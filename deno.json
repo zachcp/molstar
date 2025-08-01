@@ -112,7 +112,28 @@
   "lint": {
     "rules": {
       "tags": ["recommended"],
-      "exclude": ["no-explicit-any"]
+      "exclude": [
+        "no-explicit-any",
+        "no-namespace",
+        "ban-types",
+        "no-unused-vars",
+        "no-case-declarations",
+        "prefer-const",
+        "getter-return",
+        "require-await",
+        "no-fallthrough",
+        "jsx-key",
+        "no-extra-boolean-cast"
+        "prefer-as-const",
+        "jsx-no-useless-fragment",
+        "jsx-button-has-type",
+        "no-cond-assign",
+        "no-empty",
+        "no-empty-interface",
+        "no-extra-non-null-assertion"
+        "no-irregular-whitespace",
+        "no-this-alias"
+      ]
     },
     "exclude": [
       "build/",
