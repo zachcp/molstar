@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { QueryName, QueryParams, Encoding } from './api';
+import { QueryName, QueryParams, Encoding } from './api.ts';
 
 export interface MultipleQueryEntry<Name extends QueryName = QueryName> {
     data_source?: string,

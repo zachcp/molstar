@@ -7,4 +7,4 @@
 import './favicon.ico';
 import './index.html';
 import './style.scss';
-export * from './app';
+export * from './app.ts';

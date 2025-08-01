@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Table } from '../../mol-data/db';
+import { Table } from '../../mol-data/db.ts';
 
 export const JSONCifVERSION = '0.1.0';
 

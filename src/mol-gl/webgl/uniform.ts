@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mat3, Mat4, Quat, Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra';
-import { ValueCell } from '../../mol-util';
-import { GLRenderingContext } from './compat';
-import { RenderableSchema } from '../../mol-gl/renderable/schema';
-import { ValueOf } from '../../mol-util/type-helpers';
-import { deepClone } from '../../mol-util/object';
+import { Mat3, Mat4, Quat, Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
+import { ValueCell } from '../../mol-util/index.ts';
+import { GLRenderingContext } from './compat.ts';
+import { RenderableSchema } from '../renderable/schema.ts';
+import { ValueOf } from '../../mol-util/type-helpers.ts';
+import { deepClone } from '../../mol-util/object.ts';
 
 export type UniformKindValue = {
     'b': boolean; 'b[]': boolean[]

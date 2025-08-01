@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Expression } from '../../mol-script/language/expression';
-import { QueryFn, Structure, StructureSelection as Sel, QueryContext } from '../../mol-model/structure';
-import { Script } from '../../mol-script/script';
-import { compile } from '../../mol-script/runtime/query/compiler';
-import { PluginStateObject as SO } from '../objects';
+import { Expression } from '../../mol-script/language/expression.ts';
+import { QueryFn, Structure, StructureSelection as Sel, QueryContext } from '../../mol-model/structure.ts';
+import { Script } from '../../mol-script/script.ts';
+import { compile } from '../../mol-script/runtime/query/compiler.ts';
+import { PluginStateObject as SO } from '../objects.ts';
 
 export { StructureQueryHelper };
 namespace StructureQueryHelper {

@@ -6,14 +6,14 @@
  * @author Jason Pattle <jpattle.exscientia.co.uk>
  */
 
-import { Loci } from '../../../mol-model/loci';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { PluginBehavior } from '../behavior';
-import { ButtonsType, ModifiersKeys } from '../../../mol-util/input/input-observer';
-import { Binding } from '../../../mol-util/binding';
-import { PluginCommands } from '../../commands';
-import { CameraHelperAxis, isCameraAxesLoci } from '../../../mol-canvas3d/helper/camera-helper';
-import { Vec3 } from '../../../mol-math/linear-algebra';
+import { Loci } from '../../../mol-model/loci.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { PluginBehavior } from '../behavior.ts';
+import { ButtonsType, ModifiersKeys } from '../../../mol-util/input/input-observer.ts';
+import { Binding } from '../../../mol-util/binding.ts';
+import { PluginCommands } from '../../commands.ts';
+import { CameraHelperAxis, isCameraAxesLoci } from '../../../mol-canvas3d/helper/camera-helper.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 
 const B = ButtonsType;
 const M = ModifiersKeys;

@@ -7,9 +7,9 @@
  * Copyright (c) 2011-2018, Gregor Aisch, BSD license
  */
 
-import { Color } from '../color';
-import { degToRad } from '../../../mol-math/misc';
-import { Lab } from './lab';
+import { Color } from '../color.ts';
+import { degToRad } from '../../../mol-math/misc.ts';
+import { Lab } from './lab.ts';
 
 export { Hcl };
 

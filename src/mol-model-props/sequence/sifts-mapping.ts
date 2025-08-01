@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column } from '../../mol-data/db';
-import { MmcifFormat } from '../../mol-model-formats/structure/mmcif';
-import { CustomPropertyDescriptor } from '../../mol-model/custom-property';
-import { Model } from '../../mol-model/structure';
-import { StructureElement } from '../../mol-model/structure/structure';
-import { CustomModelProperty } from '../common/custom-model-property';
+import { Column } from '../../mol-data/db.ts';
+import { MmcifFormat } from '../../mol-model-formats/structure/mmcif.ts';
+import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
+import { Model } from '../../mol-model/structure.ts';
+import { StructureElement } from '../../mol-model/structure/structure.ts';
+import { CustomModelProperty } from '../common/custom-model-property.ts';
 
 export { SIFTSMapping as SIFTSMapping };
 

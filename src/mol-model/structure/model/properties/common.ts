@@ -5,10 +5,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { mmCIF_Database, mmCIF_Schema } from '../../../../mol-io/reader/cif/schema/mmcif';
-import { Table, Column } from '../../../../mol-data/db';
-import { EntityIndex } from '../indexing';
-import { mmCIF_chemComp_schema } from '../../../../mol-io/reader/cif/schema/mmcif-extras';
+import { mmCIF_Database, mmCIF_Schema } from '../../../../mol-io/reader/cif/schema/mmcif.ts';
+import { Table, Column } from '../../../../mol-data/db.ts';
+import { EntityIndex } from '../indexing.ts';
+import { mmCIF_chemComp_schema } from '../../../../mol-io/reader/cif/schema/mmcif-extras.ts';
 
 export type EntitySubtype = (
     mmCIF_Schema['entity_poly']['type']['T'] |

@@ -5,20 +5,20 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { CustomProperty } from '../../mol-model-props/common/custom-property';
-import { QueryContext, Structure, StructureQuery, StructureSelection, StructureProperties, StructureElement } from '../../mol-model/structure';
-import { BondType, NucleicBackboneAtoms, ProteinBackboneAtoms, SecondaryStructureType, AminoAcidNamesL, RnaBaseNames, DnaBaseNames, WaterNames, ElementSymbol, PolymerNames, CommonProteinCaps } from '../../mol-model/structure/model/types';
-import { PluginContext } from '../../mol-plugin/context';
-import { MolScriptBuilder as MS } from '../../mol-script/language/builder';
-import { Expression } from '../../mol-script/language/expression';
-import { compile } from '../../mol-script/runtime/query/compiler';
-import { StateBuilder } from '../../mol-state';
-import { RuntimeContext } from '../../mol-task';
-import { SetUtils } from '../../mol-util/set';
-import { PluginStateObject } from '../objects';
-import { StateTransforms } from '../transforms';
-import { ElementNames } from '../../mol-model/structure/model/properties/atomic/types';
-import { SecondaryStructureProvider } from '../../mol-model-props/computed/secondary-structure';
+import { CustomProperty } from '../../mol-model-props/common/custom-property.ts';
+import { QueryContext, Structure, StructureQuery, StructureSelection, StructureProperties, StructureElement } from '../../mol-model/structure.ts';
+import { BondType, NucleicBackboneAtoms, ProteinBackboneAtoms, SecondaryStructureType, AminoAcidNamesL, RnaBaseNames, DnaBaseNames, WaterNames, ElementSymbol, PolymerNames, CommonProteinCaps } from '../../mol-model/structure/model/types.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { MolScriptBuilder as MS } from '../../mol-script/language/builder.ts';
+import { Expression } from '../../mol-script/language/expression.ts';
+import { compile } from '../../mol-script/runtime/query/compiler.ts';
+import { StateBuilder } from '../../mol-state/index.ts';
+import { RuntimeContext } from '../../mol-task/index.ts';
+import { SetUtils } from '../../mol-util/set.ts';
+import { PluginStateObject } from '../objects.ts';
+import { StateTransforms } from '../transforms.ts';
+import { ElementNames } from '../../mol-model/structure/model/properties/atomic/types.ts';
+import { SecondaryStructureProvider } from '../../mol-model-props/computed/secondary-structure.ts';
 
 export enum StructureSelectionCategory {
     Type = 'Type',

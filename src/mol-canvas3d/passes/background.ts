@@ -4,29 +4,29 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { QuadPositions, } from '../../mol-gl/compute/util';
-import { ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable';
-import { AttributeSpec, DefineSpec, TextureSpec, UniformSpec, Values, ValueSpec } from '../../mol-gl/renderable/schema';
-import { ShaderCode } from '../../mol-gl/shader-code';
-import { background_frag } from '../../mol-gl/shader/background.frag';
-import { background_vert } from '../../mol-gl/shader/background.vert';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { createComputeRenderItem } from '../../mol-gl/webgl/render-item';
-import { createNullTexture, CubeFaces, Texture } from '../../mol-gl/webgl/texture';
-import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4';
-import { ValueCell } from '../../mol-util/value-cell';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { isTimingMode } from '../../mol-util/debug';
-import { Camera, ICamera } from '../camera';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
-import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2';
-import { Color } from '../../mol-util/color';
-import { Asset, AssetManager } from '../../mol-util/assets';
-import { Vec4 } from '../../mol-math/linear-algebra/3d/vec4';
-import { degToRad, isPowerOfTwo } from '../../mol-math/misc';
-import { Mat3 } from '../../mol-math/linear-algebra/3d/mat3';
-import { Euler } from '../../mol-math/linear-algebra/3d/euler';
-import { PostprocessingProps } from './postprocessing';
+import { QuadPositions, } from '../../mol-gl/compute/util.ts';
+import { ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
+import { AttributeSpec, DefineSpec, TextureSpec, UniformSpec, Values, ValueSpec } from '../../mol-gl/renderable/schema.ts';
+import { ShaderCode } from '../../mol-gl/shader-code.ts';
+import { background_frag } from '../../mol-gl/shader/background.frag.ts';
+import { background_vert } from '../../mol-gl/shader/background.vert.ts';
+import { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
+import { createNullTexture, CubeFaces, Texture } from '../../mol-gl/webgl/texture.ts';
+import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4.ts';
+import { ValueCell } from '../../mol-util/value-cell.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { isTimingMode } from '../../mol-util/debug.ts';
+import { Camera, ICamera } from '../camera.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
+import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { Asset, AssetManager } from '../../mol-util/assets.ts';
+import { Vec4 } from '../../mol-math/linear-algebra/3d/vec4.ts';
+import { degToRad, isPowerOfTwo } from '../../mol-math/misc.ts';
+import { Mat3 } from '../../mol-math/linear-algebra/3d/mat3.ts';
+import { Euler } from '../../mol-math/linear-algebra/3d/euler.ts';
+import { PostprocessingProps } from './postprocessing.ts';
 
 const SharedParams = {
     opacity: PD.Numeric(1, { min: 0.0, max: 1.0, step: 0.01 }),

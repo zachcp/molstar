@@ -4,8 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { CifWriter } from '../mol-io/writer/cif';
+import { CifWriter } from '../mol-io/writer/cif.ts';
 import * as fs from 'fs';
+import { Buffer } from "node:buffer";
 
 const category1fields: CifWriter.Field[] = [
     CifWriter.Field.str('f1', i => 'v' + i),

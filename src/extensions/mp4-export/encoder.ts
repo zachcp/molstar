@@ -5,12 +5,12 @@
  */
 
 import * as HME from 'h264-mp4-encoder';
-import { Viewport } from '../../mol-canvas3d/camera/util';
-import { ImagePass } from '../../mol-canvas3d/passes/image';
-import { PluginStateAnimation } from '../../mol-plugin-state/animation/model';
-import { PluginContext } from '../../mol-plugin/context';
-import { RuntimeContext } from '../../mol-task';
-import { Color } from '../../mol-util/color';
+import { Viewport } from '../../mol-canvas3d/camera/util.ts';
+import { ImagePass } from '../../mol-canvas3d/passes/image.ts';
+import { PluginStateAnimation } from '../../mol-plugin-state/animation/model.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { RuntimeContext } from '../../mol-task/index.ts';
+import { Color } from '../../mol-util/color/index.ts';
 
 export interface Mp4EncoderParams<A extends PluginStateAnimation = PluginStateAnimation> {
     pass: ImagePass,

@@ -7,7 +7,7 @@
  * MIT License, Copyright (c) 2018 Photopea
  */
 
-import { NumberArray } from '../type-helpers';
+import { NumberArray } from '../type-helpers.ts';
 
 export type HufTree = {
     lit: number,

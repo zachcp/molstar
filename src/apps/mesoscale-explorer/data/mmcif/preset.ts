@@ -4,17 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif';
-import { PluginStateObject } from '../../../../mol-plugin-state/objects';
-import { StructureRepresentation3D } from '../../../../mol-plugin-state/transforms/representation';
-import { PluginContext } from '../../../../mol-plugin/context';
-import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/representation/spacefill';
-import { StateObjectRef, StateObjectSelector, StateBuilder } from '../../../../mol-state';
-import { Clip } from '../../../../mol-util/clip';
-import { Color } from '../../../../mol-util/color';
-import { ColorNames } from '../../../../mol-util/color/names';
-import { GraphicsMode, MesoscaleGroup, MesoscaleState, getDistinctBaseColors, getDistinctGroupColors, getGraphicsModeProps, getMesoscaleGroupParams } from '../state';
-import { MmcifAssembly, MmcifStructure } from './model';
+import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif.ts';
+import { PluginStateObject } from '../../../../mol-plugin-state/objects.ts';
+import { StructureRepresentation3D } from '../../../../mol-plugin-state/transforms/representation.ts';
+import { PluginContext } from '../../../../mol-plugin/context.ts';
+import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/representation/spacefill.ts';
+import { StateObjectRef, StateObjectSelector, StateBuilder } from '../../../../mol-state/index.ts';
+import { Clip } from '../../../../mol-util/clip.ts';
+import { Color } from '../../../../mol-util/color/index.ts';
+import { ColorNames } from '../../../../mol-util/color/names.ts';
+import { GraphicsMode, MesoscaleGroup, MesoscaleState, getDistinctBaseColors, getDistinctGroupColors, getGraphicsModeProps, getMesoscaleGroupParams } from '../state.ts';
+import { MmcifAssembly, MmcifStructure } from './model.ts';
 
 function getSpacefillParams(color: Color, scaleFactor: number, graphics: GraphicsMode, clipVariant: Clip.Variant) {
     const gmp = getGraphicsModeProps(graphics === 'custom' ? 'quality' : graphics);

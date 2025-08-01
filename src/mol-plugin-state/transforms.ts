@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as Data from './transforms/data';
-import * as Misc from './transforms/misc';
-import * as Model from './transforms/model';
-import * as Volume from './transforms/volume';
-import * as Representation from './transforms/representation';
-import * as Shape from './transforms/shape';
+import * as Data from './transforms/data.ts';
+import * as Misc from './transforms/misc.ts';
+import * as Model from './transforms/model.ts';
+import * as Volume from './transforms/volume.ts';
+import * as Representation from './transforms/representation.ts';
+import * as Shape from './transforms/shape.ts';
 
 export const StateTransforms = {
     Data,

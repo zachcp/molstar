@@ -6,13 +6,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { execute } from './query/execute';
-import * as Data from './query/data-model';
-import { ConsoleLogger } from '../../../mol-util/console-logger';
-import * as DataFormat from '../common/data-format';
-import { LimitsConfig } from '../config';
-import { fileHandleFromPathOrUrl } from '../../common/file-handle';
-import { FileHandle } from '../../../mol-io/common/file-handle';
+import { execute } from './query/execute.ts';
+import * as Data from './query/data-model.ts';
+import { ConsoleLogger } from '../../../mol-util/console-logger.ts';
+import * as DataFormat from '../common/data-format.ts';
+import { LimitsConfig } from '../config.ts';
+import { fileHandleFromPathOrUrl } from '../../common/file-handle.ts';
+import { FileHandle } from '../../../mol-io/common/file-handle.ts';
 
 export function getOutputFilename(source: string, id: string, { asBinary, box, detail, forcedSamplingLevel }: Data.QueryParams) {
     function n(s: string) { return (s || '').replace(/[ \n\t]/g, '').toLowerCase(); }

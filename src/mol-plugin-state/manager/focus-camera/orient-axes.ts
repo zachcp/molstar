@@ -4,10 +4,10 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Camera } from '../../../mol-canvas3d/camera';
-import { Mat3, Vec3 } from '../../../mol-math/linear-algebra';
-import { PrincipalAxes } from '../../../mol-math/linear-algebra/matrix/principal-axes';
-import { Structure, StructureElement, StructureProperties } from '../../../mol-model/structure';
+import { Camera } from '../../../mol-canvas3d/camera.ts';
+import { Mat3, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { PrincipalAxes } from '../../../mol-math/linear-algebra/matrix/principal-axes.ts';
+import { Structure, StructureElement, StructureProperties } from '../../../mol-model/structure.ts';
 
 
 /** Minimum number of atoms necessary for running PCA.

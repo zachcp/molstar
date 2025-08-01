@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { objectForEach } from '../object';
-import { ColorMap } from './color';
+import { ParamDefinition as PD } from '../param-definition.ts';
+import { objectForEach } from '../object.ts';
+import { ColorMap } from './color.ts';
 
 export function getColorMapParams<T extends { [k: string]: number }>(map: ColorMap<T>) {
     const colors: Record<string, PD.Color> = {};

@@ -5,27 +5,27 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { SymmetryOperator } from '../../../mol-math/geometry/symmetry-operator';
-import { Model } from '../model';
-import { GridLookup3D, Lookup3D, Spacegroup } from '../../../mol-math/geometry';
-import { IntraUnitBonds, computeIntraUnitBonds } from './unit/bonds';
-import { CoarseElements, CoarseSphereConformation, CoarseGaussianConformation } from '../model/properties/coarse';
-import { BitFlags } from '../../../mol-util';
-import { UnitRings } from './unit/rings';
-import { StructureElement } from './element';
-import { ChainIndex, ResidueIndex, ElementIndex } from '../model/indexing';
-import { IntMap, SortedArray, Segmentation } from '../../../mol-data/int';
-import { hash2, hashFnv32a } from '../../../mol-data/util';
-import { getAtomicPolymerElements, getCoarsePolymerElements, getAtomicGapElements, getCoarseGapElements, getNucleotideElements, getProteinElements } from './util/polymer';
-import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif';
-import { PrincipalAxes } from '../../../mol-math/linear-algebra/matrix/principal-axes';
-import { getPrincipalAxes } from './util/principal-axes';
-import { Boundary, getBoundary, getFastBoundary } from '../../../mol-math/geometry/boundary';
-import { Mat4, Vec3 } from '../../../mol-math/linear-algebra';
-import { IndexPairBonds } from '../../../mol-model-formats/structure/property/bonds/index-pair';
-import { ElementSetIntraBondCache } from './unit/bonds/element-set-intra-bond-cache';
-import { ModelSymmetry } from '../../../mol-model-formats/structure/property/symmetry';
-import { getResonance, UnitResonance } from './unit/resonance';
+import { SymmetryOperator } from '../../../mol-math/geometry/symmetry-operator.ts';
+import { Model } from '../model.ts';
+import { GridLookup3D, Lookup3D, Spacegroup } from '../../../mol-math/geometry.ts';
+import { IntraUnitBonds, computeIntraUnitBonds } from './unit/bonds.ts';
+import { CoarseElements, CoarseSphereConformation, CoarseGaussianConformation } from '../model/properties/coarse.ts';
+import { BitFlags } from '../../../mol-util/index.ts';
+import { UnitRings } from './unit/rings.ts';
+import { StructureElement } from './element.ts';
+import { ChainIndex, ResidueIndex, ElementIndex } from '../model/indexing.ts';
+import { IntMap, SortedArray, Segmentation } from '../../../mol-data/int.ts';
+import { hash2, hashFnv32a } from '../../../mol-data/util.ts';
+import { getAtomicPolymerElements, getCoarsePolymerElements, getAtomicGapElements, getCoarseGapElements, getNucleotideElements, getProteinElements } from './util/polymer.ts';
+import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
+import { PrincipalAxes } from '../../../mol-math/linear-algebra/matrix/principal-axes.ts';
+import { getPrincipalAxes } from './util/principal-axes.ts';
+import { Boundary, getBoundary, getFastBoundary } from '../../../mol-math/geometry/boundary.ts';
+import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { IndexPairBonds } from '../../../mol-model-formats/structure/property/bonds/index-pair.ts';
+import { ElementSetIntraBondCache } from './unit/bonds/element-set-intra-bond-cache.ts';
+import { ModelSymmetry } from '../../../mol-model-formats/structure/property/symmetry.ts';
+import { getResonance, UnitResonance } from './unit/resonance.ts';
 
 /**
  * A building block of a structure that corresponds to an atomic or

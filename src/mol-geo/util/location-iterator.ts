@@ -6,9 +6,9 @@
  * @author Cai Huiyu <szmun.caihy@gmail.com>
  */
 
-import { Iterator } from '../../mol-data';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { NullLocation, Location } from '../../mol-model/location';
+import { Iterator } from '../../mol-data/index.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { NullLocation, Location } from '../../mol-model/location.ts';
 
 export interface LocationValue {
     location: Location

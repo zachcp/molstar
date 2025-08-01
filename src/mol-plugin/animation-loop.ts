@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginContext } from './context';
-import { now } from '../mol-util/now';
-import { PluginAnimationManager } from '../mol-plugin-state/manager/animation';
-import { isTimingMode } from '../mol-util/debug';
-import { printTimerResults } from '../mol-gl/webgl/timer';
+import { PluginContext } from './context.ts';
+import { now } from '../mol-util/now.ts';
+import { PluginAnimationManager } from '../mol-plugin-state/manager/animation.ts';
+import { isTimingMode } from '../mol-util/debug.ts';
+import { printTimerResults } from '../mol-gl/webgl/timer.ts';
 
 export class PluginAnimationLoop {
     private currentFrame: any = void 0;

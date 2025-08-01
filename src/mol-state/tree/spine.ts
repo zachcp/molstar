@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { State } from '../state';
-import { StateTransform } from '../transform';
-import { StateObject, StateObjectCell } from '../object';
+import { State } from '../state.ts';
+import { StateTransform } from '../transform.ts';
+import { StateObject, StateObjectCell } from '../object.ts';
 
 export { StateTreeSpine };
 

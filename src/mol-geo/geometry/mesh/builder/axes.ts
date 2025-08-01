@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra';
-import { MeshBuilder } from '../mesh-builder';
-import { Axes3D } from '../../../../mol-math/geometry';
-import { createCage } from '../../../primitive/cage';
+import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra.ts';
+import { MeshBuilder } from '../mesh-builder.ts';
+import { Axes3D } from '../../../../mol-math/geometry.ts';
+import { createCage } from '../../../primitive/cage.ts';
 
 const tmpVec = Vec3();
 const tmpMatrix = Mat4.identity();

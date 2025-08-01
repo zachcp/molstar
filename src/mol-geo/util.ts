@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4, Mat3 } from '../mol-math/linear-algebra';
-import { NumberArray } from '../mol-util/type-helpers';
-import { arrayMax } from '../mol-util/array';
+import { Vec3, Mat4, Mat3 } from '../mol-math/linear-algebra.ts';
+import { NumberArray } from '../mol-util/type-helpers.ts';
+import { arrayMax } from '../mol-util/array.ts';
 
 export function normalizeVec3Array<T extends NumberArray>(a: T, count: number) {
     for (let i = 0, il = count * 3; i < il; i += 3) {

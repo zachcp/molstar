@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task } from '../../mol-task';
-import { XtcFile } from '../../mol-io/reader/xtc/parser';
-import { Coordinates, Frame, Time } from '../../mol-model/structure/coordinates';
-import { Cell } from '../../mol-math/geometry/spacegroup/cell';
-import { Vec3 } from '../../mol-math/linear-algebra';
+import { Task } from '../../mol-task/index.ts';
+import { XtcFile } from '../../mol-io/reader/xtc/parser.ts';
+import { Coordinates, Frame, Time } from '../../mol-model/structure/coordinates.ts';
+import { Cell } from '../../mol-math/geometry/spacegroup/cell.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
 
 export function coordinatesFromXtc(file: XtcFile): Task<Coordinates> {
     return Task.create('Parse XTC', async ctx => {

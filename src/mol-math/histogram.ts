@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { arrayMinMax } from '../mol-util/array';
+import { arrayMinMax } from '../mol-util/array.ts';
 
 export interface Histogram {
     min: number,

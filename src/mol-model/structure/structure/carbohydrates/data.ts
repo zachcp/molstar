@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Unit } from '../unit';
-import { Vec3 } from '../../../../mol-math/linear-algebra';
-import { ResidueIndex, ElementIndex } from '../../model';
-import { SaccharideComponent } from './constants';
-import { StructureElement } from '../element';
-import { UnitRings } from '../unit/rings';
+import { Unit } from '../unit.ts';
+import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { ResidueIndex, ElementIndex } from '../../model.ts';
+import { SaccharideComponent } from './constants.ts';
+import { StructureElement } from '../element.ts';
+import { UnitRings } from '../unit/rings.ts';
 
 export interface CarbohydrateLink {
     readonly carbohydrateIndexA: number

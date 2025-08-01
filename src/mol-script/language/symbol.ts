@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Type } from './type';
-import { Expression } from './expression';
+import { Type } from './type.ts';
+import { Expression } from './expression.ts';
 
 export type Argument<T extends Type = Type> = {
     type: T,

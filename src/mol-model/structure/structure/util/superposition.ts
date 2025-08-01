@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { MinimizeRmsd } from '../../../../mol-math/linear-algebra/3d/minimize-rmsd';
-import { StructureElement } from '../element';
-import { OrderedSet } from '../../../../mol-data/int';
-import { AlignSequences } from '../../../sequence/alignment/sequence';
-import { StructureProperties } from '../properties';
+import { MinimizeRmsd } from '../../../../mol-math/linear-algebra/3d/minimize-rmsd.ts';
+import { StructureElement } from '../element.ts';
+import { OrderedSet } from '../../../../mol-data/int.ts';
+import { AlignSequences } from '../../../sequence/alignment/sequence.ts';
+import { StructureProperties } from '../properties.ts';
 
 export function superpose(xs: StructureElement.Loci[]): MinimizeRmsd.Result[] {
     const ret: MinimizeRmsd.Result[] = [];

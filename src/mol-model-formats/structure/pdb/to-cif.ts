@@ -6,23 +6,23 @@
  * @author Yana Rose <yana.v.rose@gmail.com>
  */
 
-import { substringStartsWith } from '../../../mol-util/string';
-import { CifCategory, CifField, CifFrame } from '../../../mol-io/reader/cif';
-import { Tokenizer } from '../../../mol-io/reader/common/text/tokenizer';
-import { PdbFile } from '../../../mol-io/reader/pdb/schema';
-import { parseCryst1, parseRemark350, parseMtrix } from './assembly';
-import { parseHelix, parseSheet } from './secondary-structure';
-import { parseCmpnd, parseHetnam } from './entity';
-import { ComponentBuilder } from '../common/component';
-import { EntityBuilder } from '../common/entity';
-import { Column } from '../../../mol-data/db';
-import { getMoleculeType } from '../../../mol-model/structure/model/types';
-import { getAtomSiteTemplate, addAtom, getAtomSite, LabelAsymIdHelper } from './atom-site';
-import { addAnisotropic, getAnisotropicTemplate, getAnisotropic } from './anisotropic';
-import { parseConect } from './conect';
-import { isDebugMode } from '../../../mol-util/debug';
-import { PdbHeaderData, addHeader } from './header';
-import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif';
+import { substringStartsWith } from '../../../mol-util/string.ts';
+import { CifCategory, CifField, CifFrame } from '../../../mol-io/reader/cif.ts';
+import { Tokenizer } from '../../../mol-io/reader/common/text/tokenizer.ts';
+import { PdbFile } from '../../../mol-io/reader/pdb/schema.ts';
+import { parseCryst1, parseRemark350, parseMtrix } from './assembly.ts';
+import { parseHelix, parseSheet } from './secondary-structure.ts';
+import { parseCmpnd, parseHetnam } from './entity.ts';
+import { ComponentBuilder } from '../common/component.ts';
+import { EntityBuilder } from '../common/entity.ts';
+import { Column } from '../../../mol-data/db.ts';
+import { getMoleculeType } from '../../../mol-model/structure/model/types.ts';
+import { getAtomSiteTemplate, addAtom, getAtomSite, LabelAsymIdHelper } from './atom-site.ts';
+import { addAnisotropic, getAnisotropicTemplate, getAnisotropic } from './anisotropic.ts';
+import { parseConect } from './conect.ts';
+import { isDebugMode } from '../../../mol-util/debug.ts';
+import { PdbHeaderData, addHeader } from './header.ts';
+import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
 
 export async function pdbToMmCif(pdb: PdbFile): Promise<CifFrame> {
     const { lines } = pdb;

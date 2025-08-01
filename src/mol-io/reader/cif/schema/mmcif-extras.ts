@@ -5,8 +5,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { mmCIF_Schema } from './mmcif';
-import { Column } from '../../../../mol-data/db';
+import { mmCIF_Schema } from './mmcif.ts';
+import { Column } from '../../../../mol-data/db.ts';
 
 export const mmCIF_residueId_schema = {
     label_comp_id: mmCIF_Schema.atom_site.label_comp_id,

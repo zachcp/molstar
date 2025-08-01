@@ -1,2 +1,2 @@
-import './snapshot-markdown';
-import './viewer';
+import './snapshot-markdown.tsx';
+import './viewer.tsx';

@@ -7,13 +7,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { Tokenizer } from '../common/text/tokenizer';
-import { Column } from '../../../mol-data/db';
-import { Task, chunkedSubtask, RuntimeContext } from '../../../mol-task';
-import { ReaderResult as Result } from '../result';
-import { parseFloat as fastParseFloat } from '../common/text/number-parser';
-import { StringLike } from '../../common/string-like';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { Tokenizer } from '../common/text/tokenizer.ts';
+import { Column } from '../../../mol-data/db.ts';
+import { Task, chunkedSubtask, RuntimeContext } from '../../../mol-task/index.ts';
+import { ReaderResult as Result } from '../result.ts';
+import { parseFloat as fastParseFloat } from '../common/text/number-parser.ts';
+import { StringLike } from '../../common/string-like.ts';
 
 
 // https://h5cube-spec.readthedocs.io/en/latest/cubeformat.html

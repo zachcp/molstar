@@ -4,16 +4,16 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StructureSelection } from './query/selection';
-import { StructureQuery } from './query/query';
-export * from './query/context';
-import * as generators from './query/queries/generators';
-import * as modifiers from './query/queries/modifiers';
-import * as filters from './query/queries/filters';
-import * as combinators from './query/queries/combinators';
-import * as internal from './query/queries/internal';
-import * as atomset from './query/queries/atom-set';
-import { Predicates as pred } from './query/predicates';
+import { StructureSelection } from './query/selection.ts';
+import { StructureQuery } from './query/query.ts';
+export * from './query/context.ts';
+import * as generators from './query/queries/generators.ts';
+import * as modifiers from './query/queries/modifiers.ts';
+import * as filters from './query/queries/filters.ts';
+import * as combinators from './query/queries/combinators.ts';
+import * as internal from './query/queries/internal.ts';
+import * as atomset from './query/queries/atom-set.ts';
+import { Predicates as pred } from './query/predicates.ts';
 
 export const Queries = {
     generators,

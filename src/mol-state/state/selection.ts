@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StateObject, StateObjectCell } from '../object';
-import { State } from '../state';
-import { StateTree } from '../tree';
-import { StateTransform } from '../transform';
-import { StateTransformer } from '../transformer';
+import { StateObject, StateObjectCell } from '../object.ts';
+import { State } from '../state.ts';
+import { StateTree } from '../tree.ts';
+import { StateTransform } from '../transform.ts';
+import { StateTransformer } from '../transformer.ts';
 
 namespace StateSelection {
     export type Selector<C extends StateObjectCell = StateObjectCell> = Query<C> | Builder<C> | string | C;

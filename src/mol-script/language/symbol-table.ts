@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { core } from './symbol-table/core';
-import { structureQuery } from './symbol-table/structure-query';
-import { internal } from './symbol-table/internal';
-import { normalizeTable, symbolList } from './helpers';
-import { MSymbol } from './symbol';
+import { core } from './symbol-table/core.ts';
+import { structureQuery } from './symbol-table/structure-query.ts';
+import { internal } from './symbol-table/internal.ts';
+import { normalizeTable, symbolList } from './helpers.ts';
+import { MSymbol } from './symbol.ts';
 
 const MolScriptSymbolTable = { core, structureQuery, internal };
 

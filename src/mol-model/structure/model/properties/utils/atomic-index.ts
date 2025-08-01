@@ -5,14 +5,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { AtomicData, AtomicSegments } from '../atomic';
-import { Interval, Segmentation, SortedArray } from '../../../../../mol-data/int';
-import { Entities } from '../common';
-import { ChainIndex, ResidueIndex, EntityIndex, ElementIndex } from '../../indexing';
-import { AtomicIndex, AtomicHierarchy } from '../atomic/hierarchy';
-import { cantorPairing } from '../../../../../mol-data/util';
-import { Column } from '../../../../../mol-data/db';
-import { ElementSymbol } from '../../types';
+import { AtomicData, AtomicSegments } from '../atomic.ts';
+import { Interval, Segmentation, SortedArray } from '../../../../../mol-data/int.ts';
+import { Entities } from '../common.ts';
+import { ChainIndex, ResidueIndex, EntityIndex, ElementIndex } from '../../indexing.ts';
+import { AtomicIndex, AtomicHierarchy } from '../atomic/hierarchy.ts';
+import { cantorPairing } from '../../../../../mol-data/util.ts';
+import { Column } from '../../../../../mol-data/db.ts';
+import { ElementSymbol } from '../../types.ts';
 
 function getResidueId(seq_id: number, ins_code: string) {
     if (!ins_code) return seq_id;

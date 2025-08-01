@@ -4,17 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column, Table } from '../../mol-data/db';
-import { PrmtopFile } from '../../mol-io/reader/prmtop/parser';
-import { getMoleculeType, MoleculeType } from '../../mol-model/structure/model/types';
-import { Topology } from '../../mol-model/structure/topology/topology';
-import { Task } from '../../mol-task';
-import { ModelFormat } from '../format';
-import { BasicSchema, createBasic } from './basic/schema';
-import { ComponentBuilder } from './common/component';
-import { EntityBuilder } from './common/entity';
-import { getChainId } from './common/util';
-import { guessElementSymbolString } from './util';
+import { Column, Table } from '../../mol-data/db.ts';
+import { PrmtopFile } from '../../mol-io/reader/prmtop/parser.ts';
+import { getMoleculeType, MoleculeType } from '../../mol-model/structure/model/types.ts';
+import { Topology } from '../../mol-model/structure/topology/topology.ts';
+import { Task } from '../../mol-task/index.ts';
+import { ModelFormat } from '../format.ts';
+import { BasicSchema, createBasic } from './basic/schema.ts';
+import { ComponentBuilder } from './common/component.ts';
+import { EntityBuilder } from './common/entity.ts';
+import { getChainId } from './common/util.ts';
+import { guessElementSymbolString } from './util.ts';
 
 function getBasic(prmtop: PrmtopFile) {
     const { pointers, residuePointer, residueLabel, atomName } = prmtop;

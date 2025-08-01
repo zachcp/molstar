@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Scene } from '../../mol-gl/scene';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { BoundingSphereHelper, DebugHelperParams } from './bounding-sphere-helper';
-import { CameraHelper, CameraHelperParams } from './camera-helper';
-import { HandleHelper, HandleHelperParams } from './handle-helper';
+import { Scene } from '../../mol-gl/scene.ts';
+import { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { BoundingSphereHelper, DebugHelperParams } from './bounding-sphere-helper.ts';
+import { CameraHelper, CameraHelperParams } from './camera-helper.ts';
+import { HandleHelper, HandleHelperParams } from './handle-helper.ts';
 
 export const HelperParams = {
     debug: PD.Group(DebugHelperParams),

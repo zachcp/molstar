@@ -5,8 +5,8 @@
  */
 
 import * as React from 'react';
-import { Color } from '../../mol-util/color';
-import { Icon, ArrowRightSvg, ArrowDropDownSvg, RemoveSvg, AddSvg } from './icons';
+import { Color } from '../../mol-util/color/index.ts';
+import { Icon, ArrowRightSvg, ArrowDropDownSvg, RemoveSvg, AddSvg } from './icons.tsx';
 
 export type ColorAccent = 'cyan' | 'red' | 'gray' | 'green' | 'purple' | 'blue' | 'orange'
 

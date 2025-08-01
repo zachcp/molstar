@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Segmentation, OrderedSet, SortedArray, Interval } from '../int';
-import { Iterator as _Iterator } from '../iterator';
+import { Segmentation, OrderedSet, SortedArray, Interval } from '../int.ts';
+import { Iterator as _Iterator } from '../iterator.ts';
 
 /** Pairs of min and max indices of sorted, non-overlapping ranges */
 type SortedRanges<T extends number = number> = SortedArray<T>

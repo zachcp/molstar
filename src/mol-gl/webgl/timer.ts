@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { now } from '../../mol-util/now';
-import { GLRenderingContext } from './compat';
-import { WebGLStats } from './context';
-import { WebGLExtensions } from './extensions';
+import { now } from '../../mol-util/now.ts';
+import { GLRenderingContext } from './compat.ts';
+import { WebGLStats } from './context.ts';
+import { WebGLExtensions } from './extensions.ts';
 
 function movingAverage(avg: number, sample: number, count: number) {
     avg -= avg / count;

@@ -4,10 +4,10 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { treeValidationIssues } from './tree/generic/tree-schema';
-import { treeToString } from './tree/generic/tree-utils';
-import { Root, createMVSBuilder } from './tree/mvs/mvs-builder';
-import { MVSTree, MVSTreeSchema } from './tree/mvs/mvs-tree';
+import { treeValidationIssues } from './tree/generic/tree-schema.ts';
+import { treeToString } from './tree/generic/tree-utils.ts';
+import { Root, createMVSBuilder } from './tree/mvs/mvs-builder.ts';
+import { MVSTree, MVSTreeSchema } from './tree/mvs/mvs-tree.ts';
 
 /** Top-level metadata for a MVS file (single-state or multi-state). */
 export interface GlobalMetadata {

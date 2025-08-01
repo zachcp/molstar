@@ -4,24 +4,24 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { InteractionsRepresentationProvider } from '../../mol-model-props/computed/representations/interactions';
-import { InteractionTypeColorThemeProvider } from '../../mol-model-props/computed/themes/interaction-type';
-import { presetStaticComponent, StructureRepresentationPresetProvider } from '../../mol-plugin-state/builder/structure/representation-preset';
-import { StructureSelectionQueries, StructureSelectionQuery } from '../../mol-plugin-state/helpers/structure-selection-query';
-import { StructureRef } from '../../mol-plugin-state/manager/structure/hierarchy-state';
-import { PluginUIComponent } from '../../mol-plugin-ui/base';
-import { LociLabels } from '../../mol-plugin-ui/controls';
-import { Button } from '../../mol-plugin-ui/controls/common';
-import { BackgroundTaskProgress } from '../../mol-plugin-ui/task';
-import { Toasts } from '../../mol-plugin-ui/toast';
-import { Viewport, ViewportControls } from '../../mol-plugin-ui/viewport';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginConfig } from '../../mol-plugin/config';
-import { PluginContext } from '../../mol-plugin/context';
-import { MolScriptBuilder as MS } from '../../mol-script/language/builder';
-import { StateObjectRef } from '../../mol-state';
-import { Color } from '../../mol-util/color';
-import { Material } from '../../mol-util/material';
+import { InteractionsRepresentationProvider } from '../../mol-model-props/computed/representations/interactions.ts';
+import { InteractionTypeColorThemeProvider } from '../../mol-model-props/computed/themes/interaction-type.ts';
+import { presetStaticComponent, StructureRepresentationPresetProvider } from '../../mol-plugin-state/builder/structure/representation-preset.ts';
+import { StructureSelectionQueries, StructureSelectionQuery } from '../../mol-plugin-state/helpers/structure-selection-query.ts';
+import { StructureRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
+import { PluginUIComponent } from '../../mol-plugin-ui/base.tsx';
+import { LociLabels } from '../../mol-plugin-ui/controls.tsx';
+import { Button } from '../../mol-plugin-ui/controls/common.tsx';
+import { BackgroundTaskProgress } from '../../mol-plugin-ui/task.tsx';
+import { Toasts } from '../../mol-plugin-ui/toast.tsx';
+import { Viewport, ViewportControls } from '../../mol-plugin-ui/viewport.tsx';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { MolScriptBuilder as MS } from '../../mol-script/language/builder.ts';
+import { StateObjectRef } from '../../mol-state/index.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { Material } from '../../mol-util/material.ts';
 
 function shinyStyle(plugin: PluginContext) {
     return PluginCommands.Canvas3D.SetSettings(plugin, { settings: {

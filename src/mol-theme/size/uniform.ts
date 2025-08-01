@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { SizeTheme } from '../size';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../../mol-theme/theme';
+import type { SizeTheme } from '../size.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ThemeDataContext } from '../theme.ts';
 
 const Description = 'Gives everything the same, uniform size.';
 

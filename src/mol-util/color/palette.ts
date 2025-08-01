@@ -6,11 +6,11 @@
  */
 
 import { Color } from '.';
-import { ScaleLegend, TableLegend } from '../legend';
-import { ParamDefinition as PD } from '../param-definition';
-import { distinctColors, DistinctColorsParams } from './distinct';
-import { ColorListName, getColorListFromName } from './lists';
-import { ColorScale } from './scale';
+import { ScaleLegend, TableLegend } from '../legend.ts';
+import { ParamDefinition as PD } from '../param-definition.ts';
+import { distinctColors, DistinctColorsParams } from './distinct.ts';
+import { ColorListName, getColorListFromName } from './lists.ts';
+import { ColorScale } from './scale.ts';
 
 type PaletteType = 'generate' | 'colors'
 

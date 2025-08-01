@@ -4,23 +4,23 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Vec2 } from '../../mol-math/linear-algebra';
-import { Volume } from '../../mol-model/volume';
-import { createVolumeRepresentationParams } from '../../mol-plugin-state/helpers/volume-representation-params';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { StateTransforms } from '../../mol-plugin-state/transforms';
-import { Download } from '../../mol-plugin-state/transforms/data';
-import { CreateGroup } from '../../mol-plugin-state/transforms/misc';
-import { setSubtreeVisibility } from '../../mol-plugin/behavior/static/state';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { StateObjectSelector } from '../../mol-state';
-import { Color } from '../../mol-util/color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { Vec2 } from '../../mol-math/linear-algebra.ts';
+import { Volume } from '../../mol-model/volume.ts';
+import { createVolumeRepresentationParams } from '../../mol-plugin-state/helpers/volume-representation-params.ts';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
+import { Download } from '../../mol-plugin-state/transforms/data.ts';
+import { CreateGroup } from '../../mol-plugin-state/transforms/misc.ts';
+import { setSubtreeVisibility } from '../../mol-plugin/behavior/static/state.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { StateObjectSelector } from '../../mol-state/index.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
-import { BOX, VolsegEntryData, MAX_VOXELS } from './entry-root';
-import { VolsegStateParams, VolumeTypeChoice } from './entry-state';
-import * as ExternalAPIs from './external-api';
-import { VolsegGlobalStateData } from './global-state';
+import { BOX, VolsegEntryData, MAX_VOXELS } from './entry-root.ts';
+import { VolsegStateParams, VolumeTypeChoice } from './entry-state.ts';
+import * as ExternalAPIs from './external-api.ts';
+import { VolsegGlobalStateData } from './global-state.ts';
 
 
 const GROUP_TAG = 'volume-group';

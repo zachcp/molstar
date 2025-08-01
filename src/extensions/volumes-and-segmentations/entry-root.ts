@@ -6,35 +6,35 @@
 
 import { BehaviorSubject, distinctUntilChanged, Subject, throttleTime } from 'rxjs';
 import { VolsegVolumeServerConfig } from '.';
-import { Loci } from '../../mol-model/loci';
+import { Loci } from '../../mol-model/loci.ts';
 
-import { ShapeGroup } from '../../mol-model/shape';
-import { Volume } from '../../mol-model/volume';
-import { LociLabelProvider } from '../../mol-plugin-state/manager/loci-label';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { PluginBehavior } from '../../mol-plugin/behavior';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginContext } from '../../mol-plugin/context';
-import { StateObjectCell, StateSelection, StateTransform } from '../../mol-state';
-import { shallowEqualObjects } from '../../mol-util';
-import { Choice } from '../../mol-util/param-choice';
-import { ParamDefinition } from '../../mol-util/param-definition';
-import { MeshlistData } from '../meshes/mesh-extension';
+import { ShapeGroup } from '../../mol-model/shape.ts';
+import { Volume } from '../../mol-model/volume.ts';
+import { LociLabelProvider } from '../../mol-plugin-state/manager/loci-label.ts';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { PluginBehavior } from '../../mol-plugin/behavior.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { StateObjectCell, StateSelection, StateTransform } from '../../mol-state/index.ts';
+import { shallowEqualObjects } from '../../mol-util/index.ts';
+import { Choice } from '../../mol-util/param-choice.ts';
+import { ParamDefinition } from '../../mol-util/param-definition.ts';
+import { MeshlistData } from '../meshes/mesh-extension.ts';
 
-import { DEFAULT_VOLSEG_SERVER, VolumeApiV2 } from './volseg-api/api';
-import { Segment } from './volseg-api/data';
-import { MetadataWrapper } from './volseg-api/utils';
-import { VolsegMeshSegmentationData } from './entry-meshes';
-import { VolsegModelData } from './entry-models';
-import { VolsegLatticeSegmentationData } from './entry-segmentation';
-import { VolsegState, VolsegStateData, VolsegStateParams } from './entry-state';
-import { VolsegVolumeData, SimpleVolumeParamValues, VOLUME_VISUAL_TAG } from './entry-volume';
-import * as ExternalAPIs from './external-api';
-import { VolsegGlobalStateData } from './global-state';
-import { applyEllipsis, isDefined, lazyGetter, splitEntryId } from './helpers';
-import { type VolsegStateFromEntry } from './transformers';
-import { StateTransforms } from '../../mol-plugin-state/transforms';
-import { OrderedSet } from '../../mol-data/int';
+import { DEFAULT_VOLSEG_SERVER, VolumeApiV2 } from './volseg-api/api.ts';
+import { Segment } from './volseg-api/data.ts';
+import { MetadataWrapper } from './volseg-api/utils.ts';
+import { VolsegMeshSegmentationData } from './entry-meshes.ts';
+import { VolsegModelData } from './entry-models.ts';
+import { VolsegLatticeSegmentationData } from './entry-segmentation.ts';
+import { VolsegState, VolsegStateData, VolsegStateParams } from './entry-state.ts';
+import { VolsegVolumeData, SimpleVolumeParamValues, VOLUME_VISUAL_TAG } from './entry-volume.ts';
+import * as ExternalAPIs from './external-api.ts';
+import { VolsegGlobalStateData } from './global-state.ts';
+import { applyEllipsis, isDefined, lazyGetter, splitEntryId } from './helpers.ts';
+import { type VolsegStateFromEntry } from './transformers.ts';
+import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
+import { OrderedSet } from '../../mol-data/int.ts';
 
 
 export const MAX_VOXELS = 10 ** 7;

@@ -5,12 +5,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
-import { Structure } from '../../../mol-model/structure';
-import { Vec3 } from '../../..//mol-math/linear-algebra/3d/vec3';
-import { PluginContext } from '../../../mol-plugin/context';
-import { PrincipalAxes } from '../../../mol-math/linear-algebra/matrix/principal-axes';
-import { StructureComponentRef } from '../structure/hierarchy-state';
-import { Camera } from '../../../mol-canvas3d/camera';
+import { Structure } from '../../../mol-model/structure.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra/3d/vec3.ts';
+import { PluginContext } from '../../../mol-plugin/context.ts';
+import { PrincipalAxes } from '../../../mol-math/linear-algebra/matrix/principal-axes.ts';
+import { StructureComponentRef } from '../structure/hierarchy-state.ts';
+import { Camera } from '../../../mol-canvas3d/camera.ts';
 
 function getPolymerResiduePositions(structure: Structure): Float32Array | undefined {
     if (structure.atomicResidueCount === 1) return undefined;

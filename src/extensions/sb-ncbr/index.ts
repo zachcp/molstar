@@ -5,8 +5,8 @@
  * @author Dušan Veľký <dvelky@mail.muni.cz>
  */
 
-export { SbNcbrPartialCharges } from './partial-charges/behavior';
-export { SbNcbrPartialChargesPreset } from './partial-charges/preset';
-export { SbNcbrPartialChargesPropertyProvider } from './partial-charges/property';
-export { SbNcbrTunnels } from './tunnels/behavior';
-export { TunnelsFromRawData, SelectTunnel, TunnelFromRawData, TunnelShapeProvider } from './tunnels/representation';
+export { SbNcbrPartialCharges } from './partial-charges/behavior.ts';
+export { SbNcbrPartialChargesPreset } from './partial-charges/preset.ts';
+export { SbNcbrPartialChargesPropertyProvider } from './partial-charges/property.ts';
+export { SbNcbrTunnels } from './tunnels/behavior.ts';
+export { TunnelsFromRawData, SelectTunnel, TunnelFromRawData, TunnelShapeProvider } from './tunnels/representation.ts';

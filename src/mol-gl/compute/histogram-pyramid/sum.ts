@@ -4,19 +4,19 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ComputeRenderable, createComputeRenderable } from '../../renderable';
-import { WebGLContext } from '../../webgl/context';
-import { createComputeRenderItem } from '../../webgl/render-item';
-import { Values, TextureSpec } from '../../renderable/schema';
-import { Texture } from '../../../mol-gl/webgl/texture';
-import { ShaderCode } from '../../../mol-gl/shader-code';
-import { ValueCell } from '../../../mol-util';
-import { unpackRGBToInt } from '../../../mol-util/number-packing';
-import { QuadSchema, QuadValues } from '../util';
-import { quad_vert } from '../../../mol-gl/shader/quad.vert';
-import { sum_frag } from '../../../mol-gl/shader/histogram-pyramid/sum.frag';
-import { isWebGL2 } from '../../webgl/compat';
-import { isTimingMode } from '../../../mol-util/debug';
+import { ComputeRenderable, createComputeRenderable } from '../../renderable.ts';
+import { WebGLContext } from '../../webgl/context.ts';
+import { createComputeRenderItem } from '../../webgl/render-item.ts';
+import { Values, TextureSpec } from '../../renderable/schema.ts';
+import { Texture } from '../../webgl/texture.ts';
+import { ShaderCode } from '../../shader-code.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
+import { unpackRGBToInt } from '../../../mol-util/number-packing.ts';
+import { QuadSchema, QuadValues } from '../util.ts';
+import { quad_vert } from '../../shader/quad.vert.ts';
+import { sum_frag } from '../../shader/histogram-pyramid/sum.frag.ts';
+import { isWebGL2 } from '../../webgl/compat.ts';
+import { isTimingMode } from '../../../mol-util/debug.ts';
 
 const HistopyramidSumSchema = {
     ...QuadSchema,

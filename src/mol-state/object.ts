@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { UUID } from '../mol-util';
-import { StateTransform } from './transform';
-import { ParamDefinition } from '../mol-util/param-definition';
-import { State } from './state';
-import { StateSelection, StateTransformer } from '../mol-state';
-import { StateBuilder } from './state/builder';
+import { UUID } from '../mol-util/index.ts';
+import { StateTransform } from './transform.ts';
+import { ParamDefinition } from '../mol-util/param-definition.ts';
+import { State } from './state.ts';
+import { StateSelection, StateTransformer } from './index.ts';
+import { StateBuilder } from './state/builder.ts';
 
 export { StateObject, StateObjectCell };
 

@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { arrayRemoveInPlace } from './array';
+import { arrayRemoveInPlace } from './array.ts';
 import { Subject } from 'rxjs';
 
 export class AsyncQueue<T> {

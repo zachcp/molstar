@@ -5,10 +5,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { SpacegroupCell, Box3D, Sphere3D } from '../../mol-math/geometry';
-import { Tensor, Mat4, Vec3 } from '../../mol-math/linear-algebra';
-import { Histogram, calculateHistogram } from '../../mol-math/histogram';
-import { lerp } from '../../mol-math/interpolate';
+import { SpacegroupCell, Box3D, Sphere3D } from '../../mol-math/geometry.ts';
+import { Tensor, Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { Histogram, calculateHistogram } from '../../mol-math/histogram.ts';
+import { lerp } from '../../mol-math/interpolate.ts';
 
 /** The basic unit cell that contains the grid data. */
 interface Grid {

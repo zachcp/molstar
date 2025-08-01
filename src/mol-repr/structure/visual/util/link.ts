@@ -8,19 +8,19 @@
  * @author Herman Bergwerf <post@hbergwerf.nl>
  */
 
-import { Vec3 } from '../../../../mol-math/linear-algebra';
-import { ParamDefinition as PD } from '../../../../mol-util/param-definition';
-import { Mesh } from '../../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../../mol-geo/geometry/mesh/mesh-builder';
-import { CylinderProps } from '../../../../mol-geo/primitive/cylinder';
-import { addFixedCountDashedCylinder, addCylinder, addDoubleCylinder } from '../../../../mol-geo/geometry/mesh/builder/cylinder';
-import { VisualContext } from '../../../visual';
-import { BaseGeometry } from '../../../../mol-geo/geometry/base';
-import { Lines } from '../../../../mol-geo/geometry/lines/lines';
-import { LinesBuilder } from '../../../../mol-geo/geometry/lines/lines-builder';
-import { Cylinders } from '../../../../mol-geo/geometry/cylinders/cylinders';
-import { CylindersBuilder } from '../../../../mol-geo/geometry/cylinders/cylinders-builder';
-import { Sphere3D } from '../../../../mol-math/geometry/primitives/sphere3d';
+import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
+import { Mesh } from '../../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { CylinderProps } from '../../../../mol-geo/primitive/cylinder.ts';
+import { addFixedCountDashedCylinder, addCylinder, addDoubleCylinder } from '../../../../mol-geo/geometry/mesh/builder/cylinder.ts';
+import { VisualContext } from '../../../visual.ts';
+import { BaseGeometry } from '../../../../mol-geo/geometry/base.ts';
+import { Lines } from '../../../../mol-geo/geometry/lines/lines.ts';
+import { LinesBuilder } from '../../../../mol-geo/geometry/lines/lines-builder.ts';
+import { Cylinders } from '../../../../mol-geo/geometry/cylinders/cylinders.ts';
+import { CylindersBuilder } from '../../../../mol-geo/geometry/cylinders/cylinders-builder.ts';
+import { Sphere3D } from '../../../../mol-math/geometry/primitives/sphere3d.ts';
 
 export const LinkCylinderParams = {
     linkScale: PD.Numeric(0.45, { min: 0, max: 1, step: 0.01 }),

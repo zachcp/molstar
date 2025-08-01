@@ -4,6 +4,6 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { CifField } from '../cif/data-model';
+import { CifField } from '../cif/data-model.ts';
 
 export const Field = CifField.ofTokens;

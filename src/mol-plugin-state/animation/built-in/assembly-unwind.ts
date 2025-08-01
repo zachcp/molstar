@@ -4,13 +4,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginStateAnimation } from '../model';
-import { PluginStateObject } from '../../objects';
-import { StateTransforms } from '../../transforms';
-import { StateSelection, StateTransform } from '../../../mol-state';
-import { PluginCommands } from '../../../mol-plugin/commands';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { PluginContext } from '../../../mol-plugin/context';
+import { PluginStateAnimation } from '../model.ts';
+import { PluginStateObject } from '../../objects.ts';
+import { StateTransforms } from '../../transforms.ts';
+import { StateSelection, StateTransform } from '../../../mol-state/index.ts';
+import { PluginCommands } from '../../../mol-plugin/commands.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { PluginContext } from '../../../mol-plugin/context.ts';
 
 export const AnimateAssemblyUnwind = PluginStateAnimation.create({
     name: 'built-in.animate-assembly-unwind',

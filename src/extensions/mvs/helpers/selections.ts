@@ -5,14 +5,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column } from '../../../mol-data/db';
-import { ChainIndex, ElementIndex, Model, ResidueIndex, StructureElement } from '../../../mol-model/structure';
-import { Expression } from '../../../mol-script/language/expression';
-import { arrayExtend, filterInPlace, range } from '../../../mol-util/array';
-import { AtomRanges } from './atom-ranges';
-import { IndicesAndSortings, Sorting } from './indexing';
-import { MVSAnnotationRow } from './schemas';
-import { isAnyDefined, isDefined } from './utils';
+import { Column } from '../../../mol-data/db.ts';
+import { ChainIndex, ElementIndex, Model, ResidueIndex, StructureElement } from '../../../mol-model/structure.ts';
+import { Expression } from '../../../mol-script/language/expression.ts';
+import { arrayExtend, filterInPlace, range } from '../../../mol-util/array.ts';
+import { AtomRanges } from './atom-ranges.ts';
+import { IndicesAndSortings, Sorting } from './indexing.ts';
+import { MVSAnnotationRow } from './schemas.ts';
+import { isAnyDefined, isDefined } from './utils.ts';
 
 
 const EmptyArray: readonly any[] = [];

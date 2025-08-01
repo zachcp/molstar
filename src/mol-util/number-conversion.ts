@@ -9,7 +9,7 @@
 
 // Fast Half Float Conversions, http://www.fox-toolkit.org/ftp/fasthalffloatconversion.pdf
 
-import { clamp } from '../mol-math/interpolate';
+import { clamp } from '../mol-math/interpolate.ts';
 
 const Tables = generateTables();
 

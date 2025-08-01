@@ -4,10 +4,10 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { StringBuilder } from '../../../mol-util';
-import { Category } from '../cif/encoder';
-import { getCategoryInstanceData } from '../cif/encoder/util';
-import { LigandEncoder } from '../ligand-encoder';
+import { StringBuilder } from '../../../mol-util/index.ts';
+import { Category } from '../cif/encoder.ts';
+import { getCategoryInstanceData } from '../cif/encoder/util.ts';
+import { LigandEncoder } from '../ligand-encoder.ts';
 
 // specification: http://c4.cabrillo.edu/404/ctfile.pdf
 // SDF wraps MOL and allows for multiple molecules per file as well as additional properties

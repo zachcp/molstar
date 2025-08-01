@@ -12,9 +12,9 @@ import fs from 'fs';
 require('util.promisify').shim();
 const writeFile = util.promisify(fs.writeFile);
 
-import { DatabaseCollection } from '../../mol-data/db';
-import { CCD_Schema } from '../../mol-io/reader/cif/schema/ccd';
-import { DefaultDataOptions, ensureDataAvailable, readCCD } from './util';
+import { DatabaseCollection } from '../../mol-data/db.ts';
+import { CCD_Schema } from '../../mol-io/reader/cif/schema/ccd.ts';
+import { DefaultDataOptions, ensureDataAvailable, readCCD } from './util.ts';
 
 function extractSaccharideNames(ccd: DatabaseCollection<CCD_Schema>) {
     const saccharideNames: string[] = [];

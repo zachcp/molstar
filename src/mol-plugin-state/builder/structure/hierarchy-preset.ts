@@ -5,19 +5,19 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PresetProvider } from '../preset-provider';
-import { PluginStateObject } from '../../objects';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { StateObjectRef, StateTransformer } from '../../../mol-state';
-import { StateTransforms } from '../../transforms';
-import { RootStructureDefinition } from '../../helpers/root-structure';
-import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from './representation-preset';
-import { PluginContext } from '../../../mol-plugin/context';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { Model } from '../../../mol-model/structure';
-import { getStructureQuality } from '../../../mol-repr/util';
-import { OperatorNameColorThemeProvider } from '../../../mol-theme/color/operator-name';
-import { PluginConfig } from '../../../mol-plugin/config';
+import { PresetProvider } from '../preset-provider.ts';
+import { PluginStateObject } from '../../objects.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { StateObjectRef, StateTransformer } from '../../../mol-state/index.ts';
+import { StateTransforms } from '../../transforms.ts';
+import { RootStructureDefinition } from '../../helpers/root-structure.ts';
+import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from './representation-preset.ts';
+import { PluginContext } from '../../../mol-plugin/context.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { Model } from '../../../mol-model/structure.ts';
+import { getStructureQuality } from '../../../mol-repr/util.ts';
+import { OperatorNameColorThemeProvider } from '../../../mol-theme/color/operator-name.ts';
+import { PluginConfig } from '../../../mol-plugin/config.ts';
 
 export interface TrajectoryHierarchyPresetProvider<P = any, S = {}> extends PresetProvider<PluginStateObject.Molecule.Trajectory, P, S> { }
 export function TrajectoryHierarchyPresetProvider<P, S>(preset: TrajectoryHierarchyPresetProvider<P, S>) { return preset; }

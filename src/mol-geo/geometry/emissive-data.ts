@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ValueCell } from '../../mol-util/value-cell';
-import { Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra';
-import { TextureImage, createTextureImage } from '../../mol-gl/renderable/util';
-import { createNullTexture, Texture } from '../../mol-gl/webgl/texture';
+import { ValueCell } from '../../mol-util/value-cell.ts';
+import { Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
+import { TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
+import { createNullTexture, Texture } from '../../mol-gl/webgl/texture.ts';
 
 export type EmissiveType = 'instance' | 'groupInstance' | 'volumeInstance';
 

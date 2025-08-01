@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { RuntimeContext } from './execution/runtime-context';
-import { Progress } from './execution/progress';
-import { ExecuteObservable, ExecuteObservableChild, ExecuteInContext } from './execution/observable';
-import { SyncRuntimeContext } from './execution/synchronous';
-import { idFactory } from '../mol-util/id-factory';
+import { RuntimeContext } from './execution/runtime-context.ts';
+import { Progress } from './execution/progress.ts';
+import { ExecuteObservable, ExecuteObservableChild, ExecuteInContext } from './execution/observable.ts';
+import { SyncRuntimeContext } from './execution/synchronous.ts';
+import { idFactory } from '../mol-util/id-factory.ts';
 
 /** A "named function wrapper" with built in "computation tree progress tracking". */
 interface Task<T> {

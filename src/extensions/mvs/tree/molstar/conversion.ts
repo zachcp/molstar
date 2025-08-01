@@ -5,11 +5,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { omitObjectKeys, pickObjectKeys } from '../../../../mol-util/object';
-import { ConversionRules, addDefaults, condenseTree, convertTree, dfs, resolveUris } from '../generic/tree-utils';
-import { FullMVSTree, MVSTree, MVSTreeSchema } from '../mvs/mvs-tree';
-import { MolstarParseFormatT, ParseFormatT } from '../mvs/param-types';
-import { MolstarKind, MolstarNode, MolstarTree } from './molstar-tree';
+import { omitObjectKeys, pickObjectKeys } from '../../../../mol-util/object.ts';
+import { ConversionRules, addDefaults, condenseTree, convertTree, dfs, resolveUris } from '../generic/tree-utils.ts';
+import { FullMVSTree, MVSTree, MVSTreeSchema } from '../mvs/mvs-tree.ts';
+import { MolstarParseFormatT, ParseFormatT } from '../mvs/param-types.ts';
+import { MolstarKind, MolstarNode, MolstarTree } from './molstar-tree.ts';
 
 
 /** Convert `format` parameter of `parse` node in `MolstarTree`

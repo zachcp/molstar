@@ -4,7 +4,7 @@
 * @author Yana Rose <yana.v.rose@gmail.com>
 */
 
-import { StringLike } from '../../../mol-io/common/string-like';
+import { StringLike } from '../../../mol-io/common/string-like.ts';
 
 
 export type PdbHeaderData = {

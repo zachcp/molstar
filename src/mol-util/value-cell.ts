@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { idFactory } from './id-factory';
+import { idFactory } from './id-factory.ts';
 
 /** A mutable value reference. */
 interface ValueRef<T> { ref: T }

@@ -5,9 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-export * from './structure/coordinates';
-export * from './structure/topology';
-export * from './structure/model';
-export * from './structure/structure';
-export * from './structure/query';
-export * from './structure/trajectory';
+export * from './structure/coordinates.ts';
+export * from './structure/topology.ts';
+export * from './structure/model.ts';
+export * from './structure/structure.ts';
+export * from './structure/query.ts';
+export * from './structure/trajectory.ts';

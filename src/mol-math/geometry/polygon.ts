@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { NumberArray } from '../../mol-util/type-helpers';
-import { Vec2 } from '../linear-algebra';
+import { NumberArray } from '../../mol-util/type-helpers.ts';
+import { Vec2 } from '../linear-algebra.ts';
 
 /** raycast along x-axis and apply even-odd rule */
 export function pointInPolygon(point: Vec2, polygon: NumberArray, count: number): boolean {

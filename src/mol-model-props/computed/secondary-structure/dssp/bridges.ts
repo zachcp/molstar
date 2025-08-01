@@ -5,7 +5,7 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { DSSPContext, DSSPType, BridgeType, Bridge } from './common';
+import { DSSPContext, DSSPType, BridgeType, Bridge } from './common.ts';
 
 /**
  * Two nonoverlapping stretches of three residues each, i - 1, i, i + 1 and j - 1, j, j + 1,

@@ -22,13 +22,13 @@
  * copyright (c) 2015 Jam3. MIT License
  */
 
-import { Mat3 } from './mat3';
-import { Vec3 } from './vec3';
-import { EPSILON } from './common';
-import { assertUnreachable, NumberArray } from '../../../mol-util/type-helpers';
-import { Euler } from './euler';
-import { Mat4 } from './mat4';
-import { clamp } from '../../interpolate';
+import { Mat3 } from './mat3.ts';
+import { Vec3 } from './vec3.ts';
+import { EPSILON } from './common.ts';
+import { assertUnreachable, NumberArray } from '../../../mol-util/type-helpers.ts';
+import { Euler } from './euler.ts';
+import { Mat4 } from './mat4.ts';
+import { clamp } from '../../interpolate.ts';
 
 interface Quat extends Array<number> { [d: number]: number, '@type': 'quat', length: 4 }
 interface ReadonlyQuat extends Array<number> { readonly [d: number]: number, '@type': 'quat', length: 4 }

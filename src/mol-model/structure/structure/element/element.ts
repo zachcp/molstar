@@ -5,9 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-export * from './location';
-export * from './loci';
-export * from './bundle';
-export * from './schema';
-export * from './stats';
-export * from './util';
+export * from './location.ts';
+export * from './loci.ts';
+export * from './bundle.ts';
+export * from './schema.ts';
+export * from './stats.ts';
+export * from './util.ts';

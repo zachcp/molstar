@@ -6,8 +6,8 @@
  * @author Ludovic Autin <ludovic.autin@gmail.com>
  */
 
-import { StateTransforms } from '../transforms';
-import { DataFormatProvider } from './provider';
+import { StateTransforms } from '../transforms.ts';
+import { DataFormatProvider } from './provider.ts';
 
 export const CoordinatesFormatCategory = 'Coordinates';
 

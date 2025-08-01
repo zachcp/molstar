@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Database, Column, EnumCol, StrCol, IntCol, ListCol, FloatCol, CoordCol, MatrixCol, VectorCol } from './schema';
-import { parseImportGet } from './helper';
-import * as Data from '../../../mol-io/reader/cif/data-model';
-import { CifFrame } from '../../../mol-io/reader/cif/data-model';
+import { Database, Column, EnumCol, StrCol, IntCol, ListCol, FloatCol, CoordCol, MatrixCol, VectorCol } from './schema.ts';
+import { parseImportGet } from './helper.ts';
+import * as Data from '../../../mol-io/reader/cif/data-model.ts';
+import { CifFrame } from '../../../mol-io/reader/cif/data-model.ts';
 
 export function getFieldType(type: string, description: string, values?: string[], container?: string): Column {
     switch (type) {

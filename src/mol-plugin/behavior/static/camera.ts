@@ -5,8 +5,8 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { PluginContext } from '../../../mol-plugin/context';
-import { PluginCommands } from '../../commands';
+import { PluginContext } from '../../context.ts';
+import { PluginCommands } from '../../commands.ts';
 
 export function registerDefault(ctx: PluginContext) {
     Reset(ctx);

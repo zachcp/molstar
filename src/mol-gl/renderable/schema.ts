@@ -5,14 +5,14 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { ValueCell } from '../../mol-util';
-import { AttributeItemSize, ElementsKind, AttributeValues, AttributeKind, DataTypeArrayType } from '../webgl/buffer';
-import { UniformKind, UniformValues, UniformKindValue } from '../webgl/uniform';
-import { DefineKind, DefineValues } from '../shader-code';
-import { Mat4 } from '../../mol-math/linear-algebra';
-import { TextureValues, TextureType, TextureFormat, TextureFilter, TextureKind, TextureKindValue } from '../webgl/texture';
-import { Sphere3D } from '../../mol-math/geometry';
-import { InstanceGrid } from '../../mol-math/geometry/instance-grid';
+import { ValueCell } from '../../mol-util/index.ts';
+import { AttributeItemSize, ElementsKind, AttributeValues, AttributeKind, DataTypeArrayType } from '../webgl/buffer.ts';
+import { UniformKind, UniformValues, UniformKindValue } from '../webgl/uniform.ts';
+import { DefineKind, DefineValues } from '../shader-code.ts';
+import { Mat4 } from '../../mol-math/linear-algebra.ts';
+import { TextureValues, TextureType, TextureFormat, TextureFilter, TextureKind, TextureKindValue } from '../webgl/texture.ts';
+import { Sphere3D } from '../../mol-math/geometry.ts';
+import { InstanceGrid } from '../../mol-math/geometry/instance-grid.ts';
 
 export type ValueKindType = {
     'number': number

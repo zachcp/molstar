@@ -5,16 +5,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { MolScriptSymbolTable as MolScript } from '../../language/symbol-table';
-import { DefaultQueryRuntimeTable, QuerySymbolRuntime, QueryRuntimeArguments } from './base';
-import { Queries, StructureProperties, StructureElement, QueryContext, UnitRing, Unit } from '../../../mol-model/structure';
-import { ElementSymbol, BondType, SecondaryStructureType } from '../../../mol-model/structure/model/types';
-import { SetUtils } from '../../../mol-util/set';
-import { upperCaseAny } from '../../../mol-util/string';
-import { VdwRadius, AtomWeight, AtomNumber } from '../../../mol-model/structure/model/properties/atomic';
-import { cantorPairing, invertCantorPairing, sortedCantorPairing } from '../../../mol-data/util';
-import { bundleElementImpl, bundleGenerator } from '../../../mol-model/structure/query/queries/internal';
-import { arrayEqual } from '../../../mol-util/array';
+import { MolScriptSymbolTable as MolScript } from '../../language/symbol-table.ts';
+import { DefaultQueryRuntimeTable, QuerySymbolRuntime, QueryRuntimeArguments } from './base.ts';
+import { Queries, StructureProperties, StructureElement, QueryContext, UnitRing, Unit } from '../../../mol-model/structure.ts';
+import { ElementSymbol, BondType, SecondaryStructureType } from '../../../mol-model/structure/model/types.ts';
+import { SetUtils } from '../../../mol-util/set.ts';
+import { upperCaseAny } from '../../../mol-util/string.ts';
+import { VdwRadius, AtomWeight, AtomNumber } from '../../../mol-model/structure/model/properties/atomic.ts';
+import { cantorPairing, invertCantorPairing, sortedCantorPairing } from '../../../mol-data/util.ts';
+import { bundleElementImpl, bundleGenerator } from '../../../mol-model/structure/query/queries/internal.ts';
+import { arrayEqual } from '../../../mol-util/array.ts';
 
 const C = QuerySymbolRuntime.Const;
 const D = QuerySymbolRuntime.Dynamic;

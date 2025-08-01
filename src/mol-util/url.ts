@@ -7,7 +7,7 @@
 export function urlQueryParameter(id: string) {
     if (typeof window === 'undefined') return undefined;
     const a = new RegExp(`${id}=([^&#=]*)`);
-    const m = a.exec(window.location.search);
+    const m = a.exec(globalThis.location.search);
     return m ? decodeURIComponent(m[1]) : undefined;
 }
 

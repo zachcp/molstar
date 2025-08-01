@@ -7,12 +7,12 @@
 import { useContext, useEffect, useState } from 'react';
 import ReactMarkdown, { Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { PluginReactContext } from '../base';
-import { PluginUIContext } from '../context';
-import { PluginContext } from '../../mol-plugin/context';
-import { MarkdownExtension } from '../../mol-plugin-state/manager/markdown-extensions';
-import { ColorLists } from '../../mol-util/color/lists';
-import { getColorGradient, getColorGradientBanded, parseColorList } from '../../mol-util/color/utils';
+import { PluginReactContext } from '../base.tsx';
+import { PluginUIContext } from '../context.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { MarkdownExtension } from '../../mol-plugin-state/manager/markdown-extensions.ts';
+import { ColorLists } from '../../mol-util/color/lists.ts';
+import { getColorGradient, getColorGradientBanded, parseColorList } from '../../mol-util/color/utils.ts';
 
 export function Markdown({ children, components }: { children?: string, components?: Components }) {
     return <div className='msp-markdown'>

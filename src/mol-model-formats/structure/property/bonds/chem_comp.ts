@@ -5,13 +5,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Model } from '../../../../mol-model/structure/model/model';
-import { BondType } from '../../../../mol-model/structure/model/types';
-import { CustomPropertyDescriptor } from '../../../../mol-model/custom-property';
-import { mmCIF_Schema } from '../../../../mol-io/reader/cif/schema/mmcif';
-import { CifWriter } from '../../../../mol-io/writer/cif';
-import { Table } from '../../../../mol-data/db';
-import { FormatPropertyProvider } from '../../common/property';
+import { Model } from '../../../../mol-model/structure/model/model.ts';
+import { BondType } from '../../../../mol-model/structure/model/types.ts';
+import { CustomPropertyDescriptor } from '../../../../mol-model/custom-property.ts';
+import { mmCIF_Schema } from '../../../../mol-io/reader/cif/schema/mmcif.ts';
+import { CifWriter } from '../../../../mol-io/writer/cif.ts';
+import { Table } from '../../../../mol-data/db.ts';
+import { FormatPropertyProvider } from '../../common/property.ts';
 
 export interface ComponentBond {
     readonly data: Table<mmCIF_Schema['chem_comp_bond']>

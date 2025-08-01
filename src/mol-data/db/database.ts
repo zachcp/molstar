@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Table } from './table';
+import { Table } from './table.ts';
 
 /** A collection of tables */
 type Database<Schema extends Database.Schema> = {

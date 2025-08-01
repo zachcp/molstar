@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { NumberArray } from './type-helpers';
-import { ParamDefinition as PD } from './param-definition';
+import { NumberArray } from './type-helpers.ts';
+import { ParamDefinition as PD } from './param-definition.ts';
 
 export interface Material {
     /** Normalized to [0, 1] range */

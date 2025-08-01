@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PositionData } from '../common';
-import { OrderedSet } from '../../../mol-data/int';
-import { Sphere3D } from './sphere3d';
-import { Vec3 } from '../../linear-algebra/3d/vec3';
-import { Mat4 } from '../../linear-algebra/3d/mat4';
+import { PositionData } from '../common.ts';
+import { OrderedSet } from '../../../mol-data/int.ts';
+import { Sphere3D } from './sphere3d.ts';
+import { Vec3 } from '../../linear-algebra/3d/vec3.ts';
+import { Mat4 } from '../../linear-algebra/3d/mat4.ts';
 
 interface Box3D { min: Vec3, max: Vec3 }
 

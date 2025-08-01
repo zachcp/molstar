@@ -4,15 +4,15 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { CustomStructureProperty } from '../../../mol-model-props/common/custom-structure-property';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
-import { Loci } from '../../../mol-model/loci';
-import { Structure, StructureElement } from '../../../mol-model/structure';
-import { LociLabelProvider } from '../../../mol-plugin-state/manager/loci-label';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { filterDefined } from '../helpers/utils';
-import { ElementSet, Selector, SelectorParams } from './selector';
+import { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import { CustomStructureProperty } from '../../../mol-model-props/common/custom-structure-property.ts';
+import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
+import { Loci } from '../../../mol-model/loci.ts';
+import { Structure, StructureElement } from '../../../mol-model/structure.ts';
+import { LociLabelProvider } from '../../../mol-plugin-state/manager/loci-label.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { filterDefined } from '../helpers/utils.ts';
+import { ElementSet, Selector, SelectorParams } from './selector.ts';
 
 
 /** Parameter definition for custom structure property "CustomTooltips" */

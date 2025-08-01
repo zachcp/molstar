@@ -4,24 +4,24 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { NumberArray } from '../../../mol-util/type-helpers';
-import { VisualContext } from '../../visual';
-import { Unit, Structure } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { Segmentation } from '../../../mol-data/int';
-import { CylinderProps } from '../../../mol-geo/primitive/cylinder';
-import { isNucleic } from '../../../mol-model/structure/model/types';
-import { addCylinder } from '../../../mol-geo/geometry/mesh/builder/cylinder';
-import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual';
-import { NucleotideLocationIterator, getNucleotideElementLoci, eachNucleotideElement, getNucleotideBaseType, createNucleicIndices, setPurinIndices, setPyrimidineIndices, hasPyrimidineIndices, hasPurinIndices } from './util/nucleotide';
-import { VisualUpdateState } from '../../util';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
-import { Sphere3D } from '../../../mol-math/geometry';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { NumberArray } from '../../../mol-util/type-helpers.ts';
+import { VisualContext } from '../../visual.ts';
+import { Unit, Structure } from '../../../mol-model/structure.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Segmentation } from '../../../mol-data/int.ts';
+import { CylinderProps } from '../../../mol-geo/primitive/cylinder.ts';
+import { isNucleic } from '../../../mol-model/structure/model/types.ts';
+import { addCylinder } from '../../../mol-geo/geometry/mesh/builder/cylinder.ts';
+import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere.ts';
+import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
+import { NucleotideLocationIterator, getNucleotideElementLoci, eachNucleotideElement, getNucleotideBaseType, createNucleicIndices, setPurinIndices, setPyrimidineIndices, hasPyrimidineIndices, hasPurinIndices } from './util/nucleotide.ts';
+import { VisualUpdateState } from '../../util.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
 
 // TODO support rings for multiple locations (including from microheterogeneity)
 

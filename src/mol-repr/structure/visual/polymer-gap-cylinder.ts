@@ -5,21 +5,21 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { VisualContext } from '../../visual';
-import { Unit, Structure } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { CylinderProps } from '../../../mol-geo/primitive/cylinder';
-import { PolymerGapIterator, PolymerGapLocationIterator, getPolymerGapElementLoci, eachPolymerGapElement } from './util/polymer';
-import { addFixedCountDashedCylinder } from '../../../mol-geo/geometry/mesh/builder/cylinder';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual';
-import { VisualUpdateState } from '../../util';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { StructureGroup } from './util/common';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { VisualContext } from '../../visual.ts';
+import { Unit, Structure } from '../../../mol-model/structure.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { CylinderProps } from '../../../mol-geo/primitive/cylinder.ts';
+import { PolymerGapIterator, PolymerGapLocationIterator, getPolymerGapElementLoci, eachPolymerGapElement } from './util/polymer.ts';
+import { addFixedCountDashedCylinder } from '../../../mol-geo/geometry/mesh/builder/cylinder.ts';
+import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
+import { VisualUpdateState } from '../../util.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { StructureGroup } from './util/common.ts';
 // import { TriangularPyramid } from '../../../mol-geo/primitive/pyramid';
 
 const segmentCount = 10;

@@ -4,31 +4,31 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { hashFnv32a } from '../../../mol-data/util';
-import { LocationIterator, PositionLocation } from '../../../mol-geo/util/location-iterator';
-import { RenderableState } from '../../../mol-gl/renderable';
-import { DirectVolumeValues } from '../../../mol-gl/renderable/direct-volume';
-import { calculateTransformBoundingSphere } from '../../../mol-gl/renderable/util';
-import { createNullTexture, Texture } from '../../../mol-gl/webgl/texture';
-import { Box3D, Sphere3D } from '../../../mol-math/geometry';
-import { Mat4, Vec2, Vec3, Vec4 } from '../../../mol-math/linear-algebra';
-import { Theme } from '../../../mol-theme/theme';
-import { ValueCell } from '../../../mol-util';
-import { Color } from '../../../mol-util/color';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Box } from '../../primitive/box';
-import { BaseGeometry } from '../base';
-import { createColors } from '../color-data';
-import { GeometryUtils } from '../geometry';
-import { createMarkers } from '../marker-data';
-import { createEmptyOverpaint } from '../overpaint-data';
-import { TransformData } from '../transform-data';
-import { createEmptyTransparency } from '../transparency-data';
-import { createTransferFunctionTexture, getControlPointsFromVec2Array } from './transfer-function';
-import { createEmptyClipping } from '../clipping-data';
-import { Grid } from '../../../mol-model/volume';
-import { createEmptySubstance } from '../substance-data';
-import { createEmptyEmissive } from '../emissive-data';
+import { hashFnv32a } from '../../../mol-data/util.ts';
+import { LocationIterator, PositionLocation } from '../../util/location-iterator.ts';
+import { RenderableState } from '../../../mol-gl/renderable.ts';
+import { DirectVolumeValues } from '../../../mol-gl/renderable/direct-volume.ts';
+import { calculateTransformBoundingSphere } from '../../../mol-gl/renderable/util.ts';
+import { createNullTexture, Texture } from '../../../mol-gl/webgl/texture.ts';
+import { Box3D, Sphere3D } from '../../../mol-math/geometry.ts';
+import { Mat4, Vec2, Vec3, Vec4 } from '../../../mol-math/linear-algebra.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
+import { Color } from '../../../mol-util/color/index.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Box } from '../../primitive/box.ts';
+import { BaseGeometry } from '../base.ts';
+import { createColors } from '../color-data.ts';
+import { GeometryUtils } from '../geometry.ts';
+import { createMarkers } from '../marker-data.ts';
+import { createEmptyOverpaint } from '../overpaint-data.ts';
+import { TransformData } from '../transform-data.ts';
+import { createEmptyTransparency } from '../transparency-data.ts';
+import { createTransferFunctionTexture, getControlPointsFromVec2Array } from './transfer-function.ts';
+import { createEmptyClipping } from '../clipping-data.ts';
+import { Grid } from '../../../mol-model/volume.ts';
+import { createEmptySubstance } from '../substance-data.ts';
+import { createEmptyEmissive } from '../emissive-data.ts';
 
 const VolumeBox = Box();
 

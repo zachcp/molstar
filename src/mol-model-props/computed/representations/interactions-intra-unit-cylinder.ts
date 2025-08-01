@@ -5,28 +5,28 @@
  * @author Paul Pillot <paul.pillot@tandemai.com>
  */
 
-import { Unit, Structure, StructureElement } from '../../../mol-model/structure';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { Loci, EmptyLoci } from '../../../mol-model/loci';
-import { Interval, OrderedSet, SortedArray } from '../../../mol-data/int';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { PickingId } from '../../../mol-geo/geometry/picking';
-import { VisualContext } from '../../../mol-repr/visual';
-import { Theme } from '../../../mol-theme/theme';
-import { InteractionsProvider } from '../interactions';
-import { createLinkCylinderMesh, LinkCylinderParams, LinkStyle } from '../../../mol-repr/structure/visual/util/link';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../../../mol-repr/structure/units-visual';
-import { VisualUpdateState } from '../../../mol-repr/util';
-import { LocationIterator } from '../../../mol-geo/util/location-iterator';
-import { Interactions } from '../interactions/interactions';
-import { FeatureType, InteractionFlag } from '../interactions/common';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { StructureGroup, isHydrogen } from '../../../mol-repr/structure/visual/util/common';
-import { assertUnreachable } from '../../../mol-util/type-helpers';
-import { InteractionsSharedParams } from './shared';
-import { InteractionType } from '../interactions/common';
-import { eachIntraBondedAtom } from '../chemistry/util';
+import { Unit, Structure, StructureElement } from '../../../mol-model/structure.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { Loci, EmptyLoci } from '../../../mol-model/loci.ts';
+import { Interval, OrderedSet, SortedArray } from '../../../mol-data/int.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { PickingId } from '../../../mol-geo/geometry/picking.ts';
+import { VisualContext } from '../../../mol-repr/visual.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { InteractionsProvider } from '../interactions.ts';
+import { createLinkCylinderMesh, LinkCylinderParams, LinkStyle } from '../../../mol-repr/structure/visual/util/link.ts';
+import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../../../mol-repr/structure/units-visual.ts';
+import { VisualUpdateState } from '../../../mol-repr/util.ts';
+import { LocationIterator } from '../../../mol-geo/util/location-iterator.ts';
+import { Interactions } from '../interactions/interactions.ts';
+import { FeatureType, InteractionFlag } from '../interactions/common.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { StructureGroup, isHydrogen } from '../../../mol-repr/structure/visual/util/common.ts';
+import { assertUnreachable } from '../../../mol-util/type-helpers.ts';
+import { InteractionsSharedParams } from './shared.ts';
+import { InteractionType } from '../interactions/common.ts';
+import { eachIntraBondedAtom } from '../chemistry/util.ts';
 
 async function createIntraUnitInteractionsCylinderMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PD.Values<InteractionsIntraUnitParams>, mesh?: Mesh) {
     if (!Unit.isAtomic(unit)) return Mesh.createEmpty(mesh);

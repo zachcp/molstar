@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, RuntimeContext, chunkedSubtask } from '../../../mol-task';
-import { Tokenizer, TokenBuilder } from '../common/text/tokenizer';
-import { ReaderResult as Result } from '../result';
-import { TokenColumnProvider as TokenColumn } from '../common/text/column/token';
-import { Column } from '../../../mol-data/db';
-import { StringLike } from '../../common/string-like';
+import { Task, RuntimeContext, chunkedSubtask } from '../../../mol-task/index.ts';
+import { Tokenizer, TokenBuilder } from '../common/text/tokenizer.ts';
+import { ReaderResult as Result } from '../result.ts';
+import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.ts';
+import { Column } from '../../../mol-data/db.ts';
+import { StringLike } from '../../common/string-like.ts';
 
 
 // http://www.ks.uiuc.edu/Training/Tutorials/namd/namd-tutorial-unix-html/node23.html

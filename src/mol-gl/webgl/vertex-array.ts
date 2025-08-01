@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Program } from './program';
-import { ElementsBuffer, AttributeBuffers } from './buffer';
-import { WebGLExtensions } from './extensions';
-import { idFactory } from '../../mol-util/id-factory';
-import { GLRenderingContext } from './compat';
+import { Program } from './program.ts';
+import { ElementsBuffer, AttributeBuffers } from './buffer.ts';
+import { WebGLExtensions } from './extensions.ts';
+import { idFactory } from '../../mol-util/id-factory.ts';
+import { GLRenderingContext } from './compat.ts';
 
 const getNextVertexArrayId = idFactory();
 

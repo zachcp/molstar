@@ -7,8 +7,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as argparse from 'argparse';
-import { runMaster, PreprocessEntry } from './parallel';
-import { ModelPropertyProviderConfig } from '../property-provider';
+import { runMaster, PreprocessEntry } from './parallel.ts';
+import { ModelPropertyProviderConfig } from '../property-provider.ts';
+import process from "node:process";
 
 function description() {
     const exampleCfg = {

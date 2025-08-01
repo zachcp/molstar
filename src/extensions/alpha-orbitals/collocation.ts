@@ -6,11 +6,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { RuntimeContext } from '../../mol-task';
-import { arrayMin } from '../../mol-util/array';
-import { AlphaOrbital, CubeGridInfo } from './data-model';
-import { normalizeBasicOrder, SphericalFunctions } from './spherical-functions';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { RuntimeContext } from '../../mol-task/index.ts';
+import { arrayMin } from '../../mol-util/array.ts';
+import { AlphaOrbital, CubeGridInfo } from './data-model.ts';
+import { normalizeBasicOrder, SphericalFunctions } from './spherical-functions.ts';
 
 export async function sphericalCollocation(
     grid: CubeGridInfo,

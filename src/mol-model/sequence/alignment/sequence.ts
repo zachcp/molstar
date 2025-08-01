@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StructureElement, Unit } from '../../structure/structure';
-import { AlignmentOptions, align } from './alignment';
-import { OrderedSet } from '../../../mol-data/int';
+import { StructureElement, Unit } from '../../structure/structure.ts';
+import { AlignmentOptions, align } from './alignment.ts';
+import { OrderedSet } from '../../../mol-data/int.ts';
 
 export { AlignSequences };
 

@@ -6,7 +6,7 @@
  * @author molstar/ciftools package
  */
 
-import { Database, Column } from '../../../../mol-data/db';
+import { Database, Column } from '../../../../mol-data/db.ts';
 
 import Schema = Column.Schema;
 

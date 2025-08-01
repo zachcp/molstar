@@ -5,13 +5,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, RuntimeContext } from '../../../mol-task';
-import { Tensor } from '../../../mol-math/linear-algebra';
-import { Mesh } from '../../geometry/mesh/mesh';
-import { Index, EdgeIdInfo, CubeEdges, EdgeTable, TriTable } from './tables';
-import { defaults } from '../../../mol-util';
-import { MarchingCubesBuilder, MarchingCubesMeshBuilder, MarchingCubesLinesBuilder } from './builder';
-import { Lines } from '../../geometry/lines/lines';
+import { Task, RuntimeContext } from '../../../mol-task/index.ts';
+import { Tensor } from '../../../mol-math/linear-algebra.ts';
+import { Mesh } from '../../geometry/mesh/mesh.ts';
+import { Index, EdgeIdInfo, CubeEdges, EdgeTable, TriTable } from './tables.ts';
+import { defaults } from '../../../mol-util/index.ts';
+import { MarchingCubesBuilder, MarchingCubesMeshBuilder, MarchingCubesLinesBuilder } from './builder.ts';
+import { Lines } from '../../geometry/lines/lines.ts';
 
 /**
  * The parameters required by the algorithm.

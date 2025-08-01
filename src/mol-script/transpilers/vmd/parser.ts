@@ -8,16 +8,16 @@
  * Adapted from MolQL project
  */
 
-import * as P from '../../../mol-util/monadic-parser';
-import * as h from '../helper';
-import { MolScriptBuilder } from '../../../mol-script/language/builder';
+import * as P from '../../../mol-util/monadic-parser.ts';
+import * as h from '../helper.ts';
+import { MolScriptBuilder } from '../../language/builder.ts';
 const B = MolScriptBuilder;
-import { sstrucMap, sstrucDict, properties } from './properties';
-import { operators } from './operators';
-import { keywords } from './keywords';
-import { functions } from './functions';
-import { OperatorList } from '../types';
-import { Transpiler } from '../transpiler';
+import { sstrucMap, sstrucDict, properties } from './properties.ts';
+import { operators } from './operators.ts';
+import { keywords } from './keywords.ts';
+import { functions } from './functions.ts';
+import { OperatorList } from '../types.ts';
+import { Transpiler } from '../transpiler.ts';
 
 // <, <=, = or ==, >=, >, and !=
 // lt, le, eq, ge, gt, and ne, =~

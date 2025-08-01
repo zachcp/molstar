@@ -5,11 +5,11 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Interval, OrderedSet } from '../../mol-data/int';
-import { Loci, isEveryLoci } from '../../mol-model/loci';
-import { Structure, StructureElement, Unit } from '../../mol-model/structure';
-import { Color } from '../../mol-util/color';
-import { MarkerAction, applyMarkerAction } from '../../mol-util/marker-action';
+import { Interval, OrderedSet } from '../../mol-data/int.ts';
+import { Loci, isEveryLoci } from '../../mol-model/loci.ts';
+import { Structure, StructureElement, Unit } from '../../mol-model/structure.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { MarkerAction, applyMarkerAction } from '../../mol-util/marker-action.ts';
 
 export type StructureUnit = { structure: Structure, units: Unit[] }
 

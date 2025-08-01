@@ -5,30 +5,30 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { WebGLContext } from '../mol-gl/webgl/context';
-import { ColorTheme } from '../mol-theme/color';
-import { SizeTheme } from '../mol-theme/size';
-import { ThemeRegistryContext, Theme } from '../mol-theme/theme';
+import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import { WebGLContext } from '../mol-gl/webgl/context.ts';
+import { ColorTheme } from '../mol-theme/color.ts';
+import { SizeTheme } from '../mol-theme/size.ts';
+import { ThemeRegistryContext, Theme } from '../mol-theme/theme.ts';
 import { Subject } from 'rxjs';
-import { GraphicsRenderObject } from '../mol-gl/render-object';
-import { Task } from '../mol-task';
-import { PickingId } from '../mol-geo/geometry/picking';
-import { MarkerAction, MarkerActions } from '../mol-util/marker-action';
-import { Loci as ModelLoci, EmptyLoci, isEmptyLoci } from '../mol-model/loci';
-import { Overpaint } from '../mol-theme/overpaint';
-import { Transparency } from '../mol-theme/transparency';
-import { Mat4 } from '../mol-math/linear-algebra';
-import { LocationCallback, getQualityProps } from './util';
-import { BaseGeometry } from '../mol-geo/geometry/base';
-import { Visual } from './visual';
-import { CustomProperty } from '../mol-model-props/common/custom-property';
-import { Clipping } from '../mol-theme/clipping';
-import { SetUtils } from '../mol-util/set';
-import { cantorPairing } from '../mol-data/util';
-import { Substance } from '../mol-theme/substance';
-import { Emissive } from '../mol-theme/emissive';
-import { Location } from '../mol-model/location';
+import { GraphicsRenderObject } from '../mol-gl/render-object.ts';
+import { Task } from '../mol-task/index.ts';
+import { PickingId } from '../mol-geo/geometry/picking.ts';
+import { MarkerAction, MarkerActions } from '../mol-util/marker-action.ts';
+import { Loci as ModelLoci, EmptyLoci, isEmptyLoci } from '../mol-model/loci.ts';
+import { Overpaint } from '../mol-theme/overpaint.ts';
+import { Transparency } from '../mol-theme/transparency.ts';
+import { Mat4 } from '../mol-math/linear-algebra.ts';
+import { LocationCallback, getQualityProps } from './util.ts';
+import { BaseGeometry } from '../mol-geo/geometry/base.ts';
+import { Visual } from './visual.ts';
+import { CustomProperty } from '../mol-model-props/common/custom-property.ts';
+import { Clipping } from '../mol-theme/clipping.ts';
+import { SetUtils } from '../mol-util/set.ts';
+import { cantorPairing } from '../mol-data/util.ts';
+import { Substance } from '../mol-theme/substance.ts';
+import { Emissive } from '../mol-theme/emissive.ts';
+import { Location } from '../mol-model/location.ts';
 
 export type RepresentationProps = { [k: string]: any }
 

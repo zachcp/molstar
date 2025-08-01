@@ -4,11 +4,11 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property';
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
-import { Model, Structure } from '../../../mol-model/structure';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
+import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property.ts';
+import { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
+import { Model, Structure } from '../../../mol-model/structure.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 
 
 /** Parameter definition for custom model property "Is MVS" */

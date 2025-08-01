@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginBehavior } from '../../mol-plugin/behavior/behavior';
-import { PluginConfig } from '../../mol-plugin/config';
-import { Color } from '../../mol-util/color/color';
+import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import { Color } from '../../mol-util/color/color.ts';
 
 // from https://visualsonline.cancer.gov/details.cfm?imageid=2304, public domain
 import image_cells from './images/cells.jpg';

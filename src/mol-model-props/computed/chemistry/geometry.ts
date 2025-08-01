@@ -6,11 +6,11 @@
  * @author Paul Pillot <paul.pillot@tandemai.com>
  */
 
-import { degToRad } from '../../../mol-math/misc';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { Structure, Unit, StructureElement } from '../../../mol-model/structure';
-import { eachBondedAtom, typeSymbol } from './util';
-import { Elements } from '../../../mol-model/structure/model/properties/atomic/types';
+import { degToRad } from '../../../mol-math/misc.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { Structure, Unit, StructureElement } from '../../../mol-model/structure.ts';
+import { eachBondedAtom, typeSymbol } from './util.ts';
+import { Elements } from '../../../mol-model/structure/model/properties/atomic/types.ts';
 
 /**
  * Numbering mostly inline with coordination number from VSEPR,

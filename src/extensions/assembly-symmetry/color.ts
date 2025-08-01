@@ -4,17 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ThemeDataContext } from '../../mol-theme/theme';
-import { ColorTheme, LocationColor } from '../../mol-theme/color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { AssemblySymmetryProvider, AssemblySymmetryData } from './prop';
-import { Color } from '../../mol-util/color';
-import { Unit, StructureElement, StructureProperties, Bond } from '../../mol-model/structure';
-import { Location } from '../../mol-model/location';
-import { ScaleLegend, TableLegend } from '../../mol-util/legend';
-import { getPalette, getPaletteParams } from '../../mol-util/color/palette';
-import { CustomProperty } from '../../mol-model-props/common/custom-property';
-import { ColorThemeCategory } from '../../mol-theme/color/categories';
+import { ThemeDataContext } from '../../mol-theme/theme.ts';
+import { ColorTheme, LocationColor } from '../../mol-theme/color.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { AssemblySymmetryProvider, AssemblySymmetryData } from './prop.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { Unit, StructureElement, StructureProperties, Bond } from '../../mol-model/structure.ts';
+import { Location } from '../../mol-model/location.ts';
+import { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
+import { getPalette, getPaletteParams } from '../../mol-util/color/palette.ts';
+import { CustomProperty } from '../../mol-model-props/common/custom-property.ts';
+import { ColorThemeCategory } from '../../mol-theme/color/categories.ts';
 
 const DefaultColor = Color(0xCCCCCC);
 

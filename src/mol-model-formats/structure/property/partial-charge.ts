@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column } from '../../../mol-data/db';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
-import { FormatPropertyProvider } from '../common/property';
+import { Column } from '../../../mol-data/db.ts';
+import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
+import { FormatPropertyProvider } from '../common/property.ts';
 
 export { AtomPartialCharge };
 

@@ -6,17 +6,17 @@
  * @author Yakov Pechersky <ffxen158@gmail.com>
  */
 
-import { Model } from '../../../../mol-model/structure/model/model';
-import { Structure } from '../../../../mol-model/structure';
-import { BondType } from '../../../../mol-model/structure/model/types';
-import { Column, Table } from '../../../../mol-data/db';
-import { CustomPropertyDescriptor } from '../../../../mol-model/custom-property';
-import { mmCIF_Schema } from '../../../../mol-io/reader/cif/schema/mmcif';
-import { SortedArray } from '../../../../mol-data/int';
-import { CifWriter } from '../../../../mol-io/writer/cif';
-import { ElementIndex, ResidueIndex } from '../../../../mol-model/structure/model/indexing';
-import { getInterBondOrderFromTable } from '../../../../mol-model/structure/model/properties/atomic/bonds';
-import { FormatPropertyProvider } from '../../common/property';
+import { Model } from '../../../../mol-model/structure/model/model.ts';
+import { Structure } from '../../../../mol-model/structure.ts';
+import { BondType } from '../../../../mol-model/structure/model/types.ts';
+import { Column, Table } from '../../../../mol-data/db.ts';
+import { CustomPropertyDescriptor } from '../../../../mol-model/custom-property.ts';
+import { mmCIF_Schema } from '../../../../mol-io/reader/cif/schema/mmcif.ts';
+import { SortedArray } from '../../../../mol-data/int.ts';
+import { CifWriter } from '../../../../mol-io/writer/cif.ts';
+import { ElementIndex, ResidueIndex } from '../../../../mol-model/structure/model/indexing.ts';
+import { getInterBondOrderFromTable } from '../../../../mol-model/structure/model/properties/atomic/bonds.ts';
+import { FormatPropertyProvider } from '../../common/property.ts';
 
 export interface StructConn {
     readonly data: Table<mmCIF_Schema['struct_conn']>

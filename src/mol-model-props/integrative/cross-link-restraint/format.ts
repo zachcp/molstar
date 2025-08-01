@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Model } from '../../../mol-model/structure/model/model';
-import { Table } from '../../../mol-data/db';
-import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif';
-import { Unit } from '../../../mol-model/structure';
-import { ElementIndex } from '../../../mol-model/structure/model/indexing';
-import { FormatPropertyProvider } from '../../../mol-model-formats/structure/common/property';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
+import { Model } from '../../../mol-model/structure/model/model.ts';
+import { Table } from '../../../mol-data/db.ts';
+import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
+import { Unit } from '../../../mol-model/structure.ts';
+import { ElementIndex } from '../../../mol-model/structure/model/indexing.ts';
+import { FormatPropertyProvider } from '../../../mol-model-formats/structure/common/property.ts';
+import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
 
 export { ModelCrossLinkRestraint };
 

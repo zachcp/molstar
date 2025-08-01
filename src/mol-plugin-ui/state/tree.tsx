@@ -6,16 +6,16 @@
 
 import * as React from 'react';
 import { debounceTime, filter } from 'rxjs/operators';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { State, StateAction, StateObject, StateObjectCell, StateTransform } from '../../mol-state';
-import { StateTreeSpine } from '../../mol-state/tree/spine';
-import { PluginUIComponent, _Props, _State } from '../base';
-import { ActionMenu } from '../controls/action-menu';
-import { Button, ControlGroup, IconButton } from '../controls/common';
-import { Icon, HomeOutlinedSvg, ArrowRightSvg, ArrowDropDownSvg, DeleteOutlinedSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, CloseSvg } from '../controls/icons';
-import { ApplyActionControl } from './apply-action';
-import { UpdateTransformControl } from './update-transform';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { State, StateAction, StateObject, StateObjectCell, StateTransform } from '../../mol-state/index.ts';
+import { StateTreeSpine } from '../../mol-state/tree/spine.ts';
+import { PluginUIComponent, _Props, _State } from '../base.tsx';
+import { ActionMenu } from '../controls/action-menu.tsx';
+import { Button, ControlGroup, IconButton } from '../controls/common.tsx';
+import { Icon, HomeOutlinedSvg, ArrowRightSvg, ArrowDropDownSvg, DeleteOutlinedSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, CloseSvg } from '../controls/icons.tsx';
+import { ApplyActionControl } from './apply-action.tsx';
+import { UpdateTransformControl } from './update-transform.tsx';
 
 export class StateTree extends PluginUIComponent<{ state: State }, { showActions: boolean }> {
     state = { showActions: true };
@@ -321,7 +321,7 @@ class StateTreeNodeLabel extends PluginUIComponent<{ cell: StateObjectCell, dept
         if (this.state.action === 'apply' && this.state.currentAction) {
             return <div style={{ marginBottom: '1px' }}>
                 {row}
-                <ControlGroup header={`Apply ${this.state.currentAction.definition.display.name}`} initialExpanded={true} hideExpander={true} hideOffset={false} onHeaderClick={this.hideApply} topRightIcon={CloseSvg} headerLeftMargin={`${this.props.depth * 8 + 21}px`}>
+                <ControlGroup header={`Apply ${this.state.currentAction.definition.display.name}`} initialExpanded hideExpander hideOffset={false} onHeaderClick={this.hideApply} topRightIcon={CloseSvg} headerLeftMargin={`${this.props.depth * 8 + 21}px`}>
                     <ApplyActionControl onApply={this.hideApply} state={this.props.cell.parent!} action={this.state.currentAction} nodeRef={this.props.cell.transform.ref} hideHeader noMargin />
                 </ControlGroup>
             </div>;

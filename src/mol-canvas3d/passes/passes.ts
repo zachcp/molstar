@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { DrawPass } from './draw';
-import { PickPass } from './pick';
-import { MultiSamplePass } from './multi-sample';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { AssetManager } from '../../mol-util/assets';
-import { IlluminationPass } from './illumination';
+import { DrawPass } from './draw.ts';
+import { PickPass } from './pick.ts';
+import { MultiSamplePass } from './multi-sample.ts';
+import { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { AssetManager } from '../../mol-util/assets.ts';
+import { IlluminationPass } from './illumination.ts';
 
 export class Passes {
     readonly draw: DrawPass;

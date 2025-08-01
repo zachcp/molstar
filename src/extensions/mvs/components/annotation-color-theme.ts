@@ -4,18 +4,18 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { SortedArray } from '../../../mol-data/int';
-import { Location } from '../../../mol-model/location';
-import { Bond, StructureElement } from '../../../mol-model/structure';
-import type { ColorTheme, LocationColor } from '../../../mol-theme/color';
-import type { ThemeDataContext } from '../../../mol-theme/theme';
-import { Color } from '../../../mol-util/color';
-import { ColorNames } from '../../../mol-util/color/names';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { MaybeFloatParamDefinition } from '../helpers/param-definition';
-import { decodeColor } from '../helpers/utils';
-import { getMVSAnnotationForStructure, MVSAnnotation } from './annotation-prop';
-import { isMVSStructure } from './is-mvs-model-prop';
+import { SortedArray } from '../../../mol-data/int.ts';
+import { Location } from '../../../mol-model/location.ts';
+import { Bond, StructureElement } from '../../../mol-model/structure.ts';
+import type { ColorTheme, LocationColor } from '../../../mol-theme/color.ts';
+import type { ThemeDataContext } from '../../../mol-theme/theme.ts';
+import { Color } from '../../../mol-util/color/index.ts';
+import { ColorNames } from '../../../mol-util/color/names.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { MaybeFloatParamDefinition } from '../helpers/param-definition.ts';
+import { decodeColor } from '../helpers/utils.ts';
+import { getMVSAnnotationForStructure, MVSAnnotation } from './annotation-prop.ts';
+import { isMVSStructure } from './is-mvs-model-prop.ts';
 
 
 export const MVSCategoricalPaletteParams = {

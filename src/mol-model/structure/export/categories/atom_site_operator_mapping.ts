@@ -4,13 +4,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { SymmetryOperator } from '../../../../mol-math/geometry';
-import { CifExportContext } from '../mmcif';
-import { StructureElement, StructureProperties as P, CifExportCategoryInfo } from '../../structure';
-import { Unit } from '../../structure/unit';
-import { Segmentation } from '../../../../mol-data/int';
-import { CifWriter } from '../../../../mol-io/writer/cif';
-import { Column } from '../../../../mol-data/db';
+import { SymmetryOperator } from '../../../../mol-math/geometry.ts';
+import { CifExportContext } from '../mmcif.ts';
+import { StructureElement, StructureProperties as P, CifExportCategoryInfo } from '../../structure.ts';
+import { Unit } from '../../structure/unit.ts';
+import { Segmentation } from '../../../../mol-data/int.ts';
+import { CifWriter } from '../../../../mol-io/writer/cif.ts';
+import { Column } from '../../../../mol-data/db.ts';
 
 
 export function atom_site_operator_mapping(ctx: CifExportContext): CifExportCategoryInfo | undefined {

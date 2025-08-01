@@ -6,19 +6,19 @@
  */
 
 import { List } from 'immutable';
-import { UUID } from '../../mol-util';
-import { PluginState } from '../../mol-plugin/state';
-import { StatefulPluginComponent } from '../component';
-import { PluginContext } from '../../mol-plugin/context';
-import { utf8ByteCount, utf8Write } from '../../mol-io/common/utf8';
-import { Asset } from '../../mol-util/assets';
-import { Zip } from '../../mol-util/zip/zip';
-import { readFromFile } from '../../mol-util/data-source';
-import { objectForEach } from '../../mol-util/object';
-import { PLUGIN_VERSION } from '../../mol-plugin/version';
-import { canvasToBlob } from '../../mol-canvas3d/util';
-import { Task } from '../../mol-task';
-import { StringLike } from '../../mol-io/common/string-like';
+import { UUID } from '../../mol-util/index.ts';
+import { PluginState } from '../../mol-plugin/state.ts';
+import { StatefulPluginComponent } from '../component.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { utf8ByteCount, utf8Write } from '../../mol-io/common/utf8.ts';
+import { Asset } from '../../mol-util/assets.ts';
+import { Zip } from '../../mol-util/zip/zip.ts';
+import { readFromFile } from '../../mol-util/data-source.ts';
+import { objectForEach } from '../../mol-util/object.ts';
+import { PLUGIN_VERSION } from '../../mol-plugin/version.ts';
+import { canvasToBlob } from '../../mol-canvas3d/util.ts';
+import { Task } from '../../mol-task/index.ts';
+import { StringLike } from '../../mol-io/common/string-like.ts';
 
 export { PluginStateSnapshotManager };
 

@@ -5,22 +5,22 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Viewport } from '../../mol-canvas3d/camera/util';
-import { CameraHelperParams } from '../../mol-canvas3d/helper/camera-helper';
-import { IlluminationProps } from '../../mol-canvas3d/passes/illumination';
-import { ImagePass } from '../../mol-canvas3d/passes/image';
-import { PostprocessingProps } from '../../mol-canvas3d/passes/postprocessing';
-import { canvasToBlob } from '../../mol-canvas3d/util';
-import { equalEps } from '../../mol-math/linear-algebra/3d/common';
-import { PluginComponent } from '../../mol-plugin-state/component';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { StateSelection } from '../../mol-state';
-import { RuntimeContext, Task } from '../../mol-task';
-import { Color } from '../../mol-util/color';
-import { download } from '../../mol-util/download';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { SetUtils } from '../../mol-util/set';
-import { PluginContext } from '../context';
+import { Viewport } from '../../mol-canvas3d/camera/util.ts';
+import { CameraHelperParams } from '../../mol-canvas3d/helper/camera-helper.ts';
+import { IlluminationProps } from '../../mol-canvas3d/passes/illumination.ts';
+import { ImagePass } from '../../mol-canvas3d/passes/image.ts';
+import { PostprocessingProps } from '../../mol-canvas3d/passes/postprocessing.ts';
+import { canvasToBlob } from '../../mol-canvas3d/util.ts';
+import { equalEps } from '../../mol-math/linear-algebra/3d/common.ts';
+import { PluginComponent } from '../../mol-plugin-state/component.ts';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { StateSelection } from '../../mol-state/index.ts';
+import { RuntimeContext, Task } from '../../mol-task/index.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { download } from '../../mol-util/download.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { SetUtils } from '../../mol-util/set.ts';
+import { PluginContext } from '../context.ts';
 
 export namespace ViewportScreenshotHelper {
     export type ResolutionSettings = PD.Values<ReturnType<ViewportScreenshotHelper['createParams']>>['resolution']

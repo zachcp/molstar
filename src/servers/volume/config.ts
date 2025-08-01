@@ -7,9 +7,10 @@
  */
 
 import * as argparse from 'argparse';
-import { ObjectKeys } from '../../mol-util/type-helpers';
-import { VOLUME_SERVER_HEADER } from './server/version';
+import { ObjectKeys } from '../../mol-util/type-helpers.ts';
+import { VOLUME_SERVER_HEADER } from './server/version.ts';
 import * as fs from 'fs';
+import process from "node:process";
 
 const DefaultServerConfig = {
     apiPrefix: '/VolumeServer',

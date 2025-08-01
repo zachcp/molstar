@@ -6,26 +6,26 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { RenderTarget } from '../../mol-gl/webgl/render-target';
-import { Renderer } from '../../mol-gl/renderer';
-import { Scene } from '../../mol-gl/scene';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { Camera, ICamera } from '../camera';
-import { ValueCell } from '../../mol-util';
-import { Vec2 } from '../../mol-math/linear-algebra';
-import { Helper } from '../helper/helper';
+import { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
+import { Renderer } from '../../mol-gl/renderer.ts';
+import { Scene } from '../../mol-gl/scene.ts';
+import { Texture } from '../../mol-gl/webgl/texture.ts';
+import { Camera, ICamera } from '../camera.ts';
+import { ValueCell } from '../../mol-util/index.ts';
+import { Vec2 } from '../../mol-math/linear-algebra.ts';
+import { Helper } from '../helper/helper.ts';
 
-import { StereoCamera } from '../camera/stereo';
-import { WboitPass } from './wboit';
-import { DpoitPass } from './dpoit';
-import { AntialiasingPass, PostprocessingPass, PostprocessingProps } from './postprocessing';
-import { MarkingPass, MarkingProps } from './marking';
-import { CopyRenderable, createCopyRenderable } from '../../mol-gl/compute/util';
-import { isDebugMode, isTimingMode } from '../../mol-util/debug';
-import { AssetManager } from '../../mol-util/assets';
-import { DofPass } from './dof';
-import { BloomPass } from './bloom';
+import { StereoCamera } from '../camera/stereo.ts';
+import { WboitPass } from './wboit.ts';
+import { DpoitPass } from './dpoit.ts';
+import { AntialiasingPass, PostprocessingPass, PostprocessingProps } from './postprocessing.ts';
+import { MarkingPass, MarkingProps } from './marking.ts';
+import { CopyRenderable, createCopyRenderable } from '../../mol-gl/compute/util.ts';
+import { isDebugMode, isTimingMode } from '../../mol-util/debug.ts';
+import { AssetManager } from '../../mol-util/assets.ts';
+import { DofPass } from './dof.ts';
+import { BloomPass } from './bloom.ts';
 
 type Props = {
     postprocessing: PostprocessingProps;

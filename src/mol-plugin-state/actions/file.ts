@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginContext } from '../../mol-plugin/context';
-import { StateAction } from '../../mol-state';
-import { Task } from '../../mol-task';
-import { Asset } from '../../mol-util/assets';
-import { getFileNameInfo } from '../../mol-util/file-info';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { unzip } from '../../mol-util/zip/zip';
-import { PluginStateObject } from '../objects';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { StateAction } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
+import { Asset } from '../../mol-util/assets.ts';
+import { getFileNameInfo } from '../../mol-util/file-info.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { unzip } from '../../mol-util/zip/zip.ts';
+import { PluginStateObject } from '../objects.ts';
 
 async function processFile(file: Asset.File, plugin: PluginContext, format: string, visuals: boolean) {
     const info = getFileNameInfo(file.file?.name ?? '');

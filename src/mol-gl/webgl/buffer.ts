@@ -4,15 +4,15 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { WebGLContext } from './context';
-import { ValueCell } from '../../mol-util';
-import { RenderableSchema } from '../renderable/schema';
-import { idFactory } from '../../mol-util/id-factory';
-import { assertUnreachable, ValueOf } from '../../mol-util/type-helpers';
-import { GLRenderingContext, isWebGL2 } from './compat';
-import { WebGLExtensions } from './extensions';
-import { WebGLState } from './state';
-import { getBytesPerElement, getFormat, getType, TextureFormat, TextureType } from './texture';
+import { WebGLContext } from './context.ts';
+import { ValueCell } from '../../mol-util/index.ts';
+import { RenderableSchema } from '../renderable/schema.ts';
+import { idFactory } from '../../mol-util/id-factory.ts';
+import { assertUnreachable, ValueOf } from '../../mol-util/type-helpers.ts';
+import { GLRenderingContext, isWebGL2 } from './compat.ts';
+import { WebGLExtensions } from './extensions.ts';
+import { WebGLState } from './state.ts';
+import { getBytesPerElement, getFormat, getType, TextureFormat, TextureType } from './texture.ts';
 
 const getNextBufferId = idFactory();
 

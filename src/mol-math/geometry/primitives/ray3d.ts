@@ -5,10 +5,10 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { Mat4 } from '../../linear-algebra/3d/mat4';
-import { Vec3 } from '../../linear-algebra/3d/vec3';
-import { Box3D } from './box3d';
-import { Sphere3D } from './sphere3d';
+import { Mat4 } from '../../linear-algebra/3d/mat4.ts';
+import { Vec3 } from '../../linear-algebra/3d/vec3.ts';
+import { Box3D } from './box3d.ts';
+import { Sphere3D } from './sphere3d.ts';
 
 interface Ray3D { origin: Vec3, direction: Vec3 }
 

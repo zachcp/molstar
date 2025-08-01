@@ -4,17 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Volume } from '../../mol-model/volume';
-import { Task } from '../../mol-task';
-import { SpacegroupCell, Box3D } from '../../mol-math/geometry';
-import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra';
-import { Ccp4File, Ccp4Header } from '../../mol-io/reader/ccp4/schema';
-import { degToRad } from '../../mol-math/misc';
-import { getCcp4ValueType } from '../../mol-io/reader/ccp4/parser';
-import { TypedArrayValueType } from '../../mol-io/common/typed-array';
-import { arrayMin, arrayRms, arrayMean, arrayMax } from '../../mol-util/array';
-import { ModelFormat } from '../format';
-import { CustomProperties } from '../../mol-model/custom-property';
+import { Volume } from '../../mol-model/volume.ts';
+import { Task } from '../../mol-task/index.ts';
+import { SpacegroupCell, Box3D } from '../../mol-math/geometry.ts';
+import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { Ccp4File, Ccp4Header } from '../../mol-io/reader/ccp4/schema.ts';
+import { degToRad } from '../../mol-math/misc.ts';
+import { getCcp4ValueType } from '../../mol-io/reader/ccp4/parser.ts';
+import { TypedArrayValueType } from '../../mol-io/common/typed-array.ts';
+import { arrayMin, arrayRms, arrayMean, arrayMax } from '../../mol-util/array.ts';
+import { ModelFormat } from '../format.ts';
+import { CustomProperties } from '../../mol-model/custom-property.ts';
 
 /** When available (e.g. in MRC files) use ORIGIN records instead of N[CRS]START */
 export function getCcp4Origin(header: Ccp4Header): Vec3 {

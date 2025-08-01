@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { IntTuple as Tuple } from '../tuple';
+import { IntTuple as Tuple } from '../tuple.ts';
 
 export const Empty = Tuple.Zero;
 export function ofRange(min: number, max: number) { return max < min ? Tuple.create(min, min) : Tuple.create(min, max + 1); }

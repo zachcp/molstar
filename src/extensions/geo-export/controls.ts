@@ -4,18 +4,18 @@
  * @author Sukolsak Sakshuwong <sukolsak@stanford.edu>
  */
 
-import { Box3D } from '../../mol-math/geometry';
-import { PluginComponent } from '../../mol-plugin-state/component';
-import { PluginContext } from '../../mol-plugin/context';
-import { Task } from '../../mol-task';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { StateSelection } from '../../mol-state';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { SetUtils } from '../../mol-util/set';
-import { GlbExporter } from './glb-exporter';
-import { ObjExporter } from './obj-exporter';
-import { StlExporter } from './stl-exporter';
-import { UsdzExporter } from './usdz-exporter';
+import { Box3D } from '../../mol-math/geometry.ts';
+import { PluginComponent } from '../../mol-plugin-state/component.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { Task } from '../../mol-task/index.ts';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { StateSelection } from '../../mol-state/index.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { SetUtils } from '../../mol-util/set.ts';
+import { GlbExporter } from './glb-exporter.ts';
+import { ObjExporter } from './obj-exporter.ts';
+import { StlExporter } from './stl-exporter.ts';
+import { UsdzExporter } from './usdz-exporter.ts';
 
 export const GeometryParams = {
     format: PD.Select('glb', [

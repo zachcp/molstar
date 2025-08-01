@@ -5,20 +5,20 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { ErrorColor, NtCColors } from '../color';
-import { NtCTubeProvider } from './property';
-import { NtCTubeTypes as NTT } from './types';
-import { Dnatco } from '../property';
-import { Location } from '../../../mol-model/location';
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { ColorTheme } from '../../../mol-theme/color';
-import { ThemeDataContext } from '../../../mol-theme/theme';
-import { Color, ColorMap } from '../../../mol-util/color';
-import { getColorMapParams } from '../../../mol-util/color/params';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { TableLegend } from '../../../mol-util/legend';
-import { ObjectKeys } from '../../../mol-util/type-helpers';
-import { ColorThemeCategory } from '../../../mol-theme/color/categories';
+import { ErrorColor, NtCColors } from '../color.ts';
+import { NtCTubeProvider } from './property.ts';
+import { NtCTubeTypes as NTT } from './types.ts';
+import { Dnatco } from '../property.ts';
+import { Location } from '../../../mol-model/location.ts';
+import { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import { ColorTheme } from '../../../mol-theme/color.ts';
+import { ThemeDataContext } from '../../../mol-theme/theme.ts';
+import { Color, ColorMap } from '../../../mol-util/color/index.ts';
+import { getColorMapParams } from '../../../mol-util/color/params.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { TableLegend } from '../../../mol-util/legend.ts';
+import { ObjectKeys } from '../../../mol-util/type-helpers.ts';
+import { ColorThemeCategory } from '../../../mol-theme/color/categories.ts';
 
 const Description = 'Assigns colors to NtC Tube segments';
 

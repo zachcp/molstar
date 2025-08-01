@@ -4,16 +4,16 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Segmentation, SortedArray } from '../../../../mol-data/int';
-import { StructureElement } from '../../../../mol-model/structure/structure/element';
-import { StructureProperties as P, Unit } from '../../structure';
-import { Structure } from '../../structure/structure';
-import { StructureQuery } from '../query';
-import { StructureSelection } from '../selection';
-import { QueryContext } from '../context';
-import { BondType } from '../../model/types';
-import { BundleElement, Bundle } from '../../structure/element/bundle';
-import { UnitIndex } from '../../structure/element/element';
+import { Segmentation, SortedArray } from '../../../../mol-data/int.ts';
+import { StructureElement } from '../../structure/element.ts';
+import { StructureProperties as P, Unit } from '../../structure.ts';
+import { Structure } from '../../structure/structure.ts';
+import { StructureQuery } from '../query.ts';
+import { StructureSelection } from '../selection.ts';
+import { QueryContext } from '../context.ts';
+import { BondType } from '../../model/types.ts';
+import { BundleElement, Bundle } from '../../structure/element/bundle.ts';
+import { UnitIndex } from '../../structure/element/element.ts';
 
 export function defaultBondTest(ctx: QueryContext) {
     return BondType.isCovalent(ctx.atomicBond.type);

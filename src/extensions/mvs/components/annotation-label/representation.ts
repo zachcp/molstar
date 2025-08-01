@@ -4,13 +4,13 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Structure } from '../../../../mol-model/structure';
-import { Representation, RepresentationContext, RepresentationParamsGetter } from '../../../../mol-repr/representation';
-import { ComplexRepresentation, StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../../../../mol-repr/structure/representation';
-import { MarkerAction } from '../../../../mol-util/marker-action';
-import { ParamDefinition as PD } from '../../../../mol-util/param-definition';
-import { isMVSStructure } from '../is-mvs-model-prop';
-import { MVSAnnotationLabelTextParams, MVSAnnotationLabelTextVisual } from './visual';
+import { Structure } from '../../../../mol-model/structure.ts';
+import { Representation, RepresentationContext, RepresentationParamsGetter } from '../../../../mol-repr/representation.ts';
+import { ComplexRepresentation, StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../../../../mol-repr/structure/representation.ts';
+import { MarkerAction } from '../../../../mol-util/marker-action.ts';
+import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
+import { isMVSStructure } from '../is-mvs-model-prop.ts';
+import { MVSAnnotationLabelTextParams, MVSAnnotationLabelTextVisual } from './visual.ts';
 
 
 /** Components of "MVS Annotation Label" representation */

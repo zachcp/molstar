@@ -4,16 +4,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { AtomicRanges, AtomicIndex, AtomicHierarchy, AtomicDerivedData } from '../atomic/hierarchy';
-import { Segmentation, Interval } from '../../../../../mol-data/int';
-import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges';
-import { isPolymer, PolymerType } from '../../types';
-import { ElementIndex, ResidueIndex } from '../../indexing';
-import { getAtomIdForAtomRole } from '../../../util';
-import { AtomicConformation } from '../atomic/conformation';
-import { Vec3 } from '../../../../../mol-math/linear-algebra';
-import { Entities } from '../common';
-import { StructureSequence } from '../sequence';
+import { AtomicRanges, AtomicIndex, AtomicHierarchy, AtomicDerivedData } from '../atomic/hierarchy.ts';
+import { Segmentation, Interval } from '../../../../../mol-data/int.ts';
+import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges.ts';
+import { isPolymer, PolymerType } from '../../types.ts';
+import { ElementIndex, ResidueIndex } from '../../indexing.ts';
+import { getAtomIdForAtomRole } from '../../../util.ts';
+import { AtomicConformation } from '../atomic/conformation.ts';
+import { Vec3 } from '../../../../../mol-math/linear-algebra.ts';
+import { Entities } from '../common.ts';
+import { StructureSequence } from '../sequence.ts';
 
 function areBackboneConnected(riStart: ResidueIndex, riEnd: ResidueIndex, conformation: AtomicConformation, index: AtomicIndex, derived: AtomicDerivedData) {
     const { polymerType, traceElementIndex, directionFromElementIndex, directionToElementIndex } = derived.residue;

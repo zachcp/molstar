@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column, ColumnHelpers } from '../../../../../mol-data/db';
-import { trimStr, Tokens } from '../tokenizer';
-import { parseIntSkipLeadingWhitespace, parseFloatSkipLeadingWhitespace } from '../number-parser';
+import { Column, ColumnHelpers } from '../../../../../mol-data/db.ts';
+import { trimStr, Tokens } from '../tokenizer.ts';
+import { parseIntSkipLeadingWhitespace, parseFloatSkipLeadingWhitespace } from '../number-parser.ts';
 
 export function FixedColumnProvider(lines: Tokens) {
     return function<T extends Column.Schema>(offset: number, width: number, type: T) {

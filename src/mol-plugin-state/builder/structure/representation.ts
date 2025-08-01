@@ -4,19 +4,19 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { arrayFind } from '../../../mol-data/util';
-import { PluginContext } from '../../../mol-plugin/context';
-import { StateBuilder, StateObjectRef, StateObjectSelector, StateTransform } from '../../../mol-state';
-import { Task } from '../../../mol-task';
-import { isProductionMode } from '../../../mol-util/debug';
-import { objectForEach } from '../../../mol-util/object';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { createStructureRepresentationParams, StructureRepresentationBuiltInProps, StructureRepresentationProps } from '../../helpers/structure-representation-params';
-import { PluginStateObject } from '../../objects';
-import { StructureRepresentation3D } from '../../transforms/representation';
-import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from './representation-preset';
-import { arrayRemoveInPlace } from '../../../mol-util/array';
-import { PluginConfig } from '../../../mol-plugin/config';
+import { arrayFind } from '../../../mol-data/util.ts';
+import { PluginContext } from '../../../mol-plugin/context.ts';
+import { StateBuilder, StateObjectRef, StateObjectSelector, StateTransform } from '../../../mol-state/index.ts';
+import { Task } from '../../../mol-task/index.ts';
+import { isProductionMode } from '../../../mol-util/debug.ts';
+import { objectForEach } from '../../../mol-util/object.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { createStructureRepresentationParams, StructureRepresentationBuiltInProps, StructureRepresentationProps } from '../../helpers/structure-representation-params.ts';
+import { PluginStateObject } from '../../objects.ts';
+import { StructureRepresentation3D } from '../../transforms/representation.ts';
+import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from './representation-preset.ts';
+import { arrayRemoveInPlace } from '../../../mol-util/array.ts';
+import { PluginConfig } from '../../../mol-plugin/config.ts';
 
 // TODO factor out code shared with TrajectoryHierarchyBuilder?
 

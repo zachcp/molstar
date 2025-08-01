@@ -9,4 +9,4 @@ import './embedded.html';
 import './favicon.ico';
 import './index.html';
 import '../../mol-plugin-ui/skin/light.scss';
-export * from './app';
+export * from './app.ts';

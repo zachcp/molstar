@@ -4,20 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { RuntimeContext } from '../../../mol-task';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { ColorNames } from '../../../mol-util/color/names';
-import { ShapeRepresentation } from '../representation';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation';
-import { Shape } from '../../../mol-model/shape';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { structureElementLociLabelMany } from '../../../mol-theme/label';
-import { Mat4, Vec3 } from '../../../mol-math/linear-algebra';
-import { MarkerActions } from '../../../mol-util/marker-action';
-import { Plane } from '../../../mol-geo/primitive/plane';
-import { StructureElement } from '../../../mol-model/structure';
-import { Axes3D } from '../../../mol-math/geometry';
+import { RuntimeContext } from '../../../mol-task/index.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { ColorNames } from '../../../mol-util/color/names.ts';
+import { ShapeRepresentation } from '../representation.ts';
+import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation.ts';
+import { Shape } from '../../../mol-model/shape.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { structureElementLociLabelMany } from '../../../mol-theme/label.ts';
+import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { MarkerActions } from '../../../mol-util/marker-action.ts';
+import { Plane } from '../../../mol-geo/primitive/plane.ts';
+import { StructureElement } from '../../../mol-model/structure.ts';
+import { Axes3D } from '../../../mol-math/geometry.ts';
 
 export interface PlaneData {
     locis: StructureElement.Loci[]

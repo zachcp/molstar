@@ -5,16 +5,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure, StructureElement, StructureProperties, Unit } from '../../mol-model/structure';
-import { Task, RuntimeContext } from '../../mol-task';
-import { CentroidHelper } from '../../mol-math/geometry/centroid-helper';
-import { AccessibleSurfaceAreaParams } from '../../mol-model-props/computed/accessible-surface-area';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { getElementMoleculeType } from '../../mol-model/structure/util';
-import { MoleculeType } from '../../mol-model/structure/model/types';
-import { AccessibleSurfaceArea } from '../../mol-model-props/computed/accessible-surface-area/shrake-rupley';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { MembraneOrientation } from './prop';
+import { Structure, StructureElement, StructureProperties, Unit } from '../../mol-model/structure.ts';
+import { Task, RuntimeContext } from '../../mol-task/index.ts';
+import { CentroidHelper } from '../../mol-math/geometry/centroid-helper.ts';
+import { AccessibleSurfaceAreaParams } from '../../mol-model-props/computed/accessible-surface-area.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { getElementMoleculeType } from '../../mol-model/structure/util.ts';
+import { MoleculeType } from '../../mol-model/structure/model/types.ts';
+import { AccessibleSurfaceArea } from '../../mol-model-props/computed/accessible-surface-area/shrake-rupley.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { MembraneOrientation } from './prop.ts';
 
 const LARGE_CA_THRESHOLD = 5000;
 const DEFAULT_UPDATE_INTERVAL = 10;

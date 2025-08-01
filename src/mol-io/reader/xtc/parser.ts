@@ -7,8 +7,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { RuntimeContext, Task } from '../../../mol-task';
-import { ReaderResult as Result } from '../result';
+import { RuntimeContext, Task } from '../../../mol-task/index.ts';
+import { ReaderResult as Result } from '../result.ts';
 
 export interface XtcFile {
     frames: { count: number, x: Float32Array, y: Float32Array, z: Float32Array }[],

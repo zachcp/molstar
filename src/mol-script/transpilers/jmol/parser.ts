@@ -7,17 +7,17 @@
  * Adapted from MolQL project
  */
 
-import * as P from '../../../mol-util/monadic-parser';
-import * as h from '../helper';
-import { MolScriptBuilder } from '../../../mol-script/language/builder';
+import * as P from '../../../mol-util/monadic-parser.ts';
+import * as h from '../helper.ts';
+import { MolScriptBuilder } from '../../language/builder.ts';
 const B = MolScriptBuilder;
-import { properties, structureMap } from './properties';
-import { operators } from './operators';
-import { keywords } from './keywords';
-import { AtomGroupArgs } from '../types';
-import { Transpiler } from '../transpiler';
-import { OperatorList } from '../types';
-import { Expression } from '../../language/expression';
+import { properties, structureMap } from './properties.ts';
+import { operators } from './operators.ts';
+import { keywords } from './keywords.ts';
+import { AtomGroupArgs } from '../types.ts';
+import { Transpiler } from '../transpiler.ts';
+import { OperatorList } from '../types.ts';
+import { Expression } from '../../language/expression.ts';
 
 // <, <=, =, >=, >, !=, and LIKE
 const valueOperators: OperatorList = [

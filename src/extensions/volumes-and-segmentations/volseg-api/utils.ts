@@ -4,8 +4,8 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Color } from '../../../mol-util/color';
-import { Metadata, Segment } from './data';
+import { Color } from '../../../mol-util/color/index.ts';
+import { Metadata, Segment } from './data.ts';
 
 
 export class MetadataWrapper {

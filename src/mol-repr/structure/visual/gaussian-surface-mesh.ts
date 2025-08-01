@@ -4,31 +4,31 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { UnitsMeshParams, UnitsTextureMeshParams, UnitsVisual, UnitsMeshVisual, UnitsTextureMeshVisual } from '../units-visual';
-import { GaussianDensityParams, computeUnitGaussianDensity, computeUnitGaussianDensityTexture2d, GaussianDensityProps, computeStructureGaussianDensity, computeStructureGaussianDensityTexture2d } from './util/gaussian';
-import { VisualContext } from '../../visual';
-import { Unit, Structure } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { computeMarchingCubesMesh } from '../../../mol-geo/util/marching-cubes/algorithm';
-import { ElementIterator, getElementLoci, eachElement, getSerialElementLoci, eachSerialElement } from './util/element';
-import { VisualUpdateState } from '../../util';
-import { TextureMesh } from '../../../mol-geo/geometry/texture-mesh/texture-mesh';
-import { extractIsosurface } from '../../../mol-gl/compute/marching-cubes/isosurface';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { ComplexVisual, ComplexMeshParams, ComplexMeshVisual, ComplexTextureMeshVisual, ComplexTextureMeshParams } from '../complex-visual';
-import { getVolumeSliceInfo, StructureGroup } from './util/common';
-import { WebGLContext } from '../../../mol-gl/webgl/context';
-import { MeshValues } from '../../../mol-gl/renderable/mesh';
-import { TextureMeshValues } from '../../../mol-gl/renderable/texture-mesh';
-import { Texture } from '../../../mol-gl/webgl/texture';
-import { applyMeshColorSmoothing } from '../../../mol-geo/geometry/mesh/color-smoothing';
-import { applyTextureMeshColorSmoothing } from '../../../mol-geo/geometry/texture-mesh/color-smoothing';
-import { ColorSmoothingParams, getColorSmoothingProps } from '../../../mol-geo/geometry/base';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { isTimingMode } from '../../../mol-util/debug';
-import { ValueCell } from '../../../mol-util/value-cell';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { UnitsMeshParams, UnitsTextureMeshParams, UnitsVisual, UnitsMeshVisual, UnitsTextureMeshVisual } from '../units-visual.ts';
+import { GaussianDensityParams, computeUnitGaussianDensity, computeUnitGaussianDensityTexture2d, GaussianDensityProps, computeStructureGaussianDensity, computeStructureGaussianDensityTexture2d } from './util/gaussian.ts';
+import { VisualContext } from '../../visual.ts';
+import { Unit, Structure } from '../../../mol-model/structure.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { computeMarchingCubesMesh } from '../../../mol-geo/util/marching-cubes/algorithm.ts';
+import { ElementIterator, getElementLoci, eachElement, getSerialElementLoci, eachSerialElement } from './util/element.ts';
+import { VisualUpdateState } from '../../util.ts';
+import { TextureMesh } from '../../../mol-geo/geometry/texture-mesh/texture-mesh.ts';
+import { extractIsosurface } from '../../../mol-gl/compute/marching-cubes/isosurface.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { ComplexVisual, ComplexMeshParams, ComplexMeshVisual, ComplexTextureMeshVisual, ComplexTextureMeshParams } from '../complex-visual.ts';
+import { getVolumeSliceInfo, StructureGroup } from './util/common.ts';
+import { WebGLContext } from '../../../mol-gl/webgl/context.ts';
+import { MeshValues } from '../../../mol-gl/renderable/mesh.ts';
+import { TextureMeshValues } from '../../../mol-gl/renderable/texture-mesh.ts';
+import { Texture } from '../../../mol-gl/webgl/texture.ts';
+import { applyMeshColorSmoothing } from '../../../mol-geo/geometry/mesh/color-smoothing.ts';
+import { applyTextureMeshColorSmoothing } from '../../../mol-geo/geometry/texture-mesh/color-smoothing.ts';
+import { ColorSmoothingParams, getColorSmoothingProps } from '../../../mol-geo/geometry/base.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { isTimingMode } from '../../../mol-util/debug.ts';
+import { ValueCell } from '../../../mol-util/value-cell.ts';
 
 const SharedParams = {
     ...GaussianDensityParams,

@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { createPrimitive, Primitive } from './primitive';
-import { dodecahedronVertices, dodecahedronFaces } from './dodecahedron';
-import { Vec3 } from '../../mol-math/linear-algebra';
+import { createPrimitive, Primitive } from './primitive.ts';
+import { dodecahedronVertices, dodecahedronFaces } from './dodecahedron.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
 
 function calcCenter(out: Vec3, ...vec3s: Vec3[]) {
     Vec3.set(out, 0, 0, 0);

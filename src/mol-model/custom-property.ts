@@ -5,10 +5,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { CifWriter } from '../mol-io/writer/cif';
-import { CifExportContext } from './structure/export/mmcif';
-import { QuerySymbolRuntime } from '../mol-script/runtime/query/compiler';
-import { UUID } from '../mol-util';
+import { CifWriter } from '../mol-io/writer/cif.ts';
+import { CifExportContext } from './structure/export/mmcif.ts';
+import { QuerySymbolRuntime } from '../mol-script/runtime/query/compiler.ts';
+import { UUID } from '../mol-util/index.ts';
 
 export { CustomPropertyDescriptor, CustomProperties };
 

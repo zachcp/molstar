@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4, Mat3 } from '../../mol-math/linear-algebra';
-import { NumberArray } from '../../mol-util/type-helpers';
+import { Vec3, Mat4, Mat3 } from '../../mol-math/linear-algebra.ts';
+import { NumberArray } from '../../mol-util/type-helpers.ts';
 
 export interface Primitive {
     vertices: ArrayLike<number>

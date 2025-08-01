@@ -5,17 +5,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginContext } from '../../mol-plugin/context';
-import { StateAction, StateTransformer, StateSelection } from '../../mol-state';
-import { Task } from '../../mol-task';
-import { getFileNameInfo } from '../../mol-util/file-info';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { PluginStateObject } from '../objects';
-import { Download } from '../transforms/data';
-import { DataFormatProvider } from '../formats/provider';
-import { Asset } from '../../mol-util/assets';
-import { StateTransforms } from '../transforms';
-import { assertUnreachable } from '../../mol-util/type-helpers';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { StateAction, StateTransformer, StateSelection } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
+import { getFileNameInfo } from '../../mol-util/file-info.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { PluginStateObject } from '../objects.ts';
+import { Download } from '../transforms/data.ts';
+import { DataFormatProvider } from '../formats/provider.ts';
+import { Asset } from '../../mol-util/assets.ts';
+import { StateTransforms } from '../transforms.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
 
 export type EmdbDownloadProvider = 'pdbe' | 'rcsb'
 

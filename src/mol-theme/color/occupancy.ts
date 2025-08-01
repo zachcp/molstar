@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color, ColorScale } from '../../mol-util/color';
-import { StructureElement, Unit, Bond, ElementIndex } from '../../mol-model/structure';
-import { Location } from '../../mol-model/location';
-import type { ColorTheme } from '../color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../theme';
-import { ColorThemeCategory } from './categories';
+import { Color, ColorScale } from '../../mol-util/color/index.ts';
+import { StructureElement, Unit, Bond, ElementIndex } from '../../mol-model/structure.ts';
+import { Location } from '../../mol-model/location.ts';
+import type { ColorTheme } from '../color.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ThemeDataContext } from '../theme.ts';
+import { ColorThemeCategory } from './categories.ts';
 
 const DefaultOccupancyColor = Color(0xCCCCCC);
 const Description = `Assigns a color based on the occupancy of an atom.`;

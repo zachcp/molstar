@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { OrderedSet, SortedArray } from '../../../mol-data/int';
-import { Box3D, GridLookup3D, PositionData, Sphere3D } from '../../../mol-math/geometry';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { ElementIndex, Unit } from '../../../mol-model/structure';
+import { OrderedSet, SortedArray } from '../../../mol-data/int.ts';
+import { Box3D, GridLookup3D, PositionData, Sphere3D } from '../../../mol-math/geometry.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { ElementIndex, Unit } from '../../../mol-model/structure.ts';
 
 export function mergeUnits(units: readonly Unit[], id: number): Unit {
     const u = units[0];

@@ -4,21 +4,21 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ProgramProps, createProgram, Program } from './program';
-import { ShaderType, createShader, Shader, ShaderProps } from './shader';
-import { GLRenderingContext, isWebGL2 } from './compat';
-import { Framebuffer, createFramebuffer } from './framebuffer';
-import { WebGLExtensions } from './extensions';
-import { WebGLState } from './state';
-import { AttributeBuffer, UsageHint, ArrayType, AttributeItemSize, createAttributeBuffer, ElementsBuffer, createElementsBuffer, ElementsType, AttributeBuffers, PixelPackBuffer, createPixelPackBuffer } from './buffer';
-import { createReferenceCache, ReferenceItem } from '../../mol-util/reference-cache';
-import { WebGLStats } from './context';
-import { hashString, hashFnv32a } from '../../mol-data/util';
-import { DefineValues, ShaderCode } from '../shader-code';
-import { RenderableSchema } from '../renderable/schema';
-import { createRenderbuffer, Renderbuffer, RenderbufferAttachment, RenderbufferFormat } from './renderbuffer';
-import { Texture, TextureKind, TextureFormat, TextureType, TextureFilter, createTexture, CubeFaces, createCubeTexture } from './texture';
-import { VertexArray, createVertexArray } from './vertex-array';
+import { ProgramProps, createProgram, Program } from './program.ts';
+import { ShaderType, createShader, Shader, ShaderProps } from './shader.ts';
+import { GLRenderingContext, isWebGL2 } from './compat.ts';
+import { Framebuffer, createFramebuffer } from './framebuffer.ts';
+import { WebGLExtensions } from './extensions.ts';
+import { WebGLState } from './state.ts';
+import { AttributeBuffer, UsageHint, ArrayType, AttributeItemSize, createAttributeBuffer, ElementsBuffer, createElementsBuffer, ElementsType, AttributeBuffers, PixelPackBuffer, createPixelPackBuffer } from './buffer.ts';
+import { createReferenceCache, ReferenceItem } from '../../mol-util/reference-cache.ts';
+import { WebGLStats } from './context.ts';
+import { hashString, hashFnv32a } from '../../mol-data/util.ts';
+import { DefineValues, ShaderCode } from '../shader-code.ts';
+import { RenderableSchema } from '../renderable/schema.ts';
+import { createRenderbuffer, Renderbuffer, RenderbufferAttachment, RenderbufferFormat } from './renderbuffer.ts';
+import { Texture, TextureKind, TextureFormat, TextureType, TextureFilter, createTexture, CubeFaces, createCubeTexture } from './texture.ts';
+import { VertexArray, createVertexArray } from './vertex-array.ts';
 
 function defineValueHash(v: boolean | number | string): number {
     return typeof v === 'boolean' ? (v ? 1 : 0) :

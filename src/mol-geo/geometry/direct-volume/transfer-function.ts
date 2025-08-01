@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { TextureImage } from '../../../mol-gl/renderable/util';
-import { spline } from '../../../mol-math/interpolate';
-import { ValueCell } from '../../../mol-util';
-import { Vec2 } from '../../../mol-math/linear-algebra';
+import { TextureImage } from '../../../mol-gl/renderable/util.ts';
+import { spline } from '../../../mol-math/interpolate.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
+import { Vec2 } from '../../../mol-math/linear-algebra.ts';
 
 export interface ControlPoint { x: number, alpha: number }
 

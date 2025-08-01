@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { memoize1 } from '../../../mol-util/memoize';
+import { memoize1 } from '../../../mol-util/memoize.ts';
 
 const ChainIdAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 

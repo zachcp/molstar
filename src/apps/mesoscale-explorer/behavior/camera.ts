@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Loci } from '../../../mol-model/loci';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { PluginBehavior } from '../../../mol-plugin/behavior';
-import { ButtonsType, ModifiersKeys } from '../../../mol-util/input/input-observer';
-import { Binding } from '../../../mol-util/binding';
-import { PluginCommands } from '../../../mol-plugin/commands';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { StructureElement } from '../../../mol-model/structure';
+import { Loci } from '../../../mol-model/loci.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { PluginBehavior } from '../../../mol-plugin/behavior.ts';
+import { ButtonsType, ModifiersKeys } from '../../../mol-util/input/input-observer.ts';
+import { Binding } from '../../../mol-util/binding.ts';
+import { PluginCommands } from '../../../mol-plugin/commands.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { StructureElement } from '../../../mol-model/structure.ts';
 
 const B = ButtonsType;
 const M = ModifiersKeys;

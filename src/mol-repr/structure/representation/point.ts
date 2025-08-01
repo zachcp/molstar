@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ElementPointVisual, ElementPointParams, StructureElementPointVisual, StructureElementPointParams } from '../visual/element-point';
-import { UnitsRepresentation } from '../units-representation';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { ComplexRepresentation, StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../../mol-repr/representation';
-import { ThemeRegistryContext } from '../../../mol-theme/theme';
-import { Structure } from '../../../mol-model/structure';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
+import { ElementPointVisual, ElementPointParams, StructureElementPointVisual, StructureElementPointParams } from '../visual/element-point.ts';
+import { UnitsRepresentation } from '../units-representation.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { ComplexRepresentation, StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
+import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation.ts';
+import { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import { Structure } from '../../../mol-model/structure.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const PointVisuals = {
     'element-point': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, ElementPointParams>) => UnitsRepresentation('Element points', ctx, getParams, ElementPointVisual),

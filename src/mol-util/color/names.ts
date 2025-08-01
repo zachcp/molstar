@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ColorMap, Color } from './color';
+import { ColorMap, Color } from './color.ts';
 
 /** X11 color names http://www.w3.org/TR/css3-color/#svg-color */
 export const ColorNames = ColorMap({

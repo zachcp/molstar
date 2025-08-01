@@ -5,13 +5,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StructureSequence } from '../../../mol-model/structure/model/properties/sequence';
-import { Column } from '../../../mol-data/db';
-import { AtomicHierarchy } from '../../../mol-model/structure/model/properties/atomic';
-import { Entities } from '../../../mol-model/structure/model/properties/common';
-import { Sequence } from '../../../mol-model/sequence';
-import { CoarseHierarchy } from '../../../mol-model/structure/model/properties/coarse';
-import { BasicData } from './schema';
+import { StructureSequence } from '../../../mol-model/structure/model/properties/sequence.ts';
+import { Column } from '../../../mol-data/db.ts';
+import { AtomicHierarchy } from '../../../mol-model/structure/model/properties/atomic.ts';
+import { Entities } from '../../../mol-model/structure/model/properties/common.ts';
+import { Sequence } from '../../../mol-model/sequence.ts';
+import { CoarseHierarchy } from '../../../mol-model/structure/model/properties/coarse.ts';
+import { BasicData } from './schema.ts';
 
 export function getSequence(data: BasicData, entities: Entities, atomicHierarchy: AtomicHierarchy, coarseHierarchy: CoarseHierarchy): StructureSequence {
     if (!data.entity_poly_seq || !data.entity_poly_seq._rowCount) {

@@ -6,19 +6,19 @@
  * @author Ludovic Autin <ludovic.autin@gmail.com>
  */
 
-import { Column, Table } from '../../mol-data/db';
-import { Model } from '../../mol-model/structure/model';
-import { LammpsDataFile, lammpsUnitStyles, UnitStyle } from '../../mol-io/reader/lammps/schema';
-import { Trajectory, ArrayTrajectory } from '../../mol-model/structure';
-import { BondType, MoleculeType } from '../../mol-model/structure/model/types';
-import { RuntimeContext, Task } from '../../mol-task';
-import { ModelFormat } from '../format';
-import { createModels } from './basic/parser';
-import { BasicSchema, createBasic } from './basic/schema';
-import { ComponentBuilder } from './common/component';
-import { EntityBuilder } from './common/entity';
-import { IndexPairBonds } from './property/bonds/index-pair';
-import { AtomPartialCharge } from './property/partial-charge';
+import { Column, Table } from '../../mol-data/db.ts';
+import { Model } from '../../mol-model/structure/model.ts';
+import { LammpsDataFile, lammpsUnitStyles, UnitStyle } from '../../mol-io/reader/lammps/schema.ts';
+import { Trajectory, ArrayTrajectory } from '../../mol-model/structure.ts';
+import { BondType, MoleculeType } from '../../mol-model/structure/model/types.ts';
+import { RuntimeContext, Task } from '../../mol-task/index.ts';
+import { ModelFormat } from '../format.ts';
+import { createModels } from './basic/parser.ts';
+import { BasicSchema, createBasic } from './basic/schema.ts';
+import { ComponentBuilder } from './common/component.ts';
+import { EntityBuilder } from './common/entity.ts';
+import { IndexPairBonds } from './property/bonds/index-pair.ts';
+import { AtomPartialCharge } from './property/partial-charge.ts';
 
 async function getModels(mol: LammpsDataFile, ctx: RuntimeContext, unitsStyle: UnitStyle = 'real') {
     const { atoms, bonds } = mol;

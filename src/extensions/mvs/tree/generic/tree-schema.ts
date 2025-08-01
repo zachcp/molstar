@@ -4,11 +4,11 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { onelinerJsonString } from '../../../../mol-util/json';
-import { isPlainObject, mapObjectMap } from '../../../../mol-util/object';
-import { Field } from './field-schema';
-import { AllRequired, ParamsSchema, SimpleParamsSchema, ValuesFor, paramsValidationIssues } from './params-schema';
-import { treeToString } from './tree-utils';
+import { onelinerJsonString } from '../../../../mol-util/json.ts';
+import { isPlainObject, mapObjectMap } from '../../../../mol-util/object.ts';
+import { Field } from './field-schema.ts';
+import { AllRequired, ParamsSchema, SimpleParamsSchema, ValuesFor, paramsValidationIssues } from './params-schema.ts';
+import { treeToString } from './tree-utils.ts';
 
 
 /** Type of "custom" of a tree node (key-value storage with arbitrary JSONable values) */

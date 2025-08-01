@@ -6,16 +6,16 @@
  * @author Paul Pillot <paul.pillot@tandemai.com>
  */
 
-import { Unit, StructureElement } from '../../structure';
-import { Structure } from '../structure';
-import { BondType } from '../../model/types';
-import { SortedArray, Iterator, OrderedSet } from '../../../../mol-data/int';
-import { CentroidHelper } from '../../../../mol-math/geometry/centroid-helper';
-import { Sphere3D } from '../../../../mol-math/geometry';
+import { Unit, StructureElement } from '../../structure.ts';
+import { Structure } from '../structure.ts';
+import { BondType } from '../../model/types.ts';
+import { SortedArray, Iterator, OrderedSet } from '../../../../mol-data/int.ts';
+import { CentroidHelper } from '../../../../mol-math/geometry/centroid-helper.ts';
+import { Sphere3D } from '../../../../mol-math/geometry.ts';
 
-export * from './bonds/data';
-export * from './bonds/intra-compute';
-export * from './bonds/inter-compute';
+export * from './bonds/data.ts';
+export * from './bonds/intra-compute.ts';
+export * from './bonds/inter-compute.ts';
 
 namespace Bond {
     export interface Location<U extends Unit = Unit> {

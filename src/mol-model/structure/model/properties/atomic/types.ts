@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ElementSymbol } from '../../types';
-import { AtomNumber } from './measures';
+import { ElementSymbol } from '../../types.ts';
+import { AtomNumber } from './measures.ts';
 
 /**
  * Enum of element symbols

@@ -5,8 +5,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { UniqueArray } from '../../mol-data/generic';
-import { cantorPairing } from '../../mol-data/util';
+import { UniqueArray } from '../../mol-data/generic.ts';
+import { cantorPairing } from '../../mol-data/util.ts';
 
 export { InterUnitGraph };
 

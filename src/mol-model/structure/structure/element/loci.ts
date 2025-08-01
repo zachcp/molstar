@@ -6,28 +6,28 @@
  * @author Paul Pillot <paul.pillot@tandemai.com>
  */
 
-import { UniqueArray } from '../../../../mol-data/generic';
-import { OrderedSet, SortedArray, Interval } from '../../../../mol-data/int';
-import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra';
-import { MolScriptBuilder as MS } from '../../../../mol-script/language/builder';
-import { Structure } from '../structure';
-import { Unit } from '../unit';
-import { sortArray, hashFnv32a, hash2 } from '../../../../mol-data/util';
-import { Expression } from '../../../../mol-script/language/expression';
-import { ElementIndex, Model } from '../../model';
-import { UnitIndex } from './element';
-import { Location } from './location';
-import { ChainIndex } from '../../model/indexing';
-import { PrincipalAxes } from '../../../../mol-math/linear-algebra/matrix/principal-axes';
-import { NumberArray } from '../../../../mol-util/type-helpers';
-import { StructureProperties } from '../properties';
-import { BoundaryHelper } from '../../../../mol-math/geometry/boundary-helper';
-import { Boundary } from '../../../../mol-math/geometry/boundary';
-import { IntTuple } from '../../../../mol-data/int/tuple';
-import { Box3D, Sphere3D } from '../../../../mol-math/geometry';
-import { compile } from '../../../../mol-script/runtime/query/base';
-import { QueryContext, QueryFn, StructureSelection } from '../../query';
-import { Schema } from './schema';
+import { UniqueArray } from '../../../../mol-data/generic.ts';
+import { OrderedSet, SortedArray, Interval } from '../../../../mol-data/int.ts';
+import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { MolScriptBuilder as MS } from '../../../../mol-script/language/builder.ts';
+import { Structure } from '../structure.ts';
+import { Unit } from '../unit.ts';
+import { sortArray, hashFnv32a, hash2 } from '../../../../mol-data/util.ts';
+import { Expression } from '../../../../mol-script/language/expression.ts';
+import { ElementIndex, Model } from '../../model.ts';
+import { UnitIndex } from './element.ts';
+import { Location } from './location.ts';
+import { ChainIndex } from '../../model/indexing.ts';
+import { PrincipalAxes } from '../../../../mol-math/linear-algebra/matrix/principal-axes.ts';
+import { NumberArray } from '../../../../mol-util/type-helpers.ts';
+import { StructureProperties } from '../properties.ts';
+import { BoundaryHelper } from '../../../../mol-math/geometry/boundary-helper.ts';
+import { Boundary } from '../../../../mol-math/geometry/boundary.ts';
+import { IntTuple } from '../../../../mol-data/int/tuple.ts';
+import { Box3D, Sphere3D } from '../../../../mol-math/geometry.ts';
+import { compile } from '../../../../mol-script/runtime/query/base.ts';
+import { QueryContext, QueryFn, StructureSelection } from '../../query.ts';
+import { Schema } from './schema.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const itDiff = IntTuple.diff;

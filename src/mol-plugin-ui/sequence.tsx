@@ -7,23 +7,23 @@
  */
 
 import * as React from 'react';
-import { PluginUIComponent } from './base';
-import { PluginStateObject as PSO } from '../mol-plugin-state/objects';
-import { Sequence } from './sequence/sequence';
-import { Structure, StructureElement, StructureProperties as SP, Unit } from '../mol-model/structure';
-import { SequenceWrapper } from './sequence/wrapper';
-import { PolymerSequenceWrapper } from './sequence/polymer';
-import { MarkerAction } from '../mol-util/marker-action';
-import { PureSelectControl } from './controls/parameters';
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { HeteroSequenceWrapper } from './sequence/hetero';
-import { State, StateSelection } from '../mol-state';
-import { ChainSequenceWrapper } from './sequence/chain';
-import { ElementSequenceWrapper } from './sequence/element';
-import { elementLabel } from '../mol-theme/label';
-import { Icon, HelpOutlineSvg } from './controls/icons';
-import { StructureSelectionManager } from '../mol-plugin-state/manager/structure/selection';
-import { arrayEqual } from '../mol-util/array';
+import { PluginUIComponent } from './base.tsx';
+import { PluginStateObject as PSO } from '../mol-plugin-state/objects.ts';
+import { Sequence } from './sequence/sequence.tsx';
+import { Structure, StructureElement, StructureProperties as SP, Unit } from '../mol-model/structure.ts';
+import { SequenceWrapper } from './sequence/wrapper.ts';
+import { PolymerSequenceWrapper } from './sequence/polymer.ts';
+import { MarkerAction } from '../mol-util/marker-action.ts';
+import { PureSelectControl } from './controls/parameters.tsx';
+import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import { HeteroSequenceWrapper } from './sequence/hetero.ts';
+import { State, StateSelection } from '../mol-state/index.ts';
+import { ChainSequenceWrapper } from './sequence/chain.ts';
+import { ElementSequenceWrapper } from './sequence/element.ts';
+import { elementLabel } from '../mol-theme/label.ts';
+import { Icon, HelpOutlineSvg } from './controls/icons.tsx';
+import { StructureSelectionManager } from '../mol-plugin-state/manager/structure/selection.ts';
+import { arrayEqual } from '../mol-util/array.ts';
 
 const MaxDisplaySequenceLength = 5000;
 // TODO: add virtualized Select controls (at best with a search box)?

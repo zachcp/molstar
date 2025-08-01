@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ElementSphereVisual, ElementSphereParams, StructureElementSphereVisual } from '../visual/element-sphere';
-import { UnitsRepresentation } from '../units-representation';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { ComplexRepresentation, StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation';
-import { RepresentationParamsGetter, RepresentationContext, Representation } from '../../../mol-repr/representation';
-import { ThemeRegistryContext } from '../../../mol-theme/theme';
-import { Structure } from '../../../mol-model/structure';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
+import { ElementSphereVisual, ElementSphereParams, StructureElementSphereVisual } from '../visual/element-sphere.ts';
+import { UnitsRepresentation } from '../units-representation.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { ComplexRepresentation, StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
+import { RepresentationParamsGetter, RepresentationContext, Representation } from '../../representation.ts';
+import { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import { Structure } from '../../../mol-model/structure.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const SpacefillVisuals = {
     'element-sphere': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, ElementSphereParams>) => UnitsRepresentation('Sphere mesh/impostor', ctx, getParams, ElementSphereVisual),

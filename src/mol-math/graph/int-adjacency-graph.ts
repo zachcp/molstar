@@ -5,9 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { arrayPickIndices, cantorPairing } from '../../mol-data/util';
-import { LinkedIndex, SortedArray } from '../../mol-data/int';
-import { AssignableArrayLike } from '../../mol-util/type-helpers';
+import { arrayPickIndices, cantorPairing } from '../../mol-data/util.ts';
+import { LinkedIndex, SortedArray } from '../../mol-data/int.ts';
+import { AssignableArrayLike } from '../../mol-util/type-helpers.ts';
 
 /**
  * Represent a graph using vertex adjacency list.

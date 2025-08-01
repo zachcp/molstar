@@ -5,24 +5,24 @@
  */
 
 import './index.html';
-import { resizeCanvas } from '../../mol-canvas3d/util';
-import { Representation } from '../../mol-repr/representation';
-import { Canvas3D, Canvas3DContext } from '../../mol-canvas3d/canvas3d';
-import { lociLabel } from '../../mol-theme/label';
-import { MarkerAction } from '../../mol-util/marker-action';
-import { EveryLoci } from '../../mol-model/loci';
-import { RuntimeContext, Progress } from '../../mol-task';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder';
-import { Mat4, Vec2, Vec3 } from '../../mol-math/linear-algebra';
-import { Sphere } from '../../mol-geo/primitive/sphere';
-import { ColorNames } from '../../mol-util/color/names';
-import { Shape } from '../../mol-model/shape';
-import { ShapeRepresentation } from '../../mol-repr/shape/representation';
-import { AssetManager } from '../../mol-util/assets';
-import { Spheres } from '../../mol-geo/geometry/spheres/spheres';
-import { SpheresBuilder } from '../../mol-geo/geometry/spheres/spheres-builder';
-import { ParamDefinition } from '../../mol-util/param-definition';
+import { resizeCanvas } from '../../mol-canvas3d/util.ts';
+import { Representation } from '../../mol-repr/representation.ts';
+import { Canvas3D, Canvas3DContext } from '../../mol-canvas3d/canvas3d.ts';
+import { lociLabel } from '../../mol-theme/label.ts';
+import { MarkerAction } from '../../mol-util/marker-action.ts';
+import { EveryLoci } from '../../mol-model/loci.ts';
+import { RuntimeContext, Progress } from '../../mol-task/index.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Mat4, Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { Sphere } from '../../mol-geo/primitive/sphere.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { Shape } from '../../mol-model/shape.ts';
+import { ShapeRepresentation } from '../../mol-repr/shape/representation.ts';
+import { AssetManager } from '../../mol-util/assets.ts';
+import { Spheres } from '../../mol-geo/geometry/spheres/spheres.ts';
+import { SpheresBuilder } from '../../mol-geo/geometry/spheres/spheres-builder.ts';
+import { ParamDefinition } from '../../mol-util/param-definition.ts';
 
 const parent = document.getElementById('app')!;
 parent.style.width = '100%';

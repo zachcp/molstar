@@ -5,9 +5,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ArrayEncoder, ArrayEncoding as E } from './array-encoder';
-import { getArrayDigitCount } from '../../../mol-util/number';
-import { assertUnreachable } from '../../../mol-util/type-helpers';
+import { ArrayEncoder, ArrayEncoding as E } from './array-encoder.ts';
+import { getArrayDigitCount } from '../../../mol-util/number.ts';
+import { assertUnreachable } from '../../../mol-util/type-helpers.ts';
 
 export function classifyIntArray(xs: ArrayLike<number>) {
     return IntClassifier.classify(xs as number[]);

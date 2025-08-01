@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Model } from '../../mol-model/structure';
-import { CustomPropertyDescriptor } from '../../mol-model/custom-property';
-import { CustomModelProperty } from '../common/custom-model-property';
-import { calcHelixOrientation, HelixOrientation } from './helix-orientation/helix-orientation';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Model } from '../../mol-model/structure.ts';
+import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
+import { CustomModelProperty } from '../common/custom-model-property.ts';
+import { calcHelixOrientation, HelixOrientation } from './helix-orientation/helix-orientation.ts';
 
 export const HelixOrientationParams = { };
 export type HelixOrientationParams = typeof HelixOrientationParams

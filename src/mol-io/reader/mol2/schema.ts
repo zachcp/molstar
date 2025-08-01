@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column } from '../../../mol-data/db';
+import { Column } from '../../../mol-data/db.ts';
 
 // Full format https://zhanggroup.org/DockRMSD/mol2.pdf
 // there are many records but for now ignore (pass over) all but the following

@@ -5,20 +5,20 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { StructureRepresentationPresetProvider, PresetStructureRepresentations } from '../../mol-plugin-state/builder/structure/representation-preset';
-import { MembraneOrientationProvider, MembraneOrientation } from './prop';
-import { StateObjectRef, StateTransformer, StateTransform } from '../../mol-state';
-import { Task } from '../../mol-task';
-import { PluginBehavior } from '../../mol-plugin/behavior';
-import { MembraneOrientationRepresentationProvider, MembraneOrientationParams, MembraneOrientationRepresentation } from './representation';
-import { HydrophobicityColorThemeProvider } from '../../mol-theme/color/hydrophobicity';
-import { PluginStateObject, PluginStateTransform } from '../../mol-plugin-state/objects';
-import { PluginContext } from '../../mol-plugin/context';
-import { DefaultQueryRuntimeTable } from '../../mol-script/runtime/query/compiler';
-import { StructureSelectionQuery, StructureSelectionCategory } from '../../mol-plugin-state/helpers/structure-selection-query';
-import { MolScriptBuilder as MS } from '../../mol-script/language/builder';
-import { GenericRepresentationRef } from '../../mol-plugin-state/manager/structure/hierarchy-state';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { StructureRepresentationPresetProvider, PresetStructureRepresentations } from '../../mol-plugin-state/builder/structure/representation-preset.ts';
+import { MembraneOrientationProvider, MembraneOrientation } from './prop.ts';
+import { StateObjectRef, StateTransformer, StateTransform } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
+import { PluginBehavior } from '../../mol-plugin/behavior.ts';
+import { MembraneOrientationRepresentationProvider, MembraneOrientationParams, MembraneOrientationRepresentation } from './representation.ts';
+import { HydrophobicityColorThemeProvider } from '../../mol-theme/color/hydrophobicity.ts';
+import { PluginStateObject, PluginStateTransform } from '../../mol-plugin-state/objects.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { DefaultQueryRuntimeTable } from '../../mol-script/runtime/query/compiler.ts';
+import { StructureSelectionQuery, StructureSelectionCategory } from '../../mol-plugin-state/helpers/structure-selection-query.ts';
+import { MolScriptBuilder as MS } from '../../mol-script/language/builder.ts';
+import { GenericRepresentationRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
 
 const Tag = MembraneOrientation.Tag;
 

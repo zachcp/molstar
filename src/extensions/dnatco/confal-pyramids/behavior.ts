@@ -5,14 +5,14 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { ConfalPyramidsColorThemeProvider } from './color';
-import { ConfalPyramidsProvider } from './property';
-import { ConfalPyramidsRepresentationProvider } from './representation';
-import { Dnatco } from '../property';
-import { DnatcoTypes } from '../types';
-import { StructureRepresentationPresetProvider, PresetStructureRepresentations } from '../../../mol-plugin-state/builder/structure/representation-preset';
-import { StateObjectRef } from '../../../mol-state';
-import { Task } from '../../../mol-task';
+import { ConfalPyramidsColorThemeProvider } from './color.ts';
+import { ConfalPyramidsProvider } from './property.ts';
+import { ConfalPyramidsRepresentationProvider } from './representation.ts';
+import { Dnatco } from '../property.ts';
+import { DnatcoTypes } from '../types.ts';
+import { StructureRepresentationPresetProvider, PresetStructureRepresentations } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
+import { StateObjectRef } from '../../../mol-state/index.ts';
+import { Task } from '../../../mol-task/index.ts';
 
 export const ConfalPyramidsPreset = StructureRepresentationPresetProvider({
     id: 'preset-structure-representation-confal-pyramids',

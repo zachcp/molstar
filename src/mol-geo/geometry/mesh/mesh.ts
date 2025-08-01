@@ -5,30 +5,30 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ValueCell } from '../../../mol-util';
-import { Vec3, Mat4, Mat3, Vec4 } from '../../../mol-math/linear-algebra';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { transformPositionArray, transformDirectionArray, computeIndexedVertexNormals, GroupMapping, createGroupMapping } from '../../util';
-import { GeometryUtils } from '../geometry';
-import { createMarkers } from '../marker-data';
-import { TransformData } from '../transform-data';
-import { LocationIterator, PositionLocation } from '../../util/location-iterator';
-import { createColors } from '../color-data';
-import { ChunkedArray, hashFnv32a, invertCantorPairing, sortedCantorPairing } from '../../../mol-data/util';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { calculateInvariantBoundingSphere, calculateTransformBoundingSphere } from '../../../mol-gl/renderable/util';
-import { Theme } from '../../../mol-theme/theme';
-import { MeshValues } from '../../../mol-gl/renderable/mesh';
-import { Color } from '../../../mol-util/color';
-import { BaseGeometry } from '../base';
-import { createEmptyOverpaint } from '../overpaint-data';
-import { createEmptyTransparency } from '../transparency-data';
-import { createEmptyClipping } from '../clipping-data';
-import { RenderableState } from '../../../mol-gl/renderable';
-import { arraySetAdd } from '../../../mol-util/array';
-import { degToRad } from '../../../mol-math/misc';
-import { createEmptySubstance } from '../substance-data';
-import { createEmptyEmissive } from '../emissive-data';
+import { ValueCell } from '../../../mol-util/index.ts';
+import { Vec3, Mat4, Mat3, Vec4 } from '../../../mol-math/linear-algebra.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { transformPositionArray, transformDirectionArray, computeIndexedVertexNormals, GroupMapping, createGroupMapping } from '../../util.ts';
+import { GeometryUtils } from '../geometry.ts';
+import { createMarkers } from '../marker-data.ts';
+import { TransformData } from '../transform-data.ts';
+import { LocationIterator, PositionLocation } from '../../util/location-iterator.ts';
+import { createColors } from '../color-data.ts';
+import { ChunkedArray, hashFnv32a, invertCantorPairing, sortedCantorPairing } from '../../../mol-data/util.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { calculateInvariantBoundingSphere, calculateTransformBoundingSphere } from '../../../mol-gl/renderable/util.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { MeshValues } from '../../../mol-gl/renderable/mesh.ts';
+import { Color } from '../../../mol-util/color/index.ts';
+import { BaseGeometry } from '../base.ts';
+import { createEmptyOverpaint } from '../overpaint-data.ts';
+import { createEmptyTransparency } from '../transparency-data.ts';
+import { createEmptyClipping } from '../clipping-data.ts';
+import { RenderableState } from '../../../mol-gl/renderable.ts';
+import { arraySetAdd } from '../../../mol-util/array.ts';
+import { degToRad } from '../../../mol-math/misc.ts';
+import { createEmptySubstance } from '../substance-data.ts';
+import { createEmptyEmissive } from '../emissive-data.ts';
 
 export interface Mesh {
     readonly kind: 'mesh',

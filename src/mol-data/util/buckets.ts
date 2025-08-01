@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { sort, arraySwap } from './sort';
-import { AssignableArrayLike } from '../../mol-util/type-helpers';
+import { sort, arraySwap } from './sort.ts';
+import { AssignableArrayLike } from '../../mol-util/type-helpers.ts';
 
 type Bucket = {
     key: any,

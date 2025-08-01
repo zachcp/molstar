@@ -4,26 +4,26 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mesh } from './mesh/mesh';
-import { Points } from './points/points';
-import { Text } from './text/text';
-import { RenderableState } from '../../mol-gl/renderable';
-import { LocationIterator } from '../util/location-iterator';
-import { ColorType } from './color-data';
-import { SizeType } from './size-data';
-import { Lines } from './lines/lines';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { DirectVolume } from './direct-volume/direct-volume';
-import { Color } from '../../mol-util/color';
-import { Spheres } from './spheres/spheres';
-import { arrayMax } from '../../mol-util/array';
-import { TransformData } from './transform-data';
-import { Theme } from '../../mol-theme/theme';
-import { RenderObjectValues } from '../../mol-gl/render-object';
-import { TextureMesh } from './texture-mesh/texture-mesh';
-import { Image } from './image/image';
-import { Cylinders } from './cylinders/cylinders';
-import { arrayMaxPackedIntToRGB } from '../../mol-util/number-packing';
+import { Mesh } from './mesh/mesh.ts';
+import { Points } from './points/points.ts';
+import { Text } from './text/text.ts';
+import { RenderableState } from '../../mol-gl/renderable.ts';
+import { LocationIterator } from '../util/location-iterator.ts';
+import { ColorType } from './color-data.ts';
+import { SizeType } from './size-data.ts';
+import { Lines } from './lines/lines.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { DirectVolume } from './direct-volume/direct-volume.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { Spheres } from './spheres/spheres.ts';
+import { arrayMax } from '../../mol-util/array.ts';
+import { TransformData } from './transform-data.ts';
+import { Theme } from '../../mol-theme/theme.ts';
+import { RenderObjectValues } from '../../mol-gl/render-object.ts';
+import { TextureMesh } from './texture-mesh/texture-mesh.ts';
+import { Image } from './image/image.ts';
+import { Cylinders } from './cylinders/cylinders.ts';
+import { arrayMaxPackedIntToRGB } from '../../mol-util/number-packing.ts';
 
 export type GeometryKind = 'mesh' | 'points' | 'spheres' | 'cylinders' | 'text' | 'lines' | 'direct-volume' | 'image' | 'texture-mesh'
 

@@ -6,15 +6,15 @@
 
 /** Set canvas size taking `devicePixelRatio` into account */
 export function setCanvasSize(canvas: HTMLCanvasElement, width: number, height: number, scale = 1) {
-    canvas.width = Math.round(window.devicePixelRatio * scale * width);
-    canvas.height = Math.round(window.devicePixelRatio * scale * height);
+    canvas.width = Math.round(globalThis.devicePixelRatio * scale * width);
+    canvas.height = Math.round(globalThis.devicePixelRatio * scale * height);
     Object.assign(canvas.style, { width: `${width}px`, height: `${height}px` });
 }
 
 /** Resize canvas to container element taking `devicePixelRatio` into account */
 export function resizeCanvas(canvas: HTMLCanvasElement, container: HTMLElement, scale = 1) {
-    let width = window.innerWidth;
-    let height = window.innerHeight;
+    let width = globalThis.innerWidth;
+    let height = globalThis.innerHeight;
     if (container !== document.body) {
         // fixes issue #molstar/molstar#147, offsetWidth/offsetHeight is correct size when css transform:scale is used
         width = container.offsetWidth;

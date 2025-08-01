@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { getJSONCifCategory, JSONCifDataBlock } from '../../extensions/json-cif/model';
-import { mmCIF_Schema } from '../../mol-io/reader/cif/schema/mmcif';
-import { MolstarBondSiteSchema, MolstarBondSiteTypeId, MolstarBondSiteValueOrder } from '../../mol-model/structure/export/categories/molstar_bond_site';
+import { getJSONCifCategory, JSONCifDataBlock } from '../../extensions/json-cif/model.ts';
+import { mmCIF_Schema } from '../../mol-io/reader/cif/schema/mmcif.ts';
+import { MolstarBondSiteSchema, MolstarBondSiteTypeId, MolstarBondSiteValueOrder } from '../../mol-model/structure/export/categories/molstar_bond_site.ts';
 
 function padLeft(v: any, n = 3) {
     let s = `${v}`;

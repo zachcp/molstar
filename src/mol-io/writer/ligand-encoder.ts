@@ -4,13 +4,13 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { StringBuilder } from '../../mol-util';
-import { Writer } from './writer';
-import { Encoder, Category, Field } from './cif/encoder';
-import { ComponentAtom } from '../../mol-model-formats/structure/property/atoms/chem_comp';
-import { ComponentBond } from '../../mol-model-formats/structure/property/bonds/chem_comp';
-import { getElementIdx, isHydrogen } from '../../mol-model/structure/structure/unit/bonds/common';
-import { ElementSymbol } from '../../mol-model/structure/model/types';
+import { StringBuilder } from '../../mol-util/index.ts';
+import { Writer } from './writer.ts';
+import { Encoder, Category, Field } from './cif/encoder.ts';
+import { ComponentAtom } from '../../mol-model-formats/structure/property/atoms/chem_comp.ts';
+import { ComponentBond } from '../../mol-model-formats/structure/property/bonds/chem_comp.ts';
+import { getElementIdx, isHydrogen } from '../../mol-model/structure/structure/unit/bonds/common.ts';
+import { ElementSymbol } from '../../mol-model/structure/model/types.ts';
 
 interface Atom {
     Cartn_x: number,

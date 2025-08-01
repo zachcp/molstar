@@ -4,18 +4,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Location } from '../../../mol-model/location';
-import { Color, ColorMap } from '../../../mol-util/color';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { InteractionsProvider } from '../interactions';
-import { ThemeDataContext } from '../../../mol-theme/theme';
-import { ColorTheme, LocationColor } from '../../../mol-theme/color';
-import { InteractionType } from '../interactions/common';
-import { TableLegend } from '../../../mol-util/legend';
-import { Interactions } from '../interactions/interactions';
-import { CustomProperty } from '../../common/custom-property';
-import { hash2 } from '../../../mol-data/util';
-import { ColorThemeCategory } from '../../../mol-theme/color/categories';
+import { Location } from '../../../mol-model/location.ts';
+import { Color, ColorMap } from '../../../mol-util/color/index.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { InteractionsProvider } from '../interactions.ts';
+import { ThemeDataContext } from '../../../mol-theme/theme.ts';
+import { ColorTheme, LocationColor } from '../../../mol-theme/color.ts';
+import { InteractionType } from '../interactions/common.ts';
+import { TableLegend } from '../../../mol-util/legend.ts';
+import { Interactions } from '../interactions/interactions.ts';
+import { CustomProperty } from '../../common/custom-property.ts';
+import { hash2 } from '../../../mol-data/util.ts';
+import { ColorThemeCategory } from '../../../mol-theme/color/categories.ts';
 
 const DefaultColor = Color(0xCCCCCC);
 const Description = 'Assigns colors according the interaction type of a link.';

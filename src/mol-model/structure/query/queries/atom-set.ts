@@ -9,10 +9,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StructureQuery } from '../query';
-import { StructureSelection } from '../selection';
-import { getCurrentStructureProperties } from './filters';
-import { QueryContext, QueryFn } from '../context';
+import { StructureQuery } from '../query.ts';
+import { StructureSelection } from '../selection.ts';
+import { getCurrentStructureProperties } from './filters.ts';
+import { QueryContext, QueryFn } from '../context.ts';
 
 
 export function atomCount(ctx: QueryContext) {

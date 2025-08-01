@@ -5,14 +5,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { FileNameInfo } from '../../mol-util/file-info';
-import { PluginStateObject } from '../objects';
-import { DataFormatProvider } from './provider';
-import { BuiltInTrajectoryFormats } from './trajectory';
-import { BuiltInVolumeFormats } from './volume';
-import { BuiltInShapeFormats } from './shape';
-import { BuiltInTopologyFormats } from './topology';
-import { BuiltInCoordinatesFormats } from './coordinates';
+import { FileNameInfo } from '../../mol-util/file-info.ts';
+import { PluginStateObject } from '../objects.ts';
+import { DataFormatProvider } from './provider.ts';
+import { BuiltInTrajectoryFormats } from './trajectory.ts';
+import { BuiltInVolumeFormats } from './volume.ts';
+import { BuiltInShapeFormats } from './shape.ts';
+import { BuiltInTopologyFormats } from './topology.ts';
+import { BuiltInCoordinatesFormats } from './coordinates.ts';
 
 export class DataFormatRegistry {
     private _list: { name: string, provider: DataFormatProvider }[] = [];

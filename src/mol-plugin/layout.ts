@@ -5,10 +5,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { StatefulPluginComponent } from '../mol-plugin-state/component';
-import { PluginCommands } from './commands';
-import { PluginContext } from './context';
+import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import { StatefulPluginComponent } from '../mol-plugin-state/component.ts';
+import { PluginCommands } from './commands.ts';
+import { PluginContext } from './context.ts';
 
 const regionStateOptions = [
     ['full', 'Full'],

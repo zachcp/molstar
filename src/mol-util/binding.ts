@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ButtonsType, KeyCode, ModifiersKeys } from './input/input-observer';
-import { camelCaseToWords, interpolate, stringToWords } from './string';
+import { ButtonsType, KeyCode, ModifiersKeys } from './input/input-observer.ts';
+import { camelCaseToWords, interpolate, stringToWords } from './string.ts';
 
 export { Binding };
 

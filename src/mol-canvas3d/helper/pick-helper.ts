@@ -4,17 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Renderer } from '../../mol-gl/renderer';
-import { Scene } from '../../mol-gl/scene';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
-import { spiral2d } from '../../mol-math/misc';
-import { isTimingMode } from '../../mol-util/debug';
-import { Camera } from '../camera';
-import { StereoCamera } from '../camera/stereo';
-import { cameraUnproject, Viewport } from '../camera/util';
-import { Helper } from '../helper/helper';
-import { AsyncPickData, AsyncPickStatus, checkAsyncPickingSupport, PickBuffers, PickData, PickOptions, PickPass } from '../passes/pick';
+import { Renderer } from '../../mol-gl/renderer.ts';
+import { Scene } from '../../mol-gl/scene.ts';
+import { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
+import { spiral2d } from '../../mol-math/misc.ts';
+import { isTimingMode } from '../../mol-util/debug.ts';
+import { Camera } from '../camera.ts';
+import { StereoCamera } from '../camera/stereo.ts';
+import { cameraUnproject, Viewport } from '../camera/util.ts';
+import { Helper } from './helper.ts';
+import { AsyncPickData, AsyncPickStatus, checkAsyncPickingSupport, PickBuffers, PickData, PickOptions, PickPass } from '../passes/pick.ts';
 
 export class PickHelper {
     dirty = true;

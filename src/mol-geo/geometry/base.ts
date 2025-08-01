@@ -4,22 +4,22 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { RenderableState } from '../../mol-gl/renderable';
-import { ValueCell } from '../../mol-util';
-import { BaseValues } from '../../mol-gl/renderable/schema';
-import { LocationIterator } from '../util/location-iterator';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { TransformData, createIdentityTransform } from './transform-data';
-import { Theme } from '../../mol-theme/theme';
-import { ColorNames } from '../../mol-util/color/names';
-import { NullLocation } from '../../mol-model/location';
-import { UniformColorTheme } from '../../mol-theme/color/uniform';
-import { UniformSizeTheme } from '../../mol-theme/size/uniform';
-import { smoothstep } from '../../mol-math/interpolate';
-import { Material } from '../../mol-util/material';
-import { Clip } from '../../mol-util/clip';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
-import { Vec4 } from '../../mol-math/linear-algebra/3d/vec4';
+import { RenderableState } from '../../mol-gl/renderable.ts';
+import { ValueCell } from '../../mol-util/index.ts';
+import { BaseValues } from '../../mol-gl/renderable/schema.ts';
+import { LocationIterator } from '../util/location-iterator.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { TransformData, createIdentityTransform } from './transform-data.ts';
+import { Theme } from '../../mol-theme/theme.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { NullLocation } from '../../mol-model/location.ts';
+import { UniformColorTheme } from '../../mol-theme/color/uniform.ts';
+import { UniformSizeTheme } from '../../mol-theme/size/uniform.ts';
+import { smoothstep } from '../../mol-math/interpolate.ts';
+import { Material } from '../../mol-util/material.ts';
+import { Clip } from '../../mol-util/clip.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
+import { Vec4 } from '../../mol-math/linear-algebra/3d/vec4.ts';
 
 export const VisualQualityInfo = {
     'custom': {},

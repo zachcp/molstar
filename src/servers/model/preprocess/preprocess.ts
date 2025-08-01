@@ -4,14 +4,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { readStructureWrapper, resolveStructures, readDataAndFrame } from '../server/structure-wrapper';
-import { classifyCif } from './converter';
-import { Structure } from '../../../mol-model/structure';
-import { CifWriter } from '../../../mol-io/writer/cif';
-import { Writer } from '../../../mol-io/writer/writer';
-import { encode_mmCIF_categories, CifExportContext } from '../../../mol-model/structure/export/mmcif';
-import { ModelPropertiesProvider } from '../property-provider';
-import { FileResultWriter } from '../utils/writer';
+import { readStructureWrapper, resolveStructures, readDataAndFrame } from '../server/structure-wrapper.ts';
+import { classifyCif } from './converter.ts';
+import { Structure } from '../../../mol-model/structure.ts';
+import { CifWriter } from '../../../mol-io/writer/cif.ts';
+import { Writer } from '../../../mol-io/writer/writer.ts';
+import { encode_mmCIF_categories, CifExportContext } from '../../../mol-model/structure/export/mmcif.ts';
+import { ModelPropertiesProvider } from '../property-provider.ts';
+import { FileResultWriter } from '../utils/writer.ts';
 
 // TODO: error handling
 

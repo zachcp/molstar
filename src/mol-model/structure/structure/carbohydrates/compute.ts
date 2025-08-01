@@ -5,22 +5,22 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Segmentation, SortedArray } from '../../../../mol-data/int';
-import { combinations } from '../../../../mol-data/util/combination';
-import { IntAdjacencyGraph } from '../../../../mol-math/graph';
-import { Vec3 } from '../../../../mol-math/linear-algebra';
-import { PrincipalAxes } from '../../../../mol-math/linear-algebra/matrix/principal-axes';
-import { fillSerial, arraySetAdd } from '../../../../mol-util/array';
-import { ResidueIndex, Model } from '../../model';
-import { ElementSymbol, BondType } from '../../model/types';
-import { getPositions } from '../../util';
-import { StructureElement } from '../element';
-import { Structure } from '../structure';
-import { Unit } from '../unit';
-import { CarbohydrateElement, CarbohydrateLink, Carbohydrates, CarbohydrateTerminalLink, PartialCarbohydrateElement, EmptyCarbohydrates } from './data';
-import { UnitRings, UnitRing } from '../unit/rings';
-import { ElementIndex } from '../../model/indexing';
-import { cantorPairing } from '../../../../mol-data/util';
+import { Segmentation, SortedArray } from '../../../../mol-data/int.ts';
+import { combinations } from '../../../../mol-data/util/combination.ts';
+import { IntAdjacencyGraph } from '../../../../mol-math/graph.ts';
+import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { PrincipalAxes } from '../../../../mol-math/linear-algebra/matrix/principal-axes.ts';
+import { fillSerial, arraySetAdd } from '../../../../mol-util/array.ts';
+import { ResidueIndex, Model } from '../../model.ts';
+import { ElementSymbol, BondType } from '../../model/types.ts';
+import { getPositions } from '../../util.ts';
+import { StructureElement } from '../element.ts';
+import { Structure } from '../structure.ts';
+import { Unit } from '../unit.ts';
+import { CarbohydrateElement, CarbohydrateLink, Carbohydrates, CarbohydrateTerminalLink, PartialCarbohydrateElement, EmptyCarbohydrates } from './data.ts';
+import { UnitRings, UnitRing } from '../unit/rings.ts';
+import { ElementIndex } from '../../model/indexing.ts';
+import { cantorPairing } from '../../../../mol-data/util.ts';
 
 const C = ElementSymbol('C'), O = ElementSymbol('O');
 const SugarRingFps = [

@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Loci } from '../mol-model/loci';
-import { StructureElement, Structure } from '../mol-model/structure';
-import { Script } from '../mol-script/script';
-import { BitFlags } from '../mol-util/bit-flags';
+import { Loci } from '../mol-model/loci.ts';
+import { StructureElement, Structure } from '../mol-model/structure.ts';
+import { Script } from '../mol-script/script.ts';
+import { BitFlags } from '../mol-util/bit-flags.ts';
 
 export { Clipping };
 

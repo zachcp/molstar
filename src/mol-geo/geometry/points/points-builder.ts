@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ChunkedArray } from '../../../mol-data/util';
-import { Points } from './points';
+import { ChunkedArray } from '../../../mol-data/util.ts';
+import { Points } from './points.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const caAdd3 = ChunkedArray.add3;

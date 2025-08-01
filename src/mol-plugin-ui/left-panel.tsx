@@ -7,19 +7,19 @@
 
 import * as React from 'react';
 import { throttleTime } from 'rxjs';
-import { Canvas3DContext, Canvas3DParams } from '../mol-canvas3d/canvas3d';
-import { PluginCommands } from '../mol-plugin/commands';
-import { LeftPanelTabName } from '../mol-plugin/layout';
-import { StateTransform } from '../mol-state';
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { PluginUIComponent } from './base';
-import { IconButton, SectionHeader } from './controls/common';
-import { AccountTreeOutlinedSvg, DeleteOutlinedSvg, HelpOutlineSvg, HomeOutlinedSvg, SaveOutlinedSvg, TuneSvg } from './controls/icons';
-import { ParameterControls } from './controls/parameters';
-import { StateObjectActions } from './state/actions';
-import { RemoteStateSnapshots, StateSnapshots } from './state/snapshots';
-import { StateTree } from './state/tree';
-import { HelpContent } from './viewport/help';
+import { Canvas3DContext, Canvas3DParams } from '../mol-canvas3d/canvas3d.ts';
+import { PluginCommands } from '../mol-plugin/commands.ts';
+import { LeftPanelTabName } from '../mol-plugin/layout.ts';
+import { StateTransform } from '../mol-state/index.ts';
+import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import { PluginUIComponent } from './base.tsx';
+import { IconButton, SectionHeader } from './controls/common.tsx';
+import { AccountTreeOutlinedSvg, DeleteOutlinedSvg, HelpOutlineSvg, HomeOutlinedSvg, SaveOutlinedSvg, TuneSvg } from './controls/icons.tsx';
+import { ParameterControls } from './controls/parameters.tsx';
+import { StateObjectActions } from './state/actions.tsx';
+import { RemoteStateSnapshots, StateSnapshots } from './state/snapshots.tsx';
+import { StateTree } from './state/tree.tsx';
+import { HelpContent } from './viewport/help.tsx';
 
 export class CustomImportControls extends PluginUIComponent<{ initiallyCollapsed?: boolean }> {
     componentDidMount() {
@@ -69,7 +69,7 @@ export class LeftPanelControls extends PluginUIComponent<{}, { tab: LeftPanelTab
         'none': <></>,
         'root': <>
             <SectionHeader icon={HomeOutlinedSvg} title='Home' />
-            <StateObjectActions state={this.plugin.state.data} nodeRef={StateTransform.RootRef} hideHeader={true} initiallyCollapsed={true} alwaysExpandFirst={true} />
+            <StateObjectActions state={this.plugin.state.data} nodeRef={StateTransform.RootRef} hideHeader initiallyCollapsed alwaysExpandFirst />
             <CustomImportControls />
             {this.plugin.spec.components?.remoteState !== 'none' && <RemoteStateSnapshots listOnly /> }
         </>,
@@ -188,6 +188,6 @@ class RemoveAllButton extends PluginUIComponent<{ }> {
     render() {
         const count = this.plugin.state.data.tree.children.get(StateTransform.RootRef).size;
         if (count === 0) return null;
-        return <IconButton svg={DeleteOutlinedSvg} onClick={this.remove} title={'Remove All'} style={{ display: 'inline-block' }} small className='msp-no-hover-outline' transparent />;
+        return <IconButton svg={DeleteOutlinedSvg} onClick={this.remove} title="Remove All" style={{ display: 'inline-block' }} small className='msp-no-hover-outline' transparent />;
     }
 }

@@ -5,14 +5,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StructureRepresentation3D } from '../../mol-plugin-state/transforms/representation';
-import { PluginContext } from '../../mol-plugin/context';
-import { PluginState } from '../../mol-plugin/state';
-import { State, StateBuilder, StateObject, StateObjectSelector, StateTransform, StateTransformer, StateTree } from '../../mol-state';
-import { UUID } from '../../mol-util';
-import { stringHash } from './helpers/utils';
-import { Kind, Subtree, SubtreeOfKind, Tree } from './tree/generic/tree-schema';
-import { dfs } from './tree/generic/tree-utils';
+import { StructureRepresentation3D } from '../../mol-plugin-state/transforms/representation.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { PluginState } from '../../mol-plugin/state.ts';
+import { State, StateBuilder, StateObject, StateObjectSelector, StateTransform, StateTransformer, StateTree } from '../../mol-state/index.ts';
+import { UUID } from '../../mol-util/index.ts';
+import { stringHash } from './helpers/utils.ts';
+import { Kind, Subtree, SubtreeOfKind, Tree } from './tree/generic/tree-schema.ts';
+import { dfs } from './tree/generic/tree-utils.ts';
 
 
 /** Function responsible for loading a tree node `node` into Mol*.

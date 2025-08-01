@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Task } from '../task';
-import { RuntimeContext } from './runtime-context';
-import { Progress } from './progress';
-import { now } from '../../mol-util/now';
-import { Scheduler } from '../util/scheduler';
-import { UserTiming } from '../util/user-timing';
+import { Task } from '../task.ts';
+import { RuntimeContext } from './runtime-context.ts';
+import { Progress } from './progress.ts';
+import { now } from '../../mol-util/now.ts';
+import { Scheduler } from '../util/scheduler.ts';
+import { UserTiming } from '../util/user-timing.ts';
 
 interface ExposedTask<T> extends Task<T> {
     f: (ctx: RuntimeContext) => Promise<T>,

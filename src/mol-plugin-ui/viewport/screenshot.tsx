@@ -6,20 +6,20 @@
  */
 
 import * as React from 'react';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginContext } from '../../mol-plugin/context';
-import { PluginUIComponent } from '../base';
-import { Button, ExpandGroup, ToggleButton } from '../controls/common';
-import { CopySvg, CropFreeSvg, CropOrginalSvg, CropSvg, GetAppSvg } from '../controls/icons';
-import { ParameterControls } from '../controls/parameters';
-import { ScreenshotPreview } from '../controls/screenshot';
-import { useBehavior } from '../hooks/use-behavior';
-import { LocalStateSnapshotParams, StateExportImportControls } from '../state/snapshots';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { PluginUIComponent } from '../base.tsx';
+import { Button, ExpandGroup, ToggleButton } from '../controls/common.tsx';
+import { CopySvg, CropFreeSvg, CropOrginalSvg, CropSvg, GetAppSvg } from '../controls/icons.tsx';
+import { ParameterControls } from '../controls/parameters.tsx';
+import { ScreenshotPreview } from '../controls/screenshot.tsx';
+import { useBehavior } from '../hooks/use-behavior.ts';
+import { LocalStateSnapshotParams, StateExportImportControls } from '../state/snapshots.tsx';
 import { useEffect, useState } from 'react';
-import { round } from '../../mol-util';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { Camera } from '../../mol-canvas3d/camera';
-import { fovNormalizedCameraPosition } from '../../mol-util/camera';
+import { round } from '../../mol-util/index.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { Camera } from '../../mol-canvas3d/camera.ts';
+import { fovNormalizedCameraPosition } from '../../mol-util/camera.ts';
 
 interface ImageControlsState {
     showPreview: boolean,

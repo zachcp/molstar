@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as Structure from './actions/structure';
-import * as Volume from './actions/volume';
-import * as DataFormat from './actions/file';
+import * as Structure from './actions/structure.ts';
+import * as Volume from './actions/volume.ts';
+import * as DataFormat from './actions/file.ts';
 
 export const StateActions = {
     Structure,

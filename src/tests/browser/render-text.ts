@@ -5,17 +5,17 @@
  */
 
 import './index.html';
-import { Canvas3D, Canvas3DContext } from '../../mol-canvas3d/canvas3d';
-import { TextBuilder } from '../../mol-geo/geometry/text/text-builder';
-import { Text } from '../../mol-geo/geometry/text/text';
-import { ParamDefinition, ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Color } from '../../mol-util/color';
-import { Representation } from '../../mol-repr/representation';
-import { SpheresBuilder } from '../../mol-geo/geometry/spheres/spheres-builder';
-import { createRenderObject } from '../../mol-gl/render-object';
-import { Spheres } from '../../mol-geo/geometry/spheres/spheres';
-import { resizeCanvas } from '../../mol-canvas3d/util';
-import { AssetManager } from '../../mol-util/assets';
+import { Canvas3D, Canvas3DContext } from '../../mol-canvas3d/canvas3d.ts';
+import { TextBuilder } from '../../mol-geo/geometry/text/text-builder.ts';
+import { Text } from '../../mol-geo/geometry/text/text.ts';
+import { ParamDefinition, ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { Representation } from '../../mol-repr/representation.ts';
+import { SpheresBuilder } from '../../mol-geo/geometry/spheres/spheres-builder.ts';
+import { createRenderObject } from '../../mol-gl/render-object.ts';
+import { Spheres } from '../../mol-geo/geometry/spheres/spheres.ts';
+import { resizeCanvas } from '../../mol-canvas3d/util.ts';
+import { AssetManager } from '../../mol-util/assets.ts';
 
 const parent = document.getElementById('app')!;
 parent.style.width = '100%';

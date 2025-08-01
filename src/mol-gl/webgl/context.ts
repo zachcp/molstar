@@ -4,19 +4,19 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { GLRenderingContext, isWebGL2 } from './compat';
-import { checkFramebufferStatus, createNullFramebuffer, Framebuffer } from './framebuffer';
-import { Scheduler } from '../../mol-task';
-import { isDebugMode } from '../../mol-util/debug';
-import { createExtensions, resetExtensions, WebGLExtensions } from './extensions';
-import { WebGLState, createState } from './state';
-import { WebGLResources, createResources } from './resources';
-import { RenderTarget, createRenderTarget } from './render-target';
+import { GLRenderingContext, isWebGL2 } from './compat.ts';
+import { checkFramebufferStatus, createNullFramebuffer, Framebuffer } from './framebuffer.ts';
+import { Scheduler } from '../../mol-task/index.ts';
+import { isDebugMode } from '../../mol-util/debug.ts';
+import { createExtensions, resetExtensions, WebGLExtensions } from './extensions.ts';
+import { WebGLState, createState } from './state.ts';
+import { WebGLResources, createResources } from './resources.ts';
+import { RenderTarget, createRenderTarget } from './render-target.ts';
 import { Subject } from 'rxjs';
-import { now } from '../../mol-util/now';
-import { createNullTexture, Texture, TextureFilter } from './texture';
-import { ComputeRenderable } from '../renderable';
-import { createTimer, WebGLTimer } from './timer';
+import { now } from '../../mol-util/now.ts';
+import { createNullTexture, Texture, TextureFilter } from './texture.ts';
+import { ComputeRenderable } from '../renderable.ts';
+import { createTimer, WebGLTimer } from './timer.ts';
 
 export function getGLContext(canvas: HTMLCanvasElement, attribs?: WebGLContextAttributes & { preferWebGl1?: boolean }): GLRenderingContext | null {
     function get(id: 'webgl' | 'experimental-webgl' | 'webgl2') {
@@ -310,7 +310,7 @@ export function createContext(gl: GLRenderingContext, props: Partial<{ pixelScal
         gl,
         isWebGL2: isWebGL2(gl),
         get pixelRatio() {
-            const dpr = (typeof window !== 'undefined') ? (window.devicePixelRatio || 1) : 1;
+            const dpr = (typeof window !== 'undefined') ? (globalThis.devicePixelRatio || 1) : 1;
             return dpr * (pixelScale || 1);
         },
 

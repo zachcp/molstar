@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, RuntimeContext } from '../../../mol-task';
-import { Dsn6File, Dsn6Header } from './schema';
-import { ReaderResult as Result } from '../result';
-import { FileHandle } from '../../common/file-handle';
-import { SimpleBuffer } from '../../../mol-io/common/simple-buffer';
+import { Task, RuntimeContext } from '../../../mol-task/index.ts';
+import { Dsn6File, Dsn6Header } from './schema.ts';
+import { ReaderResult as Result } from '../result.ts';
+import { FileHandle } from '../../common/file-handle.ts';
+import { SimpleBuffer } from '../../common/simple-buffer.ts';
 
 export const dsn6HeaderSize = 512;
 

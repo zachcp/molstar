@@ -6,17 +6,17 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { EveryLoci, isEmptyLoci, Loci } from '../../mol-model/loci';
-import { Structure, StructureElement } from '../../mol-model/structure';
-import { PluginContext } from '../../mol-plugin/context';
-import { Representation } from '../../mol-repr/representation';
-import { ButtonsType, ModifiersKeys } from '../../mol-util/input/input-observer';
-import { MarkerAction } from '../../mol-util/marker-action';
-import { shallowEqual } from '../../mol-util/object';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { StatefulPluginComponent } from '../component';
-import { StructureSelectionManager } from './structure/selection';
-import { Vec2, Vec3 } from '../../mol-math/linear-algebra';
+import { EveryLoci, isEmptyLoci, Loci } from '../../mol-model/loci.ts';
+import { Structure, StructureElement } from '../../mol-model/structure.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { Representation } from '../../mol-repr/representation.ts';
+import { ButtonsType, ModifiersKeys } from '../../mol-util/input/input-observer.ts';
+import { MarkerAction } from '../../mol-util/marker-action.ts';
+import { shallowEqual } from '../../mol-util/object.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { StatefulPluginComponent } from '../component.ts';
+import { StructureSelectionManager } from './structure/selection.ts';
+import { Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
 
 export { InteractivityManager };
 

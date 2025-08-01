@@ -5,13 +5,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { utf8ByteCount, utf8Write } from '../../mol-io/common/utf8';
-import { Structure, to_mmCIF, Unit } from '../../mol-model/structure';
-import { PluginContext } from '../../mol-plugin/context';
-import { Task } from '../../mol-task';
-import { getFormattedTime } from '../../mol-util/date';
-import { download } from '../../mol-util/download';
-import { zip } from '../../mol-util/zip/zip';
+import { utf8ByteCount, utf8Write } from '../../mol-io/common/utf8.ts';
+import { Structure, to_mmCIF, Unit } from '../../mol-model/structure.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { Task } from '../../mol-task/index.ts';
+import { getFormattedTime } from '../../mol-util/date.ts';
+import { download } from '../../mol-util/download.ts';
+import { zip } from '../../mol-util/zip/zip.ts';
 
 const ModelExportNameProp = '__ModelExportName__';
 export const ModelExport = {

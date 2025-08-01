@@ -4,17 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { VisualContext } from '../../visual';
-import { Unit, Structure } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Lines } from '../../../mol-geo/geometry/lines/lines';
-import { computeUnitGaussianDensity, GaussianDensityParams, GaussianDensityProps } from './util/gaussian';
-import { computeMarchingCubesLines } from '../../../mol-geo/util/marching-cubes/algorithm';
-import { UnitsLinesParams, UnitsVisual, UnitsLinesVisual } from '../units-visual';
-import { ElementIterator, getElementLoci, eachElement } from './util/element';
-import { VisualUpdateState } from '../../util';
-import { Sphere3D } from '../../../mol-math/geometry';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { VisualContext } from '../../visual.ts';
+import { Unit, Structure } from '../../../mol-model/structure.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { Lines } from '../../../mol-geo/geometry/lines/lines.ts';
+import { computeUnitGaussianDensity, GaussianDensityParams, GaussianDensityProps } from './util/gaussian.ts';
+import { computeMarchingCubesLines } from '../../../mol-geo/util/marching-cubes/algorithm.ts';
+import { UnitsLinesParams, UnitsVisual, UnitsLinesVisual } from '../units-visual.ts';
+import { ElementIterator, getElementLoci, eachElement } from './util/element.ts';
+import { VisualUpdateState } from '../../util.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
 
 async function createGaussianWireframe(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: GaussianDensityProps, lines?: Lines): Promise<Lines> {
     const { smoothness } = props;

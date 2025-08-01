@@ -11,15 +11,15 @@
 // https://pymolwiki.org/index.php/Selection_Algebra
 // https://github.com/evonove/pymol/blob/master/pymol/layer3/Selector.cpp
 
-import * as P from '../../../mol-util/monadic-parser';
-import * as h from '../helper';
-import { MolScriptBuilder } from '../../../mol-script/language/builder';
+import * as P from '../../../mol-util/monadic-parser.ts';
+import * as h from '../helper.ts';
+import { MolScriptBuilder } from '../../language/builder.ts';
 const B = MolScriptBuilder;
-import { properties } from './properties';
-import { operators } from './operators';
-import { keywords } from './keywords';
-import { AtomGroupArgs } from '../types';
-import { Transpiler } from '../transpiler';
+import { properties } from './properties.ts';
+import { operators } from './operators.ts';
+import { keywords } from './keywords.ts';
+import { AtomGroupArgs } from '../types.ts';
+import { Transpiler } from '../transpiler.ts';
 
 const propertiesDict = h.getPropertyRules(properties);
 

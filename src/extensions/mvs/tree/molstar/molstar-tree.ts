@@ -4,12 +4,12 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { omitObjectKeys, pickObjectKeys } from '../../../../mol-util/object';
-import { RequiredField, bool } from '../generic/field-schema';
-import { SimpleParamsSchema } from '../generic/params-schema';
-import { NodeFor, ParamsOfKind, SubtreeOfKind, TreeFor, TreeSchema } from '../generic/tree-schema';
-import { FullMVSTreeSchema } from '../mvs/mvs-tree';
-import { MolstarParseFormatT } from '../mvs/param-types';
+import { omitObjectKeys, pickObjectKeys } from '../../../../mol-util/object.ts';
+import { RequiredField, bool } from '../generic/field-schema.ts';
+import { SimpleParamsSchema } from '../generic/params-schema.ts';
+import { NodeFor, ParamsOfKind, SubtreeOfKind, TreeFor, TreeSchema } from '../generic/tree-schema.ts';
+import { FullMVSTreeSchema } from '../mvs/mvs-tree.ts';
+import { MolstarParseFormatT } from '../mvs/param-types.ts';
 
 
 /** Schema for `MolstarTree` (intermediate tree representation between `MVSTree` and a real Molstar state) */

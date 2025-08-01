@@ -5,22 +5,22 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { BondType, MoleculeType } from '../../../model/types';
-import { Structure } from '../../structure';
-import { Unit } from '../../unit';
-import { getElementIdx, getElementThreshold, isHydrogen, BondComputationProps, MetalsSet, DefaultBondComputationProps, getPairingThreshold } from './common';
-import { InterUnitBonds, InterUnitEdgeProps } from './data';
-import { SortedArray } from '../../../../../mol-data/int';
-import { Vec3, Mat4 } from '../../../../../mol-math/linear-algebra';
-import { StructureElement } from '../../element';
-import { ElementIndex } from '../../../model/indexing';
-import { getInterBondOrderFromTable } from '../../../model/properties/atomic/bonds';
-import { IndexPairBonds } from '../../../../../mol-model-formats/structure/property/bonds/index-pair';
-import { InterUnitGraph } from '../../../../../mol-math/graph/inter-unit-graph';
-import { StructConn } from '../../../../../mol-model-formats/structure/property/bonds/struct_conn';
-import { equalEps } from '../../../../../mol-math/linear-algebra/3d/common';
-import { Model } from '../../../model';
-import { cantorPairing, invertCantorPairing, sortedCantorPairing } from '../../../../../mol-data/util';
+import { BondType, MoleculeType } from '../../../model/types.ts';
+import { Structure } from '../../structure.ts';
+import { Unit } from '../../unit.ts';
+import { getElementIdx, getElementThreshold, isHydrogen, BondComputationProps, MetalsSet, DefaultBondComputationProps, getPairingThreshold } from './common.ts';
+import { InterUnitBonds, InterUnitEdgeProps } from './data.ts';
+import { SortedArray } from '../../../../../mol-data/int.ts';
+import { Vec3, Mat4 } from '../../../../../mol-math/linear-algebra.ts';
+import { StructureElement } from '../../element.ts';
+import { ElementIndex } from '../../../model/indexing.ts';
+import { getInterBondOrderFromTable } from '../../../model/properties/atomic/bonds.ts';
+import { IndexPairBonds } from '../../../../../mol-model-formats/structure/property/bonds/index-pair.ts';
+import { InterUnitGraph } from '../../../../../mol-math/graph/inter-unit-graph.ts';
+import { StructConn } from '../../../../../mol-model-formats/structure/property/bonds/struct_conn.ts';
+import { equalEps } from '../../../../../mol-math/linear-algebra/3d/common.ts';
+import { Model } from '../../../model.ts';
+import { cantorPairing, invertCantorPairing, sortedCantorPairing } from '../../../../../mol-data/util.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3distance = Vec3.distance;

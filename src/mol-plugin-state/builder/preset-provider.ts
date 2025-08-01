@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StateObject, StateObjectRef } from '../../mol-state';
-import { PluginContext } from '../../mol-plugin/context';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { StateObject, StateObjectRef } from '../../mol-state/index.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
 export interface PresetProvider<O extends StateObject = StateObject, P = any, S = {}> {
     id: string,

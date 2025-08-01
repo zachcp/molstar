@@ -4,6 +4,7 @@
  */
 
 import { constants } from 'fs';
+import { Buffer } from "node:buffer";
 
 const alloc = Buffer.alloc;
 

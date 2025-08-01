@@ -4,20 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Mat4, Vec3 } from '../../../mol-math/linear-algebra';
-import { Wedge } from '../../../mol-geo/primitive/wedge';
-import { VisualContext } from '../../visual';
-import { Unit, Structure } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { createCurveSegmentState, PolymerTraceIterator, interpolateCurveSegment, PolymerLocationIterator, getPolymerElementLoci, eachPolymerElement } from './util/polymer';
-import { isNucleic, SecondaryStructureType } from '../../../mol-model/structure/model/types';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual';
-import { VisualUpdateState } from '../../util';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { StructureGroup } from './util/common';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { Wedge } from '../../../mol-geo/primitive/wedge.ts';
+import { VisualContext } from '../../visual.ts';
+import { Unit, Structure } from '../../../mol-model/structure.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { createCurveSegmentState, PolymerTraceIterator, interpolateCurveSegment, PolymerLocationIterator, getPolymerElementLoci, eachPolymerElement } from './util/polymer.ts';
+import { isNucleic, SecondaryStructureType } from '../../../mol-model/structure/model/types.ts';
+import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
+import { VisualUpdateState } from '../../util.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { StructureGroup } from './util/common.ts';
 
 const t = Mat4.identity();
 const sVec = Vec3.zero();

@@ -6,8 +6,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as Data from './data-model';
-import { TypedArrayValueArray } from '../../../mol-io/common/typed-array';
+import * as Data from './data-model.ts';
+import { TypedArrayValueArray } from '../../../mol-io/common/typed-array.ts';
 
 /**
  * Downsamples each slice of input data and checks if there is enough data to perform

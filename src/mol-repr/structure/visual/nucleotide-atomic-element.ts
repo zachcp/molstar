@@ -5,26 +5,26 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { VisualContext } from '../../visual';
-import { Unit, Structure } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { Segmentation } from '../../../mol-data/int';
-import { isNucleic } from '../../../mol-model/structure/model/types';
-import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual, UnitsSpheresParams, UnitsSpheresVisual } from '../units-visual';
-import { NucleotideLocationIterator, getNucleotideElementLoci, eachNucleotideElement, getNucleotideBaseType, createNucleicIndices, setSugarIndices, hasSugarIndices, setPurinIndices, hasPurinIndices, setPyrimidineIndices, hasPyrimidineIndices } from './util/nucleotide';
-import { VisualUpdateState } from '../../util';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { WebGLContext } from '../../../mol-gl/webgl/context';
-import { Spheres } from '../../../mol-geo/geometry/spheres/spheres';
-import { sphereVertexCount } from '../../../mol-geo/primitive/sphere';
-import { SpheresBuilder } from '../../../mol-geo/geometry/spheres/spheres-builder';
-import { checkSphereImpostorSupport, StructureGroup } from './util/common';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { VisualContext } from '../../visual.ts';
+import { Unit, Structure } from '../../../mol-model/structure.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Segmentation } from '../../../mol-data/int.ts';
+import { isNucleic } from '../../../mol-model/structure/model/types.ts';
+import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere.ts';
+import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual, UnitsSpheresParams, UnitsSpheresVisual } from '../units-visual.ts';
+import { NucleotideLocationIterator, getNucleotideElementLoci, eachNucleotideElement, getNucleotideBaseType, createNucleicIndices, setSugarIndices, hasSugarIndices, setPurinIndices, hasPurinIndices, setPyrimidineIndices, hasPyrimidineIndices } from './util/nucleotide.ts';
+import { VisualUpdateState } from '../../util.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { WebGLContext } from '../../../mol-gl/webgl/context.ts';
+import { Spheres } from '../../../mol-geo/geometry/spheres/spheres.ts';
+import { sphereVertexCount } from '../../../mol-geo/primitive/sphere.ts';
+import { SpheresBuilder } from '../../../mol-geo/geometry/spheres/spheres-builder.ts';
+import { checkSphereImpostorSupport, StructureGroup } from './util/common.ts';
 
 const pTrace = Vec3();
 

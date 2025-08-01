@@ -6,16 +6,16 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column } from '../../../../mol-data/db';
-import { encodeMsgPack } from '../../../common/msgpack/encode';
+import { Column } from '../../../../mol-data/db.ts';
+import { encodeMsgPack } from '../../../common/msgpack/encode.ts';
 import {
     EncodedColumn, EncodedData, EncodedFile, EncodedDataBlock, EncodedCategory, ArrayEncoder, ArrayEncoding as E, VERSION
-} from '../../../common/binary-cif';
-import { Field, Category, Encoder } from '../encoder';
-import { Writer } from '../../writer';
-import { getIncludedFields, getCategoryInstanceData, CategoryInstanceData } from './util';
-import { classifyIntArray, classifyFloatArray } from '../../../common/binary-cif/classifier';
-import { ArrayCtor } from '../../../../mol-util/type-helpers';
+} from '../../../common/binary-cif.ts';
+import { Field, Category, Encoder } from '../encoder.ts';
+import { Writer } from '../../writer.ts';
+import { getIncludedFields, getCategoryInstanceData, CategoryInstanceData } from './util.ts';
+import { classifyIntArray, classifyFloatArray } from '../../../common/binary-cif/classifier.ts';
+import { ArrayCtor } from '../../../../mol-util/type-helpers.ts';
 
 export interface BinaryEncodingProvider {
     get(category: string, field: string): ArrayEncoder | undefined;

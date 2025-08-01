@@ -5,12 +5,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PositionData } from './common';
-import { Vec3 } from '../linear-algebra';
-import { OrderedSet } from '../../mol-data/int';
-import { BoundaryHelper } from './boundary-helper';
-import { Box3D } from '../geometry/primitives/box3d';
-import { Sphere3D } from '../geometry/primitives/sphere3d';
+import { PositionData } from './common.ts';
+import { Vec3 } from '../linear-algebra.ts';
+import { OrderedSet } from '../../mol-data/int.ts';
+import { BoundaryHelper } from './boundary-helper.ts';
+import { Box3D } from './primitives/box3d.ts';
+import { Sphere3D } from './primitives/sphere3d.ts';
 
 export type Boundary = { readonly box: Box3D, readonly sphere: Sphere3D }
 

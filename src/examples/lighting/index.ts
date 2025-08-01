@@ -4,15 +4,15 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Canvas3DProps } from '../../mol-canvas3d/canvas3d';
-import { BuiltInTrajectoryFormat } from '../../mol-plugin-state/formats/trajectory';
-import { createPluginUI } from '../../mol-plugin-ui';
-import { PluginUIContext } from '../../mol-plugin-ui/context';
-import { renderReact18 } from '../../mol-plugin-ui/react18';
-import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { Asset } from '../../mol-util/assets';
-import { Color } from '../../mol-util/color';
+import { Canvas3DProps } from '../../mol-canvas3d/canvas3d.ts';
+import { BuiltInTrajectoryFormat } from '../../mol-plugin-state/formats/trajectory.ts';
+import { createPluginUI } from '../../mol-plugin-ui/index.ts';
+import { PluginUIContext } from '../../mol-plugin-ui/context.ts';
+import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
+import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { Asset } from '../../mol-util/assets.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import './index.html';
 import '../../mol-plugin-ui/skin/light.scss';
 

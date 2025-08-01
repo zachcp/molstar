@@ -4,22 +4,22 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ComputeRenderable, createComputeRenderable } from '../../renderable';
-import { WebGLContext } from '../../webgl/context';
-import { createComputeRenderItem } from '../../webgl/render-item';
-import { Values, TextureSpec, UniformSpec, DefineSpec } from '../../renderable/schema';
-import { Texture } from '../../../mol-gl/webgl/texture';
-import { ShaderCode } from '../../../mol-gl/shader-code';
-import { ValueCell } from '../../../mol-util';
-import { Vec3, Vec2, Mat4, Mat3 } from '../../../mol-math/linear-algebra';
-import { QuadSchema, QuadValues } from '../util';
-import { createHistogramPyramid, HistogramPyramid } from '../histogram-pyramid/reduction';
-import { getTriIndices } from './tables';
-import { quad_vert } from '../../../mol-gl/shader/quad.vert';
-import { isosurface_frag } from '../../../mol-gl/shader/marching-cubes/isosurface.frag';
-import { calcActiveVoxels } from './active-voxels';
-import { isWebGL2 } from '../../webgl/compat';
-import { isTimingMode } from '../../../mol-util/debug';
+import { ComputeRenderable, createComputeRenderable } from '../../renderable.ts';
+import { WebGLContext } from '../../webgl/context.ts';
+import { createComputeRenderItem } from '../../webgl/render-item.ts';
+import { Values, TextureSpec, UniformSpec, DefineSpec } from '../../renderable/schema.ts';
+import { Texture } from '../../webgl/texture.ts';
+import { ShaderCode } from '../../shader-code.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
+import { Vec3, Vec2, Mat4, Mat3 } from '../../../mol-math/linear-algebra.ts';
+import { QuadSchema, QuadValues } from '../util.ts';
+import { createHistogramPyramid, HistogramPyramid } from '../histogram-pyramid/reduction.ts';
+import { getTriIndices } from './tables.ts';
+import { quad_vert } from '../../shader/quad.vert.ts';
+import { isosurface_frag } from '../../shader/marching-cubes/isosurface.frag.ts';
+import { calcActiveVoxels } from './active-voxels.ts';
+import { isWebGL2 } from '../../webgl/compat.ts';
+import { isTimingMode } from '../../../mol-util/debug.ts';
 
 const IsosurfaceSchema = {
     ...QuadSchema,

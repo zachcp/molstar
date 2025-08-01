@@ -5,13 +5,13 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { Segmentation } from '../../../../mol-data/int';
-import { MinimizeRmsd } from '../../../../mol-math/linear-algebra/3d/minimize-rmsd';
-import { SIFTSMapping } from '../../../../mol-model-props/sequence/sifts-mapping';
-import { ElementIndex, ResidueIndex } from '../../model/indexing';
-import { StructureElement } from '../element';
-import { Structure } from '../structure';
-import { Unit } from '../unit';
+import { Segmentation } from '../../../../mol-data/int.ts';
+import { MinimizeRmsd } from '../../../../mol-math/linear-algebra/3d/minimize-rmsd.ts';
+import { SIFTSMapping } from '../../../../mol-model-props/sequence/sifts-mapping.ts';
+import { ElementIndex, ResidueIndex } from '../../model/indexing.ts';
+import { StructureElement } from '../element.ts';
+import { Structure } from '../structure.ts';
+import { Unit } from '../unit.ts';
 
 export interface AlignmentResultEntry {
     transform: MinimizeRmsd.Result,

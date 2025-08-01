@@ -5,9 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { CustomElementProperty } from '../../mol-model-props/common/custom-element-property';
-import { Model, ElementIndex } from '../../mol-model/structure';
-import { Color } from '../../mol-util/color';
+import { CustomElementProperty } from '../../mol-model-props/common/custom-element-property.ts';
+import { Model, ElementIndex } from '../../mol-model/structure.ts';
+import { Color } from '../../mol-util/color/index.ts';
 
 export const StripedResidues = CustomElementProperty.create<number>({
     label: 'Residue Stripes',

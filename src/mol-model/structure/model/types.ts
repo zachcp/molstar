@@ -5,14 +5,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { BitFlags } from '../../../mol-util/bit-flags';
-import { SaccharideCompIdMap } from '../structure/carbohydrates/constants';
-import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif';
-import { SetUtils } from '../../../mol-util/set';
-import { EntitySubtype, ChemicalComponent } from './properties/common';
-import { LipidNames } from './types/lipids';
-import { IonNames } from './types/ions';
-import { mmCIF_chemComp_schema } from '../../../mol-io/reader/cif/schema/mmcif-extras';
+import { BitFlags } from '../../../mol-util/bit-flags.ts';
+import { SaccharideCompIdMap } from '../structure/carbohydrates/constants.ts';
+import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
+import { SetUtils } from '../../../mol-util/set.ts';
+import { EntitySubtype, ChemicalComponent } from './properties/common.ts';
+import { LipidNames } from './types/lipids.ts';
+import { IonNames } from './types/ions.ts';
+import { mmCIF_chemComp_schema } from '../../../mol-io/reader/cif/schema/mmcif-extras.ts';
 
 const _esCache = (function () {
     const cache = Object.create(null);

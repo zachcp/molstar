@@ -6,18 +6,18 @@
  * @author Ryan DiRisio <rjdiris@gmail.com>
  */
 
-import { StructureElement } from '../../../mol-model/structure';
-import { PluginContext } from '../../../mol-plugin/context';
-import { StateSelection, StateTransform, StateTransformer, StateObject, StateObjectCell } from '../../../mol-state';
-import { StateTransforms } from '../../transforms';
-import { PluginCommands } from '../../../mol-plugin/commands';
-import { arraySetAdd } from '../../../mol-util/array';
-import { PluginStateObject } from '../../objects';
-import { StatefulPluginComponent } from '../../component';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { MeasurementRepresentationCommonTextParams, LociLabelTextParams } from '../../../mol-repr/shape/loci/common';
-import { LineParams } from '../../../mol-repr/structure/representation/line';
-import { Color } from '../../../mol-util/color';
+import { StructureElement } from '../../../mol-model/structure.ts';
+import { PluginContext } from '../../../mol-plugin/context.ts';
+import { StateSelection, StateTransform, StateTransformer, StateObject, StateObjectCell } from '../../../mol-state/index.ts';
+import { StateTransforms } from '../../transforms.ts';
+import { PluginCommands } from '../../../mol-plugin/commands.ts';
+import { arraySetAdd } from '../../../mol-util/array.ts';
+import { PluginStateObject } from '../../objects.ts';
+import { StatefulPluginComponent } from '../../component.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { MeasurementRepresentationCommonTextParams, LociLabelTextParams } from '../../../mol-repr/shape/loci/common.ts';
+import { LineParams } from '../../../mol-repr/structure/representation/line.ts';
+import { Color } from '../../../mol-util/color/index.ts';
 
 export { StructureMeasurementManager };
 

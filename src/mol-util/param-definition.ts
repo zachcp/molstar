@@ -5,16 +5,16 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Color as ColorData } from './color';
-import { shallowEqualObjects } from './index';
-import { Vec2 as Vec2Data, Vec3 as Vec3Data, Mat4 as Mat4Data, EPSILON } from '../mol-math/linear-algebra';
-import { deepClone } from './object';
-import { Script as ScriptData } from '../mol-script/script';
-import { Legend } from './legend';
-import { stringToWords } from './string';
-import { getColorListFromName, ColorListName } from './color/lists';
-import { Asset } from './assets';
-import { ColorListEntry } from './color/color';
+import { Color as ColorData } from './color/index.ts';
+import { shallowEqualObjects } from './index.ts';
+import { Vec2 as Vec2Data, Vec3 as Vec3Data, Mat4 as Mat4Data, EPSILON } from '../mol-math/linear-algebra.ts';
+import { deepClone } from './object.ts';
+import { Script as ScriptData } from '../mol-script/script.ts';
+import { Legend } from './legend.ts';
+import { stringToWords } from './string.ts';
+import { getColorListFromName, ColorListName } from './color/lists.ts';
+import { Asset } from './assets.ts';
+import { ColorListEntry } from './color/color.ts';
 
 export namespace ParamDefinition {
     export interface Info {

@@ -4,25 +4,25 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { QuadSchema, QuadValues } from '../../mol-gl/compute/util';
-import { ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable';
-import { TextureSpec, UniformSpec, DefineSpec, Values } from '../../mol-gl/renderable/schema';
-import { ShaderCode } from '../../mol-gl/shader-code';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { createComputeRenderItem } from '../../mol-gl/webgl/render-item';
-import { RenderTarget } from '../../mol-gl/webgl/render-target';
-import { loadImageTexture, Texture } from '../../mol-gl/webgl/texture';
-import { Vec2, Vec4 } from '../../mol-math/linear-algebra';
-import { ValueCell } from '../../mol-util';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { blend_vert } from '../../mol-gl/shader/smaa/blend.vert';
-import { blend_frag } from '../../mol-gl/shader/smaa/blend.frag';
-import { weights_vert } from '../../mol-gl/shader/smaa/weights.vert';
-import { weights_frag } from '../../mol-gl/shader/smaa/weights.frag';
-import { edges_vert } from '../../mol-gl/shader/smaa/edges.vert';
-import { edges_frag } from '../../mol-gl/shader/smaa/edges.frag';
-import { Viewport } from '../camera/util';
-import { isDebugMode, isTimingMode } from '../../mol-util/debug';
+import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
+import { ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
+import { TextureSpec, UniformSpec, DefineSpec, Values } from '../../mol-gl/renderable/schema.ts';
+import { ShaderCode } from '../../mol-gl/shader-code.ts';
+import { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
+import { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
+import { loadImageTexture, Texture } from '../../mol-gl/webgl/texture.ts';
+import { Vec2, Vec4 } from '../../mol-math/linear-algebra.ts';
+import { ValueCell } from '../../mol-util/index.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { blend_vert } from '../../mol-gl/shader/smaa/blend.vert.ts';
+import { blend_frag } from '../../mol-gl/shader/smaa/blend.frag.ts';
+import { weights_vert } from '../../mol-gl/shader/smaa/weights.vert.ts';
+import { weights_frag } from '../../mol-gl/shader/smaa/weights.frag.ts';
+import { edges_vert } from '../../mol-gl/shader/smaa/edges.vert.ts';
+import { edges_frag } from '../../mol-gl/shader/smaa/edges.frag.ts';
+import { Viewport } from '../camera/util.ts';
+import { isDebugMode, isTimingMode } from '../../mol-util/debug.ts';
 
 export const SmaaParams = {
     edgeThreshold: PD.Numeric(0.1, { min: 0.05, max: 0.15, step: 0.01 }),

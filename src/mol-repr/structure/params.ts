@@ -5,17 +5,17 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { DirectVolume } from '../../mol-geo/geometry/direct-volume/direct-volume';
-import { Lines } from '../../mol-geo/geometry/lines/lines';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { Points } from '../../mol-geo/geometry/points/points';
-import { Spheres } from '../../mol-geo/geometry/spheres/spheres';
-import { Cylinders } from '../../mol-geo/geometry/cylinders/cylinders';
-import { Text } from '../../mol-geo/geometry/text/text';
-import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh';
-import { Image } from '../../mol-geo/geometry/image/image';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { UnitKind, UnitKindOptions } from './visual/util/common';
+import { DirectVolume } from '../../mol-geo/geometry/direct-volume/direct-volume.ts';
+import { Lines } from '../../mol-geo/geometry/lines/lines.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { Points } from '../../mol-geo/geometry/points/points.ts';
+import { Spheres } from '../../mol-geo/geometry/spheres/spheres.ts';
+import { Cylinders } from '../../mol-geo/geometry/cylinders/cylinders.ts';
+import { Text } from '../../mol-geo/geometry/text/text.ts';
+import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh.ts';
+import { Image } from '../../mol-geo/geometry/image/image.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { UnitKind, UnitKindOptions } from './visual/util/common.ts';
 
 export function getUnitKindsParam(defaultValue: UnitKind[]) {
     return PD.MultiSelect<UnitKind>(defaultValue, UnitKindOptions, { description: 'For which kinds of units/chains to show the representation visuals.' });

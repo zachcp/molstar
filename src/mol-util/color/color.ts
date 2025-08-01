@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { NumberArray } from '../../mol-util/type-helpers';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { Hcl } from './spaces/hcl';
-import { Lab } from './spaces/lab';
+import { NumberArray } from '../type-helpers.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { Hcl } from './spaces/hcl.ts';
+import { Lab } from './spaces/lab.ts';
 
 /** RGB color triplet expressed as a single number */
 export type Color = { readonly '@type': 'color' } & number

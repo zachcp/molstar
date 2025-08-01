@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Queries, Structure, StructureQuery, StructureSymmetry, StructureProperties } from '../../../mol-model/structure';
-import { getAtomsTests } from '../query/atoms';
-import { CifWriter } from '../../../mol-io/writer/cif';
-import { QuerySchemas } from '../query/schemas';
-import { Mat4 } from '../../../mol-math/linear-algebra';
+import { Queries, Structure, StructureQuery, StructureSymmetry, StructureProperties } from '../../../mol-model/structure.ts';
+import { getAtomsTests } from '../query/atoms.ts';
+import { CifWriter } from '../../../mol-io/writer/cif.ts';
+import { QuerySchemas } from '../query/schemas.ts';
+import { Mat4 } from '../../../mol-math/linear-algebra.ts';
 
 export enum QueryParamType {
     JSON,

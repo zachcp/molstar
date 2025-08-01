@@ -6,27 +6,27 @@
  * @author Neli Fonseca <neli@ebi.ac.uk>
  */
 
-import * as CCP4 from '../../mol-io/reader/ccp4/parser';
-import { CIF } from '../../mol-io/reader/cif';
-import * as DSN6 from '../../mol-io/reader/dsn6/parser';
-import * as PLY from '../../mol-io/reader/ply/parser';
-import { parsePsf } from '../../mol-io/reader/psf/parser';
-import { PluginContext } from '../../mol-plugin/context';
-import { StateObject, StateTransformer } from '../../mol-state';
-import { Task } from '../../mol-task';
-import { ajaxGetMany } from '../../mol-util/data-source';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { PluginStateObject as SO, PluginStateTransform } from '../objects';
-import { Asset } from '../../mol-util/assets';
-import { parseCube } from '../../mol-io/reader/cube/parser';
-import { parseDx } from '../../mol-io/reader/dx/parser';
-import { ColorNames } from '../../mol-util/color/names';
-import { assertUnreachable } from '../../mol-util/type-helpers';
-import { parsePrmtop } from '../../mol-io/reader/prmtop/parser';
-import { parseTop } from '../../mol-io/reader/top/parser';
-import { ungzip } from '../../mol-util/zip/zip';
-import { StringLike } from '../../mol-io/common/string-like';
-import { utf8ReadLong } from '../../mol-io/common/utf8';
+import * as CCP4 from '../../mol-io/reader/ccp4/parser.ts';
+import { CIF } from '../../mol-io/reader/cif.ts';
+import * as DSN6 from '../../mol-io/reader/dsn6/parser.ts';
+import * as PLY from '../../mol-io/reader/ply/parser.ts';
+import { parsePsf } from '../../mol-io/reader/psf/parser.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { StateObject, StateTransformer } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
+import { ajaxGetMany } from '../../mol-util/data-source.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { PluginStateObject as SO, PluginStateTransform } from '../objects.ts';
+import { Asset } from '../../mol-util/assets.ts';
+import { parseCube } from '../../mol-io/reader/cube/parser.ts';
+import { parseDx } from '../../mol-io/reader/dx/parser.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
+import { parsePrmtop } from '../../mol-io/reader/prmtop/parser.ts';
+import { parseTop } from '../../mol-io/reader/top/parser.ts';
+import { ungzip } from '../../mol-util/zip/zip.ts';
+import { StringLike } from '../../mol-io/common/string-like.ts';
+import { utf8ReadLong } from '../../mol-io/common/utf8.ts';
 
 
 export { Download };

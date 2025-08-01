@@ -5,20 +5,20 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { createAttributeBuffers, ElementsBuffer, AttributeKind, AttributeBuffers } from './buffer';
-import { createTextures, Texture } from './texture';
-import { WebGLContext } from './context';
-import { ShaderCode, DefineValues } from '../shader-code';
-import { Program, Programs } from './program';
-import { RenderableSchema, RenderableValues, AttributeSpec, getValueVersions, splitValues, DefineSpec } from '../renderable/schema';
-import { idFactory } from '../../mol-util/id-factory';
-import { ValueCell } from '../../mol-util';
-import { TextureImage, TextureVolume } from '../../mol-gl/renderable/util';
-import { isDebugMode, isTimingMode } from '../../mol-util/debug';
-import { VertexArray } from './vertex-array';
-import { fillSerial } from '../../mol-util/array';
-import { deepClone } from '../../mol-util/object';
-import { cloneUniformValues, UniformsList } from './uniform';
+import { createAttributeBuffers, ElementsBuffer, AttributeKind, AttributeBuffers } from './buffer.ts';
+import { createTextures, Texture } from './texture.ts';
+import { WebGLContext } from './context.ts';
+import { ShaderCode, DefineValues } from '../shader-code.ts';
+import { Program, Programs } from './program.ts';
+import { RenderableSchema, RenderableValues, AttributeSpec, getValueVersions, splitValues, DefineSpec } from '../renderable/schema.ts';
+import { idFactory } from '../../mol-util/id-factory.ts';
+import { ValueCell } from '../../mol-util/index.ts';
+import { TextureImage, TextureVolume } from '../renderable/util.ts';
+import { isDebugMode, isTimingMode } from '../../mol-util/debug.ts';
+import { VertexArray } from './vertex-array.ts';
+import { fillSerial } from '../../mol-util/array.ts';
+import { deepClone } from '../../mol-util/object.ts';
+import { cloneUniformValues, UniformsList } from './uniform.ts';
 
 // Handle Firefox's preference [webgl.max-vert-ids-per-draw] which defaults to 30_000_000
 // since FF119, see https://bugzilla.mozilla.org/show_bug.cgi?id=1849433

@@ -4,18 +4,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ThemeDataContext } from '../../../../mol-theme/theme';
-import { ColorTheme, LocationColor } from '../../../../mol-theme/color';
-import { ParamDefinition as PD } from '../../../../mol-util/param-definition';
-import { Color } from '../../../../mol-util/color';
-import { Bond, ElementIndex, StructureElement } from '../../../../mol-model/structure';
-import { Location } from '../../../../mol-model/location';
-import { CustomProperty } from '../../../../mol-model-props/common/custom-property';
-import { ValidationReportProvider, ValidationReport } from '../prop';
-import { TableLegend } from '../../../../mol-util/legend';
-import { PolymerType } from '../../../../mol-model/structure/model/types';
-import { SetUtils } from '../../../../mol-util/set';
-import { ColorThemeCategory } from '../../../../mol-theme/color/categories';
+import { ThemeDataContext } from '../../../../mol-theme/theme.ts';
+import { ColorTheme, LocationColor } from '../../../../mol-theme/color.ts';
+import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
+import { Color } from '../../../../mol-util/color/index.ts';
+import { Bond, ElementIndex, StructureElement } from '../../../../mol-model/structure.ts';
+import { Location } from '../../../../mol-model/location.ts';
+import { CustomProperty } from '../../../../mol-model-props/common/custom-property.ts';
+import { ValidationReportProvider, ValidationReport } from '../prop.ts';
+import { TableLegend } from '../../../../mol-util/legend.ts';
+import { PolymerType } from '../../../../mol-model/structure/model/types.ts';
+import { SetUtils } from '../../../../mol-util/set.ts';
+import { ColorThemeCategory } from '../../../../mol-theme/color/categories.ts';
 
 const DefaultColor = Color(0x909090);
 

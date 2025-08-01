@@ -6,18 +6,18 @@
  * @author Ludovic Autin <ludovic.autin@gmail.com>
  */
 
-import { Coordinates, Frame, Time } from '../../mol-model/structure/coordinates';
-import { LammpsTrajectoryFile, lammpsUnitStyles, UnitStyle } from '../../mol-io/reader/lammps/schema';
-import { Model } from '../../mol-model/structure/model';
-import { RuntimeContext, Task } from '../../mol-task';
-import { Column, Table } from '../../mol-data/db';
-import { Trajectory } from '../../mol-model/structure';
-import { BasicSchema, createBasic } from './basic/schema';
-import { ComponentBuilder } from './common/component';
-import { EntityBuilder } from './common/entity';
-import { createModels } from './basic/parser';
-import { MoleculeType } from '../../mol-model/structure/model/types';
-import { ModelFormat } from '../format';
+import { Coordinates, Frame, Time } from '../../mol-model/structure/coordinates.ts';
+import { LammpsTrajectoryFile, lammpsUnitStyles, UnitStyle } from '../../mol-io/reader/lammps/schema.ts';
+import { Model } from '../../mol-model/structure/model.ts';
+import { RuntimeContext, Task } from '../../mol-task/index.ts';
+import { Column, Table } from '../../mol-data/db.ts';
+import { Trajectory } from '../../mol-model/structure.ts';
+import { BasicSchema, createBasic } from './basic/schema.ts';
+import { ComponentBuilder } from './common/component.ts';
+import { EntityBuilder } from './common/entity.ts';
+import { createModels } from './basic/parser.ts';
+import { MoleculeType } from '../../mol-model/structure/model/types.ts';
+import { ModelFormat } from '../format.ts';
 
 export function coordinatesFromLammpsTrajectory(file: LammpsTrajectoryFile, unitsStyle: UnitStyle = 'real'): Task<Coordinates> {
     return Task.create('Parse Lammps Trajectory', async ctx => {

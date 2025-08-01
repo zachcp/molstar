@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { CoarseRanges, CoarseElementData } from '../coarse/hierarchy';
-import { Segmentation, Interval } from '../../../../../mol-data/int';
-import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges';
-import { ElementIndex } from '../../indexing';
-import { ChemicalComponent } from '../common';
+import { CoarseRanges, CoarseElementData } from '../coarse/hierarchy.ts';
+import { Segmentation, Interval } from '../../../../../mol-data/int.ts';
+import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges.ts';
+import { ElementIndex } from '../../indexing.ts';
+import { ChemicalComponent } from '../common.ts';
 
 // TODO assumes all coarse elements are part of a polymer
 // TODO add gaps at the ends of the chains by comparing to the polymer sequence data

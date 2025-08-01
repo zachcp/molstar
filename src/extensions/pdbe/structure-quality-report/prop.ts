@@ -5,24 +5,24 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column, Table } from '../../../mol-data/db';
-import { toTable } from '../../../mol-io/reader/cif/schema';
-import { mmCIF_residueId_schema } from '../../../mol-io/reader/cif/schema/mmcif-extras';
-import { CifWriter } from '../../../mol-io/writer/cif';
-import { Model, ResidueIndex, Unit, IndexedCustomProperty } from '../../../mol-model/structure';
-import { residueIdFields } from '../../../mol-model/structure/export/categories/atom_site';
-import { StructureElement, CifExportContext, Structure } from '../../../mol-model/structure/structure';
-import { CustomPropSymbol } from '../../../mol-script/language/symbol';
-import { Type } from '../../../mol-script/language/type';
-import { QuerySymbolRuntime } from '../../../mol-script/runtime/query/compiler';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { arraySetAdd } from '../../../mol-util/array';
-import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif';
-import { PropertyWrapper } from '../../../mol-model-props/common/wrapper';
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property';
-import { Asset } from '../../../mol-util/assets';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
+import { Column, Table } from '../../../mol-data/db.ts';
+import { toTable } from '../../../mol-io/reader/cif/schema.ts';
+import { mmCIF_residueId_schema } from '../../../mol-io/reader/cif/schema/mmcif-extras.ts';
+import { CifWriter } from '../../../mol-io/writer/cif.ts';
+import { Model, ResidueIndex, Unit, IndexedCustomProperty } from '../../../mol-model/structure.ts';
+import { residueIdFields } from '../../../mol-model/structure/export/categories/atom_site.ts';
+import { StructureElement, CifExportContext, Structure } from '../../../mol-model/structure/structure.ts';
+import { CustomPropSymbol } from '../../../mol-script/language/symbol.ts';
+import { Type } from '../../../mol-script/language/type.ts';
+import { QuerySymbolRuntime } from '../../../mol-script/runtime/query/compiler.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { arraySetAdd } from '../../../mol-util/array.ts';
+import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif.ts';
+import { PropertyWrapper } from '../../../mol-model-props/common/wrapper.ts';
+import { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property.ts';
+import { Asset } from '../../../mol-util/assets.ts';
+import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
 
 export { StructureQualityReport };
 

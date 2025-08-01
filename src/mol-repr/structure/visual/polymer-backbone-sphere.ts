@@ -4,25 +4,25 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { VisualContext } from '../../visual';
-import { Unit, Structure, ElementIndex, StructureElement } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { eachPolymerElement, getPolymerElementLoci, PolymerLocationIterator } from './util/polymer';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual, UnitsSpheresVisual, UnitsSpheresParams } from '../units-visual';
-import { VisualUpdateState } from '../../util';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere';
-import { sphereVertexCount } from '../../../mol-geo/primitive/sphere';
-import { WebGLContext } from '../../../mol-gl/webgl/context';
-import { Spheres } from '../../../mol-geo/geometry/spheres/spheres';
-import { SpheresBuilder } from '../../../mol-geo/geometry/spheres/spheres-builder';
-import { eachPolymerBackboneElement } from './util/polymer/backbone';
-import { checkSphereImpostorSupport, StructureGroup } from './util/common';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { VisualContext } from '../../visual.ts';
+import { Unit, Structure, ElementIndex, StructureElement } from '../../../mol-model/structure.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { eachPolymerElement, getPolymerElementLoci, PolymerLocationIterator } from './util/polymer.ts';
+import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual, UnitsSpheresVisual, UnitsSpheresParams } from '../units-visual.ts';
+import { VisualUpdateState } from '../../util.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere.ts';
+import { sphereVertexCount } from '../../../mol-geo/primitive/sphere.ts';
+import { WebGLContext } from '../../../mol-gl/webgl/context.ts';
+import { Spheres } from '../../../mol-geo/geometry/spheres/spheres.ts';
+import { SpheresBuilder } from '../../../mol-geo/geometry/spheres/spheres-builder.ts';
+import { eachPolymerBackboneElement } from './util/polymer/backbone.ts';
+import { checkSphereImpostorSupport, StructureGroup } from './util/common.ts';
 
 export const PolymerBackboneSphereParams = {
     ...UnitsMeshParams,

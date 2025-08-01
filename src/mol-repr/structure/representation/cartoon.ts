@@ -5,24 +5,24 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { Structure, Unit } from '../../../mol-model/structure';
-import { Representation, RepresentationContext, RepresentationParamsGetter } from '../../../mol-repr/representation';
-import { ThemeRegistryContext } from '../../../mol-theme/theme';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation';
-import { UnitsRepresentation } from '../units-representation';
-import { NucleotideBlockParams, NucleotideBlockVisual } from '../visual/nucleotide-block-mesh';
-import { NucleotideRingParams, NucleotideRingVisual } from '../visual/nucleotide-ring-mesh';
-import { NucleotideAtomicRingFillParams, NucleotideAtomicRingFillVisual } from '../visual/nucleotide-atomic-ring-fill';
-import { NucleotideAtomicBondParams, NucleotideAtomicBondVisual } from '../visual/nucleotide-atomic-bond';
-import { NucleotideAtomicElementParams, NucleotideAtomicElementVisual } from '../visual/nucleotide-atomic-element';
-import { PolymerDirectionParams, PolymerDirectionVisual } from '../visual/polymer-direction-wedge';
-import { PolymerGapParams, PolymerGapVisual } from '../visual/polymer-gap-cylinder';
-import { PolymerTraceParams, PolymerTraceVisual } from '../visual/polymer-trace-mesh';
-import { SecondaryStructureProvider } from '../../../mol-model-props/computed/secondary-structure';
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { HelixOrientationProvider } from '../../../mol-model-props/computed/helix-orientation';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
+import { Structure, Unit } from '../../../mol-model/structure.ts';
+import { Representation, RepresentationContext, RepresentationParamsGetter } from '../../representation.ts';
+import { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
+import { UnitsRepresentation } from '../units-representation.ts';
+import { NucleotideBlockParams, NucleotideBlockVisual } from '../visual/nucleotide-block-mesh.ts';
+import { NucleotideRingParams, NucleotideRingVisual } from '../visual/nucleotide-ring-mesh.ts';
+import { NucleotideAtomicRingFillParams, NucleotideAtomicRingFillVisual } from '../visual/nucleotide-atomic-ring-fill.ts';
+import { NucleotideAtomicBondParams, NucleotideAtomicBondVisual } from '../visual/nucleotide-atomic-bond.ts';
+import { NucleotideAtomicElementParams, NucleotideAtomicElementVisual } from '../visual/nucleotide-atomic-element.ts';
+import { PolymerDirectionParams, PolymerDirectionVisual } from '../visual/polymer-direction-wedge.ts';
+import { PolymerGapParams, PolymerGapVisual } from '../visual/polymer-gap-cylinder.ts';
+import { PolymerTraceParams, PolymerTraceVisual } from '../visual/polymer-trace-mesh.ts';
+import { SecondaryStructureProvider } from '../../../mol-model-props/computed/secondary-structure.ts';
+import { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import { HelixOrientationProvider } from '../../../mol-model-props/computed/helix-orientation.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const CartoonVisuals = {
     'polymer-trace': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, PolymerTraceParams>) => UnitsRepresentation('Polymer trace mesh', ctx, getParams, PolymerTraceVisual),

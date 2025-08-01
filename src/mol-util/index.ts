@@ -5,13 +5,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { BitFlags } from './bit-flags';
-import { StringBuilder } from './string-builder';
-import { UUID } from './uuid';
-import { Mask } from './mask';
-import { Progress } from '../mol-task';
+import { BitFlags } from './bit-flags.ts';
+import { StringBuilder } from './string-builder.ts';
+import { UUID } from './uuid.ts';
+import { Mask } from './mask.ts';
+import { Progress } from '../mol-task/index.ts';
 
-export * from './value-cell';
+export * from './value-cell.ts';
 export { BitFlags, StringBuilder, UUID, Mask };
 
 export const noop = function () { };

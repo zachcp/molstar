@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { UUID } from '../../../mol-util';
-import { Column } from '../../../mol-data/db';
-import { BasicData } from '../../../mol-model-formats/structure/basic/schema';
-import { ModelFormat } from '../../../mol-model-formats/format';
+import { UUID } from '../../../mol-util/index.ts';
+import { Column } from '../../../mol-data/db.ts';
+import { BasicData } from '../../../mol-model-formats/structure/basic/schema.ts';
+import { ModelFormat } from '../../../mol-model-formats/format.ts';
 
 export { Topology };
 

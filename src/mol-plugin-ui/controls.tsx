@@ -7,26 +7,26 @@
 
 import * as React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { UpdateTrajectory } from '../mol-plugin-state/actions/structure';
-import { LociLabel } from '../mol-plugin-state/manager/loci-label';
-import { PluginStateObject } from '../mol-plugin-state/objects';
-import { StateTransforms } from '../mol-plugin-state/transforms';
-import { ModelFromTrajectory } from '../mol-plugin-state/transforms/model';
-import { PluginCommands } from '../mol-plugin/commands';
-import { StateTransformer } from '../mol-state';
-import { PluginReactContext, PluginUIComponent } from './base';
-import { IconButton } from './controls/common';
-import { Icon, NavigateBeforeSvg, NavigateNextSvg, SkipPreviousSvg, StopSvg, PlayArrowSvg, SubscriptionsOutlinedSvg, BuildSvg } from './controls/icons';
-import { AnimationControls } from './state/animation';
-import { StructureComponentControls } from './structure/components';
-import { StructureMeasurementsControls } from './structure/measurements';
-import { StructureSelectionActionsControls } from './structure/selection';
-import { StructureSourceControls } from './structure/source';
-import { VolumeStreamingControls, VolumeSourceControls } from './structure/volume';
-import { PluginConfig } from '../mol-plugin/config';
-import { StructureSuperpositionControls } from './structure/superposition';
-import { StructureQuickStylesControls } from './structure/quick-styles';
-import { Markdown } from './controls/markdown';
+import { UpdateTrajectory } from '../mol-plugin-state/actions/structure.ts';
+import { LociLabel } from '../mol-plugin-state/manager/loci-label.ts';
+import { PluginStateObject } from '../mol-plugin-state/objects.ts';
+import { StateTransforms } from '../mol-plugin-state/transforms.ts';
+import { ModelFromTrajectory } from '../mol-plugin-state/transforms/model.ts';
+import { PluginCommands } from '../mol-plugin/commands.ts';
+import { StateTransformer } from '../mol-state/index.ts';
+import { PluginReactContext, PluginUIComponent } from './base.tsx';
+import { IconButton } from './controls/common.tsx';
+import { Icon, NavigateBeforeSvg, NavigateNextSvg, SkipPreviousSvg, StopSvg, PlayArrowSvg, SubscriptionsOutlinedSvg, BuildSvg } from './controls/icons.tsx';
+import { AnimationControls } from './state/animation.tsx';
+import { StructureComponentControls } from './structure/components.tsx';
+import { StructureMeasurementsControls } from './structure/measurements.tsx';
+import { StructureSelectionActionsControls } from './structure/selection.tsx';
+import { StructureSourceControls } from './structure/source.tsx';
+import { VolumeStreamingControls, VolumeSourceControls } from './structure/volume.tsx';
+import { PluginConfig } from '../mol-plugin/config.ts';
+import { StructureSuperpositionControls } from './structure/superposition.tsx';
+import { StructureQuickStylesControls } from './structure/quick-styles.tsx';
+import { Markdown } from './controls/markdown.tsx';
 
 export class TrajectoryViewportControls extends PluginUIComponent<{}, { show: boolean, label: string }> {
     state = { show: false, label: '' };
@@ -111,12 +111,12 @@ export class StateSnapshotViewportControls extends PluginUIComponent<{}, { isBus
         this.subscribe(this.plugin.behaviors.state.isBusy, isBusy => this.setState({ isBusy }));
         this.subscribe(this.plugin.behaviors.state.isAnimating, isBusy => this.setState({ isBusy }));
 
-        window.addEventListener('keyup', this.keyUp, false);
+        globalThis.addEventListener('keyup', this.keyUp, false);
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
-        window.removeEventListener('keyup', this.keyUp, false);
+        globalThis.removeEventListener('keyup', this.keyUp, false);
     }
 
     keyUp = (e: KeyboardEvent) => {

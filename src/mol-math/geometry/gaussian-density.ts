@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Box3D, DensityData, DensityTextureData } from '../geometry';
-import { PositionData } from './common';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { GaussianDensityTexture2d, GaussianDensityTexture3d } from './gaussian-density/gpu';
-import { Task } from '../../mol-task/task';
-import { GaussianDensityCPU } from './gaussian-density/cpu';
+import { Box3D, DensityData, DensityTextureData } from '../geometry.ts';
+import { PositionData } from './common.ts';
+import { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { Texture } from '../../mol-gl/webgl/texture.ts';
+import { GaussianDensityTexture2d, GaussianDensityTexture3d } from './gaussian-density/gpu.ts';
+import { Task } from '../../mol-task/task.ts';
+import { GaussianDensityCPU } from './gaussian-density/cpu.ts';
 
 export const DefaultGaussianDensityProps = {
     resolution: 1,

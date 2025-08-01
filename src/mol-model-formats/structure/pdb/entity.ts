@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Tokens } from '../../../mol-io/reader/common/text/tokenizer';
-import { EntityCompound } from '../common/entity';
+import { Tokens } from '../../../mol-io/reader/common/text/tokenizer.ts';
+import { EntityCompound } from '../common/entity.ts';
 
 const Spec = {
     'MOL_ID': '',

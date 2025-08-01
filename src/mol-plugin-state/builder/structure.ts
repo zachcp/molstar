@@ -4,21 +4,21 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginContext } from '../../mol-plugin/context';
-import { StateObjectRef, StateObjectSelector, StateTransformer, StateTransform, StateObjectCell } from '../../mol-state';
-import { PluginStateObject as SO } from '../objects';
-import { StateTransforms } from '../transforms';
-import { RootStructureDefinition } from '../helpers/root-structure';
-import { StructureComponentParams, StaticStructureComponentType } from '../helpers/structure-component';
-import { BuiltInTrajectoryFormat, TrajectoryFormatProvider } from '../formats/trajectory';
-import { StructureRepresentationBuilder } from './structure/representation';
-import { StructureSelectionQuery } from '../helpers/structure-selection-query';
-import { Task } from '../../mol-task';
-import { StructureElement } from '../../mol-model/structure';
-import { ModelSymmetry } from '../../mol-model-formats/structure/property/symmetry';
-import { SpacegroupCell } from '../../mol-math/geometry';
-import { Expression } from '../../mol-script/language/expression';
-import { TrajectoryHierarchyBuilder } from './structure/hierarchy';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { StateObjectRef, StateObjectSelector, StateTransformer, StateTransform, StateObjectCell } from '../../mol-state/index.ts';
+import { PluginStateObject as SO } from '../objects.ts';
+import { StateTransforms } from '../transforms.ts';
+import { RootStructureDefinition } from '../helpers/root-structure.ts';
+import { StructureComponentParams, StaticStructureComponentType } from '../helpers/structure-component.ts';
+import { BuiltInTrajectoryFormat, TrajectoryFormatProvider } from '../formats/trajectory.ts';
+import { StructureRepresentationBuilder } from './structure/representation.ts';
+import { StructureSelectionQuery } from '../helpers/structure-selection-query.ts';
+import { Task } from '../../mol-task/index.ts';
+import { StructureElement } from '../../mol-model/structure.ts';
+import { ModelSymmetry } from '../../mol-model-formats/structure/property/symmetry.ts';
+import { SpacegroupCell } from '../../mol-math/geometry.ts';
+import { Expression } from '../../mol-script/language/expression.ts';
+import { TrajectoryHierarchyBuilder } from './structure/hierarchy.ts';
 
 export class StructureBuilder {
     private get dataState() {

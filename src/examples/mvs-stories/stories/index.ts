@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { buildStory as kinase } from './kinase';
-import { buildStory as tbp } from './tbp';
+import { buildStory as kinase } from './kinase.ts';
+import { buildStory as tbp } from './tbp.ts';
 
 export const Stories = [
     { id: 'kinase', name: 'BCR-ABL: A Kinase Out of Control', buildStory: kinase },

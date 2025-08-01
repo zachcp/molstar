@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { CifField } from '../../../mol-io/reader/cif';
-import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif';
-import { TokenBuilder, Tokenizer } from '../../../mol-io/reader/common/text/tokenizer';
-import { guessElementSymbolTokens } from '../util';
-import { parseIntSkipLeadingWhitespace as fastParseInt } from '../../../mol-io/reader/common/text/number-parser';
-import { StringLike } from '../../../mol-io/common/string-like';
+import { CifField } from '../../../mol-io/reader/cif.ts';
+import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
+import { TokenBuilder, Tokenizer } from '../../../mol-io/reader/common/text/tokenizer.ts';
+import { guessElementSymbolTokens } from '../util.ts';
+import { parseIntSkipLeadingWhitespace as fastParseInt } from '../../../mol-io/reader/common/text/number-parser.ts';
+import { StringLike } from '../../../mol-io/common/string-like.ts';
 
 
 type AnisotropicTemplate = typeof getAnisotropicTemplate extends (...args: any) => infer T ? T : never

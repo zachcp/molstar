@@ -5,11 +5,11 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Interval, OrderedSet } from '../../mol-data/int';
-import { Loci } from '../../mol-model/loci';
-import { Structure, StructureElement, StructureProperties } from '../../mol-model/structure';
-import { ColorNames } from '../../mol-util/color/names';
-import { SequenceWrapper, StructureUnit } from './wrapper';
+import { Interval, OrderedSet } from '../../mol-data/int.ts';
+import { Loci } from '../../mol-model/loci.ts';
+import { Structure, StructureElement, StructureProperties } from '../../mol-model/structure.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { SequenceWrapper, StructureUnit } from './wrapper.ts';
 
 export class ChainSequenceWrapper extends SequenceWrapper<StructureUnit> {
     private label: string;

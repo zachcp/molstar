@@ -1,9 +1,9 @@
-import { StructureElement, StructureProperties } from '../../../mol-model/structure';
-import { LociLabel } from '../../../mol-plugin-state/manager/loci-label';
-import { SbNcbrPartialChargesPropertyProvider, hasPartialChargesCategories } from './property';
-import { Loci } from '../../../mol-model/loci';
-import { PluginContext } from '../../../mol-plugin/context';
-import { LociLabelProvider } from '../../../mol-plugin-state/manager/loci-label';
+import { StructureElement, StructureProperties } from '../../../mol-model/structure.ts';
+import { LociLabel } from '../../../mol-plugin-state/manager/loci-label.ts';
+import { SbNcbrPartialChargesPropertyProvider, hasPartialChargesCategories } from './property.ts';
+import { Loci } from '../../../mol-model/loci.ts';
+import { PluginContext } from '../../../mol-plugin/context.ts';
+import { LociLabelProvider } from '../../../mol-plugin-state/manager/loci-label.ts';
 
 export function SbNcbrPartialChargesLociLabelProvider(ctx: PluginContext): LociLabelProvider {
     return {

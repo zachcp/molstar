@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { AtomicConformation } from './properties/atomic';
-import { CoarseConformation } from './properties/coarse';
-import { arrayMinMax } from '../../../mol-util/array';
-import { Model } from './model';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { AtomicConformation } from './properties/atomic.ts';
+import { CoarseConformation } from './properties/coarse.ts';
+import { arrayMinMax } from '../../../mol-util/array.ts';
+import { Model } from './model.ts';
 
 export function calcModelCenter(atomicConformation: AtomicConformation, coarseConformation?: CoarseConformation) {
     const rangesX: number[] = [];

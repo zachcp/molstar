@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3 } from '../../linear-algebra';
+import { Vec3 } from '../../linear-algebra.ts';
 
 export { Cell };
 

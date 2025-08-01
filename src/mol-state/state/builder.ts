@@ -5,12 +5,12 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { StateTree } from '../tree/immutable';
-import { TransientTree } from '../tree/transient';
-import { StateObject, StateObjectCell, StateObjectSelector, StateObjectRef } from '../object';
-import { StateTransform } from '../transform';
-import { StateTransformer } from '../transformer';
-import { State } from '../state';
+import { StateTree } from '../tree/immutable.ts';
+import { TransientTree } from '../tree/transient.ts';
+import { StateObject, StateObjectCell, StateObjectSelector, StateObjectRef } from '../object.ts';
+import { StateTransform } from '../transform.ts';
+import { StateTransformer } from '../transformer.ts';
+import { State } from '../state.ts';
 import { produce } from 'immer';
 
 export { StateBuilder };

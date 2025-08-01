@@ -7,29 +7,29 @@
  */
 
 import * as React from 'react';
-import { Mat4, Vec2, Vec3 } from '../../mol-math/linear-algebra';
-import { Volume } from '../../mol-model/volume';
-import { Script } from '../../mol-script/script';
-import { Asset } from '../../mol-util/assets';
-import { Color } from '../../mol-util/color';
-import { ColorListEntry } from '../../mol-util/color/color';
-import { ColorListName, ColorListOptions, ColorListOptionsScale, ColorListOptionsSet, getColorListFromName } from '../../mol-util/color/lists';
-import { Legend as LegendData } from '../../mol-util/legend';
-import { memoize1, memoizeLatest } from '../../mol-util/memoize';
-import { getPrecision } from '../../mol-util/number';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ParamMapping } from '../../mol-util/param-mapping';
-import { camelCaseToWords } from '../../mol-util/string';
-import { PluginReactContext, PluginUIComponent } from '../base';
-import { PluginUIContext } from '../context';
-import { ActionMenu } from './action-menu';
-import { ColorOptions, ColorValueOption, CombinedColorControl } from './color';
-import { Button, ControlGroup, ControlRow, ExpandGroup, IconButton, TextInput, ToggleButton } from './common';
-import { ArrowDownwardSvg, ArrowDropDownSvg, ArrowRightSvg, ArrowUpwardSvg, BookmarksOutlinedSvg, CheckSvg, ClearSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, MoreHorizSvg, WarningSvg } from './icons';
-import { legendFor } from './legend';
-import { LineGraphComponent } from './line-graph/line-graph-component';
-import { Slider, Slider2 } from './slider';
-import { getColorGradient, getColorGradientBanded } from '../../mol-util/color/utils';
+import { Mat4, Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { Volume } from '../../mol-model/volume.ts';
+import { Script } from '../../mol-script/script.ts';
+import { Asset } from '../../mol-util/assets.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { ColorListEntry } from '../../mol-util/color/color.ts';
+import { ColorListName, ColorListOptions, ColorListOptionsScale, ColorListOptionsSet, getColorListFromName } from '../../mol-util/color/lists.ts';
+import { Legend as LegendData } from '../../mol-util/legend.ts';
+import { memoize1, memoizeLatest } from '../../mol-util/memoize.ts';
+import { getPrecision } from '../../mol-util/number.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ParamMapping } from '../../mol-util/param-mapping.ts';
+import { camelCaseToWords } from '../../mol-util/string.ts';
+import { PluginReactContext, PluginUIComponent } from '../base.tsx';
+import { PluginUIContext } from '../context.ts';
+import { ActionMenu } from './action-menu.tsx';
+import { ColorOptions, ColorValueOption, CombinedColorControl } from './color.tsx';
+import { Button, ControlGroup, ControlRow, ExpandGroup, IconButton, TextInput, ToggleButton } from './common.tsx';
+import { ArrowDownwardSvg, ArrowDropDownSvg, ArrowRightSvg, ArrowUpwardSvg, BookmarksOutlinedSvg, CheckSvg, ClearSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, MoreHorizSvg, WarningSvg } from './icons.tsx';
+import { legendFor } from './legend.tsx';
+import { LineGraphComponent } from './line-graph/line-graph-component.tsx';
+import { Slider, Slider2 } from './slider.tsx';
+import { getColorGradient, getColorGradientBanded } from '../../mol-util/color/utils.ts';
 
 export type ParameterControlsCategoryFilter = string | null | (string | null)[]
 
@@ -941,7 +941,7 @@ export class Mat4Control extends React.PureComponent<ParamProps<PD.Mat4>, { isEx
         for (let i = 0; i < 4; i++) {
             const row: React.ReactNode[] = [];
             for (let j = 0; j < 4; j++) {
-                row.push(<TextInput key={j} numeric delayMs={50} value={Mat4.getValue(v, i, j)} onChange={this.changeValue(4 * j + i)} className='msp-form-control' blurOnEnter={true} isDisabled={this.props.isDisabled} />);
+                row.push(<TextInput key={j} numeric delayMs={50} value={Mat4.getValue(v, i, j)} onChange={this.changeValue(4 * j + i)} className='msp-form-control' blurOnEnter isDisabled={this.props.isDisabled} />);
             }
             rows.push(<div className='msp-flex-row' key={i}>{row}</div>);
         }
@@ -955,7 +955,7 @@ export class Mat4Control extends React.PureComponent<ParamProps<PD.Mat4>, { isEx
         const label = this.props.param.label || camelCaseToWords(this.props.name);
         return <>
             <ControlRow label={label} control={<button onClick={this.toggleExpanded} disabled={this.props.isDisabled}>
-                <div className='msp-no-overflow' style={{ display: 'block' }}>{'4\u00D74 Matrix'}</div>
+                <div className='msp-no-overflow' style={{ display: 'block' }}>4×4 Matrix</div>
             </button>} />
             {this.state.isExpanded && <div className='msp-control-offset'>
                 {this.grid}
@@ -1061,7 +1061,7 @@ export class FileListControl extends React.PureComponent<ParamProps<PD.FileListP
                 ? names[0] : `${names.length} files selected`;
 
         return <div className='msp-btn msp-btn-block msp-btn-action msp-loader-msp-btn-file' style={{ marginTop: '1px' }}>
-            {label} <input disabled={this.props.isDisabled} onChange={this.onChangeFileList} type='file' multiple={true} accept={this.props.param.accept} />
+            {label} <input disabled={this.props.isDisabled} onChange={this.onChangeFileList} type='file' multiple accept={this.props.param.accept} />
         </div>;
     }
 
@@ -1381,9 +1381,9 @@ class ObjectListItem extends React.PureComponent<ObjectListItemProps, { isExpand
                     {this.props.param.getLabel(this.props.value)}
                 </button>
                 <div>
-                    <IconButton svg={ArrowDownwardSvg} title='Move Up' onClick={this.moveUp} small={true} />
-                    <IconButton svg={ArrowUpwardSvg} title='Move Down' onClick={this.moveDown} small={true} />
-                    <IconButton svg={DeleteOutlinedSvg} title='Remove' onClick={this.remove} small={true} />
+                    <IconButton svg={ArrowDownwardSvg} title='Move Up' onClick={this.moveUp} small />
+                    <IconButton svg={ArrowUpwardSvg} title='Move Down' onClick={this.moveDown} small />
+                    <IconButton svg={DeleteOutlinedSvg} title='Remove' onClick={this.remove} small />
                 </div>
             </div>
             {this.state.isExpanded && <div className='msp-control-offset'>

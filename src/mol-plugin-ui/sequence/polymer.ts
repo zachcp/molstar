@@ -5,13 +5,13 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Interval, OrderedSet, SortedArray } from '../../mol-data/int';
-import { Loci } from '../../mol-model/loci';
-import { Sequence } from '../../mol-model/sequence';
-import { Queries, StructureProperties as SP, Structure, StructureElement, StructureQuery, StructureSelection, Unit } from '../../mol-model/structure';
-import { MissingResidues } from '../../mol-model/structure/model/properties/common';
-import { ColorNames } from '../../mol-util/color/names';
-import { SequenceWrapper, StructureUnit } from './wrapper';
+import { Interval, OrderedSet, SortedArray } from '../../mol-data/int.ts';
+import { Loci } from '../../mol-model/loci.ts';
+import { Sequence } from '../../mol-model/sequence.ts';
+import { Queries, StructureProperties as SP, Structure, StructureElement, StructureQuery, StructureSelection, Unit } from '../../mol-model/structure.ts';
+import { MissingResidues } from '../../mol-model/structure/model/properties/common.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { SequenceWrapper, StructureUnit } from './wrapper.ts';
 
 export class PolymerSequenceWrapper extends SequenceWrapper<StructureUnit> {
     private readonly unitMap: Map<number, Unit>;

@@ -6,10 +6,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StatefulPluginComponent } from '../../mol-plugin-state/component';
+import { StatefulPluginComponent } from '../../mol-plugin-state/component.ts';
 import { OrderedMap } from 'immutable';
-import { PluginContext } from '../context';
-import { PluginCommands } from '../commands';
+import { PluginContext } from '../context.ts';
+import { PluginCommands } from '../commands.ts';
 
 export interface PluginToast {
     title: string,

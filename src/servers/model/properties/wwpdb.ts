@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { AttachModelProperties } from '../property-provider';
-import { wwPDB_chemCompBond, wwPDB_chemCompAtom } from './providers/wwpdb';
+import { AttachModelProperties } from '../property-provider.ts';
+import { wwPDB_chemCompBond, wwPDB_chemCompAtom } from './providers/wwpdb.ts';
 
 export const attachModelProperties: AttachModelProperties = (args) => {
     // return a list of promises that start attaching the props in parallel

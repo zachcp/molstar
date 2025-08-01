@@ -5,7 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column } from '../../../mol-data/db';
+import { Column } from '../../../mol-data/db.ts';
 
 export interface GroHeader {
     title: string,

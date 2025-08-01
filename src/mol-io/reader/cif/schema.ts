@@ -5,10 +5,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { DatabaseCollection, Database, Table, Column, ColumnHelpers } from '../../../mol-data/db';
-import { Tensor } from '../../../mol-math/linear-algebra';
-import { arrayEqual } from '../../../mol-util';
-import * as Data from './data-model';
+import { DatabaseCollection, Database, Table, Column, ColumnHelpers } from '../../../mol-data/db.ts';
+import { Tensor } from '../../../mol-math/linear-algebra.ts';
+import { arrayEqual } from '../../../mol-util/index.ts';
+import * as Data from './data-model.ts';
 
 export namespace FieldPath {
     export function canonical(path: string) {

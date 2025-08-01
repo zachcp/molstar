@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { CifWriter } from '../../mol-io/writer/cif';
-import { Model } from '../../mol-model/structure';
-import { dateToUtcString } from '../../mol-util/date';
-import { MmcifFormat } from '../../mol-model-formats/structure/mmcif';
+import { CifWriter } from '../../mol-io/writer/cif.ts';
+import { Model } from '../../mol-model/structure.ts';
+import { dateToUtcString } from '../../mol-util/date.ts';
+import { MmcifFormat } from '../../mol-model-formats/structure/mmcif.ts';
 
 interface PropertyWrapper<Data> {
     info: PropertyWrapper.Info,

@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StateTransformer, StateTransform } from '../../mol-state';
-import { PluginContext } from '../../mol-plugin/context';
-import { Download, ReadFile, DownloadBlob, RawData } from '../transforms/data';
-import { getFileNameInfo } from '../../mol-util/file-info';
+import { StateTransformer, StateTransform } from '../../mol-state/index.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { Download, ReadFile, DownloadBlob, RawData } from '../transforms/data.ts';
+import { getFileNameInfo } from '../../mol-util/file-info.ts';
 
 export class DataBuilder {
     private get dataState() {

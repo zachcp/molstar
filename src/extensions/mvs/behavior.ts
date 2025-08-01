@@ -4,30 +4,30 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { CustomModelProperty } from '../../mol-model-props/common/custom-model-property';
-import { CustomStructureProperty } from '../../mol-model-props/common/custom-structure-property';
-import { DataFormatProvider } from '../../mol-plugin-state/formats/provider';
-import { PluginDragAndDropHandler } from '../../mol-plugin-state/manager/drag-and-drop';
-import { LociLabelProvider } from '../../mol-plugin-state/manager/loci-label';
-import { PluginBehavior } from '../../mol-plugin/behavior/behavior';
-import { PluginContext } from '../../mol-plugin/context';
-import { StructureRepresentationProvider } from '../../mol-repr/structure/representation';
-import { StateAction, StateObjectCell, StateTree } from '../../mol-state';
-import { Task } from '../../mol-task';
-import { ColorTheme } from '../../mol-theme/color';
-import { fileToDataUri } from '../../mol-util/file';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { MVSAnnotationColorThemeProvider } from './components/annotation-color-theme';
-import { MVSAnnotationLabelRepresentationProvider } from './components/annotation-label/representation';
-import { MVSAnnotationsProvider } from './components/annotation-prop';
-import { MVSAnnotationTooltipsLabelProvider, MVSAnnotationTooltipsProvider } from './components/annotation-tooltips-prop';
-import { CustomLabelRepresentationProvider } from './components/custom-label/representation';
-import { CustomTooltipsLabelProvider, CustomTooltipsProvider } from './components/custom-tooltips-prop';
-import { LoadMvsData, MVSJFormatProvider, MVSXFormatProvider, loadMVSX } from './components/formats';
-import { IsMVSModelProvider } from './components/is-mvs-model-prop';
-import { makeMultilayerColorThemeProvider } from './components/multilayer-color-theme';
-import { loadMVS } from './load';
-import { MVSData } from './mvs-data';
+import { CustomModelProperty } from '../../mol-model-props/common/custom-model-property.ts';
+import { CustomStructureProperty } from '../../mol-model-props/common/custom-structure-property.ts';
+import { DataFormatProvider } from '../../mol-plugin-state/formats/provider.ts';
+import { PluginDragAndDropHandler } from '../../mol-plugin-state/manager/drag-and-drop.ts';
+import { LociLabelProvider } from '../../mol-plugin-state/manager/loci-label.ts';
+import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { StructureRepresentationProvider } from '../../mol-repr/structure/representation.ts';
+import { StateAction, StateObjectCell, StateTree } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
+import { ColorTheme } from '../../mol-theme/color.ts';
+import { fileToDataUri } from '../../mol-util/file.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { MVSAnnotationColorThemeProvider } from './components/annotation-color-theme.ts';
+import { MVSAnnotationLabelRepresentationProvider } from './components/annotation-label/representation.ts';
+import { MVSAnnotationsProvider } from './components/annotation-prop.ts';
+import { MVSAnnotationTooltipsLabelProvider, MVSAnnotationTooltipsProvider } from './components/annotation-tooltips-prop.ts';
+import { CustomLabelRepresentationProvider } from './components/custom-label/representation.ts';
+import { CustomTooltipsLabelProvider, CustomTooltipsProvider } from './components/custom-tooltips-prop.ts';
+import { LoadMvsData, MVSJFormatProvider, MVSXFormatProvider, loadMVSX } from './components/formats.ts';
+import { IsMVSModelProvider } from './components/is-mvs-model-prop.ts';
+import { makeMultilayerColorThemeProvider } from './components/multilayer-color-theme.ts';
+import { loadMVS } from './load.ts';
+import { MVSData } from './mvs-data.ts';
 
 
 /** Collection of things that can be register/unregistered in a plugin */

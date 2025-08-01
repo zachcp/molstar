@@ -4,15 +4,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Volume } from '../../mol-model/volume';
-import { PluginContext } from '../../mol-plugin/context';
-import { RepresentationProvider } from '../../mol-repr/representation';
-import { VolumeRepresentationRegistry } from '../../mol-repr/volume/registry';
-import { StateTransformer } from '../../mol-state';
-import { ColorTheme } from '../../mol-theme/color';
-import { SizeTheme } from '../../mol-theme/size';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { VolumeRepresentation3D } from '../transforms/representation';
+import { Volume } from '../../mol-model/volume.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { RepresentationProvider } from '../../mol-repr/representation.ts';
+import { VolumeRepresentationRegistry } from '../../mol-repr/volume/registry.ts';
+import { StateTransformer } from '../../mol-state/index.ts';
+import { ColorTheme } from '../../mol-theme/color.ts';
+import { SizeTheme } from '../../mol-theme/size.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { VolumeRepresentation3D } from '../transforms/representation.ts';
 
 export interface VolumeRepresentationBuiltInProps<
     R extends VolumeRepresentationRegistry.BuiltIn = VolumeRepresentationRegistry.BuiltIn,

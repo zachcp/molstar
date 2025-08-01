@@ -12,13 +12,13 @@ import * as fs from 'fs';
 require('util.promisify').shim();
 const writeFile = util.promisify(fs.writeFile);
 
-import { Database, Table, DatabaseCollection } from '../../mol-data/db';
-import { CCD_Schema } from '../../mol-io/reader/cif/schema/ccd';
-import { SetUtils } from '../../mol-util/set';
-import { DefaultMap } from '../../mol-util/map';
-import { mmCIF_chemCompBond_schema } from '../../mol-io/reader/cif/schema/mmcif-extras';
-import { ccd_chemCompAtom_schema } from '../../mol-io/reader/cif/schema/ccd-extras';
-import { DefaultDataOptions, ensureDataAvailable, getEncodedCif, readCCD, readPVCD } from './util';
+import { Database, Table, DatabaseCollection } from '../../mol-data/db.ts';
+import { CCD_Schema } from '../../mol-io/reader/cif/schema/ccd.ts';
+import { SetUtils } from '../../mol-util/set.ts';
+import { DefaultMap } from '../../mol-util/map.ts';
+import { mmCIF_chemCompBond_schema } from '../../mol-io/reader/cif/schema/mmcif-extras.ts';
+import { ccd_chemCompAtom_schema } from '../../mol-io/reader/cif/schema/ccd-extras.ts';
+import { DefaultDataOptions, ensureDataAvailable, getEncodedCif, readCCD, readPVCD } from './util.ts';
 
 type CCB = Table<CCD_Schema['chem_comp_bond']>
 type CCA = Table<CCD_Schema['chem_comp_atom']>

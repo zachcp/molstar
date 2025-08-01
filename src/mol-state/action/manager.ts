@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StateAction } from '../action';
-import { StateObject, StateObjectCell } from '../object';
-import { StateTransformer } from '../transformer';
-import { UUID } from '../../mol-util';
-import { arraySetRemove } from '../../mol-util/array';
-import { RxEventHelper } from '../../mol-util/rx-event-helper';
+import { StateAction } from '../action.ts';
+import { StateObject, StateObjectCell } from '../object.ts';
+import { StateTransformer } from '../transformer.ts';
+import { UUID } from '../../mol-util/index.ts';
+import { arraySetRemove } from '../../mol-util/array.ts';
+import { RxEventHelper } from '../../mol-util/rx-event-helper.ts';
 
 export { StateActionManager };
 

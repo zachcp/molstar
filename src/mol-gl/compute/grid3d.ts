@@ -4,21 +4,21 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { RenderableSchema, Values, UnboxedValues, UniformSpec, TextureSpec, DefineSpec, RenderableValues } from '../renderable/schema';
-import { WebGLContext } from '../webgl/context';
-import { getRegularGrid3dDelta, RegularGrid3d } from '../../mol-math/geometry/common';
-import { grid3dTemplate_frag } from '../shader/util/grid3d-template.frag';
-import { quad_vert } from '../shader/quad.vert';
-import { ShaderCode } from '../shader-code';
-import { UUID, ValueCell } from '../../mol-util';
-import { objectForEach } from '../../mol-util/object';
-import { getUniformGlslType, isUniformValueScalar } from '../webgl/uniform';
-import { QuadSchema, QuadValues } from './util';
-import { createComputeRenderItem } from '../webgl/render-item';
-import { createComputeRenderable } from '../renderable';
-import { isLittleEndian } from '../../mol-util/is-little-endian';
-import { RuntimeContext } from '../../mol-task';
-import { isTimingMode } from '../../mol-util/debug';
+import { RenderableSchema, Values, UnboxedValues, UniformSpec, TextureSpec, DefineSpec, RenderableValues } from '../renderable/schema.ts';
+import { WebGLContext } from '../webgl/context.ts';
+import { getRegularGrid3dDelta, RegularGrid3d } from '../../mol-math/geometry/common.ts';
+import { grid3dTemplate_frag } from '../shader/util/grid3d-template.frag.ts';
+import { quad_vert } from '../shader/quad.vert.ts';
+import { ShaderCode } from '../shader-code.ts';
+import { UUID, ValueCell } from '../../mol-util/index.ts';
+import { objectForEach } from '../../mol-util/object.ts';
+import { getUniformGlslType, isUniformValueScalar } from '../webgl/uniform.ts';
+import { QuadSchema, QuadValues } from './util.ts';
+import { createComputeRenderItem } from '../webgl/render-item.ts';
+import { createComputeRenderable } from '../renderable.ts';
+import { isLittleEndian } from '../../mol-util/is-little-endian.ts';
+import { RuntimeContext } from '../../mol-task/index.ts';
+import { isTimingMode } from '../../mol-util/debug.ts';
 
 export function canComputeGrid3dOnGPU(webgl?: WebGLContext): webgl is WebGLContext {
     return !!webgl?.extensions.textureFloat;

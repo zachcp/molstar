@@ -5,20 +5,20 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { hashFnv32a } from '../../../mol-data/util';
-import { StringLike } from '../../../mol-io/common/string-like';
-import { DataFormatProvider } from '../../../mol-plugin-state/formats/provider';
-import { PluginStateObject as SO } from '../../../mol-plugin-state/objects';
-import { Download } from '../../../mol-plugin-state/transforms/data';
-import { PluginContext } from '../../../mol-plugin/context';
-import { StateAction, StateObjectRef } from '../../../mol-state';
-import { RuntimeContext, Task } from '../../../mol-task';
-import { Asset, AssetManager } from '../../../mol-util/assets';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { unzip } from '../../../mol-util/zip/zip';
-import { loadMVS, MVSLoadOptions } from '../load';
-import { MVSData } from '../mvs-data';
-import { MVSTransform } from './annotation-structure-component';
+import { hashFnv32a } from '../../../mol-data/util.ts';
+import { StringLike } from '../../../mol-io/common/string-like.ts';
+import { DataFormatProvider } from '../../../mol-plugin-state/formats/provider.ts';
+import { PluginStateObject as SO } from '../../../mol-plugin-state/objects.ts';
+import { Download } from '../../../mol-plugin-state/transforms/data.ts';
+import { PluginContext } from '../../../mol-plugin/context.ts';
+import { StateAction, StateObjectRef } from '../../../mol-state/index.ts';
+import { RuntimeContext, Task } from '../../../mol-task/index.ts';
+import { Asset, AssetManager } from '../../../mol-util/assets.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { unzip } from '../../../mol-util/zip/zip.ts';
+import { loadMVS, MVSLoadOptions } from '../load.ts';
+import { MVSData } from '../mvs-data.ts';
+import { MVSTransform } from './annotation-structure-component.ts';
 
 
 /** Plugin state object storing `MVSData` */

@@ -4,20 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StructureElement } from './structure';
-import { Bond } from './structure/structure/unit/bonds';
-import { Shape, ShapeGroup } from './shape';
-import { Sphere3D } from '../mol-math/geometry';
-import { Vec3 } from '../mol-math/linear-algebra';
-import { Structure } from './structure/structure';
-import { PrincipalAxes } from '../mol-math/linear-algebra/matrix/principal-axes';
-import { ParamDefinition } from '../mol-util/param-definition';
-import { shallowEqual } from '../mol-util';
-import { FiniteArray } from '../mol-util/type-helpers';
-import { BoundaryHelper } from '../mol-math/geometry/boundary-helper';
-import { stringToWords } from '../mol-util/string';
-import { Volume } from './volume/volume';
-import { Interval } from '../mol-data/int';
+import { StructureElement } from './structure.ts';
+import { Bond } from './structure/structure/unit/bonds.ts';
+import { Shape, ShapeGroup } from './shape.ts';
+import { Sphere3D } from '../mol-math/geometry.ts';
+import { Vec3 } from '../mol-math/linear-algebra.ts';
+import { Structure } from './structure/structure.ts';
+import { PrincipalAxes } from '../mol-math/linear-algebra/matrix/principal-axes.ts';
+import { ParamDefinition } from '../mol-util/param-definition.ts';
+import { shallowEqual } from '../mol-util/index.ts';
+import { FiniteArray } from '../mol-util/type-helpers.ts';
+import { BoundaryHelper } from '../mol-math/geometry/boundary-helper.ts';
+import { stringToWords } from '../mol-util/string.ts';
+import { Volume } from './volume/volume.ts';
+import { Interval } from '../mol-data/int.ts';
 
 /** A Loci that includes every loci */
 export const EveryLoci = { kind: 'every-loci' as 'every-loci' };

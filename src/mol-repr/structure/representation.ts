@@ -5,10 +5,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Structure } from '../../mol-model/structure';
-import { StructureUnitTransforms } from '../../mol-model/structure/structure/util/unit-transforms';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Representation, RepresentationProps, RepresentationProvider } from '../representation';
+import { Structure } from '../../mol-model/structure.ts';
+import { StructureUnitTransforms } from '../../mol-model/structure/structure/util/unit-transforms.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Representation, RepresentationProps, RepresentationProvider } from '../representation.ts';
 
 export interface StructureRepresentationState extends Representation.State {
     unitTransforms: StructureUnitTransforms | null,
@@ -33,8 +33,8 @@ export interface StructureRepresentation<P extends RepresentationProps = {}> ext
 export type StructureRepresentationProvider<P extends PD.Params, Id extends string = string> = RepresentationProvider<Structure, P, StructureRepresentationState, Id>
 export function StructureRepresentationProvider<P extends PD.Params, Id extends string>(p: StructureRepresentationProvider<P, Id>): StructureRepresentationProvider<P, Id> { return p; }
 //
-export { ComplexRepresentation } from './complex-representation';
-export { ComplexVisual } from './complex-visual';
-export { UnitsRepresentation } from './units-representation';
-export { UnitsVisual } from './units-visual';
+export { ComplexRepresentation } from './complex-representation.ts';
+export { ComplexVisual } from './complex-visual.ts';
+export { UnitsRepresentation } from './units-representation.ts';
+export { UnitsVisual } from './units-visual.ts';
 

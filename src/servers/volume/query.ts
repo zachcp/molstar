@@ -9,8 +9,9 @@
  */
 
 import * as fs from 'fs';
-import { configureLocal } from './config';
-import * as LocalApi from './server/local-api';
+import { configureLocal } from './config.ts';
+import * as LocalApi from './server/local-api.ts';
+import process from "node:process";
 
 const config = configureLocal();
 

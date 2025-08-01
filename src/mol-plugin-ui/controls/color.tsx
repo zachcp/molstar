@@ -5,14 +5,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color } from '../../mol-util/color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { camelCaseToWords, stringToWords } from '../../mol-util/string';
+import { Color } from '../../mol-util/color/index.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { camelCaseToWords, stringToWords } from '../../mol-util/string.ts';
 import * as React from 'react';
-import { _Props, _State } from '../base';
-import { ParamProps } from './parameters';
-import { TextInput, Button, ControlRow } from './common';
-import { DefaultColorSwatch } from '../../mol-util/color/swatches';
+import { _Props, _State } from '../base.tsx';
+import { ParamProps } from './parameters.tsx';
+import { TextInput, Button, ControlRow } from './common.tsx';
+import { DefaultColorSwatch } from '../../mol-util/color/swatches.ts';
 
 export class CombinedColorControl extends React.PureComponent<ParamProps<PD.Color> & { hideNameRow?: boolean }, { isExpanded: boolean, lightness: number }> {
     state = {
@@ -81,9 +81,9 @@ export class CombinedColorControl extends React.PureComponent<ParamProps<PD.Colo
         const inner = <>
             {this.swatch()}
             <ControlRow label='RGB' className='msp-control-label-short' control={<div style={{ display: 'flex', textAlignLast: 'center', left: '80px' }}>
-                <TextInput onChange={this.onR} numeric value={r} delayMs={250} style={{ order: 1, flex: '1 1 auto', minWidth: 0 }} className='msp-form-control' onEnter={this.props.onEnter} blurOnEnter={true} blurOnEscape={true} />
-                <TextInput onChange={this.onG} numeric value={g} delayMs={250} style={{ order: 2, flex: '1 1 auto', minWidth: 0 }} className='msp-form-control' onEnter={this.props.onEnter} blurOnEnter={true} blurOnEscape={true} />
-                <TextInput onChange={this.onB} numeric value={b} delayMs={250} style={{ order: 3, flex: '1 1 auto', minWidth: 0 }} className='msp-form-control' onEnter={this.props.onEnter} blurOnEnter={true} blurOnEscape={true} />
+                <TextInput onChange={this.onR} numeric value={r} delayMs={250} style={{ order: 1, flex: '1 1 auto', minWidth: 0 }} className='msp-form-control' onEnter={this.props.onEnter} blurOnEnter blurOnEscape />
+                <TextInput onChange={this.onG} numeric value={g} delayMs={250} style={{ order: 2, flex: '1 1 auto', minWidth: 0 }} className='msp-form-control' onEnter={this.props.onEnter} blurOnEnter blurOnEscape />
+                <TextInput onChange={this.onB} numeric value={b} delayMs={250} style={{ order: 3, flex: '1 1 auto', minWidth: 0 }} className='msp-form-control' onEnter={this.props.onEnter} blurOnEnter blurOnEscape />
                 <input onInput={this.onRGB} type='color' value={Color.toHexStyle(this.props.value)} style={{ order: 4, flex: '1 1 auto', minWidth: '32px', width: '32px', height: '32px', padding: '0 2px 0 2px', background: 'none', border: 'none', cursor: 'pointer' }}></input>
             </div>} />
             <div style={{ display: 'flex', textAlignLast: 'center' }}>

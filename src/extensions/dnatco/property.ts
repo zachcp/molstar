@@ -5,14 +5,14 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { DnatcoTypes } from './types';
-import { Column, Table } from '../../mol-data/db';
-import { toTable } from '../../mol-io/reader/cif/schema';
-import { Model } from '../../mol-model/structure';
-import { CustomProperty } from '../../mol-model-props/common/custom-property';
-import { PropertyWrapper } from '../../mol-model-props/common/wrapper';
-import { MmcifFormat } from '../../mol-model-formats/structure/mmcif';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { DnatcoTypes } from './types.ts';
+import { Column, Table } from '../../mol-data/db.ts';
+import { toTable } from '../../mol-io/reader/cif/schema.ts';
+import { Model } from '../../mol-model/structure.ts';
+import { CustomProperty } from '../../mol-model-props/common/custom-property.ts';
+import { PropertyWrapper } from '../../mol-model-props/common/wrapper.ts';
+import { MmcifFormat } from '../../mol-model-formats/structure/mmcif.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
 export type DnatcoSteps = PropertyWrapper<DnatcoTypes.Steps | undefined>;
 

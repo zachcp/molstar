@@ -5,20 +5,20 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { CifFrame } from '../../../mol-io/reader/cif';
-import { toDatabase } from '../../../mol-io/reader/cif/schema';
-import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif';
-import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif';
-import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property';
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
-import { Unit } from '../../../mol-model/structure';
-import { Model, ResidueIndex } from '../../../mol-model/structure/model';
-import { AtomicIndex } from '../../../mol-model/structure/model/properties/atomic';
-import { CustomPropSymbol } from '../../../mol-script/language/symbol';
-import { Type } from '../../../mol-script/language/type';
-import { QuerySymbolRuntime } from '../../../mol-script/runtime/query/compiler';
-import { ParamDefinition, ParamDefinition as PD } from '../../../mol-util/param-definition';
+import { CifFrame } from '../../../mol-io/reader/cif.ts';
+import { toDatabase } from '../../../mol-io/reader/cif/schema.ts';
+import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
+import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif.ts';
+import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property.ts';
+import { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
+import { Unit } from '../../../mol-model/structure.ts';
+import { Model, ResidueIndex } from '../../../mol-model/structure/model.ts';
+import { AtomicIndex } from '../../../mol-model/structure/model/properties/atomic.ts';
+import { CustomPropSymbol } from '../../../mol-script/language/symbol.ts';
+import { Type } from '../../../mol-script/language/type.ts';
+import { QuerySymbolRuntime } from '../../../mol-script/runtime/query/compiler.ts';
+import { ParamDefinition, ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 
 export { QualityAssessment };
 

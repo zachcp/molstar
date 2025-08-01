@@ -5,9 +5,9 @@
  */
 
 
-import { PluginContext } from '../mol-plugin/context';
-import { PluginUISpec } from './spec';
-import { StateTransformParameters } from './state/common';
+import { PluginContext } from '../mol-plugin/context.ts';
+import { PluginUISpec } from './spec.ts';
+import { StateTransformParameters } from './state/common.tsx';
 
 export class PluginUIContext extends PluginContext {
     readonly customParamEditors = new Map<string, StateTransformParameters.Class>();

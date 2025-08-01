@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { QueryPredicate, StructureElement, StructureProperties as Props } from '../../../mol-model/structure';
-import { AtomsQueryParams } from '../../../mol-model/structure/query/queries/generators';
-import { AtomSiteSchema, AtomSiteSchemaElement } from '../server/api';
-import { ElementSymbol } from '../../../mol-model/structure/model/types';
+import { QueryPredicate, StructureElement, StructureProperties as Props } from '../../../mol-model/structure.ts';
+import { AtomsQueryParams } from '../../../mol-model/structure/query/queries/generators.ts';
+import { AtomSiteSchema, AtomSiteSchemaElement } from '../server/api.ts';
+import { ElementSymbol } from '../../../mol-model/structure/model/types.ts';
 
 export function getAtomsTests(params: AtomSiteSchema): Partial<AtomsQueryParams>[] {
     if (!params) return [{ }];

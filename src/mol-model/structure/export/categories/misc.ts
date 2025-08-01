@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column } from '../../../../mol-data/db';
-import { CifWriter } from '../../../../mol-io/writer/cif';
-import { CifExportContext } from '../mmcif';
-import { getModelMmCifCategory, getUniqueResidueNamesFromStructures } from './utils';
+import { Column } from '../../../../mol-data/db.ts';
+import { CifWriter } from '../../../../mol-io/writer/cif.ts';
+import { CifExportContext } from '../mmcif.ts';
+import { getModelMmCifCategory, getUniqueResidueNamesFromStructures } from './utils.ts';
 import CifCategory = CifWriter.Category
 
 export const _chem_comp: CifCategory<CifExportContext> = {

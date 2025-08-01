@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { OrderedSet } from '../../mol-data/int/ordered-set';
-import { fillSerial } from '../../mol-util/array';
-import { Box3D } from '../geometry/primitives/box3d';
-import { Vec3 } from '../linear-algebra/3d/vec3';
-import { PositionData } from './common';
-import { GridLookup3D } from './lookup3d/grid';
-import { Sphere3D } from './primitives/sphere3d';
+import { OrderedSet } from '../../mol-data/int/ordered-set.ts';
+import { fillSerial } from '../../mol-util/array.ts';
+import { Box3D } from './primitives/box3d.ts';
+import { Vec3 } from '../linear-algebra/3d/vec3.ts';
+import { PositionData } from './common.ts';
+import { GridLookup3D } from './lookup3d/grid.ts';
+import { Sphere3D } from './primitives/sphere3d.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3transformMat4Offset = Vec3.transformMat4Offset;

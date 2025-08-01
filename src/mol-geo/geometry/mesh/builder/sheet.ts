@@ -5,9 +5,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Vec3 } from '../../../../mol-math/linear-algebra';
-import { ChunkedArray } from '../../../../mol-data/util';
-import { MeshBuilder } from '../mesh-builder';
+import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { ChunkedArray } from '../../../../mol-data/util.ts';
+import { MeshBuilder } from '../mesh-builder.ts';
 
 const tA = Vec3();
 const tB = Vec3();

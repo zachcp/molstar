@@ -5,17 +5,17 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Loci } from '../../../mol-model/loci';
-import { RuntimeContext } from '../../../mol-task';
-import { Text } from '../../../mol-geo/geometry/text/text';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { ShapeRepresentation } from '../representation';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation';
-import { Shape } from '../../../mol-model/shape';
-import { TextBuilder } from '../../../mol-geo/geometry/text/text-builder';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { lociLabel } from '../../../mol-theme/label';
-import { LociLabelTextParams } from './common';
+import { Loci } from '../../../mol-model/loci.ts';
+import { RuntimeContext } from '../../../mol-task/index.ts';
+import { Text } from '../../../mol-geo/geometry/text/text.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { ShapeRepresentation } from '../representation.ts';
+import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation.ts';
+import { Shape } from '../../../mol-model/shape.ts';
+import { TextBuilder } from '../../../mol-geo/geometry/text/text-builder.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { lociLabel } from '../../../mol-theme/label.ts';
+import { LociLabelTextParams } from './common.ts';
 
 export interface LabelData {
     infos: { loci: Loci, label?: string }[]

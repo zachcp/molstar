@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Color, ColorListEntry } from './color';
-import { ColorNames } from './names';
+import { Color, ColorListEntry } from './color.ts';
+import { ColorNames } from './names.ts';
 
 const hexColorRegex = /^#([0-9A-F]{3}){1,2}$/i;
 const rgbColorRegex = /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/i;

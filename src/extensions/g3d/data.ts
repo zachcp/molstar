@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { decodeMsgPack } from '../../mol-io/common/msgpack/decode';
-import { PluginContext } from '../../mol-plugin/context';
-import { Task } from '../../mol-task';
-import { inflate } from '../../mol-util/zip/zip';
+import { decodeMsgPack } from '../../mol-io/common/msgpack/decode.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { Task } from '../../mol-task/index.ts';
+import { inflate } from '../../mol-util/zip/zip.ts';
 
 export interface G3dHeader {
     magic: 'G3D',

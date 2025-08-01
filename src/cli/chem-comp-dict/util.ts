@@ -13,11 +13,11 @@ require('util.promisify').shim();
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 
-import { Progress } from '../../mol-task';
-import { Database } from '../../mol-data/db';
-import { CIF } from '../../mol-io/reader/cif';
-import { CifWriter } from '../../mol-io/writer/cif';
-import { CCD_Schema } from '../../mol-io/reader/cif/schema/ccd';
+import { Progress } from '../../mol-task/index.ts';
+import { Database } from '../../mol-data/db.ts';
+import { CIF } from '../../mol-io/reader/cif.ts';
+import { CifWriter } from '../../mol-io/writer/cif.ts';
+import { CCD_Schema } from '../../mol-io/reader/cif/schema/ccd.ts';
 
 export async function ensureAvailable(path: string, url: string, forceDownload = false) {
     if (forceDownload || !fs.existsSync(path)) {

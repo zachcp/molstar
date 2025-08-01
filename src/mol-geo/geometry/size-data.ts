@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ValueCell } from '../../mol-util';
-import { Vec2 } from '../../mol-math/linear-algebra';
-import { TextureImage, createTextureImage } from '../../mol-gl/renderable/util';
-import { LocationIterator } from '../util/location-iterator';
-import { Location, NullLocation } from '../../mol-model/location';
-import { SizeTheme } from '../../mol-theme/size';
-import { Geometry } from './geometry';
-import { unpackRGBToInt, packIntToRGBArray } from '../../mol-util/number-packing';
+import { ValueCell } from '../../mol-util/index.ts';
+import { Vec2 } from '../../mol-math/linear-algebra.ts';
+import { TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
+import { LocationIterator } from '../util/location-iterator.ts';
+import { Location, NullLocation } from '../../mol-model/location.ts';
+import { SizeTheme } from '../../mol-theme/size.ts';
+import { Geometry } from './geometry.ts';
+import { unpackRGBToInt, packIntToRGBArray } from '../../mol-util/number-packing.ts';
 
 export type SizeType = 'uniform' | 'instance' | 'group' | 'groupInstance'
 

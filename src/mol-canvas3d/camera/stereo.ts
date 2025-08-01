@@ -7,10 +7,10 @@
  * Adapted from three.js, The MIT License, Copyright © 2010-2020 three.js authors
  */
 
-import { Mat4 } from '../../mol-math/linear-algebra';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Camera, ICamera } from '../camera';
-import { Viewport } from './util';
+import { Mat4 } from '../../mol-math/linear-algebra.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Camera, ICamera } from '../camera.ts';
+import { Viewport } from './util.ts';
 
 export const StereoCameraParams = {
     eyeSeparation: PD.Numeric(0.062, { min: 0.02, max: 0.1, step: 0.001 }, { description: 'Distance between left and right camera.' }),

@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { UUID } from '../../../mol-util';
-import { getQueryByName, QueryDefinition, QueryName, QueryParams, Encoding } from './api';
-import { LinkedList } from '../../../mol-data/generic';
-import { ResultWriter } from '../utils/writer';
-import { Mat4 } from '../../../mol-math/linear-algebra';
+import { UUID } from '../../../mol-util/index.ts';
+import { getQueryByName, QueryDefinition, QueryName, QueryParams, Encoding } from './api.ts';
+import { LinkedList } from '../../../mol-data/generic.ts';
+import { ResultWriter } from '../utils/writer.ts';
+import { Mat4 } from '../../../mol-math/linear-algebra.ts';
 
 export interface ResponseFormat {
     tarball: boolean,

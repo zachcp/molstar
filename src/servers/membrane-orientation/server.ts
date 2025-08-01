@@ -7,11 +7,12 @@
 
 import compression from 'compression';
 import express from 'express';
-import { VERSION } from './version';
-import { configureServer, MembraneServerConfig } from './config';
-import { ConsoleLogger } from '../../mol-util/console-logger';
-import { PerformanceMonitor } from '../../mol-util/performance-monitor';
-import { initWebApi } from './web-api';
+import { VERSION } from './version.ts';
+import { configureServer, MembraneServerConfig } from './config.ts';
+import { ConsoleLogger } from '../../mol-util/console-logger.ts';
+import { PerformanceMonitor } from '../../mol-util/performance-monitor.ts';
+import { initWebApi } from './web-api.ts';
+import process from "node:process";
 
 function setupShutdown() {
     if (MembraneServerConfig.shutdownTimeoutVarianceMinutes > MembraneServerConfig.shutdownTimeoutMinutes) {

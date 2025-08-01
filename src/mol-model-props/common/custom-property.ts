@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { RuntimeContext } from '../../mol-task';
-import { CustomPropertyDescriptor } from '../../mol-model/custom-property';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ValueBox } from '../../mol-util';
+import { RuntimeContext } from '../../mol-task/index.ts';
+import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ValueBox } from '../../mol-util/index.ts';
 import { OrderedMap } from 'immutable';
-import { AssetManager, Asset } from '../../mol-util/assets';
-import { ErrorContext } from '../../mol-util/error-context';
+import { AssetManager, Asset } from '../../mol-util/assets.ts';
+import { ErrorContext } from '../../mol-util/error-context.ts';
 
 export { CustomProperty };
 

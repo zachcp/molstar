@@ -4,28 +4,28 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Grid, Volume } from '../../mol-model/volume';
-import { VisualContext } from '../visual';
-import { Theme, ThemeRegistryContext } from '../../mol-theme/theme';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { computeMarchingCubesMesh } from '../../mol-geo/util/marching-cubes/algorithm';
-import { VolumeVisual, VolumeRepresentation, VolumeRepresentationProvider, VolumeKey } from './representation';
-import { LocationIterator } from '../../mol-geo/util/location-iterator';
-import { VisualUpdateState } from '../util';
-import { RepresentationContext, RepresentationParamsGetter, Representation } from '../representation';
-import { PickingId } from '../../mol-geo/geometry/picking';
-import { EmptyLoci, Loci } from '../../mol-model/loci';
-import { Interval, OrderedSet, SortedArray } from '../../mol-data/int';
-import { Mat4, Tensor, Vec2, Vec3 } from '../../mol-math/linear-algebra';
-import { fillSerial } from '../../mol-util/array';
-import { createSegmentTexture2d, eachVolumeLoci, getVolumeTexture2dLayout } from './util';
-import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { BaseGeometry } from '../../mol-geo/geometry/base';
-import { ValueCell } from '../../mol-util/value-cell';
-import { extractIsosurface } from '../../mol-gl/compute/marching-cubes/isosurface';
-import { Box3D } from '../../mol-math/geometry/primitives/box3d';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Grid, Volume } from '../../mol-model/volume.ts';
+import { VisualContext } from '../visual.ts';
+import { Theme, ThemeRegistryContext } from '../../mol-theme/theme.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { computeMarchingCubesMesh } from '../../mol-geo/util/marching-cubes/algorithm.ts';
+import { VolumeVisual, VolumeRepresentation, VolumeRepresentationProvider, VolumeKey } from './representation.ts';
+import { LocationIterator } from '../../mol-geo/util/location-iterator.ts';
+import { VisualUpdateState } from '../util.ts';
+import { RepresentationContext, RepresentationParamsGetter, Representation } from '../representation.ts';
+import { PickingId } from '../../mol-geo/geometry/picking.ts';
+import { EmptyLoci, Loci } from '../../mol-model/loci.ts';
+import { Interval, OrderedSet, SortedArray } from '../../mol-data/int.ts';
+import { Mat4, Tensor, Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { fillSerial } from '../../mol-util/array.ts';
+import { createSegmentTexture2d, eachVolumeLoci, getVolumeTexture2dLayout } from './util.ts';
+import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh.ts';
+import { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { BaseGeometry } from '../../mol-geo/geometry/base.ts';
+import { ValueCell } from '../../mol-util/value-cell.ts';
+import { extractIsosurface } from '../../mol-gl/compute/marching-cubes/isosurface.ts';
+import { Box3D } from '../../mol-math/geometry/primitives/box3d.ts';
 
 export const VolumeSegmentParams = {
     segments: PD.Converted(

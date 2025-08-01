@@ -5,9 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column, ColumnHelpers } from '../../../../../mol-data/db';
-import { Tokens } from '../tokenizer';
-import { parseInt as fastParseInt, parseFloat as fastParseFloat } from '../number-parser';
+import { Column, ColumnHelpers } from '../../../../../mol-data/db.ts';
+import { Tokens } from '../tokenizer.ts';
+import { parseInt as fastParseInt, parseFloat as fastParseFloat } from '../number-parser.ts';
 
 export function TokenColumnProvider(tokens: Tokens) {
     return function<T extends Column.Schema>(type: T) {

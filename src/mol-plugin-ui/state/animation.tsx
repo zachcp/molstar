@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginUIComponent } from '../base';
-import { ParameterControls, ParamOnChange } from '../controls/parameters';
-import { Button } from '../controls/common';
-import { PlayArrowSvg } from '../controls/icons';
+import { PluginUIComponent } from '../base.tsx';
+import { ParameterControls, ParamOnChange } from '../controls/parameters.tsx';
+import { Button } from '../controls/common.tsx';
+import { PlayArrowSvg } from '../controls/icons.tsx';
 
 export class AnimationControls extends PluginUIComponent<{ onStart?: () => void }> {
     componentDidMount() {

@@ -6,12 +6,12 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { Model } from '../../../../mol-model/structure/model/model';
-import { CustomPropertyDescriptor } from '../../../../mol-model/custom-property';
-import { CifWriter } from '../../../../mol-io/writer/cif';
-import { Table } from '../../../../mol-data/db';
-import { FormatPropertyProvider } from '../../common/property';
-import { CCD_Schema } from '../../../../mol-io/reader/cif/schema/ccd';
+import { Model } from '../../../../mol-model/structure/model/model.ts';
+import { CustomPropertyDescriptor } from '../../../../mol-model/custom-property.ts';
+import { CifWriter } from '../../../../mol-io/writer/cif.ts';
+import { Table } from '../../../../mol-data/db.ts';
+import { FormatPropertyProvider } from '../../common/property.ts';
+import { CCD_Schema } from '../../../../mol-io/reader/cif/schema/ccd.ts';
 
 export interface ComponentAtom {
     readonly data: Table<CCD_Schema['chem_comp_atom']>

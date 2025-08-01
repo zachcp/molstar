@@ -4,32 +4,32 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginReactContext, PluginUIComponent } from '../../../mol-plugin-ui/base';
-import { Button, ControlGroup, IconButton } from '../../../mol-plugin-ui/controls/common';
-import { ArrowDropDownSvg, ArrowRightSvg, CloseSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, ContentCutSvg, BrushSvg, SearchSvg, TooltipTextSvg, TooltipTextOutlineSvg, PlusBoxSvg, MinusBoxSvg } from '../../../mol-plugin-ui/controls/icons';
-import { PluginCommands } from '../../../mol-plugin/commands';
-import { State, StateObjectCell, StateSelection, StateTransformer } from '../../../mol-state';
-import { ParameterControls, ParameterMappingControl, ParamOnChange, SelectControl } from '../../../mol-plugin-ui/controls/parameters';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Clip } from '../../../mol-util/clip';
-import { StructureRepresentation3D } from '../../../mol-plugin-state/transforms/representation';
-import { Color } from '../../../mol-util/color';
-import { CombinedColorControl } from '../../../mol-plugin-ui/controls/color';
-import { MarkerAction } from '../../../mol-util/marker-action';
-import { EveryLoci, Loci } from '../../../mol-model/loci';
-import { deepEqual } from '../../../mol-util';
-import { ColorValueParam, ColorParams, ColorProps, DimLightness, LightnessParams, LodParams, MesoscaleGroup, MesoscaleGroupProps, OpacityParams, SimpleClipParams, SimpleClipProps, createClipMapping, getClipObjects, getDistinctGroupColors, RootParams, MesoscaleState, getRoots, getAllGroups, getAllLeafGroups, getFilteredEntities, getAllFilteredEntities, getGroups, getEntities, getAllEntities, getEntityLabel, updateColors, getGraphicsModeProps, GraphicsMode, MesoscaleStateParams, setGraphicsCanvas3DProps, PatternParams, expandAllGroups, EmissiveParams, IllustrativeParams, getCellDescription, getEntityDescription, getEveryEntity } from '../data/state';
+import { PluginReactContext, PluginUIComponent } from '../../../mol-plugin-ui/base.tsx';
+import { Button, ControlGroup, IconButton } from '../../../mol-plugin-ui/controls/common.tsx';
+import { ArrowDropDownSvg, ArrowRightSvg, CloseSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, ContentCutSvg, BrushSvg, SearchSvg, TooltipTextSvg, TooltipTextOutlineSvg, PlusBoxSvg, MinusBoxSvg } from '../../../mol-plugin-ui/controls/icons.tsx';
+import { PluginCommands } from '../../../mol-plugin/commands.ts';
+import { State, StateObjectCell, StateSelection, StateTransformer } from '../../../mol-state/index.ts';
+import { ParameterControls, ParameterMappingControl, ParamOnChange, SelectControl } from '../../../mol-plugin-ui/controls/parameters.tsx';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Clip } from '../../../mol-util/clip.ts';
+import { StructureRepresentation3D } from '../../../mol-plugin-state/transforms/representation.ts';
+import { Color } from '../../../mol-util/color/index.ts';
+import { CombinedColorControl } from '../../../mol-plugin-ui/controls/color.tsx';
+import { MarkerAction } from '../../../mol-util/marker-action.ts';
+import { EveryLoci, Loci } from '../../../mol-model/loci.ts';
+import { deepEqual } from '../../../mol-util/index.ts';
+import { ColorValueParam, ColorParams, ColorProps, DimLightness, LightnessParams, LodParams, MesoscaleGroup, MesoscaleGroupProps, OpacityParams, SimpleClipParams, SimpleClipProps, createClipMapping, getClipObjects, getDistinctGroupColors, RootParams, MesoscaleState, getRoots, getAllGroups, getAllLeafGroups, getFilteredEntities, getAllFilteredEntities, getGroups, getEntities, getAllEntities, getEntityLabel, updateColors, getGraphicsModeProps, GraphicsMode, MesoscaleStateParams, setGraphicsCanvas3DProps, PatternParams, expandAllGroups, EmissiveParams, IllustrativeParams, getCellDescription, getEntityDescription, getEveryEntity } from '../data/state.ts';
 import React, { useState } from 'react';
-import { MesoscaleExplorerState } from '../app';
-import { StructureElement } from '../../../mol-model/structure/structure/element';
-import { PluginStateObject as PSO } from '../../../mol-plugin-state/objects';
-import { Structure } from '../../../mol-model/structure';
-import { PluginContext } from '../../../mol-plugin/context';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { MesoFocusLoci } from '../behavior/camera';
+import { MesoscaleExplorerState } from '../app.ts';
+import { StructureElement } from '../../../mol-model/structure/structure/element.ts';
+import { PluginStateObject as PSO } from '../../../mol-plugin-state/objects.ts';
+import { Structure } from '../../../mol-model/structure.ts';
+import { PluginContext } from '../../../mol-plugin/context.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { MesoFocusLoci } from '../behavior/camera.ts';
 import Markdown from 'react-markdown';
 import { combineLatest } from 'rxjs';
-import { ColorLoaderControls } from './states';
+import { ColorLoaderControls } from './states.tsx';
 
 function centerLoci(plugin: PluginContext, loci: Loci, durationMs = 250) {
     const { canvas3d } = plugin;
@@ -234,7 +234,7 @@ export class SelectionInfo extends PluginUIComponent<{}, { isDisabled: boolean }
     renderStyle() {
         const style = this.style || '';
         return <div id='selestyle' style={{ margin: '5px', marginBottom: '10px' }}>
-            <SelectControl name={'Style'} param={SelectionStyleParam} value={style} onChange={(e) => { this.setStyle(e.value); }} />
+            <SelectControl name="Style" param={SelectionStyleParam} value={style} onChange={(e) => { this.setStyle(e.value); }} />
         </div>;
     }
 
@@ -334,7 +334,7 @@ export function MesoMarkdownAnchor({ href, children, element }: { href?: string,
             }
         } else {
             // open the link in a new tab
-            window.open(decodedHref, '_blank');
+            globalThis.open(decodedHref, '_blank');
         }
     };
 
@@ -543,7 +543,7 @@ export class EntityControls extends PluginUIComponent<{}, { isDisabled: boolean 
     renderGraphics() {
         const graphics = this.graphics;
         return <div id='graphicsquality' style={{ margin: '5px', marginBottom: '10px' }}>
-            <SelectControl name={'Graphics'} param={MesoscaleStateParams.graphics} value={`${graphics}`} onChange={(e) => { this.setGraphics(e.value); }} />
+            <SelectControl name="Graphics" param={MesoscaleStateParams.graphics} value={`${graphics}`} onChange={(e) => { this.setGraphics(e.value); }} />
         </div>;
     }
 
@@ -580,7 +580,7 @@ export class EntityControls extends PluginUIComponent<{}, { isDisabled: boolean 
                 <IconButton svg={CloseSvg} toggleState={false} disabled={disabled} onClick={() => this.setFilter('')} />
             </div>
             {options.length > 1 && <div id='grouptree' style={{ margin: '5px', marginBottom: '10px' }}>
-                <SelectControl name={'Group By'} param={groupParam} value={`${groupBy}`} onChange={(e) => { this.setGroupBy(parseInt(e.value)); }} />
+                <SelectControl name="Group By" param={groupParam} value={`${groupBy}`} onChange={(e) => { this.setGroupBy(parseInt(e.value)); }} />
             </div>}
             <div id='tree' style={{ position: 'relative', overflowY: 'auto', borderBottom: '1px  solid #000', maxHeight: '600px' }}>
                 <GroupNode filter={filter} cell={root} depth={0} />
@@ -894,20 +894,20 @@ export class GroupNode extends Node<{ filter: string }, { isCollapsed: boolean, 
                 {visibility}
             </div>
             {this.state.action === 'color' && <div style={{ marginRight: 5 }} className='msp-accent-offset'>
-                <ControlGroup header='Color' initialExpanded={true} hideExpander={true} hideOffset={true} onHeaderClick={this.toggleColor}
+                <ControlGroup header='Color' initialExpanded hideExpander hideOffset onHeaderClick={this.toggleColor}
                     topRightIcon={CloseSvg} noTopMargin childrenClassName='msp-viewport-controls-panel-controls'>
                     <ParameterControls params={ColorParams} values={colorValue} onChangeValues={this.updateColor} />
                 </ControlGroup>
             </div>}
             {this.state.action === 'clip' && <div style={{ marginRight: 5 }} className='msp-accent-offset'>
-                <ControlGroup header='Clip' initialExpanded={true} hideExpander={true} hideOffset={true} onHeaderClick={this.toggleClip}
+                <ControlGroup header='Clip' initialExpanded hideExpander hideOffset onHeaderClick={this.toggleClip}
                     topRightIcon={CloseSvg} noTopMargin childrenClassName='msp-viewport-controls-panel-controls'>
                     <ParameterControls params={SimpleClipParams} values={clipValue} onChangeValues={this.updateClip} />
                     <ParameterControls params={LodParams} values={lodValue} onChangeValues={this.updateLod} />
                 </ControlGroup>
             </div>}
             {this.state.action === 'root' && <div style={{ marginRight: 5 }} className='msp-accent-offset'>
-                <ControlGroup header='Color' initialExpanded={true} hideExpander={true} hideOffset={true} onHeaderClick={this.toggleRoot}
+                <ControlGroup header='Color' initialExpanded hideExpander hideOffset onHeaderClick={this.toggleRoot}
                     topRightIcon={CloseSvg} noTopMargin childrenClassName='msp-viewport-controls-panel-controls'>
                     <ParameterControls params={RootParams} values={rootValue} onChangeValues={this.updateRoot} />
                 </ControlGroup>
@@ -1236,7 +1236,7 @@ export class EntityNode extends Node<{}, { action?: 'color' | 'clip', isDisabled
                 {visibility}
             </div>
             {this.state.action === 'color' && colorValue !== void 0 && <div style={{ marginRight: 5 }} className='msp-accent-offset'>
-                <ControlGroup header='Color' initialExpanded={true} hideExpander={true} hideOffset={true} onHeaderClick={this.toggleColor}
+                <ControlGroup header='Color' initialExpanded hideExpander hideOffset onHeaderClick={this.toggleColor}
                     topRightIcon={CloseSvg} noTopMargin childrenClassName='msp-viewport-controls-panel-controls'>
                     <CombinedColorControl param={ColorValueParam} value={colorValue ?? Color(0xFFFFFF)} onChange={this.updateColor} name='color' hideNameRow />
                     <ParameterControls params={IllustrativeParams} values={illustrativeValue} onChangeValues={this.updateIllustrative} />
@@ -1247,7 +1247,7 @@ export class EntityNode extends Node<{}, { action?: 'color' | 'clip', isDisabled
                 </ControlGroup>
             </div>}
             {this.state.action === 'clip' && <div style={{ marginRight: 5 }} className='msp-accent-offset'>
-                <ControlGroup header='Clip' initialExpanded={true} hideExpander={true} hideOffset={true} onHeaderClick={this.toggleClip}
+                <ControlGroup header='Clip' initialExpanded hideExpander hideOffset onHeaderClick={this.toggleClip}
                     topRightIcon={CloseSvg} noTopMargin childrenClassName='msp-viewport-controls-panel-controls'>
                     <ParameterMappingControl mapping={this.clipMapping} />
                     {lodValue && <ParameterControls params={LodParams} values={lodValue} onChangeValues={this.updateLod} />}

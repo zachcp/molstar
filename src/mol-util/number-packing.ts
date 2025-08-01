@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { clamp } from '../mol-math/interpolate';
-import { Vec3, Vec4 } from '../mol-math/linear-algebra';
-import { NumberArray } from './type-helpers';
+import { clamp } from '../mol-math/interpolate.ts';
+import { Vec3, Vec4 } from '../mol-math/linear-algebra.ts';
+import { NumberArray } from './type-helpers.ts';
 
 /** encode positive integer as rgb byte triplet into array at offset */
 export function packIntToRGBArray(value: number, array: NumberArray, offset: number) {

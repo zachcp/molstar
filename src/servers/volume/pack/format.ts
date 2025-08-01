@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { FileHandle } from '../../../mol-io/common/file-handle';
-import { Ccp4Provider } from './format/ccp4';
-import { TypedArrayBufferContext, TypedArrayValueArray, TypedArrayValueType, getElementByteSize, createTypedArrayBufferContext } from '../../../mol-io/common/typed-array';
-import { Dsn6Provider } from './format/dsn6';
-import { fileHandleFromPathOrUrl } from '../../common/file-handle';
+import { FileHandle } from '../../../mol-io/common/file-handle.ts';
+import { Ccp4Provider } from './format/ccp4.ts';
+import { TypedArrayBufferContext, TypedArrayValueArray, TypedArrayValueType, getElementByteSize, createTypedArrayBufferContext } from '../../../mol-io/common/typed-array.ts';
+import { Dsn6Provider } from './format/dsn6.ts';
+import { fileHandleFromPathOrUrl } from '../../common/file-handle.ts';
 
 export interface Header {
     name: string,

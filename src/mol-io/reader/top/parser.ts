@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, RuntimeContext } from '../../../mol-task';
-import { Tokenizer, TokenBuilder } from '../common/text/tokenizer';
-import { ReaderResult as Result } from '../result';
-import { TokenColumnProvider as TokenColumn } from '../common/text/column/token';
-import { Column, Table } from '../../../mol-data/db';
-import { Mutable } from '../../../mol-util/type-helpers';
-import { StringLike } from '../../common/string-like';
+import { Task, RuntimeContext } from '../../../mol-task/index.ts';
+import { Tokenizer, TokenBuilder } from '../common/text/tokenizer.ts';
+import { ReaderResult as Result } from '../result.ts';
+import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.ts';
+import { Column, Table } from '../../../mol-data/db.ts';
+import { Mutable } from '../../../mol-util/type-helpers.ts';
+import { StringLike } from '../../common/string-like.ts';
 
 
 // https://manual.gromacs.org/2021-current/reference-manual/file-formats.html#top

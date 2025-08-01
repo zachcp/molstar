@@ -5,13 +5,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column } from '../../../../mol-data/db';
-import { mmCIF_Database } from '../../../../mol-io/reader/cif/schema/mmcif';
-import { CifWriter } from '../../../../mol-io/writer/cif';
-import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif';
-import { SIFTSMapping } from '../../../../mol-model-props/sequence/sifts-mapping';
-import { StructureElement, Structure, StructureProperties as P } from '../../structure';
-import { CifExportContext } from '../mmcif';
+import { Column } from '../../../../mol-data/db.ts';
+import { mmCIF_Database } from '../../../../mol-io/reader/cif/schema/mmcif.ts';
+import { CifWriter } from '../../../../mol-io/writer/cif.ts';
+import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif.ts';
+import { SIFTSMapping } from '../../../../mol-model-props/sequence/sifts-mapping.ts';
+import { StructureElement, Structure, StructureProperties as P } from '../../structure.ts';
+import { CifExportContext } from '../mmcif.ts';
 import CifField = CifWriter.Field
 import CifCategory = CifWriter.Category
 import E = CifWriter.Encodings

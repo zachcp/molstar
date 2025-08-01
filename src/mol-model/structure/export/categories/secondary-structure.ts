@@ -4,16 +4,16 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Segmentation } from '../../../../mol-data/int';
-import { CifWriter } from '../../../../mol-io/writer/cif';
-import { SecondaryStructure } from '../../model/properties/secondary-structure';
-import { StructureElement, Unit } from '../../structure';
-import { CifExportContext } from '../mmcif';
+import { Segmentation } from '../../../../mol-data/int.ts';
+import { CifWriter } from '../../../../mol-io/writer/cif.ts';
+import { SecondaryStructure } from '../../model/properties/secondary-structure.ts';
+import { StructureElement, Unit } from '../../structure.ts';
+import { CifExportContext } from '../mmcif.ts';
 import CifField = CifWriter.Field
 import CifCategory = CifWriter.Category
-import { Column } from '../../../../mol-data/db';
-import { residueIdFields } from './atom_site';
-import { ModelSecondaryStructure } from '../../../../mol-model-formats/structure/property/secondary-structure';
+import { Column } from '../../../../mol-data/db.ts';
+import { residueIdFields } from './atom_site.ts';
+import { ModelSecondaryStructure } from '../../../../mol-model-formats/structure/property/secondary-structure.ts';
 
 export const _struct_conf: CifCategory<CifExportContext> = {
     name: 'struct_conf',

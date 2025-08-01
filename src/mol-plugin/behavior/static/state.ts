@@ -5,16 +5,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure } from '../../../mol-model/structure';
-import { PluginStateSnapshotManager } from '../../../mol-plugin-state/manager/snapshots';
-import { PluginStateObject as SO } from '../../../mol-plugin-state/objects';
-import { State, StateTransform, StateTree } from '../../../mol-state';
-import { getFormattedTime } from '../../../mol-util/date';
-import { download } from '../../../mol-util/download';
-import { urlCombine } from '../../../mol-util/url';
-import { PluginCommands } from '../../commands';
-import { PluginConfig } from '../../config';
-import { PluginContext } from '../../context';
+import { Structure } from '../../../mol-model/structure.ts';
+import { PluginStateSnapshotManager } from '../../../mol-plugin-state/manager/snapshots.ts';
+import { PluginStateObject as SO } from '../../../mol-plugin-state/objects.ts';
+import { State, StateTransform, StateTree } from '../../../mol-state/index.ts';
+import { getFormattedTime } from '../../../mol-util/date.ts';
+import { download } from '../../../mol-util/download.ts';
+import { urlCombine } from '../../../mol-util/url.ts';
+import { PluginCommands } from '../../commands.ts';
+import { PluginConfig } from '../../config.ts';
+import { PluginContext } from '../../context.ts';
 
 export function registerDefault(ctx: PluginContext) {
     SyncBehaviors(ctx);

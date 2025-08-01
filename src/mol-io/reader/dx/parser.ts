@@ -7,13 +7,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { chunkedSubtask, RuntimeContext, Task } from '../../../mol-task';
-import { StringLike } from '../../common/string-like';
-import { utf8Read } from '../../common/utf8';
-import { parseFloat as fastParseFloat } from '../common/text/number-parser';
-import { Tokenizer } from '../common/text/tokenizer';
-import { ReaderResult as Result } from '../result';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { chunkedSubtask, RuntimeContext, Task } from '../../../mol-task/index.ts';
+import { StringLike } from '../../common/string-like.ts';
+import { utf8Read } from '../../common/utf8.ts';
+import { parseFloat as fastParseFloat } from '../common/text/number-parser.ts';
+import { Tokenizer } from '../common/text/tokenizer.ts';
+import { ReaderResult as Result } from '../result.ts';
 
 
 // http://apbs-pdb2pqr.readthedocs.io/en/latest/formats/opendx.html

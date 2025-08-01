@@ -5,11 +5,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { hashString } from '../../../mol-data/util';
-import { StateObject } from '../../../mol-state';
-import { Color } from '../../../mol-util/color';
-import { ColorNames } from '../../../mol-util/color/names';
-import { decodeColor as _decodeColor } from '../../../mol-util/color/utils';
+import { hashString } from '../../../mol-data/util.ts';
+import { StateObject } from '../../../mol-state/index.ts';
+import { Color } from '../../../mol-util/color/index.ts';
+import { ColorNames } from '../../../mol-util/color/names.ts';
+import { decodeColor as _decodeColor } from '../../../mol-util/color/utils.ts';
 
 
 /** Represents either the result or the reason of failure of an operation that might have failed */

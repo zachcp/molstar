@@ -5,12 +5,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { CustomPropertyDescriptor } from '../../../../mol-model/custom-property';
-import { IntAdjacencyGraph } from '../../../../mol-math/graph';
-import { Column } from '../../../../mol-data/db';
-import { FormatPropertyProvider } from '../../common/property';
-import { BondType } from '../../../../mol-model/structure/model/types';
-import { ElementIndex } from '../../../../mol-model/structure';
+import { CustomPropertyDescriptor } from '../../../../mol-model/custom-property.ts';
+import { IntAdjacencyGraph } from '../../../../mol-math/graph.ts';
+import { Column } from '../../../../mol-data/db.ts';
+import { FormatPropertyProvider } from '../../common/property.ts';
+import { BondType } from '../../../../mol-model/structure/model/types.ts';
+import { ElementIndex } from '../../../../mol-model/structure.ts';
 
 export type IndexPairsProps = {
     readonly key: ArrayLike<number>

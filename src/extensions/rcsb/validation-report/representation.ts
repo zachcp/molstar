@@ -4,31 +4,31 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Unit, Structure, StructureElement, Bond } from '../../../mol-model/structure';
-import { Theme, ThemeRegistryContext } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { PickingId } from '../../../mol-geo/geometry/picking';
-import { EmptyLoci, Loci, DataLoci } from '../../../mol-model/loci';
-import { Interval } from '../../../mol-data/int';
-import { RepresentationContext, RepresentationParamsGetter, Representation } from '../../../mol-repr/representation';
-import { UnitsRepresentation, StructureRepresentation, StructureRepresentationStateBuilder, StructureRepresentationProvider, ComplexRepresentation } from '../../../mol-repr/structure/representation';
-import { VisualContext } from '../../../mol-repr/visual';
-import { createLinkCylinderMesh, LinkCylinderParams, LinkStyle } from '../../../mol-repr/structure/visual/util/link';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../../../mol-repr/structure/units-visual';
-import { VisualUpdateState } from '../../../mol-repr/util';
-import { LocationIterator } from '../../../mol-geo/util/location-iterator';
-import { ClashesProvider, IntraUnitClashes, InterUnitClashes, ValidationReport } from './prop';
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { ComplexMeshParams, ComplexVisual, ComplexMeshVisual } from '../../../mol-repr/structure/complex-visual';
-import { Color } from '../../../mol-util/color';
-import { MarkerActions } from '../../../mol-util/marker-action';
-import { CentroidHelper } from '../../../mol-math/geometry/centroid-helper';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { bondLabel } from '../../../mol-theme/label';
-import { getUnitKindsParam } from '../../../mol-repr/structure/params';
-import { StructureGroup } from '../../../mol-repr/structure/visual/util/common';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Unit, Structure, StructureElement, Bond } from '../../../mol-model/structure.ts';
+import { Theme, ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { PickingId } from '../../../mol-geo/geometry/picking.ts';
+import { EmptyLoci, Loci, DataLoci } from '../../../mol-model/loci.ts';
+import { Interval } from '../../../mol-data/int.ts';
+import { RepresentationContext, RepresentationParamsGetter, Representation } from '../../../mol-repr/representation.ts';
+import { UnitsRepresentation, StructureRepresentation, StructureRepresentationStateBuilder, StructureRepresentationProvider, ComplexRepresentation } from '../../../mol-repr/structure/representation.ts';
+import { VisualContext } from '../../../mol-repr/visual.ts';
+import { createLinkCylinderMesh, LinkCylinderParams, LinkStyle } from '../../../mol-repr/structure/visual/util/link.ts';
+import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../../../mol-repr/structure/units-visual.ts';
+import { VisualUpdateState } from '../../../mol-repr/util.ts';
+import { LocationIterator } from '../../../mol-geo/util/location-iterator.ts';
+import { ClashesProvider, IntraUnitClashes, InterUnitClashes, ValidationReport } from './prop.ts';
+import { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import { ComplexMeshParams, ComplexVisual, ComplexMeshVisual } from '../../../mol-repr/structure/complex-visual.ts';
+import { Color } from '../../../mol-util/color/index.ts';
+import { MarkerActions } from '../../../mol-util/marker-action.ts';
+import { CentroidHelper } from '../../../mol-math/geometry/centroid-helper.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { bondLabel } from '../../../mol-theme/label.ts';
+import { getUnitKindsParam } from '../../../mol-repr/structure/params.ts';
+import { StructureGroup } from '../../../mol-repr/structure/visual/util/common.ts';
 
 //
 

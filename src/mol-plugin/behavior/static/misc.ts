@@ -5,9 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginContext } from '../../../mol-plugin/context';
-import { PluginCommands } from '../../commands';
-import { DefaultCanvas3DParams } from '../../../mol-canvas3d/canvas3d';
+import { PluginContext } from '../../context.ts';
+import { PluginCommands } from '../../commands.ts';
+import { DefaultCanvas3DParams } from '../../../mol-canvas3d/canvas3d.ts';
 
 export function registerDefault(ctx: PluginContext) {
     Canvas3DSetSettings(ctx);

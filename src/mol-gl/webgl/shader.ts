@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { idFactory } from '../../mol-util/id-factory';
-import { GLRenderingContext } from './compat';
-import { isDebugMode } from '../../mol-util/debug';
+import { idFactory } from '../../mol-util/id-factory.ts';
+import { GLRenderingContext } from './compat.ts';
+import { isDebugMode } from '../../mol-util/debug.ts';
 
 const getNextShaderId = idFactory();
 

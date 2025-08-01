@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StateTransformer } from '../../mol-state';
-import { shallowEqualObjects } from '../../mol-util';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { PluginStateObject as SO, PluginStateTransform } from '../objects';
+import { StateTransformer } from '../../mol-state/index.ts';
+import { shallowEqualObjects } from '../../mol-util/index.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { PluginStateObject as SO, PluginStateTransform } from '../objects.ts';
 
 export { CreateGroup };
 type CreateGroup = typeof CreateGroup

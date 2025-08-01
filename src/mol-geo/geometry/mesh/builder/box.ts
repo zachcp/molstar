@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra';
-import { Box3D, Axes3D } from '../../../../mol-math/geometry';
-import { MeshBuilder } from '../mesh-builder';
-import { CylinderProps } from '../../../primitive/cylinder';
-import { addCylinder } from './cylinder';
-import { addSphere } from './sphere';
-import { createCage } from '../../../primitive/cage';
+import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra.ts';
+import { Box3D, Axes3D } from '../../../../mol-math/geometry.ts';
+import { MeshBuilder } from '../mesh-builder.ts';
+import { CylinderProps } from '../../../primitive/cylinder.ts';
+import { addCylinder } from './cylinder.ts';
+import { addSphere } from './sphere.ts';
+import { createCage } from '../../../primitive/cage.ts';
 
 const tmpStart = Vec3.zero();
 const tmpEnd = Vec3.zero();

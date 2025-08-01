@@ -4,20 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { UnitsVisual, UnitsLinesParams, UnitsLinesVisual } from '../units-visual';
-import { VisualContext } from '../../visual';
-import { Unit, Structure, StructureElement } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { ElementIterator, getElementLoci, eachElement, makeElementIgnoreTest, getSerialElementLoci, eachSerialElement } from './util/element';
-import { VisualUpdateState } from '../../util';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { Lines } from '../../../mol-geo/geometry/lines/lines';
-import { LinesBuilder } from '../../../mol-geo/geometry/lines/lines-builder';
-import { bondCount } from '../../../mol-model-props/computed/chemistry/util';
-import { hasUnitVisibleBonds } from './util/bond';
-import { ComplexLinesParams, ComplexLinesVisual, ComplexVisual } from '../complex-visual';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { UnitsVisual, UnitsLinesParams, UnitsLinesVisual } from '../units-visual.ts';
+import { VisualContext } from '../../visual.ts';
+import { Unit, Structure, StructureElement } from '../../../mol-model/structure.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { ElementIterator, getElementLoci, eachElement, makeElementIgnoreTest, getSerialElementLoci, eachSerialElement } from './util/element.ts';
+import { VisualUpdateState } from '../../util.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { Lines } from '../../../mol-geo/geometry/lines/lines.ts';
+import { LinesBuilder } from '../../../mol-geo/geometry/lines/lines-builder.ts';
+import { bondCount } from '../../../mol-model-props/computed/chemistry/util.ts';
+import { hasUnitVisibleBonds } from './util/bond.ts';
+import { ComplexLinesParams, ComplexLinesVisual, ComplexVisual } from '../complex-visual.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3add = Vec3.add;

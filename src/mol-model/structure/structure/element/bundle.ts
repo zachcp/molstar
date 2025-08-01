@@ -4,18 +4,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { OrderedSet, SortedArray, Interval } from '../../../../mol-data/int';
-import { ElementIndex } from '../../model';
-import { Structure } from '../structure';
-import { Unit } from '../unit';
-import { hashFnv32a, hash2 } from '../../../../mol-data/util';
-import { SortedRanges } from '../../../../mol-data/int/sorted-ranges';
-import { UnitIndex } from './element';
-import { Loci } from './loci';
-import { Expression } from '../../../../mol-script/language/expression';
-import { MolScriptBuilder as MS } from '../../../../mol-script/language/builder';
-import { QueryContext, QueryFn, StructureSelection } from '../../query';
-import { Schema } from './schema';
+import { OrderedSet, SortedArray, Interval } from '../../../../mol-data/int.ts';
+import { ElementIndex } from '../../model.ts';
+import { Structure } from '../structure.ts';
+import { Unit } from '../unit.ts';
+import { hashFnv32a, hash2 } from '../../../../mol-data/util.ts';
+import { SortedRanges } from '../../../../mol-data/int/sorted-ranges.ts';
+import { UnitIndex } from './element.ts';
+import { Loci } from './loci.ts';
+import { Expression } from '../../../../mol-script/language/expression.ts';
+import { MolScriptBuilder as MS } from '../../../../mol-script/language/builder.ts';
+import { QueryContext, QueryFn, StructureSelection } from '../../query.ts';
+import { Schema } from './schema.ts';
 
 export interface BundleElement {
     /**

@@ -5,17 +5,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { UniqueArray } from '../../../../mol-data/generic';
-import { Segmentation, SortedArray } from '../../../../mol-data/int';
-import { ElementIndex } from '../../model';
-import { StructureElement, StructureProperties as P, Unit } from '../../structure';
-import { Structure } from '../../structure/structure';
-import { UnitRing } from '../../structure/unit/rings';
-import { QueryContextView, QueryFn, QueryPredicate } from '../context';
-import { StructureQuery } from '../query';
-import { StructureSelection } from '../selection';
-import { LinearGroupingBuilder } from '../utils/builders';
-import { structureSubtract } from '../utils/structure-set';
+import { UniqueArray } from '../../../../mol-data/generic.ts';
+import { Segmentation, SortedArray } from '../../../../mol-data/int.ts';
+import { ElementIndex } from '../../model.ts';
+import { StructureElement, StructureProperties as P, Unit } from '../../structure.ts';
+import { Structure } from '../../structure/structure.ts';
+import { UnitRing } from '../../structure/unit/rings.ts';
+import { QueryContextView, QueryFn, QueryPredicate } from '../context.ts';
+import { StructureQuery } from '../query.ts';
+import { StructureSelection } from '../selection.ts';
+import { LinearGroupingBuilder } from '../utils/builders.ts';
+import { structureSubtract } from '../utils/structure-set.ts';
 
 export const none: StructureQuery = ctx => StructureSelection.Sequence(ctx.inputStructure, []);
 export const all: StructureQuery = ctx => StructureSelection.Singletons(ctx.inputStructure, ctx.inputStructure);

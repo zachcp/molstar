@@ -6,26 +6,26 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { PresetProvider } from '../preset-provider';
-import { PluginStateObject } from '../../objects';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { VisualQuality, VisualQualityOptions } from '../../../mol-geo/geometry/base';
-import { ColorTheme } from '../../../mol-theme/color';
-import { Structure } from '../../../mol-model/structure';
-import { PluginContext } from '../../../mol-plugin/context';
-import { StateObjectRef, StateObjectSelector } from '../../../mol-state';
-import { StaticStructureComponentType } from '../../helpers/structure-component';
-import { StructureSelectionQueries as Q } from '../../helpers/structure-selection-query';
-import { PluginConfig } from '../../../mol-plugin/config';
-import { StructureFocusRepresentation } from '../../../mol-plugin/behavior/dynamic/selection/structure-focus-representation';
-import { createStructureColorThemeParams } from '../../helpers/structure-representation-params';
-import { ChainIdColorThemeProvider } from '../../../mol-theme/color/chain-id';
-import { OperatorNameColorThemeProvider } from '../../../mol-theme/color/operator-name';
-import { IndexPairBonds } from '../../../mol-model-formats/structure/property/bonds/index-pair';
-import { StructConn } from '../../../mol-model-formats/structure/property/bonds/struct_conn';
-import { StructureRepresentationRegistry } from '../../../mol-repr/structure/registry';
-import { assertUnreachable } from '../../../mol-util/type-helpers';
-import { Vec3 } from '../../../mol-math/linear-algebra/3d/vec3';
+import { PresetProvider } from '../preset-provider.ts';
+import { PluginStateObject } from '../../objects.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { VisualQuality, VisualQualityOptions } from '../../../mol-geo/geometry/base.ts';
+import { ColorTheme } from '../../../mol-theme/color.ts';
+import { Structure } from '../../../mol-model/structure.ts';
+import { PluginContext } from '../../../mol-plugin/context.ts';
+import { StateObjectRef, StateObjectSelector } from '../../../mol-state/index.ts';
+import { StaticStructureComponentType } from '../../helpers/structure-component.ts';
+import { StructureSelectionQueries as Q } from '../../helpers/structure-selection-query.ts';
+import { PluginConfig } from '../../../mol-plugin/config.ts';
+import { StructureFocusRepresentation } from '../../../mol-plugin/behavior/dynamic/selection/structure-focus-representation.ts';
+import { createStructureColorThemeParams } from '../../helpers/structure-representation-params.ts';
+import { ChainIdColorThemeProvider } from '../../../mol-theme/color/chain-id.ts';
+import { OperatorNameColorThemeProvider } from '../../../mol-theme/color/operator-name.ts';
+import { IndexPairBonds } from '../../../mol-model-formats/structure/property/bonds/index-pair.ts';
+import { StructConn } from '../../../mol-model-formats/structure/property/bonds/struct_conn.ts';
+import { StructureRepresentationRegistry } from '../../../mol-repr/structure/registry.ts';
+import { assertUnreachable } from '../../../mol-util/type-helpers.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra/3d/vec3.ts';
 
 export interface StructureRepresentationPresetProvider<P = any, S extends _Result = _Result> extends PresetProvider<PluginStateObject.Molecule.Structure, P, S> { }
 export function StructureRepresentationPresetProvider<P, S extends _Result>(repr: StructureRepresentationPresetProvider<P, S>) { return repr; }

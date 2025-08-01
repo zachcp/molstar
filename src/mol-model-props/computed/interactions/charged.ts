@@ -7,19 +7,19 @@
  * based in part on NGL (https://github.com/arose/ngl)
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Structure, Unit, StructureElement } from '../../../mol-model/structure';
-import { FeaturesBuilder, Features } from './features';
-import { ProteinBackboneAtoms, PolymerNames, BaseNames } from '../../../mol-model/structure/model/types';
-import { typeSymbol, atomId, eachBondedAtom } from '../chemistry/util';
-import { Elements } from '../../../mol-model/structure/model/properties/atomic/types';
-import { ValenceModelProvider } from '../valence-model';
-import { degToRad } from '../../../mol-math/misc';
-import { FeatureType, FeatureGroup, InteractionType } from './common';
-import { ContactProvider } from './contacts';
-import { Segmentation } from '../../../mol-data/int';
-import { isGuanidine, isAcetamidine, isPhosphate, isSulfonicAcid, isSulfate, isCarboxylate } from '../chemistry/functional-group';
-import { Vec3 } from '../../../mol-math/linear-algebra';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Structure, Unit, StructureElement } from '../../../mol-model/structure.ts';
+import { FeaturesBuilder, Features } from './features.ts';
+import { ProteinBackboneAtoms, PolymerNames, BaseNames } from '../../../mol-model/structure/model/types.ts';
+import { typeSymbol, atomId, eachBondedAtom } from '../chemistry/util.ts';
+import { Elements } from '../../../mol-model/structure/model/properties/atomic/types.ts';
+import { ValenceModelProvider } from '../valence-model.ts';
+import { degToRad } from '../../../mol-math/misc.ts';
+import { FeatureType, FeatureGroup, InteractionType } from './common.ts';
+import { ContactProvider } from './contacts.ts';
+import { Segmentation } from '../../../mol-data/int.ts';
+import { isGuanidine, isAcetamidine, isPhosphate, isSulfonicAcid, isSulfate, isCarboxylate } from '../chemistry/functional-group.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 
 const IonicParams = {
     distanceMax: PD.Numeric(5.0, { min: 0, max: 8, step: 0.1 }),

@@ -5,24 +5,24 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Segmentation, SortedArray } from '../../../../mol-data/int';
-import { Structure, Unit } from '../../structure';
-import { StructureQuery } from '../query';
-import { StructureSelection } from '../selection';
-import { UniqueStructuresBuilder } from '../utils/builders';
-import { StructureUniqueSubsetBuilder } from '../../structure/util/unique-subset-builder';
-import { QueryContext, QueryFn } from '../context';
-import { structureIntersect, structureSubtract, structureUnion } from '../utils/structure-set';
-import { UniqueArray } from '../../../../mol-data/generic';
-import { StructureSubsetBuilder } from '../../structure/util/subset-builder';
-import { StructureElement } from '../../structure/element';
-import { ResidueSet, ResidueSetEntry } from '../../model/properties/utils/residue-set';
-import { StructureProperties } from '../../structure/properties';
-import { arraySetAdd } from '../../../../mol-util/array';
+import { Segmentation, SortedArray } from '../../../../mol-data/int.ts';
+import { Structure, Unit } from '../../structure.ts';
+import { StructureQuery } from '../query.ts';
+import { StructureSelection } from '../selection.ts';
+import { UniqueStructuresBuilder } from '../utils/builders.ts';
+import { StructureUniqueSubsetBuilder } from '../../structure/util/unique-subset-builder.ts';
+import { QueryContext, QueryFn } from '../context.ts';
+import { structureIntersect, structureSubtract, structureUnion } from '../utils/structure-set.ts';
+import { UniqueArray } from '../../../../mol-data/generic.ts';
+import { StructureSubsetBuilder } from '../../structure/util/subset-builder.ts';
+import { StructureElement } from '../../structure/element.ts';
+import { ResidueSet, ResidueSetEntry } from '../../model/properties/utils/residue-set.ts';
+import { StructureProperties } from '../../structure/properties.ts';
+import { arraySetAdd } from '../../../../mol-util/array.ts';
 // MmcifFormat needs to be imported as a type otherwise it causes out-of-order
 // code execution in turbopack (and possibly other bundlers)... but interestingly
 // only when ES6 modules are used (CommonJS fine)
-import type { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif';
+import type { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif.ts';
 
 function getWholeResidues(ctx: QueryContext, source: Structure, structure: Structure) {
     const builder = source.subsetBuilder(true);

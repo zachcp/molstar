@@ -5,21 +5,21 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { QuadSchema, QuadValues } from '../../mol-gl/compute/util';
-import { ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable';
-import { TextureSpec, UniformSpec, Values } from '../../mol-gl/renderable/schema';
-import { ShaderCode } from '../../mol-gl/shader-code';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { createComputeRenderItem } from '../../mol-gl/webgl/render-item';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { ValueCell } from '../../mol-util';
-import { quad_vert } from '../../mol-gl/shader/quad.vert';
-import { evaluateWboit_frag } from '../../mol-gl/shader/evaluate-wboit.frag';
-import { Framebuffer } from '../../mol-gl/webgl/framebuffer';
-import { Vec2 } from '../../mol-math/linear-algebra';
-import { isDebugMode, isTimingMode } from '../../mol-util/debug';
-import { isWebGL2 } from '../../mol-gl/webgl/compat';
-import { Renderbuffer } from '../../mol-gl/webgl/renderbuffer';
+import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
+import { ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
+import { TextureSpec, UniformSpec, Values } from '../../mol-gl/renderable/schema.ts';
+import { ShaderCode } from '../../mol-gl/shader-code.ts';
+import { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
+import { Texture } from '../../mol-gl/webgl/texture.ts';
+import { ValueCell } from '../../mol-util/index.ts';
+import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
+import { evaluateWboit_frag } from '../../mol-gl/shader/evaluate-wboit.frag.ts';
+import { Framebuffer } from '../../mol-gl/webgl/framebuffer.ts';
+import { Vec2 } from '../../mol-math/linear-algebra.ts';
+import { isDebugMode, isTimingMode } from '../../mol-util/debug.ts';
+import { isWebGL2 } from '../../mol-gl/webgl/compat.ts';
+import { Renderbuffer } from '../../mol-gl/webgl/renderbuffer.ts';
 
 const EvaluateWboitSchema = {
     ...QuadSchema,

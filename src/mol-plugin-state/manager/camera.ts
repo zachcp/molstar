@@ -7,21 +7,21 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Camera } from '../../mol-canvas3d/camera';
-import { GraphicsRenderObject } from '../../mol-gl/render-object';
-import { Sphere3D } from '../../mol-math/geometry';
-import { BoundaryHelper } from '../../mol-math/geometry/boundary-helper';
-import { Mat3 } from '../../mol-math/linear-algebra';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
-import { PrincipalAxes } from '../../mol-math/linear-algebra/matrix/principal-axes';
-import { Loci } from '../../mol-model/loci';
-import { Structure, StructureElement } from '../../mol-model/structure';
-import { PluginContext } from '../../mol-plugin/context';
-import { PluginState } from '../../mol-plugin/state';
-import { PluginStateObject } from '../objects';
-import { pcaFocus } from './focus-camera/focus-first-residue';
-import { getFocusSnapshot } from './focus-camera/focus-object';
-import { changeCameraRotation, structureLayingTransform } from './focus-camera/orient-axes';
+import { Camera } from '../../mol-canvas3d/camera.ts';
+import { GraphicsRenderObject } from '../../mol-gl/render-object.ts';
+import { Sphere3D } from '../../mol-math/geometry.ts';
+import { BoundaryHelper } from '../../mol-math/geometry/boundary-helper.ts';
+import { Mat3 } from '../../mol-math/linear-algebra.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
+import { PrincipalAxes } from '../../mol-math/linear-algebra/matrix/principal-axes.ts';
+import { Loci } from '../../mol-model/loci.ts';
+import { Structure, StructureElement } from '../../mol-model/structure.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { PluginState } from '../../mol-plugin/state.ts';
+import { PluginStateObject } from '../objects.ts';
+import { pcaFocus } from './focus-camera/focus-first-residue.ts';
+import { getFocusSnapshot } from './focus-camera/focus-object.ts';
+import { changeCameraRotation, structureLayingTransform } from './focus-camera/orient-axes.ts';
 
 // TODO: make this customizable somewhere?
 const DefaultCameraFocusOptions = {

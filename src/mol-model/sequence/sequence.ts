@@ -5,9 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { AminoAlphabet, NuclecicAlphabet, getProteinOneLetterCode, getRnaOneLetterCode, getDnaOneLetterCode } from './constants';
-import { Column } from '../../mol-data/db';
-import { assertUnreachable } from '../../mol-util/type-helpers';
+import { AminoAlphabet, NuclecicAlphabet, getProteinOneLetterCode, getRnaOneLetterCode, getDnaOneLetterCode } from './constants.ts';
+import { Column } from '../../mol-data/db.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
 
 // TODO add mapping support to other sequence spaces, e.g. uniprot
 

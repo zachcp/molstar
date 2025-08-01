@@ -4,24 +4,24 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../../../mol-repr/structure/units-visual';
-import { ElementIterator, getElementLoci, eachElement, getSerialElementLoci, eachSerialElement, makeElementIgnoreTest } from '../../../mol-repr/structure/visual/util/element';
-import { VisualUpdateState } from '../../../mol-repr/util';
-import { VisualContext } from '../../../mol-repr/visual';
-import { Unit, Structure, StructureElement } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { sphereVertexCount } from '../../../mol-geo/primitive/sphere';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { Vec3, Mat3, Tensor, EPSILON } from '../../../mol-math/linear-algebra';
-import { addEllipsoid } from '../../../mol-geo/geometry/mesh/builder/ellipsoid';
-import { AtomSiteAnisotrop } from '../../../mol-model-formats/structure/property/anisotropic';
-import { equalEps } from '../../../mol-math/linear-algebra/3d/common';
-import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
-import { ComplexMeshParams, ComplexVisual, ComplexMeshVisual } from '../complex-visual';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
+import { ElementIterator, getElementLoci, eachElement, getSerialElementLoci, eachSerialElement, makeElementIgnoreTest } from './util/element.ts';
+import { VisualUpdateState } from '../../util.ts';
+import { VisualContext } from '../../visual.ts';
+import { Unit, Structure, StructureElement } from '../../../mol-model/structure.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { sphereVertexCount } from '../../../mol-geo/primitive/sphere.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Vec3, Mat3, Tensor, EPSILON } from '../../../mol-math/linear-algebra.ts';
+import { addEllipsoid } from '../../../mol-geo/geometry/mesh/builder/ellipsoid.ts';
+import { AtomSiteAnisotrop } from '../../../mol-model-formats/structure/property/anisotropic.ts';
+import { equalEps } from '../../../mol-math/linear-algebra/3d/common.ts';
+import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
+import { ComplexMeshParams, ComplexVisual, ComplexMeshVisual } from '../complex-visual.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3add = Vec3.add;

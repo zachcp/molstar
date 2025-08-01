@@ -9,7 +9,7 @@ import * as argparse from 'argparse';
 import * as fs from 'fs';
 import * as path from 'path';
 import fetch from 'node-fetch';
-import { UniqueArray } from '../../mol-data/generic';
+import { UniqueArray } from '../../mol-data/generic.ts';
 
 const LIPIDS_DIR = path.resolve(__dirname, '../../../../build/lipids/');
 

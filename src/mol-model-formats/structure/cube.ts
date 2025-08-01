@@ -4,16 +4,16 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column, Table } from '../../mol-data/db';
-import { MoleculeType, getElementFromAtomicNumber, ElementSymbol } from '../../mol-model/structure/model/types';
-import { RuntimeContext, Task } from '../../mol-task';
-import { createModels } from './basic/parser';
-import { BasicSchema, createBasic } from './basic/schema';
-import { ComponentBuilder } from './common/component';
-import { EntityBuilder } from './common/entity';
-import { ModelFormat } from '../format';
-import { CubeFile } from '../../mol-io/reader/cube/parser';
-import { Trajectory } from '../../mol-model/structure';
+import { Column, Table } from '../../mol-data/db.ts';
+import { MoleculeType, getElementFromAtomicNumber, ElementSymbol } from '../../mol-model/structure/model/types.ts';
+import { RuntimeContext, Task } from '../../mol-task/index.ts';
+import { createModels } from './basic/parser.ts';
+import { BasicSchema, createBasic } from './basic/schema.ts';
+import { ComponentBuilder } from './common/component.ts';
+import { EntityBuilder } from './common/entity.ts';
+import { ModelFormat } from '../format.ts';
+import { CubeFile } from '../../mol-io/reader/cube/parser.ts';
+import { Trajectory } from '../../mol-model/structure.ts';
 
 async function getModels(cube: CubeFile, ctx: RuntimeContext) {
     const { atoms } = cube;

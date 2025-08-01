@@ -4,25 +4,25 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { RenderTarget } from '../../mol-gl/webgl/render-target';
-import { Renderer, RendererParams } from '../../mol-gl/renderer';
-import { Scene } from '../../mol-gl/scene';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { DrawPass } from './draw';
-import { PostprocessingParams } from './postprocessing';
-import { MultiSamplePass, MultiSampleParams, MultiSampleHelper } from './multi-sample';
-import { Camera } from '../camera';
-import { Viewport } from '../camera/util';
-import { PixelData } from '../../mol-util/image';
-import { Helper } from '../helper/helper';
-import { CameraHelper, CameraHelperParams } from '../helper/camera-helper';
-import { MarkingParams } from './marking';
-import { AssetManager } from '../../mol-util/assets';
-import { IlluminationParams, IlluminationPass } from './illumination';
-import { RuntimeContext } from '../../mol-task';
-import { isTimingMode } from '../../mol-util/debug';
-import { printTimerResults } from '../../mol-gl/webgl/timer';
+import { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
+import { Renderer, RendererParams } from '../../mol-gl/renderer.ts';
+import { Scene } from '../../mol-gl/scene.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { DrawPass } from './draw.ts';
+import { PostprocessingParams } from './postprocessing.ts';
+import { MultiSamplePass, MultiSampleParams, MultiSampleHelper } from './multi-sample.ts';
+import { Camera } from '../camera.ts';
+import { Viewport } from '../camera/util.ts';
+import { PixelData } from '../../mol-util/image.ts';
+import { Helper } from '../helper/helper.ts';
+import { CameraHelper, CameraHelperParams } from '../helper/camera-helper.ts';
+import { MarkingParams } from './marking.ts';
+import { AssetManager } from '../../mol-util/assets.ts';
+import { IlluminationParams, IlluminationPass } from './illumination.ts';
+import { RuntimeContext } from '../../mol-task/index.ts';
+import { isTimingMode } from '../../mol-util/debug.ts';
+import { printTimerResults } from '../../mol-gl/webgl/timer.ts';
 
 export const ImageParams = {
     transparentBackground: PD.Boolean(false),

@@ -7,13 +7,13 @@
  * based in part on NGL (https://github.com/arose/ngl)
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Structure, Unit, StructureElement } from '../../../mol-model/structure';
-import { FeaturesBuilder, Features } from './features';
-import { typeSymbol, eachBondedAtom } from '../chemistry/util';
-import { Elements } from '../../../mol-model/structure/model/properties/atomic/types';
-import { FeatureType, FeatureGroup, InteractionType } from './common';
-import { ContactProvider } from './contacts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Structure, Unit, StructureElement } from '../../../mol-model/structure.ts';
+import { FeaturesBuilder, Features } from './features.ts';
+import { typeSymbol, eachBondedAtom } from '../chemistry/util.ts';
+import { Elements } from '../../../mol-model/structure/model/properties/atomic/types.ts';
+import { FeatureType, FeatureGroup, InteractionType } from './common.ts';
+import { ContactProvider } from './contacts.ts';
 
 const HydrophobicParams = {
     distanceMax: PD.Numeric(4.0, { min: 1, max: 5, step: 0.1 }),

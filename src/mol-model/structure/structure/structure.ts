@@ -5,35 +5,35 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { IntMap, SortedArray, Iterator, Segmentation, Interval } from '../../../mol-data/int';
-import { UniqueArray } from '../../../mol-data/generic';
-import { SymmetryOperator } from '../../../mol-math/geometry/symmetry-operator';
-import { Model, ElementIndex } from '../model';
-import { sort, arraySwap, hash1, sortArray, hashString, hashFnv32a } from '../../../mol-data/util';
-import { StructureElement } from './element';
-import { Unit } from './unit';
-import { StructureLookup3D } from './util/lookup3d';
-import { CoarseElements } from '../model/properties/coarse';
-import { StructureSubsetBuilder } from './util/subset-builder';
-import { InterUnitBonds, computeInterUnitBonds, Bond } from './unit/bonds';
-import { StructureSymmetry } from './symmetry';
-import { StructureProperties } from './properties';
-import { ResidueIndex, ChainIndex, EntityIndex } from '../model/indexing';
-import { Carbohydrates } from './carbohydrates/data';
-import { computeCarbohydrates } from './carbohydrates/compute';
-import { Vec3, Mat4 } from '../../../mol-math/linear-algebra';
-import { idFactory } from '../../../mol-util/id-factory';
-import { UUID } from '../../../mol-util';
-import { CustomProperties } from '../../custom-property';
-import { StructureSelection } from '../query/selection';
-import { Boundary } from '../../../mol-math/geometry/boundary';
-import { ElementSymbol } from '../model/types';
-import { CustomStructureProperty } from '../../../mol-model-props/common/custom-structure-property';
-import { Trajectory } from '../trajectory';
-import { RuntimeContext, Task } from '../../../mol-task';
-import { computeStructureBoundary } from './util/boundary';
-import { PrincipalAxes } from '../../../mol-math/linear-algebra/matrix/principal-axes';
-import { IntraUnitBondMapping, getIntraUnitBondMapping, getSerialMapping, SerialMapping } from './mapping';
+import { IntMap, SortedArray, Iterator, Segmentation, Interval } from '../../../mol-data/int.ts';
+import { UniqueArray } from '../../../mol-data/generic.ts';
+import { SymmetryOperator } from '../../../mol-math/geometry/symmetry-operator.ts';
+import { Model, ElementIndex } from '../model.ts';
+import { sort, arraySwap, hash1, sortArray, hashString, hashFnv32a } from '../../../mol-data/util.ts';
+import { StructureElement } from './element.ts';
+import { Unit } from './unit.ts';
+import { StructureLookup3D } from './util/lookup3d.ts';
+import { CoarseElements } from '../model/properties/coarse.ts';
+import { StructureSubsetBuilder } from './util/subset-builder.ts';
+import { InterUnitBonds, computeInterUnitBonds, Bond } from './unit/bonds.ts';
+import { StructureSymmetry } from './symmetry.ts';
+import { StructureProperties } from './properties.ts';
+import { ResidueIndex, ChainIndex, EntityIndex } from '../model/indexing.ts';
+import { Carbohydrates } from './carbohydrates/data.ts';
+import { computeCarbohydrates } from './carbohydrates/compute.ts';
+import { Vec3, Mat4 } from '../../../mol-math/linear-algebra.ts';
+import { idFactory } from '../../../mol-util/id-factory.ts';
+import { UUID } from '../../../mol-util/index.ts';
+import { CustomProperties } from '../../custom-property.ts';
+import { StructureSelection } from '../query/selection.ts';
+import { Boundary } from '../../../mol-math/geometry/boundary.ts';
+import { ElementSymbol } from '../model/types.ts';
+import { CustomStructureProperty } from '../../../mol-model-props/common/custom-structure-property.ts';
+import { Trajectory } from '../trajectory.ts';
+import { RuntimeContext, Task } from '../../../mol-task/index.ts';
+import { computeStructureBoundary } from './util/boundary.ts';
+import { PrincipalAxes } from '../../../mol-math/linear-algebra/matrix/principal-axes.ts';
+import { IntraUnitBondMapping, getIntraUnitBondMapping, getSerialMapping, SerialMapping } from './mapping.ts';
 
 /** Internal structure state */
 type State = {

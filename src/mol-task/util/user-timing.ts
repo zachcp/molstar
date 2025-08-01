@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task } from '../task';
-import { isTimingMode } from '../../mol-util/debug';
+import { Task } from '../task.ts';
+import { isTimingMode } from '../../mol-util/debug.ts';
 
 const hasPerformance = (typeof performance !== 'undefined') && !!performance.mark && performance.measure;
 const timingEnabled = hasPerformance && isTimingMode;

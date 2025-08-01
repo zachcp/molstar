@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Unit, Structure } from '../../../../mol-model/structure';
-import { Task, RuntimeContext } from '../../../../mol-task';
-import { getUnitConformationAndRadius, CommonSurfaceProps, ensureReasonableResolution, getStructureConformationAndRadius } from './common';
-import { PositionData, DensityData, Box3D } from '../../../../mol-math/geometry';
-import { MolecularSurfaceCalculationProps, calcMolecularSurface } from '../../../../mol-math/geometry/molecular-surface';
-import { OrderedSet } from '../../../../mol-data/int';
-import { Boundary } from '../../../../mol-math/geometry/boundary';
-import { SizeTheme } from '../../../../mol-theme/size';
+import { Unit, Structure } from '../../../../mol-model/structure.ts';
+import { Task, RuntimeContext } from '../../../../mol-task/index.ts';
+import { getUnitConformationAndRadius, CommonSurfaceProps, ensureReasonableResolution, getStructureConformationAndRadius } from './common.ts';
+import { PositionData, DensityData, Box3D } from '../../../../mol-math/geometry.ts';
+import { MolecularSurfaceCalculationProps, calcMolecularSurface } from '../../../../mol-math/geometry/molecular-surface.ts';
+import { OrderedSet } from '../../../../mol-data/int.ts';
+import { Boundary } from '../../../../mol-math/geometry/boundary.ts';
+import { SizeTheme } from '../../../../mol-theme/size.ts';
 
 export type MolecularSurfaceProps = MolecularSurfaceCalculationProps & CommonSurfaceProps
 

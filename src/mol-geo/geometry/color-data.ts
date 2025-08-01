@@ -6,14 +6,14 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { ValueCell } from '../../mol-util';
-import { TextureImage, createTextureImage } from '../../mol-gl/renderable/util';
-import { Color } from '../../mol-util/color';
-import { Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra';
-import { LocationIterator } from '../util/location-iterator';
-import { NullLocation } from '../../mol-model/location';
-import { LocationColor, ColorTheme, ColorVolume } from '../../mol-theme/color';
-import { createNullTexture, Texture } from '../../mol-gl/webgl/texture';
+import { ValueCell } from '../../mol-util/index.ts';
+import { TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
+import { LocationIterator } from '../util/location-iterator.ts';
+import { NullLocation } from '../../mol-model/location.ts';
+import { LocationColor, ColorTheme, ColorVolume } from '../../mol-theme/color.ts';
+import { createNullTexture, Texture } from '../../mol-gl/webgl/texture.ts';
 
 export type ColorTypeLocation = 'uniform' | 'instance' | 'group' | 'groupInstance' | 'vertex' | 'vertexInstance';
 export type ColorTypeGrid = 'volume' | 'volumeInstance';

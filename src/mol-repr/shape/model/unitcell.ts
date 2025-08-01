@@ -4,19 +4,19 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Model, Symmetry } from '../../../mol-model/structure';
-import { ShapeRepresentation } from '../representation';
-import { Shape } from '../../../mol-model/shape';
-import { ColorNames } from '../../../mol-util/color/names';
-import { RuntimeContext } from '../../../mol-task';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { BoxCage } from '../../../mol-geo/primitive/box';
-import { Mat4, Vec3 } from '../../../mol-math/linear-algebra';
-import { transformCage, cloneCage } from '../../../mol-geo/primitive/cage';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { RepresentationParamsGetter, Representation, RepresentationContext } from '../../representation';
+import { Model, Symmetry } from '../../../mol-model/structure.ts';
+import { ShapeRepresentation } from '../representation.ts';
+import { Shape } from '../../../mol-model/shape.ts';
+import { ColorNames } from '../../../mol-util/color/names.ts';
+import { RuntimeContext } from '../../../mol-task/index.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { BoxCage } from '../../../mol-geo/primitive/box.ts';
+import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { transformCage, cloneCage } from '../../../mol-geo/primitive/cage.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { RepresentationParamsGetter, Representation, RepresentationContext } from '../../representation.ts';
 
 const translate05 = Mat4.fromTranslation(Mat4(), Vec3.create(0.5, 0.5, 0.5));
 const unitCage = transformCage(cloneCage(BoxCage()), translate05);

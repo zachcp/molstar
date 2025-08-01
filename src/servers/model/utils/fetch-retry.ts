@@ -6,8 +6,8 @@
  */
 
 import fetch, { AbortError, Response } from 'node-fetch';
-import { retryIf } from '../../../mol-util/retry-if';
-import { downloadGs } from '../../common/google-cloud-storage';
+import { retryIf } from '../../../mol-util/retry-if.ts';
+import { downloadGs } from '../../common/google-cloud-storage.ts';
 
 
 const RETRIABLE_NETWORK_ERRORS = [

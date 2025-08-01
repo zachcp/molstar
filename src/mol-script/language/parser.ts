@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { MonadicParser as P } from '../../mol-util/monadic-parser';
-import { Expression } from './expression';
-import { MolScriptBuilder as B } from './builder';
-import { assertUnreachable } from '../../mol-util/type-helpers';
+import { MonadicParser as P } from '../../mol-util/monadic-parser.ts';
+import { Expression } from './expression.ts';
+import { MolScriptBuilder as B } from './builder.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
 
 export function parseMolScript(input: string) {
     return Language.parse(input);

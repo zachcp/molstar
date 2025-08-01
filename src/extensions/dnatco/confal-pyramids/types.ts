@@ -5,10 +5,10 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { DnatcoTypes } from '../types';
-import { DataLocation } from '../../../mol-model/location';
-import { DataLoci } from '../../../mol-model/loci';
-import { confalPyramidLabel } from './behavior';
+import { DnatcoTypes } from '../types.ts';
+import { DataLocation } from '../../../mol-model/location.ts';
+import { DataLoci } from '../../../mol-model/loci.ts';
+import { confalPyramidLabel } from './behavior.ts';
 
 export namespace ConfalPyramidsTypes {
     export interface Location extends DataLocation<DnatcoTypes.HalfStep, {}> {}

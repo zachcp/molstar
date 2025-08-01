@@ -5,9 +5,9 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { ChunkedArray } from '../../../mol-data/util';
-import { Cylinders } from './cylinders';
-import { Vec3 } from '../../../mol-math/linear-algebra';
+import { ChunkedArray } from '../../../mol-data/util.ts';
+import { Cylinders } from './cylinders.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 
 export interface CylindersBuilder {
     /**

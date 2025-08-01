@@ -4,22 +4,22 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure, StructureElement, Unit } from '../../../mol-model/structure';
-import { Loci, EmptyLoci } from '../../../mol-model/loci';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { createLinkCylinderMesh, LinkCylinderParams } from './util/link';
-import { OrderedSet, Interval } from '../../../mol-data/int';
-import { ComplexMeshVisual, ComplexVisual } from '../complex-visual';
-import { UnitsMeshParams } from '../units-visual';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { LocationIterator } from '../../../mol-geo/util/location-iterator';
-import { PickingId } from '../../../mol-geo/geometry/picking';
-import { VisualUpdateState } from '../../util';
-import { VisualContext } from '../../../mol-repr/visual';
-import { Theme } from '../../../mol-theme/theme';
-import { getAltResidueLociFromId } from './util/common';
-import { Sphere3D } from '../../../mol-math/geometry';
+import { Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
+import { Loci, EmptyLoci } from '../../../mol-model/loci.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { createLinkCylinderMesh, LinkCylinderParams } from './util/link.ts';
+import { OrderedSet, Interval } from '../../../mol-data/int.ts';
+import { ComplexMeshVisual, ComplexVisual } from '../complex-visual.ts';
+import { UnitsMeshParams } from '../units-visual.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { LocationIterator } from '../../../mol-geo/util/location-iterator.ts';
+import { PickingId } from '../../../mol-geo/geometry/picking.ts';
+import { VisualUpdateState } from '../../util.ts';
+import { VisualContext } from '../../visual.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { getAltResidueLociFromId } from './util/common.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
 
 function createCarbohydrateLinkCylinderMesh(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<CarbohydrateLinkParams>, mesh?: Mesh) {
     const { links, elements } = structure.carbohydrates;

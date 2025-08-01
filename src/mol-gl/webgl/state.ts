@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { GLRenderingContext } from './compat';
-import { WebGLExtensions } from './extensions';
+import { GLRenderingContext } from './compat.ts';
+import { WebGLExtensions } from './extensions.ts';
 
 export type WebGLState = {
     currentProgramId: number

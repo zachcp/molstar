@@ -5,9 +5,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Model } from '../../../mol-model/structure';
-import { ModelFormat } from '../../format';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
+import { Model } from '../../../mol-model/structure.ts';
+import { ModelFormat } from '../../format.ts';
+import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
 
 class FormatRegistry<T> {
     private map = new Map<ModelFormat['kind'], (model: Model) => T | undefined>();

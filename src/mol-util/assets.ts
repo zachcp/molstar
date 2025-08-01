@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { UUID } from './uuid';
-import { iterableToArray } from '../mol-data/util';
-import { ajaxGet, DataType, DataResponse, readFromFile } from './data-source';
-import { Task } from '../mol-task';
-import { File_ as File } from './nodejs-shims';
+import { UUID } from './uuid.ts';
+import { iterableToArray } from '../mol-data/util.ts';
+import { ajaxGet, DataType, DataResponse, readFromFile } from './data-source.ts';
+import { Task } from '../mol-task/index.ts';
+import { File_ as File } from './nodejs-shims.ts';
 
 export { AssetManager, Asset };
 

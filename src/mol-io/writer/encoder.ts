@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Writer } from './writer';
+import { Writer } from './writer.ts';
 
 export interface Encoder {
     encode(): void,

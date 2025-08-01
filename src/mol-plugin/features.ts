@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { is_iOS } from '../mol-util/browser';
+import { is_iOS } from '../mol-util/browser.ts';
 
 export const PluginFeatureDetection = {
     get defaultTransparency(): 'blended' | 'wboit' | 'dpoit' {

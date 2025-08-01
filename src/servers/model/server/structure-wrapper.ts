@@ -4,20 +4,21 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Structure, Model } from '../../../mol-model/structure';
-import { PerformanceMonitor } from '../../../mol-util/performance-monitor';
-import { Cache } from './cache';
-import { ModelServerConfig as Config, mapSourceAndIdToFilename, ModelServerFetchFormats } from '../config';
-import { CIF, CifFrame, CifBlock } from '../../../mol-io/reader/cif';
+import { Structure, Model } from '../../../mol-model/structure.ts';
+import { PerformanceMonitor } from '../../../mol-util/performance-monitor.ts';
+import { Cache } from './cache.ts';
+import { ModelServerConfig as Config, mapSourceAndIdToFilename, ModelServerFetchFormats } from '../config.ts';
+import { CIF, CifFrame, CifBlock } from '../../../mol-io/reader/cif.ts';
 import * as util from 'util';
 import * as fs from 'fs';
 import * as zlib from 'zlib';
-import { JobEntry } from './jobs';
-import { ConsoleLogger } from '../../../mol-util/console-logger';
-import { ModelPropertiesProvider } from '../property-provider';
-import { trajectoryFromMmCIF } from '../../../mol-model-formats/structure/mmcif';
-import { fetchRetry } from '../utils/fetch-retry';
-import { Task } from '../../../mol-task';
+import { JobEntry } from './jobs.ts';
+import { ConsoleLogger } from '../../../mol-util/console-logger.ts';
+import { ModelPropertiesProvider } from '../property-provider.ts';
+import { trajectoryFromMmCIF } from '../../../mol-model-formats/structure/mmcif.ts';
+import { fetchRetry } from '../utils/fetch-retry.ts';
+import { Task } from '../../../mol-task/index.ts';
+import { Buffer } from "node:buffer";
 
 require('util.promisify').shim();
 

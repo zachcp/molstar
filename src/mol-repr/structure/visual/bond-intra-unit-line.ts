@@ -4,24 +4,24 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { VisualContext } from '../../visual';
-import { Unit, Structure, StructureElement } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { arrayEqual } from '../../../mol-util';
-import { LinkStyle, createLinkLines, LinkBuilderProps, EmptyLinkBuilderProps } from './util/link';
-import { UnitsVisual, UnitsLinesParams, UnitsLinesVisual } from '../units-visual';
-import { VisualUpdateState } from '../../util';
-import { BondType } from '../../../mol-model/structure/model/types';
-import { BondIterator, BondLineParams, getIntraBondLoci, eachIntraBond, makeIntraBondIgnoreTest, ignoreBondType, hasUnitVisibleBonds, hasStructureVisibleBonds, getStructureGroupsBondLoci, eachStructureGroupsBond } from './util/bond';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { Lines } from '../../../mol-geo/geometry/lines/lines';
-import { IntAdjacencyGraph } from '../../../mol-math/graph';
-import { arrayIntersectionSize } from '../../../mol-util/array';
-import { StructureGroup } from './util/common';
-import { ComplexLinesParams, ComplexLinesVisual, ComplexVisual } from '../complex-visual';
-import { EmptyLocationIterator } from '../../../mol-geo/util/location-iterator';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { VisualContext } from '../../visual.ts';
+import { Unit, Structure, StructureElement } from '../../../mol-model/structure.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { arrayEqual } from '../../../mol-util/index.ts';
+import { LinkStyle, createLinkLines, LinkBuilderProps, EmptyLinkBuilderProps } from './util/link.ts';
+import { UnitsVisual, UnitsLinesParams, UnitsLinesVisual } from '../units-visual.ts';
+import { VisualUpdateState } from '../../util.ts';
+import { BondType } from '../../../mol-model/structure/model/types.ts';
+import { BondIterator, BondLineParams, getIntraBondLoci, eachIntraBond, makeIntraBondIgnoreTest, ignoreBondType, hasUnitVisibleBonds, hasStructureVisibleBonds, getStructureGroupsBondLoci, eachStructureGroupsBond } from './util/bond.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { Lines } from '../../../mol-geo/geometry/lines/lines.ts';
+import { IntAdjacencyGraph } from '../../../mol-math/graph.ts';
+import { arrayIntersectionSize } from '../../../mol-util/array.ts';
+import { StructureGroup } from './util/common.ts';
+import { ComplexLinesParams, ComplexLinesVisual, ComplexVisual } from '../complex-visual.ts';
+import { EmptyLocationIterator } from '../../../mol-geo/util/location-iterator.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const isBondType = BondType.is;

@@ -4,37 +4,37 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { CopyRenderable, QuadSchema, QuadValues, createCopyRenderable } from '../../mol-gl/compute/util';
-import { DefineSpec, TextureSpec, UniformSpec, Values } from '../../mol-gl/renderable/schema';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { ValueCell } from '../../mol-util';
-import { isDebugMode, isTimingMode } from '../../mol-util/debug';
-import { Renderer, RendererProps } from '../../mol-gl/renderer';
-import { Camera, ICamera } from '../camera';
-import { Scene } from '../../mol-gl/scene';
-import { RenderTarget } from '../../mol-gl/webgl/render-target';
-import { ShaderCode } from '../../mol-gl/shader-code';
-import { quad_vert } from '../../mol-gl/shader/quad.vert';
-import { ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable';
-import { compose_frag } from '../../mol-gl/shader/illumination/compose.frag';
-import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2';
-import { createComputeRenderItem } from '../../mol-gl/webgl/render-item';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Color } from '../../mol-util/color/color';
-import { AntialiasingPass, PostprocessingPass, PostprocessingProps } from './postprocessing';
-import { DrawPass } from './draw';
-import { MarkingPass, MarkingProps } from './marking';
-import { Helper } from '../helper/helper';
-import { DofPass } from './dof';
-import { TracingParams, TracingPass } from './tracing';
-import { JitterVectors, MultiSampleProps } from './multi-sample';
-import { compose_frag as multiSample_compose_frag } from '../../mol-gl/shader/compose.frag';
-import { clamp, lerp } from '../../mol-math/interpolate';
-import { SsaoProps } from './ssao';
-import { OutlinePass } from './outline';
-import { BloomPass } from './bloom';
+import { CopyRenderable, QuadSchema, QuadValues, createCopyRenderable } from '../../mol-gl/compute/util.ts';
+import { DefineSpec, TextureSpec, UniformSpec, Values } from '../../mol-gl/renderable/schema.ts';
+import { Texture } from '../../mol-gl/webgl/texture.ts';
+import { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { ValueCell } from '../../mol-util/index.ts';
+import { isDebugMode, isTimingMode } from '../../mol-util/debug.ts';
+import { Renderer, RendererProps } from '../../mol-gl/renderer.ts';
+import { Camera, ICamera } from '../camera.ts';
+import { Scene } from '../../mol-gl/scene.ts';
+import { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
+import { ShaderCode } from '../../mol-gl/shader-code.ts';
+import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
+import { ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
+import { compose_frag } from '../../mol-gl/shader/illumination/compose.frag.ts';
+import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2.ts';
+import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Color } from '../../mol-util/color/color.ts';
+import { AntialiasingPass, PostprocessingPass, PostprocessingProps } from './postprocessing.ts';
+import { DrawPass } from './draw.ts';
+import { MarkingPass, MarkingProps } from './marking.ts';
+import { Helper } from '../helper/helper.ts';
+import { DofPass } from './dof.ts';
+import { TracingParams, TracingPass } from './tracing.ts';
+import { JitterVectors, MultiSampleProps } from './multi-sample.ts';
+import { compose_frag as multiSample_compose_frag } from '../../mol-gl/shader/compose.frag.ts';
+import { clamp, lerp } from '../../mol-math/interpolate.ts';
+import { SsaoProps } from './ssao.ts';
+import { OutlinePass } from './outline.ts';
+import { BloomPass } from './bloom.ts';
 
 type Props = {
     transparentBackground: boolean;

@@ -6,13 +6,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as DataFormat from '../../common/data-format';
-import * as Coords from '../algebra/coordinate';
-import * as Box from '../algebra/box';
-import { Writer } from '../../../../mol-io/writer/writer';
-import { SpacegroupCell } from '../../../../mol-math/geometry';
-import { FileHandle } from '../../../../mol-io/common/file-handle';
-import { TypedArrayValueArray } from '../../../../mol-io/common/typed-array';
+import * as DataFormat from '../../common/data-format.ts';
+import * as Coords from '../algebra/coordinate.ts';
+import * as Box from '../algebra/box.ts';
+import { Writer } from '../../../../mol-io/writer/writer.ts';
+import { SpacegroupCell } from '../../../../mol-math/geometry.ts';
+import { FileHandle } from '../../../../mol-io/common/file-handle.ts';
+import { TypedArrayValueArray } from '../../../../mol-io/common/typed-array.ts';
 
 // DATA
 

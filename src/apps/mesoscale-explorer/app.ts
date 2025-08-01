@@ -4,36 +4,36 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mp4Export } from '../../extensions/mp4-export';
-import { DataFormatProvider } from '../../mol-plugin-state/formats/provider';
-import { createPluginUI } from '../../mol-plugin-ui';
-import { renderReact18 } from '../../mol-plugin-ui/react18';
-import { PluginUIContext } from '../../mol-plugin-ui/context';
-import { DefaultPluginUISpec, PluginUISpec } from '../../mol-plugin-ui/spec';
-import { PluginConfig } from '../../mol-plugin/config';
-import { PluginLayoutControlsDisplay } from '../../mol-plugin/layout';
-import { PluginSpec } from '../../mol-plugin/spec';
-import '../../mol-util/polyfill';
-import { ObjectKeys } from '../../mol-util/type-helpers';
-import { SaccharideCompIdMapType } from '../../mol-model/structure/structure/carbohydrates/constants';
-import { Backgrounds } from '../../extensions/backgrounds';
-import { LeftPanel, RightPanel } from './ui/panels';
-import { Color } from '../../mol-util/color';
-import { SpacefillRepresentationProvider } from '../../mol-repr/structure/representation/spacefill';
-import { PluginBehaviors } from '../../mol-plugin/behavior';
-import { MesoFocusLoci } from './behavior/camera';
-import { GraphicsMode, MesoscaleState } from './data/state';
-import { MesoSelectLoci } from './behavior/select';
-import { Transparency } from '../../mol-gl/webgl/render-item';
-import { LoadModel, loadExampleEntry, loadPdb, loadPdbIhm, loadUrl, openState } from './ui/states';
-import { Asset } from '../../mol-util/assets';
-import { AnimateCameraSpin } from '../../mol-plugin-state/animation/built-in/camera-spin';
-import { AnimateCameraRock } from '../../mol-plugin-state/animation/built-in/camera-rock';
-import { AnimateStateSnapshots } from '../../mol-plugin-state/animation/built-in/state-snapshots';
-import { MesoViewportSnapshotDescription } from './ui/entities';
+import { Mp4Export } from '../../extensions/mp4-export/index.ts';
+import { DataFormatProvider } from '../../mol-plugin-state/formats/provider.ts';
+import { createPluginUI } from '../../mol-plugin-ui/index.ts';
+import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
+import { PluginUIContext } from '../../mol-plugin-ui/context.ts';
+import { DefaultPluginUISpec, PluginUISpec } from '../../mol-plugin-ui/spec.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import { PluginLayoutControlsDisplay } from '../../mol-plugin/layout.ts';
+import { PluginSpec } from '../../mol-plugin/spec.ts';
+import '../../mol-util/polyfill.ts';
+import { ObjectKeys } from '../../mol-util/type-helpers.ts';
+import { SaccharideCompIdMapType } from '../../mol-model/structure/structure/carbohydrates/constants.ts';
+import { Backgrounds } from '../../extensions/backgrounds/index.ts';
+import { LeftPanel, RightPanel } from './ui/panels.tsx';
+import { Color } from '../../mol-util/color/index.ts';
+import { SpacefillRepresentationProvider } from '../../mol-repr/structure/representation/spacefill.ts';
+import { PluginBehaviors } from '../../mol-plugin/behavior.ts';
+import { MesoFocusLoci } from './behavior/camera.ts';
+import { GraphicsMode, MesoscaleState } from './data/state.ts';
+import { MesoSelectLoci } from './behavior/select.ts';
+import { Transparency } from '../../mol-gl/webgl/render-item.ts';
+import { LoadModel, loadExampleEntry, loadPdb, loadPdbIhm, loadUrl, openState } from './ui/states.tsx';
+import { Asset } from '../../mol-util/assets.ts';
+import { AnimateCameraSpin } from '../../mol-plugin-state/animation/built-in/camera-spin.ts';
+import { AnimateCameraRock } from '../../mol-plugin-state/animation/built-in/camera-rock.ts';
+import { AnimateStateSnapshots } from '../../mol-plugin-state/animation/built-in/state-snapshots.ts';
+import { MesoViewportSnapshotDescription } from './ui/entities.tsx';
 
-export { PLUGIN_VERSION as version } from '../../mol-plugin/version';
-export { setDebugMode, setProductionMode, setTimingMode, consoleStats } from '../../mol-util/debug';
+export { PLUGIN_VERSION as version } from '../../mol-plugin/version.ts';
+export { setDebugMode, setProductionMode, setTimingMode, consoleStats } from '../../mol-util/debug.ts';
 
 export type ExampleEntry = {
     id: string,

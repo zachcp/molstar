@@ -4,13 +4,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { IntMap, SortedArray } from '../../../../mol-data/int';
-import { sortArray } from '../../../../mol-data/util';
-import { StructureElement } from '../element';
-import { StructureSymmetry } from '../symmetry';
-import { Unit } from '../unit';
-import { Structure } from '../structure';
-import { ElementIndex } from '../../model';
+import { IntMap, SortedArray } from '../../../../mol-data/int.ts';
+import { sortArray } from '../../../../mol-data/util.ts';
+import { StructureElement } from '../element.ts';
+import { StructureSymmetry } from '../symmetry.ts';
+import { Unit } from '../unit.ts';
+import { Structure } from '../structure.ts';
+import { ElementIndex } from '../../model.ts';
 
 export class StructureSubsetBuilder {
     private ids: number[] = [];

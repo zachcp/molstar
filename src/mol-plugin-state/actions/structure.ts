@@ -5,23 +5,23 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginContext } from '../../mol-plugin/context';
-import { StateAction, StateSelection, StateTransformer } from '../../mol-state';
-import { Task } from '../../mol-task';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from '../builder/structure/representation-preset';
-import { BuiltInTrajectoryFormat, BuiltInTrajectoryFormats, TrajectoryFormatCategory } from '../formats/trajectory';
-import { RootStructureDefinition } from '../helpers/root-structure';
-import { PluginStateObject } from '../objects';
-import { StateTransforms } from '../transforms';
-import { Download } from '../transforms/data';
-import { CustomModelProperties, CustomStructureProperties, ModelFromTrajectory, TrajectoryFromModelAndCoordinates } from '../transforms/model';
-import { Asset } from '../../mol-util/assets';
-import { PluginConfig } from '../../mol-plugin/config';
-import { getFileNameInfo } from '../../mol-util/file-info';
-import { assertUnreachable } from '../../mol-util/type-helpers';
-import { TopologyFormatCategory } from '../formats/topology';
-import { CoordinatesFormatCategory } from '../formats/coordinates';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { StateAction, StateSelection, StateTransformer } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from '../builder/structure/representation-preset.ts';
+import { BuiltInTrajectoryFormat, BuiltInTrajectoryFormats, TrajectoryFormatCategory } from '../formats/trajectory.ts';
+import { RootStructureDefinition } from '../helpers/root-structure.ts';
+import { PluginStateObject } from '../objects.ts';
+import { StateTransforms } from '../transforms.ts';
+import { Download } from '../transforms/data.ts';
+import { CustomModelProperties, CustomStructureProperties, ModelFromTrajectory, TrajectoryFromModelAndCoordinates } from '../transforms/model.ts';
+import { Asset } from '../../mol-util/assets.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import { getFileNameInfo } from '../../mol-util/file-info.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
+import { TopologyFormatCategory } from '../formats/topology.ts';
+import { CoordinatesFormatCategory } from '../formats/coordinates.ts';
 
 const DownloadModelRepresentationOptions = (plugin: PluginContext) => {
     const representationDefault = plugin.config.get(PluginConfig.Structure.DefaultRepresentationPreset) || PresetStructureRepresentations.auto.id;

@@ -7,10 +7,10 @@
  * Adapted from MolQL project
  */
 
-import { MolScriptBuilder } from '../../../mol-script/language/builder';
+import { MolScriptBuilder } from '../../language/builder.ts';
 const B = MolScriptBuilder;
-import * as h from '../helper';
-import { KeywordDict } from '../types';
+import * as h from '../helper.ts';
+import { KeywordDict } from '../types.ts';
 
 const ResDict = {
     nucleic: ['A', 'C', 'T', 'G', 'U', 'DA', 'DC', 'DT', 'DG', 'DU'],

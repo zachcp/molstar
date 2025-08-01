@@ -5,10 +5,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Sphere3D } from '../../../../mol-math/geometry';
-import { Structure } from '../structure';
-import { BoundaryHelper } from '../../../../mol-math/geometry/boundary-helper';
-import { Boundary } from '../../../../mol-math/geometry/boundary';
+import { Sphere3D } from '../../../../mol-math/geometry.ts';
+import { Structure } from '../structure.ts';
+import { BoundaryHelper } from '../../../../mol-math/geometry/boundary-helper.ts';
+import { Boundary } from '../../../../mol-math/geometry/boundary.ts';
 
 const tmpSphere = Sphere3D();
 

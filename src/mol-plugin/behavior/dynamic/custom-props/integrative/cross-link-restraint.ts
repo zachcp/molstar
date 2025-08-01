@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginBehavior } from '../../../behavior';
-import { ModelCrossLinkRestraint } from '../../../../../mol-model-props/integrative/cross-link-restraint/format';
-import { Model } from '../../../../../mol-model/structure';
-import { MmcifFormat } from '../../../../../mol-model-formats/structure/mmcif';
-import { CrossLinkRestraintRepresentationProvider } from '../../../../../mol-model-props/integrative/cross-link-restraint/representation';
-import { CrossLinkColorThemeProvider } from '../../../../../mol-model-props/integrative/cross-link-restraint/color';
-import { CrossLinkRestraint as _CrossLinkRestraint } from '../../../../../mol-model-props/integrative/cross-link-restraint/property';
+import { PluginBehavior } from '../../../behavior.ts';
+import { ModelCrossLinkRestraint } from '../../../../../mol-model-props/integrative/cross-link-restraint/format.ts';
+import { Model } from '../../../../../mol-model/structure.ts';
+import { MmcifFormat } from '../../../../../mol-model-formats/structure/mmcif.ts';
+import { CrossLinkRestraintRepresentationProvider } from '../../../../../mol-model-props/integrative/cross-link-restraint/representation.ts';
+import { CrossLinkColorThemeProvider } from '../../../../../mol-model-props/integrative/cross-link-restraint/color.ts';
+import { CrossLinkRestraint as _CrossLinkRestraint } from '../../../../../mol-model-props/integrative/cross-link-restraint/property.ts';
 
 export const CrossLinkRestraint = PluginBehavior.create<{ }>({
     name: 'integrative-cross-link-restraint',

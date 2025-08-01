@@ -4,20 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { VisualContext } from '../../visual';
-import { Structure, StructureElement, Bond, Unit } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { BitFlags, arrayEqual } from '../../../mol-util';
-import { LinkStyle, createLinkLines, LinkBuilderProps } from './util/link';
-import { ComplexVisual, ComplexLinesVisual, ComplexLinesParams } from '../complex-visual';
-import { VisualUpdateState } from '../../util';
-import { BondType } from '../../../mol-model/structure/model/types';
-import { BondIterator, getInterBondLoci, eachInterBond, BondLineParams, makeInterBondIgnoreTest, hasStructureVisibleBonds } from './util/bond';
-import { Lines } from '../../../mol-geo/geometry/lines/lines';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { EmptyLocationIterator } from '../../../mol-geo/util/location-iterator';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { VisualContext } from '../../visual.ts';
+import { Structure, StructureElement, Bond, Unit } from '../../../mol-model/structure.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { BitFlags, arrayEqual } from '../../../mol-util/index.ts';
+import { LinkStyle, createLinkLines, LinkBuilderProps } from './util/link.ts';
+import { ComplexVisual, ComplexLinesVisual, ComplexLinesParams } from '../complex-visual.ts';
+import { VisualUpdateState } from '../../util.ts';
+import { BondType } from '../../../mol-model/structure/model/types.ts';
+import { BondIterator, getInterBondLoci, eachInterBond, BondLineParams, makeInterBondIgnoreTest, hasStructureVisibleBonds } from './util/bond.ts';
+import { Lines } from '../../../mol-geo/geometry/lines/lines.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { EmptyLocationIterator } from '../../../mol-geo/util/location-iterator.ts';
 
 const tmpRefPosBondIt = new Bond.ElementBondIterator();
 function setRefPosition(pos: Vec3, structure: Structure, unit: Unit.Atomic, index: StructureElement.UnitIndex) {

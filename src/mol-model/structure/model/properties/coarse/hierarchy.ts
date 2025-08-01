@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column } from '../../../../../mol-data/db';
-import { Segmentation } from '../../../../../mol-data/int';
-import { ElementIndex, ChainIndex, EntityIndex } from '../../indexing';
-import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges';
-import { EmptyCoarseIndex } from '../utils/coarse-index';
+import { Column } from '../../../../../mol-data/db.ts';
+import { Segmentation } from '../../../../../mol-data/int.ts';
+import { ElementIndex, ChainIndex, EntityIndex } from '../../indexing.ts';
+import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges.ts';
+import { EmptyCoarseIndex } from '../utils/coarse-index.ts';
 
 export interface CoarsedElementKeys {
     /** Assign a key to each element */

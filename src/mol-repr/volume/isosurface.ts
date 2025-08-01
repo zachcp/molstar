@@ -5,29 +5,29 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Grid, Volume } from '../../mol-model/volume';
-import { VisualContext } from '../visual';
-import { Theme, ThemeRegistryContext } from '../../mol-theme/theme';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { computeMarchingCubesMesh, computeMarchingCubesLines } from '../../mol-geo/util/marching-cubes/algorithm';
-import { VolumeVisual, VolumeRepresentation, VolumeRepresentationProvider, VolumeKey } from './representation';
-import { VisualUpdateState } from '../util';
-import { Lines } from '../../mol-geo/geometry/lines/lines';
-import { RepresentationContext, RepresentationParamsGetter, Representation } from '../representation';
-import { PickingId } from '../../mol-geo/geometry/picking';
-import { EmptyLoci, Loci } from '../../mol-model/loci';
-import { Interval, OrderedSet } from '../../mol-data/int';
-import { Tensor, Vec2, Vec3 } from '../../mol-math/linear-algebra';
-import { fillSerial } from '../../mol-util/array';
-import { createVolumeCellLocationIterator, createVolumeTexture2d, eachVolumeLoci, getVolumeTexture2dLayout } from './util';
-import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh';
-import { extractIsosurface } from '../../mol-gl/compute/marching-cubes/isosurface';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { CustomPropertyDescriptor } from '../../mol-model/custom-property';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { BaseGeometry } from '../../mol-geo/geometry/base';
-import { ValueCell } from '../../mol-util/value-cell';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Grid, Volume } from '../../mol-model/volume.ts';
+import { VisualContext } from '../visual.ts';
+import { Theme, ThemeRegistryContext } from '../../mol-theme/theme.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { computeMarchingCubesMesh, computeMarchingCubesLines } from '../../mol-geo/util/marching-cubes/algorithm.ts';
+import { VolumeVisual, VolumeRepresentation, VolumeRepresentationProvider, VolumeKey } from './representation.ts';
+import { VisualUpdateState } from '../util.ts';
+import { Lines } from '../../mol-geo/geometry/lines/lines.ts';
+import { RepresentationContext, RepresentationParamsGetter, Representation } from '../representation.ts';
+import { PickingId } from '../../mol-geo/geometry/picking.ts';
+import { EmptyLoci, Loci } from '../../mol-model/loci.ts';
+import { Interval, OrderedSet } from '../../mol-data/int.ts';
+import { Tensor, Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { fillSerial } from '../../mol-util/array.ts';
+import { createVolumeCellLocationIterator, createVolumeTexture2d, eachVolumeLoci, getVolumeTexture2dLayout } from './util.ts';
+import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh.ts';
+import { extractIsosurface } from '../../mol-gl/compute/marching-cubes/isosurface.ts';
+import { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
+import { Texture } from '../../mol-gl/webgl/texture.ts';
+import { BaseGeometry } from '../../mol-geo/geometry/base.ts';
+import { ValueCell } from '../../mol-util/value-cell.ts';
 
 export const VolumeIsosurfaceParams = {
     isoValue: Volume.IsoValueParam,

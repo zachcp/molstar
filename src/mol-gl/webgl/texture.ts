@@ -5,17 +5,17 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { WebGLContext } from './context';
-import { TextureImage, TextureVolume } from '../renderable/util';
-import { ValueCell } from '../../mol-util';
-import { RenderableSchema } from '../renderable/schema';
-import { idFactory } from '../../mol-util/id-factory';
-import { Framebuffer } from './framebuffer';
-import { isWebGL2, GLRenderingContext } from './compat';
-import { isPromiseLike, ValueOf } from '../../mol-util/type-helpers';
-import { WebGLExtensions } from './extensions';
-import { objectForEach } from '../../mol-util/object';
-import { isPowerOfTwo } from '../../mol-math/misc';
+import { WebGLContext } from './context.ts';
+import { TextureImage, TextureVolume } from '../renderable/util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
+import { RenderableSchema } from '../renderable/schema.ts';
+import { idFactory } from '../../mol-util/id-factory.ts';
+import { Framebuffer } from './framebuffer.ts';
+import { isWebGL2, GLRenderingContext } from './compat.ts';
+import { isPromiseLike, ValueOf } from '../../mol-util/type-helpers.ts';
+import { WebGLExtensions } from './extensions.ts';
+import { objectForEach } from '../../mol-util/object.ts';
+import { isPowerOfTwo } from '../../mol-math/misc.ts';
 
 const getNextTextureId = idFactory();
 

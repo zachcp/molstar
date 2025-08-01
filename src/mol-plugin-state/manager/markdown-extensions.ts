@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { getCellBoundingSphere } from '../../mol-plugin-state/manager/focus-camera/focus-object';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { StateObjectCell } from '../../mol-state';
-import { PluginContext } from '../../mol-plugin/context';
+import { getCellBoundingSphere } from './focus-camera/focus-object.ts';
+import { PluginStateObject } from '../objects.ts';
+import { StateObjectCell } from '../../mol-state/index.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
 
 export type MarkdownExtensionEvent = 'click' | 'mouse-enter' | 'mouse-leave';
 

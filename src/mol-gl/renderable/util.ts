@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Sphere3D } from '../../mol-math/geometry';
-import { Vec3, Mat4 } from '../../mol-math/linear-algebra';
-import { BoundaryHelper } from '../../mol-math/geometry/boundary-helper';
-import { TextureFilter } from '../webgl/texture';
-import { arrayMinMax } from '../../mol-util/array';
+import { Sphere3D } from '../../mol-math/geometry.ts';
+import { Vec3, Mat4 } from '../../mol-math/linear-algebra.ts';
+import { BoundaryHelper } from '../../mol-math/geometry/boundary-helper.ts';
+import { TextureFilter } from '../webgl/texture.ts';
+import { arrayMinMax } from '../../mol-util/array.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3fromArray = Vec3.fromArray;

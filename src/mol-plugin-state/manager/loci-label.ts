@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginContext } from '../../mol-plugin/context';
-import { Loci } from '../../mol-model/loci';
-import { Representation } from '../../mol-repr/representation';
-import { MarkerAction } from '../../mol-util/marker-action';
-import { arrayRemoveAtInPlace } from '../../mol-util/array';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { Loci } from '../../mol-model/loci.ts';
+import { Representation } from '../../mol-repr/representation.ts';
+import { MarkerAction } from '../../mol-util/marker-action.ts';
+import { arrayRemoveAtInPlace } from '../../mol-util/array.ts';
 
 // any represents React element. For compatibility to including the type
 export type LociLabel = string | any

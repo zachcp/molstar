@@ -5,15 +5,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Structure, StructureElement } from '../../mol-model/structure';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { StateTransforms } from '../../mol-plugin-state/transforms';
-import { PluginContext } from '../../mol-plugin/context';
-import { StateBuilder, StateObjectCell, StateSelection, StateTransform } from '../../mol-state';
-import { Substance } from '../../mol-theme/substance';
-import { StructureComponentRef } from '../manager/structure/hierarchy-state';
-import { EmptyLoci, isEmptyLoci, Loci } from '../../mol-model/loci';
-import { Material } from '../../mol-util/material';
+import { Structure, StructureElement } from '../../mol-model/structure.ts';
+import { PluginStateObject } from '../objects.ts';
+import { StateTransforms } from '../transforms.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { StateBuilder, StateObjectCell, StateSelection, StateTransform } from '../../mol-state/index.ts';
+import { Substance } from '../../mol-theme/substance.ts';
+import { StructureComponentRef } from '../manager/structure/hierarchy-state.ts';
+import { EmptyLoci, isEmptyLoci, Loci } from '../../mol-model/loci.ts';
+import { Material } from '../../mol-util/material.ts';
 
 type SubstanceEachReprCallback = (update: StateBuilder.Root, repr: StateObjectCell<PluginStateObject.Molecule.Structure.Representation3D, StateTransform<typeof StateTransforms.Representation.StructureRepresentation3D>>, substance?: StateObjectCell<any, StateTransform<typeof StateTransforms.Representation.SubstanceStructureRepresentation3DFromBundle>>) => Promise<void>
 const SubstanceManagerTag = 'substance-controls';

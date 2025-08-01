@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Expression } from './expression';
+import { Expression } from './expression.ts';
 
 export interface Container {
     source?: string,

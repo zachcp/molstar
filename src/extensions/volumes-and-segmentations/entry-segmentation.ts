@@ -4,21 +4,21 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Volume } from '../../mol-model/volume';
-import { createVolumeRepresentationParams } from '../../mol-plugin-state/helpers/volume-representation-params';
-import { StateTransforms } from '../../mol-plugin-state/transforms';
-import { Download, ParseCif } from '../../mol-plugin-state/transforms/data';
-import { CreateGroup } from '../../mol-plugin-state/transforms/misc';
-import { VolumeFromSegmentationCif } from '../../mol-plugin-state/transforms/volume';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { Color } from '../../mol-util/color';
+import { Volume } from '../../mol-model/volume.ts';
+import { createVolumeRepresentationParams } from '../../mol-plugin-state/helpers/volume-representation-params.ts';
+import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
+import { Download, ParseCif } from '../../mol-plugin-state/transforms/data.ts';
+import { CreateGroup } from '../../mol-plugin-state/transforms/misc.ts';
+import { VolumeFromSegmentationCif } from '../../mol-plugin-state/transforms/volume.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { Color } from '../../mol-util/color/index.ts';
 
-import { Segment } from './volseg-api/data';
-import { BOX, VolsegEntryData, MAX_VOXELS } from './entry-root';
-import { VolumeVisualParams } from './entry-volume';
-import { VolsegGlobalStateData } from './global-state';
-import { Interval } from '../../mol-data/int/interval';
-import { SortedArray } from '../../mol-data/int';
+import { Segment } from './volseg-api/data.ts';
+import { BOX, VolsegEntryData, MAX_VOXELS } from './entry-root.ts';
+import { VolumeVisualParams } from './entry-volume.ts';
+import { VolsegGlobalStateData } from './global-state.ts';
+import { Interval } from '../../mol-data/int/interval.ts';
+import { SortedArray } from '../../mol-data/int.ts';
 
 
 const GROUP_TAG = 'lattice-segmentation-group';

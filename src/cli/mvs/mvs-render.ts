@@ -22,23 +22,23 @@ import jpegjs from 'jpeg-js';
 import path from 'path';
 import pngjs from 'pngjs';
 
-import { Canvas3DParams } from '../../mol-canvas3d/canvas3d';
-import { setCanvasModule } from '../../mol-geo/geometry/text/font-atlas';
-import { PluginContext } from '../../mol-plugin/context';
-import { HeadlessPluginContext } from '../../mol-plugin/headless-plugin-context';
-import { DefaultPluginSpec, PluginSpec } from '../../mol-plugin/spec';
-import { ExternalModules, defaultCanvas3DParams } from '../../mol-plugin/util/headless-screenshot';
-import { Task } from '../../mol-task';
-import { setFSModule } from '../../mol-util/data-source';
-import { onelinerJsonString } from '../../mol-util/json';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { Canvas3DParams } from '../../mol-canvas3d/canvas3d.ts';
+import { setCanvasModule } from '../../mol-geo/geometry/text/font-atlas.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { HeadlessPluginContext } from '../../mol-plugin/headless-plugin-context.ts';
+import { DefaultPluginSpec, PluginSpec } from '../../mol-plugin/spec.ts';
+import { ExternalModules, defaultCanvas3DParams } from '../../mol-plugin/util/headless-screenshot.ts';
+import { Task } from '../../mol-task/index.ts';
+import { setFSModule } from '../../mol-util/data-source.ts';
+import { onelinerJsonString } from '../../mol-util/json.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
 // MolViewSpec must be imported after HeadlessPluginContext
-import { Mp4Export } from '../../extensions/mp4-export';
-import { MolViewSpec } from '../../extensions/mvs/behavior';
-import { loadMVSX } from '../../extensions/mvs/components/formats';
-import { loadMVS } from '../../extensions/mvs/load';
-import { MVSData } from '../../extensions/mvs/mvs-data';
+import { Mp4Export } from '../../extensions/mp4-export/index.ts';
+import { MolViewSpec } from '../../extensions/mvs/behavior.ts';
+import { loadMVSX } from '../../extensions/mvs/components/formats.ts';
+import { loadMVS } from '../../extensions/mvs/load.ts';
+import { MVSData } from '../../extensions/mvs/mvs-data.ts';
 
 
 setFSModule(fs);

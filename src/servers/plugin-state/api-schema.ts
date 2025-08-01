@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { VERSION } from './version';
-import { Config } from './config';
+import { VERSION } from './version.ts';
+import { Config } from './config.ts';
 
 export function getSchema(config: Config) {
     function mapPath(path: string) {

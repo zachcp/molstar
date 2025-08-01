@@ -5,8 +5,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Color, ColorMap } from '../../../../mol-util/color';
-import { SaccharideNames } from '../../model/types/saccharides';
+import { Color, ColorMap } from '../../../../mol-util/color/index.ts';
+import { SaccharideNames } from '../../model/types/saccharides.ts';
 
 // follows community standard from https://www.ncbi.nlm.nih.gov/glycans/snfg.html
 

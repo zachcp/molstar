@@ -6,15 +6,16 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as Format from './format';
-import * as Data from './data-model';
-import * as File from '../common/file';
-import * as Downsampling from './downsampling';
-import * as Writer from './writer';
-import * as DataFormat from '../common/data-format';
-import { getElementByteSize, createTypedArray, TypedArrayValueType } from '../../../mol-io/common/typed-array';
-import { SimpleBuffer } from '../../../mol-io/common/simple-buffer';
-import { fileHandleFromDescriptor } from '../../common/file-handle';
+import * as Format from './format.ts';
+import * as Data from './data-model.ts';
+import * as File from '../common/file.ts';
+import * as Downsampling from './downsampling.ts';
+import * as Writer from './writer.ts';
+import * as DataFormat from '../common/data-format.ts';
+import { getElementByteSize, createTypedArray, TypedArrayValueType } from '../../../mol-io/common/typed-array.ts';
+import { SimpleBuffer } from '../../../mol-io/common/simple-buffer.ts';
+import { fileHandleFromDescriptor } from '../../common/file-handle.ts';
+import { Buffer } from "node:buffer";
 
 export async function createContext(filename: string, channels: Format.Context[], blockSize: number, isPeriodic: boolean): Promise<Data.Context> {
     const { extent, valueType, grid, origin } = channels[0].data.header;

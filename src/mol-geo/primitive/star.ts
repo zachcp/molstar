@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { Primitive, PrimitiveBuilder } from './primitive';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { Primitive, PrimitiveBuilder } from './primitive.ts';
 
 export const DefaultStarProps = {
     pointCount: 5,

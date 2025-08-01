@@ -5,14 +5,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure, Model } from '../mol-model/structure';
-import { PluginContext } from './context';
-import { PdbDownloadProvider } from '../mol-plugin-state/actions/structure';
-import { EmdbDownloadProvider } from '../mol-plugin-state/actions/volume';
-import { StructureRepresentationPresetProvider } from '../mol-plugin-state/builder/structure/representation-preset';
-import { PluginFeatureDetection } from './features';
-import { SaccharideCompIdMapType } from '../mol-model/structure/structure/carbohydrates/constants';
-import { BackgroundProps } from '../mol-canvas3d/passes/background';
+import { Structure, Model } from '../mol-model/structure.ts';
+import { PluginContext } from './context.ts';
+import { PdbDownloadProvider } from '../mol-plugin-state/actions/structure.ts';
+import { EmdbDownloadProvider } from '../mol-plugin-state/actions/volume.ts';
+import { StructureRepresentationPresetProvider } from '../mol-plugin-state/builder/structure/representation-preset.ts';
+import { PluginFeatureDetection } from './features.ts';
+import { SaccharideCompIdMapType } from '../mol-model/structure/structure/carbohydrates/constants.ts';
+import { BackgroundProps } from '../mol-canvas3d/passes/background.ts';
 
 export class PluginConfigItem<T = any> {
     toString() { return this.key; }

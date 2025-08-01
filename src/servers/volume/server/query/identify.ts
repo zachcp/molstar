@@ -6,9 +6,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as Coords from '../algebra/coordinate';
-import * as Box from '../algebra/box';
-import * as Data from './data-model';
+import * as Coords from '../algebra/coordinate.ts';
+import * as Box from '../algebra/box.ts';
+import * as Data from './data-model.ts';
 // import { FastMap } from '../utils/collections'
 
 /** Find a list of unique blocks+offsets that overlap with the query region. */

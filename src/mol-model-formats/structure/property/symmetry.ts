@@ -5,14 +5,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif';
-import { Spacegroup, SpacegroupCell, SymmetryOperator } from '../../../mol-math/geometry';
-import { Tensor, Vec3, Mat3 } from '../../../mol-math/linear-algebra';
-import { Symmetry } from '../../../mol-model/structure/model/properties/symmetry';
-import { createAssemblies } from './assembly';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
-import { FormatPropertyProvider } from '../common/property';
-import { Table } from '../../../mol-data/db';
+import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
+import { Spacegroup, SpacegroupCell, SymmetryOperator } from '../../../mol-math/geometry.ts';
+import { Tensor, Vec3, Mat3 } from '../../../mol-math/linear-algebra.ts';
+import { Symmetry } from '../../../mol-model/structure/model/properties/symmetry.ts';
+import { createAssemblies } from './assembly.ts';
+import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
+import { FormatPropertyProvider } from '../common/property.ts';
+import { Table } from '../../../mol-data/db.ts';
 
 export { ModelSymmetry };
 

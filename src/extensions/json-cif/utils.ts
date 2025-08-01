@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { parseMol } from '../../mol-io/reader/mol/parser';
-import { trajectoryFromMol } from '../../mol-model-formats/structure/mol';
-import { Structure, to_mmCIF } from '../../mol-model/structure';
-import { Task } from '../../mol-task';
-import { JSONCifEncoder } from './encoder';
+import { parseMol } from '../../mol-io/reader/mol/parser.ts';
+import { trajectoryFromMol } from '../../mol-model-formats/structure/mol.ts';
+import { Structure, to_mmCIF } from '../../mol-model/structure.ts';
+import { Task } from '../../mol-task/index.ts';
+import { JSONCifEncoder } from './encoder.ts';
 
 export async function molfileToJSONCif(molfile: string) {
     const parsed = await parseMol(molfile).run();

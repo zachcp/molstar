@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { UnitsRepresentation } from '../units-representation';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../../mol-repr/representation';
-import { ThemeRegistryContext } from '../../../mol-theme/theme';
-import { Structure } from '../../../mol-model/structure';
-import { OrientationEllipsoidMeshParams, OrientationEllipsoidMeshVisual } from '../visual/orientation-ellipsoid-mesh';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
+import { UnitsRepresentation } from '../units-representation.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
+import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation.ts';
+import { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import { Structure } from '../../../mol-model/structure.ts';
+import { OrientationEllipsoidMeshParams, OrientationEllipsoidMeshVisual } from '../visual/orientation-ellipsoid-mesh.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const OrientationVisuals = {
     'orientation-ellipsoid-mesh': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, OrientationEllipsoidMeshParams>) => UnitsRepresentation('Orientation ellipsoid mesh', ctx, getParams, OrientationEllipsoidMeshVisual),

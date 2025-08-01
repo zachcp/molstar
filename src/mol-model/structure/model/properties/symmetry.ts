@@ -4,14 +4,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { SymmetryOperator } from '../../../../mol-math/geometry/symmetry-operator';
-import { arrayFind } from '../../../../mol-data/util';
-import { StructureQuery } from '../../query';
-import { Model } from '../../model';
-import { Spacegroup } from '../../../../mol-math/geometry';
-import { Vec3 } from '../../../../mol-math/linear-algebra';
-import { ModelSymmetry } from '../../../../mol-model-formats/structure/property/symmetry';
-import { radToDeg } from '../../../../mol-math/misc';
+import { SymmetryOperator } from '../../../../mol-math/geometry/symmetry-operator.ts';
+import { arrayFind } from '../../../../mol-data/util.ts';
+import { StructureQuery } from '../../query.ts';
+import { Model } from '../../model.ts';
+import { Spacegroup } from '../../../../mol-math/geometry.ts';
+import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { ModelSymmetry } from '../../../../mol-model-formats/structure/property/symmetry.ts';
+import { radToDeg } from '../../../../mol-math/misc.ts';
 
 /** Determine an atom set and a list of operators that should be applied to that set  */
 export interface OperatorGroup {

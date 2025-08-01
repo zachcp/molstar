@@ -7,9 +7,9 @@
 
 import * as React from 'react';
 import { Observable, Subscription } from 'rxjs';
-import { PluginUIContext } from './context';
-import { Button, ColorAccent } from './controls/common';
-import { Icon, ArrowRightSvg, ArrowDropDownSvg } from './controls/icons';
+import { PluginUIContext } from './context.ts';
+import { Button, ColorAccent } from './controls/common.tsx';
+import { Icon, ArrowRightSvg, ArrowDropDownSvg } from './controls/icons.tsx';
 
 export const PluginReactContext = React.createContext(void 0 as any as PluginUIContext);
 

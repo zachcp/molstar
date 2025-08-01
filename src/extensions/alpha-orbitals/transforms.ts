@@ -4,22 +4,22 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginStateObject, PluginStateTransform } from '../../mol-plugin-state/objects';
-import { createSphericalCollocationGrid } from './orbitals';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Task } from '../../mol-task';
-import { CustomProperties } from '../../mol-model/custom-property';
-import { SphericalBasisOrder } from './spherical-functions';
-import { Volume } from '../../mol-model/volume';
-import { PluginContext } from '../../mol-plugin/context';
-import { ColorNames } from '../../mol-util/color/names';
-import { createVolumeRepresentationParams } from '../../mol-plugin-state/helpers/volume-representation-params';
-import { StateTransformer } from '../../mol-state';
-import { VolumeRepresentation3DHelpers } from '../../mol-plugin-state/transforms/representation';
-import { AlphaOrbital, Basis, CubeGrid, CubeGridFormat, isCubeGridData } from './data-model';
-import { createSphericalCollocationDensityGrid } from './density';
-import { Mat4, Tensor } from '../../mol-math/linear-algebra';
-import { Theme } from '../../mol-theme/theme';
+import { PluginStateObject, PluginStateTransform } from '../../mol-plugin-state/objects.ts';
+import { createSphericalCollocationGrid } from './orbitals.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Task } from '../../mol-task/index.ts';
+import { CustomProperties } from '../../mol-model/custom-property.ts';
+import { SphericalBasisOrder } from './spherical-functions.ts';
+import { Volume } from '../../mol-model/volume.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { createVolumeRepresentationParams } from '../../mol-plugin-state/helpers/volume-representation-params.ts';
+import { StateTransformer } from '../../mol-state/index.ts';
+import { VolumeRepresentation3DHelpers } from '../../mol-plugin-state/transforms/representation.ts';
+import { AlphaOrbital, Basis, CubeGrid, CubeGridFormat, isCubeGridData } from './data-model.ts';
+import { createSphericalCollocationDensityGrid } from './density.ts';
+import { Mat4, Tensor } from '../../mol-math/linear-algebra.ts';
+import { Theme } from '../../mol-theme/theme.ts';
 
 export class BasisAndOrbitals extends PluginStateObject.Create<{ basis: Basis, order: SphericalBasisOrder, orbitals: AlphaOrbital[] }>({ name: 'Basis', typeClass: 'Object' }) { }
 

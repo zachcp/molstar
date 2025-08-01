@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { SortedArray } from '../../../../mol-data/int/sorted-array';
-import { sortedCantorPairing } from '../../../../mol-data/util';
-import { BondType } from '../../model/types';
-import { StructureElement } from '../element';
-import { Unit } from '../unit';
+import { SortedArray } from '../../../../mol-data/int/sorted-array.ts';
+import { sortedCantorPairing } from '../../../../mol-data/util.ts';
+import { BondType } from '../../model/types.ts';
+import { StructureElement } from '../element.ts';
+import { Unit } from '../unit.ts';
 
 export type UnitResonance = {
     /**

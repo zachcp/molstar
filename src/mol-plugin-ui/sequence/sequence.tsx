@@ -9,16 +9,16 @@
 import * as React from 'react';
 import { Subject } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
-import { OrderedSet } from '../../mol-data/int';
-import { EveryLoci } from '../../mol-model/loci';
-import { StructureElement, StructureProperties, Unit } from '../../mol-model/structure';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { Representation } from '../../mol-repr/representation';
-import { Color } from '../../mol-util/color';
-import { ButtonsType, getButton, getButtons, getModifiers, ModifiersKeys } from '../../mol-util/input/input-observer';
-import { MarkerAction } from '../../mol-util/marker-action';
-import { PluginUIComponent } from '../base';
-import { SequenceWrapper } from './wrapper';
+import { OrderedSet } from '../../mol-data/int.ts';
+import { EveryLoci } from '../../mol-model/loci.ts';
+import { StructureElement, StructureProperties, Unit } from '../../mol-model/structure.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { Representation } from '../../mol-repr/representation.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { ButtonsType, getButton, getButtons, getModifiers, ModifiersKeys } from '../../mol-util/input/input-observer.ts';
+import { MarkerAction } from '../../mol-util/marker-action.ts';
+import { PluginUIComponent } from '../base.tsx';
+import { SequenceWrapper } from './wrapper.ts';
 
 
 type SequenceProps = {

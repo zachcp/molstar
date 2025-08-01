@@ -5,8 +5,8 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { sortArray, hash3, hash4, createRangeArray } from '../../util';
-import { Interval } from '../interval';
+import { sortArray, hash3, hash4, createRangeArray } from '../../util.ts';
+import { Interval } from '../interval.ts';
 
 type Nums = ArrayLike<number>
 

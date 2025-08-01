@@ -8,11 +8,12 @@
 
 import * as fs from 'fs';
 import fetch from 'node-fetch';
-import { FileHandle } from '../../mol-io/common/file-handle';
-import { SimpleBuffer } from '../../mol-io/common/simple-buffer';
-import { defaults, noop } from '../../mol-util';
-import { openRead } from '../volume/common/file';
-import { downloadGs } from './google-cloud-storage';
+import { FileHandle } from '../../mol-io/common/file-handle.ts';
+import { SimpleBuffer } from '../../mol-io/common/simple-buffer.ts';
+import { defaults, noop } from '../../mol-util/index.ts';
+import { openRead } from '../volume/common/file.ts';
+import { downloadGs } from './google-cloud-storage.ts';
+import { Buffer } from "node:buffer";
 
 
 /** Create a file handle from either a file path or a URL (supports file://, http(s)://, gs:// protocols).  */

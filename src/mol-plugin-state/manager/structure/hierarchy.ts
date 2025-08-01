@@ -5,16 +5,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure } from '../../../mol-model/structure';
-import { setSubtreeVisibility } from '../../../mol-plugin/behavior/static/state';
-import { PluginCommands } from '../../../mol-plugin/commands';
-import { PluginContext } from '../../../mol-plugin/context';
-import { StateTransform, StateTree } from '../../../mol-state';
-import { SetUtils } from '../../../mol-util/set';
-import { TrajectoryHierarchyPresetProvider } from '../../builder/structure/hierarchy-preset';
-import { PluginComponent } from '../../component';
-import { PluginStateObject } from '../../objects';
-import { buildStructureHierarchy, StructureHierarchyRef, ModelRef, StructureComponentRef, StructureHierarchy, StructureRef, TrajectoryRef } from './hierarchy-state';
+import { Structure } from '../../../mol-model/structure.ts';
+import { setSubtreeVisibility } from '../../../mol-plugin/behavior/static/state.ts';
+import { PluginCommands } from '../../../mol-plugin/commands.ts';
+import { PluginContext } from '../../../mol-plugin/context.ts';
+import { StateTransform, StateTree } from '../../../mol-state/index.ts';
+import { SetUtils } from '../../../mol-util/set.ts';
+import { TrajectoryHierarchyPresetProvider } from '../../builder/structure/hierarchy-preset.ts';
+import { PluginComponent } from '../../component.ts';
+import { PluginStateObject } from '../../objects.ts';
+import { buildStructureHierarchy, StructureHierarchyRef, ModelRef, StructureComponentRef, StructureHierarchy, StructureRef, TrajectoryRef } from './hierarchy-state.ts';
 
 export class StructureHierarchyManager extends PluginComponent {
     private state = {

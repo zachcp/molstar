@@ -4,24 +4,24 @@
  * @author Dušan Veľký <dvelky@mail.muni.cz>
  */
 
-import { OrderedSet } from '../../../mol-data/int';
-import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { computeMarchingCubesMesh } from '../../../mol-geo/util/marching-cubes/algorithm';
-import { WebGLContext } from '../../../mol-gl/webgl/context';
-import { Texture } from '../../../mol-gl/webgl/texture';
-import { PositionData, Sphere3D, Box3D, GridLookup3D, fillGridDim } from '../../../mol-math/geometry';
-import { Boundary, getBoundary } from '../../../mol-math/geometry/boundary';
-import { DefaultMolecularSurfaceCalculationProps, MolecularSurfaceCalculationProps } from '../../../mol-math/geometry/molecular-surface';
-import { lerp, spline } from '../../../mol-math/interpolate';
-import { Vec3, Tensor, Mat4 } from '../../../mol-math/linear-algebra';
-import { Shape } from '../../../mol-model/shape';
-import { ensureReasonableResolution } from '../../../mol-repr/structure/visual/util/common';
-import { Task, RuntimeContext } from '../../../mol-task';
-import { ValueCell } from '../../../mol-util';
-import { Color } from '../../../mol-util/color';
-import { Tunnel, Profile } from './data-model';
+import { OrderedSet } from '../../../mol-data/int.ts';
+import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { computeMarchingCubesMesh } from '../../../mol-geo/util/marching-cubes/algorithm.ts';
+import { WebGLContext } from '../../../mol-gl/webgl/context.ts';
+import { Texture } from '../../../mol-gl/webgl/texture.ts';
+import { PositionData, Sphere3D, Box3D, GridLookup3D, fillGridDim } from '../../../mol-math/geometry.ts';
+import { Boundary, getBoundary } from '../../../mol-math/geometry/boundary.ts';
+import { DefaultMolecularSurfaceCalculationProps, MolecularSurfaceCalculationProps } from '../../../mol-math/geometry/molecular-surface.ts';
+import { lerp, spline } from '../../../mol-math/interpolate.ts';
+import { Vec3, Tensor, Mat4 } from '../../../mol-math/linear-algebra.ts';
+import { Shape } from '../../../mol-model/shape.ts';
+import { ensureReasonableResolution } from '../../../mol-repr/structure/visual/util/common.ts';
+import { Task, RuntimeContext } from '../../../mol-task/index.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
+import { Color } from '../../../mol-util/color/index.ts';
+import { Tunnel, Profile } from './data-model.ts';
 
 type MolecularSurfaceMeta = {
     resolution?: number

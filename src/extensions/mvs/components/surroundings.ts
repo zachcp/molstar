@@ -4,11 +4,11 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { StructureElement } from '../../../mol-model/structure';
-import { createStructureComponent } from '../../../mol-plugin-state/helpers/structure-component';
-import { PluginStateTransform, PluginStateObject as SO } from '../../../mol-plugin-state/objects';
-import { MolScriptBuilder } from '../../../mol-script/language/builder';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
+import { StructureElement } from '../../../mol-model/structure.ts';
+import { createStructureComponent } from '../../../mol-plugin-state/helpers/structure-component.ts';
+import { PluginStateTransform, PluginStateObject as SO } from '../../../mol-plugin-state/objects.ts';
+import { MolScriptBuilder } from '../../../mol-script/language/builder.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 
 
 export const StructureSurroundingsParams = {

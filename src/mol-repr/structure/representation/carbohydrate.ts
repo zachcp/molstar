@@ -4,16 +4,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
-import { Structure, Model } from '../../../mol-model/structure';
-import { Representation, RepresentationContext, RepresentationParamsGetter } from '../../../mol-repr/representation';
-import { ThemeRegistryContext } from '../../../mol-theme/theme';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { ComplexRepresentation } from '../complex-representation';
-import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation';
-import { CarbohydrateLinkParams, CarbohydrateLinkVisual } from '../visual/carbohydrate-link-cylinder';
-import { CarbohydrateSymbolParams, CarbohydrateSymbolVisual } from '../visual/carbohydrate-symbol-mesh';
-import { CarbohydrateTerminalLinkParams, CarbohydrateTerminalLinkVisual } from '../visual/carbohydrate-terminal-link-cylinder';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
+import { Structure, Model } from '../../../mol-model/structure.ts';
+import { Representation, RepresentationContext, RepresentationParamsGetter } from '../../representation.ts';
+import { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { ComplexRepresentation } from '../complex-representation.ts';
+import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
+import { CarbohydrateLinkParams, CarbohydrateLinkVisual } from '../visual/carbohydrate-link-cylinder.ts';
+import { CarbohydrateSymbolParams, CarbohydrateSymbolVisual } from '../visual/carbohydrate-symbol-mesh.ts';
+import { CarbohydrateTerminalLinkParams, CarbohydrateTerminalLinkVisual } from '../visual/carbohydrate-terminal-link-cylinder.ts';
 
 const CarbohydrateVisuals = {
     'carbohydrate-symbol': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, CarbohydrateSymbolParams>) => ComplexRepresentation('Carbohydrate symbol mesh', ctx, getParams, CarbohydrateSymbolVisual),

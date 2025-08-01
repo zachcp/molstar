@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StateTransforms } from '../transforms';
-import { DataFormatProvider } from './provider';
-import { PluginContext } from '../../mol-plugin/context';
-import { StateObjectRef } from '../../mol-state';
-import { PluginStateObject } from '../objects';
+import { StateTransforms } from '../transforms.ts';
+import { DataFormatProvider } from './provider.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { StateObjectRef } from '../../mol-state/index.ts';
+import { PluginStateObject } from '../objects.ts';
 
 export const ShapeFormatCategory = 'Shape';
 

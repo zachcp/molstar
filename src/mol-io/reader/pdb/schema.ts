@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Tokens } from '../common/text/tokenizer';
+import { Tokens } from '../common/text/tokenizer.ts';
 
 export interface PdbFile {
     lines: Tokens

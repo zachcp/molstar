@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginBehavior } from '../../mol-plugin/behavior/behavior';
-import { ZenodoImportUI } from './ui';
+import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
+import { ZenodoImportUI } from './ui.tsx';
 
 export const ZenodoImport = PluginBehavior.create<{ }>({
     name: 'extension-zenodo-import',

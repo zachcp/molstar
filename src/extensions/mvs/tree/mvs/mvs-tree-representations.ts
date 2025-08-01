@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { bool, float, int, literal, nullable, OptionalField, RequiredField } from '../generic/field-schema';
-import { SimpleParamsSchema, UnionParamsSchema } from '../generic/params-schema';
-import { Matrix, Vector3 } from './param-types';
+import { bool, float, int, literal, nullable, OptionalField, RequiredField } from '../generic/field-schema.ts';
+import { SimpleParamsSchema, UnionParamsSchema } from '../generic/params-schema.ts';
+import { Matrix, Vector3 } from './param-types.ts';
 
 const Cartoon = {
     /** Scales the corresponding visuals */

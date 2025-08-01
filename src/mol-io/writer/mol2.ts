@@ -4,8 +4,8 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { Mol2Encoder } from './mol2/encoder';
-import { Encoder } from './cif/encoder';
+import { Mol2Encoder } from './mol2/encoder.ts';
+import { Encoder } from './cif/encoder.ts';
 
 export namespace Mol2Writer {
     export interface EncoderParams {

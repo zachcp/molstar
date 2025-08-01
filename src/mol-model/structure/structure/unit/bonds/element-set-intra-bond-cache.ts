@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StructureElement } from '../../element';
-import { IntraUnitBonds } from './data';
-import { SortedArray } from '../../../../../mol-data/int';
-import { Model } from '../../../model';
+import { StructureElement } from '../../element.ts';
+import { IntraUnitBonds } from './data.ts';
+import { SortedArray } from '../../../../../mol-data/int.ts';
+import { Model } from '../../../model.ts';
 
 export class ElementSetIntraBondCache {
     private data = new Map<number, [StructureElement.Set, IntraUnitBonds][]>();

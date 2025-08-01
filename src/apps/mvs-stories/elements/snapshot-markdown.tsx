@@ -5,15 +5,15 @@
  */
 
 import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
-import { PluginComponent } from '../../../mol-plugin-state/component';
-import { getMVSStoriesContext, MVSStoriesContext } from '../context';
-import { MVSStoriesViewerModel } from './viewer';
-import { useBehavior } from '../../../mol-plugin-ui/hooks/use-behavior';
+import { PluginComponent } from '../../../mol-plugin-state/component.ts';
+import { getMVSStoriesContext, MVSStoriesContext } from '../context.ts';
+import { MVSStoriesViewerModel } from './viewer.tsx';
+import { useBehavior } from '../../../mol-plugin-ui/hooks/use-behavior.ts';
 import { createRoot } from 'react-dom/client';
-import { PluginStateSnapshotManager } from '../../../mol-plugin-state/manager/snapshots';
-import { PluginReactContext } from '../../../mol-plugin-ui/base';
+import { PluginStateSnapshotManager } from '../../../mol-plugin-state/manager/snapshots.ts';
+import { PluginReactContext } from '../../../mol-plugin-ui/base.tsx';
 import { CSSProperties } from 'react';
-import { Markdown } from '../../../mol-plugin-ui/controls/markdown';
+import { Markdown } from '../../../mol-plugin-ui/controls/markdown.tsx';
 
 export class MVSStoriesSnapshotMarkdownModel extends PluginComponent {
     readonly context: MVSStoriesContext;
@@ -126,4 +126,4 @@ export class MVSStoriesSnapshotMarkdownViewer extends HTMLElement {
     }
 }
 
-window.customElements.define('mvs-stories-snapshot-markdown', MVSStoriesSnapshotMarkdownViewer);
+globalThis.customElements.define('mvs-stories-snapshot-markdown', MVSStoriesSnapshotMarkdownViewer);

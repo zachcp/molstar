@@ -5,12 +5,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column, ColumnHelpers, Table } from '../../../mol-data/db';
-import { Tensor } from '../../../mol-math/linear-algebra';
-import { getNumberType, NumberTypes, parseInt as fastParseInt, parseFloat as fastParseFloat } from '../common/text/number-parser';
-import { Encoding } from '../../common/binary-cif';
-import { Tokens } from '../common/text/tokenizer';
-import { areValuesEqualProvider } from '../common/text/column/token';
+import { Column, ColumnHelpers, Table } from '../../../mol-data/db.ts';
+import { Tensor } from '../../../mol-math/linear-algebra.ts';
+import { getNumberType, NumberTypes, parseInt as fastParseInt, parseFloat as fastParseFloat } from '../common/text/number-parser.ts';
+import { Encoding } from '../../common/binary-cif.ts';
+import { Tokens } from '../common/text/tokenizer.ts';
+import { areValuesEqualProvider } from '../common/text/column/token.ts';
 
 export interface CifFile {
     readonly name?: string,

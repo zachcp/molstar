@@ -5,8 +5,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Box3D } from '../primitives/box3d';
-import { Sphere3D } from '../primitives/sphere3d';
+import { Box3D } from '../primitives/box3d.ts';
+import { Sphere3D } from '../primitives/sphere3d.ts';
 
 export interface Result<T> {
     count: number,

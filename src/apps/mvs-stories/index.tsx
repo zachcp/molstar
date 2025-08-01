@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { getMVSStoriesContext } from './context';
-import './elements';
-import { MVSData } from '../../extensions/mvs/mvs-data';
-import { download } from '../../mol-util/download';
+import { getMVSStoriesContext } from './context.ts';
+import './elements/index.ts';
+import { MVSData } from '../../extensions/mvs/mvs-data.ts';
+import { download } from '../../mol-util/download.ts';
 
 import './favicon.ico';
 import '../../mol-plugin-ui/skin/light.scss';

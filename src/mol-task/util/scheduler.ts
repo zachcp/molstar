@@ -10,12 +10,15 @@
  * MIT license.
  */
 
+import process from "node:process";
+import { setImmediate } from "node:timers";
+import { clearImmediate } from "node:timers";
 declare const WorkerGlobalScope: any;
 function createImmediateActions() {
     const thisGlobal: any = (function () {
         const _window = typeof window !== 'undefined' && window;
         const _self = typeof self !== 'undefined' && typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope && self;
-        const _global = typeof global !== 'undefined' && global;
+        const _global = typeof globalThis !== 'undefined' && globalThis;
         return _window || _global || _self;
     })();
 
@@ -105,14 +108,14 @@ function createImmediateActions() {
             }
         };
 
-        if (window.addEventListener) {
-            window.addEventListener('message', onGlobalMessage, false);
+        if (globalThis.addEventListener) {
+            globalThis.addEventListener('message', onGlobalMessage, false);
         } else {
             (window as any).attachEvent('onmessage', onGlobalMessage);
         }
 
         registerImmediate = function (handle) {
-            window.postMessage(messagePrefix + handle, '*');
+            globalThis.postMessage(messagePrefix + handle, '*');
         };
     }
 

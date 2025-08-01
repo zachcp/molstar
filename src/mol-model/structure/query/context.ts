@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure, StructureElement, Unit } from '../structure';
-import { now } from '../../../mol-util/now';
-import { BondType } from '../model/types';
-import { StructureSelection } from './selection';
-import { defaultBondTest } from './queries/internal';
+import { Structure, StructureElement, Unit } from '../structure.ts';
+import { now } from '../../../mol-util/now.ts';
+import { BondType } from '../model/types.ts';
+import { StructureSelection } from './selection.ts';
+import { defaultBondTest } from './queries/internal.ts';
 
 export interface QueryContextView {
     readonly element: Readonly<StructureElement.Location>;

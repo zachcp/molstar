@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Type } from '../type';
-import { MSymbol, Arguments, Argument } from '../symbol';
-import { symbol, normalizeTable, symbolList } from '../helpers';
+import { Type } from '../type.ts';
+import { MSymbol, Arguments, Argument } from '../symbol.ts';
+import { symbol, normalizeTable, symbolList } from '../helpers.ts';
 
 export namespace Types {
     export type List<T = any> = ArrayLike<T>

@@ -5,28 +5,28 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { VisualContext } from '../../visual';
-import { Unit, Structure } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { Segmentation } from '../../../mol-data/int';
-import { CylinderProps } from '../../../mol-geo/primitive/cylinder';
-import { isNucleic } from '../../../mol-model/structure/model/types';
-import { addCylinder } from '../../../mol-geo/geometry/mesh/builder/cylinder';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual, UnitsCylindersParams, UnitsCylindersVisual } from '../units-visual';
-import { NucleotideLocationIterator, getNucleotideElementLoci, eachNucleotideElement, getNucleotideBaseType, createNucleicIndices, setSugarIndices, hasSugarIndices, setPurinIndices, hasPurinIndices, setPyrimidineIndices, hasPyrimidineIndices } from './util/nucleotide';
-import { VisualUpdateState } from '../../util';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
-import { Sphere3D } from '../../../mol-math/geometry';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { VisualContext } from '../../visual.ts';
+import { Unit, Structure } from '../../../mol-model/structure.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Segmentation } from '../../../mol-data/int.ts';
+import { CylinderProps } from '../../../mol-geo/primitive/cylinder.ts';
+import { isNucleic } from '../../../mol-model/structure/model/types.ts';
+import { addCylinder } from '../../../mol-geo/geometry/mesh/builder/cylinder.ts';
+import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual, UnitsCylindersParams, UnitsCylindersVisual } from '../units-visual.ts';
+import { NucleotideLocationIterator, getNucleotideElementLoci, eachNucleotideElement, getNucleotideBaseType, createNucleicIndices, setSugarIndices, hasSugarIndices, setPurinIndices, hasPurinIndices, setPyrimidineIndices, hasPyrimidineIndices } from './util/nucleotide.ts';
+import { VisualUpdateState } from '../../util.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
 
-import { WebGLContext } from '../../../mol-gl/webgl/context';
+import { WebGLContext } from '../../../mol-gl/webgl/context.ts';
 
-import { Cylinders } from '../../../mol-geo/geometry/cylinders/cylinders';
-import { CylindersBuilder } from '../../../mol-geo/geometry/cylinders/cylinders-builder';
-import { checkCylinderImpostorSupport, StructureGroup } from './util/common';
+import { Cylinders } from '../../../mol-geo/geometry/cylinders/cylinders.ts';
+import { CylindersBuilder } from '../../../mol-geo/geometry/cylinders/cylinders-builder.ts';
+import { checkCylinderImpostorSupport, StructureGroup } from './util/common.ts';
 
 const pTrace = Vec3();
 

@@ -4,24 +4,24 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Structure, Unit } from '../../../mol-model/structure';
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property';
-import { Model, ElementIndex, ResidueIndex } from '../../../mol-model/structure/model';
-import { IntAdjacencyGraph } from '../../../mol-math/graph';
-import { CustomStructureProperty } from '../../../mol-model-props/common/custom-structure-property';
-import { InterUnitGraph } from '../../../mol-math/graph/inter-unit-graph';
-import { UnitIndex } from '../../../mol-model/structure/structure/element/element';
-import { IntMap, SortedArray } from '../../../mol-data/int';
-import { arrayMax } from '../../../mol-util/array';
-import { equalEps } from '../../../mol-math/linear-algebra/3d/common';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { QuerySymbolRuntime } from '../../../mol-script/runtime/query/compiler';
-import { CustomPropSymbol } from '../../../mol-script/language/symbol';
-import { Type } from '../../../mol-script/language/type';
-import { Asset } from '../../../mol-util/assets';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Structure, Unit } from '../../../mol-model/structure.ts';
+import { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property.ts';
+import { Model, ElementIndex, ResidueIndex } from '../../../mol-model/structure/model.ts';
+import { IntAdjacencyGraph } from '../../../mol-math/graph.ts';
+import { CustomStructureProperty } from '../../../mol-model-props/common/custom-structure-property.ts';
+import { InterUnitGraph } from '../../../mol-math/graph/inter-unit-graph.ts';
+import { UnitIndex } from '../../../mol-model/structure/structure/element/element.ts';
+import { IntMap, SortedArray } from '../../../mol-data/int.ts';
+import { arrayMax } from '../../../mol-util/array.ts';
+import { equalEps } from '../../../mol-math/linear-algebra/3d/common.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { QuerySymbolRuntime } from '../../../mol-script/runtime/query/compiler.ts';
+import { CustomPropSymbol } from '../../../mol-script/language/symbol.ts';
+import { Type } from '../../../mol-script/language/type.ts';
+import { Asset } from '../../../mol-util/assets.ts';
+import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
 
 export { ValidationReport };
 

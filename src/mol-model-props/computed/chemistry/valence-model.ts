@@ -7,15 +7,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Structure, StructureElement, Unit, Bond } from '../../../mol-model/structure';
-import { Elements, isMetal } from '../../../mol-model/structure/model/properties/atomic/types';
-import { AtomGeometry, assignGeometry } from './geometry';
-import { bondCount, typeSymbol, formalCharge, bondToElementCount } from './util';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { RuntimeContext } from '../../../mol-task';
-import { isDebugMode } from '../../../mol-util/debug';
-import { SortedArray } from '../../../mol-data/int';
-import { BondType } from '../../../mol-model/structure/model/types';
+import { Structure, StructureElement, Unit, Bond } from '../../../mol-model/structure.ts';
+import { Elements, isMetal } from '../../../mol-model/structure/model/properties/atomic/types.ts';
+import { AtomGeometry, assignGeometry } from './geometry.ts';
+import { bondCount, typeSymbol, formalCharge, bondToElementCount } from './util.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { RuntimeContext } from '../../../mol-task/index.ts';
+import { isDebugMode } from '../../../mol-util/debug.ts';
+import { SortedArray } from '../../../mol-data/int.ts';
+import { BondType } from '../../../mol-model/structure/model/types.ts';
 
 /**
  * TODO:

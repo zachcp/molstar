@@ -4,18 +4,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { CollapsableState, CollapsableControls } from '../../mol-plugin-ui/base';
-import { ApplyActionControl } from '../../mol-plugin-ui/state/apply-action';
-import { InitAssemblySymmetry3D, AssemblySymmetry3D, AssemblySymmetryPreset, tryCreateAssemblySymmetry, getAssemblySymmetryConfig } from './behavior';
-import { AssemblySymmetryProvider, AssemblySymmetryProps, AssemblySymmetryDataProvider, AssemblySymmetryData } from './prop';
-import { ParameterControls } from '../../mol-plugin-ui/controls/parameters';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { StructureHierarchyManager } from '../../mol-plugin-state/manager/structure/hierarchy';
-import { StateAction, StateSelection } from '../../mol-state';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { PluginContext } from '../../mol-plugin/context';
-import { Task } from '../../mol-task';
-import { ExtensionSvg, CheckSvg } from '../../mol-plugin-ui/controls/icons';
+import { CollapsableState, CollapsableControls } from '../../mol-plugin-ui/base.tsx';
+import { ApplyActionControl } from '../../mol-plugin-ui/state/apply-action.tsx';
+import { InitAssemblySymmetry3D, AssemblySymmetry3D, AssemblySymmetryPreset, tryCreateAssemblySymmetry, getAssemblySymmetryConfig } from './behavior.ts';
+import { AssemblySymmetryProvider, AssemblySymmetryProps, AssemblySymmetryDataProvider, AssemblySymmetryData } from './prop.ts';
+import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.tsx';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { StructureHierarchyManager } from '../../mol-plugin-state/manager/structure/hierarchy.ts';
+import { StateAction, StateSelection } from '../../mol-state/index.ts';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { Task } from '../../mol-task/index.ts';
+import { ExtensionSvg, CheckSvg } from '../../mol-plugin-ui/controls/icons.tsx';
 
 interface AssemblySymmetryControlState extends CollapsableState {
     isBusy: boolean
@@ -60,7 +60,7 @@ export class AssemblySymmetryControls extends CollapsableControls<{}, AssemblySy
     renderEnable() {
         const pivot = this.pivot;
         if (!pivot.cell.parent) return null;
-        return <ApplyActionControl state={pivot.cell.parent} action={EnableAssemblySymmetry3D} initiallyCollapsed={true} nodeRef={pivot.cell.transform.ref} simpleApply={{ header: 'Enable', icon: CheckSvg }} />;
+        return <ApplyActionControl state={pivot.cell.parent} action={EnableAssemblySymmetry3D} initiallyCollapsed nodeRef={pivot.cell.transform.ref} simpleApply={{ header: 'Enable', icon: CheckSvg }} />;
     }
 
     renderNoSymmetries() {

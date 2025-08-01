@@ -4,17 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { RepresentationParamsGetter, RepresentationContext, Representation } from '../../../mol-repr/representation';
-import { ThemeRegistryContext } from '../../../mol-theme/theme';
-import { Structure } from '../../../mol-model/structure';
-import { UnitsRepresentation, StructureRepresentation, StructureRepresentationStateBuilder, StructureRepresentationProvider, ComplexRepresentation } from '../../../mol-repr/structure/representation';
-import { EllipsoidMeshParams, EllipsoidMeshVisual, StructureEllipsoidMeshParams, StructureEllipsoidMeshVisual } from '../visual/ellipsoid-mesh';
-import { AtomSiteAnisotrop } from '../../../mol-model-formats/structure/property/anisotropic';
-import { IntraUnitBondCylinderParams, IntraUnitBondCylinderVisual, StructureIntraUnitBondCylinderParams, StructureIntraUnitBondCylinderVisual } from '../visual/bond-intra-unit-cylinder';
-import { InterUnitBondCylinderVisual, InterUnitBondCylinderParams } from '../visual/bond-inter-unit-cylinder';
-import { getUnitKindsParam } from '../params';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { RepresentationParamsGetter, RepresentationContext, Representation } from '../../representation.ts';
+import { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import { Structure } from '../../../mol-model/structure.ts';
+import { UnitsRepresentation, StructureRepresentation, StructureRepresentationStateBuilder, StructureRepresentationProvider, ComplexRepresentation } from '../representation.ts';
+import { EllipsoidMeshParams, EllipsoidMeshVisual, StructureEllipsoidMeshParams, StructureEllipsoidMeshVisual } from '../visual/ellipsoid-mesh.ts';
+import { AtomSiteAnisotrop } from '../../../mol-model-formats/structure/property/anisotropic.ts';
+import { IntraUnitBondCylinderParams, IntraUnitBondCylinderVisual, StructureIntraUnitBondCylinderParams, StructureIntraUnitBondCylinderVisual } from '../visual/bond-intra-unit-cylinder.ts';
+import { InterUnitBondCylinderVisual, InterUnitBondCylinderParams } from '../visual/bond-inter-unit-cylinder.ts';
+import { getUnitKindsParam } from '../params.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const EllipsoidVisuals = {
     'ellipsoid-mesh': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, EllipsoidMeshParams>) => UnitsRepresentation('Ellipsoid Mesh', ctx, getParams, EllipsoidMeshVisual),

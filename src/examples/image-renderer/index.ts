@@ -16,13 +16,13 @@ import gl from 'gl';
 import pngjs from 'pngjs';
 import jpegjs from 'jpeg-js';
 
-import { Download, ParseCif } from '../../mol-plugin-state/transforms/data';
-import { ModelFromTrajectory, StructureComponent, StructureFromModel, TrajectoryFromMmCif } from '../../mol-plugin-state/transforms/model';
-import { StructureRepresentation3D } from '../../mol-plugin-state/transforms/representation';
-import { HeadlessPluginContext } from '../../mol-plugin/headless-plugin-context';
-import { DefaultPluginSpec } from '../../mol-plugin/spec';
-import { ExternalModules, STYLIZED_POSTPROCESSING } from '../../mol-plugin/util/headless-screenshot';
-import { setFSModule } from '../../mol-util/data-source';
+import { Download, ParseCif } from '../../mol-plugin-state/transforms/data.ts';
+import { ModelFromTrajectory, StructureComponent, StructureFromModel, TrajectoryFromMmCif } from '../../mol-plugin-state/transforms/model.ts';
+import { StructureRepresentation3D } from '../../mol-plugin-state/transforms/representation.ts';
+import { HeadlessPluginContext } from '../../mol-plugin/headless-plugin-context.ts';
+import { DefaultPluginSpec } from '../../mol-plugin/spec.ts';
+import { ExternalModules, STYLIZED_POSTPROCESSING } from '../../mol-plugin/util/headless-screenshot.ts';
+import { setFSModule } from '../../mol-util/data-source.ts';
 
 
 setFSModule(fs);

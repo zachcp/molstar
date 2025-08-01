@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { CifCategory, CifField, CifFrame, getCifFieldType } from '../../../mol-io/reader/cif';
-import { CifWriter } from '../../../mol-io/writer/cif';
-import { Task } from '../../../mol-task';
+import { CifCategory, CifField, CifFrame, getCifFieldType } from '../../../mol-io/reader/cif.ts';
+import { CifWriter } from '../../../mol-io/writer/cif.ts';
+import { Task } from '../../../mol-task/index.ts';
 // import { showProgress } from './util';
 
 function getCategoryInstanceProvider(cat: CifCategory, fields: CifWriter.Field[]): CifWriter.Category {

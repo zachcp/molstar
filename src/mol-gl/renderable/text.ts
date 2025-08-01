@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Renderable, RenderableState, createRenderable } from '../renderable';
-import { WebGLContext } from '../webgl/context';
-import { createGraphicsRenderItem, Transparency } from '../webgl/render-item';
-import { GlobalUniformSchema, BaseSchema, AttributeSpec, UniformSpec, Values, InternalSchema, SizeSchema, InternalValues, TextureSpec, ElementsSpec, ValueSpec, GlobalTextureSchema } from './schema';
-import { TextShaderCode } from '../shader-code';
-import { ValueCell } from '../../mol-util';
+import { Renderable, RenderableState, createRenderable } from '../renderable.ts';
+import { WebGLContext } from '../webgl/context.ts';
+import { createGraphicsRenderItem, Transparency } from '../webgl/render-item.ts';
+import { GlobalUniformSchema, BaseSchema, AttributeSpec, UniformSpec, Values, InternalSchema, SizeSchema, InternalValues, TextureSpec, ElementsSpec, ValueSpec, GlobalTextureSchema } from './schema.ts';
+import { TextShaderCode } from '../shader-code.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 
 export const TextSchema = {
     ...BaseSchema,

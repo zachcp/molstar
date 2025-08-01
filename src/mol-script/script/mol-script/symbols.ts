@@ -5,14 +5,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { UniqueArray } from '../../../mol-data/generic';
-import { Expression } from '../../language/expression';
-import { Argument, MSymbol, Arguments } from '../../language/symbol';
-import { MolScriptSymbolTable as MolScript } from '../../language/symbol-table';
-import { Type } from '../../language/type';
-import { Types as StructureQueryTypes } from '../../language/symbol-table/structure-query';
-import { MolScriptBuilder as B } from '../../language/builder';
-import { getPositionalArgs, tryGetArg } from './script-macro';
+import { UniqueArray } from '../../../mol-data/generic.ts';
+import { Expression } from '../../language/expression.ts';
+import { Argument, MSymbol, Arguments } from '../../language/symbol.ts';
+import { MolScriptSymbolTable as MolScript } from '../../language/symbol-table.ts';
+import { Type } from '../../language/type.ts';
+import { Types as StructureQueryTypes } from '../../language/symbol-table/structure-query.ts';
+import { MolScriptBuilder as B } from '../../language/builder.ts';
+import { getPositionalArgs, tryGetArg } from './script-macro.ts';
 
 export type MolScriptSymbol =
     | { kind: 'alias', aliases: string[], symbol: MSymbol }

@@ -4,13 +4,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column, Table } from '../../mol-data/db';
-import { toTable } from '../../mol-io/reader/cif/schema';
-import { CifWriter } from '../../mol-io/writer/cif';
-import { Model } from '../../mol-model/structure';
-import { PropertyWrapper } from '../../mol-model-props/common/wrapper';
-import { MmcifFormat } from '../../mol-model-formats/structure/mmcif';
-import { CustomPropertyDescriptor } from '../../mol-model/custom-property';
+import { Column, Table } from '../../mol-data/db.ts';
+import { toTable } from '../../mol-io/reader/cif/schema.ts';
+import { CifWriter } from '../../mol-io/writer/cif.ts';
+import { Model } from '../../mol-model/structure.ts';
+import { PropertyWrapper } from '../../mol-model-props/common/wrapper.ts';
+import { MmcifFormat } from '../../mol-model-formats/structure/mmcif.ts';
+import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
 
 export namespace PDBeStructRefDomain {
     export type Property = PropertyWrapper<Table<Schema['pdbe_struct_ref_domain']> | undefined>

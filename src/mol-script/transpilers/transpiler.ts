@@ -7,7 +7,7 @@
  * Adapted from MolQL project
  */
 
-import { Expression } from '../language/expression';
+import { Expression } from '../language/expression.ts';
 
 export type Transpiler = (source: string) => Expression
 

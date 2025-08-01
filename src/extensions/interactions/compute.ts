@@ -4,13 +4,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { InteractionsProps } from '../../mol-model-props/computed/interactions';
-import { FeatureType } from '../../mol-model-props/computed/interactions/common';
-import { computeInteractions, Interactions } from '../../mol-model-props/computed/interactions/interactions';
-import { Structure, StructureElement, Unit } from '../../mol-model/structure';
-import { RuntimeContext } from '../../mol-task';
-import { AssetManager } from '../../mol-util/assets';
-import { InteractionInfo, InteractionTypeToKind, StructureInteractions } from './model';
+import { InteractionsProps } from '../../mol-model-props/computed/interactions.ts';
+import { FeatureType } from '../../mol-model-props/computed/interactions/common.ts';
+import { computeInteractions, Interactions } from '../../mol-model-props/computed/interactions/interactions.ts';
+import { Structure, StructureElement, Unit } from '../../mol-model/structure.ts';
+import { RuntimeContext } from '../../mol-task/index.ts';
+import { AssetManager } from '../../mol-util/assets.ts';
+import { InteractionInfo, InteractionTypeToKind, StructureInteractions } from './model.ts';
 
 export interface ComputeInteractionsOptions {
     interactions?: InteractionsProps

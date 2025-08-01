@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StateTransformer } from './transformer';
-import { UUID } from '../mol-util';
+import { StateTransformer } from './transformer.ts';
+import { UUID } from '../mol-util/index.ts';
 
 export { Transform as StateTransform };
 

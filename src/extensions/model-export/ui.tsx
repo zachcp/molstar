@@ -5,14 +5,14 @@
  */
 
 import { useState } from 'react';
-import { CollapsableControls, CollapsableState } from '../../mol-plugin-ui/base';
-import { Button } from '../../mol-plugin-ui/controls/common';
-import { GetAppSvg } from '../../mol-plugin-ui/controls/icons';
-import { ParameterControls } from '../../mol-plugin-ui/controls/parameters';
-import { useBehavior } from '../../mol-plugin-ui/hooks/use-behavior';
-import { PluginContext } from '../../mol-plugin/context';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { exportHierarchy } from './export';
+import { CollapsableControls, CollapsableState } from '../../mol-plugin-ui/base.tsx';
+import { Button } from '../../mol-plugin-ui/controls/common.tsx';
+import { GetAppSvg } from '../../mol-plugin-ui/controls/icons.tsx';
+import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.tsx';
+import { useBehavior } from '../../mol-plugin-ui/hooks/use-behavior.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { exportHierarchy } from './export.ts';
 
 export class ModelExportUI extends CollapsableControls<{}, {}> {
     protected defaultState(): CollapsableState {

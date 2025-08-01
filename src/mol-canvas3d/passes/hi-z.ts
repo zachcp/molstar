@@ -4,23 +4,23 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { HiZRenderable, createHiZRenderable } from '../../mol-gl/compute/hi-z';
-import { isWebGL2 } from '../../mol-gl/webgl/compat';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Framebuffer } from '../../mol-gl/webgl/framebuffer';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { fasterLog2 as _fasterLog2 } from '../../mol-math/approx';
-import { Sphere3D } from '../../mol-math/geometry';
-import { Mat4, Vec4 } from '../../mol-math/linear-algebra';
-import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
-import { isDebugMode, isTimingMode } from '../../mol-util/debug';
-import { ValueCell } from '../../mol-util/value-cell';
-import { Camera } from '../camera';
-import { Viewport } from '../camera/util';
-import { DrawPass } from './draw';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { PixelPackBuffer } from '../../mol-gl/webgl/buffer';
+import { HiZRenderable, createHiZRenderable } from '../../mol-gl/compute/hi-z.ts';
+import { isWebGL2 } from '../../mol-gl/webgl/compat.ts';
+import { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { Framebuffer } from '../../mol-gl/webgl/framebuffer.ts';
+import { Texture } from '../../mol-gl/webgl/texture.ts';
+import { fasterLog2 as _fasterLog2 } from '../../mol-math/approx.ts';
+import { Sphere3D } from '../../mol-math/geometry.ts';
+import { Mat4, Vec4 } from '../../mol-math/linear-algebra.ts';
+import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
+import { isDebugMode, isTimingMode } from '../../mol-util/debug.ts';
+import { ValueCell } from '../../mol-util/value-cell.ts';
+import { Camera } from '../camera.ts';
+import { Viewport } from '../camera/util.ts';
+import { DrawPass } from './draw.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { PixelPackBuffer } from '../../mol-gl/webgl/buffer.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3transformMat4 = Vec3.transformMat4;

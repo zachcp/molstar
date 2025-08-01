@@ -1,11 +1,11 @@
-import { isPositionLocation } from '../../mol-geo/util/location-iterator';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { ColorTheme } from '../../mol-theme/color';
-import { ColorThemeCategory } from '../../mol-theme/color/categories';
-import { ThemeDataContext } from '../../mol-theme/theme';
-import { Color } from '../../mol-util/color';
-import { ColorNames } from '../../mol-util/color/names';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { isPositionLocation } from '../../mol-geo/util/location-iterator.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { ColorTheme } from '../../mol-theme/color.ts';
+import { ColorThemeCategory } from '../../mol-theme/color/categories.ts';
+import { ThemeDataContext } from '../../mol-theme/theme.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
 export function CustomColorTheme(
     ctx: ThemeDataContext,

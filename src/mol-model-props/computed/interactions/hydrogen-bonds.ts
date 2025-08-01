@@ -8,17 +8,17 @@
  * based in part on NGL (https://github.com/arose/ngl)
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Structure, Unit, StructureElement } from '../../../mol-model/structure';
-import { AtomGeometry, AtomGeometryAngles, calcAngles, calcPlaneAngle, closestHydrogenIndex } from '../chemistry/geometry';
-import { FeaturesBuilder, Features } from './features';
-import { typeSymbol, bondToElementCount, bondCount, formalCharge, compId, atomId } from '../chemistry/util';
-import { Elements } from '../../../mol-model/structure/model/properties/atomic/types';
-import { ValenceModelProvider } from '../valence-model';
-import { degToRad } from '../../../mol-math/misc';
-import { FeatureType, FeatureGroup, InteractionType } from './common';
-import { ContactProvider } from './contacts';
-import { MoleculeType, ProteinBackboneAtoms } from '../../../mol-model/structure/model/types';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Structure, Unit, StructureElement } from '../../../mol-model/structure.ts';
+import { AtomGeometry, AtomGeometryAngles, calcAngles, calcPlaneAngle, closestHydrogenIndex } from '../chemistry/geometry.ts';
+import { FeaturesBuilder, Features } from './features.ts';
+import { typeSymbol, bondToElementCount, bondCount, formalCharge, compId, atomId } from '../chemistry/util.ts';
+import { Elements } from '../../../mol-model/structure/model/properties/atomic/types.ts';
+import { ValenceModelProvider } from '../valence-model.ts';
+import { degToRad } from '../../../mol-math/misc.ts';
+import { FeatureType, FeatureGroup, InteractionType } from './common.ts';
+import { ContactProvider } from './contacts.ts';
+import { MoleculeType, ProteinBackboneAtoms } from '../../../mol-model/structure/model/types.ts';
 
 const GeometryParams = {
     distanceMax: PD.Numeric(3.5, { min: 1, max: 5, step: 0.1 }),

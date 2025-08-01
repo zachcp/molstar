@@ -7,21 +7,21 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { MarkerAction } from '../../../mol-util/marker-action';
-import { PluginContext } from '../../../mol-plugin/context';
-import { PluginStateObject as SO } from '../../../mol-plugin-state/objects';
-import { lociLabel } from '../../../mol-theme/label';
-import { PluginBehavior } from '../behavior';
-import { StateTreeSpine } from '../../../mol-state/tree/spine';
-import { StateSelection } from '../../../mol-state';
-import { ButtonsType, ModifiersKeys } from '../../../mol-util/input/input-observer';
-import { Binding } from '../../../mol-util/binding';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { EmptyLoci, Loci } from '../../../mol-model/loci';
-import { Bond, Structure, StructureElement, StructureProperties } from '../../../mol-model/structure';
-import { arrayMax } from '../../../mol-util/array';
-import { Representation } from '../../../mol-repr/representation';
-import { LociLabel } from '../../../mol-plugin-state/manager/loci-label';
+import { MarkerAction } from '../../../mol-util/marker-action.ts';
+import { PluginContext } from '../../context.ts';
+import { PluginStateObject as SO } from '../../../mol-plugin-state/objects.ts';
+import { lociLabel } from '../../../mol-theme/label.ts';
+import { PluginBehavior } from '../behavior.ts';
+import { StateTreeSpine } from '../../../mol-state/tree/spine.ts';
+import { StateSelection } from '../../../mol-state/index.ts';
+import { ButtonsType, ModifiersKeys } from '../../../mol-util/input/input-observer.ts';
+import { Binding } from '../../../mol-util/binding.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { EmptyLoci, Loci } from '../../../mol-model/loci.ts';
+import { Bond, Structure, StructureElement, StructureProperties } from '../../../mol-model/structure.ts';
+import { arrayMax } from '../../../mol-util/array.ts';
+import { Representation } from '../../../mol-repr/representation.ts';
+import { LociLabel } from '../../../mol-plugin-state/manager/loci-label.ts';
 
 const B = ButtonsType;
 const M = ModifiersKeys;

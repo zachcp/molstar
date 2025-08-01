@@ -7,14 +7,14 @@
  * @author Panagiotis Tourlas <panagiot_tourlov@hotmail.com>
  */
 
-import { Column } from '../../../mol-data/db';
-import { MolFile, handleAtoms, handleBonds, handlePropertiesBlock } from '../mol/parser';
-import { Task } from '../../../mol-task';
-import { ReaderResult as Result } from '../result';
-import { Tokenizer, TokenBuilder } from '../common/text/tokenizer';
-import { TokenColumnProvider as TokenColumn } from '../common/text/column/token';
-import { handleAtomsV3, handleBondsV3, handleCountsV3, isV3 } from './parser-v3-util';
-import { StringLike } from '../../common/string-like';
+import { Column } from '../../../mol-data/db.ts';
+import { MolFile, handleAtoms, handleBonds, handlePropertiesBlock } from '../mol/parser.ts';
+import { Task } from '../../../mol-task/index.ts';
+import { ReaderResult as Result } from '../result.ts';
+import { Tokenizer, TokenBuilder } from '../common/text/tokenizer.ts';
+import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.ts';
+import { handleAtomsV3, handleBondsV3, handleCountsV3, isV3 } from './parser-v3-util.ts';
+import { StringLike } from '../../common/string-like.ts';
 
 
 /** http://c4.cabrillo.edu/404/ctfile.pdf - page 41 & 79 */

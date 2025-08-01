@@ -5,25 +5,25 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PartialCanvas3DProps } from '../mol-canvas3d/canvas3d';
-import { AnimateAssemblyUnwind } from '../mol-plugin-state/animation/built-in/assembly-unwind';
-import { AnimateCameraSpin } from '../mol-plugin-state/animation/built-in/camera-spin';
-import { AnimateModelIndex } from '../mol-plugin-state/animation/built-in/model-index';
-import { AnimateStateSnapshots } from '../mol-plugin-state/animation/built-in/state-snapshots';
-import { PluginStateAnimation } from '../mol-plugin-state/animation/model';
-import { DataFormatProvider } from '../mol-plugin-state/formats/provider';
-import { StateAction, StateTransformer } from '../mol-state';
-import { PluginBehaviors } from './behavior';
-import { StructureFocusRepresentation } from './behavior/dynamic/selection/structure-focus-representation';
-import { PluginConfigItem } from './config';
-import { PluginLayoutStateProps } from './layout';
-import { StateActions } from '../mol-plugin-state/actions';
-import { AssignColorVolume } from '../mol-plugin-state/actions/volume';
-import { StateTransforms } from '../mol-plugin-state/transforms';
-import { BoxifyVolumeStreaming, CreateVolumeStreamingBehavior, InitVolumeStreaming } from '../mol-plugin/behavior/dynamic/volume-streaming/transformers';
-import { AnimateStateInterpolation } from '../mol-plugin-state/animation/built-in/state-interpolation';
-import { AnimateStructureSpin } from '../mol-plugin-state/animation/built-in/spin-structure';
-import { AnimateCameraRock } from '../mol-plugin-state/animation/built-in/camera-rock';
+import { PartialCanvas3DProps } from '../mol-canvas3d/canvas3d.ts';
+import { AnimateAssemblyUnwind } from '../mol-plugin-state/animation/built-in/assembly-unwind.ts';
+import { AnimateCameraSpin } from '../mol-plugin-state/animation/built-in/camera-spin.ts';
+import { AnimateModelIndex } from '../mol-plugin-state/animation/built-in/model-index.ts';
+import { AnimateStateSnapshots } from '../mol-plugin-state/animation/built-in/state-snapshots.ts';
+import { PluginStateAnimation } from '../mol-plugin-state/animation/model.ts';
+import { DataFormatProvider } from '../mol-plugin-state/formats/provider.ts';
+import { StateAction, StateTransformer } from '../mol-state/index.ts';
+import { PluginBehaviors } from './behavior.ts';
+import { StructureFocusRepresentation } from './behavior/dynamic/selection/structure-focus-representation.ts';
+import { PluginConfigItem } from './config.ts';
+import { PluginLayoutStateProps } from './layout.ts';
+import { StateActions } from '../mol-plugin-state/actions.ts';
+import { AssignColorVolume } from '../mol-plugin-state/actions/volume.ts';
+import { StateTransforms } from '../mol-plugin-state/transforms.ts';
+import { BoxifyVolumeStreaming, CreateVolumeStreamingBehavior, InitVolumeStreaming } from './behavior/dynamic/volume-streaming/transformers.ts';
+import { AnimateStateInterpolation } from '../mol-plugin-state/animation/built-in/state-interpolation.ts';
+import { AnimateStructureSpin } from '../mol-plugin-state/animation/built-in/spin-structure.ts';
+import { AnimateCameraRock } from '../mol-plugin-state/animation/built-in/camera-rock.ts';
 
 export { PluginSpec };
 

@@ -5,12 +5,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column, Table } from '../../../mol-data/db';
-import { Entities, EntitySubtype } from '../../../mol-model/structure/model/properties/common';
-import { getEntityType, getEntitySubtype } from '../../../mol-model/structure/model/types';
-import { ElementIndex, EntityIndex, Model } from '../../../mol-model/structure/model';
-import { BasicData, BasicSchema, Entity } from './schema';
-import { mmCIF_chemComp_schema } from '../../../mol-io/reader/cif/schema/mmcif-extras';
+import { Column, Table } from '../../../mol-data/db.ts';
+import { Entities, EntitySubtype } from '../../../mol-model/structure/model/properties/common.ts';
+import { getEntityType, getEntitySubtype } from '../../../mol-model/structure/model/types.ts';
+import { ElementIndex, EntityIndex, Model } from '../../../mol-model/structure/model.ts';
+import { BasicData, BasicSchema, Entity } from './schema.ts';
+import { mmCIF_chemComp_schema } from '../../../mol-io/reader/cif/schema/mmcif-extras.ts';
 
 type ChemCompType = mmCIF_chemComp_schema['type']['T'];
 

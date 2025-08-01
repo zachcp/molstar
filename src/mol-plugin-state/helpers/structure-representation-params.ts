@@ -4,15 +4,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Structure } from '../../mol-model/structure';
-import { PluginContext } from '../../mol-plugin/context';
-import { RepresentationProvider } from '../../mol-repr/representation';
-import { StructureRepresentationRegistry } from '../../mol-repr/structure/registry';
-import { StateTransformer } from '../../mol-state';
-import { ColorTheme } from '../../mol-theme/color';
-import { SizeTheme } from '../../mol-theme/size';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { StructureRepresentation3D } from '../transforms/representation';
+import { Structure } from '../../mol-model/structure.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { RepresentationProvider } from '../../mol-repr/representation.ts';
+import { StructureRepresentationRegistry } from '../../mol-repr/structure/registry.ts';
+import { StateTransformer } from '../../mol-state/index.ts';
+import { ColorTheme } from '../../mol-theme/color.ts';
+import { SizeTheme } from '../../mol-theme/size.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { StructureRepresentation3D } from '../transforms/representation.ts';
 
 export interface StructureRepresentationBuiltInProps<
     R extends StructureRepresentationRegistry.BuiltIn = StructureRepresentationRegistry.BuiltIn,

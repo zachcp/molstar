@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { parseXtc } from '../../mol-io/reader/xtc/parser';
+import { parseXtc } from '../../mol-io/reader/xtc/parser.ts';
 import './index.html';
 
 const parent = document.getElementById('app')!;

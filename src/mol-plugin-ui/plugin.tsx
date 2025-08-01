@@ -9,21 +9,21 @@
 
 import { List } from 'immutable';
 import * as React from 'react';
-import { formatTime } from '../mol-util';
-import { LogEntry } from '../mol-util/log-entry';
-import { PluginReactContext, PluginUIComponent } from './base';
-import { AnimationViewportControls, DefaultStructureTools, LociLabels, StateSnapshotViewportControls, TrajectoryViewportControls, SelectionViewportControls, ViewportSnapshotDescription } from './controls';
-import { LeftPanelControls } from './left-panel';
-import { SequenceView } from './sequence';
-import { BackgroundTaskProgress, OverlayTaskProgress } from './task';
-import { Toasts } from './toast';
-import { Viewport, ViewportControls } from './viewport';
-import { PluginCommands } from '../mol-plugin/commands';
-import { PluginUIContext } from './context';
-import { OpenFiles } from '../mol-plugin-state/actions/file';
-import { Asset } from '../mol-util/assets';
+import { formatTime } from '../mol-util/index.ts';
+import { LogEntry } from '../mol-util/log-entry.ts';
+import { PluginReactContext, PluginUIComponent } from './base.tsx';
+import { AnimationViewportControls, DefaultStructureTools, LociLabels, StateSnapshotViewportControls, TrajectoryViewportControls, SelectionViewportControls, ViewportSnapshotDescription } from './controls.tsx';
+import { LeftPanelControls } from './left-panel.tsx';
+import { SequenceView } from './sequence.tsx';
+import { BackgroundTaskProgress, OverlayTaskProgress } from './task.tsx';
+import { Toasts } from './toast.tsx';
+import { Viewport, ViewportControls } from './viewport.tsx';
+import { PluginCommands } from '../mol-plugin/commands.ts';
+import { PluginUIContext } from './context.ts';
+import { OpenFiles } from '../mol-plugin-state/actions/file.ts';
+import { Asset } from '../mol-util/assets.ts';
 import { BehaviorSubject } from 'rxjs';
-import { useBehavior } from './hooks/use-behavior';
+import { useBehavior } from './hooks/use-behavior.ts';
 
 export function Plugin({ plugin }: { plugin: PluginUIContext }) {
     if (plugin.isInitialized) {

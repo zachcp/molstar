@@ -4,13 +4,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { DxFile } from '../../mol-io/reader/dx/parser';
-import { Mat4, Tensor } from '../../mol-math/linear-algebra';
-import { Volume } from '../../mol-model/volume';
-import { Task } from '../../mol-task';
-import { arrayMax, arrayMean, arrayMin, arrayRms } from '../../mol-util/array';
-import { ModelFormat } from '../format';
-import { CustomProperties } from '../../mol-model/custom-property';
+import { DxFile } from '../../mol-io/reader/dx/parser.ts';
+import { Mat4, Tensor } from '../../mol-math/linear-algebra.ts';
+import { Volume } from '../../mol-model/volume.ts';
+import { Task } from '../../mol-task/index.ts';
+import { arrayMax, arrayMean, arrayMin, arrayRms } from '../../mol-util/array.ts';
+import { ModelFormat } from '../format.ts';
+import { CustomProperties } from '../../mol-model/custom-property.ts';
 
 export function volumeFromDx(source: DxFile, params?: { label?: string, entryId?: string }): Task<Volume> {
     return Task.create<Volume>('Create Volume', async () => {

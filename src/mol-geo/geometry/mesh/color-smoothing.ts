@@ -4,15 +4,15 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { MeshValues } from '../../../mol-gl/renderable/mesh';
-import { createTextureImage, TextureImage } from '../../../mol-gl/renderable/util';
-import { WebGLContext } from '../../../mol-gl/webgl/context';
-import { Texture } from '../../../mol-gl/webgl/texture';
-import { Box3D, Sphere3D } from '../../../mol-math/geometry';
-import { lerp } from '../../../mol-math/interpolate';
-import { Vec2, Vec3, Vec4 } from '../../../mol-math/linear-algebra';
-import { getVolumeTexture2dLayout } from '../../../mol-repr/volume/util';
-import { ValueCell } from '../../../mol-util';
+import { MeshValues } from '../../../mol-gl/renderable/mesh.ts';
+import { createTextureImage, TextureImage } from '../../../mol-gl/renderable/util.ts';
+import { WebGLContext } from '../../../mol-gl/webgl/context.ts';
+import { Texture } from '../../../mol-gl/webgl/texture.ts';
+import { Box3D, Sphere3D } from '../../../mol-math/geometry.ts';
+import { lerp } from '../../../mol-math/interpolate.ts';
+import { Vec2, Vec3, Vec4 } from '../../../mol-math/linear-algebra.ts';
+import { getVolumeTexture2dLayout } from '../../../mol-repr/volume/util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 
 interface ColorSmoothingInput {
     vertexCount: number

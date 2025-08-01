@@ -6,21 +6,21 @@
  * @author Yakov Pechersky <ffxen158@gmail.com>
  */
 
-import { CIF } from '../../mol-io/reader/cif';
-import { Mat4, Vec3 } from '../../mol-math/linear-algebra';
-import { volumeFromCcp4 } from '../../mol-model-formats/volume/ccp4';
-import { volumeFromDensityServerData } from '../../mol-model-formats/volume/density-server';
-import { volumeFromDsn6 } from '../../mol-model-formats/volume/dsn6';
-import { Task } from '../../mol-task';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { PluginStateObject as SO, PluginStateTransform } from '../objects';
-import { volumeFromCube } from '../../mol-model-formats/volume/cube';
-import { volumeFromDx } from '../../mol-model-formats/volume/dx';
-import { Grid, Volume } from '../../mol-model/volume';
-import { PluginContext } from '../../mol-plugin/context';
-import { StateSelection } from '../../mol-state';
-import { volumeFromSegmentationData } from '../../mol-model-formats/volume/segmentation';
-import { getTransformFromParams, TransformParam } from './helpers';
+import { CIF } from '../../mol-io/reader/cif.ts';
+import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { volumeFromCcp4 } from '../../mol-model-formats/volume/ccp4.ts';
+import { volumeFromDensityServerData } from '../../mol-model-formats/volume/density-server.ts';
+import { volumeFromDsn6 } from '../../mol-model-formats/volume/dsn6.ts';
+import { Task } from '../../mol-task/index.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { PluginStateObject as SO, PluginStateTransform } from '../objects.ts';
+import { volumeFromCube } from '../../mol-model-formats/volume/cube.ts';
+import { volumeFromDx } from '../../mol-model-formats/volume/dx.ts';
+import { Grid, Volume } from '../../mol-model/volume.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { StateSelection } from '../../mol-state/index.ts';
+import { volumeFromSegmentationData } from '../../mol-model-formats/volume/segmentation.ts';
+import { getTransformFromParams, TransformParam } from './helpers.ts';
 
 export { VolumeFromCcp4 };
 export { VolumeFromDsn6 };

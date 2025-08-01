@@ -4,20 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mp4EncoderUI } from '../../../extensions/mp4-export/ui';
-import { CollapsableControls, CollapsableState, PluginUIComponent } from '../../../mol-plugin-ui/base';
-import { SectionHeader } from '../../../mol-plugin-ui/controls/common';
-import { ParameterControls } from '../../../mol-plugin-ui/controls/parameters';
-import { PluginCommands } from '../../../mol-plugin/commands';
-import { StructureMeasurementsControls } from '../../../mol-plugin-ui/structure/measurements';
-import { MesoscaleExplorerState } from '../app';
-import { MesoscaleState } from '../data/state';
-import { EntityControls, FocusInfo, ModelInfo, SelectionInfo } from './entities';
-import { LoaderControls, ExampleControls, SessionControls, SnapshotControls, DatabaseControls, MesoQuickStylesControls, ExplorerInfo } from './states';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { TuneSvg } from '../../../mol-plugin-ui/controls/icons';
-import { RendererParams } from '../../../mol-gl/renderer';
-import { TrackballControlsParams } from '../../../mol-canvas3d/controls/trackball';
+import { Mp4EncoderUI } from '../../../extensions/mp4-export/ui.tsx';
+import { CollapsableControls, CollapsableState, PluginUIComponent } from '../../../mol-plugin-ui/base.tsx';
+import { SectionHeader } from '../../../mol-plugin-ui/controls/common.tsx';
+import { ParameterControls } from '../../../mol-plugin-ui/controls/parameters.tsx';
+import { PluginCommands } from '../../../mol-plugin/commands.ts';
+import { StructureMeasurementsControls } from '../../../mol-plugin-ui/structure/measurements.tsx';
+import { MesoscaleExplorerState } from '../app.ts';
+import { MesoscaleState } from '../data/state.ts';
+import { EntityControls, FocusInfo, ModelInfo, SelectionInfo } from './entities.tsx';
+import { LoaderControls, ExampleControls, SessionControls, SnapshotControls, DatabaseControls, MesoQuickStylesControls, ExplorerInfo } from './states.tsx';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { TuneSvg } from '../../../mol-plugin-ui/controls/icons.tsx';
+import { RendererParams } from '../../../mol-gl/renderer.ts';
+import { TrackballControlsParams } from '../../../mol-canvas3d/controls/trackball.ts';
 
 const Spacer = () => <div style={{ height: '2em' }} />;
 
@@ -140,7 +140,7 @@ export class RightPanel extends PluginUIComponent<{}, { isDisabled: boolean }> {
                 <SectionHeader title='Selection' />
                 <SelectionInfo />
                 <Spacer />
-                <StructureMeasurementsControls initiallyCollapsed={true}/>
+                <StructureMeasurementsControls initiallyCollapsed/>
             </>
             <MesoQuickStylesControls />
             <Spacer />

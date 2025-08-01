@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { idFactory } from '../../mol-util/id-factory';
-import { Texture, TextureFilter } from './texture';
-import { Framebuffer } from './framebuffer';
-import { WebGLResources } from './resources';
-import { GLRenderingContext, isWebGL2 } from './compat';
-import { Renderbuffer } from './renderbuffer';
+import { idFactory } from '../../mol-util/id-factory.ts';
+import { Texture, TextureFilter } from './texture.ts';
+import { Framebuffer } from './framebuffer.ts';
+import { WebGLResources } from './resources.ts';
+import { GLRenderingContext, isWebGL2 } from './compat.ts';
+import { Renderbuffer } from './renderbuffer.ts';
 
 const getNextRenderTargetId = idFactory();
 

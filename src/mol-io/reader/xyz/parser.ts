@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column } from '../../../mol-data/db';
-import { Task } from '../../../mol-task';
-import { StringLike } from '../../common/string-like';
-import { Tokenizer } from '../common/text/tokenizer';
-import { ReaderResult as Result } from '../result';
+import { Column } from '../../../mol-data/db.ts';
+import { Task } from '../../../mol-task/index.ts';
+import { StringLike } from '../../common/string-like.ts';
+import { Tokenizer } from '../common/text/tokenizer.ts';
+import { ReaderResult as Result } from '../result.ts';
 
 
 export interface XyzFile {

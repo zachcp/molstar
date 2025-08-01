@@ -6,29 +6,29 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../../../mol-util/param-definition';
-import { PluginStateObject } from '../../../../mol-plugin-state/objects';
-import { Volume, Grid } from '../../../../mol-model/volume';
-import { VolumeServerHeader, VolumeServerInfo } from './model';
-import { Box3D } from '../../../../mol-math/geometry';
-import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra';
-import { Color } from '../../../../mol-util/color';
-import { PluginBehavior } from '../../behavior';
-import { LRUCache } from '../../../../mol-util/lru-cache';
-import { urlCombine } from '../../../../mol-util/url';
-import { CIF } from '../../../../mol-io/reader/cif';
-import { volumeFromDensityServerData } from '../../../../mol-model-formats/volume/density-server';
-import { PluginCommands } from '../../../commands';
-import { StateSelection } from '../../../../mol-state';
-import { StructureElement, Structure } from '../../../../mol-model/structure';
-import { PluginContext } from '../../../context';
-import { EmptyLoci, Loci, isEmptyLoci } from '../../../../mol-model/loci';
-import { Asset } from '../../../../mol-util/assets';
-import { GlobalModelTransformInfo } from '../../../../mol-model/structure/model/properties/global-transform';
+import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
+import { PluginStateObject } from '../../../../mol-plugin-state/objects.ts';
+import { Volume, Grid } from '../../../../mol-model/volume.ts';
+import { VolumeServerHeader, VolumeServerInfo } from './model.ts';
+import { Box3D } from '../../../../mol-math/geometry.ts';
+import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { Color } from '../../../../mol-util/color/index.ts';
+import { PluginBehavior } from '../../behavior.ts';
+import { LRUCache } from '../../../../mol-util/lru-cache.ts';
+import { urlCombine } from '../../../../mol-util/url.ts';
+import { CIF } from '../../../../mol-io/reader/cif.ts';
+import { volumeFromDensityServerData } from '../../../../mol-model-formats/volume/density-server.ts';
+import { PluginCommands } from '../../../commands.ts';
+import { StateSelection } from '../../../../mol-state/index.ts';
+import { StructureElement, Structure } from '../../../../mol-model/structure.ts';
+import { PluginContext } from '../../../context.ts';
+import { EmptyLoci, Loci, isEmptyLoci } from '../../../../mol-model/loci.ts';
+import { Asset } from '../../../../mol-util/assets.ts';
+import { GlobalModelTransformInfo } from '../../../../mol-model/structure/model/properties/global-transform.ts';
 import { distinctUntilChanged, filter, map, Observable, throttleTime } from 'rxjs';
-import { Camera } from '../../../../mol-canvas3d/camera';
-import { PluginCommand } from '../../../command';
-import { SingleAsyncQueue } from '../../../../mol-util/single-async-queue';
+import { Camera } from '../../../../mol-canvas3d/camera.ts';
+import { PluginCommand } from '../../../command.ts';
+import { SingleAsyncQueue } from '../../../../mol-util/single-async-queue.ts';
 
 export class VolumeStreaming extends PluginStateObject.CreateBehavior<VolumeStreaming.Behavior>({ name: 'Volume Streaming' }) { }
 

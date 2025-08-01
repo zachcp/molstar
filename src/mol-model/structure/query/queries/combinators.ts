@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StructureQuery } from '../query';
-import { StructureSelection } from '../selection';
-import { none } from './generators';
-import { HashSet } from '../../../../mol-data/generic';
-import { Structure } from '../../structure';
+import { StructureQuery } from '../query.ts';
+import { StructureSelection } from '../selection.ts';
+import { none } from './generators.ts';
+import { HashSet } from '../../../../mol-data/generic.ts';
+import { Structure } from '../../structure.ts';
 
 export function merge(queries: ArrayLike<StructureQuery>): StructureQuery {
     if (queries.length === 0) {

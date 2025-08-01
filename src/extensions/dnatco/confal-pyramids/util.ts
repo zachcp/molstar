@@ -5,11 +5,11 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { ConfalPyramidsProvider } from './property';
-import { DnatcoTypes } from '../types';
-import { DnatcoUtil } from '../util';
-import { Segmentation } from '../../../mol-data/int';
-import { ChainIndex, ElementIndex, ResidueIndex, Structure, StructureElement, Unit } from '../../../mol-model/structure';
+import { ConfalPyramidsProvider } from './property.ts';
+import { DnatcoTypes } from '../types.ts';
+import { DnatcoUtil } from '../util.ts';
+import { Segmentation } from '../../../mol-data/int.ts';
+import { ChainIndex, ElementIndex, ResidueIndex, Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
 
 export type Pyramid = {
     O3: ElementIndex,

@@ -5,10 +5,10 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { Vec3 } from '../../../../mol-math/linear-algebra';
-import { radToDeg } from '../../../../mol-math/misc';
-import { DSSPContext, DSSPType } from './common';
-import { ElementIndex } from '../../../../mol-model/structure';
+import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { radToDeg } from '../../../../mol-math/misc.ts';
+import { DSSPContext, DSSPType } from './common.ts';
+import { ElementIndex } from '../../../../mol-model/structure.ts';
 
 /**
  * Bend(i) =: [angle ((CW - Ca(i - 2)),(C"(i + 2) - C"(i))) > 70"]

@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { AminoAcidNames, BaseNames } from '../../types';
+import { AminoAcidNames, BaseNames } from '../../types.ts';
 
 /**
  * Map of intra component bond orders in aminoacids and nucleotides assuming standard IUPAC naming.

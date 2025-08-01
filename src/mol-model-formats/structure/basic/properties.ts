@@ -5,14 +5,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Table } from '../../../mol-data/db';
-import { Model } from '../../../mol-model/structure/model/model';
-import { AtomicHierarchy } from '../../../mol-model/structure/model/properties/atomic';
-import { ChemicalComponent, MissingResidue, StructAsym } from '../../../mol-model/structure/model/properties/common';
-import { getDefaultChemicalComponent, getMoleculeType, MoleculeType } from '../../../mol-model/structure/model/types';
-import { SaccharideCompIdMap, SaccharideComponent, SaccharideComponentMap, SaccharidesSnfgMap, UnknownSaccharideComponent } from '../../../mol-model/structure/structure/carbohydrates/constants';
-import { memoize1 } from '../../../mol-util/memoize';
-import { BasicData } from './schema';
+import { Table } from '../../../mol-data/db.ts';
+import { Model } from '../../../mol-model/structure/model/model.ts';
+import { AtomicHierarchy } from '../../../mol-model/structure/model/properties/atomic.ts';
+import { ChemicalComponent, MissingResidue, StructAsym } from '../../../mol-model/structure/model/properties/common.ts';
+import { getDefaultChemicalComponent, getMoleculeType, MoleculeType } from '../../../mol-model/structure/model/types.ts';
+import { SaccharideCompIdMap, SaccharideComponent, SaccharideComponentMap, SaccharidesSnfgMap, UnknownSaccharideComponent } from '../../../mol-model/structure/structure/carbohydrates/constants.ts';
+import { memoize1 } from '../../../mol-util/memoize.ts';
+import { BasicData } from './schema.ts';
 
 export function getMissingResidues(data: BasicData): Model['properties']['missingResidues'] {
     const map = new Map<string, MissingResidue>();

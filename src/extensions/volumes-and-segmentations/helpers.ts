@@ -4,12 +4,12 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Volume } from '../../mol-model/volume';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { setSubtreeVisibility } from '../../mol-plugin/behavior/static/state';
-import { StateBuilder, StateObjectSelector, StateTransformer } from '../../mol-state';
-import { ParamDefinition } from '../../mol-util/param-definition';
-import { Source } from './entry-root';
+import { Volume } from '../../mol-model/volume.ts';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { setSubtreeVisibility } from '../../mol-plugin/behavior/static/state.ts';
+import { StateBuilder, StateObjectSelector, StateTransformer } from '../../mol-state/index.ts';
+import { ParamDefinition } from '../../mol-util/param-definition.ts';
+import { Source } from './entry-root.ts';
 
 
 /** Split entry ID (e.g. 'emd-1832') into source ('emdb') and number ('1832') */

@@ -4,25 +4,25 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../../../mol-repr/structure/units-visual';
-import { VisualUpdateState } from '../../../mol-repr/util';
-import { VisualContext } from '../../../mol-repr/visual';
-import { Unit, Structure, StructureElement } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { addEllipsoid } from '../../../mol-geo/geometry/mesh/builder/ellipsoid';
-import { Axes3D, Sphere3D } from '../../../mol-math/geometry';
-import { PickingId } from '../../../mol-geo/geometry/picking';
-import { OrderedSet, Interval } from '../../../mol-data/int';
-import { EmptyLoci, Loci } from '../../../mol-model/loci';
-import { UnitIndex } from '../../../mol-model/structure/structure/element/element';
-import { LocationIterator } from '../../../mol-geo/util/location-iterator';
-import { MoleculeType } from '../../../mol-model/structure/model/types';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
-import { StructureGroup } from './util/common';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
+import { VisualUpdateState } from '../../util.ts';
+import { VisualContext } from '../../visual.ts';
+import { Unit, Structure, StructureElement } from '../../../mol-model/structure.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { addEllipsoid } from '../../../mol-geo/geometry/mesh/builder/ellipsoid.ts';
+import { Axes3D, Sphere3D } from '../../../mol-math/geometry.ts';
+import { PickingId } from '../../../mol-geo/geometry/picking.ts';
+import { OrderedSet, Interval } from '../../../mol-data/int.ts';
+import { EmptyLoci, Loci } from '../../../mol-model/loci.ts';
+import { UnitIndex } from '../../../mol-model/structure/structure/element/element.ts';
+import { LocationIterator } from '../../../mol-geo/util/location-iterator.ts';
+import { MoleculeType } from '../../../mol-model/structure/model/types.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
+import { StructureGroup } from './util/common.ts';
 
 export const OrientationEllipsoidMeshParams = {
     ...UnitsMeshParams,

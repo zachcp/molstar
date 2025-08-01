@@ -4,18 +4,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ModelCrossLinkRestraint } from './format';
-import { Unit, StructureElement, Structure, Bond } from '../../../mol-model/structure';
-import { PairRestraints, PairRestraint } from '../pair-restraints';
-import { CustomStructureProperty } from '../../common/custom-structure-property';
-import { CustomProperty } from '../../common/custom-property';
-import { DataLocation } from '../../../mol-model/location';
-import { DataLoci } from '../../../mol-model/loci';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { CentroidHelper } from '../../../mol-math/geometry/centroid-helper';
-import { bondLabel } from '../../../mol-theme/label';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
+import { ModelCrossLinkRestraint } from './format.ts';
+import { Unit, StructureElement, Structure, Bond } from '../../../mol-model/structure.ts';
+import { PairRestraints, PairRestraint } from '../pair-restraints.ts';
+import { CustomStructureProperty } from '../../common/custom-structure-property.ts';
+import { CustomProperty } from '../../common/custom-property.ts';
+import { DataLocation } from '../../../mol-model/location.ts';
+import { DataLoci } from '../../../mol-model/loci.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { CentroidHelper } from '../../../mol-math/geometry/centroid-helper.ts';
+import { bondLabel } from '../../../mol-theme/label.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
 
 export type CrossLinkRestraintValue = PairRestraints<CrossLinkRestraint>
 

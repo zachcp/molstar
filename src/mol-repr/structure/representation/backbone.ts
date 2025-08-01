@@ -4,16 +4,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PolymerBackboneCylinderVisual, PolymerBackboneCylinderParams } from '../visual/polymer-backbone-cylinder';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { UnitsRepresentation } from '../units-representation';
-import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation';
-import { Representation, RepresentationContext, RepresentationParamsGetter } from '../../../mol-repr/representation';
-import { ThemeRegistryContext } from '../../../mol-theme/theme';
-import { Structure } from '../../../mol-model/structure';
-import { PolymerBackboneSphereParams, PolymerBackboneSphereVisual } from '../visual/polymer-backbone-sphere';
-import { PolymerGapParams, PolymerGapVisual } from '../visual/polymer-gap-cylinder';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
+import { PolymerBackboneCylinderVisual, PolymerBackboneCylinderParams } from '../visual/polymer-backbone-cylinder.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { UnitsRepresentation } from '../units-representation.ts';
+import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
+import { Representation, RepresentationContext, RepresentationParamsGetter } from '../../representation.ts';
+import { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import { Structure } from '../../../mol-model/structure.ts';
+import { PolymerBackboneSphereParams, PolymerBackboneSphereVisual } from '../visual/polymer-backbone-sphere.ts';
+import { PolymerGapParams, PolymerGapVisual } from '../visual/polymer-gap-cylinder.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const BackboneVisuals = {
     'polymer-backbone-cylinder': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, PolymerBackboneCylinderParams>) => UnitsRepresentation('Polymer backbone cylinder', ctx, getParams, PolymerBackboneCylinderVisual),

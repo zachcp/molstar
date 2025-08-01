@@ -5,12 +5,12 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { Dnatco, DnatcoParams, DnatcoSteps } from '../property';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
-import { Model } from '../../../mol-model/structure';
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
+import { Dnatco, DnatcoParams, DnatcoSteps } from '../property.ts';
+import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
+import { Model } from '../../../mol-model/structure.ts';
+import { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 
 export const ConfalPyramidsParams = { ...DnatcoParams };
 export type ConfalPyramidsParams = typeof ConfalPyramidsParams;

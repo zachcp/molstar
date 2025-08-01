@@ -4,15 +4,15 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StructureElement, Bond, ElementIndex, Unit, Model } from '../../mol-model/structure';
-import { SaccharideColors, MonosaccharidesColorTable } from '../../mol-model/structure/structure/carbohydrates/constants';
-import { Location } from '../../mol-model/location';
-import type { ColorTheme, LocationColor } from '../color';
-import { Color } from '../../mol-util/color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../theme';
-import { TableLegend } from '../../mol-util/legend';
-import { ColorThemeCategory } from './categories';
+import { StructureElement, Bond, ElementIndex, Unit, Model } from '../../mol-model/structure.ts';
+import { SaccharideColors, MonosaccharidesColorTable } from '../../mol-model/structure/structure/carbohydrates/constants.ts';
+import { Location } from '../../mol-model/location.ts';
+import type { ColorTheme, LocationColor } from '../color.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ThemeDataContext } from '../theme.ts';
+import { TableLegend } from '../../mol-util/legend.ts';
+import { ColorThemeCategory } from './categories.ts';
 
 const DefaultColor = Color(0xCCCCCC);
 const Description = 'Assigns colors according to the Symbol Nomenclature for Glycans (SNFG).';

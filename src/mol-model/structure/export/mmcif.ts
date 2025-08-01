@@ -5,20 +5,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { CifWriter } from '../../../mol-io/writer/cif';
-import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif';
-import { Structure } from '../structure';
-import { _atom_site } from './categories/atom_site';
+import { CifWriter } from '../../../mol-io/writer/cif.ts';
+import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
+import { Structure } from '../structure.ts';
+import { _atom_site } from './categories/atom_site.ts';
 import CifCategory = CifWriter.Category
-import { _struct_conf, _struct_sheet_range } from './categories/secondary-structure';
-import { _chem_comp, _chem_comp_bond, _pdbx_chem_comp_identifier, _pdbx_nonpoly_scheme } from './categories/misc';
-import { Model } from '../model';
-import { getUniqueEntityIndicesFromStructures, copy_mmCif_category, copy_source_mmCifCategory } from './categories/utils';
-import { _struct_asym, _entity_poly, _entity_poly_seq } from './categories/sequence';
-import { CustomPropertyDescriptor } from '../../custom-property';
-import { atom_site_operator_mapping } from './categories/atom_site_operator_mapping';
-import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif';
-import { molstar_bond_site } from './categories/molstar_bond_site';
+import { _struct_conf, _struct_sheet_range } from './categories/secondary-structure.ts';
+import { _chem_comp, _chem_comp_bond, _pdbx_chem_comp_identifier, _pdbx_nonpoly_scheme } from './categories/misc.ts';
+import { Model } from '../model.ts';
+import { getUniqueEntityIndicesFromStructures, copy_mmCif_category, copy_source_mmCifCategory } from './categories/utils.ts';
+import { _struct_asym, _entity_poly, _entity_poly_seq } from './categories/sequence.ts';
+import { CustomPropertyDescriptor } from '../../custom-property.ts';
+import { atom_site_operator_mapping } from './categories/atom_site_operator_mapping.ts';
+import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif.ts';
+import { molstar_bond_site } from './categories/molstar_bond_site.ts';
 
 export interface CifExportContext {
     structures: Structure[],

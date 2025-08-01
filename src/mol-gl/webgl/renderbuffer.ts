@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { idFactory } from '../../mol-util/id-factory';
-import { GLRenderingContext, isWebGL2 } from './compat';
-import { Framebuffer, checkFramebufferStatus } from './framebuffer';
-import { isDebugMode } from '../../mol-util/debug';
+import { idFactory } from '../../mol-util/id-factory.ts';
+import { GLRenderingContext, isWebGL2 } from './compat.ts';
+import { Framebuffer, checkFramebufferStatus } from './framebuffer.ts';
+import { isDebugMode } from '../../mol-util/debug.ts';
 
 const getNextRenderbufferId = idFactory();
 

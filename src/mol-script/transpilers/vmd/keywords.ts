@@ -7,10 +7,10 @@
  * Adapted from MolQL project
  */
 
-import * as h from '../helper';
-import { MolScriptBuilder } from '../../../mol-script/language/builder';
+import * as h from '../helper.ts';
+import { MolScriptBuilder } from '../../language/builder.ts';
 const B = MolScriptBuilder;
-import { KeywordDict } from '../types';
+import { KeywordDict } from '../types.ts';
 
 function proteinExpr() {
     return B.struct.filter.pick({

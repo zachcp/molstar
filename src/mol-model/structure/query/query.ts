@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Structure } from '../structure';
-import { StructureSelection } from './selection';
-import { QueryContext, QueryFn, QueryContextOptions } from './context';
+import { Structure } from '../structure.ts';
+import { StructureSelection } from './selection.ts';
+import { QueryContext, QueryFn, QueryContextOptions } from './context.ts';
 
 interface StructureQuery extends QueryFn<StructureSelection> { }
 namespace StructureQuery {

@@ -5,10 +5,10 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { edt } from '../../../mol-math/geometry/distance-transform';
-import { createTextureImage, TextureImage } from '../../../mol-gl/renderable/util';
-import { RUNNING_IN_NODEJS } from '../../../mol-util/nodejs-shims';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { edt } from '../../../mol-math/geometry/distance-transform.ts';
+import { createTextureImage, TextureImage } from '../../../mol-gl/renderable/util.ts';
+import { RUNNING_IN_NODEJS } from '../../../mol-util/nodejs-shims.ts';
 
 
 const TextAtlasCache: { [k: string]: FontAtlas } = {};

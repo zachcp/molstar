@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3 } from '../linear-algebra/3d/vec3';
-import { CentroidHelper } from './centroid-helper';
-import { Sphere3D } from '../geometry/primitives/sphere3d';
-import { Box3D } from './primitives/box3d';
+import { Vec3 } from '../linear-algebra/3d/vec3.ts';
+import { CentroidHelper } from './centroid-helper.ts';
+import { Sphere3D } from './primitives/sphere3d.ts';
+import { Box3D } from './primitives/box3d.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3dot = Vec3.dot;

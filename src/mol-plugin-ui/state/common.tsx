@@ -4,15 +4,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { State, StateTransform, StateTransformer, StateAction, StateObject, StateObjectCell } from '../../mol-state';
+import { State, StateTransform, StateTransformer, StateAction, StateObject, StateObjectCell } from '../../mol-state/index.ts';
 import * as React from 'react';
-import { PurePluginUIComponent } from '../base';
-import { ParameterControls, ParamOnChange } from '../controls/parameters';
-import { PluginContext } from '../../mol-plugin/context';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { PurePluginUIComponent } from '../base.tsx';
+import { ParameterControls, ParamOnChange } from '../controls/parameters.tsx';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { BehaviorSubject, skip } from 'rxjs';
-import { Icon, RefreshSvg, CheckSvg, ArrowRightSvg, ArrowDropDownSvg, TuneSvg } from '../controls/icons';
-import { ExpandGroup, ToggleButton, Button, IconButton } from '../controls/common';
+import { Icon, RefreshSvg, CheckSvg, ArrowRightSvg, ArrowDropDownSvg, TuneSvg } from '../controls/icons.tsx';
+import { ExpandGroup, ToggleButton, Button, IconButton } from '../controls/common.tsx';
 
 export { StateTransformParameters, TransformControlBase };
 

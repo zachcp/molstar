@@ -5,17 +5,17 @@
  */
 
 import './index.html';
-import { resizeCanvas } from '../../mol-canvas3d/util';
-import { Canvas3D, Canvas3DContext } from '../../mol-canvas3d/canvas3d';
-import { LinesBuilder } from '../../mol-geo/geometry/lines/lines-builder';
-import { Mat4 } from '../../mol-math/linear-algebra';
-import { DodecahedronCage } from '../../mol-geo/primitive/dodecahedron';
-import { Lines } from '../../mol-geo/geometry/lines/lines';
-import { Color } from '../../mol-util/color';
-import { createRenderObject } from '../../mol-gl/render-object';
-import { Representation } from '../../mol-repr/representation';
-import { ParamDefinition } from '../../mol-util/param-definition';
-import { AssetManager } from '../../mol-util/assets';
+import { resizeCanvas } from '../../mol-canvas3d/util.ts';
+import { Canvas3D, Canvas3DContext } from '../../mol-canvas3d/canvas3d.ts';
+import { LinesBuilder } from '../../mol-geo/geometry/lines/lines-builder.ts';
+import { Mat4 } from '../../mol-math/linear-algebra.ts';
+import { DodecahedronCage } from '../../mol-geo/primitive/dodecahedron.ts';
+import { Lines } from '../../mol-geo/geometry/lines/lines.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { createRenderObject } from '../../mol-gl/render-object.ts';
+import { Representation } from '../../mol-repr/representation.ts';
+import { ParamDefinition } from '../../mol-util/param-definition.ts';
+import { AssetManager } from '../../mol-util/assets.ts';
 
 const parent = document.getElementById('app')!;
 parent.style.width = '100%';

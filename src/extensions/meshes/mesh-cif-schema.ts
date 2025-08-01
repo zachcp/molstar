@@ -4,9 +4,9 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Column, Database } from '../../mol-data/db';
-import { CifFrame } from '../../mol-io/reader/cif';
-import { toDatabase } from '../../mol-io/reader/cif/schema';
+import { Column, Database } from '../../mol-data/db.ts';
+import { CifFrame } from '../../mol-io/reader/cif.ts';
+import { toDatabase } from '../../mol-io/reader/cif/schema.ts';
 
 
 const int = Column.Schema.int;

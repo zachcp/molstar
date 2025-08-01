@@ -6,13 +6,13 @@
  */
 
 import * as React from 'react';
-import { StructureHierarchyRef } from '../../mol-plugin-state/manager/structure/hierarchy-state';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { State } from '../../mol-state';
-import { PurePluginUIComponent } from '../base';
-import { IconButton } from '../controls/common';
-import { UpdateTransformControl } from '../state/update-transform';
-import { VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, MoreHorizSvg } from '../controls/icons';
+import { StructureHierarchyRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { State } from '../../mol-state/index.ts';
+import { PurePluginUIComponent } from '../base.tsx';
+import { IconButton } from '../controls/common.tsx';
+import { UpdateTransformControl } from '../state/update-transform.tsx';
+import { VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, MoreHorizSvg } from '../controls/icons.tsx';
 
 export class GenericEntryListControls extends PurePluginUIComponent {
     get current() {

@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Primitive } from './primitive';
-import { Cage } from './cage';
+import { Primitive } from './primitive.ts';
+import { Cage } from './cage.ts';
 
 const plane: Primitive = {
     vertices: new Float32Array([

@@ -4,15 +4,15 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Volume } from '../../mol-model/volume';
-import { Task } from '../../mol-task';
-import { SpacegroupCell, Box3D } from '../../mol-math/geometry';
-import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra';
-import { degToRad } from '../../mol-math/misc';
-import { Dsn6File } from '../../mol-io/reader/dsn6/schema';
-import { arrayMin, arrayMax, arrayMean, arrayRms } from '../../mol-util/array';
-import { ModelFormat } from '../format';
-import { CustomProperties } from '../../mol-model/custom-property';
+import { Volume } from '../../mol-model/volume.ts';
+import { Task } from '../../mol-task/index.ts';
+import { SpacegroupCell, Box3D } from '../../mol-math/geometry.ts';
+import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { degToRad } from '../../mol-math/misc.ts';
+import { Dsn6File } from '../../mol-io/reader/dsn6/schema.ts';
+import { arrayMin, arrayMax, arrayMean, arrayRms } from '../../mol-util/array.ts';
+import { ModelFormat } from '../format.ts';
+import { CustomProperties } from '../../mol-model/custom-property.ts';
 
 export function volumeFromDsn6(source: Dsn6File, params?: { voxelSize?: Vec3, label?: string, entryId?: string }): Task<Volume> {
     return Task.create<Volume>('Create Volume', async ctx => {

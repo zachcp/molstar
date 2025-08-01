@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { createPrimitive, Primitive } from './primitive';
-import { Cage, createCage } from './cage';
+import { createPrimitive, Primitive } from './primitive.ts';
+import { Cage, createCage } from './cage.ts';
 
 const t = (1 + Math.sqrt(5)) / 2;
 

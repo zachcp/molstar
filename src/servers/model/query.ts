@@ -6,8 +6,9 @@
  */
 
 import * as fs from 'fs';
-import { VERSION } from './version';
-import { LocalInput, runLocal } from './server/api-local';
+import { VERSION } from './version.ts';
+import { LocalInput, runLocal } from './server/api-local.ts';
+import process from "node:process";
 
 console.log(`Mol* ModelServer (${VERSION}), (c) 2018-2020 Mol* authors`);
 console.log(``);

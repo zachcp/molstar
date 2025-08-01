@@ -7,7 +7,7 @@
  * based in part on https://github.com/dsehnal/CIFTools.js
  */
 
-import { StringLike } from '../../../common/string-like';
+import { StringLike } from '../../../common/string-like.ts';
 
 
 /**

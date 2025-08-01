@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { State, StateTransform, StateTransformer } from '../../mol-state';
-import { memoizeLatest } from '../../mol-util/memoize';
-import { StateTransformParameters, TransformControlBase } from './common';
+import { State, StateTransform, StateTransformer } from '../../mol-state/index.ts';
+import { memoizeLatest } from '../../mol-util/memoize.ts';
+import { StateTransformParameters, TransformControlBase } from './common.tsx';
 import { Observable } from 'rxjs';
-import { PluginUIComponent } from '../base';
+import { PluginUIComponent } from '../base.tsx';
 
 export { UpdateTransformControl, TransformUpdaterControl };
 

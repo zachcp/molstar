@@ -8,23 +8,23 @@
 
 import { produce } from 'immer';
 import { merge } from 'rxjs';
-import { Camera } from '../mol-canvas3d/camera';
-import { Canvas3DContext, Canvas3DParams, Canvas3DProps } from '../mol-canvas3d/canvas3d';
-import { Vec3 } from '../mol-math/linear-algebra';
-import { PluginComponent } from '../mol-plugin-state/component';
-import { PluginAnimationManager } from '../mol-plugin-state/manager/animation';
-import { InteractivityManager } from '../mol-plugin-state/manager/interactivity';
-import { StructureComponentManager } from '../mol-plugin-state/manager/structure/component';
-import { StructureFocusSnapshot } from '../mol-plugin-state/manager/structure/focus';
-import { StructureSelectionSnapshot } from '../mol-plugin-state/manager/structure/selection';
-import { PluginStateObject as SO } from '../mol-plugin-state/objects';
-import { State, StateTransform, StateTransformer } from '../mol-state';
-import { UUID } from '../mol-util';
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { PluginBehavior } from './behavior';
-import { PluginCommands } from './commands';
-import { PluginConfig } from './config';
-import { PluginContext } from './context';
+import { Camera } from '../mol-canvas3d/camera.ts';
+import { Canvas3DContext, Canvas3DParams, Canvas3DProps } from '../mol-canvas3d/canvas3d.ts';
+import { Vec3 } from '../mol-math/linear-algebra.ts';
+import { PluginComponent } from '../mol-plugin-state/component.ts';
+import { PluginAnimationManager } from '../mol-plugin-state/manager/animation.ts';
+import { InteractivityManager } from '../mol-plugin-state/manager/interactivity.ts';
+import { StructureComponentManager } from '../mol-plugin-state/manager/structure/component.ts';
+import { StructureFocusSnapshot } from '../mol-plugin-state/manager/structure/focus.ts';
+import { StructureSelectionSnapshot } from '../mol-plugin-state/manager/structure/selection.ts';
+import { PluginStateObject as SO } from '../mol-plugin-state/objects.ts';
+import { State, StateTransform, StateTransformer } from '../mol-state/index.ts';
+import { UUID } from '../mol-util/index.ts';
+import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import { PluginBehavior } from './behavior.ts';
+import { PluginCommands } from './commands.ts';
+import { PluginConfig } from './config.ts';
+import { PluginContext } from './context.ts';
 
 export { PluginState };
 

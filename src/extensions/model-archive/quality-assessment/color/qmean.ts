@@ -5,15 +5,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { QualityAssessment, QualityAssessmentProvider } from '../prop';
-import { Location } from '../../../../mol-model/location';
-import { Bond, StructureElement, Unit } from '../../../../mol-model/structure';
-import { ColorTheme, LocationColor } from '../../../../mol-theme/color';
-import { ThemeDataContext } from '../../../../mol-theme/theme';
-import { Color, ColorScale } from '../../../../mol-util/color';
-import { ParamDefinition as PD } from '../../../../mol-util/param-definition';
-import { CustomProperty } from '../../../../mol-model-props/common/custom-property';
-import { ColorThemeCategory } from '../../../../mol-theme/color/categories';
+import { QualityAssessment, QualityAssessmentProvider } from '../prop.ts';
+import { Location } from '../../../../mol-model/location.ts';
+import { Bond, StructureElement, Unit } from '../../../../mol-model/structure.ts';
+import { ColorTheme, LocationColor } from '../../../../mol-theme/color.ts';
+import { ThemeDataContext } from '../../../../mol-theme/theme.ts';
+import { Color, ColorScale } from '../../../../mol-util/color/index.ts';
+import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
+import { CustomProperty } from '../../../../mol-model-props/common/custom-property.ts';
+import { ColorThemeCategory } from '../../../../mol-theme/color/categories.ts';
 
 const DefaultColor = Color(0xaaaaaa);
 

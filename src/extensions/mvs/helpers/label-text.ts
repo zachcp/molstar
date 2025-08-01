@@ -4,16 +4,16 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Sphere3D } from '../../../mol-math/geometry';
-import { BoundaryHelper } from '../../../mol-math/geometry/boundary-helper';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { ElementIndex, Model, Structure, StructureElement, StructureProperties, Unit } from '../../../mol-model/structure';
-import { arrayExtend } from '../../../mol-util/array';
-import { AtomRanges } from './atom-ranges';
-import { IndicesAndSortings } from './indexing';
-import { MVSAnnotationRow } from './schemas';
-import { getAtomRangesForRows } from './selections';
-import { isDefined } from './utils';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { BoundaryHelper } from '../../../mol-math/geometry/boundary-helper.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { ElementIndex, Model, Structure, StructureElement, StructureProperties, Unit } from '../../../mol-model/structure.ts';
+import { arrayExtend } from '../../../mol-util/array.ts';
+import { AtomRanges } from './atom-ranges.ts';
+import { IndicesAndSortings } from './indexing.ts';
+import { MVSAnnotationRow } from './schemas.ts';
+import { getAtomRangesForRows } from './selections.ts';
+import { isDefined } from './utils.ts';
 
 
 /** Properties describing position, size, etc. of a text in 3D */

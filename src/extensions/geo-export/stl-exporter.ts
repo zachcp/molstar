@@ -4,12 +4,12 @@
  * @author Sukolsak Sakshuwong <sukolsak@stanford.edu>
  */
 
-import { asciiWrite } from '../../mol-io/common/ascii';
-import { Box3D } from '../../mol-math/geometry';
-import { Vec3, Mat4 } from '../../mol-math/linear-algebra';
-import { PLUGIN_VERSION } from '../../mol-plugin/version';
-import { RuntimeContext } from '../../mol-task';
-import { MeshExporter, AddMeshInput } from './mesh-exporter';
+import { asciiWrite } from '../../mol-io/common/ascii.ts';
+import { Box3D } from '../../mol-math/geometry.ts';
+import { Vec3, Mat4 } from '../../mol-math/linear-algebra.ts';
+import { PLUGIN_VERSION } from '../../mol-plugin/version.ts';
+import { RuntimeContext } from '../../mol-task/index.ts';
+import { MeshExporter, AddMeshInput } from './mesh-exporter.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3fromArray = Vec3.fromArray;

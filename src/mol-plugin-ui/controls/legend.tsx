@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color } from '../../mol-util/color';
+import { Color } from '../../mol-util/color/index.ts';
 import * as React from 'react';
-import { _Props, _State } from '../base';
-import { Legend as LegendData, ScaleLegend as ScaleLegendData, TableLegend as TableLegendData } from '../../mol-util/legend';
+import { _Props, _State } from '../base.tsx';
+import { Legend as LegendData, ScaleLegend as ScaleLegendData, TableLegend as TableLegendData } from '../../mol-util/legend.ts';
 
 export type LegendProps<L extends LegendData> = { legend: L }
 export type Legend = React.ComponentClass<LegendProps<any>>
