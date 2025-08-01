@@ -1,5 +1,5 @@
 {
-  "name": "@molstar/molstar",
+  "name": "@zachcp/molstar",
   "version": "5.0.0-dev.2",
   "description": "A comprehensive macromolecular library.",
   "exports": {
