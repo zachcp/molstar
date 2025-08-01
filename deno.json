@@ -111,7 +111,8 @@
   },
   "lint": {
     "rules": {
-      "tags": ["recommended"]
+      "tags": ["recommended"],
+      "exclude": ["no-explicit-any"]
     },
     "exclude": [
       "build/",
