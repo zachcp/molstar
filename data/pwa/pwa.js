@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-window.addEventListener('molstarViewerCreated', e => {
+globalThis.addEventListener('molstarViewerCreated', e => {
     const viewer = e.detail.viewer;
 
     // Handle incoming files
@@ -27,7 +27,7 @@ window.addEventListener('molstarViewerCreated', e => {
 
 // Register Progressive Web App service worker.
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
+    globalThis.addEventListener('load', function () {
         navigator.serviceWorker.register('./sw.js')
             .then(function (registration) {
                 // Registration was successful

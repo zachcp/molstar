@@ -10,6 +10,7 @@ import * as path from 'path';
 import * as argparse from 'argparse';
 import { sassPlugin } from 'esbuild-sass-plugin';
 import * as os from 'os';
+import process from "node:process";
 
 const Apps = [
     // Apps

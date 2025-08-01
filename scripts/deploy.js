@@ -5,6 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
+import process from "node:process";
 const git = require('simple-git');
 const path = require('path');
 const fs = require("fs");
