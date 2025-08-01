@@ -125,6 +125,7 @@
         "jsx-key",
         "no-extra-boolean-cast"
         "prefer-as-const",
+        "jsx-void-dom-elements-no-children",
         "jsx-no-useless-fragment",
         "jsx-button-has-type",
         "no-cond-assign",
