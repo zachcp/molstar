@@ -14,8 +14,7 @@ import { RuntimeContext, Task } from '../mol-task/index.ts';
 import { Asset, AssetManager } from './assets.ts';
 import { RUNNING_IN_NODEJS } from './nodejs-shims.ts';
 import { ungzip, unzip } from './zip/zip.ts';
-import { Buffer } from "node:buffer";
-
+import { Buffer } from 'node:buffer';
 
 export enum DataCompressionMethod {
     None,
@@ -23,21 +22,21 @@ export enum DataCompressionMethod {
     Zip,
 }
 
-export type DataType = 'json' | 'xml' | 'string' | 'binary' | 'zip'
-export type DataValue = 'string' | any | XMLDocument | Uint8Array
-export type DataResponse<T extends DataType> =
-    T extends 'json' ? any :
-        T extends 'xml' ? XMLDocument :
-            T extends 'string' ? StringLike :
-                T extends 'binary' ? Uint8Array :
-                    T extends 'zip' ? { [k: string]: Uint8Array } : never
+export type DataType = 'json' | 'xml' | 'string' | 'binary' | 'zip';
+export type DataValue = 'string' | any | XMLDocument | Uint8Array;
+export type DataResponse<T extends DataType> = T extends 'json' ? any
+    : T extends 'xml' ? XMLDocument
+    : T extends 'string' ? StringLike
+    : T extends 'binary' ? Uint8Array
+    : T extends 'zip' ? { [k: string]: Uint8Array }
+    : never;
 
 export interface AjaxGetParams<T extends DataType = 'string'> {
-    url: string,
-    type?: T,
-    title?: string,
-    headers?: [string, string][],
-    body?: string
+    url: string;
+    type?: T;
+    title?: string;
+    headers?: [string, string][];
+    body?: string;
 }
 
 export function readStringFromFile(file: File) {
@@ -52,14 +51,20 @@ export function readFromFile<T extends DataType>(file: File, type: T) {
     return readFromFileInternal(file, type);
 }
 
-export function ajaxGet(url: string): Task<DataValue>
-export function ajaxGet<T extends DataType>(params: AjaxGetParams<T>): Task<DataResponse<T>>
+export function ajaxGet(url: string): Task<DataValue>;
+export function ajaxGet<T extends DataType>(params: AjaxGetParams<T>): Task<DataResponse<T>>;
 export function ajaxGet<T extends DataType>(params: AjaxGetParams<T> | string) {
     if (typeof params === 'string') return ajaxGetInternal(params, params, 'string');
-    return ajaxGetInternal(params.title, params.url, params.type || 'string', params.body, params.headers);
+    return ajaxGetInternal(
+        params.title,
+        params.url,
+        params.type || 'string',
+        params.body,
+        params.headers,
+    );
 }
 
-export type AjaxTask = typeof ajaxGet
+export type AjaxTask = typeof ajaxGet;
 
 function isDone(data: XMLHttpRequest | FileReader) {
     if (RUNNING_IN_NODEJS) throw new Error('`isDone` should not be used when running in Node.js'); // XMLHttpRequest and FileReader are not available in Node.js
@@ -72,11 +77,17 @@ function isDone(data: XMLHttpRequest | FileReader) {
 }
 
 function genericError(isDownload: boolean) {
-    if (isDownload) return 'Failed to download data. Possible reasons: Resource is not available, or CORS is not allowed on the server.';
+    if (isDownload) {
+        return 'Failed to download data. Possible reasons: Resource is not available, or CORS is not allowed on the server.';
+    }
     return 'Failed to open file.';
 }
 
-function readData<T extends XMLHttpRequest | FileReader>(ctx: RuntimeContext, action: string, data: T): Promise<T> {
+function readData<T extends XMLHttpRequest | FileReader>(
+    ctx: RuntimeContext,
+    action: string,
+    data: T,
+): Promise<T> {
     if (RUNNING_IN_NODEJS) throw new Error('`readData` should not be used when running in Node.js'); // XMLHttpRequest is not available in Node.js
     return new Promise<T>((resolve, reject) => {
         // first check if data reading is already done
@@ -104,9 +115,17 @@ function readData<T extends XMLHttpRequest | FileReader>(ctx: RuntimeContext, ac
 
             try {
                 if (e.lengthComputable) {
-                    ctx.update({ message: action, isIndeterminate: false, current: e.loaded, max: e.total });
+                    ctx.update({
+                        message: action,
+                        isIndeterminate: false,
+                        current: e.loaded,
+                        max: e.total,
+                    });
                 } else {
-                    ctx.update({ message: `${action} ${(e.loaded / 1024 / 1024).toFixed(2)} MB`, isIndeterminate: true });
+                    ctx.update({
+                        message: `${action} ${(e.loaded / 1024 / 1024).toFixed(2)} MB`,
+                        isIndeterminate: true,
+                    });
                 }
             } catch (e) {
                 hasError = true;
@@ -121,26 +140,41 @@ function readData<T extends XMLHttpRequest | FileReader>(ctx: RuntimeContext, ac
 }
 
 function getCompression(name: string) {
-    return /\.gz$/i.test(name) ? DataCompressionMethod.Gzip :
-        /\.zip$/i.test(name) ? DataCompressionMethod.Zip :
-            DataCompressionMethod.None;
+    return /\.gz$/i.test(name)
+        ? DataCompressionMethod.Gzip
+        : /\.zip$/i.test(name)
+        ? DataCompressionMethod.Zip
+        : DataCompressionMethod.None;
 }
 
 const reFilterPath = /^(__MACOSX|.DS_Store)/;
 
-async function decompress(ctx: RuntimeContext, data: Uint8Array, compression: DataCompressionMethod): Promise<Uint8Array> {
+async function decompress(
+    ctx: RuntimeContext,
+    data: Uint8Array,
+    compression: DataCompressionMethod,
+): Promise<Uint8Array> {
     switch (compression) {
-        case DataCompressionMethod.None: return data;
-        case DataCompressionMethod.Gzip: return ungzip(ctx, data);
+        case DataCompressionMethod.None:
+            return data;
+        case DataCompressionMethod.Gzip:
+            return ungzip(ctx, data);
         case DataCompressionMethod.Zip:
             const parsed = await unzip(ctx, data.buffer);
-            const names = Object.keys(parsed).filter(n => !reFilterPath.test(n));
-            if (names.length !== 1) throw new Error('can only decompress zip files with a single entry');
+            const names = Object.keys(parsed).filter((n) => !reFilterPath.test(n));
+            if (names.length !== 1) {
+                throw new Error('can only decompress zip files with a single entry');
+            }
             return parsed[names[0]] as Uint8Array;
     }
 }
 
-async function processFile<T extends DataType>(ctx: RuntimeContext, fileContent: ArrayBuffer | null, type: T, compression: DataCompressionMethod): Promise<DataResponse<T>> {
+async function processFile<T extends DataType>(
+    ctx: RuntimeContext,
+    fileContent: ArrayBuffer | null,
+    type: T,
+    compression: DataCompressionMethod,
+): Promise<DataResponse<T>> {
     if (fileContent === null) throw new Error('no data given');
 
     let data = new Uint8Array(fileContent);
@@ -169,7 +203,7 @@ function readFromFileInternal<T extends DataType>(file: File, type: T): Task<Dat
         return readFromFileInternal_NodeJS(file, type);
     }
     let reader: FileReader | undefined = void 0;
-    return Task.create('Read File', async ctx => {
+    return Task.create('Read File', async (ctx) => {
         try {
             await ctx.update({ message: 'Opening file...', canAbort: true });
             reader = new FileReader();
@@ -186,8 +220,11 @@ function readFromFileInternal<T extends DataType>(file: File, type: T): Task<Dat
         if (reader) reader.abort();
     });
 }
-function readFromFileInternal_NodeJS<T extends DataType>(file: File, type: T): Task<DataResponse<T>> {
-    return Task.create('Read File', async ctx => {
+function readFromFileInternal_NodeJS<T extends DataType>(
+    file: File,
+    type: T,
+): Task<DataResponse<T>> {
+    return Task.create('Read File', async (ctx) => {
         await ctx.update({ message: 'Opening file...', canAbort: false });
         const fileContent = await file.arrayBuffer();
 
@@ -201,14 +238,16 @@ class RequestPool {
     private static poolSize = 15;
 
     static get() {
-        if (RUNNING_IN_NODEJS) throw new Error('`RequestPool.get` should not be used when running in Node.js'); // XMLHttpRequest is not available in Node.js
+        if (RUNNING_IN_NODEJS) {
+            throw new Error('`RequestPool.get` should not be used when running in Node.js'); // XMLHttpRequest is not available in Node.js
+        }
         if (this.pool.length) {
             return this.pool.pop()!;
         }
         return new XMLHttpRequest();
     }
 
-    static emptyFunc() { }
+    static emptyFunc() {}
 
     static deposit(req: XMLHttpRequest) {
         if (this.pool.length < this.poolSize) {
@@ -244,15 +283,26 @@ function processAjax<T extends DataType>(req: XMLHttpRequest, type: T): DataResp
 
 function getRequestResponseType(type: DataType): XMLHttpRequestResponseType {
     switch (type) {
-        case 'json': return 'json';
-        case 'xml': return 'document';
-        case 'string': return 'text';
-        case 'binary': return 'arraybuffer';
-        case 'zip': return 'arraybuffer';
+        case 'json':
+            return 'json';
+        case 'xml':
+            return 'document';
+        case 'string':
+            return 'text';
+        case 'binary':
+            return 'arraybuffer';
+        case 'zip':
+            return 'arraybuffer';
     }
 }
 
-function ajaxGetInternal<T extends DataType>(title: string | undefined, url: string, type: T, body?: string, headers?: [string, string][]): Task<DataResponse<T>> {
+function ajaxGetInternal<T extends DataType>(
+    title: string | undefined,
+    url: string,
+    type: T,
+    body?: string,
+    headers?: [string, string][],
+): Task<DataResponse<T>> {
     if (RUNNING_IN_NODEJS) {
         if (url.startsWith('file://')) {
             return ajaxGetInternal_file_NodeJS(title, url, type, body, headers);
@@ -262,7 +312,7 @@ function ajaxGetInternal<T extends DataType>(title: string | undefined, url: str
     }
 
     let xhttp: XMLHttpRequest | undefined = void 0;
-    return Task.create(title ? title : 'Download', async ctx => {
+    return Task.create(title ? title : 'Download', async (ctx) => {
         xhttp = RequestPool.get();
 
         xhttp.open(body ? 'post' : 'get', url, true);
@@ -294,7 +344,9 @@ function ajaxGetInternal<T extends DataType>(title: string | undefined, url: str
 let _fs: (typeof import('fs')) | undefined = undefined;
 function getFS() {
     if (!_fs) {
-        throw new Error('When running in Node.js and reading from files, call mol-util/data-source\'s setFSModule function first.');
+        throw new Error(
+            "When running in Node.js and reading from files, call mol-util/data-source's setFSModule function first.",
+        );
     }
     return _fs;
 }
@@ -313,11 +365,21 @@ function readFileAsync(filename: string): Promise<Buffer> {
 }
 
 /** Alternative implementation of ajaxGetInternal for NodeJS for file:// protocol */
-function ajaxGetInternal_file_NodeJS<T extends DataType>(title: string | undefined, url: string, type: T, body?: string, headers?: [string, string][]): Task<DataResponse<T>> {
-    if (!RUNNING_IN_NODEJS) throw new Error('This function should only be used when running in Node.js');
-    if (!url.startsWith('file://')) throw new Error('This function is only for URLs with protocol file://');
+function ajaxGetInternal_file_NodeJS<T extends DataType>(
+    title: string | undefined,
+    url: string,
+    type: T,
+    body?: string,
+    headers?: [string, string][],
+): Task<DataResponse<T>> {
+    if (!RUNNING_IN_NODEJS) {
+        throw new Error('This function should only be used when running in Node.js');
+    }
+    if (!url.startsWith('file://')) {
+        throw new Error('This function is only for URLs with protocol file://');
+    }
 
-    return Task.create(title ?? 'Download', async ctx => {
+    return Task.create(title ?? 'Download', async (ctx) => {
         const filename = url.substring('file://'.length);
         await ctx.update({ message: 'Loading file...', canAbort: false });
         const data = await readFileAsync(filename);
@@ -329,11 +391,19 @@ function ajaxGetInternal_file_NodeJS<T extends DataType>(title: string | undefin
 }
 
 /** Alternative implementation of ajaxGetInternal for NodeJS for http(s):// protocol */
-function ajaxGetInternal_http_NodeJS<T extends DataType>(title: string | undefined, url: string, type: T, body?: string, headers?: [string, string][]): Task<DataResponse<T>> {
-    if (!RUNNING_IN_NODEJS) throw new Error('This function should only be used when running in Node.js');
+function ajaxGetInternal_http_NodeJS<T extends DataType>(
+    title: string | undefined,
+    url: string,
+    type: T,
+    body?: string,
+    headers?: [string, string][],
+): Task<DataResponse<T>> {
+    if (!RUNNING_IN_NODEJS) {
+        throw new Error('This function should only be used when running in Node.js');
+    }
 
     const aborter = new AbortController();
-    return Task.create(title ?? 'Download', async ctx => {
+    return Task.create(title ?? 'Download', async (ctx) => {
         await ctx.update({ message: 'Downloading...', canAbort: true });
         const response = await fetch(url, { signal: aborter.signal });
         if (!(response.status >= 200 && response.status < 400)) {
@@ -349,8 +419,17 @@ function ajaxGetInternal_http_NodeJS<T extends DataType>(title: string | undefin
     });
 }
 
-export type AjaxGetManyEntry = { kind: 'ok', id: string, result: Asset.Wrapper<'string' | 'binary'> } | { kind: 'error', id: string, error: any }
-export async function ajaxGetMany(ctx: RuntimeContext, assetManager: AssetManager, sources: { id: string, url: Asset.Url | string, isBinary?: boolean, canFail?: boolean }[], maxConcurrency: number) {
+export type AjaxGetManyEntry = {
+    kind: 'ok';
+    id: string;
+    result: Asset.Wrapper<'string' | 'binary'>;
+} | { kind: 'error'; id: string; error: any };
+export async function ajaxGetMany(
+    ctx: RuntimeContext,
+    assetManager: AssetManager,
+    sources: { id: string; url: Asset.Url | string; isBinary?: boolean; canFail?: boolean }[],
+    maxConcurrency: number,
+) {
     const len = sources.length;
     const slots: AjaxGetManyEntry[] = new Array(sources.length);
 
@@ -360,8 +439,16 @@ export async function ajaxGetMany(ctx: RuntimeContext, assetManager: AssetManage
     for (let _i = Math.min(len, maxConcurrency); currentSrc < _i; currentSrc++) {
         const current = sources[currentSrc];
 
-        promises.push(wrapPromise(currentSrc, current.id,
-            assetManager.resolve(Asset.getUrlAsset(assetManager, current.url), current.isBinary ? 'binary' : 'string').runAsChild(ctx)));
+        promises.push(
+            wrapPromise(
+                currentSrc,
+                current.id,
+                assetManager.resolve(
+                    Asset.getUrlAsset(assetManager, current.url),
+                    current.isBinary ? 'binary' : 'string',
+                ).runAsChild(ctx),
+            ),
+        );
         promiseKeys.push(currentSrc);
     }
 
@@ -383,7 +470,10 @@ export async function ajaxGetMany(ctx: RuntimeContext, assetManager: AssetManage
         promiseKeys = promiseKeys.filter(_filterRemoveIndex, idx);
         if (currentSrc < len) {
             const current = sources[currentSrc];
-            const asset = assetManager.resolve(Asset.getUrlAsset(assetManager, current.url), current.isBinary ? 'binary' : 'string').runAsChild(ctx);
+            const asset = assetManager.resolve(
+                Asset.getUrlAsset(assetManager, current.url),
+                current.isBinary ? 'binary' : 'string',
+            ).runAsChild(ctx);
             promises.push(wrapPromise(currentSrc, current.id, asset));
             promiseKeys.push(currentSrc);
             currentSrc++;
@@ -397,7 +487,11 @@ function _filterRemoveIndex(this: number, _: any, i: number) {
     return this !== i;
 }
 
-async function wrapPromise(index: number, id: string, p: Promise<Asset.Wrapper<'string' | 'binary'>>): Promise<AjaxGetManyEntry & { index: number }> {
+async function wrapPromise(
+    index: number,
+    id: string,
+    p: Promise<Asset.Wrapper<'string' | 'binary'>>,
+): Promise<AjaxGetManyEntry & { index: number }> {
     try {
         const result = await p;
         return { kind: 'ok', result, index, id };

@@ -8,39 +8,48 @@
 import { TextEncoder } from './cif/encoder/text.ts';
 import { BinaryEncoder, BinaryEncodingProvider } from './cif/encoder/binary.ts';
 import * as _Encoder from './cif/encoder.ts';
-import { ArrayEncoding, ArrayEncoder } from '../common/binary-cif.ts';
+import { ArrayEncoder, ArrayEncoding } from '../common/binary-cif.ts';
 import { CifFrame } from '../reader/cif.ts';
 
 export namespace CifWriter {
-    export import Encoder = _Encoder.Encoder
-    export import Category = _Encoder.Category
-    export import Field = _Encoder.Field
-    export import Encoding = ArrayEncoding
+    export import Encoder = _Encoder.Encoder;
+    export import Category = _Encoder.Category;
+    export import Field = _Encoder.Field;
+    export import Encoding = ArrayEncoding;
 
     export interface EncoderParams {
-        binary?: boolean,
-        encoderName?: string,
-        binaryEncodingPovider?: BinaryEncodingProvider,
-        binaryAutoClassifyEncoding?: boolean
+        binary?: boolean;
+        encoderName?: string;
+        binaryEncodingPovider?: BinaryEncodingProvider;
+        binaryAutoClassifyEncoding?: boolean;
     }
 
     export function createEncoder(params?: EncoderParams): Encoder {
         const { binary = false, encoderName = 'mol*' } = params || {};
-        return binary ? new BinaryEncoder(encoderName, params ? params.binaryEncodingPovider : void 0, params ? !!params.binaryAutoClassifyEncoding : false) : new TextEncoder();
+        return binary
+            ? new BinaryEncoder(
+                encoderName,
+                params ? params.binaryEncodingPovider : void 0,
+                params ? !!params.binaryAutoClassifyEncoding : false,
+            )
+            : new TextEncoder();
     }
 
     export function fields<K = number, D = any, N extends string = string>() {
         return Field.build<K, D, N>();
     }
 
-    import E = Encoding
+    import E = Encoding;
     export const Encodings = {
         deltaRLE: E.by(E.delta).and(E.runLength).and(E.integerPacking),
         fixedPoint2: E.by(E.fixedPoint(100)).and(E.delta).and(E.integerPacking),
         fixedPoint3: E.by(E.fixedPoint(1000)).and(E.delta).and(E.integerPacking),
     };
 
-    export function categoryInstance<Key, Data>(fields: Field<Key, Data>[], source: Category.DataSource): Category.Instance {
+    export function categoryInstance<Key, Data>(
+        fields: Field<Key, Data>[],
+        source: Category.DataSource,
+    ): Category.Instance {
         return { fields, source: [source] };
     }
 
@@ -50,12 +59,16 @@ export namespace CifWriter {
                 const cat = frame.categories[c];
                 if (!cat) return void 0;
                 const ff = cat.getField(f);
-                return ff && ff.binaryEncoding ? ArrayEncoder.fromEncoding(ff.binaryEncoding) : void 0;
-            }
+                return ff && ff.binaryEncoding
+                    ? ArrayEncoder.fromEncoding(ff.binaryEncoding)
+                    : void 0;
+            },
         };
-    };
+    }
 
-    export function createEncodingProviderFromJsonConfig(hints: EncodingStrategyHint[]): BinaryEncodingProvider {
+    export function createEncodingProviderFromJsonConfig(
+        hints: EncodingStrategyHint[],
+    ): BinaryEncodingProvider {
         return {
             get(c, f) {
                 for (let i = 0; i < hints.length; i++) {
@@ -64,7 +77,7 @@ export namespace CifWriter {
                         return resolveEncoding(hint);
                     }
                 }
-            }
+            },
         };
     }
 
@@ -82,7 +95,7 @@ export namespace CifWriter {
                     return fixedPoint.and(E.delta).and(E.integerPacking);
                 case 'delta-rle':
                     return fixedPoint.and(E.delta).and(E.runLength).and(E.integerPacking);
-            };
+            }
         } else {
             switch (hint.encoding) {
                 case 'pack':
@@ -103,14 +116,14 @@ export namespace CifWriter {
  * Defines the information needed to encode certain fields: category and column name as well as encoding tag, precision is optional and identifies float columns.
  */
 export interface EncodingStrategyHint {
-    categoryName: string,
-    columnName: string,
+    categoryName: string;
+    columnName: string;
     // TODO would be nice to infer strategy and precision if needed
-    encoding: EncodingType,
+    encoding: EncodingType;
     /**
      * number of decimal places to keep - must be specified to float columns
      */
-    precision?: number
+    precision?: number;
 }
 
-type EncodingType = 'pack' | 'rle' | 'delta' | 'delta-rle'
+type EncodingType = 'pack' | 'rle' | 'delta' | 'delta-rle';

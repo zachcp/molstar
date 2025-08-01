@@ -9,7 +9,15 @@ import { NumberArray } from '../../mol-util/type-helpers.ts';
 /**
  * 2D Euclidean distance transform by Felzenszwalb & Huttenlocher https://cs.brown.edu/~pff/papers/dt-final.pdf
  */
-export function edt(data: NumberArray, width: number, height: number, f: NumberArray, d: NumberArray, v: NumberArray, z: NumberArray) {
+export function edt(
+    data: NumberArray,
+    width: number,
+    height: number,
+    f: NumberArray,
+    d: NumberArray,
+    v: NumberArray,
+    z: NumberArray,
+) {
     for (let x = 0; x < width; x++) {
         for (let y = 0; y < height; y++) {
             f[y] = data[y * width + x];

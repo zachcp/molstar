@@ -23,8 +23,12 @@ const Description = `Assigns a color based on volume value at a given vertex.`;
 export const ExternalVolumeColorThemeParams = {
     volume: PD.ValueRef<Volume>(
         (ctx: PluginContext) => {
-            const volumes = ctx.state.data.selectQ(q => q.root.subtree().filter(c => Volume.is(c.obj?.data)));
-            return volumes.map(v => [v.transform.ref, v.obj?.label ?? '<unknown>'] as [string, string]);
+            const volumes = ctx.state.data.selectQ((q) =>
+                q.root.subtree().filter((c) => Volume.is(c.obj?.data))
+            );
+            return volumes.map((v) =>
+                [v.transform.ref, v.obj?.label ?? '<unknown>'] as [string, string]
+            );
         },
         (ref, getData) => getData(ref),
     ),
@@ -33,28 +37,39 @@ export const ExternalVolumeColorThemeParams = {
             domain: PD.MappedStatic('auto', {
                 custom: PD.Interval([-1, 1], { step: 0.001 }),
                 auto: PD.Group({
-                    symmetric: PD.Boolean(false, { description: 'If true the automatic range is determined as [-|max|, |max|].' })
-                })
+                    symmetric: PD.Boolean(false, {
+                        description:
+                            'If true the automatic range is determined as [-|max|, |max|].',
+                    }),
+                }),
             }),
-            list: PD.ColorList('red-white-blue', { presetKind: 'scale' })
+            list: PD.ColorList('red-white-blue', { presetKind: 'scale' }),
         }),
         'relative-value': PD.Group({
             domain: PD.MappedStatic('auto', {
                 custom: PD.Interval([-1, 1], { step: 0.001 }),
                 auto: PD.Group({
-                    symmetric: PD.Boolean(false, { description: 'If true the automatic range is determined as [-|max|, |max|].' })
-                })
+                    symmetric: PD.Boolean(false, {
+                        description:
+                            'If true the automatic range is determined as [-|max|, |max|].',
+                    }),
+                }),
             }),
-            list: PD.ColorList('red-white-blue', { presetKind: 'scale' })
-        })
+            list: PD.ColorList('red-white-blue', { presetKind: 'scale' }),
+        }),
     }),
     defaultColor: PD.Color(Color(0xcccccc)),
-    normalOffset: PD.Numeric(0., { min: 0, max: 20, step: 0.1 }, { description: 'Offset vertex position along its normal by given amount.' }),
+    normalOffset: PD.Numeric(0., { min: 0, max: 20, step: 0.1 }, {
+        description: 'Offset vertex position along its normal by given amount.',
+    }),
     usePalette: PD.Boolean(false, { description: 'Use a palette to color at the pixel level.' }),
 };
-export type ExternalVolumeColorThemeParams = typeof ExternalVolumeColorThemeParams
+export type ExternalVolumeColorThemeParams = typeof ExternalVolumeColorThemeParams;
 
-export function ExternalVolumeColorTheme(ctx: ThemeDataContext, props: PD.Values<ExternalVolumeColorThemeParams>): ColorTheme<ExternalVolumeColorThemeParams> {
+export function ExternalVolumeColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<ExternalVolumeColorThemeParams>,
+): ColorTheme<ExternalVolumeColorThemeParams> {
     let volume: Volume | undefined;
     try {
         volume = props.volume.getValue();
@@ -73,7 +88,9 @@ export function ExternalVolumeColorTheme(ctx: ThemeDataContext, props: PD.Values
     if (volume) {
         const coloring = props.coloring.params;
         const { stats } = volume.grid;
-        const domain: [number, number] = coloring.domain.name === 'custom' ? coloring.domain.params : [stats.min, stats.max];
+        const domain: [number, number] = coloring.domain.name === 'custom'
+            ? coloring.domain.params
+            : [stats.min, stats.max];
 
         const isRelative = props.coloring.name === 'relative-value';
         if (coloring.domain.name === 'auto' && isRelative) {
@@ -90,7 +107,10 @@ export function ExternalVolumeColorTheme(ctx: ThemeDataContext, props: PD.Values
         const scale = ColorScale.create({ domain, listOrName: coloring.list.colors });
 
         const position = Vec3();
-        const getTrilinearlyInterpolated = Grid.makeGetTrilinearlyInterpolated(volume.grid, isRelative ? 'relative' : 'none');
+        const getTrilinearlyInterpolated = Grid.makeGetTrilinearlyInterpolated(
+            volume.grid,
+            isRelative ? 'relative' : 'none',
+        );
 
         color = (location: Location): Color => {
             if (!isPositionLocation(location)) {
@@ -108,16 +128,21 @@ export function ExternalVolumeColorTheme(ctx: ThemeDataContext, props: PD.Values
             if (isNaN(value)) return defaultColor;
 
             if (usePalette) {
-                return (clamp((value - domain[0]) / (domain[1] - domain[0]), 0, 1) * ColorTheme.PaletteScale) as Color;
+                return (clamp((value - domain[0]) / (domain[1] - domain[0]), 0, 1) *
+                    ColorTheme.PaletteScale) as Color;
             } else {
                 return scale.color(value);
             }
         };
 
-        palette = usePalette ? {
-            colors: coloring.list.colors.map(e => Array.isArray(e) ? e[0] : e),
-            filter: (coloring.list.kind === 'set' ? 'nearest' : 'linear') as 'nearest' | 'linear'
-        } : undefined;
+        palette = usePalette
+            ? {
+                colors: coloring.list.colors.map((e) => Array.isArray(e) ? e[0] : e),
+                filter: (coloring.list.kind === 'set' ? 'nearest' : 'linear') as
+                    | 'nearest'
+                    | 'linear',
+            }
+            : undefined;
     } else {
         color = () => defaultColor;
     }
@@ -134,7 +159,10 @@ export function ExternalVolumeColorTheme(ctx: ThemeDataContext, props: PD.Values
     };
 }
 
-export const ExternalVolumeColorThemeProvider: ColorTheme.Provider<ExternalVolumeColorThemeParams, 'external-volume'> = {
+export const ExternalVolumeColorThemeProvider: ColorTheme.Provider<
+    ExternalVolumeColorThemeParams,
+    'external-volume'
+> = {
     name: 'external-volume',
     label: 'External Volume',
     category: ColorThemeCategory.Misc,

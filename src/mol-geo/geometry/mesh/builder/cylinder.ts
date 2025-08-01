@@ -5,7 +5,7 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra.ts';
+import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra.ts';
 import { MeshBuilder } from '../mesh-builder.ts';
 import { Primitive, transformPrimitive } from '../../../primitive/primitive.ts';
 import { Cylinder, CylinderProps, DefaultCylinderProps } from '../../../primitive/cylinder.ts';
@@ -69,28 +69,51 @@ function getCylinder(props: CylinderProps) {
     return cylinder;
 }
 
-export type BasicCylinderProps = Omit<CylinderProps, 'height'>
+export type BasicCylinderProps = Omit<CylinderProps, 'height'>;
 
-export function addSimpleCylinder(state: MeshBuilder.State, start: Vec3, end: Vec3, props: BasicCylinderProps) {
+export function addSimpleCylinder(
+    state: MeshBuilder.State,
+    start: Vec3,
+    end: Vec3,
+    props: BasicCylinderProps,
+) {
     const d = Vec3.distance(start, end);
     Vec3.sub(tmpCylinderDir, end, start);
     setCylinderMat(tmpCylinderMat, start, tmpCylinderDir, d, false);
     MeshBuilder.addPrimitive(state, tmpCylinderMat, getCylinder(props));
 }
 
-export function addCylinderFromRay3D(state: MeshBuilder.State, ray: Ray3D, length: number, props: BasicCylinderProps) {
+export function addCylinderFromRay3D(
+    state: MeshBuilder.State,
+    ray: Ray3D,
+    length: number,
+    props: BasicCylinderProps,
+) {
     setCylinderMat(tmpCylinderMat, ray.origin, ray.direction, length, false);
     MeshBuilder.addPrimitive(state, tmpCylinderMat, getCylinder(props));
 }
 
-export function addCylinder(state: MeshBuilder.State, start: Vec3, end: Vec3, lengthScale: number, props: BasicCylinderProps) {
+export function addCylinder(
+    state: MeshBuilder.State,
+    start: Vec3,
+    end: Vec3,
+    lengthScale: number,
+    props: BasicCylinderProps,
+) {
     const d = Vec3.distance(start, end) * lengthScale;
     Vec3.sub(tmpCylinderDir, end, start);
     setCylinderMat(tmpCylinderMat, start, tmpCylinderDir, d, true);
     MeshBuilder.addPrimitive(state, tmpCylinderMat, getCylinder(props));
 }
 
-export function addDoubleCylinder(state: MeshBuilder.State, start: Vec3, end: Vec3, lengthScale: number, shift: Vec3, props: BasicCylinderProps) {
+export function addDoubleCylinder(
+    state: MeshBuilder.State,
+    start: Vec3,
+    end: Vec3,
+    lengthScale: number,
+    shift: Vec3,
+    props: BasicCylinderProps,
+) {
     const d = Vec3.distance(start, end) * lengthScale;
     const cylinder = getCylinder(props);
     Vec3.sub(tmpCylinderDir, end, start);
@@ -104,7 +127,15 @@ export function addDoubleCylinder(state: MeshBuilder.State, start: Vec3, end: Ve
     MeshBuilder.addPrimitive(state, tmpCylinderMat, cylinder);
 }
 
-export function addFixedCountDashedCylinder(state: MeshBuilder.State, start: Vec3, end: Vec3, lengthScale: number, segmentCount: number, stubCap: boolean, props: BasicCylinderProps) {
+export function addFixedCountDashedCylinder(
+    state: MeshBuilder.State,
+    start: Vec3,
+    end: Vec3,
+    lengthScale: number,
+    segmentCount: number,
+    stubCap: boolean,
+    props: BasicCylinderProps,
+) {
     const d = Vec3.distance(start, end) * lengthScale;
     const isOdd = segmentCount % 2 !== 0;
     const s = Math.floor((segmentCount + 1) / 2);

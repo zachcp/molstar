@@ -14,14 +14,14 @@ import { CoarseHierarchy } from './coarse.ts';
 import { CoarseElements } from './coarse/hierarchy.ts';
 
 interface StructureSequence {
-    readonly sequences: ReadonlyArray<StructureSequence.Entity>,
-    readonly byEntityKey: { [key: number]: StructureSequence.Entity }
+    readonly sequences: ReadonlyArray<StructureSequence.Entity>;
+    readonly byEntityKey: { [key: number]: StructureSequence.Entity };
 }
 
 namespace StructureSequence {
     export interface Entity {
-        readonly entityId: string,
-        readonly sequence: Sequence
+        readonly entityId: string;
+        readonly sequence: Sequence;
     }
 
     const Empty: StructureSequence = { byEntityKey: {}, sequences: [] };
@@ -37,19 +37,28 @@ namespace StructureSequence {
         return { sequences, byEntityKey };
     }
 
-    export function fromHierarchy(entities: Entities, atomicHierarchy: AtomicHierarchy, coarseHierarchy: CoarseHierarchy): StructureSequence {
+    export function fromHierarchy(
+        entities: Entities,
+        atomicHierarchy: AtomicHierarchy,
+        coarseHierarchy: CoarseHierarchy,
+    ): StructureSequence {
         const atomic = fromAtomicHierarchy(entities, atomicHierarchy);
-        const coarse = coarseHierarchy.isDefined ? fromCoarseHierarchy(entities, coarseHierarchy) : Empty;
+        const coarse = coarseHierarchy.isDefined
+            ? fromCoarseHierarchy(entities, coarseHierarchy)
+            : Empty;
         return merge(atomic, coarse);
     }
 
-    export function fromAtomicHierarchy(entities: Entities, hierarchy: AtomicHierarchy): StructureSequence {
+    export function fromAtomicHierarchy(
+        entities: Entities,
+        hierarchy: AtomicHierarchy,
+    ): StructureSequence {
         const { label_comp_id } = hierarchy.atoms;
         const { label_seq_id } = hierarchy.residues;
         const { chainAtomSegments, residueAtomSegments } = hierarchy;
         const { count, offsets } = chainAtomSegments;
 
-        const byEntityKey: StructureSequence['byEntityKey'] = { };
+        const byEntityKey: StructureSequence['byEntityKey'] = {};
         const sequences: StructureSequence.Entity[] = [];
 
         // check if chain segments are empty
@@ -60,11 +69,17 @@ namespace StructureSequence {
         for (let cI = 0 as ChainIndex, _cI = hierarchy.chains._rowCount; cI < _cI; cI++) {
             const entityKey = hierarchy.index.getEntityFromChain(cI);
             // Only for polymers, trying to mirror _entity_poly_seq
-            if (byEntityKey[entityKey] !== void 0 || entities.data.type.value(entityKey) !== 'polymer') continue;
+            if (
+                byEntityKey[entityKey] !== void 0 ||
+                entities.data.type.value(entityKey) !== 'polymer'
+            ) continue;
 
             const start = cI;
             cI++;
-            while (cI < _cI && entityKey === hierarchy.index.getEntityFromChain(cI) && entities.data.type.value(entityKey) !== 'polymer') {
+            while (
+                cI < _cI && entityKey === hierarchy.index.getEntityFromChain(cI) &&
+                entities.data.type.value(entityKey) !== 'polymer'
+            ) {
                 cI++;
             }
             cI--;
@@ -81,7 +96,7 @@ namespace StructureSequence {
 
             byEntityKey[entityKey] = {
                 entityId: entities.data.id.value(entityKey),
-                sequence: Sequence.ofResidueNames(compId, seqId)
+                sequence: Sequence.ofResidueNames(compId, seqId),
             };
 
             sequences.push(byEntityKey[entityKey]);
@@ -90,17 +105,23 @@ namespace StructureSequence {
         return { byEntityKey, sequences };
     }
 
-    export function fromCoarseHierarchy(entities: Entities, hierarchy: CoarseHierarchy): StructureSequence {
+    export function fromCoarseHierarchy(
+        entities: Entities,
+        hierarchy: CoarseHierarchy,
+    ): StructureSequence {
         const spheres = fromCoarseElements(entities, hierarchy.spheres);
         const gaussians = fromCoarseElements(entities, hierarchy.gaussians);
         return merge(spheres, gaussians);
     }
 
-    export function fromCoarseElements(entities: Entities, elements: CoarseElements): StructureSequence {
+    export function fromCoarseElements(
+        entities: Entities,
+        elements: CoarseElements,
+    ): StructureSequence {
         const { chainElementSegments, seq_id_begin, seq_id_end } = elements;
         const { count, offsets } = chainElementSegments;
 
-        const byEntityKey: StructureSequence['byEntityKey'] = { };
+        const byEntityKey: StructureSequence['byEntityKey'] = {};
         const sequences: StructureSequence.Entity[] = [];
 
         // check if chain segments are empty
@@ -127,7 +148,7 @@ namespace StructureSequence {
 
             byEntityKey[eK] = {
                 entityId: entities.data.id.value(eK),
-                sequence: Sequence.ofSequenceRanges(seqIdBegin, seqIdEnd)
+                sequence: Sequence.ofSequenceRanges(seqIdBegin, seqIdEnd),
             };
 
             sequences.push(byEntityKey[eK]);

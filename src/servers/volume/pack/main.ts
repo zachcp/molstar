@@ -12,10 +12,16 @@ import * as Data from './data-model.ts';
 import * as Sampling from './sampling.ts';
 import * as DataFormat from '../common/data-format.ts';
 import { FileHandle } from '../../../mol-io/common/file-handle.ts';
-import process from "node:process";
-import { Buffer } from "node:buffer";
+import process from 'node:process';
+import { Buffer } from 'node:buffer';
 
-export async function pack(input: { name: string, filename: string }[], blockSizeInMB: number, isPeriodic: boolean, outputFilename: string, format: Format.Type) {
+export async function pack(
+    input: { name: string; filename: string }[],
+    blockSizeInMB: number,
+    isPeriodic: boolean,
+    outputFilename: string,
+    format: Format.Type,
+) {
     try {
         await create(outputFilename, input, blockSizeInMB, isPeriodic, format);
     } catch (e) {
@@ -44,10 +50,17 @@ function updateAllocationProgress(progress: Data.Progress, progressDone: number)
 async function allocateFile(ctx: Data.Context) {
     const { totalByteSize, file } = ctx;
     const buffer = Buffer.alloc(Math.min(totalByteSize, 8 * 1024 * 1024));
-    const progress: Data.Progress = { current: 0, max: Math.ceil(totalByteSize / buffer.byteLength) };
+    const progress: Data.Progress = {
+        current: 0,
+        max: Math.ceil(totalByteSize / buffer.byteLength),
+    };
     let written = 0;
     while (written < totalByteSize) {
-        written += file.writeBufferSync(written, buffer, Math.min(totalByteSize - written, buffer.byteLength));
+        written += file.writeBufferSync(
+            written,
+            buffer,
+            Math.min(totalByteSize - written, buffer.byteLength),
+        );
         updateAllocationProgress(progress, 1);
     }
 }
@@ -72,7 +85,13 @@ async function writeHeader(ctx: Data.Context) {
     await ctx.file.writeBuffer(4, header);
 }
 
-async function create(filename: string, sourceDensities: { name: string, filename: string }[], sourceBlockSizeInMB: number, isPeriodic: boolean, format: Format.Type) {
+async function create(
+    filename: string,
+    sourceDensities: { name: string; filename: string }[],
+    sourceBlockSizeInMB: number,
+    isPeriodic: boolean,
+    format: Format.Type,
+) {
     const startedTime = getTime();
 
     if (sourceBlockSizeInMB % 4 !== 0 || sourceBlockSizeInMB < 4) {
@@ -92,7 +111,10 @@ async function create(filename: string, sourceDensities: { name: string, filenam
             channels.push(await Format.open(s.name, s.filename, format));
         }
         // Step 1b: Check if the Format headers are compatible.
-        const isOk = channels.reduce((ok, s) => ok && Format.compareHeaders(channels[0].data.header, s.data.header), true);
+        const isOk = channels.reduce(
+            (ok, s) => ok && Format.compareHeaders(channels[0].data.header, s.data.header),
+            true,
+        );
         if (!isOk) {
             throw new Error('Input file headers are not compatible (different grid, etc.).');
         }

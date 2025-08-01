@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { OrderedSet, Interval } from '../mol-data/int.ts';
+import { Interval, OrderedSet } from '../mol-data/int.ts';
 import { BitFlags } from './bit-flags.ts';
 import { assertUnreachable } from './type-helpers.ts';
 
@@ -15,10 +15,10 @@ export enum MarkerAction {
     Select = 0x4,
     Deselect = 0x8,
     Toggle = 0x10,
-    Clear = 0x20
+    Clear = 0x20,
 }
 
-export type MarkerActions = BitFlags<MarkerAction>
+export type MarkerActions = BitFlags<MarkerAction>;
 export namespace MarkerActions {
     export const is: (m: MarkerActions, f: MarkerAction) => boolean = BitFlags.has;
 
@@ -53,12 +53,24 @@ export function setMarkerValue(array: Uint8Array, status: 0 | 1 | 2 | 3, count: 
 
 export function applyMarkerActionAtPosition(array: Uint8Array, i: number, action: MarkerAction) {
     switch (action) {
-        case MarkerAction.Highlight: array[i] |= 1; break;
-        case MarkerAction.RemoveHighlight: array[i] &= ~1; break;
-        case MarkerAction.Select: array[i] |= 2; break;
-        case MarkerAction.Deselect: array[i] &= ~2; break;
-        case MarkerAction.Toggle: array[i] ^= 2; break;
-        case MarkerAction.Clear: array[i] = 0; break;
+        case MarkerAction.Highlight:
+            array[i] |= 1;
+            break;
+        case MarkerAction.RemoveHighlight:
+            array[i] &= ~1;
+            break;
+        case MarkerAction.Select:
+            array[i] |= 2;
+            break;
+        case MarkerAction.Deselect:
+            array[i] &= ~2;
+            break;
+        case MarkerAction.Toggle:
+            array[i] ^= 2;
+            break;
+        case MarkerAction.Clear:
+            array[i] = 0;
+            break;
     }
 }
 
@@ -143,14 +155,13 @@ export function applyMarkerAction(array: Uint8Array, set: OrderedSet, action: Ma
     return true;
 }
 
-
 export interface MarkerInfo {
     /**
      * 0: none marked;
      * 1: all marked;
      * -1: unclear, need to be calculated
      */
-    average: 0 | 1 | -1
+    average: 0 | 1 | -1;
     /**
      * 0: none marked;
      * 1: all highlighted;
@@ -158,10 +169,13 @@ export interface MarkerInfo {
      * 3: all highlighted and selected
      * -1: mixed/unclear
      */
-    status: 0 | 1 | 2 | 3 | -1
+    status: 0 | 1 | 2 | 3 | -1;
 }
 
-export function getMarkerInfo(action: MarkerAction, currentStatus: MarkerInfo['status']): MarkerInfo {
+export function getMarkerInfo(
+    action: MarkerAction,
+    currentStatus: MarkerInfo['status'],
+): MarkerInfo {
     let average: MarkerInfo['average'] = -1;
     let status: MarkerInfo['status'] = -1;
     switch (action) {

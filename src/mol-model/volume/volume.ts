@@ -8,7 +8,7 @@
 import { Grid } from './grid.ts';
 import { OrderedSet } from '../../mol-data/int.ts';
 import { Box3D, Sphere3D } from '../../mol-math/geometry.ts';
-import { Vec3, Mat4 } from '../../mol-math/linear-algebra.ts';
+import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { BoundaryHelper } from '../../mol-math/geometry/boundary-helper.ts';
 import { CubeFormat } from '../../mol-model-formats/volume/cube.ts';
 import { EPSILON, equalEps } from '../../mol-math/linear-algebra/3d/common.ts';
@@ -19,25 +19,25 @@ import { toPrecision } from '../../mol-util/number.ts';
 import { DscifFormat } from '../../mol-model-formats/volume/density-server.ts';
 
 export interface Volume {
-    readonly label?: string
-    readonly entryId?: string
-    readonly grid: Grid
+    readonly label?: string;
+    readonly entryId?: string;
+    readonly grid: Grid;
     readonly instances: ReadonlyArray<{
-        transform: Mat4
-    }>
-    readonly sourceData: ModelFormat
+        transform: Mat4;
+    }>;
+    readonly sourceData: ModelFormat;
 
     // TODO use...
-    customProperties: CustomProperties
+    customProperties: CustomProperties;
 
     /**
      * Not to be accessed directly, each custom property descriptor
      * defines property accessors that use this field to store the data.
      */
-    _propertyData: { [name: string]: any }
+    _propertyData: { [name: string]: any };
 
     // TODO add as customProperty?
-    readonly colorVolume?: Volume
+    readonly colorVolume?: Volume;
 }
 
 export namespace Volume {
@@ -51,22 +51,30 @@ export namespace Volume {
         );
     }
 
-    export type CellIndex = { readonly '@type': 'cell-index' } & number
-    export type InstanceIndex = { readonly '@type': 'instance-index' } & number
-    export type SegmentIndex = { readonly '@type': 'segment-index' } & number
+    export type CellIndex = { readonly '@type': 'cell-index' } & number;
+    export type InstanceIndex = { readonly '@type': 'instance-index' } & number;
+    export type SegmentIndex = { readonly '@type': 'segment-index' } & number;
 
-    export type IsoValue = IsoValue.Absolute | IsoValue.Relative
+    export type IsoValue = IsoValue.Absolute | IsoValue.Relative;
 
     export namespace IsoValue {
-        export type Relative = Readonly<{ kind: 'relative', relativeValue: number }>
-        export type Absolute = Readonly<{ kind: 'absolute', absoluteValue: number }>
+        export type Relative = Readonly<{ kind: 'relative'; relativeValue: number }>;
+        export type Absolute = Readonly<{ kind: 'absolute'; absoluteValue: number }>;
 
         export function areSame(a: IsoValue, b: IsoValue, stats: Grid['stats']) {
-            return equalEps(toAbsolute(a, stats).absoluteValue, toAbsolute(b, stats).absoluteValue, stats.sigma / 100);
+            return equalEps(
+                toAbsolute(a, stats).absoluteValue,
+                toAbsolute(b, stats).absoluteValue,
+                stats.sigma / 100,
+            );
         }
 
-        export function absolute(value: number): Absolute { return { kind: 'absolute', absoluteValue: value }; }
-        export function relative(value: number): Relative { return { kind: 'relative', relativeValue: value }; }
+        export function absolute(value: number): Absolute {
+            return { kind: 'absolute', absoluteValue: value };
+        }
+        export function relative(value: number): Relative {
+            return { kind: 'relative', relativeValue: value };
+        }
 
         export function calcAbsolute(stats: Grid['stats'], relativeValue: number): number {
             return relativeValue * stats.sigma + stats.mean;
@@ -77,11 +85,17 @@ export namespace Volume {
         }
 
         export function toAbsolute(value: IsoValue, stats: Grid['stats']): Absolute {
-            return value.kind === 'absolute' ? value : { kind: 'absolute', absoluteValue: IsoValue.calcAbsolute(stats, value.relativeValue) };
+            return value.kind === 'absolute' ? value : {
+                kind: 'absolute',
+                absoluteValue: IsoValue.calcAbsolute(stats, value.relativeValue),
+            };
         }
 
         export function toRelative(value: IsoValue, stats: Grid['stats']): Relative {
-            return value.kind === 'relative' ? value : { kind: 'relative', relativeValue: IsoValue.calcRelative(stats, value.absoluteValue) };
+            return value.kind === 'relative' ? value : {
+                kind: 'relative',
+                relativeValue: IsoValue.calcRelative(stats, value.absoluteValue),
+            };
         }
 
         export function toString(value: IsoValue) {
@@ -130,24 +144,35 @@ export namespace Volume {
             def,
             {
                 'absolute': PD.Converted(
-                    (v: Volume.IsoValue) => Volume.IsoValue.toAbsolute(v, Grid.One.stats).absoluteValue,
+                    (v: Volume.IsoValue) =>
+                        Volume.IsoValue.toAbsolute(v, Grid.One.stats).absoluteValue,
                     (v: number) => Volume.IsoValue.absolute(v),
-                    PD.Numeric(mean, { min, max, step: toPrecision(sigma / 100, 2) }, { immediateUpdate: true })
+                    PD.Numeric(mean, { min, max, step: toPrecision(sigma / 100, 2) }, {
+                        immediateUpdate: true,
+                    }),
                 ),
                 'relative': PD.Converted(
-                    (v: Volume.IsoValue) => Volume.IsoValue.toRelative(v, Grid.One.stats).relativeValue,
+                    (v: Volume.IsoValue) =>
+                        Volume.IsoValue.toRelative(v, Grid.One.stats).relativeValue,
                     (v: number) => Volume.IsoValue.relative(v),
-                    PD.Numeric(Math.min(1, relMax), { min: relMin, max: relMax, step: toPrecision(Math.round(((max - min) / sigma)) / 100, 2) }, { immediateUpdate: true })
-                )
+                    PD.Numeric(Math.min(1, relMax), {
+                        min: relMin,
+                        max: relMax,
+                        step: toPrecision(Math.round((max - min) / sigma) / 100, 2),
+                    }, { immediateUpdate: true }),
+                ),
             },
             (v: Volume.IsoValue) => v.kind === 'absolute' ? 'absolute' : 'relative',
-            (v: Volume.IsoValue, c: 'absolute' | 'relative') => c === 'absolute' ? Volume.IsoValue.toAbsolute(v, sts) : Volume.IsoValue.toRelative(v, sts),
-            { isEssential: true }
+            (v: Volume.IsoValue, c: 'absolute' | 'relative') =>
+                c === 'absolute'
+                    ? Volume.IsoValue.toAbsolute(v, sts)
+                    : Volume.IsoValue.toRelative(v, sts),
+            { isEssential: true },
         );
     }
 
     export const IsoValueParam = createIsoValueParam(Volume.IsoValue.relative(2));
-    export type IsoValueParam = typeof IsoValueParam
+    export type IsoValueParam = typeof IsoValueParam;
 
     export const One: Volume = {
         label: '',
@@ -165,7 +190,9 @@ export namespace Volume {
     export function areInstanceTransformsEqual(volA: Volume, volB: Volume) {
         if (volA.instances.length !== volB.instances.length) return false;
         for (let i = 0, il = volA.instances.length; i < il; ++i) {
-            if (!Mat4.areEqual(volA.instances[i].transform, volB.instances[i].transform, EPSILON)) return false;
+            if (!Mat4.areEqual(volA.instances[i].transform, volB.instances[i].transform, EPSILON)) {
+                return false;
+            }
         }
         return true;
     }
@@ -179,25 +206,60 @@ export namespace Volume {
         return volume.sourceData.data.header.orbitals;
     }
 
-    export interface Loci { readonly kind: 'volume-loci', readonly volume: Volume, readonly instances: OrderedSet<InstanceIndex> }
-    export function Loci(volume: Volume, instances: OrderedSet<InstanceIndex>): Loci { return { kind: 'volume-loci', volume, instances }; }
-    export function isLoci(x: any): x is Loci { return !!x && x.kind === 'volume-loci'; }
-    export function areLociEqual(a: Loci, b: Loci) { return a.volume === b.volume && OrderedSet.areEqual(a.instances, b.instances); }
-    export function isLociEmpty(loci: Loci) { return isEmpty(loci.volume) || OrderedSet.isEmpty(loci.instances); }
+    export interface Loci {
+        readonly kind: 'volume-loci';
+        readonly volume: Volume;
+        readonly instances: OrderedSet<InstanceIndex>;
+    }
+    export function Loci(volume: Volume, instances: OrderedSet<InstanceIndex>): Loci {
+        return { kind: 'volume-loci', volume, instances };
+    }
+    export function isLoci(x: any): x is Loci {
+        return !!x && x.kind === 'volume-loci';
+    }
+    export function areLociEqual(a: Loci, b: Loci) {
+        return a.volume === b.volume && OrderedSet.areEqual(a.instances, b.instances);
+    }
+    export function isLociEmpty(loci: Loci) {
+        return isEmpty(loci.volume) || OrderedSet.isEmpty(loci.instances);
+    }
 
     export function getBoundingSphere(volume: Volume, boundingSphere?: Sphere3D) {
         return Grid.getBoundingSphere(volume.grid, boundingSphere);
     }
 
     export namespace Isosurface {
-        export interface Loci { readonly kind: 'isosurface-loci', readonly volume: Volume, readonly isoValue: Volume.IsoValue, readonly instances: OrderedSet<InstanceIndex> }
-        export function Loci(volume: Volume, isoValue: Volume.IsoValue, instances: OrderedSet<InstanceIndex>): Loci { return { kind: 'isosurface-loci', volume, isoValue, instances }; }
-        export function isLoci(x: any): x is Loci { return !!x && x.kind === 'isosurface-loci'; }
-        export function areLociEqual(a: Loci, b: Loci) { return a.volume === b.volume && Volume.IsoValue.areSame(a.isoValue, b.isoValue, a.volume.grid.stats) && OrderedSet.areEqual(a.instances, b.instances); }
-        export function isLociEmpty(loci: Loci) { return isEmpty(loci.volume) || OrderedSet.isEmpty(loci.instances); }
+        export interface Loci {
+            readonly kind: 'isosurface-loci';
+            readonly volume: Volume;
+            readonly isoValue: Volume.IsoValue;
+            readonly instances: OrderedSet<InstanceIndex>;
+        }
+        export function Loci(
+            volume: Volume,
+            isoValue: Volume.IsoValue,
+            instances: OrderedSet<InstanceIndex>,
+        ): Loci {
+            return { kind: 'isosurface-loci', volume, isoValue, instances };
+        }
+        export function isLoci(x: any): x is Loci {
+            return !!x && x.kind === 'isosurface-loci';
+        }
+        export function areLociEqual(a: Loci, b: Loci) {
+            return a.volume === b.volume &&
+                Volume.IsoValue.areSame(a.isoValue, b.isoValue, a.volume.grid.stats) &&
+                OrderedSet.areEqual(a.instances, b.instances);
+        }
+        export function isLociEmpty(loci: Loci) {
+            return isEmpty(loci.volume) || OrderedSet.isEmpty(loci.instances);
+        }
 
         const bbox = Box3D();
-        export function getBoundingSphere(volume: Volume, isoValue: Volume.IsoValue, boundingSphere?: Sphere3D) {
+        export function getBoundingSphere(
+            volume: Volume,
+            isoValue: Volume.IsoValue,
+            boundingSphere?: Sphere3D,
+        ) {
             const value = Volume.IsoValue.toAbsolute(isoValue, volume.grid.stats).absoluteValue;
             const neg = value < 0;
 
@@ -230,12 +292,12 @@ export namespace Volume {
 
     export namespace Cell {
         export interface Loci {
-            readonly kind: 'cell-loci',
-            readonly volume: Volume,
+            readonly kind: 'cell-loci';
+            readonly volume: Volume;
             readonly elements: ReadonlyArray<{
-                readonly indices: OrderedSet<CellIndex>,
-                readonly instances: OrderedSet<InstanceIndex>
-            }>
+                readonly indices: OrderedSet<CellIndex>;
+                readonly instances: OrderedSet<InstanceIndex>;
+            }>;
         }
         export function Loci(volume: Volume, elements: Loci['elements']): Loci {
             return { kind: 'cell-loci', volume, elements };
@@ -249,7 +311,8 @@ export namespace Volume {
             for (let i = 0, il = a.elements.length; i < il; ++i) {
                 const ae = a.elements[i];
                 const be = b.elements[i];
-                if (!OrderedSet.areEqual(ae.instances, be.instances) ||
+                if (
+                    !OrderedSet.areEqual(ae.instances, be.instances) ||
                     !OrderedSet.areEqual(ae.indices, be.indices)
                 ) return false;
             }
@@ -270,17 +333,21 @@ export namespace Volume {
         }
 
         export interface Location {
-            readonly kind: 'cell-location',
-            volume: Volume
-            cell: CellIndex
-            instance: InstanceIndex
+            readonly kind: 'cell-location';
+            volume: Volume;
+            cell: CellIndex;
+            instance: InstanceIndex;
         }
-        export function Location(volume?: Volume, cell?: CellIndex, instance?: InstanceIndex): Location {
+        export function Location(
+            volume?: Volume,
+            cell?: CellIndex,
+            instance?: InstanceIndex,
+        ): Location {
             return {
                 kind: 'cell-location',
                 volume: volume as any,
                 cell: cell as any,
-                instance: instance as any
+                instance: instance as any,
             };
         }
         export function isLocation(x: any): x is Location {
@@ -290,7 +357,11 @@ export namespace Volume {
         const boundaryHelper = new BoundaryHelper('98');
         const tmpBoundaryPos = Vec3();
         const tmpBoundaryPos2 = Vec3();
-        export function getBoundingSphere(volume: Volume, elements: Loci['elements'], boundingSphere?: Sphere3D) {
+        export function getBoundingSphere(
+            volume: Volume,
+            elements: Loci['elements'],
+            boundingSphere?: Sphere3D,
+        ) {
             boundaryHelper.reset();
             const transform = Grid.getGridToCartesianTransform(volume.grid);
             const { getCoords } = volume.grid.cells.space;
@@ -328,12 +399,12 @@ export namespace Volume {
 
     export namespace Segment {
         export interface Loci {
-            readonly kind: 'segment-loci',
-            readonly volume: Volume,
+            readonly kind: 'segment-loci';
+            readonly volume: Volume;
             readonly elements: ReadonlyArray<{
-                readonly segments: OrderedSet<SegmentIndex>,
-                readonly instances: OrderedSet<InstanceIndex>
-            }>
+                readonly segments: OrderedSet<SegmentIndex>;
+                readonly instances: OrderedSet<InstanceIndex>;
+            }>;
         }
         export function Loci(volume: Volume, elements: Loci['elements']): Loci {
             return { kind: 'segment-loci', volume, elements };
@@ -347,7 +418,8 @@ export namespace Volume {
             for (let i = 0, il = a.elements.length; i < il; ++i) {
                 const ae = a.elements[i];
                 const be = b.elements[i];
-                if (!OrderedSet.areEqual(ae.instances, be.instances) ||
+                if (
+                    !OrderedSet.areEqual(ae.instances, be.instances) ||
                     !OrderedSet.areEqual(ae.segments, be.segments)
                 ) return false;
             }
@@ -370,7 +442,11 @@ export namespace Volume {
         const bbox = Box3D();
         const bbox2 = Box3D();
         const bbox3 = Box3D();
-        export function getBoundingSphere(volume: Volume, elements: Loci['elements'], boundingSphere?: Sphere3D) {
+        export function getBoundingSphere(
+            volume: Volume,
+            elements: Loci['elements'],
+            boundingSphere?: Sphere3D,
+        ) {
             const segmentation = Volume.Segmentation.get(volume);
             if (segmentation) {
                 Box3D.setEmpty(bbox);
@@ -397,17 +473,21 @@ export namespace Volume {
         }
 
         export interface Location {
-            readonly kind: 'segment-location',
-            volume: Volume
-            segment: SegmentIndex
-            instance: InstanceIndex
+            readonly kind: 'segment-location';
+            volume: Volume;
+            segment: SegmentIndex;
+            instance: InstanceIndex;
         }
-        export function Location(volume?: Volume, segment?: number, instance?: InstanceIndex): Location {
+        export function Location(
+            volume?: Volume,
+            segment?: number,
+            instance?: InstanceIndex,
+        ): Location {
             return {
                 kind: 'segment-location',
                 volume: volume as any,
                 segment: segment as any,
-                instance: instance as any
+                instance: instance as any,
             };
         }
         export function isLocation(x: any): x is Location {
@@ -422,14 +502,14 @@ export namespace Volume {
         },
         get(volume: Volume): PickingGranularity {
             return volume._propertyData['__picking_granularity__'] ?? 'voxel';
-        }
+        },
     };
 
     export type Segmentation = {
-        segments: Map<Volume.SegmentIndex, Set<number>>
-        sets: Map<number, Set<Volume.SegmentIndex>>
-        bounds: { [k: Volume.SegmentIndex]: Box3D }
-        labels: { [k: Volume.SegmentIndex]: string }
+        segments: Map<Volume.SegmentIndex, Set<number>>;
+        sets: Map<number, Set<Volume.SegmentIndex>>;
+        bounds: { [k: Volume.SegmentIndex]: Box3D };
+        labels: { [k: Volume.SegmentIndex]: string };
     };
     export const Segmentation = {
         set(volume: Volume, segmentation: Segmentation) {
@@ -437,6 +517,6 @@ export namespace Volume {
         },
         get(volume: Volume): Segmentation | undefined {
             return volume._propertyData['__segmentation__'];
-        }
+        },
     };
 }

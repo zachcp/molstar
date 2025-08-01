@@ -14,13 +14,12 @@ import { HandleHelper, HandleHelperParams } from './handle-helper.ts';
 export const HelperParams = {
     debug: PD.Group(DebugHelperParams),
     camera: PD.Group({
-        helper: PD.Group(CameraHelperParams)
+        helper: PD.Group(CameraHelperParams),
     }),
     handle: PD.Group(HandleHelperParams),
 };
 export const DefaultHelperProps = PD.getDefaultValues(HelperParams);
-export type HelperProps = PD.Values<typeof HelperParams>
-
+export type HelperProps = PD.Values<typeof HelperParams>;
 
 export class Helper {
     readonly debug: BoundingSphereHelper;

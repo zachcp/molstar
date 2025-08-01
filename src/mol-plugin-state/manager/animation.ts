@@ -28,10 +28,16 @@ class PluginAnimationManager extends StatefulPluginComponent<PluginAnimationMana
         applied: this.ev(),
     };
 
-    get isEmpty() { return this._animations.length === 0; }
-    get current() { return this._current!; }
+    get isEmpty() {
+        return this._animations.length === 0;
+    }
+    get current() {
+        return this._current!;
+    }
 
-    get animations() { return this._animations; }
+    get animations() {
+        return this._animations;
+    }
 
     private triggerUpdate() {
         this.events.updated.next(void 0);
@@ -44,9 +50,11 @@ class PluginAnimationManager extends StatefulPluginComponent<PluginAnimationMana
     getParams(): PD.Params {
         if (!this._params) {
             this._params = {
-                current: PD.Select(this._animations[0] && this._animations[0].name,
-                    this._animations.map(a => [a.name, a.display.name] as [string, string]),
-                    { label: 'Animation' })
+                current: PD.Select(
+                    this._animations[0] && this._animations[0].name,
+                    this._animations.map((a) => [a.name, a.display.name] as [string, string]),
+                    { label: 'Animation' },
+                ),
             };
         }
         return this._params as any as PD.Params;
@@ -63,7 +71,7 @@ class PluginAnimationManager extends StatefulPluginComponent<PluginAnimationMana
             paramValues: PD.getDefaultValues(params),
             state: {},
             startedTime: -1,
-            lastTime: 0
+            lastTime: 0,
         };
         this.triggerUpdate();
     }
@@ -99,7 +107,11 @@ class PluginAnimationManager extends StatefulPluginComponent<PluginAnimationMana
         await this.start();
     }
 
-    async tick(t: number, isSynchronous?: boolean, animation?: PluginAnimationManager.AnimationInfo) {
+    async tick(
+        t: number,
+        isSynchronous?: boolean,
+        animation?: PluginAnimationManager.AnimationInfo,
+    ) {
         this.currentTime = t;
         if (this.isStopped) return;
 
@@ -170,8 +182,13 @@ class PluginAnimationManager extends StatefulPluginComponent<PluginAnimationMana
         if (this._current.startedTime < 0) this._current.startedTime = t;
         const newState = await this._current.anim.apply(
             this._current.state,
-            { lastApplied: this._current.lastTime, current: t - this._current.startedTime, animation },
-            { params: this._current.paramValues, plugin: this.context });
+            {
+                lastApplied: this._current.lastTime,
+                current: t - this._current.startedTime,
+                animation,
+            },
+            { params: this._current.paramValues, plugin: this.context },
+        );
 
         if (newState.kind === 'finished') {
             this.stop();
@@ -189,8 +206,10 @@ class PluginAnimationManager extends StatefulPluginComponent<PluginAnimationMana
             state: this.state,
             current: {
                 paramValues: this._current.paramValues,
-                state: this._current.anim.stateSerialization ? this._current.anim.stateSerialization.toJSON(this._current.state) : this._current.state
-            }
+                state: this._current.anim.stateSerialization
+                    ? this._current.anim.stateSerialization.toJSON(this._current.state)
+                    : this._current.state,
+            },
         };
     }
 
@@ -229,29 +248,29 @@ class PluginAnimationManager extends StatefulPluginComponent<PluginAnimationMana
 
 namespace PluginAnimationManager {
     export interface AnimationInfo {
-        currentFrame: number,
-        frameCount: number
+        currentFrame: number;
+        frameCount: number;
     }
 
     export interface Current {
-        anim: PluginStateAnimation
-        params: PD.Params,
-        paramValues: any,
-        state: any,
-        startedTime: number,
-        lastTime: number
+        anim: PluginStateAnimation;
+        params: PD.Params;
+        paramValues: any;
+        state: any;
+        startedTime: number;
+        lastTime: number;
     }
 
     export interface State {
-        params: { current: string },
-        animationState: 'stopped' | 'playing'
+        params: { current: string };
+        animationState: 'stopped' | 'playing';
     }
 
     export interface Snapshot {
-        state: State,
+        state: State;
         current?: {
-            paramValues: any,
-            state: any
-        }
+            paramValues: any;
+            state: any;
+        };
     }
 }

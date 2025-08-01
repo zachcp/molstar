@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StructureElement, Unit, Bond, ElementIndex } from '../../mol-model/structure.ts';
+import { Bond, ElementIndex, StructureElement, Unit } from '../../mol-model/structure.ts';
 import { Location } from '../../mol-model/location.ts';
 import type { SizeTheme } from '../size.ts';
 import { VdwRadius } from '../../mol-model/structure/model/properties/atomic.ts';
@@ -12,12 +12,13 @@ import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { ThemeDataContext } from '../theme.ts';
 
 const DefaultSize = 1;
-const Description = 'Assigns a physical size, i.e. vdW radius for atoms or given radius for coarse spheres.';
+const Description =
+    'Assigns a physical size, i.e. vdW radius for atoms or given radius for coarse spheres.';
 
 export const PhysicalSizeThemeParams = {
-    scale: PD.Numeric(1, { min: 0.1, max: 5, step: 0.1 })
+    scale: PD.Numeric(1, { min: 0.1, max: 5, step: 0.1 }),
 };
-export type PhysicalSizeThemeParams = typeof PhysicalSizeThemeParams
+export type PhysicalSizeThemeParams = typeof PhysicalSizeThemeParams;
 export function getPhysicalSizeThemeParams(ctx: ThemeDataContext) {
     return PhysicalSizeThemeParams; // TODO return copy
 }
@@ -36,7 +37,10 @@ export function getPhysicalRadius(unit: Unit, element: ElementIndex): number {
  * Create attribute data with the physical size of an element,
  * i.e. vdw for atoms and radius for coarse spheres
  */
-export function PhysicalSizeTheme(ctx: ThemeDataContext, props: PD.Values<PhysicalSizeThemeParams>): SizeTheme<PhysicalSizeThemeParams> {
+export function PhysicalSizeTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<PhysicalSizeThemeParams>,
+): SizeTheme<PhysicalSizeThemeParams> {
     const scale = props.scale === void 0 ? 1 : props.scale;
 
     function size(location: Location): number {
@@ -46,7 +50,7 @@ export function PhysicalSizeTheme(ctx: ThemeDataContext, props: PD.Values<Physic
         } else if (Bond.isLocation(location)) {
             size = scale * Math.min(
                 getPhysicalRadius(location.aUnit, location.aUnit.elements[location.aIndex]),
-                getPhysicalRadius(location.bUnit, location.bUnit.elements[location.bIndex])
+                getPhysicalRadius(location.bUnit, location.bUnit.elements[location.bIndex]),
             );
         } else {
             size = scale * DefaultSize;
@@ -59,7 +63,7 @@ export function PhysicalSizeTheme(ctx: ThemeDataContext, props: PD.Values<Physic
         granularity: 'group',
         size,
         props,
-        description: Description
+        description: Description,
     };
 }
 
@@ -70,5 +74,5 @@ export const PhysicalSizeThemeProvider: SizeTheme.Provider<PhysicalSizeThemePara
     factory: PhysicalSizeTheme,
     getParams: getPhysicalSizeThemeParams,
     defaultValues: PD.getDefaultValues(PhysicalSizeThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
 };

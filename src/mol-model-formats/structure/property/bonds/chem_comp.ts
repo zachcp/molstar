@@ -14,8 +14,8 @@ import { Table } from '../../../../mol-data/db.ts';
 import { FormatPropertyProvider } from '../../common/property.ts';
 
 export interface ComponentBond {
-    readonly data: Table<mmCIF_Schema['chem_comp_bond']>
-    readonly entries: ReadonlyMap<string, ComponentBond.Entry>
+    readonly data: Table<mmCIF_Schema['chem_comp_bond']>;
+    readonly entries: ReadonlyMap<string, ComponentBond.Entry>;
 }
 
 export namespace ComponentBond {
@@ -39,14 +39,17 @@ export namespace ComponentBond {
                     }
 
                     return CifWriter.Category.ofTable(chem_comp_bond, indices);
-                }
-            }]
-        }
+                },
+            }],
+        },
     };
 
     export const Provider = FormatPropertyProvider.create<ComponentBond>(Descriptor);
 
-    export function chemCompBondFromTable(model: Model, table: Table<mmCIF_Schema['chem_comp_bond']>): Table<mmCIF_Schema['chem_comp_bond']> {
+    export function chemCompBondFromTable(
+        model: Model,
+        table: Table<mmCIF_Schema['chem_comp_bond']>,
+    ): Table<mmCIF_Schema['chem_comp_bond']> {
         return Table.pick(table, mmCIF_Schema.chem_comp_bond, (i: number) => {
             return model.properties.chemicalComponentMap.has(table.comp_id.value(i));
         });
@@ -65,7 +68,15 @@ export namespace ComponentBond {
             return e;
         }
 
-        const { comp_id, atom_id_1, atom_id_2, value_order, pdbx_aromatic_flag, _rowCount, pdbx_ordinal } = data;
+        const {
+            comp_id,
+            atom_id_1,
+            atom_id_2,
+            value_order,
+            pdbx_aromatic_flag,
+            _rowCount,
+            pdbx_ordinal,
+        } = data;
 
         let entry = addEntry(comp_id.value(0)!);
         for (let i = 0; i < _rowCount; i++) {
@@ -84,10 +95,18 @@ export namespace ComponentBond {
             let ord = 1;
             if (aromatic) flags |= BondType.Flag.Aromatic;
             switch (order.toLowerCase()) {
-                case 'delo': flags |= BondType.Flag.Aromatic; break;
-                case 'doub': ord = 2; break;
-                case 'trip': ord = 3; break;
-                case 'quad': ord = 4; break;
+                case 'delo':
+                    flags |= BondType.Flag.Aromatic;
+                    break;
+                case 'doub':
+                    ord = 2;
+                    break;
+                case 'trip':
+                    ord = 3;
+                    break;
+                case 'quad':
+                    ord = 4;
+                    break;
             }
 
             entry.add(nameA, nameB, ord, flags, key);
@@ -97,7 +116,8 @@ export namespace ComponentBond {
     }
 
     export class Entry {
-        readonly map: Map<string, Map<string, { order: number, flags: number, key: number }>> = new Map();
+        readonly map: Map<string, Map<string, { order: number; flags: number; key: number }>> =
+            new Map();
 
         add(a: string, b: string, order: number, flags: number, key: number, swap = true) {
             const e = this.map.get(a);
@@ -107,7 +127,7 @@ export namespace ComponentBond {
                     e.set(b, { order, flags, key });
                 }
             } else {
-                const map = new Map<string, { order: number, flags: number, key: number }>();
+                const map = new Map<string, { order: number; flags: number; key: number }>();
                 map.set(b, { order, flags, key });
                 this.map.set(a, map);
             }
@@ -115,6 +135,6 @@ export namespace ComponentBond {
             if (swap) this.add(b, a, order, flags, key, false);
         }
 
-        constructor(public readonly id: string) { }
+        constructor(public readonly id: string) {}
     }
 }

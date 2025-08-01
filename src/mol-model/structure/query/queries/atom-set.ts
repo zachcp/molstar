@@ -14,11 +14,9 @@ import { StructureSelection } from '../selection.ts';
 import { getCurrentStructureProperties } from './filters.ts';
 import { QueryContext, QueryFn } from '../context.ts';
 
-
 export function atomCount(ctx: QueryContext) {
     return ctx.currentStructure.elementCount;
 }
-
 
 export function countQuery(query: StructureQuery) {
     return (ctx: QueryContext) => {
@@ -33,4 +31,3 @@ export function propertySet(prop: QueryFn<any>) {
         return getCurrentStructureProperties(ctx, prop, set);
     };
 }
-

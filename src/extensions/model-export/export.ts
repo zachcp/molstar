@@ -20,10 +20,13 @@ export const ModelExport = {
     },
     setStructureName(structure: Structure, name: string) {
         return structure.inheritedPropertyData[ModelExportNameProp] = name;
-    }
+    },
 };
 
-export async function exportHierarchy(plugin: PluginContext, options?: { format?: 'cif' | 'bcif' }) {
+export async function exportHierarchy(
+    plugin: PluginContext,
+    options?: { format?: 'cif' | 'bcif' },
+) {
     try {
         await plugin.runTask(_exportHierarchy(plugin, options), { useOverlay: true });
     } catch (e) {
@@ -33,7 +36,7 @@ export async function exportHierarchy(plugin: PluginContext, options?: { format?
 }
 
 function _exportHierarchy(plugin: PluginContext, options?: { format?: 'cif' | 'bcif' }) {
-    return Task.create('Export', async ctx => {
+    return Task.create('Export', async (ctx) => {
         await ctx.update({ message: 'Exporting...', isIndeterminate: true, canAbort: false });
 
         const format = options?.format ?? 'cif';
@@ -46,11 +49,15 @@ function _exportHierarchy(plugin: PluginContext, options?: { format?: 'cif' | 'b
             const s = _s.transform?.cell.obj?.data ?? _s.cell.obj?.data;
             if (!s) continue;
             if (s.models.length > 1) {
-                plugin.log.warn(`[Export] Skipping ${_s.cell.obj?.label}: Multimodel exports not supported.`);
+                plugin.log.warn(
+                    `[Export] Skipping ${_s.cell.obj?.label}: Multimodel exports not supported.`,
+                );
                 continue;
             }
-            if (s.units.some(u => !Unit.isAtomic(u))) {
-                plugin.log.warn(`[Export] Skipping ${_s.cell.obj?.label}: Non-atomic model exports not supported.`);
+            if (s.units.some((u) => !Unit.isAtomic(u))) {
+                plugin.log.warn(
+                    `[Export] Skipping ${_s.cell.obj?.label}: Non-atomic model exports not supported.`,
+                );
                 continue;
             }
 
@@ -61,17 +68,26 @@ function _exportHierarchy(plugin: PluginContext, options?: { format?: 'cif' | 'b
                 : `${name}.${format}`;
             entryMap.set(name, (entryMap.get(name) ?? 0) + 1);
 
-            await ctx.update({ message: `Exporting ${name}...`, isIndeterminate: true, canAbort: false });
+            await ctx.update({
+                message: `Exporting ${name}...`,
+                isIndeterminate: true,
+                canAbort: false,
+            });
             if (s.elementCount > 100000) {
                 // Give UI chance to update, only needed for larger structures.
-                await new Promise(res => setTimeout(res, 50));
+                await new Promise((res) => setTimeout(res, 50));
             }
 
             try {
-                files.push([fileName, to_mmCIF(name, s, format === 'bcif', { copyAllCategories: true })]);
+                files.push([
+                    fileName,
+                    to_mmCIF(name, s, format === 'bcif', { copyAllCategories: true }),
+                ]);
             } catch (e) {
                 if (format === 'cif' && s.elementCount > 2000000) {
-                    plugin.log.warn(`[Export] The structure might be too big to be exported as Text CIF, consider using the BinaryCIF format instead.`);
+                    plugin.log.warn(
+                        `[Export] The structure might be too big to be exported as Text CIF, consider using the BinaryCIF format instead.`,
+                    );
                 }
                 throw e;
             }
@@ -90,9 +106,16 @@ function _exportHierarchy(plugin: PluginContext, options?: { format?: 'cif' | 'b
                     zipData[fn] = bytes;
                 }
             }
-            await ctx.update({ message: `Compressing Data...`, isIndeterminate: true, canAbort: false });
+            await ctx.update({
+                message: `Compressing Data...`,
+                isIndeterminate: true,
+                canAbort: false,
+            });
             const buffer = await zip(ctx, zipData);
-            download(new Blob([new Uint8Array(buffer, 0, buffer.byteLength)]), `structures_${getFormattedTime()}.zip`);
+            download(
+                new Blob([new Uint8Array(buffer, 0, buffer.byteLength)]),
+                `structures_${getFormattedTime()}.zip`,
+            );
         }
 
         plugin.log.info(`[Export] Done.`);

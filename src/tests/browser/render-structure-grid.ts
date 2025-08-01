@@ -6,7 +6,7 @@
  */
 
 import { AssetManager } from '../../mol-util/assets.ts';
-import { Canvas3D, Canvas3DProps, Canvas3DContext } from '../../mol-canvas3d/canvas3d.ts';
+import { Canvas3D, Canvas3DContext, Canvas3DProps } from '../../mol-canvas3d/canvas3d.ts';
 import { resizeCanvas } from '../../mol-canvas3d/util.ts';
 import { parseSdf as _parseSdf, SdfFile } from '../../mol-io/reader/sdf/parser.ts';
 import { Structure } from '../../mol-model/structure.ts';
@@ -33,7 +33,10 @@ async function parseSdf(sdf: string): Promise<SdfFile> {
     }
 }
 
-function getRepr<P extends PD.Params>(provider: StructureRepresentationProvider<P>, reprCtx: RepresentationContext) {
+function getRepr<P extends PD.Params>(
+    provider: StructureRepresentationProvider<P>,
+    reprCtx: RepresentationContext,
+) {
     return provider.factory(reprCtx, provider.getParams);
 }
 
@@ -58,13 +61,13 @@ function main() {
         6440397,
         2244,
         2519,
-        241
+        241,
     ];
 
     const reprCtx: RepresentationContext = {
         webgl: canvas3dContext.webgl,
         colorThemeRegistry: ColorTheme.createRegistry(),
-        sizeThemeRegistry: SizeTheme.createRegistry()
+        sizeThemeRegistry: SizeTheme.createRegistry(),
     };
 
     for (let i = 0; i < cids.length; i++) {
@@ -77,10 +80,10 @@ function main() {
                 y: iy / 2,
                 width: 0.5,
                 height: 0.5,
-            }
+            },
         }, {
-            adjustCylinderLength: ix === 0
-        }).then(canvas3d => {
+            adjustCylinderLength: ix === 0,
+        }).then((canvas3d) => {
             canvas3ds.push(canvas3d);
         });
     }
@@ -91,7 +94,7 @@ async function addViewer(
     reprCtx: RepresentationContext,
     cid: number,
     viewport: Canvas3DProps['viewport'],
-    reprValues: Partial<typeof BallAndStickRepresentationProvider.defaultValues>
+    reprValues: Partial<typeof BallAndStickRepresentationProvider.defaultValues>,
 ) {
     const file = await parseSdf(await downloadPubChemSdf(cid));
     const models = await trajectoryFromSdf(file.compounds[0]).run();
@@ -102,14 +105,14 @@ async function addViewer(
     const repr = getRepr(BallAndStickRepresentationProvider, reprCtx);
     repr.setTheme({
         color: reprCtx.colorThemeRegistry.create('element-symbol', { structure }, {
-            carbonColor: { name: 'element-symbol' }
+            carbonColor: { name: 'element-symbol' },
         } as ColorTheme.BuiltInParams<'element-symbol'>),
-        size: reprCtx.sizeThemeRegistry.create('physical', { structure })
+        size: reprCtx.sizeThemeRegistry.create('physical', { structure }),
     });
 
     await repr.createOrUpdate({
         ...BallAndStickRepresentationProvider.defaultValues,
-        ...reprValues
+        ...reprValues,
     }, structure).run();
 
     canvas3d.add(repr);

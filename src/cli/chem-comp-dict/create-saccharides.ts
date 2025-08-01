@@ -42,7 +42,9 @@ function writeSaccharideNamesFile(filePath: string, ionNames: string[]) {
  * @author molstar/cli/chem-comp-dict/create-saccharides
  */
 
-export const SaccharideNames = new Set(${JSON.stringify(ionNames).replace(/"/g, "'").replace(/,/g, ', ')});
+export const SaccharideNames = new Set(${
+        JSON.stringify(ionNames).replace(/"/g, "'").replace(/,/g, ', ')
+    });
 `;
     writeFile(filePath, output);
 }
@@ -59,23 +61,23 @@ async function run(out: string, options = DefaultDataOptions) {
 
 const parser = new argparse.ArgumentParser({
     add_help: true,
-    description: 'Extract and save SaccharideNames from CCD.'
+    description: 'Extract and save SaccharideNames from CCD.',
 });
 parser.add_argument('out', {
-    help: 'Generated file output path.'
+    help: 'Generated file output path.',
 });
 parser.add_argument('--forceDownload', '-f', {
     action: 'store_true',
-    help: 'Force download of CCD and PVCD.'
+    help: 'Force download of CCD and PVCD.',
 });
 parser.add_argument('--ccdUrl', '-c', {
     help: 'Fetch the CCD from a custom URL. This forces download of the CCD.',
-    required: false
+    required: false,
 });
 interface Args {
-    out: string,
-    forceDownload?: boolean,
-    ccdUrl?: string
+    out: string;
+    forceDownload?: boolean;
+    ccdUrl?: string;
 }
 const args: Args = parser.parse_args();
 

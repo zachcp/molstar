@@ -5,19 +5,51 @@
  */
 
 import { createPrimitive, Primitive } from './primitive.ts';
-import { createCage, Cage } from './cage.ts';
+import { Cage, createCage } from './cage.ts';
 
 export const tetrahedronVertices: ReadonlyArray<number> = [
-    0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5
+    0.5,
+    0.5,
+    0.5,
+    -0.5,
+    -0.5,
+    0.5,
+    -0.5,
+    0.5,
+    -0.5,
+    0.5,
+    -0.5,
+    -0.5,
 ];
 
 export const tetrahedronIndices: ReadonlyArray<number> = [
-    2, 1, 0, 0, 3, 2, 1, 3, 0, 2, 3, 1
+    2,
+    1,
+    0,
+    0,
+    3,
+    2,
+    1,
+    3,
+    0,
+    2,
+    3,
+    1,
 ];
 
 const tetrahedronEdges: ReadonlyArray<number> = [
-    0, 1, 1, 2, 2, 0,
-    0, 3, 1, 3, 2, 3,
+    0,
+    1,
+    1,
+    2,
+    2,
+    0,
+    0,
+    3,
+    1,
+    3,
+    2,
+    3,
 ];
 
 let tetrahedron: Primitive;

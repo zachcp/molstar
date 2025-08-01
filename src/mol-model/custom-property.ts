@@ -10,20 +10,23 @@ import { CifExportContext } from './structure/export/mmcif.ts';
 import { QuerySymbolRuntime } from '../mol-script/runtime/query/compiler.ts';
 import { UUID } from '../mol-util/index.ts';
 
-export { CustomPropertyDescriptor, CustomProperties };
+export { CustomProperties, CustomPropertyDescriptor };
 
-interface CustomPropertyDescriptor<ExportCtx = CifExportContext, Symbols extends { [name: string]: QuerySymbolRuntime } = { }> {
-    readonly name: string,
+interface CustomPropertyDescriptor<
+    ExportCtx = CifExportContext,
+    Symbols extends { [name: string]: QuerySymbolRuntime } = {},
+> {
+    readonly name: string;
 
     cifExport?: {
         // Prefix enforced during export.
-        prefix: string,
-        context?: (ctx: CifExportContext) => ExportCtx | undefined,
-        categories: CifWriter.Category<ExportCtx>[]
-    },
+        prefix: string;
+        context?: (ctx: CifExportContext) => ExportCtx | undefined;
+        categories: CifWriter.Category<ExportCtx>[];
+    };
 
     // TODO: add aliases when lisp-like mol-script is done
-    symbols?: Symbols
+    symbols?: Symbols;
 }
 
 function CustomPropertyDescriptor<Ctx, Desc extends CustomPropertyDescriptor<Ctx>>(desc: Desc) {
@@ -42,7 +45,7 @@ namespace CustomPropertyDescriptor {
 /**
  * Anything with a dispose method, used to despose of data assets or webgl resources
  */
-type Asset = { dispose: () => void }
+type Asset = { dispose: () => void };
 
 class CustomProperties {
     private _list: CustomPropertyDescriptor[] = [];
@@ -87,7 +90,7 @@ class CustomProperties {
 
     /** Disposes of all assets of all props */
     dispose() {
-        this._assets.forEach(assets => {
+        this._assets.forEach((assets) => {
             for (const a of assets) a.dispose();
         });
     }

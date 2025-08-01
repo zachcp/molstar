@@ -8,13 +8,13 @@
  */
 
 import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
-import { TextureSpec, Values, UniformSpec, DefineSpec } from '../../mol-gl/renderable/schema.ts';
+import { DefineSpec, TextureSpec, UniformSpec, Values } from '../../mol-gl/renderable/schema.ts';
 import { ShaderCode } from '../../mol-gl/shader-code.ts';
 import { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { Texture } from '../../mol-gl/webgl/texture.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
-import { createComputeRenderable, ComputeRenderable } from '../../mol-gl/renderable.ts';
+import { ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
 import { Mat4, Vec2 } from '../../mol-math/linear-algebra.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
@@ -29,10 +29,12 @@ export const OutlineParams = {
     scale: PD.Numeric(1, { min: 1, max: 5, step: 1 }),
     threshold: PD.Numeric(0.33, { min: 0.01, max: 1, step: 0.01 }),
     color: PD.Color(Color(0x000000)),
-    includeTransparent: PD.Boolean(true, { description: 'Whether to show outline for transparent objects' }),
+    includeTransparent: PD.Boolean(true, {
+        description: 'Whether to show outline for transparent objects',
+    }),
 };
 
-export type OutlineProps = PD.Values<typeof OutlineParams>
+export type OutlineProps = PD.Values<typeof OutlineParams>;
 
 export class OutlinePass {
     static isEnabled(props: PostprocessingProps) {
@@ -42,20 +44,39 @@ export class OutlinePass {
     readonly target: RenderTarget;
     private readonly renderable: OutlinesRenderable;
 
-    constructor(private readonly webgl: WebGLContext, width: number, height: number, depthTextureTransparent: Texture, depthTextureOpaque: Texture) {
+    constructor(
+        private readonly webgl: WebGLContext,
+        width: number,
+        height: number,
+        depthTextureTransparent: Texture,
+        depthTextureOpaque: Texture,
+    ) {
         this.target = webgl.createRenderTarget(width, height, false);
-        this.renderable = getOutlinesRenderable(webgl, depthTextureOpaque, depthTextureTransparent, true);
+        this.renderable = getOutlinesRenderable(
+            webgl,
+            depthTextureOpaque,
+            depthTextureTransparent,
+            true,
+        );
     }
 
     setSize(width: number, height: number) {
         const [w, h] = this.renderable.values.uTexSize.ref.value;
         if (width !== w || height !== h) {
             this.target.setSize(width, height);
-            ValueCell.update(this.renderable.values.uTexSize, Vec2.set(this.renderable.values.uTexSize.ref.value, width, height));
+            ValueCell.update(
+                this.renderable.values.uTexSize,
+                Vec2.set(this.renderable.values.uTexSize.ref.value, width, height),
+            );
         }
     }
 
-    update(camera: ICamera, props: OutlineProps, depthTextureTransparent: Texture, depthTextureOpaque: Texture) {
+    update(
+        camera: ICamera,
+        props: OutlineProps,
+        depthTextureTransparent: Texture,
+        depthTextureOpaque: Texture,
+    ) {
         let needsUpdate = false;
 
         const orthographic = camera.state.mode === 'orthographic' ? 1 : 0;
@@ -118,9 +139,14 @@ export const OutlinesSchema = {
     uOutlineThreshold: UniformSpec('f'),
     dTransparentOutline: DefineSpec('boolean'),
 };
-export type OutlinesRenderable = ComputeRenderable<Values<typeof OutlinesSchema>>
+export type OutlinesRenderable = ComputeRenderable<Values<typeof OutlinesSchema>>;
 
-export function getOutlinesRenderable(ctx: WebGLContext, depthTextureOpaque: Texture, depthTextureTransparent: Texture, transparentOutline: boolean): OutlinesRenderable {
+export function getOutlinesRenderable(
+    ctx: WebGLContext,
+    depthTextureOpaque: Texture,
+    depthTextureTransparent: Texture,
+    transparentOutline: boolean,
+): OutlinesRenderable {
     const width = depthTextureOpaque.getWidth();
     const height = depthTextureOpaque.getHeight();
 

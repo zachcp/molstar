@@ -9,4 +9,9 @@ export { SbNcbrPartialCharges } from './partial-charges/behavior.ts';
 export { SbNcbrPartialChargesPreset } from './partial-charges/preset.ts';
 export { SbNcbrPartialChargesPropertyProvider } from './partial-charges/property.ts';
 export { SbNcbrTunnels } from './tunnels/behavior.ts';
-export { TunnelsFromRawData, SelectTunnel, TunnelFromRawData, TunnelShapeProvider } from './tunnels/representation.ts';
+export {
+    SelectTunnel,
+    TunnelFromRawData,
+    TunnelsFromRawData,
+    TunnelShapeProvider,
+} from './tunnels/representation.ts';

@@ -31,12 +31,18 @@ import { Viewport } from '../camera/util.ts';
 // TODO add scale line/grid
 
 const AxesParams = {
-    alpha: PD.Numeric(0.51, { min: 0, max: 1, step: 0.01 }, { isEssential: true, label: 'Opacity' }),
+    alpha: PD.Numeric(0.51, { min: 0, max: 1, step: 0.01 }, {
+        isEssential: true,
+        label: 'Opacity',
+    }),
     colorX: PD.Color(ColorNames.red, { isEssential: true }),
     colorY: PD.Color(ColorNames.green, { isEssential: true }),
     colorZ: PD.Color(ColorNames.blue, { isEssential: true }),
     scale: PD.Numeric(0.33, { min: 0.1, max: 2, step: 0.1 }, { isEssential: true }),
-    location: PD.Select('bottom-left', PD.arrayToOptions(['bottom-left', 'bottom-right', 'top-left', 'top-right'] as const)),
+    location: PD.Select(
+        'bottom-left',
+        PD.arrayToOptions(['bottom-left', 'bottom-right', 'top-left', 'top-right'] as const),
+    ),
     locationOffsetX: PD.Numeric(0),
     locationOffsetY: PD.Numeric(0),
     originColor: PD.Color(ColorNames.grey),
@@ -55,23 +61,23 @@ const AxesParams = {
     labelOpacity: PD.Numeric(1, { min: 0, max: 1, step: 0.01 }),
     labelScale: PD.Numeric(0.25, { min: 0.1, max: 1.0, step: 0.01 }),
 };
-type AxesParams = typeof AxesParams
-type AxesProps = PD.Values<AxesParams>
+type AxesParams = typeof AxesParams;
+type AxesProps = PD.Values<AxesParams>;
 
 export const CameraHelperParams = {
     axes: PD.MappedStatic('on', {
         on: PD.Group(AxesParams),
-        off: PD.Group({})
+        off: PD.Group({}),
     }, { cycle: true, description: 'Show camera orientation axes' }),
 };
-export type CameraHelperParams = typeof CameraHelperParams
-export type CameraHelperProps = PD.Values<CameraHelperParams>
+export type CameraHelperParams = typeof CameraHelperParams;
+export type CameraHelperProps = PD.Values<CameraHelperParams>;
 
 export class CameraHelper {
     scene: Scene;
     camera: Camera;
     props: CameraHelperProps = {
-        axes: { name: 'off', params: {} }
+        axes: { name: 'off', params: {} },
     };
 
     private meshRenderObject: GraphicsRenderObject | undefined;
@@ -89,7 +95,7 @@ export class CameraHelper {
     }
 
     setProps(props: Partial<CameraHelperProps>) {
-        this.props = produce(this.props, p => {
+        this.props = produce(this.props, (p) => {
             if (props.axes !== undefined) {
                 p.axes.name = props.axes.name;
                 if (props.axes.name === 'on') {
@@ -111,7 +117,12 @@ export class CameraHelper {
                     this.scene.commit();
 
                     Vec3.set(this.camera.position, 0, 0, params.scale * 200);
-                    Mat4.lookAt(this.camera.view, this.camera.position, this.camera.target, this.camera.up);
+                    Mat4.lookAt(
+                        this.camera.view,
+                        this.camera.position,
+                        this.camera.target,
+                        this.camera.up,
+                    );
 
                     p.axes.params = { ...props.axes.params };
                 }
@@ -125,10 +136,12 @@ export class CameraHelper {
 
     getLoci(pickingId: PickingId) {
         const { objectId, groupId, instanceId } = pickingId;
-        if ((
-            (!this.meshRenderObject || objectId !== this.meshRenderObject.id) &&
-            (!this.textRenderObject || objectId !== this.textRenderObject.id)
-        ) || groupId === CameraHelperAxis.None) return EmptyLoci;
+        if (
+            (
+                (!this.meshRenderObject || objectId !== this.meshRenderObject.id) &&
+                (!this.textRenderObject || objectId !== this.textRenderObject.id)
+            ) || groupId === CameraHelperAxis.None
+        ) return EmptyLoci;
         return CameraAxesLoci(this, groupId, instanceId);
     }
 
@@ -181,29 +194,41 @@ export class CameraHelper {
         const ox = this.props.axes.params.locationOffsetX * this.pixelRatio;
         const oy = this.props.axes.params.locationOffsetY * this.pixelRatio;
         if (l === 'bottom-left') {
-            Mat4.setTranslation(this.scene.view, Vec3.create(
-                -camera.viewport.width / 2 + r + ox,
-                -camera.viewport.height / 2 + r + oy,
-                0
-            ));
+            Mat4.setTranslation(
+                this.scene.view,
+                Vec3.create(
+                    -camera.viewport.width / 2 + r + ox,
+                    -camera.viewport.height / 2 + r + oy,
+                    0,
+                ),
+            );
         } else if (l === 'bottom-right') {
-            Mat4.setTranslation(this.scene.view, Vec3.create(
-                camera.viewport.width / 2 - r - ox,
-                -camera.viewport.height / 2 + r + oy,
-                0
-            ));
+            Mat4.setTranslation(
+                this.scene.view,
+                Vec3.create(
+                    camera.viewport.width / 2 - r - ox,
+                    -camera.viewport.height / 2 + r + oy,
+                    0,
+                ),
+            );
         } else if (l === 'top-left') {
-            Mat4.setTranslation(this.scene.view, Vec3.create(
-                -camera.viewport.width / 2 + r + ox,
-                camera.viewport.height / 2 - r - oy,
-                0
-            ));
+            Mat4.setTranslation(
+                this.scene.view,
+                Vec3.create(
+                    -camera.viewport.width / 2 + r + ox,
+                    camera.viewport.height / 2 - r - oy,
+                    0,
+                ),
+            );
         } else if (l === 'top-right') {
-            Mat4.setTranslation(this.scene.view, Vec3.create(
-                camera.viewport.width / 2 - r - ox,
-                camera.viewport.height / 2 - r - oy,
-                0
-            ));
+            Mat4.setTranslation(
+                this.scene.view,
+                Vec3.create(
+                    camera.viewport.width / 2 - r - ox,
+                    camera.viewport.height / 2 - r - oy,
+                    0,
+                ),
+            );
         } else {
             assertUnreachable(l);
         }
@@ -218,7 +243,7 @@ export enum CameraHelperAxis {
     XY,
     XZ,
     YZ,
-    Origin
+    Origin,
 }
 
 function getAxisLabel(axis: number, cameraHelper: CameraHelper) {
@@ -227,23 +252,35 @@ function getAxisLabel(axis: number, cameraHelper: CameraHelper) {
     const y = a.name === 'on' ? a.params.labelY : 'Y';
     const z = a.name === 'on' ? a.params.labelZ : 'Z';
     switch (axis) {
-        case CameraHelperAxis.X: return `${x} Axis`;
-        case CameraHelperAxis.Y: return `${y} Axis`;
-        case CameraHelperAxis.Z: return `${z} Axis`;
-        case CameraHelperAxis.XY: return `${x}${y} Plane`;
-        case CameraHelperAxis.XZ: return `${x}${z} Plane`;
-        case CameraHelperAxis.YZ: return `${y}${z} Plane`;
-        case CameraHelperAxis.Origin: return 'Origin';
-        default: return 'Axes';
+        case CameraHelperAxis.X:
+            return `${x} Axis`;
+        case CameraHelperAxis.Y:
+            return `${y} Axis`;
+        case CameraHelperAxis.Z:
+            return `${z} Axis`;
+        case CameraHelperAxis.XY:
+            return `${x}${y} Plane`;
+        case CameraHelperAxis.XZ:
+            return `${x}${z} Plane`;
+        case CameraHelperAxis.YZ:
+            return `${y}${z} Plane`;
+        case CameraHelperAxis.Origin:
+            return 'Origin';
+        default:
+            return 'Axes';
     }
 }
 
 function CameraAxesLoci(cameraHelper: CameraHelper, groupId: number, instanceId: number) {
-    return DataLoci('camera-axes', cameraHelper, [{ groupId, instanceId }],
-        void 0 /** bounding sphere */,
-        () => getAxisLabel(groupId, cameraHelper));
+    return DataLoci(
+        'camera-axes',
+        cameraHelper,
+        [{ groupId, instanceId }],
+        void 0, /** bounding sphere */
+        () => getAxisLabel(groupId, cameraHelper),
+    );
 }
-export type CameraAxesLoci = ReturnType<typeof CameraAxesLoci>
+export type CameraAxesLoci = ReturnType<typeof CameraAxesLoci>;
 export function isCameraAxesLoci(x: Loci): x is CameraAxesLoci {
     return x.kind === 'data-loci' && x.tag === 'camera-axes';
 }
@@ -336,17 +373,27 @@ function createAxesMesh(props: AxesProps, mesh?: Mesh) {
 function getAxesMeshShape(props: AxesProps, shape?: Shape<Mesh>) {
     const scale = 100 * props.scale;
     const mesh = createAxesMesh(props, shape?.geometry);
-    mesh.setBoundingSphere(Sphere3D.create(Vec3.create(scale / 2, scale / 2, scale / 2), scale + scale / 4));
+    mesh.setBoundingSphere(
+        Sphere3D.create(Vec3.create(scale / 2, scale / 2, scale / 2), scale + scale / 4),
+    );
     const getColor = (groupId: number) => {
         switch (groupId) {
-            case CameraHelperAxis.X: return props.colorX;
-            case CameraHelperAxis.Y: return props.colorY;
-            case CameraHelperAxis.Z: return props.colorZ;
-            case CameraHelperAxis.XY: return props.planeColorXY;
-            case CameraHelperAxis.XZ: return props.planeColorXZ;
-            case CameraHelperAxis.YZ: return props.planeColorYZ;
-            case CameraHelperAxis.Origin: return props.originColor;
-            default: return ColorNames.grey;
+            case CameraHelperAxis.X:
+                return props.colorX;
+            case CameraHelperAxis.Y:
+                return props.colorY;
+            case CameraHelperAxis.Z:
+                return props.colorZ;
+            case CameraHelperAxis.XY:
+                return props.planeColorXY;
+            case CameraHelperAxis.XZ:
+                return props.planeColorXZ;
+            case CameraHelperAxis.YZ:
+                return props.planeColorYZ;
+            case CameraHelperAxis.Origin:
+                return props.originColor;
+            default:
+                return ColorNames.grey;
         }
     };
     return Shape.create('axes-mesh', {}, mesh, getColor, () => 1, () => '');
@@ -386,10 +433,14 @@ function getAxesTextShape(props: AxesProps, shape?: Shape<Text>) {
     text.setBoundingSphere(Sphere3D.create(Vec3.create(scale / 2, scale / 2, scale / 2), scale));
     const getColor = (groupId: number) => {
         switch (groupId) {
-            case CameraHelperAxis.X: return props.labelColorX;
-            case CameraHelperAxis.Y: return props.labelColorY;
-            case CameraHelperAxis.Z: return props.labelColorZ;
-            default: return ColorNames.grey;
+            case CameraHelperAxis.X:
+                return props.labelColorX;
+            case CameraHelperAxis.Y:
+                return props.labelColorY;
+            case CameraHelperAxis.Z:
+                return props.labelColorZ;
+            default:
+                return ColorNames.grey;
         }
     };
     return Shape.create('axes-text', {}, text, getColor, () => 1, () => '');

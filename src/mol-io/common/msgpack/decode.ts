@@ -18,9 +18,9 @@ export function decodeMsgPack(buffer: Uint8Array) {
 // https://github.com/creationix/msgpack-js
 
 interface State {
-    buffer: Uint8Array,
-    offset: number,
-    dataView: DataView
+    buffer: Uint8Array;
+    offset: number;
+    dataView: DataView;
 }
 
 /**

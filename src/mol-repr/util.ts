@@ -13,15 +13,15 @@ import { Volume } from '../mol-model/volume.ts';
 import { Location } from '../mol-model/location.ts';
 
 export interface VisualUpdateState {
-    updateTransform: boolean
-    updateMatrix: boolean
-    updateColor: boolean
-    updateSize: boolean
-    createGeometry: boolean
-    createNew: boolean
+    updateTransform: boolean;
+    updateMatrix: boolean;
+    updateColor: boolean;
+    updateSize: boolean;
+    createGeometry: boolean;
+    createNew: boolean;
 
     /** holds contextual info, is not reset  */
-    info: { [k: string]: unknown }
+    info: { [k: string]: unknown };
 }
 export namespace VisualUpdateState {
     export function create(): VisualUpdateState {
@@ -33,7 +33,7 @@ export namespace VisualUpdateState {
             createGeometry: false,
             createNew: false,
 
-            info: {}
+            info: {},
         };
     }
     export function reset(state: VisualUpdateState) {
@@ -46,22 +46,22 @@ export namespace VisualUpdateState {
     }
 }
 
-export type LocationCallback = (loc: Location, isSecondary: boolean) => void
+export type LocationCallback = (loc: Location, isSecondary: boolean) => void;
 
 //
 
 export interface QualityProps {
-    quality: VisualQuality
-    detail: number
-    radialSegments: number
-    linearSegments: number
-    resolution: number
-    imageResolution: number
-    probePositions: number
-    doubleSided: boolean
-    xrayShaded: boolean | 'inverted'
-    alpha: number
-    transparentBackfaces: 'off' | 'on' | 'opaque'
+    quality: VisualQuality;
+    detail: number;
+    radialSegments: number;
+    linearSegments: number;
+    resolution: number;
+    imageResolution: number;
+    probePositions: number;
+    doubleSided: boolean;
+    xrayShaded: boolean | 'inverted';
+    alpha: number;
+    transparentBackfaces: 'off' | 'on' | 'opaque';
 }
 
 export const DefaultQualityThresholds = {
@@ -72,11 +72,14 @@ export const DefaultQualityThresholds = {
     highElementCount: 2_000,
     coarseGrainedFactor: 10,
 
-    elementCountFactor: 1
+    elementCountFactor: 1,
 };
-export type QualityThresholds = typeof DefaultQualityThresholds
+export type QualityThresholds = typeof DefaultQualityThresholds;
 
-export function getStructureQuality(structure: Structure, tresholds: Partial<QualityThresholds> = {}): VisualQuality {
+export function getStructureQuality(
+    structure: Structure,
+    tresholds: Partial<QualityThresholds> = {},
+): VisualQuality {
     const t = { ...DefaultQualityThresholds, ...tresholds };
     let score = structure.elementCount * t.elementCountFactor;
     if (structure.isCoarseGrained || structure.isCoarse) score *= t.coarseGrainedFactor;
@@ -207,7 +210,10 @@ export function getQualityProps(props: Partial<QualityProps>, data?: any) {
         resolution = Math.min(resolution, 20);
     }
 
-    if (props.transparentBackfaces === 'off' && ((props.alpha !== undefined && props.alpha < 1) || !!props.xrayShaded)) {
+    if (
+        props.transparentBackfaces === 'off' &&
+        ((props.alpha !== undefined && props.alpha < 1) || !!props.xrayShaded)
+    ) {
         doubleSided = false;
     }
 
@@ -218,6 +224,6 @@ export function getQualityProps(props: Partial<QualityProps>, data?: any) {
         resolution,
         imageResolution,
         probePositions,
-        doubleSided
+        doubleSided,
     };
 }

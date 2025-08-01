@@ -6,12 +6,17 @@
 
 import { Color } from '../mol-util/color/index.ts';
 import { Location } from '../mol-model/location.ts';
-import { ColorType, ColorTypeDirect, ColorTypeGrid, ColorTypeLocation } from '../mol-geo/geometry/color-data.ts';
+import {
+    ColorType,
+    ColorTypeDirect,
+    ColorTypeGrid,
+    ColorTypeLocation,
+} from '../mol-geo/geometry/color-data.ts';
 import { CarbohydrateSymbolColorThemeProvider } from './color/carbohydrate-symbol.ts';
 import { UniformColorThemeProvider } from './color/uniform.ts';
 import { deepEqual } from '../mol-util/index.ts';
 import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
-import { ThemeDataContext, ThemeRegistry, ThemeProvider } from './theme.ts';
+import { ThemeDataContext, ThemeProvider, ThemeRegistry } from './theme.ts';
 import { ChainIdColorThemeProvider } from './color/chain-id.ts';
 import { ElementIndexColorThemeProvider } from './color/element-index.ts';
 import { ElementSymbolColorThemeProvider } from './color/element-symbol.ts';
@@ -52,63 +57,69 @@ import { SortedArray } from '../mol-data/int/sorted-array.ts';
 import { normalize } from '../mol-math/interpolate.ts';
 import { VolumeInstanceColorThemeProvider } from './color/volume-instance.ts';
 
-export type LocationColor = (location: Location, isSecondary: boolean) => Color
+export type LocationColor = (location: Location, isSecondary: boolean) => Color;
 
 export interface ColorVolume {
-    colors: Texture
-    dimension: Vec3
-    transform: Vec4
+    colors: Texture;
+    dimension: Vec3;
+    transform: Vec4;
 }
 
 export { ColorTheme };
 
 type ColorThemeShared<P extends PD.Params, G extends ColorType> = {
-    readonly factory: ColorTheme.Factory<P, G>
-    readonly props: Readonly<PD.Values<P>>
+    readonly factory: ColorTheme.Factory<P, G>;
+    readonly props: Readonly<PD.Values<P>>;
     /**
      * if palette is defined, 24bit RGB color value normalized to interval [0, 1]
      * is used as index to the colors
      */
-    readonly palette?: Readonly<ColorTheme.Palette>
-    readonly preferSmoothing?: boolean
-    readonly contextHash?: number
-    readonly description?: string
-    readonly legend?: Readonly<ScaleLegend | TableLegend>
-}
+    readonly palette?: Readonly<ColorTheme.Palette>;
+    readonly preferSmoothing?: boolean;
+    readonly contextHash?: number;
+    readonly description?: string;
+    readonly legend?: Readonly<ScaleLegend | TableLegend>;
+};
 
 type ColorThemeLocation<P extends PD.Params> = {
-    readonly granularity: ColorTypeLocation
-    readonly color: LocationColor
-} & ColorThemeShared<P, ColorTypeLocation>
+    readonly granularity: ColorTypeLocation;
+    readonly color: LocationColor;
+} & ColorThemeShared<P, ColorTypeLocation>;
 
 type ColorThemeGrid<P extends PD.Params> = {
-    readonly granularity: ColorTypeGrid
-    readonly grid: ColorVolume
-} & ColorThemeShared<P, ColorTypeGrid>
+    readonly granularity: ColorTypeGrid;
+    readonly grid: ColorVolume;
+} & ColorThemeShared<P, ColorTypeGrid>;
 
 type ColorThemeDirect<P extends PD.Params> = {
-    readonly granularity: ColorTypeDirect
-} & ColorThemeShared<P, ColorTypeDirect>
+    readonly granularity: ColorTypeDirect;
+} & ColorThemeShared<P, ColorTypeDirect>;
 
-type ColorTheme<P extends PD.Params, G extends ColorType = ColorTypeLocation> =
-    G extends ColorTypeLocation ? ColorThemeLocation<P> :
-        G extends ColorTypeGrid ? ColorThemeGrid<P> :
-            G extends ColorTypeDirect ? ColorThemeDirect<P> : never
+type ColorTheme<P extends PD.Params, G extends ColorType = ColorTypeLocation> = G extends
+    ColorTypeLocation ? ColorThemeLocation<P>
+    : G extends ColorTypeGrid ? ColorThemeGrid<P>
+    : G extends ColorTypeDirect ? ColorThemeDirect<P>
+    : never;
 
 namespace ColorTheme {
     export const Category = ColorThemeCategory;
 
     export interface Palette {
-        colors: Color[],
-        filter?: TextureFilter,
-        domain?: [number, number],
-        defaultColor?: Color,
+        colors: Color[];
+        filter?: TextureFilter;
+        domain?: [number, number];
+        defaultColor?: Color;
     }
 
-    export function Palette(list: ColorListEntry[], kind: 'set' | 'interpolate', domain?: [number, number], defaultColor?: Color): Palette {
+    export function Palette(
+        list: ColorListEntry[],
+        kind: 'set' | 'interpolate',
+        domain?: [number, number],
+        defaultColor?: Color,
+    ): Palette {
         const colors: Color[] = [];
 
-        const hasOffsets = list.every(c => Array.isArray(c));
+        const hasOffsets = list.every((c) => Array.isArray(c));
         if (hasOffsets) {
             let maxPrecision = 0;
             for (const e of list) {
@@ -122,8 +133,8 @@ namespace ColorTheme {
             const sorted = [...list] as [Color, number][];
             sorted.sort((a, b) => a[1] - b[1]);
 
-            const src = sorted.map(c => c[0]);
-            const values = SortedArray.ofSortedArray(sorted.map(c => c[1]));
+            const src = sorted.map((c) => c[0]);
+            const values = SortedArray.ofSortedArray(sorted.map((c) => c[1]));
 
             const _off: number[] = [];
             for (let i = 0, il = values.length - 1; i < il; ++i) {
@@ -154,27 +165,46 @@ namespace ColorTheme {
 
     export const PaletteScale = (1 << 24) - 2; // reserve (1 << 24) - 1 for undefiend values
 
-    export type Props = { [k: string]: any }
-    export type Factory<P extends PD.Params, G extends ColorType> = (ctx: ThemeDataContext, props: PD.Values<P>) => ColorTheme<P, G>
+    export type Props = { [k: string]: any };
+    export type Factory<P extends PD.Params, G extends ColorType> = (
+        ctx: ThemeDataContext,
+        props: PD.Values<P>,
+    ) => ColorTheme<P, G>;
     export const EmptyFactory = () => Empty;
     const EmptyColor = Color(0xCCCCCC);
     export const Empty: ColorTheme<{}> = {
         factory: EmptyFactory,
         granularity: 'uniform',
         color: () => EmptyColor,
-        props: {}
+        props: {},
     };
 
     export function areEqual(themeA: ColorTheme<any, any>, themeB: ColorTheme<any, any>) {
-        return themeA.contextHash === themeB.contextHash && themeA.factory === themeB.factory && deepEqual(themeA.props, themeB.props);
+        return themeA.contextHash === themeB.contextHash && themeA.factory === themeB.factory &&
+            deepEqual(themeA.props, themeB.props);
     }
 
-    export interface Provider<P extends PD.Params = any, Id extends string = string, G extends ColorType = ColorType> extends ThemeProvider<ColorTheme<P, G>, P, Id, G> { }
-    export const EmptyProvider: Provider<{}> = { name: '', label: '', category: '', factory: EmptyFactory, getParams: () => ({}), defaultValues: {}, isApplicable: () => true };
+    export interface Provider<
+        P extends PD.Params = any,
+        Id extends string = string,
+        G extends ColorType = ColorType,
+    > extends ThemeProvider<ColorTheme<P, G>, P, Id, G> {}
+    export const EmptyProvider: Provider<{}> = {
+        name: '',
+        label: '',
+        category: '',
+        factory: EmptyFactory,
+        getParams: () => ({}),
+        defaultValues: {},
+        isApplicable: () => true,
+    };
 
-    export type Registry = ThemeRegistry<ColorTheme<any, any>>
+    export type Registry = ThemeRegistry<ColorTheme<any, any>>;
     export function createRegistry() {
-        return new ThemeRegistry(BuiltIn as { [k: string]: Provider<any, any, any> }, EmptyProvider);
+        return new ThemeRegistry(
+            BuiltIn as { [k: string]: Provider<any, any, any> },
+            EmptyProvider,
+        );
     }
 
     export const BuiltIn = {
@@ -212,10 +242,15 @@ namespace ColorTheme {
         'volume-segment': VolumeSegmentColorThemeProvider,
         'volume-value': VolumeValueColorThemeProvider,
     };
-    type _BuiltIn = typeof BuiltIn
-    export type BuiltIn = keyof _BuiltIn
-    export type ParamValues<C extends ColorTheme.Provider<any>> = C extends ColorTheme.Provider<infer P> ? PD.Values<P> : never
-    export type BuiltInParams<T extends BuiltIn> = Partial<ParamValues<_BuiltIn[T]>>
+    type _BuiltIn = typeof BuiltIn;
+    export type BuiltIn = keyof _BuiltIn;
+    export type ParamValues<C extends ColorTheme.Provider<any>> = C extends
+        ColorTheme.Provider<infer P> ? PD.Values<P> : never;
+    export type BuiltInParams<T extends BuiltIn> = Partial<ParamValues<_BuiltIn[T]>>;
 }
 
-export function ColorThemeProvider<P extends PD.Params, Id extends string>(p: ColorTheme.Provider<P, Id>): ColorTheme.Provider<P, Id> { return p; }
+export function ColorThemeProvider<P extends PD.Params, Id extends string>(
+    p: ColorTheme.Provider<P, Id>,
+): ColorTheme.Provider<P, Id> {
+    return p;
+}

@@ -16,12 +16,13 @@ const Spec = {
     'EC': '',
     'ENGINEERED': '',
     'MUTATION': '',
-    'OTHER_DETAILS': ''
+    'OTHER_DETAILS': '',
 };
-type Spec = keyof typeof Spec
+type Spec = keyof typeof Spec;
 
 export function parseCmpnd(lines: Tokens, lineStart: number, lineEnd: number) {
-    const getLine = (n: number) => lines.data.substring(lines.indices[2 * n], lines.indices[2 * n + 1]);
+    const getLine = (n: number) =>
+        lines.data.substring(lines.indices[2 * n], lines.indices[2 * n + 1]);
 
     let currentSpec: Spec | undefined;
     let currentCompound: EntityCompound = { chains: [], description: '' };
@@ -53,7 +54,7 @@ export function parseCmpnd(lines: Tokens, lineStart: number, lineEnd: number) {
         if (currentSpec === 'MOL_ID') {
             currentCompound = {
                 chains: [],
-                description: ''
+                description: '',
             };
             compounds.push(currentCompound);
         } else if (currentSpec === 'MOLECULE') {
@@ -84,7 +85,7 @@ export function parseCmpnd(lines: Tokens, lineStart: number, lineEnd: number) {
         for (const chain of comp.chains) {
             singletons.push({
                 description: comp.description,
-                chains: [chain]
+                chains: [chain],
             });
         }
     }
@@ -92,7 +93,8 @@ export function parseCmpnd(lines: Tokens, lineStart: number, lineEnd: number) {
 }
 
 export function parseHetnam(lines: Tokens, lineStart: number, lineEnd: number) {
-    const getLine = (n: number) => lines.data.substring(lines.indices[2 * n], lines.indices[2 * n + 1]);
+    const getLine = (n: number) =>
+        lines.data.substring(lines.indices[2 * n], lines.indices[2 * n + 1]);
 
     const hetnams = new Map<string, string>();
 

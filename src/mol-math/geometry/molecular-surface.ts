@@ -7,13 +7,13 @@
  * ported from NGL (https://github.com/arose/ngl), licensed under MIT
  */
 
-import { Vec3, Tensor } from '../linear-algebra.ts';
+import { Tensor, Vec3 } from '../linear-algebra.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { RuntimeContext } from '../../mol-task/index.ts';
 import { OrderedSet } from '../../mol-data/int.ts';
 import { PositionData } from './common.ts';
 import { Mat4 } from '../linear-algebra/3d/mat4.ts';
-import { Box3D, GridLookup3D, fillGridDim } from '../geometry.ts';
+import { Box3D, fillGridDim, GridLookup3D } from '../geometry.ts';
 import { BaseGeometry } from '../../mol-geo/geometry/base.ts';
 import { Boundary } from './boundary.ts';
 
@@ -29,7 +29,7 @@ function normalToLine(out: Vec3, p: Vec3) {
     return out;
 }
 
-type AnglesTables = { cosTable: Float32Array, sinTable: Float32Array }
+type AnglesTables = { cosTable: Float32Array; sinTable: Float32Array };
 function getAngleTables(probePositions: number): AnglesTables {
     let theta = 0.0;
     const step = 2 * Math.PI / probePositions;
@@ -47,15 +47,31 @@ function getAngleTables(probePositions: number): AnglesTables {
 //
 
 export const MolecularSurfaceCalculationParams = {
-    probeRadius: PD.Numeric(1.4, { min: 0, max: 10, step: 0.1 }, { description: 'Radius of the probe tracing the molecular surface.' }),
-    resolution: PD.Numeric(0.5, { min: 0.01, max: 20, step: 0.01 }, { description: 'Grid resolution/cell spacing.', ...BaseGeometry.CustomQualityParamInfo }),
-    probePositions: PD.Numeric(36, { min: 12, max: 90, step: 1 }, { description: 'Number of positions tested for probe target intersection.', ...BaseGeometry.CustomQualityParamInfo }),
+    probeRadius: PD.Numeric(1.4, { min: 0, max: 10, step: 0.1 }, {
+        description: 'Radius of the probe tracing the molecular surface.',
+    }),
+    resolution: PD.Numeric(0.5, { min: 0.01, max: 20, step: 0.01 }, {
+        description: 'Grid resolution/cell spacing.',
+        ...BaseGeometry.CustomQualityParamInfo,
+    }),
+    probePositions: PD.Numeric(36, { min: 12, max: 90, step: 1 }, {
+        description: 'Number of positions tested for probe target intersection.',
+        ...BaseGeometry.CustomQualityParamInfo,
+    }),
 };
-export const DefaultMolecularSurfaceCalculationProps = PD.getDefaultValues(MolecularSurfaceCalculationParams);
-export type MolecularSurfaceCalculationProps = typeof DefaultMolecularSurfaceCalculationProps
+export const DefaultMolecularSurfaceCalculationProps = PD.getDefaultValues(
+    MolecularSurfaceCalculationParams,
+);
+export type MolecularSurfaceCalculationProps = typeof DefaultMolecularSurfaceCalculationProps;
 
-
-export async function calcMolecularSurface(ctx: RuntimeContext, position: Required<PositionData>, boundary: Boundary, maxRadius: number, box: Box3D | null, props: MolecularSurfaceCalculationProps) {
+export async function calcMolecularSurface(
+    ctx: RuntimeContext,
+    position: Required<PositionData>,
+    boundary: Boundary,
+    maxRadius: number,
+    box: Box3D | null,
+    props: MolecularSurfaceCalculationProps,
+) {
     // Field generation method adapted from AstexViewer (Mike Hartshorn) by Fred Ludlow.
     // Other parts based heavily on NGL (Alexander Rose) EDT Surface class
 
@@ -351,7 +367,7 @@ export async function calcMolecularSurface(ctx: RuntimeContext, position: Requir
     const gridy = fillGridDim(dimY, minY, resolution);
     const gridz = fillGridDim(dimZ, minZ, resolution);
 
-    const updateChunk = Math.ceil(100000 / ((Math.pow(Math.pow(maxRadius, 3), 3) * scaleFactor)));
+    const updateChunk = Math.ceil(100000 / (Math.pow(Math.pow(maxRadius, 3), 3) * scaleFactor));
     // console.timeEnd('MolecularSurface createState')
 
     // console.time('MolecularSurface projectPoints')

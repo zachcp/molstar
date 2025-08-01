@@ -5,7 +5,11 @@
  */
 
 import { Column, Table } from '../../mol-data/db.ts';
-import { MoleculeType, getElementFromAtomicNumber, ElementSymbol } from '../../mol-model/structure/model/types.ts';
+import {
+    ElementSymbol,
+    getElementFromAtomicNumber,
+    MoleculeType,
+} from '../../mol-model/structure/model/types.ts';
 import { RuntimeContext, Task } from '../../mol-task/index.ts';
 import { createModels } from './basic/parser.ts';
 import { BasicSchema, createBasic } from './basic/schema.ts';
@@ -20,7 +24,10 @@ async function getModels(cube: CubeFile, ctx: RuntimeContext) {
 
     const MOL = Column.ofConst('MOL', cube.atoms.count, Column.Schema.str);
     const A = Column.ofConst('A', cube.atoms.count, Column.Schema.str);
-    const type_symbol = Column.ofArray({ array: Column.mapToArray(atoms.number, n => getElementFromAtomicNumber(n)), schema: Column.Schema.Aliased<ElementSymbol>(Column.Schema.str) });
+    const type_symbol = Column.ofArray({
+        array: Column.mapToArray(atoms.number, (n) => getElementFromAtomicNumber(n)),
+        schema: Column.Schema.Aliased<ElementSymbol>(Column.Schema.str),
+    });
     const seq_id = Column.ofConst(1, atoms.count, Column.Schema.int);
 
     const atom_site = Table.ofPartialColumns(BasicSchema.atom_site, {
@@ -56,7 +63,7 @@ async function getModels(cube: CubeFile, ctx: RuntimeContext) {
     const basic = createBasic({
         entity: entityBuilder.getEntityTable(),
         chem_comp: componentBuilder.getChemCompTable(),
-        atom_site
+        atom_site,
     });
 
     return await createModels(basic, CubeFormat.create(cube), ctx);
@@ -64,7 +71,7 @@ async function getModels(cube: CubeFile, ctx: RuntimeContext) {
 
 //
 
-export type CubeFormat = ModelFormat<CubeFile>
+export type CubeFormat = ModelFormat<CubeFile>;
 
 export namespace CubeFormat {
     export function is(x?: ModelFormat): x is CubeFormat {
@@ -77,5 +84,5 @@ export namespace CubeFormat {
 }
 
 export function trajectoryFromCube(cube: CubeFile): Task<Trajectory> {
-    return Task.create('Parse Cube', ctx => getModels(cube, ctx));
+    return Task.create('Parse Cube', (ctx) => getModels(cube, ctx));
 }

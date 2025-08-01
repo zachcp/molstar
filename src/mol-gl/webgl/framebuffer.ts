@@ -11,16 +11,23 @@ const getNextFramebufferId = idFactory();
 
 function getFramebufferStatusDescription(gl: GLRenderingContext, status: number) {
     switch (status) {
-        case gl.FRAMEBUFFER_COMPLETE: return 'complete';
-        case gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT: return 'incomplete attachment';
-        case gl.FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: return 'incomplete missing attachment';
-        case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS: return 'incomplete dimensions';
-        case gl.FRAMEBUFFER_UNSUPPORTED: return 'unsupported';
+        case gl.FRAMEBUFFER_COMPLETE:
+            return 'complete';
+        case gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+            return 'incomplete attachment';
+        case gl.FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+            return 'incomplete missing attachment';
+        case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
+            return 'incomplete dimensions';
+        case gl.FRAMEBUFFER_UNSUPPORTED:
+            return 'unsupported';
     }
     if (isWebGL2(gl)) {
         switch (status) {
-            case gl.FRAMEBUFFER_INCOMPLETE_MULTISAMPLE: return 'incomplete multisample';
-            case gl.RENDERBUFFER_SAMPLES: return 'renderbuffer samples';
+            case gl.FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+                return 'incomplete multisample';
+            case gl.RENDERBUFFER_SAMPLES:
+                return 'renderbuffer samples';
         }
     }
     return 'unknown error';
@@ -35,11 +42,11 @@ export function checkFramebufferStatus(gl: GLRenderingContext, message?: string)
 }
 
 export interface Framebuffer {
-    readonly id: number
+    readonly id: number;
 
-    bind: () => void
-    reset: () => void
-    destroy: () => void
+    bind: () => void;
+    reset: () => void;
+    destroy: () => void;
 }
 
 function getFramebuffer(gl: GLRenderingContext) {
@@ -66,7 +73,7 @@ export function createFramebuffer(gl: GLRenderingContext): Framebuffer {
             if (destroyed) return;
             gl.deleteFramebuffer(_framebuffer);
             destroyed = true;
-        }
+        },
     };
 }
 
@@ -78,6 +85,6 @@ export function createNullFramebuffer(): Framebuffer {
 
         bind: () => {},
         reset: () => {},
-        destroy: () => {}
+        destroy: () => {},
     };
 }

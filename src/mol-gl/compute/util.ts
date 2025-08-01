@@ -7,7 +7,13 @@
 import { WebGLContext } from '../webgl/context.ts';
 import { createNullTexture, Texture } from '../webgl/texture.ts';
 import { ValueCell } from '../../mol-util/index.ts';
-import { ValueSpec, AttributeSpec, UniformSpec, Values, TextureSpec } from '../renderable/schema.ts';
+import {
+    AttributeSpec,
+    TextureSpec,
+    UniformSpec,
+    Values,
+    ValueSpec,
+} from '../renderable/schema.ts';
 import { Vec2 } from '../../mol-math/linear-algebra.ts';
 import { ShaderCode } from '../shader-code.ts';
 import { copy_frag } from '../shader/copy.frag.ts';
@@ -16,8 +22,18 @@ import { createComputeRenderItem } from '../webgl/render-item.ts';
 import { ComputeRenderable, createComputeRenderable } from '../renderable.ts';
 
 export const QuadPositions = new Float32Array([
-    1.0, 1.0, -1.0, 1.0, -1.0, -1.0, // First triangle
-    -1.0, -1.0, 1.0, -1.0, 1.0, 1.0 // Second triangle
+    1.0,
+    1.0,
+    -1.0,
+    1.0,
+    -1.0,
+    -1.0, // First triangle
+    -1.0,
+    -1.0,
+    1.0,
+    -1.0,
+    1.0,
+    1.0, // Second triangle
 ]);
 
 export const QuadSchema = {
@@ -42,7 +58,7 @@ const CopySchema = {
     uTexSize: UniformSpec('v2'),
 };
 const CopyShaderCode = ShaderCode('copy', quad_vert, copy_frag);
-export type CopyRenderable = ComputeRenderable<Values<typeof CopySchema>>
+export type CopyRenderable = ComputeRenderable<Values<typeof CopySchema>>;
 
 export function createCopyRenderable(ctx: WebGLContext, texture: Texture): CopyRenderable {
     const values: Values<typeof CopySchema> = {
@@ -61,11 +77,17 @@ const SharedCopyName = 'shared-copy';
 
 export function getSharedCopyRenderable(ctx: WebGLContext, texture: Texture) {
     if (!ctx.namedComputeRenderables[SharedCopyName]) {
-        ctx.namedComputeRenderables[SharedCopyName] = createCopyRenderable(ctx, createNullTexture());
+        ctx.namedComputeRenderables[SharedCopyName] = createCopyRenderable(
+            ctx,
+            createNullTexture(),
+        );
     }
     const copy = ctx.namedComputeRenderables[SharedCopyName] as CopyRenderable;
     ValueCell.update(copy.values.tColor, texture);
-    ValueCell.update(copy.values.uTexSize, Vec2.set(copy.values.uTexSize.ref.value, texture.getWidth(), texture.getHeight()));
+    ValueCell.update(
+        copy.values.uTexSize,
+        Vec2.set(copy.values.uTexSize.ref.value, texture.getWidth(), texture.getHeight()),
+    );
     copy.update();
     return copy;
 }
@@ -75,7 +97,11 @@ export function getSharedCopyRenderable(ctx: WebGLContext, texture: Texture) {
 const ReadTextureName = 'read-texture';
 const ReadAlphaTextureName = 'read-alpha-texture';
 
-export function readTexture<T extends Uint8Array | Float32Array | Int32Array = Uint8Array>(ctx: WebGLContext, texture: Texture, array?: T) {
+export function readTexture<T extends Uint8Array | Float32Array | Int32Array = Uint8Array>(
+    ctx: WebGLContext,
+    texture: Texture,
+    array?: T,
+) {
     const { gl, resources } = ctx;
     if (!array && texture.type !== gl.UNSIGNED_BYTE) throw new Error('unsupported texture type');
 
@@ -111,7 +137,12 @@ export function readAlphaTexture(ctx: WebGLContext, texture: Texture) {
     framebuffer.bind();
 
     if (!ctx.namedTextures[ReadAlphaTextureName]) {
-        ctx.namedTextures[ReadAlphaTextureName] = resources.texture('image-uint8', 'rgba', 'ubyte', 'linear');
+        ctx.namedTextures[ReadAlphaTextureName] = resources.texture(
+            'image-uint8',
+            'rgba',
+            'ubyte',
+            'linear',
+        );
     }
     const copyTex = ctx.namedTextures[ReadAlphaTextureName];
     copyTex.define(width, height);

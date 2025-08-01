@@ -19,7 +19,7 @@ export class ModelExportUI extends CollapsableControls<{}, {}> {
         return {
             header: 'Export Models',
             isCollapsed: true,
-            brand: { accent: 'cyan', svg: GetAppSvg }
+            brand: { accent: 'cyan', svg: GetAppSvg },
         };
     }
     protected renderControls(): JSX.Element | null {
@@ -28,7 +28,7 @@ export class ModelExportUI extends CollapsableControls<{}, {}> {
 }
 
 const Params = {
-    format: PD.Select<'cif' | 'bcif'>('cif', [['cif', 'mmCIF'], ['bcif', 'Binary mmCIF']])
+    format: PD.Select<'cif' | 'bcif'>('cif', [['cif', 'mmCIF'], ['bcif', 'Binary mmCIF']]),
 };
 const DefaultParams = PD.getDefaultValues(Params);
 
@@ -42,7 +42,8 @@ function ExportControls({ plugin }: { plugin: PluginContext }) {
     let label: string = 'Nothing to Export';
     if (hierarchy.structures.length === 1) {
         label = 'Export';
-    } if (hierarchy.structures.length > 1) {
+    }
+    if (hierarchy.structures.length > 1) {
         label = 'Export (as ZIP)';
     }
 
@@ -55,15 +56,22 @@ function ExportControls({ plugin }: { plugin: PluginContext }) {
         }
     };
 
-    return <>
-        <ParameterControls params={Params} values={params} onChangeValues={setParams} isDisabled={isBusy || exporting} />
-        <Button
-            onClick={onExport}
-            style={{ marginTop: 1 }}
-            disabled={isBusy || hierarchy.structures.length === 0 || exporting}
-            commit={hierarchy.structures.length ? 'on' : 'off'}
-        >
-            {label}
-        </Button>
-    </>;
+    return (
+        <>
+            <ParameterControls
+                params={Params}
+                values={params}
+                onChangeValues={setParams}
+                isDisabled={isBusy || exporting}
+            />
+            <Button
+                onClick={onExport}
+                style={{ marginTop: 1 }}
+                disabled={isBusy || hierarchy.structures.length === 0 || exporting}
+                commit={hierarchy.structures.length ? 'on' : 'off'}
+            >
+                {label}
+            </Button>
+        </>
+    );
 }

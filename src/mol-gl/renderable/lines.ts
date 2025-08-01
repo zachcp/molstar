@@ -4,10 +4,22 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Renderable, RenderableState, createRenderable } from '../renderable.ts';
+import { createRenderable, Renderable, RenderableState } from '../renderable.ts';
 import { WebGLContext } from '../webgl/context.ts';
 import { createGraphicsRenderItem, Transparency } from '../webgl/render-item.ts';
-import { GlobalUniformSchema, BaseSchema, AttributeSpec, DefineSpec, Values, InternalSchema, SizeSchema, ElementsSpec, InternalValues, GlobalTextureSchema, UniformSpec } from './schema.ts';
+import {
+    AttributeSpec,
+    BaseSchema,
+    DefineSpec,
+    ElementsSpec,
+    GlobalTextureSchema,
+    GlobalUniformSchema,
+    InternalSchema,
+    InternalValues,
+    SizeSchema,
+    UniformSpec,
+    Values,
+} from './schema.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 import { LinesShaderCode } from '../shader-code.ts';
 
@@ -23,16 +35,36 @@ export const LinesSchema = {
     uDoubleSided: UniformSpec('b', 'material'),
     dFlipSided: DefineSpec('boolean'),
 };
-export type LinesSchema = typeof LinesSchema
-export type LinesValues = Values<LinesSchema>
+export type LinesSchema = typeof LinesSchema;
+export type LinesValues = Values<LinesSchema>;
 
-export function LinesRenderable(ctx: WebGLContext, id: number, values: LinesValues, state: RenderableState, materialId: number, transparency: Transparency): Renderable<LinesValues> {
-    const schema = { ...GlobalUniformSchema, ...GlobalTextureSchema, ...InternalSchema, ...LinesSchema };
+export function LinesRenderable(
+    ctx: WebGLContext,
+    id: number,
+    values: LinesValues,
+    state: RenderableState,
+    materialId: number,
+    transparency: Transparency,
+): Renderable<LinesValues> {
+    const schema = {
+        ...GlobalUniformSchema,
+        ...GlobalTextureSchema,
+        ...InternalSchema,
+        ...LinesSchema,
+    };
     const internalValues: InternalValues = {
         uObjectId: ValueCell.create(id),
     };
     const shaderCode = LinesShaderCode;
-    const renderItem = createGraphicsRenderItem(ctx, 'triangles', shaderCode, schema, { ...values, ...internalValues }, materialId, transparency);
+    const renderItem = createGraphicsRenderItem(
+        ctx,
+        'triangles',
+        shaderCode,
+        schema,
+        { ...values, ...internalValues },
+        materialId,
+        transparency,
+    );
 
     return createRenderable(renderItem, values, state);
 }

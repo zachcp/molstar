@@ -31,7 +31,10 @@ export class StructureUnitTransforms {
         for (let i = 0, il = structure.unitSymmetryGroups.length; i < il; ++i) {
             const g = structure.unitSymmetryGroups[i];
             this.groupIndexMap.set(g.hashCode, i);
-            const groupTransforms = this.unitTransforms.subarray(groupOffset, groupOffset + g.units.length * 16);
+            const groupTransforms = this.unitTransforms.subarray(
+                groupOffset,
+                groupOffset + g.units.length * 16,
+            );
             this.groupUnitTransforms.push(groupTransforms);
             for (let j = 0, jl = g.units.length; j < jl; ++j) {
                 this.unitOffsetMap.set(g.units[j].id, groupOffset + j * 16);

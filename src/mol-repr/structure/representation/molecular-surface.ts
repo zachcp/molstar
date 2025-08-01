@@ -4,37 +4,84 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { MolecularSurfaceMeshVisual, MolecularSurfaceMeshParams, StructureMolecularSurfaceMeshVisual } from '../visual/molecular-surface-mesh.ts';
+import {
+    MolecularSurfaceMeshParams,
+    MolecularSurfaceMeshVisual,
+    StructureMolecularSurfaceMeshVisual,
+} from '../visual/molecular-surface-mesh.ts';
 import { UnitsRepresentation } from '../units-representation.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { ComplexRepresentation, StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation.ts';
+import {
+    ComplexRepresentation,
+    StructureRepresentation,
+    StructureRepresentationProvider,
+    StructureRepresentationStateBuilder,
+} from '../representation.ts';
+import {
+    Representation,
+    RepresentationContext,
+    RepresentationParamsGetter,
+} from '../../representation.ts';
 import { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
 import { Structure } from '../../../mol-model/structure.ts';
-import { MolecularSurfaceWireframeParams, MolecularSurfaceWireframeVisual } from '../visual/molecular-surface-wireframe.ts';
+import {
+    MolecularSurfaceWireframeParams,
+    MolecularSurfaceWireframeVisual,
+} from '../visual/molecular-surface-wireframe.ts';
 import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const MolecularSurfaceVisuals = {
-    'molecular-surface-mesh': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, MolecularSurfaceMeshParams>) => UnitsRepresentation('Molecular surface mesh', ctx, getParams, MolecularSurfaceMeshVisual),
-    'structure-molecular-surface-mesh': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, MolecularSurfaceMeshParams>) => ComplexRepresentation('Structure Molecular surface mesh', ctx, getParams, StructureMolecularSurfaceMeshVisual),
-    'molecular-surface-wireframe': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, MolecularSurfaceWireframeParams>) => UnitsRepresentation('Molecular surface wireframe', ctx, getParams, MolecularSurfaceWireframeVisual),
+    'molecular-surface-mesh': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, MolecularSurfaceMeshParams>,
+    ) => UnitsRepresentation('Molecular surface mesh', ctx, getParams, MolecularSurfaceMeshVisual),
+    'structure-molecular-surface-mesh': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, MolecularSurfaceMeshParams>,
+    ) => ComplexRepresentation(
+        'Structure Molecular surface mesh',
+        ctx,
+        getParams,
+        StructureMolecularSurfaceMeshVisual,
+    ),
+    'molecular-surface-wireframe': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, MolecularSurfaceWireframeParams>,
+    ) => UnitsRepresentation(
+        'Molecular surface wireframe',
+        ctx,
+        getParams,
+        MolecularSurfaceWireframeVisual,
+    ),
 };
 
 export const MolecularSurfaceParams = {
     ...MolecularSurfaceMeshParams,
     ...MolecularSurfaceWireframeParams,
-    visuals: PD.MultiSelect(['molecular-surface-mesh'], PD.objectToOptions(MolecularSurfaceVisuals)),
+    visuals: PD.MultiSelect(
+        ['molecular-surface-mesh'],
+        PD.objectToOptions(MolecularSurfaceVisuals),
+    ),
     bumpFrequency: PD.Numeric(1, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
     density: PD.Numeric(0.5, { min: 0, max: 1, step: 0.01 }, BaseGeometry.ShadingCategory),
 };
-export type MolecularSurfaceParams = typeof MolecularSurfaceParams
+export type MolecularSurfaceParams = typeof MolecularSurfaceParams;
 export function getMolecularSurfaceParams(ctx: ThemeRegistryContext, structure: Structure) {
     return MolecularSurfaceParams;
 }
 
-export type MolecularSurfaceRepresentation = StructureRepresentation<MolecularSurfaceParams>
-export function MolecularSurfaceRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, MolecularSurfaceParams>): MolecularSurfaceRepresentation {
-    return Representation.createMulti('Molecular Surface', ctx, getParams, StructureRepresentationStateBuilder, MolecularSurfaceVisuals as unknown as Representation.Def<Structure, MolecularSurfaceParams>);
+export type MolecularSurfaceRepresentation = StructureRepresentation<MolecularSurfaceParams>;
+export function MolecularSurfaceRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, MolecularSurfaceParams>,
+): MolecularSurfaceRepresentation {
+    return Representation.createMulti(
+        'Molecular Surface',
+        ctx,
+        getParams,
+        StructureRepresentationStateBuilder,
+        MolecularSurfaceVisuals as unknown as Representation.Def<Structure, MolecularSurfaceParams>,
+    );
 }
 
 export const MolecularSurfaceRepresentationProvider = StructureRepresentationProvider({
@@ -46,5 +93,5 @@ export const MolecularSurfaceRepresentationProvider = StructureRepresentationPro
     defaultValues: PD.getDefaultValues(MolecularSurfaceParams),
     defaultColorTheme: { name: 'chain-id' },
     defaultSizeTheme: { name: 'physical' },
-    isApplicable: (structure: Structure) => structure.elementCount > 0
+    isApplicable: (structure: Structure) => structure.elementCount > 0,
 });

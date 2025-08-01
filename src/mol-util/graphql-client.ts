@@ -7,27 +7,27 @@
  */
 
 import { RuntimeContext } from '../mol-task/index.ts';
-import { AssetManager, Asset } from './assets.ts';
+import { Asset, AssetManager } from './assets.ts';
 
-type Variables = { [key: string]: any }
+type Variables = { [key: string]: any };
 
 interface GraphQLError {
-    message: string
-    locations: { line: number, column: number }[]
-    path: string[]
+    message: string;
+    locations: { line: number; column: number }[];
+    path: string[];
 }
 
 interface GraphQLResponse {
-    data?: any
-    errors?: GraphQLError[]
-    extensions?: any
-    status: number
-    [key: string]: any
+    data?: any;
+    errors?: GraphQLError[];
+    extensions?: any;
+    status: number;
+    [key: string]: any;
 }
 
 interface GraphQLRequestContext {
-    query: string
-    variables?: Variables
+    query: string;
+    variables?: Variables;
 }
 
 export class ClientError extends Error {
@@ -35,7 +35,9 @@ export class ClientError extends Error {
     request: GraphQLRequestContext;
 
     constructor(response: GraphQLResponse, request: GraphQLRequestContext) {
-        const message = `${ClientError.extractMessage(response)}: ${JSON.stringify({ response, request })}`;
+        const message = `${ClientError.extractMessage(response)}: ${
+            JSON.stringify({ response, request })
+        }`;
 
         super(message);
 
@@ -49,15 +51,20 @@ export class ClientError extends Error {
     }
 
     private static extractMessage(response: GraphQLResponse): string {
-        return response.errors ? response.errors[0].message : `GraphQL Error (Code: ${response.status})`;
+        return response.errors
+            ? response.errors[0].message
+            : `GraphQL Error (Code: ${response.status})`;
     }
 }
 
 export class GraphQLClient {
-    constructor(private url: string, private assetManager: AssetManager) { }
+    constructor(private url: string, private assetManager: AssetManager) {}
 
-    async request(ctx: RuntimeContext, query: string, variables?: Variables): Promise<Asset.Wrapper<'json'>> {
-
+    async request(
+        ctx: RuntimeContext,
+        query: string,
+        variables?: Variables,
+    ): Promise<Asset.Wrapper<'json'>> {
         const body = JSON.stringify({ query, variables }, null, 2);
         const url = Asset.getUrlAsset(this.assetManager, this.url, body);
         const result = await this.assetManager.resolve(url, 'json').runInContext(ctx);
@@ -65,10 +72,12 @@ export class GraphQLClient {
         if (!result.data.errors && result.data.data) {
             return {
                 data: result.data.data,
-                dispose: result.dispose
+                dispose: result.dispose,
             };
         } else {
-            const errorResult = typeof result.data === 'string' ? { error: result.data } : result.data;
+            const errorResult = typeof result.data === 'string'
+                ? { error: result.data }
+                : result.data;
             throw new ClientError({ ...errorResult }, { query, variables });
         }
     }

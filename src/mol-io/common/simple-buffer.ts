@@ -6,44 +6,49 @@
  */
 
 import { defaults } from '../../mol-util/index.ts';
-import { Buffer } from "node:buffer";
+import { Buffer } from 'node:buffer';
 
 export interface SimpleBuffer extends Uint8Array {
-    readInt8: (offset: number) => number
-    readUInt8: (offset: number) => number
+    readInt8: (offset: number) => number;
+    readUInt8: (offset: number) => number;
 
-    writeInt8: (value: number, offset: number) => void
-    writeUInt8: (value: number, offset: number) => void
+    writeInt8: (value: number, offset: number) => void;
+    writeUInt8: (value: number, offset: number) => void;
 
-    readInt16LE: (offset: number) => number
-    readInt32LE: (offset: number) => number
-    readUInt16LE: (offset: number) => number
-    readUInt32LE: (offset: number) => number
-    readFloatLE: (offset: number) => number
-    readDoubleLE: (offset: number) => number
+    readInt16LE: (offset: number) => number;
+    readInt32LE: (offset: number) => number;
+    readUInt16LE: (offset: number) => number;
+    readUInt32LE: (offset: number) => number;
+    readFloatLE: (offset: number) => number;
+    readDoubleLE: (offset: number) => number;
 
-    writeInt16LE: (value: number, offset: number) => void
-    writeInt32LE: (value: number, offset: number) => void
-    writeUInt16LE: (value: number, offset: number) => void
-    writeUInt32LE: (value: number, offset: number) => void
-    writeFloatLE: (value: number, offset: number) => void
-    writeDoubleLE: (value: number, offset: number) => void
+    writeInt16LE: (value: number, offset: number) => void;
+    writeInt32LE: (value: number, offset: number) => void;
+    writeUInt16LE: (value: number, offset: number) => void;
+    writeUInt32LE: (value: number, offset: number) => void;
+    writeFloatLE: (value: number, offset: number) => void;
+    writeDoubleLE: (value: number, offset: number) => void;
 
-    readInt16BE: (offset: number) => number
-    readInt32BE: (offset: number) => number
-    readUInt16BE: (offset: number) => number
-    readUInt32BE: (offset: number) => number
-    readFloatBE: (offset: number) => number
-    readDoubleBE: (offset: number) => number
+    readInt16BE: (offset: number) => number;
+    readInt32BE: (offset: number) => number;
+    readUInt16BE: (offset: number) => number;
+    readUInt32BE: (offset: number) => number;
+    readFloatBE: (offset: number) => number;
+    readDoubleBE: (offset: number) => number;
 
-    writeInt16BE: (value: number, offset: number) => void
-    writeInt32BE: (value: number, offset: number) => void
-    writeUInt16BE: (value: number, offset: number) => void
-    writeUInt32BE: (value: number, offset: number) => void
-    writeFloatBE: (value: number, offset: number) => void
-    writeDoubleBE: (value: number, offset: number) => void
+    writeInt16BE: (value: number, offset: number) => void;
+    writeInt32BE: (value: number, offset: number) => void;
+    writeUInt16BE: (value: number, offset: number) => void;
+    writeUInt32BE: (value: number, offset: number) => void;
+    writeFloatBE: (value: number, offset: number) => void;
+    writeDoubleBE: (value: number, offset: number) => void;
 
-    copy: (targetBuffer: Uint8Array, targetStart?: number, sourceStart?: number, sourceEnd?: number) => number
+    copy: (
+        targetBuffer: Uint8Array,
+        targetStart?: number,
+        sourceStart?: number,
+        sourceEnd?: number,
+    ) => number;
 }
 
 export namespace SimpleBuffer {
@@ -83,13 +88,18 @@ export namespace SimpleBuffer {
             writeFloatBE: (value: number, offset: number) => dv.setFloat32(offset, value, false),
             writeDoubleBE: (value: number, offset: number) => dv.setFloat64(offset, value, false),
 
-            copy: (targetBuffer: Uint8Array, targetStart?: number, sourceStart?: number, sourceEnd?: number) => {
+            copy: (
+                targetBuffer: Uint8Array,
+                targetStart?: number,
+                sourceStart?: number,
+                sourceEnd?: number,
+            ) => {
                 targetStart = defaults(targetStart, 0);
                 sourceStart = defaults(sourceStart, 0);
                 sourceEnd = defaults(sourceEnd, array.length);
                 targetBuffer.set(array.subarray(sourceStart, sourceEnd), targetStart);
                 return sourceEnd - sourceStart;
-            }
+            },
         });
     }
 
@@ -101,10 +111,17 @@ export namespace SimpleBuffer {
         return buffer;
     }
 
-    export const IsNativeEndianLittle = new Uint16Array(new Uint8Array([0x12, 0x34]).buffer)[0] === 0x3412;
+    export const IsNativeEndianLittle =
+        new Uint16Array(new Uint8Array([0x12, 0x34]).buffer)[0] === 0x3412;
 
     /** source and target can't be the same */
-    export function flipByteOrder(source: SimpleBuffer, target: Uint8Array, byteCount: number, elementByteSize: number, offset: number) {
+    export function flipByteOrder(
+        source: SimpleBuffer,
+        target: Uint8Array,
+        byteCount: number,
+        elementByteSize: number,
+        offset: number,
+    ) {
         for (let i = 0, n = byteCount; i < n; i += elementByteSize) {
             for (let j = 0; j < elementByteSize; j++) {
                 target[offset + i + elementByteSize - j - 1] = source[offset + i + j];
@@ -120,7 +137,13 @@ export namespace SimpleBuffer {
         }
     }
 
-    export function ensureLittleEndian(source: SimpleBuffer, target: SimpleBuffer, byteCount: number, elementByteSize: number, offset: number) {
+    export function ensureLittleEndian(
+        source: SimpleBuffer,
+        target: SimpleBuffer,
+        byteCount: number,
+        elementByteSize: number,
+        offset: number,
+    ) {
         if (IsNativeEndianLittle) return;
         if (!byteCount || elementByteSize <= 1) return;
         flipByteOrder(source, target, byteCount, elementByteSize, offset);

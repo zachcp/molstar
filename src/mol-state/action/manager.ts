@@ -24,7 +24,9 @@ class StateActionManager {
     };
 
     add(actionOrTransformer: StateAction | StateTransformer) {
-        const action = StateTransformer.is(actionOrTransformer) ? actionOrTransformer.toAction() : actionOrTransformer;
+        const action = StateTransformer.is(actionOrTransformer)
+            ? actionOrTransformer.toAction()
+            : actionOrTransformer;
 
         if (this.actions.has(action.id)) return this;
 
@@ -47,8 +49,8 @@ class StateActionManager {
         const id = StateTransformer.is(actionOrTransformer)
             ? actionOrTransformer.toAction().id
             : UUID.is(actionOrTransformer)
-                ? actionOrTransformer
-                : actionOrTransformer.id;
+            ? actionOrTransformer
+            : actionOrTransformer.id;
 
         const action = this.actions.get(id);
         if (!action) return this;

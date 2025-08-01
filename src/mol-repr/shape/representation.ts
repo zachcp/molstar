@@ -8,7 +8,11 @@ import { Geometry, GeometryUtils } from '../../mol-geo/geometry/geometry.ts';
 import { Representation } from '../representation.ts';
 import { Shape, ShapeGroup } from '../../mol-model/shape.ts';
 import { Subject } from 'rxjs';
-import { getNextMaterialId, createRenderObject, GraphicsRenderObject } from '../../mol-gl/render-object.ts';
+import {
+    createRenderObject,
+    getNextMaterialId,
+    GraphicsRenderObject,
+} from '../../mol-gl/render-object.ts';
 import { Theme } from '../../mol-theme/theme.ts';
 import { LocationIterator } from '../../mol-geo/util/location-iterator.ts';
 import { LocationCallback, VisualUpdateState } from '../util.ts';
@@ -17,7 +21,7 @@ import { MarkerAction, MarkerActions } from '../../mol-util/marker-action.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 import { createColors } from '../../mol-geo/geometry/color-data.ts';
 import { createSizes, SizeData } from '../../mol-geo/geometry/size-data.ts';
-import { Loci, isEveryLoci, EmptyLoci } from '../../mol-model/loci.ts';
+import { EmptyLoci, isEveryLoci, Loci } from '../../mol-model/loci.ts';
 import { Interval, OrderedSet } from '../../mol-data/int.ts';
 import { PickingId } from '../../mol-geo/geometry/picking.ts';
 import { Visual } from '../visual.ts';
@@ -25,18 +29,28 @@ import { RuntimeContext, Task } from '../../mol-task/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { isDebugMode } from '../../mol-util/debug.ts';
 
-export interface ShapeRepresentation<D, G extends Geometry, P extends Geometry.Params<G>> extends Representation<D, P> { }
+export interface ShapeRepresentation<D, G extends Geometry, P extends Geometry.Params<G>>
+    extends Representation<D, P> {}
 
-export type ShapeGetter<D, G extends Geometry, P extends Geometry.Params<G>> = (ctx: RuntimeContext, data: D, props: PD.Values<P>, shape?: Shape<G>) => Shape<G> | Promise<Shape<G>>
+export type ShapeGetter<D, G extends Geometry, P extends Geometry.Params<G>> = (
+    ctx: RuntimeContext,
+    data: D,
+    props: PD.Values<P>,
+    shape?: Shape<G>,
+) => Shape<G> | Promise<Shape<G>>;
 
 export interface ShapeBuilder<G extends Geometry, P extends Geometry.Params<G>> {
     /** Hook to modify representation props */
-    modifyProps?: (props: Partial<PD.Values<P>>) => Partial<PD.Values<P>>
+    modifyProps?: (props: Partial<PD.Values<P>>) => Partial<PD.Values<P>>;
     /** Hook to modify representation state */
-    modifyState?: (state: Partial<Representation.State>) => Partial<Representation.State>
+    modifyState?: (state: Partial<Representation.State>) => Partial<Representation.State>;
 }
 
-export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Params<G>>(getShape: ShapeGetter<D, G, P>, geometryUtils: GeometryUtils<G>, builder: ShapeBuilder<G, P> = {}): ShapeRepresentation<D, G, P> {
+export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Params<G>>(
+    getShape: ShapeGetter<D, G, P>,
+    geometryUtils: GeometryUtils<G>,
+    builder: ShapeBuilder<G, P> = {},
+): ShapeRepresentation<D, G, P> {
     let version = 0;
     const updated = new Subject<number>();
     const _state = Representation.createState();
@@ -97,7 +111,7 @@ export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Pa
     function createOrUpdate(props: Partial<PD.Values<P>> = {}, data?: D) {
         if (builder.modifyProps) props = builder.modifyProps(props);
 
-        return Task.create('ShapeRepresentation.create', async runtime => {
+        return Task.create('ShapeRepresentation.create', async (runtime) => {
             const newProps = Object.assign(currentProps, props);
             const shape = data ? await getShape(runtime, data, newProps, _shape) : undefined;
 
@@ -111,15 +125,29 @@ export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Pa
             if (updateState.createNew) {
                 renderObjects.length = 0; // clear list o renderObjects
                 locationIt = Shape.groupIterator(_shape);
-                const transform = Shape.createTransform(_shape.transforms, _shape.geometry.boundingSphere, newProps.cellSize, newProps.batchSize);
-                const values = geometryUtils.createValues(_shape.geometry, transform, locationIt, _theme, newProps);
+                const transform = Shape.createTransform(
+                    _shape.transforms,
+                    _shape.geometry.boundingSphere,
+                    newProps.cellSize,
+                    newProps.batchSize,
+                );
+                const values = geometryUtils.createValues(
+                    _shape.geometry,
+                    transform,
+                    locationIt,
+                    _theme,
+                    newProps,
+                );
                 const state = geometryUtils.createRenderableState(newProps);
                 if (builder.modifyState) Object.assign(state, builder.modifyState(state));
                 Representation.updateState(_state, state);
 
                 _renderObject = createRenderObject(_shape.geometry.kind, values, state, materialId);
                 if (_renderObject) renderObjects.push(_renderObject); // add new renderObject to list
-                positionIt = geometryUtils.createPositionIterator(_shape.geometry, _renderObject.values);
+                positionIt = geometryUtils.createPositionIterator(
+                    _shape.geometry,
+                    _renderObject.values,
+                );
             } else {
                 if (!_renderObject) {
                     throw new Error('expected renderObject to be available');
@@ -132,30 +160,55 @@ export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Pa
                     if (props.instanceGranularity) {
                         createMarkers(instanceCount, 'instance', _renderObject.values);
                     } else {
-                        createMarkers(instanceCount * groupCount, 'groupInstance', _renderObject.values);
+                        createMarkers(
+                            instanceCount * groupCount,
+                            'groupInstance',
+                            _renderObject.values,
+                        );
                     }
                 }
 
                 if (updateState.updateMatrix) {
                     // console.log('update matrix');
-                    Shape.createTransform(_shape.transforms, _shape.geometry.boundingSphere, newProps.cellSize, newProps.batchSize, _renderObject.values);
+                    Shape.createTransform(
+                        _shape.transforms,
+                        _shape.geometry.boundingSphere,
+                        newProps.cellSize,
+                        newProps.batchSize,
+                        _renderObject.values,
+                    );
                     if ('lodLevels' in _renderObject.values) {
                         // to trigger `uLod` update in `renderable.cull`
-                        ValueCell.update(_renderObject.values.lodLevels, _renderObject.values.lodLevels.ref.value);
+                        ValueCell.update(
+                            _renderObject.values.lodLevels,
+                            _renderObject.values.lodLevels.ref.value,
+                        );
                     }
                 }
 
                 if (updateState.createGeometry) {
                     // console.log('update geometry')
-                    ValueCell.updateIfChanged(_renderObject.values.drawCount, Geometry.getDrawCount(_shape.geometry));
-                    ValueCell.updateIfChanged(_renderObject.values.uVertexCount, Geometry.getVertexCount(_shape.geometry));
-                    ValueCell.updateIfChanged(_renderObject.values.uGroupCount, locationIt.groupCount);
+                    ValueCell.updateIfChanged(
+                        _renderObject.values.drawCount,
+                        Geometry.getDrawCount(_shape.geometry),
+                    );
+                    ValueCell.updateIfChanged(
+                        _renderObject.values.uVertexCount,
+                        Geometry.getVertexCount(_shape.geometry),
+                    );
+                    ValueCell.updateIfChanged(
+                        _renderObject.values.uGroupCount,
+                        locationIt.groupCount,
+                    );
                 }
 
                 if (updateState.updateTransform || updateState.createGeometry) {
                     // console.log('updateBoundingSphere')
                     geometryUtils.updateBoundingSphere(_renderObject.values, _shape.geometry);
-                    positionIt = geometryUtils.createPositionIterator(_shape.geometry, _renderObject.values);
+                    positionIt = geometryUtils.createPositionIterator(
+                        _shape.geometry,
+                        _renderObject.values,
+                    );
                 }
 
                 if (updateState.updateColor) {
@@ -213,19 +266,34 @@ export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Pa
 
     return {
         label: 'Shape geometry',
-        get groupCount() { return locationIt ? locationIt.count : 0; },
-        get props() { return currentProps; },
-        get params() { return currentParams; },
-        get state() { return _state; },
-        get theme() { return _theme; },
+        get groupCount() {
+            return locationIt ? locationIt.count : 0;
+        },
+        get props() {
+            return currentProps;
+        },
+        get params() {
+            return currentParams;
+        },
+        get state() {
+            return _state;
+        },
+        get theme() {
+            return _theme;
+        },
         renderObjects,
-        get geometryVersion() { return geometryVersion; },
+        get geometryVersion() {
+            return geometryVersion;
+        },
         updated,
         createOrUpdate,
         getLoci(pickingId: PickingId) {
             const { objectId, groupId, instanceId } = pickingId;
             if (_renderObject && _renderObject.id === objectId) {
-                return ShapeGroup.Loci(_shape, [{ ids: OrderedSet.ofSingleton(groupId), instance: instanceId }]);
+                return ShapeGroup.Loci(_shape, [{
+                    ids: OrderedSet.ofSingleton(groupId),
+                    instance: instanceId,
+                }]);
             }
             return EmptyLoci;
         },
@@ -253,9 +321,13 @@ export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Pa
 
             if (_renderObject) {
                 if (state.visible !== undefined) Visual.setVisibility(_renderObject, state.visible);
-                if (state.alphaFactor !== undefined) Visual.setAlphaFactor(_renderObject, state.alphaFactor);
+                if (state.alphaFactor !== undefined) {
+                    Visual.setAlphaFactor(_renderObject, state.alphaFactor);
+                }
                 if (state.pickable !== undefined) Visual.setPickable(_renderObject, state.pickable);
-                if (state.colorOnly !== undefined) Visual.setColorOnly(_renderObject, state.colorOnly);
+                if (state.colorOnly !== undefined) {
+                    Visual.setColorOnly(_renderObject, state.colorOnly);
+                }
                 if (state.overpaint !== undefined) {
                     Visual.setOverpaint(_renderObject, state.overpaint, lociApply, true);
                 }
@@ -265,14 +337,18 @@ export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Pa
                 if (state.substance !== undefined) {
                     Visual.setSubstance(_renderObject, state.substance, lociApply, true);
                 }
-                if (state.transform !== undefined) Visual.setTransform(_renderObject, state.transform);
+                if (state.transform !== undefined) {
+                    Visual.setTransform(_renderObject, state.transform);
+                }
             }
 
             Representation.updateState(_state, state);
         },
         setTheme(theme: Theme) {
             if (isDebugMode) {
-                console.warn('The `ShapeRepresentation` theme is fixed to `ShapeGroupColorTheme` and `ShapeGroupSizeTheme`. Colors are taken from `Shape.getColor` and sizes from `Shape.getSize`');
+                console.warn(
+                    'The `ShapeRepresentation` theme is fixed to `ShapeGroupColorTheme` and `ShapeGroupSizeTheme`. Colors are taken from `Shape.getColor` and sizes from `Shape.getSize`',
+                );
             }
         },
         destroy() {
@@ -281,7 +357,7 @@ export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Pa
                 _renderObject.state.disposed = true;
                 _renderObject = undefined;
             }
-        }
+        },
     };
 }
 

@@ -6,20 +6,32 @@
 
 import { idFactory } from '../../mol-util/id-factory.ts';
 import { GLRenderingContext, isWebGL2 } from './compat.ts';
-import { Framebuffer, checkFramebufferStatus } from './framebuffer.ts';
+import { checkFramebufferStatus, Framebuffer } from './framebuffer.ts';
 import { isDebugMode } from '../../mol-util/debug.ts';
 
 const getNextRenderbufferId = idFactory();
 
-export type RenderbufferFormat = 'depth16' | 'stencil8' | 'rgba4' | 'depth-stencil' | 'depth24' | 'depth32f' | 'depth24-stencil8' | 'depth32f-stencil8'
-export type RenderbufferAttachment = 'depth' | 'stencil' | 'depth-stencil' | 'color0'
+export type RenderbufferFormat =
+    | 'depth16'
+    | 'stencil8'
+    | 'rgba4'
+    | 'depth-stencil'
+    | 'depth24'
+    | 'depth32f'
+    | 'depth24-stencil8'
+    | 'depth32f-stencil8';
+export type RenderbufferAttachment = 'depth' | 'stencil' | 'depth-stencil' | 'color0';
 
 export function getFormat(gl: GLRenderingContext, format: RenderbufferFormat) {
     switch (format) {
-        case 'depth16': return gl.DEPTH_COMPONENT16;
-        case 'stencil8': return gl.STENCIL_INDEX8;
-        case 'rgba4': return gl.RGBA4;
-        case 'depth-stencil': return gl.DEPTH_STENCIL;
+        case 'depth16':
+            return gl.DEPTH_COMPONENT16;
+        case 'stencil8':
+            return gl.STENCIL_INDEX8;
+        case 'rgba4':
+            return gl.RGBA4;
+        case 'depth-stencil':
+            return gl.DEPTH_STENCIL;
         case 'depth24':
             if (isWebGL2(gl)) return gl.DEPTH_COMPONENT24;
             else throw new Error('WebGL2 needed for `depth24` renderbuffer format');
@@ -37,22 +49,26 @@ export function getFormat(gl: GLRenderingContext, format: RenderbufferFormat) {
 
 export function getAttachment(gl: GLRenderingContext, attachment: RenderbufferAttachment) {
     switch (attachment) {
-        case 'depth': return gl.DEPTH_ATTACHMENT;
-        case 'stencil': return gl.STENCIL_ATTACHMENT;
-        case 'depth-stencil': return gl.DEPTH_STENCIL_ATTACHMENT;
-        case 'color0': return gl.COLOR_ATTACHMENT0;
+        case 'depth':
+            return gl.DEPTH_ATTACHMENT;
+        case 'stencil':
+            return gl.STENCIL_ATTACHMENT;
+        case 'depth-stencil':
+            return gl.DEPTH_STENCIL_ATTACHMENT;
+        case 'color0':
+            return gl.COLOR_ATTACHMENT0;
     }
 }
 
 export interface Renderbuffer {
-    readonly id: number
+    readonly id: number;
 
-    bind: () => void
-    attachFramebuffer: (framebuffer: Framebuffer) => void
-    detachFramebuffer: (framebuffer: Framebuffer) => void
-    setSize: (width: number, height: number) => void
-    reset: () => void
-    destroy: () => void
+    bind: () => void;
+    attachFramebuffer: (framebuffer: Framebuffer) => void;
+    detachFramebuffer: (framebuffer: Framebuffer) => void;
+    setSize: (width: number, height: number) => void;
+    reset: () => void;
+    destroy: () => void;
 }
 
 function getRenderbuffer(gl: GLRenderingContext) {
@@ -63,7 +79,13 @@ function getRenderbuffer(gl: GLRenderingContext) {
     return renderbuffer;
 }
 
-export function createRenderbuffer(gl: GLRenderingContext, format: RenderbufferFormat, attachment: RenderbufferAttachment, _width: number, _height: number): Renderbuffer {
+export function createRenderbuffer(
+    gl: GLRenderingContext,
+    format: RenderbufferFormat,
+    attachment: RenderbufferAttachment,
+    _width: number,
+    _height: number,
+): Renderbuffer {
     let _renderbuffer = getRenderbuffer(gl);
 
     const bind = () => gl.bindRenderbuffer(gl.RENDERBUFFER, _renderbuffer);
@@ -107,6 +129,6 @@ export function createRenderbuffer(gl: GLRenderingContext, format: RenderbufferF
             if (destroyed) return;
             gl.deleteRenderbuffer(_renderbuffer);
             destroyed = true;
-        }
+        },
     };
 }

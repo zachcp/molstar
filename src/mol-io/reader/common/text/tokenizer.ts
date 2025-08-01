@@ -12,20 +12,20 @@ import { StringLike } from '../../../common/string-like.ts';
 export { Tokenizer };
 
 interface Tokenizer {
-    data: StringLike,
+    data: StringLike;
 
-    position: number,
-    length: number,
+    position: number;
+    length: number;
 
-    lineNumber: number,
-    tokenStart: number,
-    tokenEnd: number
+    lineNumber: number;
+    tokenStart: number;
+    tokenEnd: number;
 }
 
 export interface Tokens {
-    data: StringLike,
-    count: number,
-    indices: ArrayLike<number>
+    data: StringLike;
+    count: number;
+    indices: ArrayLike<number>;
 }
 
 function Tokenizer(data: StringLike): Tokenizer {
@@ -35,7 +35,7 @@ function Tokenizer(data: StringLike): Tokenizer {
         length: data.length,
         lineNumber: 1,
         tokenStart: 0,
-        tokenEnd: 0
+        tokenEnd: 0,
     };
 }
 
@@ -134,16 +134,28 @@ namespace Tokenizer {
     }
 
     /** Advance the state by the given number of lines and return line starts/ends as tokens. */
-    export async function readLinesAsync(state: Tokenizer, count: number, ctx: RuntimeContext, initialLineCount = 100000): Promise<Tokens> {
+    export async function readLinesAsync(
+        state: Tokenizer,
+        count: number,
+        ctx: RuntimeContext,
+        initialLineCount = 100000,
+    ): Promise<Tokens> {
         const lineTokens = TokenBuilder.create(state.data, count * 2);
 
         let linesAlreadyRead = 0;
-        await chunkedSubtask(ctx, initialLineCount, state, (chunkSize, state) => {
-            const linesToRead = Math.min(count - linesAlreadyRead, chunkSize);
-            readLinesChunk(state, linesToRead, lineTokens);
-            linesAlreadyRead += linesToRead;
-            return linesToRead;
-        }, (ctx, state) => ctx.update({ message: 'Parsing...', current: state.position, max: state.length }));
+        await chunkedSubtask(
+            ctx,
+            initialLineCount,
+            state,
+            (chunkSize, state) => {
+                const linesToRead = Math.min(count - linesAlreadyRead, chunkSize);
+                readLinesChunk(state, linesToRead, lineTokens);
+                linesAlreadyRead += linesToRead;
+                return linesToRead;
+            },
+            (ctx, state) =>
+                ctx.update({ message: 'Parsing...', current: state.position, max: state.length }),
+        );
 
         return lineTokens;
     }
@@ -167,14 +179,25 @@ namespace Tokenizer {
         return read;
     }
 
-    export async function readAllLinesAsync(data: StringLike, ctx: RuntimeContext, chunkSize = 100000) {
+    export async function readAllLinesAsync(
+        data: StringLike,
+        ctx: RuntimeContext,
+        chunkSize = 100000,
+    ) {
         const state = Tokenizer(data);
         const tokens = TokenBuilder.create(state.data, Math.max(data.length / 80, 2));
 
-        await chunkedSubtask(ctx, chunkSize, state, (chunkSize, state) => {
-            readLinesChunkChecked(state, chunkSize, tokens);
-            return state.position < state.length ? chunkSize : 0;
-        }, (ctx, state) => ctx.update({ message: 'Parsing...', current: state.position, max: state.length }));
+        await chunkedSubtask(
+            ctx,
+            chunkSize,
+            state,
+            (chunkSize, state) => {
+                readLinesChunkChecked(state, chunkSize, tokens);
+                return state.position < state.length ? chunkSize : 0;
+            },
+            (ctx, state) =>
+                ctx.update({ message: 'Parsing...', current: state.position, max: state.length }),
+        );
 
         return tokens;
     }
@@ -279,9 +302,9 @@ export function trimStr(data: StringLike, start: number, end: number) {
 
 export namespace TokenBuilder {
     interface Builder extends Tokens {
-        offset: number,
-        indices: Uint32Array,
-        indicesLenMinus2: number
+        offset: number;
+        indices: Uint32Array;
+        indicesLenMinus2: number;
     }
 
     function resize(builder: Builder) {
@@ -314,12 +337,12 @@ export namespace TokenBuilder {
 
     export function create(data: StringLike, size: number): Tokens {
         size = Math.max(10, size);
-        return <Builder>{
+        return <Builder> {
             data,
             indicesLenMinus2: (size - 2) | 0,
             count: 0,
             offset: 0,
-            indices: new Uint32Array(size)
+            indices: new Uint32Array(size),
         };
     }
 }

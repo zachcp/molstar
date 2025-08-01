@@ -38,8 +38,9 @@ export class HeteroSequenceWrapper extends SequenceWrapper<StructureUnit> {
             for (const e of loci.elements) {
                 const unit = this.unitMap.get(e.unit.id);
                 if (unit) {
-                    const { index: residueIndex } = e.unit.model.atomicHierarchy.residueAtomSegments;
-                    OrderedSet.forEach(e.indices, v => {
+                    const { index: residueIndex } =
+                        e.unit.model.atomicHierarchy.residueAtomSegments;
+                    OrderedSet.forEach(e.indices, (v) => {
                         const seqIdx = this.sequenceIndices.get(residueIndex[unit.elements[v]]);
                         if (seqIdx !== undefined) out.push(seqIdx);
                     });

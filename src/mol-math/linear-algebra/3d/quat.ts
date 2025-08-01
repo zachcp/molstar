@@ -30,8 +30,16 @@ import { Euler } from './euler.ts';
 import { Mat4 } from './mat4.ts';
 import { clamp } from '../../interpolate.ts';
 
-interface Quat extends Array<number> { [d: number]: number, '@type': 'quat', length: 4 }
-interface ReadonlyQuat extends Array<number> { readonly [d: number]: number, '@type': 'quat', length: 4 }
+interface Quat extends Array<number> {
+    [d: number]: number;
+    '@type': 'quat';
+    length: 4;
+}
+interface ReadonlyQuat extends Array<number> {
+    readonly [d: number]: number;
+    '@type': 'quat';
+    length: 4;
+}
 
 function Quat() {
     return Quat.zero();
@@ -188,10 +196,10 @@ namespace Quat {
         // adjust signs (if necessary)
         if (cosom < 0.0) {
             cosom = -cosom;
-            bx = - bx;
-            by = - by;
-            bz = - bz;
-            bw = - bw;
+            bx = -bx;
+            by = -by;
+            bz = -bz;
+            bw = -bw;
         }
         // calculate coefficients
         if ((1.0 - cosom) > 0.000001) {
@@ -390,7 +398,7 @@ namespace Quat {
         return out;
     }
 
-    export function fromObj(a: { x: number, y: number, z: number, w: number }): Quat {
+    export function fromObj(a: { x: number; y: number; z: number; w: number }): Quat {
         return create(a.x, a.y, a.z, a.w);
     }
 
@@ -444,9 +452,9 @@ namespace Quat {
         const a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3];
         const b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
         return (Math.abs(a0 - b0) <= EPSILON * Math.max(1.0, Math.abs(a0), Math.abs(b0)) &&
-                Math.abs(a1 - b1) <= EPSILON * Math.max(1.0, Math.abs(a1), Math.abs(b1)) &&
-                Math.abs(a2 - b2) <= EPSILON * Math.max(1.0, Math.abs(a2), Math.abs(b2)) &&
-                Math.abs(a3 - b3) <= EPSILON * Math.max(1.0, Math.abs(a3), Math.abs(b3)));
+            Math.abs(a1 - b1) <= EPSILON * Math.max(1.0, Math.abs(a1), Math.abs(b1)) &&
+            Math.abs(a2 - b2) <= EPSILON * Math.max(1.0, Math.abs(a2), Math.abs(b2)) &&
+            Math.abs(a3 - b3) <= EPSILON * Math.max(1.0, Math.abs(a3), Math.abs(b3)));
     }
 
     export function add(out: Quat, a: Quat, b: Quat) {
@@ -500,8 +508,9 @@ namespace Quat {
         const dot = Vec3.dot(a, b);
         if (dot < -0.999999) {
             Vec3.cross(rotTmpVec3, rotTmpVec3UnitX, a);
-            if (Vec3.magnitude(rotTmpVec3) < 0.000001)
+            if (Vec3.magnitude(rotTmpVec3) < 0.000001) {
                 Vec3.cross(rotTmpVec3, rotTmpVec3UnitY, a);
+            }
             Vec3.normalize(rotTmpVec3, rotTmpVec3);
             setAxisAngle(out, rotTmpVec3, Math.PI);
             return out;
@@ -556,7 +565,9 @@ namespace Quat {
     }
 
     export function toString(a: Quat, precision?: number) {
-        return `[${a[0].toPrecision(precision)} ${a[1].toPrecision(precision)} ${a[2].toPrecision(precision)}  ${a[3].toPrecision(precision)}]`;
+        return `[${a[0].toPrecision(precision)} ${a[1].toPrecision(precision)} ${
+            a[2].toPrecision(precision)
+        }  ${a[3].toPrecision(precision)}]`;
     }
 
     export const Identity: ReadonlyQuat = identity();

@@ -9,7 +9,7 @@ import { getErrorDescription } from './context.ts';
 import { getProgram } from './program.ts';
 import { getShader } from './shader.ts';
 
-export type GLRenderingContext = WebGLRenderingContext | WebGL2RenderingContext
+export type GLRenderingContext = WebGLRenderingContext | WebGL2RenderingContext;
 
 export function isWebGL(gl: any): gl is WebGLRenderingContext {
     return typeof WebGLRenderingContext !== 'undefined' && gl instanceof WebGLRenderingContext;
@@ -39,7 +39,13 @@ export interface COMPAT_instanced_arrays {
      * @param offset an offset in the element array buffer. Must be a valid multiple of the size of the given `type`.
      * @param primcount the number of instances of the set of elements to execute.
      */
-    drawElementsInstanced(mode: number, count: number, type: number, offset: number, primcount: number): void;
+    drawElementsInstanced(
+        mode: number,
+        count: number,
+        type: number,
+        offset: number,
+        primcount: number,
+    ): void;
     /**
      * Modifies the rate at which generic vertex attributes advance when rendering multiple instances of primitives with `drawArraysInstanced` and `drawElementsInstanced`
      * @param index the index of the generic vertex attributes.
@@ -55,7 +61,7 @@ export function getInstancedArrays(gl: GLRenderingContext): COMPAT_instanced_arr
             drawArraysInstanced: gl.drawArraysInstanced.bind(gl),
             drawElementsInstanced: gl.drawElementsInstanced.bind(gl),
             vertexAttribDivisor: gl.vertexAttribDivisor.bind(gl),
-            VERTEX_ATTRIB_ARRAY_DIVISOR: gl.VERTEX_ATTRIB_ARRAY_DIVISOR
+            VERTEX_ATTRIB_ARRAY_DIVISOR: gl.VERTEX_ATTRIB_ARRAY_DIVISOR,
         };
     } else {
         const ext = gl.getExtension('ANGLE_instanced_arrays');
@@ -64,7 +70,7 @@ export function getInstancedArrays(gl: GLRenderingContext): COMPAT_instanced_arr
             drawArraysInstanced: ext.drawArraysInstancedANGLE.bind(ext),
             drawElementsInstanced: ext.drawElementsInstancedANGLE.bind(ext),
             vertexAttribDivisor: ext.vertexAttribDivisorANGLE.bind(ext),
-            VERTEX_ATTRIB_ARRAY_DIVISOR: ext.VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE
+            VERTEX_ATTRIB_ARRAY_DIVISOR: ext.VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE,
         };
     }
 }
@@ -114,7 +120,7 @@ export function getVertexArrayObject(gl: GLRenderingContext): COMPAT_vertex_arra
             bindVertexArray: gl.bindVertexArray.bind(gl),
             createVertexArray: gl.createVertexArray.bind(gl),
             deleteVertexArray: gl.deleteVertexArray.bind(gl),
-            isVertexArray: gl.isVertexArray.bind(gl)
+            isVertexArray: gl.isVertexArray.bind(gl),
         };
     } else {
         const ext = gl.getExtension('OES_vertex_array_object');
@@ -124,7 +130,7 @@ export function getVertexArrayObject(gl: GLRenderingContext): COMPAT_vertex_arra
             bindVertexArray: ext.bindVertexArrayOES.bind(ext),
             createVertexArray: ext.createVertexArrayOES.bind(ext),
             deleteVertexArray: ext.deleteVertexArrayOES.bind(ext),
-            isVertexArray: ext.isVertexArrayOES.bind(ext)
+            isVertexArray: ext.isVertexArrayOES.bind(ext),
         };
     }
 }
@@ -153,7 +159,7 @@ export function getTextureFloatLinear(gl: GLRenderingContext): COMPAT_texture_fl
  * See https://registry.khronos.org/webgl/extensions/OES_texture_half_float/
  */
 export interface COMPAT_texture_half_float {
-    readonly HALF_FLOAT: number
+    readonly HALF_FLOAT: number;
 }
 
 export function getTextureHalfFloat(gl: GLRenderingContext): COMPAT_texture_half_float | null {
@@ -172,7 +178,9 @@ export function getTextureHalfFloat(gl: GLRenderingContext): COMPAT_texture_half
 export interface COMPAT_texture_half_float_linear {
 }
 
-export function getTextureHalfFloatLinear(gl: GLRenderingContext): COMPAT_texture_half_float_linear | null {
+export function getTextureHalfFloatLinear(
+    gl: GLRenderingContext,
+): COMPAT_texture_half_float_linear | null {
     return gl.getExtension('OES_texture_half_float_linear');
 }
 
@@ -180,8 +188,8 @@ export function getTextureHalfFloatLinear(gl: GLRenderingContext): COMPAT_textur
  * See https://registry.khronos.org/webgl/extensions/EXT_blend_minmax/
  */
 export interface COMPAT_blend_minmax {
-    readonly MIN: number
-    readonly MAX: number
+    readonly MIN: number;
+    readonly MAX: number;
 }
 
 export function getBlendMinMax(gl: GLRenderingContext): COMPAT_blend_minmax | null {
@@ -235,7 +243,9 @@ export interface COMPAT_color_buffer_half_float {
     readonly RGBA16F: number;
 }
 
-export function getColorBufferHalfFloat(gl: GLRenderingContext): COMPAT_color_buffer_half_float | null {
+export function getColorBufferHalfFloat(
+    gl: GLRenderingContext,
+): COMPAT_color_buffer_half_float | null {
     if (isWebGL2(gl)) {
         if (gl.getExtension('EXT_color_buffer_half_float') === null) return null;
         gl.getExtension('EXT_float_blend');
@@ -368,7 +378,13 @@ export interface COMPAT_draw_buffers_indexed {
      *
      * srcRGB, dstRGB, srcAlpha, and dstAlpha accept the same tokens as srcRGB, dstRGB, srcAlpha, and dstAlpha parameters in blendEquationSeparate.
      */
-    blendFuncSeparatei: (buf: number, srcRGB: number, dstRGB: number, srcAlpha: number, dstAlpha: number) => void;
+    blendFuncSeparatei: (
+        buf: number,
+        srcRGB: number,
+        dstRGB: number,
+        srcAlpha: number,
+        dstAlpha: number,
+    ) => void;
     /**
      * The buf argument is an integer i that indicates that the write mask should be modified for DRAW_BUFFERi.
      *
@@ -411,13 +427,13 @@ export interface COMPAT_depth_texture {
 export function getDepthTexture(gl: GLRenderingContext): COMPAT_depth_texture | null {
     if (isWebGL2(gl)) {
         return {
-            UNSIGNED_INT_24_8: gl.UNSIGNED_INT_24_8
+            UNSIGNED_INT_24_8: gl.UNSIGNED_INT_24_8,
         };
     } else {
         const ext = gl.getExtension('WEBGL_depth_texture');
         if (ext === null) return null;
         return {
-            UNSIGNED_INT_24_8: ext.UNSIGNED_INT_24_8_WEBGL
+            UNSIGNED_INT_24_8: ext.UNSIGNED_INT_24_8_WEBGL,
         };
     }
 }
@@ -438,7 +454,7 @@ export function getSRGB(gl: GLRenderingContext): COMPAT_sRGB | null {
             FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING: gl.FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING,
             SRGB8_ALPHA8: gl.SRGB8_ALPHA8,
             SRGB8: gl.SRGB8,
-            SRGB: gl.SRGB
+            SRGB: gl.SRGB,
         };
     } else {
         const ext = gl.getExtension('EXT_sRGB');
@@ -447,7 +463,7 @@ export function getSRGB(gl: GLRenderingContext): COMPAT_sRGB | null {
             FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING: ext.FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING_EXT,
             SRGB8_ALPHA8: ext.SRGB8_ALPHA8_EXT,
             SRGB8: ext.SRGB_ALPHA_EXT,
-            SRGB: ext.SRGB_EXT
+            SRGB: ext.SRGB_EXT,
         };
     }
 }
@@ -457,42 +473,43 @@ export function getSRGB(gl: GLRenderingContext): COMPAT_sRGB | null {
  */
 export interface COMPAT_disjoint_timer_query {
     /** A GLint indicating the number of bits used to hold the query result for the given target. */
-    QUERY_COUNTER_BITS: number
+    QUERY_COUNTER_BITS: number;
     /** A WebGLQuery object, which is the currently active query for the given target. */
-    CURRENT_QUERY: number
+    CURRENT_QUERY: number;
     /** A GLuint64EXT containing the query result. */
-    QUERY_RESULT: number
+    QUERY_RESULT: number;
     /** A GLboolean indicating whether or not a query result is available. */
-    QUERY_RESULT_AVAILABLE: number
+    QUERY_RESULT_AVAILABLE: number;
     /** Elapsed time (in nanoseconds). */
-    TIME_ELAPSED: number
+    TIME_ELAPSED: number;
     /** The current time. */
-    TIMESTAMP: number
+    TIMESTAMP: number;
     /** A GLboolean indicating whether or not the GPU performed any disjoint operation. */
-    GPU_DISJOINT: number
+    GPU_DISJOINT: number;
 
     /** Creates a new WebGLTimerQueryEXT. */
-    createQuery: () => WebGLQuery
+    createQuery: () => WebGLQuery;
     /** Deletes a given WebGLTimerQueryEXT. */
-    deleteQuery: (query: WebGLQuery) => void
+    deleteQuery: (query: WebGLQuery) => void;
     /** Returns true if a given object is a valid WebGLTimerQueryEXT. */
-    isQuery: (query: WebGLQuery) => boolean
+    isQuery: (query: WebGLQuery) => boolean;
     /** The timer starts when all commands prior to beginQueryEXT have been fully executed. */
-    beginQuery: (target: number, query: WebGLQuery) => void
+    beginQuery: (target: number, query: WebGLQuery) => void;
     /** The timer stops when all commands prior to endQueryEXT have been fully executed. */
-    endQuery: (target: number) => void
+    endQuery: (target: number) => void;
     /** Records the current time into the corresponding query object. */
-    queryCounter: (query: WebGLQuery, target: number) => void
+    queryCounter: (query: WebGLQuery, target: number) => void;
     /** Returns information about a query target. */
-    getQuery: (target: number, pname: number) => WebGLQuery | number
+    getQuery: (target: number, pname: number) => WebGLQuery | number;
     /** Return the state of a query object. */
-    getQueryParameter: (query: WebGLQuery, pname: number) => number | boolean
+    getQueryParameter: (query: WebGLQuery, pname: number) => number | boolean;
 }
 
 export function getDisjointTimerQuery(gl: GLRenderingContext): COMPAT_disjoint_timer_query | null {
     if (isWebGL2(gl)) {
         // Firefox has EXT_disjoint_timer_query in webgl2
-        const ext = gl.getExtension('EXT_disjoint_timer_query_webgl2') || gl.getExtension('EXT_disjoint_timer_query');
+        const ext = gl.getExtension('EXT_disjoint_timer_query_webgl2') ||
+            gl.getExtension('EXT_disjoint_timer_query');
         if (ext === null) return null;
         return {
             QUERY_COUNTER_BITS: ext.QUERY_COUNTER_BITS_EXT,
@@ -543,19 +560,53 @@ export interface COMPAT_multi_draw {
     /**
      * Renders multiple primitives from array data. It is identical to multiple calls to the `drawArrays` method.
      */
-    readonly multiDrawArrays: (mode: number, firstsList: Int32Array, firstsOffset: number, countsList: Int32Array, countsOffset: number, drawcount: number) => void;
+    readonly multiDrawArrays: (
+        mode: number,
+        firstsList: Int32Array,
+        firstsOffset: number,
+        countsList: Int32Array,
+        countsOffset: number,
+        drawcount: number,
+    ) => void;
     /**
      * Renders multiple primitives from array data. It is identical to multiple calls to the `drawElements` method.
      */
-    readonly multiDrawElements: (mode: number, countsList: Int32Array, countsOffset: number, type: number, offsetsList: Int32Array, offsetsOffset: number, drawcount: number) => void;
+    readonly multiDrawElements: (
+        mode: number,
+        countsList: Int32Array,
+        countsOffset: number,
+        type: number,
+        offsetsList: Int32Array,
+        offsetsOffset: number,
+        drawcount: number,
+    ) => void;
     /**
      * Renders multiple primitives from array data. It is identical to multiple calls to the `drawArraysInstanced` method.
      */
-    readonly multiDrawArraysInstanced: (mode: number, firstsList: Int32Array, firstsOffset: number, countsList: Int32Array, countsOffset: number, instanceCountsList: Int32Array, instanceCountsOffset: number, drawcount: number) => void;
+    readonly multiDrawArraysInstanced: (
+        mode: number,
+        firstsList: Int32Array,
+        firstsOffset: number,
+        countsList: Int32Array,
+        countsOffset: number,
+        instanceCountsList: Int32Array,
+        instanceCountsOffset: number,
+        drawcount: number,
+    ) => void;
     /**
      * Renders multiple primitives from array data. It is identical to multiple calls to the `drawElementsInstanced` method.
      */
-    readonly multiDrawElementsInstanced: (mode: number, countsList: Int32Array, countsOffset: number, type: number, offsetsList: Int32Array, offsetsOffset: number, instanceCountsList: Int32Array, instanceCountsOffset: number, drawcount: number) => void;
+    readonly multiDrawElementsInstanced: (
+        mode: number,
+        countsList: Int32Array,
+        countsOffset: number,
+        type: number,
+        offsetsList: Int32Array,
+        offsetsOffset: number,
+        instanceCountsList: Int32Array,
+        instanceCountsOffset: number,
+        drawcount: number,
+    ) => void;
 }
 
 export function getMultiDraw(gl: GLRenderingContext): COMPAT_multi_draw | null {
@@ -579,20 +630,36 @@ export interface COMPAT_draw_instanced_base_vertex_base_instance {
     /**
      * Behaves identically to DrawArraysInstanced except that `baseInstance` is passed down to DrawArraysOneInstance instead of zero.
      */
-    readonly drawArraysInstancedBaseInstance: (mode: number, first: number, count: number,
-        instanceCount: number, baseInstance: number) => void;
+    readonly drawArraysInstancedBaseInstance: (
+        mode: number,
+        first: number,
+        count: number,
+        instanceCount: number,
+        baseInstance: number,
+    ) => void;
     /**
      * Behaves identically to DrawElementsInstanced except that `baseVertex` and `baseInstance` are passed down to DrawElementsOneInstance instead of zero.
      */
-    readonly drawElementsInstancedBaseVertexBaseInstance: (mode: number, count: number, type: number, offset: number, instanceCount: number, baseVertex: number, baseInstance: number) => void;
+    readonly drawElementsInstancedBaseVertexBaseInstance: (
+        mode: number,
+        count: number,
+        type: number,
+        offset: number,
+        instanceCount: number,
+        baseVertex: number,
+        baseInstance: number,
+    ) => void;
 }
 
-export function getDrawInstancedBaseVertexBaseInstance(gl: GLRenderingContext): COMPAT_draw_instanced_base_vertex_base_instance | null {
+export function getDrawInstancedBaseVertexBaseInstance(
+    gl: GLRenderingContext,
+): COMPAT_draw_instanced_base_vertex_base_instance | null {
     const ext = gl.getExtension('WEBGL_draw_instanced_base_vertex_base_instance');
     if (ext) {
         return {
             drawArraysInstancedBaseInstance: ext.drawArraysInstancedBaseInstanceWEBGL.bind(ext),
-            drawElementsInstancedBaseVertexBaseInstance: ext.drawElementsInstancedBaseVertexBaseInstanceWEBGL.bind(ext),
+            drawElementsInstancedBaseVertexBaseInstance: ext
+                .drawElementsInstancedBaseVertexBaseInstanceWEBGL.bind(ext),
         };
     } else {
         return null;
@@ -606,19 +673,48 @@ export interface COMPAT_multi_draw_instanced_base_vertex_base_instance {
     /**
      * Behaves identically to DrawArraysInstancedBaseInstance except that a list of arrays is specified instead. The number of lists is specified in the `drawcount` parameter.
      */
-    readonly multiDrawArraysInstancedBaseInstance: (mode: number, firstsList: Int32Array, firstsOffset: number, countsList: Int32Array, countsOffset: number, instanceCountsList: Int32Array, instanceCountsOffset: number, baseInstancesList: Uint32Array, baseInstancesOffset: number, drawcount: number) => void;
+    readonly multiDrawArraysInstancedBaseInstance: (
+        mode: number,
+        firstsList: Int32Array,
+        firstsOffset: number,
+        countsList: Int32Array,
+        countsOffset: number,
+        instanceCountsList: Int32Array,
+        instanceCountsOffset: number,
+        baseInstancesList: Uint32Array,
+        baseInstancesOffset: number,
+        drawcount: number,
+    ) => void;
     /**
      * Behaves identically to DrawElementsInstancedBaseVertexBaseInstance except that a list of arrays is specified instead. The number of lists is specified in the `drawcount` parameter.
      */
-    readonly multiDrawElementsInstancedBaseVertexBaseInstance: (mode: number, countsList: Int32Array, countsOffset: number, type: number, offsetsList: Int32Array, offsetsOffset: number, instanceCountsList: Int32Array, instanceCountsOffset: number, baseVerticesList: Int32Array, baseVerticesOffset: number, baseInstancesList: Uint32Array, baseInstancesOffset: number, drawcount: number) => void;
+    readonly multiDrawElementsInstancedBaseVertexBaseInstance: (
+        mode: number,
+        countsList: Int32Array,
+        countsOffset: number,
+        type: number,
+        offsetsList: Int32Array,
+        offsetsOffset: number,
+        instanceCountsList: Int32Array,
+        instanceCountsOffset: number,
+        baseVerticesList: Int32Array,
+        baseVerticesOffset: number,
+        baseInstancesList: Uint32Array,
+        baseInstancesOffset: number,
+        drawcount: number,
+    ) => void;
 }
 
-export function getMultiDrawInstancedBaseVertexBaseInstance(gl: GLRenderingContext): COMPAT_multi_draw_instanced_base_vertex_base_instance | null {
+export function getMultiDrawInstancedBaseVertexBaseInstance(
+    gl: GLRenderingContext,
+): COMPAT_multi_draw_instanced_base_vertex_base_instance | null {
     const ext = gl.getExtension('WEBGL_multi_draw_instanced_base_vertex_base_instance');
     if (ext) {
         return {
-            multiDrawArraysInstancedBaseInstance: ext.multiDrawArraysInstancedBaseInstanceWEBGL.bind(ext),
-            multiDrawElementsInstancedBaseVertexBaseInstance: ext.multiDrawElementsInstancedBaseVertexBaseInstanceWEBGL.bind(ext),
+            multiDrawArraysInstancedBaseInstance: ext.multiDrawArraysInstancedBaseInstanceWEBGL
+                .bind(ext),
+            multiDrawElementsInstancedBaseVertexBaseInstance: ext
+                .multiDrawElementsInstancedBaseVertexBaseInstanceWEBGL.bind(ext),
         };
     } else {
         return null;
@@ -632,7 +728,9 @@ export interface COMPAT_parallel_shader_compile {
     readonly COMPLETION_STATUS: number;
 }
 
-export function getParallelShaderCompile(gl: GLRenderingContext): COMPAT_parallel_shader_compile | null {
+export function getParallelShaderCompile(
+    gl: GLRenderingContext,
+): COMPAT_parallel_shader_compile | null {
     const ext = gl.getExtension('KHR_parallel_shader_compile');
     if (ext === null) return null;
     return {
@@ -668,7 +766,7 @@ export function getProvokingVertex(gl: GLRenderingContext): COMPAT_provoking_ver
                 FIRST_VERTEX_CONVENTION: ext.FIRST_VERTEX_CONVENTION_WEBGL,
                 LAST_VERTEX_CONVENTION: ext.LAST_VERTEX_CONVENTION_WEBGL,
                 PROVOKING_VERTEX: ext.PROVOKING_VERTEX_WEBGL,
-                provokingVertex: ext.provokingVertexWEBGL.bind(ext)
+                provokingVertex: ext.provokingVertexWEBGL.bind(ext),
             };
         }
     }
@@ -700,7 +798,8 @@ export function getClipCullDistance(gl: GLRenderingContext): COMPAT_clip_cull_di
             return {
                 MAX_CLIP_DISTANCES: ext.MAX_CLIP_DISTANCES_WEBGL,
                 MAX_CULL_DISTANCES: ext.MAX_CULL_DISTANCES_WEBGL,
-                MAX_COMBINED_CLIP_AND_CULL_DISTANCES: ext.MAX_COMBINED_CLIP_AND_CULL_DISTANCES_WEBGL,
+                MAX_COMBINED_CLIP_AND_CULL_DISTANCES:
+                    ext.MAX_COMBINED_CLIP_AND_CULL_DISTANCES_WEBGL,
 
                 CLIP_DISTANCE0: ext.CLIP_DISTANCE0_WEBGL,
                 CLIP_DISTANCE1: ext.CLIP_DISTANCE1_WEBGL,
@@ -709,7 +808,7 @@ export function getClipCullDistance(gl: GLRenderingContext): COMPAT_clip_cull_di
                 CLIP_DISTANCE4: ext.CLIP_DISTANCE4_WEBGL,
                 CLIP_DISTANCE5: ext.CLIP_DISTANCE5_WEBGL,
                 CLIP_DISTANCE6: ext.CLIP_DISTANCE6_WEBGL,
-                CLIP_DISTANCE7: ext.CLIP_DISTANCE7_WEBGL
+                CLIP_DISTANCE7: ext.CLIP_DISTANCE7_WEBGL,
             };
         }
     }
@@ -746,7 +845,7 @@ export function getStencilTexturing(gl: GLRenderingContext): COMPAT_stencil_text
         if (ext) {
             return {
                 DEPTH_STENCIL_TEXTURE_MODE: ext.DEPTH_STENCIL_TEXTURE_MODE_WEBGL,
-                STENCIL_INDEX: ext.STENCIL_INDEX_WEBGL
+                STENCIL_INDEX: ext.STENCIL_INDEX_WEBGL,
             };
         }
     }
@@ -770,7 +869,7 @@ export interface COMPAT_clip_control {
      * @param origin must be LOWER_LEFT (default) or UPPER_LEFT.
      * @param depth must be NEGATIVE_ONE_TO_ONE (default) or ZERO_TO_ONE.
      */
-    clipControl(origin: number, depth: number): void
+    clipControl(origin: number, depth: number): void;
 }
 
 export function getClipControl(gl: GLRenderingContext): COMPAT_clip_control | null {
@@ -786,7 +885,7 @@ export function getClipControl(gl: GLRenderingContext): COMPAT_clip_control | nu
             CLIP_ORIGIN: ext.CLIP_ORIGIN_EXT,
             CLIP_DEPTH_MODE: ext.CLIP_DEPTH_MODE_EXT,
 
-            clipControl: ext.clipControlEXT.bind(ext)
+            clipControl: ext.clipControlEXT.bind(ext),
         };
     }
     return null;
@@ -814,7 +913,9 @@ export function getRenderSnorm(gl: GLRenderingContext): COMPAT_render_snorm | nu
 export interface COMPAT_render_shared_exponent {
 }
 
-export function getRenderSharedExponent(gl: GLRenderingContext): COMPAT_render_shared_exponent | null {
+export function getRenderSharedExponent(
+    gl: GLRenderingContext,
+): COMPAT_render_shared_exponent | null {
     if (isWebGL2(gl)) {
         const ext = gl.getExtension('WEBGL_render_shared_exponent');
         if (ext) {
@@ -849,7 +950,7 @@ export function getTextureNorm16(gl: GLRenderingContext): COMPAT_texture_norm16 
             R16_SNORM: ext.R16_SNORM_EXT,
             RG16_SNORM: ext.RG16_SNORM_EXT,
             RGB16_SNORM: ext.RGB16_SNORM_EXT,
-            RGBA16_SNORM: ext.RGBA16_SNORM_EXT
+            RGBA16_SNORM: ext.RGBA16_SNORM_EXT,
         };
     }
     return null;
@@ -866,7 +967,7 @@ export function getDepthClamp(gl: GLRenderingContext): COMPAT_depth_clamp | null
     const ext = gl.getExtension('EXT_depth_clamp');
     if (ext) {
         return {
-            DEPTH_CLAMP: ext.DEPTH_CLAMP_EXT
+            DEPTH_CLAMP: ext.DEPTH_CLAMP_EXT,
         };
     }
     return null;
@@ -891,7 +992,14 @@ export interface COMPAT_multiview2 {
      * @param baseViewIndex is the index of the first view in the multiview texture.
      * @param numViews is the number of views in the multiview texture.
      */
-    framebufferTextureMultiview(target: number, attachment: number, texture: number, level: number, baseViewIndex: number, numViews: number): void;
+    framebufferTextureMultiview(
+        target: number,
+        attachment: number,
+        texture: number,
+        level: number,
+        baseViewIndex: number,
+        numViews: number,
+    ): void;
 }
 
 export function getMultiview2(gl: GLRenderingContext): COMPAT_multiview2 | null {
@@ -899,12 +1007,14 @@ export function getMultiview2(gl: GLRenderingContext): COMPAT_multiview2 | null 
         const ext = gl.getExtension('OVR_multiview2');
         if (ext) {
             return {
-                FRAMEBUFFER_ATTACHMENT_TEXTURE_NUM_VIEWS: ext.FRAMEBUFFER_ATTACHMENT_TEXTURE_NUM_VIEWS_OVR,
-                FRAMEBUFFER_ATTACHMENT_TEXTURE_BASE_VIEW_INDEX: ext.FRAMEBUFFER_ATTACHMENT_TEXTURE_BASE_VIEW_INDEX_OVR,
+                FRAMEBUFFER_ATTACHMENT_TEXTURE_NUM_VIEWS:
+                    ext.FRAMEBUFFER_ATTACHMENT_TEXTURE_NUM_VIEWS_OVR,
+                FRAMEBUFFER_ATTACHMENT_TEXTURE_BASE_VIEW_INDEX:
+                    ext.FRAMEBUFFER_ATTACHMENT_TEXTURE_BASE_VIEW_INDEX_OVR,
                 MAX_VIEWS: ext.MAX_VIEWS_OVR,
                 FRAMEBUFFER_INCOMPLETE_VIEW_TARGETS: ext.FRAMEBUFFER_INCOMPLETE_VIEW_TARGETS_OVR,
 
-                framebufferTextureMultiview: ext.framebufferTextureMultiviewOVR.bind(ext)
+                framebufferTextureMultiview: ext.framebufferTextureMultiviewOVR.bind(ext),
             };
         }
     }
@@ -944,7 +1054,18 @@ void main() {
 }`;
 
 const TextureTestTexCoords = new Float32Array([
-    -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0
+    -1.0,
+    -1.0,
+    1.0,
+    -1.0,
+    -1.0,
+    1.0,
+    -1.0,
+    1.0,
+    1.0,
+    -1.0,
+    1.0,
+    1.0,
 ]);
 
 // adapted from https://stackoverflow.com/questions/28827511/

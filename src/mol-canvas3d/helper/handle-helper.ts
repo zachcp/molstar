@@ -7,7 +7,7 @@
 import { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { Scene } from '../../mol-gl/scene.ts';
 import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
-import { Vec3, Mat4, Mat3 } from '../../mol-math/linear-algebra.ts';
+import { Mat3, Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { addSphere } from '../../mol-geo/geometry/mesh/builder/sphere.ts';
 import { GraphicsRenderObject } from '../../mol-gl/render-object.ts';
 import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
@@ -34,22 +34,22 @@ const HandleParams = {
     colorZ: PD.Color(ColorNames.blue, { isEssential: true }),
     scale: PD.Numeric(0.33, { min: 0.1, max: 2, step: 0.1 }, { isEssential: true }),
 };
-type HandleParams = typeof HandleParams
-type HandleProps = PD.Values<HandleParams>
+type HandleParams = typeof HandleParams;
+type HandleProps = PD.Values<HandleParams>;
 
 export const HandleHelperParams = {
     handle: PD.MappedStatic('off', {
         on: PD.Group(HandleParams),
-        off: PD.Group({})
+        off: PD.Group({}),
     }, { cycle: true, description: 'Show handle tool' }),
 };
-export type HandleHelperParams = typeof HandleHelperParams
-export type HandleHelperProps = PD.Values<HandleHelperParams>
+export type HandleHelperParams = typeof HandleHelperParams;
+export type HandleHelperProps = PD.Values<HandleHelperParams>;
 
 export class HandleHelper {
     scene: Scene;
     props: HandleHelperProps = {
-        handle: { name: 'off', params: {} }
+        handle: { name: 'off', params: {} },
     };
 
     private renderObject: GraphicsRenderObject | undefined;
@@ -59,14 +59,18 @@ export class HandleHelper {
     getBoundingSphere(out: Sphere3D, instanceId: number) {
         if (this.renderObject) {
             Sphere3D.copy(out, this.renderObject.values.invariantBoundingSphere.ref.value);
-            Mat4.fromArray(this._transform, this.renderObject.values.aTransform.ref.value, instanceId * 16);
+            Mat4.fromArray(
+                this._transform,
+                this.renderObject.values.aTransform.ref.value,
+                instanceId * 16,
+            );
             Sphere3D.transform(out, out, this._transform);
         }
         return out;
     }
 
     setProps(props: Partial<HandleHelperProps>) {
-        this.props = produce(this.props, p => {
+        this.props = produce(this.props, (p) => {
             if (props.handle !== undefined) {
                 p.handle.name = props.handle.name;
                 if (props.handle.name === 'on') {
@@ -100,12 +104,18 @@ export class HandleHelper {
             this.setProps(this.props);
         }
 
-        Mat4.setTranslation(this.renderObject.values.aTransform.ref.value as unknown as Mat4, position);
+        Mat4.setTranslation(
+            this.renderObject.values.aTransform.ref.value as unknown as Mat4,
+            position,
+        );
         Mat4.fromMat3(this.renderObject.values.aTransform.ref.value as unknown as Mat4, rotation);
 
         // TODO make invariant to camera scaling by adjusting renderObject transform
 
-        ValueCell.update(this.renderObject.values.aTransform, this.renderObject.values.aTransform.ref.value);
+        ValueCell.update(
+            this.renderObject.values.aTransform,
+            this.renderObject.values.aTransform.ref.value,
+        );
         this.scene.update([this.renderObject], true);
     }
 
@@ -149,7 +159,7 @@ function createHandleMesh(scale: number, mesh?: Mesh) {
     const x = Vec3.scale(Vec3(), Vec3.unitX, scale);
     const y = Vec3.scale(Vec3(), Vec3.unitY, scale);
     const z = Vec3.scale(Vec3(), Vec3.unitZ, scale);
-    const cylinderProps = { radiusTop: radius, radiusBottom: radius, radialSegments: 32 };
+    const cylinderProps = { radiusTop: radius, radiusBottom: radius, radialSegments: 32 };
 
     state.currentGroup = HandleGroup.TranslateScreenXY;
     addSphere(state, Vec3.origin, radius * 3, 2);
@@ -190,11 +200,15 @@ export const HandleGroup = {
 } as const;
 
 function HandleLoci(handleHelper: HandleHelper, groupId: number, instanceId: number) {
-    return DataLoci('handle', handleHelper, [{ groupId, instanceId }],
+    return DataLoci(
+        'handle',
+        handleHelper,
+        [{ groupId, instanceId }],
         (boundingSphere: Sphere3D) => handleHelper.getBoundingSphere(boundingSphere, instanceId),
-        () => `Handle Helper | Group Id ${groupId} | Instance Id ${instanceId}`);
+        () => `Handle Helper | Group Id ${groupId} | Instance Id ${instanceId}`,
+    );
 }
-export type HandleLoci = ReturnType<typeof HandleLoci>
+export type HandleLoci = ReturnType<typeof HandleLoci>;
 export function isHandleLoci(x: Loci): x is HandleLoci {
     return x.kind === 'data-loci' && x.tag === 'handle';
 }
@@ -202,13 +216,19 @@ export function isHandleLoci(x: Loci): x is HandleLoci {
 function getHandleShape(props: HandleProps, shape?: Shape<Mesh>) {
     const scale = 10 * props.scale;
     const mesh = createHandleMesh(scale, shape?.geometry);
-    mesh.setBoundingSphere(Sphere3D.create(Vec3.create(scale / 2, scale / 2, scale / 2), scale + scale / 4));
+    mesh.setBoundingSphere(
+        Sphere3D.create(Vec3.create(scale / 2, scale / 2, scale / 2), scale + scale / 4),
+    );
     const getColor = (groupId: number) => {
         switch (groupId) {
-            case HandleGroup.TranslateObjectX: return props.colorX;
-            case HandleGroup.TranslateObjectY: return props.colorY;
-            case HandleGroup.TranslateObjectZ: return props.colorZ;
-            default: return ColorNames.grey;
+            case HandleGroup.TranslateObjectX:
+                return props.colorX;
+            case HandleGroup.TranslateObjectY:
+                return props.colorY;
+            case HandleGroup.TranslateObjectZ:
+                return props.colorZ;
+            default:
+                return ColorNames.grey;
         }
     };
     return Shape.create('handle', {}, mesh, getColor, () => 1, () => '');

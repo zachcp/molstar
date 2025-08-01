@@ -5,26 +5,25 @@
  */
 
 import { ReaderResult as Result } from '../result.ts';
-import { Task, RuntimeContext } from '../../../mol-task/index.ts';
-import { PlyFile, PlyType, PlyElement } from './schema.ts';
-import { Tokenizer, TokenBuilder, Tokens } from '../common/text/tokenizer.ts';
+import { RuntimeContext, Task } from '../../../mol-task/index.ts';
+import { PlyElement, PlyFile, PlyType } from './schema.ts';
+import { TokenBuilder, Tokenizer, Tokens } from '../common/text/tokenizer.ts';
 import { Column } from '../../../mol-data/db.ts';
 import { TokenColumn } from '../common/text/column/token.ts';
 import { StringLike } from '../../common/string-like.ts';
-
 
 // TODO add support for binary ply files
 // TODO parse elements asynchronously
 // TODO handle lists with appended properties
 
 interface State {
-    data: StringLike
-    tokenizer: Tokenizer
-    runtimeCtx: RuntimeContext
+    data: StringLike;
+    tokenizer: Tokenizer;
+    runtimeCtx: RuntimeContext;
 
-    comments: string[]
-    elementSpecs: ElementSpec[]
-    elements: PlyElement[]
+    comments: string[];
+    elementSpecs: ElementSpec[];
+    elements: PlyElement[];
 }
 
 function State(data: StringLike, runtimeCtx: RuntimeContext): State {
@@ -36,17 +35,22 @@ function State(data: StringLike, runtimeCtx: RuntimeContext): State {
 
         comments: [],
         elementSpecs: [],
-        elements: []
+        elements: [],
     };
 }
 
-type ColumnProperty = { kind: 'column', type: PlyType, name: string }
-type ListProperty = { kind: 'list', countType: PlyType, dataType: PlyType, name: string }
-type Property = ColumnProperty | ListProperty
+type ColumnProperty = { kind: 'column'; type: PlyType; name: string };
+type ListProperty = { kind: 'list'; countType: PlyType; dataType: PlyType; name: string };
+type Property = ColumnProperty | ListProperty;
 
-type TableElementSpec = { kind: 'table', name: string, count: number, properties: ColumnProperty[] }
-type ListElementSpec = { kind: 'list', name: string, count: number, property: ListProperty }
-type ElementSpec = TableElementSpec | ListElementSpec
+type TableElementSpec = {
+    kind: 'table';
+    name: string;
+    count: number;
+    properties: ColumnProperty[];
+};
+type ListElementSpec = { kind: 'list'; name: string; count: number; property: ListProperty };
+type ElementSpec = TableElementSpec | ListElementSpec;
 
 function markHeader(tokenizer: Tokenizer) {
     const endHeaderIndex = tokenizer.data.indexOf('end_header', tokenizer.position);
@@ -71,9 +75,11 @@ function parseHeader(state: State) {
     let currentCount: number | undefined;
     let currentProperties: Property[] | undefined;
 
-
     function addCurrentElementSchema() {
-        if (currentName !== undefined && currentCount !== undefined && currentProperties !== undefined) {
+        if (
+            currentName !== undefined && currentCount !== undefined &&
+            currentProperties !== undefined
+        ) {
             let isList = false;
             for (let i = 0, il = currentProperties.length; i < il; ++i) {
                 const p = currentProperties[i];
@@ -91,14 +97,14 @@ function parseHeader(state: State) {
                     kind: 'list',
                     name: currentName,
                     count: currentCount,
-                    property: currentProperties[0] as ListProperty
+                    property: currentProperties[0] as ListProperty,
                 });
             } else {
                 elementSpecs.push({
                     kind: 'table',
                     name: currentName,
                     count: currentCount,
-                    properties: currentProperties as ColumnProperty[]
+                    properties: currentProperties as ColumnProperty[],
                 });
             }
         }
@@ -121,13 +127,13 @@ function parseHeader(state: State) {
                     kind: 'list',
                     countType: PlyType(ls[2]),
                     dataType: PlyType(ls[3]),
-                    name: ls[4]
+                    name: ls[4],
                 });
             } else {
                 currentProperties.push({
                     kind: 'column',
                     type: PlyType(ls[1]),
-                    name: ls[2]
+                    name: ls[2],
                 });
             }
         } else if (l.startsWith('end_header')) {
@@ -149,11 +155,23 @@ function parseElements(state: State) {
 
 function getColumnSchema(type: PlyType): Column.Schema {
     switch (type) {
-        case 'char': case 'uchar': case 'int8': case 'uint8':
-        case 'short': case 'ushort': case 'int16': case 'uint16':
-        case 'int': case 'uint': case 'int32': case 'uint32':
+        case 'char':
+        case 'uchar':
+        case 'int8':
+        case 'uint8':
+        case 'short':
+        case 'ushort':
+        case 'int16':
+        case 'uint16':
+        case 'int':
+        case 'uint':
+        case 'int32':
+        case 'uint32':
             return Column.Schema.int;
-        case 'float': case 'double': case 'float32': case 'float64':
+        case 'float':
+        case 'double':
+        case 'float32':
+        case 'float64':
             return Column.Schema.float;
     }
 }
@@ -194,7 +212,7 @@ function parseTableElement(state: State, spec: TableElementSpec) {
         rowCount: count,
         propertyNames,
         propertyTypes,
-        getProperty: (name: string) => propertyColumns.get(name)
+        getProperty: (name: string) => propertyColumns.get(name),
     });
 }
 
@@ -223,7 +241,7 @@ function parseListElement(state: State, spec: ListElementSpec) {
     /** holds row value entries transiently */
     const listValue = {
         entries: [] as number[],
-        count: 0
+        count: 0,
     };
 
     const column = TokenColumn(tokens, getColumnSchema(property.dataType));
@@ -241,7 +259,7 @@ function parseListElement(state: State, spec: ListElementSpec) {
             }
             listValue.count = count;
             return listValue;
-        }
+        },
     });
 }
 
@@ -251,13 +269,13 @@ async function parseInternal(data: StringLike, ctx: RuntimeContext): Promise<Res
     parseHeader(state);
     parseElements(state);
     const { elements, elementSpecs, comments } = state;
-    const elementNames = elementSpecs.map(s => s.name);
+    const elementNames = elementSpecs.map((s) => s.name);
     const result = PlyFile(elements, elementNames, comments);
     return Result.success(result);
 }
 
 export function parsePly(data: StringLike) {
-    return Task.create<Result<PlyFile>>('Parse PLY', async ctx => {
+    return Task.create<Result<PlyFile>>('Parse PLY', async (ctx) => {
         return await parseInternal(data, ctx);
     });
 }

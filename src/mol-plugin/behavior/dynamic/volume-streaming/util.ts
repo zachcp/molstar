@@ -5,14 +5,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure, Model } from '../../../../mol-model/structure.ts';
+import { Model, Structure } from '../../../../mol-model/structure.ts';
 import { VolumeServerInfo } from './model.ts';
 import { PluginContext } from '../../../context.ts';
 import { RuntimeContext } from '../../../../mol-task/index.ts';
 import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif.ts';
 import { PluginConfig } from '../../../config.ts';
 
-export function getStreamingMethod(s?: Structure, defaultKind: VolumeServerInfo.Kind = 'x-ray'): VolumeServerInfo.Kind {
+export function getStreamingMethod(
+    s?: Structure,
+    defaultKind: VolumeServerInfo.Kind = 'x-ray',
+): VolumeServerInfo.Kind {
     if (!s) return defaultKind;
 
     const model = s.models[0];
@@ -38,7 +41,10 @@ export function getEmIds(model: Model): string[] {
     if (!db_name.isDefined) return [model.entryId];
 
     for (let i = 0, il = db_name.rowCount; i < il; ++i) {
-        if (db_name.value(i).toUpperCase() === 'EMDB' && content_type.value(i) === 'associated EM volume') {
+        if (
+            db_name.value(i).toUpperCase() === 'EMDB' &&
+            content_type.value(i) === 'associated EM volume'
+        ) {
             ids.push(db_id.value(i));
         }
     }
@@ -54,21 +60,37 @@ export function getIds(method: VolumeServerInfo.Kind, s?: Structure): string[] {
     if (!s || !s.models.length) return [];
     const model = s.models[0];
     switch (method) {
-        case 'em': return getEmIds(model);
-        case 'x-ray': return getXrayIds(model);
+        case 'em':
+            return getEmIds(model);
+        case 'x-ray':
+            return getXrayIds(model);
     }
 }
 
-export async function getContourLevel(provider: 'emdb' | 'pdbe', plugin: PluginContext, taskCtx: RuntimeContext, emdbId: string) {
+export async function getContourLevel(
+    provider: 'emdb' | 'pdbe',
+    plugin: PluginContext,
+    taskCtx: RuntimeContext,
+    emdbId: string,
+) {
     switch (provider) {
-        case 'emdb': return getContourLevelEmdb(plugin, taskCtx, emdbId);
-        case 'pdbe': return getContourLevelPdbe(plugin, taskCtx, emdbId);
+        case 'emdb':
+            return getContourLevelEmdb(plugin, taskCtx, emdbId);
+        case 'pdbe':
+            return getContourLevelPdbe(plugin, taskCtx, emdbId);
     }
 }
 
-export async function getContourLevelEmdb(plugin: PluginContext, taskCtx: RuntimeContext, emdbId: string) {
+export async function getContourLevelEmdb(
+    plugin: PluginContext,
+    taskCtx: RuntimeContext,
+    emdbId: string,
+) {
     const emdbHeaderServer = plugin.config.get(PluginConfig.VolumeStreaming.EmdbHeaderServer);
-    const header = await plugin.fetch({ url: `${emdbHeaderServer}/${emdbId.toUpperCase()}/header/${emdbId.toLowerCase()}.xml`, type: 'xml' }).runInContext(taskCtx);
+    const header = await plugin.fetch({
+        url: `${emdbHeaderServer}/${emdbId.toUpperCase()}/header/${emdbId.toLowerCase()}.xml`,
+        type: 'xml',
+    }).runInContext(taskCtx);
     const map = header.getElementsByTagName('map')[0];
     const contours = map.getElementsByTagName('contour');
 
@@ -83,10 +105,17 @@ export async function getContourLevelEmdb(plugin: PluginContext, taskCtx: Runtim
     return contourLevel;
 }
 
-export async function getContourLevelPdbe(plugin: PluginContext, taskCtx: RuntimeContext, emdbId: string) {
+export async function getContourLevelPdbe(
+    plugin: PluginContext,
+    taskCtx: RuntimeContext,
+    emdbId: string,
+) {
     // TODO: parametrize URL in plugin settings?
     emdbId = emdbId.toUpperCase();
-    const header = await plugin.fetch({ url: `https://www.ebi.ac.uk/emdb/api/entry/map/${emdbId}`, type: 'json' }).runInContext(taskCtx);
+    const header = await plugin.fetch({
+        url: `https://www.ebi.ac.uk/emdb/api/entry/map/${emdbId}`,
+        type: 'json',
+    }).runInContext(taskCtx);
     const contours = header?.map?.contour_list?.contour;
 
     if (!contours || contours.length === 0) {
@@ -97,10 +126,17 @@ export async function getContourLevelPdbe(plugin: PluginContext, taskCtx: Runtim
     return contours.find((c: any) => c.primary)?.level ?? contours[0].level;
 }
 
-async function getContourLevelPdbeLegacy(plugin: PluginContext, taskCtx: RuntimeContext, emdbId: string) {
+async function getContourLevelPdbeLegacy(
+    plugin: PluginContext,
+    taskCtx: RuntimeContext,
+    emdbId: string,
+) {
     // TODO: parametrize URL in plugin settings?
     emdbId = emdbId.toUpperCase();
-    const header = await plugin.fetch({ url: `https://www.ebi.ac.uk/pdbe/api/emdb/entry/map/${emdbId}`, type: 'json' }).runInContext(taskCtx);
+    const header = await plugin.fetch({
+        url: `https://www.ebi.ac.uk/pdbe/api/emdb/entry/map/${emdbId}`,
+        type: 'json',
+    }).runInContext(taskCtx);
     const emdbEntry = header?.[emdbId];
     let contourLevel: number | undefined = void 0;
     if (emdbEntry?.[0]?.map?.contour_level?.value !== void 0) {
@@ -112,12 +148,17 @@ async function getContourLevelPdbeLegacy(plugin: PluginContext, taskCtx: Runtime
 
 export async function getEmdbIds(plugin: PluginContext, taskCtx: RuntimeContext, pdbId: string) {
     // TODO: parametrize to a differnt URL? in plugin settings perhaps
-    const summary = await plugin.fetch({ url: `https://www.ebi.ac.uk/pdbe/api/pdb/entry/summary/${pdbId}`, type: 'json' }).runInContext(taskCtx);
+    const summary = await plugin.fetch({
+        url: `https://www.ebi.ac.uk/pdbe/api/pdb/entry/summary/${pdbId}`,
+        type: 'json',
+    }).runInContext(taskCtx);
 
     const summaryEntry = summary?.[pdbId];
     const emdbIds: string[] = [];
     if (summaryEntry?.[0]?.related_structures) {
-        const emdb = summaryEntry[0].related_structures.filter((s: any) => s.resource === 'EMDB' && s.relationship === 'associated EM volume');
+        const emdb = summaryEntry[0].related_structures.filter((s: any) =>
+            s.resource === 'EMDB' && s.relationship === 'associated EM volume'
+        );
         if (!emdb.length) {
             throw new Error(`No related EMDB entry found for '${pdbId}'.`);
         }

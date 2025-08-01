@@ -8,11 +8,18 @@
 import { idFactory } from './id-factory.ts';
 
 /** A mutable value reference. */
-interface ValueRef<T> { ref: T }
+interface ValueRef<T> {
+    ref: T;
+}
 
 namespace ValueRef {
-    export function create<T>(ref: T): ValueRef<T> { return { ref }; }
-    export function set<T>(ref: ValueRef<T>, value: T) { ref.ref = value; return ref; }
+    export function create<T>(ref: T): ValueRef<T> {
+        return { ref };
+    }
+    export function set<T>(ref: ValueRef<T>, value: T) {
+        ref.ref = value;
+        return ref;
+    }
 }
 
 const getNextId = idFactory(0, 0x7FFFFFFF);
@@ -23,11 +30,11 @@ const getNextId = idFactory(0, 0x7FFFFFFF);
  */
 type ValueBox<T, D = never> = {
     /** Unique identifier in the range 0 to 0x7FFFFFFF */
-    readonly id: number,
-    readonly version: number,
-    readonly metadata: D,
-    readonly value: T,
-}
+    readonly id: number;
+    readonly version: number;
+    readonly metadata: D;
+    readonly value: T;
+};
 
 namespace ValueBox {
     export function create<T, D = never>(value: T, metadata?: D): ValueBox<T, D> {
@@ -41,7 +48,7 @@ namespace ValueBox {
 }
 
 /** An immutable box stored inside a mutable cell. */
-type ValueCell<T, D = never> = ValueRef<ValueBox<T, D>>
+type ValueCell<T, D = never> = ValueRef<ValueBox<T, D>>;
 
 namespace ValueCell {
     export function create<T, D = never>(value: T, metadata?: D): ValueCell<T, D> {
@@ -63,4 +70,4 @@ namespace ValueCell {
     }
 }
 
-export { ValueRef, ValueBox, ValueCell };
+export { ValueBox, ValueCell, ValueRef };

@@ -10,7 +10,11 @@ import { ColorNames } from '../../../mol-util/color/names.ts';
 import { Text } from '../../../mol-geo/geometry/text/text.ts';
 
 export const MeasurementRepresentationCommonTextParams = {
-    customText: PD.Text('', { label: 'Text', description: 'Override the label with custom value.', isEssential: true }),
+    customText: PD.Text('', {
+        label: 'Text',
+        description: 'Override the label with custom value.',
+        isEssential: true,
+    }),
     textColor: PD.Color(ColorNames.black, { isEssential: true }),
     textSize: PD.Numeric(0.5, { min: 0.1, max: 10, step: 0.1 }, { isEssential: true }),
 };
@@ -18,6 +22,6 @@ export const MeasurementRepresentationCommonTextParams = {
 export const LociLabelTextParams = {
     ...Text.Params,
     ...MeasurementRepresentationCommonTextParams,
-    borderWidth: PD.Numeric(0.2, { min: 0, max: 0.5, step: 0.01 })
+    borderWidth: PD.Numeric(0.2, { min: 0, max: 0.5, step: 0.01 }),
 };
-export type LociLabelTextParams = typeof LociLabelTextParams
+export type LociLabelTextParams = typeof LociLabelTextParams;

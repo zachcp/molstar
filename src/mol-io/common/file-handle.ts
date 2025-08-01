@@ -9,7 +9,7 @@ import { defaults, noop } from '../../mol-util/index.ts';
 import { SimpleBuffer } from './simple-buffer.ts';
 
 export interface FileHandle {
-    name: string
+    name: string;
     /**
      * Asynchronously reads data, returning buffer and number of bytes read
      *
@@ -18,7 +18,12 @@ export interface FileHandle {
      * @param length The number of bytes to read.
      * @param byteOffset The offset in the buffer at which to start reading.
      */
-    readBuffer(position: number, sizeOrBuffer: SimpleBuffer | number, length?: number, byteOffset?: number): Promise<{ bytesRead: number, buffer: SimpleBuffer }>
+    readBuffer(
+        position: number,
+        sizeOrBuffer: SimpleBuffer | number,
+        length?: number,
+        byteOffset?: number,
+    ): Promise<{ bytesRead: number; buffer: SimpleBuffer }>;
 
     /**
      * Asynchronously writes buffer, returning the number of bytes written.
@@ -27,7 +32,7 @@ export interface FileHandle {
      * @param buffer - The buffer data to be written.
      * @param length — The number of bytes to write. If not supplied, defaults to buffer.length
      */
-    writeBuffer(position: number, buffer: SimpleBuffer, length?: number): Promise<number>
+    writeBuffer(position: number, buffer: SimpleBuffer, length?: number): Promise<number>;
 
     /**
      * Synchronously writes buffer, returning the number of bytes written.
@@ -36,17 +41,22 @@ export interface FileHandle {
      * @param buffer - The buffer data to be written.
      * @param length — The number of bytes to write. If not supplied, defaults to buffer.length
      */
-    writeBufferSync(position: number, buffer: SimpleBuffer, length?: number): number
+    writeBufferSync(position: number, buffer: SimpleBuffer, length?: number): number;
 
     /** Closes a file handle */
-    close(): void
+    close(): void;
 }
 
 export namespace FileHandle {
     export function fromBuffer(buffer: SimpleBuffer, name: string): FileHandle {
         return {
             name,
-            readBuffer: (position: number, sizeOrBuffer: SimpleBuffer | number, size?: number, byteOffset?: number) => {
+            readBuffer: (
+                position: number,
+                sizeOrBuffer: SimpleBuffer | number,
+                size?: number,
+                byteOffset?: number,
+            ) => {
                 let bytesRead: number;
                 let outBuffer: SimpleBuffer;
                 if (typeof sizeOrBuffer === 'number') {
@@ -54,7 +64,9 @@ export namespace FileHandle {
                     const start = position;
                     const end = Math.min(buffer.length, start + size);
                     bytesRead = end - start;
-                    outBuffer = SimpleBuffer.fromUint8Array(new Uint8Array(buffer.buffer, start, end - start));
+                    outBuffer = SimpleBuffer.fromUint8Array(
+                        new Uint8Array(buffer.buffer, start, end - start),
+                    );
                 } else {
                     size = defaults(size, sizeOrBuffer.length);
                     const start = position;
@@ -73,12 +85,12 @@ export namespace FileHandle {
                 console.error('.writeBuffer not implemented for FileHandle.fromBuffer');
                 return Promise.resolve(0);
             },
-            writeBufferSync: (position: number, buffer: SimpleBuffer, length?: number,) => {
+            writeBufferSync: (position: number, buffer: SimpleBuffer, length?: number) => {
                 length = defaults(length, buffer.length);
                 console.error('.writeSync not implemented for FileHandle.fromBuffer');
                 return 0;
             },
-            close: noop
+            close: noop,
         };
     }
 }

@@ -7,9 +7,14 @@
 
 import { UUID } from '../../../mol-util/uuid.ts';
 import { StructureSequence } from './properties/sequence.ts';
-import { AtomicHierarchy, AtomicConformation, AtomicRanges } from './properties/atomic.ts';
-import { CoarseHierarchy, CoarseConformation } from './properties/coarse.ts';
-import { Entities, ChemicalComponentMap, MissingResidues, StructAsymMap } from './properties/common.ts';
+import { AtomicConformation, AtomicHierarchy, AtomicRanges } from './properties/atomic.ts';
+import { CoarseConformation, CoarseHierarchy } from './properties/coarse.ts';
+import {
+    ChemicalComponentMap,
+    Entities,
+    MissingResidues,
+    StructAsymMap,
+} from './properties/common.ts';
 import { CustomProperties } from '../../custom-property.ts';
 import { SaccharideComponentMap } from '../structure/carbohydrates/constants.ts';
 import { ModelFormat } from '../../../mol-model-formats/format.ts';
@@ -26,7 +31,7 @@ import { SymmetryOperator } from '../../../mol-math/geometry.ts';
 import { ModelSymmetry } from '../../../mol-model-formats/structure/property/symmetry.ts';
 import { Column } from '../../../mol-data/db.ts';
 import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property.ts';
-import { Trajectory, ArrayTrajectory } from '../trajectory.ts';
+import { ArrayTrajectory, Trajectory } from '../trajectory.ts';
 import { Unit } from '../structure.ts';
 import { SortedArray } from '../../../mol-data/int/sorted-array.ts';
 import { PolymerType } from './types.ts';
@@ -37,59 +42,60 @@ import { ModelSecondaryStructure } from '../../../mol-model-formats/structure/pr
  *
  * "Atoms" are integers in the range [0, atomCount).
  */
-export interface Model extends Readonly<{
-    id: UUID,
-    entryId: string,
-    label: string,
+export interface Model extends
+    Readonly<{
+        id: UUID;
+        entryId: string;
+        label: string;
 
-    /** the name of the entry/file/collection the model is part of */
-    entry: string,
+        /** the name of the entry/file/collection the model is part of */
+        entry: string;
 
-    /**
-     * corresponds to
-     * - for IHM: `ihm_model_list.model_id`
-     * - for standard mmCIF: `atom_site.pdbx_PDB_model_num`
-     * - for models from coordinates: frame index
-     */
-    modelNum: number,
+        /**
+         * corresponds to
+         * - for IHM: `ihm_model_list.model_id`
+         * - for standard mmCIF: `atom_site.pdbx_PDB_model_num`
+         * - for models from coordinates: frame index
+         */
+        modelNum: number;
 
-    sourceData: ModelFormat,
+        sourceData: ModelFormat;
 
-    parent: Model | undefined,
+        parent: Model | undefined;
 
-    entities: Entities,
-    sequence: StructureSequence,
+        entities: Entities;
+        sequence: StructureSequence;
 
-    atomicHierarchy: AtomicHierarchy,
-    atomicConformation: AtomicConformation,
-    atomicRanges: AtomicRanges,
-    atomicChainOperatorMappinng: Map<ChainIndex, SymmetryOperator>,
+        atomicHierarchy: AtomicHierarchy;
+        atomicConformation: AtomicConformation;
+        atomicRanges: AtomicRanges;
+        atomicChainOperatorMappinng: Map<ChainIndex, SymmetryOperator>;
 
-    properties: {
-        /** map that holds details about unobserved or zero occurrence residues */
-        readonly missingResidues: MissingResidues,
-        /** maps residue name to `ChemicalComponent` data */
-        readonly chemicalComponentMap: ChemicalComponentMap
-        /** maps residue name to `SaccharideComponent` data */
-        readonly saccharideComponentMap: SaccharideComponentMap
-        /** maps label_asym_id name to `StructAsym` data */
-        readonly structAsymMap: StructAsymMap
-    },
+        properties: {
+            /** map that holds details about unobserved or zero occurrence residues */
+            readonly missingResidues: MissingResidues;
+            /** maps residue name to `ChemicalComponent` data */
+            readonly chemicalComponentMap: ChemicalComponentMap;
+            /** maps residue name to `SaccharideComponent` data */
+            readonly saccharideComponentMap: SaccharideComponentMap;
+            /** maps label_asym_id name to `StructAsym` data */
+            readonly structAsymMap: StructAsymMap;
+        };
 
-    customProperties: CustomProperties,
+        customProperties: CustomProperties;
 
-    /**
-     * Not to be accessed directly, each custom property descriptor
-     * defines property accessors that use this field to store the data.
-     */
-    _staticPropertyData: { [name: string]: any },
-    _dynamicPropertyData: { [name: string]: any },
+        /**
+         * Not to be accessed directly, each custom property descriptor
+         * defines property accessors that use this field to store the data.
+         */
+        _staticPropertyData: { [name: string]: any };
+        _dynamicPropertyData: { [name: string]: any };
 
-    coarseHierarchy: CoarseHierarchy,
-    coarseConformation: CoarseConformation
-}> {
-
-} { }
+        coarseHierarchy: CoarseHierarchy;
+        coarseConformation: CoarseConformation;
+    }> {
+}
+{}
 
 export namespace Model {
     function _trajectoryFromModelAndCoordinates(model: Model, coordinates: Coordinates) {
@@ -103,7 +109,9 @@ export namespace Model {
         for (let i = 0, il = frames.length; i < il; ++i) {
             const f = frames[i];
             if (f.elementCount !== elementCount) {
-                throw new Error(`Frame element count mismatch, got ${f.elementCount} but expected ${elementCount}.`);
+                throw new Error(
+                    `Frame element count mismatch, got ${f.elementCount} but expected ${elementCount}.`,
+                );
             }
 
             const m = {
@@ -115,7 +123,7 @@ export namespace Model {
                 // coarseConformation: coarse.conformation,
                 customProperties: new CustomProperties(),
                 _staticPropertyData: Object.create(null),
-                _dynamicPropertyData: Object.create(null)
+                _dynamicPropertyData: Object.create(null),
             };
 
             if (f.cell) {
@@ -137,24 +145,37 @@ export namespace Model {
         if ('__srcIndexArray__' in model._staticPropertyData) {
             srcIndexArray = model._dynamicPropertyData.__srcIndexArray__;
         } else {
-            srcIndexArray = Column.isIdentity(srcIndex) ? void 0 : srcIndex.toArray({ array: Int32Array });
+            srcIndexArray = Column.isIdentity(srcIndex)
+                ? void 0
+                : srcIndex.toArray({ array: Int32Array });
             model._dynamicPropertyData.__srcIndexArray__ = srcIndexArray;
         }
         return srcIndexArray;
     }
 
-    export function trajectoryFromModelAndCoordinates(model: Model, coordinates: Coordinates): Trajectory {
-        return new ArrayTrajectory(_trajectoryFromModelAndCoordinates(model, coordinates).trajectory);
+    export function trajectoryFromModelAndCoordinates(
+        model: Model,
+        coordinates: Coordinates,
+    ): Trajectory {
+        return new ArrayTrajectory(
+            _trajectoryFromModelAndCoordinates(model, coordinates).trajectory,
+        );
     }
 
-    export function trajectoryFromTopologyAndCoordinates(topology: Topology, coordinates: Coordinates): Task<Trajectory> {
-        return Task.create('Create Trajectory', async ctx => {
+    export function trajectoryFromTopologyAndCoordinates(
+        topology: Topology,
+        coordinates: Coordinates,
+    ): Task<Trajectory> {
+        return Task.create('Create Trajectory', async (ctx) => {
             const models = await createModels(topology.basic, topology.sourceData, ctx);
             if (models.frameCount === 0) throw new Error('found no model');
             const model = models.representative;
             const { trajectory } = _trajectoryFromModelAndCoordinates(model, coordinates);
 
-            const bondData = { pairs: topology.bonds, count: model.atomicHierarchy.atoms._rowCount };
+            const bondData = {
+                pairs: topology.bonds,
+                count: model.atomicHierarchy.atoms._rowCount,
+            };
             const indexPairBonds = IndexPairBonds.fromData(bondData);
             const coarseGrained = isCoarseGrained(model);
 
@@ -172,7 +193,7 @@ export namespace Model {
         return Coordinates.getAtomicConformation(frame, {
             atomId: model.atomicConformation.atomId,
             occupancy: model.atomicConformation.occupancy,
-            B_iso_or_equiv: model.atomicConformation.B_iso_or_equiv
+            B_iso_or_equiv: model.atomicConformation.B_iso_or_equiv,
         }, getSourceIndexArray(model));
     }
 
@@ -196,37 +217,46 @@ export namespace Model {
     }
 
     const InvertedAtomSrcIndexProp = '__InvertedAtomSrcIndex__';
-    export function getInvertedAtomSourceIndex(model: Model): { isIdentity: boolean, invertedIndex: ArrayLike<ElementIndex> } {
-        if (model._staticPropertyData[InvertedAtomSrcIndexProp]) return model._staticPropertyData[InvertedAtomSrcIndexProp];
+    export function getInvertedAtomSourceIndex(
+        model: Model,
+    ): { isIdentity: boolean; invertedIndex: ArrayLike<ElementIndex> } {
+        if (model._staticPropertyData[InvertedAtomSrcIndexProp]) {
+            return model._staticPropertyData[InvertedAtomSrcIndexProp];
+        }
         const index = invertIndex(model.atomicHierarchy.atomSourceIndex);
         model._staticPropertyData[InvertedAtomSrcIndexProp] = index;
         return index;
     }
 
     const TrajectoryInfoProp = '__TrajectoryInfo__';
-    export type TrajectoryInfo = { readonly index: number, readonly size: number }
+    export type TrajectoryInfo = { readonly index: number; readonly size: number };
     export const TrajectoryInfo = {
         get(model: Model): TrajectoryInfo {
             return model._dynamicPropertyData[TrajectoryInfoProp] || { index: 0, size: 1 };
         },
         set(model: Model, trajectoryInfo: TrajectoryInfo) {
             return model._dynamicPropertyData[TrajectoryInfoProp] = trajectoryInfo;
-        }
+        },
     };
 
     const AsymIdCountProp = '__AsymIdCount__';
-    export type AsymIdCount = { readonly auth: number, readonly label: number }
+    export type AsymIdCount = { readonly auth: number; readonly label: number };
     export const AsymIdCount = {
         get(model: Model): AsymIdCount {
-            if (model._dynamicPropertyData[AsymIdCountProp]) return model._dynamicPropertyData[AsymIdCountProp];
+            if (model._dynamicPropertyData[AsymIdCountProp]) {
+                return model._dynamicPropertyData[AsymIdCountProp];
+            }
             const asymIdCount = getAsymIdCount(model);
             model._dynamicPropertyData[AsymIdCountProp] = asymIdCount;
             return asymIdCount;
         },
     };
 
-    export type AsymIdOffset = { auth: number, label: number };
-    export const AsymIdOffset = CustomModelProperty.createSimple<AsymIdOffset>('asym_id_offset', 'static');
+    export type AsymIdOffset = { auth: number; label: number };
+    export const AsymIdOffset = CustomModelProperty.createSimple<AsymIdOffset>(
+        'asym_id_offset',
+        'static',
+    );
 
     export type Index = number;
     export const Index = CustomModelProperty.createSimple<Index>('index', 'static');
@@ -244,15 +274,15 @@ export namespace Model {
 
     const CoordinatesHistoryProp = '__CoordinatesHistory__';
     export type CoordinatesHistory = {
-        areEqual(elements: SortedArray<ElementIndex>, kind: Unit.Kind, model: Model): boolean
-    }
+        areEqual(elements: SortedArray<ElementIndex>, kind: Unit.Kind, model: Model): boolean;
+    };
     export const CoordinatesHistory = {
         get(model: Model): CoordinatesHistory | undefined {
             return model._staticPropertyData[CoordinatesHistoryProp];
         },
         set(model: Model, coordinatesHistory: CoordinatesHistory) {
             return model._staticPropertyData[CoordinatesHistoryProp] = coordinatesHistory;
-        }
+        },
     };
 
     const CoarseGrainedProp = '__CoarseGrained__';
@@ -262,7 +292,7 @@ export namespace Model {
         },
         set(model: Model, coarseGrained: boolean) {
             return model._staticPropertyData[CoarseGrainedProp] = coarseGrained;
-        }
+        },
     };
     /**
      * Mark as coarse grained if any of the following conditions are met:
@@ -407,7 +437,10 @@ export namespace Model {
         if (!MmcifFormat.is(model.sourceData)) return false;
         const { db } = model.sourceData.data;
         for (let i = 0; i < db.struct.pdbx_structure_determination_methodology.rowCount; i++) {
-            if (db.struct.pdbx_structure_determination_methodology.value(i).toLowerCase() === 'experimental') return true;
+            if (
+                db.struct.pdbx_structure_determination_methodology.value(i).toLowerCase() ===
+                    'experimental'
+            ) return true;
         }
         return false;
     }
@@ -416,7 +449,10 @@ export namespace Model {
         if (!MmcifFormat.is(model.sourceData)) return false;
         const { db } = model.sourceData.data;
         for (let i = 0; i < db.struct.pdbx_structure_determination_methodology.rowCount; i++) {
-            if (db.struct.pdbx_structure_determination_methodology.value(i).toLowerCase() === 'integrative') return true;
+            if (
+                db.struct.pdbx_structure_determination_methodology.value(i).toLowerCase() ===
+                    'integrative'
+            ) return true;
         }
         return false;
     }
@@ -425,7 +461,10 @@ export namespace Model {
         if (!MmcifFormat.is(model.sourceData)) return false;
         const { db } = model.sourceData.data;
         for (let i = 0; i < db.struct.pdbx_structure_determination_methodology.rowCount; i++) {
-            if (db.struct.pdbx_structure_determination_methodology.value(i).toLowerCase() === 'computational') return true;
+            if (
+                db.struct.pdbx_structure_determination_methodology.value(i).toLowerCase() ===
+                    'computational'
+            ) return true;
         }
         return false;
     }
@@ -450,7 +489,10 @@ export namespace Model {
         const { db } = model.sourceData.data;
         const { db_name, content_type } = db.pdbx_database_related;
         for (let i = 0, il = db.pdbx_database_related._rowCount; i < il; ++i) {
-            if (db_name.value(i).toUpperCase() === 'EMDB' && content_type.value(i) === 'associated EM volume') {
+            if (
+                db_name.value(i).toUpperCase() === 'EMDB' &&
+                content_type.value(i) === 'associated EM volume'
+            ) {
                 return true;
             }
         }
@@ -472,7 +514,8 @@ export namespace Model {
                 !db.exptl.method.isDefined ||
                 (isFromXray(model) && (
                     !db.pdbx_database_status.status_code_sf.isDefined ||
-                    db.pdbx_database_status.status_code_sf.valueKind(0) === Column.ValueKinds.Unknown
+                    db.pdbx_database_status.status_code_sf.valueKind(0) ===
+                        Column.ValueKinds.Unknown
                 )) ||
                 (isFromEm(model) && (
                     !db.pdbx_database_related.db_name.isDefined

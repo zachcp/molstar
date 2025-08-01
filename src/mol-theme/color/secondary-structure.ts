@@ -5,15 +5,18 @@
  */
 
 import { Color, ColorMap } from '../../mol-util/color/index.ts';
-import { StructureElement, Unit, Bond, ElementIndex } from '../../mol-model/structure.ts';
+import { Bond, ElementIndex, StructureElement, Unit } from '../../mol-model/structure.ts';
 import { Location } from '../../mol-model/location.ts';
 import type { ColorTheme } from '../color.ts';
-import { SecondaryStructureType, MoleculeType } from '../../mol-model/structure/model/types.ts';
+import { MoleculeType, SecondaryStructureType } from '../../mol-model/structure/model/types.ts';
 import { getElementMoleculeType } from '../../mol-model/structure/util.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { ThemeDataContext } from '../theme.ts';
 import { TableLegend } from '../../mol-util/legend.ts';
-import { SecondaryStructureProvider, SecondaryStructureValue } from '../../mol-model-props/computed/secondary-structure.ts';
+import {
+    SecondaryStructureProvider,
+    SecondaryStructureValue,
+} from '../../mol-model-props/computed/secondary-structure.ts';
 import { getAdjustedColorMap } from '../../mol-util/color/color.ts';
 import { getColorMapParams } from '../../mol-util/color/params.ts';
 import { CustomProperty } from '../../mol-model-props/common/custom-property.ts';
@@ -28,37 +31,46 @@ export const SecondaryStructureColors = ColorMap({
     'betaTurn': 0x6080FF,
     'betaStrand': 0xFFC800,
     'coil': 0xFFFFFF,
-    'bend': 0x66D8C9 /* biting original color used 0x00FF00 */,
+    'bend': 0x66D8C9, /* biting original color used 0x00FF00 */
     'turn': 0x00B266,
 
     'dna': 0xAE00FE,
     'rna': 0xFD0162,
 
-    'carbohydrate': 0xA6A6FA
+    'carbohydrate': 0xA6A6FA,
 });
-export type SecondaryStructureColors = typeof SecondaryStructureColors
+export type SecondaryStructureColors = typeof SecondaryStructureColors;
 
 const DefaultSecondaryStructureColor = Color(0x808080);
-const Description = 'Assigns a color based on the type of secondary structure and basic molecule type.';
+const Description =
+    'Assigns a color based on the type of secondary structure and basic molecule type.';
 
 export const SecondaryStructureColorThemeParams = {
     saturation: PD.Numeric(-1, { min: -6, max: 6, step: 0.1 }),
     lightness: PD.Numeric(0, { min: -6, max: 6, step: 0.1 }),
     colors: PD.MappedStatic('default', {
         'default': PD.EmptyGroup(),
-        'custom': PD.Group(getColorMapParams(SecondaryStructureColors))
-    })
+        'custom': PD.Group(getColorMapParams(SecondaryStructureColors)),
+    }),
 };
-export type SecondaryStructureColorThemeParams = typeof SecondaryStructureColorThemeParams
+export type SecondaryStructureColorThemeParams = typeof SecondaryStructureColorThemeParams;
 export function getSecondaryStructureColorThemeParams(ctx: ThemeDataContext) {
     return SecondaryStructureColorThemeParams; // TODO return copy
 }
 
-export function secondaryStructureColor(colorMap: SecondaryStructureColors, unit: Unit, element: ElementIndex, computedSecondaryStructure?: SecondaryStructureValue): Color {
+export function secondaryStructureColor(
+    colorMap: SecondaryStructureColors,
+    unit: Unit,
+    element: ElementIndex,
+    computedSecondaryStructure?: SecondaryStructureValue,
+): Color {
     let secStrucType = SecondaryStructureType.create(SecondaryStructureType.Flag.None);
     if (computedSecondaryStructure && Unit.isAtomic(unit)) {
         const secondaryStructure = computedSecondaryStructure.get(unit.invariantId);
-        if (secondaryStructure) secStrucType = secondaryStructure.type[secondaryStructure.getIndex(unit.residueIndex[element])];
+        if (secondaryStructure) {
+            secStrucType =
+                secondaryStructure.type[secondaryStructure.getIndex(unit.residueIndex[element])];
+        }
     }
 
     if (SecondaryStructureType.is(secStrucType, SecondaryStructureType.Flag.Helix)) {
@@ -89,17 +101,37 @@ export function secondaryStructureColor(colorMap: SecondaryStructureColors, unit
     return DefaultSecondaryStructureColor;
 }
 
-export function SecondaryStructureColorTheme(ctx: ThemeDataContext, props: PD.Values<SecondaryStructureColorThemeParams>): ColorTheme<SecondaryStructureColorThemeParams> {
-    const computedSecondaryStructure = ctx.structure && SecondaryStructureProvider.get(ctx.structure);
-    const contextHash = computedSecondaryStructure ? hash2(computedSecondaryStructure.id, computedSecondaryStructure.version) : -1;
+export function SecondaryStructureColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<SecondaryStructureColorThemeParams>,
+): ColorTheme<SecondaryStructureColorThemeParams> {
+    const computedSecondaryStructure = ctx.structure &&
+        SecondaryStructureProvider.get(ctx.structure);
+    const contextHash = computedSecondaryStructure
+        ? hash2(computedSecondaryStructure.id, computedSecondaryStructure.version)
+        : -1;
 
-    const colorMap = getAdjustedColorMap(props.colors.name === 'default' ? SecondaryStructureColors : props.colors.params, props.saturation, props.lightness);
+    const colorMap = getAdjustedColorMap(
+        props.colors.name === 'default' ? SecondaryStructureColors : props.colors.params,
+        props.saturation,
+        props.lightness,
+    );
 
     function color(location: Location): Color {
         if (StructureElement.Location.is(location)) {
-            return secondaryStructureColor(colorMap, location.unit, location.element, computedSecondaryStructure?.value);
+            return secondaryStructureColor(
+                colorMap,
+                location.unit,
+                location.element,
+                computedSecondaryStructure?.value,
+            );
         } else if (Bond.isLocation(location)) {
-            return secondaryStructureColor(colorMap, location.aUnit, location.aUnit.elements[location.aIndex], computedSecondaryStructure?.value);
+            return secondaryStructureColor(
+                colorMap,
+                location.aUnit,
+                location.aUnit.elements[location.aIndex],
+                computedSecondaryStructure?.value,
+            );
         }
         return DefaultSecondaryStructureColor;
     }
@@ -112,13 +144,18 @@ export function SecondaryStructureColorTheme(ctx: ThemeDataContext, props: PD.Va
         props,
         contextHash,
         description: Description,
-        legend: TableLegend(Object.keys(colorMap).map(name => {
-            return [name, (colorMap as any)[name] as Color] as [string, Color];
-        }).concat([['Other', DefaultSecondaryStructureColor]]))
+        legend: TableLegend(
+            Object.keys(colorMap).map((name) => {
+                return [name, (colorMap as any)[name] as Color] as [string, Color];
+            }).concat([['Other', DefaultSecondaryStructureColor]]),
+        ),
     };
 }
 
-export const SecondaryStructureColorThemeProvider: ColorTheme.Provider<SecondaryStructureColorThemeParams, 'secondary-structure'> = {
+export const SecondaryStructureColorThemeProvider: ColorTheme.Provider<
+    SecondaryStructureColorThemeParams,
+    'secondary-structure'
+> = {
     name: 'secondary-structure',
     label: 'Secondary Structure',
     category: ColorThemeCategory.Residue,
@@ -127,7 +164,10 @@ export const SecondaryStructureColorThemeProvider: ColorTheme.Provider<Secondary
     defaultValues: PD.getDefaultValues(SecondaryStructureColorThemeParams),
     isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
     ensureCustomProperties: {
-        attach: (ctx: CustomProperty.Context, data: ThemeDataContext) => data.structure ? SecondaryStructureProvider.attach(ctx, data.structure, void 0, true) : Promise.resolve(),
-        detach: (data) => data.structure && SecondaryStructureProvider.ref(data.structure, false)
-    }
+        attach: (ctx: CustomProperty.Context, data: ThemeDataContext) =>
+            data.structure
+                ? SecondaryStructureProvider.attach(ctx, data.structure, void 0, true)
+                : Promise.resolve(),
+        detach: (data) => data.structure && SecondaryStructureProvider.ref(data.structure, false),
+    },
 };

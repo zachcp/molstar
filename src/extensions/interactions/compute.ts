@@ -6,20 +6,23 @@
 
 import { InteractionsProps } from '../../mol-model-props/computed/interactions.ts';
 import { FeatureType } from '../../mol-model-props/computed/interactions/common.ts';
-import { computeInteractions, Interactions } from '../../mol-model-props/computed/interactions/interactions.ts';
+import {
+    computeInteractions,
+    Interactions,
+} from '../../mol-model-props/computed/interactions/interactions.ts';
 import { Structure, StructureElement, Unit } from '../../mol-model/structure.ts';
 import { RuntimeContext } from '../../mol-task/index.ts';
 import { AssetManager } from '../../mol-util/assets.ts';
 import { InteractionInfo, InteractionTypeToKind, StructureInteractions } from './model.ts';
 
 export interface ComputeInteractionsOptions {
-    interactions?: InteractionsProps
+    interactions?: InteractionsProps;
 }
 
 export async function computeContacts(
     ctx: RuntimeContext,
-    selection: readonly { structureRef: string, loci: StructureElement.Loci }[],
-    options?: ComputeInteractionsOptions
+    selection: readonly { structureRef: string; loci: StructureElement.Loci }[],
+    options?: ComputeInteractionsOptions,
 ): Promise<StructureInteractions> {
     const unitIdToStructureRef = new Map<number, string>();
     const unitIdToContactGroupId = new Map<number, number>();
@@ -46,8 +49,9 @@ export async function computeContacts(
         options?.interactions ?? {},
         {
             skipIntraContacts: true,
-            unitPairTest: (a, b) => unitIdToContactGroupId.get(a.id) !== unitIdToContactGroupId.get(b.id)
-        }
+            unitPairTest: (a, b) =>
+                unitIdToContactGroupId.get(a.id) !== unitIdToContactGroupId.get(b.id),
+        },
     );
 
     const { edges } = interactions.contacts;
@@ -62,12 +66,17 @@ export async function computeContacts(
         const info: InteractionInfo = { kind };
 
         if (kind === 'hydrogen-bond' || kind === 'weak-hydrogen-bond') {
-            const isADonor = aType === FeatureType.HydrogenDonor || aType === FeatureType.WeakHydrogenDonor;
+            const isADonor = aType === FeatureType.HydrogenDonor ||
+                aType === FeatureType.WeakHydrogenDonor;
 
             result.elements.push({
                 info,
-                aStructureRef: isADonor ? unitIdToStructureRef.get(e.unitA)! : unitIdToStructureRef.get(e.unitB)!,
-                bStructureRef: isADonor ? unitIdToStructureRef.get(e.unitB)! : unitIdToStructureRef.get(e.unitA)!,
+                aStructureRef: isADonor
+                    ? unitIdToStructureRef.get(e.unitA)!
+                    : unitIdToStructureRef.get(e.unitB)!,
+                bStructureRef: isADonor
+                    ? unitIdToStructureRef.get(e.unitB)!
+                    : unitIdToStructureRef.get(e.unitA)!,
                 a: isADonor ? a : b,
                 b: isADonor ? b : a,
             });
@@ -86,7 +95,12 @@ export async function computeContacts(
 }
 
 const _loc = StructureElement.Location.create();
-function processFeature(structure: Structure, interactions: Interactions, unitId: number, featureIndex: number) {
+function processFeature(
+    structure: Structure,
+    interactions: Interactions,
+    unitId: number,
+    featureIndex: number,
+) {
     _loc.structure = structure;
     _loc.unit = structure.unitMap.get(unitId);
     const xs = interactions.unitsFeatures.get(unitId)!;

@@ -59,7 +59,7 @@ export class PerformanceMonitor {
 
     timeSum(...names: string[]) {
         let t = 0;
-        for (const m of names.map(n => this.ends.get(n)! - this.starts.get(n)!)) t += m;
+        for (const m of names.map((n) => this.ends.get(n)! - this.starts.get(n)!)) t += m;
         return t;
     }
 }

@@ -14,8 +14,8 @@ import { UniqueArray } from '../../mol-data/generic.ts';
 // TODO: make this into a separate "language"?
 
 type ResidueListSelectionEntry =
-    | { kind: 'single', asym_id: string; seq_id: number; ins_code?: string }
-    | { kind: 'range', asym_id: string; seq_id_beg: number; seq_id_end: number; }
+    | { kind: 'single'; asym_id: string; seq_id: number; ins_code?: string }
+    | { kind: 'range'; asym_id: string; seq_id_beg: number; seq_id_end: number };
 
 function residueEntriesToQuery(xs: ResidueListSelectionEntry[], kind: 'auth' | 'label') {
     const groups: Expression[] = [];
@@ -27,7 +27,11 @@ function residueEntriesToQuery(xs: ResidueListSelectionEntry[], kind: 'auth' | '
         if (x.kind === 'range') {
             groups.push(MS.struct.generator.atomGroups({
                 'chain-test': MS.core.rel.eq([MS.ammp(asym_id_key), x.asym_id]),
-                'residue-test': MS.core.rel.inRange([MS.ammp(seq_id_key), x.seq_id_beg, x.seq_id_end])
+                'residue-test': MS.core.rel.inRange([
+                    MS.ammp(seq_id_key),
+                    x.seq_id_beg,
+                    x.seq_id_end,
+                ]),
             }));
         } else {
             const ins_code = (x.ins_code ?? '').trim();
@@ -36,8 +40,8 @@ function residueEntriesToQuery(xs: ResidueListSelectionEntry[], kind: 'auth' | '
                 'chain-test': MS.core.rel.eq([MS.ammp(asym_id_key), x.asym_id]),
                 'residue-test': MS.core.logic.and([
                     MS.core.rel.eq([MS.ammp(seq_id_key), x.seq_id]),
-                    MS.core.rel.eq([MS.ammp('pdbx_PDB_ins_code'), ins_code])
-                ])
+                    MS.core.rel.eq([MS.ammp('pdbx_PDB_ins_code'), ins_code]),
+                ]),
             }));
         }
     }
@@ -57,7 +61,7 @@ function atomEntriesToQuery(xs: [number, number][]) {
     }
 
     const query = MS.struct.generator.atomGroups({
-        'atom-test': MS.core.set.has([MS.set(...set.array), MS.ammp('id')])
+        'atom-test': MS.core.set.has([MS.set(...set.array), MS.ammp('id')]),
     });
 
     return compile(query) as StructureQuery;
@@ -73,7 +77,7 @@ function elementSymbolNumberEntriesToQuery(xs: [number, number][]) {
     }
 
     const query = MS.struct.generator.atomGroups({
-        'atom-test': MS.core.set.has([MS.set(...set.array), MS.acp('elementSymbol')])
+        'atom-test': MS.core.set.has([MS.set(...set.array), MS.acp('elementSymbol')]),
     });
 
     return compile(query) as StructureQuery;
@@ -81,7 +85,7 @@ function elementSymbolNumberEntriesToQuery(xs: [number, number][]) {
 
 function elementSymbolStringEntriesToQuery(names: string[]) {
     const query = MS.struct.generator.atomGroups({
-        'atom-test': MS.core.set.has([MS.set(...names), MS.acp('elementSymbol')])
+        'atom-test': MS.core.set.has([MS.set(...names), MS.acp('elementSymbol')]),
     });
 
     return compile(query) as StructureQuery;
@@ -102,27 +106,30 @@ function parseInsCode(e?: string) {
 
 function parseResidueListSelection(input: string): ResidueListSelectionEntry[] {
     return input.split(',') // A 1-3, B 3 => [A 1-3, B 3]
-        .map(e => e.trim().split(/\s+|[-]/g).filter(e => !!e)) // [A 1-3, B 3] => [[A, 1, 3], [B, 3]]
-        .map(e => parseRange(e[0], parseInsCode(e[1]), +e[2]))
-        .filter(e => !!e) as ResidueListSelectionEntry[];
+        .map((e) => e.trim().split(/\s+|[-]/g).filter((e) => !!e)) // [A 1-3, B 3] => [[A, 1, 3], [B, 3]]
+        .map((e) => parseRange(e[0], parseInsCode(e[1]), +e[2]))
+        .filter((e) => !!e) as ResidueListSelectionEntry[];
 }
 
 function parseAtomListSelection(input: string): [number, number][] {
     return input.split(',') // 1-3, 3 => [1-3, 3]
-        .map(e => e.trim().split(/\s+|[-]/g).filter(e => !!e)) // [1-3, 3] => [[1, 3], [3]]
-        .filter(e => e.length === 1 || e.length === 2)
-        .map(e => e.length === 1 ? [+e[0], +e[0]] : [+e[0], +e[1]]) as [number, number][];
+        .map((e) => e.trim().split(/\s+|[-]/g).filter((e) => !!e)) // [1-3, 3] => [[1, 3], [3]]
+        .filter((e) => e.length === 1 || e.length === 2)
+        .map((e) => e.length === 1 ? [+e[0], +e[0]] : [+e[0], +e[1]]) as [number, number][];
 }
 
 // parses a list of residue ranges, e.g. A 10-100, B 30, C 12:i
-export function compileIdListSelection(input: string, idType: 'auth' | 'label' | 'atom-id' | 'element-symbol') {
+export function compileIdListSelection(
+    input: string,
+    idType: 'auth' | 'label' | 'atom-id' | 'element-symbol',
+) {
     if (idType === 'atom-id') {
         const entries = parseAtomListSelection(input);
         return atomEntriesToQuery(entries);
     } else if (idType === 'element-symbol') {
         const containsLetters = /[a-zA-Z]/.test(input);
         if (containsLetters) {
-            return elementSymbolStringEntriesToQuery(input.split(',').map(e => e.trim()));
+            return elementSymbolStringEntriesToQuery(input.split(',').map((e) => e.trim()));
         } else {
             const entries = parseAtomListSelection(input);
             return elementSymbolNumberEntriesToQuery(entries);

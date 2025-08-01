@@ -8,33 +8,33 @@
  */
 
 import { Column } from '../../../mol-data/db.ts';
-import { MolFile, handleAtoms, handleBonds, handlePropertiesBlock } from '../mol/parser.ts';
+import { handleAtoms, handleBonds, handlePropertiesBlock, MolFile } from '../mol/parser.ts';
 import { Task } from '../../../mol-task/index.ts';
 import { ReaderResult as Result } from '../result.ts';
-import { Tokenizer, TokenBuilder } from '../common/text/tokenizer.ts';
+import { TokenBuilder, Tokenizer } from '../common/text/tokenizer.ts';
 import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.ts';
 import { handleAtomsV3, handleBondsV3, handleCountsV3, isV3 } from './parser-v3-util.ts';
 import { StringLike } from '../../common/string-like.ts';
 
-
 /** http://c4.cabrillo.edu/404/ctfile.pdf - page 41 & 79 */
 
 export interface SdfFileCompound {
-    readonly molFile: MolFile,
+    readonly molFile: MolFile;
     readonly dataItems: {
-        readonly dataHeader: Column<string>,
-        readonly data: Column<string>
-    }
+        readonly dataHeader: Column<string>;
+        readonly data: Column<string>;
+    };
 }
 
 export interface SdfFile {
-    readonly compounds: SdfFileCompound[]
+    readonly compounds: SdfFileCompound[];
 }
-
 
 const delimiter = '$$$$';
 
-function handleDataItems(tokenizer: Tokenizer): { dataHeader: Column<string>, data: Column<string> } {
+function handleDataItems(
+    tokenizer: Tokenizer,
+): { dataHeader: Column<string>; data: Column<string> } {
     const dataHeader = TokenBuilder.create(tokenizer.data, 32);
     const data = TokenBuilder.create(tokenizer.data, 32);
 
@@ -68,14 +68,14 @@ function handleDataItems(tokenizer: Tokenizer): { dataHeader: Column<string>, da
 
     return {
         dataHeader: TokenColumn(dataHeader)(Column.Schema.str),
-        data: TokenColumn(data)(Column.Schema.str)
+        data: TokenColumn(data)(Column.Schema.str),
     };
 }
 
-function handleCountsV2(countsAndVersion: string): { atomCount: number, bondCount: number } {
+function handleCountsV2(countsAndVersion: string): { atomCount: number; bondCount: number } {
     return {
         atomCount: +countsAndVersion.substr(0, 3),
-        bondCount: +countsAndVersion.substr(3, 3)
+        bondCount: +countsAndVersion.substr(3, 3),
     };
 }
 
@@ -87,7 +87,9 @@ function handleMolFile(tokenizer: Tokenizer) {
     const countsAndVersion = Tokenizer.readLine(tokenizer);
     const molIsV3 = isV3(countsAndVersion);
 
-    const { atomCount, bondCount } = molIsV3 ? handleCountsV3(tokenizer) : handleCountsV2(countsAndVersion);
+    const { atomCount, bondCount } = molIsV3
+        ? handleCountsV3(tokenizer)
+        : handleCountsV2(countsAndVersion);
 
     if (Number.isNaN(atomCount) || Number.isNaN(bondCount)) {
         // try to skip to next molecule
@@ -102,17 +104,19 @@ function handleMolFile(tokenizer: Tokenizer) {
     so all charges default to 0.*/
     const nullFormalCharges: MolFile['formalCharges'] = {
         atomIdx: Column.ofConst(0, atomCount, Column.Schema.int),
-        charge: Column.ofConst(0, atomCount, Column.Schema.int)
+        charge: Column.ofConst(0, atomCount, Column.Schema.int),
     };
 
     const atoms = molIsV3 ? handleAtomsV3(tokenizer, atomCount) : handleAtoms(tokenizer, atomCount);
     const bonds = molIsV3 ? handleBondsV3(tokenizer, bondCount) : handleBonds(tokenizer, bondCount);
-    const properties = molIsV3 ? { formalCharges: nullFormalCharges } : handlePropertiesBlock(tokenizer);
+    const properties = molIsV3
+        ? { formalCharges: nullFormalCharges }
+        : handlePropertiesBlock(tokenizer);
     const dataItems = handleDataItems(tokenizer);
 
     return {
         molFile: { title, program, comment, atoms, bonds, ...properties },
-        dataItems
+        dataItems,
     };
 }
 

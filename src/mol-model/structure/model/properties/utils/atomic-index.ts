@@ -8,8 +8,8 @@
 import { AtomicData, AtomicSegments } from '../atomic.ts';
 import { Interval, Segmentation, SortedArray } from '../../../../../mol-data/int.ts';
 import { Entities } from '../common.ts';
-import { ChainIndex, ResidueIndex, EntityIndex, ElementIndex } from '../../indexing.ts';
-import { AtomicIndex, AtomicHierarchy } from '../atomic/hierarchy.ts';
+import { ChainIndex, ElementIndex, EntityIndex, ResidueIndex } from '../../indexing.ts';
+import { AtomicHierarchy, AtomicIndex } from '../atomic/hierarchy.ts';
 import { cantorPairing } from '../../../../../mol-data/util.ts';
 import { Column } from '../../../../../mol-data/db.ts';
 import { ElementSymbol } from '../../types.ts';
@@ -17,11 +17,18 @@ import { ElementSymbol } from '../../types.ts';
 function getResidueId(seq_id: number, ins_code: string) {
     if (!ins_code) return seq_id;
     if (ins_code.length === 1) return cantorPairing(ins_code.charCodeAt(0), seq_id);
-    if (ins_code.length === 2) return cantorPairing(ins_code.charCodeAt(0), cantorPairing(ins_code.charCodeAt(1), seq_id));
+    if (ins_code.length === 2) {
+        return cantorPairing(ins_code.charCodeAt(0), cantorPairing(ins_code.charCodeAt(1), seq_id));
+    }
     return `${seq_id} ${ins_code}`;
 }
 
-function updateMapMapIndex<K, I extends number>(map: Map<K, Map<string, I>>, key0: K, key1: string, index: I) {
+function updateMapMapIndex<K, I extends number>(
+    map: Map<K, Map<string, I>>,
+    key0: K,
+    key1: string,
+    index: I,
+) {
     if (map.has(key0)) {
         const submap = map.get(key0)!;
         if (!submap.has(key1)) {
@@ -39,30 +46,32 @@ function missingEntity(k: string) {
 }
 
 interface Mapping {
-    entities: Entities,
-    label_seq_id: SortedArray,
-    label_atom_id: Column<string>,
-    auth_atom_id: Column<string>,
-    label_alt_id: Column<string>,
-    type_symbol: Column<ElementSymbol>,
-    segments: AtomicSegments,
+    entities: Entities;
+    label_seq_id: SortedArray;
+    label_atom_id: Column<string>;
+    auth_atom_id: Column<string>;
+    label_alt_id: Column<string>;
+    type_symbol: Column<ElementSymbol>;
+    segments: AtomicSegments;
 
-    chain_index_entity_index: EntityIndex[],
+    chain_index_entity_index: EntityIndex[];
 
-    entity_index_label_asym_id: Map<EntityIndex, Map<string, ChainIndex>>,
-    chain_index_label_seq_id: Map<ChainIndex, Map<string | number, ResidueIndex>>,
+    entity_index_label_asym_id: Map<EntityIndex, Map<string, ChainIndex>>;
+    chain_index_label_seq_id: Map<ChainIndex, Map<string | number, ResidueIndex>>;
 
-    auth_asym_id_auth_seq_id: Map<string, Map<number, ChainIndex>>,
-    chain_index_auth_seq_id: Map<ChainIndex, Map<string | number, ResidueIndex>>,
+    auth_asym_id_auth_seq_id: Map<string, Map<number, ChainIndex>>;
+    chain_index_auth_seq_id: Map<ChainIndex, Map<string | number, ResidueIndex>>;
 
-    label_asym_id: Map<string, EntityIndex>,
+    label_asym_id: Map<string, EntityIndex>;
 }
 
 function createMapping(entities: Entities, data: AtomicData, segments: AtomicSegments): Mapping {
     return {
         entities,
         segments,
-        label_seq_id: SortedArray.ofSortedArray(data.residues.label_seq_id.toArray({ array: Int32Array })),
+        label_seq_id: SortedArray.ofSortedArray(
+            data.residues.label_seq_id.toArray({ array: Int32Array }),
+        ),
         label_atom_id: data.atoms.label_atom_id,
         auth_atom_id: data.atoms.auth_atom_id,
         label_alt_id: data.atoms.label_alt_id,
@@ -104,9 +113,19 @@ class Index implements AtomicIndex {
         return rm.has(key.auth_seq_id) ? rm.get(key.auth_seq_id)! : -1 as ChainIndex;
     }
 
-    findResidue(label_entity_id: string, label_asym_id: string, auth_seq_id: number, pdbx_PDB_ins_code?: string): ResidueIndex
-    findResidue(key: AtomicIndex.ResidueKey): ResidueIndex
-    findResidue(label_entity_id_or_key: string | AtomicIndex.ResidueKey, label_asym_id?: string, auth_seq_id?: number, pdbx_PDB_ins_code?: string): ResidueIndex {
+    findResidue(
+        label_entity_id: string,
+        label_asym_id: string,
+        auth_seq_id: number,
+        pdbx_PDB_ins_code?: string,
+    ): ResidueIndex;
+    findResidue(key: AtomicIndex.ResidueKey): ResidueIndex;
+    findResidue(
+        label_entity_id_or_key: string | AtomicIndex.ResidueKey,
+        label_asym_id?: string,
+        auth_seq_id?: number,
+        pdbx_PDB_ins_code?: string,
+    ): ResidueIndex {
         let key: AtomicIndex.ResidueKey;
         if (arguments.length === 1) {
             key = label_entity_id_or_key as AtomicIndex.ResidueKey;
@@ -147,10 +166,14 @@ class Index implements AtomicIndex {
         const id = getResidueId(key.label_seq_id, key.pdbx_PDB_ins_code || '');
         if (rm.has(id)) return rm.get(id)!;
 
-        const idx = SortedArray.findPredecessorIndex(this.map.label_seq_id, key.label_seq_id) as ResidueIndex;
+        const idx = SortedArray.findPredecessorIndex(
+            this.map.label_seq_id,
+            key.label_seq_id,
+        ) as ResidueIndex;
         const start = AtomicHierarchy.chainStartResidueIndex(this.map.segments, cI);
         if (idx < start) return start;
-        const end = AtomicHierarchy.chainEndResidueIndexExcl(this.map.segments, cI) - 1 as ResidueIndex;
+        const end = AtomicHierarchy.chainEndResidueIndexExcl(this.map.segments, cI) -
+            1 as ResidueIndex;
         if (idx >= end) return end;
         return idx;
     }
@@ -159,33 +182,79 @@ class Index implements AtomicIndex {
         const rI = this.findResidue(key);
         if (rI < 0) return -1 as ElementIndex;
         if (typeof key.label_alt_id === 'undefined') {
-            return findAtomByName(this.residueOffsets[rI], this.residueOffsets[rI + 1], this.map.label_atom_id, key.label_atom_id);
+            return findAtomByName(
+                this.residueOffsets[rI],
+                this.residueOffsets[rI + 1],
+                this.map.label_atom_id,
+                key.label_atom_id,
+            );
         }
-        return findAtomByNameAndAltLoc(this.residueOffsets[rI], this.residueOffsets[rI + 1], this.map.label_atom_id, this.map.label_alt_id, key.label_atom_id, key.label_alt_id);
+        return findAtomByNameAndAltLoc(
+            this.residueOffsets[rI],
+            this.residueOffsets[rI + 1],
+            this.map.label_atom_id,
+            this.map.label_alt_id,
+            key.label_atom_id,
+            key.label_alt_id,
+        );
     }
 
     findAtomAuth(key: AtomicIndex.AtomAuthKey): ElementIndex {
         const rI = this.findResidueAuth(key);
         if (rI < 0) return -1 as ElementIndex;
         if (typeof key.label_alt_id === 'undefined') {
-            return findAtomByName(this.residueOffsets[rI], this.residueOffsets[rI + 1], this.map.auth_atom_id, key.auth_atom_id);
+            return findAtomByName(
+                this.residueOffsets[rI],
+                this.residueOffsets[rI + 1],
+                this.map.auth_atom_id,
+                key.auth_atom_id,
+            );
         }
-        return findAtomByNameAndAltLoc(this.residueOffsets[rI], this.residueOffsets[rI + 1], this.map.auth_atom_id, this.map.label_alt_id, key.auth_atom_id, key.label_alt_id);
+        return findAtomByNameAndAltLoc(
+            this.residueOffsets[rI],
+            this.residueOffsets[rI + 1],
+            this.map.auth_atom_id,
+            this.map.label_alt_id,
+            key.auth_atom_id,
+            key.label_alt_id,
+        );
     }
 
     findAtomOnResidue(rI: ResidueIndex, label_atom_id: string, label_alt_id?: string) {
         if (typeof label_alt_id === 'undefined') {
-            return findAtomByName(this.residueOffsets[rI], this.residueOffsets[rI + 1], this.map.label_atom_id, label_atom_id);
+            return findAtomByName(
+                this.residueOffsets[rI],
+                this.residueOffsets[rI + 1],
+                this.map.label_atom_id,
+                label_atom_id,
+            );
         }
-        return findAtomByNameAndAltLoc(this.residueOffsets[rI], this.residueOffsets[rI + 1], this.map.label_atom_id, this.map.label_alt_id, label_atom_id, label_alt_id);
+        return findAtomByNameAndAltLoc(
+            this.residueOffsets[rI],
+            this.residueOffsets[rI + 1],
+            this.map.label_atom_id,
+            this.map.label_alt_id,
+            label_atom_id,
+            label_alt_id,
+        );
     }
 
     findAtomsOnResidue(rI: ResidueIndex, label_atom_ids: Set<string>) {
-        return findAtomByNames(this.residueOffsets[rI], this.residueOffsets[rI + 1], this.map.label_atom_id, label_atom_ids);
+        return findAtomByNames(
+            this.residueOffsets[rI],
+            this.residueOffsets[rI + 1],
+            this.map.label_atom_id,
+            label_atom_ids,
+        );
     }
 
     findElementOnResidue(rI: ResidueIndex, type_symbol: ElementSymbol) {
-        return findAtomByElement(this.residueOffsets[rI], this.residueOffsets[rI + 1], this.map.type_symbol, type_symbol);
+        return findAtomByElement(
+            this.residueOffsets[rI],
+            this.residueOffsets[rI + 1],
+            this.map.type_symbol,
+            type_symbol,
+        );
     }
 
     constructor(private map: Mapping) {
@@ -194,36 +263,61 @@ class Index implements AtomicIndex {
     }
 }
 
-function findAtomByName(start: ElementIndex, end: ElementIndex, data: Column<string>, atomName: string): ElementIndex {
+function findAtomByName(
+    start: ElementIndex,
+    end: ElementIndex,
+    data: Column<string>,
+    atomName: string,
+): ElementIndex {
     for (let i = start; i < end; i++) {
         if (data.value(i) === atomName) return i;
     }
     return -1 as ElementIndex;
 }
 
-function findAtomByNames(start: ElementIndex, end: ElementIndex, data: Column<string>, atomNames: Set<string>): ElementIndex {
+function findAtomByNames(
+    start: ElementIndex,
+    end: ElementIndex,
+    data: Column<string>,
+    atomNames: Set<string>,
+): ElementIndex {
     for (let i = start; i < end; i++) {
         if (atomNames.has(data.value(i))) return i;
     }
     return -1 as ElementIndex;
 }
 
-function findAtomByNameAndAltLoc(start: ElementIndex, end: ElementIndex, nameData: Column<string>, altLocData: Column<string>,
-    atomName: string, altLoc: string): ElementIndex {
+function findAtomByNameAndAltLoc(
+    start: ElementIndex,
+    end: ElementIndex,
+    nameData: Column<string>,
+    altLocData: Column<string>,
+    atomName: string,
+    altLoc: string,
+): ElementIndex {
     for (let i = start; i < end; i++) {
         if (nameData.value(i) === atomName && altLocData.value(i) === altLoc) return i;
     }
     return -1 as ElementIndex;
 }
 
-function findAtomByElement(start: ElementIndex, end: ElementIndex, data: Column<ElementSymbol>, typeSymbol: ElementSymbol): ElementIndex {
+function findAtomByElement(
+    start: ElementIndex,
+    end: ElementIndex,
+    data: Column<ElementSymbol>,
+    typeSymbol: ElementSymbol,
+): ElementIndex {
     for (let i = start; i < end; i++) {
         if (data.value(i) === typeSymbol) return i;
     }
     return -1 as ElementIndex;
 }
 
-export function getAtomicIndex(data: AtomicData, entities: Entities, segments: AtomicSegments): AtomicIndex {
+export function getAtomicIndex(
+    data: AtomicData,
+    entities: Entities,
+    segments: AtomicSegments,
+): AtomicIndex {
     const map = createMapping(entities, data, segments);
 
     const { label_seq_id, auth_seq_id, pdbx_PDB_ins_code } = data.residues;
@@ -255,7 +349,11 @@ export function getAtomicIndex(data: AtomicData, entities: Entities, segments: A
         map.chain_index_label_seq_id.set(chainIndex, chain_index_label_seq_id);
         map.chain_index_auth_seq_id.set(chainIndex, chain_index_auth_seq_id);
 
-        const residuesIt = Segmentation.transientSegments(segments.residueAtomSegments, atomSet, chainSegment);
+        const residuesIt = Segmentation.transientSegments(
+            segments.residueAtomSegments,
+            atomSet,
+            chainSegment,
+        );
         while (residuesIt.hasNext) {
             const residueSegment = residuesIt.move();
             const rI = residueSegment.index;

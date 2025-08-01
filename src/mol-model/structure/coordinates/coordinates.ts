@@ -11,36 +11,36 @@ import { AtomicConformation } from '../model/properties/atomic.ts';
 import { Column } from '../../../mol-data/db.ts';
 
 export interface Frame {
-    readonly elementCount: number
-    readonly time: Time
+    readonly elementCount: number;
+    readonly time: Time;
 
     // positions
-    readonly x: ArrayLike<number>
-    readonly y: ArrayLike<number>
-    readonly z: ArrayLike<number>
+    readonly x: ArrayLike<number>;
+    readonly y: ArrayLike<number>;
+    readonly z: ArrayLike<number>;
 
     // optional cell
-    readonly cell?: Cell
+    readonly cell?: Cell;
 
     // optional velocities
     readonly velocities?: {
-        readonly vx: ArrayLike<number>
-        readonly vy: ArrayLike<number>
-        readonly vz: ArrayLike<number>
-    }
+        readonly vx: ArrayLike<number>;
+        readonly vy: ArrayLike<number>;
+        readonly vz: ArrayLike<number>;
+    };
 
     // optional forces
     readonly forces?: {
-        readonly fx: ArrayLike<number>
-        readonly fy: ArrayLike<number>
-        readonly fz: ArrayLike<number>
-    }
+        readonly fx: ArrayLike<number>;
+        readonly fy: ArrayLike<number>;
+        readonly fz: ArrayLike<number>;
+    };
 
     readonly xyzOrdering: {
-        isIdentity: boolean,
-        frozen?: boolean,
-        index?: ArrayLike<number>,
-    }
+        isIdentity: boolean;
+        frozen?: boolean;
+        index?: ArrayLike<number>;
+    };
 }
 
 //
@@ -48,8 +48,8 @@ export interface Frame {
 export { Time };
 
 interface Time {
-    value: number
-    unit: Time.Unit
+    value: number;
+    unit: Time.Unit;
 }
 
 function Time(value: number, unit: Time.Unit) {
@@ -57,7 +57,7 @@ function Time(value: number, unit: Time.Unit) {
 }
 
 namespace Time {
-    export type Unit = 'ps' | 'step'
+    export type Unit = 'ps' | 'step';
 
     // TODO: conversion utilities
 }
@@ -67,16 +67,16 @@ namespace Time {
 export { Coordinates };
 
 interface Coordinates {
-    readonly id: UUID
+    readonly id: UUID;
 
-    readonly frames: Frame[]
+    readonly frames: Frame[];
 
-    readonly hasCell: boolean
-    readonly hasVelocities: boolean
-    readonly hasForces: boolean
+    readonly hasCell: boolean;
+    readonly hasVelocities: boolean;
+    readonly hasForces: boolean;
 
-    readonly deltaTime: Time
-    readonly timeOffset: Time
+    readonly deltaTime: Time;
+    readonly timeOffset: Time;
 }
 
 namespace Coordinates {
@@ -99,7 +99,15 @@ namespace Coordinates {
     /**
      * Only use ordering if it's not identity.
      */
-    export function getAtomicConformation(frame: Frame, fields: { atomId: Column<number>, occupancy?: Column<number>, B_iso_or_equiv?: Column<number> }, ordering?: ArrayLike<number>): AtomicConformation {
+    export function getAtomicConformation(
+        frame: Frame,
+        fields: {
+            atomId: Column<number>;
+            occupancy?: Column<number>;
+            B_iso_or_equiv?: Column<number>;
+        },
+        ordering?: ArrayLike<number>,
+    ): AtomicConformation {
         let { x, y, z } = frame;
 
         if (frame.xyzOrdering.frozen) {
@@ -145,7 +153,8 @@ namespace Coordinates {
             id: UUID.create22(),
             atomId: fields.atomId,
             occupancy: fields.occupancy ?? Column.ofConst(1, frame.elementCount, Column.Schema.int),
-            B_iso_or_equiv: fields.B_iso_or_equiv ?? Column.ofConst(0, frame.elementCount, Column.Schema.float),
+            B_iso_or_equiv: fields.B_iso_or_equiv ??
+                Column.ofConst(0, frame.elementCount, Column.Schema.float),
             xyzDefined: true,
             x,
             y,
@@ -165,7 +174,11 @@ namespace Coordinates {
         }
     }
 
-    function getSourceOrderedCoords(xs: ArrayLike<number>, srcIndex: ArrayLike<number>, index: ArrayLike<number>) {
+    function getSourceOrderedCoords(
+        xs: ArrayLike<number>,
+        srcIndex: ArrayLike<number>,
+        index: ArrayLike<number>,
+    ) {
         const ret = new Float32Array(xs.length);
 
         for (let i = 0, _i = xs.length; i < _i; i++) {

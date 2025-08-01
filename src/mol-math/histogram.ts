@@ -7,13 +7,17 @@
 import { arrayMinMax } from '../mol-util/array.ts';
 
 export interface Histogram {
-    min: number,
-    max: number,
-    binWidth: number,
-    counts: Int32Array
+    min: number;
+    max: number;
+    binWidth: number;
+    counts: Int32Array;
 }
 
-export function calculateHistogram(data: ArrayLike<number>, binCount: number, options?: { min: number, max: number, }): Histogram {
+export function calculateHistogram(
+    data: ArrayLike<number>,
+    binCount: number,
+    options?: { min: number; max: number },
+): Histogram {
     if (!options) {
         const [min, max] = arrayMinMax(data);
         return _calcHistogram(data, binCount, min, max);
@@ -22,7 +26,12 @@ export function calculateHistogram(data: ArrayLike<number>, binCount: number, op
     }
 }
 
-function _calcHistogram(data: ArrayLike<number>, binCount: number, min: number, max: number): Histogram {
+function _calcHistogram(
+    data: ArrayLike<number>,
+    binCount: number,
+    min: number,
+    max: number,
+): Histogram {
     let binWidth = (max - min) / binCount;
     if (binWidth === 0) binWidth = 1;
 

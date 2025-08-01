@@ -6,14 +6,13 @@
  * @author Ludovic Autin <ludovic.autin@gmail.com>
  */
 
-import { Task, RuntimeContext, chunkedSubtask } from '../../../../mol-task/index.ts';
-import { Tokenizer, TokenBuilder } from '../../common/text/tokenizer.ts';
+import { chunkedSubtask, RuntimeContext, Task } from '../../../../mol-task/index.ts';
+import { TokenBuilder, Tokenizer } from '../../common/text/tokenizer.ts';
 import { ReaderResult as Result } from '../../result.ts';
 import { TokenColumnProvider as TokenColumn } from '../../common/text/column/token.ts';
 import { Column } from '../../../../mol-data/db.ts';
 import { LammpsDataFile } from '../schema.ts';
 import { StringLike } from '../../../common/string-like.ts';
-
 
 const { readLine, skipWhitespace, eatValue, eatLine, markStart } = Tokenizer;
 
@@ -25,9 +24,13 @@ function State(tokenizer: Tokenizer, runtimeCtx: RuntimeContext) {
         runtimeCtx,
     };
 }
-type State = ReturnType<typeof State>
+type State = ReturnType<typeof State>;
 
-async function handleAtoms(state: State, count: number, atom_style: 'full' | 'atomic' | 'bond'): Promise<LammpsDataFile['atoms']> {
+async function handleAtoms(
+    state: State,
+    count: number,
+    atom_style: 'full' | 'atomic' | 'bond',
+): Promise<LammpsDataFile['atoms']> {
     const { tokenizer } = state;
     // default atom style is atomic
     // depending on the atom style the number of columns can change
@@ -51,7 +54,7 @@ async function handleAtoms(state: State, count: number, atom_style: 'full' | 'at
     const { length } = tokenizer;
     let linesAlreadyRead = 0;
 
-    await chunkedSubtask(state.runtimeCtx, 100000, void 0, chunkSize => {
+    await chunkedSubtask(state.runtimeCtx, 100000, void 0, (chunkSize) => {
         const linesToRead = Math.min(count - linesAlreadyRead, chunkSize);
         for (let i = 0; i < linesToRead; ++i) {
             for (let j = 0; j < n; ++j) {
@@ -69,7 +72,7 @@ async function handleAtoms(state: State, count: number, atom_style: 'full' | 'at
         }
         linesAlreadyRead += linesToRead;
         return linesToRead;
-    }, ctx => ctx.update({ message: 'Parsing...', current: tokenizer.position, max: length }));
+    }, (ctx) => ctx.update({ message: 'Parsing...', current: tokenizer.position, max: length }));
 
     return {
         count,
@@ -93,7 +96,7 @@ async function handleBonds(state: State, count: number): Promise<LammpsDataFile[
 
     const { length } = tokenizer;
     let bondsAlreadyRead = 0;
-    await chunkedSubtask(state.runtimeCtx, 10, void 0, chunkSize => {
+    await chunkedSubtask(state.runtimeCtx, 10, void 0, (chunkSize) => {
         const bondsToRead = Math.min(count - bondsAlreadyRead, chunkSize);
         for (let i = 0; i < bondsToRead; ++i) {
             for (let j = 0; j < 4; ++j) {
@@ -101,16 +104,36 @@ async function handleBonds(state: State, count: number): Promise<LammpsDataFile[
                 markStart(tokenizer);
                 eatValue(tokenizer);
                 switch (j) {
-                    case 0: TokenBuilder.addUnchecked(bondId, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                    case 1: TokenBuilder.addUnchecked(bondType, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                    case 2: TokenBuilder.addUnchecked(atomIdA, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                    case 3: TokenBuilder.addUnchecked(atomIdB, tokenizer.tokenStart, tokenizer.tokenEnd); break;
+                    case 0:
+                        TokenBuilder.addUnchecked(bondId, tokenizer.tokenStart, tokenizer.tokenEnd);
+                        break;
+                    case 1:
+                        TokenBuilder.addUnchecked(
+                            bondType,
+                            tokenizer.tokenStart,
+                            tokenizer.tokenEnd,
+                        );
+                        break;
+                    case 2:
+                        TokenBuilder.addUnchecked(
+                            atomIdA,
+                            tokenizer.tokenStart,
+                            tokenizer.tokenEnd,
+                        );
+                        break;
+                    case 3:
+                        TokenBuilder.addUnchecked(
+                            atomIdB,
+                            tokenizer.tokenStart,
+                            tokenizer.tokenEnd,
+                        );
+                        break;
                 }
             }
         }
         bondsAlreadyRead += bondsToRead;
         return bondsToRead;
-    }, ctx => ctx.update({ message: 'Parsing...', current: tokenizer.position, max: length }));
+    }, (ctx) => ctx.update({ message: 'Parsing...', current: tokenizer.position, max: length }));
 
     return {
         count,
@@ -124,7 +147,10 @@ async function handleBonds(state: State, count: number): Promise<LammpsDataFile[
 const AtomStyles = ['full', 'atomic', 'bond'] as const;
 type AtomStyle = typeof AtomStyles[number];
 
-async function parseInternal(data: StringLike, ctx: RuntimeContext): Promise<Result<LammpsDataFile>> {
+async function parseInternal(
+    data: StringLike,
+    ctx: RuntimeContext,
+): Promise<Result<LammpsDataFile>> {
     const tokenizer = Tokenizer(data);
     const state = State(tokenizer, ctx);
 
@@ -176,13 +202,13 @@ async function parseInternal(data: StringLike, ctx: RuntimeContext): Promise<Res
 
     const result: LammpsDataFile = {
         atoms,
-        bonds
+        bonds,
     };
     return Result.success(result);
 }
 
 export function parseLammpsData(data: StringLike) {
-    return Task.create<Result<LammpsDataFile>>('Parse LammpsData', async ctx => {
+    return Task.create<Result<LammpsDataFile>>('Parse LammpsData', async (ctx) => {
         return await parseInternal(data, ctx);
     });
 }

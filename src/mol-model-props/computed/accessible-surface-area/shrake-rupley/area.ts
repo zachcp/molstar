@@ -19,7 +19,11 @@ export async function computeArea(runtime: RuntimeContext, ctx: ShrakeRupleyCont
     const { atomRadiusType: atomRadius } = ctx;
     for (let i = 0; i < atomRadius.length; i += updateChunk) {
         if (runtime.shouldUpdate) {
-            await runtime.update({ message: 'Computing per residue surface accessibility...', current: i, max: atomRadius.length });
+            await runtime.update({
+                message: 'Computing per residue surface accessibility...',
+                current: i,
+                max: atomRadius.length,
+            });
         }
 
         computeRange(ctx, i, Math.min(i + updateChunk, atomRadius.length));
@@ -27,7 +31,16 @@ export async function computeArea(runtime: RuntimeContext, ctx: ShrakeRupleyCont
 }
 
 function computeRange(ctx: ShrakeRupleyContext, begin: number, end: number) {
-    const { structure, atomRadiusType, serialResidueIndex, area, spherePoints, scalingConstant, maxLookupRadius, probeSize } = ctx;
+    const {
+        structure,
+        atomRadiusType,
+        serialResidueIndex,
+        area,
+        spherePoints,
+        scalingConstant,
+        maxLookupRadius,
+        probeSize,
+    } = ctx;
     const { lookup3d, serialMapping, unitIndexMap, units } = structure;
     const { cumulativeUnitElementCount, elementIndices, unitIndices } = serialMapping;
 
@@ -42,7 +55,12 @@ function computeRange(ctx: ShrakeRupleyContext, begin: number, end: number) {
         const aZ = aUnit.conformation.z(aElementIndex);
 
         // pre-filter by lookup3d (provides >10x speed-up compared to naive evaluation)
-        const { count, units: lUnits, indices, squaredDistances } = lookup3d.find(aX, aY, aZ, maxLookupRadius);
+        const { count, units: lUnits, indices, squaredDistances } = lookup3d.find(
+            aX,
+            aY,
+            aZ,
+            maxLookupRadius,
+        );
 
         // see optimizations proposed in Eisenhaber et al., 1995 (https://doi.org/10.1002/jcc.540160303)
         // collect neighbors for each atom
@@ -55,17 +73,21 @@ function computeRange(ctx: ShrakeRupleyContext, begin: number, end: number) {
             const bElementIndex = elementIndices[bI];
 
             const vdw2 = VdWLookup[atomRadiusType[bI]];
-            if ((aUnit === bUnit && aElementIndex === bElementIndex) || vdw2 === VdWLookup[0]) continue;
+            if ((aUnit === bUnit && aElementIndex === bElementIndex) || vdw2 === VdWLookup[0]) {
+                continue;
+            }
 
             const radius2 = probeSize + vdw2;
             if (squaredDistances[iI] < (cutoff1 + vdw2) * (cutoff1 + vdw2)) {
                 const bElementIndex = elementIndices[bI];
                 // while here: compute values for later lookup
-                neighbors[neighbors.length] = [squaredDistances[iI],
+                neighbors[neighbors.length] = [
+                    squaredDistances[iI],
                     (squaredDistances[iI] + radius1 * radius1 - radius2 * radius2) / (2 * radius1),
                     bUnit.conformation.x(bElementIndex) - aX,
                     bUnit.conformation.y(bElementIndex) - aY,
-                    bUnit.conformation.z(bElementIndex) - aZ];
+                    bUnit.conformation.z(bElementIndex) - aZ,
+                ];
             }
         }
 

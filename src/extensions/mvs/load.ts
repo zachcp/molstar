@@ -9,9 +9,23 @@
 import { PluginStateSnapshotManager } from '../../mol-plugin-state/manager/snapshots.ts';
 import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
 import { Download, ParseCcp4, ParseCif } from '../../mol-plugin-state/transforms/data.ts';
-import { CustomModelProperties, CustomStructureProperties, ModelFromTrajectory, StructureComponent, StructureFromModel, TrajectoryFromMmCif, TrajectoryFromPDB } from '../../mol-plugin-state/transforms/model.ts';
-import { StructureRepresentation3D, VolumeRepresentation3D } from '../../mol-plugin-state/transforms/representation.ts';
-import { VolumeFromCcp4, VolumeFromDensityServerCif } from '../../mol-plugin-state/transforms/volume.ts';
+import {
+    CustomModelProperties,
+    CustomStructureProperties,
+    ModelFromTrajectory,
+    StructureComponent,
+    StructureFromModel,
+    TrajectoryFromMmCif,
+    TrajectoryFromPDB,
+} from '../../mol-plugin-state/transforms/model.ts';
+import {
+    StructureRepresentation3D,
+    VolumeRepresentation3D,
+} from '../../mol-plugin-state/transforms/representation.ts';
+import {
+    VolumeFromCcp4,
+    VolumeFromDensityServerCif,
+} from '../../mol-plugin-state/transforms/volume.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { PluginContext } from '../../mol-plugin/context.ts';
 import { StateObjectSelector } from '../../mol-state/index.ts';
@@ -20,33 +34,67 @@ import { createPluginStateSnapshotCamera, modifyCanvasProps } from './camera.ts'
 import { MVSAnnotationsProvider } from './components/annotation-prop.ts';
 import { MVSAnnotationStructureComponent } from './components/annotation-structure-component.ts';
 import { MVSAnnotationTooltipsProvider } from './components/annotation-tooltips-prop.ts';
-import { CustomLabelProps, CustomLabelRepresentationProvider } from './components/custom-label/representation.ts';
+import {
+    CustomLabelProps,
+    CustomLabelRepresentationProvider,
+} from './components/custom-label/representation.ts';
 import { CustomTooltipsProvider } from './components/custom-tooltips-prop.ts';
 import { IsMVSModelProps, IsMVSModelProvider } from './components/is-mvs-model-prop.ts';
-import { getPrimitiveStructureRefs, MVSBuildPrimitiveShape, MVSDownloadPrimitiveData, MVSInlinePrimitiveData, MVSShapeRepresentation3D } from './components/primitives.ts';
+import {
+    getPrimitiveStructureRefs,
+    MVSBuildPrimitiveShape,
+    MVSDownloadPrimitiveData,
+    MVSInlinePrimitiveData,
+    MVSShapeRepresentation3D,
+} from './components/primitives.ts';
 import { IsHiddenCustomStateExtension } from './load-extensions/is-hidden-custom-state.ts';
 import { NonCovalentInteractionsExtension } from './load-extensions/non-covalent-interactions.ts';
 import { LoadingActions, LoadingExtension, loadTreeVirtual, UpdateTarget } from './load-generic.ts';
-import { AnnotationFromSourceKind, AnnotationFromUriKind, collectAnnotationReferences, collectAnnotationTooltips, collectInlineLabels, collectInlineTooltips, colorThemeForNode, componentFromXProps, componentPropsFromSelector, isPhantomComponent, labelFromXProps, makeNearestReprMap, prettyNameFromSelector, representationProps, structureProps, transformAndInstantiateStructure, transformAndInstantiateVolume, volumeColorThemeForNode, volumeRepresentationProps } from './load-helpers.ts';
+import {
+    AnnotationFromSourceKind,
+    AnnotationFromUriKind,
+    collectAnnotationReferences,
+    collectAnnotationTooltips,
+    collectInlineLabels,
+    collectInlineTooltips,
+    colorThemeForNode,
+    componentFromXProps,
+    componentPropsFromSelector,
+    isPhantomComponent,
+    labelFromXProps,
+    makeNearestReprMap,
+    prettyNameFromSelector,
+    representationProps,
+    structureProps,
+    transformAndInstantiateStructure,
+    transformAndInstantiateVolume,
+    volumeColorThemeForNode,
+    volumeRepresentationProps,
+} from './load-helpers.ts';
 import { MVSData, MVSData_States, SnapshotMetadata } from './mvs-data.ts';
 import { validateTree } from './tree/generic/tree-schema.ts';
 import { convertMvsToMolstar, mvsSanityCheck } from './tree/molstar/conversion.ts';
-import { MolstarNode, MolstarNodeParams, MolstarSubtree, MolstarTree, MolstarTreeSchema } from './tree/molstar/molstar-tree.ts';
+import {
+    MolstarNode,
+    MolstarNodeParams,
+    MolstarSubtree,
+    MolstarTree,
+    MolstarTreeSchema,
+} from './tree/molstar/molstar-tree.ts';
 import { type MVSTree, MVSTreeSchema } from './tree/mvs/mvs-tree.ts';
-
 
 export interface MVSLoadOptions {
     /** Add snapshots from MVS into current snapshot list, instead of replacing the list. */
-    appendSnapshots?: boolean,
+    appendSnapshots?: boolean;
     /** Ignore any camera positioning from the MVS state and keep the current camera position instead, ignore any camera positioning when generating snapshots. */
-    keepCamera?: boolean,
+    keepCamera?: boolean;
     /** Specifies a set of MVS-loading extensions (not a part of standard MVS specification). If undefined, apply all builtin extensions. If `[]`, do not apply builtin extensions. */
-    extensions?: MolstarLoadingExtension<any>[],
+    extensions?: MolstarLoadingExtension<any>[];
     /** Run some sanity checks and print potential issues to the console. */
-    sanityChecks?: boolean,
+    sanityChecks?: boolean;
     /** Base for resolving relative URLs/URIs. May itself be a relative URL (relative to the window URL). */
-    sourceUrl?: string,
-    doNotReportErrors?: boolean
+    sourceUrl?: string;
+    doNotReportErrors?: boolean;
 }
 
 /** Load a MolViewSpec (MVS) state(s) into the Mol* plugin as plugin state snapshots. */
@@ -56,11 +104,15 @@ export async function loadMVS(plugin: PluginContext, data: MVSData, options: MVS
         const mvsExtensionLoaded = plugin.state.hasBehavior(MolViewSpec);
         if (!mvsExtensionLoaded) throw new Error('MolViewSpec extension is not loaded.');
         // console.log(`MVS tree:\n${MVSData.toPrettyString(data)}`)
-        const multiData: MVSData_States = data.kind === 'multiple' ? data : MVSData.stateToStates(data);
+        const multiData: MVSData_States = data.kind === 'multiple'
+            ? data
+            : MVSData.stateToStates(data);
         const entries: PluginStateSnapshotManager.Entry[] = [];
         for (let i = 0; i < multiData.snapshots.length; i++) {
             const snapshot = multiData.snapshots[i];
-            const previousSnapshot = i > 0 ? multiData.snapshots[i - 1] : multiData.snapshots[multiData.snapshots.length - 1];
+            const previousSnapshot = i > 0
+                ? multiData.snapshots[i - 1]
+                : multiData.snapshots[multiData.snapshots.length - 1];
             validateTree(MVSTreeSchema, snapshot.root, 'MVS');
             if (options.sanityChecks) mvsSanityCheck(snapshot.root);
             const molstarTree = convertMvsToMolstar(snapshot.root, options.sourceUrl);
@@ -69,8 +121,11 @@ export async function loadMVS(plugin: PluginContext, data: MVSData, options: MVS
                 plugin,
                 molstarTree,
                 snapshot.root,
-                { ...snapshot.metadata, previousTransitionDurationMs: previousSnapshot.metadata.transition_duration_ms },
-                options
+                {
+                    ...snapshot.metadata,
+                    previousTransitionDurationMs: previousSnapshot.metadata.transition_duration_ms,
+                },
+                options,
             );
             entries.push(entry);
         }
@@ -93,7 +148,7 @@ export async function loadMVS(plugin: PluginContext, data: MVSData, options: MVS
                 PluginCommands.Toast.Show(plugin, {
                     title: 'Error',
                     message: error,
-                    timeoutMs: 10000
+                    timeoutMs: 10000,
                 });
             }
         }
@@ -101,23 +156,28 @@ export async function loadMVS(plugin: PluginContext, data: MVSData, options: MVS
     }
 }
 
-
 function molstarTreeToEntry(
     plugin: PluginContext,
     tree: MolstarTree,
     mvsTree: MVSTree,
     metadata: SnapshotMetadata & { previousTransitionDurationMs?: number },
-    options: { keepCamera?: boolean, extensions?: MolstarLoadingExtension<any>[] }
+    options: { keepCamera?: boolean; extensions?: MolstarLoadingExtension<any>[] },
 ) {
     const context = MolstarLoadingContext.create();
-    const snapshot = loadTreeVirtual(plugin, tree, MolstarLoadingActions, context, { replaceExisting: true, extensions: options?.extensions ?? BuiltinLoadingExtensions });
+    const snapshot = loadTreeVirtual(plugin, tree, MolstarLoadingActions, context, {
+        replaceExisting: true,
+        extensions: options?.extensions ?? BuiltinLoadingExtensions,
+    });
     snapshot.canvas3d = {
-        props: plugin.canvas3d ? modifyCanvasProps(plugin.canvas3d.props, context.canvas, mvsTree.custom) : undefined,
+        props: plugin.canvas3d
+            ? modifyCanvasProps(plugin.canvas3d.props, context.canvas, mvsTree.custom)
+            : undefined,
     };
     if (!options?.keepCamera) {
         snapshot.camera = createPluginStateSnapshotCamera(plugin, context, metadata);
     }
-    snapshot.durationInMs = metadata.linger_duration_ms + (metadata.previousTransitionDurationMs ?? 0);
+    snapshot.durationInMs = metadata.linger_duration_ms +
+        (metadata.previousTransitionDurationMs ?? 0);
 
     const entryParams: PluginStateSnapshotManager.EntryParams = {
         key: metadata.key,
@@ -125,21 +185,24 @@ function molstarTreeToEntry(
         description: metadata.description,
         descriptionFormat: metadata.description_format ?? 'markdown',
     };
-    const entry: PluginStateSnapshotManager.Entry = PluginStateSnapshotManager.Entry(snapshot, entryParams);
+    const entry: PluginStateSnapshotManager.Entry = PluginStateSnapshotManager.Entry(
+        snapshot,
+        entryParams,
+    );
     return entry;
 }
 
 /** Mutable context for loading a `MolstarTree`, available throughout the loading. */
 export interface MolstarLoadingContext {
     /** Maps `*_from_[uri|source]` nodes to annotationId they should reference */
-    annotationMap: Map<MolstarNode<AnnotationFromUriKind | AnnotationFromSourceKind>, string>,
+    annotationMap: Map<MolstarNode<AnnotationFromUriKind | AnnotationFromSourceKind>, string>;
     /** Maps each node (on 'structure' or lower level) to its nearest 'representation' node */
-    nearestReprMap?: Map<MolstarNode, MolstarNode<'representation'>>,
+    nearestReprMap?: Map<MolstarNode, MolstarNode<'representation'>>;
     camera: {
-        cameraParams?: MolstarNodeParams<'camera'>,
-        focuses: { target: StateObjectSelector, params: MolstarNodeParams<'focus'> }[],
-    },
-    canvas?: MolstarNode<'canvas'>,
+        cameraParams?: MolstarNodeParams<'camera'>;
+        focuses: { target: StateObjectSelector; params: MolstarNodeParams<'focus'> }[];
+    };
+    canvas?: MolstarNode<'canvas'>;
 }
 export const MolstarLoadingContext = {
     create(): MolstarLoadingContext {
@@ -150,10 +213,13 @@ export const MolstarLoadingContext = {
     },
 };
 
-
 /** Loading actions for loading a `MolstarTree`, per node kind. */
 const MolstarLoadingActions: LoadingActions<MolstarTree, MolstarLoadingContext> = {
-    root(updateParent: UpdateTarget, node: MolstarNode<'root'>, context: MolstarLoadingContext): UpdateTarget {
+    root(
+        updateParent: UpdateTarget,
+        node: MolstarNode<'root'>,
+        context: MolstarLoadingContext,
+    ): UpdateTarget {
         context.nearestReprMap = makeNearestReprMap(node);
         return updateParent;
     },
@@ -176,7 +242,10 @@ const MolstarLoadingActions: LoadingActions<MolstarTree, MolstarLoadingContext> 
             return undefined;
         }
     },
-    trajectory(updateParent: UpdateTarget, node: MolstarNode<'trajectory'>): UpdateTarget | undefined {
+    trajectory(
+        updateParent: UpdateTarget,
+        node: MolstarNode<'trajectory'>,
+    ): UpdateTarget | undefined {
         const format = node.params.format;
         if (format === 'cif') {
             return UpdateTarget.apply(updateParent, TrajectoryFromMmCif, {
@@ -190,7 +259,11 @@ const MolstarLoadingActions: LoadingActions<MolstarTree, MolstarLoadingContext> 
             return undefined;
         }
     },
-    model(updateParent: UpdateTarget, node: MolstarSubtree<'model'>, context: MolstarLoadingContext): UpdateTarget {
+    model(
+        updateParent: UpdateTarget,
+        node: MolstarSubtree<'model'>,
+        context: MolstarLoadingContext,
+    ): UpdateTarget {
         const annotations = collectAnnotationReferences(node, context);
         const model = UpdateTarget.apply(updateParent, ModelFromTrajectory, {
             modelIndex: node.params.model_index,
@@ -207,7 +280,11 @@ const MolstarLoadingActions: LoadingActions<MolstarTree, MolstarLoadingContext> 
         });
         return model;
     },
-    structure(updateParent: UpdateTarget, node: MolstarSubtree<'structure'>, context: MolstarLoadingContext): UpdateTarget {
+    structure(
+        updateParent: UpdateTarget,
+        node: MolstarSubtree<'structure'>,
+        context: MolstarLoadingContext,
+    ): UpdateTarget {
         const props = structureProps(node);
         const struct = UpdateTarget.apply(updateParent, StructureFromModel, props);
         const transformed = transformAndInstantiateStructure(struct, node);
@@ -216,7 +293,9 @@ const MolstarLoadingActions: LoadingActions<MolstarTree, MolstarLoadingContext> 
         if (annotationTooltips.length + inlineTooltips.length > 0) {
             UpdateTarget.apply(struct, CustomStructureProperties, {
                 properties: {
-                    [MVSAnnotationTooltipsProvider.descriptor.name]: { tooltips: annotationTooltips },
+                    [MVSAnnotationTooltipsProvider.descriptor.name]: {
+                        tooltips: annotationTooltips,
+                    },
                     [CustomTooltipsProvider.descriptor.name]: { tooltips: inlineTooltips },
                 },
                 autoAttach: [
@@ -241,28 +320,52 @@ const MolstarLoadingActions: LoadingActions<MolstarTree, MolstarLoadingContext> 
     tooltip: undefined, // No action needed, already loaded in `structure`
     tooltip_from_uri: undefined, // No action needed, already loaded in `structure`
     tooltip_from_source: undefined, // No action needed, already loaded in `structure`
-    component(updateParent: UpdateTarget, node: MolstarSubtree<'component'>): UpdateTarget | undefined {
+    component(
+        updateParent: UpdateTarget,
+        node: MolstarSubtree<'component'>,
+    ): UpdateTarget | undefined {
         if (isPhantomComponent(node)) {
             return updateParent;
         }
         const selector = node.params.selector;
-        return transformAndInstantiateStructure(UpdateTarget.apply(updateParent, StructureComponent, {
-            type: componentPropsFromSelector(selector),
-            label: prettyNameFromSelector(selector),
-            nullIfEmpty: false,
-        }), node);
+        return transformAndInstantiateStructure(
+            UpdateTarget.apply(updateParent, StructureComponent, {
+                type: componentPropsFromSelector(selector),
+                label: prettyNameFromSelector(selector),
+                nullIfEmpty: false,
+            }),
+            node,
+        );
     },
-    component_from_uri(updateParent: UpdateTarget, node: MolstarSubtree<'component_from_uri'>, context: MolstarLoadingContext): UpdateTarget | undefined {
+    component_from_uri(
+        updateParent: UpdateTarget,
+        node: MolstarSubtree<'component_from_uri'>,
+        context: MolstarLoadingContext,
+    ): UpdateTarget | undefined {
         if (isPhantomComponent(node)) return undefined;
         const props = componentFromXProps(node, context);
-        return transformAndInstantiateStructure(UpdateTarget.apply(updateParent, MVSAnnotationStructureComponent, props), node);
+        return transformAndInstantiateStructure(
+            UpdateTarget.apply(updateParent, MVSAnnotationStructureComponent, props),
+            node,
+        );
     },
-    component_from_source(updateParent: UpdateTarget, node: MolstarSubtree<'component_from_source'>, context: MolstarLoadingContext): UpdateTarget | undefined {
+    component_from_source(
+        updateParent: UpdateTarget,
+        node: MolstarSubtree<'component_from_source'>,
+        context: MolstarLoadingContext,
+    ): UpdateTarget | undefined {
         if (isPhantomComponent(node)) return undefined;
         const props = componentFromXProps(node, context);
-        return transformAndInstantiateStructure(UpdateTarget.apply(updateParent, MVSAnnotationStructureComponent, props), node);
+        return transformAndInstantiateStructure(
+            UpdateTarget.apply(updateParent, MVSAnnotationStructureComponent, props),
+            node,
+        );
     },
-    representation(updateParent: UpdateTarget, node: MolstarNode<'representation'>, context: MolstarLoadingContext): UpdateTarget {
+    representation(
+        updateParent: UpdateTarget,
+        node: MolstarNode<'representation'>,
+        context: MolstarLoadingContext,
+    ): UpdateTarget {
         return UpdateTarget.apply(updateParent, StructureRepresentation3D, {
             ...representationProps(node),
             colorTheme: colorThemeForNode(node, context),
@@ -273,14 +376,20 @@ const MolstarLoadingActions: LoadingActions<MolstarTree, MolstarLoadingContext> 
         if (updateParent.transformer?.definition.to.includes(PluginStateObject.Format.Ccp4)) {
             volume = UpdateTarget.apply(updateParent, VolumeFromCcp4, {});
         } else if (updateParent.transformer?.definition.to.includes(PluginStateObject.Format.Cif)) {
-            volume = UpdateTarget.apply(updateParent, VolumeFromDensityServerCif, { blockHeader: node.params.channel_id || undefined });
+            volume = UpdateTarget.apply(updateParent, VolumeFromDensityServerCif, {
+                blockHeader: node.params.channel_id || undefined,
+            });
         } else {
             console.error(`Unsupported volume format`);
             return undefined;
         }
         return transformAndInstantiateVolume(volume, node);
     },
-    volume_representation(updateParent: UpdateTarget, node: MolstarNode<'volume_representation'>, context: MolstarLoadingContext): UpdateTarget {
+    volume_representation(
+        updateParent: UpdateTarget,
+        node: MolstarNode<'volume_representation'>,
+        context: MolstarLoadingContext,
+    ): UpdateTarget {
         return UpdateTarget.apply(updateParent, VolumeRepresentation3D, {
             ...volumeRepresentationProps(node),
             colorTheme: volumeColorThemeForNode(node, context),
@@ -290,48 +399,98 @@ const MolstarLoadingActions: LoadingActions<MolstarTree, MolstarLoadingContext> 
     color_from_uri: undefined, // No action needed, already loaded in `representation`
     color_from_source: undefined, // No action needed, already loaded in `representation`
     label: undefined, // No action needed, already loaded in `structure`
-    label_from_uri(updateParent: UpdateTarget, node: MolstarNode<'label_from_uri'>, context: MolstarLoadingContext): UpdateTarget {
+    label_from_uri(
+        updateParent: UpdateTarget,
+        node: MolstarNode<'label_from_uri'>,
+        context: MolstarLoadingContext,
+    ): UpdateTarget {
         const props = labelFromXProps(node, context);
         return UpdateTarget.apply(updateParent, StructureRepresentation3D, props);
     },
-    label_from_source(updateParent: UpdateTarget, node: MolstarNode<'label_from_source'>, context: MolstarLoadingContext): UpdateTarget {
+    label_from_source(
+        updateParent: UpdateTarget,
+        node: MolstarNode<'label_from_source'>,
+        context: MolstarLoadingContext,
+    ): UpdateTarget {
         const props = labelFromXProps(node, context);
         return UpdateTarget.apply(updateParent, StructureRepresentation3D, props);
     },
-    focus(updateParent: UpdateTarget, node: MolstarNode<'focus'>, context: MolstarLoadingContext): UpdateTarget {
+    focus(
+        updateParent: UpdateTarget,
+        node: MolstarNode<'focus'>,
+        context: MolstarLoadingContext,
+    ): UpdateTarget {
         context.camera.focuses.push({ target: updateParent.selector, params: node.params });
         return updateParent;
     },
-    camera(updateParent: UpdateTarget, node: MolstarNode<'camera'>, context: MolstarLoadingContext): UpdateTarget {
+    camera(
+        updateParent: UpdateTarget,
+        node: MolstarNode<'camera'>,
+        context: MolstarLoadingContext,
+    ): UpdateTarget {
         context.camera.cameraParams = node.params;
         return updateParent;
     },
-    canvas(updateParent: UpdateTarget, node: MolstarNode<'canvas'>, context: MolstarLoadingContext): UpdateTarget {
+    canvas(
+        updateParent: UpdateTarget,
+        node: MolstarNode<'canvas'>,
+        context: MolstarLoadingContext,
+    ): UpdateTarget {
         context.canvas = node;
         return updateParent;
     },
-    primitives(updateParent: UpdateTarget, tree: MolstarSubtree<'primitives'>, context: MolstarLoadingContext): UpdateTarget {
+    primitives(
+        updateParent: UpdateTarget,
+        tree: MolstarSubtree<'primitives'>,
+        context: MolstarLoadingContext,
+    ): UpdateTarget {
         const refs = getPrimitiveStructureRefs(tree);
         const data = UpdateTarget.apply(updateParent, MVSInlinePrimitiveData, { node: tree });
         return applyPrimitiveVisuals(data, refs);
     },
-    primitives_from_uri(updateParent: UpdateTarget, tree: MolstarNode<'primitives_from_uri'>, context: MolstarLoadingContext): UpdateTarget {
-        const data = UpdateTarget.apply(updateParent, MVSDownloadPrimitiveData, { uri: tree.params.uri, format: tree.params.format });
+    primitives_from_uri(
+        updateParent: UpdateTarget,
+        tree: MolstarNode<'primitives_from_uri'>,
+        context: MolstarLoadingContext,
+    ): UpdateTarget {
+        const data = UpdateTarget.apply(updateParent, MVSDownloadPrimitiveData, {
+            uri: tree.params.uri,
+            format: tree.params.format,
+        });
         return applyPrimitiveVisuals(data, new Set(tree.params.references));
     },
 };
 
 function applyPrimitiveVisuals(data: UpdateTarget, refs: Set<string>) {
-    const mesh = UpdateTarget.setMvsDependencies(UpdateTarget.apply(data, MVSBuildPrimitiveShape, { kind: 'mesh' }, { state: { isGhost: true } }), refs);
+    const mesh = UpdateTarget.setMvsDependencies(
+        UpdateTarget.apply(data, MVSBuildPrimitiveShape, { kind: 'mesh' }, {
+            state: { isGhost: true },
+        }),
+        refs,
+    );
     UpdateTarget.apply(mesh, MVSShapeRepresentation3D);
-    const labels = UpdateTarget.setMvsDependencies(UpdateTarget.apply(data, MVSBuildPrimitiveShape, { kind: 'labels' }, { state: { isGhost: true } }), refs);
+    const labels = UpdateTarget.setMvsDependencies(
+        UpdateTarget.apply(data, MVSBuildPrimitiveShape, { kind: 'labels' }, {
+            state: { isGhost: true },
+        }),
+        refs,
+    );
     UpdateTarget.apply(labels, MVSShapeRepresentation3D);
-    const lines = UpdateTarget.setMvsDependencies(UpdateTarget.apply(data, MVSBuildPrimitiveShape, { kind: 'lines' }, { state: { isGhost: true } }), refs);
+    const lines = UpdateTarget.setMvsDependencies(
+        UpdateTarget.apply(data, MVSBuildPrimitiveShape, { kind: 'lines' }, {
+            state: { isGhost: true },
+        }),
+        refs,
+    );
     UpdateTarget.apply(lines, MVSShapeRepresentation3D);
     return data;
 }
 
-export type MolstarLoadingExtension<TExtensionContext> = LoadingExtension<MolstarTree, MolstarLoadingContext, TExtensionContext>;
+export type MolstarLoadingExtension<TExtensionContext> = LoadingExtension<
+    MolstarTree,
+    MolstarLoadingContext,
+    TExtensionContext
+>;
 
 export const BuiltinLoadingExtensions: MolstarLoadingExtension<any>[] = [
     NonCovalentInteractionsExtension,

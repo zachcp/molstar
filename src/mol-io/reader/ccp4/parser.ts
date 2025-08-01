@@ -4,21 +4,31 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, RuntimeContext } from '../../../mol-task/index.ts';
+import { RuntimeContext, Task } from '../../../mol-task/index.ts';
 import { Ccp4File, Ccp4Header } from './schema.ts';
 import { ReaderResult as Result } from '../result.ts';
 import { FileHandle } from '../../common/file-handle.ts';
 import { SimpleBuffer } from '../../common/simple-buffer.ts';
-import { TypedArrayValueType, getElementByteSize, TypedArrayBufferContext, readTypedArray, createTypedArrayBufferContext } from '../../common/typed-array.ts';
+import {
+    createTypedArrayBufferContext,
+    getElementByteSize,
+    readTypedArray,
+    TypedArrayBufferContext,
+    TypedArrayValueType,
+} from '../../common/typed-array.ts';
 
-export async function readCcp4Header(file: FileHandle): Promise<{ header: Ccp4Header, littleEndian: boolean }> {
+export async function readCcp4Header(
+    file: FileHandle,
+): Promise<{ header: Ccp4Header; littleEndian: boolean }> {
     const headerSize = 1024;
     const { buffer } = await file.readBuffer(0, headerSize);
 
     // 53  MAP         Character string 'MAP ' to identify file type
     const MAP = String.fromCharCode(
-        buffer.readUInt8(52 * 4), buffer.readUInt8(52 * 4 + 1),
-        buffer.readUInt8(52 * 4 + 2), buffer.readUInt8(52 * 4 + 3)
+        buffer.readUInt8(52 * 4),
+        buffer.readUInt8(52 * 4 + 1),
+        buffer.readUInt8(52 * 4 + 2),
+        buffer.readUInt8(52 * 4 + 3),
     );
     if (MAP !== 'MAP ') {
         throw new Error('ccp4 format error, missing "MAP " string');
@@ -37,8 +47,12 @@ export async function readCcp4Header(file: FileHandle): Promise<{ header: Ccp4He
         if (modeLE <= 16) littleEndian = true;
     }
 
-    const readInt = littleEndian ? (o: number) => buffer.readInt32LE(o * 4) : (o: number) => buffer.readInt32BE(o * 4);
-    const readFloat = littleEndian ? (o: number) => buffer.readFloatLE(o * 4) : (o: number) => buffer.readFloatBE(o * 4);
+    const readInt = littleEndian
+        ? (o: number) => buffer.readInt32LE(o * 4)
+        : (o: number) => buffer.readInt32BE(o * 4);
+    const readFloat = littleEndian
+        ? (o: number) => buffer.readFloatLE(o * 4)
+        : (o: number) => buffer.readFloatBE(o * 4);
 
     const header: Ccp4Header = {
         NC: readInt(0),
@@ -92,7 +106,6 @@ export async function readCcp4Header(file: FileHandle): Promise<{ header: Ccp4He
         MACHST, // bytes 54 MACHST
 
         ARMS: readFloat(54),
-
         // TODO bytes 56 NLABL
         // TODO bytes 57-256 LABEL
     };
@@ -100,7 +113,14 @@ export async function readCcp4Header(file: FileHandle): Promise<{ header: Ccp4He
     return { header, littleEndian };
 }
 
-export async function readCcp4Slices(header: Ccp4Header, buffer: TypedArrayBufferContext, file: FileHandle, byteOffset: number, length: number, littleEndian: boolean) {
+export async function readCcp4Slices(
+    header: Ccp4Header,
+    buffer: TypedArrayBufferContext,
+    file: FileHandle,
+    byteOffset: number,
+    length: number,
+    littleEndian: boolean,
+) {
     if (isMapmode2to0(header)) {
         // data from mapmode2to0 is in MODE 0 (Int8) and needs to be scaled and written as float32
         const valueByteOffset = 3 * length;
@@ -121,13 +141,20 @@ export async function readCcp4Slices(header: Ccp4Header, buffer: TypedArrayBuffe
 
 function getCcp4DataType(mode: number) {
     switch (mode) {
-        case 0: return TypedArrayValueType.Int8;
-        case 1: return TypedArrayValueType.Int16;
-        case 2: return TypedArrayValueType.Float32;
-        case 3: throw new Error('mode 3 unsupported, complex 16-bit integers');
-        case 4: throw new Error('mode 4 unsupported, complex 32-bit reals');
-        case 6: TypedArrayValueType.Uint16;
-        case 16: throw new Error('mode 16 unsupported, unsigned char * 3 (for rgb data, non-standard)');
+        case 0:
+            return TypedArrayValueType.Int8;
+        case 1:
+            return TypedArrayValueType.Int16;
+        case 2:
+            return TypedArrayValueType.Float32;
+        case 3:
+            throw new Error('mode 3 unsupported, complex 16-bit integers');
+        case 4:
+            throw new Error('mode 4 unsupported, complex 32-bit reals');
+        case 6:
+            TypedArrayValueType.Uint16;
+        case 16:
+            throw new Error('mode 16 unsupported, unsigned char * 3 (for rgb data, non-standard)');
     }
     throw new Error(`unknown mode '${mode}'`);
 }
@@ -145,7 +172,11 @@ export function getCcp4DataOffset(header: Ccp4Header) {
     return 256 * 4 + header.NSYMBT;
 }
 
-async function parseInternal(file: FileHandle, size: number, ctx: RuntimeContext): Promise<Ccp4File> {
+async function parseInternal(
+    file: FileHandle,
+    size: number,
+    ctx: RuntimeContext,
+): Promise<Ccp4File> {
     await ctx.update({ message: 'Parsing CCP4/MRC/MAP file...' });
 
     const { header, littleEndian } = await readCcp4Header(file);
@@ -165,7 +196,7 @@ async function parseInternal(file: FileHandle, size: number, ctx: RuntimeContext
 }
 
 export function parseFile(file: FileHandle, size: number) {
-    return Task.create<Result<Ccp4File>>('Parse CCP4/MRC/MAP', async ctx => {
+    return Task.create<Result<Ccp4File>>('Parse CCP4/MRC/MAP', async (ctx) => {
         try {
             return Result.success(await parseInternal(file, size, ctx));
         } catch (e) {
@@ -175,5 +206,8 @@ export function parseFile(file: FileHandle, size: number) {
 }
 
 export function parse(buffer: Uint8Array, name: string) {
-    return parseFile(FileHandle.fromBuffer(SimpleBuffer.fromUint8Array(buffer), name), buffer.length);
+    return parseFile(
+        FileHandle.fromBuffer(SimpleBuffer.fromUint8Array(buffer), name),
+        buffer.length,
+    );
 }

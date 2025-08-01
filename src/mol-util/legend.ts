@@ -7,22 +7,26 @@
 import { Color } from './color/index.ts';
 import { ColorListEntry } from './color/color.ts';
 
-export type Legend = TableLegend | ScaleLegend
+export type Legend = TableLegend | ScaleLegend;
 
 export interface TableLegend {
-    kind: 'table-legend'
-    table: [ string, Color ][]
+    kind: 'table-legend';
+    table: [string, Color][];
 }
-export function TableLegend(table: [ string, Color ][]): TableLegend {
+export function TableLegend(table: [string, Color][]): TableLegend {
     return { kind: 'table-legend', table };
 }
 
 export interface ScaleLegend {
-    kind: 'scale-legend'
+    kind: 'scale-legend';
+    minLabel: string;
+    maxLabel: string;
+    colors: ColorListEntry[];
+}
+export function ScaleLegend(
     minLabel: string,
     maxLabel: string,
-    colors: ColorListEntry[]
-}
-export function ScaleLegend(minLabel: string, maxLabel: string, colors: ColorListEntry[]): ScaleLegend {
+    colors: ColorListEntry[],
+): ScaleLegend {
     return { kind: 'scale-legend', minLabel, maxLabel, colors };
 }

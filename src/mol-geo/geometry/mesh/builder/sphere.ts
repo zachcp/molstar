@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra.ts';
+import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra.ts';
 import { MeshBuilder } from '../mesh-builder.ts';
 import { Primitive } from '../../../primitive/primitive.ts';
 import { Sphere } from '../../../primitive/sphere.ts';

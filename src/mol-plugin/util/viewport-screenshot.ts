@@ -23,11 +23,15 @@ import { SetUtils } from '../../mol-util/set.ts';
 import { PluginContext } from '../context.ts';
 
 export namespace ViewportScreenshotHelper {
-    export type ResolutionSettings = PD.Values<ReturnType<ViewportScreenshotHelper['createParams']>>['resolution']
-    export type ResolutionTypes = ResolutionSettings['name']
+    export type ResolutionSettings = PD.Values<
+        ReturnType<ViewportScreenshotHelper['createParams']>
+    >['resolution'];
+    export type ResolutionTypes = ResolutionSettings['name'];
 }
 
-export type ViewportScreenshotHelperParams = PD.Values<ReturnType<ViewportScreenshotHelper['createParams']>>
+export type ViewportScreenshotHelperParams = PD.Values<
+    ReturnType<ViewportScreenshotHelper['createParams']>
+>;
 
 function checkWebPSupport() {
     // adapted from https://stackoverflow.com/a/27232658
@@ -58,30 +62,30 @@ export class ViewportScreenshotHelper extends PluginComponent {
                 custom: PD.Group({
                     width: PD.Numeric(1920, { min: 128, max, step: 1 }),
                     height: PD.Numeric(1080, { min: 128, max, step: 1 }),
-                }, { isFlat: true })
+                }, { isFlat: true }),
             }, {
                 options: [
                     ['viewport', 'Viewport'],
                     ['hd', 'HD (1280 x 720)'],
                     ['full-hd', 'Full HD (1920 x 1080)'],
                     ['ultra-hd', 'Ultra HD (3840 x 2160)'],
-                    ['custom', 'Custom']
-                ]
+                    ['custom', 'Custom'],
+                ],
             }),
             format: PD.MappedStatic('png', {
                 png: PD.Group({}),
                 webp: PD.Group({
-                    quality: PD.Numeric(0.9, { min: 0, max: 1, step: 0.01 })
+                    quality: PD.Numeric(0.9, { min: 0, max: 1, step: 0.01 }),
                 }),
                 jpeg: PD.Group({
-                    quality: PD.Numeric(0.9, { min: 0, max: 1, step: 0.01 })
+                    quality: PD.Numeric(0.9, { min: 0, max: 1, step: 0.01 }),
                 }),
             }, {
                 options: [
                     ['png', 'PNG'],
                     ['jpeg', 'JPEG'],
                     ...(checkWebPSupport() ? [['webp', 'WebP'] as ['webp', string]] : []),
-                ]
+                ],
             }),
             transparent: PD.Boolean(false),
             axes: CameraHelperParams.axes,
@@ -105,12 +109,15 @@ export class ViewportScreenshotHelper extends PluginComponent {
             resolution: this.params.resolution.defaultValue,
             illumination: this.params.illumination.defaultValue,
         }),
-        cropParams: this.ev.behavior<{ auto: boolean, relativePadding: number }>({ auto: true, relativePadding: 0.1 }),
+        cropParams: this.ev.behavior<{ auto: boolean; relativePadding: number }>({
+            auto: true,
+            relativePadding: 0.1,
+        }),
         relativeCrop: this.ev.behavior<Viewport>({ x: 0, y: 0, width: 1, height: 1 }),
     };
 
     readonly events = {
-        previewed: this.ev<any>()
+        previewed: this.ev<any>(),
     };
 
     get values() {
@@ -128,18 +135,26 @@ export class ViewportScreenshotHelper extends PluginComponent {
     private getCanvasSize() {
         return {
             width: this.plugin.canvas3d?.webgl.gl.drawingBufferWidth || 0,
-            height: this.plugin.canvas3d?.webgl.gl.drawingBufferHeight || 0
+            height: this.plugin.canvas3d?.webgl.gl.drawingBufferHeight || 0,
         };
     }
 
     private getSize() {
         const values = this.values;
         switch (values.resolution.name) {
-            case 'viewport': return this.getCanvasSize();
-            case 'hd': return { width: 1280, height: 720 };
-            case 'full-hd': return { width: 1920, height: 1080 };
-            case 'ultra-hd': return { width: 3840, height: 2160 };
-            default: return { width: values.resolution.params.width, height: values.resolution.params.height };
+            case 'viewport':
+                return this.getCanvasSize();
+            case 'hd':
+                return { width: 1280, height: 720 };
+            case 'full-hd':
+                return { width: 1920, height: 1080 };
+            case 'ultra-hd':
+                return { width: 3840, height: 2160 };
+            default:
+                return {
+                    width: values.resolution.params.width,
+                    height: values.resolution.params.height,
+                };
         }
     }
 
@@ -149,8 +164,16 @@ export class ViewportScreenshotHelper extends PluginComponent {
         return {
             ...c.props.postprocessing,
             occlusion: aoProps.name === 'on'
-                ? { name: 'on', params: { ...aoProps.params, samples: 128, resolutionScale: c.webgl.pixelRatio, transparentThreshold: 1 } }
-                : aoProps
+                ? {
+                    name: 'on',
+                    params: {
+                        ...aoProps.params,
+                        samples: 128,
+                        resolutionScale: c.webgl.pixelRatio,
+                        transparentThreshold: 1,
+                    },
+                }
+                : aoProps,
         } as PostprocessingProps;
     }
 
@@ -161,7 +184,12 @@ export class ViewportScreenshotHelper extends PluginComponent {
         return {
             ...giProps,
             enabled: isPreview ? false : giProps.enabled,
-            maxIterations: Math.ceil(Math.log2(Math.pow(2, giProps.maxIterations + extraIterations) * giProps.rendersPerFrame[1])),
+            maxIterations: Math.ceil(
+                Math.log2(
+                    Math.pow(2, giProps.maxIterations + extraIterations) *
+                        giProps.rendersPerFrame[1],
+                ),
+            ),
             targetFps: 1000 / targetIterationTimeMs,
             denoiseThreshold: [giProps.denoiseThreshold[0], giProps.denoiseThreshold[0]],
             rendersPerFrame: [1, 1],
@@ -209,9 +237,11 @@ export class ViewportScreenshotHelper extends PluginComponent {
 
     getFilename(extension?: string) {
         if (typeof extension !== 'string') extension = this.extension;
-        const models = this.plugin.state.data.select(StateSelection.Generators.rootsOfType(PluginStateObject.Molecule.Model)).map(s => s.obj!.data);
+        const models = this.plugin.state.data.select(
+            StateSelection.Generators.rootsOfType(PluginStateObject.Molecule.Model),
+        ).map((s) => s.obj!.data);
         const uniqueIds = new Set<string>();
-        models.forEach(m => uniqueIds.add(m.entryId.toUpperCase()));
+        models.forEach((m) => uniqueIds.add(m.entryId.toUpperCase()));
         const idString = SetUtils.toArray(uniqueIds).join('-');
         return `${idString || 'molstar-image'}${extension}`;
     }
@@ -229,7 +259,7 @@ export class ViewportScreenshotHelper extends PluginComponent {
     private previewData = {
         image: { data: new Uint8ClampedArray(1), width: 1, height: 0 } as ImageData,
         background: Color(0),
-        transparent: false
+        transparent: false,
     };
 
     resetCrop() {
@@ -247,13 +277,16 @@ export class ViewportScreenshotHelper extends PluginComponent {
 
     get isFullFrame() {
         const crop = this.relativeCrop;
-        return equalEps(crop.x, 0, 1e-5) && equalEps(crop.y, 0, 1e-5) && equalEps(crop.width, 1, 1e-5) && equalEps(crop.height, 1, 1e-5);
+        return equalEps(crop.x, 0, 1e-5) && equalEps(crop.y, 0, 1e-5) &&
+            equalEps(crop.width, 1, 1e-5) && equalEps(crop.height, 1, 1e-5);
     }
 
     autocrop(relativePadding = this.cropParams.relativePadding) {
         const { data, width, height } = this.previewData.image;
         const isTransparent = this.previewData.transparent;
-        const bgColor = isTransparent ? this.previewData.background : 0xff000000 | this.previewData.background;
+        const bgColor = isTransparent
+            ? this.previewData.background
+            : 0xff000000 | this.previewData.background;
 
         let l = width, r = 0, t = height, b = 0;
 
@@ -265,7 +298,8 @@ export class ViewportScreenshotHelper extends PluginComponent {
                 if (isTransparent) {
                     if (data[o + 3] === 0) continue;
                 } else {
-                    const c = (data[o] << 16) | (data[o + 1] << 8) | (data[o + 2]) | (data[o + 3] << 24);
+                    const c = (data[o] << 16) | (data[o + 1] << 8) | (data[o + 2]) |
+                        (data[o + 3] << 24);
                     if (c === bgColor) continue;
                 }
 
@@ -298,7 +332,7 @@ export class ViewportScreenshotHelper extends PluginComponent {
             x: Math.max(0, l / width),
             y: Math.max(0, t / height),
             width: Math.min(1, (r - l + 1) / width),
-            height: Math.min(1, (b - t + 1) / height)
+            height: Math.min(1, (b - t + 1) / height),
         };
 
         this.behaviors.relativeCrop.next(crop);
@@ -351,7 +385,7 @@ export class ViewportScreenshotHelper extends PluginComponent {
             x: Math.floor(crop.x * width),
             y: Math.floor(crop.y * height),
             width: Math.ceil(crop.width * width),
-            height: Math.ceil(crop.height * height)
+            height: Math.ceil(crop.height * height),
         };
         if (viewport.width + viewport.x > width) viewport.width = width - viewport.x;
         if (viewport.height + viewport.y > height) viewport.height = height - viewport.y;
@@ -390,7 +424,7 @@ export class ViewportScreenshotHelper extends PluginComponent {
             return;
         }
 
-        return Task.create('Copy Image', async ctx => {
+        return Task.create('Copy Image', async (ctx) => {
             await this.draw(ctx);
             await ctx.update('Converting image...');
             const mime = this.mimeType;
@@ -425,7 +459,7 @@ export class ViewportScreenshotHelper extends PluginComponent {
     }
 
     getImageDataUri() {
-        return this.plugin.runTask(Task.create('Generate Image', async ctx => {
+        return this.plugin.runTask(Task.create('Generate Image', async (ctx) => {
             await this.draw(ctx);
             await ctx.update('Converting image...');
             return this.canvas.toDataURL(this.mimeType);
@@ -439,7 +473,7 @@ export class ViewportScreenshotHelper extends PluginComponent {
     }
 
     private downloadTask(filename?: string) {
-        return Task.create('Download Image', async ctx => {
+        return Task.create('Download Image', async (ctx) => {
             await this.draw(ctx);
             await ctx.update('Downloading image...');
             const blob = await canvasToBlob(this.canvas, this.mimeType, this.quality);

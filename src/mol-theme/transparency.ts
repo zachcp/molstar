@@ -5,22 +5,25 @@
  */
 
 import { Loci } from '../mol-model/loci.ts';
-import { StructureElement, Structure } from '../mol-model/structure.ts';
+import { Structure, StructureElement } from '../mol-model/structure.ts';
 import { Script } from '../mol-script/script.ts';
 
 export { Transparency };
 
 type Transparency<T extends Loci = Loci> = {
-    readonly kind: T['kind']
-    readonly layers: ReadonlyArray<Transparency.Layer<T>>
-}
+    readonly kind: T['kind'];
+    readonly layers: ReadonlyArray<Transparency.Layer<T>>;
+};
 
-function Transparency<T extends Loci>(kind: T['kind'], layers: ReadonlyArray<Transparency.Layer<T>>): Transparency<T> {
+function Transparency<T extends Loci>(
+    kind: T['kind'],
+    layers: ReadonlyArray<Transparency.Layer<T>>,
+): Transparency<T> {
     return { kind, layers };
 }
 
 namespace Transparency {
-    export type Layer<T extends Loci = Loci> = { readonly loci: T, readonly value: number }
+    export type Layer<T extends Loci = Loci> = { readonly loci: T; readonly value: number };
     export const Empty: Transparency = { kind: 'empty-loci', layers: [] };
 
     export function areEqual(tA: Transparency, tB: Transparency) {
@@ -41,7 +44,10 @@ namespace Transparency {
         if (transparency.kind === 'element-loci') {
             const layers: Transparency.Layer[] = [];
             for (const layer of transparency.layers) {
-                const loci = StructureElement.Loci.remap(layer.loci as StructureElement.Loci, structure);
+                const loci = StructureElement.Loci.remap(
+                    layer.loci as StructureElement.Loci,
+                    structure,
+                );
                 if (!StructureElement.Loci.isEmpty(loci)) {
                     layers.push({ loci, value: layer.value });
                 }
@@ -100,8 +106,11 @@ namespace Transparency {
         }
     }
 
-    export type ScriptLayer = { script: Script, value: number }
-    export function ofScript(scriptLayers: ScriptLayer[], structure: Structure): Transparency<StructureElement.Loci> {
+    export type ScriptLayer = { script: Script; value: number };
+    export function ofScript(
+        scriptLayers: ScriptLayer[],
+        structure: Structure,
+    ): Transparency<StructureElement.Loci> {
         const layers: Transparency.Layer<StructureElement.Loci>[] = [];
         for (let i = 0, il = scriptLayers.length; i < il; ++i) {
             const { script, value } = scriptLayers[i];
@@ -113,8 +122,11 @@ namespace Transparency {
         return { kind: 'element-loci', layers };
     }
 
-    export type BundleLayer = { bundle: StructureElement.Bundle, value: number }
-    export function ofBundle(bundleLayers: BundleLayer[], structure: Structure): Transparency<StructureElement.Loci> {
+    export type BundleLayer = { bundle: StructureElement.Bundle; value: number };
+    export function ofBundle(
+        bundleLayers: BundleLayer[],
+        structure: Structure,
+    ): Transparency<StructureElement.Loci> {
         const layers: Transparency.Layer<StructureElement.Loci>[] = [];
         for (let i = 0, il = bundleLayers.length; i < il; ++i) {
             const { bundle, value } = bundleLayers[i];

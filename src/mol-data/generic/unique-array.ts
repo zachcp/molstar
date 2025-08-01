@@ -5,8 +5,8 @@
  */
 
 interface UniqueArray<K, T = K> {
-    keys: Set<K>,
-    array: T[]
+    keys: Set<K>;
+    array: T[];
 }
 
 namespace UniqueArray {

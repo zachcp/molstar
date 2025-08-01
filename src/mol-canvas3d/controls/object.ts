@@ -14,7 +14,7 @@ export namespace ObjectControls {
         return Vec2.set(
             out,
             (page[0] - viewport.x) / viewport.width,
-            (page[1] - viewport.y) / viewport.height
+            (page[1] - viewport.y) / viewport.height,
         );
     }
 
@@ -32,7 +32,14 @@ export namespace ObjectControls {
      * `pageStart` and `pageEnd` are 2d window coordinates;
      * `ref` defines the plane depth, if not given `camera.target` is used
      */
-    export function panDirection(out: Vec3, pageStart: Vec2, pageEnd: Vec2, input: InputObserver, camera: Camera, ref?: Vec3) {
+    export function panDirection(
+        out: Vec3,
+        pageStart: Vec2,
+        pageEnd: Vec2,
+        input: InputObserver,
+        camera: Camera,
+        ref?: Vec3,
+    ) {
         mouseOnScreen(panStart, pageStart, camera.viewport);
         mouseOnScreen(panEnd, pageEnd, camera.viewport);
         Vec2.sub(panMouseChange, Vec2.copy(panMouseChange, panEnd), panStart);

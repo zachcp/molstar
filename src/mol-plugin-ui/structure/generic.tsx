@@ -12,7 +12,11 @@ import { State } from '../../mol-state/index.ts';
 import { PurePluginUIComponent } from '../base.tsx';
 import { IconButton } from '../controls/common.tsx';
 import { UpdateTransformControl } from '../state/update-transform.tsx';
-import { VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, MoreHorizSvg } from '../controls/icons.tsx';
+import {
+    MoreHorizSvg,
+    VisibilityOffOutlinedSvg,
+    VisibilityOutlinedSvg,
+} from '../controls/icons.tsx';
 
 export class GenericEntryListControls extends PurePluginUIComponent {
     get current() {
@@ -40,36 +44,45 @@ export class GenericEntryListControls extends PurePluginUIComponent {
     get customControls(): JSX.Element[] | null {
         const controls: JSX.Element[] = [];
         this.plugin.genericRepresentationControls.forEach((provider, key) => {
-            const [refs, labelMultiple] = provider(this.plugin.managers.structure.hierarchy.selection);
+            const [refs, labelMultiple] = provider(
+                this.plugin.managers.structure.hierarchy.selection,
+            );
             if (refs.length > 0) {
-                controls.push(<div key={key}>
-                    <GenericEntry refs={refs} labelMultiple={labelMultiple} />
-                </div>);
+                controls.push(
+                    <div key={key}>
+                        <GenericEntry refs={refs} labelMultiple={labelMultiple} />
+                    </div>,
+                );
             }
         });
         return controls.length > 0 ? controls : null;
     }
 
     render() {
-        return <>
-            <div style={{ marginTop: '6px' }}>
-                {this.unitcell}
-                {this.customControls}
-            </div>
-        </>;
+        return (
+            <>
+                <div style={{ marginTop: '6px' }}>
+                    {this.unitcell}
+                    {this.customControls}
+                </div>
+            </>
+        );
     }
 }
 
-export class GenericEntry<T extends StructureHierarchyRef> extends PurePluginUIComponent<{ refs: T[], labelMultiple?: string }, { showOptions: boolean }> {
+export class GenericEntry<T extends StructureHierarchyRef>
+    extends PurePluginUIComponent<{ refs: T[]; labelMultiple?: string }, { showOptions: boolean }> {
     state = { showOptions: false };
 
     componentDidMount() {
-        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
+        this.subscribe(this.plugin.state.events.cell.stateUpdated, (e) => {
             if (State.ObjectEvent.isCell(e, this.pivot?.cell)) this.forceUpdate();
         });
     }
 
-    get pivot() { return this.props.refs[0]; }
+    get pivot() {
+        return this.props.refs[0];
+    }
 
     toggleVisibility = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
@@ -82,7 +95,7 @@ export class GenericEntry<T extends StructureHierarchyRef> extends PurePluginUIC
         if (!this.pivot.cell.parent) return;
         PluginCommands.Interactivity.Object.Highlight(this.plugin, {
             state: this.pivot.cell.parent,
-            ref: this.props.refs.map(c => c.cell.transform.ref)
+            ref: this.props.refs.map((c) => c.cell.transform.ref),
         });
     };
 
@@ -136,19 +149,54 @@ export class GenericEntry<T extends StructureHierarchyRef> extends PurePluginUIC
             label = `${refs.length} ${labelMultiple || 'Objects'}`;
         }
 
-        return <>
-            <div className='msp-flex-row'>
-                <button className='msp-form-control msp-control-button-label' title={`${label}. Click to focus.`} onClick={this.focus} onMouseEnter={this.highlight} onMouseLeave={this.clearHighlight} style={{ textAlign: 'left' }}>
-                    {label} <small>{description}</small>
-                </button>
-                <IconButton svg={pivot.cell.state.isHidden ? VisibilityOffOutlinedSvg : VisibilityOutlinedSvg} toggleState={false} className='msp-form-control' onClick={this.toggleVisibility} title={`${pivot.cell.state.isHidden ? 'Show' : 'Hide'}`} small flex />
-                {refs.length === 1 && <IconButton svg={MoreHorizSvg} className='msp-form-control' onClick={this.toggleOptions} title='Options' toggleState={this.state.showOptions} flex />}
-            </div>
-            {(refs.length === 1 && this.state.showOptions && pivot.cell.parent) && <>
-                <div className='msp-control-offset'>
-                    <UpdateTransformControl state={pivot.cell.parent} transform={pivot.cell.transform} customHeader='none' autoHideApply />
+        return (
+            <>
+                <div className='msp-flex-row'>
+                    <button
+                        className='msp-form-control msp-control-button-label'
+                        title={`${label}. Click to focus.`}
+                        onClick={this.focus}
+                        onMouseEnter={this.highlight}
+                        onMouseLeave={this.clearHighlight}
+                        style={{ textAlign: 'left' }}
+                    >
+                        {label} <small>{description}</small>
+                    </button>
+                    <IconButton
+                        svg={pivot.cell.state.isHidden
+                            ? VisibilityOffOutlinedSvg
+                            : VisibilityOutlinedSvg}
+                        toggleState={false}
+                        className='msp-form-control'
+                        onClick={this.toggleVisibility}
+                        title={`${pivot.cell.state.isHidden ? 'Show' : 'Hide'}`}
+                        small
+                        flex
+                    />
+                    {refs.length === 1 && (
+                        <IconButton
+                            svg={MoreHorizSvg}
+                            className='msp-form-control'
+                            onClick={this.toggleOptions}
+                            title='Options'
+                            toggleState={this.state.showOptions}
+                            flex
+                        />
+                    )}
                 </div>
-            </>}
-        </>;
+                {(refs.length === 1 && this.state.showOptions && pivot.cell.parent) && (
+                    <>
+                        <div className='msp-control-offset'>
+                            <UpdateTransformControl
+                                state={pivot.cell.parent}
+                                transform={pivot.cell.transform}
+                                customHeader='none'
+                                autoHideApply
+                            />
+                        </div>
+                    </>
+                )}
+            </>
+        );
     }
 }

@@ -19,11 +19,11 @@ import { getInterBondOrderFromTable } from '../../../../mol-model/structure/mode
 import { FormatPropertyProvider } from '../../common/property.ts';
 
 export interface StructConn {
-    readonly data: Table<mmCIF_Schema['struct_conn']>
-    readonly byAtomIndex: Map<ElementIndex, ReadonlyArray<StructConn.Entry>>
+    readonly data: Table<mmCIF_Schema['struct_conn']>;
+    readonly byAtomIndex: Map<ElementIndex, ReadonlyArray<StructConn.Entry>>;
     /** Cantor pairs of residue indices that have a struct-conn record */
-    readonly residueCantorPairs: Set<number>
-    readonly entries: ReadonlyArray<StructConn.Entry>
+    readonly residueCantorPairs: Set<number>;
+    readonly entries: ReadonlyArray<StructConn.Entry>;
 }
 
 export namespace StructConn {
@@ -41,16 +41,18 @@ export namespace StructConn {
 
                     const indices: number[] = [];
                     for (const e of p.entries) {
-                        if (hasAtom(structure, e.partnerA.atomIndex) &&
-                                hasAtom(structure, e.partnerB.atomIndex)) {
+                        if (
+                            hasAtom(structure, e.partnerA.atomIndex) &&
+                            hasAtom(structure, e.partnerB.atomIndex)
+                        ) {
                             indices[indices.length] = e.rowIndex;
                         }
                     }
 
                     return CifWriter.Category.ofTable(p.data, indices);
-                }
-            }]
-        }
+                },
+            }],
+        },
     };
 
     export const Provider = FormatPropertyProvider.create<StructConn>(Descriptor);
@@ -61,7 +63,8 @@ export namespace StructConn {
      */
     export function isExhaustive(model: Model): boolean {
         const structConn = StructConn.Provider.get(model);
-        return !!structConn && (structConn.entries.length / model.atomicConformation.atomId.rowCount) > 0.95;
+        return !!structConn &&
+            (structConn.entries.length / model.atomicConformation.atomId.rowCount) > 0.95;
     }
 
     function hasAtom({ units }: Structure, element: ElementIndex) {
@@ -85,15 +88,18 @@ export namespace StructConn {
     }
 
     export interface Entry {
-        rowIndex: number,
-        distance: number,
-        order: number,
-        flags: number,
-        partnerA: { residueIndex: ResidueIndex, atomIndex: ElementIndex, symmetry: string },
-        partnerB: { residueIndex: ResidueIndex, atomIndex: ElementIndex, symmetry: string }
+        rowIndex: number;
+        distance: number;
+        order: number;
+        flags: number;
+        partnerA: { residueIndex: ResidueIndex; atomIndex: ElementIndex; symmetry: string };
+        partnerB: { residueIndex: ResidueIndex; atomIndex: ElementIndex; symmetry: string };
     }
 
-    export function getEntriesFromStructConn(struct_conn: Table<mmCIF_Schema['struct_conn']>, model: Model): StructConn['entries'] {
+    export function getEntriesFromStructConn(
+        struct_conn: Table<mmCIF_Schema['struct_conn']>,
+        model: Model,
+    ): StructConn['entries'] {
         const { conn_type_id, pdbx_dist_value, pdbx_value_order } = struct_conn;
         const p1 = {
             label_asym_id: struct_conn.ptnr1_label_asym_id,
@@ -102,7 +108,7 @@ export namespace StructConn {
             label_atom_id: struct_conn.ptnr1_label_atom_id,
             label_alt_id: struct_conn.pdbx_ptnr1_label_alt_id,
             ins_code: struct_conn.pdbx_ptnr1_PDB_ins_code,
-            symmetry: struct_conn.ptnr1_symmetry
+            symmetry: struct_conn.ptnr1_symmetry,
         };
         const p2: typeof p1 = {
             label_asym_id: struct_conn.ptnr2_label_asym_id,
@@ -111,7 +117,7 @@ export namespace StructConn {
             label_atom_id: struct_conn.ptnr2_label_atom_id,
             label_alt_id: struct_conn.pdbx_ptnr2_label_alt_id,
             ins_code: struct_conn.pdbx_ptnr2_PDB_ins_code,
-            symmetry: struct_conn.ptnr2_symmetry
+            symmetry: struct_conn.ptnr2_symmetry,
         };
 
         const entityIds = Array.from(model.entities.data.id.toArray());
@@ -123,9 +129,9 @@ export namespace StructConn {
             if (!atomName) return undefined;
 
             // prefer auth_seq_id, but if it is absent, then fall back to label_seq_id
-            const resId = (ps.auth_seq_id.valueKind(row) === Column.ValueKind.Present) ?
-                ps.auth_seq_id.value(row) :
-                ps.label_seq_id.value(row);
+            const resId = (ps.auth_seq_id.valueKind(row) === Column.ValueKind.Present)
+                ? ps.auth_seq_id.value(row)
+                : ps.label_seq_id.value(row);
             const resInsCode = ps.ins_code.value(row);
             const altId = ps.label_alt_id.value(row);
             for (const eId of entityIds) {
@@ -133,10 +139,14 @@ export namespace StructConn {
                     eId,
                     asymId,
                     resId,
-                    resInsCode
+                    resInsCode,
                 );
                 if (residueIndex < 0) continue;
-                const atomIndex = model.atomicHierarchy.index.findAtomOnResidue(residueIndex, atomName, altId);
+                const atomIndex = model.atomicHierarchy.index.findAtomOnResidue(
+                    residueIndex,
+                    atomName,
+                    altId,
+                );
                 if (atomIndex < 0) continue;
                 return { residueIndex, atomIndex, symmetry: ps.symmetry.value(row) };
             }
@@ -150,21 +160,29 @@ export namespace StructConn {
             if (partnerA === undefined || partnerB === undefined) continue;
 
             const type = conn_type_id.value(i);
-            const orderType = (pdbx_value_order.value(i) || '');
+            const orderType = pdbx_value_order.value(i) || '';
             let flags = BondType.Flag.None;
             let order = 1;
 
             switch (orderType) {
-                case 'sing': order = 1; break;
-                case 'doub': order = 2; break;
-                case 'trip': order = 3; break;
-                case 'quad': order = 4; break;
+                case 'sing':
+                    order = 1;
+                    break;
+                case 'doub':
+                    order = 2;
+                    break;
+                case 'trip':
+                    order = 3;
+                    break;
+                case 'quad':
+                    order = 4;
+                    break;
                 default:
                     order = getInterBondOrderFromTable(
                         struct_conn.ptnr1_label_comp_id.value(i),
                         struct_conn.ptnr1_label_atom_id.value(i),
                         struct_conn.ptnr2_label_comp_id.value(i),
-                        struct_conn.ptnr2_label_atom_id.value(i)
+                        struct_conn.ptnr2_label_atom_id.value(i),
                     );
             }
 
@@ -172,15 +190,24 @@ export namespace StructConn {
                 case 'covale':
                     flags = BondType.Flag.Covalent;
                     break;
-                case 'disulf': flags = BondType.Flag.Covalent | BondType.Flag.Disulfide; break;
+                case 'disulf':
+                    flags = BondType.Flag.Covalent | BondType.Flag.Disulfide;
+                    break;
                 case 'hydrog':
                     flags = BondType.Flag.HydrogenBond;
                     break;
-                case 'metalc': flags = BondType.Flag.MetallicCoordination; break;
+                case 'metalc':
+                    flags = BondType.Flag.MetallicCoordination;
+                    break;
             }
 
             entries.push({
-                rowIndex: i, flags, order, distance: pdbx_dist_value.value(i), partnerA, partnerB
+                rowIndex: i,
+                flags,
+                order,
+                distance: pdbx_dist_value.value(i),
+                partnerA,
+                partnerB,
             });
         }
 

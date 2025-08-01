@@ -6,7 +6,9 @@
 
 export async function fileToDataUri(file: File): Promise<string> {
     const filename = file.name.toLowerCase() || 'file';
-    const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].some(ext => filename.endsWith(`.${ext}`));
+    const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].some((ext) =>
+        filename.endsWith(`.${ext}`)
+    );
 
     let type = 'application/octet-stream';
     if (isImage) {

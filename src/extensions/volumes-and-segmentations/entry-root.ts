@@ -28,14 +28,13 @@ import { VolsegMeshSegmentationData } from './entry-meshes.ts';
 import { VolsegModelData } from './entry-models.ts';
 import { VolsegLatticeSegmentationData } from './entry-segmentation.ts';
 import { VolsegState, VolsegStateData, VolsegStateParams } from './entry-state.ts';
-import { VolsegVolumeData, SimpleVolumeParamValues, VOLUME_VISUAL_TAG } from './entry-volume.ts';
+import { SimpleVolumeParamValues, VolsegVolumeData, VOLUME_VISUAL_TAG } from './entry-volume.ts';
 import * as ExternalAPIs from './external-api.ts';
 import { VolsegGlobalStateData } from './global-state.ts';
 import { applyEllipsis, isDefined, lazyGetter, splitEntryId } from './helpers.ts';
 import { type VolsegStateFromEntry } from './transformers.ts';
 import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
 import { OrderedSet } from '../../mol-data/int.ts';
-
 
 export const MAX_VOXELS = 10 ** 7;
 // export const MAX_VOXELS = 10 ** 2; // DEBUG
@@ -44,40 +43,57 @@ export const BOX: [[number, number, number], [number, number, number]] | null = 
 
 const MAX_ANNOTATIONS_IN_LABEL = 6;
 
-
 const SourceChoice = new Choice({ emdb: 'EMDB', empiar: 'EMPIAR', idr: 'IDR' }, 'emdb');
 export type Source = Choice.Values<typeof SourceChoice>;
 
-
-export function createLoadVolsegParams(plugin?: PluginContext, entrylists: { [source: string]: string[] } = {}) {
-    const defaultVolumeServer = plugin?.config.get(VolsegVolumeServerConfig.DefaultServer) ?? DEFAULT_VOLSEG_SERVER;
+export function createLoadVolsegParams(
+    plugin?: PluginContext,
+    entrylists: { [source: string]: string[] } = {},
+) {
+    const defaultVolumeServer = plugin?.config.get(VolsegVolumeServerConfig.DefaultServer) ??
+        DEFAULT_VOLSEG_SERVER;
     return {
         serverUrl: ParamDefinition.Text(defaultVolumeServer),
-        source: ParamDefinition.Mapped(SourceChoice.values[0], SourceChoice.options, src => entryParam(entrylists[src])),
+        source: ParamDefinition.Mapped(
+            SourceChoice.values[0],
+            SourceChoice.options,
+            (src) => entryParam(entrylists[src]),
+        ),
     };
 }
 function entryParam(entries: string[] = []) {
-    const options: [string, string][] = entries.map(e => [e, e]);
+    const options: [string, string][] = entries.map((e) => [e, e]);
     options.push(['__custom__', 'Custom']);
     return ParamDefinition.Group({
-        entryId: ParamDefinition.Select(options[0][0], options, { description: 'Choose an entry from the list, or choose "Custom" and type any entry ID (useful when using other than default server).' }),
-        customEntryId: ParamDefinition.Text('', { hideIf: p => p.entryId !== '__custom__', description: 'Entry identifier, including the source prefix, e.g. "emd-1832"' }),
+        entryId: ParamDefinition.Select(options[0][0], options, {
+            description:
+                'Choose an entry from the list, or choose "Custom" and type any entry ID (useful when using other than default server).',
+        }),
+        customEntryId: ParamDefinition.Text('', {
+            hideIf: (p) => p.entryId !== '__custom__',
+            description: 'Entry identifier, including the source prefix, e.g. "emd-1832"',
+        }),
     }, { isFlat: true });
 }
 type LoadVolsegParamValues = ParamDefinition.Values<ReturnType<typeof createLoadVolsegParams>>;
 
 export function createVolsegEntryParams(plugin?: PluginContext) {
-    const defaultVolumeServer = plugin?.config.get(VolsegVolumeServerConfig.DefaultServer) ?? DEFAULT_VOLSEG_SERVER;
+    const defaultVolumeServer = plugin?.config.get(VolsegVolumeServerConfig.DefaultServer) ??
+        DEFAULT_VOLSEG_SERVER;
     return {
         serverUrl: ParamDefinition.Text(defaultVolumeServer),
         source: SourceChoice.PDSelect(),
-        entryId: ParamDefinition.Text('emd-1832', { description: 'Entry identifier, including the source prefix, e.g. "emd-1832"' }),
+        entryId: ParamDefinition.Text('emd-1832', {
+            description: 'Entry identifier, including the source prefix, e.g. "emd-1832"',
+        }),
     };
 }
 type VolsegEntryParamValues = ParamDefinition.Values<ReturnType<typeof createVolsegEntryParams>>;
 
 export namespace VolsegEntryParamValues {
-    export function fromLoadVolsegParamValues(params: LoadVolsegParamValues): VolsegEntryParamValues {
+    export function fromLoadVolsegParamValues(
+        params: LoadVolsegParamValues,
+    ): VolsegEntryParamValues {
         let entryId = (params.source.params as any).entryId;
         if (entryId === '__custom__') {
             entryId = (params.source.params as any).customEntryId;
@@ -85,15 +101,15 @@ export namespace VolsegEntryParamValues {
         return {
             serverUrl: params.serverUrl,
             source: params.source.name as Source,
-            entryId: entryId
+            entryId: entryId,
         };
     }
 }
 
+export class VolsegEntry
+    extends PluginStateObject.CreateBehavior<VolsegEntryData>({ name: 'Vol & Seg Entry' }) {}
 
-export class VolsegEntry extends PluginStateObject.CreateBehavior<VolsegEntryData>({ name: 'Vol & Seg Entry' }) { }
-
-type VolRepr3DT = typeof StateTransforms.Representation.VolumeRepresentation3D
+type VolRepr3DT = typeof StateTransforms.Representation.VolumeRepresentation3D;
 
 export class VolsegEntryData extends PluginBehavior.WithSubscribers<VolsegEntryParamValues> {
     plugin: PluginContext;
@@ -113,10 +129,15 @@ export class VolsegEntryData extends PluginBehavior.WithSubscribers<VolsegEntryP
     private readonly modelData = new VolsegModelData(this);
     private highlightRequest = new Subject<Segment | undefined>();
 
-    private getStateNode = lazyGetter(() => this.plugin.state.data.selectQ(q => q.byRef(this.ref).subtree().ofType(VolsegState))[0] as StateObjectCell<VolsegState, StateTransform<typeof VolsegStateFromEntry>>, 'Missing VolsegState node. Must first create VolsegState for this VolsegEntry.');
+    private getStateNode = lazyGetter(
+        () =>
+            this.plugin.state.data.selectQ((q) =>
+                q.byRef(this.ref).subtree().ofType(VolsegState)
+            )[0] as StateObjectCell<VolsegState, StateTransform<typeof VolsegStateFromEntry>>,
+        'Missing VolsegState node. Must first create VolsegState for this VolsegEntry.',
+    );
     public currentState = new BehaviorSubject(ParamDefinition.getDefaultValues(VolsegStateParams));
     public currentVolume = new BehaviorSubject<StateTransform<VolRepr3DT> | undefined>(undefined);
-
 
     private constructor(plugin: PluginContext, params: VolsegEntryParamValues) {
         super(plugin, params);
@@ -130,7 +151,9 @@ export class VolsegEntryData extends PluginBehavior.WithSubscribers<VolsegEntryP
     private async initialize() {
         const metadata = await this.api.getMetadata(this.source, this.entryId);
         this.metadata = new MetadataWrapper(metadata);
-        this.pdbs = await ExternalAPIs.getPdbIdsForEmdbEntry(this.metadata.raw.grid.general.source_db_id ?? this.entryId);
+        this.pdbs = await ExternalAPIs.getPdbIdsForEmdbEntry(
+            this.metadata.raw.grid.general.source_db_id ?? this.entryId,
+        );
         // TODO use Asset?
     }
 
@@ -157,8 +180,12 @@ export class VolsegEntryData extends PluginBehavior.WithSubscribers<VolsegEntryP
         if (volumeVisual) this.currentVolume.next(volumeVisual.transform);
 
         let volumeRef: string | undefined;
-        this.subscribeObservable(this.plugin.state.data.events.cell.stateUpdated, e => {
-            try { (this.getStateNode()); } catch { return; } // if state not does not exist yet
+        this.subscribeObservable(this.plugin.state.data.events.cell.stateUpdated, (e) => {
+            try {
+                this.getStateNode();
+            } catch {
+                return;
+            } // if state not does not exist yet
             if (e.cell.transform.ref === this.getStateNode().transform.ref) {
                 const newState = this.getStateNode().obj?.data;
                 if (newState && !shallowEqualObjects(newState, this.currentState.value)) { // avoid repeated update
@@ -167,21 +194,28 @@ export class VolsegEntryData extends PluginBehavior.WithSubscribers<VolsegEntryP
             } else if (e.cell.transform.tags?.includes(VOLUME_VISUAL_TAG)) {
                 if (e.ref === volumeRef) {
                     this.currentVolume.next(e.cell.transform);
-                } else if (StateSelection.findAncestor(this.plugin.state.data.tree, this.plugin.state.data.cells, e.ref, a => a.transform.ref === ref)) {
+                } else if (
+                    StateSelection.findAncestor(
+                        this.plugin.state.data.tree,
+                        this.plugin.state.data.cells,
+                        e.ref,
+                        (a) => a.transform.ref === ref,
+                    )
+                ) {
                     volumeRef = e.ref;
                     this.currentVolume.next(e.cell.transform);
                 }
             }
         });
 
-        this.subscribeObservable(this.plugin.state.data.events.cell.removed, e => {
+        this.subscribeObservable(this.plugin.state.data.events.cell.removed, (e) => {
             if (e.ref === volumeRef) {
                 volumeRef = undefined;
                 this.currentVolume.next(undefined);
             }
         });
 
-        this.subscribeObservable(this.plugin.behaviors.interaction.click, async e => {
+        this.subscribeObservable(this.plugin.behaviors.interaction.click, async (e) => {
             const loci = e.current.loci;
             const clickedSegment = this.getSegmentIdFromLoci(loci);
             if (clickedSegment === undefined) return;
@@ -193,15 +227,21 @@ export class VolsegEntryData extends PluginBehavior.WithSubscribers<VolsegEntryP
         });
 
         this.subscribeObservable(
-            this.highlightRequest.pipe(throttleTime(50, undefined, { leading: true, trailing: true })),
-            async segment => await this.highlightSegment(segment)
+            this.highlightRequest.pipe(
+                throttleTime(50, undefined, { leading: true, trailing: true }),
+            ),
+            async (segment) => await this.highlightSegment(segment),
         );
 
         this.subscribeObservable(
-            this.currentState.pipe(distinctUntilChanged((a, b) => a.selectedSegment === b.selectedSegment)),
-            async state => {
-                if (VolsegGlobalStateData.getGlobalState(this.plugin)?.selectionMode) await this.selectSegment(state.selectedSegment);
-            }
+            this.currentState.pipe(
+                distinctUntilChanged((a, b) => a.selectedSegment === b.selectedSegment),
+            ),
+            async (state) => {
+                if (VolsegGlobalStateData.getGlobalState(this.plugin)?.selectionMode) {
+                    await this.selectSegment(state.selectedSegment);
+                }
+            },
         );
     }
 
@@ -212,8 +252,13 @@ export class VolsegEntryData extends PluginBehavior.WithSubscribers<VolsegEntryP
     async loadVolume() {
         const result = await this.volumeData.loadVolume();
         if (result) {
-            const isovalue = result.isovalue.kind === 'relative' ? result.isovalue.relativeValue : result.isovalue.absoluteValue;
-            await this.updateStateNode({ volumeIsovalueKind: result.isovalue.kind, volumeIsovalueValue: isovalue });
+            const isovalue = result.isovalue.kind === 'relative'
+                ? result.isovalue.relativeValue
+                : result.isovalue.absoluteValue;
+            await this.updateStateNode({
+                volumeIsovalueKind: result.isovalue.kind,
+                volumeIsovalueValue: isovalue,
+            });
         }
     }
 
@@ -223,22 +268,21 @@ export class VolsegEntryData extends PluginBehavior.WithSubscribers<VolsegEntryP
         await this.actionShowSegments(this.metadata.allSegmentIds);
     }
 
-
     actionHighlightSegment(segment?: Segment) {
         this.highlightRequest.next(segment);
     }
 
     async actionToggleSegment(segment: number) {
-        const current = this.currentState.value.visibleSegments.map(seg => seg.segmentId);
+        const current = this.currentState.value.visibleSegments.map((seg) => seg.segmentId);
         if (current.includes(segment)) {
-            await this.actionShowSegments(current.filter(s => s !== segment));
+            await this.actionShowSegments(current.filter((s) => s !== segment));
         } else {
             await this.actionShowSegments([...current, segment]);
         }
     }
 
     async actionToggleAllSegments() {
-        const current = this.currentState.value.visibleSegments.map(seg => seg.segmentId);
+        const current = this.currentState.value.visibleSegments.map((seg) => seg.segmentId);
         if (current.length !== this.metadata.allSegments.length) {
             await this.actionShowSegments(this.metadata.allSegmentIds);
         } else {
@@ -247,7 +291,11 @@ export class VolsegEntryData extends PluginBehavior.WithSubscribers<VolsegEntryP
     }
 
     async actionSelectSegment(segment?: number) {
-        if (segment !== undefined && this.currentState.value.visibleSegments.find(s => s.segmentId === segment) === undefined) {
+        if (
+            segment !== undefined &&
+            this.currentState.value.visibleSegments.find((s) => s.segmentId === segment) ===
+                undefined
+        ) {
             // first make the segment visible if it is not
             await this.actionToggleSegment(segment);
         }
@@ -264,7 +312,7 @@ export class VolsegEntryData extends PluginBehavior.WithSubscribers<VolsegEntryP
 
     async actionShowFittedModel(pdbIds: string[]) {
         await this.modelData.showPdbs(pdbIds);
-        await this.updateStateNode({ visibleModels: pdbIds.map(pdbId => ({ pdbId: pdbId })) });
+        await this.updateStateNode({ visibleModels: pdbIds.map((pdbId) => ({ pdbId: pdbId })) });
     }
 
     async actionSetVolumeVisual(type: 'isosurface' | 'direct-volume' | 'off') {
@@ -280,11 +328,10 @@ export class VolsegEntryData extends PluginBehavior.WithSubscribers<VolsegEntryP
         });
     }
 
-
     private async actionShowSegments(segments: number[]) {
         await this.latticeSegmentationData.showSegments(segments);
         await this.meshSegmentationData.showSegments(segments);
-        await this.updateStateNode({ visibleSegments: segments.map(s => ({ segmentId: s })) });
+        await this.updateStateNode({ visibleSegments: segments.map((s) => ({ segmentId: s })) });
     }
 
     private async highlightSegment(segment?: Segment) {
@@ -307,13 +354,16 @@ export class VolsegEntryData extends PluginBehavior.WithSubscribers<VolsegEntryP
         const newParams = { ...oldParams, ...params };
         const state = this.plugin.state.data;
         const update = state.build().to(this.getStateNode().transform.ref).update(newParams);
-        await PluginCommands.State.Update(this.plugin, { state, tree: update, options: { doNotUpdateCurrent: true } });
+        await PluginCommands.State.Update(this.plugin, {
+            state,
+            tree: update,
+            options: { doNotUpdateCurrent: true },
+        });
     }
-
 
     /** Find the nodes under this entry root which have all of the given tags. */
     findNodesByTags(...tags: string[]) {
-        return this.plugin.state.data.selectQ(q => {
+        return this.plugin.state.data.selectQ((q) => {
             let builder = q.byRef(this.ref).subtree();
             for (const tag of tags) builder = builder.withTag(tag);
             return builder;
@@ -334,15 +384,18 @@ export class VolsegEntryData extends PluginBehavior.WithSubscribers<VolsegEntryP
             if (segmentId === undefined) return;
             const segment = this.metadata.getSegment(segmentId);
             if (!segment) return;
-            const annotLabels = segment.biological_annotation.external_references.map(annot => `${applyEllipsis(annot.label)} [${annot.resource}:${annot.accession}]`);
+            const annotLabels = segment.biological_annotation.external_references.map((annot) =>
+                `${applyEllipsis(annot.label)} [${annot.resource}:${annot.accession}]`
+            );
             if (annotLabels.length === 0) return;
             if (annotLabels.length > MAX_ANNOTATIONS_IN_LABEL + 1) {
                 const nHidden = annotLabels.length - MAX_ANNOTATIONS_IN_LABEL;
                 annotLabels.length = MAX_ANNOTATIONS_IN_LABEL;
                 annotLabels.push(`(${nHidden} more annotations, click on the segment to see all)`);
             }
-            return '<hr class="msp-highlight-info-hr"/>' + annotLabels.filter(isDefined).join('<br/>');
-        }
+            return '<hr class="msp-highlight-info-hr"/>' +
+                annotLabels.filter(isDefined).join('<br/>');
+        },
     };
 
     private getSegmentIdFromLoci(loci: Loci): number | undefined {
@@ -372,8 +425,4 @@ export class VolsegEntryData extends PluginBehavior.WithSubscribers<VolsegEntryP
             this.plugin.managers.interactivity.lociSelects.deselectAll();
         }
     }
-
 }
-
-
-

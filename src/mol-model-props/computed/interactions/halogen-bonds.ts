@@ -9,22 +9,22 @@
  */
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { Structure, Unit, StructureElement } from '../../../mol-model/structure.ts';
+import { Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
 import { calcAngles } from '../chemistry/geometry.ts';
-import { FeaturesBuilder, Features } from './features.ts';
+import { Features, FeaturesBuilder } from './features.ts';
 import { ElementSymbol } from '../../../mol-model/structure/model/types.ts';
-import { typeSymbol, eachBondedAtom } from '../chemistry/util.ts';
+import { eachBondedAtom, typeSymbol } from '../chemistry/util.ts';
 import { Elements } from '../../../mol-model/structure/model/properties/atomic/types.ts';
 import { degToRad } from '../../../mol-math/misc.ts';
-import { FeatureType, FeatureGroup, InteractionType } from './common.ts';
+import { FeatureGroup, FeatureType, InteractionType } from './common.ts';
 import { ContactProvider } from './contacts.ts';
 
 const HalogenBondsParams = {
     distanceMax: PD.Numeric(4.0, { min: 1, max: 5, step: 0.1 }),
     angleMax: PD.Numeric(30, { min: 0, max: 60, step: 1 }),
 };
-type HalogenBondsParams = typeof HalogenBondsParams
-type HalogenBondsProps = PD.Values<HalogenBondsParams>
+type HalogenBondsParams = typeof HalogenBondsParams;
+type HalogenBondsProps = PD.Values<HalogenBondsParams>;
 
 const halBondElements = [Elements.CL, Elements.BR, Elements.I, Elements.AT] as ElementSymbol[];
 
@@ -38,7 +38,14 @@ function addUnitHalogenDonors(structure: Structure, unit: Unit.Atomic, builder: 
     for (let i = 0 as StructureElement.UnitIndex, il = elements.length; i < il; ++i) {
         const element = typeSymbol(unit, i);
         if (halBondElements.includes(element)) {
-            builder.add(FeatureType.HalogenDonor, FeatureGroup.None, x[elements[i]], y[elements[i]], z[elements[i]], i);
+            builder.add(
+                FeatureType.HalogenDonor,
+                FeatureGroup.None,
+                x[elements[i]],
+                y[elements[i]],
+                z[elements[i]],
+                i,
+            );
         }
     }
 }
@@ -49,7 +56,11 @@ const Y = [Elements.C, Elements.N, Elements.P, Elements.S] as ElementSymbol[];
 /**
  * Halogen bond acceptors (Y-{O|N|S}, with Y=C,P,N,S)
  */
-function addUnitHalogenAcceptors(structure: Structure, unit: Unit.Atomic, builder: FeaturesBuilder) {
+function addUnitHalogenAcceptors(
+    structure: Structure,
+    unit: Unit.Atomic,
+    builder: FeaturesBuilder,
+) {
     const { elements } = unit;
     const { x, y, z } = unit.model.atomicConformation;
 
@@ -63,7 +74,14 @@ function addUnitHalogenAcceptors(structure: Structure, unit: Unit.Atomic, builde
                 }
             });
             if (flag) {
-                builder.add(FeatureType.HalogenAcceptor, FeatureGroup.None, x[elements[i]], y[elements[i]], z[elements[i]], i);
+                builder.add(
+                    FeatureType.HalogenAcceptor,
+                    FeatureGroup.None,
+                    x[elements[i]],
+                    y[elements[i]],
+                    z[elements[i]],
+                    i,
+                );
             }
         }
     }
@@ -85,9 +103,14 @@ function getOptions(props: HalogenBondsProps) {
         angleMax: degToRad(props.angleMax),
     };
 }
-type Options = ReturnType<typeof getOptions>
+type Options = ReturnType<typeof getOptions>;
 
-function testHalogenBond(structure: Structure, infoA: Features.Info, infoB: Features.Info, opts: Options): InteractionType | undefined {
+function testHalogenBond(
+    structure: Structure,
+    infoA: Features.Info,
+    infoB: Features.Info,
+    opts: Options,
+): InteractionType | undefined {
     const typeA = infoA.types[infoA.feature];
     const typeB = infoB.types[infoB.feature];
 
@@ -106,15 +129,23 @@ function testHalogenBond(structure: Structure, infoA: Features.Info, infoB: Feat
     const [acceptorAngles] = calcAngles(structure, acc.unit, accIndex, don.unit, donIndex);
     // Angle must be defined. Excludes water as acceptor. Debatable
     if (acceptorAngles.length === 0) return;
-    if (acceptorAngles.some(acceptorAngle => OptimalAcceptorAngle - acceptorAngle > opts.angleMax)) return;
+    if (
+        acceptorAngles.some((acceptorAngle) => OptimalAcceptorAngle - acceptorAngle > opts.angleMax)
+    ) return;
 
     return InteractionType.HalogenBond;
 }
 
 //
 
-export const HalogenDonorProvider = Features.Provider([FeatureType.HalogenDonor], addUnitHalogenDonors);
-export const HalogenAcceptorProvider = Features.Provider([FeatureType.HalogenAcceptor], addUnitHalogenAcceptors);
+export const HalogenDonorProvider = Features.Provider(
+    [FeatureType.HalogenDonor],
+    addUnitHalogenDonors,
+);
+export const HalogenAcceptorProvider = Features.Provider(
+    [FeatureType.HalogenAcceptor],
+    addUnitHalogenAcceptors,
+);
 
 export const HalogenBondsProvider: ContactProvider<HalogenBondsParams> = {
     name: 'halogen-bonds',
@@ -124,7 +155,7 @@ export const HalogenBondsProvider: ContactProvider<HalogenBondsParams> = {
         return {
             maxDistance: props.distanceMax,
             requiredFeatures: new Set([FeatureType.HalogenDonor, FeatureType.HalogenAcceptor]),
-            getType: (structure, infoA, infoB) => testHalogenBond(structure, infoA, infoB, opts)
+            getType: (structure, infoA, infoB) => testHalogenBond(structure, infoA, infoB, opts),
         };
-    }
+    },
 };

@@ -12,7 +12,7 @@ import { StructureQuery } from '../query.ts';
 import { StructureSelection } from '../selection.ts';
 import { QueryContext } from '../context.ts';
 import { BondType } from '../../model/types.ts';
-import { BundleElement, Bundle } from '../../structure/element/bundle.ts';
+import { Bundle, BundleElement } from '../../structure/element/bundle.ts';
 import { UnitIndex } from '../../structure/element/element.ts';
 
 export function defaultBondTest(ctx: QueryContext) {
@@ -32,7 +32,10 @@ export function atomicSequence(): StructureQuery {
             l.element = elements[0];
             if (P.entity.type(l) !== 'polymer') continue;
 
-            const residuesIt = Segmentation.transientSegments(unit.model.atomicHierarchy.residueAtomSegments, elements);
+            const residuesIt = Segmentation.transientSegments(
+                unit.model.atomicHierarchy.residueAtomSegments,
+                elements,
+            );
             let residueCount = 0;
             while (residuesIt.hasNext) {
                 residueCount++;
@@ -43,7 +46,10 @@ export function atomicSequence(): StructureQuery {
 
             units.push(unit);
         }
-        return StructureSelection.Singletons(inputStructure, Structure.create(units, { parent: inputStructure }));
+        return StructureSelection.Singletons(
+            inputStructure,
+            Structure.create(units, { parent: inputStructure }),
+        );
     };
 }
 
@@ -62,7 +68,10 @@ export function water(): StructureQuery {
             if (P.entity.type(l) !== 'water') continue;
             units.push(unit);
         }
-        return StructureSelection.Singletons(inputStructure, Structure.create(units, { parent: inputStructure }));
+        return StructureSelection.Singletons(
+            inputStructure,
+            Structure.create(units, { parent: inputStructure }),
+        );
     };
 }
 
@@ -80,7 +89,10 @@ export function atomicHet(): StructureQuery {
             l.element = elements[0];
             if (P.entity.type(l) === 'water') continue;
             if (P.entity.type(l) === 'polymer') {
-                const residuesIt = Segmentation.transientSegments(unit.model.atomicHierarchy.residueAtomSegments, elements);
+                const residuesIt = Segmentation.transientSegments(
+                    unit.model.atomicHierarchy.residueAtomSegments,
+                    elements,
+                );
                 let residueCount = 0;
                 while (residuesIt.hasNext) {
                     residueCount++;
@@ -92,7 +104,10 @@ export function atomicHet(): StructureQuery {
 
             units.push(unit);
         }
-        return StructureSelection.Singletons(inputStructure, Structure.create(units, { parent: inputStructure }));
+        return StructureSelection.Singletons(
+            inputStructure,
+            Structure.create(units, { parent: inputStructure }),
+        );
     };
 }
 
@@ -105,15 +120,22 @@ export function spheres(): StructureQuery {
             if (unit.kind !== Unit.Kind.Spheres) continue;
             units.push(unit);
         }
-        return StructureSelection.Singletons(inputStructure, Structure.create(units, { parent: inputStructure }));
+        return StructureSelection.Singletons(
+            inputStructure,
+            Structure.create(units, { parent: inputStructure }),
+        );
     };
 }
 
-export function bundleElementImpl(groupedUnits: number[][], ranges: number[], set: number[]): BundleElement {
+export function bundleElementImpl(
+    groupedUnits: number[][],
+    ranges: number[],
+    set: number[],
+): BundleElement {
     return {
         groupedUnits: groupedUnits as any as SortedArray<number>[],
         ranges: ranges as any as SortedArray<UnitIndex>,
-        set: set as any as SortedArray<UnitIndex>
+        set: set as any as SortedArray<UnitIndex>,
     };
 }
 
@@ -121,9 +143,11 @@ export function bundleGenerator(elements: BundleElement[]): StructureQuery {
     return function query_bundleGenerator(ctx) {
         const bundle: Bundle = {
             hash: ctx.inputStructure.hashCode,
-            elements
+            elements,
         };
 
-        return StructureSelection.Sequence(ctx.inputStructure, [Bundle.toStructure(bundle, ctx.inputStructure)]);
+        return StructureSelection.Sequence(ctx.inputStructure, [
+            Bundle.toStructure(bundle, ctx.inputStructure),
+        ]);
     };
 }

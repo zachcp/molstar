@@ -29,16 +29,19 @@ export const PlyProvider = DataFormatProvider({
 
         return { format: format.selector, shape: shape.selector };
     },
-    visuals(plugin: PluginContext, data: { shape: StateObjectRef<PluginStateObject.Shape.Provider> }) {
+    visuals(
+        plugin: PluginContext,
+        data: { shape: StateObjectRef<PluginStateObject.Shape.Provider> },
+    ) {
         const repr = plugin.state.data.build()
             .to(data.shape)
             .apply(StateTransforms.Representation.ShapeRepresentation3D);
         return repr.commit();
-    }
+    },
 });
 
 export const BuiltInShapeFormats = [
     ['ply', PlyProvider] as const,
 ] as const;
 
-export type BuildInShapeFormat = (typeof BuiltInShapeFormats)[number][0]
+export type BuildInShapeFormat = (typeof BuiltInShapeFormats)[number][0];

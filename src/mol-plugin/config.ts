@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure, Model } from '../mol-model/structure.ts';
+import { Model, Structure } from '../mol-model/structure.ts';
 import { PluginContext } from './context.ts';
 import { PdbDownloadProvider } from '../mol-plugin-state/actions/structure.ts';
 import { EmdbDownloadProvider } from '../mol-plugin-state/actions/volume.ts';
@@ -15,12 +15,18 @@ import { SaccharideCompIdMapType } from '../mol-model/structure/structure/carboh
 import { BackgroundProps } from '../mol-canvas3d/passes/background.ts';
 
 export class PluginConfigItem<T = any> {
-    toString() { return this.key; }
-    valueOf() { return this.key; }
-    constructor(public key: string, public defaultValue?: T) { }
+    toString() {
+        return this.key;
+    }
+    valueOf() {
+        return this.key;
+    }
+    constructor(public key: string, public defaultValue?: T) {}
 }
 
-function item<T>(key: string, defaultValue?: T) { return new PluginConfigItem(key, defaultValue); }
+function item<T>(key: string, defaultValue?: T) {
+    return new PluginConfigItem(key, defaultValue);
+}
 
 export const PluginConfig = {
     item,
@@ -30,18 +36,24 @@ export const PluginConfig = {
         DisablePreserveDrawingBuffer: item('plugin-config.disable-preserve-drawing-buffer', false),
         PixelScale: item('plugin-config.pixel-scale', 1),
         PickScale: item('plugin-config.pick-scale', 0.25),
-        Transparency: item<'blended' | 'wboit' | 'dpoit'>('plugin-config.transparency', PluginFeatureDetection.defaultTransparency),
+        Transparency: item<'blended' | 'wboit' | 'dpoit'>(
+            'plugin-config.transparency',
+            PluginFeatureDetection.defaultTransparency,
+        ),
         // as of Oct 1 2021, WebGL 2 doesn't work on iOS 15.
         // TODO: check back in a few weeks to see if it was fixed
         PreferWebGl1: item('plugin-config.prefer-webgl1', PluginFeatureDetection.preferWebGl1),
         AllowMajorPerformanceCaveat: item('plugin-config.allow-major-performance-caveat', false),
-        PowerPreference: item<WebGLContextAttributes['powerPreference']>('plugin-config.power-preference', 'high-performance'),
+        PowerPreference: item<WebGLContextAttributes['powerPreference']>(
+            'plugin-config.power-preference',
+            'high-performance',
+        ),
         ResolutionMode: item<'auto' | 'scaled' | 'native'>('plugin-config.resolution-mode', 'auto'),
     },
     State: {
         DefaultServer: item('plugin-state.server', 'https://webchem.ncbr.muni.cz/molstar-state'),
         CurrentServer: item('plugin-state.server', 'https://webchem.ncbr.muni.cz/molstar-state'),
-        HistoryCapacity: item('history-capacity.server', 5)
+        HistoryCapacity: item('history-capacity.server', 5),
     },
     VolumeStreaming: {
         Enabled: item('volume-streaming.enabled', true),
@@ -49,7 +61,10 @@ export const PluginConfig = {
         CanStream: item('volume-streaming.can-stream', (s: Structure, plugin: PluginContext) => {
             return s.models.length === 1 && Model.probablyHasDensityMap(s.models[0]);
         }),
-        EmdbHeaderServer: item('volume-streaming.emdb-header-server', 'https://files.wwpdb.org/pub/emdb/structures'),
+        EmdbHeaderServer: item(
+            'volume-streaming.emdb-header-server',
+            'https://files.wwpdb.org/pub/emdb/structures',
+        ),
     },
     Viewport: {
         ShowExpand: item('viewer.show-expand-button', true),
@@ -66,13 +81,22 @@ export const PluginConfig = {
     },
     Structure: {
         SizeThresholds: item('structure.size-thresholds', Structure.DefaultSizeThresholds),
-        DefaultRepresentationPreset: item<string>('structure.default-representation-preset', 'auto'),
-        DefaultRepresentationPresetParams: item<StructureRepresentationPresetProvider.CommonParams>('structure.default-representation-preset-params', { }),
-        SaccharideCompIdMapType: item<SaccharideCompIdMapType>('structure.saccharide-comp-id-map-type', 'default'),
+        DefaultRepresentationPreset: item<string>(
+            'structure.default-representation-preset',
+            'auto',
+        ),
+        DefaultRepresentationPresetParams: item<StructureRepresentationPresetProvider.CommonParams>(
+            'structure.default-representation-preset-params',
+            {},
+        ),
+        SaccharideCompIdMapType: item<SaccharideCompIdMapType>(
+            'structure.saccharide-comp-id-map-type',
+            'default',
+        ),
     },
     Background: {
         Styles: item<[BackgroundProps, string][]>('background.styles', []),
-    }
+    },
 };
 
 export class PluginConfigManager {

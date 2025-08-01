@@ -4,7 +4,6 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-
 import { PluginContext } from '../mol-plugin/context.ts';
 import { PluginUISpec } from './spec.ts';
 import { StateTransformParameters } from './state/common.tsx';

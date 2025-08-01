@@ -10,11 +10,11 @@ import { iterableToArray } from '../util.ts';
 
 /** Immutable by convention IntMap */
 interface IntMap<T> {
-    has(key: number): boolean,
-    keys(): IterableIterator<number>,
-    values(): IterableIterator<T>,
-    get(key: number): T,
-    readonly size: number
+    has(key: number): boolean;
+    keys(): IterableIterator<number>;
+    values(): IterableIterator<T>;
+    get(key: number): T;
+    readonly size: number;
 }
 
 namespace IntMap {

@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, RuntimeContext } from '../../../mol-task/index.ts';
+import { RuntimeContext, Task } from '../../../mol-task/index.ts';
 import { Dsn6File, Dsn6Header } from './schema.ts';
 import { ReaderResult as Result } from '../result.ts';
 import { FileHandle } from '../../common/file-handle.ts';
@@ -31,12 +31,14 @@ function parseBrixHeader(str: string): Dsn6Header {
         gamma: parseFloat(str.substr(123, 10)),
         divisor: parseFloat(str.substr(138, 12)),
         summand: parseInt(str.substr(155, 8)),
-        sigma: parseFloat(str.substr(170, 12))
+        sigma: parseFloat(str.substr(170, 12)),
     };
 }
 
 function parseDsn6Header(buffer: SimpleBuffer, littleEndian: boolean): Dsn6Header {
-    const readInt = littleEndian ? (o: number) => buffer.readInt16LE(o * 2) : (o: number) => buffer.readInt16BE(o * 2);
+    const readInt = littleEndian
+        ? (o: number) => buffer.readInt16LE(o * 2)
+        : (o: number) => buffer.readInt16BE(o * 2);
     const factor = 1 / readInt(17);
     return {
         xStart: readInt(0),
@@ -56,7 +58,7 @@ function parseDsn6Header(buffer: SimpleBuffer, littleEndian: boolean): Dsn6Heade
         gamma: readInt(14) * factor,
         divisor: readInt(15) / 100,
         summand: readInt(16),
-        sigma: undefined
+        sigma: undefined,
     };
 }
 
@@ -68,7 +70,9 @@ function getBlocks(header: Dsn6Header) {
     return { xBlocks, yBlocks, zBlocks };
 }
 
-export async function readDsn6Header(file: FileHandle): Promise<{ header: Dsn6Header, littleEndian: boolean }> {
+export async function readDsn6Header(
+    file: FileHandle,
+): Promise<{ header: Dsn6Header; littleEndian: boolean }> {
     const { buffer } = await file.readBuffer(0, dsn6HeaderSize);
     const brixStr = String.fromCharCode.apply(null, buffer) as string;
     const isBrix = brixStr.startsWith(':-)');
@@ -77,7 +81,12 @@ export async function readDsn6Header(file: FileHandle): Promise<{ header: Dsn6He
     return { header, littleEndian };
 }
 
-export async function parseDsn6Values(header: Dsn6Header, source: Uint8Array, target: Float32Array, littleEndian: boolean) {
+export async function parseDsn6Values(
+    header: Dsn6Header,
+    source: Uint8Array,
+    target: Float32Array,
+    littleEndian: boolean,
+) {
     if (!littleEndian) {
         // even though the values are one byte they need to be swapped like they are 2
         SimpleBuffer.flipByteOrderInPlace2(source.buffer);
@@ -100,7 +109,7 @@ export async function parseDsn6Values(header: Dsn6Header, source: Uint8Array, ta
                             const x = 8 * xx + i;
                             // check if remaining slice-part contains values
                             if (x < xExtent && y < yExtent && z < zExtent) {
-                                const idx = ((((x * yExtent) + y) * zExtent) + z);
+                                const idx = (((x * yExtent) + y) * zExtent) + z;
                                 target[idx] = (source[offset] - summand) / divisor;
                                 ++offset;
                             } else {
@@ -125,7 +134,11 @@ export function getDsn6Counts(header: Dsn6Header) {
     return { count, byteCount, valueCount };
 }
 
-async function parseInternal(file: FileHandle, size: number, ctx: RuntimeContext): Promise<Dsn6File> {
+async function parseInternal(
+    file: FileHandle,
+    size: number,
+    ctx: RuntimeContext,
+): Promise<Dsn6File> {
     await ctx.update({ message: 'Parsing DSN6/BRIX file...' });
     const { header, littleEndian } = await readDsn6Header(file);
     const { buffer } = await file.readBuffer(dsn6HeaderSize, size - dsn6HeaderSize);
@@ -139,7 +152,7 @@ async function parseInternal(file: FileHandle, size: number, ctx: RuntimeContext
 }
 
 export function parseFile(file: FileHandle, size: number) {
-    return Task.create<Result<Dsn6File>>('Parse DSN6/BRIX', async ctx => {
+    return Task.create<Result<Dsn6File>>('Parse DSN6/BRIX', async (ctx) => {
         try {
             return Result.success(await parseInternal(file, size, ctx));
         } catch (e) {
@@ -149,5 +162,8 @@ export function parseFile(file: FileHandle, size: number) {
 }
 
 export function parse(buffer: Uint8Array, name: string) {
-    return parseFile(FileHandle.fromBuffer(SimpleBuffer.fromUint8Array(buffer), name), buffer.length);
+    return parseFile(
+        FileHandle.fromBuffer(SimpleBuffer.fromUint8Array(buffer), name),
+        buffer.length,
+    );
 }

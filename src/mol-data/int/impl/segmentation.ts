@@ -12,11 +12,11 @@ import { Segmentation as Segs } from '../segmentation.ts';
 
 interface Segmentation {
     /** Segments stored as a sorted array */
-    offsets: SortedArray,
+    offsets: SortedArray;
     /** Mapping of values to segments */
-    index: Int32Array,
+    index: Int32Array;
     /** Number of segments */
-    count: number
+    count: number;
 }
 
 export function create(values: ArrayLike<number>): Segmentation {
@@ -42,13 +42,21 @@ export function ofOffsets(offsets: ArrayLike<number>, bounds: Interval): Segment
 }
 
 /** Get number of segments in a segmentation */
-export function count({ count }: Segmentation) { return count; }
-export function getSegment({ index }: Segmentation, value: number) { return index[value]; }
+export function count({ count }: Segmentation) {
+    return count;
+}
+export function getSegment({ index }: Segmentation, value: number) {
+    return index[value];
+}
 
 export function projectValue({ offsets }: Segmentation, set: OrderedSet, value: number): Interval {
     const last = OrderedSet.max(offsets);
     const idx = value >= last ? -1 : OrderedSet.findPredecessorIndex(offsets, value - 1);
-    return OrderedSet.findRange(set, OrderedSet.getAt(offsets, idx), OrderedSet.getAt(offsets, idx + 1) - 1);
+    return OrderedSet.findRange(
+        set,
+        OrderedSet.getAt(offsets, idx),
+        OrderedSet.getAt(offsets, idx + 1) - 1,
+    );
 }
 
 export class SegmentIterator<I extends number = number> implements Iterator<Segs.Segment<I>> {
@@ -63,7 +71,8 @@ export class SegmentIterator<I extends number = number> implements Iterator<Segs
         while (this.hasNext) {
             if (this.updateValue()) {
                 this.value.index = this.segmentMin++ as I;
-                this.hasNext = this.segmentMax >= this.segmentMin && Interval.size(this.setRange) > 0;
+                this.hasNext = this.segmentMax >= this.segmentMin &&
+                    Interval.size(this.setRange) > 0;
                 break;
             } else {
                 this.updateSegmentRange();
@@ -75,7 +84,11 @@ export class SegmentIterator<I extends number = number> implements Iterator<Segs
     private updateValue() {
         const segmentEnd = this.segments[this.segmentMin + 1];
         // TODO: add optimized version for interval and array?
-        const setEnd = OrderedSet.findPredecessorIndexInInterval(this.set, segmentEnd, this.setRange);
+        const setEnd = OrderedSet.findPredecessorIndexInInterval(
+            this.set,
+            segmentEnd,
+            this.setRange,
+        );
         this.value.start = Interval.start(this.setRange);
         this.value.end = setEnd;
         this.setRange = Interval.ofBounds(setEnd, Interval.end(this.setRange));
@@ -98,13 +111,20 @@ export class SegmentIterator<I extends number = number> implements Iterator<Segs
         this.updateSegmentRange();
     }
 
-    constructor(private segments: SortedArray, private segmentMap: Int32Array, private set: OrderedSet, inputRange: Interval) {
+    constructor(
+        private segments: SortedArray,
+        private segmentMap: Int32Array,
+        private set: OrderedSet,
+        inputRange: Interval,
+    ) {
         this.setRange = inputRange;
         this.updateSegmentRange();
     }
 }
 
 export function segments(segs: Segmentation, set: OrderedSet, segment?: Segs.Segment) {
-    const int = typeof segment !== 'undefined' ? Interval.ofBounds(segment.start, segment.end) : Interval.ofBounds(0, OrderedSet.size(set));
+    const int = typeof segment !== 'undefined'
+        ? Interval.ofBounds(segment.start, segment.end)
+        : Interval.ofBounds(0, OrderedSet.size(set));
     return new SegmentIterator(segs.offsets, segs.index, set, int);
 }

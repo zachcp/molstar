@@ -45,7 +45,16 @@ export function mergeUnits(units: readonly Unit[], id: number): Unit {
         elements = SortedArray.union(elements, SortedArray.ofRange(start, end));
     }
 
-    return Unit.create(id, id, 0, u.traits | Unit.Trait.MultiChain, u.kind, u.model, u.conformation.operator, elements);
+    return Unit.create(
+        id,
+        id,
+        0,
+        u.traits | Unit.Trait.MultiChain,
+        u.kind,
+        u.model,
+        u.conformation.operator,
+        elements,
+    );
 }
 
 export function partitionUnits(units: readonly Unit[], cellSize: number) {

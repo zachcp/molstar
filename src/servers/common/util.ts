@@ -7,7 +7,7 @@
  */
 
 import * as express from 'express';
-import { promises, constants } from 'fs';
+import { constants, promises } from 'fs';
 
 import { ConsoleLogger } from '../../mol-util/console-logger.ts';
 
@@ -20,7 +20,10 @@ export function getParam<T>(params: any, ...path: string[]): T | undefined {
         }
         return current;
     } catch (e) {
-        ConsoleLogger.error('Config', `Unable to retrieve property ${path.join('.')} from ${JSON.stringify(params)}`);
+        ConsoleLogger.error(
+            'Config',
+            `Unable to retrieve property ${path.join('.')} from ${JSON.stringify(params)}`,
+        );
     }
 }
 

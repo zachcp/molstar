@@ -11,7 +11,7 @@ import { Scene } from '../../mol-gl/scene.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { DrawPass } from './draw.ts';
 import { PostprocessingParams } from './postprocessing.ts';
-import { MultiSamplePass, MultiSampleParams, MultiSampleHelper } from './multi-sample.ts';
+import { MultiSampleHelper, MultiSampleParams, MultiSamplePass } from './multi-sample.ts';
 import { Camera } from '../camera.ts';
 import { Viewport } from '../camera/util.ts';
 import { PixelData } from '../../mol-util/image.ts';
@@ -35,7 +35,7 @@ export const ImageParams = {
     cameraHelper: PD.Group(CameraHelperParams),
     renderer: PD.Group(RendererParams),
 };
-export type ImageProps = PD.Values<typeof ImageParams>
+export type ImageProps = PD.Values<typeof ImageParams>;
 
 export class ImagePass {
     private _width = 0;
@@ -45,7 +45,9 @@ export class ImagePass {
     readonly props: ImageProps;
 
     private _colorTarget: RenderTarget;
-    get colorTarget() { return this._colorTarget; }
+    get colorTarget() {
+        return this._colorTarget;
+    }
 
     private readonly drawPass: DrawPass;
     private readonly illuminationPass: IlluminationPass;
@@ -53,10 +55,23 @@ export class ImagePass {
     private readonly multiSampleHelper: MultiSampleHelper;
     private readonly helper: Helper;
 
-    get width() { return this._width; }
-    get height() { return this._height; }
+    get width() {
+        return this._width;
+    }
+    get height() {
+        return this._height;
+    }
 
-    constructor(private webgl: WebGLContext, assetManager: AssetManager, private renderer: Renderer, private scene: Scene, private camera: Camera, helper: Helper, transparency: 'wboit' | 'dpoit' | 'blended', props: Partial<ImageProps>) {
+    constructor(
+        private webgl: WebGLContext,
+        assetManager: AssetManager,
+        private renderer: Renderer,
+        private scene: Scene,
+        private camera: Camera,
+        helper: Helper,
+        transparency: 'wboit' | 'dpoit' | 'blended',
+        props: Partial<ImageProps>,
+    ) {
         this.props = { ...PD.getDefaultValues(ImageParams), ...props };
 
         this.drawPass = new DrawPass(webgl, assetManager, 128, 128, transparency);
@@ -74,10 +89,14 @@ export class ImagePass {
     }
 
     updateBackground() {
-        return new Promise<void>(resolve => {
-            this.drawPass.postprocessing.background.update(this.camera, this.props.postprocessing.background, () => {
-                resolve();
-            });
+        return new Promise<void>((resolve) => {
+            this.drawPass.postprocessing.background.update(
+                this.camera,
+                this.props.postprocessing.background,
+                () => {
+                    resolve();
+                },
+            );
         });
     }
 
@@ -102,9 +121,18 @@ export class ImagePass {
         Viewport.set(this._camera.viewport, 0, 0, this._width, this._height);
         this._camera.update();
 
-        const ctx = { renderer: this.renderer, camera: this._camera, scene: this.scene, helper: this.helper };
+        const ctx = {
+            renderer: this.renderer,
+            camera: this._camera,
+            scene: this.scene,
+            helper: this.helper,
+        };
         if (this.illuminationPass.supported && this.props.illumination.enabled) {
-            await runtime.update({ message: 'Tracing...', current: 1, max: this.illuminationPass.getMaxIterations(this.props) });
+            await runtime.update({
+                message: 'Tracing...',
+                current: 1,
+                max: this.illuminationPass.getMaxIterations(this.props),
+            });
             this.illuminationPass.restart(true);
             while (this.illuminationPass.shouldRender(this.props)) {
                 if (isTimingMode) this.webgl.timer.mark('ImagePass.render', { captureStats: true });
@@ -147,7 +175,12 @@ export class ImagePass {
         }
     }
 
-    async getImageData(runtime: RuntimeContext, width: number, height: number, viewport?: Viewport) {
+    async getImageData(
+        runtime: RuntimeContext,
+        width: number,
+        height: number,
+        viewport?: Viewport,
+    ) {
         this.setSize(width, height);
         await this.render(runtime);
         this.colorTarget.bind();

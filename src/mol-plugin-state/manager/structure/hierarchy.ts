@@ -14,7 +14,15 @@ import { SetUtils } from '../../../mol-util/set.ts';
 import { TrajectoryHierarchyPresetProvider } from '../../builder/structure/hierarchy-preset.ts';
 import { PluginComponent } from '../../component.ts';
 import { PluginStateObject } from '../../objects.ts';
-import { buildStructureHierarchy, StructureHierarchyRef, ModelRef, StructureComponentRef, StructureHierarchy, StructureRef, TrajectoryRef } from './hierarchy-state.ts';
+import {
+    buildStructureHierarchy,
+    ModelRef,
+    StructureComponentRef,
+    StructureHierarchy,
+    StructureHierarchyRef,
+    StructureRef,
+    TrajectoryRef,
+} from './hierarchy-state.ts';
 
 export class StructureHierarchyManager extends PluginComponent {
     private state = {
@@ -25,8 +33,8 @@ export class StructureHierarchyManager extends PluginComponent {
         selection: {
             trajectories: [] as ReadonlyArray<TrajectoryRef>,
             models: [] as ReadonlyArray<ModelRef>,
-            structures: [] as ReadonlyArray<StructureRef>
-        }
+            structures: [] as ReadonlyArray<StructureRef>,
+        },
     };
 
     readonly behaviors = {
@@ -34,19 +42,23 @@ export class StructureHierarchyManager extends PluginComponent {
             hierarchy: this.current,
             trajectories: this.selection.trajectories,
             models: this.selection.models,
-            structures: this.selection.structures
-        })
+            structures: this.selection.structures,
+        }),
     };
 
     private get dataState() {
         return this.plugin.state.data;
     }
 
-    private _currentComponentGroups: ReturnType<typeof StructureHierarchyManager['getComponentGroups']> | undefined = void 0;
+    private _currentComponentGroups:
+        | ReturnType<typeof StructureHierarchyManager['getComponentGroups']>
+        | undefined = void 0;
 
     get currentComponentGroups() {
         if (this._currentComponentGroups) return this._currentComponentGroups;
-        this._currentComponentGroups = StructureHierarchyManager.getComponentGroups(this.selection.structures);
+        this._currentComponentGroups = StructureHierarchyManager.getComponentGroups(
+            this.selection.structures,
+        );
         return this._currentComponentGroups;
     }
 
@@ -54,9 +66,13 @@ export class StructureHierarchyManager extends PluginComponent {
     get seletionSet() {
         if (this._currentSelectionSet) return this._currentSelectionSet;
         this._currentSelectionSet = new Set();
-        for (const r of this.selection.trajectories) this._currentSelectionSet.add(r.cell.transform.ref);
+        for (const r of this.selection.trajectories) {
+            this._currentSelectionSet.add(r.cell.transform.ref);
+        }
         for (const r of this.selection.models) this._currentSelectionSet.add(r.cell.transform.ref);
-        for (const r of this.selection.structures) this._currentSelectionSet.add(r.cell.transform.ref);
+        for (const r of this.selection.structures) {
+            this._currentSelectionSet.add(r.cell.transform.ref);
+        }
         return this._currentSelectionSet;
     }
 
@@ -87,13 +103,19 @@ export class StructureHierarchyManager extends PluginComponent {
         const parent = this.plugin.helpers.substructureParent.get(structure);
         if (!parent) return undefined;
 
-        const root = this.plugin.state.data.selectQ(q => q.byValue(parent).rootOfType(PluginStateObject.Molecule.Structure))[0];
+        const root =
+            this.plugin.state.data.selectQ((q) =>
+                q.byValue(parent).rootOfType(PluginStateObject.Molecule.Structure)
+            )[0];
         if (!root) return undefined;
 
-        return this.behaviors.selection.value.structures.find(s => s.cell === root);
+        return this.behaviors.selection.value.structures.find((s) => s.cell === root);
     }
 
-    private syncCurrent<T extends StructureHierarchyRef>(all: ReadonlyArray<T>, added: Set<StateTransform.Ref>): T[] {
+    private syncCurrent<T extends StructureHierarchyRef>(
+        all: ReadonlyArray<T>,
+        added: Set<StateTransform.Ref>,
+    ): T[] {
         const current = this.seletionSet;
         const newCurrent: T[] = [];
 
@@ -112,7 +134,10 @@ export class StructureHierarchyManager extends PluginComponent {
         if (this.state.syncedTree === this.dataState.tree) {
             if (notify && !this.state.notified) {
                 this.state.notified = true;
-                this.behaviors.selection.next({ hierarchy: this.state.hierarchy, ...this.state.selection });
+                this.behaviors.selection.next({
+                    hierarchy: this.state.hierarchy,
+                    ...this.state.selection,
+                });
             }
 
             return;
@@ -149,8 +174,8 @@ export class StructureHierarchyManager extends PluginComponent {
     updateCurrent(refs: StructureHierarchyRef[], action: 'add' | 'remove') {
         const hierarchy = this.current;
         const set = action === 'add'
-            ? SetUtils.union(this.seletionSet, new Set(refs.map(r => r.cell.transform.ref)))
-            : SetUtils.difference(this.seletionSet, new Set(refs.map(r => r.cell.transform.ref)));
+            ? SetUtils.union(this.seletionSet, new Set(refs.map((r) => r.cell.transform.ref)))
+            : SetUtils.difference(this.seletionSet, new Set(refs.map((r) => r.cell.transform.ref)));
 
         const trajectories = [];
         const models = [];
@@ -194,13 +219,21 @@ export class StructureHierarchyManager extends PluginComponent {
         }
     }
 
-    applyPreset<P = any, S = {}>(trajectories: ReadonlyArray<TrajectoryRef>, provider: TrajectoryHierarchyPresetProvider<P, S>, params?: P): Promise<any> {
+    applyPreset<P = any, S = {}>(
+        trajectories: ReadonlyArray<TrajectoryRef>,
+        provider: TrajectoryHierarchyPresetProvider<P, S>,
+        params?: P,
+    ): Promise<any> {
         return this.plugin.dataTransaction(async () => {
             for (const t of trajectories) {
                 if (t.models.length > 0) {
                     await this.clearTrajectory(t);
                 }
-                await this.plugin.builders.structure.hierarchy.applyPreset(t.cell, provider, params);
+                await this.plugin.builders.structure.hierarchy.applyPreset(
+                    t.cell,
+                    provider,
+                    params,
+                );
             }
         });
     }
@@ -210,8 +243,16 @@ export class StructureHierarchyManager extends PluginComponent {
             const root = StateTree.getDecoratorRoot(this.dataState.tree, s.cell.transform.ref);
             const children = this.dataState.tree.children.get(root).toArray();
             await this.remove(children, false);
-            await this.plugin.state.updateTransform(this.plugin.state.data, s.cell.transform.ref, params, 'Structure Type');
-            await this.plugin.builders.structure.representation.applyPreset(s.cell.transform.ref, 'auto');
+            await this.plugin.state.updateTransform(
+                this.plugin.state.data,
+                s.cell.transform.ref,
+                params,
+                'Structure Type',
+            );
+            await this.plugin.builders.structure.representation.applyPreset(
+                s.cell.transform.ref,
+                'auto',
+            );
         }, { canUndo: 'Structure Type' });
         PluginCommands.Camera.Reset(this.plugin);
     }
@@ -227,21 +268,23 @@ export class StructureHierarchyManager extends PluginComponent {
     constructor(private plugin: PluginContext) {
         super();
 
-        this.subscribe(plugin.state.data.events.changed, e => {
+        this.subscribe(plugin.state.data.events.changed, (e) => {
             if (e.inTransaction || plugin.behaviors.state.isAnimating.value) return;
             this.sync(true);
         });
 
-        this.subscribe(plugin.behaviors.state.isAnimating, isAnimating => {
+        this.subscribe(plugin.behaviors.state.isAnimating, (isAnimating) => {
             if (!isAnimating && !plugin.behaviors.state.isUpdating.value) this.sync(true);
         });
     }
 }
 
 export namespace StructureHierarchyManager {
-    export function getComponentGroups(structures: ReadonlyArray<StructureRef>): StructureComponentRef[][] {
+    export function getComponentGroups(
+        structures: ReadonlyArray<StructureRef>,
+    ): StructureComponentRef[][] {
         if (!structures.length) return [];
-        if (structures.length === 1) return structures[0].components.map(c => [c]);
+        if (structures.length === 1) return structures[0].components.map((c) => [c]);
 
         const groups: StructureComponentRef[][] = [];
         const map = new Map<string, StructureComponentRef[]>();
@@ -278,7 +321,9 @@ export namespace StructureHierarchyManager {
             if (!model) return s.cell.obj?.label || 'Structure';
 
             const entryId = model.entryId;
-            if (s.model?.trajectory?.models && s.model.trajectory.models.length === 1) return entryId;
+            if (s.model?.trajectory?.models && s.model.trajectory.models.length === 1) {
+                return entryId;
+            }
             if (s.model) return `${s.model.cell.obj?.label} | ${entryId}`;
             return entryId;
         }
@@ -293,6 +338,8 @@ export namespace StructureHierarchyManager {
             }
         }
 
-        return sameTraj && t ? `${t.cell.obj?.label} | ${structures.length} structures` : `${structures.length} structures`;
+        return sameTraj && t
+            ? `${t.cell.obj?.label} | ${structures.length} structures`
+            : `${structures.length} structures`;
     }
 }

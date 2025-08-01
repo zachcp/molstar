@@ -14,27 +14,38 @@ import { Structure } from '../structure.ts';
 import { Unit } from '../unit.ts';
 
 export interface AlignmentResultEntry {
-    transform: MinimizeRmsd.Result,
-    pivot: number,
-    other: number
+    transform: MinimizeRmsd.Result;
+    pivot: number;
+    other: number;
 }
 
 export interface AlignmentResult {
-    entries: AlignmentResultEntry[],
-    zeroOverlapPairs: [number, number][],
-    failedPairs: [number, number][]
+    entries: AlignmentResultEntry[];
+    zeroOverlapPairs: [number, number][];
+    failedPairs: [number, number][];
 }
 
-type IncludeResidueTest = (traceElementOrFirstAtom: StructureElement.Location<Unit.Atomic>, residueIndex: ResidueIndex, startIndex: ElementIndex, endIndex: ElementIndex) => boolean
+type IncludeResidueTest = (
+    traceElementOrFirstAtom: StructureElement.Location<Unit.Atomic>,
+    residueIndex: ResidueIndex,
+    startIndex: ElementIndex,
+    endIndex: ElementIndex,
+) => boolean;
 
 export function alignAndSuperposeWithSIFTSMapping(
     structures: Structure[],
-    options?: { traceOnly?: boolean, includeResidueTest?: IncludeResidueTest }
+    options?: { traceOnly?: boolean; includeResidueTest?: IncludeResidueTest },
 ): AlignmentResult {
     const indexMap = new Map<string, IndexEntry>();
 
     for (let i = 0; i < structures.length; i++) {
-        buildIndex(structures[i], indexMap, i, options?.traceOnly ?? true, options?.includeResidueTest ?? _includeAllResidues);
+        buildIndex(
+            structures[i],
+            indexMap,
+            i,
+            options?.traceOnly ?? true,
+            options?.includeResidueTest ?? _includeAllResidues,
+        );
     }
 
     const index = Array.from(indexMap.values());
@@ -44,7 +55,6 @@ export function alignAndSuperposeWithSIFTSMapping(
 
     const zeroOverlapPairs: AlignmentResult['zeroOverlapPairs'] = [];
     const failedPairs: AlignmentResult['failedPairs'] = [];
-
 
     const entries: AlignmentResultEntry[] = [];
     for (const p of pairs) {
@@ -116,7 +126,7 @@ function findPairs(N: number, index: IndexEntry[]) {
         }
     }
 
-    const ret: { i: number, j: number, count: number }[] = [];
+    const ret: { i: number; j: number; count: number }[] = [];
 
     for (let j = 1; j < N; j++) {
         ret[j - 1] = { i: 0, j, count: pairwiseCounts[0][j] };
@@ -139,13 +149,23 @@ function findPairs(N: number, index: IndexEntry[]) {
 }
 
 interface IndexEntry {
-    key: string,
-    pivots: { [i: number]: [unit: Unit.Atomic, start: ElementIndex, end: ElementIndex] | undefined }
+    key: string;
+    pivots: {
+        [i: number]: [unit: Unit.Atomic, start: ElementIndex, end: ElementIndex] | undefined;
+    };
 }
 
-function _includeAllResidues() { return true; }
+function _includeAllResidues() {
+    return true;
+}
 
-function buildIndex(structure: Structure, index: Map<string, IndexEntry>, sI: number, traceOnly: boolean, includeTest: IncludeResidueTest) {
+function buildIndex(
+    structure: Structure,
+    index: Map<string, IndexEntry>,
+    sI: number,
+    traceOnly: boolean,
+    includeTest: IncludeResidueTest,
+) {
     const loc = StructureElement.Location.create<Unit.Atomic>(structure);
 
     for (const unit of structure.units) {
@@ -159,8 +179,14 @@ function buildIndex(structure: Structure, index: Map<string, IndexEntry>, sI: nu
 
         const { dbName, accession, num } = map;
 
-        const chainsIt = Segmentation.transientSegments(unit.model.atomicHierarchy.chainAtomSegments, elements);
-        const residuesIt = Segmentation.transientSegments(unit.model.atomicHierarchy.residueAtomSegments, elements);
+        const chainsIt = Segmentation.transientSegments(
+            unit.model.atomicHierarchy.chainAtomSegments,
+            elements,
+        );
+        const residuesIt = Segmentation.transientSegments(
+            unit.model.atomicHierarchy.residueAtomSegments,
+            elements,
+        );
         const traceElementIndex = unit.model.atomicHierarchy.derived.residue.traceElementIndex;
 
         while (chainsIt.hasNext) {

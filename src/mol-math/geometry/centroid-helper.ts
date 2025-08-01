@@ -59,7 +59,7 @@ class CentroidHelper {
         return this.count;
     }
 
-    constructor() { }
+    constructor() {}
 }
 
 namespace CentroidHelper {
@@ -67,7 +67,10 @@ namespace CentroidHelper {
     const posA = Vec3();
     const posB = Vec3();
 
-    export function fromArrays({ x, y, z }: { x: ArrayLike<number>, y: ArrayLike<number>, z: ArrayLike<number> }, to: Sphere3D) {
+    export function fromArrays(
+        { x, y, z }: { x: ArrayLike<number>; y: ArrayLike<number>; z: ArrayLike<number> },
+        to: Sphere3D,
+    ) {
         helper.reset();
         const n = x.length;
         for (let i = 0; i < n; i++) {
@@ -84,7 +87,11 @@ namespace CentroidHelper {
         return to;
     }
 
-    export function fromProvider(count: number, getter: (i: number, pos: Vec3) => void, to: Sphere3D) {
+    export function fromProvider(
+        count: number,
+        getter: (i: number, pos: Vec3) => void,
+        to: Sphere3D,
+    ) {
         helper.reset();
         for (let i = 0; i < count; i++) {
             getter(i, posA);
@@ -100,7 +107,11 @@ namespace CentroidHelper {
         return to;
     }
 
-    export function fromPairProvider(count: number, getter: (i: number, posA: Vec3, posB: Vec3) => void, to: Sphere3D) {
+    export function fromPairProvider(
+        count: number,
+        getter: (i: number, posA: Vec3, posB: Vec3) => void,
+        to: Sphere3D,
+    ) {
         helper.reset();
         for (let i = 0; i < count; i++) {
             getter(i, posA, posB);

@@ -9,11 +9,19 @@ import { canComputeGrid3dOnGPU } from '../../mol-gl/compute/grid3d.ts';
 import { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { Task } from '../../mol-task/index.ts';
 import { isTimingMode } from '../../mol-util/debug.ts';
-import { AlphaOrbital, createGrid, CubeGrid, CubeGridComputationParams, initCubeGrid } from './data-model.ts';
+import {
+    AlphaOrbital,
+    createGrid,
+    CubeGrid,
+    CubeGridComputationParams,
+    initCubeGrid,
+} from './data-model.ts';
 import { gpuComputeAlphaOrbitalsDensityGridValues } from './gpu/compute.ts';
 
 export function createSphericalCollocationDensityGrid(
-    params: CubeGridComputationParams, orbitals: AlphaOrbital[], webgl?: WebGLContext
+    params: CubeGridComputationParams,
+    orbitals: AlphaOrbital[],
+    webgl?: WebGLContext,
 ): Task<CubeGrid> {
     return Task.create('Spherical Collocation Grid', async (ctx) => {
         const cubeGrid = initCubeGrid(params);
@@ -28,7 +36,7 @@ export function createSphericalCollocationDensityGrid(
         }
 
         const grid = createGrid(cubeGrid, matrix, [0, 1, 2]);
-        let isovalues: { negative?: number, positive?: number } | undefined;
+        let isovalues: { negative?: number; positive?: number } | undefined;
 
         if (!params.doNotComputeIsovalues) {
             isovalues = computeDensityIsocontourValues(matrix, 0.85);
@@ -92,7 +100,7 @@ export function computeDensityIsocontourValues(input: Float32Array, cumulativeTh
 
     sortArray(
         indices,
-        (indices, i, j) => weights[indices[j]] - weights[indices[i]]
+        (indices, i, j) => weights[indices[j]] - weights[indices[i]],
     );
 
     let cweight = 0,

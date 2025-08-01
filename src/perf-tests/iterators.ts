@@ -32,19 +32,23 @@ export namespace Iterators {
 
     export function forEach() {
         const ctx = { sum: 0 };
-        data.forEach(function (this: typeof ctx, v: number) { this.sum += v; }, ctx);
+        data.forEach(function (this: typeof ctx, v: number) {
+            this.sum += v;
+        }, ctx);
         return ctx.sum;
     }
 
     export function forEachAllParams() {
         const ctx = { sum: 0 };
-        data.forEach(function (this: typeof ctx, v: number, _: any, __: any) { this.sum += v; }, ctx);
+        data.forEach(function (this: typeof ctx, v: number, _: any, __: any) {
+            this.sum += v;
+        }, ctx);
         return ctx.sum;
     }
 
     export function forEachClosure() {
         let sum = 0;
-        data.forEach(v => sum += v);
+        data.forEach((v) => sum += v);
         return sum;
     }
 
@@ -54,18 +58,19 @@ export namespace Iterators {
         return sum;
     }
 
-
     export function forEachClosureAllFunction() {
         let sum = 0;
-        data.forEach(function (v, _, __) { sum += v; });
+        data.forEach(function (v, _, __) {
+            sum += v;
+        });
         return sum;
     }
 
     interface ES6Iterator {
-        [Symbol.iterator](): ES6Iterator,
+        [Symbol.iterator](): ES6Iterator;
         done: boolean;
         value: number;
-        next(): { done: boolean, value: number }
+        next(): { done: boolean; value: number };
         reset(data: any[]): ES6Iterator;
     }
 
@@ -77,7 +82,9 @@ export namespace Iterators {
         private index: number = -1;
         private length: number = 0;
 
-        [Symbol.iterator]() { return this; };
+        [Symbol.iterator]() {
+            return this;
+        }
 
         next() {
             const index = ++this.index;
@@ -104,7 +111,9 @@ export namespace Iterators {
         private index: number = -1;
         private length: number = 0;
 
-        [Symbol.iterator]() { return this; };
+        [Symbol.iterator]() {
+            return this;
+        }
 
         next() {
             const index = ++this.index;

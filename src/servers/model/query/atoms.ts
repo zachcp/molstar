@@ -4,15 +4,19 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { QueryPredicate, StructureElement, StructureProperties as Props } from '../../../mol-model/structure.ts';
+import {
+    QueryPredicate,
+    StructureElement,
+    StructureProperties as Props,
+} from '../../../mol-model/structure.ts';
 import { AtomsQueryParams } from '../../../mol-model/structure/query/queries/generators.ts';
 import { AtomSiteSchema, AtomSiteSchemaElement } from '../server/api.ts';
 import { ElementSymbol } from '../../../mol-model/structure/model/types.ts';
 
 export function getAtomsTests(params: AtomSiteSchema): Partial<AtomsQueryParams>[] {
-    if (!params) return [{ }];
+    if (!params) return [{}];
     if (Array.isArray(params)) {
-        return params.map(p => atomsTest(p));
+        return params.map((p) => atomsTest(p));
     } else {
         return [atomsTest(params)];
     }
@@ -23,14 +27,14 @@ function atomsTest(params: AtomSiteSchemaElement): Partial<AtomsQueryParams> {
         entityTest: entityTest(params),
         chainTest: chainTest(params),
         residueTest: residueTest(params),
-        atomTest: atomTest(params)
+        atomTest: atomTest(params),
     };
 }
 
 function entityTest(params: AtomSiteSchemaElement): QueryPredicate | undefined {
     if (!params || typeof params.label_entity_id === 'undefined') return void 0;
     const p = Props.entity.id, id = '' + params.label_entity_id;
-    return ctx => p(ctx.element) === id;
+    return (ctx) => p(ctx.element) === id;
 }
 
 function chainTest(params: AtomSiteSchemaElement): QueryPredicate | undefined {
@@ -38,11 +42,11 @@ function chainTest(params: AtomSiteSchemaElement): QueryPredicate | undefined {
 
     if (typeof params.label_asym_id !== 'undefined') {
         const p = Props.chain.label_asym_id, id = '' + params.label_asym_id;
-        return ctx => p(ctx.element) === id;
+        return (ctx) => p(ctx.element) === id;
     }
     if (typeof params.auth_asym_id !== 'undefined') {
         const p = Props.chain.auth_asym_id, id = '' + params.auth_asym_id;
-        return ctx => p(ctx.element) === id;
+        return (ctx) => p(ctx.element) === id;
     }
     return void 0;
 }
@@ -103,16 +107,28 @@ function atomTest(params: AtomSiteSchemaElement): QueryPredicate | undefined {
     return andEqual(props, values);
 }
 
-function andEqual(props: StructureElement.Property<any>[], values: any[]): QueryPredicate | undefined {
+function andEqual(
+    props: StructureElement.Property<any>[],
+    values: any[],
+): QueryPredicate | undefined {
     switch (props.length) {
-        case 0: return void 0;
-        case 1: return ctx => props[0](ctx.element) === values[0];
-        case 2: return ctx => props[0](ctx.element) === values[0] && props[1](ctx.element) === values[1];
-        case 3: return ctx => props[0](ctx.element) === values[0] && props[1](ctx.element) === values[1] && props[2](ctx.element) === values[2];
+        case 0:
+            return void 0;
+        case 1:
+            return (ctx) => props[0](ctx.element) === values[0];
+        case 2:
+            return (ctx) =>
+                props[0](ctx.element) === values[0] && props[1](ctx.element) === values[1];
+        case 3:
+            return (ctx) =>
+                props[0](ctx.element) === values[0] && props[1](ctx.element) === values[1] &&
+                props[2](ctx.element) === values[2];
         default: {
             const len = props.length;
-            return ctx => {
-                for (let i = 0; i < len; i++) if (!props[i](ctx.element) !== values[i]) return false;
+            return (ctx) => {
+                for (let i = 0; i < len; i++) {
+                    if (!props[i](ctx.element) !== values[i]) return false;
+                }
                 return true;
             };
         }

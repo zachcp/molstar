@@ -5,15 +5,15 @@
  */
 
 interface LinkedList<T> {
-    readonly count: number,
-    readonly first: LinkedList.Node<T> | null,
-    readonly last: LinkedList.Node<T> | null,
-    addFirst(value: T): LinkedList.Node<T>,
-    addLast(value: T): LinkedList.Node<T>,
-    remove(node: LinkedList.Node<T>): void,
-    removeFirst(): T | undefined,
-    removeLast(): T | undefined,
-    find(value: T): LinkedList.Node<T> | undefined
+    readonly count: number;
+    readonly first: LinkedList.Node<T> | null;
+    readonly last: LinkedList.Node<T> | null;
+    addFirst(value: T): LinkedList.Node<T>;
+    addLast(value: T): LinkedList.Node<T>;
+    remove(node: LinkedList.Node<T>): void;
+    removeFirst(): T | undefined;
+    removeLast(): T | undefined;
+    find(value: T): LinkedList.Node<T> | undefined;
 }
 
 function LinkedList<T>(): LinkedList<T> {
@@ -22,10 +22,10 @@ function LinkedList<T>(): LinkedList<T> {
 
 namespace LinkedList {
     export interface Node<T> {
-        previous: Node<T> | null,
-        next: Node<T> | null,
-        inList: boolean,
-        value: T
+        previous: Node<T> | null;
+        next: Node<T> | null;
+        inList: boolean;
+        value: T;
     }
 }
 

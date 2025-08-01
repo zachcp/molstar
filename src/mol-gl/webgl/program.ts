@@ -4,41 +4,48 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ShaderCode, DefineValues, addShaderDefines } from '../shader-code.ts';
+import { addShaderDefines, DefineValues, ShaderCode } from '../shader-code.ts';
 import { WebGLState } from './state.ts';
 import { WebGLExtensions } from './extensions.ts';
-import { getUniformSetters, UniformsList, getUniformType, UniformSetters, isArrayUniform, UniformType } from './uniform.ts';
+import {
+    getUniformSetters,
+    getUniformType,
+    isArrayUniform,
+    UniformSetters,
+    UniformsList,
+    UniformType,
+} from './uniform.ts';
 import { AttributeBuffers, getAttribType } from './buffer.ts';
 import { TextureId, Textures } from './texture.ts';
 import { idFactory } from '../../mol-util/id-factory.ts';
 import { RenderableSchema } from '../renderable/schema.ts';
 import { isDebugMode } from '../../mol-util/debug.ts';
 import { GLRenderingContext, isWebGL2 } from './compat.ts';
-import { ShaderType, Shader } from './shader.ts';
+import { Shader, ShaderType } from './shader.ts';
 
 const getNextProgramId = idFactory();
 
 export interface Program {
-    readonly id: number
+    readonly id: number;
 
-    use: () => void
-    setUniforms: (uniformValues: UniformsList) => void
-    uniform: (k: string, v: UniformType) => void
-    bindAttributes: (attribueBuffers: AttributeBuffers) => void
-    offsetAttributes: (attributeBuffers: AttributeBuffers, offset: number) => void
-    bindTextures: (textures: Textures, startingTargetUnit: number) => void
+    use: () => void;
+    setUniforms: (uniformValues: UniformsList) => void;
+    uniform: (k: string, v: UniformType) => void;
+    bindAttributes: (attribueBuffers: AttributeBuffers) => void;
+    offsetAttributes: (attributeBuffers: AttributeBuffers, offset: number) => void;
+    bindTextures: (textures: Textures, startingTargetUnit: number) => void;
 
-    reset: () => void
-    destroy: () => void
+    reset: () => void;
+    destroy: () => void;
 }
 
-export type Programs = { [k: string]: Program }
+export type Programs = { [k: string]: Program };
 
-type Locations = { [k: string]: number }
+type Locations = { [k: string]: number };
 
 function getLocations(gl: GLRenderingContext, program: WebGLProgram, schema: RenderableSchema) {
     const locations: Locations = {};
-    Object.keys(schema).forEach(k => {
+    Object.keys(schema).forEach((k) => {
         const spec = schema[k];
         if (spec.type === 'attribute') {
             const loc = gl.getAttribLocation(program, k);
@@ -48,7 +55,9 @@ function getLocations(gl: GLRenderingContext, program: WebGLProgram, schema: Ren
         } else if (spec.type === 'uniform') {
             let loc = gl.getUniformLocation(program, k);
             // headless-gl requires a '[0]' suffix for array uniforms (https://github.com/stackgl/headless-gl/issues/170)
-            if (loc === null && isArrayUniform(spec.kind)) loc = gl.getUniformLocation(program, k + '[0]');
+            if (loc === null && isArrayUniform(spec.kind)) {
+                loc = gl.getUniformLocation(program, k + '[0]');
+            }
             // unused uniforms will result in a `null` location which is usually fine
             // if (loc === null) console.info(`Could not get uniform location for '${k}'`);
             locations[k] = loc as number;
@@ -62,7 +71,11 @@ function getLocations(gl: GLRenderingContext, program: WebGLProgram, schema: Ren
     return locations;
 }
 
-function checkActiveAttributes(gl: GLRenderingContext, program: WebGLProgram, schema: RenderableSchema) {
+function checkActiveAttributes(
+    gl: GLRenderingContext,
+    program: WebGLProgram,
+    schema: RenderableSchema,
+) {
     const attribCount = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
     for (let i = 0; i < attribCount; ++i) {
         const info = gl.getActiveAttrib(program, i);
@@ -85,13 +98,19 @@ function checkActiveAttributes(gl: GLRenderingContext, program: WebGLProgram, sc
             }
             const attribType = getAttribType(gl, spec.kind, spec.itemSize);
             if (attribType !== type) {
-                throw new Error(`unexpected attribute type '${attribType}' for ${name}, expected '${type}'`);
+                throw new Error(
+                    `unexpected attribute type '${attribType}' for ${name}, expected '${type}'`,
+                );
             }
         }
     }
 }
 
-function checkActiveUniforms(gl: GLRenderingContext, program: WebGLProgram, schema: RenderableSchema) {
+function checkActiveUniforms(
+    gl: GLRenderingContext,
+    program: WebGLProgram,
+    schema: RenderableSchema,
+) {
     const attribCount = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
     for (let i = 0; i < attribCount; ++i) {
         const info = gl.getActiveUniform(program, i);
@@ -132,7 +151,9 @@ function checkActiveUniforms(gl: GLRenderingContext, program: WebGLProgram, sche
                     // TODO
                 }
             } else {
-                throw new Error(`'${name}' must be of type 'uniform' or 'texture' but is '${spec.type}'`);
+                throw new Error(
+                    `'${name}' must be of type 'uniform' or 'texture' but is '${spec.type}'`,
+                );
             }
         }
     }
@@ -147,9 +168,9 @@ function checkProgram(gl: GLRenderingContext, program: WebGLProgram) {
 }
 
 export interface ProgramProps {
-    defineValues: DefineValues,
-    shaderCode: ShaderCode,
-    schema: RenderableSchema
+    defineValues: DefineValues;
+    shaderCode: ShaderCode;
+    schema: RenderableSchema;
 }
 
 export function getProgram(gl: GLRenderingContext) {
@@ -160,9 +181,15 @@ export function getProgram(gl: GLRenderingContext) {
     return program;
 }
 
-type ShaderGetter = (type: ShaderType, source: string) => Shader
+type ShaderGetter = (type: ShaderType, source: string) => Shader;
 
-export function createProgram(gl: GLRenderingContext, state: WebGLState, extensions: WebGLExtensions, getShader: ShaderGetter, props: ProgramProps): Program {
+export function createProgram(
+    gl: GLRenderingContext,
+    state: WebGLState,
+    extensions: WebGLExtensions,
+    getShader: ShaderGetter,
+    props: ProgramProps,
+): Program {
     const { defineValues, shaderCode: _shaderCode, schema } = props;
 
     let program = getProgram(gl);
@@ -253,6 +280,6 @@ export function createProgram(gl: GLRenderingContext, state: WebGLState, extensi
             fragShader.destroy();
             gl.deleteProgram(program);
             destroyed = true;
-        }
+        },
     };
 }

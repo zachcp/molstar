@@ -10,7 +10,7 @@ import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { PluginStateObject as SO, PluginStateTransform } from '../objects.ts';
 
 export { CreateGroup };
-type CreateGroup = typeof CreateGroup
+type CreateGroup = typeof CreateGroup;
 const CreateGroup = PluginStateTransform.BuiltIn({
     name: 'create-group',
     display: { name: 'Group' },
@@ -18,18 +18,20 @@ const CreateGroup = PluginStateTransform.BuiltIn({
     to: SO.Group,
     params: {
         label: PD.Text('Group'),
-        description: PD.Optional(PD.Text(''))
-    }
+        description: PD.Optional(PD.Text('')),
+    },
 })({
     apply({ params }) {
         return new SO.Group({}, params);
     },
     update({ oldParams, newParams, b }) {
-        if (shallowEqualObjects(oldParams, newParams)) return StateTransformer.UpdateResult.Unchanged;
+        if (shallowEqualObjects(oldParams, newParams)) {
+            return StateTransformer.UpdateResult.Unchanged;
+        }
         b.label = newParams.label;
         b.description = newParams.description;
         return StateTransformer.UpdateResult.Updated;
-    }
+    },
 });
 
 // export { ValueRefTest };

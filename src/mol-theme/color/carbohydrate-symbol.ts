@@ -4,8 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StructureElement, Bond, ElementIndex, Unit, Model } from '../../mol-model/structure.ts';
-import { SaccharideColors, MonosaccharidesColorTable } from '../../mol-model/structure/structure/carbohydrates/constants.ts';
+import { Bond, ElementIndex, Model, StructureElement, Unit } from '../../mol-model/structure.ts';
+import {
+    MonosaccharidesColorTable,
+    SaccharideColors,
+} from '../../mol-model/structure/structure/carbohydrates/constants.ts';
 import { Location } from '../../mol-model/location.ts';
 import type { ColorTheme, LocationColor } from '../color.ts';
 import { Color } from '../../mol-util/color/index.ts';
@@ -17,13 +20,16 @@ import { ColorThemeCategory } from './categories.ts';
 const DefaultColor = Color(0xCCCCCC);
 const Description = 'Assigns colors according to the Symbol Nomenclature for Glycans (SNFG).';
 
-export const CarbohydrateSymbolColorThemeParams = { };
-export type CarbohydrateSymbolColorThemeParams = typeof CarbohydrateSymbolColorThemeParams
+export const CarbohydrateSymbolColorThemeParams = {};
+export type CarbohydrateSymbolColorThemeParams = typeof CarbohydrateSymbolColorThemeParams;
 export function getCarbohydrateSymbolColorThemeParams(ctx: ThemeDataContext) {
     return CarbohydrateSymbolColorThemeParams; // TODO return copy
 }
 
-export function CarbohydrateSymbolColorTheme(ctx: ThemeDataContext, props: PD.Values<CarbohydrateSymbolColorThemeParams>): ColorTheme<CarbohydrateSymbolColorThemeParams> {
+export function CarbohydrateSymbolColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<CarbohydrateSymbolColorThemeParams>,
+): ColorTheme<CarbohydrateSymbolColorThemeParams> {
     let color: LocationColor;
 
     if (ctx.structure) {
@@ -57,11 +63,14 @@ export function CarbohydrateSymbolColorTheme(ctx: ThemeDataContext, props: PD.Va
         color: color,
         props: props,
         description: Description,
-        legend: TableLegend(MonosaccharidesColorTable)
+        legend: TableLegend(MonosaccharidesColorTable),
     };
 }
 
-export const CarbohydrateSymbolColorThemeProvider: ColorTheme.Provider<CarbohydrateSymbolColorThemeParams, 'carbohydrate-symbol'> = {
+export const CarbohydrateSymbolColorThemeProvider: ColorTheme.Provider<
+    CarbohydrateSymbolColorThemeParams,
+    'carbohydrate-symbol'
+> = {
     name: 'carbohydrate-symbol',
     label: 'Carbohydrate Symbol',
     category: ColorThemeCategory.Residue,
@@ -69,6 +78,6 @@ export const CarbohydrateSymbolColorThemeProvider: ColorTheme.Provider<Carbohydr
     getParams: getCarbohydrateSymbolColorThemeParams,
     defaultValues: PD.getDefaultValues(CarbohydrateSymbolColorThemeParams),
     isApplicable: (ctx: ThemeDataContext) => {
-        return !!ctx.structure && ctx.structure.models.some(m => Model.hasCarbohydrate(m));
-    }
+        return !!ctx.structure && ctx.structure.models.some((m) => Model.hasCarbohydrate(m));
+    },
 };

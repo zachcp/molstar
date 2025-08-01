@@ -5,7 +5,12 @@
  */
 
 import { Structure } from '../../mol-model/structure.ts';
-import { DSSPComputationParams, DSSPComputationProps, DefaultDSSPComputationProps, computeUnitDSSP } from './secondary-structure/dssp.ts';
+import {
+    computeUnitDSSP,
+    DefaultDSSPComputationProps,
+    DSSPComputationParams,
+    DSSPComputationProps,
+} from './secondary-structure/dssp.ts';
 import { SecondaryStructure } from '../../mol-model/structure/model/properties/secondary-structure.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { Unit } from '../../mol-model/structure/structure.ts';
@@ -23,18 +28,26 @@ function getSecondaryStructureParams(_data?: Structure) {
             'model': PD.EmptyGroup({ label: 'Model' }),
             'dssp': PD.Group(DSSPComputationParams, { label: 'DSSP', isFlat: true }),
             'zhang-skolnick': PD.EmptyGroup({ label: 'Zhang-Skolnick' }),
-        }, { options: [['auto', 'Automatic'], ['model', 'Model'], ['dssp', 'DSSP'], ['zhang-skolnick', 'Zhang-Skolnick']] })
+        }, {
+            options: [['auto', 'Automatic'], ['model', 'Model'], ['dssp', 'DSSP'], [
+                'zhang-skolnick',
+                'Zhang-Skolnick',
+            ]],
+        }),
     };
 }
 
 export const SecondaryStructureParams = getSecondaryStructureParams();
-export type SecondaryStructureParams = typeof SecondaryStructureParams
-export type SecondaryStructureProps = PD.Values<SecondaryStructureParams>
+export type SecondaryStructureParams = typeof SecondaryStructureParams;
+export type SecondaryStructureProps = PD.Values<SecondaryStructureParams>;
 
 /** Maps `unit.id` to `SecondaryStructure` */
-export type SecondaryStructureValue = Map<number, SecondaryStructure>
+export type SecondaryStructureValue = Map<number, SecondaryStructure>;
 
-export const SecondaryStructureProvider: CustomStructureProperty.Provider<SecondaryStructureParams, SecondaryStructureValue> = CustomStructureProperty.createProvider({
+export const SecondaryStructureProvider: CustomStructureProperty.Provider<
+    SecondaryStructureParams,
+    SecondaryStructureValue
+> = CustomStructureProperty.createProvider({
     label: 'Secondary Structure',
     descriptor: CustomPropertyDescriptor({
         name: 'molstar_computed_secondary_structure',
@@ -44,15 +57,23 @@ export const SecondaryStructureProvider: CustomStructureProperty.Provider<Second
     defaultParams: SecondaryStructureParams,
     getParams: getSecondaryStructureParams,
     isApplicable: (data: Structure) => true,
-    obtain: async (ctx: CustomProperty.Context, data: Structure, props: Partial<SecondaryStructureProps>) => {
+    obtain: async (
+        ctx: CustomProperty.Context,
+        data: Structure,
+        props: Partial<SecondaryStructureProps>,
+    ) => {
         const p = { ...PD.getDefaultValues(SecondaryStructureParams), ...props };
         switch (p.type.name) {
-            case 'auto': return { value: await computeAuto(data) };
-            case 'dssp': return { value: await computeDssp(data, p.type.params) };
-            case 'model': return { value: await computeModel(data) };
-            case 'zhang-skolnick': return { value: await computeZhangSkolnik(data) };
+            case 'auto':
+                return { value: await computeAuto(data) };
+            case 'dssp':
+                return { value: await computeDssp(data, p.type.params) };
+            case 'model':
+                return { value: await computeModel(data) };
+            case 'zhang-skolnick':
+                return { value: await computeZhangSkolnik(data) };
         }
-    }
+    },
 });
 
 async function computeAuto(structure: Structure): Promise<SecondaryStructureValue> {
@@ -60,7 +81,10 @@ async function computeAuto(structure: Structure): Promise<SecondaryStructureValu
     for (let i = 0, il = structure.unitSymmetryGroups.length; i < il; ++i) {
         const u = structure.unitSymmetryGroups[i].units[0];
         const m = u.model;
-        if ((Model.isFromPdbArchive(m) && Model.isExperimental(m) && !Model.isCoarseGrained(m)) || Model.hasSecondaryStructure(m)) {
+        if (
+            (Model.isFromPdbArchive(m) && Model.isExperimental(m) && !Model.isCoarseGrained(m)) ||
+            Model.hasSecondaryStructure(m)
+        ) {
             const secondaryStructure = ModelSecondaryStructure.Provider.get(m);
             if (secondaryStructure) map.set(u.invariantId, secondaryStructure);
         } else if (Unit.isAtomic(u) && !Model.isCoarseGrained(m)) {
@@ -74,7 +98,10 @@ async function computeAuto(structure: Structure): Promise<SecondaryStructureValu
     return map;
 }
 
-async function computeDssp(structure: Structure, props: DSSPComputationProps): Promise<SecondaryStructureValue> {
+async function computeDssp(
+    structure: Structure,
+    props: DSSPComputationProps,
+): Promise<SecondaryStructureValue> {
     // TODO take inter-unit hbonds into account for bridge, ladder, sheet assignment
     const map = new Map<number, SecondaryStructure>();
     for (let i = 0, il = structure.unitSymmetryGroups.length; i < il; ++i) {

@@ -7,7 +7,10 @@
 import { Column } from '../../mol-data/db.ts';
 import { Category, Encoder } from '../../mol-io/writer/cif/encoder.ts';
 import { BinaryEncodingProvider } from '../../mol-io/writer/cif/encoder/binary.ts';
-import { getCategoryInstanceData, getIncludedFields } from '../../mol-io/writer/cif/encoder/util.ts';
+import {
+    getCategoryInstanceData,
+    getIncludedFields,
+} from '../../mol-io/writer/cif/encoder/util.ts';
 import { Writer } from '../../mol-io/writer/writer.ts';
 import { JSONCifCategory, JSONCifDataBlock, JSONCifFile, JSONCifVERSION } from './model.ts';
 
@@ -36,11 +39,15 @@ export class JSONCifEncoder implements Encoder<string> {
         this.dataBlocks.push({
             header: (header || '').replace(/[ \n\t]/g, '').toUpperCase(),
             categoryNames: [],
-            categories: {}
+            categories: {},
         });
     }
 
-    writeCategory<Ctx>(category: Category<Ctx>, context?: Ctx, options?: Encoder.WriteCategoryOptions) {
+    writeCategory<Ctx>(
+        category: Category<Ctx>,
+        context?: Ctx,
+        options?: Encoder.WriteCategoryOptions,
+    ) {
         if (this.encodedData) {
             throw new Error('The writer contents have already been encoded, no more writing.');
         }
@@ -58,7 +65,11 @@ export class JSONCifEncoder implements Encoder<string> {
         if (!fields.length) return;
 
         const rows: Record<string, any>[] = [];
-        const cat: JSONCifCategory = { name: category.name, fieldNames: fields.map(f => f.name), rows };
+        const cat: JSONCifCategory = {
+            name: category.name,
+            fieldNames: fields.map((f) => f.name),
+            rows,
+        };
 
         for (const src of source) {
             const d = src.data;
@@ -84,7 +95,9 @@ export class JSONCifEncoder implements Encoder<string> {
 
     encode() {
         if (this.encodedData) return;
-        this.encodedData = this.options?.formatJSON ? JSON.stringify(this.data, null, 2) : JSON.stringify(this.data);
+        this.encodedData = this.options?.formatJSON
+            ? JSON.stringify(this.data, null, 2)
+            : JSON.stringify(this.data);
     }
 
     writeTo(writer: Writer) {
@@ -108,7 +121,7 @@ export class JSONCifEncoder implements Encoder<string> {
         this.data = {
             encoder,
             version: JSONCifVERSION,
-            dataBlocks: this.dataBlocks
+            dataBlocks: this.dataBlocks,
         };
     }
 }

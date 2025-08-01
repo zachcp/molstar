@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Table, Column } from '../../../mol-data/db.ts';
+import { Column, Table } from '../../../mol-data/db.ts';
 import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
 import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
 import { CifWriter } from '../../../mol-io/writer/cif.ts';
@@ -15,14 +15,14 @@ export { AtomSiteAnisotrop };
 
 const Anisotrop = {
     U: mmCIF_Schema.atom_site_anisotrop.U,
-    U_esd: mmCIF_Schema.atom_site_anisotrop.U_esd
+    U_esd: mmCIF_Schema.atom_site_anisotrop.U_esd,
 };
-type Anisotrop = Table<typeof Anisotrop>
+type Anisotrop = Table<typeof Anisotrop>;
 
 interface AtomSiteAnisotrop {
-    data: Anisotrop
+    data: Anisotrop;
     /** maps atom_site-index to atom_site_anisotrop-index */
-    elementToAnsiotrop: Int32Array
+    elementToAnsiotrop: Int32Array;
 }
 
 namespace AtomSiteAnisotrop {
@@ -39,10 +39,12 @@ namespace AtomSiteAnisotrop {
                     if (!p) return CifWriter.Category.Empty;
                     if (!MmcifFormat.is(ctx.firstModel.sourceData)) return CifWriter.Category.Empty;
                     // TODO filter to write only data for elements that exist in model
-                    return CifWriter.Category.ofTable(ctx.firstModel.sourceData.data.db.atom_site_anisotrop);
-                }
-            }]
-        }
+                    return CifWriter.Category.ofTable(
+                        ctx.firstModel.sourceData.data.db.atom_site_anisotrop,
+                    );
+                },
+            }],
+        },
     };
 
     export const Provider = FormatPropertyProvider.create<AtomSiteAnisotrop>(Descriptor);
@@ -64,7 +66,10 @@ namespace AtomSiteAnisotrop {
         return elementToAnsiotrop;
     }
 
-    export function getElementToAnsiotropFromLabel(atomLabel: Column<string>, ansioLabel: Column<string>) {
+    export function getElementToAnsiotropFromLabel(
+        atomLabel: Column<string>,
+        ansioLabel: Column<string>,
+    ) {
         const atomLabelToElement: { [k: string]: number | undefined } = {};
         for (let i = 0, il = atomLabel.rowCount; i < il; i++) {
             atomLabelToElement[atomLabel.value(i)] = i;

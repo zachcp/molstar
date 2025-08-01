@@ -6,7 +6,7 @@
  */
 
 import { CustomElementProperty } from '../../mol-model-props/common/custom-element-property.ts';
-import { Model, ElementIndex, ResidueIndex } from '../../mol-model/structure.ts';
+import { ElementIndex, Model, ResidueIndex } from '../../mol-model/structure.ts';
 import { Color } from '../../mol-util/color/index.ts';
 import { CustomProperty } from '../../mol-model-props/common/custom-property.ts';
 import { Asset } from '../../mol-util/assets.ts';
@@ -21,7 +21,7 @@ const EvolutionaryConservationPalette: Color[] = [
     [234, 255, 255],
     [215, 255, 255],
     [140, 255, 255],
-    [16, 200, 209] // 1
+    [16, 200, 209], // 1
 ].reverse().map(([r, g, b]) => Color.fromRgb(r, g, b));
 const EvolutionaryConservationDefaultColor = Color(0x999999);
 
@@ -31,7 +31,10 @@ export const EvolutionaryConservation = CustomElementProperty.create<number>({
     type: 'static',
     async getData(model: Model, ctx: CustomProperty.Context) {
         const id = model.entryId.toLowerCase();
-        const url = Asset.getUrlAsset(ctx.assetManager, `https://proteopedia.org/cgi-bin/cnsrf?${id}`);
+        const url = Asset.getUrlAsset(
+            ctx.assetManager,
+            `https://proteopedia.org/cgi-bin/cnsrf?${id}`,
+        );
         const json = await ctx.assetManager.resolve(url, 'json').runInContext(ctx.runtime);
         const annotations = json.data?.residueAnnotations || [];
 
@@ -51,7 +54,9 @@ export const EvolutionaryConservation = CustomElementProperty.create<number>({
 
         for (let rI = 0 as ResidueIndex; rI < residueCount; rI++) {
             const cI = chainIndex[residueOffsets[rI]];
-            const key = `${model.atomicHierarchy.chains.auth_asym_id.value(cI)} ${model.atomicHierarchy.residues.auth_seq_id.value(rI)}`;
+            const key = `${model.atomicHierarchy.chains.auth_asym_id.value(cI)} ${
+                model.atomicHierarchy.residues.auth_seq_id.value(rI)
+            }`;
             if (!conservationMap.has(key)) continue;
             const ann = conservationMap.get(key)!;
             for (let aI = residueOffsets[rI]; aI < residueOffsets[rI + 1]; aI++) {
@@ -66,10 +71,10 @@ export const EvolutionaryConservation = CustomElementProperty.create<number>({
             if (e < 1 || e > 10) return EvolutionaryConservationDefaultColor;
             return EvolutionaryConservationPalette[e - 1];
         },
-        defaultColor: EvolutionaryConservationDefaultColor
+        defaultColor: EvolutionaryConservationDefaultColor,
     },
     getLabel(e) {
         if (e === 10) return `Evolutionary Conservation: Insufficient Data`;
         return e ? `Evolutionary Conservation: ${e}` : void 0;
-    }
+    },
 });

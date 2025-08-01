@@ -5,7 +5,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-export const IsNativeEndianLittle = new Uint16Array(new Uint8Array([0x12, 0x34]).buffer)[0] === 0x3412;
+export const IsNativeEndianLittle =
+    new Uint16Array(new Uint8Array([0x12, 0x34]).buffer)[0] === 0x3412;
 
 export function flipByteOrder(data: Uint8Array, bytes: number) {
     const buffer = new ArrayBuffer(data.length);

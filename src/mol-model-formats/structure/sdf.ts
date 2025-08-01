@@ -12,7 +12,7 @@ import { getMolModels } from './mol.ts';
 
 export { SdfFormat };
 
-type SdfFormat = ModelFormat<SdfFileCompound>
+type SdfFormat = ModelFormat<SdfFileCompound>;
 
 namespace SdfFormat {
     export function is(x?: ModelFormat): x is SdfFormat {
@@ -25,5 +25,5 @@ namespace SdfFormat {
 }
 
 export function trajectoryFromSdf(mol: SdfFileCompound): Task<Trajectory> {
-    return Task.create('Parse SDF', ctx => getMolModels(mol.molFile, SdfFormat.create(mol), ctx));
+    return Task.create('Parse SDF', (ctx) => getMolModels(mol.molFile, SdfFormat.create(mol), ctx));
 }

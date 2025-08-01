@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-export type Comparer<T = any> = (data: T, i: number, j: number) => number
-export type Swapper<T = any> = (data: T, i: number, j: number) => void
+export type Comparer<T = any> = (data: T, i: number, j: number) => number;
+export type Swapper<T = any> = (data: T, i: number, j: number) => void;
 
-type Ctx = { cmp: Comparer, swap: Swapper, parts: number[], data: any }
+type Ctx = { cmp: Comparer; swap: Swapper; parts: number[]; data: any };
 
 export function arrayLess(arr: ArrayLike<number>, i: number, j: number) {
     return arr[i] - arr[j];
@@ -32,13 +32,13 @@ function partition(ctx: Ctx, l: number, r: number) {
     // move the median to the 1st spot
     swap(data, l, medianPivotIndex(data, cmp, l, r));
 
-    while (cmp(data, tail, l) > 0) { --tail; }
+    while (cmp(data, tail, l) > 0) --tail;
     for (let i = l + 1; i <= tail; i++) {
         const c = cmp(data, i, l);
         if (c > 0) {
             swap(data, i, tail);
             --tail;
-            while (cmp(data, tail, l) > 0) { --tail; }
+            while (cmp(data, tail, l) > 0) --tail;
             i--;
         } else if (c === 0) {
             swap(data, i, equals);
@@ -47,7 +47,7 @@ function partition(ctx: Ctx, l: number, r: number) {
     }
 
     // move the medians to the correct spots
-    for (let i = l; i < equals; i++) { swap(data, i, l + tail - i); }
+    for (let i = l; i < equals; i++) swap(data, i, l + tail - i);
     parts[0] = tail - equals + l + 1;
     parts[1] = tail;
 }
@@ -90,13 +90,13 @@ function partitionArrayAsc(data: number[], parts: number[], l: number, r: number
     arraySwap(data, l, medianPivotIndex(data, arrayLess, l, r));
     const pivot = data[l];
 
-    while (data[tail] > pivot) { --tail; }
+    while (data[tail] > pivot) --tail;
     for (let i = l + 1; i <= tail; i++) {
         const v = data[i];
         if (v > pivot) {
             arraySwap(data, i, tail);
             --tail;
-            while (data[tail] > pivot) { --tail; }
+            while (data[tail] > pivot) --tail;
             i--;
         } else if (v === pivot) {
             arraySwap(data, i, equals);
@@ -105,7 +105,7 @@ function partitionArrayAsc(data: number[], parts: number[], l: number, r: number
     }
 
     // move all medians to the correct spots
-    for (let i = l; i < equals; i++) { arraySwap(data, i, l + tail - i); }
+    for (let i = l; i < equals; i++) arraySwap(data, i, l + tail - i);
     parts[0] = tail - equals + l + 1;
     parts[1] = tail;
 }
@@ -142,17 +142,31 @@ function quickSortArrayAsc(data: number[], parts: number[], low: number, high: n
     }
 }
 
-export function sortArray(data: ArrayLike<number>, cmp: Comparer<ArrayLike<number>> = arrayLess): ArrayLike<number> {
+export function sortArray(
+    data: ArrayLike<number>,
+    cmp: Comparer<ArrayLike<number>> = arrayLess,
+): ArrayLike<number> {
     return sortArrayRange(data, 0, data.length, cmp);
 }
 
-export function sortArrayRange(data: ArrayLike<number>, start: number, end: number, cmp: Comparer<ArrayLike<number>> = arrayLess): ArrayLike<number> {
+export function sortArrayRange(
+    data: ArrayLike<number>,
+    start: number,
+    end: number,
+    cmp: Comparer<ArrayLike<number>> = arrayLess,
+): ArrayLike<number> {
     if (cmp === arrayLess) quickSortArrayAsc(data as any, [0, 0], start, end - 1);
     else quickSort({ data, cmp, swap: arraySwap, parts: [0, 0] }, start, end - 1);
     return data;
 }
 
-export function sort<T>(data: T, start: number, end: number, cmp: Comparer<T>, swap: Swapper<T>): T {
+export function sort<T>(
+    data: T,
+    start: number,
+    end: number,
+    cmp: Comparer<T>,
+    swap: Swapper<T>,
+): T {
     const ctx: Ctx = { data, cmp, swap, parts: [0, 0] };
     quickSort(ctx, start, end - 1);
     return data;

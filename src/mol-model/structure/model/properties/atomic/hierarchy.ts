@@ -9,7 +9,7 @@ import { Column, Table } from '../../../../../mol-data/db.ts';
 import { Segmentation } from '../../../../../mol-data/int.ts';
 import { mmCIF_Schema as mmCIF } from '../../../../../mol-io/reader/cif/schema/mmcif.ts';
 import { ElementSymbol, MoleculeType, PolymerType } from '../../types.ts';
-import { ChainIndex, EntityIndex, ResidueIndex, ElementIndex } from '../../indexing.ts';
+import { ChainIndex, ElementIndex, EntityIndex, ResidueIndex } from '../../indexing.ts';
 import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges.ts';
 
 export const AtomsSchema = {
@@ -49,12 +49,11 @@ export const AtomsSchema = {
      * This is the formal charge assignment normally found in chemical diagrams.
      */
     pdbx_formal_charge: mmCIF.atom_site.pdbx_formal_charge,
-
     // id, occupancy and B_iso_or_equiv are part of conformation
 };
 
-export type AtomsSchema = typeof AtomsSchema
-export type Atoms = Table<AtomsSchema>
+export type AtomsSchema = typeof AtomsSchema;
+export type Atoms = Table<AtomsSchema>;
 
 export const ResiduesSchema = {
     /**
@@ -75,11 +74,10 @@ export const ResiduesSchema = {
      * PDB insertion code.
      */
     pdbx_PDB_ins_code: mmCIF.atom_site.pdbx_PDB_ins_code,
-
     // comp_id is part of atoms because of microheterogeneity
 };
-export type ResiduesSchema = typeof ResiduesSchema
-export type Residues = Table<ResiduesSchema>
+export type ResiduesSchema = typeof ResiduesSchema;
+export type Residues = Table<ResiduesSchema>;
 
 export const ChainsSchema = {
     /**
@@ -95,38 +93,38 @@ export const ChainsSchema = {
     /**
      * For mmCIF files, this points to _entity.id in the ENTITY category.
      */
-    label_entity_id: mmCIF.atom_site.label_entity_id
+    label_entity_id: mmCIF.atom_site.label_entity_id,
 };
-export type ChainsSchema = typeof ChainsSchema
-export type Chains = Table<ChainsSchema>
+export type ChainsSchema = typeof ChainsSchema;
+export type Chains = Table<ChainsSchema>;
 
 export interface AtomicData {
-    atoms: Atoms,
+    atoms: Atoms;
     /**
      * The index of this atom in the input data.
      * Required because of sorting of atoms.
      */
-    atomSourceIndex: Column<number>,
-    residues: Residues,
-    chains: Chains
+    atomSourceIndex: Column<number>;
+    residues: Residues;
+    chains: Chains;
 }
 
 export interface AtomicDerivedData {
     readonly atom: {
-        readonly atomicNumber: ArrayLike<number>
-    },
+        readonly atomicNumber: ArrayLike<number>;
+    };
     readonly residue: {
-        readonly traceElementIndex: ArrayLike<ElementIndex | -1>
-        readonly directionFromElementIndex: ArrayLike<ElementIndex | -1>
-        readonly directionToElementIndex: ArrayLike<ElementIndex | -1>
-        readonly moleculeType: ArrayLike<MoleculeType>
-        readonly polymerType: ArrayLike<PolymerType>
-    }
+        readonly traceElementIndex: ArrayLike<ElementIndex | -1>;
+        readonly directionFromElementIndex: ArrayLike<ElementIndex | -1>;
+        readonly directionToElementIndex: ArrayLike<ElementIndex | -1>;
+        readonly moleculeType: ArrayLike<MoleculeType>;
+        readonly polymerType: ArrayLike<PolymerType>;
+    };
 }
 
 export interface AtomicSegments {
     /** Maps residueIndex to a range of atoms [segments[rI], segments[rI + 1]) */
-    residueAtomSegments: Segmentation<ElementIndex, ResidueIndex>,
+    residueAtomSegments: Segmentation<ElementIndex, ResidueIndex>;
     /**
      * Maps chainIndex to a range of atoms [segments[cI], segments[cI + 1]),
      *
@@ -135,27 +133,27 @@ export interface AtomicSegments {
      * const start = rI[offsets[i]], const end = rI[offsets[i + 1] - 1] + 1;
      * for (let j = start; j < end; i++) { }
      */
-    chainAtomSegments: Segmentation<ElementIndex, ChainIndex>,
+    chainAtomSegments: Segmentation<ElementIndex, ChainIndex>;
 
     // TODO: include entity segments?
 }
 
 export interface AtomicIndex {
     /** @returns index or -1 if not present. */
-    getEntityFromChain(cI: ChainIndex): EntityIndex,
+    getEntityFromChain(cI: ChainIndex): EntityIndex;
     /** @returns index or -1 if not present. */
-    findEntity(label_asym_id: string): EntityIndex
+    findEntity(label_asym_id: string): EntityIndex;
 
     /**
      * Find chain using label_ mmCIF properties
      * @returns index or -1 if not present.
      */
-    findChainLabel(key: AtomicIndex.ChainLabelKey): ChainIndex,
+    findChainLabel(key: AtomicIndex.ChainLabelKey): ChainIndex;
     /**
      * Find chain using auth_ mmCIF properties
      * @returns index or -1 if not present.
      */
-    findChainAuth(key: AtomicIndex.ChainAuthKey): ChainIndex,
+    findChainAuth(key: AtomicIndex.ChainAuthKey): ChainIndex;
 
     /**
      * Index of the 1st occurence of this residue.
@@ -163,90 +161,132 @@ export interface AtomicIndex {
      * @param key.pdbx_PDB_ins_code Empty string for undefined
      * @returns index or -1 if not present.
      */
-    findResidue(key: AtomicIndex.ResidueKey): ResidueIndex,
-    findResidue(label_entity_id: string, label_asym_id: string, auth_seq_id: number, pdbx_PDB_ins_code?: string): ResidueIndex,
-
+    findResidue(key: AtomicIndex.ResidueKey): ResidueIndex;
+    findResidue(
+        label_entity_id: string,
+        label_asym_id: string,
+        auth_seq_id: number,
+        pdbx_PDB_ins_code?: string,
+    ): ResidueIndex;
 
     /**
      * Index of the 1st occurence of this residue using "all-label" address.
      * Doesn't work for "ligands" as they don't have a label seq id assigned.
      * @returns index or -1 if not present.
      */
-    findResidueLabel(key: AtomicIndex.ResidueLabelKey): ResidueIndex,
+    findResidueLabel(key: AtomicIndex.ResidueLabelKey): ResidueIndex;
 
     /**
      * Index of the 1st occurence of this residue.
      * @param key.pdbx_PDB_ins_code Empty string for undefined
      * @returns index or -1 if not present.
      */
-    findResidueAuth(key: AtomicIndex.ResidueAuthKey): ResidueIndex,
+    findResidueAuth(key: AtomicIndex.ResidueAuthKey): ResidueIndex;
 
     /**
      * Find the residue index where the spefied residue should be inserted to maintain the ordering (entity_id, asym_id, seq_id, ins_code).
      * Useful for determining ranges for sequence-level annotations.
      * @param key.pdbx_PDB_ins_code Use empty string for undefined
      */
-    findResidueInsertion(key: AtomicIndex.ResidueLabelKey): ResidueIndex,
+    findResidueInsertion(key: AtomicIndex.ResidueLabelKey): ResidueIndex;
 
     /**
      * Find element index of an atom.
      * @param key
      * @returns index or -1 if the atom is not present.
      */
-    findAtom(key: AtomicIndex.AtomKey): ElementIndex,
+    findAtom(key: AtomicIndex.AtomKey): ElementIndex;
 
     /**
      * Find element index of an atom.
      * @param key
      * @returns index or -1 if the atom is not present.
      */
-    findAtomAuth(key: AtomicIndex.AtomAuthKey): ElementIndex,
+    findAtomAuth(key: AtomicIndex.AtomAuthKey): ElementIndex;
 
     /**
      * Find element index of an atom on a given residue.
      * @returns index or -1 if the atom is not present.
      */
-    findAtomOnResidue(residueIndex: ResidueIndex, label_atom_id: string, label_alt_id?: string): ElementIndex
+    findAtomOnResidue(
+        residueIndex: ResidueIndex,
+        label_atom_id: string,
+        label_alt_id?: string,
+    ): ElementIndex;
 
     /**
      * Find element index of any given atom on a given residue.
      * @returns first found index or -1 if none of the given atoms are present.
      */
-    findAtomsOnResidue(residueIndex: ResidueIndex, label_atom_ids: Set<string>): ElementIndex
+    findAtomsOnResidue(residueIndex: ResidueIndex, label_atom_ids: Set<string>): ElementIndex;
 
     /**
      * Find element index of an atom on a given residue.
      * @returns index or -1 if the atom is not present.
      */
-    findElementOnResidue(residueIndex: ResidueIndex, type_symbol: ElementSymbol): ElementIndex
+    findElementOnResidue(residueIndex: ResidueIndex, type_symbol: ElementSymbol): ElementIndex;
 
     // TODO: add indices that support comp_id?
 }
 
 export namespace AtomicIndex {
-    export interface ChainLabelKey { label_entity_id: string, label_asym_id: string }
-    export interface ChainAuthKey { auth_asym_id: string, auth_seq_id: number }
+    export interface ChainLabelKey {
+        label_entity_id: string;
+        label_asym_id: string;
+    }
+    export interface ChainAuthKey {
+        auth_asym_id: string;
+        auth_seq_id: number;
+    }
 
-    export interface ResidueKey { label_entity_id: string, label_asym_id: string, auth_seq_id: number, pdbx_PDB_ins_code?: string }
-    export function EmptyResidueKey(): ResidueKey { return { label_entity_id: '', label_asym_id: '', auth_seq_id: 0, pdbx_PDB_ins_code: void 0 }; }
+    export interface ResidueKey {
+        label_entity_id: string;
+        label_asym_id: string;
+        auth_seq_id: number;
+        pdbx_PDB_ins_code?: string;
+    }
+    export function EmptyResidueKey(): ResidueKey {
+        return {
+            label_entity_id: '',
+            label_asym_id: '',
+            auth_seq_id: 0,
+            pdbx_PDB_ins_code: void 0,
+        };
+    }
 
-    export interface ResidueAuthKey { auth_asym_id: string, auth_comp_id: string, auth_seq_id: number, pdbx_PDB_ins_code?: string }
-    export interface ResidueLabelKey { label_entity_id: string, label_asym_id: string, label_seq_id: number, pdbx_PDB_ins_code?: string }
+    export interface ResidueAuthKey {
+        auth_asym_id: string;
+        auth_comp_id: string;
+        auth_seq_id: number;
+        pdbx_PDB_ins_code?: string;
+    }
+    export interface ResidueLabelKey {
+        label_entity_id: string;
+        label_asym_id: string;
+        label_seq_id: number;
+        pdbx_PDB_ins_code?: string;
+    }
 
-    export interface AtomKey extends ResidueKey { label_atom_id: string, label_alt_id?: string }
-    export interface AtomAuthKey extends ResidueAuthKey { auth_atom_id: string, label_alt_id?: string }
+    export interface AtomKey extends ResidueKey {
+        label_atom_id: string;
+        label_alt_id?: string;
+    }
+    export interface AtomAuthKey extends ResidueAuthKey {
+        auth_atom_id: string;
+        label_alt_id?: string;
+    }
 }
 
 export interface AtomicRanges {
-    polymerRanges: SortedRanges<ElementIndex>
-    gapRanges: SortedRanges<ElementIndex>
-    cyclicPolymerMap: Map<ResidueIndex, ResidueIndex>
+    polymerRanges: SortedRanges<ElementIndex>;
+    gapRanges: SortedRanges<ElementIndex>;
+    cyclicPolymerMap: Map<ResidueIndex, ResidueIndex>;
 }
 
-type _Hierarchy = AtomicData & AtomicSegments
+type _Hierarchy = AtomicData & AtomicSegments;
 export interface AtomicHierarchy extends _Hierarchy {
-    index: AtomicIndex
-    derived: AtomicDerivedData
+    index: AtomicIndex;
+    derived: AtomicDerivedData;
 }
 
 export namespace AtomicHierarchy {
@@ -257,7 +297,8 @@ export namespace AtomicHierarchy {
 
     /** End residue exclusive */
     export function chainEndResidueIndexExcl(segs: AtomicSegments, cI: ChainIndex) {
-        return segs.residueAtomSegments.index[segs.chainAtomSegments.offsets[cI + 1] - 1] + 1 as ResidueIndex;
+        return segs.residueAtomSegments.index[segs.chainAtomSegments.offsets[cI + 1] - 1] +
+            1 as ResidueIndex;
     }
 
     export function chainResidueCount(segs: AtomicSegments, cI: ChainIndex) {

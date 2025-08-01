@@ -7,12 +7,12 @@
  */
 
 import { UniqueArray } from '../../../../mol-data/generic.ts';
-import { OrderedSet, SortedArray, Interval } from '../../../../mol-data/int.ts';
+import { Interval, OrderedSet, SortedArray } from '../../../../mol-data/int.ts';
 import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra.ts';
 import { MolScriptBuilder as MS } from '../../../../mol-script/language/builder.ts';
 import { Structure } from '../structure.ts';
 import { Unit } from '../unit.ts';
-import { sortArray, hashFnv32a, hash2 } from '../../../../mol-data/util.ts';
+import { hash2, hashFnv32a, sortArray } from '../../../../mol-data/util.ts';
 import { Expression } from '../../../../mol-script/language/expression.ts';
 import { ElementIndex, Model } from '../../model.ts';
 import { UnitIndex } from './element.ts';
@@ -34,25 +34,28 @@ const itDiff = IntTuple.diff;
 
 /** Represents multiple structure element index locations */
 export interface Loci {
-    readonly kind: 'element-loci',
-    readonly structure: Structure,
+    readonly kind: 'element-loci';
+    readonly structure: Structure;
     /** Access i-th element as unit.elements[indices[i]] */
     readonly elements: ReadonlyArray<{
-        unit: Unit,
+        unit: Unit;
         /**
          * Indices into the unit.elements array.
          * Can use OrderedSet.forEach to iterate (or OrderedSet.size + OrderedSet.getAt)
          */
-        indices: OrderedSet<UnitIndex>
-    }>
+        indices: OrderedSet<UnitIndex>;
+    }>;
 }
 
-export function Loci(structure: Structure, elements: ArrayLike<{ unit: Unit, indices: OrderedSet<UnitIndex> }>): Loci {
+export function Loci(
+    structure: Structure,
+    elements: ArrayLike<{ unit: Unit; indices: OrderedSet<UnitIndex> }>,
+): Loci {
     return { kind: 'element-loci', structure, elements: elements as Loci['elements'] };
 }
 
 export namespace Loci {
-    export type Element = Loci['elements'][0]
+    export type Element = Loci['elements'][0];
 
     export function is(x: any): x is Loci {
         return !!x && x.kind === 'element-loci';
@@ -96,17 +99,27 @@ export namespace Loci {
     }
 
     export function all(structure: Structure): Loci {
-        return Loci(structure, structure.units.map(unit => ({
-            unit,
-            indices: OrderedSet.ofBounds<UnitIndex>(0 as UnitIndex, unit.elements.length as UnitIndex)
-        })));
+        return Loci(
+            structure,
+            structure.units.map((unit) => ({
+                unit,
+                indices: OrderedSet.ofBounds<UnitIndex>(
+                    0 as UnitIndex,
+                    unit.elements.length as UnitIndex,
+                ),
+            })),
+        );
     }
 
     export function none(structure: Structure): Loci {
         return Loci(structure, []);
     }
 
-    export function fromExpression(structure: Structure, expression: Expression | ((builder: typeof MS) => Expression), queryContext?: QueryContext): Loci {
+    export function fromExpression(
+        structure: Structure,
+        expression: Expression | ((builder: typeof MS) => Expression),
+        queryContext?: QueryContext,
+    ): Loci {
         let expr;
         if (typeof expression === 'function') {
             expr = expression(MS);
@@ -117,12 +130,20 @@ export namespace Loci {
         return StructureSelection.toLociWithSourceUnits(selection);
     }
 
-    export function fromQuery(structure: Structure, query: QueryFn, queryContext?: QueryContext): Loci {
+    export function fromQuery(
+        structure: Structure,
+        query: QueryFn,
+        queryContext?: QueryContext,
+    ): Loci {
         const selection = query(queryContext ?? new QueryContext(structure));
         return StructureSelection.toLociWithSourceUnits(selection);
     }
 
-    export function fromSchema(structure: Structure, schema: Schema, queryContext?: QueryContext): Loci {
+    export function fromSchema(
+        structure: Structure,
+        schema: Schema,
+        queryContext?: QueryContext,
+    ): Loci {
         return Schema.toLoci(structure, schema, queryContext);
     }
 
@@ -143,7 +164,7 @@ export namespace Loci {
         if (isEmpty(loci)) return loci;
         return Loci(loci.structure, [{
             unit: loci.elements[0].unit,
-            indices: OrderedSet.ofSingleton(OrderedSet.start(loci.elements[0].indices))
+            indices: OrderedSet.ofSingleton(OrderedSet.start(loci.elements[0].indices)),
         }]);
     }
 
@@ -194,7 +215,7 @@ export namespace Loci {
         if (structure === loci.structure) return loci;
 
         const elements: Loci['elements'][0][] = [];
-        loci.elements.forEach(e => {
+        loci.elements.forEach((e) => {
             if (!structure.unitMap.has(e.unit.id)) return;
             const unit = structure.unitMap.get(e.unit.id);
 
@@ -217,7 +238,10 @@ export namespace Loci {
         const elements: Loci['elements'][0][] = [];
         for (const e of ys.elements) {
             if (map.has(e.unit.id)) {
-                elements[elements.length] = { unit: e.unit, indices: OrderedSet.union(map.get(e.unit.id)!, e.indices) };
+                elements[elements.length] = {
+                    unit: e.unit,
+                    indices: OrderedSet.union(map.get(e.unit.id)!, e.indices),
+                };
                 map.delete(e.unit.id);
             } else {
                 elements[elements.length] = e;
@@ -344,14 +368,20 @@ export namespace Loci {
                         const idx = OrderedSet.indexOf(unitElements, j);
                         if (idx >= 0) {
                             const altId = label_alt_id.value(j);
-                            if (!restrictToConformation || hasSharedAltId || !altId || residueAltIds.has(altId)) {
+                            if (
+                                !restrictToConformation || hasSharedAltId || !altId ||
+                                residueAltIds.has(altId)
+                            ) {
                                 newIndices[newIndices.length] = idx as UnitIndex;
                             }
                         }
                     }
                 }
 
-                elements[elements.length] = { unit: lociElement.unit, indices: makeIndexSet(newIndices) };
+                elements[elements.length] = {
+                    unit: lociElement.unit,
+                    indices: makeIndexSet(newIndices),
+                };
             } else {
                 // coarse elements are already by-residue
                 elements[elements.length] = lociElement;
@@ -363,9 +393,12 @@ export namespace Loci {
 
     function getChainSegments(unit: Unit) {
         switch (unit.kind) {
-            case Unit.Kind.Atomic: return unit.model.atomicHierarchy.chainAtomSegments;
-            case Unit.Kind.Spheres: return unit.model.coarseHierarchy.spheres.chainElementSegments;
-            case Unit.Kind.Gaussians: return unit.model.coarseHierarchy.gaussians.chainElementSegments;
+            case Unit.Kind.Atomic:
+                return unit.model.atomicHierarchy.chainAtomSegments;
+            case Unit.Kind.Spheres:
+                return unit.model.coarseHierarchy.spheres.chainElementSegments;
+            case Unit.Kind.Gaussians:
+                return unit.model.coarseHierarchy.gaussians.chainElementSegments;
         }
     }
 
@@ -373,7 +406,11 @@ export namespace Loci {
         return element.unit.elements.length === OrderedSet.size(element.indices);
     }
 
-    function collectChains(unit: Unit, chainIndices: Set<ChainIndex>, elements: Loci['elements'][0][]) {
+    function collectChains(
+        unit: Unit,
+        chainIndices: Set<ChainIndex>,
+        elements: Loci['elements'][0][],
+    ) {
         const { index } = getChainSegments(unit);
         const xs = unit.elements;
         let size = 0;
@@ -403,7 +440,13 @@ export namespace Loci {
         }
     }
 
-    function extendGroupToWholeChains(loci: Loci, start: number, end: number, isPartitioned: boolean, elements: Loci['elements'][0][]) {
+    function extendGroupToWholeChains(
+        loci: Loci,
+        start: number,
+        end: number,
+        isPartitioned: boolean,
+        elements: Loci['elements'][0][],
+    ) {
         const { index: chainIndex } = getChainSegments(loci.elements[0].unit);
 
         const chainIndices = new Set<ChainIndex>();
@@ -478,7 +521,9 @@ export namespace Loci {
             l.unit = unit;
             l.element = unit.elements[0];
             if (entities.has(entityModelKey(l))) {
-                const indices = OrderedSet.ofBounds(0, unit.elements.length) as OrderedSet<UnitIndex>;
+                const indices = OrderedSet.ofBounds(0, unit.elements.length) as OrderedSet<
+                    UnitIndex
+                >;
                 elements[elements.length] = { unit, indices };
             }
         }
@@ -499,7 +544,9 @@ export namespace Loci {
         for (let i = 0, il = units.length; i < il; ++i) {
             const unit = units[i];
             if (models.has(unit.model.id)) {
-                const indices = OrderedSet.ofBounds(0, unit.elements.length) as OrderedSet<UnitIndex>;
+                const indices = OrderedSet.ofBounds(0, unit.elements.length) as OrderedSet<
+                    UnitIndex
+                >;
                 elements[elements.length] = { unit, indices };
             }
         }
@@ -515,7 +562,10 @@ export namespace Loci {
         return SortedArray.ofSortedArray<ElementIndex>(elementIndices);
     }
 
-    function getUnitIndices(elements: SortedArray<ElementIndex>, indices: SortedArray<ElementIndex>) {
+    function getUnitIndices(
+        elements: SortedArray<ElementIndex>,
+        indices: SortedArray<ElementIndex>,
+    ) {
         if (SortedArray.isRange(elements) && SortedArray.areEqual(elements, indices)) {
             return Interval.ofLength(elements.length);
         }
@@ -564,7 +614,9 @@ export namespace Loci {
         for (let i = 0, il = units.length; i < il; ++i) {
             const unit = units[i];
             if (operators.has(unit.conformation.operator.name)) {
-                const indices = OrderedSet.ofBounds(0, unit.elements.length) as OrderedSet<UnitIndex>;
+                const indices = OrderedSet.ofBounds(0, unit.elements.length) as OrderedSet<
+                    UnitIndex
+                >;
                 elements[elements.length] = { unit, indices };
             }
         }
@@ -576,7 +628,11 @@ export namespace Loci {
 
     const boundaryHelper = new BoundaryHelper('98');
     const tempPosBoundary = Vec3();
-    export function getBoundary(loci: Loci, transform?: Mat4, result?: { box?: Box3D, sphere?: Sphere3D }): Boundary {
+    export function getBoundary(
+        loci: Loci,
+        transform?: Mat4,
+        result?: { box?: Box3D; sphere?: Sphere3D },
+    ): Boundary {
         boundaryHelper.reset();
 
         for (const e of loci.elements) {
@@ -635,12 +691,12 @@ export namespace Loci {
 
     export function getPrincipalAxesMany(locis: Loci[]): PrincipalAxes {
         let elementCount = 0;
-        locis.forEach(l => {
+        locis.forEach((l) => {
             elementCount += size(l);
         });
         const positions = new Float32Array(3 * elementCount);
         let offset = 0;
-        locis.forEach(l => {
+        locis.forEach((l) => {
             toPositionsArray(l, positions, offset);
             offset += size(l) * 3;
         });
@@ -658,7 +714,10 @@ export namespace Loci {
         if (Loci.isEmpty(loci)) return MS.struct.generator.empty();
 
         const models = loci.structure.models;
-        const sourceIndexMap = new Map<string, { modelLabel: string, modelIndex: number, xs: UniqueArray<number, number> }>();
+        const sourceIndexMap = new Map<
+            string,
+            { modelLabel: string; modelIndex: number; xs: UniqueArray<number, number> }
+        >();
         for (const e of loci.elements) {
             const { indices } = e;
             const { elements } = e.unit;
@@ -668,7 +727,11 @@ export namespace Loci {
             if (sourceIndexMap.has(key)) sourceIndices = sourceIndexMap.get(key)!.xs;
             else {
                 sourceIndices = UniqueArray.create<number, number>();
-                sourceIndexMap.set(key, { modelLabel: e.unit.model.label, modelIndex: e.unit.model.modelNum, xs: sourceIndices });
+                sourceIndexMap.set(key, {
+                    modelLabel: e.unit.model.label,
+                    modelIndex: e.unit.model.modelNum,
+                    xs: sourceIndices,
+                });
             }
 
             for (let i = 0, _i = OrderedSet.size(indices); i < _i; i++) {
@@ -683,7 +746,9 @@ export namespace Loci {
             const k = keys.next();
             if (k.done) break;
             const e = sourceIndexMap.get(k.value)!;
-            opData.push(getOpData(k.value, e.xs.array, models.length > 1, e.modelLabel, e.modelIndex));
+            opData.push(
+                getOpData(k.value, e.xs.array, models.length > 1, e.modelLabel, e.modelIndex),
+            );
         }
 
         const opGroups = new Map<string, OpData>();
@@ -699,7 +764,7 @@ export namespace Loci {
         }
 
         const opQueries: Expression[] = [];
-        opGroups.forEach(d => {
+        opGroups.forEach((d) => {
             const { ranges, set } = d.atom;
             const { opName } = d.chain;
 
@@ -712,7 +777,11 @@ export namespace Loci {
                 tests[tests.length] = MS.core.set.has([MS.core.type.set(set), siProp]);
             }
             for (let rI = 0, _rI = ranges.length / 2; rI < _rI; rI++) {
-                tests[tests.length] = MS.core.rel.inRange([siProp, ranges[2 * rI], ranges[2 * rI + 1]]);
+                tests[tests.length] = MS.core.rel.inRange([
+                    siProp,
+                    ranges[2 * rI],
+                    ranges[2 * rI + 1],
+                ]);
             }
 
             if (d.entity) {
@@ -725,14 +794,14 @@ export namespace Loci {
                     'entity-test': MS.core.logic.and([
                         MS.core.rel.eq([MS.struct.atomProperty.core.modelLabel(), modelLabel]),
                         MS.core.rel.eq([MS.struct.atomProperty.core.modelIndex(), modelIndex]),
-                    ])
+                    ]),
                 }));
             } else {
                 opQueries.push(MS.struct.generator.atomGroups({
                     'atom-test': tests.length > 1 ? MS.core.logic.or(tests) : tests[0],
                     'chain-test': opName.length > 1
                         ? MS.core.set.has([MS.core.type.set(opName), opProp])
-                        : MS.core.rel.eq([opProp, opName[0]])
+                        : MS.core.rel.eq([opProp, opName[0]]),
                 }));
             }
         });
@@ -741,17 +810,23 @@ export namespace Loci {
             opQueries.length === 1
                 ? opQueries[0]
                 // Need to union before merge for fast performance
-                : MS.struct.combinator.merge(opQueries.map(q => MS.struct.modifier.union([q])))
+                : MS.struct.combinator.merge(opQueries.map((q) => MS.struct.modifier.union([q]))),
         ]);
     }
 
     type OpData = {
-        atom: { set: number[], ranges: number[] },
-        chain: { opName: string[] },
-        entity?: { modelLabel: string, modelIndex: number }
-    }
+        atom: { set: number[]; ranges: number[] };
+        chain: { opName: string[] };
+        entity?: { modelLabel: string; modelIndex: number };
+    };
 
-    function getOpData(opName: string, xs: number[], multimodel: boolean, modelLabel: string, modelIndex: number): OpData {
+    function getOpData(
+        opName: string,
+        xs: number[],
+        multimodel: boolean,
+        modelLabel: string,
+        modelIndex: number,
+    ): OpData {
         sortArray(xs);
 
         const ranges: number[] = [];
@@ -779,7 +854,7 @@ export namespace Loci {
             ? {
                 atom: { set, ranges },
                 chain: { opName: [opName] },
-                entity: { modelLabel, modelIndex }
+                entity: { modelLabel, modelIndex },
             }
             : {
                 atom: { set, ranges },

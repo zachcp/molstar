@@ -35,7 +35,7 @@ export const PartialChargesThemeParams = {
         { min: 0 },
         {
             label: 'Charge Range',
-        }
+        },
     ),
     absolute: PD.Boolean(false, { isHidden: false, label: 'Use Range' }),
     chargeType: PD.Select(
@@ -44,7 +44,7 @@ export const PartialChargesThemeParams = {
             ['atom', 'Atom charges'],
             ['residue', 'Residue charges'],
         ],
-        { isHidden: false }
+        { isHidden: false },
     ),
 };
 export type PartialChargesThemeParams = typeof PartialChargesThemeParams;
@@ -55,7 +55,7 @@ export function getPartialChargesThemeParams() {
 
 export function PartialChargesColorTheme(
     ctx: ThemeDataContext,
-    props: PD.Values<PartialChargesThemeParams>
+    props: PD.Values<PartialChargesThemeParams>,
 ): ColorTheme<PartialChargesThemeParams> {
     const model = ctx.structure?.models[0];
     if (!model) {
@@ -67,7 +67,12 @@ export function PartialChargesColorTheme(
     }
 
     const { absolute, chargeType } = props;
-    const { typeIdToAtomIdToCharge, typeIdToResidueToCharge, maxAbsoluteAtomCharges, maxAbsoluteResidueCharges } = data;
+    const {
+        typeIdToAtomIdToCharge,
+        typeIdToResidueToCharge,
+        maxAbsoluteAtomCharges,
+        maxAbsoluteResidueCharges,
+    } = data;
     const typeId = SbNcbrPartialChargesPropertyProvider.props(model).typeId;
     const atomToCharge = typeIdToAtomIdToCharge.get(typeId);
     const residueToCharge = typeIdToResidueToCharge.get(typeId);
@@ -129,8 +134,8 @@ export function PartialChargesColorTheme(
 }
 
 export const SbNcbrPartialChargesColorThemeProvider: ColorTheme.Provider<
-PartialChargesThemeParams,
-'sb-ncbr-partial-charges'
+    PartialChargesThemeParams,
+    'sb-ncbr-partial-charges'
 > = {
     label: 'SB NCBR Partial Charges',
     name: 'sb-ncbr-partial-charges',
@@ -140,12 +145,21 @@ PartialChargesThemeParams,
     defaultValues: PD.getDefaultValues(PartialChargesThemeParams),
     isApplicable: (ctx: ThemeDataContext) =>
         !!ctx.structure &&
-        ctx.structure.models.some((model) => SbNcbrPartialChargesPropertyProvider.isApplicable(model)),
+        ctx.structure.models.some((model) =>
+            SbNcbrPartialChargesPropertyProvider.isApplicable(model)
+        ),
     ensureCustomProperties: {
         attach: (ctx: CustomProperty.Context, data: ThemeDataContext) =>
             data.structure
-                ? SbNcbrPartialChargesPropertyProvider.attach(ctx, data.structure.models[0], void 0, true)
+                ? SbNcbrPartialChargesPropertyProvider.attach(
+                    ctx,
+                    data.structure.models[0],
+                    void 0,
+                    true,
+                )
                 : Promise.resolve(),
-        detach: (data) => data.structure && SbNcbrPartialChargesPropertyProvider.ref(data.structure.models[0], false),
+        detach: (data) =>
+            data.structure &&
+            SbNcbrPartialChargesPropertyProvider.ref(data.structure.models[0], false),
     },
 };

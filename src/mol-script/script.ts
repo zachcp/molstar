@@ -8,14 +8,24 @@ import { transpileMolScript } from './script/mol-script/symbols.ts';
 import { parseMolScript } from './language/parser.ts';
 import { parse } from './transpile.ts';
 import { Expression } from './language/expression.ts';
-import { StructureElement, QueryContext, StructureSelection, Structure, QueryFn, QueryContextOptions } from '../mol-model/structure.ts';
+import {
+    QueryContext,
+    QueryContextOptions,
+    QueryFn,
+    Structure,
+    StructureElement,
+    StructureSelection,
+} from '../mol-model/structure.ts';
 import { compile } from './runtime/query/compiler.ts';
 import { MolScriptBuilder } from './language/builder.ts';
 import { assertUnreachable } from '../mol-util/type-helpers.ts';
 
 export { Script };
 
-interface Script { expression: string, language: Script.Language }
+interface Script {
+    expression: string;
+    language: Script.Language;
+}
 
 function Script(expression: string, language: Script.Language): Script {
     return { expression, language };
@@ -64,7 +74,11 @@ namespace Script {
         return StructureSelection.toLociWithSourceUnits(result);
     }
 
-    export function getStructureSelection(expr: Expression | ((builder: typeof MolScriptBuilder) => Expression), structure: Structure, options?: QueryContextOptions) {
+    export function getStructureSelection(
+        expr: Expression | ((builder: typeof MolScriptBuilder) => Expression),
+        structure: Structure,
+        options?: QueryContextOptions,
+    ) {
         const e = typeof expr === 'function' ? expr(MolScriptBuilder) : expr;
         const query = compile<StructureSelection>(e);
         return query(new QueryContext(structure, options));

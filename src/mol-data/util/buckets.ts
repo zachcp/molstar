@@ -4,20 +4,26 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { sort, arraySwap } from './sort.ts';
+import { arraySwap, sort } from './sort.ts';
 import { AssignableArrayLike } from '../../mol-util/type-helpers.ts';
 
 type Bucket = {
-    key: any,
-    count: number,
-    offset: number
+    key: any;
+    count: number;
+    offset: number;
+};
+
+function sortAsc(bs: Bucket[], i: number, j: number) {
+    return bs[i].key < bs[j].key ? -1 : 1;
 }
 
-function sortAsc(bs: Bucket[], i: number, j: number) { return bs[i].key < bs[j].key ? -1 : 1; }
-
-function _makeBuckets(indices: AssignableArrayLike<number>,
-    getKey: (i: number) => any, sortBuckets: boolean, start: number, end: number) {
-
+function _makeBuckets(
+    indices: AssignableArrayLike<number>,
+    getKey: (i: number) => any,
+    sortBuckets: boolean,
+    start: number,
+    end: number,
+) {
     const buckets = new Map<any, Bucket>();
     const bucketList: Bucket[] = [];
 
@@ -84,11 +90,11 @@ function _makeBuckets(indices: AssignableArrayLike<number>,
 
 export interface MakeBucketsOptions<K> {
     // If specified, will be sorted
-    sort?: boolean,
+    sort?: boolean;
     // inclusive start indidex
-    start?: number,
+    start?: number;
     // exclusive end index
-    end?: number
+    end?: number;
 }
 
 /**
@@ -96,7 +102,10 @@ export interface MakeBucketsOptions<K> {
  * Returns the offsets of buckets. So that [offsets[i], offsets[i + 1]) determines the range.
  */
 export function makeBuckets<K extends string | number>(
-    indices: AssignableArrayLike<number>, getKey: (i: number) => K, options?: MakeBucketsOptions<K>): ArrayLike<number> {
+    indices: AssignableArrayLike<number>,
+    getKey: (i: number) => K,
+    options?: MakeBucketsOptions<K>,
+): ArrayLike<number> {
     const s = (options && options.start) || 0;
     const e = (options && options.end) || indices.length;
     if (e - s <= 0) throw new Error('Can only bucket non-empty collections.');

@@ -4,11 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { createComputeRenderable, ComputeRenderable } from '../../renderable.ts';
+import { ComputeRenderable, createComputeRenderable } from '../../renderable.ts';
 import { WebGLContext } from '../../webgl/context.ts';
 import { createComputeRenderItem } from '../../webgl/render-item.ts';
-import { Values, TextureSpec, UniformSpec } from '../../renderable/schema.ts';
-import { Texture, TextureFilter, TextureFormat, TextureKind, TextureType } from '../../webgl/texture.ts';
+import { TextureSpec, UniformSpec, Values } from '../../renderable/schema.ts';
+import {
+    Texture,
+    TextureFilter,
+    TextureFormat,
+    TextureKind,
+    TextureType,
+} from '../../webgl/texture.ts';
 import { ShaderCode } from '../../shader-code.ts';
 import { ValueCell } from '../../../mol-util/index.ts';
 import { QuadSchema, QuadValues } from '../util.ts';
@@ -29,25 +35,38 @@ const HistopyramidReductionSchema = {
     uTexSize: UniformSpec('f'),
     uFirst: UniformSpec('b'),
 };
-type HistopyramidReductionValues = Values<typeof HistopyramidReductionSchema>
+type HistopyramidReductionValues = Values<typeof HistopyramidReductionSchema>;
 
 const HistogramPyramidName = 'histogram-pyramid';
 
-function getHistopyramidReductionRenderable(ctx: WebGLContext, inputLevel: Texture, previousLevel: Texture): ComputeRenderable<HistopyramidReductionValues> {
+function getHistopyramidReductionRenderable(
+    ctx: WebGLContext,
+    inputLevel: Texture,
+    previousLevel: Texture,
+): ComputeRenderable<HistopyramidReductionValues> {
     if (ctx.namedComputeRenderables[HistogramPyramidName]) {
-        const v = ctx.namedComputeRenderables[HistogramPyramidName].values as HistopyramidReductionValues;
+        const v = ctx.namedComputeRenderables[HistogramPyramidName]
+            .values as HistopyramidReductionValues;
 
         ValueCell.update(v.tInputLevel, inputLevel);
         ValueCell.update(v.tPreviousLevel, previousLevel);
 
         ctx.namedComputeRenderables[HistogramPyramidName].update();
     } else {
-        ctx.namedComputeRenderables[HistogramPyramidName] = createHistopyramidReductionRenderable(ctx, inputLevel, previousLevel);
+        ctx.namedComputeRenderables[HistogramPyramidName] = createHistopyramidReductionRenderable(
+            ctx,
+            inputLevel,
+            previousLevel,
+        );
     }
     return ctx.namedComputeRenderables[HistogramPyramidName];
 }
 
-function createHistopyramidReductionRenderable(ctx: WebGLContext, inputLevel: Texture, previousLevel: Texture) {
+function createHistopyramidReductionRenderable(
+    ctx: WebGLContext,
+    inputLevel: Texture,
+    previousLevel: Texture,
+) {
     const values: HistopyramidReductionValues = {
         ...QuadValues,
         tInputLevel: ValueCell.create(inputLevel),
@@ -64,7 +83,7 @@ function createHistopyramidReductionRenderable(ctx: WebGLContext, inputLevel: Te
     return createComputeRenderable(renderItem, values);
 }
 
-type TextureFramebuffer = { texture: Texture, framebuffer: Framebuffer }
+type TextureFramebuffer = { texture: Texture; framebuffer: Framebuffer };
 function getLevelTextureFramebuffer(ctx: WebGLContext, level: number) {
     const size = Math.pow(2, level);
     const name = `level${level}`;
@@ -99,7 +118,14 @@ function getFramebuffer(name: string, webgl: WebGLContext): Framebuffer {
     return webgl.namedFramebuffers[_name];
 }
 
-function getTexture(name: string, webgl: WebGLContext, kind: TextureKind, format: TextureFormat, type: TextureType, filter: TextureFilter): Texture {
+function getTexture(
+    name: string,
+    webgl: WebGLContext,
+    kind: TextureKind,
+    format: TextureFormat,
+    type: TextureType,
+    filter: TextureFilter,
+): Texture {
     const _name = `${HistogramPyramidName}-${name}`;
     if (!webgl.namedTextures[_name]) {
         webgl.namedTextures[_name] = webgl.resources.texture(kind, format, type, filter);
@@ -113,14 +139,19 @@ function tryGetFramebuffer(name: string, webgl: WebGLContext): Framebuffer | und
 }
 
 export interface HistogramPyramid {
-    pyramidTex: Texture
-    count: number
-    height: number
-    levels: number
-    scale: Vec2
+    pyramidTex: Texture;
+    count: number;
+    height: number;
+    levels: number;
+    scale: Vec2;
 }
 
-export function createHistogramPyramid(ctx: WebGLContext, inputTexture: Texture, scale: Vec2, gridTexDim: Vec3): HistogramPyramid {
+export function createHistogramPyramid(
+    ctx: WebGLContext,
+    inputTexture: Texture,
+    scale: Vec2,
+    gridTexDim: Vec3,
+): HistogramPyramid {
     if (isTimingMode) ctx.timer.mark('createHistogramPyramid');
     const { gl, state } = ctx;
     const w = inputTexture.getWidth();
@@ -154,9 +185,15 @@ export function createHistogramPyramid(ctx: WebGLContext, inputTexture: Texture,
     }
 
     const levelTexturesFramebuffers: TextureFramebuffer[] = [];
-    for (let i = 0; i < levels; ++i) levelTexturesFramebuffers.push(getLevelTextureFramebuffer(ctx, i));
+    for (let i = 0; i < levels; ++i) {
+        levelTexturesFramebuffers.push(getLevelTextureFramebuffer(ctx, i));
+    }
 
-    const renderable = getHistopyramidReductionRenderable(ctx, inputTexture, levelTexturesFramebuffers[0].texture);
+    const renderable = getHistopyramidReductionRenderable(
+        ctx,
+        inputTexture,
+        levelTexturesFramebuffers[0].texture,
+    );
     state.currentRenderItemId = -1;
     setRenderingDefaults(ctx);
 
@@ -173,7 +210,10 @@ export function createHistogramPyramid(ctx: WebGLContext, inputTexture: Texture,
         ValueCell.update(renderable.values.uTexSize, size);
         ValueCell.updateIfChanged(renderable.values.uFirst, i === 0);
         if (i > 0) {
-            ValueCell.update(renderable.values.tPreviousLevel, levelTexturesFramebuffers[levels - i].texture);
+            ValueCell.update(
+                renderable.values.tPreviousLevel,
+                levelTexturesFramebuffers[levels - i].texture,
+            );
             renderable.update();
         }
         state.currentRenderItemId = -1;

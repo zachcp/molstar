@@ -10,29 +10,30 @@ import { ChainIndex, ElementIndex, Model, ResidueIndex } from '../../../mol-mode
 import { filterInPlace, range, sortIfNeeded } from '../../../mol-util/array.ts';
 import { Mapping, MultiMap, NumberMap } from './utils.ts';
 
-
 /** Auxiliary data structure for efficiently finding chains/residues/atoms in a model by their properties */
 export interface IndicesAndSortings {
-    chainsByLabelEntityId: Mapping<string, readonly ChainIndex[]>,
-    chainsByLabelAsymId: Mapping<string, readonly ChainIndex[]>,
-    chainsByAuthAsymId: Mapping<string, readonly ChainIndex[]>,
-    residuesSortedByLabelSeqId: Mapping<ChainIndex, Sorting<ResidueIndex, number>>,
-    residuesSortedByAuthSeqId: Mapping<ChainIndex, Sorting<ResidueIndex, number>>,
-    residuesByInsCode: Mapping<ChainIndex, Mapping<string, readonly ResidueIndex[]>>,
-    residuesByLabelCompId: Mapping<ChainIndex, Mapping<string, readonly ResidueIndex[]>>,
+    chainsByLabelEntityId: Mapping<string, readonly ChainIndex[]>;
+    chainsByLabelAsymId: Mapping<string, readonly ChainIndex[]>;
+    chainsByAuthAsymId: Mapping<string, readonly ChainIndex[]>;
+    residuesSortedByLabelSeqId: Mapping<ChainIndex, Sorting<ResidueIndex, number>>;
+    residuesSortedByAuthSeqId: Mapping<ChainIndex, Sorting<ResidueIndex, number>>;
+    residuesByInsCode: Mapping<ChainIndex, Mapping<string, readonly ResidueIndex[]>>;
+    residuesByLabelCompId: Mapping<ChainIndex, Mapping<string, readonly ResidueIndex[]>>;
     /** Indicates if each residue is listed only once in `residuesByLabelCompId` (i.e. if each residue has only one label_comp_id) */
-    residuesByLabelCompIdIsPure: boolean,
-    residuesByAuthCompId: Mapping<ChainIndex, Mapping<string, readonly ResidueIndex[]>>,
+    residuesByLabelCompIdIsPure: boolean;
+    residuesByAuthCompId: Mapping<ChainIndex, Mapping<string, readonly ResidueIndex[]>>;
     /** Indicates if each residue is listed only once in `residuesByAuthCompId` (i.e. if each residue has only one auth_comp_id) */
-    residuesByAuthCompIdIsPure: boolean,
-    atomsById: Mapping<number, ElementIndex>,
-    atomsByIndex: Mapping<number, ElementIndex>,
+    residuesByAuthCompIdIsPure: boolean;
+    atomsById: Mapping<number, ElementIndex>;
+    atomsByIndex: Mapping<number, ElementIndex>;
 }
 
 export const IndicesAndSortings = {
     /** Get `IndicesAndSortings` for a model (use a cached value or create if not available yet) */
     get(model: Model): IndicesAndSortings {
-        return model._dynamicPropertyData['indices-and-sortings'] ??= IndicesAndSortings.create(model);
+        return model._dynamicPropertyData['indices-and-sortings'] ??= IndicesAndSortings.create(
+            model,
+        );
     },
 
     /** Create `IndicesAndSortings` for a model */
@@ -67,13 +68,26 @@ export const IndicesAndSortings = {
             chainsByAuthAsymId.add(auth_asym_id.value(iChain), iChain);
 
             const iResFrom = h.residueAtomSegments.index[h.chainAtomSegments.offsets[iChain]];
-            const iResTo = h.residueAtomSegments.index[h.chainAtomSegments.offsets[iChain + 1] - 1] + 1;
+            const iResTo =
+                h.residueAtomSegments.index[h.chainAtomSegments.offsets[iChain + 1] - 1] + 1;
 
-            const residuesWithLabelSeqId = filterInPlace(range(iResFrom, iResTo) as ResidueIndex[], iRes => label_seq_id.valueKind(iRes) === Present);
-            residuesSortedByLabelSeqId.set(iChain, Sorting.create(residuesWithLabelSeqId, label_seq_id.value));
+            const residuesWithLabelSeqId = filterInPlace(
+                range(iResFrom, iResTo) as ResidueIndex[],
+                (iRes) => label_seq_id.valueKind(iRes) === Present,
+            );
+            residuesSortedByLabelSeqId.set(
+                iChain,
+                Sorting.create(residuesWithLabelSeqId, label_seq_id.value),
+            );
 
-            const residuesWithAuthSeqId = filterInPlace(range(iResFrom, iResTo) as ResidueIndex[], iRes => auth_seq_id.valueKind(iRes) === Present);
-            residuesSortedByAuthSeqId.set(iChain, Sorting.create(residuesWithAuthSeqId, auth_seq_id.value));
+            const residuesWithAuthSeqId = filterInPlace(
+                range(iResFrom, iResTo) as ResidueIndex[],
+                (iRes) => auth_seq_id.valueKind(iRes) === Present,
+            );
+            residuesSortedByAuthSeqId.set(
+                iChain,
+                Sorting.create(residuesWithAuthSeqId, auth_seq_id.value),
+            );
 
             const residuesHereByInsCode = new MultiMap<string, ResidueIndex>();
             const residuesHereByLabelCompId = new MultiMap<string, ResidueIndex>();
@@ -90,8 +104,12 @@ export const IndicesAndSortings = {
                 }
                 if (_labelCompIdSet.size > 1) residuesByLabelCompIdIsPure = false;
                 if (_authCompIdSet.size > 1) residuesByAuthCompIdIsPure = false;
-                for (const labelCompId of _labelCompIdSet) residuesHereByLabelCompId.add(labelCompId, iRes);
-                for (const authCompId of _authCompIdSet) residuesHereByAuthCompId.add(authCompId, iRes);
+                for (const labelCompId of _labelCompIdSet) {
+                    residuesHereByLabelCompId.add(labelCompId, iRes);
+                }
+                for (const authCompId of _authCompIdSet) {
+                    residuesHereByAuthCompId.add(authCompId, iRes);
+                }
                 _labelCompIdSet.clear();
                 _authCompIdSet.clear();
             }
@@ -108,28 +126,38 @@ export const IndicesAndSortings = {
         }
 
         return {
-            chainsByLabelEntityId, chainsByLabelAsymId, chainsByAuthAsymId,
-            residuesSortedByLabelSeqId, residuesSortedByAuthSeqId, residuesByInsCode,
-            residuesByLabelCompId, residuesByLabelCompIdIsPure, residuesByAuthCompId, residuesByAuthCompIdIsPure,
-            atomsById, atomsByIndex,
+            chainsByLabelEntityId,
+            chainsByLabelAsymId,
+            chainsByAuthAsymId,
+            residuesSortedByLabelSeqId,
+            residuesSortedByAuthSeqId,
+            residuesByInsCode,
+            residuesByLabelCompId,
+            residuesByLabelCompIdIsPure,
+            residuesByAuthCompId,
+            residuesByAuthCompIdIsPure,
+            atomsById,
+            atomsByIndex,
         };
     },
 };
 
-
 /** Represents a set of things (keys) of type `K`, sorted by some property (value) of type `V` */
 export interface Sorting<K, V extends number> {
     /** Keys sorted by their corresponding values */
-    keys: readonly K[],
+    keys: readonly K[];
     /** Sorted values corresponding to each key (value for `keys[i]` is `values[i]`) */
-    values: SortedArray<V>,
+    values: SortedArray<V>;
 }
 
 export const Sorting = {
     /** Create a `Sorting` from an array of keys and a function returning their corresponding values.
      * If two keys have the same value, the smaller key will come first.
      * This function modifies `keys` - create a copy if you need the original order! */
-    create<K extends number, V extends number>(keys: K[], valueFunction: (k: K) => V): Sorting<K, V> {
+    create<K extends number, V extends number>(
+        keys: K[],
+        valueFunction: (k: K) => V,
+    ): Sorting<K, V> {
         sortIfNeeded(keys, (a, b) => valueFunction(a) - valueFunction(b) || a - b);
         const values: SortedArray<V> = SortedArray.ofSortedArray(keys.map(valueFunction));
         return { keys, values };
@@ -144,7 +172,11 @@ export const Sorting = {
     /** Return a newly allocated array of keys which have value within interval `[min, max]` (inclusive).
      * The returned keys are sorted by their value.
      * Undefined `min` is interpreted as negative infitity, undefined `max` is interpreted as positive infinity. */
-    getKeysWithValueInRange<K, V extends number>(sorting: Sorting<K, V>, min: V | undefined, max: V | undefined): K[] {
+    getKeysWithValueInRange<K, V extends number>(
+        sorting: Sorting<K, V>,
+        min: V | undefined,
+        max: V | undefined,
+    ): K[] {
         const { keys, values } = sorting;
         if (!keys) return [];
         const n = keys.length;

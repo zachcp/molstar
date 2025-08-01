@@ -19,38 +19,42 @@ import { PluginStateObject } from '../../objects.ts';
 import { getLociRange } from './selection.ts';
 
 export type FocusEntry = {
-    label: string
-    loci: StructureElement.Loci
-    category?: string
-}
+    label: string;
+    loci: StructureElement.Loci;
+    category?: string;
+};
 
 export interface StructureFocusSnapshot {
     current?: {
-        label: string
-        ref: string
-        bundle: StructureElement.Bundle
-        category?: string
-    }
+        label: string;
+        ref: string;
+        bundle: StructureElement.Bundle;
+        category?: string;
+    };
 }
 
 interface StructureFocusManagerState {
-    current?: FocusEntry
-    history: FocusEntry[]
+    current?: FocusEntry;
+    history: FocusEntry[];
 }
 
 const HISTORY_CAPACITY = 8;
 
 export class StructureFocusManager extends StatefulPluginComponent<StructureFocusManagerState> {
     readonly events = {
-        historyUpdated: this.ev<undefined>()
+        historyUpdated: this.ev<undefined>(),
     };
 
     readonly behaviors = {
-        current: this.ev.behavior<FocusEntry | undefined>(void 0)
+        current: this.ev.behavior<FocusEntry | undefined>(void 0),
     };
 
-    get current() { return this.state.current; }
-    get history() { return this.state.history; }
+    get current() {
+        return this.state.current;
+    }
+    get history() {
+        return this.state.history;
+    }
 
     /** Last added or removed loci */
     private referenceLoci: StructureElement.Loci | undefined;
@@ -83,7 +87,10 @@ export class StructureFocusManager extends StatefulPluginComponent<StructureFocu
 
     set(entry: FocusEntry) {
         this.tryAddHistory(entry);
-        if (!this.state.current || !StructureElement.Loci.areEqual(this.state.current.loci, entry.loci)) {
+        if (
+            !this.state.current ||
+            !StructureElement.Loci.areEqual(this.state.current.loci, entry.loci)
+        ) {
             this.state.current = entry;
             this.behaviors.current.next(entry);
         }
@@ -100,12 +107,16 @@ export class StructureFocusManager extends StatefulPluginComponent<StructureFocu
             return;
         }
 
-        this.set({ loci, label: lociLabel(loci, { reverse: true, hidePrefix: true, htmlStyling: false }) });
+        this.set({
+            loci,
+            label: lociLabel(loci, { reverse: true, hidePrefix: true, htmlStyling: false }),
+        });
         this.referenceLoci = loci;
     }
 
     addFromLoci(anyLoci: Loci) {
-        const union = this.state.current && StructureElement.Loci.is(anyLoci) && anyLoci.structure === this.state.current.loci.structure
+        const union = this.state.current && StructureElement.Loci.is(anyLoci) &&
+                anyLoci.structure === this.state.current.loci.structure
             ? StructureElement.Loci.union(anyLoci, this.state.current.loci)
             : anyLoci;
         this.setFromLoci(union);
@@ -117,13 +128,14 @@ export class StructureFocusManager extends StatefulPluginComponent<StructureFocu
         const { kind, loci } = toggleLoci(this.state.current?.loci, anyLoci);
         this.setFromLoci(loci);
         const refLoci = Loci.normalize(anyLoci);
-        this.referenceLoci = StructureElement.Loci.is(refLoci) && kind !== 'subtract' ? refLoci : undefined;
+        this.referenceLoci = StructureElement.Loci.is(refLoci) && kind !== 'subtract'
+            ? refLoci
+            : undefined;
     }
 
     extendFromLoci(anyLoci: Loci) {
         const range = this.tryGetRange(anyLoci) ?? anyLoci;
         this.toggleFromLoci(range);
-
     }
 
     clear() {
@@ -146,8 +158,8 @@ export class StructureFocusManager extends StatefulPluginComponent<StructureFocu
                 label: this.current.label,
                 ref,
                 bundle: StructureElement.Bundle.fromLoci(this.current.loci),
-                category: this.current.category
-            }
+                category: this.current.category,
+            },
         };
     }
 
@@ -158,7 +170,8 @@ export class StructureFocusManager extends StatefulPluginComponent<StructureFocu
         }
 
         const { label, ref, bundle, category } = snapshot.current;
-        const structure = this.plugin.state.data.select(StateSelection.Generators.byRef(ref))[0]?.obj?.data as Structure;
+        const structure = this.plugin.state.data.select(StateSelection.Generators.byRef(ref))[0]
+            ?.obj?.data as Structure;
         if (!structure) return;
 
         const loci = StructureElement.Bundle.toLoci(bundle, structure);
@@ -206,7 +219,8 @@ export class StructureFocusManager extends StatefulPluginComponent<StructureFocu
                     Loci.getBoundingSphere(loci, sphere);
                     const camera = this.plugin.canvas3d?.camera!;
                     const d = camera.getTargetDistance(sphere.radius + 4); // default extraRadius
-                    if (Vec3.distance(camera.target, sphere.center) > sphere.radius ||
+                    if (
+                        Vec3.distance(camera.target, sphere.center) > sphere.radius ||
                         d > camera.viewport.height / camera.zoom
                     ) {
                         this.plugin.managers.camera.focusSphere(sphere, { durationMs: 0 });
@@ -221,7 +235,10 @@ export class StructureFocusManager extends StatefulPluginComponent<StructureFocu
 
 /** Return union of `currentLoci` and `newLoci`; or subtract `newLoci` from `currentLoci` if `newLoci` is a subset of `currentLoci`. */
 function toggleLoci(currentLoci: StructureElement.Loci | undefined, newLoci: Loci) {
-    if (currentLoci && StructureElement.Loci.is(newLoci) && newLoci.structure === currentLoci.structure) {
+    if (
+        currentLoci && StructureElement.Loci.is(newLoci) &&
+        newLoci.structure === currentLoci.structure
+    ) {
         if (StructureElement.Loci.isSubset(currentLoci, newLoci)) {
             return { kind: 'subtract', loci: StructureElement.Loci.subtract(currentLoci, newLoci) };
         } else {

@@ -14,21 +14,34 @@ import { LimitsConfig } from '../config.ts';
 import { fileHandleFromPathOrUrl } from '../../common/file-handle.ts';
 import { FileHandle } from '../../../mol-io/common/file-handle.ts';
 
-export function getOutputFilename(source: string, id: string, { asBinary, box, detail, forcedSamplingLevel }: Data.QueryParams) {
-    function n(s: string) { return (s || '').replace(/[ \n\t]/g, '').toLowerCase(); }
-    function r(v: number) { return Math.round(10 * v) / 10; }
-    const det = forcedSamplingLevel !== void 0
-        ? `l${forcedSamplingLevel}`
-        : `d${Math.min(Math.max(0, detail | 0), LimitsConfig.maxOutputSizeInVoxelCountByPrecisionLevel.length - 1)}`;
+export function getOutputFilename(
+    source: string,
+    id: string,
+    { asBinary, box, detail, forcedSamplingLevel }: Data.QueryParams,
+) {
+    function n(s: string) {
+        return (s || '').replace(/[ \n\t]/g, '').toLowerCase();
+    }
+    function r(v: number) {
+        return Math.round(10 * v) / 10;
+    }
+    const det = forcedSamplingLevel !== void 0 ? `l${forcedSamplingLevel}` : `d${
+        Math.min(
+            Math.max(0, detail | 0),
+            LimitsConfig.maxOutputSizeInVoxelCountByPrecisionLevel.length - 1,
+        )
+    }`;
     const boxInfo = box.kind === 'Cell'
         ? 'cell'
-        : `${box.kind === 'Cartesian' ? 'cartn' : 'frac'}_${r(box.a[0])}_${r(box.a[1])}_${r(box.a[2])}_${r(box.b[0])}_${r(box.b[1])}_${r(box.b[2])}`;
+        : `${box.kind === 'Cartesian' ? 'cartn' : 'frac'}_${r(box.a[0])}_${r(box.a[1])}_${
+            r(box.a[2])
+        }_${r(box.b[0])}_${r(box.b[1])}_${r(box.b[2])}`;
     return `${n(source)}_${n(id)}-${boxInfo}_${det}.${asBinary ? 'bcif' : 'cif'}`;
 }
 
 export interface ExtendedHeader extends DataFormat.Header {
-    availablePrecisions: { precision: number, maxVoxels: number }[]
-    isAvailable: boolean
+    availablePrecisions: { precision: number; maxVoxels: number }[];
+    isAvailable: boolean;
 }
 
 /** Reads the header and includes information about available detail levels */
@@ -58,7 +71,10 @@ export async function getExtendedHeaderJson(filename: string | undefined, source
     }
 }
 
-export async function queryBox(params: Data.QueryParams, outputProvider: () => Data.QueryOutputStream) {
+export async function queryBox(
+    params: Data.QueryParams,
+    outputProvider: () => Data.QueryOutputStream,
+) {
     return await execute(params, outputProvider);
 }
 

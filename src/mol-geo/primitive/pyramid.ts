@@ -5,7 +5,7 @@
  */
 
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
-import { Primitive, PrimitiveBuilder, createPrimitive } from './primitive.ts';
+import { createPrimitive, Primitive, PrimitiveBuilder } from './primitive.ts';
 import { polygon } from './polygon.ts';
 import { Cage } from './cage.ts';
 
@@ -83,8 +83,30 @@ export function PerforatedOctagonalPyramid() {
         vertices[8 * 3 + 4] = 0;
         vertices[8 * 3 + 5] = 0.5;
         const indices: ReadonlyArray<number> = [
-            0, 1, 8, 1, 2, 8, 4, 5, 8, 5, 6, 8,
-            2, 3, 9, 3, 4, 9, 6, 7, 9, 7, 0, 9
+            0,
+            1,
+            8,
+            1,
+            2,
+            8,
+            4,
+            5,
+            8,
+            5,
+            6,
+            8,
+            2,
+            3,
+            9,
+            3,
+            4,
+            9,
+            6,
+            7,
+            9,
+            7,
+            0,
+            9,
         ];
         perforatedOctagonalPyramid = createPrimitive(vertices, indices);
     }

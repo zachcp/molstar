@@ -15,18 +15,20 @@ import { useBehavior } from './hooks/use-behavior.ts';
 
 export function BackgroundTaskProgress() {
     const plugin = useContext(PluginReactContext);
-    const [tracked, setTracked] = useState<OrderedMap<number, TaskManager.ProgressEvent>>(OrderedMap());
+    const [tracked, setTracked] = useState<OrderedMap<number, TaskManager.ProgressEvent>>(
+        OrderedMap(),
+    );
 
     useEffect(() => {
-        const started = plugin.events.task.progress.subscribe(e => {
+        const started = plugin.events.task.progress.subscribe((e) => {
             const hideOverlay = !!plugin.spec.components?.hideTaskOverlay;
             if (e.level === 'background' && (hideOverlay || !e.useOverlay)) {
-                setTracked(tracked => tracked.set(e.id, e));
+                setTracked((tracked) => tracked.set(e.id, e));
             }
         });
 
         const finished = plugin.events.task.finished.subscribe(({ id }) => {
-            setTracked(tracked => tracked.delete(id));
+            setTracked((tracked) => tracked.delete(id));
         });
 
         return () => {
@@ -35,10 +37,12 @@ export function BackgroundTaskProgress() {
         };
     }, [plugin]);
 
-    return <div className='msp-background-tasks'>
-        {tracked.valueSeq().map(e => <ProgressEntry key={e!.id} event={e!} />)}
-        <CanvasCommitState />
-    </div>;
+    return (
+        <div className='msp-background-tasks'>
+            {tracked.valueSeq().map((e) => <ProgressEntry key={e!.id} event={e!} />)}
+            <CanvasCommitState />
+        </div>
+    );
 }
 
 function CanvasCommitState() {
@@ -47,18 +51,23 @@ function CanvasCommitState() {
 
     if (!queueSize) return null;
 
-    return <div className='msp-task-state'>
-        <div>
+    return (
+        <div className='msp-task-state'>
             <div>
-                Commiting renderables... {queueSize} remaining
+                <div>
+                    Commiting renderables... {queueSize} remaining
+                </div>
             </div>
         </div>
-    </div>;
+    );
 }
 
 class ProgressEntry extends PluginUIComponent<{ event: TaskManager.ProgressEvent }> {
     abort = () => {
-        this.plugin.managers.task.requestAbort(this.props.event.progress.root.progress.taskId, 'User Request');
+        this.plugin.managers.task.requestAbort(
+            this.props.event.progress.root.progress.taskId,
+            'User Request',
+        );
     };
 
     render() {
@@ -67,18 +76,20 @@ class ProgressEntry extends PluginUIComponent<{ event: TaskManager.ProgressEvent
         const pr = root.progress.isIndeterminate
             ? void 0
             : <>[{root.progress.current}/{root.progress.max}]</>;
-        const subtasks = subtaskCount > 0
-            ? <>[{subtaskCount} subtask(s)]</>
-            : void 0;
+        const subtasks = subtaskCount > 0 ? <>[{subtaskCount} subtask(s)]</> : void 0;
 
-        return <div className='msp-task-state'>
-            <div>
-                {root.progress.canAbort && <IconButton svg={CancelSvg} onClick={this.abort} title='Abort' />}
+        return (
+            <div className='msp-task-state'>
                 <div>
-                    {root.progress.message} {pr} {subtasks}
+                    {root.progress.canAbort && (
+                        <IconButton svg={CancelSvg} onClick={this.abort} title='Abort' />
+                    )}
+                    <div>
+                        {root.progress.message} {pr} {subtasks}
+                    </div>
                 </div>
             </div>
-        </div>;
+        );
     }
 }
 
@@ -91,17 +102,19 @@ function countSubtasks(progress: Progress.Node) {
 
 export function OverlayTaskProgress() {
     const plugin = useContext(PluginReactContext);
-    const [tracked, setTracked] = useState<OrderedMap<number, TaskManager.ProgressEvent>>(OrderedMap());
+    const [tracked, setTracked] = useState<OrderedMap<number, TaskManager.ProgressEvent>>(
+        OrderedMap(),
+    );
 
     useEffect(() => {
-        const started = plugin.events.task.progress.subscribe(e => {
+        const started = plugin.events.task.progress.subscribe((e) => {
             if (!!e.useOverlay) {
-                setTracked(tracked => tracked.set(e.id, e));
+                setTracked((tracked) => tracked.set(e.id, e));
             }
         });
 
         const finished = plugin.events.task.finished.subscribe(({ id }) => {
-            setTracked(tracked => tracked.delete(id));
+            setTracked((tracked) => tracked.delete(id));
         });
 
         return () => {
@@ -112,7 +125,9 @@ export function OverlayTaskProgress() {
 
     if (tracked.size === 0) return null;
 
-    return <div className='msp-overlay-tasks'>
-        {tracked.valueSeq().map(e => <ProgressEntry key={e!.id} event={e!} />)}
-    </div>;
+    return (
+        <div className='msp-overlay-tasks'>
+            {tracked.valueSeq().map((e) => <ProgressEntry key={e!.id} event={e!} />)}
+        </div>
+    );
 }

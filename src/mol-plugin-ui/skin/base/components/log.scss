@@ -46,16 +46,16 @@
             }
         }
 
-
         .msp-log-entry {
             margin-left: $control-label-width;
             background: color-lower-contrast($control-background, 5%);
-            padding: $info-vertical-padding (
-                $control-spacing + 15px) $info-vertical-padding $control-spacing ;
+            padding: $info-vertical-padding ($control-spacing + 15px) $info-vertical-padding
+                $control-spacing;
         }
 
         .msp-log-timestamp {
-            padding: $info-vertical-padding $control-spacing $info-vertical-padding $control-spacing;
+            padding: $info-vertical-padding $control-spacing $info-vertical-padding
+                $control-spacing;
             float: left;
             text-align: right;
             width: $control-label-width;

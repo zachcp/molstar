@@ -41,7 +41,7 @@ class HashSetImpl<T> implements SetLike<T> {
         return false;
     }
 
-    constructor(private getHash: (v: T) => any, private areEqual: (a: T, b: T) => boolean) { }
+    constructor(private getHash: (v: T) => any, private areEqual: (a: T, b: T) => boolean) {}
 }
 // TODO: add implementations with multilevel hashing support?
 

@@ -7,15 +7,21 @@
 import { Color } from '../../mol-util/color/index.ts';
 import * as React from 'react';
 import { _Props, _State } from '../base.tsx';
-import { Legend as LegendData, ScaleLegend as ScaleLegendData, TableLegend as TableLegendData } from '../../mol-util/legend.ts';
+import {
+    Legend as LegendData,
+    ScaleLegend as ScaleLegendData,
+    TableLegend as TableLegendData,
+} from '../../mol-util/legend.ts';
 
-export type LegendProps<L extends LegendData> = { legend: L }
-export type Legend = React.ComponentClass<LegendProps<any>>
+export type LegendProps<L extends LegendData> = { legend: L };
+export type Legend = React.ComponentClass<LegendProps<any>>;
 
 export function legendFor(legend: LegendData): Legend | undefined {
     switch (legend.kind) {
-        case 'scale-legend': return ScaleLegend;
-        case 'table-legend': return TableLegend;
+        case 'scale-legend':
+            return ScaleLegend;
+        case 'table-legend':
+            return TableLegend;
         default:
             const _: never = legend;
             console.warn(`${_} has no associated UI component`);
@@ -26,27 +32,39 @@ export function legendFor(legend: LegendData): Legend | undefined {
 export class ScaleLegend extends React.PureComponent<LegendProps<ScaleLegendData>> {
     render() {
         const { legend } = this.props;
-        const colors = legend.colors.map(c => Array.isArray(c) ? `${Color.toStyle(c[0])} ${100 * c[1]}%` : Color.toStyle(c)).join(', ');
-        return <div className='msp-scale-legend'>
-            <div style={{ background: `linear-gradient(to right, ${colors})` }}>
-                <span style={{ float: 'left' }}>{legend.minLabel}</span>
-                <span style={{ float: 'right' }}>{legend.maxLabel}</span>
+        const colors = legend.colors.map((c) =>
+            Array.isArray(c) ? `${Color.toStyle(c[0])} ${100 * c[1]}%` : Color.toStyle(c)
+        ).join(', ');
+        return (
+            <div className='msp-scale-legend'>
+                <div style={{ background: `linear-gradient(to right, ${colors})` }}>
+                    <span style={{ float: 'left' }}>{legend.minLabel}</span>
+                    <span style={{ float: 'right' }}>{legend.maxLabel}</span>
+                </div>
             </div>
-        </div>;
+        );
     }
 }
 
 export class TableLegend extends React.PureComponent<LegendProps<TableLegendData>> {
     render() {
         const { legend } = this.props;
-        return <div className='msp-table-legend'>
-            {legend.table.map((value, i) => {
-                const [name, color] = value;
-                return <div key={i}>
-                    <div className='msp-table-legend-color' style={{ backgroundColor: Color.toStyle(color) }}></div>
-                    <div className='msp-table-legend-text'>{name}</div>
-                </div>;
-            })}
-        </div>;
+        return (
+            <div className='msp-table-legend'>
+                {legend.table.map((value, i) => {
+                    const [name, color] = value;
+                    return (
+                        <div key={i}>
+                            <div
+                                className='msp-table-legend-color'
+                                style={{ backgroundColor: Color.toStyle(color) }}
+                            >
+                            </div>
+                            <div className='msp-table-legend-text'>{name}</div>
+                        </div>
+                    );
+                })}
+            </div>
+        );
     }
 }

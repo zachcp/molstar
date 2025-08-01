@@ -44,30 +44,41 @@ export function getNtCTubeColorThemeParams(ctx: ThemeDataContext) {
     return PD.clone(NtCTubeColorThemeParams);
 }
 
-export function NtCTubeColorTheme(ctx: ThemeDataContext, props: PD.Values<NtCTubeColorThemeParams>): ColorTheme<NtCTubeColorThemeParams> {
+export function NtCTubeColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<NtCTubeColorThemeParams>,
+): ColorTheme<NtCTubeColorThemeParams> {
     const colorMap = props.colors.name === 'default'
         ? NtCTubeColors
         : props.colors.name === 'custom'
-            ? props.colors.params
-            : ColorMap({
-                ...Object.fromEntries(ObjectKeys(NtCTubeColors).map(item => [item, props.colors.params])),
-                residueMarker: NtCTubeColors.residueMarker,
-                stepBoundaryMarker: NtCTubeColors.stepBoundaryMarker
-            }) as NtCTubeColors;
+        ? props.colors.params
+        : ColorMap({
+            ...Object.fromEntries(
+                ObjectKeys(NtCTubeColors).map((item) => [item, props.colors.params]),
+            ),
+            residueMarker: NtCTubeColors.residueMarker,
+            stepBoundaryMarker: NtCTubeColors.stepBoundaryMarker,
+        }) as NtCTubeColors;
 
     function color(location: Location, isSecondary: boolean): Color {
         if (NTT.isLocation(location)) {
             const { data } = location;
             const { step, kind } = data;
             let key;
-            if (kind === 'upper')
+            if (kind === 'upper') {
                 key = step.NtC + '_Upr' as keyof NtCTubeColors;
-            else if (kind === 'lower')
+            } else if (kind === 'lower') {
                 key = step.NtC + '_Lwr' as keyof NtCTubeColors;
-            else if (kind === 'residue-boundary')
-                key = (!props.markResidueBoundaries ? step.NtC + '_Lwr' : 'residueMarker') as keyof NtCTubeColors;
-            else /* segment-boundary */
-                key = (!props.markSegmentBoundaries ? step.NtC + '_Lwr' : 'stepBoundaryMarker') as keyof NtCTubeColors;
+            } else if (kind === 'residue-boundary') {
+                key = (!props.markResidueBoundaries
+                    ? step.NtC + '_Lwr'
+                    : 'residueMarker') as keyof NtCTubeColors;
+            } /* segment-boundary */
+            else {
+                key = (!props.markSegmentBoundaries
+                    ? step.NtC + '_Lwr'
+                    : 'stepBoundaryMarker') as keyof NtCTubeColors;
+            }
 
             return colorMap[key] ?? ErrorColor;
         }
@@ -81,7 +92,10 @@ export function NtCTubeColorTheme(ctx: ThemeDataContext, props: PD.Values<NtCTub
         color,
         props,
         description: Description,
-        legend: TableLegend(ObjectKeys(colorMap).map(k => [k.replace('_', ' '), colorMap[k]] as [string, Color]).concat([['Error', ErrorColor]])),
+        legend: TableLegend(
+            ObjectKeys(colorMap).map((k) => [k.replace('_', ' '), colorMap[k]] as [string, Color])
+                .concat([['Error', ErrorColor]]),
+        ),
     };
 }
 
@@ -92,9 +106,13 @@ export const NtCTubeColorThemeProvider: ColorTheme.Provider<NtCTubeColorThemePar
     factory: NtCTubeColorTheme,
     getParams: getNtCTubeColorThemeParams,
     defaultValues: PD.getDefaultValues(NtCTubeColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure && ctx.structure.models.some(m => Dnatco.isApplicable(m)),
+    isApplicable: (ctx: ThemeDataContext) =>
+        !!ctx.structure && ctx.structure.models.some((m) => Dnatco.isApplicable(m)),
     ensureCustomProperties: {
-        attach: (ctx: CustomProperty.Context, data: ThemeDataContext) => data.structure ? NtCTubeProvider.attach(ctx, data.structure.models[0], void 0, true) : Promise.resolve(),
-        detach: (data) => data.structure && NtCTubeProvider.ref(data.structure.models[0], false)
-    }
+        attach: (ctx: CustomProperty.Context, data: ThemeDataContext) =>
+            data.structure
+                ? NtCTubeProvider.attach(ctx, data.structure.models[0], void 0, true)
+                : Promise.resolve(),
+        detach: (data) => data.structure && NtCTubeProvider.ref(data.structure.models[0], false),
+    },
 };

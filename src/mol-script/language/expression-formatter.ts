@@ -42,7 +42,9 @@ class Writer {
         if (!this.currentLineLength) {
             this.value.push(str);
             this.currentLineLength = str.length;
-        } else if (this.currentLineLength + this.prefixLength + this.localPrefix.length + str.length < 80) {
+        } else if (
+            this.currentLineLength + this.prefixLength + this.localPrefix.length + str.length < 80
+        ) {
             this.value.push(str);
             this.currentLineLength += str.length;
         } else {

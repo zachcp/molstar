@@ -12,7 +12,7 @@ import * as P from '../../mol-util/monadic-parser.ts';
 import { MolScriptBuilder } from '../language/builder.ts';
 const B = MolScriptBuilder;
 import { Expression } from '../language/expression.ts';
-import { KeywordDict, PropertyDict, FunctionDict, OperatorList } from './types.ts';
+import { FunctionDict, KeywordDict, OperatorList, PropertyDict } from './types.ts';
 import { escapeRegExp } from '../../mol-util/string.ts';
 
 export { escapeRegExp };
@@ -21,10 +21,14 @@ export { escapeRegExp };
 // parsed, and parses as many occurrences as possible of the prefix operator.
 // Note that the parser is created using `P.lazy` because it's recursive. It's
 // valid for there to be zero occurrences of the prefix operator.
-export function prefix(opParser: P.MonadicParser<any>, nextParser: P.MonadicParser<any>, mapFn: any) {
+export function prefix(
+    opParser: P.MonadicParser<any>,
+    nextParser: P.MonadicParser<any>,
+    mapFn: any,
+) {
     const parser: P.MonadicParser<any> = P.MonadicParser.lazy(() => {
         return P.MonadicParser.seq(opParser, parser)
-            .map(x => mapFn(...x))
+            .map((x) => mapFn(...x))
             .or(nextParser);
     });
     return parser;
@@ -39,7 +43,11 @@ export function prefix(opParser: P.MonadicParser<any>, nextParser: P.MonadicPars
 // takes the first possible match, even if subsequent matches are longer, so the
 // parser will never actually look far enough ahead to see the postfix
 // operators.
-export function postfix(opParser: P.MonadicParser<any>, nextParser: P.MonadicParser<any>, mapFn: any) {
+export function postfix(
+    opParser: P.MonadicParser<any>,
+    nextParser: P.MonadicParser<any>,
+    mapFn: any,
+) {
     // Because we can't use recursion like stated above, we just match a flat list
     // of as many occurrences of the postfix operator as possible, then use
     // `.reduce` to manually nest the list.
@@ -55,7 +63,7 @@ export function postfix(opParser: P.MonadicParser<any>, nextParser: P.MonadicPar
         (x: any, suffixes: any) =>
             suffixes.reduce((acc: any, x: any) => {
                 return mapFn(x, acc);
-            }, x)
+            }, x),
     );
 }
 
@@ -63,13 +71,17 @@ export function postfix(opParser: P.MonadicParser<any>, nextParser: P.MonadicPar
 // that parsers everything at the next precedence level, and returns a parser
 // that parses as many binary operations as possible, associating them to the
 // right. (e.g. 1^2^3 is 1^(2^3) not (1^2)^3)
-export function binaryRight(opParser: P.MonadicParser<any>, nextParser: P.MonadicParser<any>, mapFn: any) {
+export function binaryRight(
+    opParser: P.MonadicParser<any>,
+    nextParser: P.MonadicParser<any>,
+    mapFn: any,
+) {
     const parser: P.MonadicParser<any> = P.MonadicParser.lazy(() =>
-        nextParser.chain(next =>
+        nextParser.chain((next) =>
             P.MonadicParser.seq(
                 opParser,
                 P.MonadicParser.of(next),
-                parser
+                parser,
             ).map((x) => {
                 return x;
             }).or(P.MonadicParser.of(next))
@@ -82,7 +94,11 @@ export function binaryRight(opParser: P.MonadicParser<any>, nextParser: P.Monadi
 // that parsers everything at the next precedence level, and returns a parser
 // that parses as many binary operations as possible, associating them to the
 // left. (e.g. 1-2-3 is (1-2)-3 not 1-(2-3))
-export function binaryLeft(opParser: P.MonadicParser<any>, nextParser: P.MonadicParser<any>, mapFn: any) {
+export function binaryLeft(
+    opParser: P.MonadicParser<any>,
+    nextParser: P.MonadicParser<any>,
+    mapFn: any,
+) {
     // We run into a similar problem as with the `POSTFIX` parser above where we
     // can't recurse in the direction we want, so we have to resort to parsing an
     // entire list of operator chunks and then using `.reduce` to manually nest
@@ -101,7 +117,7 @@ export function binaryLeft(opParser: P.MonadicParser<any>, nextParser: P.Monadic
                 const [op, another] = ch;
                 return mapFn(op, acc, another);
             }, first);
-        }
+        },
     );
 }
 
@@ -111,16 +127,20 @@ export function binaryLeft(opParser: P.MonadicParser<any>, nextParser: P.Monadic
 export function combineOperators(opList: any[], rule: P.MonadicParser<any>) {
     const x = opList.reduce(
         (acc, level) => {
-            const map = level.isUnsupported ? makeError(`operator '${level.name}' not supported`) : level.map;
+            const map = level.isUnsupported
+                ? makeError(`operator '${level.name}' not supported`)
+                : level.map;
             return level.type(level.rule, acc, map);
         },
-        rule
+        rule,
     );
     return x;
 }
 
 export function infixOp(re: RegExp, group: number = 0) {
-    return P.MonadicParser.optWhitespace.then(P.MonadicParser.regexp(re, group).skip(P.MonadicParser.optWhitespace));
+    return P.MonadicParser.optWhitespace.then(
+        P.MonadicParser.regexp(re, group).skip(P.MonadicParser.optWhitespace),
+    );
 }
 
 export function prefixOp(re: RegExp, group: number = 0) {
@@ -167,13 +187,20 @@ export function testExpr(property: any, args: any) {
     if (args && args.op !== undefined && args.val !== undefined) {
         const opArgs = [property, args.val];
         switch (args.op) {
-            case '=': return B.core.rel.eq(opArgs);
-            case '!=': return B.core.rel.neq(opArgs);
-            case '>': return B.core.rel.gr(opArgs);
-            case '<': return B.core.rel.lt(opArgs);
-            case '>=': return B.core.rel.gre(opArgs);
-            case '<=': return B.core.rel.lte(opArgs);
-            default: throw new Error(`operator '${args.op}' not supported`);
+            case '=':
+                return B.core.rel.eq(opArgs);
+            case '!=':
+                return B.core.rel.neq(opArgs);
+            case '>':
+                return B.core.rel.gr(opArgs);
+            case '<':
+                return B.core.rel.lt(opArgs);
+            case '>=':
+                return B.core.rel.gre(opArgs);
+            case '<=':
+                return B.core.rel.lte(opArgs);
+            default:
+                throw new Error(`operator '${args.op}' not supported`);
         }
     } else if (args && args.flags !== undefined) {
         return B.core.flags.hasAny([property, args.flags]);
@@ -190,8 +217,10 @@ export function testExpr(property: any, args: any) {
 
 export function invertExpr(selection: Expression) {
     return B.struct.generator.queryInSelection({
-        0: selection, query: B.struct.generator.all(), 'in-complement': true }
-    );
+        0: selection,
+        query: B.struct.generator.all(),
+        'in-complement': true,
+    });
 }
 
 export function strLenSortFn(a: string, b: string) {
@@ -208,7 +237,7 @@ export function getPropertyRules(properties: PropertyDict) {
     // in keyof typeof properties
     const propertiesDict: { [name: string]: P.MonadicParser<any> } = {};
 
-    Object.keys(properties).sort(strLenSortFn).forEach(name => {
+    Object.keys(properties).sort(strLenSortFn).forEach((name) => {
         const ps = properties[name];
         const errorFn = makeError(`property '${name}' not supported`);
         const rule = P.MonadicParser.regexp(ps.regex).map((x: any) => {
@@ -227,25 +256,27 @@ export function getPropertyRules(properties: PropertyDict) {
 export function getNamedPropertyRules(properties: PropertyDict) {
     const namedPropertiesList: P.MonadicParser<any>[] = [];
 
-    Object.keys(properties).sort(strLenSortFn).forEach(name => {
+    Object.keys(properties).sort(strLenSortFn).forEach((name) => {
         const ps = properties[name];
         const errorFn = makeError(`property '${name}' not supported`);
         const rule = P.MonadicParser.regexp(ps.regex).map((x: any) => {
             if (ps.isUnsupported) errorFn();
             return testExpr(ps.property, ps.map(x));
         });
-        const nameRule = P.MonadicParser.regexp(getNamesRegex(name, ps.abbr)).trim(P.MonadicParser.optWhitespace);
+        const nameRule = P.MonadicParser.regexp(getNamesRegex(name, ps.abbr)).trim(
+            P.MonadicParser.optWhitespace,
+        );
         const groupMap = (x: any) => B.struct.generator.atomGroups({ [ps.level]: x });
 
         if (ps.isNumeric) {
             namedPropertiesList.push(
                 nameRule.then(P.MonadicParser.seq(
                     P.MonadicParser.regexp(/>=|<=|=|!=|>|</).trim(P.MonadicParser.optWhitespace),
-                    P.MonadicParser.regexp(ps.regex).map(ps.map)
+                    P.MonadicParser.regexp(ps.regex).map(ps.map),
                 )).map((x: any) => {
                     if (ps.isUnsupported) errorFn();
                     return testExpr(ps.property, { op: x[0], val: x[1] });
-                }).map(groupMap)
+                }).map(groupMap),
             );
         } else {
             namedPropertiesList.push(nameRule.then(rule).map(groupMap));
@@ -258,7 +289,7 @@ export function getNamedPropertyRules(properties: PropertyDict) {
 export function getKeywordRules(keywords: KeywordDict) {
     const keywordsList: P.MonadicParser<any>[] = [];
 
-    Object.keys(keywords).sort(strLenSortFn).forEach(name => {
+    Object.keys(keywords).sort(strLenSortFn).forEach((name) => {
         const ks = keywords[name];
         const mapFn = ks.map ? ks.map : makeError(`keyword '${name}' not supported`);
         const rule = P.MonadicParser.regexp(getNamesRegex(name, ks.abbr)).map(mapFn);
@@ -273,10 +304,12 @@ export function getFunctionRules(functions: FunctionDict, argRule: P.MonadicPars
     const begRule = P.MonadicParser.regexp(/\(\s*/);
     const endRule = P.MonadicParser.regexp(/\s*\)/);
 
-    Object.keys(functions).sort(strLenSortFn).forEach(name => {
+    Object.keys(functions).sort(strLenSortFn).forEach((name) => {
         const fs = functions[name];
         const mapFn = fs.map ? fs.map : makeError(`function '${name}' not supported`);
-        const rule = P.MonadicParser.regexp(new RegExp(name, 'i')).skip(begRule).then(argRule).skip(endRule).map(mapFn);
+        const rule = P.MonadicParser.regexp(new RegExp(name, 'i')).skip(begRule).then(argRule).skip(
+            endRule,
+        ).map(mapFn);
         functionsList.push(rule);
     });
 
@@ -285,10 +318,12 @@ export function getFunctionRules(functions: FunctionDict, argRule: P.MonadicPars
 
 export function getPropertyNameRules(properties: PropertyDict, lookahead: RegExp) {
     const list: P.MonadicParser<any>[] = [];
-    Object.keys(properties).sort(strLenSortFn).forEach(name => {
+    Object.keys(properties).sort(strLenSortFn).forEach((name) => {
         const ps = properties[name];
         const errorFn = makeError(`property '${name}' not supported`);
-        const rule = (P.MonadicParser as any).regexp(getNamesRegex(name, ps.abbr)).lookahead(lookahead).map(() => {
+        const rule = (P.MonadicParser as any).regexp(getNamesRegex(name, ps.abbr)).lookahead(
+            lookahead,
+        ).map(() => {
             if (ps.isUnsupported) errorFn();
             return ps.property;
         });
@@ -298,7 +333,12 @@ export function getPropertyNameRules(properties: PropertyDict, lookahead: RegExp
     return list;
 }
 
-export function getReservedWords(properties: PropertyDict, keywords: KeywordDict, operators: OperatorList, functions?: FunctionDict) {
+export function getReservedWords(
+    properties: PropertyDict,
+    keywords: KeywordDict,
+    operators: OperatorList,
+    functions?: FunctionDict,
+) {
     const w: string[] = [];
     for (const name in properties) {
         w.push(name);
@@ -308,7 +348,7 @@ export function getReservedWords(properties: PropertyDict, keywords: KeywordDict
         w.push(name);
         if (keywords[name].abbr) w.push(...keywords[name].abbr!);
     }
-    operators.forEach(o => {
+    operators.forEach((o) => {
         w.push(o.name);
         if (o.abbr) w.push(...o.abbr);
     });
@@ -322,7 +362,7 @@ export function atomNameSet(ids: string[]) {
 export function asAtoms(e: Expression) {
     return B.struct.generator.queryInSelection({
         0: e,
-        query: B.struct.generator.all()
+        query: B.struct.generator.all(),
     });
 }
 
@@ -345,7 +385,18 @@ export function wrapValue(property: any, value: any, sstrucDict?: any) {
 const propPrefix = 'structure-query.atom-property.macromolecular.';
 const entityProps = ['entityKey', 'label_entity_id', 'entityType'];
 const chainProps = ['chainKey', 'label_asym_id', 'label_entity_id', 'auth_asym_id', 'entityType'];
-const residueProps = ['residueKey', 'label_comp_id', 'label_seq_id', 'auth_comp_id', 'auth_seq_id', 'pdbx_formal_charge', 'secondaryStructureKey', 'secondaryStructureFlags', 'isModified', 'modifiedParentName'];
+const residueProps = [
+    'residueKey',
+    'label_comp_id',
+    'label_seq_id',
+    'auth_comp_id',
+    'auth_seq_id',
+    'pdbx_formal_charge',
+    'secondaryStructureKey',
+    'secondaryStructureFlags',
+    'isModified',
+    'modifiedParentName',
+];
 export function testLevel(property: any) {
     if (property.head.name.startsWith(propPrefix)) {
         const name = property.head.name.substr(propPrefix.length);
@@ -357,13 +408,13 @@ export function testLevel(property: any) {
 }
 
 const flagProps = [
-    'structure-query.atom-property.macromolecular.secondary-structure-flags'
+    'structure-query.atom-property.macromolecular.secondary-structure-flags',
 ];
 export function valuesTest(property: any, values: any[]) {
     if (flagProps.includes(property.head.name)) {
         const name = values[0].head;
         const flags: any[] = [];
-        values.forEach(v => flags.push(...v.args[0]));
+        values.forEach((v) => flags.push(...v.args[0]));
         return B.core.flags.hasAny([property, { head: name, args: flags }]);
     } else {
         if (values.length === 1) {
@@ -378,7 +429,7 @@ export function resnameExpr(resnameList: string[]) {
     return B.struct.generator.atomGroups({
         'residue-test': B.core.set.has([
             B.core.type.set(resnameList),
-            B.ammp('label_comp_id')
-        ])
+            B.ammp('label_comp_id'),
+        ]),
     });
 }

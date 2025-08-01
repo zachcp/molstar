@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Task, Progress, Scheduler, MultistepTask, chunkedSubtask } from '../mol-task/index.ts';
+import { chunkedSubtask, MultistepTask, Progress, Scheduler, Task } from '../mol-task/index.ts';
 import { now } from '../mol-util/now.ts';
 
 export async function test1() {
@@ -21,13 +21,13 @@ function messageTree(root: Progress.Node, prefix = ''): string {
     }
 
     const newPrefix = prefix + '  |_ ';
-    const subTree = root.children.map(c => messageTree(c, newPrefix));
+    const subTree = root.children.map((c) => messageTree(c, newPrefix));
     if (p.isIndeterminate) return `${prefix}${p.taskName}: ${p.message}\n${subTree.join('\n')}`;
     return `${prefix}${p.taskName}: [${p.current}/${p.max}] ${p.message}\n${subTree.join('\n')}`;
 }
 
 function createTask<T>(delayMs: number, r: T): Task<T> {
-    return Task.create('delayed value ' + r, async ctx => {
+    return Task.create('delayed value ' + r, async (ctx) => {
         ctx.update(`Processing delayed ${r} after ${delayMs}ms`, true);
         await Scheduler.delay(delayMs);
         if (ctx.shouldUpdate) await ctx.update({ message: `hello from delayed ${r} ${delayMs}` });
@@ -36,7 +36,7 @@ function createTask<T>(delayMs: number, r: T): Task<T> {
 }
 
 export function abortAfter(delay: number) {
-    return Task.create('abort after ' + delay, async ctx => {
+    return Task.create('abort after ' + delay, async (ctx) => {
         await Scheduler.delay(delay);
         throw Task.Aborted('test');
         // if (ctx.shouldUpdate) await ctx.update({ message: 'hello from delayed... ' });
@@ -45,7 +45,7 @@ export function abortAfter(delay: number) {
 }
 
 export function testTree() {
-    return Task.create('test o', async ctx => {
+    return Task.create('test o', async (ctx) => {
         await Scheduler.delay(250);
         if (ctx.shouldUpdate) await ctx.update({ message: 'hi! 1' });
         await Scheduler.delay(125);
@@ -66,7 +66,7 @@ export function testTree() {
     }, () => console.log('On abort O'));
 }
 
-export type ChunkedState = { i: number, current: number, total: number }
+export type ChunkedState = { i: number; current: number; total: number };
 
 function processChunk(n: number, state: ChunkedState): number {
     const toProcess = Math.min(state.current + n, state.total);
@@ -81,24 +81,39 @@ function processChunk(n: number, state: ChunkedState): number {
     return toProcess - start;
 }
 
-export const ms = MultistepTask('ms-task', ['step 1', 'step 2', 'step 3'], async (p: { i: number }, step, ctx) => {
-    await step(0);
+export const ms = MultistepTask(
+    'ms-task',
+    ['step 1', 'step 2', 'step 3'],
+    async (p: { i: number }, step, ctx) => {
+        await step(0);
 
-    const child = Task.create('chunked', async ctx => {
-        const s = await chunkedSubtask(ctx, 25, { i: 0, current: 0, total: 125 }, processChunk, (ctx, s, p) => ctx.update('chunk test ' + p));
-        return s.i;
-    });
+        const child = Task.create('chunked', async (ctx) => {
+            const s = await chunkedSubtask(
+                ctx,
+                25,
+                { i: 0, current: 0, total: 125 },
+                processChunk,
+                (ctx, s, p) => ctx.update('chunk test ' + p),
+            );
+            return s.i;
+        });
 
-    await child.runAsChild(ctx);
-    await Scheduler.delay(250);
-    await step(1);
-    await chunkedSubtask(ctx, 25, { i: 0, current: 0, total: 80 }, processChunk, (ctx, s, p) => ctx.update('chunk test ' + p));
-    await Scheduler.delay(250);
-    await step(2);
-    await Scheduler.delay(250);
-    return p.i + 3;
-});
-
+        await child.runAsChild(ctx);
+        await Scheduler.delay(250);
+        await step(1);
+        await chunkedSubtask(
+            ctx,
+            25,
+            { i: 0, current: 0, total: 80 },
+            processChunk,
+            (ctx, s, p) => ctx.update('chunk test ' + p),
+        );
+        await Scheduler.delay(250);
+        await step(2);
+        await Scheduler.delay(250);
+        return p.i + 3;
+    },
+);
 
 export function abortingObserver(p: Progress) {
     console.log(messageTree(p.root));
@@ -107,7 +122,9 @@ export function abortingObserver(p: Progress) {
     }
 }
 
-export function logP(p: Progress) { console.log(messageTree(p.root)); }
+export function logP(p: Progress) {
+    console.log(messageTree(p.root));
+}
 
 async function test() {
     try {

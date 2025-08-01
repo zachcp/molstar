@@ -5,7 +5,12 @@
  */
 
 import { Expression } from '../../mol-script/language/expression.ts';
-import { QueryFn, Structure, StructureSelection as Sel, QueryContext } from '../../mol-model/structure.ts';
+import {
+    QueryContext,
+    QueryFn,
+    Structure,
+    StructureSelection as Sel,
+} from '../../mol-model/structure.ts';
 import { Script } from '../../mol-script/script.ts';
 import { compile } from '../../mol-script/runtime/query/compiler.ts';
 import { PluginStateObject as SO } from '../objects.ts';
@@ -13,14 +18,18 @@ import { PluginStateObject as SO } from '../objects.ts';
 export { StructureQueryHelper };
 namespace StructureQueryHelper {
     export interface CacheEntry {
-        script?: Script,
-        expression: Expression,
-        compiled: QueryFn<Sel>,
-        originalStructure: Structure,
-        currentStructure: Structure
+        script?: Script;
+        expression: Expression;
+        compiled: QueryFn<Sel>;
+        originalStructure: Structure;
+        currentStructure: Structure;
     }
 
-    export function isUnchanged(entry: CacheEntry, query: Script | Expression, structure: Structure) {
+    export function isUnchanged(
+        entry: CacheEntry,
+        query: Script | Expression,
+        structure: Structure,
+    ) {
         if (entry.currentStructure !== structure) return false;
         if (Script.is(query)) {
             return !!entry.script && Script.areEqual(entry.script, query);
@@ -33,7 +42,13 @@ namespace StructureQueryHelper {
         const expression = Script.is(query) ? Script.toExpression(query) : query;
         const compiled = compile<Sel>(expression);
 
-        return { script, expression, compiled, originalStructure: structure, currentStructure: structure };
+        return {
+            script,
+            expression,
+            compiled,
+            originalStructure: structure,
+            currentStructure: structure,
+        };
     }
 
     export function run(entry: CacheEntry, structure: Structure) {
@@ -50,7 +65,11 @@ namespace StructureQueryHelper {
         return entry.compiled(new QueryContext(structure));
     }
 
-    export function updateStructureObject(obj: SO.Molecule.Structure, selection: Sel, label?: string) {
+    export function updateStructureObject(
+        obj: SO.Molecule.Structure,
+        selection: Sel,
+        label?: string,
+    ) {
         const s = Sel.unionStructure(selection);
         obj.label = `${label || 'Selection'}`;
         obj.description = Structure.elementDescription(s);

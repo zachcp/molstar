@@ -6,15 +6,23 @@
 
 import { Structure } from '../structure.ts';
 import { StructureSelection } from './selection.ts';
-import { QueryContext, QueryFn, QueryContextOptions } from './context.ts';
+import { QueryContext, QueryContextOptions, QueryFn } from './context.ts';
 
-interface StructureQuery extends QueryFn<StructureSelection> { }
+interface StructureQuery extends QueryFn<StructureSelection> {}
 namespace StructureQuery {
-    export function run(query: StructureQuery, structure: Structure, options?: QueryContextOptions) {
+    export function run(
+        query: StructureQuery,
+        structure: Structure,
+        options?: QueryContextOptions,
+    ) {
         return query(new QueryContext(structure, options));
     }
 
-    export function loci(query: StructureQuery, structure: Structure, options?: QueryContextOptions) {
+    export function loci(
+        query: StructureQuery,
+        structure: Structure,
+        options?: QueryContextOptions,
+    ) {
         const sel = query(new QueryContext(structure, options));
         return StructureSelection.toLociWithSourceUnits(sel);
     }

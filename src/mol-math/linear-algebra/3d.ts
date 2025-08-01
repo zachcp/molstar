@@ -25,10 +25,9 @@ import { Vec4 } from './3d/vec4.ts';
 import { Quat } from './3d/quat.ts';
 import { EPSILON } from './3d/common.ts';
 
-export { Mat4, Mat3, Vec2, Vec3, Vec4, Quat, EPSILON };
+export { EPSILON, Mat3, Mat4, Quat, Vec2, Vec3, Vec4 };
 
-export type Vec<T> =
-    T extends 4 ? Vec4 :
-        T extends 3 ? Vec3 :
-            T extends 2 ? Vec2 :
-                number[]
+export type Vec<T> = T extends 4 ? Vec4
+    : T extends 3 ? Vec3
+    : T extends 2 ? Vec2
+    : number[];

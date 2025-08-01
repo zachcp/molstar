@@ -6,9 +6,19 @@
 
 import { decodeColor } from '../../../extensions/mvs/helpers/utils.ts';
 import { MVSData_States } from '../../../extensions/mvs/mvs-data.ts';
-import { createMVSBuilder, Structure as MVSStructure, Representation, Root } from '../../../extensions/mvs/tree/mvs/mvs-builder.ts';
+import {
+    createMVSBuilder,
+    Representation,
+    Root,
+    Structure as MVSStructure,
+} from '../../../extensions/mvs/tree/mvs/mvs-builder.ts';
 import { MVSNodeParams } from '../../../extensions/mvs/tree/mvs/mvs-tree.ts';
-import { ColorT, ComponentExpressionT, isPrimitiveComponentExpressions, PrimitivePositionT } from '../../../extensions/mvs/tree/mvs/param-types.ts';
+import {
+    ColorT,
+    ComponentExpressionT,
+    isPrimitiveComponentExpressions,
+    PrimitivePositionT,
+} from '../../../extensions/mvs/tree/mvs/param-types.ts';
 import { Mat3, Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
 
 const Domains = {
@@ -44,11 +54,96 @@ const Colors = {
 // Obtained using https://www.rcsb.org/alignment
 // Aligned to 1iep
 const Superpositions = {
-    '1opl': [-0.6321036327, 0.3450463255, 0.6938213248, 0, -0.6288677634, -0.7515716885, -0.1991615756, 0, 0.4527364948, -0.5622126202, 0.6920597055, 0, 36.3924122492, 118.2516908402, -26.4992054179, 1] as unknown as Mat4,
-    '3ik3': [-0.7767826245, -0.6295936551, 0.0148520572, 0, 0.6059737752, -0.7408035481, 0.2898376906, 0, -0.1714775143, 0.2341408391, 0.9569605684, 0, 21.0648276775, 53.0266628762, -0.3385906075, 1] as unknown as Mat4,
-    '2gqg': [0.0648740828, -0.7163272638, 0.6947421137, 0, 0.0160329972, -0.6953706204, -0.7184724374, 0, 0.9977646498, 0.0577490387, -0.0336266582, 0, -31.0690973964, 146.0940883054, 39.7107422531, 1] as unknown as Mat4,
-    '2g2i': [-0.5680242227, 0.6527660987, 0.5012433569, 0, -0.10067389, 0.5493518768, -0.8295042395, 0, -0.8168312251, -0.5216406194, -0.2463286704, 0, -8.1905690894, 75.7603329146, -6.1327389269, 1] as unknown as Mat4,
-    '3oxz': [0.7989033646, 0.5984398921, -0.0601922711, 0, -0.1303123126, 0.269921501, 0.9540236289, 0, 0.5871729857, -0.754328893, 0.2936252816, 0, -8.0697093741, 58.1709160658, 19.0363028443, 1] as unknown as Mat4,
+    '1opl': [
+        -0.6321036327,
+        0.3450463255,
+        0.6938213248,
+        0,
+        -0.6288677634,
+        -0.7515716885,
+        -0.1991615756,
+        0,
+        0.4527364948,
+        -0.5622126202,
+        0.6920597055,
+        0,
+        36.3924122492,
+        118.2516908402,
+        -26.4992054179,
+        1,
+    ] as unknown as Mat4,
+    '3ik3': [
+        -0.7767826245,
+        -0.6295936551,
+        0.0148520572,
+        0,
+        0.6059737752,
+        -0.7408035481,
+        0.2898376906,
+        0,
+        -0.1714775143,
+        0.2341408391,
+        0.9569605684,
+        0,
+        21.0648276775,
+        53.0266628762,
+        -0.3385906075,
+        1,
+    ] as unknown as Mat4,
+    '2gqg': [
+        0.0648740828,
+        -0.7163272638,
+        0.6947421137,
+        0,
+        0.0160329972,
+        -0.6953706204,
+        -0.7184724374,
+        0,
+        0.9977646498,
+        0.0577490387,
+        -0.0336266582,
+        0,
+        -31.0690973964,
+        146.0940883054,
+        39.7107422531,
+        1,
+    ] as unknown as Mat4,
+    '2g2i': [
+        -0.5680242227,
+        0.6527660987,
+        0.5012433569,
+        0,
+        -0.10067389,
+        0.5493518768,
+        -0.8295042395,
+        0,
+        -0.8168312251,
+        -0.5216406194,
+        -0.2463286704,
+        0,
+        -8.1905690894,
+        75.7603329146,
+        -6.1327389269,
+        1,
+    ] as unknown as Mat4,
+    '3oxz': [
+        0.7989033646,
+        0.5984398921,
+        -0.0601922711,
+        0,
+        -0.1303123126,
+        0.269921501,
+        0.9540236289,
+        0,
+        0.5871729857,
+        -0.754328893,
+        0.2936252816,
+        0,
+        -8.0697093741,
+        58.1709160658,
+        19.0363028443,
+        1,
+    ] as unknown as Mat4,
 };
 
 const Steps = [
@@ -71,7 +166,7 @@ BCR-ABL is a classic case of how structural biology can drive drug discovery. Th
             const builder = createMVSBuilder();
 
             const _1opl = structure(builder, '1opl');
-            const [_1opl_poly,] = polymer(_1opl, { color: Colors['1opl'] });
+            const [_1opl_poly] = polymer(_1opl, { color: Colors['1opl'] });
             _1opl_poly.label({ text: 'ABL Kinase' });
 
             ligand(_1opl, {
@@ -92,13 +187,16 @@ BCR-ABL is a classic case of how structural biology can drive drug discovery. Th
             target: [0.36, 55.32, 21.8],
             up: [-0.01, 0.01, -1],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'The ABL Kinase: A Well-Regulated Enzyme',
         key: 'regulated-kinase',
         description: `
 ### The ABL Kinase: A Well-Regulated Enzyme
 
-Normally, the ABL kinase ([PDB ID 1OPL](${wwPDBLink('1opl')})) is a well-regulated enzyme, kept in check by its SH3 and SH2 domains which fold back onto the kinase domain like a safety lock.
+Normally, the ABL kinase ([PDB ID 1OPL](${
+            wwPDBLink('1opl')
+        })) is a well-regulated enzyme, kept in check by its SH3 and SH2 domains which fold back onto the kinase domain like a safety lock.
 `,
         state: () => {
             const builder = createMVSBuilder();
@@ -129,7 +227,8 @@ Normally, the ABL kinase ([PDB ID 1OPL](${wwPDBLink('1opl')})) is a well-regulat
             target: [-10.37, 49.7, 12.68],
             up: [-0.27, -0.37, -0.89],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'The Birth of a Rogue Kinase',
         key: 'rogue-kinase',
         transition_duration_ms: 750,
@@ -141,7 +240,9 @@ fusing the ABL1 gene from chromosome 9 with the BCR gene on chromosome 22. This 
 regulation of the wildtype protein. Read more about this [here](https://www.cancer.gov/publications/dictionaries/cancer-terms/def/philadelphia-chromosome)
 and [the history of its discovery](https://pmc.ncbi.nlm.nih.gov/articles/PMC1934591/).
 
-Comparing the normal protein to the kinase domain alone ([PDB ID 2GQG](${wwPDBLink('2gqg')}), in light red), you can
+Comparing the normal protein to the kinase domain alone ([PDB ID 2GQG](${
+            wwPDBLink('2gqg')
+        }), in light red), you can
 see how the SH3 and SH2 domains (teal in normal ABL, red in BCR-ABL, with SH3 domain being unresolved in the crystal structure) are no longer positioned to restrain the kinase.
 
 With this lock removed, BCR-ABL is stuck in an active conformation, like an accelerator pedal jammed to the floor. Without
@@ -183,7 +284,8 @@ its normal regulation, BCR-ABL will keep signaling, unchecked causing unregulate
             target: [3.99, 47.45, 0.08],
             up: [-0.22, -0.28, -0.94],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'ATP Binding and Unstoppable Signaling [1/2]',
         key: 'unstoppable-signaling',
         description: `
@@ -219,11 +321,20 @@ supports efficient phosphate transfer, which is central to BCR-ABL's ability to 
             domains(_2g2i, _2g2i_poly_repr, [
                 [Domains.SH2, DomainColors['SH2_BCR'], 'SH2'],
                 [Domains.P_loop, DomainColors['P_loop'], 'P Loop'],
-                [Domains.Activation_loop, DomainColors['Activation_loop'], 'Activation Loop (active)', { label_size: 3 }],
+                [
+                    Domains.Activation_loop,
+                    DomainColors['Activation_loop'],
+                    'Activation Loop (active)',
+                    { label_size: 3 },
+                ],
             ], { label_size: 3 });
 
             drawInteractions(_2g2i, [
-                ['Salt Bridge', { auth_asym_id: 'A', auth_seq_id: 271, auth_atom_id: 'NZ' }, { auth_asym_id: 'A', auth_seq_id: 286, auth_atom_id: 'OE1' }, { skipResidue: true }],
+                ['Salt Bridge', { auth_asym_id: 'A', auth_seq_id: 271, auth_atom_id: 'NZ' }, {
+                    auth_asym_id: 'A',
+                    auth_seq_id: 286,
+                    auth_atom_id: 'OE1',
+                }, { skipResidue: true }],
             ]);
 
             bindingSite(_2g2i, [
@@ -239,7 +350,8 @@ supports efficient phosphate transfer, which is central to BCR-ABL's ability to 
             target: [15.59, 54.81, 12.37],
             up: [0.61, 0.03, -0.79],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'ATP Binding and Unstoppable Signaling [2/2]',
         description: `
 ### ATP Binding and Unstoppable Signaling
@@ -257,7 +369,8 @@ ATP binds freely, phosphorylation proceeds unchecked, and the signaling pathways
             target: [12.31, 54.23, 18.79],
             up: [0.06, -0.35, -0.93],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'Imatinib: The Drug That Changed Everything [1/2]',
         key: 'imatinib',
         description: `
@@ -265,7 +378,9 @@ ATP binds freely, phosphorylation proceeds unchecked, and the signaling pathways
 
 For years, chronic myeloid leukemia (CML) was a death sentence. Then came Imatinib (Gleevec) — a small molecule designed to fit into the ATP-binding pocket of BCR-ABL and lock the kinase in an inactive conformation. It was the first targeted cancer therapy of its kind.
 
-Take a look at the Imatinib-bound structure ([PDB ID 1IEP](${wwPDBLink('1iep')})), and you'll notice a key difference — this time, the kinase is frozen in its inactive form. The drug (shown in colour) nestles deep in the ATP-binding site and blocks ATP from binding.
+Take a look at the Imatinib-bound structure ([PDB ID 1IEP](${
+            wwPDBLink('1iep')
+        })), and you'll notice a key difference — this time, the kinase is frozen in its inactive form. The drug (shown in colour) nestles deep in the ATP-binding site and blocks ATP from binding.
 
 Imatinib forms specific interactions with several important residues:
 - A hydrogen bond with Thr315, the gatekeeper residue, which plays a major role in drug sensitivity and resistance.
@@ -290,13 +405,34 @@ Together, these interactions stabilize the inactive kinase, shutting down its ac
             });
 
             drawInteractions(_1iep, [
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 286, auth_atom_id: 'OE2' }, { label_asym_id: 'G', label_atom_id: 'N21' }, { skipResidue: true }],
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 315, auth_atom_id: 'OG1' }, { label_asym_id: 'G', label_atom_id: 'N13' }, { skipResidue: true }],
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 318, auth_atom_id: 'N' }, { label_asym_id: 'G', label_atom_id: 'N3' }, { skipResidue: true }],
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 318, auth_atom_id: 'O' }, { label_asym_id: 'G', label_atom_id: 'N3' }, { skipResidue: true }],
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 360, auth_atom_id: 'O' }, { label_asym_id: 'G', label_atom_id: 'N51' }, { skipResidue: true }],
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 361, auth_atom_id: 'O' }, { label_asym_id: 'G', label_atom_id: 'N51' }, { skipResidue: true }],
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 381, auth_atom_id: 'N' }, { label_asym_id: 'G', label_atom_id: 'O29' }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 286, auth_atom_id: 'OE2' }, {
+                    label_asym_id: 'G',
+                    label_atom_id: 'N21',
+                }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 315, auth_atom_id: 'OG1' }, {
+                    label_asym_id: 'G',
+                    label_atom_id: 'N13',
+                }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 318, auth_atom_id: 'N' }, {
+                    label_asym_id: 'G',
+                    label_atom_id: 'N3',
+                }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 318, auth_atom_id: 'O' }, {
+                    label_asym_id: 'G',
+                    label_atom_id: 'N3',
+                }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 360, auth_atom_id: 'O' }, {
+                    label_asym_id: 'G',
+                    label_atom_id: 'N51',
+                }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 361, auth_atom_id: 'O' }, {
+                    label_asym_id: 'G',
+                    label_atom_id: 'N51',
+                }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 381, auth_atom_id: 'N' }, {
+                    label_asym_id: 'G',
+                    label_atom_id: 'O29',
+                }, { skipResidue: true }],
             ]);
 
             ligand(_1iep, {
@@ -326,7 +462,8 @@ Together, these interactions stabilize the inactive kinase, shutting down its ac
             target: [16, 53.82, 14.88],
             up: [0.26, -0.5, -0.83],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'Imatinib: The Drug That Changed Everything [2/2]',
         description: `
 ### Imatinib: The Drug That Changed Everything
@@ -356,17 +493,43 @@ The change is decisive: BCR-ABL is finally silenced.
 
             domains(_1iep, _1iep_poly_repr, [
                 [Domains.P_loop, DomainColors['P_loop'], 'P Loop'],
-                [Domains.Activation_loop, DomainColors['Activation_loop'], 'Activation Loop (inactive)', { label_size: 3 }],
+                [
+                    Domains.Activation_loop,
+                    DomainColors['Activation_loop'],
+                    'Activation Loop (inactive)',
+                    { label_size: 3 },
+                ],
             ], { label_size: 3 });
 
             drawInteractions(_1iep, [
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 286, auth_atom_id: 'OE2' }, { label_asym_id: 'G', label_atom_id: 'N21' }, { skipResidue: true }],
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 315, auth_atom_id: 'OG1' }, { label_asym_id: 'G', label_atom_id: 'N13' }, { skipResidue: true }],
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 318, auth_atom_id: 'N' }, { label_asym_id: 'G', label_atom_id: 'N3' }, { skipResidue: true }],
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 318, auth_atom_id: 'O' }, { label_asym_id: 'G', label_atom_id: 'N3' }, { skipResidue: true }],
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 360, auth_atom_id: 'O' }, { label_asym_id: 'G', label_atom_id: 'N51' }, { skipResidue: true }],
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 361, auth_atom_id: 'O' }, { label_asym_id: 'G', label_atom_id: 'N51' }, { skipResidue: true }],
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 381, auth_atom_id: 'N' }, { label_asym_id: 'G', label_atom_id: 'O29' }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 286, auth_atom_id: 'OE2' }, {
+                    label_asym_id: 'G',
+                    label_atom_id: 'N21',
+                }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 315, auth_atom_id: 'OG1' }, {
+                    label_asym_id: 'G',
+                    label_atom_id: 'N13',
+                }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 318, auth_atom_id: 'N' }, {
+                    label_asym_id: 'G',
+                    label_atom_id: 'N3',
+                }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 318, auth_atom_id: 'O' }, {
+                    label_asym_id: 'G',
+                    label_atom_id: 'N3',
+                }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 360, auth_atom_id: 'O' }, {
+                    label_asym_id: 'G',
+                    label_atom_id: 'N51',
+                }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 361, auth_atom_id: 'O' }, {
+                    label_asym_id: 'G',
+                    label_atom_id: 'N51',
+                }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 381, auth_atom_id: 'N' }, {
+                    label_asym_id: 'G',
+                    label_atom_id: 'O29',
+                }, { skipResidue: true }],
             ]);
 
             ligand(_1iep, {
@@ -396,14 +559,17 @@ The change is decisive: BCR-ABL is finally silenced.
             target: [12.53, 54.2, 19.09],
             up: [0.04, -0.07, -1],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'Resistance Strikes: The T315I Mutation [1/2]',
         key: 'mutation',
         description: `
 ### Resistance Strikes: The T315I Mutation
 
 For a while, it seemed like leukemia had been beaten. But then, in some patients, the cancer returned. The culprit?
-What was once a threonine (Thr) is now an isoleucine (Ile), a single mutation [T315I](https://doi.org/10.1016/j.ccr.2011.03.003), shown on [PDB ID 3IK3](${wwPDBLink('3ik3')}) in orange.
+What was once a threonine (Thr) is now an isoleucine (Ile), a single mutation [T315I](https://doi.org/10.1016/j.ccr.2011.03.003), shown on [PDB ID 3IK3](${
+            wwPDBLink('3ik3')
+        }) in orange.
 
 Forming a hydrogen bond with Imatinib, Thr315 was a crucial contact point. With bulkier and non-polar isoleucine in its place, the contact is lost and the drug won't bind.
 `,
@@ -445,7 +611,8 @@ Forming a hydrogen bond with Imatinib, Thr315 was a crucial contact point. With 
             target: [13.02, 54.12, 9.71],
             up: [0.39, -0.26, -0.88],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'Resistance Strikes: The T315I Mutation [2/2]',
         description: `
 ### Resistance Strikes: The T315I Mutation
@@ -468,7 +635,11 @@ The result? Resistance. BCR-ABL is active again, and the leukemia returns, this 
             });
 
             drawInteractions(_2g2i, [
-                ['Salt Bridge', { auth_asym_id: 'A', auth_seq_id: 271, auth_atom_id: 'NZ' }, { auth_asym_id: 'A', auth_seq_id: 286, auth_atom_id: 'OE1' }, { skipResidue: true }],
+                ['Salt Bridge', { auth_asym_id: 'A', auth_seq_id: 271, auth_atom_id: 'NZ' }, {
+                    auth_asym_id: 'A',
+                    auth_seq_id: 286,
+                    auth_atom_id: 'OE1',
+                }, { skipResidue: true }],
             ]);
 
             bindingSite(_2g2i, [
@@ -495,13 +666,16 @@ The result? Resistance. BCR-ABL is active again, and the leukemia returns, this 
             target: [16.64, 55.48, 15.94],
             up: [0.24, -0.23, -0.94],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'Fighting Back: Ponatinib and the Future of Kinase Inhibitors',
         key: 'ponatinib',
         description: `
 ### Fighting Back: Ponatinib and the Future of Kinase Inhibitors
 
-The battle didn't end there. Scientists knew they needed a new inhibitor—one that could work even against T315I. Enter Ponatinib (shown in [PDB ID 3OXZ](${wwPDBLink('3oxz')})), a next-generation
+The battle didn't end there. Scientists knew they needed a new inhibitor—one that could work even against T315I. Enter Ponatinib (shown in [PDB ID 3OXZ](${
+            wwPDBLink('3oxz')
+        })), a next-generation
 drug designed to bypass this resistance. Viewing the Ponatinib-bound structure, you'll see how it differs from Imatinib. Instead of being blocked by T315I,
 Ponatinib has a flexible triple-bond linker, allowing it to slip into the binding site without clashing with the mutation. 
 
@@ -536,11 +710,26 @@ inside every cancer cell.
             });
 
             drawInteractions(_3oxz, [
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 360, auth_atom_id: 'O' }, { label_asym_id: 'B', label_atom_id: 'N4' }, { skipResidue: true }],
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 361, auth_atom_id: 'O' }, { label_asym_id: 'B', label_atom_id: 'N4' }, { skipResidue: true }],
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 286, auth_atom_id: 'OE2' }, { label_asym_id: 'B', label_atom_id: 'N2' }, { skipResidue: true }],
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 381, auth_atom_id: 'N' }, { label_asym_id: 'B', label_atom_id: 'O1' }, { skipResidue: true }],
-                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 318, auth_atom_id: 'N' }, { label_asym_id: 'B', label_atom_id: 'N1' }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 360, auth_atom_id: 'O' }, {
+                    label_asym_id: 'B',
+                    label_atom_id: 'N4',
+                }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 361, auth_atom_id: 'O' }, {
+                    label_asym_id: 'B',
+                    label_atom_id: 'N4',
+                }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 286, auth_atom_id: 'OE2' }, {
+                    label_asym_id: 'B',
+                    label_atom_id: 'N2',
+                }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 381, auth_atom_id: 'N' }, {
+                    label_asym_id: 'B',
+                    label_atom_id: 'O1',
+                }, { skipResidue: true }],
+                ['H-bond', { auth_asym_id: 'A', auth_seq_id: 318, auth_atom_id: 'N' }, {
+                    label_asym_id: 'B',
+                    label_atom_id: 'N1',
+                }, { skipResidue: true }],
             ]);
 
             bindingSite(_3oxz, [
@@ -558,7 +747,8 @@ inside every cancer cell.
             target: [9.61, 50.49, 14.08],
             up: [0.15, -0.15, -0.98],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'The End',
         key: 'end',
         description: `
@@ -578,11 +768,15 @@ Read more [here](https://pmc.ncbi.nlm.nih.gov/articles/PMC3513788/).
             target: [0.36, 55.32, 21.8],
             up: [-0.01, 0.01, -1],
         } satisfies MVSNodeParams<'camera'>,
-    }
+    },
 ];
 
-
-type Interaction = [label: string, polymer: PrimitivePositionT, ligand: PrimitivePositionT, options?: { skipResidue?: boolean }]
+type Interaction = [
+    label: string,
+    polymer: PrimitivePositionT,
+    ligand: PrimitivePositionT,
+    options?: { skipResidue?: boolean },
+];
 
 function drawInteractions(structure: MVSStructure, interactions: Interaction[]) {
     const primitives = structure.primitives();
@@ -591,11 +785,20 @@ function drawInteractions(structure: MVSStructure, interactions: Interaction[]) 
     const addedResidues = new Set<string>();
 
     for (const [tooltip, a, b, options] of interactions) {
-        primitives.tube({ start: a, end: b, color: '#4289B5', tooltip, radius: 0.1, dash_length: 0.1 });
+        primitives.tube({
+            start: a,
+            end: b,
+            color: '#4289B5',
+            tooltip,
+            radius: 0.1,
+            dash_length: 0.1,
+        });
 
         if (options?.skipResidue) continue;
 
-        const expressions = isPrimitiveComponentExpressions(a) ? a.expressions! : [a as ComponentExpressionT];
+        const expressions = isPrimitiveComponentExpressions(a)
+            ? a.expressions!
+            : [a as ComponentExpressionT];
         for (const _e of expressions) {
             const e = { ..._e };
             delete e.auth_atom_id;
@@ -617,7 +820,7 @@ function drawInteractions(structure: MVSStructure, interactions: Interaction[]) 
             custom: {
                 molstar_color_theme_name: 'element-symbol',
                 molstar_color_theme_params: { carbonColor: { name: 'element-symbol', params: {} } },
-            }
+            },
         });
 }
 
@@ -644,13 +847,30 @@ function structure(builder: Root, id: string): MVSStructure {
     return ret;
 }
 
-function domains(structure: MVSStructure, reprensentation: Representation, domains: [selector: ComponentExpressionT, color: ColorT, label?: string, options?: { label_size?: number }][], options?: { label_size?: number }) {
-    const hasLabels = domains.some(d => !!d[2]);
+function domains(
+    structure: MVSStructure,
+    reprensentation: Representation,
+    domains: [
+        selector: ComponentExpressionT,
+        color: ColorT,
+        label?: string,
+        options?: { label_size?: number },
+    ][],
+    options?: { label_size?: number },
+) {
+    const hasLabels = domains.some((d) => !!d[2]);
     const primitives = hasLabels ? structure.primitives() : undefined;
 
     for (const [selector, color, label, opts] of domains) {
         reprensentation.color({ selector, color });
-        if (label) primitives!.label({ position: selector, text: label, label_color: color, label_size: opts?.label_size ?? options?.label_size ?? 1.5 });
+        if (label) {
+            primitives!.label({
+                position: selector,
+                text: label,
+                label_color: color,
+                label_size: opts?.label_size ?? options?.label_size ?? 1.5,
+            });
+        }
     }
 }
 
@@ -662,55 +882,70 @@ function polymer(structure: MVSStructure, options: { color: ColorT }) {
 }
 
 function ligand(structure: MVSStructure, options: {
-    selector: ComponentExpressionT | ComponentExpressionT[],
-    label?: string,
-    surface?: boolean,
-    carbon_color?: ColorT,
-    uniform_color?: ColorT,
-    label_color?: ColorT,
-    label_size?: number,
-    opacity?: number,
+    selector: ComponentExpressionT | ComponentExpressionT[];
+    label?: string;
+    surface?: boolean;
+    carbon_color?: ColorT;
+    uniform_color?: ColorT;
+    label_color?: ColorT;
+    label_size?: number;
+    opacity?: number;
 }) {
     const comp = structure.component({ selector: options.selector });
-    const coloring = options.uniform_color
-        ? { color: options.uniform_color }
-        : {
-            custom: {
-                molstar_color_theme_name: 'element-symbol',
-                molstar_color_theme_params: { carbonColor: options?.carbon_color ? { name: 'uniform', params: { value: decodeColor(options?.carbon_color) } } : { name: 'element-symbol', params: {} } }
-            }
-        };
+    const coloring = options.uniform_color ? { color: options.uniform_color } : {
+        custom: {
+            molstar_color_theme_name: 'element-symbol',
+            molstar_color_theme_params: {
+                carbonColor: options?.carbon_color
+                    ? { name: 'uniform', params: { value: decodeColor(options?.carbon_color) } }
+                    : { name: 'element-symbol', params: {} },
+            },
+        },
+    };
 
-    if (options.surface) comp.representation({ type: 'surface' }).color(coloring).opacity({ opacity: 0.33 });
+    if (options.surface) {
+        comp.representation({ type: 'surface' }).color(coloring).opacity({ opacity: 0.33 });
+    }
     const repr = comp.representation({ type: 'ball_and_stick' }).color(coloring);
     if (options.opacity) repr.opacity({ opacity: options.opacity });
 
-    const label_color: ColorT = options?.label_color ?? options.uniform_color ?? options.carbon_color ?? '#5B53A4';
+    const label_color: ColorT = options?.label_color ?? options.uniform_color ??
+        options.carbon_color ?? '#5B53A4';
     if (options.label) {
         structure.primitives().label({
-            position: Array.isArray(options.selector) ? { expressions: options.selector } : options.selector,
+            position: Array.isArray(options.selector)
+                ? { expressions: options.selector }
+                : options.selector,
             text: options.label,
             label_color,
-            label_size: options?.label_size ?? 1.5
+            label_size: options?.label_size ?? 1.5,
         });
     }
 
     return comp;
 }
 
-function bindingSite(structure: MVSStructure, residues: [selector: ComponentExpressionT, label: string][], options: {
-    color?: ColorT,
-    label_size?: number,
-}) {
+function bindingSite(
+    structure: MVSStructure,
+    residues: [selector: ComponentExpressionT, label: string][],
+    options: {
+        color?: ColorT;
+        label_size?: number;
+    },
+) {
     const color: ColorT = options.color ?? '#5B53A4';
     const coloring = {
         custom: {
             molstar_color_theme_name: 'element-symbol',
-            molstar_color_theme_params: { carbonColor: { name: 'uniform', params: { value: decodeColor(color) } } }
-        }
+            molstar_color_theme_params: {
+                carbonColor: { name: 'uniform', params: { value: decodeColor(color) } },
+            },
+        },
     };
 
-    structure.component({ selector: residues.map(r => r[0]) }).representation({ type: 'ball_and_stick' }).color(coloring);
+    structure.component({ selector: residues.map((r) => r[0]) }).representation({
+        type: 'ball_and_stick',
+    }).color(coloring);
 
     const primitives = structure.primitives();
     for (const [selector, label] of residues) {
@@ -718,7 +953,7 @@ function bindingSite(structure: MVSStructure, residues: [selector: ComponentExpr
             position: selector,
             text: label,
             label_color: color,
-            label_size: options?.label_size ?? 1.5
+            label_size: options?.label_size ?? 1.5,
         });
     }
 }
@@ -751,6 +986,6 @@ export function buildStory(): MVSData_States {
             title: 'The Structural Story of BCR-ABL: A Kinase Out of Control',
             version: '1.0',
             timestamp: new Date().toISOString(),
-        }
+        },
     };
 }

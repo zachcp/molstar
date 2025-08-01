@@ -4,10 +4,22 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Renderable, RenderableState, createRenderable } from '../renderable.ts';
+import { createRenderable, Renderable, RenderableState } from '../renderable.ts';
 import { WebGLContext } from '../webgl/context.ts';
 import { createGraphicsRenderItem, Transparency } from '../webgl/render-item.ts';
-import { GlobalUniformSchema, BaseSchema, Values, InternalSchema, SizeSchema, InternalValues, ValueSpec, DefineSpec, GlobalTextureSchema, UniformSpec, TextureSpec } from './schema.ts';
+import {
+    BaseSchema,
+    DefineSpec,
+    GlobalTextureSchema,
+    GlobalUniformSchema,
+    InternalSchema,
+    InternalValues,
+    SizeSchema,
+    TextureSpec,
+    UniformSpec,
+    Values,
+    ValueSpec,
+} from './schema.ts';
 import { SpheresShaderCode } from '../shader-code.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 
@@ -35,15 +47,35 @@ export const SpheresSchema = {
     centerBuffer: ValueSpec('float32'),
     groupBuffer: ValueSpec('float32'),
 };
-export type SpheresSchema = typeof SpheresSchema
-export type SpheresValues = Values<SpheresSchema>
+export type SpheresSchema = typeof SpheresSchema;
+export type SpheresValues = Values<SpheresSchema>;
 
-export function SpheresRenderable(ctx: WebGLContext, id: number, values: SpheresValues, state: RenderableState, materialId: number, transparency: Transparency): Renderable<SpheresValues> {
-    const schema = { ...GlobalUniformSchema, ...GlobalTextureSchema, ...InternalSchema, ...SpheresSchema };
+export function SpheresRenderable(
+    ctx: WebGLContext,
+    id: number,
+    values: SpheresValues,
+    state: RenderableState,
+    materialId: number,
+    transparency: Transparency,
+): Renderable<SpheresValues> {
+    const schema = {
+        ...GlobalUniformSchema,
+        ...GlobalTextureSchema,
+        ...InternalSchema,
+        ...SpheresSchema,
+    };
     const internalValues: InternalValues = {
         uObjectId: ValueCell.create(id),
     };
     const shaderCode = SpheresShaderCode;
-    const renderItem = createGraphicsRenderItem(ctx, 'triangles', shaderCode, schema, { ...values, ...internalValues }, materialId, transparency);
+    const renderItem = createGraphicsRenderItem(
+        ctx,
+        'triangles',
+        shaderCode,
+        schema,
+        { ...values, ...internalValues },
+        materialId,
+        transparency,
+    );
     return createRenderable(renderItem, values, state);
 }

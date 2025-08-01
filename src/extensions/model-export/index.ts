@@ -11,7 +11,7 @@ export const ModelExport = PluginBehavior.create<{}>({
     name: 'extension-model-export',
     category: 'misc',
     display: {
-        name: 'Model Export'
+        name: 'Model Export',
     },
     ctor: class extends PluginBehavior.Handler<{}> {
         register(): void {
@@ -26,5 +26,5 @@ export const ModelExport = PluginBehavior.create<{}>({
             this.ctx.customStructureControls.delete('model-export');
         }
     },
-    params: () => ({})
+    params: () => ({}),
 });

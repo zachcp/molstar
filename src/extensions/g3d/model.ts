@@ -24,23 +24,23 @@ import { G3dDataBlock } from './data.ts';
 import { FormatPropertyProvider } from '../../mol-model-formats/structure/common/property.ts';
 
 interface NormalizedData {
-    entity_id: string[],
-    chromosome: string[],
-    seq_id_begin: Int32Array,
-    seq_id_end: Int32Array,
-    start: Int32Array,
-    x: Float32Array,
-    y: Float32Array,
-    z: Float32Array,
-    r: Float32Array,
-    haplotype: string[]
+    entity_id: string[];
+    chromosome: string[];
+    seq_id_begin: Int32Array;
+    seq_id_end: Int32Array;
+    start: Int32Array;
+    x: Float32Array;
+    y: Float32Array;
+    z: Float32Array;
+    r: Float32Array;
+    haplotype: string[];
 }
 
 function getColumns(block: G3dDataBlock) {
     const { data } = block;
     let size = 0;
 
-    objectForEach(data, h => objectForEach(h, g => size += g.start.length));
+    objectForEach(data, (h) => objectForEach(h, (g) => size += g.start.length));
 
     const normalized: NormalizedData = {
         entity_id: new Array(size),
@@ -52,7 +52,7 @@ function getColumns(block: G3dDataBlock) {
         y: new Float32Array(size),
         z: new Float32Array(size),
         r: new Float32Array(size),
-        haplotype: new Array(size)
+        haplotype: new Array(size),
     };
 
     const p = [Vec3(), Vec3(), Vec3()];
@@ -89,7 +89,8 @@ function getColumns(block: G3dDataBlock) {
                 normalized.x[o] = x;
                 normalized.y[o] = y;
                 normalized.z[o] = z;
-                normalized.r[o] = 2 / 3 * Math.min(Vec3.distance(p[0], p[1]), Vec3.distance(p[1], p[2]));
+                normalized.r[o] = 2 / 3 *
+                    Math.min(Vec3.distance(p[0], p[1]), Vec3.distance(p[1], p[2]));
                 normalized.haplotype[o] = h;
 
                 const _p = p[0];
@@ -144,7 +145,7 @@ async function getTraj(ctx: RuntimeContext, data: G3dDataBlock) {
             model_id: Column.ofIntArray([1]),
             model_name: Column.ofStringArray(['G3D Model']),
         }, 1),
-        ihm_sphere_obj_site
+        ihm_sphere_obj_site,
     });
 
     const models = await createModels(basic, { kind: 'g3d', name: 'G3D', data }, ctx);
@@ -161,37 +162,38 @@ async function getTraj(ctx: RuntimeContext, data: G3dDataBlock) {
 }
 
 export function trajectoryFromG3D(data: G3dDataBlock): Task<Trajectory> {
-    return Task.create('Parse G3D', async ctx => {
+    return Task.create('Parse G3D', async (ctx) => {
         return getTraj(ctx, data);
     });
 }
 
 export const G3dSymbols = {
-    haplotype: QuerySymbolRuntime.Dynamic(CustomPropSymbol('g3d', 'haplotype', Type.Str),
-        ctx => {
-            if (Unit.isAtomic(ctx.element.unit)) return '';
-            const info = (G3dInfoDataProperty as any).get(ctx.element.unit.model);
-            if (!info) return '';
-            const seqId = ctx.element.unit.model.coarseHierarchy.spheres.seq_id_begin.value(ctx.element.element);
-            return info.haplotype[seqId] || '';
-        }
-    ),
-    chromosome: QuerySymbolRuntime.Dynamic(CustomPropSymbol('g3d', 'chromosome', Type.Str),
-        ctx => {
+    haplotype: QuerySymbolRuntime.Dynamic(CustomPropSymbol('g3d', 'haplotype', Type.Str), (ctx) => {
+        if (Unit.isAtomic(ctx.element.unit)) return '';
+        const info = (G3dInfoDataProperty as any).get(ctx.element.unit.model);
+        if (!info) return '';
+        const seqId = ctx.element.unit.model.coarseHierarchy.spheres.seq_id_begin.value(
+            ctx.element.element,
+        );
+        return info.haplotype[seqId] || '';
+    }),
+    chromosome: QuerySymbolRuntime.Dynamic(
+        CustomPropSymbol('g3d', 'chromosome', Type.Str),
+        (ctx) => {
             if (Unit.isAtomic(ctx.element.unit)) return '';
             const { asym_id } = ctx.element.unit.model.coarseHierarchy.spheres;
             return asym_id.value(ctx.element.element) || '';
-        }
+        },
     ),
-    region: QuerySymbolRuntime.Dynamic(CustomPropSymbol('g3d', 'region', Type.Num),
-        ctx => {
-            if (Unit.isAtomic(ctx.element.unit)) return '';
-            const info = (G3dInfoDataProperty as any).get(ctx.element.unit.model);
-            if (!info) return 0;
-            const seqId = ctx.element.unit.model.coarseHierarchy.spheres.seq_id_begin.value(ctx.element.element);
-            return info.start[seqId] || 0;
-        }
-    )
+    region: QuerySymbolRuntime.Dynamic(CustomPropSymbol('g3d', 'region', Type.Num), (ctx) => {
+        if (Unit.isAtomic(ctx.element.unit)) return '';
+        const info = (G3dInfoDataProperty as any).get(ctx.element.unit.model);
+        if (!info) return 0;
+        const seqId = ctx.element.unit.model.coarseHierarchy.spheres.seq_id_begin.value(
+            ctx.element.element,
+        );
+        return info.start[seqId] || 0;
+    }),
 };
 
 export const G3dInfoDataProperty = FormatPropertyProvider.create<G3dInfoData>({ name: 'g3d_info' });
@@ -206,8 +208,8 @@ export function g3dChromosomeQuery(chr: string) {
     return MS.struct.generator.atomGroups({
         'chain-test': MS.core.logic.and([
             MS.core.rel.eq([MS.ammp('objectPrimitive'), 'sphere']),
-            MS.core.rel.eq([G3dSymbols.chromosome.symbol(), chr])
-        ])
+            MS.core.rel.eq([G3dSymbols.chromosome.symbol(), chr]),
+        ]),
     });
 }
 
@@ -215,19 +217,19 @@ export function g3dRegionQuery(chr: string, start: number, end: number) {
     return MS.struct.generator.atomGroups({
         'chain-test': MS.core.logic.and([
             MS.core.rel.eq([MS.ammp('objectPrimitive'), 'sphere']),
-            MS.core.rel.eq([G3dSymbols.chromosome.symbol(), chr])
+            MS.core.rel.eq([G3dSymbols.chromosome.symbol(), chr]),
         ]),
-        'residue-test': MS.core.rel.inRange([G3dSymbols.region.symbol(), start, end])
+        'residue-test': MS.core.rel.inRange([G3dSymbols.region.symbol(), start, end]),
     });
 }
 
 export interface G3dInfoData {
-    haplotypes: string[],
-    haplotype: string[],
-    start: Int32Array,
-    resolution: number,
-    chroms: string[]
-};
+    haplotypes: string[];
+    haplotype: string[];
+    start: Int32Array;
+    resolution: number;
+    chroms: string[];
+}
 
 export const G3dLabelProvider: LociLabelProvider = {
     label: (e: Loci): string | undefined => {
@@ -241,5 +243,5 @@ export const G3dLabelProvider: LociLabelProvider = {
         const eI = first.unit.elements[OrderedSet.getAt(first.indices, 0)];
         const seqId = first.unit.model.coarseHierarchy.spheres.seq_id_begin.value(eI);
         return `<b>Start:</b> ${info.start[seqId]} <small>| resolution ${info.resolution}<small>`;
-    }
+    },
 };

@@ -5,10 +5,10 @@
  */
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
+import { UnitsMeshParams, UnitsMeshVisual, UnitsVisual } from '../units-visual.ts';
 import { VisualUpdateState } from '../../util.ts';
 import { VisualContext } from '../../visual.ts';
-import { Unit, Structure, StructureElement } from '../../../mol-model/structure.ts';
+import { Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
 import { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
@@ -16,7 +16,7 @@ import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { addEllipsoid } from '../../../mol-geo/geometry/mesh/builder/ellipsoid.ts';
 import { Axes3D, Sphere3D } from '../../../mol-math/geometry.ts';
 import { PickingId } from '../../../mol-geo/geometry/picking.ts';
-import { OrderedSet, Interval } from '../../../mol-data/int.ts';
+import { Interval, OrderedSet } from '../../../mol-data/int.ts';
 import { EmptyLoci, Loci } from '../../../mol-model/loci.ts';
 import { UnitIndex } from '../../../mol-model/structure/structure/element/element.ts';
 import { LocationIterator } from '../../../mol-geo/util/location-iterator.ts';
@@ -29,29 +29,33 @@ export const OrientationEllipsoidMeshParams = {
     sizeFactor: PD.Numeric(1, { min: 0, max: 2, step: 0.1 }),
     detail: PD.Numeric(0, { min: 0, max: 3, step: 1 }, BaseGeometry.CustomQualityParamInfo),
 };
-export type OrientationEllipsoidMeshParams = typeof OrientationEllipsoidMeshParams
+export type OrientationEllipsoidMeshParams = typeof OrientationEllipsoidMeshParams;
 
-export function OrientationEllipsoidMeshVisual(materialId: number): UnitsVisual<OrientationEllipsoidMeshParams> {
+export function OrientationEllipsoidMeshVisual(
+    materialId: number,
+): UnitsVisual<OrientationEllipsoidMeshParams> {
     return UnitsMeshVisual<OrientationEllipsoidMeshParams>({
         defaultProps: PD.getDefaultValues(OrientationEllipsoidMeshParams),
         createGeometry: createOrientationEllipsoidMesh,
         createLocationIterator: UnitIterator,
         getLoci: getUnitLoci,
         eachLocation: eachUnit,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<OrientationEllipsoidMeshParams>, currentProps: PD.Values<OrientationEllipsoidMeshParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
-                newProps.detail !== currentProps.detail
-            );
-        }
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<OrientationEllipsoidMeshParams>,
+            currentProps: PD.Values<OrientationEllipsoidMeshParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
+                newProps.detail !== currentProps.detail;
+        },
     }, materialId);
 }
 
 //
 
 export interface OrientationEllipsoidMeshProps {
-    detail: number,
-    sizeFactor: number,
+    detail: number;
+    sizeFactor: number;
 }
 
 function isUnitApplicable(unit: Unit) {
@@ -67,7 +71,14 @@ function isUnitApplicable(unit: Unit) {
     return true;
 }
 
-export function createOrientationEllipsoidMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: OrientationEllipsoidMeshProps, mesh?: Mesh): Mesh {
+export function createOrientationEllipsoidMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: OrientationEllipsoidMeshProps,
+    mesh?: Mesh,
+): Mesh {
     if (!isUnitApplicable(unit)) return Mesh.createEmpty(mesh);
 
     const { detail, sizeFactor } = props;
@@ -119,7 +130,11 @@ function getUnitLoci(pickingId: PickingId, structureGroup: StructureGroup, id: n
     return EmptyLoci;
 }
 
-function eachUnit(loci: Loci, structureGroup: StructureGroup, apply: (interval: Interval) => boolean) {
+function eachUnit(
+    loci: Loci,
+    structureGroup: StructureGroup,
+    apply: (interval: Interval) => boolean,
+) {
     let changed = false;
     if (!StructureElement.Loci.is(loci)) return false;
     const { structure, group } = structureGroup;

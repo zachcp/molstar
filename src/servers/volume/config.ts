@@ -10,7 +10,7 @@ import * as argparse from 'argparse';
 import { ObjectKeys } from '../../mol-util/type-helpers.ts';
 import { VOLUME_SERVER_HEADER } from './server/version.ts';
 import * as fs from 'fs';
-import process from "node:process";
+import process from 'node:process';
 
 const DefaultServerConfig = {
     apiPrefix: '/VolumeServer',
@@ -28,12 +28,13 @@ function addLimitsArgs(parser: argparse.ArgumentParser) {
         help: `Maximum number of blocks that could be read in 1 query.
 This is somewhat tied to the maxOutputSizeInVoxelCountByPrecisionLevel
 in that the <maximum number of voxel> = maxRequestBlockCount * <block size>^3.
-The default block size is 96 which corresponds to 28,311,552 voxels with 32 max blocks.`
+The default block size is 96 which corresponds to 28,311,552 voxels with 32 max blocks.`,
     });
     parser.add_argument('--maxFractionalBoxVolume', {
         default: DefaultLimitsConfig.maxFractionalBoxVolume,
         metavar: 'VOLUME',
-        help: `The maximum fractional volume of the query box (to prevent queries that are too big).`
+        help:
+            `The maximum fractional volume of the query box (to prevent queries that are too big).`,
     });
     parser.add_argument('--maxOutputSizeInVoxelCountByPrecisionLevel', {
         nargs: '+',
@@ -41,7 +42,7 @@ The default block size is 96 which corresponds to 28,311,552 voxels with 32 max 
         metavar: 'LEVEL',
         help: `What is the (approximate) maximum desired size in voxel count by precision level
 Rule of thumb: <response gzipped size> in [<voxel count> / 8, <voxel count> / 4].
-The maximum number of voxels is tied to maxRequestBlockCount.`
+The maximum number of voxels is tied to maxRequestBlockCount.`,
     });
 }
 
@@ -49,26 +50,27 @@ function addServerArgs(parser: argparse.ArgumentParser) {
     parser.add_argument('--apiPrefix', {
         default: DefaultServerConfig.apiPrefix,
         metavar: 'PREFIX',
-        help: `Specify the prefix of the API, i.e. <host>/<apiPrefix>/<API queries>`
+        help: `Specify the prefix of the API, i.e. <host>/<apiPrefix>/<API queries>`,
     });
     parser.add_argument('--defaultPort', {
         default: DefaultServerConfig.defaultPort,
         metavar: 'PORT',
         type: 'int',
-        help: `Specify the port the server is running on`
+        help: `Specify the port the server is running on`,
     });
 
     parser.add_argument('--shutdownTimeoutMinutes', {
         default: DefaultServerConfig.shutdownTimeoutMinutes,
         metavar: 'TIME',
         type: 'int',
-        help: `0 for off, server will shut down after this amount of minutes.`
+        help: `0 for off, server will shut down after this amount of minutes.`,
     });
     parser.add_argument('--shutdownTimeoutVarianceMinutes', {
         default: DefaultServerConfig.shutdownTimeoutVarianceMinutes,
         metavar: 'VARIANCE',
         type: 'int',
-        help: `modifies the shutdown timer by +/- timeoutVarianceMinutes (to avoid multiple instances shutting at the same time)`
+        help:
+            `modifies the shutdown timer by +/- timeoutVarianceMinutes (to avoid multiple instances shutting at the same time)`,
     });
     parser.add_argument('--idMap', {
         nargs: 2,
@@ -76,9 +78,9 @@ function addServerArgs(parser: argparse.ArgumentParser) {
         metavar: ['TYPE', 'PATH'] as any,
         help: [
             'Map `id`s for a `type` to a file path or URL.',
-            'Example: x-ray \'../../data/mdb/xray/${id}-ccp4.mdb\'',
+            "Example: x-ray '../../data/mdb/xray/${id}-ccp4.mdb'",
             '',
-            '  - JS expressions can be used inside ${}, e.g. \'${id.substr(1, 2)}/${id}.mdb\'',
+            "  - JS expressions can be used inside ${}, e.g. '${id.substr(1, 2)}/${id}.mdb'",
             '  - Can be specified multiple times.',
             '  - The `TYPE` variable (e.g. `x-ray`) is arbitrary and depends on how you plan to use the server.',
             '    By default, Mol* Viewer uses `x-ray` and `em`, but any particular use case may vary. ',
@@ -89,7 +91,8 @@ function addServerArgs(parser: argparse.ArgumentParser) {
         default: DefaultServerConfig.healthCheckPath,
         action: 'append',
         metavar: 'PATH',
-        help: `File path(s) to use for health-checks. Will test if all files are accessible and report a failed health-check if that's not the case.`,
+        help:
+            `File path(s) to use for health-checks. Will test if all files are accessible and report a failed health-check if that's not the case.`,
     });
 }
 
@@ -97,21 +100,29 @@ function addJsonConfigArgs(parser: argparse.ArgumentParser) {
     parser.add_argument('--cfg', {
         help: [
             'JSON config file path',
-            'If a property is not specified, cmd line param/OS variable/default value are used.'
+            'If a property is not specified, cmd line param/OS variable/default value are used.',
         ].join('\n'),
         required: false,
     });
-    parser.add_argument('--printCfg', { help: 'Print current config for validation and exit.', required: false, action: 'store_true' });
-    parser.add_argument('--cfgTemplate', { help: 'Prints default JSON config template to be modified and exits.', required: false, action: 'store_true' });
+    parser.add_argument('--printCfg', {
+        help: 'Print current config for validation and exit.',
+        required: false,
+        action: 'store_true',
+    });
+    parser.add_argument('--cfgTemplate', {
+        help: 'Prints default JSON config template to be modified and exits.',
+        required: false,
+        action: 'store_true',
+    });
 }
 
 export interface ServerJsonConfig {
-    cfg?: string,
-    printCfg?: any,
-    cfgTemplate?: any
+    cfg?: string;
+    printCfg?: any;
+    cfgTemplate?: any;
 }
 
-export type ServerConfig = typeof DefaultServerConfig
+export type ServerConfig = typeof DefaultServerConfig;
 export const ServerConfig = { ...DefaultServerConfig };
 
 function setServerConfig(config: ServerConfig) {
@@ -136,10 +147,10 @@ const DefaultLimitsConfig = {
         4 * 1024 * 1024,
         8 * 1024 * 1024,
         16 * 1024 * 1024, // ~ 256*256*256
-        24 * 1024 * 1024
-    ]
+        24 * 1024 * 1024,
+    ],
 };
-export type LimitsConfig = typeof DefaultLimitsConfig
+export type LimitsConfig = typeof DefaultLimitsConfig;
 export const LimitsConfig = { ...DefaultLimitsConfig };
 
 function setLimitsConfig(config: LimitsConfig) {
@@ -148,7 +159,7 @@ function setLimitsConfig(config: LimitsConfig) {
     }
 }
 
-type FullServerConfig = ServerConfig & LimitsConfig
+type FullServerConfig = ServerConfig & LimitsConfig;
 
 function setConfig(config: FullServerConfig) {
     setServerConfig(config);
@@ -159,16 +170,16 @@ const ServerConfigTemplate: FullServerConfig = {
     ...DefaultServerConfig,
     idMap: [
         ['x-ray', './path-to-xray-data/${id.substr(1, 2)}/${id}.mdb'],
-        ['em', './path-to-em-data/emd-${id}.mdb']
+        ['em', './path-to-em-data/emd-${id}.mdb'],
     ] as [string, string][],
-    ...DefaultLimitsConfig
+    ...DefaultLimitsConfig,
 };
 
 export function configureServer() {
     const parser = new argparse.ArgumentParser({
         // version: VOLUME_SERVER_VERSION,
         add_help: true,
-        description: VOLUME_SERVER_HEADER
+        description: VOLUME_SERVER_HEADER,
     });
     addJsonConfigArgs(parser);
     addServerArgs(parser);
@@ -204,10 +215,17 @@ export function configureLocal() {
     const parser = new argparse.ArgumentParser({
         // version: VOLUME_SERVER_VERSION,
         add_help: true,
-        description: VOLUME_SERVER_HEADER
+        description: VOLUME_SERVER_HEADER,
     });
-    parser.add_argument('--jobs', { help: `Path to a JSON file with job specification.`, required: false });
-    parser.add_argument('--jobsTemplate', { help: 'Print example template for jobs.json and exit.', required: false, action: 'store_true' });
+    parser.add_argument('--jobs', {
+        help: `Path to a JSON file with job specification.`,
+        required: false,
+    });
+    parser.add_argument('--jobsTemplate', {
+        help: 'Print example template for jobs.json and exit.',
+        required: false,
+        action: 'store_true',
+    });
     addJsonConfigArgs(parser);
     addLimitsArgs(parser);
 
@@ -231,7 +249,7 @@ export function configureLocal() {
             process.exit(0);
         }
 
-        return config as LimitsConfig & { jobs: string, jobsTemplate: any };
+        return config as LimitsConfig & { jobs: string; jobsTemplate: any };
     } catch (e) {
         console.error('' + e);
         process.exit(1);

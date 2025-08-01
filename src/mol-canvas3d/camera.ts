@@ -5,8 +5,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mat4, Vec3, Vec4, EPSILON } from '../mol-math/linear-algebra.ts';
-import { Viewport, cameraProject, cameraUnproject } from './camera/util.ts';
+import { EPSILON, Mat4, Vec3, Vec4 } from '../mol-math/linear-algebra.ts';
+import { cameraProject, cameraUnproject, Viewport } from './camera/util.ts';
 import { CameraTransitionManager } from './camera/transition.ts';
 import { BehaviorSubject } from 'rxjs';
 import { Scene } from '../mol-gl/scene.ts';
@@ -16,18 +16,18 @@ import { Ray3D } from '../mol-math/geometry/primitives/ray3d.ts';
 export type { ICamera };
 
 interface ICamera {
-    readonly viewport: Viewport,
-    readonly view: Mat4,
-    readonly projection: Mat4,
-    readonly projectionView: Mat4,
-    readonly inverseProjectionView: Mat4,
-    readonly state: Readonly<Camera.Snapshot>,
-    readonly viewOffset: Camera.ViewOffset,
-    readonly far: number,
-    readonly near: number,
-    readonly fogFar: number,
-    readonly fogNear: number,
-    readonly headRotation: Mat4,
+    readonly viewport: Viewport;
+    readonly view: Mat4;
+    readonly projection: Mat4;
+    readonly projectionView: Mat4;
+    readonly inverseProjectionView: Mat4;
+    readonly state: Readonly<Camera.Snapshot>;
+    readonly viewOffset: Camera.ViewOffset;
+    readonly far: number;
+    readonly near: number;
+    readonly fogFar: number;
+    readonly fogNear: number;
+    readonly headRotation: Mat4;
 }
 
 const tmpClip = Vec4();
@@ -52,14 +52,26 @@ export class Camera implements ICamera {
     readonly transition: CameraTransitionManager = new CameraTransitionManager(this);
     readonly stateChanged = new BehaviorSubject<Partial<Camera.Snapshot>>(this.state);
 
-    get position() { return this.state.position; }
-    set position(v: Vec3) { Vec3.copy(this.state.position, v); }
+    get position() {
+        return this.state.position;
+    }
+    set position(v: Vec3) {
+        Vec3.copy(this.state.position, v);
+    }
 
-    get up() { return this.state.up; }
-    set up(v: Vec3) { Vec3.copy(this.state.up, v); }
+    get up() {
+        return this.state.up;
+    }
+    set up(v: Vec3) {
+        Vec3.copy(this.state.up, v);
+    }
 
-    get target() { return this.state.target; }
-    set target(v: Vec3) { Vec3.copy(this.state.target, v); }
+    get target() {
+        return this.state.target;
+    }
+    set target(v: Vec3) {
+        Vec3.copy(this.state.target, v);
+    }
 
     private prevProjection = Mat4.identity();
     private prevView = Mat4.identity();
@@ -72,18 +84,25 @@ export class Camera implements ICamera {
             return false;
         }
 
-        const height = 2 * Math.tan(snapshot.fov / 2) * Vec3.distance(snapshot.position, snapshot.target) * this.state.scale;
+        const height = 2 * Math.tan(snapshot.fov / 2) *
+            Vec3.distance(snapshot.position, snapshot.target) * this.state.scale;
         this.zoom = this.viewport.height / height;
 
         updateClip(this);
 
         switch (this.state.mode) {
-            case 'orthographic': updateOrtho(this); break;
-            case 'perspective': updatePers(this); break;
-            default: assertUnreachable(this.state.mode);
+            case 'orthographic':
+                updateOrtho(this);
+                break;
+            case 'perspective':
+                updatePers(this);
+                break;
+            default:
+                assertUnreachable(this.state.mode);
         }
 
-        const changed = !Mat4.areEqual(this.projection, this.prevProjection, EPSILON) || !Mat4.areEqual(this.view, this.prevView, EPSILON);
+        const changed = !Mat4.areEqual(this.projection, this.prevProjection, EPSILON) ||
+            !Mat4.areEqual(this.view, this.prevView, EPSILON);
 
         if (changed) {
             Mat4.mul(this.projectionView, this.projection, this.view);
@@ -111,14 +130,30 @@ export class Camera implements ICamera {
     }
 
     getTargetDistance(radius: number) {
-        return Camera.targetDistance(radius, this.state.mode, this.state.fov, this.viewport.width, this.viewport.height);
+        return Camera.targetDistance(
+            radius,
+            this.state.mode,
+            this.state.fov,
+            this.viewport.width,
+            this.viewport.height,
+        );
     }
 
-    getFocus(target: Vec3, radius: number, up?: Vec3, dir?: Vec3, snapshot?: Partial<Camera.Snapshot>): Partial<Camera.Snapshot> {
+    getFocus(
+        target: Vec3,
+        radius: number,
+        up?: Vec3,
+        dir?: Vec3,
+        snapshot?: Partial<Camera.Snapshot>,
+    ): Partial<Camera.Snapshot> {
         const r = Math.max(radius, 0.01);
         const targetDistance = this.getTargetDistance(r);
 
-        Vec3.sub(this.deltaDirection, snapshot?.target ?? this.target, snapshot?.position ?? this.position);
+        Vec3.sub(
+            this.deltaDirection,
+            snapshot?.target ?? this.target,
+            snapshot?.position ?? this.position,
+        );
         if (dir) Vec3.matchDirection(this.deltaDirection, dir, this.deltaDirection);
         Vec3.setMagnitude(this.deltaDirection, this.deltaDirection, targetDistance);
         Vec3.sub(this.newPosition, target, this.deltaDirection);
@@ -217,9 +252,11 @@ export class Camera implements ICamera {
 }
 
 export namespace Camera {
-    export type Mode = 'perspective' | 'orthographic'
+    export type Mode = 'perspective' | 'orthographic';
 
-    export type SnapshotProvider = Partial<Snapshot> | ((scene: Scene, camera: Camera) => Partial<Snapshot>)
+    export type SnapshotProvider =
+        | Partial<Snapshot>
+        | ((scene: Scene, camera: Camera) => Partial<Snapshot>);
 
     /**
      * Sets an offseted view in a larger frustum. This is useful for
@@ -227,25 +264,36 @@ export namespace Camera {
      * - jittering the camera position for sampling
      */
     export interface ViewOffset {
-        enabled: boolean,
-        fullWidth: number,
-        fullHeight: number,
-        offsetX: number,
-        offsetY: number,
-        width: number,
-        height: number
+        enabled: boolean;
+        fullWidth: number;
+        fullHeight: number;
+        offsetX: number;
+        offsetY: number;
+        width: number;
+        height: number;
     }
 
     export function ViewOffset(): ViewOffset {
         return {
             enabled: false,
-            fullWidth: 1, fullHeight: 1,
-            offsetX: 0, offsetY: 0,
-            width: 1, height: 1
+            fullWidth: 1,
+            fullHeight: 1,
+            offsetX: 0,
+            offsetY: 0,
+            width: 1,
+            height: 1,
         };
     }
 
-    export function setViewOffset(out: ViewOffset, fullWidth: number, fullHeight: number, offsetX: number, offsetY: number, width: number, height: number) {
+    export function setViewOffset(
+        out: ViewOffset,
+        fullWidth: number,
+        fullHeight: number,
+        offsetX: number,
+        offsetY: number,
+        width: number,
+        height: number,
+    ) {
         out.fullWidth = fullWidth;
         out.fullHeight = fullHeight;
         out.offsetX = offsetX;
@@ -264,14 +312,21 @@ export namespace Camera {
         out.height = view.height;
     }
 
-    export function targetDistance(radius: number, mode: Mode, fov: number, width: number, height: number) {
+    export function targetDistance(
+        radius: number,
+        mode: Mode,
+        fov: number,
+        width: number,
+        height: number,
+    ) {
         const r = Math.max(radius, 0.01);
         const aspect = width / height;
-        const aspectFactor = (height < width ? 1 : aspect);
-        if (mode === 'orthographic')
+        const aspectFactor = height < width ? 1 : aspect;
+        if (mode === 'orthographic') {
             return Math.abs((r / aspectFactor) / Math.tan(fov / 2));
-        else
+        } else {
             return Math.abs((r / aspectFactor) / Math.sin(fov / 2));
+        }
     }
 
     export function createDefaultSnapshot(): Snapshot {
@@ -295,21 +350,21 @@ export namespace Camera {
     }
 
     export interface Snapshot {
-        mode: Mode
-        fov: number
+        mode: Mode;
+        fov: number;
 
-        position: Vec3
-        up: Vec3
-        target: Vec3
+        position: Vec3;
+        up: Vec3;
+        target: Vec3;
 
-        radius: number
-        radiusMax: number
-        fog: number
-        clipFar: boolean
-        minNear: number
-        minFar: number
+        radius: number;
+        radiusMax: number;
+        fog: number;
+        clipFar: boolean;
+        minNear: number;
+        minFar: number;
 
-        scale: number
+        scale: number;
     }
 
     export function copySnapshot(out: Snapshot, source?: Partial<Snapshot>) {
@@ -335,18 +390,18 @@ export namespace Camera {
     }
 
     export function areSnapshotsEqual(a: Snapshot, b: Snapshot) {
-        return a.mode === b.mode
-            && a.fov === b.fov
-            && a.radius === b.radius
-            && a.radiusMax === b.radiusMax
-            && a.fog === b.fog
-            && a.clipFar === b.clipFar
-            && a.minNear === b.minNear
-            && a.minFar === b.minFar
-            && a.scale === b.scale
-            && Vec3.exactEquals(a.position, b.position)
-            && Vec3.exactEquals(a.up, b.up)
-            && Vec3.exactEquals(a.target, b.target);
+        return a.mode === b.mode &&
+            a.fov === b.fov &&
+            a.radius === b.radius &&
+            a.radiusMax === b.radiusMax &&
+            a.fog === b.fog &&
+            a.clipFar === b.clipFar &&
+            a.minNear === b.minNear &&
+            a.minFar === b.minFar &&
+            a.scale === b.scale &&
+            Vec3.exactEquals(a.position, b.position) &&
+            Vec3.exactEquals(a.up, b.up) &&
+            Vec3.exactEquals(a.target, b.target);
     }
 }
 

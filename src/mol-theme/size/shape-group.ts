@@ -14,12 +14,15 @@ const DefaultSize = 1;
 const Description = 'Assigns sizes as defined by the shape object.';
 
 export const ShapeGroupSizeThemeParams = {};
-export type ShapeGroupSizeThemeParams = typeof ShapeGroupSizeThemeParams
+export type ShapeGroupSizeThemeParams = typeof ShapeGroupSizeThemeParams;
 export function getShapeGroupSizeThemeParams(ctx: ThemeDataContext) {
     return ShapeGroupSizeThemeParams; // TODO return copy
 }
 
-export function ShapeGroupSizeTheme(ctx: ThemeDataContext, props: PD.Values<ShapeGroupSizeThemeParams>): SizeTheme<ShapeGroupSizeThemeParams> {
+export function ShapeGroupSizeTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<ShapeGroupSizeThemeParams>,
+): SizeTheme<ShapeGroupSizeThemeParams> {
     return {
         factory: ShapeGroupSizeTheme,
         granularity: 'groupInstance',
@@ -30,16 +33,19 @@ export function ShapeGroupSizeTheme(ctx: ThemeDataContext, props: PD.Values<Shap
             return DefaultSize;
         },
         props,
-        description: Description
+        description: Description,
     };
 }
 
-export const ShapeGroupSizeThemeProvider: SizeTheme.Provider<ShapeGroupSizeThemeParams, 'shape-group'> = {
+export const ShapeGroupSizeThemeProvider: SizeTheme.Provider<
+    ShapeGroupSizeThemeParams,
+    'shape-group'
+> = {
     name: 'shape-group',
     label: 'Shape Group',
     category: '',
     factory: ShapeGroupSizeTheme,
     getParams: getShapeGroupSizeThemeParams,
     defaultValues: PD.getDefaultValues(ShapeGroupSizeThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.shape
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.shape,
 };

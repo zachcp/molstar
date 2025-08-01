@@ -11,11 +11,11 @@ import * as path from 'path';
 import fetch from 'node-fetch';
 
 import { parseCsv } from '../../mol-io/reader/csv/parser.ts';
-import { CifFrame, CifBlock } from '../../mol-io/reader/cif.ts';
+import { CifBlock, CifFrame } from '../../mol-io/reader/cif.ts';
 import { parseCifText } from '../../mol-io/reader/cif/text/parser.ts';
 import { generateSchema } from './util/cif-dic.ts';
 import { generate } from './util/generate.ts';
-import { Filter, Database } from './util/schema.ts';
+import { Database, Filter } from './util/schema.ts';
 import { parseImportGet } from './util/helper.ts';
 
 function getDicVersion(block: CifBlock) {
@@ -26,7 +26,14 @@ function getDicNamespace(block: CifBlock) {
     return block.categories.dictionary.getField('namespace')!.str(0);
 }
 
-async function runGenerateSchemaMmcif(name: string, fieldNamesPath: string, typescript = false, out: string, moldbImportPath: string, addAliases: boolean) {
+async function runGenerateSchemaMmcif(
+    name: string,
+    fieldNamesPath: string,
+    typescript = false,
+    out: string,
+    moldbImportPath: string,
+    addAliases: boolean,
+) {
     await ensureMmcifDicAvailable();
     const mmcifDic = await parseCifText(fs.readFileSync(MMCIF_DIC_PATH, 'utf8')).run();
     if (mmcifDic.isError) throw mmcifDic;
@@ -42,15 +49,36 @@ async function runGenerateSchemaMmcif(name: string, fieldNamesPath: string, type
     const mmcifDicVersion = getDicVersion(mmcifDic.result.blocks[0]);
     const ihmDicVersion = getDicVersion(ihmDic.result.blocks[0]);
     const maDicVersion = getDicVersion(maDic.result.blocks[0]);
-    const version = `Dictionary versions: mmCIF ${mmcifDicVersion}, IHM ${ihmDicVersion}, MA ${maDicVersion}.`;
+    const version =
+        `Dictionary versions: mmCIF ${mmcifDicVersion}, IHM ${ihmDicVersion}, MA ${maDicVersion}.`;
 
-    const frames: CifFrame[] = [...mmcifDic.result.blocks[0].saveFrames, ...ihmDic.result.blocks[0].saveFrames, ...maDic.result.blocks[0].saveFrames];
+    const frames: CifFrame[] = [
+        ...mmcifDic.result.blocks[0].saveFrames,
+        ...ihmDic.result.blocks[0].saveFrames,
+        ...maDic.result.blocks[0].saveFrames,
+    ];
     const schema = generateSchema(frames);
 
-    await runGenerateSchema(name, version, schema, fieldNamesPath, typescript, out, moldbImportPath, addAliases);
+    await runGenerateSchema(
+        name,
+        version,
+        schema,
+        fieldNamesPath,
+        typescript,
+        out,
+        moldbImportPath,
+        addAliases,
+    );
 }
 
-async function runGenerateSchemaCifCore(name: string, fieldNamesPath: string, typescript = false, out: string, moldbImportPath: string, addAliases: boolean) {
+async function runGenerateSchemaCifCore(
+    name: string,
+    fieldNamesPath: string,
+    typescript = false,
+    out: string,
+    moldbImportPath: string,
+    addAliases: boolean,
+) {
     await ensureCifCoreDicAvailable();
     const cifCoreDic = await parseCifText(fs.readFileSync(CIF_CORE_DIC_PATH, 'utf8')).run();
     if (cifCoreDic.isError) throw cifCoreDic;
@@ -62,10 +90,22 @@ async function runGenerateSchemaCifCore(name: string, fieldNamesPath: string, ty
     const imports = await resolveImports(frames, DIC_DIR);
     const schema = generateSchema(frames, imports);
 
-    await runGenerateSchema(name, version, schema, fieldNamesPath, typescript, out, moldbImportPath, addAliases);
+    await runGenerateSchema(
+        name,
+        version,
+        schema,
+        fieldNamesPath,
+        typescript,
+        out,
+        moldbImportPath,
+        addAliases,
+    );
 }
 
-async function resolveImports(frames: CifFrame[], baseDir: string): Promise<Map<string, CifFrame[]>> {
+async function resolveImports(
+    frames: CifFrame[],
+    baseDir: string,
+): Promise<Map<string, CifFrame[]>> {
     const imports = new Map<string, CifFrame[]>();
 
     for (const d of frames) {
@@ -76,7 +116,8 @@ async function resolveImports(frames: CifFrame[], baseDir: string): Promise<Map<
                 if (!file) continue;
                 if (imports.has(file)) continue;
 
-                const dic = await parseCifText(fs.readFileSync(path.join(baseDir, file), 'utf8')).run();
+                const dic = await parseCifText(fs.readFileSync(path.join(baseDir, file), 'utf8'))
+                    .run();
                 if (dic.isError) throw dic;
 
                 imports.set(file, [...dic.result.blocks[0].saveFrames]);
@@ -87,7 +128,15 @@ async function resolveImports(frames: CifFrame[], baseDir: string): Promise<Map<
     return imports;
 }
 
-async function runGenerateSchemaDic(name: string, dicPath: string, fieldNamesPath: string, typescript = false, out: string, moldbImportPath: string, addAliases: boolean) {
+async function runGenerateSchemaDic(
+    name: string,
+    dicPath: string,
+    fieldNamesPath: string,
+    typescript = false,
+    out: string,
+    moldbImportPath: string,
+    addAliases: boolean,
+) {
     const dic = await parseCifText(fs.readFileSync(dicPath, 'utf8')).run();
     if (dic.isError) throw dic;
 
@@ -99,12 +148,32 @@ async function runGenerateSchemaDic(name: string, dicPath: string, fieldNamesPat
     const imports = await resolveImports(frames, path.dirname(dicPath));
     const schema = generateSchema(frames, imports);
 
-    await runGenerateSchema(name, version, schema, fieldNamesPath, typescript, out, moldbImportPath, addAliases);
+    await runGenerateSchema(
+        name,
+        version,
+        schema,
+        fieldNamesPath,
+        typescript,
+        out,
+        moldbImportPath,
+        addAliases,
+    );
 }
 
-async function runGenerateSchema(name: string, version: string, schema: Database, fieldNamesPath: string, typescript = false, out: string, moldbImportPath: string, addAliases: boolean) {
+async function runGenerateSchema(
+    name: string,
+    version: string,
+    schema: Database,
+    fieldNamesPath: string,
+    typescript = false,
+    out: string,
+    moldbImportPath: string,
+    addAliases: boolean,
+) {
     const filter = fieldNamesPath ? await getFieldNamesFilter(fieldNamesPath) : undefined;
-    const output = typescript ? generate(name, version, schema, filter, moldbImportPath, addAliases) : JSON.stringify(schema, undefined, 4);
+    const output = typescript
+        ? generate(name, version, schema, filter, moldbImportPath, addAliases)
+        : JSON.stringify(schema, undefined, 4);
 
     if (out) {
         fs.writeFileSync(out, output);
@@ -133,9 +202,15 @@ async function getFieldNamesFilter(fieldNamesPath: string): Promise<Filter> {
     return filter;
 }
 
-async function ensureMmcifDicAvailable() { await ensureDicAvailable(MMCIF_DIC_PATH, MMCIF_DIC_URL); }
-async function ensureIhmDicAvailable() { await ensureDicAvailable(IHM_DIC_PATH, IHM_DIC_URL); }
-async function ensureMaDicAvailable() { await ensureDicAvailable(MA_DIC_PATH, MA_DIC_URL); }
+async function ensureMmcifDicAvailable() {
+    await ensureDicAvailable(MMCIF_DIC_PATH, MMCIF_DIC_URL);
+}
+async function ensureIhmDicAvailable() {
+    await ensureDicAvailable(IHM_DIC_PATH, IHM_DIC_URL);
+}
+async function ensureMaDicAvailable() {
+    await ensureDicAvailable(MA_DIC_PATH, MA_DIC_URL);
+}
 async function ensureCifCoreDicAvailable() {
     await ensureDicAvailable(CIF_CORE_DIC_PATH, CIF_CORE_DIC_URL);
     await ensureDicAvailable(CIF_CORE_ENUM_PATH, CIF_CORE_ENUM_URL);
@@ -166,62 +241,65 @@ const MA_DIC_URL = 'https://raw.githubusercontent.com/ihmwg/ModelCIF/master/dist
 const CIF_CORE_DIC_PATH = `${DIC_DIR}/cif_core.dic`;
 const CIF_CORE_DIC_URL = 'https://raw.githubusercontent.com/COMCIFS/cif_core/master/cif_core.dic';
 const CIF_CORE_ENUM_PATH = `${DIC_DIR}/templ_enum.cif`;
-const CIF_CORE_ENUM_URL = 'https://raw.githubusercontent.com/COMCIFS/cif_core/master/templ_enum.cif';
+const CIF_CORE_ENUM_URL =
+    'https://raw.githubusercontent.com/COMCIFS/cif_core/master/templ_enum.cif';
 const CIF_CORE_ATTR_PATH = `${DIC_DIR}/templ_attr.cif`;
-const CIF_CORE_ATTR_URL = 'https://raw.githubusercontent.com/COMCIFS/cif_core/master/templ_attr.cif';
+const CIF_CORE_ATTR_URL =
+    'https://raw.githubusercontent.com/COMCIFS/cif_core/master/templ_attr.cif';
 
 const parser = new argparse.ArgumentParser({
     add_help: true,
-    description: 'Create schema from mmcif dictionary (v50 plus IHM and entity_branch extensions, downloaded from wwPDB)'
+    description:
+        'Create schema from mmcif dictionary (v50 plus IHM and entity_branch extensions, downloaded from wwPDB)',
 });
 parser.add_argument('--preset', '-p', {
     default: '',
     choices: ['', 'mmCIF', 'CCD', 'BIRD', 'CifCore'],
-    help: 'Preset name'
+    help: 'Preset name',
 });
 parser.add_argument('--name', '-n', {
     default: '',
-    help: 'Schema name'
+    help: 'Schema name',
 });
 parser.add_argument('--out', '-o', {
-    help: 'Generated schema output path, if not given printed to stdout'
+    help: 'Generated schema output path, if not given printed to stdout',
 });
 parser.add_argument('--targetFormat', '-tf', {
     default: 'typescript-molstar',
     choices: ['typescript-molstar', 'json-internal'],
-    help: 'Target format'
+    help: 'Target format',
 });
 parser.add_argument('--dicPath', '-d', {
     default: '',
-    help: 'Path to dictionary'
+    help: 'Path to dictionary',
 });
 parser.add_argument('--fieldNamesPath', '-fn', {
     default: '',
-    help: 'Field names to include'
+    help: 'Field names to include',
 });
 parser.add_argument('--forceDicDownload', '-f', {
     action: 'store_true',
-    help: 'Force download of dictionaries'
+    help: 'Force download of dictionaries',
 });
 parser.add_argument('--moldataImportPath', '-mip', {
     default: 'molstar/lib/mol-data',
-    help: 'mol-data import path (for typescript target only)'
+    help: 'mol-data import path (for typescript target only)',
 });
 parser.add_argument('--addAliases', '-aa', {
     action: 'store_true',
-    help: 'Add field name/path aliases'
+    help: 'Add field name/path aliases',
 });
 interface Args {
-    name: string
-    preset: '' | 'mmCIF' | 'CCD' | 'BIRD' | 'CifCore'
-    forceDicDownload: boolean
-    dic: '' | 'mmCIF' | 'CifCore'
-    dicPath: string,
-    fieldNamesPath: string
-    targetFormat: 'typescript-molstar' | 'json-internal'
-    out: string,
-    moldataImportPath: string
-    addAliases: boolean
+    name: string;
+    preset: '' | 'mmCIF' | 'CCD' | 'BIRD' | 'CifCore';
+    forceDicDownload: boolean;
+    dic: '' | 'mmCIF' | 'CifCore';
+    dicPath: string;
+    fieldNamesPath: string;
+    targetFormat: 'typescript-molstar' | 'json-internal';
+    out: string;
+    moldataImportPath: string;
+    addAliases: boolean;
 }
 const args: Args = parser.parse_args();
 
@@ -231,37 +309,71 @@ switch (args.preset) {
     case 'mmCIF':
         args.name = 'mmCIF';
         args.dic = 'mmCIF';
-        args.fieldNamesPath = path.resolve(__dirname, '../../../../data/cif-field-names/mmcif-field-names.csv');
+        args.fieldNamesPath = path.resolve(
+            __dirname,
+            '../../../../data/cif-field-names/mmcif-field-names.csv',
+        );
         break;
     case 'CCD':
         args.name = 'CCD';
         args.dic = 'mmCIF';
-        args.fieldNamesPath = path.resolve(__dirname, '../../../../data/cif-field-names/ccd-field-names.csv');
+        args.fieldNamesPath = path.resolve(
+            __dirname,
+            '../../../../data/cif-field-names/ccd-field-names.csv',
+        );
         break;
     case 'BIRD':
         args.name = 'BIRD';
         args.dic = 'mmCIF';
-        args.fieldNamesPath = path.resolve(__dirname, '../../../../data/cif-field-names/bird-field-names.csv');
+        args.fieldNamesPath = path.resolve(
+            __dirname,
+            '../../../../data/cif-field-names/bird-field-names.csv',
+        );
         break;
     case 'CifCore':
         args.name = 'CifCore';
         args.dic = 'CifCore';
-        args.fieldNamesPath = path.resolve(__dirname, '../../../../data/cif-field-names/cif-core-field-names.csv');
+        args.fieldNamesPath = path.resolve(
+            __dirname,
+            '../../../../data/cif-field-names/cif-core-field-names.csv',
+        );
         break;
 }
 
 if (args.name) {
     const typescript = args.targetFormat === 'typescript-molstar';
     if (args.dicPath) {
-        runGenerateSchemaDic(args.name, args.dicPath, args.fieldNamesPath, typescript, args.out, args.moldataImportPath, args.addAliases).catch(e => {
+        runGenerateSchemaDic(
+            args.name,
+            args.dicPath,
+            args.fieldNamesPath,
+            typescript,
+            args.out,
+            args.moldataImportPath,
+            args.addAliases,
+        ).catch((e) => {
             console.error(e);
         });
     } else if (args.dic === 'mmCIF') {
-        runGenerateSchemaMmcif(args.name, args.fieldNamesPath, typescript, args.out, args.moldataImportPath, args.addAliases).catch(e => {
+        runGenerateSchemaMmcif(
+            args.name,
+            args.fieldNamesPath,
+            typescript,
+            args.out,
+            args.moldataImportPath,
+            args.addAliases,
+        ).catch((e) => {
             console.error(e);
         });
     } else if (args.dic === 'CifCore') {
-        runGenerateSchemaCifCore(args.name, args.fieldNamesPath, typescript, args.out, args.moldataImportPath, args.addAliases).catch(e => {
+        runGenerateSchemaCifCore(
+            args.name,
+            args.fieldNamesPath,
+            typescript,
+            args.out,
+            args.moldataImportPath,
+            args.addAliases,
+        ).catch((e) => {
             console.error(e);
         });
     }

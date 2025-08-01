@@ -4,21 +4,54 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PolymerBackboneCylinderVisual, PolymerBackboneCylinderParams } from '../visual/polymer-backbone-cylinder.ts';
+import {
+    PolymerBackboneCylinderParams,
+    PolymerBackboneCylinderVisual,
+} from '../visual/polymer-backbone-cylinder.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { UnitsRepresentation } from '../units-representation.ts';
-import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
-import { Representation, RepresentationContext, RepresentationParamsGetter } from '../../representation.ts';
+import {
+    StructureRepresentation,
+    StructureRepresentationProvider,
+    StructureRepresentationStateBuilder,
+} from '../representation.ts';
+import {
+    Representation,
+    RepresentationContext,
+    RepresentationParamsGetter,
+} from '../../representation.ts';
 import { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
 import { Structure } from '../../../mol-model/structure.ts';
-import { PolymerBackboneSphereParams, PolymerBackboneSphereVisual } from '../visual/polymer-backbone-sphere.ts';
+import {
+    PolymerBackboneSphereParams,
+    PolymerBackboneSphereVisual,
+} from '../visual/polymer-backbone-sphere.ts';
 import { PolymerGapParams, PolymerGapVisual } from '../visual/polymer-gap-cylinder.ts';
 import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const BackboneVisuals = {
-    'polymer-backbone-cylinder': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, PolymerBackboneCylinderParams>) => UnitsRepresentation('Polymer backbone cylinder', ctx, getParams, PolymerBackboneCylinderVisual),
-    'polymer-backbone-sphere': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, PolymerBackboneSphereParams>) => UnitsRepresentation('Polymer backbone sphere', ctx, getParams, PolymerBackboneSphereVisual),
-    'polymer-gap': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, PolymerGapParams>) => UnitsRepresentation('Polymer gap cylinder', ctx, getParams, PolymerGapVisual),
+    'polymer-backbone-cylinder': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, PolymerBackboneCylinderParams>,
+    ) => UnitsRepresentation(
+        'Polymer backbone cylinder',
+        ctx,
+        getParams,
+        PolymerBackboneCylinderVisual,
+    ),
+    'polymer-backbone-sphere': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, PolymerBackboneSphereParams>,
+    ) => UnitsRepresentation(
+        'Polymer backbone sphere',
+        ctx,
+        getParams,
+        PolymerBackboneSphereVisual,
+    ),
+    'polymer-gap': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, PolymerGapParams>,
+    ) => UnitsRepresentation('Polymer gap cylinder', ctx, getParams, PolymerGapVisual),
 };
 
 export const BackboneParams = {
@@ -26,16 +59,22 @@ export const BackboneParams = {
     ...PolymerBackboneCylinderParams,
     ...PolymerGapParams,
     sizeAspectRatio: PD.Numeric(1, { min: 0.1, max: 3, step: 0.1 }),
-    visuals: PD.MultiSelect(['polymer-backbone-cylinder', 'polymer-backbone-sphere', 'polymer-gap'], PD.objectToOptions(BackboneVisuals)),
+    visuals: PD.MultiSelect(
+        ['polymer-backbone-cylinder', 'polymer-backbone-sphere', 'polymer-gap'],
+        PD.objectToOptions(BackboneVisuals),
+    ),
     bumpFrequency: PD.Numeric(0, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
     density: PD.Numeric(0.1, { min: 0, max: 1, step: 0.01 }, BaseGeometry.ShadingCategory),
-    colorMode: PD.Select('default', PD.arrayToOptions(['default', 'interpolate'] as const), { ...BaseGeometry.ShadingCategory, isHidden: true }),
+    colorMode: PD.Select('default', PD.arrayToOptions(['default', 'interpolate'] as const), {
+        ...BaseGeometry.ShadingCategory,
+        isHidden: true,
+    }),
 };
-export type BackboneParams = typeof BackboneParams
+export type BackboneParams = typeof BackboneParams;
 export function getBackboneParams(ctx: ThemeRegistryContext, structure: Structure) {
     const params = PD.clone(BackboneParams);
     let hasGaps = false;
-    structure.units.forEach(u => {
+    structure.units.forEach((u) => {
         if (!hasGaps && u.gapElements.length) hasGaps = true;
     });
     params.visuals.defaultValue = ['polymer-backbone-cylinder', 'polymer-backbone-sphere'];
@@ -43,9 +82,18 @@ export function getBackboneParams(ctx: ThemeRegistryContext, structure: Structur
     return params;
 }
 
-export type BackboneRepresentation = StructureRepresentation<BackboneParams>
-export function BackboneRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, BackboneParams>): BackboneRepresentation {
-    return Representation.createMulti('Backbone', ctx, getParams, StructureRepresentationStateBuilder, BackboneVisuals as unknown as Representation.Def<Structure, BackboneParams>);
+export type BackboneRepresentation = StructureRepresentation<BackboneParams>;
+export function BackboneRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, BackboneParams>,
+): BackboneRepresentation {
+    return Representation.createMulti(
+        'Backbone',
+        ctx,
+        getParams,
+        StructureRepresentationStateBuilder,
+        BackboneVisuals as unknown as Representation.Def<Structure, BackboneParams>,
+    );
 }
 
 export const BackboneRepresentationProvider = StructureRepresentationProvider({

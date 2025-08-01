@@ -13,27 +13,32 @@ import { StructureElement } from '../../../mol-model/structure/structure.ts';
 import { IntMap } from '../../../mol-data/int.ts';
 
 export { InteractionsIntraContacts };
-interface InteractionsIntraContacts extends IntAdjacencyGraph<Features.FeatureIndex, InteractionsIntraContacts.Props> {
-    readonly elementsIndex: InteractionsIntraContacts.ElementsIndex
+interface InteractionsIntraContacts
+    extends IntAdjacencyGraph<Features.FeatureIndex, InteractionsIntraContacts.Props> {
+    readonly elementsIndex: InteractionsIntraContacts.ElementsIndex;
 }
 namespace InteractionsIntraContacts {
     export type Props = {
-        readonly type: ArrayLike<InteractionType>
-        readonly flag: AssignableArrayLike<InteractionFlag>
-    }
+        readonly type: ArrayLike<InteractionType>;
+        readonly flag: AssignableArrayLike<InteractionFlag>;
+    };
 
     /** maps unit elements to contacts, range for unit element i is offsets[i] to offsets[i + 1] */
     export type ElementsIndex = {
         /** intra contact indices */
-        readonly indices: ArrayLike<number>
+        readonly indices: ArrayLike<number>;
         /** range for unit element i is offsets[i] to offsets[i + 1] */
-        readonly offsets: ArrayLike<number>
-    }
+        readonly offsets: ArrayLike<number>;
+    };
 
     /**
      * Note: assumes that feature members of a contact are non-overlapping
      */
-    export function createElementsIndex(contacts: IntAdjacencyGraph<Features.FeatureIndex, Props>, features: Features, elementsCount: number) {
+    export function createElementsIndex(
+        contacts: IntAdjacencyGraph<Features.FeatureIndex, Props>,
+        features: Features,
+        elementsCount: number,
+    ) {
         const offsets = new Int32Array(elementsCount + 1);
         const bucketFill = new Int32Array(elementsCount);
         const bucketSizes = new Int32Array(elementsCount);
@@ -84,10 +89,14 @@ namespace InteractionsIntraContacts {
 }
 
 export { InteractionsInterContacts };
-class InteractionsInterContacts extends InterUnitGraph<number, Features.FeatureIndex, InteractionsInterContacts.Props> {
+class InteractionsInterContacts
+    extends InterUnitGraph<number, Features.FeatureIndex, InteractionsInterContacts.Props> {
     private readonly elementKeyIndex: Map<string, number[]>;
 
-    getContactIndicesForElement(index: StructureElement.UnitIndex, unit: Unit): ReadonlyArray<number> {
+    getContactIndicesForElement(
+        index: StructureElement.UnitIndex,
+        unit: Unit,
+    ): ReadonlyArray<number> {
         return this.elementKeyIndex.get(this.getElementKey(index, unit.id)) || [];
     }
 
@@ -95,7 +104,17 @@ class InteractionsInterContacts extends InterUnitGraph<number, Features.FeatureI
         return `${index}|${unitId}`;
     }
 
-    constructor(map: Map<number, InterUnitGraph.UnitPairEdges<number, Features.FeatureIndex, InteractionsInterContacts.Props>[]>, unitsFeatures: IntMap<Features>) {
+    constructor(
+        map: Map<
+            number,
+            InterUnitGraph.UnitPairEdges<
+                number,
+                Features.FeatureIndex,
+                InteractionsInterContacts.Props
+            >[]
+        >,
+        unitsFeatures: IntMap<Features>,
+    ) {
         super(map);
 
         this.elementKeyIndex = new Map<string, number[]>();
@@ -115,7 +134,7 @@ class InteractionsInterContacts extends InterUnitGraph<number, Features.FeatureI
     }
 }
 namespace InteractionsInterContacts {
-    export type Props = { type: InteractionType, flag: InteractionFlag }
+    export type Props = { type: InteractionType; flag: InteractionFlag };
 }
 
 export enum InteractionFlag {
@@ -172,7 +191,7 @@ export const enum FeatureType {
     IonicTypePartner = 10,
     DativeBondPartner = 11,
     TransitionMetal = 12,
-    IonicTypeMetal = 13
+    IonicTypeMetal = 13,
 }
 
 // to use with isolatedModules
@@ -190,7 +209,7 @@ export enum FeatureTypes {
     IonicTypePartner = FeatureType.IonicTypePartner,
     DativeBondPartner = FeatureType.DativeBondPartner,
     TransitionMetal = FeatureType.TransitionMetal,
-    IonicTypeMetal = FeatureType.IonicTypeMetal
+    IonicTypeMetal = FeatureType.IonicTypeMetal,
 }
 
 export function featureTypeLabel(type: FeatureType): string {
@@ -237,7 +256,7 @@ export enum FeatureGroup {
     Halocarbon = 7,
     Guanidine = 8,
     Acetamidine = 9,
-    Carboxylate = 10
+    Carboxylate = 10,
 }
 
 export function featureGroupLabel(group: FeatureGroup): string {

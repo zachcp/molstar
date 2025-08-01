@@ -7,9 +7,9 @@
 import { Column } from '../db.ts';
 
 export interface Grouping<V, K> {
-    map: Map<K, V[]>,
-    keys: ReadonlyArray<K>,
-    groups: ReadonlyArray<ReadonlyArray<V>>
+    map: Map<K, V[]>;
+    keys: ReadonlyArray<K>;
+    groups: ReadonlyArray<ReadonlyArray<V>>;
 }
 
 class GroupingImpl<K, V> {
@@ -34,7 +34,7 @@ class GroupingImpl<K, V> {
         return { keys: this.keys, groups: this.groups, map: this.map };
     }
 
-    constructor(private getKey: (v: V) => K) { }
+    constructor(private getKey: (v: V) => K) {}
 }
 
 export function Grouper<V, K>(getKey: (x: V) => K) {

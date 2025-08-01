@@ -5,21 +5,21 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { SpacegroupCell, Box3D, Sphere3D } from '../../mol-math/geometry.ts';
-import { Tensor, Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
-import { Histogram, calculateHistogram } from '../../mol-math/histogram.ts';
+import { Box3D, SpacegroupCell, Sphere3D } from '../../mol-math/geometry.ts';
+import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { calculateHistogram, Histogram } from '../../mol-math/histogram.ts';
 import { lerp } from '../../mol-math/interpolate.ts';
 
 /** The basic unit cell that contains the grid data. */
 interface Grid {
-    readonly transform: Grid.Transform,
-    readonly cells: Tensor,
+    readonly transform: Grid.Transform;
+    readonly cells: Tensor;
     readonly stats: Readonly<{
-        min: number,
-        max: number,
-        mean: number,
-        sigma: number
-    }>
+        min: number;
+        max: number;
+        mean: number;
+        sigma: number;
+    }>;
 }
 
 namespace Grid {
@@ -29,7 +29,10 @@ namespace Grid {
         stats: { min: 0, max: 0, mean: 0, sigma: 0 },
     };
 
-    export type Transform = { kind: 'spacegroup', cell: SpacegroupCell, fractionalBox: Box3D } | { kind: 'matrix', matrix: Mat4 }
+    export type Transform = { kind: 'spacegroup'; cell: SpacegroupCell; fractionalBox: Box3D } | {
+        kind: 'matrix';
+        matrix: Mat4;
+    };
 
     const _scale = Mat4.zero(), _translate = Mat4.zero();
     export function getGridToCartesianTransform(grid: Grid) {
@@ -39,7 +42,14 @@ namespace Grid {
 
         if (grid.transform.kind === 'spacegroup') {
             const { cells: { space } } = grid;
-            const scale = Mat4.fromScaling(_scale, Vec3.div(Vec3.zero(), Box3D.size(Vec3.zero(), grid.transform.fractionalBox), Vec3.ofArray(space.dimensions)));
+            const scale = Mat4.fromScaling(
+                _scale,
+                Vec3.div(
+                    Vec3.zero(),
+                    Box3D.size(Vec3.zero(), grid.transform.fractionalBox),
+                    Vec3.ofArray(space.dimensions),
+                ),
+            );
             const translate = Mat4.fromTranslation(_translate, grid.transform.fractionalBox.min);
             return Mat4.mul3(Mat4.zero(), grid.transform.cell.fromFractional, translate, scale);
         }
@@ -70,10 +80,13 @@ namespace Grid {
     export function getHistogram(grid: Grid, binCount: number) {
         let histograms = (grid as any)._historams as { [binCount: number]: Histogram };
         if (!histograms) {
-            histograms = (grid as any)._historams = { };
+            histograms = (grid as any)._historams = {};
         }
         if (!histograms[binCount]) {
-            histograms[binCount] = calculateHistogram(grid.cells.data, binCount, { min: grid.stats.min, max: grid.stats.max });
+            histograms[binCount] = calculateHistogram(grid.cells.data, binCount, {
+                min: grid.stats.min,
+                max: grid.stats.max,
+            });
         }
         return histograms[binCount];
     }

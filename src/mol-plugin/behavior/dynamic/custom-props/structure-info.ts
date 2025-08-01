@@ -5,9 +5,9 @@
  */
 
 import { PluginBehavior } from '../../behavior.ts';
-import { Structure, Model } from '../../../../mol-model/structure.ts';
+import { Model, Structure } from '../../../../mol-model/structure.ts';
 import { PluginStateObject } from '../../../../mol-plugin-state/objects.ts';
-import { StateSelection, StateObject } from '../../../../mol-state/index.ts';
+import { StateObject, StateSelection } from '../../../../mol-state/index.ts';
 
 export const StructureInfo = PluginBehavior.create({
     name: 'structure-info-prop',
@@ -16,7 +16,9 @@ export const StructureInfo = PluginBehavior.create({
     ctor: class extends PluginBehavior.Handler {
         private get maxModelIndex() {
             let maxIndex = -1;
-            const cells = this.ctx.state.data.select(StateSelection.Generators.rootsOfType(PluginStateObject.Molecule.Model));
+            const cells = this.ctx.state.data.select(
+                StateSelection.Generators.rootsOfType(PluginStateObject.Molecule.Model),
+            );
             for (const c of cells) {
                 const index = c.obj?.data && Model.Index.get(c.obj?.data).value;
                 if (index !== undefined && index > maxIndex) maxIndex = index;
@@ -26,7 +28,9 @@ export const StructureInfo = PluginBehavior.create({
 
         private get maxStructureIndex() {
             let maxIndex = -1;
-            const cells = this.ctx.state.data.select(StateSelection.Generators.rootsOfType(PluginStateObject.Molecule.Structure));
+            const cells = this.ctx.state.data.select(
+                StateSelection.Generators.rootsOfType(PluginStateObject.Molecule.Structure),
+            );
             for (const c of cells) {
                 const index = c.obj?.data && Structure.Index.get(c.obj?.data).value;
                 if (index !== undefined && index > maxIndex) maxIndex = index;
@@ -37,7 +41,9 @@ export const StructureInfo = PluginBehavior.create({
         private get asymIdOffset() {
             let auth = 0;
             let label = 0;
-            const cells = this.ctx.state.data.select(StateSelection.Generators.rootsOfType(PluginStateObject.Molecule.Model));
+            const cells = this.ctx.state.data.select(
+                StateSelection.Generators.rootsOfType(PluginStateObject.Molecule.Model),
+            );
             for (const c of cells) {
                 const m = c.obj?.data;
                 if (m) {
@@ -54,7 +60,9 @@ export const StructureInfo = PluginBehavior.create({
 
         private setModelMaxIndex() {
             const value = this.maxModelIndex;
-            const cells = this.ctx.state.data.select(StateSelection.Generators.rootsOfType(PluginStateObject.Molecule.Model));
+            const cells = this.ctx.state.data.select(
+                StateSelection.Generators.rootsOfType(PluginStateObject.Molecule.Model),
+            );
             for (const c of cells) {
                 const m = c.obj?.data;
                 if (m) {
@@ -67,7 +75,9 @@ export const StructureInfo = PluginBehavior.create({
 
         private setStructureMaxIndex() {
             const value = this.maxModelIndex;
-            const cells = this.ctx.state.data.select(StateSelection.Generators.rootsOfType(PluginStateObject.Molecule.Structure));
+            const cells = this.ctx.state.data.select(
+                StateSelection.Generators.rootsOfType(PluginStateObject.Molecule.Structure),
+            );
             for (const c of cells) {
                 const s = c.obj?.data;
                 if (s) {
@@ -101,10 +111,16 @@ export const StructureInfo = PluginBehavior.create({
             Structure.Index.set(structure, { value }, value);
         }
 
-        private handle(ref: string, obj: StateObject<any, StateObject.Type<any>>, oldObj?: StateObject<any, StateObject.Type<any>>) {
+        private handle(
+            ref: string,
+            obj: StateObject<any, StateObject.Type<any>>,
+            oldObj?: StateObject<any, StateObject.Type<any>>,
+        ) {
             if (PluginStateObject.Molecule.Structure.is(obj)) {
                 const transform = this.ctx.state.data.tree.transforms.get(ref);
-                if (!transform.transformer.definition.isDecorator && obj.data.parent === undefined) {
+                if (
+                    !transform.transformer.definition.isDecorator && obj.data.parent === undefined
+                ) {
                     this.handleStructure(obj.data, oldObj?.data);
                 }
             } else if (PluginStateObject.Molecule.Model.is(obj)) {
@@ -122,13 +138,13 @@ export const StructureInfo = PluginBehavior.create({
             this.ctx.customStructureProperties.register(Structure.Index, true);
             this.ctx.customStructureProperties.register(Structure.MaxIndex, true);
 
-            this.subscribeObservable(this.ctx.state.data.events.object.created, o => {
+            this.subscribeObservable(this.ctx.state.data.events.object.created, (o) => {
                 this.handle(o.ref, o.obj);
                 this.setModelMaxIndex();
                 this.setStructureMaxIndex();
             });
 
-            this.subscribeObservable(this.ctx.state.data.events.object.updated, o => {
+            this.subscribeObservable(this.ctx.state.data.events.object.updated, (o) => {
                 this.handle(o.ref, o.obj, o.oldObj);
             });
         }
@@ -140,5 +156,5 @@ export const StructureInfo = PluginBehavior.create({
             this.ctx.customStructureProperties.unregister(Structure.Index.descriptor.name);
             this.ctx.customStructureProperties.unregister(Structure.MaxIndex.descriptor.name);
         }
-    }
+    },
 });

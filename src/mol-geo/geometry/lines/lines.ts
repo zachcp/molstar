@@ -6,7 +6,7 @@
 
 import { ValueCell } from '../../../mol-util/index.ts';
 import { Mat4, Vec3, Vec4 } from '../../../mol-math/linear-algebra.ts';
-import { transformPositionArray, GroupMapping, createGroupMapping } from '../../util.ts';
+import { createGroupMapping, GroupMapping, transformPositionArray } from '../../util.ts';
 import { GeometryUtils } from '../geometry.ts';
 import { createColors } from '../color-data.ts';
 import { createMarkers } from '../marker-data.ts';
@@ -17,7 +17,10 @@ import { LinesValues } from '../../../mol-gl/renderable/lines.ts';
 import { Mesh } from '../mesh/mesh.ts';
 import { LinesBuilder } from './lines-builder.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { calculateInvariantBoundingSphere, calculateTransformBoundingSphere } from '../../../mol-gl/renderable/util.ts';
+import {
+    calculateInvariantBoundingSphere,
+    calculateTransformBoundingSphere,
+} from '../../../mol-gl/renderable/util.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { Theme } from '../../../mol-theme/theme.ts';
 import { Color } from '../../../mol-util/color/index.ts';
@@ -31,35 +34,43 @@ import { createEmptyEmissive } from '../emissive-data.ts';
 
 /** Wide line */
 export interface Lines {
-    readonly kind: 'lines',
+    readonly kind: 'lines';
 
     /** Number of lines */
-    lineCount: number,
+    lineCount: number;
 
     /** Mapping buffer as array of xy values wrapped in a value cell */
-    readonly mappingBuffer: ValueCell<Float32Array>,
+    readonly mappingBuffer: ValueCell<Float32Array>;
     /** Index buffer as array of vertex index triplets wrapped in a value cell */
-    readonly indexBuffer: ValueCell<Uint32Array>,
+    readonly indexBuffer: ValueCell<Uint32Array>;
     /** Group buffer as array of group ids for each vertex wrapped in a value cell */
-    readonly groupBuffer: ValueCell<Float32Array>,
+    readonly groupBuffer: ValueCell<Float32Array>;
     /** Line start buffer as array of xyz values wrapped in a value cell */
-    readonly startBuffer: ValueCell<Float32Array>,
+    readonly startBuffer: ValueCell<Float32Array>;
     /** Line end buffer as array of xyz values wrapped in a value cell */
-    readonly endBuffer: ValueCell<Float32Array>,
+    readonly endBuffer: ValueCell<Float32Array>;
 
     /** Bounding sphere of the lines */
-    readonly boundingSphere: Sphere3D
+    readonly boundingSphere: Sphere3D;
     /** Maps group ids to line indices */
-    readonly groupMapping: GroupMapping
+    readonly groupMapping: GroupMapping;
 
-    setBoundingSphere(boundingSphere: Sphere3D): void
+    setBoundingSphere(boundingSphere: Sphere3D): void;
 }
 
 export namespace Lines {
-    export function create(mappings: Float32Array, indices: Uint32Array, groups: Float32Array, starts: Float32Array, ends: Float32Array, lineCount: number, lines?: Lines): Lines {
-        return lines ?
-            update(mappings, indices, groups, starts, ends, lineCount, lines) :
-            fromArrays(mappings, indices, groups, starts, ends, lineCount);
+    export function create(
+        mappings: Float32Array,
+        indices: Uint32Array,
+        groups: Float32Array,
+        starts: Float32Array,
+        ends: Float32Array,
+        lineCount: number,
+        lines?: Lines,
+    ): Lines {
+        return lines
+            ? update(mappings, indices, groups, starts, ends, lineCount, lines)
+            : fromArrays(mappings, indices, groups, starts, ends, lineCount);
     }
 
     export function createEmpty(lines?: Lines): Lines {
@@ -94,13 +105,23 @@ export namespace Lines {
 
     function hashCode(lines: Lines) {
         return hashFnv32a([
-            lines.lineCount, lines.mappingBuffer.ref.version, lines.indexBuffer.ref.version,
-            lines.groupBuffer.ref.version, lines.startBuffer.ref.version, lines.endBuffer.ref.version
+            lines.lineCount,
+            lines.mappingBuffer.ref.version,
+            lines.indexBuffer.ref.version,
+            lines.groupBuffer.ref.version,
+            lines.startBuffer.ref.version,
+            lines.endBuffer.ref.version,
         ]);
     }
 
-    function fromArrays(mappings: Float32Array, indices: Uint32Array, groups: Float32Array, starts: Float32Array, ends: Float32Array, lineCount: number): Lines {
-
+    function fromArrays(
+        mappings: Float32Array,
+        indices: Uint32Array,
+        groups: Float32Array,
+        starts: Float32Array,
+        ends: Float32Array,
+        lineCount: number,
+    ): Lines {
         const boundingSphere = Sphere3D();
         let groupMapping: GroupMapping;
 
@@ -118,8 +139,16 @@ export namespace Lines {
             get boundingSphere() {
                 const newHash = hashCode(lines);
                 if (newHash !== currentHash) {
-                    const s = calculateInvariantBoundingSphere(lines.startBuffer.ref.value, lines.lineCount * 4, 4);
-                    const e = calculateInvariantBoundingSphere(lines.endBuffer.ref.value, lines.lineCount * 4, 4);
+                    const s = calculateInvariantBoundingSphere(
+                        lines.startBuffer.ref.value,
+                        lines.lineCount * 4,
+                        4,
+                    );
+                    const e = calculateInvariantBoundingSphere(
+                        lines.endBuffer.ref.value,
+                        lines.lineCount * 4,
+                        4,
+                    );
 
                     Sphere3D.expandBySphere(boundingSphere, s, e);
                     currentHash = newHash;
@@ -128,7 +157,11 @@ export namespace Lines {
             },
             get groupMapping() {
                 if (lines.groupBuffer.ref.version !== currentGroup) {
-                    groupMapping = createGroupMapping(lines.groupBuffer.ref.value, lines.lineCount, 4);
+                    groupMapping = createGroupMapping(
+                        lines.groupBuffer.ref.value,
+                        lines.lineCount,
+                        4,
+                    );
                     currentGroup = lines.groupBuffer.ref.version;
                 }
                 return groupMapping;
@@ -136,12 +169,20 @@ export namespace Lines {
             setBoundingSphere(sphere: Sphere3D) {
                 Sphere3D.copy(boundingSphere, sphere);
                 currentHash = hashCode(lines);
-            }
+            },
         };
         return lines;
     }
 
-    function update(mappings: Float32Array, indices: Uint32Array, groups: Float32Array, starts: Float32Array, ends: Float32Array, lineCount: number, lines: Lines) {
+    function update(
+        mappings: Float32Array,
+        indices: Uint32Array,
+        groups: Float32Array,
+        starts: Float32Array,
+        ends: Float32Array,
+        lineCount: number,
+        lines: Lines,
+    ) {
         if (lineCount > lines.lineCount) {
             ValueCell.update(lines.mappingBuffer, mappings);
             ValueCell.update(lines.indexBuffer, indices);
@@ -169,7 +210,7 @@ export namespace Lines {
         sizeFactor: PD.Numeric(2, { min: 0, max: 10, step: 0.1 }),
         lineSizeAttenuation: PD.Boolean(false),
     };
-    export type Params = typeof Params
+    export type Params = typeof Params;
 
     export const Utils: GeometryUtils<Lines, Params> = {
         Params,
@@ -180,7 +221,7 @@ export namespace Lines {
         updateBoundingSphere,
         createRenderableState: BaseGeometry.createRenderableState,
         updateRenderableState: BaseGeometry.updateRenderableState,
-        createPositionIterator
+        createPositionIterator,
     };
 
     function createPositionIterator(lines: Lines, transform: TransformData): LocationIterator {
@@ -203,7 +244,13 @@ export namespace Lines {
         return LocationIterator(groupCount, instanceCount, 2, getLocation);
     }
 
-    function createValues(lines: Lines, transform: TransformData, locationIt: LocationIterator, theme: Theme, props: PD.Values<Params>): LinesValues {
+    function createValues(
+        lines: Lines,
+        transform: TransformData,
+        locationIt: LocationIterator,
+        theme: Theme,
+        props: PD.Values<Params>,
+    ): LinesValues {
         const { instanceCount, groupCount } = locationIt;
         const positionIt = createPositionIterator(lines, transform);
 
@@ -218,10 +265,20 @@ export namespace Lines {
         const material = createEmptySubstance();
         const clipping = createEmptyClipping();
 
-        const counts = { drawCount: lines.lineCount * 2 * 3, vertexCount: lines.lineCount * 4, groupCount, instanceCount };
+        const counts = {
+            drawCount: lines.lineCount * 2 * 3,
+            vertexCount: lines.lineCount * 4,
+            groupCount,
+            instanceCount,
+        };
 
         const invariantBoundingSphere = Sphere3D.clone(lines.boundingSphere);
-        const boundingSphere = calculateTransformBoundingSphere(invariantBoundingSphere, transform.aTransform.ref.value, instanceCount, 0);
+        const boundingSphere = calculateTransformBoundingSphere(
+            invariantBoundingSphere,
+            transform.aTransform.ref.value,
+            instanceCount,
+            0,
+        );
 
         return {
             dGeometryType: ValueCell.create('lines'),
@@ -252,7 +309,13 @@ export namespace Lines {
         };
     }
 
-    function createValuesSimple(lines: Lines, props: Partial<PD.Values<Params>>, colorValue: Color, sizeValue: number, transform?: TransformData) {
+    function createValuesSimple(
+        lines: Lines,
+        props: Partial<PD.Values<Params>>,
+        colorValue: Color,
+        sizeValue: number,
+        transform?: TransformData,
+    ) {
         const s = BaseGeometry.createSimple(colorValue, sizeValue, transform);
         const p = { ...PD.getDefaultValues(Params), ...props };
         return createValues(lines, s.transform, s.locationIterator, s.theme, p);
@@ -266,14 +329,22 @@ export namespace Lines {
 
     function updateBoundingSphere(values: LinesValues, lines: Lines) {
         const invariantBoundingSphere = Sphere3D.clone(lines.boundingSphere);
-        const boundingSphere = calculateTransformBoundingSphere(invariantBoundingSphere, values.aTransform.ref.value, values.instanceCount.ref.value, 0);
+        const boundingSphere = calculateTransformBoundingSphere(
+            invariantBoundingSphere,
+            values.aTransform.ref.value,
+            values.instanceCount.ref.value,
+            0,
+        );
 
         if (!Sphere3D.equals(boundingSphere, values.boundingSphere.ref.value)) {
             ValueCell.update(values.boundingSphere, boundingSphere);
         }
         if (!Sphere3D.equals(invariantBoundingSphere, values.invariantBoundingSphere.ref.value)) {
             ValueCell.update(values.invariantBoundingSphere, invariantBoundingSphere);
-            ValueCell.update(values.uInvariantBoundingSphere, Vec4.fromSphere(values.uInvariantBoundingSphere.ref.value, invariantBoundingSphere));
+            ValueCell.update(
+                values.uInvariantBoundingSphere,
+                Vec4.fromSphere(values.uInvariantBoundingSphere.ref.value, invariantBoundingSphere),
+            );
         }
     }
 }

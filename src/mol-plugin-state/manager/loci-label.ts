@@ -12,13 +12,13 @@ import { MarkerAction } from '../../mol-util/marker-action.ts';
 import { arrayRemoveAtInPlace } from '../../mol-util/array.ts';
 
 // any represents React element. For compatibility to including the type
-export type LociLabel = string | any
+export type LociLabel = string | any;
 export type LociLabelProvider = {
-    label: (loci: Loci, repr?: Representation<any>) => LociLabel | undefined
-    group?: (entry: LociLabel) => string
+    label: (loci: Loci, repr?: Representation<any>) => LociLabel | undefined;
+    group?: (entry: LociLabel) => string;
     /** Labels from providers with higher priority are shown first */
-    priority?: number
-}
+    priority?: number;
+};
 
 export class LociLabelManager {
     providers: LociLabelProvider[] = [];
@@ -37,7 +37,7 @@ export class LociLabelManager {
     }
 
     removeProvider(provider: LociLabelProvider) {
-        this.providers = this.providers.filter(p => p !== provider);
+        this.providers = this.providers.filter((p) => p !== provider);
         this.isDirty = true;
         this.showLabels();
     }
@@ -45,7 +45,7 @@ export class LociLabelManager {
     private locis: Representation.Loci[] = [];
 
     private mark(loci: Representation.Loci, action: MarkerAction) {
-        const idx = this.locis.findIndex(l => Representation.Loci.areEqual(loci, l));
+        const idx = this.locis.findIndex((l) => Representation.Loci.areEqual(loci, l));
         if (idx === -1 && action === MarkerAction.Highlight) {
             this.locis.push(loci);
             this.isDirty = true;
@@ -82,10 +82,11 @@ export class LociLabelManager {
             this.labels.length = 0;
             this.groupedLabels.forEach((group, hash) => {
                 const count = group.length;
-                const entry = count > 1 && group[0] !== group[1]
-                    ? hash : group[0];
+                const entry = count > 1 && group[0] !== group[1] ? hash : group[0];
 
-                this.labels.push(count === 1 ? entry : `${entry} <small>|| \u00D7 ${count}</small>`);
+                this.labels.push(
+                    count === 1 ? entry : `${entry} <small>|| \u00D7 ${count}</small>`,
+                );
             });
             this.isDirty = false;
         }

@@ -6,26 +6,26 @@
 
 import { CifWriter } from '../mol-io/writer/cif.ts';
 import * as fs from 'fs';
-import { Buffer } from "node:buffer";
+import { Buffer } from 'node:buffer';
 
 const category1fields: CifWriter.Field[] = [
-    CifWriter.Field.str('f1', i => 'v' + i),
-    CifWriter.Field.int('f2', i => i * i),
-    CifWriter.Field.float('f3', i => Math.random()),
+    CifWriter.Field.str('f1', (i) => 'v' + i),
+    CifWriter.Field.int('f2', (i) => i * i),
+    CifWriter.Field.float('f3', (i) => Math.random()),
 ];
 
 const category2fields: CifWriter.Field[] = [
-    CifWriter.Field.str('e1', i => 'v\n' + i),
-    CifWriter.Field.int('e2', i => i * i),
-    CifWriter.Field.float('e3', i => Math.random()),
+    CifWriter.Field.str('e1', (i) => 'v\n' + i),
+    CifWriter.Field.int('e2', (i) => i * i),
+    CifWriter.Field.float('e3', (i) => Math.random()),
 ];
 
 function getCat(name: string): CifWriter.Category {
     return {
         name,
-        instance(ctx: { fields: CifWriter.Field[], rowCount: number }) {
+        instance(ctx: { fields: CifWriter.Field[]; rowCount: number }) {
             return { fields: ctx.fields, source: [{ rowCount: ctx.rowCount }] };
-        }
+        },
     };
 }
 
@@ -33,8 +33,12 @@ function testText() {
     const enc = CifWriter.createEncoder();
 
     const filter: CifWriter.Category.Filter = {
-        includeCategory(cat) { return true; },
-        includeField(cat, field) { return !(cat === 'cat2' && field === 'e2'); }
+        includeCategory(cat) {
+            return true;
+        },
+        includeField(cat, field) {
+            return !(cat === 'cat2' && field === 'e2');
+        },
     };
 
     enc.startDataBlock('test');
@@ -46,13 +50,16 @@ function testText() {
 
 testText();
 
-
 function testBinary() {
     const enc = CifWriter.createEncoder({ binary: true });
 
     const filter: CifWriter.Category.Filter = {
-        includeCategory(cat) { return true; },
-        includeField(cat, field) { return !(cat === 'cat2' && field === 'e2'); }
+        includeCategory(cat) {
+            return true;
+        },
+        includeField(cat, field) {
+            return !(cat === 'cat2' && field === 'e2');
+        },
     };
 
     enc.startDataBlock('test');

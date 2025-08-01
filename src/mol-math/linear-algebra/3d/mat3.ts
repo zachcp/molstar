@@ -23,8 +23,16 @@ import { Euler } from './euler.ts';
 import { Mat4 } from './mat4.ts';
 import { Vec3 } from './vec3.ts';
 
-interface Mat3 extends Array<number> { [d: number]: number, '@type': 'mat3', length: 9 }
-interface ReadonlyMat3 extends Array<number> { readonly [d: number]: number, '@type': 'mat3', length: 9 }
+interface Mat3 extends Array<number> {
+    [d: number]: number;
+    '@type': 'mat3';
+    length: 9;
+}
+interface ReadonlyMat3 extends Array<number> {
+    readonly [d: number]: number;
+    '@type': 'mat3';
+    length: 9;
+}
 
 function Mat3() {
     return Mat3.zero();
@@ -126,7 +134,17 @@ namespace Mat3 {
         return fromMat4(out, _m4);
     }
 
-    export function create(a00: number, a01: number, a02: number, a10: number, a11: number, a12: number, a20: number, a21: number, a22: number): Mat3 {
+    export function create(
+        a00: number,
+        a01: number,
+        a02: number,
+        a10: number,
+        a11: number,
+        a12: number,
+        a20: number,
+        a21: number,
+        a22: number,
+    ): Mat3 {
         const out = zero();
         out[0] = a00;
         out[1] = a01;
@@ -330,13 +348,25 @@ namespace Mat3 {
     }
 
     export function mul(out: Mat3, a: Mat3, b: Mat3) {
-        const a00 = a[0], a01 = a[1], a02 = a[2],
-            a10 = a[3], a11 = a[4], a12 = a[5],
-            a20 = a[6], a21 = a[7], a22 = a[8];
+        const a00 = a[0],
+            a01 = a[1],
+            a02 = a[2],
+            a10 = a[3],
+            a11 = a[4],
+            a12 = a[5],
+            a20 = a[6],
+            a21 = a[7],
+            a22 = a[8];
 
-        const b00 = b[0], b01 = b[1], b02 = b[2],
-            b10 = b[3], b11 = b[4], b12 = b[5],
-            b20 = b[6], b21 = b[7], b22 = b[8];
+        const b00 = b[0],
+            b01 = b[1],
+            b02 = b[2],
+            b10 = b[3],
+            b11 = b[4],
+            b12 = b[5],
+            b20 = b[6],
+            b21 = b[7],
+            b22 = b[8];
 
         out[0] = b00 * a00 + b01 * a10 + b02 * a20;
         out[1] = b00 * a01 + b01 * a11 + b02 * a21;
@@ -413,12 +443,11 @@ namespace Mat3 {
             const p = Math.sqrt(p2 / 6);
             mulScalar(tmpB, Identity, q);
             sub(tmpB, a, tmpB);
-            mulScalar(tmpB, tmpB, (1 / p));
+            mulScalar(tmpB, tmpB, 1 / p);
             const r = determinant(tmpB) / 2;
             // In exact arithmetic for a symmetric matrix  -1 <= r <= 1
             // but computation error can leave it slightly outside this range.
-            const phi = r <= -1 ? piThird : r >= 1 ?
-                0 : Math.acos(r) / 3;
+            const phi = r <= -1 ? piThird : r >= 1 ? 0 : Math.acos(r) / 3;
             // the eigenvalues satisfy eig3 <= eig2 <= eig1
             out[0] = q + 2 * p * Math.cos(phi);
             out[2] = q + 2 * p * Math.cos(phi + (2 * piThird));
@@ -478,9 +507,9 @@ namespace Mat3 {
     /** Return the Frobenius inner product of two matrices (= dot product of the flattened matrices).
      * Can be used as a measure of similarity between two rotation matrices. */
     export function innerProduct(a: Mat3, b: Mat3) {
-        return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
-            + a[3] * b[3] + a[4] * b[4] + a[5] * b[5]
-            + a[6] * b[6] + a[7] * b[7] + a[8] * b[8];
+        return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] +
+            a[3] * b[3] + a[4] * b[4] + a[5] * b[5] +
+            a[6] * b[6] + a[7] * b[7] + a[8] * b[8];
     }
 
     /**

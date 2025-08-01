@@ -68,7 +68,7 @@
         text-align: center;
         background: $default-background;
 
-        >div {
+        > div {
             b {
                 font-size: 120%;
             }
@@ -88,7 +88,7 @@
         overflow: hidden;
     }
 
-    .msp-loader-msp-btn-file input[type=file] {
+    .msp-loader-msp-btn-file input[type='file'] {
         position: absolute;
         top: 0;
         right: 0;
@@ -119,7 +119,8 @@
             border-color: color-increase-contrast($msp-form-control-background, 5%) !important;
             border: none;
             outline-offset: -1px !important;
-            outline: 1px solid color-increase-contrast($msp-form-control-background, 20%) !important;
+            outline: 1px solid color-increase-contrast($msp-form-control-background, 20%)
+                !important;
         }
     }
 
@@ -132,7 +133,8 @@
         .msp-btn {
             &:hover {
                 outline-offset: -1px !important;
-                outline: 1px solid color-increase-contrast($msp-form-control-background, 20%) !important;
+                outline: 1px solid color-increase-contrast($msp-form-control-background, 20%)
+                    !important;
             }
         }
     }
@@ -148,7 +150,7 @@
             color: color-lower-contrast($font-color, 15%);
         }
 
-        >.msp-icon {
+        > .msp-icon {
             display: block;
             top: 0;
             left: $control-spacing;
@@ -206,17 +208,17 @@
     .msp-mapped-parameter-group {
         position: relative;
 
-        >.msp-control-row:first-child {
-            >div:nth-child(2) {
+        > .msp-control-row:first-child {
+            > div:nth-child(2) {
                 right: 33px;
             }
         }
 
-        >button:first-child {
+        > button:first-child {
             right: 33px;
         }
 
-        >.msp-btn-icon {
+        > .msp-btn-icon {
             position: absolute;
             right: 0;
             width: 32px;
@@ -266,12 +268,12 @@
         // border-bottom: 1px solid $color-accent-orange;
         cursor: default;
 
-        >.msp-icon {
+        > .msp-icon {
             display: block;
             float: left;
         }
 
-        >small {
+        > small {
             font-weight: normal;
         }
     }
@@ -294,19 +296,19 @@
         width: inherit;
         height: $row-height;
 
-        >.msp-flex-item {
+        > .msp-flex-item {
             margin: 0;
             flex: 1 1 auto;
             margin-right: 1px;
             overflow: hidden;
         }
 
-        >.msp-flex-item:last-child {
+        > .msp-flex-item:last-child {
             margin-right: 0;
         }
 
-        >select,
-        >button {
+        > select,
+        > button {
             margin: 0;
             flex: 1 1 auto;
             margin-right: 1px;
@@ -323,20 +325,20 @@
             max-width: 32px;
         }
 
-        >select {
+        > select {
             background: none;
 
-            >option[value=_] {
+            > option[value='_'] {
                 display: none;
             }
         }
 
-        >select:last-child,
-        >button:last-child {
+        > select:last-child,
+        > button:last-child {
             margin-right: 0;
         }
 
-        >button.msp-control-button-label {
+        > button.msp-control-button-label {
             background: $default-background;
         }
     }
@@ -345,16 +347,17 @@
         list-style: none;
         // margin-top: $control-spacing;
 
-        >li {
+        > li {
             position: relative;
             overflow: hidden;
 
-            >button:first-child {
+            > button:first-child {
                 text-align: left;
-                border-left: $control-spacing solid color-increase-contrast($default-background, 12%) !important;
+                border-left: $control-spacing solid
+                    color-increase-contrast($default-background, 12%) !important;
             }
 
-            >div {
+            > div {
                 position: absolute;
                 right: 0;
                 top: 0;
@@ -368,11 +371,11 @@
         height: $state-image-height;
         margin-top: 0px;
 
-        >button {
+        > button {
             height: $state-image-height;
             padding: 0px;
 
-            >img {
+            > img {
                 min-height: $state-image-height;
                 width: inherit;
                 transform: translateY(-50%);
@@ -390,7 +393,7 @@
 
         &-current {
             .msp-btn-tree-label {
-                >span {
+                > span {
                     font-weight: bold;
                 }
 
@@ -407,7 +410,7 @@
             border-left-style: solid;
         }
 
-        .msp-btn-tree-label>small {
+        .msp-btn-tree-label > small {
             color: color-lower-contrast($font-color, 20%);
         }
     }
@@ -429,7 +432,7 @@
             margin-right: $control-spacing;
             background-color: $msp-form-control-background;
 
-            >span {
+            > span {
                 color: $font-color;
                 margin-left: $control-spacing;
                 margin-right: $control-spacing;
@@ -443,11 +446,11 @@
             float: left;
             margin-right: $control-spacing;
 
-            >button {
+            > button {
                 background-color: $msp-form-control-background;
             }
 
-            >select {
+            > select {
                 display: inline-block;
                 width: 200px;
                 margin-right: $control-spacing;
@@ -460,11 +463,11 @@
             margin-right: $control-spacing;
             position: relative;
 
-            >div:first-child {
+            > div:first-child {
                 position: relative;
                 display: inline-block;
 
-                >button {
+                > button {
                     position: relative;
                 }
             }
@@ -496,7 +499,7 @@
             background: $control-background;
         }
 
-        >.msp-flex-row .msp-btn {
+        > .msp-flex-row .msp-btn {
             padding: 0 5px;
         }
 
@@ -513,18 +516,18 @@
         margin-top: 1px;
         position: relative;
 
-        >button {
+        > button {
             text-align: left;
 
-            >span {
+            > span {
                 font-weight: bold;
             }
         }
 
-        >div {
+        > div {
             position: absolute;
             right: 0;
-            top: 0
+            top: 0;
         }
     }
 
@@ -540,7 +543,7 @@
         height: $row-height;
         width: inherit;
 
-        >button {
+        > button {
             margin: 0;
             flex: 1 1 auto;
             margin-right: 1px;
@@ -554,7 +557,6 @@
     }
 
     .msp-action-menu-options {
-
         &-no-header,
         .msp-control-group-children {
             max-height: 300px;
@@ -574,7 +576,6 @@
             text-align: left;
         }
 
-
         .msp-action-menu-button {
             margin-top: 1px;
             display: flex;
@@ -588,13 +589,13 @@
     .msp-representation-entry {
         position: relative;
 
-        >.msp-control-group-header {
-            >.msp-btn {
+        > .msp-control-group-header {
+            > .msp-btn {
                 font-weight: bold;
             }
 
-            >.msp-icon,
-            >.msp-btn-link {
+            > .msp-icon,
+            > .msp-btn-link {
                 line-height: 24px;
                 height: 24px;
             }
@@ -656,16 +657,16 @@
         }
 
         .msp-slider {
-            >div:first-child {
+            > div:first-child {
                 right: 42px;
             }
 
-            >div:last-child {
+            > div:last-child {
                 width: 30px;
             }
         }
 
-        >button {
+        > button {
             position: absolute;
             right: 0;
             width: 32px;

@@ -11,14 +11,13 @@ import { StateBuilder, StateObjectSelector, StateTransformer } from '../../mol-s
 import { ParamDefinition } from '../../mol-util/param-definition.ts';
 import { Source } from './entry-root.ts';
 
-
 /** Split entry ID (e.g. 'emd-1832') into source ('emdb') and number ('1832') */
 export function splitEntryId(entryId: string) {
     const PREFIX_TO_SOURCE: { [prefix: string]: Source } = { 'emd': 'emdb' };
     const [prefix, entry] = entryId.split('-');
     return {
         source: PREFIX_TO_SOURCE[prefix] ?? prefix,
-        entryNumber: entry
+        entryNumber: entry,
     };
 }
 
@@ -29,11 +28,9 @@ export function createEntryId(source: Source, entryNumber: string | number) {
     return `${prefix}-${entryNumber}`;
 }
 
-
 export function isDefined<T>(x: T | undefined): x is T {
     return x !== undefined;
 }
-
 
 export class NodeManager {
     private nodes: { [key: string]: StateObjectSelector };
@@ -60,7 +57,9 @@ export class NodeManager {
     }
 
     public getNodes(): StateObjectSelector[] {
-        return Object.keys(this.nodes).map(key => this.getNode(key)).filter(node => node) as StateObjectSelector[];
+        return Object.keys(this.nodes).map((key) => this.getNode(key)).filter((node) =>
+            node
+        ) as StateObjectSelector[];
     }
 
     public deleteAllNodes(update: StateBuilder.Root) {
@@ -76,7 +75,11 @@ export class NodeManager {
         }
     }
 
-    public async showNode(key: string, factory: () => StateObjectSelector | Promise<StateObjectSelector>, forceVisible: boolean = true) {
+    public async showNode(
+        key: string,
+        factory: () => StateObjectSelector | Promise<StateObjectSelector>,
+        forceVisible: boolean = true,
+    ) {
         let node = this.getNode(key);
         if (node) {
             if (forceVisible) {
@@ -90,8 +93,6 @@ export class NodeManager {
     }
 }
 
-
-
 const CreateTransformer = StateTransformer.builderFactory('volseg');
 
 export const CreateVolume = CreateTransformer({
@@ -102,14 +103,15 @@ export const CreateVolume = CreateTransformer({
         label: ParamDefinition.Text('Volume', { isHidden: true }),
         description: ParamDefinition.Text('', { isHidden: true }),
         volume: ParamDefinition.Value<Volume>(undefined as any, { isHidden: true }),
-    }
+    },
 })({
     apply({ params }) {
-        return new PluginStateObject.Volume.Data(params.volume, { label: params.label, description: params.description });
-    }
+        return new PluginStateObject.Volume.Data(params.volume, {
+            label: params.label,
+            description: params.description,
+        });
+    },
 });
-
-
 
 export function applyEllipsis(name: string, max_chars: number = 60) {
     if (name.length <= max_chars) return name;
@@ -119,7 +121,6 @@ export function applyEllipsis(name: string, max_chars: number = 60) {
     if (lastSpace > 0 && ',;.'.includes(name.charAt(lastSpace - 1))) lastSpace--;
     return name.substring(0, lastSpace) + '...';
 }
-
 
 export function lazyGetter<T>(getter: () => T, errorIfUndefined?: string) {
     let value: T | undefined = undefined;

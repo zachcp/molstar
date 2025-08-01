@@ -19,7 +19,7 @@ export function Canvas3DSetSettings(ctx: PluginContext) {
         ctx.events.canvas3d.settingsUpdated.next(void 0);
     });
 
-    PluginCommands.Canvas3D.SetSettings.subscribe(ctx, e => {
+    PluginCommands.Canvas3D.SetSettings.subscribe(ctx, (e) => {
         if (!ctx.canvas3d) return;
 
         ctx.canvas3d?.setProps(e.settings);

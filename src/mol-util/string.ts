@@ -7,7 +7,6 @@
 
 import { StringLike } from '../mol-io/common/string-like.ts';
 
-
 const reLine = /^/mg;
 export function indentString(str: string, count: number, indent: string) {
     return count === 0 ? str : str.replace(reLine, indent.repeat(count));

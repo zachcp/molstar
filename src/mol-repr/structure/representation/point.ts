@@ -4,18 +4,43 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ElementPointVisual, ElementPointParams, StructureElementPointVisual, StructureElementPointParams } from '../visual/element-point.ts';
+import {
+    ElementPointParams,
+    ElementPointVisual,
+    StructureElementPointParams,
+    StructureElementPointVisual,
+} from '../visual/element-point.ts';
 import { UnitsRepresentation } from '../units-representation.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { ComplexRepresentation, StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation.ts';
+import {
+    ComplexRepresentation,
+    StructureRepresentation,
+    StructureRepresentationProvider,
+    StructureRepresentationStateBuilder,
+} from '../representation.ts';
+import {
+    Representation,
+    RepresentationContext,
+    RepresentationParamsGetter,
+} from '../../representation.ts';
 import { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
 import { Structure } from '../../../mol-model/structure.ts';
 import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const PointVisuals = {
-    'element-point': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, ElementPointParams>) => UnitsRepresentation('Element points', ctx, getParams, ElementPointVisual),
-    'structure-element-point': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, StructureElementPointParams>) => ComplexRepresentation('Structure element points', ctx, getParams, StructureElementPointVisual),
+    'element-point': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, ElementPointParams>,
+    ) => UnitsRepresentation('Element points', ctx, getParams, ElementPointVisual),
+    'structure-element-point': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, StructureElementPointParams>,
+    ) => ComplexRepresentation(
+        'Structure element points',
+        ctx,
+        getParams,
+        StructureElementPointVisual,
+    ),
 };
 
 export const PointParams = {
@@ -23,7 +48,7 @@ export const PointParams = {
     density: PD.Numeric(0.1, { min: 0, max: 1, step: 0.01 }, BaseGeometry.ShadingCategory),
     visuals: PD.MultiSelect(['element-point'], PD.objectToOptions(PointVisuals)),
 };
-export type PointParams = typeof PointParams
+export type PointParams = typeof PointParams;
 export function getPointParams(ctx: ThemeRegistryContext, structure: Structure) {
     let params = PointParams;
     if (structure.unitSymmetryGroups.length > 5000) {
@@ -33,9 +58,18 @@ export function getPointParams(ctx: ThemeRegistryContext, structure: Structure) 
     return params;
 }
 
-export type PointRepresentation = StructureRepresentation<PointParams>
-export function PointRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, PointParams>): PointRepresentation {
-    return Representation.createMulti('Point', ctx, getParams, StructureRepresentationStateBuilder, PointVisuals as unknown as Representation.Def<Structure, PointParams>);
+export type PointRepresentation = StructureRepresentation<PointParams>;
+export function PointRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, PointParams>,
+): PointRepresentation {
+    return Representation.createMulti(
+        'Point',
+        ctx,
+        getParams,
+        StructureRepresentationStateBuilder,
+        PointVisuals as unknown as Representation.Def<Structure, PointParams>,
+    );
 }
 
 export const PointRepresentationProvider = StructureRepresentationProvider({
@@ -47,5 +81,5 @@ export const PointRepresentationProvider = StructureRepresentationProvider({
     defaultValues: PD.getDefaultValues(PointParams),
     defaultColorTheme: { name: 'element-symbol' },
     defaultSizeTheme: { name: 'uniform' },
-    isApplicable: (structure: Structure) => structure.elementCount > 0
+    isApplicable: (structure: Structure) => structure.elementCount > 0,
 });

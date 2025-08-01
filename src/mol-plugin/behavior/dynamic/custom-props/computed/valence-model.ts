@@ -15,11 +15,11 @@ import { OrderedSet } from '../../../../../mol-data/int.ts';
 import { geometryLabel } from '../../../../../mol-model-props/computed/chemistry/geometry.ts';
 import { arraySetAdd } from '../../../../../mol-util/array.ts';
 
-export const ValenceModel = PluginBehavior.create<{ autoAttach: boolean, showTooltip: boolean }>({
+export const ValenceModel = PluginBehavior.create<{ autoAttach: boolean; showTooltip: boolean }>({
     name: 'computed-valence-model-prop',
     category: 'custom-props',
     display: { name: 'Valence Model' },
-    ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean, showTooltip: boolean }> {
+    ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean; showTooltip: boolean }> {
         private provider = ValenceModelProvider;
 
         private getStructures(structure: Structure) {
@@ -27,7 +27,12 @@ export const ValenceModel = PluginBehavior.create<{ autoAttach: boolean, showToo
             const root = this.ctx.helpers.substructureParent.get(structure);
             if (root) {
                 const state = this.ctx.state.data;
-                const selections = state.select(StateSelection.Generators.ofType(PluginStateObject.Molecule.Structure, root.transform.ref));
+                const selections = state.select(
+                    StateSelection.Generators.ofType(
+                        PluginStateObject.Molecule.Structure,
+                        root.transform.ref,
+                    ),
+                );
                 for (const s of selections) {
                     if (s.obj) arraySetAdd(structures, s.obj.data);
                 }
@@ -65,24 +70,30 @@ export const ValenceModel = PluginBehavior.create<{ autoAttach: boolean, showToo
                             const implicitH = vm.implicitH[idx];
                             const totalH = vm.totalH[idx];
 
-                            labels.push(`Valence Model: <small>Charge</small> ${charge} | <small>Ideal Geometry</small> ${geometryLabel(idealGeometry)} | <small>Implicit H</small> ${implicitH} | <small>Total H</small> ${totalH}`);
+                            labels.push(
+                                `Valence Model: <small>Charge</small> ${charge} | <small>Ideal Geometry</small> ${
+                                    geometryLabel(idealGeometry)
+                                } | <small>Implicit H</small> ${implicitH} | <small>Total H</small> ${totalH}`,
+                            );
                         }
 
                         return labels.length ? labels.join('<br/>') : undefined;
 
-                    default: return void 0;
+                    default:
+                        return void 0;
                 }
-            }
+            },
         };
 
-        update(p: { autoAttach: boolean, showTooltip: boolean }) {
-            const updated = (
-                this.params.autoAttach !== p.autoAttach ||
-                this.params.showTooltip !== p.showTooltip
-            );
+        update(p: { autoAttach: boolean; showTooltip: boolean }) {
+            const updated = this.params.autoAttach !== p.autoAttach ||
+                this.params.showTooltip !== p.showTooltip;
             this.params.autoAttach = p.autoAttach;
             this.params.showTooltip = p.showTooltip;
-            this.ctx.customStructureProperties.setDefaultAutoAttach(this.provider.descriptor.name, this.params.autoAttach);
+            this.ctx.customStructureProperties.setDefaultAutoAttach(
+                this.provider.descriptor.name,
+                this.params.autoAttach,
+            );
             return updated;
         }
 
@@ -98,6 +109,6 @@ export const ValenceModel = PluginBehavior.create<{ autoAttach: boolean, showToo
     },
     params: () => ({
         autoAttach: PD.Boolean(false),
-        showTooltip: PD.Boolean(true)
-    })
+        showTooltip: PD.Boolean(true),
+    }),
 });

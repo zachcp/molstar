@@ -5,28 +5,49 @@
  */
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { ComplexRepresentation, StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation.ts';
+import {
+    ComplexRepresentation,
+    StructureRepresentation,
+    StructureRepresentationProvider,
+    StructureRepresentationStateBuilder,
+} from '../representation.ts';
+import {
+    Representation,
+    RepresentationContext,
+    RepresentationParamsGetter,
+} from '../../representation.ts';
 import { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
 import { Structure } from '../../../mol-model/structure.ts';
 import { PlaneImageParams, PlaneImageVisual } from '../visual/plane-image.ts';
 
 const PlaneVisuals = {
-    'plane-image': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, PlaneImageParams>) => ComplexRepresentation('Plane image', ctx, getParams, PlaneImageVisual),
+    'plane-image': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, PlaneImageParams>,
+    ) => ComplexRepresentation('Plane image', ctx, getParams, PlaneImageVisual),
 };
 
 export const PlaneParams = {
     ...PlaneImageParams,
     visuals: PD.MultiSelect(['plane-image'], PD.objectToOptions(PlaneVisuals)),
 };
-export type PlaneParams = typeof PlaneParams
+export type PlaneParams = typeof PlaneParams;
 export function getPlaneParams(ctx: ThemeRegistryContext, structure: Structure) {
     return PlaneParams;
 }
 
-export type PlaneRepresentation = StructureRepresentation<PlaneParams>
-export function PlaneRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, PlaneParams>): PlaneRepresentation {
-    return Representation.createMulti('Plane', ctx, getParams, StructureRepresentationStateBuilder, PlaneVisuals as unknown as Representation.Def<Structure, PlaneParams>);
+export type PlaneRepresentation = StructureRepresentation<PlaneParams>;
+export function PlaneRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, PlaneParams>,
+): PlaneRepresentation {
+    return Representation.createMulti(
+        'Plane',
+        ctx,
+        getParams,
+        StructureRepresentationStateBuilder,
+        PlaneVisuals as unknown as Representation.Def<Structure, PlaneParams>,
+    );
 }
 
 export const PlaneRepresentationProvider = StructureRepresentationProvider({
@@ -44,5 +65,5 @@ export const PlaneRepresentationProvider = StructureRepresentationProvider({
     },
     mustRecreate: (oldProps: PD.Values<PlaneParams>, newProps: PD.Values<PlaneParams>) => {
         return oldProps.includeParent !== newProps.includeParent;
-    }
+    },
 });

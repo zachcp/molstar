@@ -18,10 +18,10 @@ export function swaggerUiAssetsHandler(options?: ServeStaticOptions): Handler {
 }
 
 export interface SwaggerUIOptions {
-    openapiJsonUrl: string
-    apiPrefix: string
-    title: string
-    shortcutIconLink: string
+    openapiJsonUrl: string;
+    apiPrefix: string;
+    title: string;
+    shortcutIconLink: string;
 }
 
 function createHTML(options: SwaggerUIOptions) {

@@ -9,7 +9,7 @@ import { ValueCell } from '../../mol-util/index.ts';
 import { BaseValues } from '../../mol-gl/renderable/schema.ts';
 import { LocationIterator } from '../util/location-iterator.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { TransformData, createIdentityTransform } from './transform-data.ts';
+import { createIdentityTransform, TransformData } from './transform-data.ts';
 import { Theme } from '../../mol-theme/theme.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import { NullLocation } from '../../mol-model/location.ts';
@@ -32,7 +32,7 @@ export const VisualQualityInfo = {
     'lower': {},
     'lowest': {},
 };
-export type VisualQuality = keyof typeof VisualQualityInfo
+export type VisualQuality = keyof typeof VisualQualityInfo;
 export const VisualQualityNames = Object.keys(VisualQualityInfo) as VisualQuality[];
 export const VisualQualityOptions = PD.arrayToOptions(VisualQualityNames);
 
@@ -45,17 +45,26 @@ export const ColorSmoothingParams = {
             resolutionFactor: PD.Numeric(2, { min: 0.5, max: 6, step: 0.1 }),
             sampleStride: PD.Numeric(3, { min: 1, max: 12, step: 1 }),
         }),
-        off: PD.Group({})
+        off: PD.Group({}),
     }),
 };
-export type ColorSmoothingParams = typeof ColorSmoothingParams
+export type ColorSmoothingParams = typeof ColorSmoothingParams;
 
-export function hasColorSmoothingProp(props: PD.Values<any>): props is PD.Values<ColorSmoothingParams> {
+export function hasColorSmoothingProp(
+    props: PD.Values<any>,
+): props is PD.Values<ColorSmoothingParams> {
     return !!props.smoothColors;
 }
 
-export function getColorSmoothingProps(smoothColors: PD.Values<ColorSmoothingParams>['smoothColors'], preferSmoothing?: boolean, resolution?: number) {
-    if ((smoothColors.name === 'on' || (smoothColors.name === 'auto' && preferSmoothing)) && resolution && resolution < 3) {
+export function getColorSmoothingProps(
+    smoothColors: PD.Values<ColorSmoothingParams>['smoothColors'],
+    preferSmoothing?: boolean,
+    resolution?: number,
+) {
+    if (
+        (smoothColors.name === 'on' || (smoothColors.name === 'auto' && preferSmoothing)) &&
+        resolution && resolution < 3
+    ) {
         let stride = 3;
         if (smoothColors.name === 'on') {
             resolution *= smoothColors.params.resolutionFactor;
@@ -67,7 +76,7 @@ export function getColorSmoothingProps(smoothColors: PD.Values<ColorSmoothingPar
             if (resolution > 1.2) stride = 2;
         }
         return { resolution, stride };
-    };
+    }
 }
 
 //
@@ -78,31 +87,70 @@ export namespace BaseGeometry {
     export const CullingLodCategory: PD.Info = { category: 'Culling & LOD' };
     export const CustomQualityParamInfo: PD.Info = {
         category: 'Custom Quality',
-        hideIf: (params: PD.Values<Params>) => typeof params.quality !== 'undefined' && params.quality !== 'custom'
+        hideIf: (params: PD.Values<Params>) =>
+            typeof params.quality !== 'undefined' && params.quality !== 'custom',
     };
 
     export const Params = {
-        alpha: PD.Numeric(1, { min: 0, max: 1, step: 0.01 }, { label: 'Opacity', isEssential: true, description: 'How opaque/transparent the representation is rendered.' }),
-        quality: PD.Select<VisualQuality>('auto', VisualQualityOptions, { isEssential: true, description: 'Visual/rendering quality of the representation.' }),
+        alpha: PD.Numeric(1, { min: 0, max: 1, step: 0.01 }, {
+            label: 'Opacity',
+            isEssential: true,
+            description: 'How opaque/transparent the representation is rendered.',
+        }),
+        quality: PD.Select<VisualQuality>('auto', VisualQualityOptions, {
+            isEssential: true,
+            description: 'Visual/rendering quality of the representation.',
+        }),
         material: Material.getParam(),
         clip: PD.Group(Clip.Params),
         emissive: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }),
-        density: PD.Numeric(0.2, { min: 0, max: 1, step: 0.01 }, { description: 'Density value to estimate object thickness.' }),
-        instanceGranularity: PD.Boolean(false, { description: 'Use instance granularity for marker, transparency, clipping, overpaint, substance data to save memory.' }),
-        lod: PD.Vec3(Vec3(), undefined, { ...CullingLodCategory, description: 'Level of detail.', fieldLabels: { x: 'Min Distance', y: 'Max Distance', z: 'Overlap (Shader)' } }),
-        cellSize: PD.Numeric(200, { min: 0, max: 5000, step: 100 }, { ...CullingLodCategory, description: 'Instance grid cell size.' }),
-        batchSize: PD.Numeric(2000, { min: 0, max: 50000, step: 500 }, { ...CullingLodCategory, description: 'Instance grid batch size.' }),
+        density: PD.Numeric(0.2, { min: 0, max: 1, step: 0.01 }, {
+            description: 'Density value to estimate object thickness.',
+        }),
+        instanceGranularity: PD.Boolean(false, {
+            description:
+                'Use instance granularity for marker, transparency, clipping, overpaint, substance data to save memory.',
+        }),
+        lod: PD.Vec3(Vec3(), undefined, {
+            ...CullingLodCategory,
+            description: 'Level of detail.',
+            fieldLabels: { x: 'Min Distance', y: 'Max Distance', z: 'Overlap (Shader)' },
+        }),
+        cellSize: PD.Numeric(200, { min: 0, max: 5000, step: 100 }, {
+            ...CullingLodCategory,
+            description: 'Instance grid cell size.',
+        }),
+        batchSize: PD.Numeric(2000, { min: 0, max: 50000, step: 500 }, {
+            ...CullingLodCategory,
+            description: 'Instance grid batch size.',
+        }),
     };
-    export type Params = typeof Params
+    export type Params = typeof Params;
 
-    export type Counts = { drawCount: number, vertexCount: number, groupCount: number, instanceCount: number }
+    export type Counts = {
+        drawCount: number;
+        vertexCount: number;
+        groupCount: number;
+        instanceCount: number;
+    };
 
-    export function createSimple(colorValue = ColorNames.grey, sizeValue = 1, transform?: TransformData) {
+    export function createSimple(
+        colorValue = ColorNames.grey,
+        sizeValue = 1,
+        transform?: TransformData,
+    ) {
         if (!transform) transform = createIdentityTransform();
-        const locationIterator = LocationIterator(1, transform.instanceCount.ref.value, 1, () => NullLocation, false, () => false);
+        const locationIterator = LocationIterator(
+            1,
+            transform.instanceCount.ref.value,
+            1,
+            () => NullLocation,
+            false,
+            () => false,
+        );
         const theme: Theme = {
             color: UniformColorTheme({}, { value: colorValue, lightness: 0, saturation: 0 }),
-            size: UniformSizeTheme({}, { value: sizeValue })
+            size: UniformSizeTheme({}, { value: sizeValue }),
         };
         return { transform, locationIterator, theme };
     }
@@ -156,7 +204,10 @@ export namespace BaseGeometry {
         ValueCell.update(values.uClipObjectTransform, clip.objects.transform);
 
         ValueCell.updateIfChanged(values.instanceGranularity, props.instanceGranularity);
-        ValueCell.update(values.uLod, Vec4.set(values.uLod.ref.value, props.lod[0], props.lod[1], props.lod[2], 0));
+        ValueCell.update(
+            values.uLod,
+            Vec4.set(values.uLod.ref.value, props.lod[0], props.lod[1], props.lod[2], 0),
+        );
     }
 
     export function createRenderableState(props: Partial<PD.Values<Params>> = {}): RenderableState {

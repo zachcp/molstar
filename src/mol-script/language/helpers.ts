@@ -5,9 +5,13 @@
  */
 
 import { Type } from './type.ts';
-import { MSymbol, Arguments, isSymbol } from './symbol.ts';
+import { Arguments, isSymbol, MSymbol } from './symbol.ts';
 
-export function symbol<A extends Arguments, T extends Type<S>, S>(args: A, type: T, description?: string) {
+export function symbol<A extends Arguments, T extends Type<S>, S>(
+    args: A,
+    type: T,
+    description?: string,
+) {
     return MSymbol('', args, type, description);
 }
 
@@ -24,7 +28,10 @@ export function symbolList(table: any): MSymbol[] {
 function formatKey(key: string) {
     const regex = /([a-z])([A-Z])([a-z]|$)/g;
     // do this twice because 'xXxX'
-    return key.replace(regex, (s, a, b, c) => `${a}-${b.toLocaleLowerCase()}${c}`).replace(regex, (s, a, b, c) => `${a}-${b.toLocaleLowerCase()}${c}`);
+    return key.replace(regex, (s, a, b, c) => `${a}-${b.toLocaleLowerCase()}${c}`).replace(
+        regex,
+        (s, a, b, c) => `${a}-${b.toLocaleLowerCase()}${c}`,
+    );
 }
 
 function _normalizeTable(namespace: string, key: string, obj: any) {

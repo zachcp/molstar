@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Unit, StructureElement, Bond, ElementIndex } from '../../mol-model/structure.ts';
+import { Bond, ElementIndex, StructureElement, Unit } from '../../mol-model/structure.ts';
 
-import { ColorScale, Color } from '../../mol-util/color/index.ts';
+import { Color, ColorScale } from '../../mol-util/color/index.ts';
 import { Location } from '../../mol-model/location.ts';
 import type { ColorTheme } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
@@ -19,7 +19,7 @@ const Description = 'Gives every polymer residue a color based on its `seq_id` v
 export const SequenceIdColorThemeParams = {
     list: PD.ColorList('turbo-no-black', { presetKind: 'scale' }),
 };
-export type SequenceIdColorThemeParams = typeof SequenceIdColorThemeParams
+export type SequenceIdColorThemeParams = typeof SequenceIdColorThemeParams;
 export function getSequenceIdColorThemeParams(ctx: ThemeDataContext) {
     return SequenceIdColorThemeParams; // TODO return copy
 }
@@ -33,12 +33,12 @@ function getSeqId(unit: Unit, element: ElementIndex): number {
         case Unit.Kind.Spheres:
             return Math.round(
                 (model.coarseHierarchy.spheres.seq_id_begin.value(element) +
-                    model.coarseHierarchy.spheres.seq_id_end.value(element)) / 2
+                    model.coarseHierarchy.spheres.seq_id_end.value(element)) / 2,
             );
         case Unit.Kind.Gaussians:
             return Math.round(
                 (model.coarseHierarchy.gaussians.seq_id_begin.value(element) +
-                    model.coarseHierarchy.gaussians.seq_id_end.value(element)) / 2
+                    model.coarseHierarchy.gaussians.seq_id_end.value(element)) / 2,
             );
     }
 }
@@ -69,7 +69,10 @@ function getSequenceLength(unit: Unit, element: ElementIndex) {
     return entity.sequence.length;
 }
 
-export function SequenceIdColorTheme(ctx: ThemeDataContext, props: PD.Values<SequenceIdColorThemeParams>): ColorTheme<SequenceIdColorThemeParams> {
+export function SequenceIdColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<SequenceIdColorThemeParams>,
+): ColorTheme<SequenceIdColorThemeParams> {
     const scale = ColorScale.create({
         listOrName: props.list.colors,
         minLabel: 'Start',
@@ -107,16 +110,19 @@ export function SequenceIdColorTheme(ctx: ThemeDataContext, props: PD.Values<Seq
         color,
         props,
         description: Description,
-        legend: scale ? scale.legend : undefined
+        legend: scale ? scale.legend : undefined,
     };
 }
 
-export const SequenceIdColorThemeProvider: ColorTheme.Provider<SequenceIdColorThemeParams, 'sequence-id'> = {
+export const SequenceIdColorThemeProvider: ColorTheme.Provider<
+    SequenceIdColorThemeParams,
+    'sequence-id'
+> = {
     name: 'sequence-id',
     label: 'Sequence Id',
     category: ColorThemeCategory.Residue,
     factory: SequenceIdColorTheme,
     getParams: getSequenceIdColorThemeParams,
     defaultValues: PD.getDefaultValues(SequenceIdColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
 };

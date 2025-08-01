@@ -9,11 +9,11 @@ import { Mat4, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
 export { Viewport };
 
 type Viewport = {
-    x: number
-    y: number
-    width: number
-    height: number
-}
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+};
 
 function Viewport() {
     return Viewport.zero();
@@ -32,7 +32,13 @@ namespace Viewport {
     export function copy(target: Viewport, source: Viewport): Viewport {
         return Object.assign(target, source);
     }
-    export function set(viewport: Viewport, x: number, y: number, width: number, height: number): Viewport {
+    export function set(
+        viewport: Viewport,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+    ): Viewport {
         viewport.x = x;
         viewport.y = y;
         viewport.width = width;
@@ -88,7 +94,12 @@ export function cameraProject(out: Vec4, point: Vec3, viewport: Viewport, projec
  * The point must have `x` and `y` set to 2D window coordinates
  * and `z` between 0 (near) and 1 (far); the optional `w` is not used.
  */
-export function cameraUnproject(out: Vec3, point: Vec3 | Vec4, viewport: Viewport, inverseProjectionView: Mat4) {
+export function cameraUnproject(
+    out: Vec3,
+    point: Vec3 | Vec4,
+    viewport: Viewport,
+    inverseProjectionView: Mat4,
+) {
     const { x, y, width, height } = viewport;
 
     const px = point[0] - x;

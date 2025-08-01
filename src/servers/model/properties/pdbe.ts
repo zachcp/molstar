@@ -5,7 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PDBe_structureQualityReport, PDBe_preferredAssembly, PDBe_structRefDomain } from './providers/pdbe.ts';
+import {
+    PDBe_preferredAssembly,
+    PDBe_structRefDomain,
+    PDBe_structureQualityReport,
+} from './providers/pdbe.ts';
 import { AttachModelProperties } from '../property-provider.ts';
 
 export const attachModelProperties: AttachModelProperties = (args) => {
@@ -14,6 +18,6 @@ export const attachModelProperties: AttachModelProperties = (args) => {
     return [
         PDBe_structureQualityReport(args),
         PDBe_preferredAssembly(args),
-        PDBe_structRefDomain(args)
+        PDBe_structRefDomain(args),
     ];
 };

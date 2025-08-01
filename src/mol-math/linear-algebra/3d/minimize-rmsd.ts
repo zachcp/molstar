@@ -14,11 +14,15 @@ import { Sphere3D } from '../../geometry/primitives/sphere3d.ts';
 export { MinimizeRmsd };
 namespace MinimizeRmsd {
     export interface Result {
-        bTransform: Mat4,
-        rmsd: number
+        bTransform: Mat4;
+        rmsd: number;
     }
 
-    export interface Positions { x: ArrayLike<number>, y: ArrayLike<number>, z: ArrayLike<number> }
+    export interface Positions {
+        x: ArrayLike<number>;
+        y: ArrayLike<number>;
+        z: ArrayLike<number>;
+    }
     export namespace Positions {
         export function empty(n: number) {
             return { x: new Float64Array(n), y: new Float64Array(n), z: new Float64Array(n) };
@@ -26,10 +30,10 @@ namespace MinimizeRmsd {
     }
 
     export interface Input {
-        a: Positions,
-        b: Positions,
-        centerA?: Vec3,
-        centerB?: Vec3
+        a: Positions;
+        b: Positions;
+        centerA?: Vec3;
+        centerB?: Vec3;
     }
 
     export function compute(data: Input, result?: MinimizeRmsd.Result) {

@@ -64,13 +64,16 @@ function getAxesToFlip(position: Vec3, origin: Vec3, up: Vec3, normalDir: Vec3) 
     };
 }
 
-function getFirstResidueOrAveragePosition(structure: Structure, polymerPositions: Float32Array): Vec3 {
+function getFirstResidueOrAveragePosition(
+    structure: Structure,
+    polymerPositions: Float32Array,
+): Vec3 {
     if (structure.units.length === 1) {
         // if only one chain, return the coordinates of the first residue
         return Vec3.create(polymerPositions[0], polymerPositions[1], polymerPositions[2]);
     } else {
         // if more than one chain, return average of the coordinates of the first polymer chain
-        const firstPolymerUnit = structure.units.find(u => u.props.polymerElements);
+        const firstPolymerUnit = structure.units.find((u) => u.props.polymerElements);
         if (firstPolymerUnit) {
             const pos = Vec3();
             const center = Vec3();
@@ -86,7 +89,11 @@ function getFirstResidueOrAveragePosition(structure: Structure, polymerPositions
     }
 }
 
-export function pcaFocus(plugin: PluginContext, radius: number, options: { principalAxes: PrincipalAxes, positionToFlip?: Vec3 }) {
+export function pcaFocus(
+    plugin: PluginContext,
+    radius: number,
+    options: { principalAxes: PrincipalAxes; positionToFlip?: Vec3 },
+) {
     if (!plugin.canvas3d) return;
 
     const { origin, dirA, dirB, dirC } = options.principalAxes.boxAxes;
@@ -137,7 +144,7 @@ export function getPcaTransform(group: StructureComponentRef[]): PcaTransformDat
     const positionToFlip = getFirstResidueOrAveragePosition(structure, positions);
     const pcaTransfromData: PcaTransformData = {
         principalAxes: PrincipalAxes.ofPositions(positions),
-        positionToFlip
+        positionToFlip,
     };
     structure.currentPropertyData._pcaTransformData = pcaTransfromData;
     return pcaTransfromData;

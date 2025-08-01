@@ -13,7 +13,11 @@ class FormatRegistry<T> {
     private map = new Map<ModelFormat['kind'], (model: Model) => T | undefined>();
     private applicable = new Map<ModelFormat['kind'], (model: Model) => boolean>();
 
-    add(kind: ModelFormat['kind'], obtain: (model: Model) => T | undefined, applicable?: (model: Model) => boolean) {
+    add(
+        kind: ModelFormat['kind'],
+        obtain: (model: Model) => T | undefined,
+        applicable?: (model: Model) => boolean,
+    ) {
         this.map.set(kind, obtain);
         if (applicable) this.applicable.set(kind, applicable);
     }
@@ -37,16 +41,19 @@ class FormatRegistry<T> {
 export { FormatPropertyProvider };
 
 interface FormatPropertyProvider<T> {
-    readonly descriptor: CustomPropertyDescriptor
-    readonly formatRegistry: FormatRegistry<T>
-    isApplicable(model: Model): boolean
-    get(model: Model): T | undefined
-    set(model: Model, value: T): void
-    delete(model: Model): void
+    readonly descriptor: CustomPropertyDescriptor;
+    readonly formatRegistry: FormatRegistry<T>;
+    isApplicable(model: Model): boolean;
+    get(model: Model): T | undefined;
+    set(model: Model, value: T): void;
+    delete(model: Model): void;
 }
 
 namespace FormatPropertyProvider {
-    export function create<T>(descriptor: CustomPropertyDescriptor, options?: { asDynamic?: boolean }): FormatPropertyProvider<T> {
+    export function create<T>(
+        descriptor: CustomPropertyDescriptor,
+        options?: { asDynamic?: boolean },
+    ): FormatPropertyProvider<T> {
         const { name } = descriptor;
         const formatRegistry = new FormatRegistry<T>();
 
@@ -57,7 +64,9 @@ namespace FormatPropertyProvider {
                 return formatRegistry.isApplicable(model);
             },
             get(model: Model): T | undefined {
-                const store = options?.asDynamic ? model._dynamicPropertyData : model._staticPropertyData;
+                const store = options?.asDynamic
+                    ? model._dynamicPropertyData
+                    : model._staticPropertyData;
 
                 if (store[name]) return store[name];
                 if (model.customProperties.has(descriptor)) return;
@@ -82,7 +91,7 @@ namespace FormatPropertyProvider {
                 } else {
                     delete model._staticPropertyData[name];
                 }
-            }
+            },
         };
     }
 }

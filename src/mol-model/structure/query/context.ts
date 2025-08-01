@@ -55,7 +55,8 @@ export class QueryContext implements QueryContextView {
 
     popCurrentBond() {
         if (this.currentAtomicBondStack.length > 0) {
-            (this.atomicBond as QueryContextBondInfo<Unit.Atomic>) = this.currentAtomicBondStack.pop()!;
+            (this.atomicBond as QueryContextBondInfo<Unit.Atomic>) = this.currentAtomicBondStack
+                .pop()!;
         } else {
             (this.atomicBond as any) = void 0;
         }
@@ -66,8 +67,9 @@ export class QueryContext implements QueryContextView {
     }
 
     popCurrentStructure() {
-        if (this.currentStructureStack.length) (this.currentStructure as Structure) = this.currentStructureStack.pop()!;
-        else (this.currentStructure as Structure) = void 0 as any;
+        if (this.currentStructureStack.length) {
+            (this.currentStructure as Structure) = this.currentStructureStack.pop()!;
+        } else (this.currentStructure as Structure) = void 0 as any;
     }
 
     pushInputStructure(structure: Structure) {
@@ -100,12 +102,16 @@ export class QueryContext implements QueryContextView {
 }
 
 export interface QueryContextOptions {
-    timeoutMs?: number,
-    currentSelection?: StructureSelection
+    timeoutMs?: number;
+    currentSelection?: StructureSelection;
 }
 
-export interface QueryPredicate { (ctx: QueryContext): boolean }
-export interface QueryFn<T = any> { (ctx: QueryContext): T }
+export interface QueryPredicate {
+    (ctx: QueryContext): boolean;
+}
+export interface QueryFn<T = any> {
+    (ctx: QueryContext): T;
+}
 
 class QueryContextBondInfo<U extends Unit = Unit> {
     a: StructureElement.Location<U> = StructureElement.Location.create(void 0);

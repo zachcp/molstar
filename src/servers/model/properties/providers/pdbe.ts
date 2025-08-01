@@ -7,7 +7,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Model } from '../../../../mol-model/structure.ts';
-import { StructureQualityReportProvider, StructureQualityReport } from '../../../../extensions/pdbe/structure-quality-report/prop.ts';
+import {
+    StructureQualityReport,
+    StructureQualityReportProvider,
+} from '../../../../extensions/pdbe/structure-quality-report/prop.ts';
 import { fetchRetry } from '../../utils/fetch-retry.ts';
 import { UUID } from '../../../../mol-util/index.ts';
 import { PDBePreferredAssembly } from '../../../../extensions/pdbe/preferred-assembly.ts';
@@ -16,21 +19,44 @@ import { AttachModelProperty } from '../../property-provider.ts';
 import { ConsoleLogger } from '../../../../mol-util/console-logger.ts';
 import { getParam } from '../../../common/util.ts';
 
-export const PDBe_structureQualityReport: AttachModelProperty = async ({ model, params, cache }) => {
+export const PDBe_structureQualityReport: AttachModelProperty = async (
+    { model, params, cache },
+) => {
     const PDBe_apiSourceJson = useFileSource(params)
-        ? residuewise_outlier_summary.getDataFromAggregateFile(getFilePrefix(params, 'residuewise_outlier_summary'))
-        : apiQueryProvider(getApiUrl(params, 'residuewise_outlier_summary', StructureQualityReport.DefaultServerUrl), cache);
+        ? residuewise_outlier_summary.getDataFromAggregateFile(
+            getFilePrefix(params, 'residuewise_outlier_summary'),
+        )
+        : apiQueryProvider(
+            getApiUrl(
+                params,
+                'residuewise_outlier_summary',
+                StructureQualityReport.DefaultServerUrl,
+            ),
+            cache,
+        );
     const data = StructureQualityReport.fromJson(model, await PDBe_apiSourceJson(model));
-    return StructureQualityReportProvider.set(model, { serverUrl: StructureQualityReport.DefaultServerUrl }, data);
+    return StructureQualityReportProvider.set(model, {
+        serverUrl: StructureQualityReport.DefaultServerUrl,
+    }, data);
 };
 
 export const PDBe_preferredAssembly: AttachModelProperty = ({ model, params, cache }) => {
-    const PDBe_apiSourceJson = apiQueryProvider(getApiUrl(params, 'preferred_assembly', 'https://www.ebi.ac.uk/pdbe/api/pdb/entry/summary'), cache);
+    const PDBe_apiSourceJson = apiQueryProvider(
+        getApiUrl(params, 'preferred_assembly', 'https://www.ebi.ac.uk/pdbe/api/pdb/entry/summary'),
+        cache,
+    );
     return PDBePreferredAssembly.attachFromCifOrApi(model, { PDBe_apiSourceJson });
 };
 
 export const PDBe_structRefDomain: AttachModelProperty = ({ model, params, cache }) => {
-    const PDBe_apiSourceJson = apiQueryProvider(getApiUrl(params, 'struct_ref_domain', 'https://www.ebi.ac.uk/pdbe/api/mappings/sequence_domains'), cache);
+    const PDBe_apiSourceJson = apiQueryProvider(
+        getApiUrl(
+            params,
+            'struct_ref_domain',
+            'https://www.ebi.ac.uk/pdbe/api/mappings/sequence_domains',
+        ),
+        cache,
+    );
     return PDBeStructRefDomain.attachFromCifOrApi(model, { PDBe_apiSourceJson });
 };
 
@@ -43,11 +69,11 @@ namespace residuewise_outlier_summary {
             const key = `${model.entryId[1]}${model.entryId[2]}`;
             if (!json.has(key)) {
                 const fn = path.join(pathPrefix, `${key}.json`);
-                if (!fs.existsSync(fn)) json.set(key, { });
+                if (!fs.existsSync(fn)) json.set(key, {});
                 // TODO: use async readFile?
                 else json.set(key, JSON.parse(fs.readFileSync(fn, 'utf8')));
             }
-            return json.get(key)![model.entryId.toLowerCase()] || { };
+            return json.get(key)![model.entryId.toLowerCase()] || {};
         };
     }
 }
@@ -74,16 +100,23 @@ function apiQueryProvider(urlPrefix: string, cache: any) {
     return async (model: Model) => {
         try {
             if (cache[cacheKey]) return cache[cacheKey];
-            const rawData = await fetchRetry(`${urlPrefix}/${model.entryId.toLowerCase()}`, 1500, 5);
+            const rawData = await fetchRetry(
+                `${urlPrefix}/${model.entryId.toLowerCase()}`,
+                1500,
+                5,
+            );
             // TODO: is this ok?
-            if (rawData.status !== 200) return { };
-            const json = ((await rawData.json()) as any)[model.entryId.toLowerCase()] || { };
+            if (rawData.status !== 200) return {};
+            const json = ((await rawData.json()) as any)[model.entryId.toLowerCase()] || {};
             cache[cacheKey] = json;
             return json;
         } catch (e) {
             // TODO: handle better
-            ConsoleLogger.warn('Props', `Could not retrieve prop @${`${urlPrefix}/${model.entryId.toLowerCase()}`}`);
-            return { };
+            ConsoleLogger.warn(
+                'Props',
+                `Could not retrieve prop @${`${urlPrefix}/${model.entryId.toLowerCase()}`}`,
+            );
+            return {};
         }
     };
 }

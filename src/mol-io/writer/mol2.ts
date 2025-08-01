@@ -9,11 +9,11 @@ import { Encoder } from './cif/encoder.ts';
 
 export namespace Mol2Writer {
     export interface EncoderParams {
-        encoderName?: string,
+        encoderName?: string;
         // whether to write ModelServer meta-information (query & params)
-        metaInformation?: boolean,
+        metaInformation?: boolean;
         // whether to write hydrogen atoms
-        hydrogens?: boolean
+        hydrogens?: boolean;
     }
 
     export function createEncoder(params?: EncoderParams): Encoder {

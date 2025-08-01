@@ -5,10 +5,10 @@
  */
 
 import { Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
-import { Loci, EmptyLoci } from '../../../mol-model/loci.ts';
+import { EmptyLoci, Loci } from '../../../mol-model/loci.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { createLinkCylinderMesh, LinkCylinderParams } from './util/link.ts';
-import { OrderedSet, Interval } from '../../../mol-data/int.ts';
+import { Interval, OrderedSet } from '../../../mol-data/int.ts';
 import { ComplexMeshVisual, ComplexVisual } from '../complex-visual.ts';
 import { UnitsMeshParams } from '../units-visual.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
@@ -21,7 +21,13 @@ import { Theme } from '../../../mol-theme/theme.ts';
 import { getAltResidueLociFromId } from './util/common.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 
-function createCarbohydrateLinkCylinderMesh(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<CarbohydrateLinkParams>, mesh?: Mesh) {
+function createCarbohydrateLinkCylinderMesh(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<CarbohydrateLinkParams>,
+    mesh?: Mesh,
+) {
     const { links, elements } = structure.carbohydrates;
     const { linkSizeFactor } = props;
 
@@ -61,7 +67,7 @@ export const CarbohydrateLinkParams = {
     ...LinkCylinderParams,
     linkSizeFactor: PD.Numeric(0.3, { min: 0, max: 3, step: 0.01 }),
 };
-export type CarbohydrateLinkParams = typeof CarbohydrateLinkParams
+export type CarbohydrateLinkParams = typeof CarbohydrateLinkParams;
 
 export function CarbohydrateLinkVisual(materialId: number): ComplexVisual<CarbohydrateLinkParams> {
     return ComplexMeshVisual<CarbohydrateLinkParams>({
@@ -70,13 +76,15 @@ export function CarbohydrateLinkVisual(materialId: number): ComplexVisual<Carboh
         createLocationIterator: CarbohydrateLinkIterator,
         getLoci: getLinkLoci,
         eachLocation: eachCarbohydrateLink,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<CarbohydrateLinkParams>, currentProps: PD.Values<CarbohydrateLinkParams>) => {
-            state.createGeometry = (
-                newProps.linkSizeFactor !== currentProps.linkSizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<CarbohydrateLinkParams>,
+            currentProps: PD.Values<CarbohydrateLinkParams>,
+        ) => {
+            state.createGeometry = newProps.linkSizeFactor !== currentProps.linkSizeFactor ||
                 newProps.radialSegments !== currentProps.radialSegments ||
-                newProps.linkCap !== currentProps.linkCap
-            );
-        }
+                newProps.linkCap !== currentProps.linkCap;
+        },
     }, materialId);
 }
 
@@ -105,7 +113,7 @@ function getLinkLoci(pickingId: PickingId, structure: Structure, id: number) {
         const carbB = elements[l.carbohydrateIndexB];
         return StructureElement.Loci.union(
             getAltResidueLociFromId(structure, carbA.unit, carbA.residueIndex, carbA.altId),
-            getAltResidueLociFromId(structure, carbB.unit, carbB.residueIndex, carbB.altId)
+            getAltResidueLociFromId(structure, carbB.unit, carbB.residueIndex, carbB.altId),
         );
     }
     return EmptyLoci;
@@ -113,7 +121,11 @@ function getLinkLoci(pickingId: PickingId, structure: Structure, id: number) {
 
 const __linkIndicesSet = new Set<number>();
 
-function eachCarbohydrateLink(loci: Loci, structure: Structure, apply: (interval: Interval) => boolean) {
+function eachCarbohydrateLink(
+    loci: Loci,
+    structure: Structure,
+    apply: (interval: Interval) => boolean,
+) {
     let changed = false;
     if (!StructureElement.Loci.is(loci)) return false;
     if (!Structure.areEquivalent(loci.structure, structure)) return false;
@@ -123,7 +135,7 @@ function eachCarbohydrateLink(loci: Loci, structure: Structure, apply: (interval
         if (!Unit.isAtomic(unit)) continue;
 
         __linkIndicesSet.clear();
-        OrderedSet.forEach(indices, v => {
+        OrderedSet.forEach(indices, (v) => {
             const linkIndices = getLinkIndices(unit, unit.elements[v]);
             for (let i = 0, il = linkIndices.length; i < il; ++i) {
                 if (!__linkIndicesSet.has(linkIndices[i])) {

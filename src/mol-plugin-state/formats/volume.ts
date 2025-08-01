@@ -29,7 +29,7 @@ async function tryObtainRecommendedIsoValue(plugin: PluginContext, volume?: Volu
     const { entryId } = volume;
     if (!entryId || !entryId.toLowerCase().startsWith('emd')) return;
 
-    return plugin.runTask(Task.create('Try Set Recommended IsoValue', async ctx => {
+    return plugin.runTask(Task.create('Try Set Recommended IsoValue', async (ctx) => {
         try {
             const absIsoLevel = await getContourLevelEmdb(plugin, ctx, entryId);
             RecommendedIsoValue.Provider.set(volume, Volume.IsoValue.absolute(absIsoLevel));
@@ -47,16 +47,21 @@ function tryGetRecomendedIsoValue(volume: Volume) {
     return Volume.adjustedIsoValue(volume, recommendedIsoValue.absoluteValue, 'absolute');
 }
 
-async function defaultVisuals(plugin: PluginContext, data: { volume: StateObjectSelector<PluginStateObject.Volume.Data> }) {
-
+async function defaultVisuals(
+    plugin: PluginContext,
+    data: { volume: StateObjectSelector<PluginStateObject.Volume.Data> },
+) {
     const typeParams: { isoValue?: Volume.IsoValue } = {};
     const isoValue = data.volume.data && tryGetRecomendedIsoValue(data.volume.data);
     if (isoValue) typeParams.isoValue = isoValue;
 
-    const visual = plugin.build().to(data.volume).apply(StateTransforms.Representation.VolumeRepresentation3D, createVolumeRepresentationParams(plugin, data.volume.data, {
-        type: 'isosurface',
-        typeParams,
-    }));
+    const visual = plugin.build().to(data.volume).apply(
+        StateTransforms.Representation.VolumeRepresentation3D,
+        createVolumeRepresentationParams(plugin, data.volume.data, {
+            type: 'isosurface',
+            typeParams,
+        }),
+    );
     return [await visual.commit()];
 }
 
@@ -70,14 +75,16 @@ export const Ccp4Provider = DataFormatProvider({
             .to(data)
             .apply(StateTransforms.Data.ParseCcp4, {}, { state: { isGhost: true } });
 
-        const volume = format.apply(StateTransforms.Volume.VolumeFromCcp4, { entryId: params?.entryId });
+        const volume = format.apply(StateTransforms.Volume.VolumeFromCcp4, {
+            entryId: params?.entryId,
+        });
 
         await format.commit({ revertOnError: true });
         await tryObtainRecommendedIsoValue(plugin, volume.selector.data);
 
         return { format: format.selector, volume: volume.selector };
     },
-    visuals: defaultVisuals
+    visuals: defaultVisuals,
 });
 
 export const Dsn6Provider = DataFormatProvider({
@@ -90,14 +97,16 @@ export const Dsn6Provider = DataFormatProvider({
             .to(data)
             .apply(StateTransforms.Data.ParseDsn6, {}, { state: { isGhost: true } });
 
-        const volume = format.apply(StateTransforms.Volume.VolumeFromDsn6, { entryId: params?.entryId });
+        const volume = format.apply(StateTransforms.Volume.VolumeFromDsn6, {
+            entryId: params?.entryId,
+        });
 
         await format.commit({ revertOnError: true });
         await tryObtainRecommendedIsoValue(plugin, volume.selector.data);
 
         return { format: format.selector, volume: volume.selector };
     },
-    visuals: defaultVisuals
+    visuals: defaultVisuals,
 });
 
 export const DxProvider = DataFormatProvider({
@@ -111,14 +120,16 @@ export const DxProvider = DataFormatProvider({
             .to(data)
             .apply(StateTransforms.Data.ParseDx, {}, { state: { isGhost: true } });
 
-        const volume = format.apply(StateTransforms.Volume.VolumeFromDx, { entryId: params?.entryId });
+        const volume = format.apply(StateTransforms.Volume.VolumeFromDx, {
+            entryId: params?.entryId,
+        });
 
         await volume.commit({ revertOnError: true });
         await tryObtainRecommendedIsoValue(plugin, volume.selector.data);
 
         return { volume: volume.selector };
     },
-    visuals: defaultVisuals
+    visuals: defaultVisuals,
 });
 
 export const CubeProvider = DataFormatProvider({
@@ -131,7 +142,9 @@ export const CubeProvider = DataFormatProvider({
             .to(data)
             .apply(StateTransforms.Data.ParseCube, {}, { state: { isGhost: true } });
 
-        const volume = format.apply(StateTransforms.Volume.VolumeFromCube, { entryId: params?.entryId });
+        const volume = format.apply(StateTransforms.Volume.VolumeFromCube, {
+            entryId: params?.entryId,
+        });
         const structure = format
             .apply(StateTransforms.Model.TrajectoryFromCube, void 0, { state: { isGhost: true } })
             .apply(StateTransforms.Model.ModelFromTrajectory)
@@ -142,45 +155,65 @@ export const CubeProvider = DataFormatProvider({
 
         return { format: format.selector, volume: volume.selector, structure: structure.selector };
     },
-    visuals: async (plugin: PluginContext, data: { volume: StateObjectSelector<PluginStateObject.Volume.Data>, structure: StateObjectSelector<PluginStateObject.Molecule.Structure> }) => {
+    visuals: async (
+        plugin: PluginContext,
+        data: {
+            volume: StateObjectSelector<PluginStateObject.Volume.Data>;
+            structure: StateObjectSelector<PluginStateObject.Molecule.Structure>;
+        },
+    ) => {
         const surfaces = plugin.build();
 
         const volumeReprs: StateObjectSelector<PluginStateObject.Volume.Representation3D>[] = [];
         const volumeData = data.volume.cell?.obj?.data;
         if (volumeData && Volume.isOrbitals(volumeData)) {
-            const volumePos = surfaces.to(data.volume).apply(StateTransforms.Representation.VolumeRepresentation3D, createVolumeRepresentationParams(plugin, volumeData, {
-                type: 'isosurface',
-                typeParams: { isoValue: Volume.IsoValue.relative(1), alpha: 0.4 },
-                color: 'uniform',
-                colorParams: { value: ColorNames.blue }
-            }));
-            const volumeNeg = surfaces.to(data.volume).apply(StateTransforms.Representation.VolumeRepresentation3D, createVolumeRepresentationParams(plugin, volumeData, {
-                type: 'isosurface',
-                typeParams: { isoValue: Volume.IsoValue.relative(-1), alpha: 0.4 },
-                color: 'uniform',
-                colorParams: { value: ColorNames.red }
-            }));
+            const volumePos = surfaces.to(data.volume).apply(
+                StateTransforms.Representation.VolumeRepresentation3D,
+                createVolumeRepresentationParams(plugin, volumeData, {
+                    type: 'isosurface',
+                    typeParams: { isoValue: Volume.IsoValue.relative(1), alpha: 0.4 },
+                    color: 'uniform',
+                    colorParams: { value: ColorNames.blue },
+                }),
+            );
+            const volumeNeg = surfaces.to(data.volume).apply(
+                StateTransforms.Representation.VolumeRepresentation3D,
+                createVolumeRepresentationParams(plugin, volumeData, {
+                    type: 'isosurface',
+                    typeParams: { isoValue: Volume.IsoValue.relative(-1), alpha: 0.4 },
+                    color: 'uniform',
+                    colorParams: { value: ColorNames.red },
+                }),
+            );
             volumeReprs.push(volumePos.selector, volumeNeg.selector);
         } else {
-            const volume = surfaces.to(data.volume).apply(StateTransforms.Representation.VolumeRepresentation3D, createVolumeRepresentationParams(plugin, volumeData, {
-                type: 'isosurface',
-                typeParams: { isoValue: Volume.IsoValue.relative(2), alpha: 0.4 },
-                color: 'uniform',
-                colorParams: { value: ColorNames.grey }
-            }));
+            const volume = surfaces.to(data.volume).apply(
+                StateTransforms.Representation.VolumeRepresentation3D,
+                createVolumeRepresentationParams(plugin, volumeData, {
+                    type: 'isosurface',
+                    typeParams: { isoValue: Volume.IsoValue.relative(2), alpha: 0.4 },
+                    color: 'uniform',
+                    colorParams: { value: ColorNames.grey },
+                }),
+            );
             volumeReprs.push(volume.selector);
         }
 
-        const structure = await plugin.builders.structure.representation.applyPreset(data.structure, 'auto');
+        const structure = await plugin.builders.structure.representation.applyPreset(
+            data.structure,
+            'auto',
+        );
         await surfaces.commit();
 
-        const structureReprs: StateObjectSelector<PluginStateObject.Molecule.Structure.Representation3D>[] = [];
+        const structureReprs: StateObjectSelector<
+            PluginStateObject.Molecule.Structure.Representation3D
+        >[] = [];
         objectForEach(structure?.representations as any, (r: any) => {
             if (r) structureReprs.push(r);
         });
 
         return [...volumeReprs, ...structureReprs];
-    }
+    },
 });
 
 type DsCifParams = { entryId?: string | string[] };
@@ -209,7 +242,12 @@ export const DscifProvider = DataFormatProvider({
 
             const entryId = Array.isArray(params?.entryId) ? params?.entryId[i] : params?.entryId;
             if (block.categories['volume_data_3d_info']?.rowCount > 0) {
-                volumes.push(b.apply(StateTransforms.Volume.VolumeFromDensityServerCif, { blockHeader: block.header, entryId }).selector);
+                volumes.push(
+                    b.apply(StateTransforms.Volume.VolumeFromDensityServerCif, {
+                        blockHeader: block.header,
+                        entryId,
+                    }).selector,
+                );
                 i++;
             }
         }
@@ -219,31 +257,62 @@ export const DscifProvider = DataFormatProvider({
 
         return { volumes };
     },
-    visuals: async (plugin, data: { volumes: StateObjectSelector<PluginStateObject.Volume.Data>[] }) => {
+    visuals: async (
+        plugin,
+        data: { volumes: StateObjectSelector<PluginStateObject.Volume.Data>[] },
+    ) => {
         const { volumes } = data;
         const tree = plugin.build();
         const visuals: StateObjectSelector<PluginStateObject.Volume.Representation3D>[] = [];
 
         if (volumes.length > 0) {
-            const isoValue = (volumes[0].data && tryGetRecomendedIsoValue(volumes[0].data)) || Volume.IsoValue.relative(1.5);
+            const isoValue = (volumes[0].data && tryGetRecomendedIsoValue(volumes[0].data)) ||
+                Volume.IsoValue.relative(1.5);
 
             visuals[0] = tree
                 .to(volumes[0])
-                .apply(StateTransforms.Representation.VolumeRepresentation3D, VolumeRepresentation3DHelpers.getDefaultParamsStatic(plugin, 'isosurface', { isoValue, alpha: 1 }, 'uniform', { value: ColorNames.teal }))
+                .apply(
+                    StateTransforms.Representation.VolumeRepresentation3D,
+                    VolumeRepresentation3DHelpers.getDefaultParamsStatic(
+                        plugin,
+                        'isosurface',
+                        { isoValue, alpha: 1 },
+                        'uniform',
+                        { value: ColorNames.teal },
+                    ),
+                )
                 .selector;
         }
 
         if (volumes.length > 1) {
-            const posParams = VolumeRepresentation3DHelpers.getDefaultParamsStatic(plugin, 'isosurface', { isoValue: Volume.IsoValue.relative(3), alpha: 0.3 }, 'uniform', { value: ColorNames.green });
-            const negParams = VolumeRepresentation3DHelpers.getDefaultParamsStatic(plugin, 'isosurface', { isoValue: Volume.IsoValue.relative(-3), alpha: 0.3 }, 'uniform', { value: ColorNames.red });
-            visuals[visuals.length] = tree.to(volumes[1]).apply(StateTransforms.Representation.VolumeRepresentation3D, posParams).selector;
-            visuals[visuals.length] = tree.to(volumes[1]).apply(StateTransforms.Representation.VolumeRepresentation3D, negParams).selector;
+            const posParams = VolumeRepresentation3DHelpers.getDefaultParamsStatic(
+                plugin,
+                'isosurface',
+                { isoValue: Volume.IsoValue.relative(3), alpha: 0.3 },
+                'uniform',
+                { value: ColorNames.green },
+            );
+            const negParams = VolumeRepresentation3DHelpers.getDefaultParamsStatic(
+                plugin,
+                'isosurface',
+                { isoValue: Volume.IsoValue.relative(-3), alpha: 0.3 },
+                'uniform',
+                { value: ColorNames.red },
+            );
+            visuals[visuals.length] = tree.to(volumes[1]).apply(
+                StateTransforms.Representation.VolumeRepresentation3D,
+                posParams,
+            ).selector;
+            visuals[visuals.length] = tree.to(volumes[1]).apply(
+                StateTransforms.Representation.VolumeRepresentation3D,
+                negParams,
+            ).selector;
         }
 
         await tree.commit();
 
         return visuals;
-    }
+    },
 });
 
 export const SegcifProvider = DataFormatProvider({
@@ -268,7 +337,11 @@ export const SegcifProvider = DataFormatProvider({
             if (block.header.toUpperCase() === 'SERVER') continue;
 
             if (block.categories['volume_data_3d_info']?.rowCount > 0) {
-                volumes.push(b.apply(StateTransforms.Volume.VolumeFromSegmentationCif, { blockHeader: block.header }).selector);
+                volumes.push(
+                    b.apply(StateTransforms.Volume.VolumeFromSegmentationCif, {
+                        blockHeader: block.header,
+                    }).selector,
+                );
             }
         }
 
@@ -276,7 +349,10 @@ export const SegcifProvider = DataFormatProvider({
 
         return { volumes };
     },
-    visuals: async (plugin, data: { volumes: StateObjectSelector<PluginStateObject.Volume.Data>[] }) => {
+    visuals: async (
+        plugin,
+        data: { volumes: StateObjectSelector<PluginStateObject.Volume.Data>[] },
+    ) => {
         const { volumes } = data;
         const tree = plugin.build();
         const visuals: StateObjectSelector<PluginStateObject.Volume.Representation3D>[] = [];
@@ -286,7 +362,17 @@ export const SegcifProvider = DataFormatProvider({
             if (segmentation) {
                 visuals[visuals.length] = tree
                     .to(volumes[0])
-                    .apply(StateTransforms.Representation.VolumeRepresentation3D, VolumeRepresentation3DHelpers.getDefaultParams(plugin, 'segment', volumes[0].data!, { alpha: 1, instanceGranularity: true }, 'volume-segment', { }))
+                    .apply(
+                        StateTransforms.Representation.VolumeRepresentation3D,
+                        VolumeRepresentation3DHelpers.getDefaultParams(
+                            plugin,
+                            'segment',
+                            volumes[0].data!,
+                            { alpha: 1, instanceGranularity: true },
+                            'volume-segment',
+                            {},
+                        ),
+                    )
                     .selector;
             }
         }
@@ -294,7 +380,7 @@ export const SegcifProvider = DataFormatProvider({
         await tree.commit();
 
         return visuals;
-    }
+    },
 });
 
 export const BuiltInVolumeFormats = [
@@ -306,4 +392,4 @@ export const BuiltInVolumeFormats = [
     ['segcif', SegcifProvider] as const,
 ] as const;
 
-export type BuildInVolumeFormat = (typeof BuiltInVolumeFormats)[number][0]
+export type BuildInVolumeFormat = (typeof BuiltInVolumeFormats)[number][0];

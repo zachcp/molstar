@@ -17,15 +17,23 @@ type State = { snapshot: Camera.Snapshot };
 
 export const AnimateCameraSpin = PluginStateAnimation.create({
     name: 'built-in.animate-camera-spin',
-    display: { name: 'Camera Spin', description: 'Spin the 3D scene around the x-axis in view space' },
+    display: {
+        name: 'Camera Spin',
+        description: 'Spin the 3D scene around the x-axis in view space',
+    },
     isExportable: true,
     params: () => ({
         durationInMs: PD.Numeric(4000, { min: 100, max: 20000, step: 100 }),
-        speed: PD.Numeric(1, { min: 1, max: 10, step: 1 }, { description: 'How many times to spin in the specified duration.' }),
-        direction: PD.Select<'cw' | 'ccw'>('cw', [['cw', 'Clockwise'], ['ccw', 'Counter Clockwise']], { cycle: true })
+        speed: PD.Numeric(1, { min: 1, max: 10, step: 1 }, {
+            description: 'How many times to spin in the specified duration.',
+        }),
+        direction: PD.Select<'cw' | 'ccw'>('cw', [['cw', 'Clockwise'], [
+            'ccw',
+            'Counter Clockwise',
+        ]], { cycle: true }),
     }),
     initialState: (_, ctx) => ({ snapshot: ctx.canvas3d?.camera.getSnapshot()! }) as State,
-    getDuration: p => ({ kind: 'fixed', durationMs: p.durationInMs }),
+    getDuration: (p) => ({ kind: 'fixed', durationMs: p.durationInMs }),
     teardown: (_, state: State, ctx) => {
         ctx.canvas3d?.requestCameraReset({ snapshot: state.snapshot, durationMs: 0 });
     },
@@ -42,19 +50,23 @@ export const AnimateCameraSpin = PluginStateAnimation.create({
         const phase = t.animation
             ? t.animation?.currentFrame / (t.animation.frameCount + 1)
             : clamp(t.current / ctx.params.durationInMs, 0, 1);
-        const angle = 2 * Math.PI * phase * ctx.params.speed * (ctx.params.direction === 'ccw' ? -1 : 1);
+        const angle = 2 * Math.PI * phase * ctx.params.speed *
+            (ctx.params.direction === 'ccw' ? -1 : 1);
 
         Vec3.sub(_dir, snapshot.position, snapshot.target);
         Vec3.normalize(_axis, snapshot.up);
         Quat.setAxisAngle(_rot, _axis, angle);
         Vec3.transformQuat(_dir, _dir, _rot);
         const position = Vec3.add(Vec3(), snapshot.target, _dir);
-        ctx.plugin.canvas3d?.requestCameraReset({ snapshot: { ...snapshot, position }, durationMs: 0 });
+        ctx.plugin.canvas3d?.requestCameraReset({
+            snapshot: { ...snapshot, position },
+            durationMs: 0,
+        });
 
         if (phase >= 0.99999) {
             return { kind: 'finished' };
         }
 
         return { kind: 'next', state: animState };
-    }
+    },
 });

@@ -12,11 +12,14 @@ import { ElementIndex } from '../../../../mol-model/structure/model.ts';
 import { radToDeg } from '../../../../mol-math/misc.ts';
 
 export interface DihedralAngles {
-    phi: Float32Array
-    psi: Float32Array
+    phi: Float32Array;
+    psi: Float32Array;
 }
 
-export function calculateUnitDihedralAngles(unit: Unit.Atomic, proteinInfo: ProteinInfo): DihedralAngles {
+export function calculateUnitDihedralAngles(
+    unit: Unit.Atomic,
+    proteinInfo: ProteinInfo,
+): DihedralAngles {
     const { cIndices, nIndices, residueIndices } = proteinInfo;
     const c = unit.conformation;
     const { index } = unit.model.atomicHierarchy;

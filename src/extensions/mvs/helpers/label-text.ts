@@ -7,7 +7,14 @@
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { BoundaryHelper } from '../../../mol-math/geometry/boundary-helper.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
-import { ElementIndex, Model, Structure, StructureElement, StructureProperties, Unit } from '../../../mol-model/structure.ts';
+import {
+    ElementIndex,
+    Model,
+    Structure,
+    StructureElement,
+    StructureProperties,
+    Unit,
+} from '../../../mol-model/structure.ts';
 import { arrayExtend } from '../../../mol-util/array.ts';
 import { AtomRanges } from './atom-ranges.ts';
 import { IndicesAndSortings } from './indexing.ts';
@@ -15,17 +22,16 @@ import { MVSAnnotationRow } from './schemas.ts';
 import { getAtomRangesForRows } from './selections.ts';
 import { isDefined } from './utils.ts';
 
-
 /** Properties describing position, size, etc. of a text in 3D */
 export interface TextProps {
     /** Anchor point for the text (i.e. the center of the text will appear in front of `center`) */
-    center: Vec3,
+    center: Vec3;
     /** Depth of the text wrt anchor point (i.e. the text will appear in distance `radius` in front of the anchor point) */
-    depth: number,
+    depth: number;
     /** Relative text size */
-    scale: number,
+    scale: number;
     /** Index of the first atom within structure, to which this text is bound (for coloring and similar purposes) */
-    group: number,
+    group: number;
 }
 
 const tmpVec = Vec3();
@@ -40,19 +46,29 @@ class AtomRangesCache {
     private readonly hasOperators: boolean;
 
     constructor(private readonly rows: MVSAnnotationRow[]) {
-        this.hasOperators = rows.some(row => isDefined(row.instance_id));
+        this.hasOperators = rows.some((row) => isDefined(row.instance_id));
     }
 
     get(unit: Unit): AtomRanges {
         const instanceId = unit.conformation.operator.instanceId;
         const key = this.hasOperators ? `${unit.model.id}:${instanceId}` : unit.model.id;
-        return this.cache[key] ??= getAtomRangesForRows(this.rows, unit.model, instanceId, IndicesAndSortings.get(unit.model));
+        return this.cache[key] ??= getAtomRangesForRows(
+            this.rows,
+            unit.model,
+            instanceId,
+            IndicesAndSortings.get(unit.model),
+        );
     }
 }
 
 /** Return `TextProps` (position, size, etc.) for a text that is to be bound to a substructure of `structure` defined by union of `rows`.
  * Derives `center` and `depth` from the boundary sphere of the substructure, `scale` from the number of heavy atoms in the substructure. */
-export function textPropsForSelection(structure: Structure, sizeFunction: (location: StructureElement.Location) => number, rows: MVSAnnotationRow[], onlyInModel?: Model): TextProps | undefined {
+export function textPropsForSelection(
+    structure: Structure,
+    sizeFunction: (location: StructureElement.Location) => number,
+    rows: MVSAnnotationRow[],
+    onlyInModel?: Model,
+): TextProps | undefined {
     const loc = StructureElement.Location.create(structure);
     const { units } = structure;
     const { type_symbol } = StructureProperties.atom;
@@ -72,14 +88,17 @@ export function textPropsForSelection(structure: Structure, sizeFunction: (locat
             loc.element = atom;
             unit.conformation.position(atom, tmpVec);
             arrayExtend(tmpArray, tmpVec);
-            group ??= structure.serialMapping.cumulativeUnitElementCount[iUnit] + outFirstAtomIndex.value!;
+            group ??= structure.serialMapping.cumulativeUnitElementCount[iUnit] +
+                outFirstAtomIndex.value!;
             atomSize ??= sizeFunction(loc);
             includedAtoms++;
             if (type_symbol(loc) !== 'H') includedHeavyAtoms++;
         }
     }
     if (includedAtoms > 0) {
-        const { center, radius } = (includedAtoms > 1) ? boundarySphere(tmpArray) : { center: Vec3.fromArray(Vec3(), tmpArray, 0), radius: 1.1 * atomSize! };
+        const { center, radius } = (includedAtoms > 1)
+            ? boundarySphere(tmpArray)
+            : { center: Vec3.fromArray(Vec3(), tmpArray, 0), radius: 1.1 * atomSize! };
         const scale = (includedHeavyAtoms || includedAtoms) ** (1 / 3);
         return { center, depth: radius, scale, group: group! };
     }

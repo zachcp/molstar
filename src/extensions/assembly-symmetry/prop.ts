@@ -5,7 +5,7 @@
  */
 
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { Structure, Model, StructureSelection, QueryContext } from '../../mol-model/structure.ts';
+import { Model, QueryContext, Structure, StructureSelection } from '../../mol-model/structure.ts';
 import { Column } from '../../mol-data/db.ts';
 import { GraphQLClient } from '../../mol-util/graphql-client.ts';
 import { CustomProperty } from '../../mol-model-props/common/custom-property.ts';
@@ -50,7 +50,7 @@ const BiologicalAssemblyNames = new Set([
     'complete icosahedral assembly',
     'complete point assembly',
     'representative helical assembly',
-    'software_defined_assembly'
+    'software_defined_assembly',
 ]);
 
 export function isBiologicalAssembly(structure: Structure): boolean {
@@ -59,7 +59,7 @@ export function isBiologicalAssembly(structure: Structure): boolean {
     if (!mmcif.pdbx_struct_assembly.details.isDefined) return false;
     const id = structure.units[0].conformation.operator.assembly?.id || '';
     if (id === '') return true;
-    const indices = Column.indicesOf(mmcif.pdbx_struct_assembly.id, e => e === id);
+    const indices = Column.indicesOf(mmcif.pdbx_struct_assembly.id, (e) => e === id);
     if (indices.length !== 1) return false;
     const details = mmcif.pdbx_struct_assembly.details.value(indices[0]);
     return BiologicalAssemblyNames.has(details);
@@ -68,28 +68,38 @@ export function isBiologicalAssembly(structure: Structure): boolean {
 export namespace AssemblySymmetryData {
     export enum Tag {
         Cluster = 'assembly-symmetry-cluster',
-        Representation = 'assembly-symmetry-3d'
+        Representation = 'assembly-symmetry-3d',
     }
 
     export const DefaultServerUrl = 'https://data.rcsb.org/graphql'; // Alternative: 'https://www.ebi.ac.uk/pdbe/aggregated-api/pdb/symmetry' (if serverType is 'pdbe')
 
     export function isApplicable(structure?: Structure): boolean {
-        if (!structure || structure.models.length !== 1 || !Model.hasPdbId(structure.models[0])) return false;
+        if (!structure || structure.models.length !== 1 || !Model.hasPdbId(structure.models[0])) {
+            return false;
+        }
         return isBiologicalAssembly(structure) || Model.isIntegrative(structure.models[0]);
     }
 
-    export async function fetch(ctx: CustomProperty.Context, structure: Structure, props: AssemblySymmetryDataProps): Promise<CustomProperty.Data<AssemblySymmetryDataValue>> {
+    export async function fetch(
+        ctx: CustomProperty.Context,
+        structure: Structure,
+        props: AssemblySymmetryDataProps,
+    ): Promise<CustomProperty.Data<AssemblySymmetryDataValue>> {
         if (!isApplicable(structure)) return { value: [] };
 
         if (props.serverType === 'pdbe') return fetchPDBe(ctx, structure, props);
         else return fetchRCSB(ctx, structure, props);
     }
 
-    export async function fetchRCSB(ctx: CustomProperty.Context, structure: Structure, props: AssemblySymmetryDataProps): Promise<CustomProperty.Data<AssemblySymmetryDataValue>> {
+    export async function fetchRCSB(
+        ctx: CustomProperty.Context,
+        structure: Structure,
+        props: AssemblySymmetryDataProps,
+    ): Promise<CustomProperty.Data<AssemblySymmetryDataValue>> {
         const client = new GraphQLClient(props.serverUrl, ctx.assetManager);
         const variables = {
             assembly_id: structure.units[0].conformation.operator.assembly?.id || 'deposited', // data.rcsb.org guarantees assembly 'deposited' to be present for IHM
-            entry_id: structure.units[0].model.entryId
+            entry_id: structure.units[0].model.entryId,
         };
         const result = await client.request(ctx.runtime, rcsb_symmetry_gql, variables);
         let value: AssemblySymmetryDataValue = [];
@@ -102,7 +112,11 @@ export namespace AssemblySymmetryData {
         return { value, assets: [result] };
     }
 
-    async function fetchPDBe(ctx: CustomProperty.Context, structure: Structure, props: AssemblySymmetryDataProps): Promise<CustomProperty.Data<AssemblySymmetryDataValue>> {
+    async function fetchPDBe(
+        ctx: CustomProperty.Context,
+        structure: Structure,
+        props: AssemblySymmetryDataProps,
+    ): Promise<CustomProperty.Data<AssemblySymmetryDataValue>> {
         const assembly_id = structure.units[0].conformation.operator.assembly?.id || '-1'; // should use '' instead of '-1' but the API does not support non-number assembly_id
         const entry_id = structure.units[0].model.entryId.toLowerCase();
         const url = `${props.serverUrl}/${entry_id}?assembly_id=${assembly_id}`;
@@ -141,7 +155,9 @@ export namespace AssemblySymmetryData {
         return -1;
     }
 
-    export type RotationAxes = ReadonlyArray<{ order: number, start: ReadonlyVec3, end: ReadonlyVec3 }>
+    export type RotationAxes = ReadonlyArray<
+        { order: number; start: ReadonlyVec3; end: ReadonlyVec3 }
+    >;
     export function isRotationAxes(x: AssemblySymmetryValue['rotation_axes']): x is RotationAxes {
         return !!x && x.length > 0;
     }
@@ -160,8 +176,8 @@ export namespace AssemblySymmetryData {
     function getAsymIdsStructure(structure: Structure, asymIds: string[]) {
         const query = MS.struct.modifier.union([
             MS.struct.generator.atomGroups({
-                'chain-test': MS.core.set.has([MS.set(...asymIds), MS.ammp('label_asym_id')])
-            })
+                'chain-test': MS.core.set.has([MS.set(...asymIds), MS.ammp('label_asym_id')]),
+            }),
         ]);
         const compiled = compile<StructureSelection>(query);
         const result = compiled(new QueryContext(structure));
@@ -181,7 +197,7 @@ export function getSymmetrySelectParam(structure?: Structure) {
         const assemblySymmetryData = AssemblySymmetryDataProvider.get(structure).value;
         if (assemblySymmetryData) {
             const options: [number, string][] = [
-                [-1, 'Off']
+                [-1, 'Off'],
             ];
             for (let i = 0, il = assemblySymmetryData.length; i < il; ++i) {
                 const { symbol, kind } = assemblySymmetryData[i];
@@ -204,32 +220,38 @@ export function getSymmetrySelectParam(structure?: Structure) {
 
 export const AssemblySymmetryDataParams = {
     serverType: PD.Select('rcsb', [['rcsb', 'RCSB'], ['pdbe', 'PDBe']] as const),
-    serverUrl: PD.Text(AssemblySymmetryData.DefaultServerUrl, { description: 'GraphQL endpoint URL (if server type is RCSB) or PDBe API endpoint URL (if server type is PDBe)' })
+    serverUrl: PD.Text(AssemblySymmetryData.DefaultServerUrl, {
+        description:
+            'GraphQL endpoint URL (if server type is RCSB) or PDBe API endpoint URL (if server type is PDBe)',
+    }),
 };
-export type AssemblySymmetryDataParams = typeof AssemblySymmetryDataParams
-export type AssemblySymmetryDataProps = PD.Values<AssemblySymmetryDataParams>
+export type AssemblySymmetryDataParams = typeof AssemblySymmetryDataParams;
+export type AssemblySymmetryDataProps = PD.Values<AssemblySymmetryDataParams>;
 
 export type AssemblySymmetryDataValue = ReadonlyArray<{
-    readonly kind: string,
-    readonly oligomeric_state: string,
-    readonly stoichiometry: ReadonlyArray<string>,
-    readonly symbol: string,
-    readonly type: string,
+    readonly kind: string;
+    readonly oligomeric_state: string;
+    readonly stoichiometry: ReadonlyArray<string>;
+    readonly symbol: string;
+    readonly type: string;
     readonly clusters: ReadonlyArray<{
-        readonly avg_rmsd?: number,
+        readonly avg_rmsd?: number;
         readonly members: ReadonlyArray<{
-            readonly asym_id: string,
-            readonly pdbx_struct_oper_list_ids?: ReadonlyArray<string>
-        }>
-    }>,
+            readonly asym_id: string;
+            readonly pdbx_struct_oper_list_ids?: ReadonlyArray<string>;
+        }>;
+    }>;
     readonly rotation_axes?: ReadonlyArray<{
-        readonly order?: number,
-        readonly start: ReadonlyArray<number>,
-        readonly end: ReadonlyArray<number>
-    }>
-}>
+        readonly order?: number;
+        readonly start: ReadonlyArray<number>;
+        readonly end: ReadonlyArray<number>;
+    }>;
+}>;
 
-export const AssemblySymmetryDataProvider: CustomStructureProperty.Provider<AssemblySymmetryDataParams, AssemblySymmetryDataValue> = CustomStructureProperty.createProvider({
+export const AssemblySymmetryDataProvider: CustomStructureProperty.Provider<
+    AssemblySymmetryDataParams,
+    AssemblySymmetryDataValue
+> = CustomStructureProperty.createProvider({
     label: 'Assembly Symmetry Data',
     descriptor: CustomPropertyDescriptor({
         name: 'molstar_struct_symmetry_data',
@@ -239,10 +261,14 @@ export const AssemblySymmetryDataProvider: CustomStructureProperty.Provider<Asse
     defaultParams: AssemblySymmetryDataParams,
     getParams: (data: Structure) => AssemblySymmetryDataParams,
     isApplicable: (data: Structure) => AssemblySymmetryData.isApplicable(data),
-    obtain: async (ctx: CustomProperty.Context, data: Structure, props: Partial<AssemblySymmetryDataProps>) => {
+    obtain: async (
+        ctx: CustomProperty.Context,
+        data: Structure,
+        props: Partial<AssemblySymmetryDataProps>,
+    ) => {
         const p = { ...PD.getDefaultValues(AssemblySymmetryDataParams), ...props };
         return await AssemblySymmetryData.fetch(ctx, data, p);
-    }
+    },
 });
 
 //
@@ -250,17 +276,20 @@ export const AssemblySymmetryDataProvider: CustomStructureProperty.Provider<Asse
 function getAssemblySymmetryParams(data?: Structure) {
     return {
         ...AssemblySymmetryDataParams,
-        symmetryIndex: getSymmetrySelectParam(data)
+        symmetryIndex: getSymmetrySelectParam(data),
     };
 }
 
 export const AssemblySymmetryParams = getAssemblySymmetryParams();
-export type AssemblySymmetryParams = typeof AssemblySymmetryParams
-export type AssemblySymmetryProps = PD.Values<AssemblySymmetryParams>
+export type AssemblySymmetryParams = typeof AssemblySymmetryParams;
+export type AssemblySymmetryProps = PD.Values<AssemblySymmetryParams>;
 
-export type AssemblySymmetryValue = AssemblySymmetryDataValue[0]
+export type AssemblySymmetryValue = AssemblySymmetryDataValue[0];
 
-export const AssemblySymmetryProvider: CustomStructureProperty.Provider<AssemblySymmetryParams, AssemblySymmetryValue> = CustomStructureProperty.createProvider({
+export const AssemblySymmetryProvider: CustomStructureProperty.Provider<
+    AssemblySymmetryParams,
+    AssemblySymmetryValue
+> = CustomStructureProperty.createProvider({
     label: 'Assembly Symmetry',
     descriptor: CustomPropertyDescriptor({
         name: 'molstar_struct_symmetry',
@@ -270,12 +299,16 @@ export const AssemblySymmetryProvider: CustomStructureProperty.Provider<Assembly
     defaultParams: AssemblySymmetryParams,
     getParams: getAssemblySymmetryParams,
     isApplicable: (data: Structure) => AssemblySymmetryData.isApplicable(data),
-    obtain: async (ctx: CustomProperty.Context, data: Structure, props: Partial<AssemblySymmetryProps>) => {
+    obtain: async (
+        ctx: CustomProperty.Context,
+        data: Structure,
+        props: Partial<AssemblySymmetryProps>,
+    ) => {
         const p = { ...PD.getDefaultValues(getAssemblySymmetryParams(data)), ...props };
         await AssemblySymmetryDataProvider.attach(ctx, data, p);
         const assemblySymmetryData = AssemblySymmetryDataProvider.get(data).value;
         const assemblySymmetry = assemblySymmetryData?.[p.symmetryIndex];
         if (!assemblySymmetry) new Error(`No assembly symmetry found for index ${p.symmetryIndex}`);
         return { value: assemblySymmetry };
-    }
+    },
 });

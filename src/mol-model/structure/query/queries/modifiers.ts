@@ -41,7 +41,11 @@ function getWholeResidues(ctx: QueryContext, source: Structure, structure: Struc
         const residuesIt = Segmentation.transientSegments(residueAtomSegments, elements);
         while (residuesIt.hasNext) {
             const rI = residuesIt.move().index;
-            for (let j = residueAtomSegments.offsets[rI], _j = residueAtomSegments.offsets[rI + 1]; j < _j; j++) {
+            for (
+                let j = residueAtomSegments.offsets[rI], _j = residueAtomSegments.offsets[rI + 1];
+                j < _j;
+                j++
+            ) {
                 if (SortedArray.has(sourceElements, j)) builder.addElement(j);
             }
         }
@@ -56,7 +60,10 @@ export function wholeResidues(query: StructureQuery): StructureQuery {
     return function query_wholeResidues(ctx) {
         const inner = query(ctx);
         if (StructureSelection.isSingleton(inner)) {
-            return StructureSelection.Singletons(ctx.inputStructure, getWholeResidues(ctx, ctx.inputStructure, inner.structure));
+            return StructureSelection.Singletons(
+                ctx.inputStructure,
+                getWholeResidues(ctx, ctx.inputStructure, inner.structure),
+            );
         } else {
             const builder = new UniqueStructuresBuilder(ctx.inputStructure);
             for (const s of inner.structures) {
@@ -68,12 +75,17 @@ export function wholeResidues(query: StructureQuery): StructureQuery {
 }
 
 export interface IncludeSurroundingsParams {
-    radius: number,
-    elementRadius?: QueryFn<number>,
-    wholeResidues?: boolean
+    radius: number;
+    elementRadius?: QueryFn<number>;
+    wholeResidues?: boolean;
 }
 
-function getIncludeSurroundings(ctx: QueryContext, source: Structure, structure: Structure, params: IncludeSurroundingsParams) {
+function getIncludeSurroundings(
+    ctx: QueryContext,
+    source: Structure,
+    structure: Structure,
+    params: IncludeSurroundingsParams,
+) {
     const builder = new StructureUniqueSubsetBuilder(source);
     const lookup = source.lookup3d;
     const r = params.radius;
@@ -88,16 +100,23 @@ function getIncludeSurroundings(ctx: QueryContext, source: Structure, structure:
 
         ctx.throwIfTimedOut();
     }
-    return !!params.wholeResidues ? getWholeResidues(ctx, source, builder.getStructure()) : builder.getStructure();
+    return !!params.wholeResidues
+        ? getWholeResidues(ctx, source, builder.getStructure())
+        : builder.getStructure();
 }
 
 interface IncludeSurroundingsParamsWithRadius extends IncludeSurroundingsParams {
-    elementRadius: QueryFn<number>,
-    elementRadiusClosure: StructureElement.Property<number>,
-    sourceMaxRadius: number
+    elementRadius: QueryFn<number>;
+    elementRadiusClosure: StructureElement.Property<number>;
+    sourceMaxRadius: number;
 }
 
-function getIncludeSurroundingsWithRadius(ctx: QueryContext, source: Structure, structure: Structure, params: IncludeSurroundingsParamsWithRadius) {
+function getIncludeSurroundingsWithRadius(
+    ctx: QueryContext,
+    source: Structure,
+    structure: Structure,
+    params: IncludeSurroundingsParamsWithRadius,
+) {
     const builder = new StructureUniqueSubsetBuilder(source);
     const lookup = source.lookup3d;
     const { elementRadius, elementRadiusClosure, sourceMaxRadius, radius } = params;
@@ -113,18 +132,32 @@ function getIncludeSurroundingsWithRadius(ctx: QueryContext, source: Structure, 
             const e = elements[i];
             ctx.element.element = e;
             const eRadius = elementRadius(ctx);
-            lookup.findIntoBuilderWithRadius(c.x(e), c.y(e), c.z(e), eRadius, sourceMaxRadius, radius, elementRadiusClosure, builder);
+            lookup.findIntoBuilderWithRadius(
+                c.x(e),
+                c.y(e),
+                c.z(e),
+                eRadius,
+                sourceMaxRadius,
+                radius,
+                elementRadiusClosure,
+                builder,
+            );
         }
 
         ctx.throwIfTimedOut();
     }
 
     ctx.popCurrentElement();
-    return !!params.wholeResidues ? getWholeResidues(ctx, source, builder.getStructure()) : builder.getStructure();
+    return !!params.wholeResidues
+        ? getWholeResidues(ctx, source, builder.getStructure())
+        : builder.getStructure();
 }
 
-function createElementRadiusFn(ctx: QueryContext, eRadius: QueryFn<number>): StructureElement.Property<number> {
-    return e => {
+function createElementRadiusFn(
+    ctx: QueryContext,
+    eRadius: QueryFn<number>,
+): StructureElement.Property<number> {
+    return (e) => {
         ctx.element.structure = e.structure;
         ctx.element.unit = e.unit;
         ctx.element.element = e.element;
@@ -145,13 +178,15 @@ function findStructureRadius(ctx: QueryContext, eRadius: QueryFn<number>) {
             const eR = eRadius(ctx);
             if (eR > r) r = eR;
         }
-
     }
     ctx.throwIfTimedOut();
     return r;
 }
 
-export function includeSurroundings(query: StructureQuery, params: IncludeSurroundingsParams): StructureQuery {
+export function includeSurroundings(
+    query: StructureQuery,
+    params: IncludeSurroundingsParams,
+): StructureQuery {
     return function query_includeSurroundings(ctx) {
         const inner = query(ctx);
 
@@ -160,11 +195,16 @@ export function includeSurroundings(query: StructureQuery, params: IncludeSurrou
                 ...params,
                 elementRadius: params.elementRadius,
                 elementRadiusClosure: createElementRadiusFn(ctx, params.elementRadius),
-                sourceMaxRadius: findStructureRadius(ctx, params.elementRadius)
+                sourceMaxRadius: findStructureRadius(ctx, params.elementRadius),
             };
 
             if (StructureSelection.isSingleton(inner)) {
-                const surr = getIncludeSurroundingsWithRadius(ctx, ctx.inputStructure, inner.structure, prms);
+                const surr = getIncludeSurroundingsWithRadius(
+                    ctx,
+                    ctx.inputStructure,
+                    inner.structure,
+                    prms,
+                );
                 const ret = StructureSelection.Singletons(ctx.inputStructure, surr);
                 return ret;
             } else {
@@ -214,7 +254,9 @@ export function intersectBy(query: StructureQuery, by: StructureQuery): Structur
         if (StructureSelection.structureCount(selection) === 0) return selection;
 
         const bySel = by(ctx);
-        if (StructureSelection.structureCount(bySel) === 0) return StructureSelection.Empty(ctx.inputStructure);
+        if (StructureSelection.structureCount(bySel) === 0) {
+            return StructureSelection.Empty(ctx.inputStructure);
+        }
         const unionBy = StructureSelection.unionStructure(bySel);
 
         const ret = StructureSelection.UniqueBuilder(ctx.inputStructure);
@@ -272,8 +314,9 @@ export function expandProperty(query: StructureQuery, property: QueryFn): Struct
                     ctx.element.element = elements[i];
                     const p = property(ctx);
                     let arr: UniqueArray<number>;
-                    if (propertyToStructureIndexMap.has(p)) arr = propertyToStructureIndexMap.get(p)!;
-                    else {
+                    if (propertyToStructureIndexMap.has(p)) {
+                        arr = propertyToStructureIndexMap.get(p)!;
+                    } else {
                         arr = UniqueArray.create<number>();
                         propertyToStructureIndexMap.set(p, arr);
                     }
@@ -311,14 +354,16 @@ export function expandProperty(query: StructureQuery, property: QueryFn): Struct
 }
 
 export interface IncludeConnectedParams {
-    query: StructureQuery,
-    bondTest?: QueryFn<boolean>,
-    layerCount: number,
-    wholeResidues: boolean,
-    fixedPoint: boolean
+    query: StructureQuery;
+    bondTest?: QueryFn<boolean>;
+    layerCount: number;
+    wholeResidues: boolean;
+    fixedPoint: boolean;
 }
 
-export function includeConnected({ query, layerCount, wholeResidues, bondTest, fixedPoint }: IncludeConnectedParams): StructureQuery {
+export function includeConnected(
+    { query, layerCount, wholeResidues, bondTest, fixedPoint }: IncludeConnectedParams,
+): StructureQuery {
     const lc = Math.max(layerCount, 0);
     return function query_includeConnected(ctx) {
         const builder = StructureSelection.UniqueBuilder(ctx.inputStructure);
@@ -374,7 +419,8 @@ function expandConnected(ctx: QueryContext, structure: Structure) {
         }
 
         const inputUnitA = inputStructure.unitMap.get(unit.id) as Unit.Atomic;
-        const { offset: intraBondOffset, b: intraBondB, edgeProps: { flags, order, key } } = inputUnitA.bonds;
+        const { offset: intraBondOffset, b: intraBondB, edgeProps: { flags, order, key } } =
+            inputUnitA.bonds;
 
         atomicBond.setStructure(inputStructure);
 
@@ -385,15 +431,24 @@ function expandConnected(ctx: QueryContext, structure: Structure) {
             // add the current element
             builder.addToUnit(unit.id, unit.elements[i]);
 
-            const aIndex = SortedArray.indexOf(inputUnitA.elements, unit.elements[i]) as StructureElement.UnitIndex;
+            const aIndex = SortedArray.indexOf(
+                inputUnitA.elements,
+                unit.elements[i],
+            ) as StructureElement.UnitIndex;
 
             // check intra unit bonds
-            for (let lI = intraBondOffset[aIndex], _lI = intraBondOffset[aIndex + 1]; lI < _lI; lI++) {
+            for (
+                let lI = intraBondOffset[aIndex], _lI = intraBondOffset[aIndex + 1];
+                lI < _lI;
+                lI++
+            ) {
                 const bIndex = intraBondB[lI] as StructureElement.UnitIndex;
                 const bElement = inputUnitA.elements[bIndex];
 
                 // Check if the element is already present:
-                if (SortedArray.has(unit.elements, bElement) || builder.has(unit.id, bElement)) continue;
+                if (SortedArray.has(unit.elements, bElement) || builder.has(unit.id, bElement)) {
+                    continue;
+                }
 
                 atomicBond.aIndex = aIndex;
                 atomicBond.a.element = unit.elements[i];
@@ -422,7 +477,10 @@ function expandConnected(ctx: QueryContext, structure: Structure) {
                     const bElement = inputUnitB.elements[bond.indexB];
 
                     // Check if the element is already present:
-                    if ((currentUnitB && SortedArray.has(currentUnitB.elements, bElement)) || builder.has(bondedUnit.unitB, bElement)) continue;
+                    if (
+                        (currentUnitB && SortedArray.has(currentUnitB.elements, bElement)) ||
+                        builder.has(bondedUnit.unitB, bElement)
+                    ) continue;
 
                     atomicBond.a.unit = inputUnitA;
                     atomicBond.aIndex = aI;
@@ -446,24 +504,29 @@ function expandConnected(ctx: QueryContext, structure: Structure) {
 }
 
 export interface SurroundingLigandsParams {
-    query: StructureQuery,
-    radius: number,
-    includeWater: boolean
+    query: StructureQuery;
+    radius: number;
+    includeWater: boolean;
 }
 
 /**
  * Includes expanded surrounding ligands based on radius from the source, struct_conn entries & pdbx_molecule entries.
  */
-export function surroundingLigands({ query, radius, includeWater }: SurroundingLigandsParams): StructureQuery {
+export function surroundingLigands(
+    { query, radius, includeWater }: SurroundingLigandsParams,
+): StructureQuery {
     const _ent_type = StructureProperties.entity.type;
     function testIsWater(l: StructureElement.Location) {
         return _ent_type(l) === 'water';
     }
 
     return function query_surroundingLigands(ctx) {
-
         const inner = StructureSelection.unionStructure(query(ctx));
-        const surroundings = getWholeResidues(ctx, ctx.inputStructure, getIncludeSurroundings(ctx, ctx.inputStructure, inner, { radius }));
+        const surroundings = getWholeResidues(
+            ctx,
+            ctx.inputStructure,
+            getIncludeSurroundings(ctx, ctx.inputStructure, inner, { radius }),
+        );
 
         const prd = getPrdAsymIdx(ctx.inputStructure);
         const graph = getStructConnInfo(ctx.inputStructure);
@@ -480,8 +543,14 @@ export function surroundingLigands({ query, radius, includeWater }: SurroundingL
             l.unit = unit;
 
             const { elements } = unit;
-            const chainsIt = Segmentation.transientSegments(unit.model.atomicHierarchy.chainAtomSegments, elements);
-            const residuesIt = Segmentation.transientSegments(unit.model.atomicHierarchy.residueAtomSegments, elements);
+            const chainsIt = Segmentation.transientSegments(
+                unit.model.atomicHierarchy.chainAtomSegments,
+                elements,
+            );
+            const residuesIt = Segmentation.transientSegments(
+                unit.model.atomicHierarchy.residueAtomSegments,
+                elements,
+            );
 
             while (chainsIt.hasNext) {
                 const chainSegment = chainsIt.move();
@@ -524,8 +593,14 @@ export function surroundingLigands({ query, radius, includeWater }: SurroundingL
 
             l.unit = unit;
             const { elements } = unit;
-            const chainsIt = Segmentation.transientSegments(unit.model.atomicHierarchy.chainAtomSegments, elements);
-            const residuesIt = Segmentation.transientSegments(unit.model.atomicHierarchy.residueAtomSegments, elements);
+            const chainsIt = Segmentation.transientSegments(
+                unit.model.atomicHierarchy.chainAtomSegments,
+                elements,
+            );
+            const residuesIt = Segmentation.transientSegments(
+                unit.model.atomicHierarchy.residueAtomSegments,
+                elements,
+            );
 
             builder.beginUnit(unit.id);
 
@@ -536,7 +611,10 @@ export function surroundingLigands({ query, radius, includeWater }: SurroundingL
                 const asym_id = StructureProperties.chain.label_asym_id(l);
                 const op_name = StructureProperties.unit.operator_name(l);
 
-                if (includedPrdChains.has(asym_id) && includedPrdChains.get(asym_id)!.indexOf(op_name) >= 0) {
+                if (
+                    includedPrdChains.has(asym_id) &&
+                    includedPrdChains.get(asym_id)!.indexOf(op_name) >= 0
+                ) {
                     builder.addElementRange(elements, chainSegment.start, chainSegment.end);
                     continue;
                 }
@@ -570,7 +648,14 @@ export function surroundingLigands({ query, radius, includeWater }: SurroundingL
                 const elements = unit.elements;
                 for (let i = 0, _i = elements.length; i < _i; i++) {
                     const e = elements[i];
-                    lookup.findIntoBuilderIf(c.x(e), c.y(e), c.z(e), radius, finalBuilder, testIsWater);
+                    lookup.findIntoBuilderIf(
+                        c.x(e),
+                        c.y(e),
+                        c.z(e),
+                        radius,
+                        finalBuilder,
+                        testIsWater,
+                    );
                     finalBuilder.addToUnit(unit.id, e);
                 }
 
@@ -608,8 +693,22 @@ function getStructConnInfo(structure: Structure) {
 
     const struct_conn = (model.sourceData as MmcifFormat).data.db.struct_conn;
     const { conn_type_id } = struct_conn;
-    const { ptnr1_label_asym_id, ptnr1_label_comp_id, ptnr1_label_seq_id, ptnr1_symmetry, pdbx_ptnr1_label_alt_id, pdbx_ptnr1_PDB_ins_code } = struct_conn;
-    const { ptnr2_label_asym_id, ptnr2_label_comp_id, ptnr2_label_seq_id, ptnr2_symmetry, pdbx_ptnr2_label_alt_id, pdbx_ptnr2_PDB_ins_code } = struct_conn;
+    const {
+        ptnr1_label_asym_id,
+        ptnr1_label_comp_id,
+        ptnr1_label_seq_id,
+        ptnr1_symmetry,
+        pdbx_ptnr1_label_alt_id,
+        pdbx_ptnr1_PDB_ins_code,
+    } = struct_conn;
+    const {
+        ptnr2_label_asym_id,
+        ptnr2_label_comp_id,
+        ptnr2_label_seq_id,
+        ptnr2_symmetry,
+        pdbx_ptnr2_label_alt_id,
+        pdbx_ptnr2_PDB_ins_code,
+    } = struct_conn;
 
     for (let i = 0; i < struct_conn._rowCount; i++) {
         const bondType = conn_type_id.value(i);
@@ -621,7 +720,7 @@ function getStructConnInfo(structure: Structure) {
             label_seq_id: ptnr1_label_seq_id.value(i),
             label_alt_id: pdbx_ptnr1_label_alt_id.value(i),
             ins_code: pdbx_ptnr1_PDB_ins_code.value(i),
-            operator_name: ptnr1_symmetry.value(i) ?? '1_555'
+            operator_name: ptnr1_symmetry.value(i) ?? '1_555',
         };
 
         const b: ResidueSetEntry = {
@@ -630,7 +729,7 @@ function getStructConnInfo(structure: Structure) {
             label_seq_id: ptnr2_label_seq_id.value(i),
             label_alt_id: pdbx_ptnr2_label_alt_id.value(i),
             ins_code: pdbx_ptnr2_PDB_ins_code.value(i),
-            operator_name: ptnr2_symmetry.value(i) ?? '1_555'
+            operator_name: ptnr2_symmetry.value(i) ?? '1_555',
         };
 
         graph.addEdge(a, b);
@@ -692,7 +791,6 @@ class StructConnGraph {
                 } else {
                     set.add(v);
                 }
-
             }
         }
     }

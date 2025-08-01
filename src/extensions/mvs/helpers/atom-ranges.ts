@@ -8,13 +8,12 @@ import { SortedArray } from '../../../mol-data/int.ts';
 import { ElementIndex } from '../../../mol-model/structure.ts';
 import { arrayExtend, range } from '../../../mol-util/array.ts';
 
-
 /** Represents a collection of disjoint atom ranges in a model.
  * The number of ranges is `AtomRanges.count(ranges)`,
  * the i-th range covers atoms `[ranges.from[i], ranges.to[i])`. */
 export interface AtomRanges {
-    from: ElementIndex[],
-    to: ElementIndex[],
+    from: ElementIndex[];
+    to: ElementIndex[];
 }
 
 export const AtomRanges = {
@@ -97,7 +96,12 @@ export const AtomRanges = {
     /** Return a sorted subset of `atoms` which lie in any of `ranges` (i.e. set intersection of `atoms` and `ranges`).
      * If `out` is provided, use it to store the result (clear any old contents).
      * If `outFirstAtomIndex` is provided, fill `outFirstAtomIndex.value` with the index of the first selected atom (if any). */
-    selectAtomsInRanges(atoms: SortedArray<ElementIndex>, ranges: AtomRanges, out?: ElementIndex[], outFirstAtomIndex: { value?: number } = {}): ElementIndex[] {
+    selectAtomsInRanges(
+        atoms: SortedArray<ElementIndex>,
+        ranges: AtomRanges,
+        out?: ElementIndex[],
+        outFirstAtomIndex: { value?: number } = {},
+    ): ElementIndex[] {
         out ??= [];
         out.length = 0;
         outFirstAtomIndex.value = undefined;
@@ -106,7 +110,10 @@ export const AtomRanges = {
         const nRanges = AtomRanges.count(ranges);
         if (nAtoms <= nRanges) {
             // Implementation 1 (more efficient when there are fewer atoms)
-            let iRange = SortedArray.findPredecessorIndex(SortedArray.ofSortedArray(ranges.to), atoms[0] + 1);
+            let iRange = SortedArray.findPredecessorIndex(
+                SortedArray.ofSortedArray(ranges.to),
+                atoms[0] + 1,
+            );
             for (let iAtom = 0; iAtom < nAtoms; iAtom++) {
                 const a = atoms[iAtom];
                 while (iRange < nRanges && ranges.to[iRange] <= a) iRange++;
@@ -121,7 +128,11 @@ export const AtomRanges = {
             for (let iRange = 0; iRange < nRanges; iRange++) {
                 const from = ranges.from[iRange];
                 const to = ranges.to[iRange];
-                for (let iAtom = SortedArray.findPredecessorIndex(atoms, from); iAtom < nAtoms; iAtom++) {
+                for (
+                    let iAtom = SortedArray.findPredecessorIndex(atoms, from);
+                    iAtom < nAtoms;
+                    iAtom++
+                ) {
                     const a = atoms[iAtom];
                     if (a < to) {
                         out.push(a);

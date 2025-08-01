@@ -4,10 +4,22 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Renderable, RenderableState, createRenderable } from '../renderable.ts';
+import { createRenderable, Renderable, RenderableState } from '../renderable.ts';
 import { WebGLContext } from '../webgl/context.ts';
 import { createGraphicsRenderItem, Transparency } from '../webgl/render-item.ts';
-import { GlobalUniformSchema, BaseSchema, AttributeSpec, ElementsSpec, DefineSpec, Values, InternalSchema, InternalValues, GlobalTextureSchema, ValueSpec, UniformSpec } from './schema.ts';
+import {
+    AttributeSpec,
+    BaseSchema,
+    DefineSpec,
+    ElementsSpec,
+    GlobalTextureSchema,
+    GlobalUniformSchema,
+    InternalSchema,
+    InternalValues,
+    UniformSpec,
+    Values,
+    ValueSpec,
+} from './schema.ts';
 import { MeshShaderCode } from '../shader-code.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 
@@ -27,18 +39,38 @@ export const MeshSchema = {
     dTransparentBackfaces: DefineSpec('string', ['off', 'on', 'opaque']),
     uBumpFrequency: UniformSpec('f', 'material'),
     uBumpAmplitude: UniformSpec('f', 'material'),
-    meta: ValueSpec('unknown')
+    meta: ValueSpec('unknown'),
 } as const;
-export type MeshSchema = typeof MeshSchema
-export type MeshValues = Values<MeshSchema>
+export type MeshSchema = typeof MeshSchema;
+export type MeshValues = Values<MeshSchema>;
 
-export function MeshRenderable(ctx: WebGLContext, id: number, values: MeshValues, state: RenderableState, materialId: number, transparency: Transparency): Renderable<MeshValues> {
-    const schema = { ...GlobalUniformSchema, ...GlobalTextureSchema, ...InternalSchema, ...MeshSchema };
+export function MeshRenderable(
+    ctx: WebGLContext,
+    id: number,
+    values: MeshValues,
+    state: RenderableState,
+    materialId: number,
+    transparency: Transparency,
+): Renderable<MeshValues> {
+    const schema = {
+        ...GlobalUniformSchema,
+        ...GlobalTextureSchema,
+        ...InternalSchema,
+        ...MeshSchema,
+    };
     const internalValues: InternalValues = {
         uObjectId: ValueCell.create(id),
     };
     const shaderCode = MeshShaderCode;
-    const renderItem = createGraphicsRenderItem(ctx, 'triangles', shaderCode, schema, { ...values, ...internalValues }, materialId, transparency);
+    const renderItem = createGraphicsRenderItem(
+        ctx,
+        'triangles',
+        shaderCode,
+        schema,
+        { ...values, ...internalValues },
+        materialId,
+        transparency,
+    );
 
     return createRenderable(renderItem, values, state);
 }

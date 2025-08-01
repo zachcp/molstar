@@ -10,20 +10,21 @@ import { StringLike } from '../../common/string-like.ts';
 import { Tokenizer } from '../common/text/tokenizer.ts';
 import { ReaderResult as Result } from '../result.ts';
 
-
 export interface XyzFile {
     readonly molecules: {
-        readonly comment: string,
-        readonly count: number,
-        readonly x: Column<number>,
-        readonly y: Column<number>,
-        readonly z: Column<number>,
-        readonly type_symbol: Column<string>
-    }[],
+        readonly comment: string;
+        readonly count: number;
+        readonly x: Column<number>;
+        readonly y: Column<number>;
+        readonly z: Column<number>;
+        readonly type_symbol: Column<string>;
+    }[];
 }
 
 function handleMolecule(tokenizer: Tokenizer): XyzFile['molecules'][number] {
-    let count = tokenizer.position >= tokenizer.data.length - 1 ? 0 : +Tokenizer.readLine(tokenizer);
+    let count = tokenizer.position >= tokenizer.data.length - 1
+        ? 0
+        : +Tokenizer.readLine(tokenizer);
     if (isNaN(count)) count = 0;
 
     const comment = Tokenizer.readLine(tokenizer);
@@ -48,7 +49,7 @@ function handleMolecule(tokenizer: Tokenizer): XyzFile['molecules'][number] {
         x: Column.ofFloatArray(x),
         y: Column.ofFloatArray(y),
         z: Column.ofFloatArray(z),
-        type_symbol: Column.ofStringArray(type_symbol)
+        type_symbol: Column.ofStringArray(type_symbol),
     };
 }
 

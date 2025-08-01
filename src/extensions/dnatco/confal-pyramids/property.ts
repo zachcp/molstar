@@ -16,7 +16,10 @@ export const ConfalPyramidsParams = { ...DnatcoParams };
 export type ConfalPyramidsParams = typeof ConfalPyramidsParams;
 export type ConfalPyramidsProps = PD.Values<ConfalPyramidsParams>;
 
-export const ConfalPyramidsProvider: CustomModelProperty.Provider<ConfalPyramidsParams, DnatcoSteps> = CustomModelProperty.createProvider({
+export const ConfalPyramidsProvider: CustomModelProperty.Provider<
+    ConfalPyramidsParams,
+    DnatcoSteps
+> = CustomModelProperty.createProvider({
     label: 'Confal Pyramids',
     descriptor: CustomPropertyDescriptor({
         name: 'confal_pyramids',
@@ -25,8 +28,12 @@ export const ConfalPyramidsProvider: CustomModelProperty.Provider<ConfalPyramids
     defaultParams: ConfalPyramidsParams,
     getParams: (data: Model) => ConfalPyramidsParams,
     isApplicable: (data: Model) => Dnatco.isApplicable(data),
-    obtain: async (ctx: CustomProperty.Context, data: Model, props: Partial<ConfalPyramidsProps>) => {
+    obtain: async (
+        ctx: CustomProperty.Context,
+        data: Model,
+        props: Partial<ConfalPyramidsProps>,
+    ) => {
         const p = { ...PD.getDefaultValues(ConfalPyramidsParams), ...props };
         return Dnatco.fromCif(ctx, data, p);
-    }
+    },
 });

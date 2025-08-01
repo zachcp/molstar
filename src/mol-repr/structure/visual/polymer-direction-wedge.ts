@@ -8,13 +8,20 @@ import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { Wedge } from '../../../mol-geo/primitive/wedge.ts';
 import { VisualContext } from '../../visual.ts';
-import { Unit, Structure } from '../../../mol-model/structure.ts';
+import { Structure, Unit } from '../../../mol-model/structure.ts';
 import { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
-import { createCurveSegmentState, PolymerTraceIterator, interpolateCurveSegment, PolymerLocationIterator, getPolymerElementLoci, eachPolymerElement } from './util/polymer.ts';
+import {
+    createCurveSegmentState,
+    eachPolymerElement,
+    getPolymerElementLoci,
+    interpolateCurveSegment,
+    PolymerLocationIterator,
+    PolymerTraceIterator,
+} from './util/polymer.ts';
 import { isNucleic, SecondaryStructureType } from '../../../mol-model/structure/model/types.ts';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
+import { UnitsMeshParams, UnitsMeshVisual, UnitsVisual } from '../units-visual.ts';
 import { VisualUpdateState } from '../../util.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { StructureGroup } from './util/common.ts';
@@ -35,9 +42,16 @@ export const PolymerDirectionWedgeParams = {
     sizeFactor: PD.Numeric(0.2, { min: 0, max: 10, step: 0.01 }),
 };
 export const DefaultPolymerDirectionWedgeProps = PD.getDefaultValues(PolymerDirectionWedgeParams);
-export type PolymerDirectionWedgeProps = typeof DefaultPolymerDirectionWedgeProps
+export type PolymerDirectionWedgeProps = typeof DefaultPolymerDirectionWedgeProps;
 
-function createPolymerDirectionWedgeMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PolymerDirectionWedgeProps, mesh?: Mesh) {
+function createPolymerDirectionWedgeMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PolymerDirectionWedgeProps,
+    mesh?: Mesh,
+) {
     const polymerElementCount = unit.polymerElements.length;
 
     if (!polymerElementCount) return Mesh.createEmpty(mesh);
@@ -94,21 +108,24 @@ function createPolymerDirectionWedgeMesh(ctx: VisualContext, unit: Unit, structu
 
 export const PolymerDirectionParams = {
     ...UnitsMeshParams,
-    ...PolymerDirectionWedgeParams
+    ...PolymerDirectionWedgeParams,
 };
-export type PolymerDirectionParams = typeof PolymerDirectionParams
+export type PolymerDirectionParams = typeof PolymerDirectionParams;
 
 export function PolymerDirectionVisual(materialId: number): UnitsVisual<PolymerDirectionParams> {
     return UnitsMeshVisual<PolymerDirectionParams>({
         defaultProps: PD.getDefaultValues(PolymerDirectionParams),
         createGeometry: createPolymerDirectionWedgeMesh,
-        createLocationIterator: (structureGroup: StructureGroup) => PolymerLocationIterator.fromGroup(structureGroup),
+        createLocationIterator: (structureGroup: StructureGroup) =>
+            PolymerLocationIterator.fromGroup(structureGroup),
         getLoci: getPolymerElementLoci,
         eachLocation: eachPolymerElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<PolymerDirectionParams>, currentProps: PD.Values<PolymerDirectionParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor
-            );
-        }
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<PolymerDirectionParams>,
+            currentProps: PD.Values<PolymerDirectionParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor;
+        },
     }, materialId);
 }

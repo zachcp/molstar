@@ -24,7 +24,7 @@ const InteractionCategories = new Set([
     'atom_site',
     'pdbx_entity_branch',
     'pdbx_entity_branch_link',
-    'pdbx_branch_scheme'
+    'pdbx_branch_scheme',
 ]);
 
 const AssemblyCategories = new Set([
@@ -47,16 +47,24 @@ const AssemblyCategories = new Set([
     'atom_site',
     'pdbx_entity_branch',
     'pdbx_entity_branch_link',
-    'pdbx_branch_scheme'
+    'pdbx_branch_scheme',
 ]);
 
 export const QuerySchemas = {
-    interaction: <CifWriter.Category.Filter>{
-        includeCategory(name) { return InteractionCategories.has(name); },
-        includeField(cat, field) { return true; }
+    interaction: <CifWriter.Category.Filter> {
+        includeCategory(name) {
+            return InteractionCategories.has(name);
+        },
+        includeField(cat, field) {
+            return true;
+        },
     },
-    assembly: <CifWriter.Category.Filter>{
-        includeCategory(name) { return AssemblyCategories.has(name); },
-        includeField(cat, field) { return true; }
-    }
+    assembly: <CifWriter.Category.Filter> {
+        includeCategory(name) {
+            return AssemblyCategories.has(name);
+        },
+        includeField(cat, field) {
+            return true;
+        },
+    },
 };

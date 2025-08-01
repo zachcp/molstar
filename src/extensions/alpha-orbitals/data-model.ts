@@ -8,7 +8,7 @@ import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { Grid } from '../../mol-model/volume.ts';
 import { SphericalBasisOrder } from './spherical-functions.ts';
 import { Box3D, RegularGrid3d } from '../../mol-math/geometry.ts';
-import { arrayMin, arrayMax, arrayRms, arrayMean } from '../../mol-util/array.ts';
+import { arrayMax, arrayMean, arrayMin, arrayRms } from '../../mol-util/array.ts';
 import { ModelFormat } from '../../mol-model-formats/format.ts';
 
 // Note: generally contracted gaussians are currently not supported.
@@ -71,19 +71,18 @@ export function isCubeGridData(f: ModelFormat): f is CubeGridFormat {
 }
 
 export function initCubeGrid(params: CubeGridComputationParams): CubeGridInfo {
-    const geometry = params.basis.atoms.map(a => a.center);
+    const geometry = params.basis.atoms.map((a) => a.center);
     const { gridSpacing: spacing, boxExpand: expand } = params;
 
     const count = geometry.length;
     const box = Box3D.expand(
         Box3D(),
         Box3D.fromVec3Array(Box3D(), geometry as unknown as Vec3[]),
-        Vec3.create(expand, expand, expand)
+        Vec3.create(expand, expand, expand),
     );
     const size = Box3D.size(Vec3(), box);
 
-    const spacingThresholds =
-        typeof spacing === 'number' ? [[0, spacing]] : [...spacing];
+    const spacingThresholds = typeof spacing === 'number' ? [[0, spacing]] : [...spacing];
     spacingThresholds.sort((a, b) => b[0] - a[0]);
 
     let s = 0.4;
@@ -118,8 +117,8 @@ export function createGrid(gridInfo: RegularGrid3d, values: Float32Array, axisOr
         Vec3.div(
             Vec3(),
             boxSize,
-            Vec3.sub(Vec3(), gridInfo.dimensions, Vec3.create(1, 1, 1))
-        )
+            Vec3.sub(Vec3(), gridInfo.dimensions, Vec3.create(1, 1, 1)),
+        ),
     );
     const translate = Mat4.fromTranslation(Mat4(), boxOrigin);
     const matrix = Mat4.mul(Mat4(), translate, scale);
@@ -128,7 +127,7 @@ export function createGrid(gridInfo: RegularGrid3d, values: Float32Array, axisOr
         transform: { kind: 'matrix', matrix },
         cells: Tensor.create(
             Tensor.Space(gridInfo.dimensions, axisOrder, Float32Array),
-            (values as any) as Tensor.Data
+            (values as any) as Tensor.Data,
         ),
         stats: {
             min: arrayMin(values),

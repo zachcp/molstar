@@ -6,8 +6,13 @@
  */
 
 import { FileHandle } from '../../../../mol-io/common/file-handle.ts';
-import { readCcp4Header, readCcp4Slices, getCcp4DataOffset, getCcp4ValueType } from '../../../../mol-io/reader/ccp4/parser.ts';
-import { Header, Provider, Data } from '../format.ts';
+import {
+    getCcp4DataOffset,
+    getCcp4ValueType,
+    readCcp4Header,
+    readCcp4Slices,
+} from '../../../../mol-io/reader/ccp4/parser.ts';
+import { Data, Header, Provider } from '../format.ts';
 import { getCcp4Origin } from '../../../../mol-model-formats/volume/ccp4.ts';
 import { Ccp4Header } from '../../../../mol-io/reader/ccp4/schema.ts';
 
@@ -18,7 +23,7 @@ async function readHeader(name: string, file: FileHandle) {
         name,
         valueType: getCcp4ValueType(ccp4Header),
         grid: [ccp4Header.NX, ccp4Header.NY, ccp4Header.NZ],
-        axisOrder: [ccp4Header.MAPC, ccp4Header.MAPR, ccp4Header.MAPS].map(i => i - 1),
+        axisOrder: [ccp4Header.MAPC, ccp4Header.MAPR, ccp4Header.MAPS].map((i) => i - 1),
         extent: [ccp4Header.NC, ccp4Header.NR, ccp4Header.NS],
         origin: getCcp4Origin(ccp4Header),
         spacegroupNumber: ccp4Header.ISPG,
@@ -26,10 +31,14 @@ async function readHeader(name: string, file: FileHandle) {
         cellAngles: [ccp4Header.alpha, ccp4Header.beta, ccp4Header.gamma],
         littleEndian,
         dataOffset: getCcp4DataOffset(ccp4Header),
-        originalHeader: ccp4Header
+        originalHeader: ccp4Header,
     };
     // "normalize" the grid axis order
-    header.grid = [header.grid[header.axisOrder[0]], header.grid[header.axisOrder[1]], header.grid[header.axisOrder[2]]];
+    header.grid = [
+        header.grid[header.axisOrder[0]],
+        header.grid[header.axisOrder[1]],
+        header.grid[header.axisOrder[2]],
+    ];
     return header;
 }
 
@@ -45,7 +54,14 @@ export async function readSlices(data: Data) {
     const sliceCount = Math.min(slices.sliceCapacity, extent[2] - slices.slicesRead);
     const sliceByteCount = slices.buffer.elementByteSize * sliceCount * sliceSize;
 
-    await readCcp4Slices(originalHeader as Ccp4Header, slices.buffer, data.file, header.dataOffset + sliceByteOffset, sliceByteCount, header.littleEndian);
+    await readCcp4Slices(
+        originalHeader as Ccp4Header,
+        slices.buffer,
+        data.file,
+        header.dataOffset + sliceByteOffset,
+        sliceByteCount,
+        header.littleEndian,
+    );
     slices.slicesRead += sliceCount;
     slices.sliceCount = sliceCount;
 

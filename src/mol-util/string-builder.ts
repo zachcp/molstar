@@ -7,10 +7,10 @@
  */
 
 interface StringBuilder {
-    current: string[],
-    offset: number,
-    capacity: number,
-    chunks: string[]
+    current: string[];
+    offset: number;
+    capacity: number;
+    chunks: string[];
 }
 
 namespace StringBuilder {
@@ -19,7 +19,7 @@ namespace StringBuilder {
             current: [],
             offset: 0,
             capacity: chunkCapacity,
-            chunks: []
+            chunks: [],
         };
     }
 
@@ -47,14 +47,18 @@ namespace StringBuilder {
 
     export function getChunks(builder: StringBuilder): string[] {
         if (builder.offset > 0) {
-            if (builder.current.length === builder.offset) builder.chunks[builder.chunks.length] = builder.current.join('');
-            else builder.chunks[builder.chunks.length] = builder.current.slice(0, builder.offset).join('');
+            if (builder.current.length === builder.offset) {
+                builder.chunks[builder.chunks.length] = builder.current.join('');
+            } else {builder.chunks[builder.chunks.length] = builder.current.slice(0, builder.offset)
+                    .join('');}
             builder.offset = 0;
         }
         return builder.chunks;
     }
 
-    const enum PaddingSpaces { Count = 512 }
+    const enum PaddingSpaces {
+        Count = 512,
+    }
     const __paddingSpaces: string[] = [];
     (function () {
         let s = '';
@@ -98,7 +102,10 @@ namespace StringBuilder {
     }
 
     export function writePadLeft(builder: StringBuilder, val: string, totalWidth: number) {
-        if (!val) { whitespace(builder, totalWidth); return; }
+        if (!val) {
+            whitespace(builder, totalWidth);
+            return;
+        }
 
         const padding = totalWidth - val.length;
         whitespace(builder, padding);
@@ -106,13 +113,15 @@ namespace StringBuilder {
     }
 
     export function writePadRight(builder: StringBuilder, val: string, totalWidth: number) {
-        if (!val) { whitespace(builder, totalWidth); return; }
+        if (!val) {
+            whitespace(builder, totalWidth);
+            return;
+        }
 
         const padding = totalWidth - val.length;
         writeSafe(builder, val);
         whitespace(builder, padding);
     }
-
 
     export function writeInteger(builder: StringBuilder, val: number) {
         writeSafe(builder, '' + val);
@@ -143,14 +152,24 @@ namespace StringBuilder {
         writeSafe(builder, '' + Math.round(precisionMultiplier * val) / precisionMultiplier);
     }
 
-    export function writeFloatPadLeft(builder: StringBuilder, val: number, precisionMultiplier: number, totalWidth: number) {
+    export function writeFloatPadLeft(
+        builder: StringBuilder,
+        val: number,
+        precisionMultiplier: number,
+        totalWidth: number,
+    ) {
         const s = '' + Math.round(precisionMultiplier * val) / precisionMultiplier;
         const padding = totalWidth - s.length;
         whitespace(builder, padding);
         writeSafe(builder, s);
     }
 
-    export function writeFloatPadRight(builder: StringBuilder, val: number, precisionMultiplier: number, totalWidth: number) {
+    export function writeFloatPadRight(
+        builder: StringBuilder,
+        val: number,
+        precisionMultiplier: number,
+        totalWidth: number,
+    ) {
         const s = '' + Math.round(precisionMultiplier * val) / precisionMultiplier;
         const padding = totalWidth - s.length;
         writeSafe(builder, s);

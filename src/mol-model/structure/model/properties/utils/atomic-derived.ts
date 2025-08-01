@@ -5,9 +5,17 @@
  */
 
 import { AtomicData, AtomNumber } from '../atomic.ts';
-import { AtomicIndex, AtomicDerivedData, AtomicSegments } from '../atomic/hierarchy.ts';
+import { AtomicDerivedData, AtomicIndex, AtomicSegments } from '../atomic/hierarchy.ts';
 import { ElementIndex, ResidueIndex } from '../../indexing.ts';
-import { MoleculeType, getMoleculeType, getComponentType, PolymerType, getPolymerType, isPolymer, ElementSymbol } from '../../types.ts';
+import {
+    ElementSymbol,
+    getComponentType,
+    getMoleculeType,
+    getPolymerType,
+    isPolymer,
+    MoleculeType,
+    PolymerType,
+} from '../../types.ts';
 import { getAtomIdForAtomRole } from '../../../util.ts';
 import { ChemicalComponentMap } from '../common.ts';
 import { isProductionMode } from '../../../../../mol-util/debug.ts';
@@ -15,7 +23,12 @@ import { mmCIF_chemComp_schema } from '../../../../../mol-io/reader/cif/schema/m
 
 type ChemCompType = mmCIF_chemComp_schema['type']['T'];
 
-export function getAtomicDerivedData(data: AtomicData, segments: AtomicSegments, index: AtomicIndex, chemicalComponentMap: ChemicalComponentMap): AtomicDerivedData {
+export function getAtomicDerivedData(
+    data: AtomicData,
+    segments: AtomicSegments,
+    index: AtomicIndex,
+    chemicalComponentMap: ChemicalComponentMap,
+): AtomicDerivedData {
     const { label_comp_id, type_symbol, _rowCount: atomCount } = data.atoms;
     const { _rowCount: residueCount } = data.residues;
     const { offsets } = segments.residueAtomSegments;
@@ -81,14 +94,18 @@ export function getAtomicDerivedData(data: AtomicData, segments: AtomicSegments,
 
     return {
         atom: {
-            atomicNumber: atomicNumber as unknown as ArrayLike<number>
+            atomicNumber: atomicNumber as unknown as ArrayLike<number>,
         },
         residue: {
             traceElementIndex: traceElementIndex as unknown as ArrayLike<ElementIndex | -1>,
-            directionFromElementIndex: directionFromElementIndex as unknown as ArrayLike<ElementIndex | -1>,
-            directionToElementIndex: directionToElementIndex as unknown as ArrayLike<ElementIndex | -1>,
+            directionFromElementIndex: directionFromElementIndex as unknown as ArrayLike<
+                ElementIndex | -1
+            >,
+            directionToElementIndex: directionToElementIndex as unknown as ArrayLike<
+                ElementIndex | -1
+            >,
             moleculeType: moleculeType as unknown as ArrayLike<MoleculeType>,
             polymerType: polymerType as unknown as ArrayLike<PolymerType>,
-        }
+        },
     };
 }

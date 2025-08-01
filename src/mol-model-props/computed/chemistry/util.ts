@@ -32,7 +32,11 @@ export function compId(unit: Unit.Atomic, index: StructureElement.UnitIndex) {
 
 //
 
-export function interBondCount(structure: Structure, unit: Unit.Atomic, index: StructureElement.UnitIndex): number {
+export function interBondCount(
+    structure: Structure,
+    unit: Unit.Atomic,
+    index: StructureElement.UnitIndex,
+): number {
     let count = 0;
     const indices = structure.interUnitBonds.getEdgeIndices(index, unit.id);
     for (let i = 0, il = indices.length; i < il; ++i) {
@@ -51,21 +55,39 @@ export function intraBondCount(unit: Unit.Atomic, index: StructureElement.UnitIn
     return count;
 }
 
-export function bondCount(structure: Structure, unit: Unit.Atomic, index: StructureElement.UnitIndex): number {
+export function bondCount(
+    structure: Structure,
+    unit: Unit.Atomic,
+    index: StructureElement.UnitIndex,
+): number {
     return interBondCount(structure, unit, index) + intraBondCount(unit, index);
 }
 
-export function bondToElementCount(structure: Structure, unit: Unit.Atomic, index: StructureElement.UnitIndex, element: Elements): number {
+export function bondToElementCount(
+    structure: Structure,
+    unit: Unit.Atomic,
+    index: StructureElement.UnitIndex,
+    element: Elements,
+): number {
     let count = 0;
-    eachBondedAtom(structure, unit, index, (unit: Unit.Atomic, index: StructureElement.UnitIndex) => {
-        if (typeSymbol(unit, index) === element) count += 1;
-    });
+    eachBondedAtom(
+        structure,
+        unit,
+        index,
+        (unit: Unit.Atomic, index: StructureElement.UnitIndex) => {
+            if (typeSymbol(unit, index) === element) count += 1;
+        },
+    );
     return count;
 }
 
 //
 
-export function intraConnectedTo(unit: Unit.Atomic, indexA: StructureElement.UnitIndex, indexB: StructureElement.UnitIndex) {
+export function intraConnectedTo(
+    unit: Unit.Atomic,
+    indexA: StructureElement.UnitIndex,
+    indexB: StructureElement.UnitIndex,
+) {
     const { offset, b, edgeProps: { flags } } = unit.bonds;
     BondType.is;
     for (let i = offset[indexA], il = offset[indexA + 1]; i < il; ++i) {
@@ -74,18 +96,37 @@ export function intraConnectedTo(unit: Unit.Atomic, indexA: StructureElement.Uni
     return false;
 }
 
-export function interConnectedTo(structure: Structure, unitA: Unit.Atomic, indexA: StructureElement.UnitIndex, unitB: Unit.Atomic, indexB: StructureElement.UnitIndex) {
+export function interConnectedTo(
+    structure: Structure,
+    unitA: Unit.Atomic,
+    indexA: StructureElement.UnitIndex,
+    unitB: Unit.Atomic,
+    indexB: StructureElement.UnitIndex,
+) {
     const b = structure.interUnitBonds.getEdge(indexA, unitA.id, indexB, unitB.id);
     return b && BondType.isCovalent(b.props.flag);
 }
 
-export function connectedTo(structure: Structure, unitA: Unit.Atomic, indexA: StructureElement.UnitIndex, unitB: Unit.Atomic, indexB: StructureElement.UnitIndex) {
-    return unitA === unitB ? intraConnectedTo(unitA, indexA, indexB) : interConnectedTo(structure, unitA, indexA, unitB, indexB);
+export function connectedTo(
+    structure: Structure,
+    unitA: Unit.Atomic,
+    indexA: StructureElement.UnitIndex,
+    unitB: Unit.Atomic,
+    indexB: StructureElement.UnitIndex,
+) {
+    return unitA === unitB
+        ? intraConnectedTo(unitA, indexA, indexB)
+        : interConnectedTo(structure, unitA, indexA, unitB, indexB);
 }
 
 //
 
-export function eachInterBondedAtom(structure: Structure, unit: Unit.Atomic, index: StructureElement.UnitIndex, cb: (unit: Unit.Atomic, index: StructureElement.UnitIndex) => void): void {
+export function eachInterBondedAtom(
+    structure: Structure,
+    unit: Unit.Atomic,
+    index: StructureElement.UnitIndex,
+    cb: (unit: Unit.Atomic, index: StructureElement.UnitIndex) => void,
+): void {
     const indices = structure.interUnitBonds.getEdgeIndices(index, unit.id);
     for (let i = 0, il = indices.length; i < il; ++i) {
         const b = structure.interUnitBonds.edges[indices[i]];
@@ -94,21 +135,34 @@ export function eachInterBondedAtom(structure: Structure, unit: Unit.Atomic, ind
     }
 }
 
-export function eachIntraBondedAtom(unit: Unit.Atomic, index: StructureElement.UnitIndex, cb: (unit: Unit.Atomic, index: StructureElement.UnitIndex) => void): void {
+export function eachIntraBondedAtom(
+    unit: Unit.Atomic,
+    index: StructureElement.UnitIndex,
+    cb: (unit: Unit.Atomic, index: StructureElement.UnitIndex) => void,
+): void {
     const { offset, b, edgeProps: { flags } } = unit.bonds;
     for (let i = offset[index], il = offset[index + 1]; i < il; ++i) {
         if (BondType.isCovalent(flags[i])) cb(unit, b[i] as StructureElement.UnitIndex);
     }
 }
 
-export function eachBondedAtom(structure: Structure, unit: Unit.Atomic, index: StructureElement.UnitIndex, cb: (unit: Unit.Atomic, index: StructureElement.UnitIndex) => void): void {
+export function eachBondedAtom(
+    structure: Structure,
+    unit: Unit.Atomic,
+    index: StructureElement.UnitIndex,
+    cb: (unit: Unit.Atomic, index: StructureElement.UnitIndex) => void,
+): void {
     eachInterBondedAtom(structure, unit, index, cb);
     eachIntraBondedAtom(unit, index, cb);
 }
 
 //
 
-export function eachResidueAtom(unit: Unit.Atomic, index: StructureElement.UnitIndex, cb: (index: StructureElement.UnitIndex) => void): void {
+export function eachResidueAtom(
+    unit: Unit.Atomic,
+    index: StructureElement.UnitIndex,
+    cb: (index: StructureElement.UnitIndex) => void,
+): void {
     const { offsets } = unit.model.atomicHierarchy.residueAtomSegments;
     const rI = unit.getResidueIndex(index);
     for (let i = offsets[rI], il = offsets[rI + 1]; i < il; ++i) {

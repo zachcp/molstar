@@ -12,9 +12,9 @@ import { Mask } from './mask.ts';
 import { Progress } from '../mol-task/index.ts';
 
 export * from './value-cell.ts';
-export { BitFlags, StringBuilder, UUID, Mask };
+export { BitFlags, Mask, StringBuilder, UUID };
 
-export const noop = function () { };
+export const noop = function () {};
 
 export function round(n: number, d: number) {
     const f = Math.pow(10, d);
@@ -117,12 +117,16 @@ export function defaults<T>(value: T | undefined, defaultValue: T): T {
     return value !== undefined ? value : defaultValue;
 }
 
-export function extend<S extends {}, T extends {}, U extends {}>(object: S, source: T, guard?: U): S & T & U {
+export function extend<S extends {}, T extends {}, U extends {}>(
+    object: S,
+    source: T,
+    guard?: U,
+): S & T & U {
     let v: any;
 
-    const s = <any>source;
-    const o = <any>object;
-    const g = <any>guard;
+    const s = <any> source;
+    const o = <any> object;
+    const g = <any> guard;
     for (const k of Object.keys(source)) {
         v = s[k];
         if (v !== void 0) o[k] = v;
@@ -136,7 +140,7 @@ export function extend<S extends {}, T extends {}, U extends {}>(object: S, sour
         }
     }
 
-    return <any>object;
+    return <any> object;
 }
 
 export function shallowClone<T extends {}>(o: T): T {
@@ -156,7 +160,7 @@ function _assign<T>(target: T): T {
 }
 
 export declare function _assignType<T>(o: T, ...from: any[]): T;
-export const assign: (<T>(o: T, ...from: any[]) => T) = (Object as any).assign || _assign;
+export const assign: <T>(o: T, ...from: any[]) => T = (Object as any).assign || _assign;
 
 function _shallowMerge1<T extends {}>(source: T, update: T) {
     let changed = false;
@@ -189,9 +193,11 @@ function _shallowMerge<T>(source: T) {
     return ret;
 }
 
-export const merge: (<T>(source: T, ...rest: Partial<T>[]) => T) = _shallowMerge;
+export const merge: <T>(source: T, ...rest: Partial<T>[]) => T = _shallowMerge;
 
-function padTime(n: number) { return (n < 10 ? '0' : '') + n; }
+function padTime(n: number) {
+    return (n < 10 ? '0' : '') + n;
+}
 export function formatTime(d: Date) {
     const h = d.getHours(), m = d.getMinutes(), s = d.getSeconds();
     return `${h}:${padTime(m)}:${padTime(s)}`;

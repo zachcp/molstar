@@ -6,13 +6,13 @@
 
 import { Volume } from '../../mol-model/volume.ts';
 import { Task } from '../../mol-task/index.ts';
-import { SpacegroupCell, Box3D } from '../../mol-math/geometry.ts';
+import { Box3D, SpacegroupCell } from '../../mol-math/geometry.ts';
 import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { Ccp4File, Ccp4Header } from '../../mol-io/reader/ccp4/schema.ts';
 import { degToRad } from '../../mol-math/misc.ts';
 import { getCcp4ValueType } from '../../mol-io/reader/ccp4/parser.ts';
 import { TypedArrayValueType } from '../../mol-io/common/typed-array.ts';
-import { arrayMin, arrayRms, arrayMean, arrayMax } from '../../mol-util/array.ts';
+import { arrayMax, arrayMean, arrayMin, arrayRms } from '../../mol-util/array.ts';
 import { ModelFormat } from '../format.ts';
 import { CustomProperties } from '../../mol-model/custom-property.ts';
 
@@ -24,7 +24,7 @@ export function getCcp4Origin(header: Ccp4Header): Vec3 {
         return Vec3.create(
             header.originX / (header.xLength / header.NX),
             header.originY / (header.yLength / header.NY),
-            header.originZ / (header.zLength / header.NZ)
+            header.originZ / (header.zLength / header.NZ),
         );
     }
 }
@@ -32,25 +32,42 @@ export function getCcp4Origin(header: Ccp4Header): Vec3 {
 function getTypedArrayCtor(header: Ccp4Header) {
     const valueType = getCcp4ValueType(header);
     switch (valueType) {
-        case TypedArrayValueType.Float32: return Float32Array;
-        case TypedArrayValueType.Int8: return Int8Array;
-        case TypedArrayValueType.Int16: return Int16Array;
-        case TypedArrayValueType.Uint16: return Uint16Array;
+        case TypedArrayValueType.Float32:
+            return Float32Array;
+        case TypedArrayValueType.Int8:
+            return Int8Array;
+        case TypedArrayValueType.Int16:
+            return Int16Array;
+        case TypedArrayValueType.Uint16:
+            return Uint16Array;
     }
     throw Error(`${valueType} is not a supported value format.`);
 }
 
-export function volumeFromCcp4(source: Ccp4File, params?: { voxelSize?: Vec3, offset?: Vec3, label?: string, entryId?: string }): Task<Volume> {
-    return Task.create<Volume>('Create Volume', async ctx => {
+export function volumeFromCcp4(
+    source: Ccp4File,
+    params?: { voxelSize?: Vec3; offset?: Vec3; label?: string; entryId?: string },
+): Task<Volume> {
+    return Task.create<Volume>('Create Volume', async (ctx) => {
         const { header, values } = source;
         const size = Vec3.create(header.xLength, header.yLength, header.zLength);
         if (params && params.voxelSize) Vec3.mul(size, size, params.voxelSize);
-        const angles = Vec3.create(degToRad(header.alpha), degToRad(header.beta), degToRad(header.gamma));
+        const angles = Vec3.create(
+            degToRad(header.alpha),
+            degToRad(header.beta),
+            degToRad(header.gamma),
+        );
         const spacegroup = header.ISPG > 65536 ? 0 : header.ISPG;
         const cell = SpacegroupCell.create(spacegroup || 'P 1', size, angles);
 
-        const axis_order_fast_to_slow = Vec3.create(header.MAPC - 1, header.MAPR - 1, header.MAPS - 1);
-        const normalizeOrder = Tensor.convertToCanonicalAxisIndicesFastToSlow(axis_order_fast_to_slow);
+        const axis_order_fast_to_slow = Vec3.create(
+            header.MAPC - 1,
+            header.MAPR - 1,
+            header.MAPS - 1,
+        );
+        const normalizeOrder = Tensor.convertToCanonicalAxisIndicesFastToSlow(
+            axis_order_fast_to_slow,
+        );
 
         const grid = [header.NX, header.NY, header.NZ];
         const extent = normalizeOrder([header.NC, header.NR, header.NS]);
@@ -58,10 +75,22 @@ export function volumeFromCcp4(source: Ccp4File, params?: { voxelSize?: Vec3, of
         if (params?.offset) Vec3.add(origin, origin, params.offset);
         const gridOrigin = normalizeOrder(origin);
 
-        const origin_frac = Vec3.create(gridOrigin[0] / grid[0], gridOrigin[1] / grid[1], gridOrigin[2] / grid[2]);
-        const dimensions_frac = Vec3.create(extent[0] / grid[0], extent[1] / grid[1], extent[2] / grid[2]);
+        const origin_frac = Vec3.create(
+            gridOrigin[0] / grid[0],
+            gridOrigin[1] / grid[1],
+            gridOrigin[2] / grid[2],
+        );
+        const dimensions_frac = Vec3.create(
+            extent[0] / grid[0],
+            extent[1] / grid[1],
+            extent[2] / grid[2],
+        );
 
-        const space = Tensor.Space(extent, Tensor.invertAxisOrder(axis_order_fast_to_slow), getTypedArrayCtor(header));
+        const space = Tensor.Space(
+            extent,
+            Tensor.invertAxisOrder(axis_order_fast_to_slow),
+            getTypedArrayCtor(header),
+        );
         const data = Tensor.create(space, Tensor.Data1(values));
 
         // TODO Calculate stats? When to trust header data?
@@ -69,19 +98,29 @@ export function volumeFromCcp4(source: Ccp4File, params?: { voxelSize?: Vec3, of
         // These, however, calculate sigma, so no data on that.
 
         // always calculate stats when all stats related values are zero
-        const calcStats = header.AMIN === 0 && header.AMAX === 0 && header.AMEAN === 0 && header.ARMS === 0;
+        const calcStats = header.AMIN === 0 && header.AMAX === 0 && header.AMEAN === 0 &&
+            header.ARMS === 0;
 
         return {
             label: params?.label,
             entryId: params?.entryId,
             grid: {
-                transform: { kind: 'spacegroup', cell, fractionalBox: Box3D.create(origin_frac, Vec3.add(Vec3.zero(), origin_frac, dimensions_frac)) },
+                transform: {
+                    kind: 'spacegroup',
+                    cell,
+                    fractionalBox: Box3D.create(
+                        origin_frac,
+                        Vec3.add(Vec3.zero(), origin_frac, dimensions_frac),
+                    ),
+                },
                 cells: data,
                 stats: {
                     min: (isNaN(header.AMIN) || calcStats) ? arrayMin(values) : header.AMIN,
                     max: (isNaN(header.AMAX) || calcStats) ? arrayMax(values) : header.AMAX,
                     mean: (isNaN(header.AMEAN) || calcStats) ? arrayMean(values) : header.AMEAN,
-                    sigma: (isNaN(header.ARMS) || header.ARMS === 0) ? arrayRms(values) : header.ARMS
+                    sigma: (isNaN(header.ARMS) || header.ARMS === 0)
+                        ? arrayRms(values)
+                        : header.ARMS,
                 },
             },
             instances: [{ transform: Mat4.identity() }],
@@ -96,7 +135,7 @@ export function volumeFromCcp4(source: Ccp4File, params?: { voxelSize?: Vec3, of
 
 export { Ccp4Format };
 
-type Ccp4Format = ModelFormat<Ccp4File>
+type Ccp4Format = ModelFormat<Ccp4File>;
 
 namespace Ccp4Format {
     export function is(x?: ModelFormat): x is Ccp4Format {

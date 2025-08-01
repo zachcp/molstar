@@ -8,32 +8,41 @@ import { PluginContext } from '../../../mol-plugin/context.ts';
 import { PluginStateSnapshotManager } from '../../manager/snapshots.ts';
 import { PluginStateAnimation } from '../model.ts';
 
-async function setPartialSnapshot(plugin: PluginContext, entry: PluginStateSnapshotManager.Entry, first = false) {
+async function setPartialSnapshot(
+    plugin: PluginContext,
+    entry: PluginStateSnapshotManager.Entry,
+    first = false,
+) {
     if (entry.snapshot.data) {
         await plugin.runTask(plugin.state.data.setSnapshot(entry.snapshot.data));
         // update the canvas3d trackball with the snapshot
         plugin.canvas3d?.setProps({
-            trackball: entry.snapshot.canvas3d?.props?.trackball
+            trackball: entry.snapshot.canvas3d?.props?.trackball,
         });
-
     }
 
     if (entry.snapshot.camera?.current) {
         plugin.canvas3d?.requestCameraReset({
             snapshot: entry.snapshot.camera.current,
             durationMs: first || entry.snapshot.camera.transitionStyle === 'instant'
-                ? 0 : entry.snapshot.camera.transitionDurationInMs,
+                ? 0
+                : entry.snapshot.camera.transitionDurationInMs,
         });
     } else if (entry.snapshot.camera?.focus) {
         plugin.managers.camera.focusObject({
             ...entry.snapshot.camera.focus,
             durationMs: first || entry.snapshot.camera.transitionStyle === 'instant'
-                ? 0 : entry.snapshot.camera.transitionDurationInMs,
+                ? 0
+                : entry.snapshot.camera.transitionDurationInMs,
         });
     }
 }
 
-type State = { totalDuration: number, snapshots: PluginStateSnapshotManager.Entry[], currentIndex: 0 };
+type State = {
+    totalDuration: number;
+    snapshots: PluginStateSnapshotManager.Entry[];
+    currentIndex: 0;
+};
 
 export const AnimateStateSnapshots = PluginStateAnimation.create({
     name: 'built-in.animate-state-snapshots',
@@ -45,7 +54,7 @@ export const AnimateStateSnapshots = PluginStateAnimation.create({
         if (entries.size < 2) {
             return { canApply: false, reason: 'At least 2 states required.' };
         }
-        if (entries.some(e => !!e?.snapshot.startAnimation)) {
+        if (entries.some((e) => !!e?.snapshot.startAnimation)) {
             return { canApply: false, reason: 'Nested animations not supported.' };
         }
         return { canApply: plugin.managers.snapshot.state.entries.size > 1 };
@@ -57,7 +66,10 @@ export const AnimateStateSnapshots = PluginStateAnimation.create({
     getDuration: (_, plugin) => {
         return {
             kind: 'fixed',
-            durationMs: plugin.managers.snapshot.state.entries.toArray().reduce((a, b) => a + (b.snapshot.durationInMs ?? 0), 0)
+            durationMs: plugin.managers.snapshot.state.entries.toArray().reduce(
+                (a, b) => a + (b.snapshot.durationInMs ?? 0),
+                0,
+            ),
         };
     },
     initialState: (_, plugin) => {
@@ -66,7 +78,7 @@ export const AnimateStateSnapshots = PluginStateAnimation.create({
         return {
             totalDuration: snapshots.reduce((a, b) => a + (b.snapshot.durationInMs ?? 0), 0),
             snapshots,
-            currentIndex: 0
+            currentIndex: 0,
         } as State;
     },
     async apply(animState: State, t, ctx) {
@@ -92,5 +104,5 @@ export const AnimateStateSnapshots = PluginStateAnimation.create({
         await setPartialSnapshot(ctx.plugin, animState.snapshots[i]);
 
         return { kind: 'next', state: { ...animState, currentIndex: i } };
-    }
+    },
 });

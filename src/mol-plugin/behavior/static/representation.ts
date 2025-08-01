@@ -17,13 +17,13 @@ export function registerDefault(ctx: PluginContext) {
 
 export function SyncRepresentationToCanvas(ctx: PluginContext) {
     const events = ctx.state.data.events;
-    events.object.created.subscribe(e => {
+    events.object.created.subscribe((e) => {
         if (!SO.isRepresentation3D(e.obj)) return;
         updateVisibility(e.state.cells.get(e.ref)!, e.obj.data.repr);
         e.obj.data.repr.setState({ syncManually: true });
         ctx.canvas3d?.add(e.obj.data.repr);
     });
-    events.object.updated.subscribe(e => {
+    events.object.updated.subscribe((e) => {
         if (e.oldObj && SO.isRepresentation3D(e.oldObj)) {
             ctx.canvas3d?.remove(e.oldObj.data.repr);
             e.oldObj.data.repr.destroy();
@@ -39,7 +39,7 @@ export function SyncRepresentationToCanvas(ctx: PluginContext) {
         }
         ctx.canvas3d?.add(e.obj.data.repr);
     });
-    events.object.removed.subscribe(e => {
+    events.object.removed.subscribe((e) => {
         if (!SO.isRepresentation3D(e.obj)) return;
         ctx.canvas3d?.remove(e.obj.data.repr);
 
@@ -47,23 +47,22 @@ export function SyncRepresentationToCanvas(ctx: PluginContext) {
     });
 }
 
-
 export function SyncStructureRepresentation3DState(ctx: PluginContext) {
     // TODO: figure out how to do transform composition here?
     const events = ctx.state.data.events;
-    events.object.created.subscribe(e => {
+    events.object.created.subscribe((e) => {
         if (!SO.Molecule.Structure.Representation3DState.is(e.obj)) return;
         const data = e.obj.data as SO.Molecule.Structure.Representation3DStateData;
         data.repr.setState(data.state);
         ctx.canvas3d?.update(data.repr);
     });
-    events.object.updated.subscribe(e => {
+    events.object.updated.subscribe((e) => {
         if (!SO.Molecule.Structure.Representation3DState.is(e.obj)) return;
         const data = e.obj.data as SO.Molecule.Structure.Representation3DStateData;
         data.repr.setState(data.state);
         ctx.canvas3d?.update(data.repr);
     });
-    events.object.removed.subscribe(e => {
+    events.object.removed.subscribe((e) => {
         if (!SO.Molecule.Structure.Representation3DState.is(e.obj)) return;
         const data = e.obj.data as SO.Molecule.Structure.Representation3DStateData;
         data.repr.setState(data.initialState);
@@ -71,9 +70,8 @@ export function SyncStructureRepresentation3DState(ctx: PluginContext) {
     });
 }
 
-
 export function UpdateRepresentationVisibility(ctx: PluginContext) {
-    ctx.state.data.events.cell.stateUpdated.subscribe(e => {
+    ctx.state.data.events.cell.stateUpdated.subscribe((e) => {
         const cell = e.state.cells.get(e.ref)!;
         if (!SO.isRepresentation3D(cell.obj)) return;
 

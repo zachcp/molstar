@@ -15,24 +15,23 @@ import { parseFloat as fastParseFloat } from '../common/text/number-parser.ts';
 import { Tokenizer } from '../common/text/tokenizer.ts';
 import { ReaderResult as Result } from '../result.ts';
 
-
 // http://apbs-pdb2pqr.readthedocs.io/en/latest/formats/opendx.html
 
 export interface DxFile {
-    name: string,
-    header: DxFile.Header,
-    values: Float64Array
+    name: string;
+    header: DxFile.Header;
+    values: Float64Array;
 }
 
 export namespace DxFile {
     export interface Header {
-        dim: Vec3,
-        min: Vec3,
-        h: Vec3
+        dim: Vec3;
+        min: Vec3;
+        h: Vec3;
     }
 }
 
-function readHeader(tokenizer: Tokenizer): { header: DxFile.Header, headerByteCount: number } {
+function readHeader(tokenizer: Tokenizer): { header: DxFile.Header; headerByteCount: number } {
     const header: Partial<DxFile.Header> = { h: Vec3() };
     let headerByteCount = 0;
     let deltaLineCount = 0;
@@ -124,7 +123,7 @@ async function parseBinary(taskCtx: RuntimeContext, data: Uint8Array, name: stri
 }
 
 export function parseDx(data: StringLike | Uint8Array, name: string) {
-    return Task.create<Result<DxFile>>('Parse DX', taskCtx => {
+    return Task.create<Result<DxFile>>('Parse DX', (taskCtx) => {
         if (StringLike.is(data)) return parseText(taskCtx, data, name);
         return parseBinary(taskCtx, data, name);
     });

@@ -20,7 +20,11 @@ import { PluginLayoutStateProps } from './layout.ts';
 import { StateActions } from '../mol-plugin-state/actions.ts';
 import { AssignColorVolume } from '../mol-plugin-state/actions/volume.ts';
 import { StateTransforms } from '../mol-plugin-state/transforms.ts';
-import { BoxifyVolumeStreaming, CreateVolumeStreamingBehavior, InitVolumeStreaming } from './behavior/dynamic/volume-streaming/transformers.ts';
+import {
+    BoxifyVolumeStreaming,
+    CreateVolumeStreamingBehavior,
+    InitVolumeStreaming,
+} from './behavior/dynamic/volume-streaming/transformers.ts';
 import { AnimateStateInterpolation } from '../mol-plugin-state/animation/built-in/state-interpolation.ts';
 import { AnimateStructureSpin } from '../mol-plugin-state/animation/built-in/spin-structure.ts';
 import { AnimateCameraRock } from '../mol-plugin-state/animation/built-in/camera-rock.ts';
@@ -28,35 +32,48 @@ import { AnimateCameraRock } from '../mol-plugin-state/animation/built-in/camera
 export { PluginSpec };
 
 interface PluginSpec {
-    actions?: PluginSpec.Action[],
-    behaviors: PluginSpec.Behavior[],
-    animations?: PluginStateAnimation[],
-    customFormats?: [string, DataFormatProvider][],
-    canvas3d?: PartialCanvas3DProps,
+    actions?: PluginSpec.Action[];
+    behaviors: PluginSpec.Behavior[];
+    animations?: PluginStateAnimation[];
+    customFormats?: [string, DataFormatProvider][];
+    canvas3d?: PartialCanvas3DProps;
     layout?: {
-        initial?: Partial<PluginLayoutStateProps>,
-    },
-    config?: [PluginConfigItem, unknown][]
+        initial?: Partial<PluginLayoutStateProps>;
+    };
+    config?: [PluginConfigItem, unknown][];
 }
 
 namespace PluginSpec {
     export interface Action {
-        action: StateAction | StateTransformer,
+        action: StateAction | StateTransformer;
         /* constructible react component with <action.customControl /> */
-        customControl?: any,
-        autoUpdate?: boolean
+        customControl?: any;
+        autoUpdate?: boolean;
     }
 
-    export function Action(action: StateAction | StateTransformer, params?: { customControl?: any /* constructible react component with <action.customControl /> */, autoUpdate?: boolean }): Action {
-        return { action, customControl: params && params.customControl, autoUpdate: params && params.autoUpdate };
+    export function Action(
+        action: StateAction | StateTransformer,
+        params?: {
+            customControl?: any /* constructible react component with <action.customControl /> */;
+            autoUpdate?: boolean;
+        },
+    ): Action {
+        return {
+            action,
+            customControl: params && params.customControl,
+            autoUpdate: params && params.autoUpdate,
+        };
     }
 
     export interface Behavior {
-        transformer: StateTransformer,
-        defaultParams?: any
+        transformer: StateTransformer;
+        defaultParams?: any;
     }
 
-    export function Behavior<T extends StateTransformer>(transformer: T, defaultParams: Partial<StateTransformer.Params<T>> = {}): Behavior {
+    export function Behavior<T extends StateTransformer>(
+        transformer: T,
+        defaultParams: Partial<StateTransformer.Params<T>> = {},
+    ): Behavior {
         return { transformer, defaultParams };
     }
 }
@@ -101,10 +118,18 @@ export const DefaultPluginSpec = (): PluginSpec => ({
         PluginSpec.Action(StateTransforms.Representation.ExplodeStructureRepresentation3D),
         PluginSpec.Action(StateTransforms.Representation.SpinStructureRepresentation3D),
         PluginSpec.Action(StateTransforms.Representation.UnwindStructureAssemblyRepresentation3D),
-        PluginSpec.Action(StateTransforms.Representation.OverpaintStructureRepresentation3DFromScript),
-        PluginSpec.Action(StateTransforms.Representation.TransparencyStructureRepresentation3DFromScript),
-        PluginSpec.Action(StateTransforms.Representation.ClippingStructureRepresentation3DFromScript),
-        PluginSpec.Action(StateTransforms.Representation.SubstanceStructureRepresentation3DFromScript),
+        PluginSpec.Action(
+            StateTransforms.Representation.OverpaintStructureRepresentation3DFromScript,
+        ),
+        PluginSpec.Action(
+            StateTransforms.Representation.TransparencyStructureRepresentation3DFromScript,
+        ),
+        PluginSpec.Action(
+            StateTransforms.Representation.ClippingStructureRepresentation3DFromScript,
+        ),
+        PluginSpec.Action(
+            StateTransforms.Representation.SubstanceStructureRepresentation3DFromScript,
+        ),
         PluginSpec.Action(StateTransforms.Representation.ThemeStrengthRepresentation3D),
 
         PluginSpec.Action(AssignColorVolume),
@@ -141,6 +166,6 @@ export const DefaultPluginSpec = (): PluginSpec => ({
         AnimateStateSnapshots,
         AnimateAssemblyUnwind,
         AnimateStructureSpin,
-        AnimateStateInterpolation
-    ]
+        AnimateStateInterpolation,
+    ],
 });

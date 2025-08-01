@@ -4,7 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Unit, StructureElement, ElementIndex, ResidueIndex, Structure } from '../../../../../mol-model/structure.ts';
+import {
+    ElementIndex,
+    ResidueIndex,
+    Structure,
+    StructureElement,
+    Unit,
+} from '../../../../../mol-model/structure.ts';
 import { Iterator } from '../../../../../mol-data/iterator.ts';
 import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges.ts';
 import { getGapRanges } from '../polymer.ts';
@@ -12,7 +18,8 @@ import { getGapRanges } from '../polymer.ts';
 /** Iterates over gaps, i.e. the stem residues/coarse elements adjacent to gaps */
 export function PolymerGapIterator(structure: Structure, unit: Unit): Iterator<PolymerGapPair> {
     switch (unit.kind) {
-        case Unit.Kind.Atomic: return new AtomicPolymerGapIterator(structure, unit);
+        case Unit.Kind.Atomic:
+            return new AtomicPolymerGapIterator(structure, unit);
         case Unit.Kind.Spheres:
         case Unit.Kind.Gaussians:
             return new CoarsePolymerGapIterator(structure, unit);
@@ -20,8 +27,8 @@ export function PolymerGapIterator(structure: Structure, unit: Unit): Iterator<P
 }
 
 interface PolymerGapPair {
-    centerA: StructureElement.Location
-    centerB: StructureElement.Location
+    centerA: StructureElement.Location;
+    centerB: StructureElement.Location;
 }
 
 function createPolymerGapPair(structure: Structure, unit: Unit) {
@@ -40,14 +47,17 @@ export class AtomicPolymerGapIterator implements Iterator<PolymerGapPair> {
     move() {
         const { elements, residueIndex } = this.unit;
         const gapSegment = this.gapIt.move();
-        this.value.centerA.element = this.traceElementIndex[residueIndex[elements[gapSegment.start]]];
-        this.value.centerB.element = this.traceElementIndex[residueIndex[elements[gapSegment.end - 1]]];
+        this.value.centerA.element =
+            this.traceElementIndex[residueIndex[elements[gapSegment.start]]];
+        this.value.centerB.element =
+            this.traceElementIndex[residueIndex[elements[gapSegment.end - 1]]];
         this.hasNext = this.gapIt.hasNext;
         return this.value;
     }
 
     constructor(structure: Structure, private unit: Unit.Atomic) {
-        this.traceElementIndex = unit.model.atomicHierarchy.derived.residue.traceElementIndex as ArrayLike<ElementIndex>; // can assume it won't be -1 for polymer residues
+        this.traceElementIndex = unit.model.atomicHierarchy.derived.residue
+            .traceElementIndex as ArrayLike<ElementIndex>; // can assume it won't be -1 for polymer residues
         this.gapIt = SortedRanges.transientSegments(getGapRanges(unit), unit.elements);
         this.value = createPolymerGapPair(structure, unit);
         this.hasNext = this.gapIt.hasNext;

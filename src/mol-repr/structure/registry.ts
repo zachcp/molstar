@@ -6,7 +6,7 @@
 
 import { Structure } from '../../mol-model/structure.ts';
 import { objectForEach } from '../../mol-util/object.ts';
-import { RepresentationRegistry, RepresentationProvider } from '../representation.ts';
+import { RepresentationProvider, RepresentationRegistry } from '../representation.ts';
 import { StructureRepresentationState } from './representation.ts';
 import { BallAndStickRepresentationProvider } from './representation/ball-and-stick.ts';
 import { CarbohydrateRepresentationProvider } from './representation/carbohydrate.ts';
@@ -24,11 +24,16 @@ import { GaussianVolumeRepresentationProvider } from './representation/gaussian-
 import { BackboneRepresentationProvider } from './representation/backbone.ts';
 import { PlaneRepresentationProvider } from './representation/plane.ts';
 
-export class StructureRepresentationRegistry extends RepresentationRegistry<Structure, StructureRepresentationState> {
+export class StructureRepresentationRegistry
+    extends RepresentationRegistry<Structure, StructureRepresentationState> {
     constructor() {
         super();
         objectForEach(StructureRepresentationRegistry.BuiltIn, (p, k) => {
-            if (p.name !== k) throw new Error(`Fix BuiltInStructureRepresentations to have matching names. ${p.name} ${k}`);
+            if (p.name !== k) {
+                throw new Error(
+                    `Fix BuiltInStructureRepresentations to have matching names. ${p.name} ${k}`,
+                );
+            }
             this.add(p as any);
         });
     }
@@ -53,7 +58,9 @@ export namespace StructureRepresentationRegistry {
         'spacefill': SpacefillRepresentationProvider,
     };
 
-    type _BuiltIn = typeof BuiltIn
-    export type BuiltIn = keyof _BuiltIn
-    export type BuiltInParams<T extends BuiltIn> = Partial<RepresentationProvider.ParamValues<_BuiltIn[T]>>
+    type _BuiltIn = typeof BuiltIn;
+    export type BuiltIn = keyof _BuiltIn;
+    export type BuiltInParams<T extends BuiltIn> = Partial<
+        RepresentationProvider.ParamValues<_BuiltIn[T]>
+    >;
 }

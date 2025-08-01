@@ -11,13 +11,16 @@ import { camelCaseToWords, stringToWords } from '../../mol-util/string.ts';
 import * as React from 'react';
 import { _Props, _State } from '../base.tsx';
 import { ParamProps } from './parameters.tsx';
-import { TextInput, Button, ControlRow } from './common.tsx';
+import { Button, ControlRow, TextInput } from './common.tsx';
 import { DefaultColorSwatch } from '../../mol-util/color/swatches.ts';
 
-export class CombinedColorControl extends React.PureComponent<ParamProps<PD.Color> & { hideNameRow?: boolean }, { isExpanded: boolean, lightness: number }> {
+export class CombinedColorControl extends React.PureComponent<
+    ParamProps<PD.Color> & { hideNameRow?: boolean },
+    { isExpanded: boolean; lightness: number }
+> {
     state = {
         isExpanded: !!this.props.param.isExpanded || !!this.props.hideNameRow,
-        lightness: 0
+        lightness: 0,
     };
 
     protected update(value: Color) {
@@ -69,52 +72,145 @@ export class CombinedColorControl extends React.PureComponent<ParamProps<PD.Colo
     };
 
     swatch() {
-        return <div className='msp-combined-color-swatch'>
-            {DefaultColorSwatch.map(c => <Button key={c[1]} inline data-color={c[1]} onClick={this.onClickSwatch} style={{ background: Color.toStyle(c[1]) }} />)}
-        </div>;
+        return (
+            <div className='msp-combined-color-swatch'>
+                {DefaultColorSwatch.map((c) => (
+                    <Button
+                        key={c[1]}
+                        inline
+                        data-color={c[1]}
+                        onClick={this.onClickSwatch}
+                        style={{ background: Color.toStyle(c[1]) }}
+                    />
+                ))}
+            </div>
+        );
     }
 
     render() {
         const label = this.props.param.label || camelCaseToWords(this.props.name);
         const [r, g, b] = Color.toRgb(this.props.value);
 
-        const inner = <>
-            {this.swatch()}
-            <ControlRow label='RGB' className='msp-control-label-short' control={<div style={{ display: 'flex', textAlignLast: 'center', left: '80px' }}>
-                <TextInput onChange={this.onR} numeric value={r} delayMs={250} style={{ order: 1, flex: '1 1 auto', minWidth: 0 }} className='msp-form-control' onEnter={this.props.onEnter} blurOnEnter blurOnEscape />
-                <TextInput onChange={this.onG} numeric value={g} delayMs={250} style={{ order: 2, flex: '1 1 auto', minWidth: 0 }} className='msp-form-control' onEnter={this.props.onEnter} blurOnEnter blurOnEscape />
-                <TextInput onChange={this.onB} numeric value={b} delayMs={250} style={{ order: 3, flex: '1 1 auto', minWidth: 0 }} className='msp-form-control' onEnter={this.props.onEnter} blurOnEnter blurOnEscape />
-                <input onInput={this.onRGB} type='color' value={Color.toHexStyle(this.props.value)} style={{ order: 4, flex: '1 1 auto', minWidth: '32px', width: '32px', height: '32px', padding: '0 2px 0 2px', background: 'none', border: 'none', cursor: 'pointer' }}></input>
-            </div>} />
-            <div style={{ display: 'flex', textAlignLast: 'center' }}>
-                <Button onClick={this.onLighten} style={{ order: 1, flex: '1 1 auto', minWidth: 0 }} className='msp-form-control'>Lighten</Button>
-                <Button onClick={this.onDarken} style={{ order: 1, flex: '1 1 auto', minWidth: 0 }} className='msp-form-control'>Darken</Button>
-            </div>
-        </>;
+        const inner = (
+            <>
+                {this.swatch()}
+                <ControlRow
+                    label='RGB'
+                    className='msp-control-label-short'
+                    control={
+                        <div style={{ display: 'flex', textAlignLast: 'center', left: '80px' }}>
+                            <TextInput
+                                onChange={this.onR}
+                                numeric
+                                value={r}
+                                delayMs={250}
+                                style={{ order: 1, flex: '1 1 auto', minWidth: 0 }}
+                                className='msp-form-control'
+                                onEnter={this.props.onEnter}
+                                blurOnEnter
+                                blurOnEscape
+                            />
+                            <TextInput
+                                onChange={this.onG}
+                                numeric
+                                value={g}
+                                delayMs={250}
+                                style={{ order: 2, flex: '1 1 auto', minWidth: 0 }}
+                                className='msp-form-control'
+                                onEnter={this.props.onEnter}
+                                blurOnEnter
+                                blurOnEscape
+                            />
+                            <TextInput
+                                onChange={this.onB}
+                                numeric
+                                value={b}
+                                delayMs={250}
+                                style={{ order: 3, flex: '1 1 auto', minWidth: 0 }}
+                                className='msp-form-control'
+                                onEnter={this.props.onEnter}
+                                blurOnEnter
+                                blurOnEscape
+                            />
+                            <input
+                                onInput={this.onRGB}
+                                type='color'
+                                value={Color.toHexStyle(this.props.value)}
+                                style={{
+                                    order: 4,
+                                    flex: '1 1 auto',
+                                    minWidth: '32px',
+                                    width: '32px',
+                                    height: '32px',
+                                    padding: '0 2px 0 2px',
+                                    background: 'none',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                            </input>
+                        </div>
+                    }
+                />
+                <div style={{ display: 'flex', textAlignLast: 'center' }}>
+                    <Button
+                        onClick={this.onLighten}
+                        style={{ order: 1, flex: '1 1 auto', minWidth: 0 }}
+                        className='msp-form-control'
+                    >
+                        Lighten
+                    </Button>
+                    <Button
+                        onClick={this.onDarken}
+                        style={{ order: 1, flex: '1 1 auto', minWidth: 0 }}
+                        className='msp-form-control'
+                    >
+                        Darken
+                    </Button>
+                </div>
+            </>
+        );
 
         if (this.props.hideNameRow) {
             return inner;
         }
 
-        return <>
-            <ControlRow title={this.props.param.description}
-                label={label}
-                control={<Button onClick={this.toggleExpanded} inline className='msp-combined-color-button' style={{ background: Color.toStyle(this.props.value) }} />} />
-            {this.state.isExpanded && <div className='msp-control-offset'>
-                {inner}
-            </div>}
-        </>;
+        return (
+            <>
+                <ControlRow
+                    title={this.props.param.description}
+                    label={label}
+                    control={
+                        <Button
+                            onClick={this.toggleExpanded}
+                            inline
+                            className='msp-combined-color-button'
+                            style={{ background: Color.toStyle(this.props.value) }}
+                        />
+                    }
+                />
+                {this.state.isExpanded && (
+                    <div className='msp-control-offset'>
+                        {inner}
+                    </div>
+                )}
+            </>
+        );
     }
 }
 
 let _colors: any = void 0;
 export function ColorOptions() {
     if (_colors) return _colors;
-    _colors = <>{DefaultColorSwatch.map(v =>
-        <option key={v[1]} value={v[1]} style={{ background: `${Color.toStyle(v[1])}` }} >
-            {stringToWords(v[0])}
-        </option>
-    )}</>;
+    _colors = (
+        <>
+            {DefaultColorSwatch.map((v) => (
+                <option key={v[1]} value={v[1]} style={{ background: `${Color.toStyle(v[1])}` }}>
+                    {stringToWords(v[0])}
+                </option>
+            ))}
+        </>
+    );
     return _colors;
 }
 
@@ -124,7 +220,15 @@ const DefaultColorSwatchMap = (function () {
     return map;
 })();
 export function ColorValueOption(color: Color) {
-    return !DefaultColorSwatchMap.has(color) ? <option key={Color.toHexString(color)} value={color} style={{ background: `${Color.toStyle(color)}` }} >
-        {Color.toRgbString(color)}
-    </option> : null;
+    return !DefaultColorSwatchMap.has(color)
+        ? (
+            <option
+                key={Color.toHexString(color)}
+                value={color}
+                style={{ background: `${Color.toStyle(color)}` }}
+            >
+                {Color.toRgbString(color)}
+            </option>
+        )
+        : null;
 }

@@ -24,17 +24,17 @@ import { Helper } from '../helper/helper.ts';
 
 const NullId = Math.pow(2, 24) - 2;
 
-export type PickData = { id: PickingId, position: Vec3 }
+export type PickData = { id: PickingId; position: Vec3 };
 
 export type AsyncPickData = {
-    tryGet: () => 'pending' | PickData | undefined,
-}
+    tryGet: () => 'pending' | PickData | undefined;
+};
 
 export const DefaultPickOptions = {
     pickPadding: 1,
     maxAsyncReadLag: 5,
 };
-export type PickOptions = typeof DefaultPickOptions
+export type PickOptions = typeof DefaultPickOptions;
 
 //
 
@@ -61,7 +61,12 @@ export class PickPass {
     private pickWidth: number;
     private pickHeight: number;
 
-    constructor(private webgl: WebGLContext, private width: number, private height: number, private pickScale: number) {
+    constructor(
+        private webgl: WebGLContext,
+        private width: number,
+        private height: number,
+        private pickScale: number,
+    ) {
         const pickRatio = pickScale / webgl.pixelRatio;
         this.pickWidth = Math.ceil(width * pickRatio);
         this.pickHeight = Math.ceil(height * pickRatio);
@@ -241,7 +246,14 @@ export class PickPass {
         }
     }
 
-    private renderVariant(renderer: Renderer, camera: ICamera, scene: Scene, helper: Helper, variant: 'pick' | 'depth', pickType: number) {
+    private renderVariant(
+        renderer: Renderer,
+        camera: ICamera,
+        scene: Scene,
+        helper: Helper,
+        variant: 'pick' | 'depth',
+        pickType: number,
+    ) {
         renderer.clear(false);
         renderer.update(camera, scene);
         renderer.renderPick(scene.primitives, camera, variant, pickType);
@@ -291,7 +303,11 @@ export function checkAsyncPickingSupport(webgl: WebGLContext): boolean {
     return false;
 }
 
-export enum AsyncPickStatus { Pending, Resolved, Failed };
+export enum AsyncPickStatus {
+    Pending,
+    Resolved,
+    Failed,
+}
 
 export class PickBuffers {
     private object: Uint8Array;
@@ -485,7 +501,11 @@ export class PickBuffers {
         }
     }
 
-    constructor(private webgl: WebGLContext, private pickPass: PickPass, public maxAsyncReadLag = 5) {
+    constructor(
+        private webgl: WebGLContext,
+        private pickPass: PickPass,
+        public maxAsyncReadLag = 5,
+    ) {
         if (webgl.isWebGL2) {
             this.objectBuffer = webgl.resources.pixelPack('rgba', 'ubyte');
             this.instanceBuffer = webgl.resources.pixelPack('rgba', 'ubyte');

@@ -7,15 +7,28 @@
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { VisualContext } from '../../visual.ts';
-import { Unit, Structure } from '../../../mol-model/structure.ts';
+import { Structure, Unit } from '../../../mol-model/structure.ts';
 import { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
-import { createCurveSegmentState, PolymerTraceIterator, interpolateCurveSegment, interpolateSizes, PolymerLocationIterator, getPolymerElementLoci, eachPolymerElement, HelixTension, NucleicShift, StandardShift, StandardTension, OverhangFactor } from './util/polymer.ts';
+import {
+    createCurveSegmentState,
+    eachPolymerElement,
+    getPolymerElementLoci,
+    HelixTension,
+    interpolateCurveSegment,
+    interpolateSizes,
+    NucleicShift,
+    OverhangFactor,
+    PolymerLocationIterator,
+    PolymerTraceIterator,
+    StandardShift,
+    StandardTension,
+} from './util/polymer.ts';
 import { isNucleic, SecondaryStructureType } from '../../../mol-model/structure/model/types.ts';
 import { addSheet } from '../../../mol-geo/geometry/mesh/builder/sheet.ts';
 import { addTube } from '../../../mol-geo/geometry/mesh/builder/tube.ts';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
+import { UnitsMeshParams, UnitsMeshVisual, UnitsVisual } from '../units-visual.ts';
 import { VisualUpdateState } from '../../util.ts';
 import { SecondaryStructureProvider } from '../../../mol-model-props/computed/secondary-structure.ts';
 import { addRibbon } from '../../../mol-geo/geometry/mesh/builder/ribbon.ts';
@@ -28,27 +41,64 @@ import { StructureGroup } from './util/common.ts';
 export const PolymerTraceMeshParams = {
     sizeFactor: PD.Numeric(0.2, { min: 0, max: 10, step: 0.01 }),
     aspectRatio: PD.Numeric(5, { min: 0.1, max: 10, step: 0.1 }),
-    arrowFactor: PD.Numeric(1.5, { min: 0, max: 3, step: 0.1 }, { description: 'Size factor for sheet arrows' }),
+    arrowFactor: PD.Numeric(1.5, { min: 0, max: 3, step: 0.1 }, {
+        description: 'Size factor for sheet arrows',
+    }),
     tubularHelices: PD.Boolean(false, { description: 'Draw alpha helices as tubes' }),
     roundCap: PD.Boolean(false, { description: 'Draw round caps on tubular alpha helices' }),
-    helixProfile: PD.Select('elliptical', PD.arrayToOptions(['elliptical', 'rounded', 'square'] as const), { description: 'Protein helix trace profile' }),
-    nucleicProfile: PD.Select('square', PD.arrayToOptions(['elliptical', 'rounded', 'square'] as const), { description: 'Nucleic strand trace profile' }),
+    helixProfile: PD.Select(
+        'elliptical',
+        PD.arrayToOptions(['elliptical', 'rounded', 'square'] as const),
+        { description: 'Protein helix trace profile' },
+    ),
+    nucleicProfile: PD.Select(
+        'square',
+        PD.arrayToOptions(['elliptical', 'rounded', 'square'] as const),
+        { description: 'Nucleic strand trace profile' },
+    ),
     detail: PD.Numeric(0, { min: 0, max: 3, step: 1 }, BaseGeometry.CustomQualityParamInfo),
-    linearSegments: PD.Numeric(8, { min: 1, max: 48, step: 1 }, BaseGeometry.CustomQualityParamInfo),
-    radialSegments: PD.Numeric(16, { min: 2, max: 56, step: 2 }, BaseGeometry.CustomQualityParamInfo)
+    linearSegments: PD.Numeric(
+        8,
+        { min: 1, max: 48, step: 1 },
+        BaseGeometry.CustomQualityParamInfo,
+    ),
+    radialSegments: PD.Numeric(
+        16,
+        { min: 2, max: 56, step: 2 },
+        BaseGeometry.CustomQualityParamInfo,
+    ),
 };
 export const DefaultPolymerTraceMeshProps = PD.getDefaultValues(PolymerTraceMeshParams);
-export type PolymerTraceMeshProps = typeof DefaultPolymerTraceMeshProps
+export type PolymerTraceMeshProps = typeof DefaultPolymerTraceMeshProps;
 
 const tmpV1 = Vec3();
 
-function createPolymerTraceMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PolymerTraceMeshProps, mesh?: Mesh) {
+function createPolymerTraceMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PolymerTraceMeshProps,
+    mesh?: Mesh,
+) {
     const polymerElementCount = unit.polymerElements.length;
 
     if (!polymerElementCount) return Mesh.createEmpty(mesh);
-    const { sizeFactor, detail, linearSegments, radialSegments, aspectRatio, arrowFactor, tubularHelices, roundCap, helixProfile, nucleicProfile } = props;
+    const {
+        sizeFactor,
+        detail,
+        linearSegments,
+        radialSegments,
+        aspectRatio,
+        arrowFactor,
+        tubularHelices,
+        roundCap,
+        helixProfile,
+        nucleicProfile,
+    } = props;
 
-    const vertexCount = linearSegments * radialSegments * polymerElementCount + (radialSegments + 1) * polymerElementCount * 2;
+    const vertexCount = linearSegments * radialSegments * polymerElementCount +
+        (radialSegments + 1) * polymerElementCount * 2;
     const builderState = MeshBuilder.createState(vertexCount, vertexCount / 10, mesh);
 
     const isCoarse = Unit.isCoarse(unit);
@@ -56,14 +106,20 @@ function createPolymerTraceMesh(ctx: VisualContext, unit: Unit, structure: Struc
     const { curvePoints, normalVectors, binormalVectors, widthValues, heightValues } = state;
 
     let i = 0;
-    const polymerTraceIt = PolymerTraceIterator(unit, structure, { ignoreSecondaryStructure: false, useHelixOrientation: tubularHelices });
+    const polymerTraceIt = PolymerTraceIterator(unit, structure, {
+        ignoreSecondaryStructure: false,
+        useHelixOrientation: tubularHelices,
+    });
     while (polymerTraceIt.hasNext) {
         const v = polymerTraceIt.move();
         builderState.currentGroup = i;
 
         const isNucleicType = isNucleic(v.moleculeType);
         const isSheet = SecondaryStructureType.is(v.secStrucType, SecondaryStructureType.Flag.Beta);
-        const isHelix = SecondaryStructureType.is(v.secStrucType, SecondaryStructureType.Flag.Helix);
+        const isHelix = SecondaryStructureType.is(
+            v.secStrucType,
+            SecondaryStructureType.Flag.Helix,
+        );
         const tension = isHelix && !tubularHelices ? HelixTension : StandardTension;
         const shift = isNucleicType ? NucleicShift : StandardShift;
 
@@ -112,9 +168,29 @@ function createPolymerTraceMesh(ctx: VisualContext, unit: Unit, structure: Struc
             interpolateSizes(state, w0, w1, w2, h0, h1, h2, shift);
 
             if (radialSegments === 2) {
-                addRibbon(builderState, curvePoints, normalVectors, binormalVectors, segmentCount, widthValues, heightValues, arrowHeight);
+                addRibbon(
+                    builderState,
+                    curvePoints,
+                    normalVectors,
+                    binormalVectors,
+                    segmentCount,
+                    widthValues,
+                    heightValues,
+                    arrowHeight,
+                );
             } else {
-                addSheet(builderState, curvePoints, normalVectors, binormalVectors, segmentCount, widthValues, heightValues, arrowHeight, startCap, endCap);
+                addSheet(
+                    builderState,
+                    curvePoints,
+                    normalVectors,
+                    binormalVectors,
+                    segmentCount,
+                    widthValues,
+                    heightValues,
+                    arrowHeight,
+                    startCap,
+                    endCap,
+                );
             }
         } else {
             let h0: number, h1: number, h2: number;
@@ -144,7 +220,9 @@ function createPolymerTraceMesh(ctx: VisualContext, unit: Unit, structure: Struc
 
             interpolateSizes(state, w0, w1, w2, h0, h1, h2, shift);
 
-            const [normals, binormals] = isNucleicType ? [binormalVectors, normalVectors] : [normalVectors, binormalVectors];
+            const [normals, binormals] = isNucleicType
+                ? [binormalVectors, normalVectors]
+                : [normalVectors, binormalVectors];
             if (isNucleicType) {
                 // TODO: find a cleaner way to swap normal and binormal for nucleic types
                 for (let i = 0, il = normals.length; i < il; i++) normals[i] *= -1;
@@ -154,18 +232,83 @@ function createPolymerTraceMesh(ctx: VisualContext, unit: Unit, structure: Struc
 
             if (radialSegments === 2) {
                 if (isNucleicType) {
-                    addRibbon(builderState, curvePoints, normals, binormals, segmentCount, heightValues, widthValues, 0);
+                    addRibbon(
+                        builderState,
+                        curvePoints,
+                        normals,
+                        binormals,
+                        segmentCount,
+                        heightValues,
+                        widthValues,
+                        0,
+                    );
                 } else {
-                    addRibbon(builderState, curvePoints, normals, binormals, segmentCount, widthValues, heightValues, 0);
+                    addRibbon(
+                        builderState,
+                        curvePoints,
+                        normals,
+                        binormals,
+                        segmentCount,
+                        widthValues,
+                        heightValues,
+                        0,
+                    );
                 }
             } else if (radialSegments === 4) {
-                addSheet(builderState, curvePoints, normals, binormals, segmentCount, widthValues, heightValues, 0, startCap, endCap);
+                addSheet(
+                    builderState,
+                    curvePoints,
+                    normals,
+                    binormals,
+                    segmentCount,
+                    widthValues,
+                    heightValues,
+                    0,
+                    startCap,
+                    endCap,
+                );
             } else if (h1 === w1) {
-                addTube(builderState, curvePoints, normals, binormals, segmentCount, radialSegments, widthValues, heightValues, startCap, endCap, 'elliptical', hasRoundCap);
+                addTube(
+                    builderState,
+                    curvePoints,
+                    normals,
+                    binormals,
+                    segmentCount,
+                    radialSegments,
+                    widthValues,
+                    heightValues,
+                    startCap,
+                    endCap,
+                    'elliptical',
+                    hasRoundCap,
+                );
             } else if (profile === 'square') {
-                addSheet(builderState, curvePoints, normals, binormals, segmentCount, widthValues, heightValues, 0, startCap, endCap);
+                addSheet(
+                    builderState,
+                    curvePoints,
+                    normals,
+                    binormals,
+                    segmentCount,
+                    widthValues,
+                    heightValues,
+                    0,
+                    startCap,
+                    endCap,
+                );
             } else {
-                addTube(builderState, curvePoints, normals, binormals, segmentCount, radialSegments, widthValues, heightValues, startCap, endCap, profile);
+                addTube(
+                    builderState,
+                    curvePoints,
+                    normals,
+                    binormals,
+                    segmentCount,
+                    radialSegments,
+                    widthValues,
+                    heightValues,
+                    startCap,
+                    endCap,
+                    profile,
+                );
             }
         }
 
@@ -182,20 +325,28 @@ function createPolymerTraceMesh(ctx: VisualContext, unit: Unit, structure: Struc
 
 export const PolymerTraceParams = {
     ...UnitsMeshParams,
-    ...PolymerTraceMeshParams
+    ...PolymerTraceMeshParams,
 };
-export type PolymerTraceParams = typeof PolymerTraceParams
+export type PolymerTraceParams = typeof PolymerTraceParams;
 
 export function PolymerTraceVisual(materialId: number): UnitsVisual<PolymerTraceParams> {
     return UnitsMeshVisual<PolymerTraceParams>({
         defaultProps: PD.getDefaultValues(PolymerTraceParams),
         createGeometry: createPolymerTraceMesh,
-        createLocationIterator: (structureGroup: StructureGroup) => PolymerLocationIterator.fromGroup(structureGroup, { asSecondary: true }),
+        createLocationIterator: (structureGroup: StructureGroup) =>
+            PolymerLocationIterator.fromGroup(structureGroup, { asSecondary: true }),
         getLoci: getPolymerElementLoci,
         eachLocation: eachPolymerElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<PolymerTraceParams>, currentProps: PD.Values<PolymerTraceParams>, newTheme: Theme, currentTheme: Theme, newStructureGroup: StructureGroup, currentStructureGroup: StructureGroup) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<PolymerTraceParams>,
+            currentProps: PD.Values<PolymerTraceParams>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructureGroup: StructureGroup,
+            currentStructureGroup: StructureGroup,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.tubularHelices !== currentProps.tubularHelices ||
                 newProps.roundCap !== currentProps.roundCap ||
                 newProps.detail !== currentProps.detail ||
@@ -204,18 +355,24 @@ export function PolymerTraceVisual(materialId: number): UnitsVisual<PolymerTrace
                 newProps.aspectRatio !== currentProps.aspectRatio ||
                 newProps.arrowFactor !== currentProps.arrowFactor ||
                 newProps.helixProfile !== currentProps.helixProfile ||
-                newProps.nucleicProfile !== currentProps.nucleicProfile
-            );
+                newProps.nucleicProfile !== currentProps.nucleicProfile;
 
-            const secondaryStructureHash = SecondaryStructureProvider.get(newStructureGroup.structure).version;
+            const secondaryStructureHash =
+                SecondaryStructureProvider.get(newStructureGroup.structure).version;
             if ((state.info.secondaryStructureHash as number) !== secondaryStructureHash) {
                 if (state.info.secondaryStructureHash !== undefined) state.createGeometry = true;
                 state.info.secondaryStructureHash = secondaryStructureHash;
             }
         },
-        initUpdateState: (state: VisualUpdateState, newProps: PD.Values<PolymerTraceParams>, newTheme: Theme, newStructureGroup: StructureGroup) => {
-            const secondaryStructureHash = SecondaryStructureProvider.get(newStructureGroup.structure).version;
+        initUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<PolymerTraceParams>,
+            newTheme: Theme,
+            newStructureGroup: StructureGroup,
+        ) => {
+            const secondaryStructureHash =
+                SecondaryStructureProvider.get(newStructureGroup.structure).version;
             state.info.secondaryStructureHash = secondaryStructureHash;
-        }
+        },
     }, materialId);
 }

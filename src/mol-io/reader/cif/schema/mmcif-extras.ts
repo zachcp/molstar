@@ -16,18 +16,20 @@ export const mmCIF_residueId_schema = {
     label_entity_id: mmCIF_Schema.atom_site.label_entity_id,
     auth_comp_id: mmCIF_Schema.atom_site.auth_atom_id,
     auth_seq_id: mmCIF_Schema.atom_site.auth_seq_id,
-    auth_asym_id: mmCIF_Schema.atom_site.auth_asym_id
+    auth_asym_id: mmCIF_Schema.atom_site.auth_asym_id,
 };
 
 export const mmCIF_chemCompBond_schema = {
     ...mmCIF_Schema.chem_comp_bond,
     /** Indicates if the bond entry was taken from the protonation variant dictionary */
-    molstar_protonation_variant: Column.Schema.Str()
+    molstar_protonation_variant: Column.Schema.Str(),
 };
 
 /** Has `type` extended with 'ION' and 'LIPID' */
 export const mmCIF_chemComp_schema = {
     ...mmCIF_Schema.chem_comp,
-    type: Column.Schema.Aliased<mmCIF_Schema['chem_comp']['type']['T'] | 'ion' | 'lipid'>(Column.Schema.str)
+    type: Column.Schema.Aliased<mmCIF_Schema['chem_comp']['type']['T'] | 'ion' | 'lipid'>(
+        Column.Schema.str,
+    ),
 };
 export type mmCIF_chemComp_schema = typeof mmCIF_chemComp_schema;

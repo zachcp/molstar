@@ -14,7 +14,12 @@ import { isPositionLocation } from '../../mol-geo/util/location-iterator.ts';
 import { ColorThemeCategory } from './categories.ts';
 import { StateSelection } from '../../mol-state/state/selection.ts';
 import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
-import { QueryContext, Structure, StructureElement, StructureSelection } from '../../mol-model/structure.ts';
+import {
+    QueryContext,
+    Structure,
+    StructureElement,
+    StructureSelection,
+} from '../../mol-model/structure.ts';
 import { ChainIdColorTheme, ChainIdColorThemeParams } from './chain-id.ts';
 import { EntityIdColorTheme, EntityIdColorThemeParams } from './entity-id.ts';
 import { EntitySourceColorTheme, EntitySourceColorThemeParams } from './entity-source.ts';
@@ -32,8 +37,12 @@ const Description = `Assigns a color based on structure property at a given vert
 export const ExternalStructureColorThemeParams = {
     structure: PD.ValueRef<Structure>(
         (ctx: PluginContext) => {
-            const structures = ctx.state.data.select(StateSelection.Generators.rootsOfType(PluginStateObject.Molecule.Structure)).filter(c => c.obj?.data);
-            return structures.map(v => [v.transform.ref, v.obj?.label ?? '<unknown>'] as [string, string]);
+            const structures = ctx.state.data.select(
+                StateSelection.Generators.rootsOfType(PluginStateObject.Molecule.Structure),
+            ).filter((c) => c.obj?.data);
+            return structures.map((v) =>
+                [v.transform.ref, v.obj?.label ?? '<unknown>'] as [string, string]
+            );
         },
         (ref, getData) => getData(ref),
     ),
@@ -46,28 +55,46 @@ export const ExternalStructureColorThemeParams = {
         'structure-index': PD.Group(StructureIndexColorThemeParams),
     }),
     defaultColor: PD.Color(Color(0xcccccc)),
-    maxDistance: PD.Numeric(8, { min: 0.1, max: 24, step: 0.1 }, { description: 'Maximum distance to search for the nearest structure element. This is done only if the approximate search fails.' }),
-    approxMaxDistance: PD.Numeric(4, { min: 0, max: 12, step: 0.1 }, { description: 'Maximum distance to search for an approximately nearest structure element. This is done before the extact search.' }),
-    normalOffset: PD.Numeric(0, { min: -10, max: 20, step: 0.1 }, { description: 'Offset vertex position along its normal by given amount.' }),
+    maxDistance: PD.Numeric(8, { min: 0.1, max: 24, step: 0.1 }, {
+        description:
+            'Maximum distance to search for the nearest structure element. This is done only if the approximate search fails.',
+    }),
+    approxMaxDistance: PD.Numeric(4, { min: 0, max: 12, step: 0.1 }, {
+        description:
+            'Maximum distance to search for an approximately nearest structure element. This is done before the extact search.',
+    }),
+    normalOffset: PD.Numeric(0, { min: -10, max: 20, step: 0.1 }, {
+        description: 'Offset vertex position along its normal by given amount.',
+    }),
     backboneOnly: PD.Boolean(false),
 };
-export type ExternalStructureColorThemeParams = typeof ExternalStructureColorThemeParams
+export type ExternalStructureColorThemeParams = typeof ExternalStructureColorThemeParams;
 
-type ExternalStructureColorThemeProps = PD.Values<ExternalStructureColorThemeParams>
+type ExternalStructureColorThemeProps = PD.Values<ExternalStructureColorThemeParams>;
 
 function getStyleTheme(ctx: ThemeDataContext, props: ExternalStructureColorThemeProps['style']) {
     switch (props.name) {
-        case 'chain-id': return ChainIdColorTheme(ctx, props.params);
-        case 'entity-id': return EntityIdColorTheme(ctx, props.params);
-        case 'entity-source': return EntitySourceColorTheme(ctx, props.params);
-        case 'molecule-type': return MoleculeTypeColorTheme(ctx, props.params);
-        case 'model-index': return ModelIndexColorTheme(ctx, props.params);
-        case 'structure-index': return StructureIndexColorTheme(ctx, props.params);
-        default: assertUnreachable(props);
+        case 'chain-id':
+            return ChainIdColorTheme(ctx, props.params);
+        case 'entity-id':
+            return EntityIdColorTheme(ctx, props.params);
+        case 'entity-source':
+            return EntitySourceColorTheme(ctx, props.params);
+        case 'molecule-type':
+            return MoleculeTypeColorTheme(ctx, props.params);
+        case 'model-index':
+            return ModelIndexColorTheme(ctx, props.params);
+        case 'structure-index':
+            return StructureIndexColorTheme(ctx, props.params);
+        default:
+            assertUnreachable(props);
     }
 }
 
-export function ExternalStructureColorTheme(ctx: ThemeDataContext, props: PD.Values<ExternalStructureColorThemeParams>): ColorTheme<ExternalStructureColorThemeParams> {
+export function ExternalStructureColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<ExternalStructureColorThemeParams>,
+): ColorTheme<ExternalStructureColorThemeParams> {
     let structure: Structure | undefined;
     try {
         structure = props.structure.getValue();
@@ -82,7 +109,13 @@ export function ExternalStructureColorTheme(ctx: ThemeDataContext, props: PD.Val
     let contextHash: number | undefined = undefined;
     let legend: Readonly<ScaleLegend | TableLegend> | undefined = undefined;
 
-    const { maxDistance, approxMaxDistance: approxDistance, normalOffset, defaultColor, backboneOnly } = props;
+    const {
+        maxDistance,
+        approxMaxDistance: approxDistance,
+        normalOffset,
+        defaultColor,
+        backboneOnly,
+    } = props;
 
     if (structure) {
         const styleTheme = getStyleTheme({ ...ctx, structure }, props.style);
@@ -92,7 +125,9 @@ export function ExternalStructureColorTheme(ctx: ThemeDataContext, props: PD.Val
 
         let s = structure;
         if (backboneOnly) {
-            s = StructureSelection.unionStructure(StructureSelectionQueries.backbone.query(new QueryContext(structure)));
+            s = StructureSelection.unionStructure(
+                StructureSelectionQueries.backbone.query(new QueryContext(structure)),
+            );
         }
 
         const position = Vec3();
@@ -157,7 +192,10 @@ export function ExternalStructureColorTheme(ctx: ThemeDataContext, props: PD.Val
     };
 }
 
-export const ExternalStructureColorThemeProvider: ColorTheme.Provider<ExternalStructureColorThemeParams, 'external-structure'> = {
+export const ExternalStructureColorThemeProvider: ColorTheme.Provider<
+    ExternalStructureColorThemeParams,
+    'external-structure'
+> = {
     name: 'external-structure',
     label: 'External Structure',
     category: ColorThemeCategory.Misc,

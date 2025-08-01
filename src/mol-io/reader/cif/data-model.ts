@@ -7,14 +7,19 @@
 
 import { Column, ColumnHelpers, Table } from '../../../mol-data/db.ts';
 import { Tensor } from '../../../mol-math/linear-algebra.ts';
-import { getNumberType, NumberTypes, parseInt as fastParseInt, parseFloat as fastParseFloat } from '../common/text/number-parser.ts';
+import {
+    getNumberType,
+    NumberTypes,
+    parseFloat as fastParseFloat,
+    parseInt as fastParseInt,
+} from '../common/text/number-parser.ts';
 import { Encoding } from '../../common/binary-cif.ts';
 import { Tokens } from '../common/text/tokenizer.ts';
 import { areValuesEqualProvider } from '../common/text/column/token.ts';
 
 export interface CifFile {
-    readonly name?: string,
-    readonly blocks: ReadonlyArray<CifBlock>
+    readonly name?: string;
+    readonly blocks: ReadonlyArray<CifBlock>;
 }
 
 export function CifFile(blocks: ArrayLike<CifBlock>, name?: string): CifFile {
@@ -22,60 +27,96 @@ export function CifFile(blocks: ArrayLike<CifBlock>, name?: string): CifFile {
 }
 
 export interface CifFrame {
-    readonly header: string,
+    readonly header: string;
     /** Category names, stored separately so that the ordering can be preserved. */
-    readonly categoryNames: ReadonlyArray<string>,
-    readonly categories: CifCategories
+    readonly categoryNames: ReadonlyArray<string>;
+    readonly categories: CifCategories;
 }
 
 export interface CifBlock extends CifFrame {
-    readonly saveFrames: CifFrame[]
-    getField(name: string): CifField | undefined
+    readonly saveFrames: CifFrame[];
+    getField(name: string): CifField | undefined;
 }
 
-export function CifBlock(categoryNames: string[], categories: CifCategories, header: string, saveFrames: CifFrame[] = []): CifBlock {
+export function CifBlock(
+    categoryNames: string[],
+    categories: CifCategories,
+    header: string,
+    saveFrames: CifFrame[] = [],
+): CifBlock {
     return {
-        categoryNames, header, categories, saveFrames,
+        categoryNames,
+        header,
+        categories,
+        saveFrames,
         getField(name: string) {
             const [category, field] = name.split('.');
             return categories[category].getField(field || '');
-        }
+        },
     };
 }
 
-export function CifSaveFrame(categoryNames: string[], categories: CifCategories, header: string): CifFrame {
+export function CifSaveFrame(
+    categoryNames: string[],
+    categories: CifCategories,
+    header: string,
+): CifFrame {
     return { categoryNames, header, categories };
 }
 
-export type CifAliases = { readonly [name: string]: string[] }
-export type CifCategories = { readonly [name: string]: CifCategory }
+export type CifAliases = { readonly [name: string]: string[] };
+export type CifCategories = { readonly [name: string]: CifCategory };
 
 export interface CifCategory {
-    readonly rowCount: number,
-    readonly name: string,
-    readonly fieldNames: ReadonlyArray<string>,
-    getField(name: string): CifField | undefined
+    readonly rowCount: number;
+    readonly name: string;
+    readonly fieldNames: ReadonlyArray<string>;
+    getField(name: string): CifField | undefined;
 }
 
-export function CifCategory(name: string, rowCount: number, fieldNames: string[], fields: { [name: string]: CifField }): CifCategory {
-    return { rowCount, name, fieldNames: [...fieldNames], getField(name) { return fields[name]; } };
+export function CifCategory(
+    name: string,
+    rowCount: number,
+    fieldNames: string[],
+    fields: { [name: string]: CifField },
+): CifCategory {
+    return {
+        rowCount,
+        name,
+        fieldNames: [...fieldNames],
+        getField(name) {
+            return fields[name];
+        },
+    };
 }
 
 export namespace CifCategory {
     export function empty(name: string): CifCategory {
-        return { rowCount: 0, name, fieldNames: [], getField(name: string) { return void 0; } };
-    };
+        return {
+            rowCount: 0,
+            name,
+            fieldNames: [],
+            getField(name: string) {
+                return void 0;
+            },
+        };
+    }
 
-    export type SomeFields<S> = { [P in keyof S]?: CifField }
-    export type Fields<S> = { [P in keyof S]: CifField }
+    export type SomeFields<S> = { [P in keyof S]?: CifField };
+    export type Fields<S> = { [P in keyof S]: CifField };
 
-    export function ofFields(name: string, fields: { [name: string]: CifField | undefined }): CifCategory {
+    export function ofFields(
+        name: string,
+        fields: { [name: string]: CifField | undefined },
+    ): CifCategory {
         const fieldNames = Object.keys(fields);
         return {
             rowCount: fieldNames.length > 0 ? fields[fieldNames[0]]!.rowCount : 0,
             name,
             fieldNames,
-            getField(name) { return fields[name]; }
+            getField(name) {
+                return fields[name];
+            },
         };
     }
 
@@ -94,22 +135,22 @@ export namespace CifCategory {
  * This is to ensure that the functions can invoked without having to "bind" them.
  */
 export interface CifField {
-    readonly __array: ArrayLike<any> | undefined,
-    readonly binaryEncoding: Encoding[] | undefined,
-    readonly isDefined: boolean,
-    readonly rowCount: number,
+    readonly __array: ArrayLike<any> | undefined;
+    readonly binaryEncoding: Encoding[] | undefined;
+    readonly isDefined: boolean;
+    readonly rowCount: number;
 
-    str(row: number): string,
-    int(row: number): number,
-    float(row: number): number,
+    str(row: number): string;
+    int(row: number): number;
+    float(row: number): number;
 
-    valueKind(row: number): Column.ValueKind,
+    valueKind(row: number): Column.ValueKind;
 
-    areValuesEqual(rowA: number, rowB: number): boolean,
+    areValuesEqual(rowA: number, rowB: number): boolean;
 
-    toStringArray(params?: Column.ToArrayParams<string>): ReadonlyArray<string>,
-    toIntArray(params?: Column.ToArrayParams<number>): ReadonlyArray<number>,
-    toFloatArray(params?: Column.ToArrayParams<number>): ReadonlyArray<number>
+    toStringArray(params?: Column.ToArrayParams<string>): ReadonlyArray<string>;
+    toIntArray(params?: Column.ToArrayParams<number>): ReadonlyArray<number>;
+    toFloatArray(params?: Column.ToArrayParams<number>): ReadonlyArray<number>;
 }
 
 export namespace CifField {
@@ -119,10 +160,20 @@ export namespace CifField {
 
     export function ofStrings(values: ArrayLike<string>): CifField {
         const rowCount = values.length;
-        const str: CifField['str'] = row => { const ret = values[row]; if (!ret || ret === '.' || ret === '?') return ''; return ret; };
-        const int: CifField['int'] = row => { const v = values[row]; return fastParseInt(v, 0, v.length) || 0; };
-        const float: CifField['float'] = row => { const v = values[row]; return fastParseFloat(v, 0, v.length) || 0; };
-        const valueKind: CifField['valueKind'] = row => {
+        const str: CifField['str'] = (row) => {
+            const ret = values[row];
+            if (!ret || ret === '.' || ret === '?') return '';
+            return ret;
+        };
+        const int: CifField['int'] = (row) => {
+            const v = values[row];
+            return fastParseInt(v, 0, v.length) || 0;
+        };
+        const float: CifField['float'] = (row) => {
+            const v = values[row];
+            return fastParseFloat(v, 0, v.length) || 0;
+        };
+        const valueKind: CifField['valueKind'] = (row) => {
             const v = values[row], l = v.length;
             if (l > 1) return Column.ValueKinds.Present;
             if (l === 0) return Column.ValueKinds.NotPresent;
@@ -142,17 +193,22 @@ export namespace CifField {
             float,
             valueKind,
             areValuesEqual: (rowA, rowB) => values[rowA] === values[rowB],
-            toStringArray: params => params ? ColumnHelpers.createAndFillArray(rowCount, str, params) : values as string[],
-            toIntArray: params => ColumnHelpers.createAndFillArray(rowCount, int, params),
-            toFloatArray: params => ColumnHelpers.createAndFillArray(rowCount, float, params)
+            toStringArray: (params) =>
+                params
+                    ? ColumnHelpers.createAndFillArray(rowCount, str, params)
+                    : values as string[],
+            toIntArray: (params) => ColumnHelpers.createAndFillArray(rowCount, int, params),
+            toFloatArray: (params) => ColumnHelpers.createAndFillArray(rowCount, float, params),
         };
     }
 
     export function ofNumbers(values: ArrayLike<number>): CifField {
         const rowCount = values.length;
-        const str: CifField['str'] = row => { return '' + values[row]; };
-        const float: CifField['float'] = row => values[row];
-        const valueKind: CifField['valueKind'] = row => Column.ValueKinds.Present;
+        const str: CifField['str'] = (row) => {
+            return '' + values[row];
+        };
+        const float: CifField['float'] = (row) => values[row];
+        const valueKind: CifField['valueKind'] = (row) => Column.ValueKinds.Present;
 
         const toFloatArray = (params: Column.ToArrayParams<number>) => {
             if (!params || params.array && values instanceof params.array) {
@@ -172,30 +228,30 @@ export namespace CifField {
             float,
             valueKind,
             areValuesEqual: (rowA, rowB) => values[rowA] === values[rowB],
-            toStringArray: params => ColumnHelpers.createAndFillArray(rowCount, str, params),
+            toStringArray: (params) => ColumnHelpers.createAndFillArray(rowCount, str, params),
             toIntArray: toFloatArray,
-            toFloatArray
+            toFloatArray,
         };
     }
 
     export function ofTokens(tokens: Tokens): CifField {
         const { data, indices, count: rowCount } = tokens;
 
-        const str: CifField['str'] = row => {
+        const str: CifField['str'] = (row) => {
             const ret = data.substring(indices[2 * row], indices[2 * row + 1]);
             if (ret === '.' || ret === '?') return '';
             return ret;
         };
 
-        const int: CifField['int'] = row => {
+        const int: CifField['int'] = (row) => {
             return fastParseInt(data, indices[2 * row], indices[2 * row + 1]) || 0;
         };
 
-        const float: CifField['float'] = row => {
+        const float: CifField['float'] = (row) => {
             return fastParseFloat(data, indices[2 * row], indices[2 * row + 1]) || 0;
         };
 
-        const valueKind: CifField['valueKind'] = row => {
+        const valueKind: CifField['valueKind'] = (row) => {
             const s = indices[2 * row], l = indices[2 * row + 1] - s;
             if (l > 1) return Column.ValueKinds.Present;
             if (l === 0) return Column.ValueKinds.NotPresent;
@@ -215,9 +271,9 @@ export namespace CifField {
             float,
             valueKind,
             areValuesEqual: areValuesEqualProvider(tokens),
-            toStringArray: params => ColumnHelpers.createAndFillArray(rowCount, str, params),
-            toIntArray: params => ColumnHelpers.createAndFillArray(rowCount, int, params),
-            toFloatArray: params => ColumnHelpers.createAndFillArray(rowCount, float, params)
+            toStringArray: (params) => ColumnHelpers.createAndFillArray(rowCount, str, params),
+            toIntArray: (params) => ColumnHelpers.createAndFillArray(rowCount, int, params),
+            toFloatArray: (params) => ColumnHelpers.createAndFillArray(rowCount, float, params),
         };
     }
 
@@ -231,20 +287,28 @@ export namespace CifField {
         switch (column.schema.valueType) {
             case 'float':
             case 'int':
-                str = row => { return '' + column.value(row); };
+                str = (row) => {
+                    return '' + column.value(row);
+                };
                 int = column.value;
                 float = column.value;
                 break;
             case 'str':
                 str = column.value;
-                int = row => { const v = column.value(row); return fastParseInt(v, 0, v.length) || 0; };
-                float = row => { const v = column.value(row); return fastParseFloat(v, 0, v.length) || 0; };
+                int = (row) => {
+                    const v = column.value(row);
+                    return fastParseInt(v, 0, v.length) || 0;
+                };
+                float = (row) => {
+                    const v = column.value(row);
+                    return fastParseFloat(v, 0, v.length) || 0;
+                };
                 break;
             case 'list':
                 const { separator } = column.schema;
-                str = row => column.value(row).join(separator);
-                int = row => NaN;
-                float = row => NaN;
+                str = (row) => column.value(row).join(separator);
+                int = (row) => NaN;
+                float = (row) => NaN;
                 break;
             default:
                 throw new Error(`unsupported valueType '${column.schema.valueType}'`);
@@ -260,9 +324,9 @@ export namespace CifField {
             float,
             valueKind,
             areValuesEqual,
-            toStringArray: params => ColumnHelpers.createAndFillArray(rowCount, str, params),
-            toIntArray: params => ColumnHelpers.createAndFillArray(rowCount, int, params),
-            toFloatArray: params => ColumnHelpers.createAndFillArray(rowCount, float, params)
+            toStringArray: (params) => ColumnHelpers.createAndFillArray(rowCount, str, params),
+            toIntArray: (params) => ColumnHelpers.createAndFillArray(rowCount, int, params),
+            toFloatArray: (params) => ColumnHelpers.createAndFillArray(rowCount, float, params),
         };
     }
 
@@ -271,7 +335,12 @@ export namespace CifField {
     }
 }
 
-export function tensorFieldNameGetter(field: string, rank: number, zeroIndexed: boolean, namingVariant: 'brackets' | 'underscore') {
+export function tensorFieldNameGetter(
+    field: string,
+    rank: number,
+    zeroIndexed: boolean,
+    namingVariant: 'brackets' | 'underscore',
+) {
     const offset = zeroIndexed ? 0 : 1;
     switch (rank) {
         case 1:
@@ -284,14 +353,21 @@ export function tensorFieldNameGetter(field: string, rank: number, zeroIndexed: 
                 : (i: number, j: number) => `${field}_${i + offset}${j + offset}`;
         case 3:
             return namingVariant === 'brackets'
-                ? (i: number, j: number, k: number) => `${field}[${i + offset}][${j + offset}][${k + offset}]`
-                : (i: number, j: number, k: number) => `${field}_${i + offset}${j + offset}${k + offset}`;
+                ? (i: number, j: number, k: number) =>
+                    `${field}[${i + offset}][${j + offset}][${k + offset}]`
+                : (i: number, j: number, k: number) =>
+                    `${field}_${i + offset}${j + offset}${k + offset}`;
         default:
             throw new Error('Tensors with rank > 3 or rank 0 are currently not supported.');
     }
 }
 
-export function getTensor(category: CifCategory, space: Tensor.Space, row: number, getName: (...args: number[]) => string): Tensor.Data {
+export function getTensor(
+    category: CifCategory,
+    space: Tensor.Space,
+    row: number,
+    getName: (...args: number[]) => string,
+): Tensor.Data {
     const ret = space.create();
 
     if (space.rank === 1) {
@@ -324,7 +400,9 @@ export function getTensor(category: CifCategory, space: Tensor.Space, row: numbe
     return ret;
 }
 
-export function getCifFieldType(field: CifField): Column.Schema.Int | Column.Schema.Float | Column.Schema.Str {
+export function getCifFieldType(
+    field: CifField,
+): Column.Schema.Int | Column.Schema.Float | Column.Schema.Str {
     let floatCount = 0, hasStringOrScientific = false, undefinedCount = 0;
     for (let i = 0, _i = field.rowCount; i < _i; i++) {
         const k = field.valueKind(i);
@@ -335,7 +413,10 @@ export function getCifFieldType(field: CifField): Column.Schema.Int | Column.Sch
         const type = getNumberType(field.str(i));
         if (type === NumberTypes.Int) continue;
         else if (type === NumberTypes.Float) floatCount++;
-        else { hasStringOrScientific = true; break; }
+        else {
+            hasStringOrScientific = true;
+            break;
+        }
     }
 
     // numbers in scientific notation and plain text are not distinguishable

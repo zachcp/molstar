@@ -6,23 +6,24 @@
 
 import { Color } from '../../mol-util/color/index.ts';
 import { Location } from '../../mol-model/location.ts';
-import { StructureElement, Bond, Structure } from '../../mol-model/structure.ts';
+import { Bond, Structure, StructureElement } from '../../mol-model/structure.ts';
 import type { ColorTheme, LocationColor } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { ThemeDataContext } from '../theme.ts';
-import { TableLegend, ScaleLegend } from '../../mol-util/legend.ts';
-import { getPaletteParams, getPalette } from '../../mol-util/color/palette.ts';
+import { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
+import { getPalette, getPaletteParams } from '../../mol-util/color/palette.ts';
 import { ColorLists, getColorListFromName } from '../../mol-util/color/lists.ts';
 import { ColorThemeCategory } from './categories.ts';
 
 const DefaultList = 'dark-2';
 const DefaultColor = Color(0xCCCCCC);
-const Description = 'Gives every polymer chain instance a unique color based on the position (index) of the polymer in the list of polymers in the structure.';
+const Description =
+    'Gives every polymer chain instance a unique color based on the position (index) of the polymer in the list of polymers in the structure.';
 
 export const PolymerIndexColorThemeParams = {
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
 };
-export type PolymerIndexColorThemeParams = typeof PolymerIndexColorThemeParams
+export type PolymerIndexColorThemeParams = typeof PolymerIndexColorThemeParams;
 export function getPolymerIndexColorThemeParams(ctx: ThemeDataContext) {
     const params = PD.clone(PolymerIndexColorThemeParams);
     if (ctx.structure) {
@@ -30,13 +31,13 @@ export function getPolymerIndexColorThemeParams(ctx: ThemeDataContext) {
             params.palette.defaultValue.name = 'colors';
             params.palette.defaultValue.params = {
                 ...params.palette.defaultValue.params,
-                list: { kind: 'interpolate', colors: getColorListFromName(DefaultList).list }
+                list: { kind: 'interpolate', colors: getColorListFromName(DefaultList).list },
             };
         }
     }
     return params;
 }
-export type PolymerIndexColorThemeProps = PD.Values<typeof PolymerIndexColorThemeParams>
+export type PolymerIndexColorThemeProps = PD.Values<typeof PolymerIndexColorThemeParams>;
 
 function getPolymerChainCount(structure: Structure) {
     let polymerChainCount = 0;
@@ -47,7 +48,10 @@ function getPolymerChainCount(structure: Structure) {
     return polymerChainCount;
 }
 
-export function PolymerIndexColorTheme(ctx: ThemeDataContext, props: PD.Values<PolymerIndexColorThemeParams>): ColorTheme<PolymerIndexColorThemeParams> {
+export function PolymerIndexColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<PolymerIndexColorThemeParams>,
+): ColorTheme<PolymerIndexColorThemeParams> {
     let color: LocationColor;
     let legend: ScaleLegend | TableLegend | undefined;
 
@@ -83,16 +87,19 @@ export function PolymerIndexColorTheme(ctx: ThemeDataContext, props: PD.Values<P
         color,
         props,
         description: Description,
-        legend
+        legend,
     };
 }
 
-export const PolymerIndexColorThemeProvider: ColorTheme.Provider<PolymerIndexColorThemeParams, 'polymer-index'> = {
+export const PolymerIndexColorThemeProvider: ColorTheme.Provider<
+    PolymerIndexColorThemeParams,
+    'polymer-index'
+> = {
     name: 'polymer-index',
     label: 'Polymer Chain Instance',
     category: ColorThemeCategory.Chain,
     factory: PolymerIndexColorTheme,
     getParams: getPolymerIndexColorThemeParams,
     defaultValues: PD.getDefaultValues(PolymerIndexColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
 };

@@ -20,7 +20,13 @@ const SheetDelta = 1.42;
 const posA = Vec3();
 const posB = Vec3();
 
-function zhangSkolnickAtomicSS(unit: Unit.Atomic, residueIndices: SortedArray<ResidueIndex>, i: number, distances: number[], delta: number) {
+function zhangSkolnickAtomicSS(
+    unit: Unit.Atomic,
+    residueIndices: SortedArray<ResidueIndex>,
+    i: number,
+    distances: number[],
+    delta: number,
+) {
     const c = unit.conformation;
     const { traceElementIndex } = unit.model.atomicHierarchy.derived.residue;
 
@@ -85,7 +91,10 @@ export async function computeUnitZhangSkolnik(unit: Unit.Atomic): Promise<Second
     return SecondaryStructure(type, keys, elements, getIndex);
 }
 
-function createElement(kind: string, flag: SecondaryStructureType.Flag): SecondaryStructure.Element {
+function createElement(
+    kind: string,
+    flag: SecondaryStructureType.Flag,
+): SecondaryStructure.Element {
     if (kind === 'helix') {
         return { kind: 'helix', flags: flag } as SecondaryStructure.Helix;
     } else if (kind === 'sheet') {

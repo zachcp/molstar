@@ -4,19 +4,33 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PolymerTubeVisual, PolymerTubeParams } from '../visual/polymer-tube-mesh.ts';
-import { PolymerGapVisual, PolymerGapParams } from '../visual/polymer-gap-cylinder.ts';
+import { PolymerTubeParams, PolymerTubeVisual } from '../visual/polymer-tube-mesh.ts';
+import { PolymerGapParams, PolymerGapVisual } from '../visual/polymer-gap-cylinder.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { UnitsRepresentation } from '../units-representation.ts';
-import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation.ts';
+import {
+    StructureRepresentation,
+    StructureRepresentationProvider,
+    StructureRepresentationStateBuilder,
+} from '../representation.ts';
+import {
+    Representation,
+    RepresentationContext,
+    RepresentationParamsGetter,
+} from '../../representation.ts';
 import { Structure, Unit } from '../../../mol-model/structure.ts';
 import { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
 import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const PuttyVisuals = {
-    'polymer-tube': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, PolymerTubeParams>) => UnitsRepresentation('Polymer tube mesh', ctx, getParams, PolymerTubeVisual),
-    'polymer-gap': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, PolymerGapParams>) => UnitsRepresentation('Polymer gap cylinder', ctx, getParams, PolymerGapVisual),
+    'polymer-tube': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, PolymerTubeParams>,
+    ) => UnitsRepresentation('Polymer tube mesh', ctx, getParams, PolymerTubeVisual),
+    'polymer-gap': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, PolymerGapParams>,
+    ) => UnitsRepresentation('Polymer gap cylinder', ctx, getParams, PolymerGapVisual),
 };
 
 export const PuttyParams = {
@@ -27,13 +41,15 @@ export const PuttyParams = {
     bumpFrequency: PD.Numeric(2, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
     density: PD.Numeric(0.1, { min: 0, max: 1, step: 0.01 }, BaseGeometry.ShadingCategory),
 };
-export type PuttyParams = typeof PuttyParams
+export type PuttyParams = typeof PuttyParams;
 export function getPuttyParams(ctx: ThemeRegistryContext, structure: Structure) {
     const params = PD.clone(PuttyParams);
     let hasNucleotides = false;
     let hasGaps = false;
-    structure.units.forEach(u => {
-        if (!hasNucleotides && Unit.isAtomic(u) && u.nucleotideElements.length) hasNucleotides = true;
+    structure.units.forEach((u) => {
+        if (!hasNucleotides && Unit.isAtomic(u) && u.nucleotideElements.length) {
+            hasNucleotides = true;
+        }
         if (!hasGaps && u.gapElements.length) hasGaps = true;
     });
     params.visuals.defaultValue = ['polymer-tube'];
@@ -41,9 +57,18 @@ export function getPuttyParams(ctx: ThemeRegistryContext, structure: Structure) 
     return params;
 }
 
-export type PuttyRepresentation = StructureRepresentation<PuttyParams>
-export function PuttyRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, PuttyParams>): PuttyRepresentation {
-    return Representation.createMulti('Putty', ctx, getParams, StructureRepresentationStateBuilder, PuttyVisuals as unknown as Representation.Def<Structure, PuttyParams>);
+export type PuttyRepresentation = StructureRepresentation<PuttyParams>;
+export function PuttyRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, PuttyParams>,
+): PuttyRepresentation {
+    return Representation.createMulti(
+        'Putty',
+        ctx,
+        getParams,
+        StructureRepresentationStateBuilder,
+        PuttyVisuals as unknown as Representation.Def<Structure, PuttyParams>,
+    );
 }
 
 export const PuttyRepresentationProvider = StructureRepresentationProvider({

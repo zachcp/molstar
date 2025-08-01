@@ -11,4 +11,4 @@ import { createMapping } from './mapping.ts';
     const data = await fetch('https://www.ebi.ac.uk/pdbe/api/mappings/1tqn?pretty=true');
     const json = await data.json();
     console.log(createMapping(json));
-}());
+})();

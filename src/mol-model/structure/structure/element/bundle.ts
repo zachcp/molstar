@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { OrderedSet, SortedArray, Interval } from '../../../../mol-data/int.ts';
+import { Interval, OrderedSet, SortedArray } from '../../../../mol-data/int.ts';
 import { ElementIndex } from '../../model.ts';
 import { Structure } from '../structure.ts';
 import { Unit } from '../unit.ts';
-import { hashFnv32a, hash2 } from '../../../../mol-data/util.ts';
+import { hash2, hashFnv32a } from '../../../../mol-data/util.ts';
 import { SortedRanges } from '../../../../mol-data/int/sorted-ranges.ts';
 import { UnitIndex } from './element.ts';
 import { Loci } from './loci.ts';
@@ -22,46 +22,62 @@ export interface BundleElement {
      * Array (sorted by first element in sub-array) of
      * arrays of `Unit.id`s that share the same `Unit.invariantId`
      */
-    groupedUnits: SortedArray<number>[],
-    set: SortedArray<UnitIndex>
-    ranges: SortedRanges<UnitIndex>
+    groupedUnits: SortedArray<number>[];
+    set: SortedArray<UnitIndex>;
+    ranges: SortedRanges<UnitIndex>;
 }
 
 export interface Bundle {
     /** Hash of the structure with which the bundle is compatible */
-    readonly hash: number
+    readonly hash: number;
     /** Bundle elements */
-    readonly elements: ReadonlyArray<Readonly<BundleElement>>
+    readonly elements: ReadonlyArray<Readonly<BundleElement>>;
 }
 
 export namespace Bundle {
     export const Empty: Bundle = { hash: -1, elements: [] };
 
     export function fromSubStructure(parent: Structure, structure: Structure) {
-        return fromLoci(StructureSelection.toLociWithSourceUnits(StructureSelection.Singletons(parent, structure)));
+        return fromLoci(
+            StructureSelection.toLociWithSourceUnits(
+                StructureSelection.Singletons(parent, structure),
+            ),
+        );
     }
 
     export function fromSelection(selection: StructureSelection) {
         return fromLoci(StructureSelection.toLociWithSourceUnits(selection));
     }
 
-    export function fromExpression(structure: Structure, expression: Expression | ((builder: typeof MS) => Expression), queryContext?: QueryContext): Bundle {
+    export function fromExpression(
+        structure: Structure,
+        expression: Expression | ((builder: typeof MS) => Expression),
+        queryContext?: QueryContext,
+    ): Bundle {
         return fromLoci(Loci.fromExpression(structure, expression, queryContext));
     }
 
-    export function fromQuery(structure: Structure, query: QueryFn, queryContext?: QueryContext): Bundle {
+    export function fromQuery(
+        structure: Structure,
+        query: QueryFn,
+        queryContext?: QueryContext,
+    ): Bundle {
         return fromLoci(Loci.fromQuery(structure, query, queryContext));
     }
 
-    export function fromSchema(structure: Structure, schema: Schema, queryContext?: QueryContext): Bundle {
+    export function fromSchema(
+        structure: Structure,
+        schema: Schema,
+        queryContext?: QueryContext,
+    ): Bundle {
         return Schema.toBundle(structure, schema, queryContext);
     }
 
     export function fromLoci(loci: Loci): Bundle {
         const _elements: {
-            unit: Unit
-            set: SortedArray<UnitIndex>
-            ranges: SortedRanges<UnitIndex>
+            unit: Unit;
+            set: SortedArray<UnitIndex>;
+            ranges: SortedRanges<UnitIndex>;
         }[] = [];
         for (const e of loci.elements) {
             const { unit, indices } = e;
@@ -97,14 +113,14 @@ export namespace Bundle {
             _elements.push({
                 unit,
                 set: SortedArray.ofSortedArray(set),
-                ranges: SortedRanges.ofSortedRanges(ranges)
+                ranges: SortedRanges.ofSortedRanges(ranges),
             });
         }
 
         const elementGroups = new Map<number, {
-            groupedUnits: Map<number, number[]>
-            set: SortedArray<UnitIndex>
-            ranges: SortedRanges<UnitIndex>
+            groupedUnits: Map<number, number[]>;
+            set: SortedArray<UnitIndex>;
+            ranges: SortedRanges<UnitIndex>;
         }>();
         for (let i = 0, il = _elements.length; i < il; ++i) {
             const e = _elements[i];
@@ -124,9 +140,9 @@ export namespace Bundle {
         }
 
         const elements: BundleElement[] = [];
-        elementGroups.forEach(e => {
+        elementGroups.forEach((e) => {
             const groupedUnits: SortedArray<number>[] = [];
-            e.groupedUnits.forEach(g => groupedUnits.push(SortedArray.ofUnsortedArray(g)));
+            e.groupedUnits.forEach((g) => groupedUnits.push(SortedArray.ofUnsortedArray(g)));
             groupedUnits.sort((a, b) => a[0] - b[0]); // sort by first unit id of each group
             elements.push({ groupedUnits, set: e.set, ranges: e.ranges });
         });
@@ -233,10 +249,9 @@ export namespace Bundle {
         return Structure.create(units, { parent });
     }
 
-
     function elementToExpression(e: BundleElement): Expression {
         return MS.internal.generator.bundleElement({
-            groupedUnits: MS.core.type.list(e.groupedUnits.map(u => MS.core.type.list(u))),
+            groupedUnits: MS.core.type.list(e.groupedUnits.map((u) => MS.core.type.list(u))),
             ranges: MS.core.type.list(e.ranges),
             set: MS.core.type.list(e.set),
         });
@@ -244,7 +259,7 @@ export namespace Bundle {
 
     export function toExpression(bundle: Bundle): Expression {
         return MS.internal.generator.bundle({
-            elements: MS.core.type.list(bundle.elements.map(elementToExpression))
+            elements: MS.core.type.list(bundle.elements.map(elementToExpression)),
         });
     }
 
@@ -254,7 +269,9 @@ export namespace Bundle {
             const elementA = a.elements[i], elementB = b.elements[i];
             if (elementA.groupedUnits.length !== elementB.groupedUnits.length) return false;
             for (let j = 0, jl = elementB.groupedUnits.length; j < jl; ++j) {
-                if (!SortedArray.areEqual(elementA.groupedUnits[j], elementB.groupedUnits[j])) return false;
+                if (!SortedArray.areEqual(elementA.groupedUnits[j], elementB.groupedUnits[j])) {
+                    return false;
+                }
             }
             if (!SortedArray.areEqual(elementA.set, elementB.set)) return false;
             if (!SortedRanges.areEqual(elementA.ranges, elementB.ranges)) return false;

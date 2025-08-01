@@ -31,18 +31,21 @@ export function initWebApi(app: express.Express) {
         res.writeHead(200, {
             'Content-Type': 'application/json; charset=utf-8',
             'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'X-Requested-With'
+            'Access-Control-Allow-Headers': 'X-Requested-With',
         });
         res.end(JSON.stringify(getSchema()));
     });
 
     app.use(makePath(''), swaggerUiAssetsHandler());
-    app.get(makePath(''), swaggerUiIndexHandler({
-        openapiJsonUrl: makePath('openapi.json'),
-        apiPrefix: MembraneServerConfig.apiPrefix,
-        title: 'MembraneServer API',
-        shortcutIconLink
-    }));
+    app.get(
+        makePath(''),
+        swaggerUiIndexHandler({
+            openapiJsonUrl: makePath('openapi.json'),
+            apiPrefix: MembraneServerConfig.apiPrefix,
+            title: 'MembraneServer API',
+            shortcutIconLink,
+        }),
+    );
 }
 
 async function predictMembraneOrientation(req: express.Request, res: express.Response) {
@@ -52,7 +55,10 @@ async function predictMembraneOrientation(req: express.Request, res: express.Res
         const entryId = req.params.id;
         const assemblyId = req.query.assemblyId as string ?? '1';
         const p = parseParams(req);
-        ConsoleLogger.log('predictMembraneOrientation', `${entryId}-${assemblyId} with params: ${JSON.stringify(p)}`);
+        ConsoleLogger.log(
+            'predictMembraneOrientation',
+            `${entryId}-${assemblyId} with params: ${JSON.stringify(p)}`,
+        );
 
         const cif = await downloadFromPdb(entryId);
         const models = await getModels(cif);

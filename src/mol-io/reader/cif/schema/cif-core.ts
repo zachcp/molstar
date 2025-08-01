@@ -6,7 +6,7 @@
  * @author molstar/ciftools package
  */
 
-import { Database, Column } from '../../../../mol-data/db.ts';
+import { Column, Database } from '../../../../mol-data/db.ts';
 
 import Schema = Column.Schema;
 
@@ -802,4 +802,4 @@ export const CifCore_Aliases = {
 };
 
 export type CifCore_Schema = typeof CifCore_Schema;
-export interface CifCore_Database extends Database<CifCore_Schema> {};
+export interface CifCore_Database extends Database<CifCore_Schema> {}

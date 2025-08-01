@@ -11,8 +11,8 @@ import { guessElementSymbolTokens } from '../util.ts';
 import { parseIntSkipLeadingWhitespace as fastParseInt } from '../../../mol-io/reader/common/text/number-parser.ts';
 import { StringLike } from '../../../mol-io/common/string-like.ts';
 
-
-type AnisotropicTemplate = typeof getAnisotropicTemplate extends (...args: any) => infer T ? T : never
+type AnisotropicTemplate = typeof getAnisotropicTemplate extends (...args: any) => infer T ? T
+    : never;
 export function getAnisotropicTemplate(data: StringLike, count: number) {
     const str = () => [] as string[];
     const float = () => new Float32Array(count);
@@ -41,7 +41,9 @@ export function getAnisotropicTemplate(data: StringLike, count: number) {
     };
 }
 
-export function getAnisotropic(sites: AnisotropicTemplate): { [K in keyof mmCIF_Schema['atom_site_anisotrop']]?: CifField } {
+export function getAnisotropic(
+    sites: AnisotropicTemplate,
+): { [K in keyof mmCIF_Schema['atom_site_anisotrop']]?: CifField } {
     const pdbx_auth_seq_id = CifField.ofTokens(sites.pdbx_auth_seq_id);
     const pdbx_auth_comp_id = CifField.ofTokens(sites.pdbx_auth_comp_id);
     const pdbx_auth_asym_id = CifField.ofTokens(sites.pdbx_auth_asym_id);
@@ -73,7 +75,13 @@ export function getAnisotropic(sites: AnisotropicTemplate): { [K in keyof mmCIF_
     return fields;
 }
 
-export function addAnisotropic(sites: AnisotropicTemplate, model: string, data: Tokenizer, s: number, e: number) {
+export function addAnisotropic(
+    sites: AnisotropicTemplate,
+    model: string,
+    data: Tokenizer,
+    s: number,
+    e: number,
+) {
     const { data: str } = data;
     const length = e - s;
 

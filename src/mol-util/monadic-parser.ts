@@ -6,18 +6,22 @@
  **
  * Adapted from Parsimmon (https://github.com/jneen/parsimmon)
  * Copyright (c) 2011-present J. Adkisson (http://jneen.net).
- **/
+ */
 
 export class MonadicParser<A> {
-    constructor(public _: MonadicParser.Action<A>) { }
+    constructor(public _: MonadicParser.Action<A>) {}
 
     parse(input: string): MonadicParser.ParseResult<A> {
         const result = this.skip(MonadicParser.eof)._(input, 0);
         if (result.status) {
             return { success: true, value: result.value };
         }
-        return { success: false, index: makeLineColumnIndex(input, result.furthest), expected: result.expected };
-    };
+        return {
+            success: false,
+            index: makeLineColumnIndex(input, result.furthest),
+            expected: result.expected,
+        };
+    }
 
     tryParse(str: string) {
         const result = this.parse(str);
@@ -38,11 +42,16 @@ export class MonadicParser<A> {
         return this.wrap(parser, parser);
     }
 
-    wrap<L, R>(leftParser: MonadicParser<L> | string, rightParser: MonadicParser<R> | string): MonadicParser<A> {
-        return seqPick(1,
+    wrap<L, R>(
+        leftParser: MonadicParser<L> | string,
+        rightParser: MonadicParser<R> | string,
+    ): MonadicParser<A> {
+        return seqPick(
+            1,
             typeof leftParser === 'string' ? MonadicParser.string(leftParser) : leftParser,
             this,
-            typeof rightParser === 'string' ? MonadicParser.string(rightParser) : rightParser);
+            typeof rightParser === 'string' ? MonadicParser.string(rightParser) : rightParser,
+        );
     }
 
     thru<B>(wrapper: (p: MonadicParser<A>) => MonadicParser<B>) {
@@ -62,7 +71,9 @@ export class MonadicParser<A> {
                 result = mergeReplies(this._(input, i), result);
                 if (result.status) {
                     if (i === result.index) {
-                        throw new Error('infinite loop detected in .many() parser --- calling .many() on a parser which can accept zero characters is usually the cause');
+                        throw new Error(
+                            'infinite loop detected in .many() parser --- calling .many() on a parser which can accept zero characters is usually the cause',
+                        );
                     }
                     i = result.index;
                     accum.push(result.value);
@@ -71,7 +82,7 @@ export class MonadicParser<A> {
                 }
             }
         });
-    };
+    }
 
     times(min: number, _max?: number): MonadicParser<A[]> {
         const max = typeof _max === 'undefined' ? min : _max;
@@ -102,19 +113,19 @@ export class MonadicParser<A> {
             }
             return mergeReplies(makeSuccess(i, accum), prevResult);
         });
-    };
+    }
 
     result<B>(res: B) {
         return this.map(() => res);
-    };
+    }
 
     atMost(n: number) {
         return this.times(0, n);
-    };
+    }
 
     atLeast(n: number) {
-        return MonadicParser.seq(this.times(n), this.many()).map(r => [...r[0], ...r[1]]);
-    };
+        return MonadicParser.seq(this.times(n), this.many()).map((r) => [...r[0], ...r[1]]);
+    }
 
     map<B>(f: (a: A) => B): MonadicParser<B> {
         return new MonadicParser((input, i) => {
@@ -131,12 +142,21 @@ export class MonadicParser<A> {
     }
 
     mark(): MonadicParser<MonadicParser.Mark<A>> {
-        return MonadicParser.seq(MonadicParser.index, this, MonadicParser.index).map(r => ({ start: r[0], value: r[1], end: r[2] }));
+        return MonadicParser.seq(MonadicParser.index, this, MonadicParser.index).map((r) => ({
+            start: r[0],
+            value: r[1],
+            end: r[2],
+        }));
     }
 
     node(name: string): MonadicParser<MonadicParser.Node<A>> {
-        return MonadicParser.seq(MonadicParser.index, this, MonadicParser.index).map(r => ({ name, start: r[0], value: r[1], end: r[2] }));
-    };
+        return MonadicParser.seq(MonadicParser.index, this, MonadicParser.index).map((r) => ({
+            name,
+            start: r[0],
+            value: r[1],
+            end: r[2],
+        }));
+    }
 
     sepBy<B>(separator: MonadicParser<B>): MonadicParser<A[]> {
         return MonadicParser.sepBy(this, separator);
@@ -148,11 +168,11 @@ export class MonadicParser<A> {
 
     lookahead<B>(x: MonadicParser<B>) {
         return this.skip(MonadicParser.lookahead(x));
-    };
+    }
 
     notFollowedBy<B>(x: MonadicParser<B>) {
         return this.skip(MonadicParser.notFollowedBy(x));
-    };
+    }
 
     desc(expected: string) {
         return new MonadicParser((input, i) => {
@@ -162,15 +182,15 @@ export class MonadicParser<A> {
             }
             return reply;
         });
-    };
+    }
 
     fallback<B>(result: B) {
         return this.or(MonadicParser.succeed(result));
-    };
+    }
 
     ap<B>(other: MonadicParser<(x: A) => B>): MonadicParser<B> {
         return MonadicParser.seq(other, this).map(([f, x]) => f(x));
-    };
+    }
 
     chain<B>(f: (a: A) => MonadicParser<B>): MonadicParser<B> {
         return new MonadicParser<B>((input, i) => {
@@ -181,11 +201,11 @@ export class MonadicParser<A> {
             const nextParser = f(result.value);
             return mergeReplies(nextParser._(input, result.index), result);
         });
-    };
+    }
 }
 
 export namespace MonadicParser {
-    export type Action<T> = (input: string, i: number) => MonadicParser.Result<T>
+    export type Action<T> = (input: string, i: number) => MonadicParser.Result<T>;
 
     export type ParseResult<T> = ParseSuccess<T> | ParseFailure;
 
@@ -199,14 +219,14 @@ export namespace MonadicParser {
     }
 
     export interface ParseSuccess<T> {
-        success: true,
-        value: T
+        success: true;
+        value: T;
     }
 
     export interface ParseFailure {
-        success: false,
-        index: Index,
-        expected: string[],
+        success: false;
+        index: Index;
+        expected: string[];
     }
 
     export interface Mark<T> {
@@ -216,22 +236,22 @@ export namespace MonadicParser {
     }
 
     export interface Node<T> extends Mark<T> {
-        name: string
+        name: string;
     }
 
     export interface Success<T> {
-        status: true,
-        value: T,
-        index: number
+        status: true;
+        value: T;
+        index: number;
     }
 
     export interface Failure {
-        status: false,
-        furthest: number,
-        expected: string[]
+        status: false;
+        furthest: number;
+        expected: string[];
     }
 
-    export type Result<T> = Success<T> | Failure
+    export type Result<T> = Success<T> | Failure;
 
     export function seqMap<A, B>(a: MonadicParser<A>, b: MonadicParser<B>, c: any) {
         const args = [].slice.call(arguments);
@@ -255,12 +275,27 @@ export namespace MonadicParser {
         return language;
     }
 
-    export function seq<A>(a: MonadicParser<A>): MonadicParser<[A]>
-    export function seq<A, B>(a: MonadicParser<A>, b: MonadicParser<B>): MonadicParser<[A, B]>
-    export function seq<A, B, C>(a: MonadicParser<A>, b: MonadicParser<B>, c: MonadicParser<C>): MonadicParser<[A, B, C]>
-    export function seq<A, B, C, D>(a: MonadicParser<A>, b: MonadicParser<B>, c: MonadicParser<C>, d: MonadicParser<D>): MonadicParser<[A, B, C, D]>
-    export function seq<A, B, C, D, E>(a: MonadicParser<A>, b: MonadicParser<B>, c: MonadicParser<C>, d: MonadicParser<D>, e: MonadicParser<E>): MonadicParser<[A, B, C, D, E]>
-    export function seq<T>(...parsers: MonadicParser<T>[]): MonadicParser<T[]>
+    export function seq<A>(a: MonadicParser<A>): MonadicParser<[A]>;
+    export function seq<A, B>(a: MonadicParser<A>, b: MonadicParser<B>): MonadicParser<[A, B]>;
+    export function seq<A, B, C>(
+        a: MonadicParser<A>,
+        b: MonadicParser<B>,
+        c: MonadicParser<C>,
+    ): MonadicParser<[A, B, C]>;
+    export function seq<A, B, C, D>(
+        a: MonadicParser<A>,
+        b: MonadicParser<B>,
+        c: MonadicParser<C>,
+        d: MonadicParser<D>,
+    ): MonadicParser<[A, B, C, D]>;
+    export function seq<A, B, C, D, E>(
+        a: MonadicParser<A>,
+        b: MonadicParser<B>,
+        c: MonadicParser<C>,
+        d: MonadicParser<D>,
+        e: MonadicParser<E>,
+    ): MonadicParser<[A, B, C, D, E]>;
+    export function seq<T>(...parsers: MonadicParser<T>[]): MonadicParser<T[]>;
     export function seq(...parsers: MonadicParser<any>[]): MonadicParser<any[]> {
         const numParsers = parsers.length;
         return new MonadicParser<any[]>((input, index) => {
@@ -279,12 +314,27 @@ export namespace MonadicParser {
         });
     }
 
-    export function alt<A>(a: MonadicParser<A>): MonadicParser<A>
-    export function alt<A, B>(a: MonadicParser<A>, b: MonadicParser<B>): MonadicParser<A | B>
-    export function alt<A, B, C>(a: MonadicParser<A>, b: MonadicParser<B>, c: MonadicParser<C>): MonadicParser<A | B | C>
-    export function alt<A, B, C, D>(a: MonadicParser<A>, b: MonadicParser<B>, c: MonadicParser<C>, d: MonadicParser<D>): MonadicParser<A | B | C | D>
-    export function alt<A, B, C, D, E>(a: MonadicParser<A>, b: MonadicParser<B>, c: MonadicParser<C>, d: MonadicParser<D>, e: MonadicParser<E>): MonadicParser<A | B | C | D | E>
-    export function alt<T>(...parsers: MonadicParser<T>[]): MonadicParser<T[]>
+    export function alt<A>(a: MonadicParser<A>): MonadicParser<A>;
+    export function alt<A, B>(a: MonadicParser<A>, b: MonadicParser<B>): MonadicParser<A | B>;
+    export function alt<A, B, C>(
+        a: MonadicParser<A>,
+        b: MonadicParser<B>,
+        c: MonadicParser<C>,
+    ): MonadicParser<A | B | C>;
+    export function alt<A, B, C, D>(
+        a: MonadicParser<A>,
+        b: MonadicParser<B>,
+        c: MonadicParser<C>,
+        d: MonadicParser<D>,
+    ): MonadicParser<A | B | C | D>;
+    export function alt<A, B, C, D, E>(
+        a: MonadicParser<A>,
+        b: MonadicParser<B>,
+        c: MonadicParser<C>,
+        d: MonadicParser<D>,
+        e: MonadicParser<E>,
+    ): MonadicParser<A | B | C | D | E>;
+    export function alt<T>(...parsers: MonadicParser<T>[]): MonadicParser<T[]>;
     export function alt(...parsers: MonadicParser<any>[]): MonadicParser<any> {
         const numParsers = parsers.length;
         if (numParsers === 0) {
@@ -302,20 +352,25 @@ export namespace MonadicParser {
         });
     }
 
-    export function sepBy<A, B>(parser: MonadicParser<A>, separator: MonadicParser<B>): MonadicParser<A[]> {
+    export function sepBy<A, B>(
+        parser: MonadicParser<A>,
+        separator: MonadicParser<B>,
+    ): MonadicParser<A[]> {
         return sepBy1(parser, separator).or(succeed([]));
     }
 
     export function sepBy1<A, B>(parser: MonadicParser<A>, separator: MonadicParser<B>) {
         const pairs = separator.then(parser).many();
-        return seq(parser, pairs).map(r => [r[0], ...r[1]]);
+        return seq(parser, pairs).map((r) => [r[0], ...r[1]]);
     }
 
     export function string(str: string) {
         const expected = `'${str}'`;
         if (str.length === 1) {
             const code = str.charCodeAt(0);
-            return new MonadicParser((input, i) => input.charCodeAt(i) === code ? makeSuccess(i + 1, str) : makeFailure(i, expected));
+            return new MonadicParser((input, i) =>
+                input.charCodeAt(i) === code ? makeSuccess(i + 1, str) : makeFailure(i, expected)
+            );
         }
 
         return new MonadicParser((input, i) => {
@@ -399,15 +454,15 @@ export namespace MonadicParser {
     }
 
     export function oneOf(str: string) {
-        return test(ch => str.indexOf(ch) >= 0);
+        return test((ch) => str.indexOf(ch) >= 0);
     }
 
     export function noneOf(str: string) {
-        return test(ch => str.indexOf(ch) < 0);
+        return test((ch) => str.indexOf(ch) < 0);
     }
 
     export function range(begin: string, end: string) {
-        return test(ch => begin <= ch && ch <= end).desc(begin + '-' + end);
+        return test((ch) => begin <= ch && ch <= end).desc(begin + '-' + end);
     }
 
     export function takeWhile(predicate: (ch: string) => boolean) {
@@ -474,7 +529,6 @@ export namespace MonadicParser {
     export function regex(re: RegExp) {
         return regexp(re);
     }
-
 }
 
 function seqPick(idx: number, ...parsers: MonadicParser<any>[]): MonadicParser<any> {
@@ -503,7 +557,10 @@ function makeFailure(index: number, expected: string): MonadicParser.Failure {
     return { status: false, furthest: index, expected: [expected] };
 }
 
-function mergeReplies<A, B>(result: MonadicParser.Result<A>, last?: MonadicParser.Result<B>): MonadicParser.Result<A> {
+function mergeReplies<A, B>(
+    result: MonadicParser.Result<A>,
+    last?: MonadicParser.Result<B>,
+): MonadicParser.Result<A> {
     if (!last || result.status || last.status || result.furthest > last.furthest) {
         return result;
     }
@@ -535,9 +592,11 @@ function formatGot(input: string, error: MonadicParser.ParseFailure) {
     if (i === input.length) {
         return ', got the end of the input';
     }
-    const prefix = i > 0 ? '\'...' : '\'';
-    const suffix = input.length - i > 12 ? '...\'' : '\'';
-    return ` at line ${index.line} column ${index.column}, got ${prefix}${input.slice(i, i + 12)}${suffix}`;
+    const prefix = i > 0 ? "'..." : "'";
+    const suffix = input.length - i > 12 ? "...'" : "'";
+    return ` at line ${index.line} column ${index.column}, got ${prefix}${
+        input.slice(i, i + 12)
+    }${suffix}`;
 }
 
 function formatError(input: string, error: MonadicParser.ParseFailure) {

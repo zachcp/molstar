@@ -12,7 +12,10 @@ import { parseCifText } from '../../mol-io/reader/cif/text/parser.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
 import { trajectoryFromMmCIF } from '../../mol-model-formats/structure/mmcif.ts';
 import { Model } from '../../mol-model/structure.ts';
-import { CoarseElementKey, CoarseElementReference } from '../../mol-model/structure/model/properties/coarse.ts';
+import {
+    CoarseElementKey,
+    CoarseElementReference,
+} from '../../mol-model/structure/model/properties/coarse.ts';
 import { createPluginUI } from '../../mol-plugin-ui/index.ts';
 import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
 import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';
@@ -35,40 +38,40 @@ async function createViewer(root: HTMLElement) {
             layout: {
                 initial: {
                     isExpanded: true,
-                    showControls: false
-                }
+                    showControls: false,
+                },
             },
             components: {
                 remoteState: 'none',
             },
             behaviors: [
                 ...spec.behaviors,
-                PluginSpec.Behavior(MolViewSpec)
+                PluginSpec.Behavior(MolViewSpec),
             ],
             config: [
                 [PluginConfig.Viewport.ShowAnimation, false],
                 [PluginConfig.Viewport.ShowTrajectoryControls, false],
-            ]
-        }
+            ],
+        },
     });
 
     return plugin;
 }
 
 interface IHMRestraintInfo {
-    e1: CoarseElementKey & { label_comp_id: string },
-    e2: CoarseElementKey & { label_comp_id: string },
-    a: Vec3,
-    b: Vec3,
-    restraintType: 'harmonic' | 'upper bound' | 'lower bound',
-    threshold: number,
-    satisfied: boolean,
-    distance: number,
+    e1: CoarseElementKey & { label_comp_id: string };
+    e2: CoarseElementKey & { label_comp_id: string };
+    a: Vec3;
+    b: Vec3;
+    restraintType: 'harmonic' | 'upper bound' | 'lower bound';
+    threshold: number;
+    satisfied: boolean;
+    distance: number;
 }
 
 interface IHMStructureInfo {
-    entity_labels: [id: string | undefined, label: string | undefined][],
-    model_restraints: IHMRestraintInfo[][],
+    entity_labels: [id: string | undefined, label: string | undefined][];
+    model_restraints: IHMRestraintInfo[][];
 }
 
 function getCoarseElementPosition(e: CoarseElementReference, model: Model, position: Vec3) {
@@ -116,7 +119,9 @@ async function parseInfo(plugin: PluginContext, url: string): Promise<IHMStructu
         return { entity_labels: [], model_restraints: [] };
     }
 
-    const trajectory = await plugin.runTask(trajectoryFromMmCIF(parsed.result.blocks[0], parsed.result));
+    const trajectory = await plugin.runTask(
+        trajectoryFromMmCIF(parsed.result.blocks[0], parsed.result),
+    );
 
     const dataBlocks = parsed.result.blocks;
 
@@ -167,14 +172,16 @@ async function parseInfo(plugin: PluginContext, url: string): Promise<IHMStructu
                 continue;
             }
 
-            const restraintType: 'harmonic' | 'upper bound' | 'lower bound' = restraint_type.str(i)?.toLowerCase() as any;
+            const restraintType: 'harmonic' | 'upper bound' | 'lower bound' = restraint_type.str(i)
+                ?.toLowerCase() as any;
             const thresholdValue = threshold.float(i);
             const distance = Vec3.distance(a, b);
 
             let satisfied = true;
             if (restraintType === 'harmonic') {
                 const thresholdValue = threshold.float(i);
-                satisfied = distance >= (1 - HarmonicRestraintTolerance) * thresholdValue && distance <= (1 + HarmonicRestraintTolerance) * thresholdValue;
+                satisfied = distance >= (1 - HarmonicRestraintTolerance) * thresholdValue &&
+                    distance <= (1 + HarmonicRestraintTolerance) * thresholdValue;
             } else if (restraintType === 'upper bound') {
                 satisfied = distance <= thresholdValue;
             } else if (restraintType === 'lower bound') {
@@ -197,7 +204,12 @@ async function parseInfo(plugin: PluginContext, url: string): Promise<IHMStructu
     return { entity_labels, model_restraints };
 }
 
-function baseStructure(url: string, modelIndex: number, info: IHMStructureInfo, options?: { noEntityLabels?: boolean }) {
+function baseStructure(
+    url: string,
+    modelIndex: number,
+    info: IHMStructureInfo,
+    options?: { noEntityLabels?: boolean },
+) {
     const builder = createMVSBuilder();
 
     const structure = builder
@@ -222,19 +234,28 @@ function baseStructure(url: string, modelIndex: number, info: IHMStructureInfo, 
         for (const [label_entity_id, text] of info.entity_labels) {
             if (!text) continue;
             primitives
-                .label({ position: { label_entity_id }, text, label_size: 16, label_color: '#cccccc' });
+                .label({
+                    position: { label_entity_id },
+                    text,
+                    label_size: 16,
+                    label_color: '#cccccc',
+                });
         }
     }
 
     return [builder, structure] as const;
 }
 
-function drawConstraints([, structure]: ReturnType<typeof baseStructure>, restraints: IHMRestraintInfo[], options: {
-    filter: (r: IHMRestraintInfo) => boolean,
-    color: (r: IHMRestraintInfo) => any,
-    radius?: (r: IHMRestraintInfo) => number,
-    tooltip: (r: IHMRestraintInfo) => string | undefined,
-}) {
+function drawConstraints(
+    [, structure]: ReturnType<typeof baseStructure>,
+    restraints: IHMRestraintInfo[],
+    options: {
+        filter: (r: IHMRestraintInfo) => boolean;
+        color: (r: IHMRestraintInfo) => any;
+        radius?: (r: IHMRestraintInfo) => number;
+        tooltip: (r: IHMRestraintInfo) => string | undefined;
+    },
+) {
     const primitives = structure.primitives();
     for (const r of restraints) {
         if (!options.filter(r)) continue;
@@ -272,16 +293,20 @@ export async function loadIHMRestraints(root: HTMLElement, url?: string) {
     const modelIndex = 0;
     const restraints = info.model_restraints[modelIndex];
 
-    const nVialoted = restraints.filter(r => !r.satisfied).length;
+    const nVialoted = restraints.filter((r) => !r.satisfied).length;
     const nSatisfied = restraints.length - nVialoted;
 
     const snapshots: Snapshot[] = [];
 
     let mvs = baseStructure(url, modelIndex, info);
     drawConstraints(mvs, restraints, {
-        filter: r => true,
-        color: r => r.e1.label_entity_id === r.e2.label_entity_id && r.e1.label_asym_id === r.e2.label_asym_id ? 'yellow' : 'blue',
-        radius: r => 1,
+        filter: (r) => true,
+        color: (r) =>
+            r.e1.label_entity_id === r.e2.label_entity_id &&
+                r.e1.label_asym_id === r.e2.label_asym_id
+                ? 'yellow'
+                : 'blue',
+        radius: (r) => 1,
         tooltip: restraintTooltip,
     });
     snapshots.push(mvs[0].getSnapshot({
@@ -297,9 +322,9 @@ export async function loadIHMRestraints(root: HTMLElement, url?: string) {
 
     mvs = baseStructure(url, modelIndex, info);
     drawConstraints(mvs, restraints, {
-        filter: r => true,
-        color: r => r.satisfied ? 'green' : 'red',
-        radius: r => 1,
+        filter: (r) => true,
+        color: (r) => r.satisfied ? 'green' : 'red',
+        radius: (r) => 1,
         tooltip: restraintTooltip,
     });
     snapshots.push(mvs[0].getSnapshot({
@@ -315,9 +340,9 @@ export async function loadIHMRestraints(root: HTMLElement, url?: string) {
 
     mvs = baseStructure(url, modelIndex, info);
     drawConstraints(mvs, restraints, {
-        filter: r => !r.satisfied,
-        color: r => r.satisfied ? 'green' : 'red',
-        radius: r => 1,
+        filter: (r) => !r.satisfied,
+        color: (r) => r.satisfied ? 'green' : 'red',
+        radius: (r) => 1,
         tooltip: restraintTooltip,
     });
     snapshots.push(mvs[0].getSnapshot({
@@ -332,9 +357,9 @@ ${nVialoted} restraints are violated.
 
     mvs = baseStructure(url, modelIndex, info);
     drawConstraints(mvs, restraints, {
-        filter: r => r.satisfied,
-        color: r => r.satisfied ? 'green' : 'red',
-        radius: r => 1,
+        filter: (r) => r.satisfied,
+        color: (r) => r.satisfied ? 'green' : 'red',
+        radius: (r) => 1,
         tooltip: restraintTooltip,
     });
     snapshots.push(mvs[0].getSnapshot({
@@ -354,7 +379,7 @@ ${nSatisfied} restraints are satisfied.
             title: 'I/HM Restraints',
             version: '1.0',
             timestamp: new Date().toISOString(),
-        }
+        },
     };
 
     await loadMVS(plugin, data, { sanityChecks: true, keepCamera: true });

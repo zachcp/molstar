@@ -19,7 +19,8 @@ function uint32ForLoop(array: Uint8Array, count: number): number {
     let sum = 0;
     for (let i = 0; i < viewEnd; ++i) {
         const v = view[i];
-        sum += ((v & 0xFF) && 1) + ((v & 0xFF00) && 1) + ((v & 0xFF0000) && 1) + ((v & 0xFF000000) && 1);
+        sum += ((v & 0xFF) && 1) + ((v & 0xFF00) && 1) + ((v & 0xFF0000) && 1) +
+            ((v & 0xFF000000) && 1);
     }
     for (let i = backStart; i < count; ++i) {
         sum += array[i] && 1;
@@ -167,7 +168,7 @@ function createData(elements: number, instances: number) {
     const start = Math.floor(instances / 2);
     data.fill(1, start, start + elements);
     return data;
-};
+}
 
 export function run(elements: number, instances: number) {
     const suite = new B.Suite();

@@ -16,13 +16,13 @@ export namespace NtCTubeTypes {
     const DummyTag = 'dnatco-tube-dummy';
 
     export type Data = {
-        data: DnatcoTypes.Steps,
-    }
+        data: DnatcoTypes.Steps;
+    };
 
     export type TubeBlock = {
-        step: DnatcoTypes.Step,
+        step: DnatcoTypes.Step;
         kind: 'upper' | 'lower' | 'residue-boundary' | 'segment-boundary';
-    }
+    };
 
     export interface Location extends DataLocation<TubeBlock> {}
 
@@ -37,8 +37,19 @@ export namespace NtCTubeTypes {
     export interface Loci extends DataLoci<DnatcoTypes.Step[], number> {}
     export interface DummyLoci extends DataLoci<{}, number> {}
 
-    export function Loci(data: DnatcoTypes.Step[], stepIndices: number[], elements: number[], boundingSphere?: Sphere3D): Loci {
-        return DataLoci(DataTag, data, elements, boundingSphere ? () => boundingSphere : undefined, () => stepIndices[0] !== undefined ? NtCTubeSegmentLabel(data[stepIndices[0]]) : '');
+    export function Loci(
+        data: DnatcoTypes.Step[],
+        stepIndices: number[],
+        elements: number[],
+        boundingSphere?: Sphere3D,
+    ): Loci {
+        return DataLoci(
+            DataTag,
+            data,
+            elements,
+            boundingSphere ? () => boundingSphere : undefined,
+            () => stepIndices[0] !== undefined ? NtCTubeSegmentLabel(data[stepIndices[0]]) : '',
+        );
     }
 
     export function DummyLoci(): DummyLoci {

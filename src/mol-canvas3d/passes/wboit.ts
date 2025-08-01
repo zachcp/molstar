@@ -28,18 +28,30 @@ const EvaluateWboitSchema = {
     uTexSize: UniformSpec('v2'),
 };
 const EvaluateWboitShaderCode = ShaderCode('evaluate-wboit', quad_vert, evaluateWboit_frag);
-type EvaluateWboitRenderable = ComputeRenderable<Values<typeof EvaluateWboitSchema>>
+type EvaluateWboitRenderable = ComputeRenderable<Values<typeof EvaluateWboitSchema>>;
 
-function getEvaluateWboitRenderable(ctx: WebGLContext, wboitATexture: Texture, wboitBTexture: Texture): EvaluateWboitRenderable {
+function getEvaluateWboitRenderable(
+    ctx: WebGLContext,
+    wboitATexture: Texture,
+    wboitBTexture: Texture,
+): EvaluateWboitRenderable {
     const values: Values<typeof EvaluateWboitSchema> = {
         ...QuadValues,
         tWboitA: ValueCell.create(wboitATexture),
         tWboitB: ValueCell.create(wboitBTexture),
-        uTexSize: ValueCell.create(Vec2.create(wboitATexture.getWidth(), wboitATexture.getHeight())),
+        uTexSize: ValueCell.create(
+            Vec2.create(wboitATexture.getWidth(), wboitATexture.getHeight()),
+        ),
     };
 
     const schema = { ...EvaluateWboitSchema };
-    const renderItem = createComputeRenderItem(ctx, 'triangles', EvaluateWboitShaderCode, schema, values);
+    const renderItem = createComputeRenderItem(
+        ctx,
+        'triangles',
+        EvaluateWboitShaderCode,
+        schema,
+        values,
+    );
 
     return createComputeRenderable(renderItem, values);
 }
@@ -77,7 +89,12 @@ export class WboitPass {
         if (isTimingMode) this.webgl.timer.mark('WboitPass.render');
         const { state, gl } = this.webgl;
 
-        state.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        state.blendFuncSeparate(
+            gl.SRC_ALPHA,
+            gl.ONE_MINUS_SRC_ALPHA,
+            gl.ONE,
+            gl.ONE_MINUS_SRC_ALPHA,
+        );
         state.enable(gl.BLEND);
 
         this.renderable.update();
@@ -91,7 +108,10 @@ export class WboitPass {
             this.textureA.define(width, height);
             this.textureB.define(width, height);
             this.depthRenderbuffer.setSize(width, height);
-            ValueCell.update(this.renderable.values.uTexSize, Vec2.set(this.renderable.values.uTexSize.ref.value, width, height));
+            ValueCell.update(
+                this.renderable.values.uTexSize,
+                Vec2.set(this.renderable.values.uTexSize.ref.value, width, height),
+            );
         }
     }
 

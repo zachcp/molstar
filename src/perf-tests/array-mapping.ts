@@ -3,42 +3,69 @@ import { SymmetryOperator } from '../mol-math/geometry/symmetry-operator.ts';
 import { Mat4 } from '../mol-math/linear-algebra/3d/mat4.ts';
 import { Vec3 } from '../mol-math/linear-algebra/3d/vec3.ts';
 
-interface CoordinateMapper<T extends number> { (index: T, slot: Vec3): Vec3 }
+interface CoordinateMapper<T extends number> {
+    (index: T, slot: Vec3): Vec3;
+}
 interface ArrayMapping<T extends number> {
-    readonly coordinates: Coordinates,
-    readonly operator: SymmetryOperator,
-    readonly invariantPosition: CoordinateMapper<T>,
-    readonly position: CoordinateMapper<T>,
-    x(index: T): number,
-    y(index: T): number,
-    z(index: T): number,
-    r(index: T): number
+    readonly coordinates: Coordinates;
+    readonly operator: SymmetryOperator;
+    readonly invariantPosition: CoordinateMapper<T>;
+    readonly position: CoordinateMapper<T>;
+    x(index: T): number;
+    y(index: T): number;
+    z(index: T): number;
+    r(index: T): number;
 }
 
-interface Coordinates { x: ArrayLike<number>, y: ArrayLike<number>, z: ArrayLike<number> }
+interface Coordinates {
+    x: ArrayLike<number>;
+    y: ArrayLike<number>;
+    z: ArrayLike<number>;
+}
 
-function _createMapping<T extends number>(operator: SymmetryOperator, coords: Coordinates, radius: ((index: T) => number)): ArrayMapping<T> {
+function _createMapping<T extends number>(
+    operator: SymmetryOperator,
+    coords: Coordinates,
+    radius: (index: T) => number,
+): ArrayMapping<T> {
     const invariantPosition = createCoordinateMapper(SymmetryOperator.Default, coords);
-    const position = operator.isIdentity ? invariantPosition : createCoordinateMapper(operator, coords);
+    const position = operator.isIdentity
+        ? invariantPosition
+        : createCoordinateMapper(operator, coords);
     const { x, y, z } = createProjections(operator, coords);
     return { operator, coordinates: coords, invariantPosition, position, x, y, z, r: radius };
 }
 
-function createMapping<T extends number>(operator: SymmetryOperator, coords: Coordinates, radius: ((index: T) => number) = _zeroRadius) {
+function createMapping<T extends number>(
+    operator: SymmetryOperator,
+    coords: Coordinates,
+    radius: (index: T) => number = _zeroRadius,
+) {
     return _createMapping(operator, coords, radius);
 }
 
-function createCoordinateMapper<T extends number>(t: SymmetryOperator, coords: Coordinates): CoordinateMapper<T> {
+function createCoordinateMapper<T extends number>(
+    t: SymmetryOperator,
+    coords: Coordinates,
+): CoordinateMapper<T> {
     if (t.isIdentity) return identityPosition(coords);
     return generalPosition(t, coords);
 }
 
-function _zeroRadius(i: number) { return 0; }
+function _zeroRadius(i: number) {
+    return 0;
+}
 
-interface Projections { x(index: number): number, y(index: number): number, z(index: number): number }
+interface Projections {
+    x(index: number): number;
+    y(index: number): number;
+    z(index: number): number;
+}
 
 function createProjections(t: SymmetryOperator, coords: SymmetryOperator.Coordinates): Projections {
-    if (t.isIdentity) return { x: projectCoord(coords.x), y: projectCoord(coords.y), z: projectCoord(coords.z) };
+    if (t.isIdentity) {
+        return { x: projectCoord(coords.x), y: projectCoord(coords.y), z: projectCoord(coords.z) };
+    }
     return { x: projectX(t, coords), y: projectY(t, coords), z: projectZ(t, coords) };
 }
 
@@ -52,7 +79,10 @@ function isW1(m: Mat4) {
     return m[3] === 0 && m[7] === 0 && m[11] === 0 && m[15] === 1;
 }
 
-function projectX({ matrix: m }: SymmetryOperator, { x: xs, y: ys, z: zs }: SymmetryOperator.Coordinates) {
+function projectX(
+    { matrix: m }: SymmetryOperator,
+    { x: xs, y: ys, z: zs }: SymmetryOperator.Coordinates,
+) {
     const xx = m[0], yy = m[4], zz = m[8], tx = m[12];
 
     if (isW1(m)) {
@@ -68,7 +98,10 @@ function projectX({ matrix: m }: SymmetryOperator, { x: xs, y: ys, z: zs }: Symm
     };
 }
 
-function projectY({ matrix: m }: SymmetryOperator, { x: xs, y: ys, z: zs }: SymmetryOperator.Coordinates) {
+function projectY(
+    { matrix: m }: SymmetryOperator,
+    { x: xs, y: ys, z: zs }: SymmetryOperator.Coordinates,
+) {
     const xx = m[1], yy = m[5], zz = m[9], ty = m[13];
 
     if (isW1(m)) {
@@ -84,7 +117,10 @@ function projectY({ matrix: m }: SymmetryOperator, { x: xs, y: ys, z: zs }: Symm
     };
 }
 
-function projectZ({ matrix: m }: SymmetryOperator, { x: xs, y: ys, z: zs }: SymmetryOperator.Coordinates) {
+function projectZ(
+    { matrix: m }: SymmetryOperator,
+    { x: xs, y: ys, z: zs }: SymmetryOperator.Coordinates,
+) {
     const xx = m[2], yy = m[6], zz = m[10], tz = m[14];
 
     if (isW1(m)) {
@@ -100,7 +136,9 @@ function projectZ({ matrix: m }: SymmetryOperator, { x: xs, y: ys, z: zs }: Symm
     };
 }
 
-function identityPosition<T extends number>({ x, y, z }: SymmetryOperator.Coordinates): SymmetryOperator.CoordinateMapper<T> {
+function identityPosition<T extends number>(
+    { x, y, z }: SymmetryOperator.Coordinates,
+): SymmetryOperator.CoordinateMapper<T> {
     return function identityPosition(i: T, s: Vec3): Vec3 {
         s[0] = x[i];
         s[1] = y[i];
@@ -109,7 +147,10 @@ function identityPosition<T extends number>({ x, y, z }: SymmetryOperator.Coordi
     };
 }
 
-function generalPosition<T extends number>({ matrix: m }: SymmetryOperator, { x: xs, y: ys, z: zs }: SymmetryOperator.Coordinates) {
+function generalPosition<T extends number>(
+    { matrix: m }: SymmetryOperator,
+    { x: xs, y: ys, z: zs }: SymmetryOperator.Coordinates,
+) {
     if (isW1(m)) {
         // this should always be the case.
         return function generalPosition_W1(i: T, r: Vec3): Vec3 {

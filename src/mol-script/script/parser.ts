@@ -7,4 +7,4 @@
 
 import { Expression } from '../language/expression.ts';
 
-export type Parser = (source: string) => Expression
+export type Parser = (source: string) => Expression;

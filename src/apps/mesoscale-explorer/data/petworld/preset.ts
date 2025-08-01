@@ -11,7 +11,14 @@ import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/
 import { StructureRepresentation3D } from '../../../../mol-plugin-state/transforms/representation.ts';
 import { PluginContext } from '../../../../mol-plugin/context.ts';
 import { PluginStateObject } from '../../../../mol-plugin-state/objects.ts';
-import { GraphicsMode, MesoscaleGroup, MesoscaleState, getDistinctBaseColors, getGraphicsModeProps, getMesoscaleGroupParams } from '../state.ts';
+import {
+    getDistinctBaseColors,
+    getGraphicsModeProps,
+    getMesoscaleGroupParams,
+    GraphicsMode,
+    MesoscaleGroup,
+    MesoscaleState,
+} from '../state.ts';
 import { ColorNames } from '../../../../mol-util/color/names.ts';
 import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif.ts';
 import { Task } from '../../../../mol-task/index.ts';
@@ -43,26 +50,29 @@ function getSpacefillParams(color: Color, graphics: GraphicsMode) {
                 value: color,
                 saturation: 0,
                 lightness: 0,
-            }
+            },
         },
         sizeTheme: {
             name: 'physical',
             params: {
                 scale: 1,
-            }
+            },
         },
     };
 }
 
-export async function createPetworldHierarchy(plugin: PluginContext, trajectory: StateObjectRef<PluginStateObject.Molecule.Trajectory>) {
+export async function createPetworldHierarchy(
+    plugin: PluginContext,
+    trajectory: StateObjectRef<PluginStateObject.Molecule.Trajectory>,
+) {
     const cell = StateObjectRef.resolveAndCheck(plugin.state.data, trajectory);
     const tr = cell?.obj?.data;
     if (!cell || !tr) return;
 
     if (!MmcifFormat.is(tr.representative.sourceData)) return;
 
-    const membrane: { modelIndex: number, entityIds: string[] }[] = [];
-    const other: { modelIndex: number, entityIds: string[] }[] = [];
+    const membrane: { modelIndex: number; entityIds: string[] }[] = [];
+    const other: { modelIndex: number; entityIds: string[] }[] = [];
     for (let i = 0; i < tr.frameCount; ++i) {
         const m = await Task.resolveInContext(tr.getFrameAtIndex(i));
         // cannot use m.properties.structAsymMap because petworld models
@@ -71,7 +81,7 @@ export async function createPetworldHierarchy(plugin: PluginContext, trajectory:
         const membraneIds: string[] = [];
         const otherIds: string[] = [];
         const seen = new Set<string>();
-        for (let i = 0; i < _rowCount; i ++) {
+        for (let i = 0; i < _rowCount; i++) {
             const entityId = label_entity_id.value(i);
             if (seen.has(entityId)) continue;
 
@@ -97,12 +107,46 @@ export async function createPetworldHierarchy(plugin: PluginContext, trajectory:
 
     const group = await state.build()
         .toRoot()
-        .apply(MesoscaleGroup, { ...groupParams, root: true, index: -1, tag: `ent:`, label: 'entity', color: { type: 'generate', illustrative: false, value: ColorNames.white, variability: 20, shift: 0, lightness: 0, alpha: 1, emissive: 0 } }, { tags: ['group:ent:'], state: { isCollapsed: false, isHidden: groupParams.hidden } })
+        .apply(MesoscaleGroup, {
+            ...groupParams,
+            root: true,
+            index: -1,
+            tag: `ent:`,
+            label: 'entity',
+            color: {
+                type: 'generate',
+                illustrative: false,
+                value: ColorNames.white,
+                variability: 20,
+                shift: 0,
+                lightness: 0,
+                alpha: 1,
+                emissive: 0,
+            },
+        }, { tags: ['group:ent:'], state: { isCollapsed: false, isHidden: groupParams.hidden } })
         .commit({ revertOnError: true });
 
     await state.build()
         .to(group)
-        .apply(MesoscaleGroup, { ...groupParams, index: undefined, tag: `ent:mem`, label: 'Membrane', color: { type: 'uniform', illustrative: false, value: ColorNames.lightgrey, variability: 20, shift: 0, lightness: 0, alpha: 1, emissive: 0 } }, { tags: ['group:ent:mem', 'ent:', '__no_group_color__'], state: { isCollapsed: true, isHidden: groupParams.hidden } })
+        .apply(MesoscaleGroup, {
+            ...groupParams,
+            index: undefined,
+            tag: `ent:mem`,
+            label: 'Membrane',
+            color: {
+                type: 'uniform',
+                illustrative: false,
+                value: ColorNames.lightgrey,
+                variability: 20,
+                shift: 0,
+                lightness: 0,
+                alpha: 1,
+                emissive: 0,
+            },
+        }, {
+            tags: ['group:ent:mem', 'ent:', '__no_group_color__'],
+            state: { isCollapsed: true, isHidden: groupParams.hidden },
+        })
         .commit();
 
     const colors = getDistinctBaseColors(other.length, 0);
@@ -115,13 +159,19 @@ export async function createPetworldHierarchy(plugin: PluginContext, trajectory:
                 build = build
                     .to(cell)
                     .apply(StructureFromPetworld, membrane[i])
-                    .apply(StructureRepresentation3D, getSpacefillParams(ColorNames.lightgrey, graphicsMode), { tags: ['ent:mem', '__no_group_color__'] });
+                    .apply(
+                        StructureRepresentation3D,
+                        getSpacefillParams(ColorNames.lightgrey, graphicsMode),
+                        { tags: ['ent:mem', '__no_group_color__'] },
+                    );
             }
             for (let i = 0, il = other.length; i < il; ++i) {
                 build = build
                     .to(cell)
                     .apply(StructureFromPetworld, other[i])
-                    .apply(StructureRepresentation3D, getSpacefillParams(colors[i], graphicsMode), { tags: ['ent:'] });
+                    .apply(StructureRepresentation3D, getSpacefillParams(colors[i], graphicsMode), {
+                        tags: ['ent:'],
+                    });
             }
             await build.commit();
         } catch (e) {

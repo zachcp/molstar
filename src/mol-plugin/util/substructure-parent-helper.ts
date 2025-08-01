@@ -16,12 +16,18 @@ class SubstructureParentHelper {
     private ev = RxEventHelper.create();
 
     readonly events = {
-        updated: this.ev<{ ref: string, oldObj: PluginStateObject.Molecule.Structure | undefined, obj: PluginStateObject.Molecule.Structure }>(),
-        removed: this.ev<{ ref: string, obj: PluginStateObject.Molecule.Structure | undefined }>(),
+        updated: this.ev<
+            {
+                ref: string;
+                oldObj: PluginStateObject.Molecule.Structure | undefined;
+                obj: PluginStateObject.Molecule.Structure;
+            }
+        >(),
+        removed: this.ev<{ ref: string; obj: PluginStateObject.Molecule.Structure | undefined }>(),
     };
 
     // private decorators = new Map<string, string[]>();
-    private root = new Map<Structure, { ref: string, count: number }>();
+    private root = new Map<Structure, { ref: string; count: number }>();
     private tracked = new Map<string, Structure>();
 
     private getDecorator(root: string): string {
@@ -36,7 +42,10 @@ class SubstructureParentHelper {
     }
 
     /** Returns the root node of given structure if existing, takes decorators into account */
-    get(s: Structure, ignoreDecorators = false): StateObjectCell<PluginStateObject.Molecule.Structure> | undefined {
+    get(
+        s: Structure,
+        ignoreDecorators = false,
+    ): StateObjectCell<PluginStateObject.Molecule.Structure> | undefined {
         const r = this.root.get(s);
         if (!r) return;
         if (ignoreDecorators) return this.plugin.state.data.cells.get(r.ref);
@@ -53,7 +62,11 @@ class SubstructureParentHelper {
             const e = this.root.get(obj.data)!;
             e.count++;
         } else {
-            const parent = state.select(StateSelection.Generators.byRef(ref).rootOfType([PluginStateObject.Molecule.Structure]))[0];
+            const parent = state.select(
+                StateSelection.Generators.byRef(ref).rootOfType([
+                    PluginStateObject.Molecule.Structure,
+                ]),
+            )[0];
 
             if (!parent) {
                 this.root.set(obj.data, { ref, count: 1 });
@@ -80,7 +93,12 @@ class SubstructureParentHelper {
         return true;
     }
 
-    private updateMapping(state: State, ref: string, oldObj: StateObject | undefined, obj: StateObject) {
+    private updateMapping(
+        state: State,
+        ref: string,
+        oldObj: StateObject | undefined,
+        obj: StateObject,
+    ) {
         if (!PluginStateObject.Molecule.Structure.is(obj)) return false;
 
         this.removeMapping(ref);
@@ -93,17 +111,17 @@ class SubstructureParentHelper {
     }
 
     constructor(private plugin: PluginContext) {
-        plugin.state.data.events.object.created.subscribe(e => {
+        plugin.state.data.events.object.created.subscribe((e) => {
             this.addMapping(e.state, e.ref, e.obj);
         });
 
-        plugin.state.data.events.object.removed.subscribe(e => {
+        plugin.state.data.events.object.removed.subscribe((e) => {
             if (this.removeMapping(e.ref)) {
                 this.events.removed.next({ ref: e.ref, obj: e.obj });
             }
         });
 
-        plugin.state.data.events.object.updated.subscribe(e => {
+        plugin.state.data.events.object.updated.subscribe((e) => {
             if (this.updateMapping(e.state, e.ref, e.oldObj, e.obj)) {
                 this.events.updated.next({ ref: e.ref, oldObj: e.oldObj, obj: e.obj });
             }

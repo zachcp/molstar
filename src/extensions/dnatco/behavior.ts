@@ -16,22 +16,25 @@ import { NtCTubeColorThemeProvider } from './ntc-tube/color.ts';
 import { NtCTubeProvider } from './ntc-tube/property.ts';
 import { NtCTubeRepresentationProvider } from './ntc-tube/representation.ts';
 
-
-export const DnatcoNtCs = PluginBehavior.create<{ autoAttach: boolean, showToolTip: boolean }>({
+export const DnatcoNtCs = PluginBehavior.create<{ autoAttach: boolean; showToolTip: boolean }>({
     name: 'dnatco-ntcs',
     category: 'custom-props',
     display: {
         name: 'DNATCO NtC Annotations',
         description: 'DNATCO NtC Annotations',
     },
-    ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean, showToolTip: boolean }> {
+    ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean; showToolTip: boolean }> {
         register(): void {
             this.ctx.customModelProperties.register(ConfalPyramidsProvider, this.params.autoAttach);
             this.ctx.customModelProperties.register(NtCTubeProvider, this.params.autoAttach);
 
-            this.ctx.representation.structure.themes.colorThemeRegistry.add(ConfalPyramidsColorThemeProvider);
+            this.ctx.representation.structure.themes.colorThemeRegistry.add(
+                ConfalPyramidsColorThemeProvider,
+            );
             this.ctx.representation.structure.registry.add(ConfalPyramidsRepresentationProvider);
-            this.ctx.representation.structure.themes.colorThemeRegistry.add(NtCTubeColorThemeProvider);
+            this.ctx.representation.structure.themes.colorThemeRegistry.add(
+                NtCTubeColorThemeProvider,
+            );
             this.ctx.representation.structure.registry.add(NtCTubeRepresentationProvider);
 
             this.ctx.builders.structure.representation.registerPreset(ConfalPyramidsPreset);
@@ -43,9 +46,13 @@ export const DnatcoNtCs = PluginBehavior.create<{ autoAttach: boolean, showToolT
             this.ctx.customModelProperties.unregister(NtCTubeProvider.descriptor.name);
 
             this.ctx.representation.structure.registry.remove(ConfalPyramidsRepresentationProvider);
-            this.ctx.representation.structure.themes.colorThemeRegistry.remove(ConfalPyramidsColorThemeProvider);
+            this.ctx.representation.structure.themes.colorThemeRegistry.remove(
+                ConfalPyramidsColorThemeProvider,
+            );
             this.ctx.representation.structure.registry.remove(NtCTubeRepresentationProvider);
-            this.ctx.representation.structure.themes.colorThemeRegistry.remove(NtCTubeColorThemeProvider);
+            this.ctx.representation.structure.themes.colorThemeRegistry.remove(
+                NtCTubeColorThemeProvider,
+            );
 
             this.ctx.builders.structure.representation.unregisterPreset(ConfalPyramidsPreset);
             this.ctx.builders.structure.representation.unregisterPreset(NtCTubePreset);
@@ -53,7 +60,6 @@ export const DnatcoNtCs = PluginBehavior.create<{ autoAttach: boolean, showToolT
     },
     params: () => ({
         autoAttach: PD.Boolean(true),
-        showToolTip: PD.Boolean(true)
-    })
+        showToolTip: PD.Boolean(true),
+    }),
 });
-

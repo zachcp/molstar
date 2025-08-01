@@ -69,10 +69,11 @@ import { PluginContainer } from './container.ts';
 export type PluginInitializedState =
     | { kind: 'no' }
     | { kind: 'yes' }
-    | { kind: 'error', error: any }
+    | { kind: 'error'; error: any };
 
 export class PluginContext {
-    runTask = <T>(task: Task<T>, params?: { useOverlay?: boolean }) => this.managers.task.run(task, params);
+    runTask = <T>(task: Task<T>, params?: { useOverlay?: boolean }) =>
+        this.managers.task.run(task, params);
     resolveTask = <T>(object: Task<T> | T | undefined) => {
         if (!object) return void 0;
         if (Task.is(object)) return this.runTask(object);
@@ -80,9 +81,15 @@ export class PluginContext {
     };
 
     protected subs: Subscription[] = [];
-    private initCanvas3dPromiseCallbacks: [res: () => void, rej: (err: any) => void] = [() => {}, () => {}];
+    private initCanvas3dPromiseCallbacks: [res: () => void, rej: (err: any) => void] = [
+        () => {},
+        () => {},
+    ];
     private _isInitialized = false;
-    private initializedPromiseCallbacks: [res: () => void, rej: (err: any) => void] = [() => {}, () => {}];
+    private initializedPromiseCallbacks: [res: () => void, rej: (err: any) => void] = [
+        () => {},
+        () => {},
+    ];
 
     private disposed = false;
     private container: PluginContainer | undefined = void 0;
@@ -100,26 +107,43 @@ export class PluginContext {
             // TODO: should there be separate "updated" event?
             //   Often, this is used to indicate that the state has updated
             //   and it might not be the best way to react to state updates.
-            isBusy: this.ev.behavior<boolean>(false)
+            isBusy: this.ev.behavior<boolean>(false),
         },
         interaction: {
-            hover: this.ev.behavior<InteractivityManager.HoverEvent>({ current: Representation.Loci.Empty, modifiers: ModifiersKeys.None, buttons: 0, button: 0 }),
-            click: this.ev.behavior<InteractivityManager.ClickEvent>({ current: Representation.Loci.Empty, modifiers: ModifiersKeys.None, buttons: 0, button: 0 }),
-            drag: this.ev.behavior<InteractivityManager.DragEvent>({ current: Representation.Loci.Empty, modifiers: ModifiersKeys.None, buttons: 0, button: 0, pageStart: Vec2(), pageEnd: Vec2() }),
+            hover: this.ev.behavior<InteractivityManager.HoverEvent>({
+                current: Representation.Loci.Empty,
+                modifiers: ModifiersKeys.None,
+                buttons: 0,
+                button: 0,
+            }),
+            click: this.ev.behavior<InteractivityManager.ClickEvent>({
+                current: Representation.Loci.Empty,
+                modifiers: ModifiersKeys.None,
+                buttons: 0,
+                button: 0,
+            }),
+            drag: this.ev.behavior<InteractivityManager.DragEvent>({
+                current: Representation.Loci.Empty,
+                modifiers: ModifiersKeys.None,
+                buttons: 0,
+                button: 0,
+                pageStart: Vec2(),
+                pageEnd: Vec2(),
+            }),
             key: this.ev.behavior<KeyInput>(EmptyKeyInput),
             keyReleased: this.ev.behavior<KeyInput>(EmptyKeyInput),
             selectionMode: this.ev.behavior<boolean>(false),
         },
         labels: {
-            highlight: this.ev.behavior<{ labels: ReadonlyArray<LociLabel> }>({ labels: [] })
+            highlight: this.ev.behavior<{ labels: ReadonlyArray<LociLabel> }>({ labels: [] }),
         },
         layout: {
-            leftPanelTabName: this.ev.behavior<LeftPanelTabName>('root')
+            leftPanelTabName: this.ev.behavior<LeftPanelTabName>('root'),
         },
         canvas3d: {
             // TODO: remove in 4.0?
-            initialized: this.canvas3dInit.pipe(filter(v => !!v), take(1))
-        }
+            initialized: this.canvas3dInit.pipe(filter((v) => !!v), take(1)),
+        },
     } as const;
 
     readonly canvas3dInitialized = new Promise<void>((res, rej) => {
@@ -142,25 +166,31 @@ export class PluginContext {
     readonly representation = {
         structure: {
             registry: new StructureRepresentationRegistry(),
-            themes: { colorThemeRegistry: ColorTheme.createRegistry(), sizeThemeRegistry: SizeTheme.createRegistry() } as ThemeRegistryContext,
+            themes: {
+                colorThemeRegistry: ColorTheme.createRegistry(),
+                sizeThemeRegistry: SizeTheme.createRegistry(),
+            } as ThemeRegistryContext,
         },
         volume: {
             registry: new VolumeRepresentationRegistry(),
-            themes: { colorThemeRegistry: ColorTheme.createRegistry(), sizeThemeRegistry: SizeTheme.createRegistry() } as ThemeRegistryContext
-        }
+            themes: {
+                colorThemeRegistry: ColorTheme.createRegistry(),
+                sizeThemeRegistry: SizeTheme.createRegistry(),
+            } as ThemeRegistryContext,
+        },
     } as const;
 
     readonly query = {
         structure: {
-            registry: new StructureSelectionQueryRegistry()
-        }
+            registry: new StructureSelectionQueryRegistry(),
+        },
     } as const;
 
     readonly dataFormats = new DataFormatRegistry();
 
     readonly builders = {
         data: new DataBuilder(this),
-        structure: void 0 as any as StructureBuilder
+        structure: void 0 as any as StructureBuilder,
     };
 
     build() {
@@ -169,7 +199,7 @@ export class PluginContext {
 
     readonly helpers = {
         substructureParent: new SubstructureParentHelper(this),
-        viewportScreenshot: void 0 as ViewportScreenshotHelper | undefined
+        viewportScreenshot: void 0 as ViewportScreenshotHelper | undefined,
     } as const;
 
     readonly managers = {
@@ -181,7 +211,7 @@ export class PluginContext {
             focus: new StructureFocusManager(this),
         },
         volume: {
-            hierarchy: new VolumeHierarchyManager(this)
+            hierarchy: new VolumeHierarchyManager(this),
         },
         interactivity: void 0 as any as InteractivityManager,
         camera: new CameraManager(this),
@@ -200,15 +230,24 @@ export class PluginContext {
         task: this.managers.task.events,
         canvas3d: {
             settingsUpdated: this.ev(),
-        }
+        },
     } as const;
 
     readonly customModelProperties = new CustomProperty.Registry<Model>();
     readonly customStructureProperties = new CustomProperty.Registry<Structure>();
 
-    readonly customStructureControls = new Map<string, { new(): any /* constructible react components with <action.customControl /> */ }>();
-    readonly customImportControls = new Map<string, { new(): any /* constructible react components with <action.customControl /> */ }>();
-    readonly genericRepresentationControls = new Map<string, (selection: StructureHierarchyManager['selection']) => [StructureHierarchyRef[], string]>();
+    readonly customStructureControls = new Map<
+        string,
+        { new (): any /* constructible react components with <action.customControl /> */ }
+    >();
+    readonly customImportControls = new Map<
+        string,
+        { new (): any /* constructible react components with <action.customControl /> */ }
+    >();
+    readonly genericRepresentationControls = new Map<
+        string,
+        (selection: StructureHierarchyManager['selection']) => [StructureHierarchyRef[], string]
+    >();
 
     /**
      * A helper for collecting and notifying errors
@@ -225,23 +264,34 @@ export class PluginContext {
      */
     readonly customState: unknown = Object.create(null);
 
-    async initViewerAsync(canvas: HTMLCanvasElement, container: HTMLDivElement, canvas3dContext?: Canvas3DContext) {
+    async initViewerAsync(
+        canvas: HTMLCanvasElement,
+        container: HTMLDivElement,
+        canvas3dContext?: Canvas3DContext,
+    ) {
         return this._initViewer(canvas, container, canvas3dContext);
     }
 
-    async initContainerAsync(options?: { canvas3dContext?: Canvas3DContext, checkeredCanvasBackground?: boolean }) {
+    async initContainerAsync(
+        options?: { canvas3dContext?: Canvas3DContext; checkeredCanvasBackground?: boolean },
+    ) {
         return this._initContainer(options);
     }
 
-    async mountAsync(target: HTMLElement, initOptions?: { canvas3dContext?: Canvas3DContext, checkeredCanvasBackground?: boolean }) {
+    async mountAsync(
+        target: HTMLElement,
+        initOptions?: { canvas3dContext?: Canvas3DContext; checkeredCanvasBackground?: boolean },
+    ) {
         return this._mount(target, initOptions);
     }
 
-    private _initContainer(options?: { canvas3dContext?: Canvas3DContext, checkeredCanvasBackground?: boolean }) {
+    private _initContainer(
+        options?: { canvas3dContext?: Canvas3DContext; checkeredCanvasBackground?: boolean },
+    ) {
         if (this.container) return true;
         const container = new PluginContainer({
             checkeredCanvasBackground: options?.checkeredCanvasBackground,
-            canvas: options?.canvas3dContext?.canvas
+            canvas: options?.canvas3dContext?.canvas,
         });
         if (!this._initViewer(container.canvas, container.parent, options?.canvas3dContext)) {
             return false;
@@ -254,7 +304,10 @@ export class PluginContext {
      * Mount the plugin into the target element (assumes the target has "relative"-like positioninig).
      * If initContainer wasn't called separately before, initOptions will be passed to it.
      */
-    private _mount(target: HTMLElement, initOptions?: { canvas3dContext?: Canvas3DContext, checkeredCanvasBackground?: boolean }) {
+    private _mount(
+        target: HTMLElement,
+        initOptions?: { canvas3dContext?: Canvas3DContext; checkeredCanvasBackground?: boolean },
+    ) {
         if (this.disposed) throw new Error('Cannot mount a disposed context');
 
         if (!this._initContainer(initOptions)) return false;
@@ -267,18 +320,30 @@ export class PluginContext {
         this.container?.unmount();
     }
 
-    private _initViewer(canvas: HTMLCanvasElement, container: HTMLDivElement, canvas3dContext?: Canvas3DContext) {
+    private _initViewer(
+        canvas: HTMLCanvasElement,
+        container: HTMLDivElement,
+        canvas3dContext?: Canvas3DContext,
+    ) {
         try {
             this.layout.setRoot(container);
-            if (this.spec.layout && this.spec.layout.initial) this.layout.setProps(this.spec.layout.initial);
+            if (this.spec.layout && this.spec.layout.initial) {
+                this.layout.setProps(this.spec.layout.initial);
+            }
 
             if (!canvas3dContext) {
                 canvas3dContext = Canvas3DContext.fromCanvas(canvas, this.managers.asset, {
-                    antialias: !(this.config.get(PluginConfig.General.DisableAntialiasing) ?? false),
-                    preserveDrawingBuffer: !(this.config.get(PluginConfig.General.DisablePreserveDrawingBuffer) ?? false),
+                    antialias:
+                        !(this.config.get(PluginConfig.General.DisableAntialiasing) ?? false),
+                    preserveDrawingBuffer:
+                        !(this.config.get(PluginConfig.General.DisablePreserveDrawingBuffer) ??
+                            false),
                     preferWebGl1: this.config.get(PluginConfig.General.PreferWebGl1) || false,
-                    failIfMajorPerformanceCaveat: !(this.config.get(PluginConfig.General.AllowMajorPerformanceCaveat) ?? false),
-                    powerPreference: this.config.get(PluginConfig.General.PowerPreference) || 'high-performance',
+                    failIfMajorPerformanceCaveat:
+                        !(this.config.get(PluginConfig.General.AllowMajorPerformanceCaveat) ??
+                            false),
+                    powerPreference: this.config.get(PluginConfig.General.PowerPreference) ||
+                        'high-performance',
                     handleResize: this.handleResize,
                 }, {
                     pixelScale: this.config.get(PluginConfig.General.PixelScale) || 1,
@@ -297,7 +362,7 @@ export class PluginContext {
                 this.canvas3d?.setProps({ renderer: { backgroundColor } });
             } else {
                 if (props.renderer?.backgroundColor === void 0) {
-                    props = produce(props, p => {
+                    props = produce(props, (p) => {
                         if (p.renderer) p.renderer.backgroundColor = backgroundColor;
                         else p.renderer = { backgroundColor };
                     });
@@ -305,15 +370,45 @@ export class PluginContext {
                 this.canvas3d?.setProps(props);
             }
             this.animationLoop.start();
-            (this.helpers.viewportScreenshot as ViewportScreenshotHelper) = new ViewportScreenshotHelper(this);
+            (this.helpers.viewportScreenshot as ViewportScreenshotHelper) =
+                new ViewportScreenshotHelper(this);
 
-            this.subs.push(this.canvas3d!.interaction.click.subscribe(e => this.behaviors.interaction.click.next(e)));
-            this.subs.push(this.canvas3d!.interaction.drag.subscribe(e => this.behaviors.interaction.drag.next(e)));
-            this.subs.push(this.canvas3d!.interaction.hover.subscribe(e => this.behaviors.interaction.hover.next(e)));
-            this.subs.push(this.canvas3d!.input.resize.pipe(debounceTime(50), throttleTime(100, undefined, { leading: false, trailing: true })).subscribe(() => this.handleResize()));
-            this.subs.push(this.canvas3d!.input.keyDown.subscribe(e => this.behaviors.interaction.key.next(e)));
-            this.subs.push(this.canvas3d!.input.keyUp.subscribe(e => this.behaviors.interaction.keyReleased.next(e)));
-            this.subs.push(this.layout.events.updated.subscribe(() => requestAnimationFrame(() => this.handleResize())));
+            this.subs.push(
+                this.canvas3d!.interaction.click.subscribe((e) =>
+                    this.behaviors.interaction.click.next(e)
+                ),
+            );
+            this.subs.push(
+                this.canvas3d!.interaction.drag.subscribe((e) =>
+                    this.behaviors.interaction.drag.next(e)
+                ),
+            );
+            this.subs.push(
+                this.canvas3d!.interaction.hover.subscribe((e) =>
+                    this.behaviors.interaction.hover.next(e)
+                ),
+            );
+            this.subs.push(
+                this.canvas3d!.input.resize.pipe(
+                    debounceTime(50),
+                    throttleTime(100, undefined, { leading: false, trailing: true }),
+                ).subscribe(() => this.handleResize()),
+            );
+            this.subs.push(
+                this.canvas3d!.input.keyDown.subscribe((e) =>
+                    this.behaviors.interaction.key.next(e)
+                ),
+            );
+            this.subs.push(
+                this.canvas3d!.input.keyUp.subscribe((e) =>
+                    this.behaviors.interaction.keyReleased.next(e)
+                ),
+            );
+            this.subs.push(
+                this.layout.events.updated.subscribe(() =>
+                    requestAnimationFrame(() => this.handleResize())
+                ),
+            );
 
             this.handleResize();
 
@@ -365,16 +460,24 @@ export class PluginContext {
         this.behaviors.interaction.selectionMode.next(mode);
     }
 
-    dataTransaction(f: (ctx: RuntimeContext) => Promise<void> | void, options?: { canUndo?: string | boolean, rethrowErrors?: boolean }) {
+    dataTransaction(
+        f: (ctx: RuntimeContext) => Promise<void> | void,
+        options?: { canUndo?: string | boolean; rethrowErrors?: boolean },
+    ) {
         return this.runTask(this.state.data.transaction(f, options));
     }
 
     clear(resetViewportSettings = false) {
         if (resetViewportSettings) this.canvas3d?.setProps(DefaultCanvas3DParams);
-        return PluginCommands.State.RemoveObject(this, { state: this.state.data, ref: StateTransform.RootRef });
+        return PluginCommands.State.RemoveObject(this, {
+            state: this.state.data,
+            ref: StateTransform.RootRef,
+        });
     }
 
-    dispose(options?: { doNotForceWebGLContextLoss?: boolean, doNotDisposeCanvas3DContext?: boolean }) {
+    dispose(
+        options?: { doNotForceWebGLContextLoss?: boolean; doNotDisposeCanvas3DContext?: boolean },
+    ) {
         if (this.disposed) return;
 
         for (const s of this.subs) {
@@ -392,9 +495,9 @@ export class PluginContext {
         this.state.dispose();
         this.helpers.substructureParent.dispose();
 
-        objectForEach(this.managers, m => (m as any)?.dispose?.());
-        objectForEach(this.managers.structure, m => (m as any)?.dispose?.());
-        objectForEach(this.managers.volume, m => (m as any)?.dispose?.());
+        objectForEach(this.managers, (m) => (m as any)?.dispose?.());
+        objectForEach(this.managers.structure, (m) => (m as any)?.dispose?.());
+        objectForEach(this.managers.volume, (m) => (m as any)?.dispose?.());
 
         this.unmount();
         this.container = undefined;
@@ -404,9 +507,14 @@ export class PluginContext {
     }
 
     private initBehaviorEvents() {
-        this.subs.push(merge(this.state.data.behaviors.isUpdating, this.state.behaviors.behaviors.isUpdating).subscribe(u => {
-            if (this.behaviors.state.isUpdating.value !== u) this.behaviors.state.isUpdating.next(u);
-        }));
+        this.subs.push(
+            merge(this.state.data.behaviors.isUpdating, this.state.behaviors.behaviors.isUpdating)
+                .subscribe((u) => {
+                    if (this.behaviors.state.isUpdating.value !== u) {
+                        this.behaviors.state.isUpdating.next(u);
+                    }
+                }),
+        );
 
         const timeoutMs = this.config.get(PluginConfig.General.IsBusyTimeoutMs) || 750;
         const isBusy = this.behaviors.state.isBusy;
@@ -420,22 +528,26 @@ export class PluginContext {
             timeout = void 0;
         };
 
-        this.subs.push(merge(this.behaviors.state.isUpdating, this.behaviors.state.isAnimating).subscribe(v => {
-            const isUpdating = this.behaviors.state.isUpdating.value;
-            const isAnimating = this.behaviors.state.isAnimating.value;
+        this.subs.push(
+            merge(this.behaviors.state.isUpdating, this.behaviors.state.isAnimating).subscribe(
+                (v) => {
+                    const isUpdating = this.behaviors.state.isUpdating.value;
+                    const isAnimating = this.behaviors.state.isAnimating.value;
 
-            if (isUpdating || isAnimating) {
-                if (!isBusy.value) {
-                    reset();
-                    timeout = setTimeout(setBusy, timeoutMs);
-                }
-            } else {
-                reset();
-                isBusy.next(false);
-            }
-        }));
+                    if (isUpdating || isAnimating) {
+                        if (!isBusy.value) {
+                            reset();
+                            timeout = setTimeout(setBusy, timeoutMs);
+                        }
+                    } else {
+                        reset();
+                        isBusy.next(false);
+                    }
+                },
+            ),
+        );
 
-        this.subs.push(this.behaviors.interaction.selectionMode.subscribe(v => {
+        this.subs.push(this.behaviors.interaction.selectionMode.subscribe((v) => {
             if (!v) {
                 this.managers.interactivity?.lociSelects.deselectAll();
             }
@@ -448,14 +560,20 @@ export class PluginContext {
         BuiltInPluginBehaviors.Camera.registerDefault(this);
         BuiltInPluginBehaviors.Misc.registerDefault(this);
 
-        this.subs.push(merge(this.state.data.events.log, this.state.behaviors.events.log).subscribe(e => this.events.log.next(e)));
+        this.subs.push(
+            merge(this.state.data.events.log, this.state.behaviors.events.log).subscribe((e) =>
+                this.events.log.next(e)
+            ),
+        );
     }
 
     private async initBehaviors() {
         let tree = this.state.behaviors.build();
 
         for (const cat of Object.keys(PluginBehavior.Categories)) {
-            tree.toRoot().apply(PluginBehavior.CreateCategory, { label: (PluginBehavior.Categories as any)[cat] }, { ref: cat, state: { isLocked: true } });
+            tree.toRoot().apply(PluginBehavior.CreateCategory, {
+                label: (PluginBehavior.Categories as any)[cat],
+            }, { ref: cat, state: { isLocked: true } });
         }
 
         // Init custom properties 1st
@@ -463,18 +581,36 @@ export class PluginContext {
             const cat = PluginBehavior.getCategoryId(b.transformer);
             if (cat !== 'custom-props') continue;
 
-            tree.to(PluginBehavior.getCategoryId(b.transformer)).apply(b.transformer, b.defaultParams, { ref: b.transformer.id });
+            tree.to(PluginBehavior.getCategoryId(b.transformer)).apply(
+                b.transformer,
+                b.defaultParams,
+                { ref: b.transformer.id },
+            );
         }
-        await this.runTask(this.state.behaviors.updateTree(tree, { doNotUpdateCurrent: true, doNotLogTiming: true }));
+        await this.runTask(
+            this.state.behaviors.updateTree(tree, {
+                doNotUpdateCurrent: true,
+                doNotLogTiming: true,
+            }),
+        );
 
         tree = this.state.behaviors.build();
         for (const b of this.spec.behaviors) {
             const cat = PluginBehavior.getCategoryId(b.transformer);
             if (cat === 'custom-props') continue;
 
-            tree.to(PluginBehavior.getCategoryId(b.transformer)).apply(b.transformer, b.defaultParams, { ref: b.transformer.id });
+            tree.to(PluginBehavior.getCategoryId(b.transformer)).apply(
+                b.transformer,
+                b.defaultParams,
+                { ref: b.transformer.id },
+            );
         }
-        await this.runTask(this.state.behaviors.updateTree(tree, { doNotUpdateCurrent: true, doNotLogTiming: true }));
+        await this.runTask(
+            this.state.behaviors.updateTree(tree, {
+                doNotUpdateCurrent: true,
+                doNotLogTiming: true,
+            }),
+        );
     }
 
     private initCustomFormats() {
@@ -501,7 +637,9 @@ export class PluginContext {
 
     async init() {
         try {
-            this.subs.push(this.events.log.subscribe(e => this.log.entries = this.log.entries.push(e)));
+            this.subs.push(
+                this.events.log.subscribe((e) => this.log.entries = this.log.entries.push(e)),
+            );
 
             this.initCustomFormats();
             this.initBehaviorEvents();
@@ -516,7 +654,9 @@ export class PluginContext {
 
             await this.initBehaviors();
 
-            this.log.message(`Mol* Plugin ${PLUGIN_VERSION} [${PLUGIN_VERSION_DATE.toLocaleString()}]`);
+            this.log.message(
+                `Mol* Plugin ${PLUGIN_VERSION} [${PLUGIN_VERSION_DATE.toLocaleString()}]`,
+            );
             if (!isProductionMode) this.log.message(`Development mode enabled`);
             if (isDebugMode) this.log.message(`Debug mode enabled`);
 
@@ -534,6 +674,8 @@ export class PluginContext {
         // TODO: is this the best place to do it?
         setAutoFreeze(false);
 
-        setSaccharideCompIdMapType(this.config.get(PluginConfig.Structure.SaccharideCompIdMapType) ?? 'default');
+        setSaccharideCompIdMapType(
+            this.config.get(PluginConfig.Structure.SaccharideCompIdMapType) ?? 'default',
+        );
     }
 }

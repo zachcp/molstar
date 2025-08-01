@@ -16,12 +16,15 @@ const Description = 'Assign size based on the given value of a volume cell.';
 export const VolumeValueSizeThemeParams = {
     scale: PD.Numeric(1, { min: 0.1, max: 5, step: 0.1 }),
 };
-export type VolumeValueSizeThemeParams = typeof VolumeValueSizeThemeParams
+export type VolumeValueSizeThemeParams = typeof VolumeValueSizeThemeParams;
 export function getVolumeValueSizeThemeParams(ctx: ThemeDataContext) {
     return VolumeValueSizeThemeParams; // TODO return copy
 }
 
-export function VolumeValueSizeTheme(ctx: ThemeDataContext, props: PD.Values<VolumeValueSizeThemeParams>): SizeTheme<VolumeValueSizeThemeParams> {
+export function VolumeValueSizeTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<VolumeValueSizeThemeParams>,
+): SizeTheme<VolumeValueSizeThemeParams> {
     if (ctx.volume) {
         const { data } = ctx.volume.grid.cells;
 
@@ -39,7 +42,7 @@ export function VolumeValueSizeTheme(ctx: ThemeDataContext, props: PD.Values<Vol
             granularity: 'group',
             size,
             props,
-            description: Description
+            description: Description,
         };
     } else {
         return {
@@ -47,12 +50,15 @@ export function VolumeValueSizeTheme(ctx: ThemeDataContext, props: PD.Values<Vol
             granularity: 'uniform',
             size: () => props.scale,
             props,
-            description: Description
+            description: Description,
         };
     }
 }
 
-export const VolumeValueSizeThemeProvider: SizeTheme.Provider<VolumeValueSizeThemeParams, 'volume-value'> = {
+export const VolumeValueSizeThemeProvider: SizeTheme.Provider<
+    VolumeValueSizeThemeParams,
+    'volume-value'
+> = {
     name: 'volume-value',
     label: 'Volume Value',
     category: '',

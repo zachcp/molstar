@@ -9,8 +9,8 @@ import { CifWriter } from '../../../../mol-io/writer/cif.ts';
 import { SecondaryStructure } from '../../model/properties/secondary-structure.ts';
 import { StructureElement, Unit } from '../../structure.ts';
 import { CifExportContext } from '../mmcif.ts';
-import CifField = CifWriter.Field
-import CifCategory = CifWriter.Category
+import CifField = CifWriter.Field;
+import CifCategory = CifWriter.Category;
 import { Column } from '../../../../mol-data/db.ts';
 import { residueIdFields } from './atom_site.ts';
 import { ModelSecondaryStructure } from '../../../../mol-model-formats/structure/property/secondary-structure.ts';
@@ -21,55 +21,95 @@ export const _struct_conf: CifCategory<CifExportContext> = {
         const elements = findElements(ctx, 'helix');
         return {
             fields: struct_conf_fields(),
-            source: [{ data: elements, rowCount: elements.length }]
+            source: [{ data: elements, rowCount: elements.length }],
         };
-    }
+    },
 };
 
 export const _struct_sheet_range: CifCategory<CifExportContext> = {
     name: 'struct_sheet_range',
     instance(ctx) {
-        const elements = (findElements(ctx, 'sheet') as SSElement<SecondaryStructure.Sheet>[]).sort(compare_ssr);
+        const elements = (findElements(ctx, 'sheet') as SSElement<SecondaryStructure.Sheet>[]).sort(
+            compare_ssr,
+        );
         return {
             fields: struct_sheet_range_fields(),
-            source: [{ data: elements, rowCount: elements.length }]
+            source: [{ data: elements, rowCount: elements.length }],
         };
-    }
+    },
 };
 
-function compare_ssr(x: SSElement<SecondaryStructure.Sheet>, y: SSElement<SecondaryStructure.Sheet>) {
+function compare_ssr(
+    x: SSElement<SecondaryStructure.Sheet>,
+    y: SSElement<SecondaryStructure.Sheet>,
+) {
     const a = x.element, b = y.element;
-    return a.sheet_id < b.sheet_id ? -1 : a.sheet_id === b.sheet_id ? x.start.element - y.start.element : 1;
-};
+    return a.sheet_id < b.sheet_id
+        ? -1
+        : a.sheet_id === b.sheet_id
+        ? x.start.element - y.start.element
+        : 1;
+}
 
 const struct_conf_fields = (): CifField[] => [
-    CifField.str<number, SSElement<SecondaryStructure.Helix>[]>('conf_type_id', (i, data) => data[i].element.type_id),
-    CifField.str<number, SSElement<SecondaryStructure.Helix>[]>('id', (i, data, idx) => `${data[i].element.type_id}${idx + 1}`),
-    ...residueIdFields<number, SSElement<SecondaryStructure.Helix>[]>((i, e) => e[i].start, { prefix: 'beg' }),
-    ...residueIdFields<number, SSElement<SecondaryStructure.Helix>[]>((i, e) => e[i].end, { prefix: 'end' }),
-    CifField.str<number, SSElement<SecondaryStructure.Helix>[]>('pdbx_PDB_helix_class', (i, data) => data[i].element.helix_class),
-    CifField.str<number, SSElement<SecondaryStructure.Helix>[]>('details', (i, data) => data[i].element.details || '', {
-        valueKind: (i, d) => !!d[i].element.details ? Column.ValueKinds.Present : Column.ValueKinds.Unknown
+    CifField.str<number, SSElement<SecondaryStructure.Helix>[]>(
+        'conf_type_id',
+        (i, data) => data[i].element.type_id,
+    ),
+    CifField.str<number, SSElement<SecondaryStructure.Helix>[]>(
+        'id',
+        (i, data, idx) => `${data[i].element.type_id}${idx + 1}`,
+    ),
+    ...residueIdFields<number, SSElement<SecondaryStructure.Helix>[]>((i, e) => e[i].start, {
+        prefix: 'beg',
     }),
-    CifField.int<number, SSElement<SecondaryStructure.Helix>[]>('pdbx_PDB_helix_length', (i, data) => data[i].length)
+    ...residueIdFields<number, SSElement<SecondaryStructure.Helix>[]>((i, e) => e[i].end, {
+        prefix: 'end',
+    }),
+    CifField.str<number, SSElement<SecondaryStructure.Helix>[]>(
+        'pdbx_PDB_helix_class',
+        (i, data) => data[i].element.helix_class,
+    ),
+    CifField.str<number, SSElement<SecondaryStructure.Helix>[]>(
+        'details',
+        (i, data) => data[i].element.details || '',
+        {
+            valueKind: (i, d) =>
+                !!d[i].element.details ? Column.ValueKinds.Present : Column.ValueKinds.Unknown,
+        },
+    ),
+    CifField.int<number, SSElement<SecondaryStructure.Helix>[]>(
+        'pdbx_PDB_helix_length',
+        (i, data) => data[i].length,
+    ),
 ];
 
 const struct_sheet_range_fields = (): CifField[] => [
-    CifField.str<number, SSElement<SecondaryStructure.Sheet>[]>('sheet_id', (i, data) => data[i].element.sheet_id),
+    CifField.str<number, SSElement<SecondaryStructure.Sheet>[]>(
+        'sheet_id',
+        (i, data) => data[i].element.sheet_id,
+    ),
     CifField.index('id'),
-    ...residueIdFields<number, SSElement<SecondaryStructure.Sheet>[]>((i, e) => e[i].start, { prefix: 'beg' }),
-    ...residueIdFields<number, SSElement<SecondaryStructure.Sheet>[]>((i, e) => e[i].end, { prefix: 'end' }),
-    CifField.str('symmetry', (i, data) => '', { valueKind: (i, d) => Column.ValueKinds.Unknown })
+    ...residueIdFields<number, SSElement<SecondaryStructure.Sheet>[]>((i, e) => e[i].start, {
+        prefix: 'beg',
+    }),
+    ...residueIdFields<number, SSElement<SecondaryStructure.Sheet>[]>((i, e) => e[i].end, {
+        prefix: 'end',
+    }),
+    CifField.str('symmetry', (i, data) => '', { valueKind: (i, d) => Column.ValueKinds.Unknown }),
 ];
 
 interface SSElement<T extends SecondaryStructure.Element> {
-    start: StructureElement.Location,
-    end: StructureElement.Location,
-    length: number,
-    element: T
+    start: StructureElement.Location;
+    end: StructureElement.Location;
+    length: number;
+    element: T;
 }
 
-function findElements<T extends SecondaryStructure.Element>(ctx: CifExportContext, kind: SecondaryStructure.Element['kind']) {
+function findElements<T extends SecondaryStructure.Element>(
+    ctx: CifExportContext,
+    kind: SecondaryStructure.Element['kind'],
+) {
     // TODO: encode secondary structure for different models?
     const secondaryStructure = ModelSecondaryStructure.Provider.get(ctx.firstModel);
     if (!secondaryStructure) return [] as SSElement<T>[];
@@ -107,7 +147,7 @@ function findElements<T extends SecondaryStructure.Element>(ctx: CifExportContex
                         start: StructureElement.Location.create(structure, u, segs.offsets[start]),
                         end: StructureElement.Location.create(structure, u, segs.offsets[prev]),
                         length: prev - start + 1,
-                        element
+                        element,
                     };
                     break;
                 }

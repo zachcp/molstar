@@ -10,9 +10,11 @@ import { Hcl } from './spaces/hcl.ts';
 import { Lab } from './spaces/lab.ts';
 
 /** RGB color triplet expressed as a single number */
-export type Color = { readonly '@type': 'color' } & number
+export type Color = { readonly '@type': 'color' } & number;
 
-export function Color(hex: number) { return hex as Color; }
+export function Color(hex: number) {
+    return hex as Color;
+}
 
 export namespace Color {
     export function toStyle(hexColor: Color): string {
@@ -70,14 +72,18 @@ export namespace Color {
 
     /** Copies hex color to rgb array */
     export function toArray<T extends NumberArray>(hexColor: Color, array: T, offset: number): T {
-        array[offset] = (hexColor >> 16 & 255);
-        array[offset + 1] = (hexColor >> 8 & 255);
-        array[offset + 2] = (hexColor & 255);
+        array[offset] = hexColor >> 16 & 255;
+        array[offset + 1] = hexColor >> 8 & 255;
+        array[offset + 2] = hexColor & 255;
         return array;
     }
 
     /** Copies normalized (0 to 1) hex color to rgb array */
-    export function toArrayNormalized<T extends NumberArray>(hexColor: Color, array: T, offset: number): T {
+    export function toArrayNormalized<T extends NumberArray>(
+        hexColor: Color,
+        array: T,
+        offset: number,
+    ): T {
         array[offset] = (hexColor >> 16 & 255) / 255;
         array[offset + 1] = (hexColor >> 8 & 255) / 255;
         array[offset + 2] = (hexColor & 255) / 255;
@@ -86,9 +92,9 @@ export namespace Color {
 
     /** Copies hex color to rgb vec3 */
     export function toVec3(out: Vec3, hexColor: Color): Vec3 {
-        out[0] = (hexColor >> 16 & 255);
-        out[1] = (hexColor >> 8 & 255);
-        out[2] = (hexColor & 255);
+        out[0] = hexColor >> 16 & 255;
+        out[1] = hexColor >> 8 & 255;
+        out[2] = hexColor & 255;
         return out;
     }
 
@@ -167,7 +173,7 @@ export namespace Color {
         const l1 = luminance(a);
         const l2 = luminance(b);
         return l1 > l2 ? (l1 + 0.05) / (l2 + 0.05) : (l2 + 0.05) / (l1 + 0.05);
-    };
+    }
 
     //
 
@@ -179,7 +185,7 @@ export namespace Color {
         return fromNormalizedRgb(
             _sRGBToLinear((c >> 16 & 255) / 255),
             _sRGBToLinear((c >> 8 & 255) / 255),
-            _sRGBToLinear((c & 255) / 255)
+            _sRGBToLinear((c & 255) / 255),
         );
     }
 
@@ -191,29 +197,42 @@ export namespace Color {
         return fromNormalizedRgb(
             _linearToSRGB((c >> 16 & 255) / 255),
             _linearToSRGB((c >> 8 & 255) / 255),
-            _linearToSRGB((c & 255) / 255)
+            _linearToSRGB((c & 255) / 255),
         );
     }
 }
 
-export type ColorListEntry = Color | [Color, number /** normalized value from 0 to 1 */]
+export type ColorListEntry = Color | [Color, number /** normalized value from 0 to 1 */];
 
 export interface ColorList {
-    label: string
-    description: string
-    list: ColorListEntry[]
-    type: 'sequential' | 'diverging' | 'cyclical' | 'qualitative'
+    label: string;
+    description: string;
+    list: ColorListEntry[];
+    type: 'sequential' | 'diverging' | 'cyclical' | 'qualitative';
 }
-export function ColorList(label: string, type: ColorList['type'], description: string, list: (number | [number, number])[]): ColorList {
+export function ColorList(
+    label: string,
+    type: ColorList['type'],
+    description: string,
+    list: (number | [number, number])[],
+): ColorList {
     return { label, description, list: list as ColorListEntry[], type };
 }
 
-export type ColorTable<T extends { [k: string]: number[] }> = { [k in keyof T]: Color[] }
-export function ColorTable<T extends { [k: string]: number[] }>(o: T) { return o as unknown as ColorTable<T>; }
+export type ColorTable<T extends { [k: string]: number[] }> = { [k in keyof T]: Color[] };
+export function ColorTable<T extends { [k: string]: number[] }>(o: T) {
+    return o as unknown as ColorTable<T>;
+}
 
-export type ColorMap<T extends { [k: string]: number }> = { [k in keyof T]: Color }
-export function ColorMap<T extends { [k: string]: number }>(o: T) { return o as unknown as ColorMap<T>; }
-export function getAdjustedColorMap<T extends { [k: string]: number }>(map: ColorMap<T>, saturation: number, lightness: number) {
+export type ColorMap<T extends { [k: string]: number }> = { [k in keyof T]: Color };
+export function ColorMap<T extends { [k: string]: number }>(o: T) {
+    return o as unknown as ColorMap<T>;
+}
+export function getAdjustedColorMap<T extends { [k: string]: number }>(
+    map: ColorMap<T>,
+    saturation: number,
+    lightness: number,
+) {
     const adjustedMap: { [k: string]: Color } = {};
     for (const e in map) {
         let c = map[e];
@@ -224,5 +243,7 @@ export function getAdjustedColorMap<T extends { [k: string]: number }>(map: Colo
     return adjustedMap as ColorMap<T>;
 }
 
-export type ColorSwatch = [string, Color][]
-export function ColorSwatch(l: [string, number][]) { return l as unknown as ColorSwatch; }
+export type ColorSwatch = [string, Color][];
+export function ColorSwatch(l: [string, number][]) {
+    return l as unknown as ColorSwatch;
+}

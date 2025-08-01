@@ -17,32 +17,48 @@ import { StructureSelection } from '../selection.ts';
 import { LinearGroupingBuilder } from '../utils/builders.ts';
 import { structureSubtract } from '../utils/structure-set.ts';
 
-export const none: StructureQuery = ctx => StructureSelection.Sequence(ctx.inputStructure, []);
-export const all: StructureQuery = ctx => StructureSelection.Singletons(ctx.inputStructure, ctx.inputStructure);
+export const none: StructureQuery = (ctx) => StructureSelection.Sequence(ctx.inputStructure, []);
+export const all: StructureQuery = (ctx) =>
+    StructureSelection.Singletons(ctx.inputStructure, ctx.inputStructure);
 
 export interface AtomsQueryParams {
     /** Query to be executed for each unit once */
-    unitTest: QueryPredicate,
+    unitTest: QueryPredicate;
     /** Query to be executed for each entity once */
-    entityTest: QueryPredicate,
+    entityTest: QueryPredicate;
     /** Query to be executed for each chain once */
-    chainTest: QueryPredicate,
+    chainTest: QueryPredicate;
     /** Query to be executed for each residue (or coarse element) once */
-    residueTest: QueryPredicate,
+    residueTest: QueryPredicate;
     /** Query to be executed for each atom */
-    atomTest: QueryPredicate,
-    groupBy: QueryFn
+    atomTest: QueryPredicate;
+    groupBy: QueryFn;
 }
 
-export function residues(params?: Partial<AtomsQueryParams>) { return atoms({ ...params, groupBy: ctx => P.residue.key(ctx.element) }); }
-export function chains(params?: Partial<AtomsQueryParams>) { return atoms({ ...params, groupBy: ctx => P.chain.key(ctx.element) }); }
+export function residues(params?: Partial<AtomsQueryParams>) {
+    return atoms({ ...params, groupBy: (ctx) => P.residue.key(ctx.element) });
+}
+export function chains(params?: Partial<AtomsQueryParams>) {
+    return atoms({ ...params, groupBy: (ctx) => P.chain.key(ctx.element) });
+}
 
-function _true(ctx: QueryContextView) { return true; }
-function _zero(ctx: QueryContextView) { return 0; }
+function _true(ctx: QueryContextView) {
+    return true;
+}
+function _zero(ctx: QueryContextView) {
+    return 0;
+}
 
 export function atoms(params?: Partial<AtomsQueryParams>): StructureQuery {
-    if (!params || (!params.atomTest && !params.residueTest && !params.chainTest && !params.entityTest && !params.unitTest && !params.groupBy)) return all;
-    if (!!params.atomTest && !params.residueTest && !params.chainTest && !params.entityTest && !params.unitTest && !params.groupBy) return atomGroupsLinear(params.atomTest);
+    if (
+        !params ||
+        (!params.atomTest && !params.residueTest && !params.chainTest && !params.entityTest &&
+            !params.unitTest && !params.groupBy)
+    ) return all;
+    if (
+        !!params.atomTest && !params.residueTest && !params.chainTest && !params.entityTest &&
+        !params.unitTest && !params.groupBy
+    ) return atomGroupsLinear(params.atomTest);
 
     const normalized: AtomsQueryParams = {
         unitTest: params.unitTest || _true,
@@ -83,7 +99,9 @@ function atomGroupsLinear(atomTest: QueryPredicate): StructureQuery {
     };
 }
 
-function atomGroupsSegmented({ unitTest, entityTest, chainTest, residueTest, atomTest }: AtomsQueryParams): StructureQuery {
+function atomGroupsSegmented(
+    { unitTest, entityTest, chainTest, residueTest, atomTest }: AtomsQueryParams,
+): StructureQuery {
     return function query_atomGroupsSegmented(ctx) {
         const { inputStructure } = ctx;
         const { units } = inputStructure;
@@ -102,8 +120,14 @@ function atomGroupsSegmented({ unitTest, entityTest, chainTest, residueTest, ato
             builder.beginUnit(unit.id);
 
             if (unit.kind === Unit.Kind.Atomic) {
-                const chainsIt = Segmentation.transientSegments(unit.model.atomicHierarchy.chainAtomSegments, elements);
-                const residuesIt = Segmentation.transientSegments(unit.model.atomicHierarchy.residueAtomSegments, elements);
+                const chainsIt = Segmentation.transientSegments(
+                    unit.model.atomicHierarchy.chainAtomSegments,
+                    elements,
+                );
+                const residuesIt = Segmentation.transientSegments(
+                    unit.model.atomicHierarchy.residueAtomSegments,
+                    elements,
+                );
 
                 while (chainsIt.hasNext) {
                     const chainSegment = chainsIt.move();
@@ -125,7 +149,11 @@ function atomGroupsSegmented({ unitTest, entityTest, chainTest, residueTest, ato
                         if (!residueTest(ctx)) continue;
 
                         if (residueLevel) {
-                            builder.addElementRange(elements, residueSegment.start, residueSegment.end);
+                            builder.addElementRange(
+                                elements,
+                                residueSegment.start,
+                                residueSegment.end,
+                            );
                             continue;
                         }
 
@@ -139,7 +167,9 @@ function atomGroupsSegmented({ unitTest, entityTest, chainTest, residueTest, ato
                     }
                 }
             } else {
-                const { chainElementSegments } = unit.kind === Unit.Kind.Spheres ? model.coarseHierarchy.spheres : model.coarseHierarchy.gaussians;
+                const { chainElementSegments } = unit.kind === Unit.Kind.Spheres
+                    ? model.coarseHierarchy.spheres
+                    : model.coarseHierarchy.gaussians;
                 const chainsIt = Segmentation.transientSegments(chainElementSegments, elements);
 
                 while (chainsIt.hasNext) {
@@ -171,7 +201,9 @@ function atomGroupsSegmented({ unitTest, entityTest, chainTest, residueTest, ato
     };
 }
 
-function atomGroupsGrouped({ unitTest, entityTest, chainTest, residueTest, atomTest, groupBy }: AtomsQueryParams): StructureQuery {
+function atomGroupsGrouped(
+    { unitTest, entityTest, chainTest, residueTest, atomTest, groupBy }: AtomsQueryParams,
+): StructureQuery {
     return function query_atomGroupsGrouped(ctx) {
         const { inputStructure } = ctx;
         const { units } = inputStructure;
@@ -186,8 +218,14 @@ function atomGroupsGrouped({ unitTest, entityTest, chainTest, residueTest, atomT
             const { elements, model } = unit;
 
             if (unit.kind === Unit.Kind.Atomic) {
-                const chainsIt = Segmentation.transientSegments(model.atomicHierarchy.chainAtomSegments, elements);
-                const residuesIt = Segmentation.transientSegments(model.atomicHierarchy.residueAtomSegments, elements);
+                const chainsIt = Segmentation.transientSegments(
+                    model.atomicHierarchy.chainAtomSegments,
+                    elements,
+                );
+                const residuesIt = Segmentation.transientSegments(
+                    model.atomicHierarchy.residueAtomSegments,
+                    elements,
+                );
 
                 while (chainsIt.hasNext) {
                     const chainSegment = chainsIt.move();
@@ -213,7 +251,9 @@ function atomGroupsGrouped({ unitTest, entityTest, chainTest, residueTest, atomT
                     }
                 }
             } else {
-                const { chainElementSegments } = unit.kind === Unit.Kind.Spheres ? model.coarseHierarchy.spheres : model.coarseHierarchy.gaussians;
+                const { chainElementSegments } = unit.kind === Unit.Kind.Spheres
+                    ? model.coarseHierarchy.spheres
+                    : model.coarseHierarchy.gaussians;
                 const chainsIt = Segmentation.transientSegments(chainElementSegments, elements);
                 while (chainsIt.hasNext) {
                     const chainSegment = chainsIt.move();
@@ -241,10 +281,15 @@ function atomGroupsGrouped({ unitTest, entityTest, chainTest, residueTest, atomT
 function getRingStructure(unit: Unit.Atomic, ring: UnitRing, inputStructure: Structure) {
     const elements = new Int32Array(ring.length) as any as ElementIndex[];
     for (let i = 0, _i = ring.length; i < _i; i++) elements[i] = unit.elements[ring[i]];
-    return Structure.create([unit.getChild(SortedArray.ofSortedArray(elements))], { parent: inputStructure });
+    return Structure.create([unit.getChild(SortedArray.ofSortedArray(elements))], {
+        parent: inputStructure,
+    });
 }
 
-export function rings(fingerprints?: ArrayLike<UnitRing.Fingerprint>, onlyAromatic?: boolean): StructureQuery {
+export function rings(
+    fingerprints?: ArrayLike<UnitRing.Fingerprint>,
+    onlyAromatic?: boolean,
+): StructureQuery {
     return function query_rings(ctx) {
         const { units } = ctx.inputStructure;
         const ret = StructureSelection.LinearBuilder(ctx.inputStructure);
@@ -265,7 +310,9 @@ export function rings(fingerprints?: ArrayLike<UnitRing.Fingerprint>, onlyAromat
             }
         } else {
             const uniqueFps = UniqueArray.create<UnitRing.Fingerprint, UnitRing.Fingerprint>();
-            for (let i = 0; i < fingerprints.length; i++) UniqueArray.add(uniqueFps, fingerprints[i], fingerprints[i]);
+            for (let i = 0; i < fingerprints.length; i++) {
+                UniqueArray.add(uniqueFps, fingerprints[i], fingerprints[i]);
+            }
 
             for (const u of units) {
                 if (!Unit.isAtomic(u)) continue;
@@ -285,7 +332,11 @@ export function rings(fingerprints?: ArrayLike<UnitRing.Fingerprint>, onlyAromat
     };
 }
 
-export function querySelection(selection: StructureQuery, query: StructureQuery, inComplement: boolean = false): StructureQuery {
+export function querySelection(
+    selection: StructureQuery,
+    query: StructureQuery,
+    inComplement: boolean = false,
+): StructureQuery {
     return function query_querySelection(ctx) {
         const targetSel = selection(ctx);
         if (StructureSelection.structureCount(targetSel) === 0) return targetSel;
@@ -322,7 +373,8 @@ export function bondedAtomicPairs(bondTest?: QueryPredicate): StructureQuery {
         for (const unit of structure.units) {
             if (unit.kind !== Unit.Kind.Atomic) continue;
 
-            const { offset: intraBondOffset, b: intraBondB, edgeProps: { flags, order, key } } = unit.bonds;
+            const { offset: intraBondOffset, b: intraBondB, edgeProps: { flags, order, key } } =
+                unit.bonds;
             atomicBond.a.unit = unit;
             atomicBond.b.unit = unit;
             for (let i = 0 as StructureElement.UnitIndex, _i = unit.elements.length; i < _i; i++) {

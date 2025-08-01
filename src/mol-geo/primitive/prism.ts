@@ -17,7 +17,7 @@ export const DefaultPrismProps = {
     topCap: true,
     bottomCap: true,
 };
-export type PrismProps = Partial<typeof DefaultPrismProps>
+export type PrismProps = Partial<typeof DefaultPrismProps>;
 
 /**
  * Create a prism with a base of 3 or more points
@@ -155,8 +155,12 @@ export function PrismCage(points: ArrayLike<number>, height = 1): Cage {
     // vertices and side edges
     for (let i = 0; i < sideCount; ++i) {
         vertices.push(
-            points[i * 3], points[i * 3 + 1], -halfHeight,
-            points[i * 3], points[i * 3 + 1], halfHeight
+            points[i * 3],
+            points[i * 3 + 1],
+            -halfHeight,
+            points[i * 3],
+            points[i * 3 + 1],
+            halfHeight,
         );
         edges.push(offset, offset + 1);
         offset += 2;
@@ -166,8 +170,10 @@ export function PrismCage(points: ArrayLike<number>, height = 1): Cage {
     for (let i = 0; i < sideCount; ++i) {
         const ni = (i + 1) % sideCount;
         edges.push(
-            i * 2, ni * 2,
-            i * 2 + 1, ni * 2 + 1
+            i * 2,
+            ni * 2,
+            i * 2 + 1,
+            ni * 2 + 1,
         );
     }
 

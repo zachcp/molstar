@@ -18,12 +18,22 @@ export const DefaultCylinderProps = {
     topCap: false,
     bottomCap: false,
     thetaStart: 0.0,
-    thetaLength: Math.PI * 2
+    thetaLength: Math.PI * 2,
 };
-export type CylinderProps = Partial<typeof DefaultCylinderProps>
+export type CylinderProps = Partial<typeof DefaultCylinderProps>;
 
 export function Cylinder(props?: CylinderProps): Primitive {
-    const { radiusTop, radiusBottom, height, radialSegments, heightSegments, topCap, bottomCap, thetaStart, thetaLength } = { ...DefaultCylinderProps, ...props };
+    const {
+        radiusTop,
+        radiusBottom,
+        height,
+        radialSegments,
+        heightSegments,
+        topCap,
+        bottomCap,
+        thetaStart,
+        thetaLength,
+    } = { ...DefaultCylinderProps, ...props };
 
     // buffers
     const indices: number[] = [];
@@ -44,7 +54,7 @@ export function Cylinder(props?: CylinderProps): Primitive {
     return {
         vertices: new Float32Array(vertices),
         normals: new Float32Array(normals),
-        indices: new Uint32Array(indices)
+        indices: new Uint32Array(indices),
     };
 
     function generateTorso() {
@@ -86,7 +96,6 @@ export function Cylinder(props?: CylinderProps): Primitive {
         // generate indices
 
         for (let x = 0; x < radialSegments; ++x) {
-
             for (let y = 0; y < heightSegments; ++y) {
                 // we use the index array to access the correct indices
                 const a = indexArray[y][x];
@@ -98,13 +107,12 @@ export function Cylinder(props?: CylinderProps): Primitive {
                 indices.push(a, b, d);
                 indices.push(b, c, d);
             }
-
         }
     }
 
     function generateCap(top: boolean) {
         const radius = (top === true) ? radiusTop : radiusBottom;
-        const sign = (top === true) ? 1 : - 1;
+        const sign = (top === true) ? 1 : -1;
 
         // save the index of the first center vertex
         const centerIndexStart = index;

@@ -21,7 +21,7 @@ import { Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
 export { InteractivityManager };
 
 interface InteractivityManagerState {
-    props: PD.ValuesFor<InteractivityManager.Params>
+    props: PD.ValuesFor<InteractivityManager.Params>;
 }
 
 // TODO: make this customizable somewhere?
@@ -31,7 +31,7 @@ const DefaultInteractivityFocusOptions = {
     durationMs: 250,
 };
 
-export type InteractivityFocusLociOptions = typeof DefaultInteractivityFocusOptions
+export type InteractivityFocusLociOptions = typeof DefaultInteractivityFocusOptions;
 
 class InteractivityManager extends StatefulPluginComponent<InteractivityManagerState> {
     readonly lociSelects: InteractivityManager.LociSelectManager;
@@ -40,10 +40,12 @@ class InteractivityManager extends StatefulPluginComponent<InteractivityManagerS
     private _props = PD.getDefaultValues(InteractivityManager.Params);
 
     readonly events = {
-        propsUpdated: this.ev()
+        propsUpdated: this.ev(),
     };
 
-    get props(): Readonly<InteractivityManagerState['props']> { return { ...this.state.props }; }
+    get props(): Readonly<InteractivityManagerState['props']> {
+        return { ...this.state.props };
+    }
 
     setProps(props: Partial<InteractivityManager.Props>) {
         const old = this.props;
@@ -72,14 +74,39 @@ class InteractivityManager extends StatefulPluginComponent<InteractivityManagerS
 
 namespace InteractivityManager {
     export const Params = {
-        granularity: PD.Select('residue', Loci.GranularityOptions, { label: 'Picking Level', description: 'Controls if selections are expanded upon picking to whole residues, chains, structures, instances, or left as atoms and coarse elements' }),
+        granularity: PD.Select('residue', Loci.GranularityOptions, {
+            label: 'Picking Level',
+            description:
+                'Controls if selections are expanded upon picking to whole residues, chains, structures, instances, or left as atoms and coarse elements',
+        }),
     };
-    export type Params = typeof Params
-    export type Props = PD.Values<Params>
+    export type Params = typeof Params;
+    export type Props = PD.Values<Params>;
 
-    export interface HoverEvent { current: Representation.Loci, buttons: ButtonsType, button: ButtonsType.Flag, modifiers: ModifiersKeys, page?: Vec2, position?: Vec3 }
-    export interface DragEvent { current: Representation.Loci, buttons: ButtonsType, button: ButtonsType.Flag, modifiers: ModifiersKeys, pageStart: Vec2, pageEnd: Vec2 }
-    export interface ClickEvent { current: Representation.Loci, buttons: ButtonsType, button: ButtonsType.Flag, modifiers: ModifiersKeys, page?: Vec2, position?: Vec3 }
+    export interface HoverEvent {
+        current: Representation.Loci;
+        buttons: ButtonsType;
+        button: ButtonsType.Flag;
+        modifiers: ModifiersKeys;
+        page?: Vec2;
+        position?: Vec3;
+    }
+    export interface DragEvent {
+        current: Representation.Loci;
+        buttons: ButtonsType;
+        button: ButtonsType.Flag;
+        modifiers: ModifiersKeys;
+        pageStart: Vec2;
+        pageEnd: Vec2;
+    }
+    export interface ClickEvent {
+        current: Representation.Loci;
+        buttons: ButtonsType;
+        button: ButtonsType.Flag;
+        modifiers: ModifiersKeys;
+        page?: Vec2;
+        position?: Vec3;
+    }
 
     /**
      * The `noRender` argument indicates that the action should only update the internal
@@ -89,7 +116,11 @@ namespace InteractivityManager {
      * This is useful because some actions require clearing any markings before
      * they can be applied.
      */
-    export type LociMarkProvider = (loci: Representation.Loci, action: MarkerAction, /* test */ noRender?: boolean) => void
+    export type LociMarkProvider = (
+        loci: Representation.Loci,
+        action: MarkerAction,
+        /* test */ noRender?: boolean,
+    ) => void;
 
     export abstract class LociMarkManager {
         protected providers: LociMarkProvider[] = [];
@@ -106,11 +137,15 @@ namespace InteractivityManager {
         }
 
         removeProvider(provider: LociMarkProvider) {
-            this.providers = this.providers.filter(p => p !== provider);
+            this.providers = this.providers.filter((p) => p !== provider);
             // TODO clear, then re-apply remaining providers
         }
 
-        protected normalizedLoci(reprLoci: Representation.Loci, applyGranularity: boolean, alwaysConvertBonds = false) {
+        protected normalizedLoci(
+            reprLoci: Representation.Loci,
+            applyGranularity: boolean,
+            alwaysConvertBonds = false,
+        ) {
             const { loci, repr } = reprLoci;
             const granularity = applyGranularity ? this.props.granularity : undefined;
             return { loci: Loci.normalize(loci, granularity, alwaysConvertBonds), repr };
@@ -179,10 +214,12 @@ namespace InteractivityManager {
         highlightOnlyExtend(current: Representation.Loci, applyGranularity = true) {
             const normalized = this.normalizedLoci(current, applyGranularity);
             if (StructureElement.Loci.is(normalized.loci)) {
-                const range = this.ctx.selectionMode ? this.sel.tryGetRange(normalized.loci) : this.ctx.managers.structure.focus.tryGetRange(normalized.loci);
+                const range = this.ctx.selectionMode
+                    ? this.sel.tryGetRange(normalized.loci)
+                    : this.ctx.managers.structure.focus.tryGetRange(normalized.loci);
                 const extended = {
                     loci: range ?? normalized.loci,
-                    repr: normalized.repr
+                    repr: normalized.repr,
                 };
                 if (!this.isHighlighted(extended)) {
                     if (Loci.isEmpty(extended.loci)) {
@@ -246,7 +283,10 @@ namespace InteractivityManager {
             const normalized = this.normalizedLoci(current, applyGranularity, true);
             if (StructureElement.Loci.is(normalized.loci)) {
                 // only deselect for the structure of the given loci
-                this.mark({ loci: Structure.Loci(normalized.loci.structure), repr: normalized.repr }, MarkerAction.Deselect);
+                this.mark({
+                    loci: Structure.Loci(normalized.loci.structure),
+                    repr: normalized.repr,
+                }, MarkerAction.Deselect);
                 this.sel.modify('set', normalized.loci);
             }
             this.mark(normalized, MarkerAction.Select);
@@ -269,7 +309,10 @@ namespace InteractivityManager {
             if (isEmptyLoci(current.loci)) this.deselectAll();
         }
 
-        protected mark(current: Representation.Loci, action: MarkerAction.Select | MarkerAction.Deselect) {
+        protected mark(
+            current: Representation.Loci,
+            action: MarkerAction.Select | MarkerAction.Deselect,
+        ) {
             const { loci } = current;
             if (!Loci.isEmpty(loci)) {
                 if (StructureElement.Loci.is(loci)) {
@@ -277,7 +320,11 @@ namespace InteractivityManager {
                     // marked with granularity unequal to 'element' and join/intersect operations
                     // are handled properly
                     const selLoci = this.sel.getLoci(loci.structure);
-                    super.mark({ loci: Structure.Loci(loci.structure) }, MarkerAction.Deselect, !Loci.isEmpty(selLoci));
+                    super.mark(
+                        { loci: Structure.Loci(loci.structure) },
+                        MarkerAction.Deselect,
+                        !Loci.isEmpty(selLoci),
+                    );
                     super.mark({ loci: selLoci }, MarkerAction.Select);
                 } else {
                     super.mark(current, action);

@@ -5,8 +5,13 @@
  */
 
 import { FileHandle } from '../../../../mol-io/common/file-handle.ts';
-import { Header, Provider, Data } from '../format.ts';
-import { readDsn6Header, dsn6HeaderSize, parseDsn6Values, getDsn6Counts } from '../../../../mol-io/reader/dsn6/parser.ts';
+import { Data, Header, Provider } from '../format.ts';
+import {
+    dsn6HeaderSize,
+    getDsn6Counts,
+    parseDsn6Values,
+    readDsn6Header,
+} from '../../../../mol-io/reader/dsn6/parser.ts';
 import { TypedArrayValueType } from '../../../../mol-io/common/typed-array.ts';
 import { Dsn6Header } from '../../../../mol-io/reader/dsn6/schema.ts';
 
@@ -25,7 +30,7 @@ async function readHeader(name: string, file: FileHandle) {
         cellAngles: [dsn6Header.alpha, dsn6Header.beta, dsn6Header.gamma],
         littleEndian,
         dataOffset: dsn6HeaderSize,
-        originalHeader: dsn6Header
+        originalHeader: dsn6Header,
     };
     return header;
 }
@@ -46,7 +51,9 @@ export async function readSlices(data: Data) {
 
     const { byteCount } = getDsn6Counts(originalHeader as Dsn6Header);
     if (byteCount > slices.maxBlockBytes) {
-        throw new Error(`dsn6 file to large, can't read ${byteCount} bytes at once, increase block size or use another file format`);
+        throw new Error(
+            `dsn6 file to large, can't read ${byteCount} bytes at once, increase block size or use another file format`,
+        );
     }
 
     const { buffer } = await file.readBuffer(dataOffset, byteCount);

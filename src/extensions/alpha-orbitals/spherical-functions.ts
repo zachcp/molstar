@@ -17,7 +17,7 @@ export type SphericalBasisOrder = 'gaussian' | 'cca' | 'cca-reverse';
 export function normalizeBasicOrder(
     L: number,
     alpha: number[],
-    order: SphericalBasisOrder
+    order: SphericalBasisOrder,
 ) {
     if (order === 'gaussian' || L === 0) return alpha;
 
@@ -35,7 +35,7 @@ export type SphericalFunc = (
     alpha: number[],
     x: number,
     y: number,
-    z: number
+    z: number,
 ) => number;
 
 export const SphericalFunctions: SphericalFunc[] = [L0, L1, L2, L3, L4];
@@ -66,8 +66,10 @@ function L3(alpha: number[], x: number, y: number, z: number) {
     const xxx = xx * x, yyy = yy * y, zzz = zz * z;
     return (
         alpha[0] * (-1.5 * xx * z - 1.5 * yy * z + zzz) +
-        alpha[1] * (-0.6123724356957945 * xxx - 0.6123724356957945 * x * yy + 2.449489742783178 * x * zz) +
-        alpha[2] * (-0.6123724356957945 * xx * y - 0.6123724356957945 * yyy + 2.449489742783178 * y * zz) +
+        alpha[1] *
+            (-0.6123724356957945 * xxx - 0.6123724356957945 * x * yy + 2.449489742783178 * x * zz) +
+        alpha[2] *
+            (-0.6123724356957945 * xx * y - 0.6123724356957945 * yyy + 2.449489742783178 * y * zz) +
         alpha[3] * (1.9364916731037085 * xx * z - 1.9364916731037085 * yy * z) +
         alpha[4] * (3.872983346207417 * x * y * z) +
         alpha[5] * (0.7905694150420949 * xxx - 2.3717082451262845 * x * yy) +
@@ -80,14 +82,24 @@ function L4(alpha: number[], x: number, y: number, z: number) {
     const xxx = xx * x, yyy = yy * y, zzz = zz * z;
     const xxxx = xxx * x, yyyy = yyy * y, zzzz = zzz * z;
     return (
-        alpha[0] * (0.375 * xxxx + 0.75 * xx * yy + 0.375 * yyyy - 3.0 * xx * zz - 3.0 * yy * zz + zzzz) +
-        alpha[1] * (-2.3717082451262845 * xxx * z - 2.3717082451262845 * x * yy * z + 3.1622776601683795 * x * zzz) +
-        alpha[2] * (-2.3717082451262845 * xx * y * z - 2.3717082451262845 * yyy * z + 3.1622776601683795 * y * zzz) +
-        alpha[3] * (-0.5590169943749475 * xxxx + 0.5590169943749475 * yyyy + 3.3541019662496847 * xx * zz - 3.3541019662496847 * yy * zz) +
-        alpha[4] * (-1.118033988749895 * xxx * y - 1.118033988749895 * x * yyy + 6.708203932499369 * x * y * zz) +
+        alpha[0] *
+            (0.375 * xxxx + 0.75 * xx * yy + 0.375 * yyyy - 3.0 * xx * zz - 3.0 * yy * zz + zzzz) +
+        alpha[1] *
+            (-2.3717082451262845 * xxx * z - 2.3717082451262845 * x * yy * z +
+                3.1622776601683795 * x * zzz) +
+        alpha[2] *
+            (-2.3717082451262845 * xx * y * z - 2.3717082451262845 * yyy * z +
+                3.1622776601683795 * y * zzz) +
+        alpha[3] *
+            (-0.5590169943749475 * xxxx + 0.5590169943749475 * yyyy + 3.3541019662496847 * xx * zz -
+                3.3541019662496847 * yy * zz) +
+        alpha[4] *
+            (-1.118033988749895 * xxx * y - 1.118033988749895 * x * yyy +
+                6.708203932499369 * x * y * zz) +
         alpha[5] * (2.091650066335189 * xxx * z + -6.274950199005566 * x * yy * z) +
         alpha[6] * (6.274950199005566 * xx * y * z + -2.091650066335189 * yyy * z) +
-        alpha[7] * (0.739509972887452 * xxxx - 4.437059837324712 * xx * yy + 0.739509972887452 * yyyy) +
+        alpha[7] *
+            (0.739509972887452 * xxxx - 4.437059837324712 * xx * yy + 0.739509972887452 * yyyy) +
         alpha[8] * (2.958039891549808 * xxx * y + -2.958039891549808 * x * yyy)
     );
 }

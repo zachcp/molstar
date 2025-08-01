@@ -20,13 +20,13 @@ export class MVSStoriesSnapshotMarkdownModel extends PluginComponent {
     root: HTMLElement | undefined = undefined;
 
     state = new BehaviorSubject<{
-        entry?: PluginStateSnapshotManager.Entry,
-        index?: number,
-        all: PluginStateSnapshotManager.Entry[],
+        entry?: PluginStateSnapshotManager.Entry;
+        index?: number;
+        all: PluginStateSnapshotManager.Entry[];
     }>({ all: [] });
 
     get viewer() {
-        return this.context.state.viewers.value?.find(v => this.options?.viewerName === v.name);
+        return this.context.state.viewers.value?.find((v) => this.options?.viewerName === v.name);
     }
 
     sync() {
@@ -45,32 +45,39 @@ export class MVSStoriesSnapshotMarkdownModel extends PluginComponent {
 
         let currentViewer: MVSStoriesViewerModel | undefined = undefined;
         let sub: { unsubscribe: () => void } | undefined = undefined;
-        this.subscribe(this.context.state.viewers.pipe(
-            map(xs => xs.find(v => this.options?.viewerName === v.name)),
-            distinctUntilChanged((a, b) => a?.model === b?.model)
-        ), viewer => {
-            if (currentViewer !== viewer) {
-                currentViewer = viewer?.model;
-                sub?.unsubscribe();
-            }
-            if (!viewer) return;
-            sub = this.subscribe(viewer.model.plugin?.managers.snapshot.events.changed, () => {
+        this.subscribe(
+            this.context.state.viewers.pipe(
+                map((xs) => xs.find((v) => this.options?.viewerName === v.name)),
+                distinctUntilChanged((a, b) => a?.model === b?.model),
+            ),
+            (viewer) => {
+                if (currentViewer !== viewer) {
+                    currentViewer = viewer?.model;
+                    sub?.unsubscribe();
+                }
+                if (!viewer) return;
+                sub = this.subscribe(viewer.model.plugin?.managers.snapshot.events.changed, () => {
+                    this.sync();
+                });
                 this.sync();
-            });
-            this.sync();
-        });
+            },
+        );
 
         this.sync();
     }
 
-    constructor(private options?: { context?: { name?: string, container?: object }, viewerName?: string }) {
+    constructor(
+        private options?: { context?: { name?: string; container?: object }; viewerName?: string },
+    ) {
         super();
 
         this.context = getMVSStoriesContext(options?.context);
     }
 }
 
-export function MVSStoriesSnapshotMarkdownUI({ model }: { model: MVSStoriesSnapshotMarkdownModel }) {
+export function MVSStoriesSnapshotMarkdownUI(
+    { model }: { model: MVSStoriesSnapshotMarkdownModel },
+) {
     const state = useBehavior(model.state);
     const isLoading = useBehavior(model.context.state.isLoading);
 
@@ -78,31 +85,53 @@ export function MVSStoriesSnapshotMarkdownUI({ model }: { model: MVSStoriesSnaps
     const className = 'mvs-stories-markdown-explanation';
 
     if (isLoading) {
-        return <div style={style} className={className}>
-            <i>Loading...</i>
-        </div>;
+        return (
+            <div style={style} className={className}>
+                <i>Loading...</i>
+            </div>
+        );
     }
 
     if (state.all.length === 0) {
-        return <div style={style} className={className}>
-            <i>No snapshot loaded or no description available</i>
-        </div>;
+        return (
+            <div style={style} className={className}>
+                <i>No snapshot loaded or no description available</i>
+            </div>
+        );
     }
 
-    return <div style={style} className={className}>
-        <div style={{ display: 'flex', flexDirection: 'row', width: '100%', gap: '8px' }}>
-            <span style={{ lineHeight: '38px', minWidth: 60, maxWidth: 60, flexShrink: 0 }}>{typeof state.index === 'number' ? state.index + 1 : '-'}/{state.all.length}</span>
-            <button onClick={() => model.viewer?.model.plugin?.managers.snapshot.applyNext(-1)} style={{ flexGrow: 1, flexShrink: 0 }}>Prev</button>
-            <button onClick={() => model.viewer?.model.plugin?.managers.snapshot.applyNext(1)} style={{ flexGrow: 1, flexShrink: 0 }}>Next</button>
-        </div>
-        <div style={{ flexGrow: 1, overflow: 'hidden', overflowY: 'auto', position: 'relative' }}>
-            <div style={{ position: 'absolute', inset: 0 }}>
-                <PluginReactContext.Provider value={model.viewer?.model.plugin as any}>
-                    <Markdown>{state.entry?.description ?? 'Description not available'}</Markdown>
-                </PluginReactContext.Provider>
+    return (
+        <div style={style} className={className}>
+            <div style={{ display: 'flex', flexDirection: 'row', width: '100%', gap: '8px' }}>
+                <span style={{ lineHeight: '38px', minWidth: 60, maxWidth: 60, flexShrink: 0 }}>
+                    {typeof state.index === 'number' ? state.index + 1 : '-'}/{state.all.length}
+                </span>
+                <button
+                    onClick={() => model.viewer?.model.plugin?.managers.snapshot.applyNext(-1)}
+                    style={{ flexGrow: 1, flexShrink: 0 }}
+                >
+                    Prev
+                </button>
+                <button
+                    onClick={() => model.viewer?.model.plugin?.managers.snapshot.applyNext(1)}
+                    style={{ flexGrow: 1, flexShrink: 0 }}
+                >
+                    Next
+                </button>
+            </div>
+            <div
+                style={{ flexGrow: 1, overflow: 'hidden', overflowY: 'auto', position: 'relative' }}
+            >
+                <div style={{ position: 'absolute', inset: 0 }}>
+                    <PluginReactContext.Provider value={model.viewer?.model.plugin as any}>
+                        <Markdown>
+                            {state.entry?.description ?? 'Description not available'}
+                        </Markdown>
+                    </PluginReactContext.Provider>
+                </div>
             </div>
         </div>
-    </div>;
+    );
 }
 
 export class MVSStoriesSnapshotMarkdownViewer extends HTMLElement {

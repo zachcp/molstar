@@ -14,8 +14,8 @@ import { FormatPropertyProvider } from '../../common/property.ts';
 import { CCD_Schema } from '../../../../mol-io/reader/cif/schema/ccd.ts';
 
 export interface ComponentAtom {
-    readonly data: Table<CCD_Schema['chem_comp_atom']>
-    readonly entries: ReadonlyMap<string, ComponentAtom.Entry>
+    readonly data: Table<CCD_Schema['chem_comp_atom']>;
+    readonly entries: ReadonlyMap<string, ComponentAtom.Entry>;
 }
 
 export namespace ComponentAtom {
@@ -39,14 +39,17 @@ export namespace ComponentAtom {
                     }
 
                     return CifWriter.Category.ofTable(chem_comp_atom, indices);
-                }
-            }]
-        }
+                },
+            }],
+        },
     };
 
     export const Provider = FormatPropertyProvider.create<ComponentAtom>(Descriptor);
 
-    export function chemCompAtomFromTable(model: Model, table: Table<CCD_Schema['chem_comp_atom']>): Table<CCD_Schema['chem_comp_atom']> {
+    export function chemCompAtomFromTable(
+        model: Model,
+        table: Table<CCD_Schema['chem_comp_atom']>,
+    ): Table<CCD_Schema['chem_comp_atom']> {
         return Table.pick(table, CCD_Schema.chem_comp_atom, (i: number) => {
             return model.properties.chemicalComponentMap.has(table.comp_id.value(i));
         });
@@ -85,12 +88,22 @@ export namespace ComponentAtom {
     }
 
     export class Entry {
-        readonly map: Map<string, { charge: number, stereo_config: CCD_Schema['chem_comp_atom']['pdbx_stereo_config']['T'] }> = new Map();
+        readonly map: Map<
+            string,
+            {
+                charge: number;
+                stereo_config: CCD_Schema['chem_comp_atom']['pdbx_stereo_config']['T'];
+            }
+        > = new Map();
 
-        add(a: string, charge: number, stereo_config: CCD_Schema['chem_comp_atom']['pdbx_stereo_config']['T']) {
+        add(
+            a: string,
+            charge: number,
+            stereo_config: CCD_Schema['chem_comp_atom']['pdbx_stereo_config']['T'],
+        ) {
             this.map.set(a, { charge, stereo_config });
         }
 
-        constructor(public readonly id: string) { }
+        constructor(public readonly id: string) {}
     }
 }

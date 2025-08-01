@@ -4,35 +4,34 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, RuntimeContext, chunkedSubtask } from '../../../mol-task/index.ts';
-import { Tokenizer, TokenBuilder } from '../common/text/tokenizer.ts';
+import { chunkedSubtask, RuntimeContext, Task } from '../../../mol-task/index.ts';
+import { TokenBuilder, Tokenizer } from '../common/text/tokenizer.ts';
 import { ReaderResult as Result } from '../result.ts';
 import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.ts';
 import { Column } from '../../../mol-data/db.ts';
 import { StringLike } from '../../common/string-like.ts';
 
-
 // http://www.ks.uiuc.edu/Training/Tutorials/namd/namd-tutorial-unix-html/node23.html
 
 export interface PsfFile {
-    readonly id: string
-    readonly title: string[]
+    readonly id: string;
+    readonly title: string[];
     readonly atoms: {
-        readonly count: number
-        readonly atomId: Column<number>
-        readonly segmentName: Column<string>
-        readonly residueId: Column<number>
-        readonly residueName: Column<string>
-        readonly atomName: Column<string>
-        readonly atomType: Column<string>
-        readonly charge: Column<number>
-        readonly mass: Column<number>
-    }
+        readonly count: number;
+        readonly atomId: Column<number>;
+        readonly segmentName: Column<string>;
+        readonly residueId: Column<number>;
+        readonly residueName: Column<string>;
+        readonly atomName: Column<string>;
+        readonly atomType: Column<string>;
+        readonly charge: Column<number>;
+        readonly mass: Column<number>;
+    };
     readonly bonds: {
-        readonly count: number
-        readonly atomIdA: Column<number>
-        readonly atomIdB: Column<number>
-    }
+        readonly count: number;
+        readonly atomIdA: Column<number>;
+        readonly atomIdB: Column<number>;
+    };
 }
 
 const { readLine, skipWhitespace, eatValue, eatLine, markStart } = Tokenizer;
@@ -46,7 +45,7 @@ function State(tokenizer: Tokenizer, runtimeCtx: RuntimeContext) {
         runtimeCtx,
     };
 }
-type State = ReturnType<typeof State>
+type State = ReturnType<typeof State>;
 
 async function handleAtoms(state: State, count: number): Promise<PsfFile['atoms']> {
     const { tokenizer } = state;
@@ -71,7 +70,7 @@ async function handleAtoms(state: State, count: number): Promise<PsfFile['atoms'
 
     const { length } = tokenizer;
     let linesAlreadyRead = 0;
-    await chunkedSubtask(state.runtimeCtx, 100000, void 0, chunkSize => {
+    await chunkedSubtask(state.runtimeCtx, 100000, void 0, (chunkSize) => {
         const linesToRead = Math.min(count - linesAlreadyRead, chunkSize);
         for (let i = 0; i < linesToRead; ++i) {
             for (let j = 0; j < n; ++j) {
@@ -80,23 +79,107 @@ async function handleAtoms(state: State, count: number): Promise<PsfFile['atoms'
                 eatValue(tokenizer);
                 if (isLammpsFull) {
                     switch (j) {
-                        case 0: TokenBuilder.addUnchecked(atomId, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                        case 1: TokenBuilder.addUnchecked(residueId, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                        case 2: TokenBuilder.addUnchecked(atomName, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                        case 3: TokenBuilder.addUnchecked(atomType, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                        case 4: TokenBuilder.addUnchecked(charge, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                        case 5: TokenBuilder.addUnchecked(mass, tokenizer.tokenStart, tokenizer.tokenEnd); break;
+                        case 0:
+                            TokenBuilder.addUnchecked(
+                                atomId,
+                                tokenizer.tokenStart,
+                                tokenizer.tokenEnd,
+                            );
+                            break;
+                        case 1:
+                            TokenBuilder.addUnchecked(
+                                residueId,
+                                tokenizer.tokenStart,
+                                tokenizer.tokenEnd,
+                            );
+                            break;
+                        case 2:
+                            TokenBuilder.addUnchecked(
+                                atomName,
+                                tokenizer.tokenStart,
+                                tokenizer.tokenEnd,
+                            );
+                            break;
+                        case 3:
+                            TokenBuilder.addUnchecked(
+                                atomType,
+                                tokenizer.tokenStart,
+                                tokenizer.tokenEnd,
+                            );
+                            break;
+                        case 4:
+                            TokenBuilder.addUnchecked(
+                                charge,
+                                tokenizer.tokenStart,
+                                tokenizer.tokenEnd,
+                            );
+                            break;
+                        case 5:
+                            TokenBuilder.addUnchecked(
+                                mass,
+                                tokenizer.tokenStart,
+                                tokenizer.tokenEnd,
+                            );
+                            break;
                     }
                 } else {
                     switch (j) {
-                        case 0: TokenBuilder.addUnchecked(atomId, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                        case 1: TokenBuilder.addUnchecked(segmentName, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                        case 2: TokenBuilder.addUnchecked(residueId, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                        case 3: TokenBuilder.addUnchecked(residueName, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                        case 4: TokenBuilder.addUnchecked(atomName, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                        case 5: TokenBuilder.addUnchecked(atomType, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                        case 6: TokenBuilder.addUnchecked(charge, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                        case 7: TokenBuilder.addUnchecked(mass, tokenizer.tokenStart, tokenizer.tokenEnd); break;
+                        case 0:
+                            TokenBuilder.addUnchecked(
+                                atomId,
+                                tokenizer.tokenStart,
+                                tokenizer.tokenEnd,
+                            );
+                            break;
+                        case 1:
+                            TokenBuilder.addUnchecked(
+                                segmentName,
+                                tokenizer.tokenStart,
+                                tokenizer.tokenEnd,
+                            );
+                            break;
+                        case 2:
+                            TokenBuilder.addUnchecked(
+                                residueId,
+                                tokenizer.tokenStart,
+                                tokenizer.tokenEnd,
+                            );
+                            break;
+                        case 3:
+                            TokenBuilder.addUnchecked(
+                                residueName,
+                                tokenizer.tokenStart,
+                                tokenizer.tokenEnd,
+                            );
+                            break;
+                        case 4:
+                            TokenBuilder.addUnchecked(
+                                atomName,
+                                tokenizer.tokenStart,
+                                tokenizer.tokenEnd,
+                            );
+                            break;
+                        case 5:
+                            TokenBuilder.addUnchecked(
+                                atomType,
+                                tokenizer.tokenStart,
+                                tokenizer.tokenEnd,
+                            );
+                            break;
+                        case 6:
+                            TokenBuilder.addUnchecked(
+                                charge,
+                                tokenizer.tokenStart,
+                                tokenizer.tokenEnd,
+                            );
+                            break;
+                        case 7:
+                            TokenBuilder.addUnchecked(
+                                mass,
+                                tokenizer.tokenStart,
+                                tokenizer.tokenEnd,
+                            );
+                            break;
                     }
                 }
             }
@@ -106,7 +189,7 @@ async function handleAtoms(state: State, count: number): Promise<PsfFile['atoms'
         }
         linesAlreadyRead += linesToRead;
         return linesToRead;
-    }, ctx => ctx.update({ message: 'Parsing...', current: tokenizer.position, max: length }));
+    }, (ctx) => ctx.update({ message: 'Parsing...', current: tokenizer.position, max: length }));
 
     return {
         count,
@@ -121,7 +204,7 @@ async function handleAtoms(state: State, count: number): Promise<PsfFile['atoms'
         atomName: TokenColumn(atomName)(Column.Schema.str),
         atomType: TokenColumn(atomType)(Column.Schema.str),
         charge: TokenColumn(charge)(Column.Schema.float),
-        mass: TokenColumn(mass)(Column.Schema.float)
+        mass: TokenColumn(mass)(Column.Schema.float),
     };
 }
 
@@ -133,7 +216,7 @@ async function handleBonds(state: State, count: number): Promise<PsfFile['bonds'
 
     const { length } = tokenizer;
     let bondsAlreadyRead = 0;
-    await chunkedSubtask(state.runtimeCtx, 10, void 0, chunkSize => {
+    await chunkedSubtask(state.runtimeCtx, 10, void 0, (chunkSize) => {
         const bondsToRead = Math.min(count - bondsAlreadyRead, chunkSize);
         for (let i = 0; i < bondsToRead; ++i) {
             for (let j = 0; j < 2; ++j) {
@@ -141,14 +224,26 @@ async function handleBonds(state: State, count: number): Promise<PsfFile['bonds'
                 markStart(tokenizer);
                 eatValue(tokenizer);
                 switch (j) {
-                    case 0: TokenBuilder.addUnchecked(atomIdA, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                    case 1: TokenBuilder.addUnchecked(atomIdB, tokenizer.tokenStart, tokenizer.tokenEnd); break;
+                    case 0:
+                        TokenBuilder.addUnchecked(
+                            atomIdA,
+                            tokenizer.tokenStart,
+                            tokenizer.tokenEnd,
+                        );
+                        break;
+                    case 1:
+                        TokenBuilder.addUnchecked(
+                            atomIdB,
+                            tokenizer.tokenStart,
+                            tokenizer.tokenEnd,
+                        );
+                        break;
                 }
             }
         }
         bondsAlreadyRead += bondsToRead;
         return bondsToRead;
-    }, ctx => ctx.update({ message: 'Parsing...', current: tokenizer.position, max: length }));
+    }, (ctx) => ctx.update({ message: 'Parsing...', current: tokenizer.position, max: length }));
 
     return {
         count,
@@ -227,13 +322,13 @@ async function parseInternal(data: StringLike, ctx: RuntimeContext): Promise<Res
         id,
         title,
         atoms,
-        bonds
+        bonds,
     };
     return Result.success(result);
 }
 
 export function parsePsf(data: StringLike) {
-    return Task.create<Result<PsfFile>>('Parse PSF', async ctx => {
+    return Task.create<Result<PsfFile>>('Parse PSF', async (ctx) => {
         return await parseInternal(data, ctx);
     });
 }

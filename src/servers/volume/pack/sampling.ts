@@ -12,23 +12,38 @@ import * as File from '../common/file.ts';
 import * as Downsampling from './downsampling.ts';
 import * as Writer from './writer.ts';
 import * as DataFormat from '../common/data-format.ts';
-import { getElementByteSize, createTypedArray, TypedArrayValueType } from '../../../mol-io/common/typed-array.ts';
+import {
+    createTypedArray,
+    getElementByteSize,
+    TypedArrayValueType,
+} from '../../../mol-io/common/typed-array.ts';
 import { SimpleBuffer } from '../../../mol-io/common/simple-buffer.ts';
 import { fileHandleFromDescriptor } from '../../common/file-handle.ts';
-import { Buffer } from "node:buffer";
+import { Buffer } from 'node:buffer';
 
-export async function createContext(filename: string, channels: Format.Context[], blockSize: number, isPeriodic: boolean): Promise<Data.Context> {
+export async function createContext(
+    filename: string,
+    channels: Format.Context[],
+    blockSize: number,
+    isPeriodic: boolean,
+): Promise<Data.Context> {
     const { extent, valueType, grid, origin } = channels[0].data.header;
 
     const samplingCounts = getSamplingCounts(extent, blockSize);
-    const cubeBuffer = Buffer.from(new ArrayBuffer(channels.length * blockSize * blockSize * blockSize * getElementByteSize(valueType)));
+    const cubeBuffer = Buffer.from(
+        new ArrayBuffer(
+            channels.length * blockSize * blockSize * blockSize * getElementByteSize(valueType),
+        ),
+    );
 
-    const litteEndianCubeBuffer = SimpleBuffer.IsNativeEndianLittle
-        ? cubeBuffer
-        : Buffer.from(new ArrayBuffer(channels.length * blockSize * blockSize * blockSize * getElementByteSize(valueType)));
+    const litteEndianCubeBuffer = SimpleBuffer.IsNativeEndianLittle ? cubeBuffer : Buffer.from(
+        new ArrayBuffer(
+            channels.length * blockSize * blockSize * blockSize * getElementByteSize(valueType),
+        ),
+    );
 
     // The data can be periodic iff the extent is the same as the grid and origin is 0.
-    if (grid.some((v, i) => v !== extent[i]) || origin.some(v => v !== 0)) {
+    if (grid.some((v, i) => v !== extent[i]) || origin.some((v) => v !== 0)) {
         isPeriodic = false;
     }
 
@@ -41,12 +56,13 @@ export async function createContext(filename: string, channels: Format.Context[]
         cubeBuffer,
         litteEndianCubeBuffer,
         kernel: { size: 5, coefficients: [1, 4, 6, 4, 1], coefficientSum: 16 },
-        sampling: samplingCounts.map((__, i) => createSampling(i, valueType, channels.length, samplingCounts, blockSize)),
+        sampling: samplingCounts.map((__, i) =>
+            createSampling(i, valueType, channels.length, samplingCounts, blockSize)
+        ),
         dataByteOffset: 0,
         totalByteSize: 0,
-        progress: { current: 0, max: 0 }
+        progress: { current: 0, max: 0 },
     };
-
 
     let byteOffset = 0;
     for (const s of ctx.sampling) {
@@ -96,30 +112,51 @@ function getSamplingCounts(baseSampleCount: number[], blockSize: number) {
     }
 }
 
-function createBlockBuffer(sampleCount: number[], blockSize: number, valueType: TypedArrayValueType, numChannels: number): Data.BlockBuffer {
+function createBlockBuffer(
+    sampleCount: number[],
+    blockSize: number,
+    valueType: TypedArrayValueType,
+    numChannels: number,
+): Data.BlockBuffer {
     const values = [];
-    for (let i = 0; i < numChannels; i++) values[i] = createTypedArray(valueType, sampleCount[0] * sampleCount[1] * blockSize);
+    for (let i = 0; i < numChannels; i++) {
+        values[i] = createTypedArray(valueType, sampleCount[0] * sampleCount[1] * blockSize);
+    }
     return {
         values,
-        buffers: values.map(xs => Buffer.from(xs.buffer)),
-        slicesWritten: 0
+        buffers: values.map((xs) => Buffer.from(xs.buffer)),
+        slicesWritten: 0,
     };
 }
 
-function createDownsamplingBuffer(valueType: TypedArrayValueType, sourceSampleCount: number[], targetSampleCount: number[], numChannels: number): Data.DownsamplingBuffer[] {
+function createDownsamplingBuffer(
+    valueType: TypedArrayValueType,
+    sourceSampleCount: number[],
+    targetSampleCount: number[],
+    numChannels: number,
+): Data.DownsamplingBuffer[] {
     const ret = [];
     for (let i = 0; i < numChannels; i++) {
         ret[ret.length] = {
             downsampleH: createTypedArray(valueType, sourceSampleCount[1] * targetSampleCount[0]),
-            downsampleHK: createTypedArray(valueType, 5 * targetSampleCount[0] * targetSampleCount[1]),
+            downsampleHK: createTypedArray(
+                valueType,
+                5 * targetSampleCount[0] * targetSampleCount[1],
+            ),
             slicesWritten: 0,
-            startSliceIndex: 0
+            startSliceIndex: 0,
         };
     }
     return ret;
 }
 
-function createSampling(index: number, valueType: TypedArrayValueType, numChannels: number, sampleCounts: number[][], blockSize: number): Data.Sampling {
+function createSampling(
+    index: number,
+    valueType: TypedArrayValueType,
+    numChannels: number,
+    sampleCounts: number[][],
+    blockSize: number,
+): Data.Sampling {
     const sampleCount = sampleCounts[index];
     const valuesInfo: Data.ValuesInfo[] = [];
     for (let i = 0; i < numChannels; i++) {
@@ -127,7 +164,7 @@ function createSampling(index: number, valueType: TypedArrayValueType, numChanne
             sum: 0.0,
             sqSum: 0.0,
             max: Number.NEGATIVE_INFINITY,
-            min: Number.POSITIVE_INFINITY
+            min: Number.POSITIVE_INFINITY,
         };
     }
     return {
@@ -135,11 +172,14 @@ function createSampling(index: number, valueType: TypedArrayValueType, numChanne
         sampleCount,
         blocks: createBlockBuffer(sampleCount, blockSize, valueType, numChannels),
         valuesInfo,
-        downsampling: index < sampleCounts.length - 1 ? createDownsamplingBuffer(valueType, sampleCount, sampleCounts[index + 1], numChannels) : void 0,
+        downsampling: index < sampleCounts.length - 1
+            ? createDownsamplingBuffer(valueType, sampleCount, sampleCounts[index + 1], numChannels)
+            : void 0,
 
         byteOffset: 0,
-        byteSize: numChannels * sampleCount[0] * sampleCount[1] * sampleCount[2] * getElementByteSize(valueType),
-        writeByteOffset: 0
+        byteSize: numChannels * sampleCount[0] * sampleCount[1] * sampleCount[2] *
+            getElementByteSize(valueType),
+        writeByteOffset: 0,
     };
 }
 
@@ -185,7 +225,11 @@ function updateValuesInfo(sampling: Data.Sampling) {
     }
 }
 
-function shouldSamplingBeWritten(sampling: Data.Sampling, blockSize: number, isDataFinished: boolean) {
+function shouldSamplingBeWritten(
+    sampling: Data.Sampling,
+    blockSize: number,
+    isDataFinished: boolean,
+) {
     if (isDataFinished) return sampling.blocks.slicesWritten > 0;
     return sampling.blocks.slicesWritten >= blockSize;
 }

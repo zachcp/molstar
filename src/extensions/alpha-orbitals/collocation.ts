@@ -15,7 +15,7 @@ import { normalizeBasicOrder, SphericalFunctions } from './spherical-functions.t
 export async function sphericalCollocation(
     grid: CubeGridInfo,
     orbital: AlphaOrbital,
-    taskCtx: RuntimeContext
+    taskCtx: RuntimeContext,
 ) {
     const { basis, sphericalOrder, cutoffThreshold } = grid.params;
     let baseCount = 0;
@@ -43,7 +43,7 @@ export async function sphericalCollocation(
                 const alpha = normalizeBasicOrder(
                     L,
                     orbital.alpha.slice(baseIndex, baseIndex + 2 * L + 1),
-                    sphericalOrder
+                    sphericalOrder,
                 );
                 baseIndex += 2 * L + 1;
 
@@ -55,7 +55,7 @@ export async function sphericalCollocation(
                     shell.exponents,
                     atom.center as unknown as Vec3,
                     cutoffThreshold,
-                    alpha
+                    alpha,
                 );
 
                 if (taskCtx.shouldUpdate) {
@@ -81,7 +81,7 @@ function collocationBasis(
     exponents: number[],
     center: Vec3,
     cutoffThreshold: number,
-    alpha: number[]
+    alpha: number[],
 ) {
     const ncoeff = exponents.length;
     const sphericalFunc = SphericalFunctions[L];
@@ -98,10 +98,9 @@ function collocationBasis(
         sy = grid.box.min[1],
         sz = grid.box.min[2];
 
-    const cutoffRadius =
-        cutoffThreshold > 0
-            ? Math.sqrt(-Math.log(cutoffThreshold) / arrayMin(exponents))
-            : 10000;
+    const cutoffRadius = cutoffThreshold > 0
+        ? Math.sqrt(-Math.log(cutoffThreshold) / arrayMin(exponents))
+        : 10000;
     const cutoffSquared = cutoffRadius * cutoffRadius;
 
     const radiusBox = getRadiusBox(grid, center, cutoffRadius);
@@ -129,12 +128,10 @@ function collocationBasis(
 
                 let gaussianSum = 0;
                 for (let c = 0; c < ncoeff; c++) {
-                    gaussianSum +=
-                        coefficients[c] * Math.exp(-exponents[c] * R2);
+                    gaussianSum += coefficients[c] * Math.exp(-exponents[c] * R2);
                 }
 
                 const sphericalSum = L === 0 ? alpha[0] : sphericalFunc(alpha, x, y, z);
-
 
                 matrix[k + oY] += gaussianSum * sphericalSum;
             }

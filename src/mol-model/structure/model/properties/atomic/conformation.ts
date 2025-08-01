@@ -9,7 +9,7 @@ import { Column } from '../../../../../mol-data/db.ts';
 import { UUID } from '../../../../../mol-util/uuid.ts';
 
 export interface AtomicConformation {
-    id: UUID,
+    id: UUID;
 
     // ID is part of conformation because mmCIF is a leaky abstraction
     // that assigns different atom ids to corresponding atoms in different models
@@ -18,18 +18,18 @@ export interface AtomicConformation {
     /**
      * Uniquely identifies an atom, i.e. even accross models in a mmCIF file.
      */
-    atomId: Column<number>,
+    atomId: Column<number>;
 
     /**
      * The fraction of the atom type present at this site. The sum of the occupancies of all the atom types
      * at this site may not significantly exceed 1.0 unless it is a dummy site.
      */
-    occupancy: Column<number>,
+    occupancy: Column<number>;
     /**
      * Isotropic atomic displacement parameter, or equivalent isotropic atomic displacement parameter,
      * B~eq~, calculated from the anisotropic displacement parameters.
      */
-    B_iso_or_equiv: Column<number>
+    B_iso_or_equiv: Column<number>;
 
     // Coordinates. Generally, not to be accessed directly because the coordinate might be
     // transformed by an operator. Use Unit.getPosition instead.
@@ -37,17 +37,17 @@ export interface AtomicConformation {
     /**
      * Are xyz coordinates defined?
      */
-    xyzDefined: boolean,
+    xyzDefined: boolean;
     /**
      * The x coordinate in angstroms specified according to a set of orthogonal Cartesian axes.
      */
-    x: ArrayLike<number>,
+    x: ArrayLike<number>;
     /**
      * The y coordinate in angstroms specified according to a set of orthogonal Cartesian axes.
      */
-    y: ArrayLike<number>,
+    y: ArrayLike<number>;
     /**
      * The z coordinate in angstroms specified according to a set of orthogonal Cartesian axes.
      */
-    z: ArrayLike<number>
+    z: ArrayLike<number>;
 }

@@ -8,11 +8,12 @@ import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
 import { Choice } from '../../../mol-util/param-choice.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 
-
 export const DEFAULT_MESH_SERVER = 'http://localhost:9000/v2';
 
-
-export class MeshServerInfo extends PluginStateObject.Create<MeshServerInfo.Data>({ name: 'Volume Server', typeClass: 'Object' }) { }
+export class MeshServerInfo extends PluginStateObject.Create<MeshServerInfo.Data>({
+    name: 'Volume Server',
+    typeClass: 'Object',
+}) {}
 
 export namespace MeshServerInfo {
     export const MeshSourceChoice = new Choice({ empiar: 'EMPIAR', emdb: 'EMDB' }, 'empiar');

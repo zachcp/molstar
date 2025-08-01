@@ -5,12 +5,19 @@
  */
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { UnitsVisual, UnitsLinesParams, UnitsLinesVisual } from '../units-visual.ts';
+import { UnitsLinesParams, UnitsLinesVisual, UnitsVisual } from '../units-visual.ts';
 import { VisualContext } from '../../visual.ts';
-import { Unit, Structure, StructureElement } from '../../../mol-model/structure.ts';
+import { Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
 import { Theme } from '../../../mol-theme/theme.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
-import { ElementIterator, getElementLoci, eachElement, makeElementIgnoreTest, getSerialElementLoci, eachSerialElement } from './util/element.ts';
+import {
+    eachElement,
+    eachSerialElement,
+    ElementIterator,
+    getElementLoci,
+    getSerialElementLoci,
+    makeElementIgnoreTest,
+} from './util/element.ts';
 import { VisualUpdateState } from '../../util.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { Lines } from '../../../mol-geo/geometry/lines/lines.ts';
@@ -35,9 +42,16 @@ export const ElementCrossParams = {
     crosses: PD.Select('lone', PD.arrayToOptions(['lone', 'all'] as const)),
     crossSize: PD.Numeric(0.35, { min: 0, max: 2, step: 0.01 }),
 };
-export type ElementCrossParams = typeof ElementCrossParams
+export type ElementCrossParams = typeof ElementCrossParams;
 
-export function createElementCross(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PD.Values<ElementCrossParams>, lines: Lines) {
+export function createElementCross(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<ElementCrossParams>,
+    lines: Lines,
+) {
     const { child } = structure;
     if (child && !child.unitMap.get(unit.id)) return Lines.createEmpty(lines);
 
@@ -60,7 +74,10 @@ export function createElementCross(ctx: VisualContext, unit: Unit, structure: St
 
     for (let i = 0 as StructureElement.UnitIndex; i < n; ++i) {
         if (ignore && ignore(elements[i])) continue;
-        if (lone && Unit.isAtomic(unit) && hasUnitVisibleBonds(unit, props) && bondCount(structure, unit, i) !== 0) continue;
+        if (
+            lone && Unit.isAtomic(unit) && hasUnitVisibleBonds(unit, props) &&
+            bondCount(structure, unit, i) !== 0
+        ) continue;
 
         c.invariantPosition(elements[i], p);
         v3add(center, center, p);
@@ -84,7 +101,10 @@ export function createElementCross(ctx: VisualContext, unit: Unit, structure: St
     let boundingSphere: Sphere3D;
     Vec3.scale(center, center, 1 / count);
     const oldBoundingSphere = lines ? Sphere3D.clone(lines.boundingSphere) : undefined;
-    if (oldBoundingSphere && Vec3.distance(center, oldBoundingSphere.center) / oldBoundingSphere.radius < 0.1) {
+    if (
+        oldBoundingSphere &&
+        Vec3.distance(center, oldBoundingSphere.center) / oldBoundingSphere.radius < 0.1
+    ) {
         boundingSphere = oldBoundingSphere;
     } else {
         boundingSphere = Sphere3D.expand(Sphere3D(), unit.boundary.sphere, 1 * props.sizeFactor);
@@ -101,21 +121,29 @@ export function ElementCrossVisual(materialId: number): UnitsVisual<ElementCross
         createLocationIterator: ElementIterator.fromGroup,
         getLoci: getElementLoci,
         eachLocation: eachElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<ElementCrossParams>, currentProps: PD.Values<ElementCrossParams>) => {
-            state.createGeometry = (
-                newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<ElementCrossParams>,
+            currentProps: PD.Values<ElementCrossParams>,
+        ) => {
+            state.createGeometry = newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
                 newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant ||
                 newProps.traceOnly !== currentProps.traceOnly ||
                 newProps.crosses !== currentProps.crosses ||
-                newProps.crossSize !== currentProps.crossSize
-            );
-        }
+                newProps.crossSize !== currentProps.crossSize;
+        },
     }, materialId);
 }
 
 //
 
-export function createStructureElementCross(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<StructureElementCrossParams>, lines?: Lines): Lines {
+export function createStructureElementCross(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<StructureElementCrossParams>,
+    lines?: Lines,
+): Lines {
     const { child } = structure;
 
     const { getSerialIndex } = structure.serialMapping;
@@ -143,7 +171,10 @@ export function createStructureElementCross(ctx: VisualContext, structure: Struc
 
         for (let i = 0 as StructureElement.UnitIndex; i < elementCount; i++) {
             if (ignore && ignore(elements[i])) continue;
-            if (lone && Unit.isAtomic(unit) && hasUnitVisibleBonds(unit, props) && bondCount(structure, unit, i) !== 0) continue;
+            if (
+                lone && Unit.isAtomic(unit) && hasUnitVisibleBonds(unit, props) &&
+                bondCount(structure, unit, i) !== 0
+            ) continue;
 
             c.position(elements[i], p);
             v3add(center, center, p);
@@ -169,10 +200,17 @@ export function createStructureElementCross(ctx: VisualContext, structure: Struc
     let boundingSphere: Sphere3D;
     Vec3.scale(center, center, 1 / count);
     const oldBoundingSphere = lines ? Sphere3D.clone(lines.boundingSphere) : undefined;
-    if (oldBoundingSphere && Vec3.distance(center, oldBoundingSphere.center) / oldBoundingSphere.radius < 1.0) {
+    if (
+        oldBoundingSphere &&
+        Vec3.distance(center, oldBoundingSphere.center) / oldBoundingSphere.radius < 1.0
+    ) {
         boundingSphere = oldBoundingSphere;
     } else {
-        boundingSphere = Sphere3D.expand(Sphere3D(), (child ?? structure).boundary.sphere, 1 * props.sizeFactor);
+        boundingSphere = Sphere3D.expand(
+            Sphere3D(),
+            (child ?? structure).boundary.sphere,
+            1 * props.sizeFactor,
+        );
     }
     l.setBoundingSphere(boundingSphere);
 
@@ -188,23 +226,27 @@ export const StructureElementCrossParams = {
     crosses: PD.Select('lone', PD.arrayToOptions(['lone', 'all'] as const)),
     crossSize: PD.Numeric(0.35, { min: 0, max: 2, step: 0.01 }),
 };
-export type StructureElementCrossParams = typeof StructureElementCrossParams
+export type StructureElementCrossParams = typeof StructureElementCrossParams;
 
-export function StructureElementCrossVisual(materialId: number): ComplexVisual<StructureElementCrossParams> {
+export function StructureElementCrossVisual(
+    materialId: number,
+): ComplexVisual<StructureElementCrossParams> {
     return ComplexLinesVisual<StructureElementCrossParams>({
         defaultProps: PD.getDefaultValues(StructureElementCrossParams),
         createGeometry: createStructureElementCross,
         createLocationIterator: ElementIterator.fromStructure,
         getLoci: getSerialElementLoci,
         eachLocation: eachSerialElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<StructureElementCrossParams>, currentProps: PD.Values<StructureElementCrossParams>) => {
-            state.createGeometry = (
-                newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<StructureElementCrossParams>,
+            currentProps: PD.Values<StructureElementCrossParams>,
+        ) => {
+            state.createGeometry = newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
                 newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant ||
                 newProps.traceOnly !== currentProps.traceOnly ||
                 newProps.crosses !== currentProps.crosses ||
-                newProps.crossSize !== currentProps.crossSize
-            );
-        }
+                newProps.crossSize !== currentProps.crossSize;
+        },
     }, materialId);
 }

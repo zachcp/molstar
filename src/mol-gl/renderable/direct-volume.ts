@@ -4,10 +4,23 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Renderable, RenderableState, createRenderable } from '../renderable.ts';
+import { createRenderable, Renderable, RenderableState } from '../renderable.ts';
 import { WebGLContext } from '../webgl/context.ts';
 import { createGraphicsRenderItem, Transparency } from '../webgl/render-item.ts';
-import { AttributeSpec, Values, UniformSpec, GlobalUniformSchema, InternalSchema, TextureSpec, ElementsSpec, DefineSpec, InternalValues, GlobalTextureSchema, BaseSchema, ValueSpec } from './schema.ts';
+import {
+    AttributeSpec,
+    BaseSchema,
+    DefineSpec,
+    ElementsSpec,
+    GlobalTextureSchema,
+    GlobalUniformSchema,
+    InternalSchema,
+    InternalValues,
+    TextureSpec,
+    UniformSpec,
+    Values,
+    ValueSpec,
+} from './schema.ts';
 import { DirectVolumeShaderCode } from '../shader-code.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 
@@ -43,13 +56,25 @@ export const DirectVolumeSchema = {
     dCelShaded: DefineSpec('boolean'),
     dXrayShaded: DefineSpec('string', ['off', 'on', 'inverted']),
 
-    meta: ValueSpec('unknown')
+    meta: ValueSpec('unknown'),
 };
-export type DirectVolumeSchema = typeof DirectVolumeSchema
-export type DirectVolumeValues = Values<DirectVolumeSchema>
+export type DirectVolumeSchema = typeof DirectVolumeSchema;
+export type DirectVolumeValues = Values<DirectVolumeSchema>;
 
-export function DirectVolumeRenderable(ctx: WebGLContext, id: number, values: DirectVolumeValues, state: RenderableState, materialId: number, transparency: Transparency): Renderable<DirectVolumeValues> {
-    const schema = { ...GlobalUniformSchema, ...GlobalTextureSchema, ...InternalSchema, ...DirectVolumeSchema };
+export function DirectVolumeRenderable(
+    ctx: WebGLContext,
+    id: number,
+    values: DirectVolumeValues,
+    state: RenderableState,
+    materialId: number,
+    transparency: Transparency,
+): Renderable<DirectVolumeValues> {
+    const schema = {
+        ...GlobalUniformSchema,
+        ...GlobalTextureSchema,
+        ...InternalSchema,
+        ...DirectVolumeSchema,
+    };
     if (!ctx.isWebGL2) {
         // workaround for webgl1 limitation that loop counters need to be `const`
         (schema.uMaxSteps as any) = DefineSpec('number');
@@ -58,6 +83,14 @@ export function DirectVolumeRenderable(ctx: WebGLContext, id: number, values: Di
         uObjectId: ValueCell.create(id),
     };
     const shaderCode = DirectVolumeShaderCode;
-    const renderItem = createGraphicsRenderItem(ctx, 'triangles', shaderCode, schema, { ...values, ...internalValues }, materialId, transparency);
+    const renderItem = createGraphicsRenderItem(
+        ctx,
+        'triangles',
+        shaderCode,
+        schema,
+        { ...values, ...internalValues },
+        materialId,
+        transparency,
+    );
     return createRenderable(renderItem, values, state);
 }

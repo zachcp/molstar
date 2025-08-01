@@ -5,19 +5,19 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { CIF, CifCategory, getCifFieldType, CifField, CifFile } from '../../mol-io/reader/cif.ts';
+import { CIF, CifCategory, CifField, CifFile, getCifFieldType } from '../../mol-io/reader/cif.ts';
 import { CifWriter, EncodingStrategyHint } from '../../mol-io/writer/cif.ts';
 import * as util from 'util';
 import * as fs from 'fs';
 import * as zlib from 'zlib';
-import { Progress, Task, RuntimeContext } from '../../mol-task/index.ts';
+import { Progress, RuntimeContext, Task } from '../../mol-task/index.ts';
 import { classifyFloatArray, classifyIntArray } from '../../mol-io/common/binary-cif.ts';
 import { BinaryEncodingProvider } from '../../mol-io/writer/cif/encoder/binary.ts';
 import { Category } from '../../mol-io/writer/cif/encoder.ts';
 import { ReaderResult } from '../../mol-io/reader/result.ts';
 import { utf8ReadLong } from '../../mol-io/common/utf8.ts';
-import process from "node:process";
-import { Buffer } from "node:buffer";
+import process from 'node:process';
+import { Buffer } from 'node:buffer';
 
 function showProgress(p: Progress) {
     process.stdout.write(`\r${new Array(80).join(' ')}`);
@@ -34,7 +34,9 @@ async function readFile(ctx: RuntimeContext, filename: string): Promise<ReaderRe
         if (isGz) input = await unzipAsync(input);
         return await CIF.parseBinary(new Uint8Array(input)).runInContext(ctx);
     } else {
-        const data = isGz ? await unzipAsync(await readFileAsync(filename)) : await readFileAsync(filename);
+        const data = isGz
+            ? await unzipAsync(await readFileAsync(filename))
+            : await readFileAsync(filename);
         const str = utf8ReadLong(data);
         const cif = await CIF.parseText(str).runInContext(ctx);
         return cif;
@@ -49,28 +51,49 @@ async function getCIF(ctx: RuntimeContext, filename: string) {
     return parsed.result;
 }
 
-function getCategoryInstanceProvider(cat: CifCategory, fields: CifWriter.Field[]): CifWriter.Category {
+function getCategoryInstanceProvider(
+    cat: CifCategory,
+    fields: CifWriter.Field[],
+): CifWriter.Category {
     return {
         name: cat.name,
-        instance: () => CifWriter.categoryInstance(fields, { data: cat, rowCount: cat.rowCount })
+        instance: () => CifWriter.categoryInstance(fields, { data: cat, rowCount: cat.rowCount }),
     };
 }
 
 function classify(name: string, field: CifField): CifWriter.Field {
     const type = getCifFieldType(field);
     if (type['@type'] === 'str') {
-        return { name, type: CifWriter.Field.Type.Str, value: field.str, valueKind: field.valueKind };
+        return {
+            name,
+            type: CifWriter.Field.Type.Str,
+            value: field.str,
+            valueKind: field.valueKind,
+        };
     } else if (type['@type'] === 'float') {
         const encoder = classifyFloatArray(field.toFloatArray({ array: Float64Array }));
-        return CifWriter.Field.float(name, field.float, { valueKind: field.valueKind, encoder, typedArray: Float64Array });
+        return CifWriter.Field.float(name, field.float, {
+            valueKind: field.valueKind,
+            encoder,
+            typedArray: Float64Array,
+        });
     } else {
         const encoder = classifyIntArray(field.toIntArray({ array: Int32Array }));
-        return CifWriter.Field.int(name, field.int, { valueKind: field.valueKind, encoder, typedArray: Int32Array });
+        return CifWriter.Field.int(name, field.int, {
+            valueKind: field.valueKind,
+            encoder,
+            typedArray: Int32Array,
+        });
     }
 }
 
-export function convert(path: string, asText = false, hints?: EncodingStrategyHint[], filter?: string) {
-    return Task.create<Uint8Array>('Convert CIF', async ctx => {
+export function convert(
+    path: string,
+    asText = false,
+    hints?: EncodingStrategyHint[],
+    filter?: string,
+) {
+    return Task.create<Uint8Array>('Convert CIF', async (ctx) => {
         const encodingProvider: BinaryEncodingProvider = hints
             ? CifWriter.createEncodingProviderFromJsonConfig(hints)
             : { get: (c, f) => void 0 };
@@ -80,7 +103,7 @@ export function convert(path: string, asText = false, hints?: EncodingStrategyHi
             binary: !asText,
             encoderName: 'mol*/ciftools cif2bcif',
             binaryAutoClassifyEncoding: true,
-            binaryEncodingPovider: encodingProvider
+            binaryEncodingPovider: encodingProvider,
         });
 
         if (filter) {
@@ -102,12 +125,16 @@ export function convert(path: string, asText = false, hints?: EncodingStrategyHi
                 for (const f of cat.fieldNames) {
                     fields.push(classify(f, cat.getField(f)!));
                     current++;
-                    if (ctx.shouldUpdate) await ctx.update({ message: 'Encoding...', current, max: maxProgress });
+                    if (ctx.shouldUpdate) {
+                        await ctx.update({ message: 'Encoding...', current, max: maxProgress });
+                    }
                 }
 
                 encoder.writeCategory(getCategoryInstanceProvider(b.categories[c], fields));
                 current++;
-                if (ctx.shouldUpdate) await ctx.update({ message: 'Encoding...', current, max: maxProgress });
+                if (ctx.shouldUpdate) {
+                    await ctx.update({ message: 'Encoding...', current, max: maxProgress });
+                }
             }
         }
         await ctx.update('Exporting...');

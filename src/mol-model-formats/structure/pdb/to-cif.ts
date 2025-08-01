@@ -10,18 +10,18 @@ import { substringStartsWith } from '../../../mol-util/string.ts';
 import { CifCategory, CifField, CifFrame } from '../../../mol-io/reader/cif.ts';
 import { Tokenizer } from '../../../mol-io/reader/common/text/tokenizer.ts';
 import { PdbFile } from '../../../mol-io/reader/pdb/schema.ts';
-import { parseCryst1, parseRemark350, parseMtrix } from './assembly.ts';
+import { parseCryst1, parseMtrix, parseRemark350 } from './assembly.ts';
 import { parseHelix, parseSheet } from './secondary-structure.ts';
 import { parseCmpnd, parseHetnam } from './entity.ts';
 import { ComponentBuilder } from '../common/component.ts';
 import { EntityBuilder } from '../common/entity.ts';
 import { Column } from '../../../mol-data/db.ts';
 import { getMoleculeType } from '../../../mol-model/structure/model/types.ts';
-import { getAtomSiteTemplate, addAtom, getAtomSite, LabelAsymIdHelper } from './atom-site.ts';
-import { addAnisotropic, getAnisotropicTemplate, getAnisotropic } from './anisotropic.ts';
+import { addAtom, getAtomSite, getAtomSiteTemplate, LabelAsymIdHelper } from './atom-site.ts';
+import { addAnisotropic, getAnisotropic, getAnisotropicTemplate } from './anisotropic.ts';
 import { parseConect } from './conect.ts';
 import { isDebugMode } from '../../../mol-util/debug.ts';
-import { PdbHeaderData, addHeader } from './header.ts';
+import { addHeader, PdbHeaderData } from './header.ts';
 import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
 
 export async function pdbToMmCif(pdb: PdbFile): Promise<CifFrame> {
@@ -62,7 +62,10 @@ export async function pdbToMmCif(pdb: PdbFile): Promise<CifFrame> {
         switch (data.charAt(s)) {
             case 'A':
                 if (substringStartsWith(data, s, e, 'ATOM  ')) {
-                    if (!modelNum) { modelNum++; modelStr = '' + modelNum; }
+                    if (!modelNum) {
+                        modelNum++;
+                        modelStr = '' + modelNum;
+                    }
                     addAtom(atomSite, modelStr, tokenizer, s, e, isPdbqt);
                 } else if (substringStartsWith(data, s, e, 'ANISOU')) {
                     addAnisotropic(anisotropic, modelStr, tokenizer, s, e);
@@ -74,7 +77,8 @@ export async function pdbToMmCif(pdb: PdbFile): Promise<CifFrame> {
                 } else if (substringStartsWith(data, s, e, 'CONECT')) {
                     let j = i + 1;
                     while (true) {
-                        s = indices[2 * j]; e = indices[2 * j + 1];
+                        s = indices[2 * j];
+                        e = indices[2 * j + 1];
                         if (!substringStartsWith(data, s, e, 'CONECT')) break;
                         j++;
                     }
@@ -89,7 +93,8 @@ export async function pdbToMmCif(pdb: PdbFile): Promise<CifFrame> {
                 } else if (substringStartsWith(data, s, e, 'COMPND')) {
                     let j = i + 1;
                     while (true) {
-                        s = indices[2 * j]; e = indices[2 * j + 1];
+                        s = indices[2 * j];
+                        e = indices[2 * j + 1];
                         if (!substringStartsWith(data, s, e, 'COMPND')) break;
                         j++;
                     }
@@ -101,12 +106,16 @@ export async function pdbToMmCif(pdb: PdbFile): Promise<CifFrame> {
                 if (substringStartsWith(data, s, e, 'HEADER')) {
                     addHeader(data, s, e, header);
                 } else if (substringStartsWith(data, s, e, 'HETATM')) {
-                    if (!modelNum) { modelNum++; modelStr = '' + modelNum; }
+                    if (!modelNum) {
+                        modelNum++;
+                        modelStr = '' + modelNum;
+                    }
                     addAtom(atomSite, modelStr, tokenizer, s, e, isPdbqt);
                 } else if (substringStartsWith(data, s, e, 'HELIX')) {
                     let j = i + 1;
                     while (true) {
-                        s = indices[2 * j]; e = indices[2 * j + 1];
+                        s = indices[2 * j];
+                        e = indices[2 * j + 1];
                         if (!substringStartsWith(data, s, e, 'HELIX')) break;
                         j++;
                     }
@@ -115,7 +124,8 @@ export async function pdbToMmCif(pdb: PdbFile): Promise<CifFrame> {
                 } else if (substringStartsWith(data, s, e, 'HETNAM')) {
                     let j = i + 1;
                     while (true) {
-                        s = indices[2 * j]; e = indices[2 * j + 1];
+                        s = indices[2 * j];
+                        e = indices[2 * j + 1];
                         if (!substringStartsWith(data, s, e, 'HETNAM')) break;
                         j++;
                     }
@@ -131,7 +141,8 @@ export async function pdbToMmCif(pdb: PdbFile): Promise<CifFrame> {
                 if (substringStartsWith(data, s, e, 'MTRIX')) {
                     let j = i + 1;
                     while (true) {
-                        s = indices[2 * j]; e = indices[2 * j + 1];
+                        s = indices[2 * j];
+                        e = indices[2 * j + 1];
                         if (!substringStartsWith(data, s, e, 'MTRIX')) break;
                         j++;
                     }
@@ -147,7 +158,8 @@ export async function pdbToMmCif(pdb: PdbFile): Promise<CifFrame> {
                 if (substringStartsWith(data, s, e, 'REMARK 350')) {
                     let j = i + 1;
                     while (true) {
-                        s = indices[2 * j]; e = indices[2 * j + 1];
+                        s = indices[2 * j];
+                        e = indices[2 * j + 1];
                         if (!substringStartsWith(data, s, e, 'REMARK 350')) break;
                         j++;
                     }
@@ -160,7 +172,8 @@ export async function pdbToMmCif(pdb: PdbFile): Promise<CifFrame> {
                 if (substringStartsWith(data, s, e, 'SHEET')) {
                     let j = i + 1;
                     while (true) {
-                        s = indices[2 * j]; e = indices[2 * j + 1];
+                        s = indices[2 * j];
+                        e = indices[2 * j + 1];
                         if (!substringStartsWith(data, s, e, 'SHEET')) break;
                         j++;
                     }
@@ -179,19 +192,19 @@ export async function pdbToMmCif(pdb: PdbFile): Promise<CifFrame> {
     // build entry, struct_keywords and pdbx_database_status
     if (header.id_code) {
         const entry: CifCategory.SomeFields<mmCIF_Schema['entry']> = {
-            id: CifField.ofString(header.id_code)
+            id: CifField.ofString(header.id_code),
         };
         helperCategories.push(CifCategory.ofFields('entry', entry));
     }
     if (header.classification) {
         const struct_keywords: CifCategory.SomeFields<mmCIF_Schema['struct_keywords']> = {
-            pdbx_keywords: CifField.ofString(header.classification)
+            pdbx_keywords: CifField.ofString(header.classification),
         };
         helperCategories.push(CifCategory.ofFields('struct_keywords', struct_keywords));
     }
     if (header.dep_date) {
         const pdbx_database_status: CifCategory.SomeFields<mmCIF_Schema['pdbx_database_status']> = {
-            recvd_initial_deposition_date: CifField.ofString(header.dep_date)
+            recvd_initial_deposition_date: CifField.ofString(header.dep_date),
         };
         helperCategories.push(CifCategory.ofFields('pdbx_database_status', pdbx_database_status));
     }
@@ -201,7 +214,12 @@ export async function pdbToMmCif(pdb: PdbFile): Promise<CifFrame> {
     const atomIds = Column.ofStringTokens(atomSite.auth_atom_id);
     const compIds = Column.ofStringTokens(atomSite.auth_comp_id);
     const asymIds = Column.ofStringTokens(atomSite.auth_asym_id);
-    const labelAsymIdHelper = new LabelAsymIdHelper(asymIds, atomSite.pdbx_PDB_model_num, terIndices, hasAssemblies);
+    const labelAsymIdHelper = new LabelAsymIdHelper(
+        asymIds,
+        atomSite.pdbx_PDB_model_num,
+        terIndices,
+        hasAssemblies,
+    );
     const componentBuilder = new ComponentBuilder(seqIds, atomIds);
     componentBuilder.setNames(heteroNames);
     entityBuilder.setNames(heteroNames);
@@ -222,7 +240,10 @@ export async function pdbToMmCif(pdb: PdbFile): Promise<CifFrame> {
         entity: CifCategory.ofTable('entity', entityBuilder.getEntityTable()),
         chem_comp: CifCategory.ofTable('chem_comp', componentBuilder.getChemCompTable()),
         atom_site: CifCategory.ofFields('atom_site', atom_site),
-        atom_site_anisotrop: CifCategory.ofFields('atom_site_anisotrop', getAnisotropic(anisotropic))
+        atom_site_anisotrop: CifCategory.ofFields(
+            'atom_site_anisotrop',
+            getAnisotropic(anisotropic),
+        ),
     } as any;
 
     for (const c of helperCategories) {
@@ -232,6 +253,6 @@ export async function pdbToMmCif(pdb: PdbFile): Promise<CifFrame> {
     return {
         header: pdb.id || 'PDB',
         categoryNames: Object.keys(categories),
-        categories
+        categories,
     };
 }

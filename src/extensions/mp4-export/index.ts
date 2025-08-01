@@ -7,13 +7,13 @@
 import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
 import { Mp4EncoderUI } from './ui.tsx';
 
-export const Mp4Export = PluginBehavior.create<{ }>({
+export const Mp4Export = PluginBehavior.create<{}>({
     name: 'extension-mp4-export',
     category: 'misc',
     display: {
-        name: 'MP4 Animation Export'
+        name: 'MP4 Animation Export',
     },
-    ctor: class extends PluginBehavior.Handler<{ }> {
+    ctor: class extends PluginBehavior.Handler<{}> {
         register(): void {
             this.ctx.customStructureControls.set('mp4-export', Mp4EncoderUI as any);
         }
@@ -26,5 +26,5 @@ export const Mp4Export = PluginBehavior.create<{ }>({
             this.ctx.customStructureControls.delete('mp4-export');
         }
     },
-    params: () => ({ })
+    params: () => ({}),
 });

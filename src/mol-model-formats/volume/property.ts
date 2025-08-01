@@ -10,9 +10,9 @@ import { Volume } from '../../mol-model/volume/volume.ts';
 export { PropertyProvider };
 
 interface PropertyProvider<T> {
-    readonly descriptor: CustomPropertyDescriptor
-    get(volume: Volume): T | undefined
-    set(volume: Volume, value: T): void
+    readonly descriptor: CustomPropertyDescriptor;
+    get(volume: Volume): T | undefined;
+    set(volume: Volume, value: T): void;
 }
 
 namespace PropertyProvider {
@@ -27,7 +27,7 @@ namespace PropertyProvider {
             set(volume: Volume, value: T) {
                 volume.customProperties.add(descriptor);
                 volume._propertyData[name] = value;
-            }
+            },
         };
     }
 }
@@ -36,7 +36,7 @@ namespace PropertyProvider {
 
 export { RecommendedIsoValue };
 
-type RecommendedIsoValue = Volume.IsoValue
+type RecommendedIsoValue = Volume.IsoValue;
 
 namespace RecommendedIsoValue {
     export const Descriptor: CustomPropertyDescriptor = {

@@ -2,9 +2,12 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+        >
         <link rel="icon" href="./favicon.ico" type="image/x-icon">
-        <link rel="stylesheet" href="../extras/driver.css"/>
+        <link rel="stylesheet" href="../extras/driver.css" />
         <title>Mol* Mesoscale Explorer</title>
         <style>
             * {
@@ -46,7 +49,9 @@
 
             function getParam(name, regex) {
                 var r = new RegExp(name + '=' + '(' + regex + ')[&]?', 'i');
-                return decodeURIComponent(((window.location.search || '').match(r) || [])[1] || '');
+                return decodeURIComponent(
+                    ((window.location.search || '').match(r) || [])[1] || '',
+                );
             }
 
             var debugMode = getParam('debug-mode', '[^&]+').trim() === '1';
@@ -56,12 +61,17 @@
             if (timingMode) molstar.setTimingMode(timingMode);
 
             var hideControls = getParam('hide-controls', '[^&]+').trim() === '1';
-            var preferWebgl1 = getParam('prefer-webgl1', '[^&]+').trim() === '1' || void 0;
-            var allowMajorPerformanceCaveat = getParam('allow-major-performance-caveat', '[^&]+').trim() === '1';
-            var powerPreference = getParam('power-preference', '[^&]+').trim().toLowerCase();
-            var graphicsMode = getParam('graphics-mode', '[^&]+').trim().toLowerCase();
+            var preferWebgl1 = getParam('prefer-webgl1', '[^&]+').trim() === '1' ||
+                void 0;
+            var allowMajorPerformanceCaveat =
+                getParam('allow-major-performance-caveat', '[^&]+').trim() === '1';
+            var powerPreference = getParam('power-preference', '[^&]+').trim()
+                .toLowerCase();
+            var graphicsMode = getParam('graphics-mode', '[^&]+').trim()
+                .toLowerCase();
             var illumination = getParam('illumination', '[^&]+').trim() === '1';
-            var resolutionMode = getParam('resolution-mode', '[^&]+').trim().toLowerCase();
+            var resolutionMode = getParam('resolution-mode', '[^&]+').trim()
+                .toLowerCase();
 
             molstar.MesoscaleExplorer.create('app', {
                 layoutShowControls: !hideControls,
@@ -72,8 +82,8 @@
                 graphicsMode: graphicsMode || 'quality',
                 illumination: illumination,
                 resolutionMode: resolutionMode || 'auto',
-                driver: driver
-            }).then(me => {
+                driver: driver,
+            }).then((me) => {
                 var example = getParam('example', '[^&]+').trim();
                 if (example) {
                     me.loadExample(example);

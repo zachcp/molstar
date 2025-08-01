@@ -17,13 +17,12 @@ import { TypedArray } from '../../mol-util/type-helpers.ts';
 
 import { CIF_schema_mesh } from './mesh-cif-schema.ts';
 
-
 type MeshModificationParams = {
-    scale?: [number, number, number],
-    shift?: [number, number, number],
-    matrix?: Mat4,
-    group?: number,
-    invertSides?: boolean
+    scale?: [number, number, number];
+    shift?: [number, number, number];
+    matrix?: Mat4;
+    group?: number;
+    invertSides?: boolean;
 };
 
 /** Modify mesh in-place */
@@ -92,15 +91,15 @@ export function copy(m: Mesh, modification?: MeshModificationParams): Mesh {
 
 /** Join more meshes into one */
 export function concat(...meshes: Mesh[]): Mesh {
-    const nVertices = sum(meshes.map(m => m.vertexCount));
-    const nTriangles = sum(meshes.map(m => m.triangleCount));
-    const vertices = concatArrays(Float32Array, meshes.map(m => m.vertexBuffer.ref.value));
-    const normals = concatArrays(Float32Array, meshes.map(m => m.normalBuffer.ref.value));
-    const groups = concatArrays(Float32Array, meshes.map(m => m.groupBuffer.ref.value));
+    const nVertices = sum(meshes.map((m) => m.vertexCount));
+    const nTriangles = sum(meshes.map((m) => m.triangleCount));
+    const vertices = concatArrays(Float32Array, meshes.map((m) => m.vertexBuffer.ref.value));
+    const normals = concatArrays(Float32Array, meshes.map((m) => m.normalBuffer.ref.value));
+    const groups = concatArrays(Float32Array, meshes.map((m) => m.groupBuffer.ref.value));
     const newIndices = [];
     let offset = 0;
     for (const m of meshes) {
-        newIndices.push(m.indexBuffer.ref.value.map(i => i + offset));
+        newIndices.push(m.indexBuffer.ref.value.map((i) => i + offset));
         offset += m.vertexCount;
     }
     const indices = concatArrays(Uint32Array, newIndices);
@@ -110,10 +109,16 @@ export function concat(...meshes: Mesh[]): Mesh {
 /** Return Mesh from CIF data and mesh IDs (group IDs).
  * Assume the CIF contains coords in grid space,
  * transform the output mesh to `space` */
-export async function meshFromCif(data: CifFile, invertSides: boolean | undefined = undefined, outSpace: 'grid' | 'fractional' | 'cartesian' = 'cartesian'): Promise<{ mesh: Mesh, meshIds: number[] }> {
-    const volumeInfoBlock = data.blocks.find(b => b.header === 'VOLUME_INFO');
-    const meshesBlock = data.blocks.find(b => b.header === 'MESHES');
-    if (!volumeInfoBlock || !meshesBlock) throw new Error('Missing VOLUME_INFO or MESHES block in mesh CIF file');
+export async function meshFromCif(
+    data: CifFile,
+    invertSides: boolean | undefined = undefined,
+    outSpace: 'grid' | 'fractional' | 'cartesian' = 'cartesian',
+): Promise<{ mesh: Mesh; meshIds: number[] }> {
+    const volumeInfoBlock = data.blocks.find((b) => b.header === 'VOLUME_INFO');
+    const meshesBlock = data.blocks.find((b) => b.header === 'MESHES');
+    if (!volumeInfoBlock || !meshesBlock) {
+        throw new Error('Missing VOLUME_INFO or MESHES block in mesh CIF file');
+    }
     const volumeInfoCif = CIF.schema.densityServer(volumeInfoBlock);
     const meshCif = CIF_schema_mesh(meshesBlock);
 
@@ -153,7 +158,11 @@ export async function meshFromCif(data: CifFile, invertSides: boolean | undefine
         const gridSize = volumeInfoCif.volume_data_3d_info.sample_count.value(0);
         const originFract = volumeInfoCif.volume_data_3d_info.origin.value(0);
         const dimensionFract = volumeInfoCif.volume_data_3d_info.dimensions.value(0);
-        if (dimensionFract[0] !== 1 || dimensionFract[1] !== 1 || dimensionFract[2] !== 1) throw new Error(`Asserted the fractional dimensions are [1,1,1], but are actually [${dimensionFract}]`);
+        if (dimensionFract[0] !== 1 || dimensionFract[1] !== 1 || dimensionFract[2] !== 1) {
+            throw new Error(
+                `Asserted the fractional dimensions are [1,1,1], but are actually [${dimensionFract}]`,
+            );
+        }
         const scale: [number, number, number] = [1 / gridSize[0], 1 / gridSize[1], 1 / gridSize[2]];
         modify(mesh, { scale: scale, shift: Array.from(originFract) as any });
     }
@@ -174,7 +183,15 @@ function isInverted(mesh: Mesh): boolean {
     const center3 = Vec3.create(3 * center[0], 3 * center[1], 3 * center[2]);
 
     let dirMetric = 0.0;
-    const [a, b, c, u, v, normal, radius] = [Vec3(), Vec3(), Vec3(), Vec3(), Vec3(), Vec3(), Vec3()];
+    const [a, b, c, u, v, normal, radius] = [
+        Vec3(),
+        Vec3(),
+        Vec3(),
+        Vec3(),
+        Vec3(),
+        Vec3(),
+        Vec3(),
+    ];
     for (let i = 0; i < indices.length; i += 3) {
         Vec3.fromArray(a, vertices, 3 * indices[i]);
         Vec3.fromArray(b, vertices, 3 * indices[i + 1]);
@@ -204,7 +221,11 @@ function meshCenter(mesh: Mesh) {
     return Vec3.create(x / n, y / n, z / n);
 }
 
-function flattenCoords(x: ArrayLike<number>, y: ArrayLike<number>, z: ArrayLike<number>): Float32Array {
+function flattenCoords(
+    x: ArrayLike<number>,
+    y: ArrayLike<number>,
+    z: ArrayLike<number>,
+): Float32Array {
     const n = x.length;
     const out = new Float32Array(3 * n);
     for (let i = 0; i < n; i++) {
@@ -270,25 +291,74 @@ export function fakeMesh4(): Mesh {
 }
 
 /** Return a box-shaped mesh */
-export function meshFromBox(box: [[number, number, number], [number, number, number]], group: number = 0) {
+export function meshFromBox(
+    box: [[number, number, number], [number, number, number]],
+    group: number = 0,
+) {
     const [[x0, y0, z0], [x1, y1, z1]] = box;
     const vertices = new Float32Array([
-        x0, y0, z0,
-        x1, y0, z0,
-        x0, y1, z0,
-        x1, y1, z0,
-        x0, y0, z1,
-        x1, y0, z1,
-        x0, y1, z1,
-        x1, y1, z1,
+        x0,
+        y0,
+        z0,
+        x1,
+        y0,
+        z0,
+        x0,
+        y1,
+        z0,
+        x1,
+        y1,
+        z0,
+        x0,
+        y0,
+        z1,
+        x1,
+        y0,
+        z1,
+        x0,
+        y1,
+        z1,
+        x1,
+        y1,
+        z1,
     ]);
     const indices = new Uint32Array([
-        2, 1, 0, 1, 2, 3,
-        1, 4, 0, 4, 1, 5,
-        3, 5, 1, 5, 3, 7,
-        2, 7, 3, 7, 2, 6,
-        0, 6, 2, 6, 0, 4,
-        4, 7, 6, 7, 4, 5,
+        2,
+        1,
+        0,
+        1,
+        2,
+        3,
+        1,
+        4,
+        0,
+        4,
+        1,
+        5,
+        3,
+        5,
+        1,
+        5,
+        3,
+        7,
+        2,
+        7,
+        3,
+        7,
+        2,
+        6,
+        0,
+        6,
+        2,
+        6,
+        0,
+        4,
+        4,
+        7,
+        6,
+        7,
+        4,
+        5,
     ]);
     const groups = new Float32Array([group, group, group, group, group, group, group, group]);
     const normals = new Float32Array(8);
@@ -302,7 +372,7 @@ function sum(array: number[]): number {
 }
 
 function concatArrays<T extends TypedArray>(t: new (len: number) => T, arrays: T[]): T {
-    const totalLength = arrays.map(a => a.length).reduce((a, b) => a + b, 0);
+    const totalLength = arrays.map((a) => a.length).reduce((a, b) => a + b, 0);
     const result: T = new t(totalLength);
     let offset = 0;
     for (const array of arrays) {
@@ -337,4 +407,3 @@ function shuffleArray<T>(array: T[]): T[] {
     }
     return array;
 }
-

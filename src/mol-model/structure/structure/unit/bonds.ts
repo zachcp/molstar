@@ -6,10 +6,10 @@
  * @author Paul Pillot <paul.pillot@tandemai.com>
  */
 
-import { Unit, StructureElement } from '../../structure.ts';
+import { StructureElement, Unit } from '../../structure.ts';
 import { Structure } from '../structure.ts';
 import { BondType } from '../../model/types.ts';
-import { SortedArray, Iterator, OrderedSet } from '../../../../mol-data/int.ts';
+import { Iterator, OrderedSet, SortedArray } from '../../../../mol-data/int.ts';
 import { CentroidHelper } from '../../../../mol-math/geometry/centroid-helper.ts';
 import { Sphere3D } from '../../../../mol-math/geometry.ts';
 
@@ -19,20 +19,27 @@ export * from './bonds/inter-compute.ts';
 
 namespace Bond {
     export interface Location<U extends Unit = Unit> {
-        readonly kind: 'bond-location',
+        readonly kind: 'bond-location';
 
-        aStructure: Structure,
-        aUnit: U,
+        aStructure: Structure;
+        aUnit: U;
         /** Index into aUnit.elements */
-        aIndex: StructureElement.UnitIndex,
+        aIndex: StructureElement.UnitIndex;
 
-        bStructure: Structure,
-        bUnit: U,
+        bStructure: Structure;
+        bUnit: U;
         /** Index into bUnit.elements */
-        bIndex: StructureElement.UnitIndex,
+        bIndex: StructureElement.UnitIndex;
     }
 
-    export function Location(aStructure?: Structure, aUnit?: Unit, aIndex?: StructureElement.UnitIndex, bStructure?: Structure, bUnit?: Unit, bIndex?: StructureElement.UnitIndex): Location {
+    export function Location(
+        aStructure?: Structure,
+        aUnit?: Unit,
+        aIndex?: StructureElement.UnitIndex,
+        bStructure?: Structure,
+        bUnit?: Unit,
+        bIndex?: StructureElement.UnitIndex,
+    ): Location {
         return {
             kind: 'bond-location',
             aStructure: aStructure as any,
@@ -40,7 +47,7 @@ namespace Bond {
             aIndex: aIndex as any,
             bStructure: bStructure as any,
             bUnit: bUnit as any,
-            bIndex: bIndex as any
+            bIndex: bIndex as any,
         };
     }
 
@@ -50,16 +57,17 @@ namespace Bond {
 
     export function areLocationsEqual(locA: Location, locB: Location) {
         return (
-            locA.aStructure.label === locB.aStructure.label && locA.bStructure.label === locB.bStructure.label &&
+            locA.aStructure.label === locB.aStructure.label &&
+            locA.bStructure.label === locB.bStructure.label &&
             locA.aIndex === locB.aIndex && locA.bIndex === locB.bIndex &&
             locA.aUnit.id === locB.aUnit.id && locA.bUnit.id === locB.bUnit.id
         );
     }
 
     export interface Loci {
-        readonly kind: 'bond-loci',
-        readonly structure: Structure
-        readonly bonds: ReadonlyArray<Location>
+        readonly kind: 'bond-loci';
+        readonly structure: Structure;
+        readonly bonds: ReadonlyArray<Location>;
     }
 
     export function Loci(structure: Structure, bonds: ArrayLike<Location>): Loci {
@@ -87,17 +95,21 @@ namespace Bond {
         if (structure === loci.structure) return loci;
 
         const bonds: Loci['bonds'][0][] = [];
-        loci.bonds.forEach(l => {
+        loci.bonds.forEach((l) => {
             const unitA = structure.unitMap.get(l.aUnit.id);
             if (!unitA) return;
             const unitB = structure.unitMap.get(l.bUnit.id);
             if (!unitB) return;
 
             const elementA = l.aUnit.elements[l.aIndex];
-            const indexA = SortedArray.indexOf(unitA.elements, elementA) as StructureElement.UnitIndex | -1;
+            const indexA = SortedArray.indexOf(unitA.elements, elementA) as
+                | StructureElement.UnitIndex
+                | -1;
             if (indexA === -1) return;
             const elementB = l.bUnit.elements[l.bIndex];
-            const indexB = SortedArray.indexOf(unitB.elements, elementB) as StructureElement.UnitIndex | -1;
+            const indexB = SortedArray.indexOf(unitB.elements, elementB) as
+                | StructureElement.UnitIndex
+                | -1;
             if (indexB === -1) return;
 
             bonds.push(Location(loci.structure, unitA, indexA, loci.structure, unitB, indexB));
@@ -126,7 +138,7 @@ namespace Bond {
         map.forEach((indices: number[], id: number) => {
             elements.push({
                 unit: loci.structure.unitMap.get(id)!,
-                indices: SortedArray.deduplicate(SortedArray.ofUnsortedArray(indices))
+                indices: SortedArray.deduplicate(SortedArray.ofUnsortedArray(indices)),
             });
         });
 
@@ -135,7 +147,10 @@ namespace Bond {
 
     export function toFirstStructureElementLoci(loci: Loci): StructureElement.Loci {
         const { aUnit, aIndex } = loci.bonds[0];
-        return StructureElement.Loci(loci.structure, [{ unit: aUnit, indices: OrderedSet.ofSingleton(aIndex) }]);
+        return StructureElement.Loci(loci.structure, [{
+            unit: aUnit,
+            indices: OrderedSet.ofSingleton(aIndex),
+        }]);
     }
 
     export function getType(structure: Structure, location: Location<Unit.Atomic>): BondType {
@@ -176,10 +191,10 @@ namespace Bond {
     }
 
     export interface ElementBondData {
-        otherUnit: Unit.Atomic
-        otherIndex: StructureElement.UnitIndex
-        type: BondType
-        order: number
+        otherUnit: Unit.Atomic;
+        otherIndex: StructureElement.UnitIndex;
+        type: BondType;
+        order: number;
     }
 
     export class ElementBondIterator implements Iterator<ElementBondData> {
@@ -214,19 +229,24 @@ namespace Bond {
             this.intraBondEnd = unit.bonds.offset[index + 1];
             this.intraBondIndex = unit.bonds.offset[index];
 
-            this.hasNext = this.interBondIndex < this.interBondCount || this.intraBondIndex < this.intraBondEnd;
+            this.hasNext = this.interBondIndex < this.interBondCount ||
+                this.intraBondIndex < this.intraBondEnd;
         }
 
         private advance() {
             if (this.intraBondIndex < this.intraBondEnd) {
                 this.current.otherUnit = this.unit;
-                this.current.otherIndex = this.unit.bonds.b[this.intraBondIndex] as StructureElement.UnitIndex;
+                this.current.otherIndex = this.unit.bonds
+                    .b[this.intraBondIndex] as StructureElement.UnitIndex;
                 this.current.type = this.unit.bonds.edgeProps.flags[this.intraBondIndex];
                 this.current.order = this.unit.bonds.edgeProps.order[this.intraBondIndex];
                 this.intraBondIndex += 1;
             } else if (this.interBondIndex < this.interBondCount) {
-                const b = this.structure.interUnitBonds.edges[this.interBondIndices[this.interBondIndex]];
-                this.current.otherUnit = this.structure.unitMap.get(b.unitA !== this.unit.id ? b.unitA : b.unitB) as Unit.Atomic;
+                const b =
+                    this.structure.interUnitBonds.edges[this.interBondIndices[this.interBondIndex]];
+                this.current.otherUnit = this.structure.unitMap.get(
+                    b.unitA !== this.unit.id ? b.unitA : b.unitB,
+                ) as Unit.Atomic;
                 this.current.otherIndex = b.indexA !== this.index ? b.indexA : b.indexB;
                 this.current.type = b.props.flag;
                 this.current.order = b.props.order;
@@ -235,7 +255,8 @@ namespace Bond {
                 this.hasNext = false;
                 return;
             }
-            this.hasNext = this.interBondIndex < this.interBondCount || this.intraBondIndex < this.intraBondEnd;
+            this.hasNext = this.interBondIndex < this.interBondCount ||
+                this.intraBondIndex < this.intraBondEnd;
         }
 
         constructor() {

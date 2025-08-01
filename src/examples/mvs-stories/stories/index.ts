@@ -9,5 +9,9 @@ import { buildStory as tbp } from './tbp.ts';
 
 export const Stories = [
     { id: 'kinase', name: 'BCR-ABL: A Kinase Out of Control', buildStory: kinase },
-    { id: 'tata', name: 'TATA-Binding Protein and its Role in Transcription Initiation ', buildStory: tbp },
+    {
+        id: 'tata',
+        name: 'TATA-Binding Protein and its Role in Transcription Initiation ',
+        buildStory: tbp,
+    },
 ] as const;

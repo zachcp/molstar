@@ -8,40 +8,40 @@
 import { ValueCell } from '../mol-util/index.ts';
 import { idFactory } from '../mol-util/id-factory.ts';
 import { WebGLExtensions } from './webgl/extensions.ts';
-import { isWebGL2, GLRenderingContext } from './webgl/compat.ts';
+import { GLRenderingContext, isWebGL2 } from './webgl/compat.ts';
 import { assertUnreachable } from '../mol-util/type-helpers.ts';
 
-export type DefineKind = 'boolean' | 'string' | 'number'
-export type DefineType = boolean | string
-export type DefineValues = { [k: string]: ValueCell<DefineType> }
+export type DefineKind = 'boolean' | 'string' | 'number';
+export type DefineType = boolean | string;
+export type DefineValues = { [k: string]: ValueCell<DefineType> };
 
 const shaderCodeId = idFactory();
 
-type ShaderExtensionsValue = 'required' | 'optional'
+type ShaderExtensionsValue = 'required' | 'optional';
 export interface ShaderExtensions {
-    readonly fragDepth?: ShaderExtensionsValue
-    readonly drawBuffers?: ShaderExtensionsValue
-    readonly shaderTextureLod?: ShaderExtensionsValue
+    readonly fragDepth?: ShaderExtensionsValue;
+    readonly drawBuffers?: ShaderExtensionsValue;
+    readonly shaderTextureLod?: ShaderExtensionsValue;
     /** Needed to enable the `gl_DrawID` built-in */
-    readonly multiDraw?: ShaderExtensionsValue
-    readonly clipCullDistance?: ShaderExtensionsValue
-    readonly conservativeDepth?: ShaderExtensionsValue
+    readonly multiDraw?: ShaderExtensionsValue;
+    readonly clipCullDistance?: ShaderExtensionsValue;
+    readonly conservativeDepth?: ShaderExtensionsValue;
     /** Needed to enable the `gl_ViewID_OVR` built-in */
-    readonly multiview2?: ShaderExtensionsValue
+    readonly multiview2?: ShaderExtensionsValue;
 }
 
-type FragOutTypes = { [k in number]: 'vec4' | 'ivec4' }
-type IgnoreDefine = (name: string, variant: string, defines: ShaderDefines) => boolean
+type FragOutTypes = { [k in number]: 'vec4' | 'ivec4' };
+type IgnoreDefine = (name: string, variant: string, defines: ShaderDefines) => boolean;
 
 export interface ShaderCode {
-    readonly id: number
-    readonly name: string
-    readonly vert: string
-    readonly frag: string
-    readonly extensions: ShaderExtensions
+    readonly id: number;
+    readonly name: string;
+    readonly vert: string;
+    readonly frag: string;
+    readonly extensions: ShaderExtensions;
     /** Fragment shader output type only applicable for webgl2 */
-    readonly outTypes: FragOutTypes
-    readonly ignoreDefine?: IgnoreDefine
+    readonly outTypes: FragOutTypes;
+    readonly ignoreDefine?: IgnoreDefine;
 }
 
 import { apply_fog } from './shader/chunks/apply-fog.glsl.ts';
@@ -111,11 +111,12 @@ const ShaderChunks: { [k: string]: string } = {
     texture3d_from_2d_linear,
     texture3d_from_2d_nearest,
     wboit_write,
-    dpoit_write
+    dpoit_write,
 };
 
 const reInclude = /^(?!\/\/)\s*#include\s+(\S+)/gm;
-const reUnrollLoop = /#pragma unroll_loop_start\s+for\s*\(\s*int\s+i\s*=\s*(\d+)\s*;\s*i\s*<\s*(\d+)\s*;\s*\+\+i\s*\s*\)\s*{([\s\S]+?)}\s+#pragma unroll_loop_end/g;
+const reUnrollLoop =
+    /#pragma unroll_loop_start\s+for\s*\(\s*int\s+i\s*=\s*(\d+)\s*;\s*i\s*<\s*(\d+)\s*;\s*\+\+i\s*\s*\)\s*{([\s\S]+?)}\s+#pragma unroll_loop_end/g;
 const reSingleLineComment = /[ \t]*\/\/.*\n/g;
 const reMultiLineComment = /[ \t]*\/\*[\s\S]*?\*\//g;
 const reMultipleLinebreaks = /\n{2,}/g;
@@ -149,7 +150,9 @@ function loopReplacer(_match: string, start: string, end: string, snippet: strin
 
 function replaceCounts(str: string, defines: ShaderDefines) {
     if (defines.dLightCount) str = str.replace(/dLightCount/g, `${defines.dLightCount.ref.value}`);
-    if (defines.dClipObjectCount) str = str.replace(/dClipObjectCount/g, `${defines.dClipObjectCount.ref.value}`);
+    if (defines.dClipObjectCount) {
+        str = str.replace(/dClipObjectCount/g, `${defines.dClipObjectCount.ref.value}`);
+    }
     return str;
 }
 
@@ -157,8 +160,23 @@ function preprocess(str: string, defines: ShaderDefines) {
     return unrollLoops(replaceCounts(str, defines));
 }
 
-export function ShaderCode(name: string, vert: string, frag: string, extensions: ShaderExtensions = {}, outTypes: FragOutTypes = {}, ignoreDefine?: IgnoreDefine): ShaderCode {
-    return { id: shaderCodeId(), name, vert: addIncludes(vert), frag: addIncludes(frag), extensions, outTypes, ignoreDefine };
+export function ShaderCode(
+    name: string,
+    vert: string,
+    frag: string,
+    extensions: ShaderExtensions = {},
+    outTypes: FragOutTypes = {},
+    ignoreDefine?: IgnoreDefine,
+): ShaderCode {
+    return {
+        id: shaderCodeId(),
+        name,
+        vert: addIncludes(vert),
+        frag: addIncludes(frag),
+        extensions,
+        outTypes,
+        ignoreDefine,
+    };
 }
 
 // Note: `drawBuffers` need to be 'optional' for wboit
@@ -170,10 +188,14 @@ function ignoreDefine(name: string, variant: string, defines: ShaderDefines): bo
         }
     } else {
         const ignore = [
-            'dColorType', 'dUsePalette',
-            'dOverpaintType', 'dOverpaint',
-            'dSubstanceType', 'dSubstance',
-            'dColorMarker', 'dCelShaded',
+            'dColorType',
+            'dUsePalette',
+            'dOverpaintType',
+            'dOverpaint',
+            'dSubstanceType',
+            'dSubstance',
+            'dColorMarker',
+            'dCelShaded',
             'dLightCount',
         ];
         if (variant !== 'depth' && !variant.startsWith('pick')) {
@@ -185,50 +207,106 @@ function ignoreDefine(name: string, variant: string, defines: ShaderDefines): bo
         return ignore.includes(name);
     }
     return false;
-};
+}
 
 function ignoreDefineUnlit(name: string, variant: string, defines: ShaderDefines): boolean {
     if (name === 'dLightCount') return true;
     return ignoreDefine(name, variant, defines);
-};
+}
 
 import { points_vert } from './shader/points.vert.ts';
 import { points_frag } from './shader/points.frag.ts';
-export const PointsShaderCode = ShaderCode('points', points_vert, points_frag, { drawBuffers: 'optional' }, {}, ignoreDefineUnlit);
+export const PointsShaderCode = ShaderCode(
+    'points',
+    points_vert,
+    points_frag,
+    { drawBuffers: 'optional' },
+    {},
+    ignoreDefineUnlit,
+);
 
 import { spheres_vert } from './shader/spheres.vert.ts';
 import { spheres_frag } from './shader/spheres.frag.ts';
-export const SpheresShaderCode = ShaderCode('spheres', spheres_vert, spheres_frag, { fragDepth: 'required', drawBuffers: 'optional' }, {}, ignoreDefine);
+export const SpheresShaderCode = ShaderCode(
+    'spheres',
+    spheres_vert,
+    spheres_frag,
+    { fragDepth: 'required', drawBuffers: 'optional' },
+    {},
+    ignoreDefine,
+);
 
 import { cylinders_vert } from './shader/cylinders.vert.ts';
 import { cylinders_frag } from './shader/cylinders.frag.ts';
-export const CylindersShaderCode = ShaderCode('cylinders', cylinders_vert, cylinders_frag, { fragDepth: 'required', drawBuffers: 'optional' }, {}, ignoreDefine);
+export const CylindersShaderCode = ShaderCode(
+    'cylinders',
+    cylinders_vert,
+    cylinders_frag,
+    { fragDepth: 'required', drawBuffers: 'optional' },
+    {},
+    ignoreDefine,
+);
 
 import { text_vert } from './shader/text.vert.ts';
 import { text_frag } from './shader/text.frag.ts';
-export const TextShaderCode = ShaderCode('text', text_vert, text_frag, { drawBuffers: 'optional' }, {}, ignoreDefineUnlit);
+export const TextShaderCode = ShaderCode(
+    'text',
+    text_vert,
+    text_frag,
+    { drawBuffers: 'optional' },
+    {},
+    ignoreDefineUnlit,
+);
 
 import { lines_vert } from './shader/lines.vert.ts';
 import { lines_frag } from './shader/lines.frag.ts';
-export const LinesShaderCode = ShaderCode('lines', lines_vert, lines_frag, { drawBuffers: 'optional' }, {}, ignoreDefineUnlit);
+export const LinesShaderCode = ShaderCode(
+    'lines',
+    lines_vert,
+    lines_frag,
+    { drawBuffers: 'optional' },
+    {},
+    ignoreDefineUnlit,
+);
 
 import { mesh_vert } from './shader/mesh.vert.ts';
 import { mesh_frag } from './shader/mesh.frag.ts';
-export const MeshShaderCode = ShaderCode('mesh', mesh_vert, mesh_frag, { drawBuffers: 'optional' }, {}, ignoreDefine);
+export const MeshShaderCode = ShaderCode(
+    'mesh',
+    mesh_vert,
+    mesh_frag,
+    { drawBuffers: 'optional' },
+    {},
+    ignoreDefine,
+);
 
 import { directVolume_vert } from './shader/direct-volume.vert.ts';
 import { directVolume_frag } from './shader/direct-volume.frag.ts';
-export const DirectVolumeShaderCode = ShaderCode('direct-volume', directVolume_vert, directVolume_frag, { fragDepth: 'optional', drawBuffers: 'optional' }, {}, ignoreDefine);
+export const DirectVolumeShaderCode = ShaderCode(
+    'direct-volume',
+    directVolume_vert,
+    directVolume_frag,
+    { fragDepth: 'optional', drawBuffers: 'optional' },
+    {},
+    ignoreDefine,
+);
 
 import { image_vert } from './shader/image.vert.ts';
 import { image_frag } from './shader/image.frag.ts';
-export const ImageShaderCode = ShaderCode('image', image_vert, image_frag, { drawBuffers: 'optional' }, {}, ignoreDefineUnlit);
+export const ImageShaderCode = ShaderCode(
+    'image',
+    image_vert,
+    image_frag,
+    { drawBuffers: 'optional' },
+    {},
+    ignoreDefineUnlit,
+);
 
 //
 
 export type ShaderDefines = {
-    [k: string]: ValueCell<DefineType>
-}
+    [k: string]: ValueCell<DefineType>;
+};
 
 function getDefinesCode(defines: ShaderDefines, ignore?: IgnoreDefine) {
     if (defines === undefined) return '';
@@ -277,7 +355,7 @@ function getGlsl100VertPrefix(extensions: WebGLExtensions, shaderExtensions: Sha
 
 function getGlsl100FragPrefix(extensions: WebGLExtensions, shaderExtensions: ShaderExtensions) {
     const prefix: string[] = [
-        '#extension GL_OES_standard_derivatives : enable'
+        '#extension GL_OES_standard_derivatives : enable',
     ];
     if (shaderExtensions.fragDepth) {
         if (extensions.fragDepth) {
@@ -375,10 +453,15 @@ function getGlsl300VertPrefix(extensions: WebGLExtensions, shaderExtensions: Sha
     return prefix.join('\n') + '\n';
 }
 
-function getGlsl300FragPrefix(gl: WebGL2RenderingContext, extensions: WebGLExtensions, shaderExtensions: ShaderExtensions, outTypes: FragOutTypes) {
+function getGlsl300FragPrefix(
+    gl: WebGL2RenderingContext,
+    extensions: WebGLExtensions,
+    shaderExtensions: ShaderExtensions,
+    outTypes: FragOutTypes,
+) {
     const prefix = [
         '#version 300 es',
-        `layout(location = 0) out highp ${outTypes[0] || 'vec4'} out_FragData0;`
+        `layout(location = 0) out highp ${outTypes[0] || 'vec4'} out_FragData0;`,
     ];
     if (shaderExtensions.fragDepth) {
         if (extensions.fragDepth) {
@@ -390,7 +473,9 @@ function getGlsl300FragPrefix(gl: WebGL2RenderingContext, extensions: WebGLExten
             prefix.push('#define requiredDrawBuffers');
             const maxDrawBuffers = gl.getParameter(gl.MAX_DRAW_BUFFERS) as number;
             for (let i = 1, il = maxDrawBuffers; i < il; ++i) {
-                prefix.push(`layout(location = ${i}) out highp ${outTypes[i] || 'vec4'} out_FragData${i};`);
+                prefix.push(
+                    `layout(location = ${i}) out highp ${outTypes[i] || 'vec4'} out_FragData${i};`,
+                );
             }
         }
     }
@@ -410,7 +495,12 @@ function transformGlsl300Frag(frag: string) {
     return frag.replace(/gl_FragData\[([0-9]+)\]/g, 'out_FragData$1');
 }
 
-export function addShaderDefines(gl: GLRenderingContext, extensions: WebGLExtensions, defines: ShaderDefines, shaders: ShaderCode): ShaderCode {
+export function addShaderDefines(
+    gl: GLRenderingContext,
+    extensions: WebGLExtensions,
+    defines: ShaderDefines,
+    shaders: ShaderCode,
+): ShaderCode {
     const vertHeader = getDefinesCode(defines, shaders.ignoreDefine);
     const fragHeader = getDefinesCode(defines, shaders.ignoreDefine);
     const vertPrefix = isWebGL2(gl)
@@ -426,6 +516,6 @@ export function addShaderDefines(gl: GLRenderingContext, extensions: WebGLExtens
         vert: `${vertPrefix}${vertHeader}${preprocess(shaders.vert, defines)}`,
         frag: `${fragPrefix}${fragHeader}${preprocess(frag, defines)}`,
         extensions: shaders.extensions,
-        outTypes: shaders.outTypes
+        outTypes: shaders.outTypes,
     };
 }

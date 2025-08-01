@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { CoarseRanges, CoarseElementData } from '../coarse/hierarchy.ts';
-import { Segmentation, Interval } from '../../../../../mol-data/int.ts';
+import { CoarseElementData, CoarseRanges } from '../coarse/hierarchy.ts';
+import { Interval, Segmentation } from '../../../../../mol-data/int.ts';
 import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges.ts';
 import { ElementIndex } from '../../indexing.ts';
 import { ChemicalComponent } from '../common.ts';
@@ -13,10 +13,16 @@ import { ChemicalComponent } from '../common.ts';
 // TODO assumes all coarse elements are part of a polymer
 // TODO add gaps at the ends of the chains by comparing to the polymer sequence data
 
-export function getCoarseRanges(data: CoarseElementData, chemicalComponentMap: ReadonlyMap<string, ChemicalComponent>): CoarseRanges {
+export function getCoarseRanges(
+    data: CoarseElementData,
+    chemicalComponentMap: ReadonlyMap<string, ChemicalComponent>,
+): CoarseRanges {
     const polymerRanges: number[] = [];
     const gapRanges: number[] = [];
-    const chainIt = Segmentation.transientSegments(data.chainElementSegments, Interval.ofBounds(0, data.count));
+    const chainIt = Segmentation.transientSegments(
+        data.chainElementSegments,
+        Interval.ofBounds(0, data.count),
+    );
 
     const { seq_id_begin, seq_id_end } = data;
 
@@ -46,6 +52,6 @@ export function getCoarseRanges(data: CoarseElementData, chemicalComponentMap: R
 
     return {
         polymerRanges: SortedRanges.ofSortedRanges(polymerRanges as ElementIndex[]),
-        gapRanges: SortedRanges.ofSortedRanges(gapRanges as ElementIndex[])
+        gapRanges: SortedRanges.ofSortedRanges(gapRanges as ElementIndex[]),
     };
 }

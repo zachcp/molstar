@@ -6,19 +6,24 @@
 
 import { ValueCell } from '../../mol-util/value-cell.ts';
 import { Vec2 } from '../../mol-math/linear-algebra.ts';
-import { TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
+import { createTextureImage, TextureImage } from '../../mol-gl/renderable/util.ts';
 import { Clipping } from '../../mol-theme/clipping.ts';
 
 export type ClippingType = 'instance' | 'groupInstance';
 
 export type ClippingData = {
-    tClipping: ValueCell<TextureImage<Uint8Array>>
-    uClippingTexDim: ValueCell<Vec2>
-    dClipping: ValueCell<boolean>
-    dClippingType: ValueCell<string>
-}
+    tClipping: ValueCell<TextureImage<Uint8Array>>;
+    uClippingTexDim: ValueCell<Vec2>;
+    dClipping: ValueCell<boolean>;
+    dClippingType: ValueCell<string>;
+};
 
-export function applyClippingGroups(array: Uint8Array, start: number, end: number, groups: Clipping.Groups) {
+export function applyClippingGroups(
+    array: Uint8Array,
+    start: number,
+    end: number,
+    groups: Clipping.Groups,
+) {
     array.fill(groups, start, end);
     return true;
 }
@@ -27,11 +32,23 @@ export function clearClipping(array: Uint8Array, start: number, end: number) {
     array.fill(0, start, end);
 }
 
-export function createClipping(count: number, type: ClippingType, clippingData?: ClippingData): ClippingData {
-    const clipping = createTextureImage(Math.max(1, count), 1, Uint8Array, clippingData && clippingData.tClipping.ref.value.array);
+export function createClipping(
+    count: number,
+    type: ClippingType,
+    clippingData?: ClippingData,
+): ClippingData {
+    const clipping = createTextureImage(
+        Math.max(1, count),
+        1,
+        Uint8Array,
+        clippingData && clippingData.tClipping.ref.value.array,
+    );
     if (clippingData) {
         ValueCell.update(clippingData.tClipping, clipping);
-        ValueCell.update(clippingData.uClippingTexDim, Vec2.create(clipping.width, clipping.height));
+        ValueCell.update(
+            clippingData.uClippingTexDim,
+            Vec2.create(clipping.width, clipping.height),
+        );
         ValueCell.updateIfChanged(clippingData.dClipping, count > 0);
         ValueCell.updateIfChanged(clippingData.dClippingType, type);
         return clippingData;

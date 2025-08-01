@@ -6,7 +6,7 @@
  */
 
 import { WebGLContext } from './webgl/context.ts';
-import { GraphicsRenderObject, createRenderable } from './render-object.ts';
+import { createRenderable, GraphicsRenderObject } from './render-object.ts';
 import { Object3D } from './object3d.ts';
 import { Sphere3D } from '../mol-math/geometry/primitives/sphere3d.ts';
 import { CommitQueue } from './commit-queue.ts';
@@ -20,7 +20,11 @@ import { clamp } from '../mol-math/interpolate.ts';
 
 const boundaryHelper = new BoundaryHelper('98');
 
-function calculateBoundingSphere(renderables: GraphicsRenderable[], boundingSphere: Sphere3D, onlyVisible: boolean): Sphere3D {
+function calculateBoundingSphere(
+    renderables: GraphicsRenderable[],
+    boundingSphere: Sphere3D,
+    onlyVisible: boolean,
+): Sphere3D {
     boundaryHelper.reset();
 
     for (let i = 0, il = renderables.length; i < il; ++i) {
@@ -64,41 +68,44 @@ function renderableSort(a: GraphicsRenderable, b: GraphicsRenderable) {
 }
 
 interface Scene extends Object3D {
-    readonly count: number
-    readonly renderables: ReadonlyArray<GraphicsRenderable>
-    readonly boundingSphere: Sphere3D
-    readonly boundingSphereVisible: Sphere3D
+    readonly count: number;
+    readonly renderables: ReadonlyArray<GraphicsRenderable>;
+    readonly boundingSphere: Sphere3D;
+    readonly boundingSphereVisible: Sphere3D;
 
-    readonly primitives: Scene.Group
-    readonly volumes: Scene.Group
+    readonly primitives: Scene.Group;
+    readonly volumes: Scene.Group;
 
     /** Returns `true` if some visibility has changed, `false` otherwise. */
-    syncVisibility: () => boolean
-    setTransparency: (transparency: Transparency) => void
-    update: (objects: ArrayLike<GraphicsRenderObject> | undefined, keepBoundingSphere: boolean) => void
-    add: (o: GraphicsRenderObject) => void // GraphicsRenderable
-    remove: (o: GraphicsRenderObject) => void
-    commit: (maxTimeMs?: number) => boolean
-    readonly needsCommit: boolean
-    readonly commitQueueSize: number
-    has: (o: GraphicsRenderObject) => boolean
-    clear: () => void
-    forEach: (callbackFn: (value: GraphicsRenderable, key: GraphicsRenderObject) => void) => void
+    syncVisibility: () => boolean;
+    setTransparency: (transparency: Transparency) => void;
+    update: (
+        objects: ArrayLike<GraphicsRenderObject> | undefined,
+        keepBoundingSphere: boolean,
+    ) => void;
+    add: (o: GraphicsRenderObject) => void; // GraphicsRenderable
+    remove: (o: GraphicsRenderObject) => void;
+    commit: (maxTimeMs?: number) => boolean;
+    readonly needsCommit: boolean;
+    readonly commitQueueSize: number;
+    has: (o: GraphicsRenderObject) => boolean;
+    clear: () => void;
+    forEach: (callbackFn: (value: GraphicsRenderable, key: GraphicsRenderObject) => void) => void;
     /** Marker average of primitive renderables */
-    readonly markerAverage: number
+    readonly markerAverage: number;
     /** Emissive average of primitive renderables */
-    readonly emissiveAverage: number
+    readonly emissiveAverage: number;
     /** Opacity average of primitive renderables */
-    readonly opacityAverage: number
+    readonly opacityAverage: number;
     /** Transparency minimum, excluding fully opaque, of primitive renderables */
-    readonly transparencyMin: number
+    readonly transparencyMin: number;
     /** Is `true` if any primitive renderable (possibly) has any opaque part */
-    readonly hasOpaque: boolean
+    readonly hasOpaque: boolean;
 }
 
 namespace Scene {
     export interface Group extends Object3D {
-        readonly renderables: ReadonlyArray<GraphicsRenderable>
+        readonly renderables: ReadonlyArray<GraphicsRenderable>;
     }
 
     export function create(ctx: WebGLContext, transparency: Transparency = 'blended'): Scene {
@@ -235,7 +242,8 @@ namespace Scene {
             let emissiveAverage = 0;
             for (let i = 0, il = primitives.length; i < il; ++i) {
                 if (!primitives[i].state.visible) continue;
-                emissiveAverage += primitives[i].values.emissiveAverage.ref.value + primitives[i].values.uEmissive.ref.value;
+                emissiveAverage += primitives[i].values.emissiveAverage.ref.value +
+                    primitives[i].values.uEmissive.ref.value;
                 count += 1;
             }
             return count > 0 ? emissiveAverage / count : 0;
@@ -251,11 +259,15 @@ namespace Scene {
                 // TODO: simplify, handle in renderable.state???
                 // uAlpha is updated in "render" so we need to recompute it here
                 const alpha = clamp(p.values.alpha.ref.value * p.state.alphaFactor, 0, 1);
-                const xray = (p.values.dXrayShaded?.ref.value === 'on' || p.values.dXrayShaded?.ref.value === 'inverted') ? 0.5 : 1;
+                const xray = (p.values.dXrayShaded?.ref.value === 'on' ||
+                        p.values.dXrayShaded?.ref.value === 'inverted')
+                    ? 0.5
+                    : 1;
                 const fuzzy = p.values.dPointStyle?.ref.value === 'fuzzy' ? 0.5 : 1;
                 const text = p.values.dGeometryType.ref.value === 'text' ? 0.5 : 1;
                 const image = p.values.dGeometryType.ref.value === 'image' ? 0.5 : 1;
-                opacityAverage += (1 - p.values.transparencyAverage.ref.value) * alpha * xray * fuzzy * text * image;
+                opacityAverage += (1 - p.values.transparencyAverage.ref.value) * alpha * xray *
+                    fuzzy * text * image;
                 count += 1;
             }
             return count > 0 ? opacityAverage / count : 0;
@@ -272,13 +284,16 @@ namespace Scene {
                 transparenyValues.length = 0;
                 const alpha = clamp(p.values.alpha.ref.value * p.state.alphaFactor, 0, 1);
                 if (alpha < 1) transparenyValues.push(1 - alpha);
-                if (p.values.dXrayShaded?.ref.value === 'on' ||
+                if (
+                    p.values.dXrayShaded?.ref.value === 'on' ||
                     p.values.dXrayShaded?.ref.value === 'inverted' ||
                     p.values.dPointStyle?.ref.value === 'fuzzy' ||
                     p.values.dGeometryType.ref.value === 'text' ||
                     p.values.dGeometryType.ref.value === 'image'
                 ) transparenyValues.push(0.5);
-                if (p.values.transparencyMin.ref.value > 0) transparenyValues.push(p.values.transparencyMin.ref.value);
+                if (p.values.transparencyMin.ref.value > 0) {
+                    transparenyValues.push(p.values.transparencyMin.ref.value);
+                }
                 transparencyMin = Math.min(transparencyMin, ...transparenyValues);
             }
             return transparencyMin;
@@ -291,14 +306,20 @@ namespace Scene {
                 if (!p.state.visible) continue;
 
                 if (p.state.opaque) return true;
-                if (p.state.alphaFactor === 1 && p.values.alpha.ref.value === 1 && p.values.transparencyAverage.ref.value !== 1) return true;
+                if (
+                    p.state.alphaFactor === 1 && p.values.alpha.ref.value === 1 &&
+                    p.values.transparencyAverage.ref.value !== 1
+                ) return true;
                 if (p.values.dTransparentBackfaces?.ref.value === 'opaque') return true;
             }
             return false;
         }
 
         return {
-            view, position, direction, up,
+            view,
+            position,
+            direction,
+            up,
 
             renderables,
             primitives: { view, position, direction, up, renderables: primitives },
@@ -336,8 +357,12 @@ namespace Scene {
             add: (o: GraphicsRenderObject) => commitQueue.add(o),
             remove: (o: GraphicsRenderObject) => commitQueue.remove(o),
             commit: (maxTime = Number.MAX_VALUE) => commit(maxTime),
-            get commitQueueSize() { return commitQueue.size; },
-            get needsCommit() { return !commitQueue.isEmpty; },
+            get commitQueueSize() {
+                return commitQueue.size;
+            },
+            get needsCommit() {
+                return !commitQueue.isEmpty;
+            },
             has: (o: GraphicsRenderObject) => {
                 return renderableMap.has(o);
             },
@@ -352,7 +377,9 @@ namespace Scene {
                 boundingSphereDirty = true;
                 boundingSphereVisibleDirty = true;
             },
-            forEach: (callbackFn: (value: GraphicsRenderable, key: GraphicsRenderObject) => void) => {
+            forEach: (
+                callbackFn: (value: GraphicsRenderable, key: GraphicsRenderObject) => void,
+            ) => {
                 renderableMap.forEach(callbackFn);
             },
             get count() {

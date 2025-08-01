@@ -25,7 +25,7 @@ function nextIndex(n: number) {
     const newSmallest = ripple & -ripple;
     const ones = ((newSmallest / smallest) >> 1) - 1;
     return ripple | ones;
-};
+}
 
 export class CombinationIterator<T> implements Iterator<ReadonlyArray<T>> {
     private value: T[];
@@ -50,9 +50,7 @@ export class CombinationIterator<T> implements Iterator<ReadonlyArray<T>> {
     constructor(private array: T[], count: number) {
         this.index = (1 << count) - 1;
         this.size = C(array.length, count);
-        this.maxIndex = 1 << array.length,
-
-        this.value = new Array(count);
+        this.maxIndex = 1 << array.length, this.value = new Array(count);
         this.hasNext = count > 0 && count <= array.length;
     }
 }

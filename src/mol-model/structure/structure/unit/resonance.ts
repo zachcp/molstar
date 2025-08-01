@@ -18,27 +18,33 @@ export type UnitResonance = {
      */
     readonly delocalizedTriplets: {
         /** Return 3rd element in triplet or undefined if `a` and `b` are not part of a triplet */
-        readonly getThirdElement: (a: StructureElement.UnitIndex, b: StructureElement.UnitIndex) => StructureElement.UnitIndex | undefined
+        readonly getThirdElement: (
+            a: StructureElement.UnitIndex,
+            b: StructureElement.UnitIndex,
+        ) => StructureElement.UnitIndex | undefined;
         /** Return index into `triplets` or undefined if `a` is not part of any triplet */
-        readonly getTripletIndices: (a: StructureElement.UnitIndex) => number[] | undefined
-        readonly triplets: SortedArray<StructureElement.UnitIndex>[]
-    }
-}
+        readonly getTripletIndices: (a: StructureElement.UnitIndex) => number[] | undefined;
+        readonly triplets: SortedArray<StructureElement.UnitIndex>[];
+    };
+};
 
 const EmptyUnitResonance: UnitResonance = {
     delocalizedTriplets: {
         getThirdElement: () => undefined,
         getTripletIndices: () => undefined,
-        triplets: []
-    }
+        triplets: [],
+    },
 };
 
 export function getResonance(unit: Unit.Atomic): UnitResonance {
-    if (Unit.Traits.is(unit.traits, Unit.Trait.Water) || Unit.Traits.is(unit.traits, Unit.Trait.CoarseGrained)) {
+    if (
+        Unit.Traits.is(unit.traits, Unit.Trait.Water) ||
+        Unit.Traits.is(unit.traits, Unit.Trait.CoarseGrained)
+    ) {
         return EmptyUnitResonance;
     }
     return {
-        delocalizedTriplets: getDelocalizedTriplets(unit)
+        delocalizedTriplets: getDelocalizedTriplets(unit),
     };
 }
 
@@ -52,7 +58,11 @@ function getDelocalizedTriplets(unit: Unit.Atomic) {
     const thirdElementMap = new Map<number, StructureElement.UnitIndex>();
     const indicesMap = new Map<number, number[]>();
 
-    const add = (a: StructureElement.UnitIndex, b: StructureElement.UnitIndex, c: StructureElement.UnitIndex) => {
+    const add = (
+        a: StructureElement.UnitIndex,
+        b: StructureElement.UnitIndex,
+        c: StructureElement.UnitIndex,
+    ) => {
         const index = triplets.length;
         triplets.push(SortedArray.ofUnsortedArray([a, b, c]));
         thirdElementMap.set(sortedCantorPairing(a, b), c);

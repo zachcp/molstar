@@ -6,15 +6,24 @@
  */
 
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { ComplexVisual, StructureRepresentation, StructureRepresentationStateBuilder, StructureRepresentationState } from './representation.ts';
-import { Representation, RepresentationContext, RepresentationParamsGetter } from '../representation.ts';
-import { Structure, StructureElement, Bond } from '../../mol-model/structure.ts';
+import {
+    ComplexVisual,
+    StructureRepresentation,
+    StructureRepresentationState,
+    StructureRepresentationStateBuilder,
+} from './representation.ts';
+import {
+    Representation,
+    RepresentationContext,
+    RepresentationParamsGetter,
+} from '../representation.ts';
+import { Bond, Structure, StructureElement } from '../../mol-model/structure.ts';
 import { Subject } from 'rxjs';
 import { getNextMaterialId, GraphicsRenderObject } from '../../mol-gl/render-object.ts';
 import { Theme } from '../../mol-theme/theme.ts';
 import { Task } from '../../mol-task/index.ts';
 import { PickingId } from '../../mol-geo/geometry/picking.ts';
-import { EmptyLoci, Loci, isEveryLoci, isDataLoci, EveryLoci } from '../../mol-model/loci.ts';
+import { EmptyLoci, EveryLoci, isDataLoci, isEveryLoci, Loci } from '../../mol-model/loci.ts';
 import { MarkerAction, MarkerActions } from '../../mol-util/marker-action.ts';
 import { Overpaint } from '../../mol-theme/overpaint.ts';
 import { StructureParams } from './params.ts';
@@ -25,7 +34,17 @@ import { Substance } from '../../mol-theme/substance.ts';
 import { LocationCallback } from '../util.ts';
 import { Emissive } from '../../mol-theme/emissive.ts';
 
-export function ComplexRepresentation<P extends StructureParams>(label: string, ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, P>, visualCtor: (materialId: number, structure: Structure, props: PD.Values<P>, webgl?: WebGLContext) => ComplexVisual<P>): StructureRepresentation<P> {
+export function ComplexRepresentation<P extends StructureParams>(
+    label: string,
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, P>,
+    visualCtor: (
+        materialId: number,
+        structure: Structure,
+        props: PD.Values<P>,
+        webgl?: WebGLContext,
+    ) => ComplexVisual<P>,
+): StructureRepresentation<P> {
     let version = 0;
     const { webgl } = ctx;
     const updated = new Subject<number>();
@@ -48,7 +67,7 @@ export function ComplexRepresentation<P extends StructureParams>(label: string, 
         }
         _props = Object.assign({}, _props, props);
 
-        return Task.create('Creating or updating ComplexRepresentation', async runtime => {
+        return Task.create('Creating or updating ComplexRepresentation', async (runtime) => {
             let newVisual = false;
             if (!visual) {
                 visual = visualCtor(materialId, _structure, _props, webgl);
@@ -93,7 +112,10 @@ export function ComplexRepresentation<P extends StructureParams>(label: string, 
             if (!Structure.areRootsEquivalent(loci.structure, _structure)) return false;
             // Remap `loci` from equivalent structure to the current `_structure`
             loci = Loci.remap(loci, _structure);
-            if (Structure.isLoci(loci) || (StructureElement.Loci.is(loci) && StructureElement.Loci.isWholeStructure(loci))) {
+            if (
+                Structure.isLoci(loci) ||
+                (StructureElement.Loci.is(loci) && StructureElement.Loci.isWholeStructure(loci))
+            ) {
                 // Change to `EveryLoci` to allow for downstream optimizations
                 loci = EveryLoci;
             }
@@ -109,7 +131,10 @@ export function ComplexRepresentation<P extends StructureParams>(label: string, 
 
         if (state.visible !== undefined && visual) {
             // hide visual when _unitTransforms is set and not the identity
-            visual.setVisibility(state.visible && (_state.unitTransforms === null || _state.unitTransforms.isIdentity));
+            visual.setVisibility(
+                state.visible &&
+                    (_state.unitTransforms === null || _state.unitTransforms.isIdentity),
+            );
         }
         if (state.alphaFactor !== undefined && visual) visual.setAlphaFactor(state.alphaFactor);
         if (state.pickable !== undefined && visual) visual.setPickable(state.pickable);
@@ -138,13 +163,18 @@ export function ComplexRepresentation<P extends StructureParams>(label: string, 
             const remappedClipping = Clipping.remap(state.clipping, _structure);
             visual.setClipping(remappedClipping);
         }
-        if (state.themeStrength !== undefined && visual) visual.setThemeStrength(state.themeStrength);
+        if (state.themeStrength !== undefined && visual) {
+            visual.setThemeStrength(state.themeStrength);
+        }
         if (state.transform !== undefined && visual) visual.setTransform(state.transform);
         if (state.unitTransforms !== undefined && visual) {
             // Since ComplexVisuals always renders geometries between units, the application
             // of `unitTransforms` does not make sense. When given here and not the identity,
             // it is ignored and sets the visual's visibility to `false`.
-            visual.setVisibility(_state.visible && (state.unitTransforms === null || state.unitTransforms.isIdentity));
+            visual.setVisibility(
+                _state.visible &&
+                    (state.unitTransforms === null || state.unitTransforms.isIdentity),
+            );
         }
     }
 
@@ -161,11 +191,21 @@ export function ComplexRepresentation<P extends StructureParams>(label: string, 
         get groupCount() {
             return visual ? visual.groupCount : 0;
         },
-        get props() { return _props; },
-        get params() { return _params; },
-        get state() { return _state; },
-        get theme() { return _theme; },
-        get geometryVersion() { return geometryState.version; },
+        get props() {
+            return _props;
+        },
+        get params() {
+            return _params;
+        },
+        get state() {
+            return _state;
+        },
+        get theme() {
+            return _theme;
+        },
+        get geometryVersion() {
+            return geometryState.version;
+        },
         renderObjects,
         updated,
         createOrUpdate,
@@ -175,6 +215,6 @@ export function ComplexRepresentation<P extends StructureParams>(label: string, 
         getAllLoci,
         eachLocation,
         mark,
-        destroy
+        destroy,
     };
 }

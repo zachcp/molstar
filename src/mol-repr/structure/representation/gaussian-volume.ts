@@ -5,15 +5,41 @@
  */
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { GaussianDensityVolumeParams, GaussianDensityVolumeVisual, UnitsGaussianDensityVolumeParams, UnitsGaussianDensityVolumeVisual } from '../visual/gaussian-density-volume.ts';
-import { StructureRepresentation, StructureRepresentationProvider, ComplexRepresentation, StructureRepresentationStateBuilder, UnitsRepresentation } from '../representation.ts';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation.ts';
+import {
+    GaussianDensityVolumeParams,
+    GaussianDensityVolumeVisual,
+    UnitsGaussianDensityVolumeParams,
+    UnitsGaussianDensityVolumeVisual,
+} from '../visual/gaussian-density-volume.ts';
+import {
+    ComplexRepresentation,
+    StructureRepresentation,
+    StructureRepresentationProvider,
+    StructureRepresentationStateBuilder,
+    UnitsRepresentation,
+} from '../representation.ts';
+import {
+    Representation,
+    RepresentationContext,
+    RepresentationParamsGetter,
+} from '../../representation.ts';
 import { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
 import { Structure } from '../../../mol-model/structure.ts';
 
 const GaussianVolumeVisuals = {
-    'gaussian-volume': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, GaussianDensityVolumeParams>) => ComplexRepresentation('Gaussian volume', ctx, getParams, GaussianDensityVolumeVisual),
-    'units-gaussian-volume': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, UnitsGaussianDensityVolumeParams>) => UnitsRepresentation('Units-Gaussian volume', ctx, getParams, UnitsGaussianDensityVolumeVisual)
+    'gaussian-volume': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, GaussianDensityVolumeParams>,
+    ) => ComplexRepresentation('Gaussian volume', ctx, getParams, GaussianDensityVolumeVisual),
+    'units-gaussian-volume': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, UnitsGaussianDensityVolumeParams>,
+    ) => UnitsRepresentation(
+        'Units-Gaussian volume',
+        ctx,
+        getParams,
+        UnitsGaussianDensityVolumeVisual,
+    ),
 };
 
 export const GaussianVolumeParams = {
@@ -21,14 +47,23 @@ export const GaussianVolumeParams = {
     jumpLength: PD.Numeric(4, { min: 0, max: 20, step: 0.1 }),
     visuals: PD.MultiSelect(['gaussian-volume'], PD.objectToOptions(GaussianVolumeVisuals)),
 };
-export type GaussianVolumeParams = typeof GaussianVolumeParams
+export type GaussianVolumeParams = typeof GaussianVolumeParams;
 export function getGaussianVolumeParams(ctx: ThemeRegistryContext, structure: Structure) {
     return GaussianVolumeParams;
 }
 
-export type GaussianVolumeRepresentation = StructureRepresentation<GaussianVolumeParams>
-export function GaussianVolumeRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, GaussianVolumeParams>): GaussianVolumeRepresentation {
-    return Representation.createMulti('Gaussian Volume', ctx, getParams, StructureRepresentationStateBuilder, GaussianVolumeVisuals as unknown as Representation.Def<Structure, GaussianVolumeParams>);
+export type GaussianVolumeRepresentation = StructureRepresentation<GaussianVolumeParams>;
+export function GaussianVolumeRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, GaussianVolumeParams>,
+): GaussianVolumeRepresentation {
+    return Representation.createMulti(
+        'Gaussian Volume',
+        ctx,
+        getParams,
+        StructureRepresentationStateBuilder,
+        GaussianVolumeVisuals as unknown as Representation.Def<Structure, GaussianVolumeParams>,
+    );
 }
 
 export const GaussianVolumeRepresentationProvider = StructureRepresentationProvider({
@@ -40,5 +75,5 @@ export const GaussianVolumeRepresentationProvider = StructureRepresentationProvi
     defaultValues: PD.getDefaultValues(GaussianVolumeParams),
     defaultColorTheme: { name: 'chain-id' },
     defaultSizeTheme: { name: 'physical' },
-    isApplicable: (structure: Structure) => structure.elementCount > 0
+    isApplicable: (structure: Structure) => structure.elementCount > 0,
 });

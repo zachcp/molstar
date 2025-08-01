@@ -7,7 +7,7 @@
  */
 
 import { Column, Table } from '../../mol-data/db.ts';
-import { MolFile, formalChargeMapper } from '../../mol-io/reader/mol/parser.ts';
+import { formalChargeMapper, MolFile } from '../../mol-io/reader/mol/parser.ts';
 import { MoleculeType } from '../../mol-model/structure/model/types.ts';
 import { RuntimeContext, Task } from '../../mol-task/index.ts';
 import { createModels } from './basic/parser.ts';
@@ -18,7 +18,11 @@ import { ModelFormat } from '../format.ts';
 import { IndexPairBonds } from './property/bonds/index-pair.ts';
 import { Trajectory } from '../../mol-model/structure.ts';
 
-export async function getMolModels(mol: MolFile, format: ModelFormat<any> | undefined, ctx: RuntimeContext) {
+export async function getMolModels(
+    mol: MolFile,
+    format: ModelFormat<any> | undefined,
+    ctx: RuntimeContext,
+) {
     const { atoms, bonds, formalCharges } = mol;
 
     const MOL = Column.ofConst('MOL', mol.atoms.count, Column.Schema.str);
@@ -29,7 +33,9 @@ export async function getMolModels(mol: MolFile, format: ModelFormat<any> | unde
     const computedFormalCharges = new Int32Array(mol.atoms.count);
     if (formalCharges.atomIdx.rowCount > 0) {
         for (let i = 0; i < formalCharges.atomIdx.rowCount; i++) {
-            computedFormalCharges[formalCharges.atomIdx.value(i) - 1] = formalCharges.charge.value(i);
+            computedFormalCharges[formalCharges.atomIdx.value(i) - 1] = formalCharges.charge.value(
+                i,
+            );
         }
     } else {
         for (let i = 0; i < mol.atoms.count; i++) {
@@ -57,7 +63,7 @@ export async function getMolModels(mol: MolFile, format: ModelFormat<any> | unde
         type_symbol,
 
         pdbx_PDB_model_num: Column.ofConst(1, atoms.count, Column.Schema.int),
-        pdbx_formal_charge: Column.ofIntArray(computedFormalCharges)
+        pdbx_formal_charge: Column.ofIntArray(computedFormalCharges),
     }, atoms.count);
 
     const entityBuilder = new EntityBuilder();
@@ -71,18 +77,22 @@ export async function getMolModels(mol: MolFile, format: ModelFormat<any> | unde
     const basic = createBasic({
         entity: entityBuilder.getEntityTable(),
         chem_comp: componentBuilder.getChemCompTable(),
-        atom_site
+        atom_site,
     });
 
     const models = await createModels(basic, format ?? MolFormat.create(mol), ctx);
 
     if (models.frameCount > 0) {
-        const indexA = Column.ofIntArray(Column.mapToArray(bonds.atomIdxA, x => x - 1, Int32Array));
-        const indexB = Column.ofIntArray(Column.mapToArray(bonds.atomIdxB, x => x - 1, Int32Array));
+        const indexA = Column.ofIntArray(
+            Column.mapToArray(bonds.atomIdxA, (x) => x - 1, Int32Array),
+        );
+        const indexB = Column.ofIntArray(
+            Column.mapToArray(bonds.atomIdxB, (x) => x - 1, Int32Array),
+        );
         const order = Column.asArrayColumn(bonds.order, Int32Array);
         const pairBonds = IndexPairBonds.fromData(
             { pairs: { indexA, indexB, order }, count: atoms.count },
-            { maxDistance: Infinity }
+            { maxDistance: Infinity },
         );
         IndexPairBonds.Provider.set(models.representative, pairBonds);
     }
@@ -94,7 +104,7 @@ export async function getMolModels(mol: MolFile, format: ModelFormat<any> | unde
 
 export { MolFormat };
 
-type MolFormat = ModelFormat<MolFile>
+type MolFormat = ModelFormat<MolFile>;
 
 namespace MolFormat {
     export function is(x?: ModelFormat): x is MolFormat {
@@ -107,5 +117,5 @@ namespace MolFormat {
 }
 
 export function trajectoryFromMol(mol: MolFile): Task<Trajectory> {
-    return Task.create('Parse MOL', ctx => getMolModels(mol, void 0, ctx));
+    return Task.create('Parse MOL', (ctx) => getMolModels(mol, void 0, ctx));
 }

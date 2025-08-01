@@ -6,10 +6,10 @@
 
 import { asciiWrite } from '../../mol-io/common/ascii.ts';
 import { Box3D } from '../../mol-math/geometry.ts';
-import { Vec3, Mat4 } from '../../mol-math/linear-algebra.ts';
+import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { PLUGIN_VERSION } from '../../mol-plugin/version.ts';
 import { RuntimeContext } from '../../mol-task/index.ts';
-import { MeshExporter, AddMeshInput } from './mesh-exporter.ts';
+import { AddMeshInput, MeshExporter } from './mesh-exporter.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3fromArray = Vec3.fromArray;
@@ -20,8 +20,8 @@ const v3toArray = Vec3.toArray;
 // https://www.fabbers.com/tech/STL_Format
 
 export type StlData = {
-    stl: Uint8Array
-}
+    stl: Uint8Array;
+};
 
 export class StlExporter extends MeshExporter<StlData> {
     readonly fileExtension = 'stl';
@@ -46,7 +46,10 @@ export class StlExporter extends MeshExporter<StlData> {
         for (let instanceIndex = 0; instanceIndex < instanceCount; ++instanceIndex) {
             if (ctx.shouldUpdate) await ctx.update({ current: instanceIndex + 1 });
 
-            const { vertices, indices, vertexCount, drawCount } = StlExporter.getInstance(input, instanceIndex);
+            const { vertices, indices, vertexCount, drawCount } = StlExporter.getInstance(
+                input,
+                instanceIndex,
+            );
 
             Mat4.fromArray(t, aTransform, instanceIndex * 16);
             Mat4.mul(t, this.centerTransform, t);

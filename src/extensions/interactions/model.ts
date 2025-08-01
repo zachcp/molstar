@@ -8,11 +8,11 @@ import { InteractionType } from '../../mol-model-props/computed/interactions/com
 import { StructureElement } from '../../mol-model/structure.ts';
 
 interface InteractionElementSchemaBase {
-    aStructureRef?: string,
-    a: StructureElement.Schema,
-    bStructureRef?: string,
-    b: StructureElement.Schema,
-    description?: string,
+    aStructureRef?: string;
+    a: StructureElement.Schema;
+    bStructureRef?: string;
+    b: StructureElement.Schema;
+    description?: string;
 }
 
 export type InteractionElementSchema =
@@ -25,9 +25,9 @@ export type InteractionElementSchema =
     | { kind: 'weak-hydrogen-bond' } & InteractionElementSchemaBase
     | { kind: 'hydrophobic' } & InteractionElementSchemaBase
     | { kind: 'metal-coordination' } & InteractionElementSchemaBase
-    | { kind: 'covalent', degree?: 'aromatic' | 1 | 2 | 3 | 4 } & InteractionElementSchemaBase
+    | { kind: 'covalent'; degree?: 'aromatic' | 1 | 2 | 3 | 4 } & InteractionElementSchemaBase;
 
-export type InteractionKind = InteractionElementSchema['kind']
+export type InteractionKind = InteractionElementSchema['kind'];
 
 export const InteractionKinds: InteractionKind[] = [
     'unknown',
@@ -48,26 +48,30 @@ export type InteractionInfo =
     | { kind: 'pi-stacking' }
     | { kind: 'cation-pi' }
     | { kind: 'halogen-bond' }
-    | { kind: 'hydrogen-bond', hydrogenStructureRef?: string, hydrogen?: StructureElement.Loci }
-    | { kind: 'weak-hydrogen-bond', hydrogenStructureRef?: string, hydrogen?: StructureElement.Loci }
+    | { kind: 'hydrogen-bond'; hydrogenStructureRef?: string; hydrogen?: StructureElement.Loci }
+    | {
+        kind: 'weak-hydrogen-bond';
+        hydrogenStructureRef?: string;
+        hydrogen?: StructureElement.Loci;
+    }
     | { kind: 'hydrophobic' }
     | { kind: 'metal-coordination' }
-    | { kind: 'covalent', degree?: 'aromatic' | 1 | 2 | 3 | 4 }
+    | { kind: 'covalent'; degree?: 'aromatic' | 1 | 2 | 3 | 4 };
 
 export interface StructureInteractionElement {
     // Pass the schema when loading from custom data
-    sourceSchema?: InteractionElementSchema,
+    sourceSchema?: InteractionElementSchema;
 
-    info: InteractionInfo,
-    aStructureRef?: string,
-    a: StructureElement.Loci,
-    bStructureRef?: string,
-    b: StructureElement.Loci,
+    info: InteractionInfo;
+    aStructureRef?: string;
+    a: StructureElement.Loci;
+    bStructureRef?: string;
+    b: StructureElement.Loci;
 }
 
 export interface StructureInteractions {
-    kind: 'structure-interactions',
-    elements: StructureInteractionElement[],
+    kind: 'structure-interactions';
+    elements: StructureInteractionElement[];
 }
 
 export const InteractionTypeToKind = {

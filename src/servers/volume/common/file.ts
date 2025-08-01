@@ -10,7 +10,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { FileHandle } from '../../../mol-io/common/file-handle.ts';
 import { SimpleBuffer } from '../../../mol-io/common/simple-buffer.ts';
-import { Buffer } from "node:buffer";
+import { Buffer } from 'node:buffer';
 
 export async function openRead(filename: string) {
     return new Promise<number>((res, rej) => {

@@ -4,8 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Model, ResidueIndex, ElementIndex } from './model.ts';
-import { MoleculeType, AtomRole, PolymerTypeAtomRoleId, getMoleculeType, PolymerType } from './model/types.ts';
+import { ElementIndex, Model, ResidueIndex } from './model.ts';
+import {
+    AtomRole,
+    getMoleculeType,
+    MoleculeType,
+    PolymerType,
+    PolymerTypeAtomRoleId,
+} from './model/types.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
 import { Unit } from './structure.ts';
 import { NumberArray } from '../../mol-util/type-helpers.ts';
@@ -20,7 +26,8 @@ export function getCoarseBegCompId(unit: Unit.Spheres | Unit.Gaussians, element:
 export function getElementMoleculeType(unit: Unit, element: ElementIndex): MoleculeType {
     switch (unit.kind) {
         case Unit.Kind.Atomic:
-            return unit.model.atomicHierarchy.derived.residue.moleculeType[unit.residueIndex[element]];
+            return unit.model.atomicHierarchy.derived.residue
+                .moleculeType[unit.residueIndex[element]];
         case Unit.Kind.Spheres:
         case Unit.Kind.Gaussians:
             // TODO add unit.model.coarseHierarchy.derived.residue.moleculeType

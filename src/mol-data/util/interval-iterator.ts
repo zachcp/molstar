@@ -5,10 +5,11 @@
  */
 
 import { Iterator } from '../iterator.ts';
-import { OrderedSet, Interval, Segmentation } from '../int.ts';
+import { Interval, OrderedSet, Segmentation } from '../int.ts';
 
 /** Emits a segment of length one for each element in the interval that is also in the set */
-export class IntervalIterator<I extends number = number> implements Iterator<Segmentation.Segment<I>> {
+export class IntervalIterator<I extends number = number>
+    implements Iterator<Segmentation.Segment<I>> {
     private value: Segmentation.Segment<I> = { index: 0 as I, start: 0, end: 0 };
 
     private curIndex = 0;
@@ -18,7 +19,10 @@ export class IntervalIterator<I extends number = number> implements Iterator<Seg
 
     updateValue() {
         this.value.index = this.curIndex as I;
-        this.value.start = OrderedSet.findPredecessorIndex(this.set, Interval.getAt(this.interval, this.curIndex));
+        this.value.start = OrderedSet.findPredecessorIndex(
+            this.set,
+            Interval.getAt(this.interval, this.curIndex),
+        );
         this.value.end = this.value.start + 1;
     }
 

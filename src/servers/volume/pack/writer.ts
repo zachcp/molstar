@@ -9,7 +9,7 @@
 import * as Data from './data-model.ts';
 import { getElementByteSize } from '../../../mol-io/common/typed-array.ts';
 import { SimpleBuffer } from '../../../mol-io/common/simple-buffer.ts';
-import process from "node:process";
+import process from 'node:process';
 
 /** Converts a layer to blocks and writes them to the output file. */
 export async function writeBlockLayer(ctx: Data.Context, sampling: Data.Sampling) {
@@ -20,7 +20,11 @@ export async function writeBlockLayer(ctx: Data.Context, sampling: Data.Sampling
     for (let v = 0; v < nV; v++) {
         for (let u = 0; u < nU; u++) {
             const size = fillCubeBuffer(ctx, sampling, u, v);
-            await ctx.file.writeBuffer(startOffset + sampling.writeByteOffset, ctx.litteEndianCubeBuffer, size);
+            await ctx.file.writeBuffer(
+                startOffset + sampling.writeByteOffset,
+                ctx.litteEndianCubeBuffer,
+                size,
+            );
             sampling.writeByteOffset += size;
             updateProgress(ctx.progress, 1);
         }
@@ -53,7 +57,13 @@ function fillCubeBuffer(ctx: Data.Context, sampling: Data.Sampling, u: number, v
         }
     }
     // flip the byte order if needed.
-    SimpleBuffer.ensureLittleEndian(ctx.cubeBuffer, ctx.litteEndianCubeBuffer, writeOffset, elementSize, 0);
+    SimpleBuffer.ensureLittleEndian(
+        ctx.cubeBuffer,
+        ctx.litteEndianCubeBuffer,
+        writeOffset,
+        elementSize,
+        0,
+    );
     return writeOffset;
 }
 

@@ -19,9 +19,22 @@ import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { EmptyLoci, Loci } from '../../../mol-model/loci.ts';
 import { Structure, Unit } from '../../../mol-model/structure.ts';
 import { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
-import { Representation, RepresentationContext, RepresentationParamsGetter } from '../../../mol-repr/representation.ts';
-import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder, UnitsRepresentation } from '../../../mol-repr/structure/representation.ts';
-import { UnitsMeshParams, UnitsMeshVisual, UnitsVisual } from '../../../mol-repr/structure/units-visual.ts';
+import {
+    Representation,
+    RepresentationContext,
+    RepresentationParamsGetter,
+} from '../../../mol-repr/representation.ts';
+import {
+    StructureRepresentation,
+    StructureRepresentationProvider,
+    StructureRepresentationStateBuilder,
+    UnitsRepresentation,
+} from '../../../mol-repr/structure/representation.ts';
+import {
+    UnitsMeshParams,
+    UnitsMeshVisual,
+    UnitsVisual,
+} from '../../../mol-repr/structure/units-visual.ts';
 import { VisualUpdateState } from '../../../mol-repr/util.ts';
 import { VisualContext } from '../../../mol-repr/visual.ts';
 import { StructureGroup } from '../../../mol-repr/structure/visual/util/common.ts';
@@ -52,7 +65,7 @@ function shiftVertex(vec: Vec3, ref: Vec3, scale: number) {
 }
 
 const ConfalPyramidsMeshParams = {
-    ...UnitsMeshParams
+    ...UnitsMeshParams,
 };
 type ConfalPyramidsMeshParams = typeof ConfalPyramidsMeshParams;
 
@@ -73,7 +86,14 @@ function createConfalPyramidsIterator(structureGroup: StructureGroup): LocationI
     return LocationIterator(halfPyramidsCount, instanceCount, 1, getLocation);
 }
 
-function createConfalPyramidsMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PD.Values<ConfalPyramidsMeshParams>, mesh?: Mesh) {
+function createConfalPyramidsMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<ConfalPyramidsMeshParams>,
+    mesh?: Mesh,
+) {
     if (!Unit.isAtomic(unit)) return Mesh.createEmpty(mesh);
 
     const data = ConfalPyramidsProvider.get(structure.model)?.value?.data;
@@ -88,8 +108,9 @@ function createConfalPyramidsMesh(ctx: VisualContext, unit: Unit, structure: Str
     const it = new ConfalPyramidsIterator(structure, unit);
     while (it.hasNext) {
         const allPoints = it.move();
-        if (!allPoints)
+        if (!allPoints) {
             continue;
+        }
 
         for (const points of allPoints) {
             const { O3, P, OP1, OP2, O5, confalScore } = points;
@@ -156,7 +177,11 @@ function getConfalPyramidLoci(pickingId: PickingId, structureGroup: StructureGro
     return CPT.Loci(data.steps, [idx]);
 }
 
-function eachConfalPyramid(loci: Loci, structureGroup: StructureGroup, apply: (interval: Interval) => boolean) {
+function eachConfalPyramid(
+    loci: Loci,
+    structureGroup: StructureGroup,
+    apply: (interval: Interval) => boolean,
+) {
     return false; // TODO: Implement me
 }
 
@@ -167,16 +192,23 @@ function ConfalPyramidsVisual(materialId: number): UnitsVisual<ConfalPyramidsMes
         createLocationIterator: createConfalPyramidsIterator,
         getLoci: getConfalPyramidLoci,
         eachLocation: eachConfalPyramid,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<ConfalPyramidsMeshParams>, currentProps: PD.Values<ConfalPyramidsMeshParams>) => {
-        }
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<ConfalPyramidsMeshParams>,
+            currentProps: PD.Values<ConfalPyramidsMeshParams>,
+        ) => {
+        },
     }, materialId);
 }
 const ConfalPyramidsVisuals = {
-    'confal-pyramids-symbol': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, UnitsMeshParams>) => UnitsRepresentation('Confal Pyramids Symbol Mesh', ctx, getParams, ConfalPyramidsVisual),
+    'confal-pyramids-symbol': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, UnitsMeshParams>,
+    ) => UnitsRepresentation('Confal Pyramids Symbol Mesh', ctx, getParams, ConfalPyramidsVisual),
 };
 
 export const ConfalPyramidsParams = {
-    ...UnitsMeshParams
+    ...UnitsMeshParams,
 };
 export type ConfalPyramidsParams = typeof ConfalPyramidsParams;
 export function getConfalPyramidsParams(ctx: ThemeRegistryContext, structure: Structure) {
@@ -184,8 +216,17 @@ export function getConfalPyramidsParams(ctx: ThemeRegistryContext, structure: St
 }
 
 export type ConfalPyramidsRepresentation = StructureRepresentation<ConfalPyramidsParams>;
-export function ConfalPyramidsRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, ConfalPyramidsParams>): ConfalPyramidsRepresentation {
-    const repr = Representation.createMulti('Confal Pyramids', ctx, getParams, StructureRepresentationStateBuilder, ConfalPyramidsVisuals as unknown as Representation.Def<Structure, ConfalPyramidsParams>);
+export function ConfalPyramidsRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, ConfalPyramidsParams>,
+): ConfalPyramidsRepresentation {
+    const repr = Representation.createMulti(
+        'Confal Pyramids',
+        ctx,
+        getParams,
+        StructureRepresentationStateBuilder,
+        ConfalPyramidsVisuals as unknown as Representation.Def<Structure, ConfalPyramidsParams>,
+    );
     return repr;
 }
 
@@ -198,9 +239,10 @@ export const ConfalPyramidsRepresentationProvider = StructureRepresentationProvi
     defaultValues: PD.getDefaultValues(ConfalPyramidsParams),
     defaultColorTheme: { name: 'confal-pyramids' },
     defaultSizeTheme: { name: 'uniform' },
-    isApplicable: (structure: Structure) => structure.models.some(m => Dnatco.isApplicable(m)),
+    isApplicable: (structure: Structure) => structure.models.some((m) => Dnatco.isApplicable(m)),
     ensureCustomProperties: {
-        attach: (ctx: CustomProperty.Context, structure: Structure) => ConfalPyramidsProvider.attach(ctx, structure.model, void 0, true),
+        attach: (ctx: CustomProperty.Context, structure: Structure) =>
+            ConfalPyramidsProvider.attach(ctx, structure.model, void 0, true),
         detach: (data) => ConfalPyramidsProvider.ref(data.model, false),
-    }
+    },
 });

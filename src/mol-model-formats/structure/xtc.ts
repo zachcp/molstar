@@ -12,7 +12,7 @@ import { Cell } from '../../mol-math/geometry/spacegroup/cell.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
 
 export function coordinatesFromXtc(file: XtcFile): Task<Coordinates> {
-    return Task.create('Parse XTC', async ctx => {
+    return Task.create('Parse XTC', async (ctx) => {
         await ctx.update('Converting to coordinates');
 
         const deltaTime = Time(file.deltaTime, 'step');
@@ -31,7 +31,7 @@ export function coordinatesFromXtc(file: XtcFile): Task<Coordinates> {
                 y: file.frames[i].y,
                 z: file.frames[i].z,
                 xyzOrdering: { isIdentity: true },
-                time: Time(offsetTime.value + deltaTime.value * i, deltaTime.unit)
+                time: Time(offsetTime.value + deltaTime.value * i, deltaTime.unit),
             });
         }
 

@@ -11,7 +11,7 @@ import { Unit } from '../unit.ts';
 import { Structure } from '../structure.ts';
 import { UniqueArray } from '../../../../mol-data/generic.ts';
 
-type UArray = UniqueArray<number, number>
+type UArray = UniqueArray<number, number>;
 
 export class StructureUniqueSubsetBuilder {
     private ids: number[] = [];
@@ -44,7 +44,9 @@ export class StructureUniqueSubsetBuilder {
         if (this.unitMap.has(parentId)) {
             this.currentUnit = this.unitMap.get(parentId);
         } else {
-            this.currentUnit = this.currentUnit.array.length > 0 ? UniqueArray.create() : this.currentUnit;
+            this.currentUnit = this.currentUnit.array.length > 0
+                ? UniqueArray.create()
+                : this.currentUnit;
         }
     }
 
@@ -86,7 +88,9 @@ export class StructureUniqueSubsetBuilder {
 
             let child = parent.getChild(SortedArray.ofSortedArray(unit));
             const pivot = symmGroups.add(child.id, child);
-            if (child !== pivot) child = pivot.applyOperator(child.id, child.conformation.operator, true);
+            if (child !== pivot) {
+                child = pivot.applyOperator(child.id, child.conformation.operator, true);
+            }
             newUnits[newUnits.length] = child;
         }
 
@@ -98,6 +102,5 @@ export class StructureUniqueSubsetBuilder {
     }
 
     constructor(private parent: Structure) {
-
     }
 }

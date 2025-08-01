@@ -5,9 +5,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Unit, Structure, ElementIndex, StructureElement, ResidueIndex } from '../../../../mol-model/structure.ts';
+import {
+    ElementIndex,
+    ResidueIndex,
+    Structure,
+    StructureElement,
+    Unit,
+} from '../../../../mol-model/structure.ts';
 import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra.ts';
-import { TransformData, createTransform } from '../../../../mol-geo/geometry/transform-data.ts';
+import { createTransform, TransformData } from '../../../../mol-geo/geometry/transform-data.ts';
 import { OrderedSet, SortedArray } from '../../../../mol-data/int.ts';
 import { EmptyLoci, Loci } from '../../../../mol-model/loci.ts';
 import { AtomicNumbers } from '../../../../mol-model/structure/model/properties/atomic.ts';
@@ -37,7 +43,11 @@ export function checkSphereImpostorSupport(webgl?: WebGLContext) {
             const missing: string[] = [];
             if (!webgl.extensions.fragDepth) missing.push('fragDepth');
             if (!webgl.extensions.textureFloat) missing.push('textureFloat');
-            console.warn(`Missing "${missing.join('", "')}" extensions required for "sphere impostors". Falling back to "sphere mesh".`);
+            console.warn(
+                `Missing "${
+                    missing.join('", "')
+                }" extensions required for "sphere impostors". Falling back to "sphere mesh".`,
+            );
             SphereImpostorWarningShown = true;
         }
     } else {
@@ -51,14 +61,20 @@ let CylinderImpostorWarningShown = false;
 export function checkCylinderImpostorSupport(webgl?: WebGLContext) {
     if (!webgl) {
         if (isDebugMode && !CylinderImpostorWarningShown) {
-            console.warn('WebGL required for "cylinder impostors". Falling back to "cylinder mesh".');
+            console.warn(
+                'WebGL required for "cylinder impostors". Falling back to "cylinder mesh".',
+            );
             CylinderImpostorWarningShown = true;
         }
     } else if (!webgl.extensions.fragDepth) {
         if (isDebugMode && !CylinderImpostorWarningShown) {
             const missing: string[] = [];
             if (!webgl.extensions.fragDepth) missing.push('fragDepth');
-            console.warn(`Missing "${missing.join('", "')}" extensions required for "cylinder impostors". Falling back to "cylinder mesh".`);
+            console.warn(
+                `Missing "${
+                    missing.join('", "')
+                }" extensions required for "cylinder impostors". Falling back to "cylinder mesh".`,
+            );
             CylinderImpostorWarningShown = true;
         }
     } else {
@@ -70,7 +86,11 @@ export function checkCylinderImpostorSupport(webgl?: WebGLContext) {
 //
 
 /** Return a Loci for the elements of a whole residue the elementIndex belongs to. */
-export function getResidueLoci(structure: Structure, unit: Unit.Atomic, elementIndex: ElementIndex): Loci {
+export function getResidueLoci(
+    structure: Structure,
+    unit: Unit.Atomic,
+    elementIndex: ElementIndex,
+): Loci {
     const { elements, model } = unit;
     if (OrderedSet.indexOf(elements, elementIndex) !== -1) {
         const { index, offsets } = model.atomicHierarchy.residueAtomSegments;
@@ -80,7 +100,9 @@ export function getResidueLoci(structure: Structure, unit: Unit.Atomic, elementI
             const unitIndex = OrderedSet.indexOf(elements, i);
             if (unitIndex !== -1) _indices.push(unitIndex);
         }
-        const indices = OrderedSet.ofSortedArray<StructureElement.UnitIndex>(SortedArray.ofSortedArray(_indices));
+        const indices = OrderedSet.ofSortedArray<StructureElement.UnitIndex>(
+            SortedArray.ofSortedArray(_indices),
+        );
         return StructureElement.Loci(structure, [{ unit, indices }]);
     }
     return EmptyLoci;
@@ -90,7 +112,11 @@ export function getResidueLoci(structure: Structure, unit: Unit.Atomic, elementI
  * Return a Loci for the elements of a whole residue the elementIndex belongs to but
  * restrict to elements that have the same label_alt_id or none
  */
-export function getAltResidueLoci(structure: Structure, unit: Unit.Atomic, elementIndex: ElementIndex) {
+export function getAltResidueLoci(
+    structure: Structure,
+    unit: Unit.Atomic,
+    elementIndex: ElementIndex,
+) {
     const { elements, model } = unit;
     const { label_alt_id } = model.atomicHierarchy.atoms;
     const elementAltId = label_alt_id.value(elementIndex);
@@ -102,7 +128,12 @@ export function getAltResidueLoci(structure: Structure, unit: Unit.Atomic, eleme
     return StructureElement.Loci(structure, []);
 }
 
-export function getAltResidueLociFromId(structure: Structure, unit: Unit.Atomic, residueIndex: ResidueIndex, elementAltId: string) {
+export function getAltResidueLociFromId(
+    structure: Structure,
+    unit: Unit.Atomic,
+    residueIndex: ResidueIndex,
+    elementAltId: string,
+) {
     const { elements, model } = unit;
     const { label_alt_id } = model.atomicHierarchy.atoms;
     const { offsets } = model.atomicHierarchy.residueAtomSegments;
@@ -117,26 +148,44 @@ export function getAltResidueLociFromId(structure: Structure, unit: Unit.Atomic,
             }
         }
     }
-    const indices = OrderedSet.ofSortedArray<StructureElement.UnitIndex>(SortedArray.ofSortedArray(_indices));
+    const indices = OrderedSet.ofSortedArray<StructureElement.UnitIndex>(
+        SortedArray.ofSortedArray(_indices),
+    );
     return StructureElement.Loci(structure, [{ unit, indices }]);
 }
 
 //
 
-export type StructureGroup = { structure: Structure, group: Unit.SymmetryGroup }
+export type StructureGroup = { structure: Structure; group: Unit.SymmetryGroup };
 
-export function createUnitsTransform(structureGroup: StructureGroup, includeParent: boolean, invariantBoundingSphere: Sphere3D, cellSize: number, batchSize: number, transformData?: TransformData) {
+export function createUnitsTransform(
+    structureGroup: StructureGroup,
+    includeParent: boolean,
+    invariantBoundingSphere: Sphere3D,
+    cellSize: number,
+    batchSize: number,
+    transformData?: TransformData,
+) {
     const { child } = structureGroup.structure;
     const units: ReadonlyArray<Unit> = includeParent && child
-        ? structureGroup.group.units.filter(u => child.unitMap.has(u.id))
+        ? structureGroup.group.units.filter((u) => child.unitMap.has(u.id))
         : structureGroup.group.units;
     const unitCount = units.length;
     const n = unitCount * 16;
-    const array = transformData && transformData.aTransform.ref.value.length >= n ? transformData.aTransform.ref.value : new Float32Array(n);
+    const array = transformData && transformData.aTransform.ref.value.length >= n
+        ? transformData.aTransform.ref.value
+        : new Float32Array(n);
     for (let i = 0; i < unitCount; i++) {
         m4toArray(units[i].conformation.operator.matrix, array, i * 16);
     }
-    return createTransform(array, unitCount, invariantBoundingSphere, cellSize, batchSize, transformData);
+    return createTransform(
+        array,
+        unitCount,
+        invariantBoundingSphere,
+        cellSize,
+        batchSize,
+        transformData,
+    );
 }
 
 export const UnitKindInfo = {
@@ -144,7 +193,7 @@ export const UnitKindInfo = {
     'spheres': {},
     'gaussians': {},
 };
-export type UnitKind = keyof typeof UnitKindInfo
+export type UnitKind = keyof typeof UnitKindInfo;
 export const UnitKindOptions = PD.objectToOptions(UnitKindInfo);
 
 export function includesUnitKind(unitKinds: UnitKind[], unit: Unit) {
@@ -175,7 +224,11 @@ export function getVolumeSliceInfo(box: Box3D, resolution: number, maxCells = De
  * Internally it uses the largest 2d slice of the box to determine the
  * maximum resolution to account for the 2d texture layout on the GPU.
  */
-export function ensureReasonableResolution<T>(box: Box3D, props: { resolution: number } & T, maxCells = DefaultMaxCells) {
+export function ensureReasonableResolution<T>(
+    box: Box3D,
+    props: { resolution: number } & T,
+    maxCells = DefaultMaxCells,
+) {
     const { area, areaCells, maxAreaCells } = getVolumeSliceInfo(box, props.resolution, maxCells);
     const resolution = areaCells > maxAreaCells ? Math.sqrt(area / maxAreaCells) : props.resolution;
     return { ...props, resolution };
@@ -183,20 +236,30 @@ export function ensureReasonableResolution<T>(box: Box3D, props: { resolution: n
 
 export function getConformation(unit: Unit) {
     switch (unit.kind) {
-        case Unit.Kind.Atomic: return unit.model.atomicConformation;
-        case Unit.Kind.Spheres: return unit.model.coarseConformation.spheres;
-        case Unit.Kind.Gaussians: return unit.model.coarseConformation.gaussians;
+        case Unit.Kind.Atomic:
+            return unit.model.atomicConformation;
+        case Unit.Kind.Spheres:
+            return unit.model.coarseConformation.spheres;
+        case Unit.Kind.Gaussians:
+            return unit.model.coarseConformation.gaussians;
     }
 }
 
 export const CommonSurfaceParams = {
-    ignoreHydrogens: PD.Boolean(false, { description: 'Whether or not to include hydrogen atoms in the surface calculation.' }),
+    ignoreHydrogens: PD.Boolean(false, {
+        description: 'Whether or not to include hydrogen atoms in the surface calculation.',
+    }),
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
-    traceOnly: PD.Boolean(false, { description: 'Whether or not to only use trace atoms in the surface calculation.' }),
-    includeParent: PD.Boolean(false, { description: 'Include elements of the parent structure in surface calculation to get a surface patch of the current structure.' }),
+    traceOnly: PD.Boolean(false, {
+        description: 'Whether or not to only use trace atoms in the surface calculation.',
+    }),
+    includeParent: PD.Boolean(false, {
+        description:
+            'Include elements of the parent structure in surface calculation to get a surface patch of the current structure.',
+    }),
 };
 export const DefaultCommonSurfaceProps = PD.getDefaultValues(CommonSurfaceParams);
-export type CommonSurfaceProps = typeof DefaultCommonSurfaceProps
+export type CommonSurfaceProps = typeof DefaultCommonSurfaceProps;
 
 const v = Vec3();
 function squaredDistance(x: number, y: number, z: number, center: Vec3) {
@@ -204,7 +267,11 @@ function squaredDistance(x: number, y: number, z: number, center: Vec3) {
 }
 
 /** marks `indices` for filtering/ignoring in `id` when not in `elements` */
-function filterUnitId(id: AssignableArrayLike<number>, elements: SortedArray, indices: SortedArray) {
+function filterUnitId(
+    id: AssignableArrayLike<number>,
+    elements: SortedArray,
+    indices: SortedArray,
+) {
     let start = 0;
     const end = elements.length;
     for (let i = 0, il = indices.length; i < il; ++i) {
@@ -218,7 +285,12 @@ function filterUnitId(id: AssignableArrayLike<number>, elements: SortedArray, in
     }
 }
 
-export function getUnitConformationAndRadius(structure: Structure, unit: Unit, sizeTheme: SizeTheme<any>, props: CommonSurfaceProps) {
+export function getUnitConformationAndRadius(
+    structure: Structure,
+    unit: Unit,
+    sizeTheme: SizeTheme<any>,
+    props: CommonSurfaceProps,
+) {
     const { ignoreHydrogens, ignoreHydrogensVariant, traceOnly, includeParent } = props;
     const rootUnit = includeParent ? structure.root.unitMap.get(unit.id) : unit;
     const differentRoot = includeParent && rootUnit !== unit;
@@ -237,7 +309,9 @@ export function getUnitConformationAndRadius(structure: Structure, unit: Unit, s
         const _id: number[] = [];
         for (let i = 0, il = elements.length; i < il; ++i) {
             const eI = elements[i];
-            if (ignoreHydrogens && isHydrogen(structure, rootUnit, eI, ignoreHydrogensVariant)) continue;
+            if (ignoreHydrogens && isHydrogen(structure, rootUnit, eI, ignoreHydrogensVariant)) {
+                continue;
+            }
             if (traceOnly && !isTrace(rootUnit, eI)) continue;
             if (differentRoot && squaredDistance(x[eI], y[eI], z[eI], center) > radiusSq) continue;
 
@@ -267,7 +341,11 @@ export function getUnitConformationAndRadius(structure: Structure, unit: Unit, s
     return { position, boundary, radius };
 }
 
-export function getStructureConformationAndRadius(structure: Structure, sizeTheme: SizeTheme<any>, props: CommonSurfaceProps) {
+export function getStructureConformationAndRadius(
+    structure: Structure,
+    sizeTheme: SizeTheme<any>,
+    props: CommonSurfaceProps,
+) {
     const { ignoreHydrogens, ignoreHydrogensVariant, traceOnly, includeParent } = props;
     const differentRoot = includeParent && !!structure.parent;
     const l = StructureElement.Location.create(structure.root);
@@ -300,7 +378,9 @@ export function getStructureConformationAndRadius(structure: Structure, sizeThem
             l.unit = unit;
             for (let j = 0, jl = elements.length; j < jl; ++j) {
                 const eI = elements[j];
-                if (ignoreHydrogens && isHydrogen(structure, unit, eI, ignoreHydrogensVariant)) continue;
+                if (ignoreHydrogens && isHydrogen(structure, unit, eI, ignoreHydrogensVariant)) {
+                    continue;
+                }
                 if (traceOnly && !isTrace(unit, eI)) continue;
 
                 const _x = c.x(eI), _y = c.y(eI), _z = c.z(eI);
@@ -362,11 +442,20 @@ export function getStructureConformationAndRadius(structure: Structure, sizeThem
 }
 
 const _H = AtomicNumbers['H'];
-export function isHydrogen(structure: Structure, unit: Unit, element: ElementIndex, variant: 'all' | 'non-polar' | 'polar') {
+export function isHydrogen(
+    structure: Structure,
+    unit: Unit,
+    element: ElementIndex,
+    variant: 'all' | 'non-polar' | 'polar',
+) {
     if (Unit.isCoarse(unit)) return false;
     if (unit.model.atomicHierarchy.derived.atom.atomicNumber[element] !== _H) return false;
     if (variant === 'all') return true;
-    const polar = hasPolarNeighbour(structure, unit, SortedArray.indexOf(unit.elements, element) as StructureElement.UnitIndex);
+    const polar = hasPolarNeighbour(
+        structure,
+        unit,
+        SortedArray.indexOf(unit.elements, element) as StructureElement.UnitIndex,
+    );
     if (polar && variant === 'polar') return true;
     if (!polar && variant === 'non-polar') return true;
     return false;

@@ -13,18 +13,20 @@ export function getSchema() {
         info: {
             version: VERSION,
             title: 'Membrane Server',
-            description: 'The MembraneServer process an entry and predicts the orientation of the membrane layer, which can be used to compose molecular scenes using MolViewSpec.',
+            description:
+                'The MembraneServer process an entry and predicts the orientation of the membrane layer, which can be used to compose molecular scenes using MolViewSpec.',
         },
         tags: [
             {
                 name: 'General',
-            }
+            },
         ],
         paths: {
             [`${MembraneServerConfig.apiPrefix}/predict/{id}/`]: {
                 get: {
                     tags: ['General'],
-                    summary: 'Returns a JSON response specifying if data is available and the maximum region that can be queried.',
+                    summary:
+                        'Returns a JSON response specifying if data is available and the maximum region that can be queried.',
                     operationId: 'predictMembrane',
                     parameters: [
                         { $ref: '#/components/parameters/id' },
@@ -42,12 +44,12 @@ export function getSchema() {
                             description: '',
                             content: {
                                 'application/json': {
-                                    schema: { $ref: '#/components/schemas/prediction' }
-                                }
-                            }
+                                    schema: { $ref: '#/components/schemas/prediction' },
+                                },
+                            },
                         },
                     },
-                }
+                },
             },
         },
         components: {
@@ -58,44 +60,46 @@ export function getSchema() {
                         planePoint1: {
                             type: 'array',
                             items: {
-                                type: 'number'
+                                type: 'number',
                             },
                             minItems: 3,
                             maxItems: 3,
-                            description: 'Array of three numbers representing the first plane point'
+                            description:
+                                'Array of three numbers representing the first plane point',
                         },
                         planePoint2: {
                             type: 'array',
                             items: {
-                                type: 'number'
+                                type: 'number',
                             },
                             minItems: 3,
                             maxItems: 3,
-                            description: 'Array of three numbers representing the second plane point'
+                            description:
+                                'Array of three numbers representing the second plane point',
                         },
                         normalVector: {
                             type: 'array',
                             items: {
-                                type: 'number'
+                                type: 'number',
                             },
                             minItems: 3,
                             maxItems: 3,
-                            description: 'Array of three numbers representing the normal vector'
+                            description: 'Array of three numbers representing the normal vector',
                         },
                         centroid: {
                             type: 'array',
                             items: {
-                                type: 'number'
+                                type: 'number',
                             },
                             minItems: 3,
                             maxItems: 3,
-                            description: 'Array of three numbers representing the centroid'
+                            description: 'Array of three numbers representing the centroid',
                         },
                         radius: {
                             type: 'number',
-                            description: 'A number representing the radius'
-                        }
-                    }
+                            description: 'A number representing the radius',
+                        },
+                    },
                 },
             },
             parameters: {
@@ -119,12 +123,13 @@ export function getSchema() {
                         default: '1',
                         type: 'string',
                     },
-                    style: 'simple'
+                    style: 'simple',
                 },
                 numberOfSpherePoints: {
                     name: 'numberOfSpherePoints',
                     in: 'query',
-                    description: 'Number of spheres/directions to test for membrane placement. Original value is 350.',
+                    description:
+                        'Number of spheres/directions to test for membrane placement. Original value is 350.',
                     required: false,
                     schema: {
                         type: 'integer',
@@ -132,7 +137,7 @@ export function getSchema() {
                         maximum: 700,
                         default: 175,
                     },
-                    style: 'simple'
+                    style: 'simple',
                 },
                 stepSize: {
                     name: 'stepSize',
@@ -145,7 +150,7 @@ export function getSchema() {
                         maximum: 4,
                         default: 1,
                     },
-                    style: 'simple'
+                    style: 'simple',
                 },
                 minThickness: {
                     name: 'minThickness',
@@ -158,7 +163,7 @@ export function getSchema() {
                         maximum: 30,
                         default: 20,
                     },
-                    style: 'simple'
+                    style: 'simple',
                 },
                 maxThickness: {
                     name: 'maxThickness',
@@ -171,7 +176,7 @@ export function getSchema() {
                         maximum: 50,
                         default: 40,
                     },
-                    style: 'simple'
+                    style: 'simple',
                 },
                 asaCutoff: {
                     name: 'asaCutoff',
@@ -184,12 +189,13 @@ export function getSchema() {
                         maximum: 100,
                         default: 40,
                     },
-                    style: 'simple'
+                    style: 'simple',
                 },
                 adjust: {
                     name: 'adjust',
                     in: 'query',
-                    description: 'Minimum length of membrane-spanning regions (original values: 14 for alpha-helices and 5 for beta sheets). Set to 0 to not optimize membrane thickness.',
+                    description:
+                        'Minimum length of membrane-spanning regions (original values: 14 for alpha-helices and 5 for beta sheets). Set to 0 to not optimize membrane thickness.',
                     required: false,
                     schema: {
                         type: 'integer',
@@ -197,22 +203,24 @@ export function getSchema() {
                         maximum: 30,
                         default: 14,
                     },
-                    style: 'simple'
+                    style: 'simple',
                 },
                 tmdetDefinition: {
                     name: 'tmdetDefinition',
                     in: 'query',
-                    description: `Use TMDET's classification of membrane-favoring amino acids. TMDET's classification shows better performance on porins and other beta-barrel structures.`,
+                    description:
+                        `Use TMDET's classification of membrane-favoring amino acids. TMDET's classification shows better performance on porins and other beta-barrel structures.`,
                     required: false,
                     schema: {
                         type: 'boolean',
                         default: false,
                     },
-                    style: 'simple'
+                    style: 'simple',
                 },
-            }
-        }
+            },
+        },
     };
 }
 
-export const shortcutIconLink = `<link rel='shortcut icon' href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAnUExURQAAAMIrHrspHr0oH7soILonHrwqH7onILsoHrsoH7soH7woILwpIKgVokoAAAAMdFJOUwAQHzNxWmBHS5XO6jdtAmoAAACZSURBVDjLxZNRCsQgDAVNXmwb9f7nXZEaLRgXloXOhwQdjMYYwpOLw55fBT46KhbOKhmRR2zLcFJQj8UR+HxFgArIF5BKJbEncC6NDEdI5SatBRSDJwGAoiFDONrEJXWYhGMIcRJGCrb1TOtDahfUuQXd10jkFYq0ViIrbUpNcVT6redeC1+b9tH2WLR93Sx2VCzkv/7NjfABxjQHksGB7lAAAAAASUVORK5CYII=' />`;
+export const shortcutIconLink =
+    `<link rel='shortcut icon' href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAnUExURQAAAMIrHrspHr0oH7soILonHrwqH7onILsoHrsoH7soH7woILwpIKgVokoAAAAMdFJOUwAQHzNxWmBHS5XO6jdtAmoAAACZSURBVDjLxZNRCsQgDAVNXmwb9f7nXZEaLRgXloXOhwQdjMYYwpOLw55fBT46KhbOKhmRR2zLcFJQj8UR+HxFgArIF5BKJbEncC6NDEdI5SatBRSDJwGAoiFDONrEJXWYhGMIcRJGCrb1TOtDahfUuQXd10jkFYq0ViIrbUpNcVT6redeC1+b9tH2WLR93Sx2VCzkv/7NjfABxjQHksGB7lAAAAAASUVORK5CYII=' />`;

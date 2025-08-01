@@ -11,7 +11,13 @@ import { BoundaryHelper } from '../../../mol-math/geometry/boundary-helper.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { PrincipalAxes } from '../../../mol-math/linear-algebra/matrix/principal-axes.ts';
 import { EmptyLoci, Loci } from '../../../mol-model/loci.ts';
-import { QueryContext, Structure, StructureElement, StructureQuery, StructureSelection } from '../../../mol-model/structure.ts';
+import {
+    QueryContext,
+    Structure,
+    StructureElement,
+    StructureQuery,
+    StructureSelection,
+} from '../../../mol-model/structure.ts';
 import { PluginContext } from '../../../mol-plugin/context.ts';
 import { StateObjectRef, StateSelection } from '../../../mol-state/index.ts';
 import { Task } from '../../../mol-task/index.ts';
@@ -26,24 +32,25 @@ import { Boundary } from '../../../mol-math/geometry/boundary.ts';
 import { iterableToArray } from '../../../mol-data/util.ts';
 
 interface StructureSelectionManagerState {
-    entries: Map<string, SelectionEntry>,
-    additionsHistory: StructureSelectionHistoryEntry[],
-    stats?: SelectionStats
+    entries: Map<string, SelectionEntry>;
+    additionsHistory: StructureSelectionHistoryEntry[];
+    stats?: SelectionStats;
 }
 
 const boundaryHelper = new BoundaryHelper('98');
 const HISTORY_CAPACITY = 24;
 
-export type StructureSelectionModifier = 'add' | 'remove' | 'intersect' | 'set'
+export type StructureSelectionModifier = 'add' | 'remove' | 'intersect' | 'set';
 
 export type StructureSelectionSnapshot = {
     entries: {
-        ref: string
-        bundle: StructureElement.Bundle
-    }[]
-}
+        ref: string;
+        bundle: StructureElement.Bundle;
+    }[];
+};
 
-export class StructureSelectionManager extends StatefulPluginComponent<StructureSelectionManagerState> {
+export class StructureSelectionManager
+    extends StatefulPluginComponent<StructureSelectionManagerState> {
     readonly events = {
         changed: this.ev<undefined>(),
         additionsHistoryUpdated: this.ev<undefined>(),
@@ -51,14 +58,18 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
         loci: {
             add: this.ev<StructureElement.Loci>(),
             remove: this.ev<StructureElement.Loci>(),
-            clear: this.ev<undefined>()
-        }
+            clear: this.ev<undefined>(),
+        },
     };
 
     private referenceLoci: StructureElement.Loci | undefined;
 
-    get entries() { return this.state.entries; }
-    get additionsHistory() { return this.state.additionsHistory; }
+    get entries() {
+        return this.state.entries;
+    }
+    get additionsHistory() {
+        return this.state.additionsHistory;
+    }
     get stats() {
         if (this.state.stats) return this.state.stats;
         this.state.stats = this.calcStats();
@@ -84,14 +95,18 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
         let elementCount = 0;
         const stats = StructureElement.Stats.create();
 
-        this.entries.forEach(v => {
+        this.entries.forEach((v) => {
             const { elements } = v.selection;
             if (elements.length) {
                 structureCount += 1;
                 for (let i = 0, il = elements.length; i < il; ++i) {
                     elementCount += OrderedSet.size(elements[i].indices);
                 }
-                StructureElement.Stats.add(stats, stats, StructureElement.Stats.ofLoci(v.selection));
+                StructureElement.Stats.add(
+                    stats,
+                    stats,
+                    StructureElement.Stats.ofLoci(v.selection),
+                );
             }
         });
 
@@ -154,7 +169,12 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
         return !StructureElement.Loci.areEqual(sel, entry.selection);
     }
 
-    modifyHistory(entry: StructureSelectionHistoryEntry, action: 'remove' | 'up' | 'down', modulus?: number, groupByStructure = false) {
+    modifyHistory(
+        entry: StructureSelectionHistoryEntry,
+        action: 'remove' | 'up' | 'down',
+        modulus?: number,
+        groupByStructure = false,
+    ) {
         const history = this.additionsHistory;
         const idx = history.indexOf(entry);
         if (idx < 0) return;
@@ -162,9 +182,15 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
         let swapWith: number | undefined = void 0;
 
         switch (action) {
-            case 'remove': arrayRemoveAtInPlace(history, idx); break;
-            case 'up': swapWith = idx - 1; break;
-            case 'down': swapWith = idx + 1; break;
+            case 'remove':
+                arrayRemoveAtInPlace(history, idx);
+                break;
+            case 'up':
+                swapWith = idx - 1;
+                break;
+            case 'down':
+                swapWith = idx + 1;
+                break;
         }
 
         if (swapWith !== void 0) {
@@ -173,7 +199,10 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
                 swapWith = swapWith % mod;
                 if (swapWith < 0) swapWith += mod;
 
-                if (!groupByStructure || history[idx].loci.structure === history[swapWith].loci.structure) {
+                if (
+                    !groupByStructure ||
+                    history[idx].loci.structure === history[swapWith].loci.structure
+                ) {
                     const t = history[idx];
                     history[idx] = history[swapWith];
                     history[swapWith] = t;
@@ -252,7 +281,11 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
         }
     }
 
-    private onUpdate(ref: string, oldObj: PSO.Molecule.Structure | undefined, obj: PSO.Molecule.Structure) {
+    private onUpdate(
+        ref: string,
+        oldObj: PSO.Molecule.Structure | undefined,
+        obj: PSO.Molecule.Structure,
+    ) {
         // no change to structure
         if (oldObj === obj || oldObj?.data === obj.data) return;
 
@@ -360,7 +393,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
     /** Count of all selected elements */
     elementCount() {
         let count = 0;
-        this.entries.forEach(v => {
+        this.entries.forEach((v) => {
             count += StructureElement.Loci.size(v.selection);
         });
         return count;
@@ -373,7 +406,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
         boundaryHelper.reset();
 
         const boundaries: Boundary[] = [];
-        this.entries.forEach(v => {
+        this.entries.forEach((v) => {
             const loci = v.selection;
             if (!StructureElement.Loci.isEmpty(loci)) {
                 boundaries.push(StructureElement.Loci.getBoundary(loci));
@@ -397,16 +430,24 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
 
     getPrincipalAxes(): PrincipalAxes {
         const values = iterableToArray(this.entries.values());
-        return StructureElement.Loci.getPrincipalAxesMany(values.map(v => v.selection));
+        return StructureElement.Loci.getPrincipalAxesMany(values.map((v) => v.selection));
     }
 
     modify(modifier: StructureSelectionModifier, loci: Loci) {
         let changed = false;
         switch (modifier) {
-            case 'add': changed = this.add(loci); break;
-            case 'remove': changed = this.remove(loci); break;
-            case 'intersect': changed = this.intersect(loci); break;
-            case 'set': changed = this.set(loci); break;
+            case 'add':
+                changed = this.add(loci);
+                break;
+            case 'remove':
+                changed = this.remove(loci);
+                break;
+            case 'intersect':
+                changed = this.intersect(loci);
+                break;
+            case 'set':
+                changed = this.set(loci);
+                break;
         }
 
         if (changed) {
@@ -417,11 +458,15 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
 
     private get applicableStructures() {
         return this.plugin.managers.structure.hierarchy.selection.structures
-            .filter(s => !!s.cell.obj)
-            .map(s => s.cell.obj!.data);
+            .filter((s) => !!s.cell.obj)
+            .map((s) => s.cell.obj!.data);
     }
 
-    private triggerInteraction(modifier: StructureSelectionModifier, loci: Loci, applyGranularity = true) {
+    private triggerInteraction(
+        modifier: StructureSelectionModifier,
+        loci: Loci,
+        applyGranularity = true,
+    ) {
         switch (modifier) {
             case 'add':
                 this.plugin.managers.interactivity.lociSelects.select({ loci }, applyGranularity);
@@ -430,10 +475,16 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
                 this.plugin.managers.interactivity.lociSelects.deselect({ loci }, applyGranularity);
                 break;
             case 'intersect':
-                this.plugin.managers.interactivity.lociSelects.selectJoin({ loci }, applyGranularity);
+                this.plugin.managers.interactivity.lociSelects.selectJoin(
+                    { loci },
+                    applyGranularity,
+                );
                 break;
             case 'set':
-                this.plugin.managers.interactivity.lociSelects.selectOnly({ loci }, applyGranularity);
+                this.plugin.managers.interactivity.lociSelects.selectOnly(
+                    { loci },
+                    applyGranularity,
+                );
                 break;
         }
     }
@@ -442,18 +493,34 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
         this.triggerInteraction(modifier, loci, applyGranularity);
     }
 
-    fromCompiledQuery(modifier: StructureSelectionModifier, query: StructureQuery, applyGranularity = true) {
+    fromCompiledQuery(
+        modifier: StructureSelectionModifier,
+        query: StructureQuery,
+        applyGranularity = true,
+    ) {
         for (const s of this.applicableStructures) {
             const loci = query(new QueryContext(s));
-            this.triggerInteraction(modifier, StructureSelection.toLociWithSourceUnits(loci), applyGranularity);
+            this.triggerInteraction(
+                modifier,
+                StructureSelection.toLociWithSourceUnits(loci),
+                applyGranularity,
+            );
         }
     }
 
-    fromSelectionQuery(modifier: StructureSelectionModifier, query: StructureSelectionQuery, applyGranularity = true) {
-        this.plugin.runTask(Task.create('Structure Selection', async runtime => {
+    fromSelectionQuery(
+        modifier: StructureSelectionModifier,
+        query: StructureSelectionQuery,
+        applyGranularity = true,
+    ) {
+        this.plugin.runTask(Task.create('Structure Selection', async (runtime) => {
             for (const s of this.applicableStructures) {
                 const loci = await query.getSelection(this.plugin, runtime, s);
-                this.triggerInteraction(modifier, StructureSelection.toLociWithSourceUnits(loci), applyGranularity);
+                this.triggerInteraction(
+                    modifier,
+                    StructureSelection.toLociWithSourceUnits(loci),
+                    applyGranularity,
+                );
             }
         }));
     }
@@ -479,7 +546,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
         this.entries.forEach((entry, ref) => {
             entries.push({
                 ref,
-                bundle: StructureElement.Bundle.fromLoci(entry.selection)
+                bundle: StructureElement.Bundle.fromLoci(entry.selection),
             });
         });
 
@@ -490,7 +557,8 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
         this.entries.clear();
 
         for (const { ref, bundle } of snapshot.entries) {
-            const structure = this.plugin.state.data.select(StateSelection.Generators.byRef(ref))[0]?.obj?.data as Structure;
+            const structure = this.plugin.state.data.select(StateSelection.Generators.byRef(ref))[0]
+                ?.obj?.data as Structure;
             if (!structure) continue;
 
             const loci = StructureElement.Bundle.toLoci(bundle, structure);
@@ -502,24 +570,32 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
         super({ entries: new Map(), additionsHistory: [], stats: SelectionStats() });
 
         // listen to events from substructureParent helper to ensure it is updated
-        plugin.helpers.substructureParent.events.removed.subscribe(e => this.onRemove(e.ref, e.obj));
-        plugin.helpers.substructureParent.events.updated.subscribe(e => this.onUpdate(e.ref, e.oldObj, e.obj));
+        plugin.helpers.substructureParent.events.removed.subscribe((e) =>
+            this.onRemove(e.ref, e.obj)
+        );
+        plugin.helpers.substructureParent.events.updated.subscribe((e) =>
+            this.onUpdate(e.ref, e.oldObj, e.obj)
+        );
     }
 }
 
 interface SelectionStats {
-    structureCount: number,
-    elementCount: number,
-    label: string
+    structureCount: number;
+    elementCount: number;
+    label: string;
 }
 
-function SelectionStats(): SelectionStats { return { structureCount: 0, elementCount: 0, label: 'Nothing Selected' }; };
+function SelectionStats(): SelectionStats {
+    return { structureCount: 0, elementCount: 0, label: 'Nothing Selected' };
+}
 
 class SelectionEntry {
     private _selection: StructureElement.Loci;
     private _structure?: Structure = void 0;
 
-    get selection() { return this._selection; }
+    get selection() {
+        return this._selection;
+    }
     set selection(value: StructureElement.Loci) {
         this._selection = value;
         this._structure = void 0;
@@ -541,9 +617,9 @@ class SelectionEntry {
 }
 
 export interface StructureSelectionHistoryEntry {
-    id: UUID,
-    loci: StructureElement.Loci,
-    label: string
+    id: UUID;
+    loci: StructureElement.Loci;
+    label: string;
 }
 
 /** remap `selection-entry` to be related to `structure` if possible */
@@ -552,7 +628,10 @@ function remapSelectionEntry(e: SelectionEntry, s: Structure): SelectionEntry {
 }
 
 /** Return loci spanning the range between `fromLoci` and `toLoci` (including both) if they belong to the same unit in the same structure */
-export function getLociRange(fromLoci: Loci | undefined, toLoci: Loci | undefined): StructureElement.Loci | undefined {
+export function getLociRange(
+    fromLoci: Loci | undefined,
+    toLoci: Loci | undefined,
+): StructureElement.Loci | undefined {
     if (!StructureElement.Loci.is(fromLoci)) return;
     if (!StructureElement.Loci.is(toLoci)) return;
     if (fromLoci.structure !== toLoci.structure) return;
@@ -579,12 +658,19 @@ export function getLociRange(fromLoci: Loci | undefined, toLoci: Loci | undefine
 /**
  * Assumes `ref` and `ext` belong to the same unit in the same structure
  */
-function getElementRange(structure: Structure, ref: StructureElement.Loci['elements'][0], ext: StructureElement.Loci['elements'][0]) {
+function getElementRange(
+    structure: Structure,
+    ref: StructureElement.Loci['elements'][0],
+    ext: StructureElement.Loci['elements'][0],
+) {
     const min = Math.min(OrderedSet.min(ref.indices), OrderedSet.min(ext.indices));
     const max = Math.max(OrderedSet.max(ref.indices), OrderedSet.max(ext.indices));
 
     return StructureElement.Loci(structure, [{
         unit: ref.unit,
-        indices: OrderedSet.ofRange(min as StructureElement.UnitIndex, max as StructureElement.UnitIndex)
+        indices: OrderedSet.ofRange(
+            min as StructureElement.UnitIndex,
+            max as StructureElement.UnitIndex,
+        ),
     }]);
 }

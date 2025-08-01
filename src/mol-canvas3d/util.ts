@@ -23,7 +23,12 @@ export function resizeCanvas(canvas: HTMLCanvasElement, container: HTMLElement, 
     setCanvasSize(canvas, width, height, scale);
 }
 
-function _canvasToBlob(canvas: HTMLCanvasElement, callback: BlobCallback, type?: string, quality?: any) {
+function _canvasToBlob(
+    canvas: HTMLCanvasElement,
+    callback: BlobCallback,
+    type?: string,
+    quality?: any,
+) {
     const bin = atob(canvas.toDataURL(type, quality).split(',')[1]);
     const len = bin.length;
     const len32 = len >> 2;
@@ -44,7 +49,11 @@ function _canvasToBlob(canvas: HTMLCanvasElement, callback: BlobCallback, type?:
     callback(new Blob([a8], { type: type || 'image/png' }));
 }
 
-export async function canvasToBlob(canvas: HTMLCanvasElement, type?: string, quality?: any): Promise<Blob> {
+export async function canvasToBlob(
+    canvas: HTMLCanvasElement,
+    type?: string,
+    quality?: any,
+): Promise<Blob> {
     return new Promise((resolve, reject) => {
         const callback = (blob: Blob | null) => {
             if (blob) resolve(blob);

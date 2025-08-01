@@ -4,15 +4,29 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { State, StateTransform, StateTransformer, StateAction, StateObject, StateObjectCell } from '../../mol-state/index.ts';
+import {
+    State,
+    StateAction,
+    StateObject,
+    StateObjectCell,
+    StateTransform,
+    StateTransformer,
+} from '../../mol-state/index.ts';
 import * as React from 'react';
 import { PurePluginUIComponent } from '../base.tsx';
 import { ParameterControls, ParamOnChange } from '../controls/parameters.tsx';
 import { PluginContext } from '../../mol-plugin/context.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { BehaviorSubject, skip } from 'rxjs';
-import { Icon, RefreshSvg, CheckSvg, ArrowRightSvg, ArrowDropDownSvg, TuneSvg } from '../controls/icons.tsx';
-import { ExpandGroup, ToggleButton, Button, IconButton } from '../controls/common.tsx';
+import {
+    ArrowDropDownSvg,
+    ArrowRightSvg,
+    CheckSvg,
+    Icon,
+    RefreshSvg,
+    TuneSvg,
+} from '../controls/icons.tsx';
+import { Button, ExpandGroup, IconButton, ToggleButton } from '../controls/common.tsx';
 
 export { StateTransformParameters, TransformControlBase };
 
@@ -32,30 +46,37 @@ class StateTransformParameters extends PurePluginUIComponent<StateTransformParam
     };
 
     render() {
-        return <ParameterControls params={this.props.info.params} values={this.props.params} onChange={this.onChange} onEnter={this.props.events.onEnter} isDisabled={this.props.isDisabled} />;
+        return (
+            <ParameterControls
+                params={this.props.info.params}
+                values={this.props.params}
+                onChange={this.onChange}
+                onEnter={this.props.events.onEnter}
+                isDisabled={this.props.isDisabled}
+            />
+        );
     }
 }
-
 
 namespace StateTransformParameters {
     export interface Props {
         info: {
-            params: PD.Params,
-            initialValues: any,
-            isEmpty: boolean
-        },
+            params: PD.Params;
+            initialValues: any;
+            isEmpty: boolean;
+        };
         events: {
-            onChange: (params: any, areInitial: boolean, errors?: string[]) => void,
-            onEnter: () => void,
-        }
-        params: any,
-        isDisabled?: boolean,
-        a?: StateObject,
-        b?: StateObject,
-        bCell?: StateObjectCell
+            onChange: (params: any, areInitial: boolean, errors?: string[]) => void;
+            onEnter: () => void;
+        };
+        params: any;
+        isDisabled?: boolean;
+        a?: StateObject;
+        b?: StateObject;
+        bCell?: StateObjectCell;
     }
 
-    export type Class = React.ComponentClass<Props>
+    export type Class = React.ComponentClass<Props>;
 
     function areParamsEmpty(params: PD.Params) {
         const keys = Object.keys(params);
@@ -65,54 +86,64 @@ namespace StateTransformParameters {
         return true;
     }
 
-    export function infoFromAction(plugin: PluginContext, state: State, action: StateAction, nodeRef: StateTransform.Ref): Props['info'] {
+    export function infoFromAction(
+        plugin: PluginContext,
+        state: State,
+        action: StateAction,
+        nodeRef: StateTransform.Ref,
+    ): Props['info'] {
         const source = state.cells.get(nodeRef)!.obj!;
-        const params = action.definition.params ? action.definition.params(source, plugin) : { };
+        const params = action.definition.params ? action.definition.params(source, plugin) : {};
         const initialValues = PD.getDefaultValues(params);
         return {
             initialValues,
             params,
-            isEmpty: areParamsEmpty(params)
+            isEmpty: areParamsEmpty(params),
         };
     }
 
-    export function infoFromTransform(plugin: PluginContext, state: State, transform: StateTransform): Props['info'] {
+    export function infoFromTransform(
+        plugin: PluginContext,
+        state: State,
+        transform: StateTransform,
+    ): Props['info'] {
         const cell = state.cells.get(transform.ref)!;
         // const source: StateObjectCell | undefined = (cell.sourceRef && state.cells.get(cell.sourceRef)!) || void 0;
         // const create = transform.transformer.definition.params;
         // const params = create ? create((source && source.obj) as any, plugin) : { };
-        const params = (cell.params && cell.params.definition) || { };
-        const initialValues = (cell.params && cell.params.values) || { };
+        const params = (cell.params && cell.params.definition) || {};
+        const initialValues = (cell.params && cell.params.values) || {};
         return {
             initialValues,
             params,
-            isEmpty: areParamsEmpty(params)
+            isEmpty: areParamsEmpty(params),
         };
     }
 }
 
 namespace TransformControlBase {
     export interface ComponentState {
-        params: any,
-        error?: string,
-        busy: boolean,
-        isInitial: boolean,
-        simpleOnly?: boolean,
-        isCollapsed?: boolean
+        params: any;
+        error?: string;
+        busy: boolean;
+        isInitial: boolean;
+        simpleOnly?: boolean;
+        isCollapsed?: boolean;
     }
 
     export interface CommonProps {
-        simpleApply?: { header: string, icon?: React.FC, title?: string },
-        noMargin?: boolean,
-        applyLabel?: string,
-        onApply?: () => void,
-        autoHideApply?: boolean,
-        wrapInExpander?: boolean,
-        expanderHeaderLeftMargin?: string
+        simpleApply?: { header: string; icon?: React.FC; title?: string };
+        noMargin?: boolean;
+        applyLabel?: string;
+        onApply?: () => void;
+        autoHideApply?: boolean;
+        wrapInExpander?: boolean;
+        expanderHeaderLeftMargin?: string;
     }
 }
 
-abstract class TransformControlBase<P, S extends TransformControlBase.ComponentState> extends PurePluginUIComponent<P & TransformControlBase.CommonProps, S> {
+abstract class TransformControlBase<P, S extends TransformControlBase.ComponentState>
+    extends PurePluginUIComponent<P & TransformControlBase.CommonProps, S> {
     abstract applyAction(): Promise<void>;
     abstract getInfo(): StateTransformParameters.Props['info'];
     abstract getHeader(): StateTransformer.Definition['display'] | 'none';
@@ -121,7 +152,7 @@ abstract class TransformControlBase<P, S extends TransformControlBase.ComponentS
     abstract canAutoApply(newParams: any): boolean;
     abstract applyText(): string;
     abstract isUpdate(): boolean;
-    abstract getSourceAndTarget(): { a?: StateObject, b?: StateObject, bCell?: StateObjectCell };
+    abstract getSourceAndTarget(): { a?: StateObject; b?: StateObject; bCell?: StateObjectCell };
     abstract state: S;
 
     private busy = new BehaviorSubject(false);
@@ -149,7 +180,7 @@ abstract class TransformControlBase<P, S extends TransformControlBase.ComponentS
                     this.autoApplyHandle = setTimeout(this.apply, 50) as any as number;
                 }
             });
-        }
+        },
     };
 
     apply = async () => {
@@ -167,10 +198,10 @@ abstract class TransformControlBase<P, S extends TransformControlBase.ComponentS
     };
 
     componentDidMount() {
-        this.subscribe(this.plugin.behaviors.state.isBusy, busy => {
+        this.subscribe(this.plugin.behaviors.state.isBusy, (busy) => {
             if (this.busy.value !== busy) this.busy.next(busy);
         });
-        this.subscribe(this.busy.pipe(skip(1)), busy => {
+        this.subscribe(this.busy.pipe(skip(1)), (busy) => {
             this.setState({ busy });
         });
     }
@@ -182,7 +213,11 @@ abstract class TransformControlBase<P, S extends TransformControlBase.ComponentS
     setDefault = () => {
         const info = this.getInfo();
         const params = PD.getDefaultValues(info.params);
-        this.setState({ params, isInitial: PD.areEqual(info.params, params, info.initialValues), error: void 0 });
+        this.setState({
+            params,
+            isInitial: PD.areEqual(info.params, params, info.initialValues),
+            error: void 0,
+        });
     };
 
     toggleExpanded = () => {
@@ -192,16 +227,31 @@ abstract class TransformControlBase<P, S extends TransformControlBase.ComponentS
     renderApply() {
         const canApply = this.canApply();
 
-        if (this.props.autoHideApply && (!canApply || this.canAutoApply(this.state.params))) return null;
+        if (this.props.autoHideApply && (!canApply || this.canAutoApply(this.state.params))) {
+            return null;
+        }
 
-        return <div className='msp-transform-apply-wrap'>
-            <IconButton svg={RefreshSvg} className='msp-transform-default-params' onClick={this.setDefault} disabled={this.state.busy} title='Set default params' />
-            <div className={`msp-transform-apply-wider`}>
-                <Button icon={canApply ? CheckSvg : void 0} className={`msp-btn-commit msp-btn-commit-${canApply ? 'on' : 'off'}`} onClick={this.apply} disabled={!canApply}>
-                    {this.props.applyLabel || this.applyText()}
-                </Button>
+        return (
+            <div className='msp-transform-apply-wrap'>
+                <IconButton
+                    svg={RefreshSvg}
+                    className='msp-transform-default-params'
+                    onClick={this.setDefault}
+                    disabled={this.state.busy}
+                    title='Set default params'
+                />
+                <div className={`msp-transform-apply-wider`}>
+                    <Button
+                        icon={canApply ? CheckSvg : void 0}
+                        className={`msp-btn-commit msp-btn-commit-${canApply ? 'on' : 'off'}`}
+                        onClick={this.apply}
+                        disabled={!canApply}
+                    >
+                        {this.props.applyLabel || this.applyText()}
+                    </Button>
+                </div>
             </div>
-        </div>;
+        );
     }
 
     renderDefault() {
@@ -223,39 +273,82 @@ abstract class TransformControlBase<P, S extends TransformControlBase.ComponentS
         if (!isEmpty && !this.state.isCollapsed) {
             const { a, b, bCell } = this.getSourceAndTarget();
             const applyControl = this.renderApply();
-            params = <>
-                <ParamEditor info={info} a={a} b={b} bCell={bCell} events={this.events} params={this.state.params} isDisabled={this.state.busy} />
-                {applyControl}
-            </>;
+            params = (
+                <>
+                    <ParamEditor
+                        info={info}
+                        a={a}
+                        b={b}
+                        bCell={bCell}
+                        events={this.events}
+                        params={this.state.params}
+                        isDisabled={this.state.busy}
+                    />
+                    {applyControl}
+                </>
+            );
         }
 
-        const ctrl = <div className={wrapClass} style={{ marginBottom: this.props.noMargin ? 0 : void 0 }}>
-            {display !== 'none' && !this.props.wrapInExpander && <div className='msp-transform-header'>
-                <Button onClick={this.toggleExpanded} title={display.description}>
-                    {!isEmpty && <Icon svg={this.state.isCollapsed ? ArrowRightSvg : ArrowDropDownSvg} />}
-                    {display.name}
-                </Button>
-            </div>}
-            {params}
-        </div>;
+        const ctrl = (
+            <div className={wrapClass} style={{ marginBottom: this.props.noMargin ? 0 : void 0 }}>
+                {display !== 'none' && !this.props.wrapInExpander && (
+                    <div className='msp-transform-header'>
+                        <Button onClick={this.toggleExpanded} title={display.description}>
+                            {!isEmpty && (
+                                <Icon
+                                    svg={this.state.isCollapsed ? ArrowRightSvg : ArrowDropDownSvg}
+                                />
+                            )}
+                            {display.name}
+                        </Button>
+                    </div>
+                )}
+                {params}
+            </div>
+        );
 
         if (isEmpty || !this.props.wrapInExpander) return ctrl;
 
-        return <ExpandGroup header={this.isUpdate() ? `Update ${display === 'none' ? '' : display.name}` : `Apply ${display === 'none' ? '' : display.name}` } headerLeftMargin={this.props.expanderHeaderLeftMargin}>
-            {ctrl}
-        </ExpandGroup>;
+        return (
+            <ExpandGroup
+                header={this.isUpdate()
+                    ? `Update ${display === 'none' ? '' : display.name}`
+                    : `Apply ${display === 'none' ? '' : display.name}`}
+                headerLeftMargin={this.props.expanderHeaderLeftMargin}
+            >
+                {ctrl}
+            </ExpandGroup>
+        );
     }
 
     renderSimple() {
         const info = this.getInfo();
         const canApply = this.canApply();
 
-        const apply = <div className='msp-flex-row'>
-            <Button icon={this.props.simpleApply?.icon} title={this.props.simpleApply?.title} disabled={this.state.busy || !canApply} onClick={this.apply} className='msp-btn-apply-simple'>
-                {this.props.simpleApply?.header}
-            </Button>
-            {!info.isEmpty && <ToggleButton icon={TuneSvg} label='' title='Options' toggle={this.toggleExpanded} isSelected={!this.state.isCollapsed} disabled={this.state.busy} style={{ flex: '0 0 40px', padding: 0 }} />}
-        </div>;
+        const apply = (
+            <div className='msp-flex-row'>
+                <Button
+                    icon={this.props.simpleApply?.icon}
+                    title={this.props.simpleApply?.title}
+                    disabled={this.state.busy || !canApply}
+                    onClick={this.apply}
+                    className='msp-btn-apply-simple'
+                >
+                    {this.props.simpleApply?.header}
+                </Button>
+                {!info.isEmpty && (
+                    <ToggleButton
+                        icon={TuneSvg}
+                        label=''
+                        title='Options'
+                        toggle={this.toggleExpanded}
+                        isSelected={!this.state.isCollapsed}
+                        disabled={this.state.busy}
+                        style={{ flex: '0 0 40px', padding: 0 }}
+                    />
+                )}
+            </div>
+        );
 
         if (this.state.isCollapsed) return apply;
 
@@ -265,10 +358,20 @@ abstract class TransformControlBase<P, S extends TransformControlBase.ComponentS
             : StateTransformParameters;
         const { a, b, bCell } = this.getSourceAndTarget();
 
-        return <>
-            {apply}
-            <ParamEditor info={info} a={a} b={b} bCell={bCell} events={this.events} params={this.state.params} isDisabled={this.state.busy} />
-        </>;
+        return (
+            <>
+                {apply}
+                <ParamEditor
+                    info={info}
+                    a={a}
+                    b={b}
+                    bCell={bCell}
+                    events={this.events}
+                    params={this.state.params}
+                    isDisabled={this.state.busy}
+                />
+            </>
+        );
     }
 
     render() {

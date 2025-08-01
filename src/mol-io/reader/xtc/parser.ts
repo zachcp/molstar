@@ -11,21 +11,87 @@ import { RuntimeContext, Task } from '../../../mol-task/index.ts';
 import { ReaderResult as Result } from '../result.ts';
 
 export interface XtcFile {
-    frames: { count: number, x: Float32Array, y: Float32Array, z: Float32Array }[],
-    boxes: number[][],
-    times: number[],
-    timeOffset: number,
-    deltaTime: number
+    frames: { count: number; x: Float32Array; y: Float32Array; z: Float32Array }[];
+    boxes: number[][];
+    times: number[];
+    timeOffset: number;
+    deltaTime: number;
 }
 
 const MagicInts = new Uint32Array([
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 10, 12, 16, 20, 25, 32, 40, 50, 64,
-    80, 101, 128, 161, 203, 256, 322, 406, 512, 645, 812, 1024, 1290,
-    1625, 2048, 2580, 3250, 4096, 5060, 6501, 8192, 10321, 13003,
-    16384, 20642, 26007, 32768, 41285, 52015, 65536, 82570, 104031,
-    131072, 165140, 208063, 262144, 330280, 416127, 524287, 660561,
-    832255, 1048576, 1321122, 1664510, 2097152, 2642245, 3329021,
-    4194304, 5284491, 6658042, 8388607, 10568983, 13316085, 16777216
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    8,
+    10,
+    12,
+    16,
+    20,
+    25,
+    32,
+    40,
+    50,
+    64,
+    80,
+    101,
+    128,
+    161,
+    203,
+    256,
+    322,
+    406,
+    512,
+    645,
+    812,
+    1024,
+    1290,
+    1625,
+    2048,
+    2580,
+    3250,
+    4096,
+    5060,
+    6501,
+    8192,
+    10321,
+    13003,
+    16384,
+    20642,
+    26007,
+    32768,
+    41285,
+    52015,
+    65536,
+    82570,
+    104031,
+    131072,
+    165140,
+    208063,
+    262144,
+    330280,
+    416127,
+    524287,
+    660561,
+    832255,
+    1048576,
+    1321122,
+    1664510,
+    2097152,
+    2642245,
+    3329021,
+    4194304,
+    5284491,
+    6658042,
+    8388607,
+    10568983,
+    13316085,
+    16777216,
 ]);
 const FirstIdx = 9;
 // const LastIdx = MagicInts.length
@@ -122,10 +188,49 @@ namespace Decoder {
         return (lastBB1 >> uint32view[1]) & 0xff;
     }
 
-    const intBytes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    const intBytes = [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+    ];
     // new Int32Array(32);
 
-    export function decodeInts(cbuf: Uint8Array, offset: number, numOfBits1: number, sizes: number[], nums: number[]) {
+    export function decodeInts(
+        cbuf: Uint8Array,
+        offset: number,
+        numOfBits1: number,
+        sizes: number[],
+        nums: number[],
+    ) {
         let numOfBits = numOfBits1;
         let numOfBytes = 0;
 
@@ -174,7 +279,7 @@ async function parseInternal(ctx: RuntimeContext, data: Uint8Array) {
         boxes: [],
         times: [],
         timeOffset: 0,
-        deltaTime: 0
+        deltaTime: 0,
     };
     const coordinates = f.frames;
     const boxes = f.boxes;
@@ -210,7 +315,12 @@ async function parseInternal(ctx: RuntimeContext, data: Uint8Array) {
         boxes.push(box as unknown as number[]);
 
         if (natoms <= 9) { // no compression
-            frameCoords = { count: natoms, x: new Float32Array(natoms), y: new Float32Array(natoms), z: new Float32Array(natoms) };
+            frameCoords = {
+                count: natoms,
+                x: new Float32Array(natoms),
+                y: new Float32Array(natoms),
+                z: new Float32Array(natoms),
+            };
             offset += 4;
             for (let i = 0; i < natoms; ++i) {
                 frameCoords.x[i] = dv.getFloat32(offset);
@@ -226,7 +336,12 @@ async function parseInternal(ctx: RuntimeContext, data: Uint8Array) {
             thiscoord[0] = thiscoord[1] = thiscoord[2] = 0;
             prevcoord[0] = prevcoord[1] = prevcoord[2] = 0;
 
-            frameCoords = { count: natoms, x: new Float32Array(natoms), y: new Float32Array(natoms), z: new Float32Array(natoms) };
+            frameCoords = {
+                count: natoms,
+                x: new Float32Array(natoms),
+                y: new Float32Array(natoms),
+                z: new Float32Array(natoms),
+            };
             let lfp = 0;
 
             const lsize = dv.getInt32(offset);
@@ -405,7 +520,7 @@ async function parseInternal(ctx: RuntimeContext, data: Uint8Array) {
 }
 
 export function parseXtc(data: Uint8Array) {
-    return Task.create<Result<XtcFile>>('Parse XTC', async ctx => {
+    return Task.create<Result<XtcFile>>('Parse XTC', async (ctx) => {
         try {
             ctx.update({ canAbort: true, message: 'Parsing trajectory...' });
             const file = await parseInternal(ctx, data);

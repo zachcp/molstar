@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { HiZRenderable, createHiZRenderable } from '../../mol-gl/compute/hi-z.ts';
+import { createHiZRenderable, HiZRenderable } from '../../mol-gl/compute/hi-z.ts';
 import { isWebGL2 } from '../../mol-gl/webgl/compat.ts';
 import { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { Framebuffer } from '../../mol-gl/webgl/framebuffer.ts';
@@ -67,7 +67,7 @@ function perspectiveProjectSphere(out: Vec4, p: Vec3, r: number, projection: Mat
         maxx * -0.5 + 0.5,
         miny * 0.5 + 0.5,
         minx * -0.5 + 0.5,
-        maxy * 0.5 + 0.5
+        maxy * 0.5 + 0.5,
     );
 }
 
@@ -85,7 +85,7 @@ function orthographicProjectSphere(out: Vec4, p: Vec3, r: number, projection: Ma
         maxx * 0.5 + 0.5,
         miny * -0.5 + 0.5,
         minx * 0.5 + 0.5,
-        maxy * -0.5 + 0.5
+        maxy * -0.5 + 0.5,
     );
 }
 
@@ -96,19 +96,23 @@ function projectSphere(out: Vec4, p: Vec3, r: number, projection: Mat4) {
 }
 
 type LevelData = {
-    texture: Texture,
-    framebuffer: Framebuffer,
-    size: Vec2,
-    invSize: Vec2,
-    offset: number
-}[]
+    texture: Texture;
+    framebuffer: Framebuffer;
+    size: Vec2;
+    invSize: Vec2;
+    offset: number;
+}[];
 
 export const HiZParams = {
-    enabled: PD.Boolean(false, { description: 'Hierarchical Z-buffer occlusion culling. Only available for WebGL2.' }),
-    maxFrameLag: PD.Numeric(10, { min: 1, max: 30, step: 1 }, { description: 'Maximum number of frames to wait for Z-buffer data.' }),
+    enabled: PD.Boolean(false, {
+        description: 'Hierarchical Z-buffer occlusion culling. Only available for WebGL2.',
+    }),
+    maxFrameLag: PD.Numeric(10, { min: 1, max: 30, step: 1 }, {
+        description: 'Maximum number of frames to wait for Z-buffer data.',
+    }),
     minLevel: PD.Numeric(3, { min: 1, max: 10, step: 1 }),
 };
-export type HiZProps = PD.Values<typeof HiZParams>
+export type HiZProps = PD.Values<typeof HiZParams>;
 
 export class HiZPass {
     private readonly viewport = Viewport();
@@ -183,7 +187,12 @@ export class HiZPass {
         //
 
         const v = this.renderable.values;
-        const s = Math.pow(2, Math.ceil(Math.log(Math.max(gl.drawingBufferWidth, gl.drawingBufferHeight)) / Math.log(2)) - 1);
+        const s = Math.pow(
+            2,
+            Math.ceil(
+                Math.log(Math.max(gl.drawingBufferWidth, gl.drawingBufferHeight)) / Math.log(2),
+            ) - 1,
+        );
 
         for (let i = 0, il = this.levelData.length; i < il; ++i) {
             const td = this.levelData[i];
@@ -195,10 +204,14 @@ export class HiZPass {
                 ValueCell.update(v.tPreviousLevel, this.levelData[i - 1].texture);
             } else {
                 ValueCell.update(v.uInvSize, Vec2.set(v.uInvSize.ref.value, 1 / s, 1 / s));
-                ValueCell.update(v.uOffset, Vec2.set(v.uOffset.ref.value,
-                    this.viewport.x / gl.drawingBufferWidth,
-                    this.viewport.y / gl.drawingBufferHeight
-                ));
+                ValueCell.update(
+                    v.uOffset,
+                    Vec2.set(
+                        v.uOffset.ref.value,
+                        this.viewport.x / gl.drawingBufferWidth,
+                        this.viewport.y / gl.drawingBufferHeight,
+                    ),
+                );
                 ValueCell.update(v.tPreviousLevel, this.drawPass.depthTextureOpaque);
             }
 
@@ -336,7 +349,9 @@ export class HiZPass {
         if (levels === this.levelData.length) return;
 
         const { minLevel } = this.props;
-        this.buffer = new Float32Array(Math.pow(2, levels - minLevel) * Math.pow(2, levels - 1 - minLevel));
+        this.buffer = new Float32Array(
+            Math.pow(2, levels - minLevel) * Math.pow(2, levels - 1 - minLevel),
+        );
         this.tex.define(Math.pow(2, levels - minLevel), Math.pow(2, levels - 1 - minLevel));
 
         for (const td of this.levelData) {
@@ -350,7 +365,12 @@ export class HiZPass {
             const levelSize = Math.pow(2, levels - i - 1);
             const size = Vec2.create(levelSize, levelSize);
             const invSize = Vec2.create(1 / levelSize, 1 / levelSize);
-            const texture = this.webgl.resources.texture('image-float32', 'alpha', 'float', 'nearest');
+            const texture = this.webgl.resources.texture(
+                'image-float32',
+                'alpha',
+                'float',
+                'nearest',
+            );
             texture.define(levelSize, levelSize);
             texture.attachFramebuffer(framebuffer, 0);
             this.levelData.push({ texture, framebuffer, size, invSize, offset: 0 });
@@ -384,10 +404,10 @@ export class HiZPass {
     //
 
     private debug?: {
-        container: HTMLDivElement
-        canvas: HTMLCanvasElement
-        ctx: CanvasRenderingContext2D
-        rect: HTMLDivElement
+        container: HTMLDivElement;
+        canvas: HTMLCanvasElement;
+        ctx: CanvasRenderingContext2D;
+        rect: HTMLDivElement;
     };
 
     private initDebug(element: HTMLElement) {
@@ -531,7 +551,12 @@ export class HiZPass {
         }
     }
 
-    constructor(private webgl: WebGLContext, private drawPass: DrawPass, canvas: HTMLCanvasElement | undefined, props: Partial<HiZProps>) {
+    constructor(
+        private webgl: WebGLContext,
+        private drawPass: DrawPass,
+        canvas: HTMLCanvasElement | undefined,
+        props: Partial<HiZProps>,
+    ) {
         this.props = { ...PD.getDefaultValues(HiZParams), ...props };
 
         const { gl, extensions } = webgl;

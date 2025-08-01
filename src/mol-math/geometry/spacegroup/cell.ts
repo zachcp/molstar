@@ -9,8 +9,8 @@ import { Vec3 } from '../../linear-algebra.ts';
 export { Cell };
 
 interface Cell {
-    readonly size: Vec3
-    readonly anglesInRadians: Vec3
+    readonly size: Vec3;
+    readonly anglesInRadians: Vec3;
 }
 
 function Cell() {

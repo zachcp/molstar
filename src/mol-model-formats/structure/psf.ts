@@ -52,7 +52,10 @@ function getBasic(atoms: PsfFile['atoms']) {
             const compId = atoms.residueName.value(i);
             const moleculeType = getMoleculeType(componentBuilder.add(compId, i).type, compId);
 
-            if (!segmentChanged && (moleculeType !== prevMoleculeType || residueNumber !== prevResidueNumber + 1)) {
+            if (
+                !segmentChanged &&
+                (moleculeType !== prevMoleculeType || residueNumber !== prevResidueNumber + 1)
+            ) {
                 currentAsymId = getChainId(currentAsymIndex);
                 currentAsymIndex += 1;
                 currentSeqId = 0;
@@ -70,7 +73,10 @@ function getBasic(atoms: PsfFile['atoms']) {
         seqIds[i] = currentSeqId;
         ids[i] = i;
 
-        typeSymbol[i] = guessElementSymbolString(atoms.atomName.value(i), atoms.residueName.value(i));
+        typeSymbol[i] = guessElementSymbolString(
+            atoms.atomName.value(i),
+            atoms.residueName.value(i),
+        );
     }
 
     const atom_site = Table.ofPartialColumns(BasicSchema.atom_site, {
@@ -95,7 +101,7 @@ function getBasic(atoms: PsfFile['atoms']) {
     return createBasic({
         entity: entityBuilder.getEntityTable(),
         chem_comp: componentBuilder.getChemCompTable(),
-        atom_site
+        atom_site,
     });
 }
 
@@ -103,7 +109,7 @@ function getBasic(atoms: PsfFile['atoms']) {
 
 export { PsfFormat };
 
-type PsfFormat = ModelFormat<PsfFile>
+type PsfFormat = ModelFormat<PsfFile>;
 
 namespace PsfFormat {
     export function is(x?: ModelFormat): x is PsfFormat {
@@ -116,7 +122,7 @@ namespace PsfFormat {
 }
 
 export function topologyFromPsf(psf: PsfFile): Task<Topology> {
-    return Task.create('Parse PSF', async ctx => {
+    return Task.create('Parse PSF', async (ctx) => {
         const format = PsfFormat.fromPsf(psf);
         const basic = getBasic(psf.atoms);
 
@@ -133,7 +139,7 @@ export function topologyFromPsf(psf: PsfFile): Task<Topology> {
                 rowCount: atomIdB.rowCount,
                 schema: atomIdB.schema,
             }),
-            order: Column.ofConst(1, psf.bonds.count, Column.Schema.int)
+            order: Column.ofConst(1, psf.bonds.count, Column.Schema.int),
         };
 
         return Topology.create(psf.id, basic, bonds, format);

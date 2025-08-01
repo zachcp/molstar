@@ -5,45 +5,51 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { AminoAlphabet, NuclecicAlphabet, getProteinOneLetterCode, getRnaOneLetterCode, getDnaOneLetterCode } from './constants.ts';
+import {
+    AminoAlphabet,
+    getDnaOneLetterCode,
+    getProteinOneLetterCode,
+    getRnaOneLetterCode,
+    NuclecicAlphabet,
+} from './constants.ts';
 import { Column } from '../../mol-data/db.ts';
 import { assertUnreachable } from '../../mol-util/type-helpers.ts';
 
 // TODO add mapping support to other sequence spaces, e.g. uniprot
 
-type Sequence = Sequence.Protein | Sequence.DNA | Sequence.RNA | Sequence.Generic
+type Sequence = Sequence.Protein | Sequence.DNA | Sequence.RNA | Sequence.Generic;
 
 namespace Sequence {
     export enum Kind {
         Protein = 'protein',
         RNA = 'RNA',
         DNA = 'DNA',
-        Generic = 'generic'
+        Generic = 'generic',
     }
 
     export interface Base<K extends Kind, Alphabet extends string> {
-        readonly kind: K,
-        readonly length: number,
+        readonly kind: K;
+        readonly length: number;
 
         /** One letter code */
-        readonly code: Column<Alphabet>
-        readonly label: Column<string>
+        readonly code: Column<Alphabet>;
+        readonly label: Column<string>;
 
-        readonly seqId: Column<number>
+        readonly seqId: Column<number>;
         /** Component id */
-        readonly compId: Column<string>
+        readonly compId: Column<string>;
 
         /** returns index for given seqId */
-        readonly index: (seqId: number) => number
+        readonly index: (seqId: number) => number;
 
         /** maps seqId to list of compIds */
-        readonly microHet: ReadonlyMap<number, string[]>
+        readonly microHet: ReadonlyMap<number, string[]>;
     }
 
-    export interface Protein extends Base<Kind.Protein, AminoAlphabet> { }
-    export interface RNA extends Base<Kind.RNA, NuclecicAlphabet> { }
-    export interface DNA extends Base<Kind.DNA, NuclecicAlphabet> { }
-    export interface Generic extends Base<Kind.Generic, 'X' | '-'> { }
+    export interface Protein extends Base<Kind.Protein, AminoAlphabet> {}
+    export interface RNA extends Base<Kind.RNA, NuclecicAlphabet> {}
+    export interface DNA extends Base<Kind.DNA, NuclecicAlphabet> {}
+    export interface Generic extends Base<Kind.Generic, 'X' | '-'> {}
 
     export function getSequenceString(seq: Sequence) {
         const array = seq.code.toArray();
@@ -63,11 +69,20 @@ namespace Sequence {
     function codeProvider(kind: Kind, map?: ReadonlyMap<string, string>) {
         let code: (name: string) => string;
         switch (kind) {
-            case Kind.Protein: code = getProteinOneLetterCode; break;
-            case Kind.DNA: code = getDnaOneLetterCode; break;
-            case Kind.RNA: code = getRnaOneLetterCode; break;
-            case Kind.Generic: code = () => 'X'; break;
-            default: assertUnreachable(kind);
+            case Kind.Protein:
+                code = getProteinOneLetterCode;
+                break;
+            case Kind.DNA:
+                code = getDnaOneLetterCode;
+                break;
+            case Kind.RNA:
+                code = getRnaOneLetterCode;
+                break;
+            case Kind.Generic:
+                code = () => 'X';
+                break;
+            default:
+                assertUnreachable(kind);
         }
         if (map && map.size > 0) {
             return (name: string) => {
@@ -132,7 +147,7 @@ namespace Sequence {
             for (let i = 0, il = idx; i < il; ++i) {
                 const mh = microHet.get(seqIds[i]);
                 if (mh) {
-                    const l = mh.map(id => {
+                    const l = mh.map((id) => {
                         const c = codeFromName(id);
                         return c === 'X' ? id : c;
                     });
@@ -152,7 +167,10 @@ namespace Sequence {
         }
     }
 
-    export function ofSequenceRanges(seqIdBegin: Column<number>, seqIdEnd: Column<number>): Sequence {
+    export function ofSequenceRanges(
+        seqIdBegin: Column<number>,
+        seqIdEnd: Column<number>,
+    ): Sequence {
         const kind = Kind.Generic;
 
         return new SequenceRangesImpl(kind, seqIdBegin, seqIdEnd) as Sequence;
@@ -171,7 +189,11 @@ namespace Sequence {
             return seqId - this.minSeqId;
         }
 
-        constructor(public kind: K, private seqIdStart: Column<number>, private seqIdEnd: Column<number>) {
+        constructor(
+            public kind: K,
+            private seqIdStart: Column<number>,
+            private seqIdEnd: Column<number>,
+        ) {
             let maxSeqId = 0, minSeqId = Number.MAX_SAFE_INTEGER;
             for (let i = 0, _i = this.seqIdStart.rowCount; i < _i; i++) {
                 const idStart = this.seqIdStart.value(i);
@@ -185,9 +207,9 @@ namespace Sequence {
             this.code = Column.ofConst('X', count, Column.Schema.str) as Column<Alphabet>;
             this.label = Column.ofConst('', count, Column.Schema.str);
             this.seqId = Column.ofLambda({
-                value: row => row + minSeqId + 1,
+                value: (row) => row + minSeqId + 1,
                 rowCount: count,
-                schema: Column.Schema.int
+                schema: Column.Schema.int,
             });
             this.compId = Column.ofConst('', count, Column.Schema.str);
 

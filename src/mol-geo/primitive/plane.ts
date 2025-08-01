@@ -9,26 +9,46 @@ import { Cage } from './cage.ts';
 
 const plane: Primitive = {
     vertices: new Float32Array([
-        -0.5, 0.5, 0,
-        0.5, 0.5, 0,
-        -0.5, -0.5, 0,
-        0.5, -0.5, 0
+        -0.5,
+        0.5,
+        0,
+        0.5,
+        0.5,
+        0,
+        -0.5,
+        -0.5,
+        0,
+        0.5,
+        -0.5,
+        0,
     ]),
     normals: new Float32Array([
-        0, 0, 1,
-        0, 0, 1,
-        0, 0, 1,
-        0, 0, 1
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
     ]),
     indices: new Uint32Array([
-        0, 2, 1,
-        1, 2, 3
-    ])
+        0,
+        2,
+        1,
+        1,
+        2,
+        3,
+    ]),
 };
 
 const planeCage: Cage = {
     vertices: plane.vertices,
-    edges: new Uint32Array([0, 1, 2, 3, 3, 1, 2, 0])
+    edges: new Uint32Array([0, 1, 2, 3, 3, 1, 2, 0]),
 };
 
 export function Plane(): Primitive {

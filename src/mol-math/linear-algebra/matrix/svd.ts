@@ -32,7 +32,16 @@ export function hypot(a: number, b: number) {
 const EPSILON = 0.0000001192092896;
 const FLT_MIN = 1E-37;
 
-export function JacobiSVDImpl(At: NumberArray, astep: number, _W: NumberArray, Vt: NumberArray, vstep: number, m: number, n: number, n1: number) {
+export function JacobiSVDImpl(
+    At: NumberArray,
+    astep: number,
+    _W: NumberArray,
+    Vt: NumberArray,
+    vstep: number,
+    m: number,
+    n: number,
+    n1: number,
+) {
     const eps = EPSILON * 2.0;
     const minval = FLT_MIN;
     let i = 0;
@@ -94,7 +103,7 @@ export function JacobiSVDImpl(At: NumberArray, astep: number, _W: NumberArray, V
                 p += At[Ai] * At[Aj];
                 p += At[Ai + 1] * At[Aj + 1];
 
-                for (; k < m; k++) { p += At[Ai + k] * At[Aj + k]; }
+                for (; k < m; k++) p += At[Ai + k] * At[Aj + k];
 
                 if (Math.abs(p) <= eps * Math.sqrt(a * b)) continue;
 
@@ -104,10 +113,10 @@ export function JacobiSVDImpl(At: NumberArray, astep: number, _W: NumberArray, V
                 if (beta < 0) {
                     delta = (gamma - beta) * 0.5;
                     s = Math.sqrt(delta / gamma);
-                    c = (p / (gamma * s * 2.0));
+                    c = p / (gamma * s * 2.0);
                 } else {
                     c = Math.sqrt((gamma + beta) / (gamma * 2.0));
-                    s = (p / (gamma * c * 2.0));
+                    s = p / (gamma * c * 2.0);
                 }
 
                 a = 0.0;
@@ -116,20 +125,26 @@ export function JacobiSVDImpl(At: NumberArray, astep: number, _W: NumberArray, V
                 k = 2; // unroll
                 t0 = c * At[Ai] + s * At[Aj];
                 t1 = -s * At[Ai] + c * At[Aj];
-                At[Ai] = t0; At[Aj] = t1;
-                a += t0 * t0; b += t1 * t1;
+                At[Ai] = t0;
+                At[Aj] = t1;
+                a += t0 * t0;
+                b += t1 * t1;
 
                 t0 = c * At[Ai + 1] + s * At[Aj + 1];
                 t1 = -s * At[Ai + 1] + c * At[Aj + 1];
-                At[Ai + 1] = t0; At[Aj + 1] = t1;
-                a += t0 * t0; b += t1 * t1;
+                At[Ai + 1] = t0;
+                At[Aj + 1] = t1;
+                a += t0 * t0;
+                b += t1 * t1;
 
                 for (; k < m; k++) {
                     t0 = c * At[Ai + k] + s * At[Aj + k];
                     t1 = -s * At[Ai + k] + c * At[Aj + k];
-                    At[Ai + k] = t0; At[Aj + k] = t1;
+                    At[Ai + k] = t0;
+                    At[Aj + k] = t1;
 
-                    a += t0 * t0; b += t1 * t1;
+                    a += t0 * t0;
+                    b += t1 * t1;
                 }
 
                 W[i] = a;
@@ -144,16 +159,19 @@ export function JacobiSVDImpl(At: NumberArray, astep: number, _W: NumberArray, V
                     k = 2;
                     t0 = c * Vt[Vi] + s * Vt[Vj];
                     t1 = -s * Vt[Vi] + c * Vt[Vj];
-                    Vt[Vi] = t0; Vt[Vj] = t1;
+                    Vt[Vi] = t0;
+                    Vt[Vj] = t1;
 
                     t0 = c * Vt[Vi + 1] + s * Vt[Vj + 1];
                     t1 = -s * Vt[Vi + 1] + c * Vt[Vj + 1];
-                    Vt[Vi + 1] = t0; Vt[Vj + 1] = t1;
+                    Vt[Vi + 1] = t0;
+                    Vt[Vj + 1] = t1;
 
                     for (; k < n; k++) {
                         t0 = c * Vt[Vi + k] + s * Vt[Vj + k];
                         t1 = -s * Vt[Vi + k] + c * Vt[Vj + k];
-                        Vt[Vi + k] = t0; Vt[Vj + k] = t1;
+                        Vt[Vi + k] = t0;
+                        Vt[Vj + k] = t1;
                     }
                 }
             }
@@ -172,7 +190,7 @@ export function JacobiSVDImpl(At: NumberArray, astep: number, _W: NumberArray, V
     for (i = 0; i < n - 1; i++) {
         j = i;
         for (k = i + 1; k < n; k++) {
-            if (W[j] < W[k]) { j = k; }
+            if (W[j] < W[k]) j = k;
         }
         if (i !== j) {
             swap(W, i, j, sd);
@@ -203,9 +221,9 @@ export function JacobiSVDImpl(At: NumberArray, astep: number, _W: NumberArray, V
             // if we got a zero singular value, then in order to get the corresponding left singular vector
             // we generate a random vector, project it to the previously computed left singular vectors,
             // subtract the projection and normalize the difference.
-            val0 = (1.0 / m);
+            val0 = 1.0 / m;
             for (k = 0; k < m; k++) {
-                seed = (seed * 214013 + 2531011);
+                seed = seed * 214013 + 2531011;
                 val = (((seed >> 16) & 0x7fff) & 256) !== 0 ? val0 : -val0;
                 At[i * astep + k] = val;
             }
@@ -217,7 +235,7 @@ export function JacobiSVDImpl(At: NumberArray, astep: number, _W: NumberArray, V
                     }
                     asum = 0.0;
                     for (k = 0; k < m; k++) {
-                        t = (At[i * astep + k] - sd * At[j * astep + k]);
+                        t = At[i * astep + k] - sd * At[j * astep + k];
                         At[i * astep + k] = t;
                         asum += Math.abs(t);
                     }
@@ -235,7 +253,7 @@ export function JacobiSVDImpl(At: NumberArray, astep: number, _W: NumberArray, V
             sd = Math.sqrt(sd);
         }
 
-        s = (1.0 / sd);
+        s = 1.0 / sd;
         for (k = 0; k < m; k++) {
             At[i * astep + k] *= s;
         }

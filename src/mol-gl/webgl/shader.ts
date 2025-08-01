@@ -18,13 +18,13 @@ function addLineNumbers(source: string) {
     return lines.join('\n');
 }
 
-export type ShaderType = 'vert' | 'frag'
-export type ShaderProps = { type: ShaderType, source: string }
+export type ShaderType = 'vert' | 'frag';
+export type ShaderProps = { type: ShaderType; source: string };
 export interface Shader {
-    readonly id: number
-    attach: (program: WebGLProgram) => void
-    reset: () => void
-    destroy: () => void
+    readonly id: number;
+    attach: (program: WebGLProgram) => void;
+    reset: () => void;
+    destroy: () => void;
 }
 
 export function getShader(gl: GLRenderingContext, props: ShaderProps) {
@@ -38,7 +38,9 @@ export function getShader(gl: GLRenderingContext, props: ShaderProps) {
     gl.compileShader(shader);
 
     if (isDebugMode && gl.getShaderParameter(shader, gl.COMPILE_STATUS) === false) {
-        console.warn(`'${type}' shader info log '${gl.getShaderInfoLog(shader)}'\n${addLineNumbers(source)}`);
+        console.warn(
+            `'${type}' shader info log '${gl.getShaderInfoLog(shader)}'\n${addLineNumbers(source)}`,
+        );
         throw new Error(`Error compiling ${type} shader`);
     }
 
@@ -59,6 +61,6 @@ export function createShader(gl: GLRenderingContext, props: ShaderProps): Shader
         },
         destroy: () => {
             gl.deleteShader(shader);
-        }
+        },
     };
 }

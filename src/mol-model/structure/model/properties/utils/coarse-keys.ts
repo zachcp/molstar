@@ -6,7 +6,7 @@
  */
 
 import { Entities } from '../common.ts';
-import { CoarseElementData, CoarsedElementKeys } from '../coarse.ts';
+import { CoarsedElementKeys, CoarseElementData } from '../coarse.ts';
 import { ChainIndex, ElementIndex, EntityIndex } from '../../indexing.ts';
 import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges.ts';
 import { OrderedSet } from '../../../../../mol-data/int.ts';
@@ -25,7 +25,11 @@ function getElementSubstructureKeyMap(map: Map<number, Map<string, number>>, key
     return ret;
 }
 
-function createLookUp(entities: Entities, chain: Map<number, Map<string, number>>, seq: Map<number, SeqMap>) {
+function createLookUp(
+    entities: Entities,
+    chain: Map<number, Map<string, number>>,
+    seq: Map<number, SeqMap>,
+) {
     const getEntKey = entities.getEntityIndex;
     const findChainKey: CoarsedElementKeys['findChainKey'] = (e, c) => {
         const eKey = getEntKey(e);
@@ -53,7 +57,7 @@ function missingEntity(k: string) {
     throw new Error(`Missing entity entry for entity id '${k}'.`);
 }
 
-type SeqMap = { elementIndices: number[], seqRanges: SortedRanges }
+type SeqMap = { elementIndices: number[]; seqRanges: SortedRanges };
 
 export function getCoarseKeys(data: CoarseElementData, entities: Entities): CoarsedElementKeys {
     const { entity_id, asym_id, seq_id_begin, seq_id_end, count, chainElementSegments } = data;
@@ -97,7 +101,7 @@ export function getCoarseKeys(data: CoarseElementData, entities: Entities): Coar
 
     const { findChainKey, findSequenceKey } = createLookUp(entities, chainMaps, seqMaps);
 
-    const getEntityFromChain: CoarsedElementKeys['getEntityFromChain'] = c => {
+    const getEntityFromChain: CoarsedElementKeys['getEntityFromChain'] = (c) => {
         return chainToEntity[c];
     };
 

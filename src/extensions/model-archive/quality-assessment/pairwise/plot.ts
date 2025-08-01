@@ -9,12 +9,16 @@ import { AtomicHierarchy } from '../../../../mol-model/structure/model/propertie
 import { Color } from '../../../../mol-util/color/index.ts';
 import { QualityAssessment } from '../prop.ts';
 
-
 const DefaultMetricColorRange = [0x00441B, 0xF7FCF5] as [Color, Color];
 
-export type MAResidueRangeInfo = { startOffset: number, endOffset: number, label: string };
+export type MAResidueRangeInfo = { startOffset: number; endOffset: number; label: string };
 
-function drawMetricPNG(model: Model, metric: QualityAssessment.Pairwise, colorRange: [Color, Color], noDataColor: Color) {
+function drawMetricPNG(
+    model: Model,
+    metric: QualityAssessment.Pairwise,
+    colorRange: [Color, Color],
+    noDataColor: Color,
+) {
     const [minResidueIndex, maxResidueIndex] = metric.residueRange;
     const [minMetric, maxMetric] = metric.valueRange;
     const [minColor, maxColor] = colorRange;
@@ -66,7 +70,11 @@ function drawMetricPNG(model: Model, metric: QualityAssessment.Pairwise, colorRa
     const { label_asym_id } = hierarchy.chains;
 
     let cI = AtomicHierarchy.residueChainIndex(hierarchy, minResidueIndex as ResidueIndex);
-    let currentChain: MAResidueRangeInfo = { startOffset: 0, endOffset: 1, label: label_asym_id.value(cI) };
+    let currentChain: MAResidueRangeInfo = {
+        startOffset: 0,
+        endOffset: 1,
+        label: label_asym_id.value(cI),
+    };
     chains.push(currentChain);
 
     for (let i = 1; i < range; i++) {
@@ -85,7 +93,7 @@ function drawMetricPNG(model: Model, metric: QualityAssessment.Pairwise, colorRa
         metric,
         chains,
         colorRange: [Color.toStyle(colorRange[0]), Color.toStyle(colorRange[1])] as const,
-        png: canvas.toDataURL('png')
+        png: canvas.toDataURL('png'),
     };
 }
 
@@ -93,4 +101,4 @@ export function maDrawPairwiseMetricPNG(model: Model, metric: QualityAssessment.
     return drawMetricPNG(model, metric, DefaultMetricColorRange, Color(0xE2E2E2));
 }
 
-export type MAPairwiseMetricDrawing = ReturnType<typeof drawMetricPNG>
+export type MAPairwiseMetricDrawing = ReturnType<typeof drawMetricPNG>;

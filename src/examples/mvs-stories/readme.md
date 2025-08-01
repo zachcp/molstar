@@ -7,11 +7,12 @@ See the [mvs-stories](../../apps/mvs-stories) app for more info about how to use
 ### Usage
 
 - Clone Mol* GitHub repo and build it.
+
 ```bash
-  git clone https://github.com/molstar/molstar.git
-  cd molstar
-  npm install
-  npm build
+git clone https://github.com/molstar/molstar.git
+cd molstar
+npm install
+npm build
 ```
 
 - See [index.html](./index.html) for example usage.
@@ -19,5 +20,5 @@ See the [mvs-stories](../../apps/mvs-stories) app for more info about how to use
 - For interactive development build (for production use `npm run build`) of the example that immediately reflects changes use:
 
 ```bash
-  npm run dev -- -e mvs-stories
+npm run dev -- -e mvs-stories
 ```

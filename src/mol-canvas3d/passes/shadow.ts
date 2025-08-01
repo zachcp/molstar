@@ -8,13 +8,13 @@
  */
 
 import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
-import { TextureSpec, Values, UniformSpec, DefineSpec } from '../../mol-gl/renderable/schema.ts';
+import { DefineSpec, TextureSpec, UniformSpec, Values } from '../../mol-gl/renderable/schema.ts';
 import { ShaderCode } from '../../mol-gl/shader-code.ts';
 import { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { Texture } from '../../mol-gl/webgl/texture.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
-import { createComputeRenderable, ComputeRenderable } from '../../mol-gl/renderable.ts';
+import { ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
 import { Mat4, Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
@@ -31,7 +31,7 @@ export const ShadowParams = {
     tolerance: PD.Numeric(1.0, { min: 0.0, max: 10.0, step: 0.1 }),
 };
 
-export type ShadowProps = PD.Values<typeof ShadowParams>
+export type ShadowProps = PD.Values<typeof ShadowParams>;
 
 export class ShadowPass {
     static isEnabled(props: PostprocessingProps) {
@@ -41,7 +41,12 @@ export class ShadowPass {
     readonly target: RenderTarget;
     private readonly renderable: ShadowsRenderable;
 
-    constructor(readonly webgl: WebGLContext, width: number, height: number, depthTextureOpaque: Texture) {
+    constructor(
+        readonly webgl: WebGLContext,
+        width: number,
+        height: number,
+        depthTextureOpaque: Texture,
+    ) {
         this.target = webgl.createRenderTarget(width, height, false);
         this.renderable = getShadowsRenderable(webgl, depthTextureOpaque);
     }
@@ -50,7 +55,10 @@ export class ShadowPass {
         const [w, h] = this.renderable.values.uTexSize.ref.value;
         if (width !== w || height !== h) {
             this.target.setSize(width, height);
-            ValueCell.update(this.renderable.values.uTexSize, Vec2.set(this.renderable.values.uTexSize.ref.value, width, height));
+            ValueCell.update(
+                this.renderable.values.uTexSize,
+                Vec2.set(this.renderable.values.uTexSize.ref.value, width, height),
+            );
         }
     }
 
@@ -68,11 +76,12 @@ export class ShadowPass {
         ValueCell.update(this.renderable.values.uProjection, camera.projection);
         ValueCell.update(this.renderable.values.uInvProjection, invProjection);
 
-        Vec4.set(this.renderable.values.uBounds.ref.value,
+        Vec4.set(
+            this.renderable.values.uBounds.ref.value,
             v.x / w,
             v.y / h,
             (v.x + v.width) / w,
-            (v.y + v.height) / h
+            (v.y + v.height) / h,
         );
         ValueCell.update(this.renderable.values.uBounds, this.renderable.values.uBounds.ref.value);
 
@@ -83,8 +92,14 @@ export class ShadowPass {
             needsUpdateShadows = true;
         }
 
-        ValueCell.updateIfChanged(this.renderable.values.uMaxDistance, props.maxDistance * camera.state.scale);
-        ValueCell.updateIfChanged(this.renderable.values.uTolerance, props.tolerance * camera.state.scale);
+        ValueCell.updateIfChanged(
+            this.renderable.values.uMaxDistance,
+            props.maxDistance * camera.state.scale,
+        );
+        ValueCell.updateIfChanged(
+            this.renderable.values.uTolerance,
+            props.tolerance * camera.state.scale,
+        );
         if (this.renderable.values.dSteps.ref.value !== props.steps) {
             ValueCell.update(this.renderable.values.dSteps, props.steps);
             needsUpdateShadows = true;
@@ -133,7 +148,7 @@ const ShadowsSchema = {
     dLightCount: DefineSpec('number'),
     uAmbientColor: UniformSpec('v3'),
 };
-type ShadowsRenderable = ComputeRenderable<Values<typeof ShadowsSchema>>
+type ShadowsRenderable = ComputeRenderable<Values<typeof ShadowsSchema>>;
 
 function getShadowsRenderable(ctx: WebGLContext, depthTexture: Texture): ShadowsRenderable {
     const width = depthTexture.getWidth();

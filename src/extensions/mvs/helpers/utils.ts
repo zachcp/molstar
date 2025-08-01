@@ -11,9 +11,8 @@ import { Color } from '../../../mol-util/color/index.ts';
 import { ColorNames } from '../../../mol-util/color/names.ts';
 import { decodeColor as _decodeColor } from '../../../mol-util/color/utils.ts';
 
-
 /** Represents either the result or the reason of failure of an operation that might have failed */
-export type Maybe<T> = { ok: true, value: T } | { ok: false, error: any }
+export type Maybe<T> = { ok: true; value: T } | { ok: false; error: any };
 
 /** Try to await a promise and return an object with its result (if resolved) or with the error (if rejected) */
 export async function safePromise<T>(promise: T): Promise<Maybe<Awaited<T>>> {
@@ -24,7 +23,6 @@ export async function safePromise<T>(promise: T): Promise<Maybe<Awaited<T>>> {
         return { ok: false, error };
     }
 }
-
 
 /** A map where values are arrays. Handles missing keys when adding values. */
 export class MultiMap<K, V> implements Mapping<K, V[]> {
@@ -44,7 +42,7 @@ export class MultiMap<K, V> implements Mapping<K, V[]> {
 }
 
 /** Basic subset of `Map<K, V>`, only needs to have `get` method */
-export type Mapping<K, V> = Pick<Map<K, V>, 'get'>
+export type Mapping<K, V> = Pick<Map<K, V>, 'get'>;
 
 /** Implementation of `Map` where keys are integers
  * and most keys are expected to be from interval `[0, limit)`.
@@ -67,7 +65,6 @@ export class NumberMap<K extends number, V> implements Mapping<K, V> {
     }
 }
 
-
 /** Return `true` if `value` is not `undefined` or `null`.
  * Prefer this over `value !== undefined`
  * (for maybe if we want to allow `null` in `AnnotationRow` in the future) */
@@ -80,7 +77,7 @@ export function isAnyDefined(...values: any[]): boolean {
 }
 /** Return filtered array containing all original elements except `undefined` or `null`. */
 export function filterDefined<T>(elements: (T | undefined | null)[]): T[] {
-    return elements.filter(x => x !== undefined && x !== null) as T[];
+    return elements.filter((x) => x !== undefined && x !== null) as T[];
 }
 
 /** Create an 8-hex-character hash for a given input string, e.g. 'spanish inquisition' -> '7f9ac4be' */
@@ -95,8 +92,7 @@ export function stringHash(input: string): string {
 }
 
 /** Return type of elements in a set */
-export type ElementOfSet<S> = S extends Set<infer T> ? T : never
-
+export type ElementOfSet<S> = S extends Set<infer T> ? T : never;
 
 /** Convert `colorString` (either X11 color name like 'magenta' or hex code like '#ff00ff') to Color.
  * Return `undefined` if `colorString` cannot be converted. */
@@ -108,7 +104,7 @@ export function decodeColor(colorString: string | undefined | null): Color | und
 const hexColorRegex = /^#([0-9A-F]{3}){1,2}$/i;
 
 /** Hexadecimal color string, e.g. '#FF1100' (the type matches more than just valid HexColor strings) */
-export type HexColor = `#${string}`
+export type HexColor = `#${string}`;
 
 export const HexColor = {
     /** Decide if a string is a valid hexadecimal color string (6-digit or 3-digit, e.g. '#FF1100' or '#f10') */
@@ -118,7 +114,7 @@ export const HexColor = {
 };
 
 /** Named color string, e.g. 'red' */
-export type ColorName = keyof ColorNames
+export type ColorName = keyof ColorNames;
 
 export const ColorName = {
     /** Decide if a string is a valid named color string */
@@ -127,7 +123,10 @@ export const ColorName = {
     },
 };
 
-export function collectMVSReferences<T extends StateObject.Ctor>(type: T[], dependencies: Record<string, StateObject>): Record<string, StateObject.From<T>['data']> {
+export function collectMVSReferences<T extends StateObject.Ctor>(
+    type: T[],
+    dependencies: Record<string, StateObject>,
+): Record<string, StateObject.From<T>['data']> {
     const ret: any = {};
 
     for (const key of Object.keys(dependencies)) {

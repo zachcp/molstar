@@ -5,11 +5,20 @@
  */
 
 import { PluginContext } from '../../mol-plugin/context.ts';
-import { StateObjectRef, StateObjectSelector, StateTransformer, StateTransform, StateObjectCell } from '../../mol-state/index.ts';
+import {
+    StateObjectCell,
+    StateObjectRef,
+    StateObjectSelector,
+    StateTransform,
+    StateTransformer,
+} from '../../mol-state/index.ts';
 import { PluginStateObject as SO } from '../objects.ts';
 import { StateTransforms } from '../transforms.ts';
 import { RootStructureDefinition } from '../helpers/root-structure.ts';
-import { StructureComponentParams, StaticStructureComponentType } from '../helpers/structure-component.ts';
+import {
+    StaticStructureComponentType,
+    StructureComponentParams,
+} from '../helpers/structure-component.ts';
 import { BuiltInTrajectoryFormat, TrajectoryFormatProvider } from '../formats/trajectory.ts';
 import { StructureRepresentationBuilder } from './structure/representation.ts';
 import { StructureSelectionQuery } from '../helpers/structure-selection-query.ts';
@@ -25,14 +34,22 @@ export class StructureBuilder {
         return this.plugin.state.data;
     }
 
-    private async parseTrajectoryData(data: StateObjectRef<SO.Data.Binary | SO.Data.String>, format: BuiltInTrajectoryFormat | TrajectoryFormatProvider) {
-        const provider = typeof format === 'string' ? this.plugin.dataFormats.get(format) as TrajectoryFormatProvider : format;
+    private async parseTrajectoryData(
+        data: StateObjectRef<SO.Data.Binary | SO.Data.String>,
+        format: BuiltInTrajectoryFormat | TrajectoryFormatProvider,
+    ) {
+        const provider = typeof format === 'string'
+            ? this.plugin.dataFormats.get(format) as TrajectoryFormatProvider
+            : format;
         if (!provider) throw new Error(`'${format}' is not a supported data format.`);
         const { trajectory } = await provider.parse(this.plugin, data);
         return trajectory;
     }
 
-    private parseTrajectoryBlob(data: StateObjectRef<SO.Data.Blob>, params: StateTransformer.Params<StateTransforms['Data']['ParseBlob']>) {
+    private parseTrajectoryBlob(
+        data: StateObjectRef<SO.Data.Blob>,
+        params: StateTransformer.Params<StateTransforms['Data']['ParseBlob']>,
+    ) {
         const state = this.dataState;
         const trajectory = state.build().to(data)
             .apply(StateTransforms.Data.ParseBlob, params, { state: { isGhost: true } })
@@ -43,8 +60,14 @@ export class StructureBuilder {
     readonly hierarchy = new TrajectoryHierarchyBuilder(this.plugin);
     readonly representation = new StructureRepresentationBuilder(this.plugin);
 
-    parseTrajectory(data: StateObjectRef<SO.Data.Binary | SO.Data.String>, format: BuiltInTrajectoryFormat | TrajectoryFormatProvider): Promise<StateObjectSelector<SO.Molecule.Trajectory>>
-    parseTrajectory(blob: StateObjectRef<SO.Data.Blob>, params: StateTransformer.Params<StateTransforms['Data']['ParseBlob']>): Promise<StateObjectSelector<SO.Molecule.Trajectory>>
+    parseTrajectory(
+        data: StateObjectRef<SO.Data.Binary | SO.Data.String>,
+        format: BuiltInTrajectoryFormat | TrajectoryFormatProvider,
+    ): Promise<StateObjectSelector<SO.Molecule.Trajectory>>;
+    parseTrajectory(
+        blob: StateObjectRef<SO.Data.Blob>,
+        params: StateTransformer.Params<StateTransforms['Data']['ParseBlob']>,
+    ): Promise<StateObjectSelector<SO.Molecule.Trajectory>>;
     parseTrajectory(data: StateObjectRef, params: any) {
         const cell = StateObjectRef.resolveAndCheck(this.dataState, data as StateObjectRef);
         if (!cell) throw new Error('Invalid data cell.');
@@ -56,22 +79,36 @@ export class StructureBuilder {
         }
     }
 
-    createModel(trajectory: StateObjectRef<SO.Molecule.Trajectory>, params?: StateTransformer.Params<StateTransforms['Model']['ModelFromTrajectory']>, initialState?: Partial<StateTransform.State>) {
+    createModel(
+        trajectory: StateObjectRef<SO.Molecule.Trajectory>,
+        params?: StateTransformer.Params<StateTransforms['Model']['ModelFromTrajectory']>,
+        initialState?: Partial<StateTransform.State>,
+    ) {
         const state = this.dataState;
         const model = state.build().to(trajectory)
-            .apply(StateTransforms.Model.ModelFromTrajectory, params || { modelIndex: 0 }, { state: initialState });
+            .apply(StateTransforms.Model.ModelFromTrajectory, params || { modelIndex: 0 }, {
+                state: initialState,
+            });
 
         return model.commit({ revertOnError: true });
     }
 
-    insertModelProperties(model: StateObjectRef<SO.Molecule.Model>, params?: StateTransformer.Params<StateTransforms['Model']['CustomModelProperties']>, initialState?: Partial<StateTransform.State>) {
+    insertModelProperties(
+        model: StateObjectRef<SO.Molecule.Model>,
+        params?: StateTransformer.Params<StateTransforms['Model']['CustomModelProperties']>,
+        initialState?: Partial<StateTransform.State>,
+    ) {
         const state = this.dataState;
         const props = state.build().to(model)
             .apply(StateTransforms.Model.CustomModelProperties, params, { state: initialState });
         return props.commit({ revertOnError: true });
     }
 
-    tryCreateUnitcell(model: StateObjectRef<SO.Molecule.Model>, params?: StateTransformer.Params<StateTransforms['Representation']['ModelUnitcell3D']>, initialState?: Partial<StateTransform.State>) {
+    tryCreateUnitcell(
+        model: StateObjectRef<SO.Molecule.Model>,
+        params?: StateTransformer.Params<StateTransforms['Representation']['ModelUnitcell3D']>,
+        initialState?: Partial<StateTransform.State>,
+    ) {
         const state = this.dataState;
         const m = StateObjectRef.resolveAndCheck(state, model)?.obj?.data;
         if (!m) return;
@@ -83,24 +120,34 @@ export class StructureBuilder {
         return unitcell.commit({ revertOnError: true });
     }
 
-    createStructure(modelRef: StateObjectRef<SO.Molecule.Model>, params?: RootStructureDefinition.Params, initialState?: Partial<StateTransform.State>, tags?: string | string[]) {
+    createStructure(
+        modelRef: StateObjectRef<SO.Molecule.Model>,
+        params?: RootStructureDefinition.Params,
+        initialState?: Partial<StateTransform.State>,
+        tags?: string | string[],
+    ) {
         const state = this.dataState;
 
         if (!params) {
             const model = StateObjectRef.resolveAndCheck(state, modelRef);
             if (model) {
                 const symm = ModelSymmetry.Provider.get(model.obj?.data!);
-                if (!symm || symm?.assemblies.length === 0) params = { name: 'model', params: { } };
+                if (!symm || symm?.assemblies.length === 0) params = { name: 'model', params: {} };
             }
         }
 
         const structure = state.build().to(modelRef)
-            .apply(StateTransforms.Model.StructureFromModel, { type: params || { name: 'assembly', params: { } } }, { state: initialState, tags });
+            .apply(StateTransforms.Model.StructureFromModel, {
+                type: params || { name: 'assembly', params: {} },
+            }, { state: initialState, tags });
 
         return structure.commit({ revertOnError: true });
     }
 
-    insertStructureProperties(structure: StateObjectRef<SO.Molecule.Structure>, params?: StateTransformer.Params<StateTransforms['Model']['CustomStructureProperties']>) {
+    insertStructureProperties(
+        structure: StateObjectRef<SO.Molecule.Structure>,
+        params?: StateTransformer.Params<StateTransforms['Model']['CustomStructureProperties']>,
+    ) {
         const state = this.dataState;
         const props = state.build().to(structure)
             .apply(StateTransforms.Model.CustomStructureProperties, params);
@@ -112,15 +159,25 @@ export class StructureBuilder {
     }
 
     /** returns undefined if the component is empty/null */
-    async tryCreateComponent(structure: StateObjectRef<SO.Molecule.Structure>, params: StructureComponentParams, key: string, tags?: string[]): Promise<StateObjectSelector<SO.Molecule.Structure> | undefined> {
+    async tryCreateComponent(
+        structure: StateObjectRef<SO.Molecule.Structure>,
+        params: StructureComponentParams,
+        key: string,
+        tags?: string[],
+    ): Promise<StateObjectSelector<SO.Molecule.Structure> | undefined> {
         const state = this.dataState;
 
         const root = state.build().to(structure);
 
         const keyTag = `structure-component-${key}`;
-        const component = root.applyOrUpdateTagged(keyTag, StateTransforms.Model.StructureComponent, params, {
-            tags: tags ? [...tags, keyTag] : [keyTag]
-        });
+        const component = root.applyOrUpdateTagged(
+            keyTag,
+            StateTransforms.Model.StructureComponent,
+            params,
+            {
+                tags: tags ? [...tags, keyTag] : [keyTag],
+            },
+        );
 
         await component.commit();
 
@@ -134,28 +191,53 @@ export class StructureBuilder {
         return selector;
     }
 
-    tryCreateComponentFromExpression(structure: StateObjectRef<SO.Molecule.Structure>, expression: Expression, key: string, params?: { label?: string, tags?: string[] }) {
-        return this.tryCreateComponent(structure, {
-            type: { name: 'expression', params: expression },
-            nullIfEmpty: true,
-            label: (params?.label || '').trim()
-        }, key, params?.tags);
+    tryCreateComponentFromExpression(
+        structure: StateObjectRef<SO.Molecule.Structure>,
+        expression: Expression,
+        key: string,
+        params?: { label?: string; tags?: string[] },
+    ) {
+        return this.tryCreateComponent(
+            structure,
+            {
+                type: { name: 'expression', params: expression },
+                nullIfEmpty: true,
+                label: (params?.label || '').trim(),
+            },
+            key,
+            params?.tags,
+        );
     }
 
-    tryCreateComponentStatic(structure: StateObjectRef<SO.Molecule.Structure>, type: StaticStructureComponentType, params?: { label?: string, tags?: string[] }) {
-        return this.tryCreateComponent(structure, {
-            type: { name: 'static', params: type },
-            nullIfEmpty: true,
-            label: (params?.label || '').trim()
-        }, `static-${type}`, params?.tags);
+    tryCreateComponentStatic(
+        structure: StateObjectRef<SO.Molecule.Structure>,
+        type: StaticStructureComponentType,
+        params?: { label?: string; tags?: string[] },
+    ) {
+        return this.tryCreateComponent(
+            structure,
+            {
+                type: { name: 'static', params: type },
+                nullIfEmpty: true,
+                label: (params?.label || '').trim(),
+            },
+            `static-${type}`,
+            params?.tags,
+        );
     }
 
-    tryCreateComponentFromSelection(structure: StateObjectRef<SO.Molecule.Structure>, selection: StructureSelectionQuery, key: string, params?: { label?: string, tags?: string[] }): Promise<StateObjectSelector<SO.Molecule.Structure> | undefined> {
-        return this.plugin.runTask(Task.create('Query Component', async taskCtx => {
-            let { label, tags } = params || { };
+    tryCreateComponentFromSelection(
+        structure: StateObjectRef<SO.Molecule.Structure>,
+        selection: StructureSelectionQuery,
+        key: string,
+        params?: { label?: string; tags?: string[] },
+    ): Promise<StateObjectSelector<SO.Molecule.Structure> | undefined> {
+        return this.plugin.runTask(Task.create('Query Component', async (taskCtx) => {
+            let { label, tags } = params || {};
             label = (label || '').trim();
 
-            const structureData = StateObjectRef.resolveAndCheck(this.dataState, structure)?.obj?.data;
+            const structureData = StateObjectRef.resolveAndCheck(this.dataState, structure)?.obj
+                ?.data;
 
             if (!structureData) return;
 
@@ -163,17 +245,25 @@ export class StructureBuilder {
                 ? {
                     type: {
                         name: 'bundle',
-                        params: StructureElement.Bundle.fromSelection(await selection.getSelection(this.plugin, taskCtx, structureData)) },
+                        params: StructureElement.Bundle.fromSelection(
+                            await selection.getSelection(this.plugin, taskCtx, structureData),
+                        ),
+                    },
                     nullIfEmpty: true,
-                    label: label || selection.label
-                } : {
+                    label: label || selection.label,
+                }
+                : {
                     type: { name: 'expression', params: selection.expression },
                     nullIfEmpty: true,
-                    label: label || selection.label
+                    label: label || selection.label,
                 };
 
             if (selection.ensureCustomProperties) {
-                await selection.ensureCustomProperties({ runtime: taskCtx, assetManager: this.plugin.managers.asset, errorContext: this.plugin.errorContext }, structureData);
+                await selection.ensureCustomProperties({
+                    runtime: taskCtx,
+                    assetManager: this.plugin.managers.asset,
+                    errorContext: this.plugin.errorContext,
+                }, structureData);
             }
 
             return this.tryCreateComponent(structure, transformParams, key, tags);

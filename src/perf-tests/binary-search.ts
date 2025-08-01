@@ -1,6 +1,5 @@
 import { findPredecessorIndex } from '../mol-data/int/impl/sorted-array.ts';
 
-
 function createData(n: number) {
     const data = []; // new Int32Array(n);
     let last = (15 * Math.random()) | 0;
@@ -51,7 +50,12 @@ namespace SortedArray_old {
         return binarySearchPredIndexRange(xs, v, 0, len);
     }
 
-    function binarySearchPredIndexRange(xs: ArrayLike<number>, value: number, start: number, end: number) {
+    function binarySearchPredIndexRange(
+        xs: ArrayLike<number>,
+        value: number,
+        start: number,
+        end: number,
+    ) {
         let min = start, max = end - 1;
         while (min < max) {
             // do a linear search if there are only 10 or less items remaining
@@ -93,7 +97,7 @@ function setSearch(set: Set<number>, val: number) {
     return set.has(val);
 }
 
-type Mask = { min: number, max: number, mask: ArrayLike<number> }
+type Mask = { min: number; max: number; mask: ArrayLike<number> };
 function maskSearch({ min, max, mask }: Mask, val: number) {
     return val >= min && val <= max && !!mask[val - min];
 }
@@ -240,4 +244,4 @@ function run(f: () => number, n: number) {
     console.time('prepare-mask');
     run(() => prepareMask(list).min, 1);
     console.timeEnd('prepare-mask');
-}());
+})();

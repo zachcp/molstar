@@ -16,23 +16,28 @@ import { CifExportContext } from '../mmcif.ts';
 import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif.ts';
 import { CifCategory, CifField, getCifFieldType } from '../../../../mol-io/reader/cif.ts';
 
-export function getModelMmCifCategory<K extends keyof mmCIF_Schema>(model: Model, name: K): mmCIF_Database[K] | undefined {
+export function getModelMmCifCategory<K extends keyof mmCIF_Schema>(
+    model: Model,
+    name: K,
+): mmCIF_Database[K] | undefined {
     if (!MmcifFormat.is(model.sourceData)) return;
     return model.sourceData.data.db[name];
 }
 
 export function getUniqueResidueNamesFromStructures(structures: Structure[]) {
-    return SetUtils.unionMany(...structures.map(s => s.uniqueResidueNames));
+    return SetUtils.unionMany(...structures.map((s) => s.uniqueResidueNames));
 }
 
 export function getUniqueEntityIdsFromStructures(structures: Structure[]): Set<string> {
     if (structures.length === 0) return new Set();
 
     const names = structures[0].model.entities.data.id;
-    return new Set(getUniqueEntityIndicesFromStructures(structures).map(i => names.value(i)));
+    return new Set(getUniqueEntityIndicesFromStructures(structures).map((i) => names.value(i)));
 }
 
-export function getUniqueEntityIndicesFromStructures(structures: Structure[]): ReadonlyArray<EntityIndex> {
+export function getUniqueEntityIndicesFromStructures(
+    structures: Structure[],
+): ReadonlyArray<EntityIndex> {
     if (structures.length === 0) return [];
     if (structures.length === 1) return structures[0].entityIndices;
     const ret = UniqueArray.create<EntityIndex, EntityIndex>();
@@ -45,7 +50,10 @@ export function getUniqueEntityIndicesFromStructures(structures: Structure[]): R
     return ret.array;
 }
 
-export function copy_mmCif_category(name: keyof mmCIF_Schema, condition?: (structure: Structure) => boolean): CifWriter.Category<CifExportContext> {
+export function copy_mmCif_category(
+    name: keyof mmCIF_Schema,
+    condition?: (structure: Structure) => boolean,
+): CifWriter.Category<CifExportContext> {
     return {
         name,
         instance({ structures }) {
@@ -57,11 +65,15 @@ export function copy_mmCif_category(name: keyof mmCIF_Schema, condition?: (struc
             const table = model.sourceData.data.db[name];
             if (!table || !table._rowCount) return CifWriter.Category.Empty;
             return CifWriter.Category.ofTable(table);
-        }
+        },
     };
 }
 
-export function copy_source_mmCifCategory(encoder: CifWriter.Encoder, ctx: CifExportContext, category: CifCategory): CifWriter.Category<CifExportContext> | undefined {
+export function copy_source_mmCifCategory(
+    encoder: CifWriter.Encoder,
+    ctx: CifExportContext,
+    category: CifCategory,
+): CifWriter.Category<CifExportContext> | undefined {
     if (!MmcifFormat.is(ctx.firstModel.sourceData)) return;
 
     const fs = CifWriter.fields<number, undefined>();
@@ -74,7 +86,7 @@ export function copy_source_mmCifCategory(encoder: CifWriter.Encoder, ctx: CifEx
     } else {
         for (const f of category.fieldNames) {
             const field = category.getField(f)!;
-            fs.str(f, row => field.str(row));
+            fs.str(f, (row) => field.str(row));
         }
     }
 
@@ -83,17 +95,28 @@ export function copy_source_mmCifCategory(encoder: CifWriter.Encoder, ctx: CifEx
         name: category.name,
         instance() {
             return { fields, source: [{ data: void 0, rowCount: category.rowCount }] };
-        }
+        },
     };
 }
 
 function classifyField(name: string, field: CifField): CifWriter.Field {
     const type = getCifFieldType(field);
     if (type['@type'] === 'str') {
-        return { name, type: CifWriter.Field.Type.Str, value: field.str, valueKind: field.valueKind };
+        return {
+            name,
+            type: CifWriter.Field.Type.Str,
+            value: field.str,
+            valueKind: field.valueKind,
+        };
     } else if (type['@type'] === 'float') {
-        return CifWriter.Field.float(name, field.float, { valueKind: field.valueKind, typedArray: Float64Array });
+        return CifWriter.Field.float(name, field.float, {
+            valueKind: field.valueKind,
+            typedArray: Float64Array,
+        });
     } else {
-        return CifWriter.Field.int(name, field.int, { valueKind: field.valueKind, typedArray: Int32Array });
+        return CifWriter.Field.int(name, field.int, {
+            valueKind: field.valueKind,
+            typedArray: Int32Array,
+        });
     }
 }

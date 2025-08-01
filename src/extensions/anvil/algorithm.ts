@@ -5,8 +5,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure, StructureElement, StructureProperties, Unit } from '../../mol-model/structure.ts';
-import { Task, RuntimeContext } from '../../mol-task/index.ts';
+import {
+    Structure,
+    StructureElement,
+    StructureProperties,
+    Unit,
+} from '../../mol-model/structure.ts';
+import { RuntimeContext, Task } from '../../mol-task/index.ts';
 import { CentroidHelper } from '../../mol-math/geometry/centroid-helper.ts';
 import { AccessibleSurfaceAreaParams } from '../../mol-model-props/computed/accessible-surface-area.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
@@ -21,37 +26,66 @@ const DEFAULT_UPDATE_INTERVAL = 10;
 const LARGE_CA_UPDATE_INTERVAL = 1;
 
 interface ANVILContext {
-    structure: Structure,
+    structure: Structure;
 
-    numberOfSpherePoints: number,
-    stepSize: number,
-    minThickness: number,
-    maxThickness: number,
-    asaCutoff: number,
-    adjust: number,
+    numberOfSpherePoints: number;
+    stepSize: number;
+    minThickness: number;
+    maxThickness: number;
+    asaCutoff: number;
+    adjust: number;
 
-    offsets: ArrayLike<number>,
-    exposed: ArrayLike<number>,
-    hydrophobic: ArrayLike<boolean>,
-    centroid: Vec3,
-    extent: number,
-    large: boolean
-};
+    offsets: ArrayLike<number>;
+    exposed: ArrayLike<number>;
+    hydrophobic: ArrayLike<boolean>;
+    centroid: Vec3;
+    extent: number;
+    large: boolean;
+}
 
 export const ANVILParams = {
-    numberOfSpherePoints: PD.Numeric(175, { min: 35, max: 700, step: 1 }, { description: 'Number of spheres/directions to test for membrane placement. Original value is 350.' }),
-    stepSize: PD.Numeric(1, { min: 0.25, max: 4, step: 0.25 }, { description: 'Thickness of membrane slices that will be tested' }),
-    minThickness: PD.Numeric(20, { min: 10, max: 30, step: 1 }, { description: 'Minimum membrane thickness used during refinement' }),
-    maxThickness: PD.Numeric(40, { min: 30, max: 50, step: 1 }, { description: 'Maximum membrane thickness used during refinement' }),
-    asaCutoff: PD.Numeric(40, { min: 10, max: 100, step: 1 }, { description: 'Relative ASA cutoff above which residues will be considered' }),
-    adjust: PD.Numeric(14, { min: 0, max: 30, step: 1 }, { description: 'Minimum length of membrane-spanning regions (original values: 14 for alpha-helices and 5 for beta sheets). Set to 0 to not optimize membrane thickness.' }),
-    tmdetDefinition: PD.Boolean(false, { description: `Use TMDET's classification of membrane-favoring amino acids. TMDET's classification shows better performance on porins and other beta-barrel structures.` })
+    numberOfSpherePoints: PD.Numeric(175, { min: 35, max: 700, step: 1 }, {
+        description:
+            'Number of spheres/directions to test for membrane placement. Original value is 350.',
+    }),
+    stepSize: PD.Numeric(1, { min: 0.25, max: 4, step: 0.25 }, {
+        description: 'Thickness of membrane slices that will be tested',
+    }),
+    minThickness: PD.Numeric(20, { min: 10, max: 30, step: 1 }, {
+        description: 'Minimum membrane thickness used during refinement',
+    }),
+    maxThickness: PD.Numeric(40, { min: 30, max: 50, step: 1 }, {
+        description: 'Maximum membrane thickness used during refinement',
+    }),
+    asaCutoff: PD.Numeric(40, { min: 10, max: 100, step: 1 }, {
+        description: 'Relative ASA cutoff above which residues will be considered',
+    }),
+    adjust: PD.Numeric(14, { min: 0, max: 30, step: 1 }, {
+        description:
+            'Minimum length of membrane-spanning regions (original values: 14 for alpha-helices and 5 for beta sheets). Set to 0 to not optimize membrane thickness.',
+    }),
+    tmdetDefinition: PD.Boolean(false, {
+        description:
+            `Use TMDET's classification of membrane-favoring amino acids. TMDET's classification shows better performance on porins and other beta-barrel structures.`,
+    }),
 };
-export type ANVILParams = typeof ANVILParams
-export type ANVILProps = PD.Values<ANVILParams>
+export type ANVILParams = typeof ANVILParams;
+export type ANVILProps = PD.Values<ANVILParams>;
 
 /** ANVIL-specific (not general) definition of membrane-favoring amino acids */
-const ANVIL_DEFINITION = new Set(['ALA', 'CYS', 'GLY', 'HIS', 'ILE', 'LEU', 'MET', 'PHE', 'SER', 'TRP', 'VAL']);
+const ANVIL_DEFINITION = new Set([
+    'ALA',
+    'CYS',
+    'GLY',
+    'HIS',
+    'ILE',
+    'LEU',
+    'MET',
+    'PHE',
+    'SER',
+    'TRP',
+    'VAL',
+]);
 /** TMDET-specific (not general) definition of membrane-favoring amino acids */
 const TMDET_DEFINITION = new Set(['LEU', 'ILE', 'VAL', 'PHE', 'MET', 'GLY', 'TRP', 'TYR']);
 
@@ -69,7 +103,7 @@ const TMDET_DEFINITION = new Set(['LEU', 'ILE', 'VAL', 'PHE', 'MET', 'GLY', 'TRP
  * doi: 10.1093/bioinformatics/bth340
  */
 export function computeANVIL(structure: Structure, props: ANVILProps) {
-    return Task.create('Compute Membrane Orientation', async runtime => {
+    return Task.create('Compute Membrane Orientation', async (runtime) => {
         return await calculate(runtime, structure, props);
     });
 }
@@ -90,7 +124,11 @@ const v3sub = Vec3.sub;
 const v3zero = Vec3.zero;
 
 const centroidHelper = new CentroidHelper();
-async function initialize(structure: Structure, props: ANVILProps, accessibleSurfaceArea: AccessibleSurfaceArea): Promise<ANVILContext> {
+async function initialize(
+    structure: Structure,
+    props: ANVILProps,
+    accessibleSurfaceArea: AccessibleSurfaceArea,
+): Promise<ANVILContext> {
     const l = StructureElement.Location.create(structure);
     const { label_atom_id, label_comp_id, x, y, z } = StructureProperties.atom;
     const asaCutoff = props.asaCutoff / 100;
@@ -102,7 +140,11 @@ async function initialize(structure: Structure, props: ANVILProps, accessibleSur
     const definition = props.tmdetDefinition ? TMDET_DEFINITION : ANVIL_DEFINITION;
 
     function isPartOfEntity(l: StructureElement.Location): boolean {
-        return !Unit.isAtomic(l.unit) ? notAtomic() : l.unit.model.atomicHierarchy.residues.label_seq_id.valueKind(l.unit.residueIndex[l.element]) === 0;
+        return !Unit.isAtomic(l.unit)
+            ? notAtomic()
+            : l.unit.model.atomicHierarchy.residues.label_seq_id.valueKind(
+                l.unit.residueIndex[l.element],
+            ) === 0;
     }
 
     const vec = v3zero();
@@ -136,7 +178,10 @@ async function initialize(structure: Structure, props: ANVILProps, accessibleSur
 
             // keep track of offsets and exposed state to reuse
             offsets.push(structure.serialMapping.getSerialIndex(l.unit, l.element));
-            if (AccessibleSurfaceArea.getValue(l, accessibleSurfaceArea) / MaxAsa[label_comp_id(l)] > asaCutoff) {
+            if (
+                AccessibleSurfaceArea.getValue(l, accessibleSurfaceArea) /
+                        MaxAsa[label_comp_id(l)] > asaCutoff
+            ) {
                 exposed.push(structure.serialMapping.getSerialIndex(l.unit, l.element));
                 hydrophobic.push(isHydrophobic(definition, label_comp_id(l)));
             }
@@ -162,24 +207,54 @@ async function initialize(structure: Structure, props: ANVILProps, accessibleSur
         hydrophobic,
         centroid,
         extent,
-        large: offsets.length > LARGE_CA_THRESHOLD
+        large: offsets.length > LARGE_CA_THRESHOLD,
     };
 }
 
-export async function calculate(runtime: RuntimeContext, structure: Structure, params: ANVILProps): Promise<MembraneOrientation> {
+export async function calculate(
+    runtime: RuntimeContext,
+    structure: Structure,
+    params: ANVILProps,
+): Promise<MembraneOrientation> {
     // can't get away with the default 92 points here
-    const asaProps = { ...PD.getDefaultValues(AccessibleSurfaceAreaParams), probeSize: 4.0, traceOnly: true, numberOfSpherePoints: 184 };
-    const accessibleSurfaceArea = await AccessibleSurfaceArea.compute(structure, asaProps).runInContext(runtime);
+    const asaProps = {
+        ...PD.getDefaultValues(AccessibleSurfaceAreaParams),
+        probeSize: 4.0,
+        traceOnly: true,
+        numberOfSpherePoints: 184,
+    };
+    const accessibleSurfaceArea = await AccessibleSurfaceArea.compute(structure, asaProps)
+        .runInContext(runtime);
 
     const ctx = await initialize(structure, params, accessibleSurfaceArea);
     const initialHphobHphil = HphobHphil.initial(ctx);
 
-    const initialMembrane = (await findMembrane(runtime, 'Placing initial membrane...', ctx, generateSpherePoints(ctx, ctx.numberOfSpherePoints), initialHphobHphil))!;
-    const refinedMembrane = (await findMembrane(runtime, 'Refining membrane placement...', ctx, findProximateAxes(ctx, initialMembrane), initialHphobHphil))!;
-    let membrane = initialMembrane.qmax! > refinedMembrane.qmax! ? initialMembrane : refinedMembrane;
+    const initialMembrane = (await findMembrane(
+        runtime,
+        'Placing initial membrane...',
+        ctx,
+        generateSpherePoints(ctx, ctx.numberOfSpherePoints),
+        initialHphobHphil,
+    ))!;
+    const refinedMembrane = (await findMembrane(
+        runtime,
+        'Refining membrane placement...',
+        ctx,
+        findProximateAxes(ctx, initialMembrane),
+        initialHphobHphil,
+    ))!;
+    let membrane = initialMembrane.qmax! > refinedMembrane.qmax!
+        ? initialMembrane
+        : refinedMembrane;
 
     if (ctx.adjust && !ctx.large) {
-        membrane = await adjustThickness(runtime, 'Adjusting membrane thickness...', ctx, membrane, initialHphobHphil);
+        membrane = await adjustThickness(
+            runtime,
+            'Adjusting membrane thickness...',
+            ctx,
+            membrane,
+            initialHphobHphil,
+        );
     }
 
     const normalVector = v3zero();
@@ -196,17 +271,17 @@ export async function calculate(runtime: RuntimeContext, structure: Structure, p
         planePoint2: membrane.planePoint2,
         normalVector,
         centroid: center,
-        radius: extent
+        radius: extent,
     };
 }
 
 interface MembraneCandidate {
-    planePoint1: Vec3,
-    planePoint2: Vec3,
-    stats: HphobHphil,
-    normalVector?: Vec3,
-    spherePoint?: Vec3,
-    qmax?: number
+    planePoint1: Vec3;
+    planePoint2: Vec3;
+    stats: HphobHphil;
+    normalVector?: Vec3;
+    spherePoint?: Vec3;
+    qmax?: number;
 }
 
 namespace MembraneCandidate {
@@ -214,11 +289,18 @@ namespace MembraneCandidate {
         return {
             planePoint1: c1,
             planePoint2: c2,
-            stats
+            stats,
         };
     }
 
-    export function scored(spherePoint: Vec3, planePoint1: Vec3, planePoint2: Vec3, stats: HphobHphil, qmax: number, centroid: Vec3): MembraneCandidate {
+    export function scored(
+        spherePoint: Vec3,
+        planePoint1: Vec3,
+        planePoint2: Vec3,
+        stats: HphobHphil,
+        qmax: number,
+        centroid: Vec3,
+    ): MembraneCandidate {
         const normalVector = v3zero();
         v3sub(normalVector, centroid, spherePoint);
         return {
@@ -227,12 +309,18 @@ namespace MembraneCandidate {
             stats,
             normalVector,
             spherePoint,
-            qmax
+            qmax,
         };
     }
 }
 
-async function findMembrane(runtime: RuntimeContext, message: string | undefined, ctx: ANVILContext, spherePoints: Vec3[], initialStats: HphobHphil): Promise<MembraneCandidate | undefined> {
+async function findMembrane(
+    runtime: RuntimeContext,
+    message: string | undefined,
+    ctx: ANVILContext,
+    spherePoints: Vec3[],
+    initialStats: HphobHphil,
+): Promise<MembraneCandidate | undefined> {
     const { centroid, stepSize, minThickness, maxThickness, large } = ctx;
     // best performing membrane
     let membrane: MembraneCandidate | undefined;
@@ -242,7 +330,10 @@ async function findMembrane(runtime: RuntimeContext, message: string | undefined
     // construct slices of thickness 1.0 along the axis connecting the centroid and the spherePoint
     const diam = v3zero();
     for (let n = 0, nl = spherePoints.length; n < nl; n++) {
-        if (runtime.shouldUpdate && message && (n + 1) % (large ? LARGE_CA_UPDATE_INTERVAL : DEFAULT_UPDATE_INTERVAL) === 0) {
+        if (
+            runtime.shouldUpdate && message &&
+            (n + 1) % (large ? LARGE_CA_UPDATE_INTERVAL : DEFAULT_UPDATE_INTERVAL) === 0
+        ) {
             await runtime.update({ message, current: (n + 1), max: nl });
         }
 
@@ -286,7 +377,14 @@ async function findMembrane(runtime: RuntimeContext, message: string | undefined
                     const qvaltest = qValue(stats, initialStats);
                     if (qvaltest >= qmax) {
                         qmax = qvaltest;
-                        membrane = MembraneCandidate.scored(spherePoint, qvartemp[i].planePoint1, qvartemp[i + jmax].planePoint2, stats, qmax, centroid);
+                        membrane = MembraneCandidate.scored(
+                            spherePoint,
+                            qvartemp[i].planePoint1,
+                            qvartemp[i + jmax].planePoint2,
+                            stats,
+                            qmax,
+                            centroid,
+                        );
                     }
                 }
             }
@@ -299,7 +397,13 @@ async function findMembrane(runtime: RuntimeContext, message: string | undefined
 }
 
 /** Adjust membrane thickness by maximizing the number of membrane segments. */
-async function adjustThickness(runtime: RuntimeContext, message: string | undefined, ctx: ANVILContext, membrane: MembraneCandidate, initialHphobHphil: HphobHphil): Promise<MembraneCandidate> {
+async function adjustThickness(
+    runtime: RuntimeContext,
+    message: string | undefined,
+    ctx: ANVILContext,
+    membrane: MembraneCandidate,
+    initialHphobHphil: HphobHphil,
+): Promise<MembraneCandidate> {
     const { minThickness, large } = ctx;
     const step = 0.3;
     let maxThickness = v3distance(membrane.planePoint1, membrane.planePoint2);
@@ -311,16 +415,25 @@ async function adjustThickness(runtime: RuntimeContext, message: string | undefi
     const nl = Math.ceil((maxThickness - minThickness) / step);
     while (maxThickness > minThickness) {
         n++;
-        if (runtime.shouldUpdate && message && n % (large ? LARGE_CA_UPDATE_INTERVAL : DEFAULT_UPDATE_INTERVAL) === 0) {
+        if (
+            runtime.shouldUpdate && message &&
+            n % (large ? LARGE_CA_UPDATE_INTERVAL : DEFAULT_UPDATE_INTERVAL) === 0
+        ) {
             await runtime.update({ message, current: n, max: nl });
         }
 
         const p = {
             ...ctx,
             maxThickness,
-            stepSize: step
+            stepSize: step,
         };
-        const temp = await findMembrane(runtime, void 0, p, [membrane.spherePoint!], initialHphobHphil);
+        const temp = await findMembrane(
+            runtime,
+            void 0,
+            p,
+            [membrane.spherePoint!],
+            initialHphobHphil,
+        );
         if (temp) {
             const nos = membraneSegments(ctx, temp).length;
             if (nos > maxNos) {
@@ -335,7 +448,10 @@ async function adjustThickness(runtime: RuntimeContext, message: string | undefi
 }
 
 /** Report auth_seq_ids for all transmembrane segments. Will reject segments that are shorter than the adjust parameter specifies. Missing residues are considered in-membrane. */
-function membraneSegments(ctx: ANVILContext, membrane: MembraneCandidate): ArrayLike<{ start: number, end: number }> {
+function membraneSegments(
+    ctx: ANVILContext,
+    membrane: MembraneCandidate,
+): ArrayLike<{ start: number; end: number }> {
     const { offsets, structure, adjust } = ctx;
     const { normalVector, planePoint1, planePoint2 } = membrane;
     const { units } = structure;
@@ -350,11 +466,13 @@ function membraneSegments(ctx: ANVILContext, membrane: MembraneCandidate): Array
 
     const inMembrane: { [k: string]: Set<number> } = Object.create(null);
     const outMembrane: { [k: string]: Set<number> } = Object.create(null);
-    const segments: Array<{ start: number, end: number }> = [];
+    const segments: Array<{ start: number; end: number }> = [];
     let authAsymId;
     let lastAuthAsymId = null;
     let authSeqId;
-    let lastAuthSeqId = units[0].model.atomicHierarchy.residues.auth_seq_id.value((units[0] as Unit.Atomic).chainIndex[0]) - 1;
+    let lastAuthSeqId = units[0].model.atomicHierarchy.residues.auth_seq_id.value(
+        (units[0] as Unit.Atomic).chainIndex[0],
+    ) - 1;
     let startOffset = 0;
     let endOffset = 0;
 
@@ -364,15 +482,24 @@ function membraneSegments(ctx: ANVILContext, membrane: MembraneCandidate): Array
         if (!Unit.isAtomic(unit)) notAtomic();
         const elementIndex = elementIndices[offsets[k]];
 
-        authAsymId = unit.model.atomicHierarchy.chains.auth_asym_id.value(unit.chainIndex[elementIndex]);
+        authAsymId = unit.model.atomicHierarchy.chains.auth_asym_id.value(
+            unit.chainIndex[elementIndex],
+        );
         if (authAsymId !== lastAuthAsymId) {
             if (!inMembrane[authAsymId]) inMembrane[authAsymId] = new Set<number>();
             if (!outMembrane[authAsymId]) outMembrane[authAsymId] = new Set<number>();
             lastAuthAsymId = authAsymId;
         }
 
-        authSeqId = unit.model.atomicHierarchy.residues.auth_seq_id.value(unit.residueIndex[elementIndex]);
-        v3set(testPoint, unit.conformation.x(elementIndex), unit.conformation.y(elementIndex), unit.conformation.z(elementIndex));
+        authSeqId = unit.model.atomicHierarchy.residues.auth_seq_id.value(
+            unit.residueIndex[elementIndex],
+        );
+        v3set(
+            testPoint,
+            unit.conformation.x(elementIndex),
+            unit.conformation.y(elementIndex),
+            unit.conformation.z(elementIndex),
+        );
         if (_isInMembranePlane(testPoint, normalVector!, dMin, dMax)) {
             inMembrane[authAsymId].add(authSeqId);
         } else {
@@ -385,8 +512,12 @@ function membraneSegments(ctx: ANVILContext, membrane: MembraneCandidate): Array
         if (!Unit.isAtomic(unit)) notAtomic();
         const elementIndex = elementIndices[offsets[k]];
 
-        authAsymId = unit.model.atomicHierarchy.chains.auth_asym_id.value(unit.chainIndex[elementIndex]);
-        authSeqId = unit.model.atomicHierarchy.residues.auth_seq_id.value(unit.residueIndex[elementIndex]);
+        authAsymId = unit.model.atomicHierarchy.chains.auth_asym_id.value(
+            unit.chainIndex[elementIndex],
+        );
+        authSeqId = unit.model.atomicHierarchy.residues.auth_seq_id.value(
+            unit.residueIndex[elementIndex],
+        );
         if (inMembrane[authAsymId].has(authSeqId)) {
             // chain change
             if (authAsymId !== lastAuthAsymId) {
@@ -415,18 +546,28 @@ function membraneSegments(ctx: ANVILContext, membrane: MembraneCandidate): Array
     const l = StructureElement.Location.create(structure);
     let startAuth;
     let endAuth;
-    const refinedSegments: Array<{ start: number, end: number }> = [];
+    const refinedSegments: Array<{ start: number; end: number }> = [];
     for (let k = 0, kl = segments.length; k < kl; k++) {
         const { start, end } = segments[k];
         if (start === 0 || end === offsets.length - 1) continue;
 
         // evaluate residues 1 pos outside of membrane
         setLocation(l, structure, offsets[start - 1]);
-        v3set(testPoint, l.unit.conformation.x(l.element), l.unit.conformation.y(l.element), l.unit.conformation.z(l.element));
+        v3set(
+            testPoint,
+            l.unit.conformation.x(l.element),
+            l.unit.conformation.y(l.element),
+            l.unit.conformation.z(l.element),
+        );
         const d3 = -v3dot(normalVector!, testPoint);
 
         setLocation(l, structure, offsets[end + 1]);
-        v3set(testPoint, l.unit.conformation.x(l.element), l.unit.conformation.y(l.element), l.unit.conformation.z(l.element));
+        v3set(
+            testPoint,
+            l.unit.conformation.x(l.element),
+            l.unit.conformation.y(l.element),
+            l.unit.conformation.z(l.element),
+        );
         const d4 = -v3dot(normalVector!, testPoint);
 
         if (Math.min(d3, d4) < dMin && Math.max(d3, d4) > dMax) {
@@ -485,17 +626,31 @@ function qValue(currentStats: HphobHphil, initialStats: HphobHphil): number {
     }
 
     const part_tot = currentStats.hphob + currentStats.hphil;
-    return (currentStats.hphob * (initialStats.hphil - currentStats.hphil) - currentStats.hphil * (initialStats.hphob - currentStats.hphob)) /
-            Math.sqrt(part_tot * initialStats.hphob * initialStats.hphil * (initialStats.hphob + initialStats.hphil - part_tot));
+    return (currentStats.hphob * (initialStats.hphil - currentStats.hphil) -
+        currentStats.hphil * (initialStats.hphob - currentStats.hphob)) /
+        Math.sqrt(
+            part_tot * initialStats.hphob * initialStats.hphil *
+                (initialStats.hphob + initialStats.hphil - part_tot),
+        );
 }
 
-export function isInMembranePlane(testPoint: Vec3, normalVector: Vec3, planePoint1: Vec3, planePoint2: Vec3): boolean {
+export function isInMembranePlane(
+    testPoint: Vec3,
+    normalVector: Vec3,
+    planePoint1: Vec3,
+    planePoint2: Vec3,
+): boolean {
     const d1 = -v3dot(normalVector, planePoint1);
     const d2 = -v3dot(normalVector, planePoint2);
     return _isInMembranePlane(testPoint, normalVector, Math.min(d1, d2), Math.max(d1, d2));
 }
 
-function _isInMembranePlane(testPoint: Vec3, normalVector: Vec3, min: number, max: number): boolean {
+function _isInMembranePlane(
+    testPoint: Vec3,
+    normalVector: Vec3,
+    min: number,
+    max: number,
+): boolean {
     const d = -v3dot(normalVector, testPoint);
     return d > min && d < max;
 }
@@ -508,12 +663,14 @@ function generateSpherePoints(ctx: ANVILContext, numberOfSpherePoints: number): 
     for (let k = 1, kl = numberOfSpherePoints + 1; k < kl; k++) {
         h = -1 + 2 * (k - 1) / (2 * numberOfSpherePoints - 1);
         theta = Math.acos(h);
-        phi = (k === 1 || k === numberOfSpherePoints) ? 0 : (oldPhi + 3.6 / Math.sqrt(2 * numberOfSpherePoints * (1 - h * h))) % (2 * Math.PI);
+        phi = (k === 1 || k === numberOfSpherePoints)
+            ? 0
+            : (oldPhi + 3.6 / Math.sqrt(2 * numberOfSpherePoints * (1 - h * h))) % (2 * Math.PI);
 
         const point = v3create(
             extent * Math.sin(phi) * Math.sin(theta) + centroid[0],
             extent * Math.cos(theta) + centroid[1],
-            extent * Math.cos(phi) * Math.sin(theta) + centroid[2]
+            extent * Math.cos(phi) * Math.sin(theta) + centroid[2],
         );
         points[k - 1] = point;
         oldPhi = phi;
@@ -543,8 +700,8 @@ function findProximateAxes(ctx: ANVILContext, membrane: MembraneCandidate): Vec3
 }
 
 interface HphobHphil {
-    hphob: number,
-    hphil: number
+    hphob: number;
+    hphil: number;
 }
 
 namespace HphobHphil {
@@ -563,7 +720,13 @@ namespace HphobHphil {
     }
 
     const testPoint = v3zero();
-    export function sliced(ctx: ANVILContext, stepSize: number, spherePoint: Vec3, diam: Vec3, diamNorm: number): HphobHphil[] {
+    export function sliced(
+        ctx: ANVILContext,
+        stepSize: number,
+        spherePoint: Vec3,
+        diam: Vec3,
+        diamNorm: number,
+    ): HphobHphil[] {
         const { exposed, hydrophobic, structure } = ctx;
         const { units, serialMapping } = structure;
         const { unitIndices, elementIndices } = serialMapping;
@@ -575,7 +738,12 @@ namespace HphobHphil {
         for (let i = 0, il = exposed.length; i < il; i++) {
             const unit = units[unitIndices[exposed[i]]];
             const elementIndex = elementIndices[exposed[i]];
-            v3set(testPoint, unit.conformation.x(elementIndex), unit.conformation.y(elementIndex), unit.conformation.z(elementIndex));
+            v3set(
+                testPoint,
+                unit.conformation.x(elementIndex),
+                unit.conformation.y(elementIndex),
+                unit.conformation.z(elementIndex),
+            );
             v3sub(testPoint, testPoint, spherePoint);
             if (hydrophobic[i]) {
                 sliceStats[Math.floor(v3dot(testPoint, diam) / diamNorm / stepSize)].hphob++;
@@ -613,7 +781,7 @@ export const MaxAsa: { [k: string]: number } = {
     'THR': 101.70,
     'TRP': 211.26,
     'TYR': 177.38,
-    'VAL': 114.28
+    'VAL': 114.28,
 };
 
 function setLocation(l: StructureElement.Location, structure: Structure, serialIndex: number) {

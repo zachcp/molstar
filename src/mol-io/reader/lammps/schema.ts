@@ -160,53 +160,62 @@ export const lammpsUnitStyles: { [key: string]: LammpsUnitStyle } = {
         electricField: 'volt/nanometer',
         density: 'ag/nm^3',
         scale: 10.0,
-    }
+    },
 };
 
-export const UnitStyles = ['real', 'metal', 'si', 'cgs', 'electron', 'micro', 'nano', 'lj'] as const;
+export const UnitStyles = [
+    'real',
+    'metal',
+    'si',
+    'cgs',
+    'electron',
+    'micro',
+    'nano',
+    'lj',
+] as const;
 export type UnitStyle = typeof UnitStyles[number];
 
 export interface LammpsDataFile {
     readonly atoms: {
-        readonly count: number
-        readonly atomId: Column<number>
-        readonly moleculeId: Column<number>
-        readonly atomType: Column<number>
-        readonly charge: Column<number>
-        readonly x: Column<number>,
-        readonly y: Column<number>,
-        readonly z: Column<number>,
-    }
+        readonly count: number;
+        readonly atomId: Column<number>;
+        readonly moleculeId: Column<number>;
+        readonly atomType: Column<number>;
+        readonly charge: Column<number>;
+        readonly x: Column<number>;
+        readonly y: Column<number>;
+        readonly z: Column<number>;
+    };
     readonly bonds: {
-        readonly count: number
-        readonly bondId: Column<number>
-        readonly bondType: Column<number>
-        readonly atomIdA: Column<number>
-        readonly atomIdB: Column<number>
-    }
+        readonly count: number;
+        readonly bondId: Column<number>;
+        readonly bondType: Column<number>;
+        readonly atomIdA: Column<number>;
+        readonly atomIdB: Column<number>;
+    };
 }
 
 export interface LammpsBox {
-    lower: [number, number, number],
-    length: [number, number, number],
-    periodicity: [string, string, string]
+    lower: [number, number, number];
+    length: [number, number, number];
+    periodicity: [string, string, string];
 }
 
 export interface LammpsFrame {
-    count: number,
-    atomMode: string,
-    atomId: Column<number>,
-    moleculeId: Column<number>,
-    atomType: Column<number>,
-    x: Column<number>,
-    y: Column<number>,
-    z: Column<number>,
+    count: number;
+    atomMode: string;
+    atomId: Column<number>;
+    moleculeId: Column<number>;
+    atomType: Column<number>;
+    x: Column<number>;
+    y: Column<number>;
+    z: Column<number>;
 }
 
 export interface LammpsTrajectoryFile {
-    frames: LammpsFrame[],
-    times: number[],
-    bounds: LammpsBox[],
-    timeOffset: number,
-    deltaTime: number
+    frames: LammpsFrame[];
+    times: number[];
+    bounds: LammpsBox[];
+    timeOffset: number;
+    deltaTime: number;
 }

@@ -22,25 +22,29 @@ export const GeometryParams = {
         ['glb', 'glTF 2.0 Binary (.glb)'],
         ['stl', 'Stl (.stl)'],
         ['obj', 'Wavefront (.obj)'],
-        ['usdz', 'Universal Scene Description (.usdz)']
-    ])
+        ['usdz', 'Universal Scene Description (.usdz)'],
+    ]),
 };
 
 export class GeometryControls extends PluginComponent {
     readonly behaviors = {
-        params: this.ev.behavior<PD.Values<typeof GeometryParams>>(PD.getDefaultValues(GeometryParams))
+        params: this.ev.behavior<PD.Values<typeof GeometryParams>>(
+            PD.getDefaultValues(GeometryParams),
+        ),
     };
 
     private getFilename() {
-        const models = this.plugin.state.data.select(StateSelection.Generators.rootsOfType(PluginStateObject.Molecule.Model)).map(s => s.obj!.data);
+        const models = this.plugin.state.data.select(
+            StateSelection.Generators.rootsOfType(PluginStateObject.Molecule.Model),
+        ).map((s) => s.obj!.data);
         const uniqueIds = new Set<string>();
-        models.forEach(m => uniqueIds.add(m.entryId.toUpperCase()));
+        models.forEach((m) => uniqueIds.add(m.entryId.toUpperCase()));
         const idString = SetUtils.toArray(uniqueIds).join('-');
         return `${idString || 'molstar-model'}`;
     }
 
     exportGeometry() {
-        const task = Task.create('Export Geometry', async ctx => {
+        const task = Task.create('Export Geometry', async (ctx) => {
             try {
                 const renderObjects = this.plugin.canvas3d?.getRenderObjects()!;
                 const filename = this.getFilename();
@@ -61,18 +65,23 @@ export class GeometryControls extends PluginComponent {
                     case 'usdz':
                         renderObjectExporter = new UsdzExporter(boundingBox, boundingSphere.radius);
                         break;
-                    default: throw new Error('Unsupported format.');
+                    default:
+                        throw new Error('Unsupported format.');
                 }
 
                 for (let i = 0, il = renderObjects.length; i < il; ++i) {
                     await ctx.update({ message: `Exporting object ${i}/${il}` });
-                    await renderObjectExporter.add(renderObjects[i], this.plugin.canvas3d?.webgl!, ctx);
+                    await renderObjectExporter.add(
+                        renderObjects[i],
+                        this.plugin.canvas3d?.webgl!,
+                        ctx,
+                    );
                 }
 
                 const blob = await renderObjectExporter.getBlob(ctx);
                 return {
                     blob,
-                    filename: filename + '.' + renderObjectExporter.fileExtension
+                    filename: filename + '.' + renderObjectExporter.fileExtension,
                 };
             } catch (e) {
                 this.plugin.log.error('Error during geometry export');

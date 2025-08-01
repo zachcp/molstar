@@ -9,17 +9,23 @@ import { BitFlags } from '../../../mol-util/bit-flags.ts';
 import { SaccharideCompIdMap } from '../structure/carbohydrates/constants.ts';
 import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
 import { SetUtils } from '../../../mol-util/set.ts';
-import { EntitySubtype, ChemicalComponent } from './properties/common.ts';
+import { ChemicalComponent, EntitySubtype } from './properties/common.ts';
 import { LipidNames } from './types/lipids.ts';
 import { IonNames } from './types/ions.ts';
 import { mmCIF_chemComp_schema } from '../../../mol-io/reader/cif/schema/mmcif-extras.ts';
 
-const _esCache = (function () {
+const _esCache = function () {
     const cache = Object.create(null);
     const letters: string[] = [];
-    for (let i = 'A'.charCodeAt(0); i <= 'Z'.charCodeAt(0); i++) letters[letters.length] = String.fromCharCode(i);
-    for (let i = 'a'.charCodeAt(0); i <= 'z'.charCodeAt(0); i++) letters[letters.length] = String.fromCharCode(i);
-    for (let i = '0'.charCodeAt(0); i <= '9'.charCodeAt(0); i++) letters[letters.length] = String.fromCharCode(i);
+    for (let i = 'A'.charCodeAt(0); i <= 'Z'.charCodeAt(0); i++) {
+        letters[letters.length] = String.fromCharCode(i);
+    }
+    for (let i = 'a'.charCodeAt(0); i <= 'z'.charCodeAt(0); i++) {
+        letters[letters.length] = String.fromCharCode(i);
+    }
+    for (let i = '0'.charCodeAt(0); i <= '9'.charCodeAt(0); i++) {
+        letters[letters.length] = String.fromCharCode(i);
+    }
 
     for (const k of letters) {
         cache[k] = k.toUpperCase();
@@ -31,15 +37,135 @@ const _esCache = (function () {
         }
     }
     return cache;
-}());
-export type ElementSymbol = string & { '@type': 'element-symbol' }
+}();
+export type ElementSymbol = string & { '@type': 'element-symbol' };
 export function ElementSymbol(s: string): ElementSymbol {
     return _esCache[s] || s.toUpperCase();
 }
 
 const _elementByAtomicNumber = new Map(
-    ([[1, 'H'], [2, 'He'], [3, 'Li'], [4, 'Be'], [5, 'B'], [6, 'C'], [7, 'N'], [8, 'O'], [9, 'F'], [10, 'Ne'], [11, 'Na'], [12, 'Mg'], [13, 'Al'], [14, 'Si'], [15, 'P'], [16, 'S'], [17, 'Cl'], [18, 'Ar'], [19, 'K'], [20, 'Ca'], [21, 'Sc'], [22, 'Ti'], [23, 'V'], [24, 'Cr'], [25, 'Mn'], [26, 'Fe'], [27, 'Co'], [28, 'Ni'], [29, 'Cu'], [30, 'Zn'], [31, 'Ga'], [32, 'Ge'], [33, 'As'], [34, 'Se'], [35, 'Br'], [36, 'Kr'], [37, 'Rb'], [38, 'Sr'], [39, 'Y'], [40, 'Zr'], [41, 'Nb'], [42, 'Mo'], [43, 'Tc'], [44, 'Ru'], [45, 'Rh'], [46, 'Pd'], [47, 'Ag'], [48, 'Cd'], [49, 'In'], [50, 'Sn'], [51, 'Sb'], [52, 'Te'], [53, 'I'], [54, 'Xe'], [55, 'Cs'], [56, 'Ba'], [57, 'La'], [58, 'Ce'], [59, 'Pr'], [60, 'Nd'], [61, 'Pm'], [62, 'Sm'], [63, 'Eu'], [64, 'Gd'], [65, 'Tb'], [66, 'Dy'], [67, 'Ho'], [68, 'Er'], [69, 'Tm'], [70, 'Yb'], [71, 'Lu'], [72, 'Hf'], [73, 'Ta'], [74, 'W'], [75, 'Re'], [76, 'Os'], [77, 'Ir'], [78, 'Pt'], [79, 'Au'], [80, 'Hg'], [81, 'Tl'], [82, 'Pb'], [83, 'Bi'], [84, 'Po'], [85, 'At'], [86, 'Rn'], [87, 'Fr'], [88, 'Ra'], [89, 'Ac'], [90, 'Th'], [91, 'Pa'], [92, 'U'], [93, 'Np'], [94, 'Pu'], [95, 'Am'], [96, 'Cm'], [97, 'Bk'], [98, 'Cf'], [99, 'Es'], [100, 'Fm'], [101, 'Md'], [102, 'No'], [103, 'Lr'], [104, 'Rf'], [105, 'Db'], [106, 'Sg'], [107, 'Bh'], [108, 'Hs'], [109, 'Mt'], [110, 'Ds'], [111, 'Rg'], [112, 'Cn'], [113, 'Uut'], [114, 'Fl'], [115, 'Uup'], [116, 'Lv'], [117, 'Uus'], [118, 'Uuo']] as const)
-        .map(e => [e[0], ElementSymbol(e[1])]));
+    ([
+        [1, 'H'],
+        [2, 'He'],
+        [3, 'Li'],
+        [4, 'Be'],
+        [5, 'B'],
+        [6, 'C'],
+        [7, 'N'],
+        [8, 'O'],
+        [9, 'F'],
+        [10, 'Ne'],
+        [11, 'Na'],
+        [12, 'Mg'],
+        [13, 'Al'],
+        [14, 'Si'],
+        [15, 'P'],
+        [16, 'S'],
+        [17, 'Cl'],
+        [18, 'Ar'],
+        [19, 'K'],
+        [20, 'Ca'],
+        [21, 'Sc'],
+        [22, 'Ti'],
+        [23, 'V'],
+        [24, 'Cr'],
+        [25, 'Mn'],
+        [26, 'Fe'],
+        [27, 'Co'],
+        [28, 'Ni'],
+        [29, 'Cu'],
+        [30, 'Zn'],
+        [31, 'Ga'],
+        [32, 'Ge'],
+        [33, 'As'],
+        [34, 'Se'],
+        [35, 'Br'],
+        [36, 'Kr'],
+        [37, 'Rb'],
+        [38, 'Sr'],
+        [39, 'Y'],
+        [40, 'Zr'],
+        [41, 'Nb'],
+        [42, 'Mo'],
+        [43, 'Tc'],
+        [44, 'Ru'],
+        [45, 'Rh'],
+        [46, 'Pd'],
+        [47, 'Ag'],
+        [48, 'Cd'],
+        [49, 'In'],
+        [50, 'Sn'],
+        [51, 'Sb'],
+        [52, 'Te'],
+        [53, 'I'],
+        [54, 'Xe'],
+        [55, 'Cs'],
+        [56, 'Ba'],
+        [57, 'La'],
+        [58, 'Ce'],
+        [59, 'Pr'],
+        [60, 'Nd'],
+        [61, 'Pm'],
+        [62, 'Sm'],
+        [63, 'Eu'],
+        [64, 'Gd'],
+        [65, 'Tb'],
+        [66, 'Dy'],
+        [67, 'Ho'],
+        [68, 'Er'],
+        [69, 'Tm'],
+        [70, 'Yb'],
+        [71, 'Lu'],
+        [72, 'Hf'],
+        [73, 'Ta'],
+        [74, 'W'],
+        [75, 'Re'],
+        [76, 'Os'],
+        [77, 'Ir'],
+        [78, 'Pt'],
+        [79, 'Au'],
+        [80, 'Hg'],
+        [81, 'Tl'],
+        [82, 'Pb'],
+        [83, 'Bi'],
+        [84, 'Po'],
+        [85, 'At'],
+        [86, 'Rn'],
+        [87, 'Fr'],
+        [88, 'Ra'],
+        [89, 'Ac'],
+        [90, 'Th'],
+        [91, 'Pa'],
+        [92, 'U'],
+        [93, 'Np'],
+        [94, 'Pu'],
+        [95, 'Am'],
+        [96, 'Cm'],
+        [97, 'Bk'],
+        [98, 'Cf'],
+        [99, 'Es'],
+        [100, 'Fm'],
+        [101, 'Md'],
+        [102, 'No'],
+        [103, 'Lr'],
+        [104, 'Rf'],
+        [105, 'Db'],
+        [106, 'Sg'],
+        [107, 'Bh'],
+        [108, 'Hs'],
+        [109, 'Mt'],
+        [110, 'Ds'],
+        [111, 'Rg'],
+        [112, 'Cn'],
+        [113, 'Uut'],
+        [114, 'Fl'],
+        [115, 'Uup'],
+        [116, 'Lv'],
+        [117, 'Uus'],
+        [118, 'Uuo'],
+    ] as const)
+        .map((e) => [e[0], ElementSymbol(e[1])]),
+);
 
 export function getElementFromAtomicNumber(n: number) {
     if (_elementByAtomicNumber.has(n as any)) return _elementByAtomicNumber.get(n as any)!;
@@ -48,7 +174,12 @@ export function getElementFromAtomicNumber(n: number) {
 
 /** Entity types as defined in the mmCIF dictionary */
 export enum EntityType {
-    'unknown', 'polymer', 'non-polymer', 'macrolide', 'water', 'branched'
+    'unknown',
+    'polymer',
+    'non-polymer',
+    'macrolide',
+    'water',
+    'branched',
 }
 
 export const enum MoleculeType {
@@ -71,7 +202,7 @@ export const enum MoleculeType {
     /** PNA, peptide nucleic acid, comp id included in `PeptideBaseNames` */
     PNA,
     /** Saccharide, e.g. component type included in `SaccharideComponentTypeNames` */
-    Saccharide
+    Saccharide,
 }
 
 export const enum PolymerType {
@@ -85,7 +216,13 @@ export const enum PolymerType {
     PNA,
 }
 
-export type AtomRole = 'trace' | 'directionFrom' | 'directionTo' | 'backboneStart' | 'backboneEnd' | 'coarseBackbone'
+export type AtomRole =
+    | 'trace'
+    | 'directionFrom'
+    | 'directionTo'
+    | 'backboneStart'
+    | 'backboneEnd'
+    | 'coarseBackbone';
 
 export const PolymerTypeAtomRoleId: { [k in PolymerType]: { [k in AtomRole]: Set<string> } } = {
     [PolymerType.NA]: {
@@ -94,7 +231,7 @@ export const PolymerTypeAtomRoleId: { [k in PolymerType]: { [k in AtomRole]: Set
         directionTo: new Set(),
         backboneStart: new Set(),
         backboneEnd: new Set(),
-        coarseBackbone: new Set()
+        coarseBackbone: new Set(),
     },
     [PolymerType.Protein]: {
         trace: new Set(['CA']),
@@ -104,7 +241,7 @@ export const PolymerTypeAtomRoleId: { [k in PolymerType]: { [k in AtomRole]: Set
         backboneEnd: new Set(['C']),
         // CA1 is used e.g. in GFP chromophores
         // BB, BAS are often used for coarse grained models
-        coarseBackbone: new Set(['CA', 'CA1', 'BB', 'BAS'])
+        coarseBackbone: new Set(['CA', 'CA1', 'BB', 'BAS']),
     },
     [PolymerType.GammaProtein]: {
         trace: new Set(['CA']),
@@ -112,7 +249,7 @@ export const PolymerTypeAtomRoleId: { [k in PolymerType]: { [k in AtomRole]: Set
         directionTo: new Set(['O']),
         backboneStart: new Set(['N']),
         backboneEnd: new Set(['CD']),
-        coarseBackbone: new Set(['CA'])
+        coarseBackbone: new Set(['CA']),
     },
     [PolymerType.BetaProtein]: {
         trace: new Set(['CA']),
@@ -120,145 +257,259 @@ export const PolymerTypeAtomRoleId: { [k in PolymerType]: { [k in AtomRole]: Set
         directionTo: new Set(['O']),
         backboneStart: new Set(['N']),
         backboneEnd: new Set(['CG']),
-        coarseBackbone: new Set(['CA'])
+        coarseBackbone: new Set(['CA']),
     },
     [PolymerType.RNA]: {
-        trace: new Set(['O3\'', 'O3*']),
-        directionFrom: new Set(['C4\'', 'C4*']),
-        directionTo: new Set(['C3\'', 'C3*']),
+        trace: new Set(["O3'", 'O3*']),
+        directionFrom: new Set(["C4'", 'C4*']),
+        directionTo: new Set(["C3'", 'C3*']),
         backboneStart: new Set(['P']),
-        backboneEnd: new Set(['O3\'', 'O3*']),
-        coarseBackbone: new Set(['P'])
+        backboneEnd: new Set(["O3'", 'O3*']),
+        coarseBackbone: new Set(['P']),
     },
     [PolymerType.DNA]: {
-        trace: new Set(['O3\'', 'O3*']),
-        directionFrom: new Set(['C3\'', 'C3*']),
-        directionTo: new Set(['C1\'', 'C1*']),
+        trace: new Set(["O3'", 'O3*']),
+        directionFrom: new Set(["C3'", 'C3*']),
+        directionTo: new Set(["C1'", 'C1*']),
         backboneStart: new Set(['P']),
-        backboneEnd: new Set(['O3\'', 'O3*']),
-        coarseBackbone: new Set(['P'])
+        backboneEnd: new Set(["O3'", 'O3*']),
+        coarseBackbone: new Set(['P']),
     },
     [PolymerType.PNA]: {
-        trace: new Set(['N4\'', 'N4*']),
-        directionFrom: new Set(['N4\'', 'N4*']),
-        directionTo: new Set(['C7\'', 'C7*']),
-        backboneStart: new Set(['N1\'', 'N1*']),
-        backboneEnd: new Set(['C\'', 'C*']),
-        coarseBackbone: new Set(['P'])
-    }
+        trace: new Set(["N4'", 'N4*']),
+        directionFrom: new Set(["N4'", 'N4*']),
+        directionTo: new Set(["C7'", 'C7*']),
+        backboneStart: new Set(["N1'", 'N1*']),
+        backboneEnd: new Set(["C'", 'C*']),
+        coarseBackbone: new Set(['P']),
+    },
 };
 
 export const ProteinBackboneAtoms = new Set([
-    'CA', 'C', 'N', 'O',
-    'O1', 'O2', 'OC1', 'OC2', 'OT1', 'OT2', 'OX1', 'OXT',
-    'H', 'H1', 'H2', 'H3', 'HA', 'HN', 'HXT',
-    'BB'
+    'CA',
+    'C',
+    'N',
+    'O',
+    'O1',
+    'O2',
+    'OC1',
+    'OC2',
+    'OT1',
+    'OT2',
+    'OX1',
+    'OXT',
+    'H',
+    'H1',
+    'H2',
+    'H3',
+    'HA',
+    'HN',
+    'HXT',
+    'BB',
 ]);
 
 export const NucleicBackboneAtoms = new Set([
-    'P', 'OP1', 'OP2', 'HOP2', 'HOP3',
-    'O2\'', 'O3\'', 'O4\'', 'O5\'', 'C1\'', 'C2\'', 'C3\'', 'C4\'', 'C5\'',
-    'H1\'', 'H2\'', 'H2\'\'', 'HO2\'', 'H3\'', 'H4\'', 'H5\'', 'H5\'\'', 'HO3\'', 'HO5\'',
-    'O2*', 'O3*', 'O4*', 'O5*', 'C1*', 'C2*', 'C3*', 'C4*', 'C5*'
+    'P',
+    'OP1',
+    'OP2',
+    'HOP2',
+    'HOP3',
+    "O2'",
+    "O3'",
+    "O4'",
+    "O5'",
+    "C1'",
+    "C2'",
+    "C3'",
+    "C4'",
+    "C5'",
+    "H1'",
+    "H2'",
+    "H2''",
+    "HO2'",
+    "H3'",
+    "H4'",
+    "H5'",
+    "H5''",
+    "HO3'",
+    "HO5'",
+    'O2*',
+    'O3*',
+    'O4*',
+    'O5*',
+    'C1*',
+    'C2*',
+    'C3*',
+    'C4*',
+    'C5*',
 ]);
 
 type ChemCompType = mmCIF_chemComp_schema['type']['T'];
 
 /** Chemical component type names for D-linked protein */
 export const DProteinComponentTypeNames = new Set<ChemCompType>([
-    'd-peptide linking', 'd-peptide nh3 amino terminus',
-    'd-peptide cooh carboxy terminus', 'd-gamma-peptide, c-delta linking',
-    'd-beta-peptide, c-gamma linking'
+    'd-peptide linking',
+    'd-peptide nh3 amino terminus',
+    'd-peptide cooh carboxy terminus',
+    'd-gamma-peptide, c-delta linking',
+    'd-beta-peptide, c-gamma linking',
 ]);
 
 /** Chemical component type names for L-linked protein */
 export const LProteinComponentTypeNames = new Set<ChemCompType>([
-    'l-peptide linking', 'l-peptide nh3 amino terminus',
-    'l-peptide cooh carboxy terminus', 'l-gamma-peptide, c-delta linking',
-    'l-beta-peptide, c-gamma linking'
+    'l-peptide linking',
+    'l-peptide nh3 amino terminus',
+    'l-peptide cooh carboxy terminus',
+    'l-gamma-peptide, c-delta linking',
+    'l-beta-peptide, c-gamma linking',
 ]);
 
 /** Chemical component type names for gamma protein, overlaps with D/L-linked */
 export const GammaProteinComponentTypeNames = new Set<ChemCompType>([
-    'd-gamma-peptide, c-delta linking', 'l-gamma-peptide, c-delta linking'
+    'd-gamma-peptide, c-delta linking',
+    'l-gamma-peptide, c-delta linking',
 ]);
 
 /** Chemical component type names for beta protein, overlaps with D/L-linked */
 export const BetaProteinComponentTypeNames = new Set<ChemCompType>([
-    'd-beta-peptide, c-gamma linking', 'l-beta-peptide, c-gamma linking'
+    'd-beta-peptide, c-gamma linking',
+    'l-beta-peptide, c-gamma linking',
 ]);
 
 /** Chemical component type names for protein termini, overlaps with D/L-linked */
 export const ProteinTerminusComponentTypeNames = new Set<ChemCompType>([
-    'd-peptide nh3 amino terminus', 'd-peptide cooh carboxy terminus',
-    'l-peptide nh3 amino terminus', 'l-peptide cooh carboxy terminus'
+    'd-peptide nh3 amino terminus',
+    'd-peptide cooh carboxy terminus',
+    'l-peptide nh3 amino terminus',
+    'l-peptide cooh carboxy terminus',
 ]);
 
 /** Chemical component type names for peptide-like protein */
 export const OtherProteinComponentTypeNames = new Set<ChemCompType>([
-    'peptide linking', 'peptide-like',
+    'peptide linking',
+    'peptide-like',
 ]);
 
 /** Chemical component type names for protein */
 export const ProteinComponentTypeNames = SetUtils.unionMany(
-    DProteinComponentTypeNames, LProteinComponentTypeNames, OtherProteinComponentTypeNames
+    DProteinComponentTypeNames,
+    LProteinComponentTypeNames,
+    OtherProteinComponentTypeNames,
 );
 
 /** Chemical component type names for DNA */
 export const DNAComponentTypeNames = new Set<ChemCompType>([
-    'dna linking', 'l-dna linking', 'dna oh 5 prime terminus', 'dna oh 3 prime terminus',
+    'dna linking',
+    'l-dna linking',
+    'dna oh 5 prime terminus',
+    'dna oh 3 prime terminus',
 ]);
 
 /** Chemical component type names for RNA */
 export const RNAComponentTypeNames = new Set<ChemCompType>([
-    'rna linking', 'l-rna linking', 'rna oh 5 prime terminus', 'rna oh 3 prime terminus',
+    'rna linking',
+    'l-rna linking',
+    'rna oh 5 prime terminus',
+    'rna oh 3 prime terminus',
 ]);
 
 /** Chemical component type names for saccharide */
 export const SaccharideComponentTypeNames = SetUtils.unionMany(
     new Set<ChemCompType>([
-        'd-saccharide, beta linking', 'l-saccharide, beta linking',
-        'd-saccharide, alpha linking', 'l-saccharide, alpha linking',
-        'l-saccharide', 'd-saccharide', 'saccharide',
+        'd-saccharide, beta linking',
+        'l-saccharide, beta linking',
+        'd-saccharide, alpha linking',
+        'l-saccharide, alpha linking',
+        'l-saccharide',
+        'd-saccharide',
+        'saccharide',
     ]),
     // deprecated in the mmCIF dictionary, kept for backward compatibility
     new Set([
-        'd-saccharide 1,4 and 1,4 linking', 'l-saccharide 1,4 and 1,4 linking',
-        'd-saccharide 1,4 and 1,6 linking', 'l-saccharide 1,4 and 1,6 linking'
+        'd-saccharide 1,4 and 1,4 linking',
+        'l-saccharide 1,4 and 1,4 linking',
+        'd-saccharide 1,4 and 1,6 linking',
+        'l-saccharide 1,4 and 1,6 linking',
     ]),
 );
 
 /** Chemical component type names for other */
 export const OtherComponentTypeNames = new Set<ChemCompType>([
-    'non-polymer', 'other'
+    'non-polymer',
+    'other',
 ]);
 
 /** Chemical component type names for ion (extension to mmcif) */
 export const IonComponentTypeNames = new Set<ChemCompType>([
-    'ion'
+    'ion',
 ]);
 
 /** Chemical component type names for lipid (extension to mmcif) */
 export const LipidComponentTypeNames = new Set<ChemCompType>([
-    'lipid'
+    'lipid',
 ]);
 
 /** Common names for water molecules */
 export const WaterNames = new Set([
-    'SOL', 'WAT', 'HOH', 'H2O', 'W', 'DOD', 'D3O', 'TIP', 'TIP3', 'TIP4', 'SPC'
+    'SOL',
+    'WAT',
+    'HOH',
+    'H2O',
+    'W',
+    'DOD',
+    'D3O',
+    'TIP',
+    'TIP3',
+    'TIP4',
+    'SPC',
 ]);
 
 export const AminoAcidNamesL = new Set([
-    'HIS', 'ARG', 'LYS', 'ILE', 'PHE', 'LEU', 'TRP', 'ALA', 'MET', 'PRO', 'CYS',
-    'ASN', 'VAL', 'GLY', 'SER', 'GLN', 'TYR', 'ASP', 'GLU', 'THR', 'SEC', 'PYL',
+    'HIS',
+    'ARG',
+    'LYS',
+    'ILE',
+    'PHE',
+    'LEU',
+    'TRP',
+    'ALA',
+    'MET',
+    'PRO',
+    'CYS',
+    'ASN',
+    'VAL',
+    'GLY',
+    'SER',
+    'GLN',
+    'TYR',
+    'ASP',
+    'GLU',
+    'THR',
+    'SEC',
+    'PYL',
     'UNK', // unknown amino acid from CCD
-    'MSE', 'SEP', 'TPO', 'PTR', 'PCA', 'HYP', // common from CCD
+    'MSE',
+    'SEP',
+    'TPO',
+    'PTR',
+    'PCA',
+    'HYP', // common from CCD
 
     // charmm ff
-    'HSD', 'HSE', 'HSP', 'LSN', 'ASPP', 'GLUP',
+    'HSD',
+    'HSE',
+    'HSP',
+    'LSN',
+    'ASPP',
+    'GLUP',
 
     // amber ff
-    'HID', 'HIE', 'HIP', 'LYN', 'ASH', 'GLH',
+    'HID',
+    'HIE',
+    'HIP',
+    'LYN',
+    'ASH',
+    'GLH',
 ]);
 export const AminoAcidNamesD = new Set([
     'DAL', // D-ALANINE
@@ -280,13 +531,17 @@ export const AminoAcidNamesD = new Set([
     'DTR', // D-TRYPTOPHAN
     'DTY', // D-TYROSINE
     'DVA', // D-VALINE
-    'DNE' // D-NORLEUCINE
+    'DNE', // D-NORLEUCINE
     // ???  // D-SELENOCYSTEINE
 ]);
 export const AminoAcidNames = SetUtils.unionMany(AminoAcidNamesL, AminoAcidNamesD);
 
 export const CommonProteinCaps = new Set([
-    'NME', 'ACE', 'NH2', 'FOR', 'FMT'
+    'NME',
+    'ACE',
+    'NH2',
+    'FOR',
+    'FMT',
     // not including the following
     // 'E1H' GFP backbone fragmentation in 2G16
     // 'HOA' complexes zinc
@@ -295,12 +550,22 @@ export const CommonProteinCaps = new Set([
 ]);
 
 export const RnaBaseNames = new Set([
-    'A', 'C', 'T', 'G', 'I', 'U',
-    'N' // unknown RNA base from CCD
+    'A',
+    'C',
+    'T',
+    'G',
+    'I',
+    'U',
+    'N', // unknown RNA base from CCD
 ]);
 export const DnaBaseNames = new Set([
-    'DA', 'DC', 'DT', 'DG', 'DI', 'DU',
-    'DN' // unknown DNA base from CCD
+    'DA',
+    'DC',
+    'DT',
+    'DG',
+    'DI',
+    'DU',
+    'DN', // unknown DNA base from CCD
 ]);
 export const PeptideBaseNames = new Set(['APN', 'CPN', 'TPN', 'GPN']);
 export const PurineBaseNames = new Set(['A', 'G', 'I', 'DA', 'DG', 'DI', 'APN', 'GPN']);
@@ -396,7 +661,7 @@ export function getDefaultChemicalComponent(compId: string): ChemicalComponent {
         name: compId,
         mon_nstd_flag: PolymerNames.has(compId) ? 'y' : 'n',
         pdbx_synonyms: [],
-        type: getComponentType(compId)
+        type: getComponentType(compId),
     };
 }
 
@@ -453,14 +718,15 @@ export function isPolymer(moleculeType: MoleculeType) {
 }
 
 export function isNucleic(moleculeType: MoleculeType) {
-    return moleculeType === MoleculeType.DNA || moleculeType === MoleculeType.RNA || moleculeType === MoleculeType.PNA;
+    return moleculeType === MoleculeType.DNA || moleculeType === MoleculeType.RNA ||
+        moleculeType === MoleculeType.PNA;
 }
 
 export function isProtein(moleculeType: MoleculeType) {
     return moleculeType === MoleculeType.Protein;
 }
 
-export type SecondaryStructureType = BitFlags<SecondaryStructureType.Flag>
+export type SecondaryStructureType = BitFlags<SecondaryStructureType.Flag>;
 export namespace SecondaryStructureType {
     export const is: (ss: SecondaryStructureType, f: Flag) => boolean = BitFlags.has;
     export const create: (fs: Flag) => SecondaryStructureType = BitFlags.create;
@@ -510,7 +776,9 @@ export namespace SecondaryStructureType {
         NA = 0x20000000, // not applicable/available
     }
 
-    export const SecondaryStructureMmcif: { [value in mmCIF_Schema['struct_conf']['conf_type_id']['T']]: number } = {
+    export const SecondaryStructureMmcif: {
+        [value in mmCIF_Schema['struct_conf']['conf_type_id']['T']]: number;
+    } = {
         helx_lh_27_p: Flag.Helix | Flag.LeftHanded | Flag.Helix27, // left-handed 2-7 helix (protein)
         helx_lh_3t_p: Flag.Helix | Flag.LeftHanded | Flag.Helix3Ten, // left-handed 3-10 helix (protein)
         helx_lh_al_p: Flag.Helix | Flag.LeftHanded | Flag.HelixAlpha, // left-handed alpha helix (protein)
@@ -614,14 +882,20 @@ export const MaxAsa = {
     'VAL': 165.0,
 
     // charmm ff
-    'HSD': 216.0, 'HSE': 216.0, 'HSP': 216.0,
+    'HSD': 216.0,
+    'HSE': 216.0,
+    'HSP': 216.0,
 
     // amber ff
-    'HID': 216.0, 'HIE': 216.0, 'HIP': 216.0, 'ASH': 187.0, 'GLH': 214.0,
+    'HID': 216.0,
+    'HIE': 216.0,
+    'HIP': 216.0,
+    'ASH': 187.0,
+    'GLH': 214.0,
 };
 export const DefaultMaxAsa = 121.0;
 
-export type BondType = BitFlags<BondType.Flag>
+export type BondType = BitFlags<BondType.Flag>;
 export namespace BondType {
     export const is: (b: BondType, f: Flag) => boolean = BitFlags.has;
     export const enum Flag {
@@ -631,7 +905,7 @@ export namespace BondType {
         HydrogenBond = 0x4,
         Disulfide = 0x8,
         Aromatic = 0x10,
-        Computed = 0x20
+        Computed = 0x20,
         // currently at most 16 flags are supported!!
     }
 
@@ -655,7 +929,7 @@ export namespace BondType {
         'aromatic': Flag.Aromatic,
         'computed': Flag.Computed,
     };
-    export type Names = keyof typeof Names
+    export type Names = keyof typeof Names;
 
     export function isName(name: string): name is Names {
         return name in Names;
@@ -663,12 +937,18 @@ export namespace BondType {
 
     export function fromName(name: Names): Flag {
         switch (name) {
-            case 'covalent': return Flag.Covalent;
-            case 'metal-coordination': return Flag.MetallicCoordination;
-            case 'hydrogen-bond': return Flag.HydrogenBond;
-            case 'disulfide': return Flag.Disulfide;
-            case 'aromatic': return Flag.Aromatic;
-            case 'computed': return Flag.Computed;
+            case 'covalent':
+                return Flag.Covalent;
+            case 'metal-coordination':
+                return Flag.MetallicCoordination;
+            case 'hydrogen-bond':
+                return Flag.HydrogenBond;
+            case 'disulfide':
+                return Flag.Disulfide;
+            case 'aromatic':
+                return Flag.Aromatic;
+            case 'computed':
+                return Flag.Computed;
         }
     }
 
@@ -714,9 +994,13 @@ export const ResidueHydrophobicity = {
     'VAL': [0.07, -0.46, -0.53],
 
     // charmm ff
-    'HSD': [0.17, 0.11, -0.06], 'HSE': [0.17, 0.11, -0.06], 'HSP': [0.96, 2.33, 1.37],
+    'HSD': [0.17, 0.11, -0.06],
+    'HSE': [0.17, 0.11, -0.06],
+    'HSP': [0.96, 2.33, 1.37],
 
     // amber ff
-    'HID': [0.17, 0.11, -0.06], 'HIE': [0.17, 0.11, -0.06], 'HIP': [0.96, 2.33, 1.37],
+    'HID': [0.17, 0.11, -0.06],
+    'HIE': [0.17, 0.11, -0.06],
+    'HIP': [0.96, 2.33, 1.37],
 };
 export const DefaultResidueHydrophobicity = [0.00, 0.00, 0.00];

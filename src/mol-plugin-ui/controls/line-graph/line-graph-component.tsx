@@ -12,9 +12,9 @@ import { Grid } from '../../../mol-model/volume.ts';
 import { arrayMax } from '../../../mol-util/array.ts';
 
 interface LineGraphComponentState {
-    points: Vec2[],
-    copyPoint: any,
-    canSelectMultiple: boolean,
+    points: Vec2[];
+    copyPoint: any;
+    canSelectMultiple: boolean;
 }
 
 export class LineGraphComponent extends React.Component<any, LineGraphComponentState> {
@@ -35,7 +35,7 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
         this.state = {
             points: [
                 Vec2.create(0, 0),
-                Vec2.create(1, 0)
+                Vec2.create(1, 0),
             ],
             copyPoint: undefined,
             canSelectMultiple: false,
@@ -73,7 +73,6 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
         this.handleKeyUp = this.handleKeyUp.bind(this);
         this.handleLeave = this.handleLeave.bind(this);
         this.handleEnter = this.handleEnter.bind(this);
-
     }
 
     public render() {
@@ -81,10 +80,10 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
         const lines = this.renderLines();
         const histogram = this.renderHistogram();
 
-        return ([
-            <div key="LineGraph">
+        return [
+            <div key='LineGraph'>
                 <svg
-                    className="msp-canvas"
+                    className='msp-canvas'
                     ref={this.refCallBack}
                     viewBox={`0 0 ${this.width + this.padding} ${this.height + this.padding}`}
                     onMouseMove={this.handleDrag}
@@ -94,19 +93,19 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
                     tabIndex={0}
                     onKeyDown={this.handleKeyDown}
                     onKeyUp={this.handleKeyUp}
-                    onDoubleClick={this.handleDoubleClick}>
-
-                    <g stroke="black" fill="black">
+                    onDoubleClick={this.handleDoubleClick}
+                >
+                    <g stroke='black' fill='black'>
                         {histogram}
                         {lines}
                         {points}
                     </g>
-                    <g className="ghost-points" stroke="black" fill="black">
+                    <g className='ghost-points' stroke='black' fill='black'>
                     </g>
                 </svg>
             </div>,
-            <div key="modal" id="modal-root" />
-        ]);
+            <div key='modal' id='modal-root' />,
+        ];
     }
 
     componentDidMount() {
@@ -141,7 +140,9 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
             return;
         }
 
-        const copyPoint: Vec2 = this.normalizePoint(Vec2.create(this.state.points[id][0], this.state.points[id][1]));
+        const copyPoint: Vec2 = this.normalizePoint(
+            Vec2.create(this.state.points[id][0], this.state.points[id][1]),
+        );
         this.ghostPoints.push(document.createElementNS(this.namespace, 'circle') as SVGElement);
         this.ghostPoints[0].setAttribute('r', '10');
         this.ghostPoints[0].setAttribute('fill', 'orange');
@@ -167,15 +168,18 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
         const svgP = pt.matrixTransform(this.myRef.getScreenCTM().inverse());
         updatedCopyPoint = Vec2.create(svgP.x, svgP.y);
 
-        if ((svgP.x < (padding) || svgP.x > (this.width + (padding))) && (svgP.y > (this.height + (padding)) || svgP.y < (padding))) {
+        if (
+            (svgP.x < padding || svgP.x > (this.width + padding)) &&
+            (svgP.y > (this.height + padding) || svgP.y < padding)
+        ) {
             updatedCopyPoint = Vec2.create(this.updatedX, this.updatedY);
         } else if (svgP.x < padding) {
             updatedCopyPoint = Vec2.create(padding, svgP.y);
-        } else if (svgP.x > (this.width + (padding))) {
+        } else if (svgP.x > (this.width + padding)) {
             updatedCopyPoint = Vec2.create(this.width + padding, svgP.y);
-        } else if (svgP.y > (this.height + (padding))) {
+        } else if (svgP.y > (this.height + padding)) {
             updatedCopyPoint = Vec2.create(svgP.x, this.height + padding);
-        } else if (svgP.y < (padding)) {
+        } else if (svgP.y < padding) {
             updatedCopyPoint = Vec2.create(svgP.x, padding);
         } else {
             updatedCopyPoint = Vec2.create(svgP.x, svgP.y);
@@ -187,7 +191,6 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
         this.ghostPoints[0].setAttribute('style', 'display: visible');
         this.ghostPoints[0].setAttribute('cx', `${updatedCopyPoint[0]}`);
         this.ghostPoints[0].setAttribute('cy', `${updatedCopyPoint[1]}`);
-
 
         this.props.onDrag(unNormalizePoint);
     }
@@ -202,7 +205,10 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
             return;
         }
 
-        if (selected === undefined || selected[0] === 0 || selected[0] === this.state.points.length - 1) {
+        if (
+            selected === undefined || selected[0] === 0 ||
+            selected[0] === this.state.points.length - 1
+        ) {
             this.setState({
                 copyPoint: undefined,
             });
@@ -243,10 +249,12 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
         const points = this.state.points;
         const padding = this.padding / 2;
 
-        if (svgP.x < (padding) ||
-            svgP.x > (this.width + (padding)) ||
-            svgP.y > (this.height + (padding)) ||
-            svgP.y < (this.padding / 2)) {
+        if (
+            svgP.x < padding ||
+            svgP.x > (this.width + padding) ||
+            svgP.y > (this.height + padding) ||
+            svgP.y < (this.padding / 2)
+        ) {
             return;
         }
         const newPoint = this.unNormalizePoint(Vec2.create(svgP.x, svgP.y));
@@ -268,7 +276,7 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
     }
 
     private deletePoint = (i: number) => (event: any) => {
-        if (i === 0 || i === this.state.points.length - 1) { return; }
+        if (i === 0 || i === this.state.points.length - 1) return;
         const points = this.state.points.filter((_, j) => j !== i);
         points.sort((a, b) => {
             if (a[0] === b[0]) {
@@ -343,7 +351,17 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
             const x = this.width * i / (N - 1) + offset;
             const y1 = this.height + offset;
             const y2 = this.height * (1 - histogram.counts[i] / max) + offset;
-            bars.push(<line key={`histogram${i}`} x1={x} x2={x} y1={y1} y2={y2} stroke="#ded9ca" strokeWidth={w} />);
+            bars.push(
+                <line
+                    key={`histogram${i}`}
+                    x1={x}
+                    x2={x}
+                    y1={y1}
+                    y2={y2}
+                    stroke='#ded9ca'
+                    strokeWidth={w}
+                />,
+            );
         }
         return bars;
     }
@@ -354,19 +372,21 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
         for (let i = 0; i < this.state.points.length; i++) {
             if (i !== 0 && i !== this.state.points.length - 1) {
                 point = this.normalizePoint(this.state.points[i]);
-                points.push(<PointComponent
-                    key={i}
-                    id={i}
-                    x={point[0]}
-                    y={point[1]}
-                    nX={this.state.points[i][0]}
-                    nY={this.state.points[i][1]}
-                    selected={false}
-                    delete={this.deletePoint}
-                    onmouseover={this.props.onHover}
-                    onmousedown={this.handleMouseDown(i)}
-                    onclick={this.handleClick(i)}
-                />);
+                points.push(
+                    <PointComponent
+                        key={i}
+                        id={i}
+                        x={point[0]}
+                        y={point[1]}
+                        nX={this.state.points[i][0]}
+                        nY={this.state.points[i][1]}
+                        selected={false}
+                        delete={this.deletePoint}
+                        onmouseover={this.props.onHover}
+                        onmousedown={this.handleMouseDown(i)}
+                        onclick={this.handleClick(i)}
+                    />,
+                );
             }
         }
         return points;
@@ -400,7 +420,17 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
             const x2 = data[i + 1][0];
             const y2 = data[i + 1][1];
 
-            lines.push(<line key={`lineOf${i}`} x1={x1} x2={x2} y1={y1} y2={y2} stroke="#cec9ba" strokeWidth="5"/>);
+            lines.push(
+                <line
+                    key={`lineOf${i}`}
+                    x1={x1}
+                    x2={x2}
+                    y1={y1}
+                    y2={y2}
+                    stroke='#cec9ba'
+                    strokeWidth='5'
+                />,
+            );
         }
 
         return lines;

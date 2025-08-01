@@ -6,7 +6,7 @@
  * @author molstar/ciftools package
  */
 
-import { Database, Column } from '../../../../mol-data/db.ts';
+import { Column, Database } from '../../../../mol-data/db.ts';
 
 import Schema = Column.Schema;
 
@@ -73,7 +73,7 @@ export const CCD_Schema = {
          * Items in this indirectly point to _chem_comp.id in
          * the CHEM_COMP category.
          */
-        mon_nstd_parent_comp_id: List(',', x => x),
+        mon_nstd_parent_comp_id: List(',', (x) => x),
         /**
          * The full name of the component.
          */
@@ -104,11 +104,41 @@ export const CCD_Schema = {
          * linking monomers, monomers with some type of N-terminal (or 5')
          * cap and monomers with some type of C-terminal (or 3') cap.
          */
-        type: Aliased<'d-peptide linking' | 'l-peptide linking' | 'd-peptide nh3 amino terminus' | 'l-peptide nh3 amino terminus' | 'd-peptide cooh carboxy terminus' | 'l-peptide cooh carboxy terminus' | 'dna linking' | 'rna linking' | 'l-rna linking' | 'l-dna linking' | 'dna oh 5 prime terminus' | 'rna oh 5 prime terminus' | 'dna oh 3 prime terminus' | 'rna oh 3 prime terminus' | 'd-saccharide, beta linking' | 'd-saccharide, alpha linking' | 'l-saccharide, beta linking' | 'l-saccharide, alpha linking' | 'l-saccharide' | 'd-saccharide' | 'saccharide' | 'non-polymer' | 'peptide linking' | 'peptide-like' | 'l-gamma-peptide, c-delta linking' | 'd-gamma-peptide, c-delta linking' | 'l-beta-peptide, c-gamma linking' | 'd-beta-peptide, c-gamma linking' | 'other'>(lstr),
+        type: Aliased<
+            | 'd-peptide linking'
+            | 'l-peptide linking'
+            | 'd-peptide nh3 amino terminus'
+            | 'l-peptide nh3 amino terminus'
+            | 'd-peptide cooh carboxy terminus'
+            | 'l-peptide cooh carboxy terminus'
+            | 'dna linking'
+            | 'rna linking'
+            | 'l-rna linking'
+            | 'l-dna linking'
+            | 'dna oh 5 prime terminus'
+            | 'rna oh 5 prime terminus'
+            | 'dna oh 3 prime terminus'
+            | 'rna oh 3 prime terminus'
+            | 'd-saccharide, beta linking'
+            | 'd-saccharide, alpha linking'
+            | 'l-saccharide, beta linking'
+            | 'l-saccharide, alpha linking'
+            | 'l-saccharide'
+            | 'd-saccharide'
+            | 'saccharide'
+            | 'non-polymer'
+            | 'peptide linking'
+            | 'peptide-like'
+            | 'l-gamma-peptide, c-delta linking'
+            | 'd-gamma-peptide, c-delta linking'
+            | 'l-beta-peptide, c-gamma linking'
+            | 'd-beta-peptide, c-gamma linking'
+            | 'other'
+        >(lstr),
         /**
          * Synonym list for the component.
          */
-        pdbx_synonyms: List(';', x => x),
+        pdbx_synonyms: List(';', (x) => x),
         /**
          * A preliminary classification used by PDB.
          */
@@ -321,7 +351,9 @@ export const CCD_Schema = {
          * bond associated with the specified atoms, expressed as a bond
          * order.
          */
-        value_order: Aliased<'sing' | 'doub' | 'trip' | 'quad' | 'arom' | 'poly' | 'delo' | 'pi'>(lstr),
+        value_order: Aliased<'sing' | 'doub' | 'trip' | 'quad' | 'arom' | 'poly' | 'delo' | 'pi'>(
+            lstr,
+        ),
         /**
          * Ordinal index for the component bond list.
          */
@@ -353,7 +385,22 @@ export const CCD_Schema = {
         /**
          * This data item contains the descriptor type.
          */
-        type: Aliased<'smiles_cannonical' | 'smiles_canonical' | 'smiles' | 'inchi' | 'inchi_main' | 'inchi_main_formula' | 'inchi_main_connect' | 'inchi_main_hatom' | 'inchi_charge' | 'inchi_stereo' | 'inchi_isotope' | 'inchi_fixedh' | 'inchi_reconnect' | 'inchikey'>(lstr),
+        type: Aliased<
+            | 'smiles_cannonical'
+            | 'smiles_canonical'
+            | 'smiles'
+            | 'inchi'
+            | 'inchi_main'
+            | 'inchi_main_formula'
+            | 'inchi_main_connect'
+            | 'inchi_main_hatom'
+            | 'inchi_charge'
+            | 'inchi_stereo'
+            | 'inchi_isotope'
+            | 'inchi_fixedh'
+            | 'inchi_reconnect'
+            | 'inchikey'
+        >(lstr),
         /**
          * This data item contains the name of the program
          * or library used to compute the descriptor.
@@ -383,7 +430,20 @@ export const CCD_Schema = {
         /**
          * This data item contains the identifier type.
          */
-        type: Aliased<'COMMON NAME' | 'SYSTEMATIC NAME' | 'CAS REGISTRY NUMBER' | 'PUBCHEM Identifier' | 'MDL Identifier' | 'SYNONYM' | 'CONDENSED IUPAC CARB SYMBOL' | 'IUPAC CARB SYMBOL' | 'SNFG CARB SYMBOL' | 'CONDENSED IUPAC CARBOHYDRATE SYMBOL' | 'IUPAC CARBOHYDRATE SYMBOL' | 'SNFG CARBOHYDRATE SYMBOL'>(str),
+        type: Aliased<
+            | 'COMMON NAME'
+            | 'SYSTEMATIC NAME'
+            | 'CAS REGISTRY NUMBER'
+            | 'PUBCHEM Identifier'
+            | 'MDL Identifier'
+            | 'SYNONYM'
+            | 'CONDENSED IUPAC CARB SYMBOL'
+            | 'IUPAC CARB SYMBOL'
+            | 'SNFG CARB SYMBOL'
+            | 'CONDENSED IUPAC CARBOHYDRATE SYMBOL'
+            | 'IUPAC CARBOHYDRATE SYMBOL'
+            | 'SNFG CARBOHYDRATE SYMBOL'
+        >(str),
         /**
          * This data item contains the name of the program
          * or library used to compute the identifier.
@@ -398,4 +458,4 @@ export const CCD_Schema = {
 };
 
 export type CCD_Schema = typeof CCD_Schema;
-export interface CCD_Database extends Database<CCD_Schema> {};
+export interface CCD_Database extends Database<CCD_Schema> {}

@@ -30,7 +30,7 @@ const UnpackFactors = Vec4.create(
     UnpackDownscale / PackFactors[0],
     UnpackDownscale / PackFactors[1],
     UnpackDownscale / PackFactors[2],
-    UnpackDownscale / 1
+    UnpackDownscale / 1,
 );
 
 const tmpDepthRGBA = Vec4();

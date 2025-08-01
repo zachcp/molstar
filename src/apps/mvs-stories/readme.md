@@ -30,10 +30,12 @@ Can also use `https://cdn.jsdelivr.net/npm/molstar@latest/build/mvs-stories/mvs-
 
 ```html
 <script>
-mvsStories.loadFromURL('https://raw.githubusercontent.com/molstar/molstar/master/examples/mvs/1cbs.mvsj');
+    mvsStories.loadFromURL(
+        'https://raw.githubusercontent.com/molstar/molstar/master/examples/mvs/1cbs.mvsj',
+    );
 </script>
 ```
- 
+
 - See [index.html](./index.html) for full example of how to embed the app.
 
 - For interactive development build (for production use `npm run build`) of the example that immediately reflects changes use:
@@ -44,7 +46,7 @@ npm run dev -- -a mvs-stories
 
 ### Multiple Stories on a Single Page
 
-To support multiple instances of stories, use the `context-name='unique-name'` attribute  on the `mvs-` components together with `loadFromURL/Data(..., { contextName: 'unique-name' })`.
+To support multiple instances of stories, use the `context-name='unique-name'` attribute on the `mvs-` components together with `loadFromURL/Data(..., { contextName: 'unique-name' })`.
 
 For example (simplified to not include layout):
 
@@ -62,5 +64,4 @@ For example (simplified to not include layout):
     mvsStories.loadFromURL('1.mvsj', { format: 'mvsj', contextName: '1' });
     mvsStories.loadFromURL('2.mvsj', { format: 'mvsj', contextName: '2' });
 </script>
-
 ```

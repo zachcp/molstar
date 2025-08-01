@@ -8,7 +8,7 @@ import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { Structure, Unit } from '../../../mol-model/structure.ts';
 import { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
 import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property.ts';
-import { Model, ElementIndex, ResidueIndex } from '../../../mol-model/structure/model.ts';
+import { ElementIndex, Model, ResidueIndex } from '../../../mol-model/structure/model.ts';
 import { IntAdjacencyGraph } from '../../../mol-math/graph.ts';
 import { CustomStructureProperty } from '../../../mol-model-props/common/custom-structure-property.ts';
 import { InterUnitGraph } from '../../../mol-math/graph/inter-unit-graph.ts';
@@ -30,51 +30,62 @@ interface ValidationReport {
      * Real Space R (RSRZ) for residues,
      * defined for polymer residues in X-ray structures
      */
-    rsrz: Map<ResidueIndex, number>
+    rsrz: Map<ResidueIndex, number>;
     /**
      * Real Space Correlation Coefficient (RSCC) for residues,
      * defined for each non-polymer residue in X-ray structures
      */
-    rscc: Map<ResidueIndex, number>
+    rscc: Map<ResidueIndex, number>;
     /**
      * Random Coil Index (RCI) for residues,
      * defined for polymer residues in NMR structures
      */
-    rci: Map<ResidueIndex, number>
+    rci: Map<ResidueIndex, number>;
     /**
      * Set of geometry issues for residues
      */
-    geometryIssues: Map<ResidueIndex, Set<string>>
+    geometryIssues: Map<ResidueIndex, Set<string>>;
 
     /**
      * Set of bond outliers
      */
     bondOutliers: {
-        index: Map<ElementIndex, number[]>
+        index: Map<ElementIndex, number[]>;
         data: {
-            tag: string, atomA: ElementIndex, atomB: ElementIndex
-            z: number, mean: number, obs: number, stdev: number
-        }[]
-    }
+            tag: string;
+            atomA: ElementIndex;
+            atomB: ElementIndex;
+            z: number;
+            mean: number;
+            obs: number;
+            stdev: number;
+        }[];
+    };
     /**
      * Set of angle outliers
      */
     angleOutliers: {
-        index: Map<ElementIndex, number[]>
+        index: Map<ElementIndex, number[]>;
         data: {
-            tag: string, atomA: ElementIndex, atomB: ElementIndex, atomC: ElementIndex,
-            z: number, mean: number, obs: number, stdev: number
-        }[]
-    }
+            tag: string;
+            atomA: ElementIndex;
+            atomB: ElementIndex;
+            atomC: ElementIndex;
+            z: number;
+            mean: number;
+            obs: number;
+            stdev: number;
+        }[];
+    };
 
     /**
      * Clashes between atoms, including id, magniture and distance
      */
     clashes: IntAdjacencyGraph<ElementIndex, {
-        readonly id: ArrayLike<number>
-        readonly magnitude: ArrayLike<number>
-        readonly distance: ArrayLike<number>
-    }>
+        readonly id: ArrayLike<number>;
+        readonly magnitude: ArrayLike<number>;
+        readonly distance: ArrayLike<number>;
+    }>;
 }
 
 namespace ValidationReport {
@@ -99,99 +110,124 @@ namespace ValidationReport {
         return parseValidationReportXml(xml, model);
     }
 
-    export async function fetch(ctx: CustomProperty.Context, model: Model, props: ServerSourceProps): Promise<CustomProperty.Data<ValidationReport>> {
+    export async function fetch(
+        ctx: CustomProperty.Context,
+        model: Model,
+        props: ServerSourceProps,
+    ): Promise<CustomProperty.Data<ValidationReport>> {
         const url = Asset.getUrlAsset(ctx.assetManager, getEntryUrl(model.entryId, props.baseUrl));
         const xml = await ctx.assetManager.resolve(url, 'xml').runInContext(ctx.runtime);
         return { value: fromXml(xml.data, model), assets: [xml] };
     }
 
-    export async function open(ctx: CustomProperty.Context, model: Model, props: FileSourceProps): Promise<CustomProperty.Data<ValidationReport>> {
+    export async function open(
+        ctx: CustomProperty.Context,
+        model: Model,
+        props: FileSourceProps,
+    ): Promise<CustomProperty.Data<ValidationReport>> {
         if (props.input === null) throw new Error('No file given');
         const xml = await ctx.assetManager.resolve(props.input, 'xml').runInContext(ctx.runtime);
         return { value: fromXml(xml.data, model), assets: [xml] };
     }
 
-    export async function obtain(ctx: CustomProperty.Context, model: Model, props: ValidationReportProps): Promise<CustomProperty.Data<ValidationReport>> {
+    export async function obtain(
+        ctx: CustomProperty.Context,
+        model: Model,
+        props: ValidationReportProps,
+    ): Promise<CustomProperty.Data<ValidationReport>> {
         switch (props.source.name) {
-            case 'file': return open(ctx, model, props.source.params);
-            case 'server': return fetch(ctx, model, props.source.params);
+            case 'file':
+                return open(ctx, model, props.source.params);
+            case 'server':
+                return fetch(ctx, model, props.source.params);
         }
     }
 
     export const symbols = {
-        hasClash: QuerySymbolRuntime.Dynamic(CustomPropSymbol('rcsb', 'validation-report.has-clash', Type.Bool),
-            ctx => {
+        hasClash: QuerySymbolRuntime.Dynamic(
+            CustomPropSymbol('rcsb', 'validation-report.has-clash', Type.Bool),
+            (ctx) => {
                 const { unit, element } = ctx.element;
                 if (!Unit.isAtomic(unit)) return 0;
                 const validationReport = ValidationReportProvider.get(unit.model).value;
                 return validationReport && validationReport.clashes.getVertexEdgeCount(element) > 0;
-            }
+            },
         ),
-        issueCount: QuerySymbolRuntime.Dynamic(CustomPropSymbol('rcsb', 'validation-report.issue-count', Type.Num),
-            ctx => {
+        issueCount: QuerySymbolRuntime.Dynamic(
+            CustomPropSymbol('rcsb', 'validation-report.issue-count', Type.Num),
+            (ctx) => {
                 const { unit, element } = ctx.element;
                 if (!Unit.isAtomic(unit)) return 0;
                 const validationReport = ValidationReportProvider.get(unit.model).value;
                 return validationReport?.geometryIssues.get(unit.residueIndex[element])?.size || 0;
-            }
+            },
         ),
     };
 }
 
 const FileSourceParams = {
-    input: PD.File({ accept: '.xml,.gz,.zip' })
+    input: PD.File({ accept: '.xml,.gz,.zip' }),
 };
-type FileSourceProps = PD.Values<typeof FileSourceParams>
+type FileSourceProps = PD.Values<typeof FileSourceParams>;
 
 const ServerSourceParams = {
-    baseUrl: PD.Text(ValidationReport.DefaultBaseUrl, { description: 'Base URL to directory tree' })
+    baseUrl: PD.Text(ValidationReport.DefaultBaseUrl, {
+        description: 'Base URL to directory tree',
+    }),
 };
-type ServerSourceProps = PD.Values<typeof ServerSourceParams>
+type ServerSourceProps = PD.Values<typeof ServerSourceParams>;
 
 export const ValidationReportParams = {
     source: PD.MappedStatic('server', {
         'file': PD.Group(FileSourceParams, { label: 'File', isFlat: true }),
         'server': PD.Group(ServerSourceParams, { label: 'Server', isFlat: true }),
-    }, { options: [['file', 'File'], ['server', 'Server']] })
+    }, { options: [['file', 'File'], ['server', 'Server']] }),
 };
-export type ValidationReportParams = typeof ValidationReportParams
-export type ValidationReportProps = PD.Values<ValidationReportParams>
+export type ValidationReportParams = typeof ValidationReportParams;
+export type ValidationReportProps = PD.Values<ValidationReportParams>;
 
-export const ValidationReportProvider: CustomModelProperty.Provider<ValidationReportParams, ValidationReport> = CustomModelProperty.createProvider({
+export const ValidationReportProvider: CustomModelProperty.Provider<
+    ValidationReportParams,
+    ValidationReport
+> = CustomModelProperty.createProvider({
     label: 'Validation Report',
     descriptor: CustomPropertyDescriptor({
         name: 'rcsb_validation_report',
-        symbols: ValidationReport.symbols
+        symbols: ValidationReport.symbols,
     }),
     type: 'dynamic',
     defaultParams: ValidationReportParams,
     getParams: (data: Model) => ValidationReportParams,
     isApplicable: (data: Model) => ValidationReport.isApplicable(data),
-    obtain: async (ctx: CustomProperty.Context, data: Model, props: Partial<ValidationReportProps>) => {
+    obtain: async (
+        ctx: CustomProperty.Context,
+        data: Model,
+        props: Partial<ValidationReportProps>,
+    ) => {
         const p = { ...PD.getDefaultValues(ValidationReportParams), ...props };
         return await ValidationReport.obtain(ctx, data, p);
-    }
+    },
 });
 
 //
 
 type IntraUnitClashesProps = {
-    readonly id: ArrayLike<number>
-    readonly magnitude: ArrayLike<number>
-    readonly distance: ArrayLike<number>
-}
+    readonly id: ArrayLike<number>;
+    readonly magnitude: ArrayLike<number>;
+    readonly distance: ArrayLike<number>;
+};
 type InterUnitClashesProps = {
-    readonly id: number
-    readonly magnitude: number
-    readonly distance: number
-}
+    readonly id: number;
+    readonly magnitude: number;
+    readonly distance: number;
+};
 
-export type IntraUnitClashes = IntAdjacencyGraph<UnitIndex, IntraUnitClashesProps>
-export type InterUnitClashes = InterUnitGraph<number, UnitIndex, InterUnitClashesProps>
+export type IntraUnitClashes = IntAdjacencyGraph<UnitIndex, IntraUnitClashesProps>;
+export type InterUnitClashes = InterUnitGraph<number, UnitIndex, InterUnitClashesProps>;
 
 export interface Clashes {
-    readonly interUnit: InterUnitClashes
-    readonly intraUnit: IntMap<IntraUnitClashes>
+    readonly interUnit: InterUnitClashes;
+    readonly intraUnit: IntMap<IntraUnitClashes>;
 }
 
 function createInterUnitClashes(structure: Structure, clashes: ValidationReport['clashes']) {
@@ -230,13 +266,16 @@ function createInterUnitClashes(structure: Structure, clashes: ValidationReport[
     }, {
         maxRadius: arrayMax(clashes.edgeProps.distance),
         validUnit: (unit: Unit) => Unit.isAtomic(unit),
-        validUnitPair: (unitA: Unit, unitB: Unit) => unitA.model === unitB.model
+        validUnitPair: (unitA: Unit, unitB: Unit) => unitA.model === unitB.model,
     });
 
     return new InterUnitGraph(builder.getMap());
 }
 
-function createIntraUnitClashes(unit: Unit.Atomic, clashes: ValidationReport['clashes']): IntraUnitClashes {
+function createIntraUnitClashes(
+    unit: Unit.Atomic,
+    clashes: ValidationReport['clashes'],
+): IntraUnitClashes {
     const aIndices: UnitIndex[] = [];
     const bIndices: UnitIndex[] = [];
     const ids: number[] = [];
@@ -296,28 +335,29 @@ function createClashes(structure: Structure, clashes: ValidationReport['clashes'
 
     return {
         interUnit: createInterUnitClashes(structure, clashes),
-        intraUnit
+        intraUnit,
     };
 }
 
-export const ClashesProvider: CustomStructureProperty.Provider<{}, Clashes> = CustomStructureProperty.createProvider({
-    label: 'Clashes',
-    descriptor: CustomPropertyDescriptor({
-        name: 'rcsb_clashes',
-        // TODO `cifExport` and `symbol`
-    }),
-    type: 'local',
-    defaultParams: {},
-    getParams: (data: Structure) => ({}),
-    isApplicable: (data: Structure) => true,
-    obtain: async (ctx: CustomProperty.Context, data: Structure) => {
-        await ValidationReportProvider.attach(ctx, data.models[0]);
-        const validationReport = ValidationReportProvider.get(data.models[0]).value!;
-        return {
-            value: createClashes(data, validationReport.clashes)
-        };
-    }
-});
+export const ClashesProvider: CustomStructureProperty.Provider<{}, Clashes> =
+    CustomStructureProperty.createProvider({
+        label: 'Clashes',
+        descriptor: CustomPropertyDescriptor({
+            name: 'rcsb_clashes',
+            // TODO `cifExport` and `symbol`
+        }),
+        type: 'local',
+        defaultParams: {},
+        getParams: (data: Structure) => ({}),
+        isApplicable: (data: Structure) => true,
+        obtain: async (ctx: CustomProperty.Context, data: Structure) => {
+            await ValidationReportProvider.attach(ctx, data.models[0]);
+            const validationReport = ValidationReportProvider.get(data.models[0]).value!;
+            return {
+                value: createClashes(data, validationReport.clashes),
+            };
+        },
+    });
 
 //
 
@@ -364,7 +404,13 @@ function ClashesBuilder(elementsCount: number) {
     const seen = new Map<string, ElementIndex>();
 
     return {
-        add(element: ElementIndex, id: number, magnitude: number, distance: number, isSymop: boolean) {
+        add(
+            element: ElementIndex,
+            id: number,
+            magnitude: number,
+            distance: number,
+            isSymop: boolean,
+        ) {
             const hash = `${id}|${isSymop ? 's' : ''}`;
             const other = seen.get(hash);
             if (other !== undefined) {
@@ -389,7 +435,7 @@ function ClashesBuilder(elementsCount: number) {
                 builder.assignProperty(distance, distances[i]);
             }
             return builder.createGraph({ id, magnitude, distance });
-        }
+        },
     };
 }
 
@@ -401,11 +447,11 @@ function parseValidationReportXml(xml: XMLDocument, model: Model): ValidationRep
 
     const bondOutliers = {
         index: new Map<ElementIndex, number[]>(),
-        data: [] as ValidationReport['bondOutliers']['data']
+        data: [] as ValidationReport['bondOutliers']['data'],
     };
     const angleOutliers = {
         index: new Map<ElementIndex, number[]>(),
-        data: [] as ValidationReport['angleOutliers']['data']
+        data: [] as ValidationReport['angleOutliers']['data'],
     };
 
     const clashesBuilder = ClashesBuilder(model.atomicHierarchy.atoms._rowCount);
@@ -416,7 +462,9 @@ function parseValidationReportXml(xml: XMLDocument, model: Model): ValidationRep
     if (entries.length === 1) {
         const chemicalShiftLists = entries[0].getElementsByTagName('chemical_shift_list');
         if (chemicalShiftLists.length === 1) {
-            const randomCoilIndices = chemicalShiftLists[0].getElementsByTagName('random_coil_index');
+            const randomCoilIndices = chemicalShiftLists[0].getElementsByTagName(
+                'random_coil_index',
+            );
             for (let j = 0, jl = randomCoilIndices.length; j < jl; ++j) {
                 const { attributes } = randomCoilIndices[j];
                 const value = parseFloat(getItem(attributes, 'value'));
@@ -443,7 +491,12 @@ function parseValidationReportXml(xml: XMLDocument, model: Model): ValidationRep
         const pdbx_PDB_ins_code = getItem(ga, 'icode').trim() || undefined;
         const label_alt_id = getItem(ga, 'altcode').trim() || undefined;
 
-        const rI = index.findResidueAuth({ auth_asym_id, auth_comp_id, auth_seq_id, pdbx_PDB_ins_code });
+        const rI = index.findResidueAuth({
+            auth_asym_id,
+            auth_comp_id,
+            auth_seq_id,
+            pdbx_PDB_ins_code,
+        });
 
         // continue if no residue index is found
         if (rI === -1) continue;
@@ -466,7 +519,10 @@ function parseValidationReportXml(xml: XMLDocument, model: Model): ValidationRep
                 addIndex(idx, atomA, bondOutliers.index);
                 addIndex(idx, atomB, bondOutliers.index);
                 bondOutliers.data.push({
-                    tag: 'bond-outlier', atomA, atomB, ...getMolInfo(bo)
+                    tag: 'bond-outlier',
+                    atomA,
+                    atomB,
+                    ...getMolInfo(bo),
                 });
             }
 
@@ -483,7 +539,11 @@ function parseValidationReportXml(xml: XMLDocument, model: Model): ValidationRep
                 addIndex(idx, atomB, angleOutliers.index);
                 addIndex(idx, atomC, angleOutliers.index);
                 angleOutliers.data.push({
-                    tag: 'angle-outlier', atomA, atomB, atomC, ...getMolInfo(ao)
+                    tag: 'angle-outlier',
+                    atomA,
+                    atomB,
+                    atomC,
+                    ...getMolInfo(ao),
                 });
             }
 
@@ -506,7 +566,10 @@ function parseValidationReportXml(xml: XMLDocument, model: Model): ValidationRep
                 addIndex(idx, atomA, bondOutliers.index);
                 addIndex(idx, atomB, bondOutliers.index);
                 bondOutliers.data.push({
-                    tag: 'mog-bond-outlier', atomA, atomB, ...getMogInfo(mbo)
+                    tag: 'mog-bond-outlier',
+                    atomA,
+                    atomB,
+                    ...getMogInfo(mbo),
                 });
             }
 
@@ -524,7 +587,11 @@ function parseValidationReportXml(xml: XMLDocument, model: Model): ValidationRep
                 addIndex(idx, atomB, angleOutliers.index);
                 addIndex(idx, atomC, angleOutliers.index);
                 angleOutliers.data.push({
-                    tag: 'mog-angle-outlier', atomA, atomB, atomC, ...getMogInfo(mao)
+                    tag: 'mog-angle-outlier',
+                    atomA,
+                    atomB,
+                    atomC,
+                    ...getMogInfo(mao),
                 });
             }
         }
@@ -565,9 +632,13 @@ function parseValidationReportXml(xml: XMLDocument, model: Model): ValidationRep
     const clashes = clashesBuilder.get();
 
     const validationReport = {
-        rsrz, rscc, rci, geometryIssues,
-        bondOutliers, angleOutliers,
-        clashes
+        rsrz,
+        rscc,
+        rci,
+        geometryIssues,
+        bondOutliers,
+        angleOutliers,
+        clashes,
     };
 
     return validationReport;

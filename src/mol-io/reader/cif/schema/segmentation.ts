@@ -7,7 +7,7 @@
 import { Column, Database } from '../../../../mol-data/db.ts';
 import { DensityServer_Data_Schema } from './density-server.ts';
 
-import Schema = Column.Schema
+import Schema = Column.Schema;
 
 const int = Schema.int;
 
@@ -18,8 +18,8 @@ export const Segmentation_Data_Schema = {
         segment_id: int,
     },
     segmentation_data_3d: {
-        values: int
-    }
+        values: int,
+    },
 };
 
 export type Segmentation_Data_Schema = typeof Segmentation_Data_Schema;

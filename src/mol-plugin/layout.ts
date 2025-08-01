@@ -19,7 +19,7 @@ const simpleRegionStateOptions = [
     ['full', 'Full'],
     ['hidden', 'Hidden'],
 ] as const;
-export type PluginLayoutControlsDisplay = 'outside' | 'portrait' | 'landscape' | 'reactive'
+export type PluginLayoutControlsDisplay = 'outside' | 'portrait' | 'landscape' | 'reactive';
 export const PluginLayoutStateParams = {
     isExpanded: PD.Boolean(false),
     showControls: PD.Boolean(true),
@@ -29,45 +29,47 @@ export const PluginLayoutStateParams = {
         right: PD.Select('full', simpleRegionStateOptions),
         bottom: PD.Select('full', simpleRegionStateOptions),
     }),
-    controlsDisplay: PD.Value<PluginLayoutControlsDisplay>('outside', { isHidden: true })
+    controlsDisplay: PD.Value<PluginLayoutControlsDisplay>('outside', { isHidden: true }),
 };
-export type PluginLayoutStateProps = PD.Values<typeof PluginLayoutStateParams>
+export type PluginLayoutStateProps = PD.Values<typeof PluginLayoutStateParams>;
 
-export type LeftPanelTabName = 'none' | 'root' | 'data' | 'states' | 'settings' | 'help'
+export type LeftPanelTabName = 'none' | 'root' | 'data' | 'states' | 'settings' | 'help';
 
 interface RootState {
-    top: string | null,
-    bottom: string | null,
-    left: string | null,
-    right: string | null,
+    top: string | null;
+    bottom: string | null;
+    left: string | null;
+    right: string | null;
 
-    width: string | null,
-    height: string | null,
-    maxWidth: string | null,
-    maxHeight: string | null,
-    margin: string | null,
-    marginLeft: string | null,
-    marginRight: string | null,
-    marginTop: string | null,
-    marginBottom: string | null,
+    width: string | null;
+    height: string | null;
+    maxWidth: string | null;
+    maxHeight: string | null;
+    margin: string | null;
+    marginLeft: string | null;
+    marginRight: string | null;
+    marginTop: string | null;
+    marginBottom: string | null;
 
-    scrollTop: number,
-    scrollLeft: number,
-    position: string | null,
-    overflow: string | null,
-    viewports: HTMLElement[],
-    zIndex: string | null
+    scrollTop: number;
+    scrollLeft: number;
+    position: string | null;
+    overflow: string | null;
+    viewports: HTMLElement[];
+    zIndex: string | null;
 }
 
 export class PluginLayout extends StatefulPluginComponent<PluginLayoutStateProps> {
     readonly events = {
-        updated: this.ev()
+        updated: this.ev(),
     };
 
     private updateProps(state: Partial<PluginLayoutStateProps>) {
         const prevExpanded = !!this.state.isExpanded;
         this.updateState(state);
-        if (this.root && typeof state.isExpanded === 'boolean' && state.isExpanded !== prevExpanded) this.handleExpand();
+        if (
+            this.root && typeof state.isExpanded === 'boolean' && state.isExpanded !== prevExpanded
+        ) this.handleExpand();
 
         this.events.updated.next(void 0);
     }
@@ -116,7 +118,6 @@ export class PluginLayout extends StatefulPluginComponent<PluginLayoutStateProps
 
                 if (!hasExp) head.appendChild(this.expandedViewport);
 
-
                 const s = body.style;
 
                 const doc = this.getScrollElement();
@@ -124,10 +125,25 @@ export class PluginLayout extends StatefulPluginComponent<PluginLayoutStateProps
                 const scrollTop = doc.scrollTop;
 
                 this.rootState = {
-                    top: s.top, bottom: s.bottom, right: s.right, left: s.left, scrollTop, scrollLeft, position: s.position, overflow: s.overflow, viewports, zIndex: this.root.style.zIndex,
-                    width: s.width, height: s.height,
-                    maxWidth: s.maxWidth, maxHeight: s.maxHeight,
-                    margin: s.margin, marginLeft: s.marginLeft, marginRight: s.marginRight, marginTop: s.marginTop, marginBottom: s.marginBottom
+                    top: s.top,
+                    bottom: s.bottom,
+                    right: s.right,
+                    left: s.left,
+                    scrollTop,
+                    scrollLeft,
+                    position: s.position,
+                    overflow: s.overflow,
+                    viewports,
+                    zIndex: this.root.style.zIndex,
+                    width: s.width,
+                    height: s.height,
+                    maxWidth: s.maxWidth,
+                    maxHeight: s.maxHeight,
+                    margin: s.margin,
+                    marginLeft: s.marginLeft,
+                    marginRight: s.marginRight,
+                    marginTop: s.marginTop,
+                    marginBottom: s.marginBottom,
                 };
 
                 s.overflow = 'hidden';
@@ -199,16 +215,20 @@ export class PluginLayout extends StatefulPluginComponent<PluginLayoutStateProps
     }
 
     constructor(private context: PluginContext) {
-        super({ ...PD.getDefaultValues(PluginLayoutStateParams), ...(context.spec.layout && context.spec.layout.initial) });
+        super({
+            ...PD.getDefaultValues(PluginLayoutStateParams),
+            ...(context.spec.layout && context.spec.layout.initial),
+        });
 
-        PluginCommands.Layout.Update.subscribe(context, e => this.updateProps(e.state));
+        PluginCommands.Layout.Update.subscribe(context, (e) => this.updateProps(e.state));
 
         // TODO how best make sure it runs on node.js as well as in the browser?
         if (typeof document !== 'undefined') {
             // <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
             this.expandedViewport = document.createElement('meta') as any;
             this.expandedViewport.name = 'viewport';
-            this.expandedViewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0';
+            this.expandedViewport.content =
+                'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0';
         }
     }
 }

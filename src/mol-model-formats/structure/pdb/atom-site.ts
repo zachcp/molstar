@@ -1,5 +1,5 @@
 /**
-     * Copyright (c) 2019-2024 mol* contributors, licensed under MIT, See LICENSE file for more info.
+ * Copyright (c) 2019-2024 mol* contributors, licensed under MIT, See LICENSE file for more info.
  *
  * @author David Sehnal <david.sehnal@gmail.com>
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
@@ -13,8 +13,7 @@ import { Column } from '../../../mol-data/db.ts';
 import { areTokensEmpty } from '../../../mol-io/reader/common/text/column/token.ts';
 import { StringLike } from '../../../mol-io/common/string-like.ts';
 
-
-type AtomSiteTemplate = typeof getAtomSiteTemplate extends (...args: any) => infer T ? T : never
+type AtomSiteTemplate = typeof getAtomSiteTemplate extends (...args: any) => infer T ? T : never;
 export function getAtomSiteTemplate(data: StringLike, count: number) {
     const str = () => [] as string[];
     const ts = () => TokenBuilder.create(data, 2 * count);
@@ -42,7 +41,12 @@ export function getAtomSiteTemplate(data: StringLike, count: number) {
 }
 
 export class LabelAsymIdHelper {
-    constructor(private asymIds: Column<string>, private modelNums: string[], private terIndices: Set<number>, private hasAssemblies: boolean) { }
+    constructor(
+        private asymIds: Column<string>,
+        private modelNums: string[],
+        private terIndices: Set<number>,
+        private hasAssemblies: boolean,
+    ) {}
 
     private asymIdCounts = new Map<string, number>();
     private currModelNum: string | undefined = undefined;
@@ -84,7 +88,11 @@ export class LabelAsymIdHelper {
     }
 }
 
-export function getAtomSite(sites: AtomSiteTemplate, labelAsymIdHelper: LabelAsymIdHelper, options: { hasAssemblies: boolean }): { [K in keyof mmCIF_Schema['atom_site'] | 'partial_charge']?: CifField } {
+export function getAtomSite(
+    sites: AtomSiteTemplate,
+    labelAsymIdHelper: LabelAsymIdHelper,
+    options: { hasAssemblies: boolean },
+): { [K in keyof mmCIF_Schema['atom_site'] | 'partial_charge']?: CifField } {
     labelAsymIdHelper.clear();
 
     const pdbx_PDB_model_num = CifField.ofStrings(sites.pdbx_PDB_model_num);
@@ -201,17 +209,26 @@ export function getAtomSite(sites: AtomSiteTemplate, labelAsymIdHelper: LabelAsy
         label_seq_id,
         label_entity_id: CifField.ofStrings(sites.label_entity_id),
 
-        occupancy: areTokensEmpty(sites.occupancy) ? CifField.ofUndefined(sites.index, Column.Schema.float) : CifField.ofTokens(sites.occupancy),
+        occupancy: areTokensEmpty(sites.occupancy)
+            ? CifField.ofUndefined(sites.index, Column.Schema.float)
+            : CifField.ofTokens(sites.occupancy),
         type_symbol: CifField.ofTokens(sites.type_symbol),
 
         pdbx_PDB_ins_code: CifField.ofTokens(sites.pdbx_PDB_ins_code),
         pdbx_PDB_model_num,
 
-        partial_charge: CifField.ofTokens(sites.partial_charge)
+        partial_charge: CifField.ofTokens(sites.partial_charge),
     };
 }
 
-export function addAtom(sites: AtomSiteTemplate, model: string, data: Tokenizer, s: number, e: number, isPdbqt: boolean) {
+export function addAtom(
+    sites: AtomSiteTemplate,
+    model: string,
+    data: Tokenizer,
+    s: number,
+    e: number,
+    isPdbqt: boolean,
+) {
     const { data: str } = data;
     const length = e - s;
 

@@ -12,14 +12,24 @@ const caAdd3 = ChunkedArray.add3;
 const caAdd = ChunkedArray.add;
 
 export interface PointsBuilder {
-    add(x: number, y: number, z: number, group: number): void
-    getPoints(): Points
+    add(x: number, y: number, z: number, group: number): void;
+    getPoints(): Points;
 }
 
 export namespace PointsBuilder {
     export function create(initialCount = 2048, chunkSize = 1024, points?: Points): PointsBuilder {
-        const centers = ChunkedArray.create(Float32Array, 3, chunkSize, points ? points.centerBuffer.ref.value : initialCount);
-        const groups = ChunkedArray.create(Float32Array, 1, chunkSize, points ? points.groupBuffer.ref.value : initialCount);
+        const centers = ChunkedArray.create(
+            Float32Array,
+            3,
+            chunkSize,
+            points ? points.centerBuffer.ref.value : initialCount,
+        );
+        const groups = ChunkedArray.create(
+            Float32Array,
+            1,
+            chunkSize,
+            points ? points.groupBuffer.ref.value : initialCount,
+        );
 
         return {
             add: (x: number, y: number, z: number, group: number) => {
@@ -30,7 +40,7 @@ export namespace PointsBuilder {
                 const cb = ChunkedArray.compact(centers, true) as Float32Array;
                 const gb = ChunkedArray.compact(groups, true) as Float32Array;
                 return Points.create(cb, gb, centers.elementCount, points);
-            }
+            },
         };
     }
 }

@@ -7,7 +7,7 @@
  */
 
 import { Structure } from '../structure.ts';
-import { Lookup3D, GridLookup3D, Result } from '../../../../mol-math/geometry.ts';
+import { GridLookup3D, Lookup3D, Result } from '../../../../mol-math/geometry.ts';
 import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
 import { OrderedSet } from '../../../../mol-data/int.ts';
 import { StructureUniqueSubsetBuilder } from './unique-subset-builder.ts';
@@ -17,11 +17,16 @@ import { UnitIndex } from '../element/util.ts';
 import { FibonacciHeap } from '../../../../mol-util/fibonacci-heap.ts';
 
 export interface StructureResult extends Result<StructureElement.UnitIndex> {
-    units: Unit[]
+    units: Unit[];
 }
 
 export namespace StructureResult {
-    export function add(result: StructureResult, unit: Unit, index: StructureElement.UnitIndex, distSq: number) {
+    export function add(
+        result: StructureResult,
+        unit: Unit,
+        index: StructureElement.UnitIndex,
+        distSq: number,
+    ) {
         result.indices[result.count] = index;
         result.units[result.count] = unit;
         result.squaredDistances[result.count] = distSq;
@@ -44,13 +49,17 @@ export namespace StructureResult {
 }
 
 export interface StructureLookup3DResultContext {
-    result: StructureResult,
-    closeUnitsResult: Result<number>,
-    unitGroupResult: Result<UnitIndex>,
+    result: StructureResult;
+    closeUnitsResult: Result<number>;
+    unitGroupResult: Result<UnitIndex>;
 }
 
 export function StructureLookup3DResultContext(): StructureLookup3DResultContext {
-    return { result: StructureResult.create(), closeUnitsResult: Result.create(), unitGroupResult: Result.create() };
+    return {
+        result: StructureResult.create(),
+        closeUnitsResult: Result.create(),
+        unitGroupResult: Result.create(),
+    };
 }
 
 export class StructureLookup3D {
@@ -64,11 +73,23 @@ export class StructureLookup3D {
 
     private findContext = StructureLookup3DResultContext();
 
-    find(x: number, y: number, z: number, radius: number, ctx?: StructureLookup3DResultContext): StructureResult {
+    find(
+        x: number,
+        y: number,
+        z: number,
+        radius: number,
+        ctx?: StructureLookup3DResultContext,
+    ): StructureResult {
         return this._find(x, y, z, radius, ctx ?? this.findContext);
     }
 
-    private _find(x: number, y: number, z: number, radius: number, ctx: StructureLookup3DResultContext): StructureResult {
+    private _find(
+        x: number,
+        y: number,
+        z: number,
+        radius: number,
+        ctx: StructureLookup3DResultContext,
+    ): StructureResult {
         Result.reset(ctx.result);
         const { units } = this.structure;
         const closeUnits = this.unitLookup.find(x, y, z, radius, ctx.closeUnitsResult);
@@ -81,25 +102,55 @@ export class StructureLookup3D {
                 Vec3.transformMat4(this.pivot, this.pivot, unit.conformation.operator.inverse);
             }
             const unitLookup = unit.lookup3d;
-            const groupResult = unitLookup.find(this.pivot[0], this.pivot[1], this.pivot[2], radius, ctx.unitGroupResult);
+            const groupResult = unitLookup.find(
+                this.pivot[0],
+                this.pivot[1],
+                this.pivot[2],
+                radius,
+                ctx.unitGroupResult,
+            );
             for (let j = 0, _j = groupResult.count; j < _j; j++) {
-                StructureResult.add(ctx.result, unit, groupResult.indices[j], groupResult.squaredDistances[j]);
+                StructureResult.add(
+                    ctx.result,
+                    unit,
+                    groupResult.indices[j],
+                    groupResult.squaredDistances[j],
+                );
             }
         }
         return ctx.result;
     }
 
-    nearest(x: number, y: number, z: number, k: number = 1, ctx?: StructureLookup3DResultContext): StructureResult {
+    nearest(
+        x: number,
+        y: number,
+        z: number,
+        k: number = 1,
+        ctx?: StructureLookup3DResultContext,
+    ): StructureResult {
         return this._nearest(x, y, z, k, ctx ?? this.findContext);
     }
 
-    _nearest(x: number, y: number, z: number, k: number, ctx: StructureLookup3DResultContext): StructureResult {
+    _nearest(
+        x: number,
+        y: number,
+        z: number,
+        k: number,
+        ctx: StructureLookup3DResultContext,
+    ): StructureResult {
         const result = ctx.result, heap = this.heap;
         Result.reset(result);
         heap.clear();
         const { units } = this.structure;
         let elementsCount = 0;
-        const closeUnits = this.unitLookup.nearest(x, y, z, units.length, (uid: number) => (elementsCount += units[uid].elements.length) >= k, ctx.closeUnitsResult); // sort units based on distance to the point
+        const closeUnits = this.unitLookup.nearest(
+            x,
+            y,
+            z,
+            units.length,
+            (uid: number) => (elementsCount += units[uid].elements.length) >= k,
+            ctx.closeUnitsResult,
+        ); // sort units based on distance to the point
         if (closeUnits.count === 0) return result;
         let totalCount = 0, maxDistResult = -Number.MAX_VALUE;
         for (let t = 0, _t = closeUnits.count; t < _t; t++) {
@@ -111,33 +162,62 @@ export class StructureLookup3D {
                 Vec3.transformMat4(this.pivot, this.pivot, unit.conformation.operator.inverse);
             }
             const unitLookup = unit.lookup3d;
-            const groupResult = unitLookup.nearest(this.pivot[0], this.pivot[1], this.pivot[2], k, void 0, ctx.unitGroupResult);
+            const groupResult = unitLookup.nearest(
+                this.pivot[0],
+                this.pivot[1],
+                this.pivot[2],
+                k,
+                void 0,
+                ctx.unitGroupResult,
+            );
             if (groupResult.count === 0) continue;
             totalCount += groupResult.count;
-            maxDistResult = Math.max(maxDistResult, groupResult.squaredDistances[groupResult.count - 1]);
+            maxDistResult = Math.max(
+                maxDistResult,
+                groupResult.squaredDistances[groupResult.count - 1],
+            );
             for (let j = 0, _j = groupResult.count; j < _j; j++) {
-                heap.insert(groupResult.squaredDistances[j], { index: groupResult.indices[j], unit: unit });
+                heap.insert(groupResult.squaredDistances[j], {
+                    index: groupResult.indices[j],
+                    unit: unit,
+                });
             }
         }
         if (k === 1) {
             const node = heap.findMinimum();
             if (node) {
                 const { key: squaredDistance } = node;
-                const { unit, index } = node.value as { index: UnitIndex, unit: Unit };
-                StructureResult.add(result, unit as Unit, index as UnitIndex, squaredDistance as number);
+                const { unit, index } = node.value as { index: UnitIndex; unit: Unit };
+                StructureResult.add(
+                    result,
+                    unit as Unit,
+                    index as UnitIndex,
+                    squaredDistance as number,
+                );
             }
         } else {
             while (!heap.isEmpty() && result.count < k) {
                 const node = heap.extractMinimum();
                 const { key: squaredDistance } = node!;
-                const { unit, index } = node!.value as { index: UnitIndex, unit: Unit };
-                StructureResult.add(result, unit as Unit, index as UnitIndex, squaredDistance as number);
+                const { unit, index } = node!.value as { index: UnitIndex; unit: Unit };
+                StructureResult.add(
+                    result,
+                    unit as Unit,
+                    index as UnitIndex,
+                    squaredDistance as number,
+                );
             }
         }
         return result;
     }
 
-    findIntoBuilder(x: number, y: number, z: number, radius: number, builder: StructureUniqueSubsetBuilder) {
+    findIntoBuilder(
+        x: number,
+        y: number,
+        z: number,
+        radius: number,
+        builder: StructureUniqueSubsetBuilder,
+    ) {
         const { units } = this.structure;
         const closeUnits = this.unitLookup.find(x, y, z, radius);
         if (closeUnits.count === 0) return;
@@ -149,7 +229,12 @@ export class StructureLookup3D {
                 Vec3.transformMat4(this.pivot, this.pivot, unit.conformation.operator.inverse);
             }
             const unitLookup = unit.lookup3d;
-            const groupResult = unitLookup.find(this.pivot[0], this.pivot[1], this.pivot[2], radius);
+            const groupResult = unitLookup.find(
+                this.pivot[0],
+                this.pivot[1],
+                this.pivot[2],
+                radius,
+            );
             if (groupResult.count === 0) continue;
 
             const elements = unit.elements;
@@ -161,7 +246,14 @@ export class StructureLookup3D {
         }
     }
 
-    findIntoBuilderIf(x: number, y: number, z: number, radius: number, builder: StructureUniqueSubsetBuilder, test: (l: StructureElement.Location) => boolean) {
+    findIntoBuilderIf(
+        x: number,
+        y: number,
+        z: number,
+        radius: number,
+        builder: StructureUniqueSubsetBuilder,
+        test: (l: StructureElement.Location) => boolean,
+    ) {
         const { units } = this.structure;
         const closeUnits = this.unitLookup.find(x, y, z, radius);
         if (closeUnits.count === 0) return;
@@ -175,7 +267,12 @@ export class StructureLookup3D {
                 Vec3.transformMat4(this.pivot, this.pivot, unit.conformation.operator.inverse);
             }
             const unitLookup = unit.lookup3d;
-            const groupResult = unitLookup.find(this.pivot[0], this.pivot[1], this.pivot[2], radius);
+            const groupResult = unitLookup.find(
+                this.pivot[0],
+                this.pivot[1],
+                this.pivot[2],
+                radius,
+            );
             if (groupResult.count === 0) continue;
 
             const elements = unit.elements;
@@ -191,7 +288,16 @@ export class StructureLookup3D {
         }
     }
 
-    findIntoBuilderWithRadius(x: number, y: number, z: number, pivotR: number, maxRadius: number, radius: number, eRadius: StructureElement.Property<number>, builder: StructureUniqueSubsetBuilder) {
+    findIntoBuilderWithRadius(
+        x: number,
+        y: number,
+        z: number,
+        pivotR: number,
+        maxRadius: number,
+        radius: number,
+        eRadius: StructureElement.Property<number>,
+        builder: StructureUniqueSubsetBuilder,
+    ) {
         const { units } = this.structure;
         const closeUnits = this.unitLookup.find(x, y, z, radius);
         if (closeUnits.count === 0) return;
@@ -206,7 +312,12 @@ export class StructureLookup3D {
                 Vec3.transformMat4(this.pivot, this.pivot, unit.conformation.operator.inverse);
             }
             const unitLookup = unit.lookup3d;
-            const groupResult = unitLookup.find(this.pivot[0], this.pivot[1], this.pivot[2], queryRadius);
+            const groupResult = unitLookup.find(
+                this.pivot[0],
+                this.pivot[1],
+                this.pivot[2],
+                queryRadius,
+            );
             if (groupResult.count === 0) continue;
 
             const elements = unit.elements;
@@ -240,11 +351,23 @@ export class StructureLookup3D {
         return false;
     }
 
-    approxNearest(x: number, y: number, z: number, radius: number, ctx?: StructureLookup3DResultContext): StructureResult {
+    approxNearest(
+        x: number,
+        y: number,
+        z: number,
+        radius: number,
+        ctx?: StructureLookup3DResultContext,
+    ): StructureResult {
         return this._approxNearest(x, y, z, radius, ctx ?? this.findContext);
     }
 
-    _approxNearest(x: number, y: number, z: number, radius: number, ctx: StructureLookup3DResultContext): StructureResult {
+    _approxNearest(
+        x: number,
+        y: number,
+        z: number,
+        radius: number,
+        ctx: StructureLookup3DResultContext,
+    ): StructureResult {
         Result.reset(ctx.result);
         const { units } = this.structure;
         const closeUnits = this.unitLookup.find(x, y, z, radius, ctx.closeUnitsResult);
@@ -258,10 +381,21 @@ export class StructureLookup3D {
                 Vec3.transformMat4(this.pivot, this.pivot, unit.conformation.operator.inverse);
             }
             const unitLookup = unit.lookup3d;
-            const groupResult = unitLookup.approxNearest(this.pivot[0], this.pivot[1], this.pivot[2], radius, ctx.unitGroupResult);
+            const groupResult = unitLookup.approxNearest(
+                this.pivot[0],
+                this.pivot[1],
+                this.pivot[2],
+                radius,
+                ctx.unitGroupResult,
+            );
             for (let j = 0, _j = groupResult.count; j < _j; j++) {
                 if (groupResult.squaredDistances[j] < minDistSq) {
-                    StructureResult.add(ctx.result, unit, groupResult.indices[j], groupResult.squaredDistances[j]);
+                    StructureResult.add(
+                        ctx.result,
+                        unit,
+                        groupResult.indices[j],
+                        groupResult.squaredDistances[j],
+                    );
                     minDistSq = groupResult.squaredDistances[j];
                 }
             }
@@ -295,7 +429,13 @@ export class StructureLookup3D {
             radius[i] = s.radius;
         }
 
-        const position = { x: xs, y: ys, z: zs, radius, indices: OrderedSet.ofBounds(0, unitCount) };
+        const position = {
+            x: xs,
+            y: ys,
+            z: zs,
+            radius,
+            indices: OrderedSet.ofBounds(0, unitCount),
+        };
         this.unitLookup = GridLookup3D(position, boundary);
     }
 }

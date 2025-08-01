@@ -9,7 +9,15 @@ import { BondType } from '../../../model/types.ts';
 import { IntraUnitBondProps, IntraUnitBonds } from './data.ts';
 import { Unit } from '../../unit.ts';
 import { IntAdjacencyGraph } from '../../../../../mol-math/graph.ts';
-import { BondComputationProps, getElementIdx, MetalsSet, getElementThreshold, isHydrogen, DefaultBondComputationProps, getPairingThreshold } from './common.ts';
+import {
+    BondComputationProps,
+    DefaultBondComputationProps,
+    getElementIdx,
+    getElementThreshold,
+    getPairingThreshold,
+    isHydrogen,
+    MetalsSet,
+} from './common.ts';
 import { SortedArray } from '../../../../../mol-data/int.ts';
 import { getIntraBondOrderFromTable } from '../../../model/properties/atomic/bonds.ts';
 import { StructureElement } from '../../element.ts';
@@ -29,7 +37,15 @@ const CoarseGrainedBondMaxRadius = 6;
 const CoarseGrainedIntraResidueBondMaxDistance = 5.5;
 const CoarseGrainedInterResidueBondMaxDistance = 3.9;
 
-function getGraph(atomA: StructureElement.UnitIndex[], atomB: StructureElement.UnitIndex[], _order: number[], _flags: number[], _key: number[], atomCount: number, props?: IntraUnitBondProps): IntraUnitBonds {
+function getGraph(
+    atomA: StructureElement.UnitIndex[],
+    atomB: StructureElement.UnitIndex[],
+    _order: number[],
+    _flags: number[],
+    _key: number[],
+    atomCount: number,
+    props?: IntraUnitBondProps,
+): IntraUnitBonds {
     const builder = new IntAdjacencyGraph.EdgeBuilder(atomCount, atomA, atomB);
     const flags = new Uint16Array(builder.slotCount);
     const order = new Int8Array(builder.slotCount);
@@ -60,7 +76,8 @@ function findIndexPairBonds(unit: Unit.Atomic) {
     const { type_symbol } = unit.model.atomicHierarchy.atoms;
     const atomCount = unit.elements.length;
     const { maxDistance } = indexPairs;
-    const { offset, b, edgeProps: { order, distance, flag, key, operatorA, operatorB } } = indexPairs.bonds;
+    const { offset, b, edgeProps: { order, distance, flag, key, operatorA, operatorB } } =
+        indexPairs.bonds;
 
     const { atomSourceIndex: sourceIndex } = unit.model.atomicHierarchy;
     const { invertedIndex } = Model.getInvertedAtomSourceIndex(unit.model);
@@ -103,7 +120,10 @@ function findIndexPairBonds(unit: Unit.Atomic) {
                 add = dist < maxDistance;
             } else {
                 const pairingThreshold = getPairingThreshold(
-                    aeI, beI, getElementThreshold(aeI), getElementThreshold(beI)
+                    aeI,
+                    beI,
+                    getElementThreshold(aeI),
+                    getElementThreshold(beI),
                 );
                 add = dist < pairingThreshold;
 
@@ -136,7 +156,8 @@ function findBonds(unit: Unit.Atomic, props: BondComputationProps): IntraUnitBon
     const { x, y, z } = unit.model.atomicConformation;
     const atomCount = unit.elements.length;
     const { elements: atoms, residueIndex, chainIndex } = unit;
-    const { type_symbol, label_atom_id, label_alt_id, label_comp_id } = unit.model.atomicHierarchy.atoms;
+    const { type_symbol, label_atom_id, label_alt_id, label_comp_id } =
+        unit.model.atomicHierarchy.atoms;
     const { label_seq_id } = unit.model.atomicHierarchy.residues;
     const { traceElementIndex } = unit.model.atomicHierarchy.derived.residue;
     const { index } = unit.model.atomicHierarchy;
@@ -155,7 +176,9 @@ function findBonds(unit: Unit.Atomic, props: BondComputationProps): IntraUnitBon
     const key: number[] = [];
 
     let lastResidue = -1;
-    let componentMap: Map<string, Map<string, { flags: number, order: number, key: number }>> | undefined = void 0;
+    let componentMap:
+        | Map<string, Map<string, { flags: number; order: number; key: number }>>
+        | undefined = void 0;
 
     let isWatery = true, isDictionaryBased = true, isSequenced = true;
 
@@ -168,7 +191,9 @@ function findBonds(unit: Unit.Atomic, props: BondComputationProps): IntraUnitBon
         const elemA = type_symbol.value(aI);
         if (isWatery && (elemA !== 'H' && elemA !== 'O')) isWatery = false;
 
-        const structConnEntries = props.forceCompute ? void 0 : structConn && structConn.byAtomIndex.get(aI);
+        const structConnEntries = props.forceCompute
+            ? void 0
+            : structConn && structConn.byAtomIndex.get(aI);
         let hasStructConn = false;
         if (structConnEntries) {
             for (const se of structConnEntries) {
@@ -177,7 +202,10 @@ function findBonds(unit: Unit.Atomic, props: BondComputationProps): IntraUnitBon
                 if (partnerA.symmetry !== partnerB.symmetry) continue;
 
                 const p = partnerA.atomIndex === aI ? partnerB : partnerA;
-                const _bI = SortedArray.indexOf(unit.elements, p.atomIndex) as StructureElement.UnitIndex;
+                const _bI = SortedArray.indexOf(
+                    unit.elements,
+                    p.atomIndex,
+                ) as StructureElement.UnitIndex;
                 if (_bI < 0 || atoms[_bI] < aI) continue;
 
                 atomA[atomA.length] = _aI;
@@ -274,18 +302,30 @@ function findBonds(unit: Unit.Atomic, props: BondComputationProps): IntraUnitBon
                     flag = dist <= CoarseGrainedIntraResidueBondMaxDistance;
                 } else {
                     // inter residue "backbone" bonds
-                    flag = dist <= CoarseGrainedInterResidueBondMaxDistance && traceElementIndex[raI] === aI && traceElementIndex[rbI] === bI;
+                    flag = dist <= CoarseGrainedInterResidueBondMaxDistance &&
+                        traceElementIndex[raI] === aI && traceElementIndex[rbI] === bI;
                 }
             } else {
-                const pairingThreshold = getPairingThreshold(aeI, beI, thresholdA, getElementThreshold(beI));
+                const pairingThreshold = getPairingThreshold(
+                    aeI,
+                    beI,
+                    thresholdA,
+                    getElementThreshold(beI),
+                );
                 flag = dist <= pairingThreshold;
             }
 
             if (flag) {
                 atomA[atomA.length] = _aI;
                 atomB[atomB.length] = _bI;
-                order[order.length] = getIntraBondOrderFromTable(compId, atomIdA, label_atom_id.value(bI));
-                flags[flags.length] = (isMetal ? BondType.Flag.MetallicCoordination : BondType.Flag.Covalent) | BondType.Flag.Computed;
+                order[order.length] = getIntraBondOrderFromTable(
+                    compId,
+                    atomIdA,
+                    label_atom_id.value(bI),
+                );
+                flags[flags.length] =
+                    (isMetal ? BondType.Flag.MetallicCoordination : BondType.Flag.Covalent) |
+                    BondType.Flag.Computed;
                 key[key.length] = -1;
 
                 const seqIdB = label_seq_id.value(rbI);

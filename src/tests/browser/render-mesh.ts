@@ -54,7 +54,11 @@ function meshRepr() {
 
     const t3 = Mat4.identity();
     Mat4.scaleUniformly(t3, t3, 8);
-    MeshBuilder.addPrimitive(builderState, t3, Torus({ tubularSegments: 64, radialSegments: 32, tube: 0.1 }));
+    MeshBuilder.addPrimitive(
+        builderState,
+        t3,
+        Torus({ tubularSegments: 64, radialSegments: 32, tube: 0.1 }),
+    );
 
     const mesh = MeshBuilder.getMesh(builderState);
 

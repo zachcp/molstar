@@ -8,39 +8,50 @@
  */
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { Structure, Unit, StructureElement } from '../../../mol-model/structure.ts';
-import { FeaturesBuilder, Features } from './features.ts';
-import { ProteinBackboneAtoms, PolymerNames, BaseNames } from '../../../mol-model/structure/model/types.ts';
-import { typeSymbol, atomId, eachBondedAtom } from '../chemistry/util.ts';
+import { Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
+import { Features, FeaturesBuilder } from './features.ts';
+import {
+    BaseNames,
+    PolymerNames,
+    ProteinBackboneAtoms,
+} from '../../../mol-model/structure/model/types.ts';
+import { atomId, eachBondedAtom, typeSymbol } from '../chemistry/util.ts';
 import { Elements } from '../../../mol-model/structure/model/properties/atomic/types.ts';
 import { ValenceModelProvider } from '../valence-model.ts';
 import { degToRad } from '../../../mol-math/misc.ts';
-import { FeatureType, FeatureGroup, InteractionType } from './common.ts';
+import { FeatureGroup, FeatureType, InteractionType } from './common.ts';
 import { ContactProvider } from './contacts.ts';
 import { Segmentation } from '../../../mol-data/int.ts';
-import { isGuanidine, isAcetamidine, isPhosphate, isSulfonicAcid, isSulfate, isCarboxylate } from '../chemistry/functional-group.ts';
+import {
+    isAcetamidine,
+    isCarboxylate,
+    isGuanidine,
+    isPhosphate,
+    isSulfate,
+    isSulfonicAcid,
+} from '../chemistry/functional-group.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 
 const IonicParams = {
     distanceMax: PD.Numeric(5.0, { min: 0, max: 8, step: 0.1 }),
 };
-type IonicParams = typeof IonicParams
-type IonicProps = PD.Values<IonicParams>
+type IonicParams = typeof IonicParams;
+type IonicProps = PD.Values<IonicParams>;
 
 const PiStackingParams = {
     distanceMax: PD.Numeric(5.5, { min: 1, max: 8, step: 0.1 }),
     offsetMax: PD.Numeric(2.0, { min: 0, max: 4, step: 0.1 }),
     angleDevMax: PD.Numeric(30, { min: 0, max: 180, step: 1 }),
 };
-type PiStackingParams = typeof PiStackingParams
-type PiStackingProps = PD.Values<PiStackingParams>
+type PiStackingParams = typeof PiStackingParams;
+type PiStackingProps = PD.Values<PiStackingParams>;
 
 const CationPiParams = {
     distanceMax: PD.Numeric(6.0, { min: 1, max: 8, step: 0.1 }),
     offsetMax: PD.Numeric(2.0, { min: 0, max: 4, step: 0.1 }),
 };
-type CationPiParams = typeof CationPiParams
-type CationPiProps = PD.Values<CationPiParams>
+type CationPiParams = typeof CationPiParams;
+type CationPiProps = PD.Values<CationPiParams>;
 
 //
 
@@ -63,16 +74,23 @@ function addUnitPositiveCharges(structure: Structure, unit: Unit.Atomic, builder
     const addedElements = new Set<StructureElement.UnitIndex>();
 
     const { label_comp_id } = unit.model.atomicHierarchy.atoms;
-    const residueIt = Segmentation.transientSegments(unit.model.atomicHierarchy.residueAtomSegments, elements);
+    const residueIt = Segmentation.transientSegments(
+        unit.model.atomicHierarchy.residueAtomSegments,
+        elements,
+    );
 
     while (residueIt.hasNext) {
         const { index: residueIndex, start, end } = residueIt.move();
-        const compId = label_comp_id.value(unit.model.atomicHierarchy.residueAtomSegments.offsets[residueIndex]);
+        const compId = label_comp_id.value(
+            unit.model.atomicHierarchy.residueAtomSegments.offsets[residueIndex],
+        );
 
         if (PositvelyCharged.includes(compId)) {
             builder.startState();
             for (let j = start as StructureElement.UnitIndex; j < end; ++j) {
-                if (typeSymbol(unit, j) === Elements.N && !ProteinBackboneAtoms.has(atomId(unit, j))) {
+                if (
+                    typeSymbol(unit, j) === Elements.N && !ProteinBackboneAtoms.has(atomId(unit, j))
+                ) {
                     builder.pushMember(x[elements[j]], y[elements[j]], z[elements[j]], j);
                 }
             }
@@ -101,7 +119,14 @@ function addUnitPositiveCharges(structure: Structure, unit: Unit.Atomic, builder
 
             for (let j = start as StructureElement.UnitIndex; j < end; ++j) {
                 if (charge[j] > 0 && !addedElements.has(j)) {
-                    builder.add(FeatureType.PositiveCharge, FeatureGroup.None, x[elements[j]], y[elements[j]], z[elements[j]], j);
+                    builder.add(
+                        FeatureType.PositiveCharge,
+                        FeatureGroup.None,
+                        x[elements[j]],
+                        y[elements[j]],
+                        z[elements[j]],
+                        j,
+                    );
                 }
             }
         }
@@ -116,16 +141,23 @@ function addUnitNegativeCharges(structure: Structure, unit: Unit.Atomic, builder
     const addedElements = new Set<StructureElement.UnitIndex>();
 
     const { label_comp_id } = unit.model.atomicHierarchy.atoms;
-    const residueIt = Segmentation.transientSegments(unit.model.atomicHierarchy.residueAtomSegments, elements);
+    const residueIt = Segmentation.transientSegments(
+        unit.model.atomicHierarchy.residueAtomSegments,
+        elements,
+    );
 
     while (residueIt.hasNext) {
         const { index: residueIndex, start, end } = residueIt.move();
-        const compId = label_comp_id.value(unit.model.atomicHierarchy.residueAtomSegments.offsets[residueIndex]);
+        const compId = label_comp_id.value(
+            unit.model.atomicHierarchy.residueAtomSegments.offsets[residueIndex],
+        );
 
         if (NegativelyCharged.includes(compId)) {
             builder.startState();
             for (let j = start as StructureElement.UnitIndex; j < end; ++j) {
-                if (typeSymbol(unit, j) === Elements.O && !ProteinBackboneAtoms.has(atomId(unit, j))) {
+                if (
+                    typeSymbol(unit, j) === Elements.O && !ProteinBackboneAtoms.has(atomId(unit, j))
+                ) {
                     builder.pushMember(x[elements[j]], y[elements[j]], z[elements[j]], j);
                 }
             }
@@ -145,7 +177,9 @@ function addUnitNegativeCharges(structure: Structure, unit: Unit.Atomic, builder
         } else if (!PolymerNames.has(compId)) {
             for (let j = start as StructureElement.UnitIndex; j < end; ++j) {
                 builder.startState();
-                if (typeSymbol(unit, j) === Elements.N && !ProteinBackboneAtoms.has(atomId(unit, j))) {
+                if (
+                    typeSymbol(unit, j) === Elements.N && !ProteinBackboneAtoms.has(atomId(unit, j))
+                ) {
                     builder.pushMember(x[elements[j]], y[elements[j]], z[elements[j]], j);
                 }
                 builder.finishState(FeatureType.NegativeCharge, FeatureGroup.None);
@@ -174,7 +208,14 @@ function addUnitNegativeCharges(structure: Structure, unit: Unit.Atomic, builder
 
             for (let j = start as StructureElement.UnitIndex; j < end; ++j) {
                 if (charge[j] < 0 && !addedElements.has(j)) {
-                    builder.add(FeatureType.NegativeCharge, FeatureGroup.None, x[elements[j]], y[elements[j]], z[elements[j]], j);
+                    builder.add(
+                        FeatureType.NegativeCharge,
+                        FeatureGroup.None,
+                        x[elements[j]],
+                        y[elements[j]],
+                        z[elements[j]],
+                        j,
+                    );
                 }
             }
         }
@@ -217,7 +258,11 @@ function isCationPi(ti: FeatureType, tj: FeatureType) {
 const tmpPointA = Vec3();
 const tmpPointB = Vec3();
 
-function areFeaturesWithinDistanceSq(infoA: Features.Info, infoB: Features.Info, distanceSq: number): boolean {
+function areFeaturesWithinDistanceSq(
+    infoA: Features.Info,
+    infoB: Features.Info,
+    distanceSq: number,
+): boolean {
     const { feature: featureA, offsets: offsetsA, members: membersA } = infoA;
     const { feature: featureB, offsets: offsetsB, members: membersB } = infoB;
     for (let i = offsetsA[featureA], il = offsetsA[featureA + 1]; i < il; ++i) {
@@ -265,7 +310,7 @@ function getIonicOptions(props: IonicProps) {
         distanceMaxSq: props.distanceMax * props.distanceMax,
     };
 }
-type IonicOptions = ReturnType<typeof getIonicOptions>
+type IonicOptions = ReturnType<typeof getIonicOptions>;
 
 function getPiStackingOptions(props: PiStackingProps) {
     return {
@@ -273,14 +318,14 @@ function getPiStackingOptions(props: PiStackingProps) {
         angleDevMax: degToRad(props.angleDevMax),
     };
 }
-type PiStackingOptions = ReturnType<typeof getPiStackingOptions>
+type PiStackingOptions = ReturnType<typeof getPiStackingOptions>;
 
 function getCationPiOptions(props: CationPiProps) {
     return {
-        offsetMax: props.offsetMax
+        offsetMax: props.offsetMax,
     };
 }
-type CationPiOptions = ReturnType<typeof getCationPiOptions>
+type CationPiOptions = ReturnType<typeof getCationPiOptions>;
 
 const deg180InRad = degToRad(180);
 const deg90InRad = degToRad(90);
@@ -288,7 +333,13 @@ const deg90InRad = degToRad(90);
 const tmpNormalA = Vec3();
 const tmpNormalB = Vec3();
 
-function testIonic(structure: Structure, infoA: Features.Info, infoB: Features.Info, distanceSq: number, opts: IonicOptions): InteractionType | undefined {
+function testIonic(
+    structure: Structure,
+    infoA: Features.Info,
+    infoB: Features.Info,
+    distanceSq: number,
+    opts: IonicOptions,
+): InteractionType | undefined {
     const typeA = infoA.types[infoA.feature];
     const typeB = infoB.types[infoB.feature];
 
@@ -299,7 +350,13 @@ function testIonic(structure: Structure, infoA: Features.Info, infoB: Features.I
     }
 }
 
-function testPiStacking(structure: Structure, infoA: Features.Info, infoB: Features.Info, distanceSq: number, opts: PiStackingOptions): InteractionType | undefined {
+function testPiStacking(
+    structure: Structure,
+    infoA: Features.Info,
+    infoB: Features.Info,
+    distanceSq: number,
+    opts: PiStackingOptions,
+): InteractionType | undefined {
     const typeA = infoA.types[infoA.feature];
     const typeB = infoB.types[infoB.feature];
 
@@ -308,18 +365,29 @@ function testPiStacking(structure: Structure, infoA: Features.Info, infoB: Featu
         getNormal(tmpNormalB, infoB);
 
         const angle = Vec3.angle(tmpNormalA, tmpNormalB);
-        const offset = Math.min(getOffset(infoA, infoB, tmpNormalB), getOffset(infoB, infoA, tmpNormalA));
+        const offset = Math.min(
+            getOffset(infoA, infoB, tmpNormalB),
+            getOffset(infoB, infoA, tmpNormalA),
+        );
         if (offset <= opts.offsetMax) {
             if (angle <= opts.angleDevMax || angle >= deg180InRad - opts.angleDevMax) {
                 return InteractionType.PiStacking; // parallel
-            } else if (angle <= opts.angleDevMax + deg90InRad && angle >= deg90InRad - opts.angleDevMax) {
+            } else if (
+                angle <= opts.angleDevMax + deg90InRad && angle >= deg90InRad - opts.angleDevMax
+            ) {
                 return InteractionType.PiStacking; // t-shaped
             }
         }
     }
 }
 
-function testCationPi(structure: Structure, infoA: Features.Info, infoB: Features.Info, distanceSq: number, opts: CationPiOptions): InteractionType | undefined {
+function testCationPi(
+    structure: Structure,
+    infoA: Features.Info,
+    infoB: Features.Info,
+    distanceSq: number,
+    opts: CationPiOptions,
+): InteractionType | undefined {
     const typeA = infoA.types[infoA.feature];
     const typeB = infoB.types[infoB.feature];
 
@@ -336,9 +404,18 @@ function testCationPi(structure: Structure, infoA: Features.Info, infoB: Feature
 
 //
 
-export const NegativChargeProvider = Features.Provider([FeatureType.NegativeCharge], addUnitNegativeCharges);
-export const PositiveChargeProvider = Features.Provider([FeatureType.PositiveCharge], addUnitPositiveCharges);
-export const AromaticRingProvider = Features.Provider([FeatureType.AromaticRing], addUnitAromaticRings);
+export const NegativChargeProvider = Features.Provider(
+    [FeatureType.NegativeCharge],
+    addUnitNegativeCharges,
+);
+export const PositiveChargeProvider = Features.Provider(
+    [FeatureType.PositiveCharge],
+    addUnitPositiveCharges,
+);
+export const AromaticRingProvider = Features.Provider(
+    [FeatureType.AromaticRing],
+    addUnitAromaticRings,
+);
 
 export const IonicProvider: ContactProvider<IonicParams> = {
     name: 'ionic',
@@ -348,9 +425,10 @@ export const IonicProvider: ContactProvider<IonicParams> = {
         return {
             maxDistance: props.distanceMax,
             requiredFeatures: new Set([FeatureType.NegativeCharge, FeatureType.PositiveCharge]),
-            getType: (structure, infoA, infoB, distanceSq) => testIonic(structure, infoA, infoB, distanceSq, opts)
+            getType: (structure, infoA, infoB, distanceSq) =>
+                testIonic(structure, infoA, infoB, distanceSq, opts),
         };
-    }
+    },
 };
 
 export const PiStackingProvider: ContactProvider<PiStackingParams> = {
@@ -361,9 +439,10 @@ export const PiStackingProvider: ContactProvider<PiStackingParams> = {
         return {
             maxDistance: props.distanceMax,
             requiredFeatures: new Set([FeatureType.AromaticRing]),
-            getType: (structure, infoA, infoB, distanceSq) => testPiStacking(structure, infoA, infoB, distanceSq, opts)
+            getType: (structure, infoA, infoB, distanceSq) =>
+                testPiStacking(structure, infoA, infoB, distanceSq, opts),
         };
-    }
+    },
 };
 
 export const CationPiProvider: ContactProvider<CationPiParams> = {
@@ -374,7 +453,8 @@ export const CationPiProvider: ContactProvider<CationPiParams> = {
         return {
             maxDistance: props.distanceMax,
             requiredFeatures: new Set([FeatureType.AromaticRing, FeatureType.PositiveCharge]),
-            getType: (structure, infoA, infoB, distanceSq) => testCationPi(structure, infoA, infoB, distanceSq, opts)
+            getType: (structure, infoA, infoB, distanceSq) =>
+                testCationPi(structure, infoA, infoB, distanceSq, opts),
         };
-    }
+    },
 };

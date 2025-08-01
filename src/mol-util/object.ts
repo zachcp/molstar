@@ -110,7 +110,10 @@ export function mapObjectMap<T, S>(obj: { [k: string]: T }, f: (v: T) => S): { [
 
 /** Return an object with keys being the elements of `array` and values computed by `getValue` function.
  * Equivalent to Pythonic `{k: getValue(k) for k in array}` */
-export function mapArrayToObject<K extends keyof any, V>(array: readonly K[], getValue: (key: K) => V): Record<K, V> {
+export function mapArrayToObject<K extends keyof any, V>(
+    array: readonly K[],
+    getValue: (key: K) => V,
+): Record<K, V> {
     const result = {} as Record<K, V>;
     for (const key of array) {
         result[key] = getValue(key);
@@ -118,7 +121,10 @@ export function mapArrayToObject<K extends keyof any, V>(array: readonly K[], ge
     return result;
 }
 
-export function objectForEach<T extends {}, V extends T[K], K extends keyof T & string>(o: T, f: (v: V, k: K) => void) {
+export function objectForEach<T extends {}, V extends T[K], K extends keyof T & string>(
+    o: T,
+    f: (v: V, k: K) => void,
+) {
     if (!o) return;
     for (const k of Object.keys(o)) {
         f((o as any)[k], k as K);
@@ -126,7 +132,10 @@ export function objectForEach<T extends {}, V extends T[K], K extends keyof T & 
 }
 
 /** Return an object with keys `keys` and their values same as in `obj`, i.e. `{ key: obj[key] for key in keys }` */
-export function pickObjectKeys<T extends {}, K extends keyof T>(obj: T, keys: readonly K[]): Pick<T, K> {
+export function pickObjectKeys<T extends {}, K extends keyof T>(
+    obj: T,
+    keys: readonly K[],
+): Pick<T, K> {
     const result: Partial<Pick<T, K>> = {};
     for (const key of keys) {
         if (Object.hasOwn(obj, key)) {
@@ -137,7 +146,11 @@ export function pickObjectKeys<T extends {}, K extends keyof T>(obj: T, keys: re
 }
 
 /** Same as `pickObjectKeys` but allows loading values into a different key or skipping keys, i.e. return `{ key: obj[remapping[key] ?? key] for key in keys if remapping[key] !== null }`  */
-export function pickObjectKeysWithRemapping<V>(obj: Record<string, V>, keys: string[], remapping: Record<string, string | null>): Record<string, V> {
+export function pickObjectKeysWithRemapping<V>(
+    obj: Record<string, V>,
+    keys: string[],
+    remapping: Record<string, string | null>,
+): Record<string, V> {
     const result: Record<string, V> = {};
     for (const key of keys) {
         let srcKey = remapping[key];
@@ -150,11 +163,15 @@ export function pickObjectKeysWithRemapping<V>(obj: Record<string, V>, keys: str
     return result;
 }
 
-export function objectOfArraysToArrayOfObjects<T extends object>(objectOfArrays: { [key in keyof T]: T[key][] }): T[] {
+export function objectOfArraysToArrayOfObjects<T extends object>(
+    objectOfArrays: { [key in keyof T]: T[key][] },
+): T[] {
     let n: number | undefined = undefined;
     for (const key in objectOfArrays) {
         const length = objectOfArrays[key].length;
-        if (n !== undefined && n !== length) throw new Error('FormatError: arrays must have the same length.');
+        if (n !== undefined && n !== length) {
+            throw new Error('FormatError: arrays must have the same length.');
+        }
         n = length;
     }
     if (n === undefined) return []; // empty input object
@@ -171,7 +188,10 @@ export function objectOfArraysToArrayOfObjects<T extends object>(objectOfArrays:
 }
 
 /** Return an object same as `obj` but without keys `keys` */
-export function omitObjectKeys<T extends {}, K extends keyof T>(obj: T, omitKeys: readonly K[]): Omit<T, K> {
+export function omitObjectKeys<T extends {}, K extends keyof T>(
+    obj: T,
+    omitKeys: readonly K[],
+): Omit<T, K> {
     const result: T = { ...obj };
     for (const key of omitKeys) {
         delete result[key];
@@ -180,7 +200,10 @@ export function omitObjectKeys<T extends {}, K extends keyof T>(obj: T, omitKeys
 }
 
 /** Create an object from keys and values (first key maps to first value etc.) */
-export function objectFromKeysAndValues<K extends keyof any, V>(keys: K[], values: V[]): Record<K, V> {
+export function objectFromKeysAndValues<K extends keyof any, V>(
+    keys: K[],
+    values: V[],
+): Record<K, V> {
     const obj: Partial<Record<K, V>> = {};
     for (let i = 0; i < keys.length; i++) {
         obj[keys[i]] = values[i];
@@ -194,7 +217,9 @@ export function isPlainObject(obj: any): boolean {
 }
 
 /** Like `Promise.all` but with objects instead of arrays */
-export async function promiseAllObj<T extends {}>(promisesObj: { [key in keyof T]: Promise<T[key]> }): Promise<T> {
+export async function promiseAllObj<T extends {}>(
+    promisesObj: { [key in keyof T]: Promise<T[key]> },
+): Promise<T> {
     const keys = Object.keys(promisesObj);
     const promises = Object.values(promisesObj);
     const results = await Promise.all(promises);

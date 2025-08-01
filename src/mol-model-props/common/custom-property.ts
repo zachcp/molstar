@@ -9,38 +9,43 @@ import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { ValueBox } from '../../mol-util/index.ts';
 import { OrderedMap } from 'immutable';
-import { AssetManager, Asset } from '../../mol-util/assets.ts';
+import { Asset, AssetManager } from '../../mol-util/assets.ts';
 import { ErrorContext } from '../../mol-util/error-context.ts';
 
 export { CustomProperty };
 
 namespace CustomProperty {
     export interface Context {
-        runtime: RuntimeContext
-        assetManager: AssetManager
-        errorContext?: ErrorContext
+        runtime: RuntimeContext;
+        assetManager: AssetManager;
+        errorContext?: ErrorContext;
     }
 
-    export type Data<V> = { value: V, assets?: Asset.Wrapper[] }
+    export type Data<V> = { value: V; assets?: Asset.Wrapper[] };
 
     export interface Container<P, V> {
-        readonly props: P
-        readonly data: ValueBox<V | undefined>
+        readonly props: P;
+        readonly data: ValueBox<V | undefined>;
     }
 
     export interface Provider<Data, Params extends PD.Params, Value> {
-        readonly label: string
-        readonly descriptor: CustomPropertyDescriptor
+        readonly label: string;
+        readonly descriptor: CustomPropertyDescriptor;
         /** hides property in ui and always attaches */
-        readonly isHidden?: boolean
-        readonly getParams: (data: Data) => Params
-        readonly defaultParams: Params
-        readonly isApplicable: (data: Data) => boolean
-        readonly attach: (ctx: Context, data: Data, props?: Partial<PD.Values<Params>>, addRef?: boolean) => Promise<void>
-        readonly ref: (data: Data, add: boolean) => void
-        readonly get: (data: Data) => ValueBox<Value | undefined>
-        readonly set: (data: Data, props: PD.Values<Params>, value?: Value) => void
-        readonly props: (data: Data) => PD.Values<Params>
+        readonly isHidden?: boolean;
+        readonly getParams: (data: Data) => Params;
+        readonly defaultParams: Params;
+        readonly isApplicable: (data: Data) => boolean;
+        readonly attach: (
+            ctx: Context,
+            data: Data,
+            props?: Partial<PD.Values<Params>>,
+            addRef?: boolean,
+        ) => Promise<void>;
+        readonly ref: (data: Data, add: boolean) => void;
+        readonly get: (data: Data) => ValueBox<Value | undefined>;
+        readonly set: (data: Data, props: PD.Values<Params>, value?: Value) => void;
+        readonly props: (data: Data) => PD.Values<Params>;
     }
 
     export class Registry<Data> {
@@ -69,13 +74,13 @@ namespace CustomProperty {
                     }
 
                     propertiesParams[provider.descriptor.name] = PD.Group({
-                        ...provider.getParams(data)
+                        ...provider.getParams(data),
                     }, { label: provider.label, isHidden: provider.isHidden });
                 }
             }
             return {
                 autoAttach: PD.MultiSelect(autoAttachDefault, autoAttachOptions),
-                properties: PD.Group(propertiesParams, { isFlat: true })
+                properties: PD.Group(propertiesParams, { isFlat: true }),
             };
         }
 

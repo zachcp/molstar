@@ -8,7 +8,11 @@ import { RuntimeContext } from '../../../mol-task/index.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { ColorNames } from '../../../mol-util/color/names.ts';
 import { ShapeRepresentation } from '../representation.ts';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation.ts';
+import {
+    Representation,
+    RepresentationContext,
+    RepresentationParamsGetter,
+} from '../../representation.ts';
 import { Shape } from '../../../mol-model/shape.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
@@ -22,37 +26,46 @@ import { MarkerActions } from '../../../mol-util/marker-action.ts';
 import { StructureElement } from '../../../mol-model/structure.ts';
 
 export interface OrientationData {
-    locis: StructureElement.Loci[]
+    locis: StructureElement.Loci[];
 }
 
 const SharedParams = {
     color: PD.Color(ColorNames.orange),
     scaleFactor: PD.Numeric(1, { min: 0.1, max: 10, step: 0.1 }),
-    radiusScale: PD.Numeric(2, { min: 0.1, max: 10, step: 0.1 })
+    radiusScale: PD.Numeric(2, { min: 0.1, max: 10, step: 0.1 }),
 };
 
 const AxesParams = {
     ...Mesh.Params,
-    ...SharedParams
+    ...SharedParams,
 };
-type AxesParams = typeof AxesParams
+type AxesParams = typeof AxesParams;
 
 const BoxParams = {
     ...Mesh.Params,
-    ...SharedParams
+    ...SharedParams,
 };
-type BoxParams = typeof BoxParams
+type BoxParams = typeof BoxParams;
 
 const EllipsoidParams = {
     ...Mesh.Params,
-    ...SharedParams
+    ...SharedParams,
 };
-type EllipsoidParams = typeof EllipsoidParams
+type EllipsoidParams = typeof EllipsoidParams;
 
 const OrientationVisuals = {
-    'axes': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<OrientationData, AxesParams>) => ShapeRepresentation(getAxesShape, Mesh.Utils),
-    'box': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<OrientationData, BoxParams>) => ShapeRepresentation(getBoxShape, Mesh.Utils),
-    'ellipsoid': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<OrientationData, EllipsoidParams>) => ShapeRepresentation(getEllipsoidShape, Mesh.Utils),
+    'axes': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<OrientationData, AxesParams>,
+    ) => ShapeRepresentation(getAxesShape, Mesh.Utils),
+    'box': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<OrientationData, BoxParams>,
+    ) => ShapeRepresentation(getBoxShape, Mesh.Utils),
+    'ellipsoid': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<OrientationData, EllipsoidParams>,
+    ) => ShapeRepresentation(getEllipsoidShape, Mesh.Utils),
 };
 
 export const OrientationParams = {
@@ -61,8 +74,8 @@ export const OrientationParams = {
     ...EllipsoidParams,
     visuals: PD.MultiSelect(['box'], PD.objectToOptions(OrientationVisuals)),
 };
-export type OrientationParams = typeof OrientationParams
-export type OrientationProps = PD.Values<OrientationParams>
+export type OrientationParams = typeof OrientationParams;
+export type OrientationProps = PD.Values<OrientationParams>;
 
 //
 
@@ -81,7 +94,12 @@ function buildAxesMesh(data: OrientationData, props: OrientationProps, mesh?: Me
     return MeshBuilder.getMesh(state);
 }
 
-function getAxesShape(ctx: RuntimeContext, data: OrientationData, props: OrientationProps, shape?: Shape<Mesh>) {
+function getAxesShape(
+    ctx: RuntimeContext,
+    data: OrientationData,
+    props: OrientationProps,
+    shape?: Shape<Mesh>,
+) {
     const mesh = buildAxesMesh(data, props, shape && shape.geometry);
     const name = getAxesName(data.locis);
     return Shape.create(name, data, mesh, () => props.color, () => 1, () => name);
@@ -104,7 +122,12 @@ function buildBoxMesh(data: OrientationData, props: OrientationProps, mesh?: Mes
     return MeshBuilder.getMesh(state);
 }
 
-function getBoxShape(ctx: RuntimeContext, data: OrientationData, props: OrientationProps, shape?: Shape<Mesh>) {
+function getBoxShape(
+    ctx: RuntimeContext,
+    data: OrientationData,
+    props: OrientationProps,
+    shape?: Shape<Mesh>,
+) {
     const mesh = buildBoxMesh(data, props, shape && shape.geometry);
     const name = getBoxName(data.locis);
     return Shape.create(name, data, mesh, () => props.color, () => 1, () => name);
@@ -132,7 +155,12 @@ function buildEllipsoidMesh(data: OrientationData, props: OrientationProps, mesh
     return MeshBuilder.getMesh(state);
 }
 
-function getEllipsoidShape(ctx: RuntimeContext, data: OrientationData, props: OrientationProps, shape?: Shape<Mesh>) {
+function getEllipsoidShape(
+    ctx: RuntimeContext,
+    data: OrientationData,
+    props: OrientationProps,
+    shape?: Shape<Mesh>,
+) {
     const mesh = buildEllipsoidMesh(data, props, shape && shape.geometry);
     const name = getEllipsoidName(data.locis);
     return Shape.create(name, data, mesh, () => props.color, () => 1, () => name);
@@ -140,9 +168,18 @@ function getEllipsoidShape(ctx: RuntimeContext, data: OrientationData, props: Or
 
 //
 
-export type OrientationRepresentation = Representation<OrientationData, OrientationParams>
-export function OrientationRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<OrientationData, OrientationParams>): OrientationRepresentation {
-    const repr = Representation.createMulti('Orientation', ctx, getParams, Representation.StateBuilder, OrientationVisuals as unknown as Representation.Def<OrientationData, OrientationParams>);
+export type OrientationRepresentation = Representation<OrientationData, OrientationParams>;
+export function OrientationRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<OrientationData, OrientationParams>,
+): OrientationRepresentation {
+    const repr = Representation.createMulti(
+        'Orientation',
+        ctx,
+        getParams,
+        Representation.StateBuilder,
+        OrientationVisuals as unknown as Representation.Def<OrientationData, OrientationParams>,
+    );
     repr.setState({ markerActions: MarkerActions.Highlighting });
     return repr;
 }

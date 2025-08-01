@@ -9,7 +9,7 @@
 import { Column, Table } from '../../mol-data/db.ts';
 import { Model } from '../../mol-model/structure/model.ts';
 import { LammpsDataFile, lammpsUnitStyles, UnitStyle } from '../../mol-io/reader/lammps/schema.ts';
-import { Trajectory, ArrayTrajectory } from '../../mol-model/structure.ts';
+import { ArrayTrajectory, Trajectory } from '../../mol-model/structure.ts';
 import { BondType, MoleculeType } from '../../mol-model/structure/model/types.ts';
 import { RuntimeContext, Task } from '../../mol-task/index.ts';
 import { ModelFormat } from '../format.ts';
@@ -86,27 +86,31 @@ async function getModels(mol: LammpsDataFile, ctx: RuntimeContext, unitsStyle: U
     const basic = createBasic({
         entity: entityBuilder.getEntityTable(),
         chem_comp: componentBuilder.getChemCompTable(),
-        atom_site
+        atom_site,
     });
     const _models = await createModels(basic, LammpsDataFormat.create(mol), ctx);
     if (_models.frameCount > 0) {
         const first = _models.representative;
         if (bonds.count !== 0) {
-            const indexA = Column.ofIntArray(Column.mapToArray(bonds.atomIdA, x => x - 1, Int32Array));
-            const indexB = Column.ofIntArray(Column.mapToArray(bonds.atomIdB, x => x - 1, Int32Array));
+            const indexA = Column.ofIntArray(
+                Column.mapToArray(bonds.atomIdA, (x) => x - 1, Int32Array),
+            );
+            const indexB = Column.ofIntArray(
+                Column.mapToArray(bonds.atomIdB, (x) => x - 1, Int32Array),
+            );
             const key = bonds.bondId;
             const order = Column.ofConst(1, bonds.count, Column.Schema.int);
             const flag = Column.ofConst(BondType.Flag.Covalent, bonds.count, Column.Schema.int);
             const pairBonds = IndexPairBonds.fromData(
                 { pairs: { key, indexA, indexB, order, flag }, count: atoms.count },
-                { maxDistance: Infinity }
+                { maxDistance: Infinity },
             );
             IndexPairBonds.Provider.set(first, pairBonds);
         }
 
         AtomPartialCharge.Provider.set(first, {
             data: atoms.charge,
-            type: 'NO_CHARGES'
+            type: 'NO_CHARGES',
         });
 
         models.push(first);
@@ -118,7 +122,7 @@ async function getModels(mol: LammpsDataFile, ctx: RuntimeContext, unitsStyle: U
 
 export { LammpsDataFormat };
 
-type LammpsDataFormat = ModelFormat<LammpsDataFile>
+type LammpsDataFormat = ModelFormat<LammpsDataFile>;
 
 namespace LammpsDataFormat {
     export function is(x?: ModelFormat): x is LammpsDataFormat {
@@ -130,7 +134,10 @@ namespace LammpsDataFormat {
     }
 }
 
-export function trajectoryFromLammpsData(mol: LammpsDataFile, unitsStyle?: UnitStyle): Task<Trajectory> {
+export function trajectoryFromLammpsData(
+    mol: LammpsDataFile,
+    unitsStyle?: UnitStyle,
+): Task<Trajectory> {
     if (unitsStyle === void 0) unitsStyle = 'real';
-    return Task.create('Parse Lammps Data', ctx => getModels(mol, ctx, unitsStyle));
+    return Task.create('Parse Lammps Data', (ctx) => getModels(mol, ctx, unitsStyle));
 }

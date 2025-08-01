@@ -5,9 +5,17 @@
  */
 
 import { Structure, StructureElement } from '../../mol-model/structure.ts';
-import { InteractionElementSchema, InteractionInfo, StructureInteractionElement, StructureInteractions } from './model.ts';
+import {
+    InteractionElementSchema,
+    InteractionInfo,
+    StructureInteractionElement,
+    StructureInteractions,
+} from './model.ts';
 
-export function getCustomInteractionData(interactions: InteractionElementSchema[], structures: { [ref: string]: Structure }): StructureInteractions {
+export function getCustomInteractionData(
+    interactions: InteractionElementSchema[],
+    structures: { [ref: string]: Structure },
+): StructureInteractions {
     const elements: StructureInteractionElement[] = [];
 
     for (const schema of interactions) {

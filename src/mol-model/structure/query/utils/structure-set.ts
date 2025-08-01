@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Structure, Unit, StructureElement } from '../../structure.ts';
+import { Structure, StructureElement, Unit } from '../../structure.ts';
 import { SortedArray } from '../../../../mol-data/int.ts';
 import { StructureSubsetBuilder } from '../../structure/util/subset-builder.ts';
 
@@ -26,7 +26,9 @@ export function structureUnion(source: Structure, structures: Structure[]) {
                 if (merged.length === source.unitMap.get(u.id).elements.length) fullUnits.add(u.id);
             } else {
                 unitMap.set(u.id, u.elements);
-                if (u.elements.length === source.unitMap.get(u.id).elements.length) fullUnits.add(u.id);
+                if (u.elements.length === source.unitMap.get(u.id).elements.length) {
+                    fullUnits.add(u.id);
+                }
             }
         }
     }
@@ -61,9 +63,11 @@ export function structureAreIntersecting(sA: Structure, sB: Structure): boolean 
 
     let a, b;
     if (sA.units.length < sB.units.length) {
-        a = sA; b = sB;
+        a = sA;
+        b = sB;
     } else {
-        a = sB; b = sA;
+        a = sB;
+        b = sA;
     }
 
     const aU = a.units, bU = b.unitMap;
@@ -84,9 +88,11 @@ export function structureIntersect(sA: Structure, sB: Structure): Structure {
 
     let a, b;
     if (sA.units.length < sB.units.length) {
-        a = sA; b = sB;
+        a = sA;
+        b = sB;
     } else {
-        a = sB; b = sA;
+        a = sB;
+        b = sA;
     }
 
     const aU = a.units, bU = b.unitMap;

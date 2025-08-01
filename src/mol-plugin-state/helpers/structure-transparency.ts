@@ -9,15 +9,38 @@ import { Structure, StructureElement } from '../../mol-model/structure.ts';
 import { PluginStateObject } from '../objects.ts';
 import { StateTransforms } from '../transforms.ts';
 import { PluginContext } from '../../mol-plugin/context.ts';
-import { StateBuilder, StateObjectCell, StateSelection, StateTransform } from '../../mol-state/index.ts';
+import {
+    StateBuilder,
+    StateObjectCell,
+    StateSelection,
+    StateTransform,
+} from '../../mol-state/index.ts';
 import { StructureComponentRef } from '../manager/structure/hierarchy-state.ts';
 import { EmptyLoci, isEmptyLoci, Loci } from '../../mol-model/loci.ts';
 import { Transparency } from '../../mol-theme/transparency.ts';
 
-type TransparencyEachReprCallback = (update: StateBuilder.Root, repr: StateObjectCell<PluginStateObject.Molecule.Structure.Representation3D, StateTransform<typeof StateTransforms.Representation.StructureRepresentation3D>>, transparency?: StateObjectCell<any, StateTransform<typeof StateTransforms.Representation.TransparencyStructureRepresentation3DFromBundle>>) => Promise<void>
+type TransparencyEachReprCallback = (
+    update: StateBuilder.Root,
+    repr: StateObjectCell<
+        PluginStateObject.Molecule.Structure.Representation3D,
+        StateTransform<typeof StateTransforms.Representation.StructureRepresentation3D>
+    >,
+    transparency?: StateObjectCell<
+        any,
+        StateTransform<
+            typeof StateTransforms.Representation.TransparencyStructureRepresentation3DFromBundle
+        >
+    >,
+) => Promise<void>;
 const TransparencyManagerTag = 'transparency-controls';
 
-export async function setStructureTransparency(plugin: PluginContext, components: StructureComponentRef[], value: number, lociGetter: (structure: Structure) => Promise<StructureElement.Loci | EmptyLoci>, types?: string[]) {
+export async function setStructureTransparency(
+    plugin: PluginContext,
+    components: StructureComponentRef[],
+    value: number,
+    lociGetter: (structure: Structure) => Promise<StructureElement.Loci | EmptyLoci>,
+    types?: string[],
+) {
     await eachRepr(plugin, components, async (update, repr, transparencyCell) => {
         if (types && types.length > 0 && !types.includes(repr.params!.values.type.name)) return;
 
@@ -39,12 +62,20 @@ export async function setStructureTransparency(plugin: PluginContext, components
         } else {
             const filtered = getFilteredBundle([layer], structure);
             update.to(repr.transform.ref)
-                .apply(StateTransforms.Representation.TransparencyStructureRepresentation3DFromBundle, Transparency.toBundle(filtered), { tags: TransparencyManagerTag });
+                .apply(
+                    StateTransforms.Representation.TransparencyStructureRepresentation3DFromBundle,
+                    Transparency.toBundle(filtered),
+                    { tags: TransparencyManagerTag },
+                );
         }
     });
 }
 
-export async function clearStructureTransparency(plugin: PluginContext, components: StructureComponentRef[], types?: string[]) {
+export async function clearStructureTransparency(
+    plugin: PluginContext,
+    components: StructureComponentRef[],
+    types?: string[],
+) {
     await eachRepr(plugin, components, async (update, repr, transparencyCell) => {
         if (types && types.length > 0 && !types.includes(repr.params!.values.type.name)) return;
         if (transparencyCell) {
@@ -53,12 +84,21 @@ export async function clearStructureTransparency(plugin: PluginContext, componen
     });
 }
 
-async function eachRepr(plugin: PluginContext, components: StructureComponentRef[], callback: TransparencyEachReprCallback) {
+async function eachRepr(
+    plugin: PluginContext,
+    components: StructureComponentRef[],
+    callback: TransparencyEachReprCallback,
+) {
     const state = plugin.state.data;
     const update = state.build();
     for (const c of components) {
         for (const r of c.representations) {
-            const transparency = state.select(StateSelection.Generators.ofTransformer(StateTransforms.Representation.TransparencyStructureRepresentation3DFromBundle, r.cell.transform.ref).withTag(TransparencyManagerTag));
+            const transparency = state.select(
+                StateSelection.Generators.ofTransformer(
+                    StateTransforms.Representation.TransparencyStructureRepresentation3DFromBundle,
+                    r.cell.transform.ref,
+                ).withTag(TransparencyManagerTag),
+            );
             await callback(update, r.cell, transparency[0]);
         }
     }

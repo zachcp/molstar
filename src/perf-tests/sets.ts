@@ -1,5 +1,5 @@
 import * as B from 'benchmark';
-import { Tuple, Segmentation, OrderedSet as OrdSet } from '../mol-data/int.ts';
+import { OrderedSet as OrdSet, Segmentation, Tuple } from '../mol-data/int.ts';
 // import { ElementSet } from 'mol-model/structure'
 
 // export namespace Iteration {
@@ -133,7 +133,9 @@ export namespace Union {
         return ret;
     }
 
-    function _setAdd(this: Set<number>, x: number) { this.add(x); }
+    function _setAdd(this: Set<number>, x: number) {
+        this.add(x);
+    }
     function unionS(a: Set<number>, b: Set<number>) {
         const ret = new Set<number>();
         a.forEach(_setAdd, ret);
@@ -141,7 +143,9 @@ export namespace Union {
         return ret;
     }
 
-    function _setInt(this: { set: Set<number>, other: Set<number> }, x: number) { if (this.other.has(x)) this.set.add(x); }
+    function _setInt(this: { set: Set<number>; other: Set<number> }, x: number) {
+        if (this.other.has(x)) this.set.add(x);
+    }
     function intS(a: Set<number>, b: Set<number>) {
         if (a.size < b.size) {
             const ctx = { set: new Set<number>(), other: b };
@@ -160,8 +164,16 @@ export namespace Union {
         const { ordSet: osA, set: sA, obj: oA } = createData(createArray(1000));
         const { ordSet: osB, set: sB, obj: oB } = createData(createArray(1000));
 
-        console.log(OrdSet.size(unionOS(osA, osB)), Object.keys(unionO(oA, oB)).length, unionS(sA, sB).size);
-        console.log(OrdSet.size(intOS(osA, osB)), Object.keys(intO(oA, oB)).length, intS(sA, sB).size);
+        console.log(
+            OrdSet.size(unionOS(osA, osB)),
+            Object.keys(unionO(oA, oB)).length,
+            unionS(sA, sB).size,
+        );
+        console.log(
+            OrdSet.size(intOS(osA, osB)),
+            Object.keys(intO(oA, oB)).length,
+            intS(sA, sB).size,
+        );
 
         suite
             .add('u ord set', () => unionOS(osA, osB))
@@ -183,8 +195,16 @@ export namespace Union {
         const { ordSet: osA, set: sA, obj: oA } = createData(rangeA);
         const { ordSet: osB, set: sB, obj: oB } = createData(rangeB);
 
-        console.log(OrdSet.size(unionOS(osA, osB)), Object.keys(unionO(oA, oB)).length, unionS(sA, sB).size);
-        console.log(OrdSet.size(intOS(osA, osB)), Object.keys(intO(oA, oB)).length, intS(sA, sB).size);
+        console.log(
+            OrdSet.size(unionOS(osA, osB)),
+            Object.keys(unionO(oA, oB)).length,
+            unionS(sA, sB).size,
+        );
+        console.log(
+            OrdSet.size(intOS(osA, osB)),
+            Object.keys(intO(oA, oB)).length,
+            intS(sA, sB).size,
+        );
 
         suite
             .add('u ord set', () => unionOS(osA, osB))
@@ -220,7 +240,6 @@ export namespace Union {
 //         }
 //         return b.getSet();
 //     }
-
 
 //     export function run() {
 //         const suite = new B.Suite();
@@ -332,8 +351,8 @@ export namespace ObjectVsMap {
 }
 
 export namespace IntVsStringIndices {
-    type WithKeys<K> = { keys: K[], data: { [key: number]: number } }
-    type MapWithKeys = { keys: number[], map: Map<number, number> }
+    type WithKeys<K> = { keys: K[]; data: { [key: number]: number } };
+    type MapWithKeys = { keys: number[]; map: Map<number, number> };
 
     function createCacheKeys(n: number): WithKeys<number> {
         const data = Object.create(null), keys = [];

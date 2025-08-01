@@ -4,20 +4,38 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Unit, Structure } from '../../../../mol-model/structure.ts';
-import { Task, RuntimeContext } from '../../../../mol-task/index.ts';
-import { getUnitConformationAndRadius, CommonSurfaceProps, ensureReasonableResolution, getStructureConformationAndRadius } from './common.ts';
-import { PositionData, DensityData, Box3D } from '../../../../mol-math/geometry.ts';
-import { MolecularSurfaceCalculationProps, calcMolecularSurface } from '../../../../mol-math/geometry/molecular-surface.ts';
+import { Structure, Unit } from '../../../../mol-model/structure.ts';
+import { RuntimeContext, Task } from '../../../../mol-task/index.ts';
+import {
+    CommonSurfaceProps,
+    ensureReasonableResolution,
+    getStructureConformationAndRadius,
+    getUnitConformationAndRadius,
+} from './common.ts';
+import { Box3D, DensityData, PositionData } from '../../../../mol-math/geometry.ts';
+import {
+    calcMolecularSurface,
+    MolecularSurfaceCalculationProps,
+} from '../../../../mol-math/geometry/molecular-surface.ts';
 import { OrderedSet } from '../../../../mol-data/int.ts';
 import { Boundary } from '../../../../mol-math/geometry/boundary.ts';
 import { SizeTheme } from '../../../../mol-theme/size.ts';
 
-export type MolecularSurfaceProps = MolecularSurfaceCalculationProps & CommonSurfaceProps
+export type MolecularSurfaceProps = MolecularSurfaceCalculationProps & CommonSurfaceProps;
 
-function getUnitPositionDataAndMaxRadius(structure: Structure, unit: Unit, sizeTheme: SizeTheme<any>, props: MolecularSurfaceProps) {
+function getUnitPositionDataAndMaxRadius(
+    structure: Structure,
+    unit: Unit,
+    sizeTheme: SizeTheme<any>,
+    props: MolecularSurfaceProps,
+) {
     const { probeRadius } = props;
-    const { position, boundary, radius } = getUnitConformationAndRadius(structure, unit, sizeTheme, props);
+    const { position, boundary, radius } = getUnitConformationAndRadius(
+        structure,
+        unit,
+        sizeTheme,
+        props,
+    );
     const { indices } = position;
     const n = OrderedSet.size(indices);
     const radii = new Float32Array(OrderedSet.end(indices));
@@ -33,19 +51,37 @@ function getUnitPositionDataAndMaxRadius(structure: Structure, unit: Unit, sizeT
     return { position: { ...position, radius: radii }, boundary, maxRadius };
 }
 
-export function computeUnitMolecularSurface(structure: Structure, unit: Unit, sizeTheme: SizeTheme<any>, props: MolecularSurfaceProps) {
-    const { position, boundary, maxRadius } = getUnitPositionDataAndMaxRadius(structure, unit, sizeTheme, props);
+export function computeUnitMolecularSurface(
+    structure: Structure,
+    unit: Unit,
+    sizeTheme: SizeTheme<any>,
+    props: MolecularSurfaceProps,
+) {
+    const { position, boundary, maxRadius } = getUnitPositionDataAndMaxRadius(
+        structure,
+        unit,
+        sizeTheme,
+        props,
+    );
     const p = ensureReasonableResolution(boundary.box, props);
-    return Task.create('Molecular Surface', async ctx => {
+    return Task.create('Molecular Surface', async (ctx) => {
         return await MolecularSurface(ctx, position, boundary, maxRadius, boundary.box, p);
     });
 }
 
 //
 
-function getStructurePositionDataAndMaxRadius(structure: Structure, sizeTheme: SizeTheme<any>, props: MolecularSurfaceProps) {
+function getStructurePositionDataAndMaxRadius(
+    structure: Structure,
+    sizeTheme: SizeTheme<any>,
+    props: MolecularSurfaceProps,
+) {
     const { probeRadius } = props;
-    const { position, boundary, radius } = getStructureConformationAndRadius(structure, sizeTheme, props);
+    const { position, boundary, radius } = getStructureConformationAndRadius(
+        structure,
+        sizeTheme,
+        props,
+    );
     const { indices } = position;
     const n = OrderedSet.size(indices);
     const radii = new Float32Array(OrderedSet.end(indices));
@@ -61,16 +97,31 @@ function getStructurePositionDataAndMaxRadius(structure: Structure, sizeTheme: S
     return { position: { ...position, radius: radii }, boundary, maxRadius };
 }
 
-export function computeStructureMolecularSurface(structure: Structure, sizeTheme: SizeTheme<any>, props: MolecularSurfaceProps) {
-    const { position, boundary, maxRadius } = getStructurePositionDataAndMaxRadius(structure, sizeTheme, props);
+export function computeStructureMolecularSurface(
+    structure: Structure,
+    sizeTheme: SizeTheme<any>,
+    props: MolecularSurfaceProps,
+) {
+    const { position, boundary, maxRadius } = getStructurePositionDataAndMaxRadius(
+        structure,
+        sizeTheme,
+        props,
+    );
     const p = ensureReasonableResolution(boundary.box, props);
-    return Task.create('Molecular Surface', async ctx => {
+    return Task.create('Molecular Surface', async (ctx) => {
         return await MolecularSurface(ctx, position, boundary, maxRadius, boundary.box, p);
     });
 }
 
 //
 
-async function MolecularSurface(ctx: RuntimeContext, position: Required<PositionData>, boundary: Boundary, maxRadius: number, box: Box3D | null, props: MolecularSurfaceCalculationProps): Promise<DensityData> {
+async function MolecularSurface(
+    ctx: RuntimeContext,
+    position: Required<PositionData>,
+    boundary: Boundary,
+    maxRadius: number,
+    box: Box3D | null,
+    props: MolecularSurfaceCalculationProps,
+): Promise<DensityData> {
     return calcMolecularSurface(ctx, position, boundary, maxRadius, box, props);
 }

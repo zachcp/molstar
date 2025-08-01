@@ -5,11 +5,18 @@
  */
 
 import { VERSION } from '../version.ts';
-import { QueryParamInfo, QueryParamType, QueryDefinition, CommonQueryParamsInfo, QueryList } from './api.ts';
+import {
+    CommonQueryParamsInfo,
+    QueryDefinition,
+    QueryList,
+    QueryParamInfo,
+    QueryParamType,
+} from './api.ts';
 import { ModelServerConfig as ServerConfig } from '../config.ts';
 import { MultipleQuerySpec } from './api-web-multiple.ts';
 
-export const shortcutIconLink = `<link rel='shortcut icon' href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAnUExURQAAAMIrHrspHr0oH7soILonHrwqH7onILsoHrsoH7soH7woILwpIKgVokoAAAAMdFJOUwAQHzNxWmBHS5XO6jdtAmoAAACZSURBVDjLxZNRCsQgDAVNXmwb9f7nXZEaLRgXloXOhwQdjMYYwpOLw55fBT46KhbOKhmRR2zLcFJQj8UR+HxFgArIF5BKJbEncC6NDEdI5SatBRSDJwGAoiFDONrEJXWYhGMIcRJGCrb1TOtDahfUuQXd10jkFYq0ViIrbUpNcVT6redeC1+b9tH2WLR93Sx2VCzkv/7NjfABxjQHksGB7lAAAAAASUVORK5CYII=' />`;
+export const shortcutIconLink =
+    `<link rel='shortcut icon' href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAnUExURQAAAMIrHrspHr0oH7soILonHrwqH7onILsoHrsoH7soH7woILwpIKgVokoAAAAMdFJOUwAQHzNxWmBHS5XO6jdtAmoAAACZSURBVDjLxZNRCsQgDAVNXmwb9f7nXZEaLRgXloXOhwQdjMYYwpOLw55fBT46KhbOKhmRR2zLcFJQj8UR+HxFgArIF5BKJbEncC6NDEdI5SatBRSDJwGAoiFDONrEJXWYhGMIcRJGCrb1TOtDahfUuQXd10jkFYq0ViIrbUpNcVT6redeC1+b9tH2WLR93Sx2VCzkv/7NjfABxjQHksGB7lAAAAAASUVORK5CYII=' />`;
 
 export function getApiSchema() {
     return {
@@ -17,12 +24,13 @@ export function getApiSchema() {
         info: {
             version: VERSION,
             title: 'ModelServer',
-            description: 'The ModelServer is a service for accessing subsets of macromolecular model data.',
+            description:
+                'The ModelServer is a service for accessing subsets of macromolecular model data.',
         },
         tags: [
             {
                 name: 'General',
-            }
+            },
         ],
         paths: getPaths(),
         components: {
@@ -35,10 +43,10 @@ export function getApiSchema() {
                     schema: {
                         type: 'string',
                     },
-                    style: 'simple'
+                    style: 'simple',
                 },
-            }
-        }
+            },
+        },
     };
 }
 
@@ -48,14 +56,19 @@ function getPaths() {
         ret[`${ServerConfig.apiPrefix}/v1/{id}/${name}`] = getQueryInfo(definition);
     }
 
-    const queryManySummary = 'Executes multiple queries at the same time and writes them as separate data blocks.';
+    const queryManySummary =
+        'Executes multiple queries at the same time and writes them as separate data blocks.';
     const queryManyExample: MultipleQuerySpec = {
         queries: [
-            { entryId: '1cbs', query: 'residueInteraction', params: { atom_site: [{ label_comp_id: 'REA' }], radius: 5 } },
-            { entryId: '1tqn', query: 'full', copy_all_categories: true }
+            {
+                entryId: '1cbs',
+                query: 'residueInteraction',
+                params: { atom_site: [{ label_comp_id: 'REA' }], radius: 5 },
+            },
+            { entryId: '1tqn', query: 'full', copy_all_categories: true },
         ],
         encoding: 'cif',
-        asTarGz: false
+        asTarGz: false,
     };
     ret[`${ServerConfig.apiPrefix}/v1/query-many`] = {
         get: {
@@ -71,7 +84,7 @@ function getPaths() {
                     type: 'string',
                 },
                 example: JSON.stringify(queryManyExample),
-                style: 'simple'
+                style: 'simple',
             }],
             responses: {
                 200: {
@@ -79,9 +92,9 @@ function getPaths() {
                     content: {
                         'text/plain': {},
                         'application/octet-stream': {},
-                    }
-                }
-            }
+                    },
+                },
+            },
         },
         post: {
             tags: ['General'],
@@ -92,9 +105,9 @@ function getPaths() {
                 content: {
                     'application/json': {
                         schema: { type: 'object' },
-                        example: queryManyExample
-                    }
-                }
+                        example: queryManyExample,
+                    },
+                },
             },
             responses: {
                 200: {
@@ -102,10 +115,10 @@ function getPaths() {
                     content: {
                         'text/plain': {},
                         'application/octet-stream': {},
-                    }
-                }
-            }
-        }
+                    },
+                },
+            },
+        },
     };
 
     return ret;
@@ -113,7 +126,7 @@ function getPaths() {
 
 function getQueryInfo(def: QueryDefinition) {
     const jsonExample: any = {};
-    def.jsonParams.forEach(p => {
+    def.jsonParams.forEach((p) => {
         if (!p.exampleValues || !p.exampleValues.length) return;
         jsonExample[p.name] = p.exampleValues[0];
     });
@@ -126,7 +139,7 @@ function getQueryInfo(def: QueryDefinition) {
             parameters: [
                 { $ref: '#/components/parameters/id' },
                 ...def.restParams.map(getParamInfo),
-                ...CommonQueryParamsInfo.map(getParamInfo)
+                ...CommonQueryParamsInfo.map(getParamInfo),
             ],
             responses: {
                 200: {
@@ -134,9 +147,9 @@ function getQueryInfo(def: QueryDefinition) {
                     content: {
                         'text/plain': {},
                         'application/octet-stream': {},
-                    }
-                }
-            }
+                    },
+                },
+            },
         },
         post: {
             tags: ['General'],
@@ -144,15 +157,15 @@ function getQueryInfo(def: QueryDefinition) {
             operationId: def.name + '-post',
             parameters: [
                 { $ref: '#/components/parameters/id' },
-                ...CommonQueryParamsInfo.map(getParamInfo)
+                ...CommonQueryParamsInfo.map(getParamInfo),
             ],
             requestBody: {
                 content: {
                     'application/json': {
                         schema: { type: 'object' },
-                        example: jsonExample
-                    }
-                }
+                        example: jsonExample,
+                    },
+                },
             },
             responses: {
                 200: {
@@ -160,10 +173,10 @@ function getQueryInfo(def: QueryDefinition) {
                     content: {
                         'text/plain': {},
                         'application/octet-stream': {},
-                    }
-                }
-            }
-        }
+                    },
+                },
+            },
+        },
     };
 }
 
@@ -175,14 +188,15 @@ function getParamInfo(info: QueryParamInfo) {
         required: !!info.required,
         schema: {
             type: info.type === QueryParamType.String
-                ? 'string' : info.type === QueryParamType.Integer
-                    ? 'integer'
-                    : info.type === QueryParamType.Boolean
-                        ? 'boolean'
-                        : 'number',
+                ? 'string'
+                : info.type === QueryParamType.Integer
+                ? 'integer'
+                : info.type === QueryParamType.Boolean
+                ? 'boolean'
+                : 'number',
             enum: info.supportedValues ? info.supportedValues : void 0,
-            default: info.defaultValue
+            default: info.defaultValue,
         },
-        style: 'simple'
+        style: 'simple',
     };
 }

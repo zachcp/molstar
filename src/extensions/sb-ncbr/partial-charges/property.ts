@@ -46,10 +46,13 @@ function getData(model: Model): CustomProperty.Data<SBNcbrPartialChargeData | un
         const typeIdToResidueToCharge = getTypeIdToResidueIdToCharge(model, typeIdToAtomIdToCharge);
         const maxAbsoluteAtomCharges = getMaxAbsoluteCharges(typeIdToAtomIdToCharge);
         const maxAbsoluteResidueCharges = getMaxAbsoluteCharges(typeIdToResidueToCharge);
-        const maxAbsoluteAtomChargeAll = getMaxAbsoluteAtomChargeAll(maxAbsoluteAtomCharges, maxAbsoluteResidueCharges);
+        const maxAbsoluteAtomChargeAll = getMaxAbsoluteAtomChargeAll(
+            maxAbsoluteAtomCharges,
+            maxAbsoluteResidueCharges,
+        );
 
         const options = Array.from(typeIdToMethod.entries()).map(
-            ([typeId, method]) => [typeId, method] as [number, string]
+            ([typeId, method]) => [typeId, method] as [number, string],
         );
         const params = {
             typeId: PD.Select<number>(1, options),
@@ -77,8 +80,12 @@ function getTypeIdToMethod(model: Model) {
 
     const sourceData = model.sourceData as MmcifFormat;
     const rowCount = sourceData.data.frame.categories.sb_ncbr_partial_atomic_charges_meta.rowCount;
-    const typeIds = sourceData.data.frame.categories.sb_ncbr_partial_atomic_charges_meta.getField('id');
-    const methods = sourceData.data.frame.categories.sb_ncbr_partial_atomic_charges_meta.getField('method');
+    const typeIds = sourceData.data.frame.categories.sb_ncbr_partial_atomic_charges_meta.getField(
+        'id',
+    );
+    const methods = sourceData.data.frame.categories.sb_ncbr_partial_atomic_charges_meta.getField(
+        'method',
+    );
 
     if (!typeIds || !methods) {
         return typeIdToMethod;
@@ -93,14 +100,22 @@ function getTypeIdToMethod(model: Model) {
     return typeIdToMethod;
 }
 
-function getTypeIdToAtomIdToCharge(model: Model): SBNcbrPartialChargeData['typeIdToAtomIdToCharge'] {
+function getTypeIdToAtomIdToCharge(
+    model: Model,
+): SBNcbrPartialChargeData['typeIdToAtomIdToCharge'] {
     const atomIdToCharge: SBNcbrPartialChargeData['typeIdToAtomIdToCharge'] = new Map();
 
     const sourceData = model.sourceData as MmcifFormat;
     const rowCount = sourceData.data.frame.categories.sb_ncbr_partial_atomic_charges.rowCount;
-    const typeIds = sourceData.data.frame.categories.sb_ncbr_partial_atomic_charges.getField('type_id');
-    const atomIds = sourceData.data.frame.categories.sb_ncbr_partial_atomic_charges.getField('atom_id');
-    const charges = sourceData.data.frame.categories.sb_ncbr_partial_atomic_charges.getField('charge');
+    const typeIds = sourceData.data.frame.categories.sb_ncbr_partial_atomic_charges.getField(
+        'type_id',
+    );
+    const atomIds = sourceData.data.frame.categories.sb_ncbr_partial_atomic_charges.getField(
+        'atom_id',
+    );
+    const charges = sourceData.data.frame.categories.sb_ncbr_partial_atomic_charges.getField(
+        'charge',
+    );
 
     if (!typeIds || !atomIds || !charges) return atomIdToCharge;
 
@@ -119,7 +134,7 @@ function getTypeIdToAtomIdToCharge(model: Model): SBNcbrPartialChargeData['typeI
 
 function getTypeIdToResidueIdToCharge(
     model: Model,
-    typeIdToAtomIdToCharge: SBNcbrPartialChargeData['typeIdToAtomIdToCharge']
+    typeIdToAtomIdToCharge: SBNcbrPartialChargeData['typeIdToAtomIdToCharge'],
 ) {
     const { offsets, count } = model.atomicHierarchy.residueAtomSegments;
     const { atomId: atomIds } = model.atomicConformation;
@@ -146,10 +161,10 @@ function getTypeIdToResidueIdToCharge(
 }
 
 function getMaxAbsoluteCharges(
-    typeIdToCharge: SBNcbrPartialChargeData['typeIdToAtomIdToCharge']
+    typeIdToCharge: SBNcbrPartialChargeData['typeIdToAtomIdToCharge'],
 ): SBNcbrPartialChargeData['maxAbsoluteAtomCharges'];
 function getMaxAbsoluteCharges(
-    typeIdToCharge: SBNcbrPartialChargeData['typeIdToResidueToCharge']
+    typeIdToCharge: SBNcbrPartialChargeData['typeIdToResidueToCharge'],
 ): SBNcbrPartialChargeData['maxAbsoluteResidueCharges'] {
     const maxAbsoluteCharges: Map<number, number> = new Map();
 
@@ -165,7 +180,7 @@ function getMaxAbsoluteCharges(
 
 function getMaxAbsoluteAtomChargeAll(
     maxAbsoluteAtomCharges: SBNcbrPartialChargeData['maxAbsoluteAtomCharges'],
-    maxAbsoluteResidueCharges: SBNcbrPartialChargeData['maxAbsoluteResidueCharges']
+    maxAbsoluteResidueCharges: SBNcbrPartialChargeData['maxAbsoluteResidueCharges'],
 ): number {
     let maxAbsoluteCharge = 0;
 
@@ -192,8 +207,8 @@ export function hasPartialChargesCategories(model: Model): boolean {
 }
 
 export const SbNcbrPartialChargesPropertyProvider: CustomModelProperty.Provider<
-PartialChargesPropertyParams,
-SBNcbrPartialChargeData | undefined
+    PartialChargesPropertyParams,
+    SBNcbrPartialChargeData | undefined
 > = CustomModelProperty.createProvider({
     label: 'SB NCBR Partial Charges Property Provider',
     descriptor: CustomPropertyDescriptor({

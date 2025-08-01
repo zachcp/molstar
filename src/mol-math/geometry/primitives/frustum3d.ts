@@ -13,7 +13,15 @@ import { Box3D } from './box3d.ts';
 import { Plane3D } from './plane3d.ts';
 import { Sphere3D } from './sphere3d.ts';
 
-interface Frustum3D { 0: Plane3D, 1: Plane3D, 2: Plane3D, 3: Plane3D, 4: Plane3D, 5: Plane3D; length: 6; }
+interface Frustum3D {
+    0: Plane3D;
+    1: Plane3D;
+    2: Plane3D;
+    3: Plane3D;
+    4: Plane3D;
+    5: Plane3D;
+    length: 6;
+}
 
 function Frustum3D() {
     return Frustum3D.create(Plane3D(), Plane3D(), Plane3D(), Plane3D(), Plane3D(), Plane3D());
@@ -27,9 +35,16 @@ namespace Frustum3D {
         Top = 3,
         Far = 4,
         Near = 5,
-    };
+    }
 
-    export function create(right: Plane3D, left: Plane3D, bottom: Plane3D, top: Plane3D, far: Plane3D, near: Plane3D): Frustum3D {
+    export function create(
+        right: Plane3D,
+        left: Plane3D,
+        bottom: Plane3D,
+        top: Plane3D,
+        far: Plane3D,
+        near: Plane3D,
+    ): Frustum3D {
         return [right, left, bottom, top, far, near];
     }
 

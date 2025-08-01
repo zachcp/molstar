@@ -14,7 +14,7 @@ import { CancelSvg } from './controls/icons.tsx';
 class ToastEntry extends PluginUIComponent<{ entry: PluginToastManager.Entry }> {
     private hide = () => {
         const entry = this.props.entry;
-        (entry.hide || function () { }).call(null);
+        (entry.hide || function () {}).call(null);
     };
 
     render() {
@@ -22,20 +22,31 @@ class ToastEntry extends PluginUIComponent<{ entry: PluginToastManager.Entry }> 
         const message = typeof entry.message === 'string'
             ? <div dangerouslySetInnerHTML={{ __html: entry.message }} />
             // @ts-ignore // TODO: handle type better
-            : <div><entry.message /></div>;
+            : (
+                <div>
+                    <entry.message />
+                </div>
+            );
 
-        return <div className='msp-toast-entry'>
-            <div className='msp-toast-title' onClick={() => this.hide()}>
-                {entry.title}
+        return (
+            <div className='msp-toast-entry'>
+                <div className='msp-toast-title' onClick={() => this.hide()}>
+                    {entry.title}
+                </div>
+                <div className='msp-toast-message'>
+                    {message}
+                </div>
+                <div className='msp-toast-clear'></div>
+                <div className='msp-toast-hide'>
+                    <IconButton
+                        svg={CancelSvg}
+                        onClick={this.hide}
+                        title='Hide'
+                        className='msp-no-hover-outline'
+                    />
+                </div>
             </div>
-            <div className='msp-toast-message'>
-                {message}
-            </div>
-            <div className='msp-toast-clear'></div>
-            <div className='msp-toast-hide'>
-                <IconButton svg={CancelSvg} onClick={this.hide} title='Hide' className='msp-no-hover-outline' />
-            </div>
-        </div>;
+        );
     }
 }
 
@@ -51,10 +62,14 @@ export class Toasts extends PluginUIComponent {
 
         const entries: PluginToastManager.Entry[] = [];
         state.entries.forEach((t, k) => entries.push(t!));
-        entries.sort(function (x, y) { return x.serialNumber - y.serialNumber; });
+        entries.sort(function (x, y) {
+            return x.serialNumber - y.serialNumber;
+        });
 
-        return <div className='msp-toast-container'>
-            {entries.map(e => <ToastEntry key={e.serialNumber} entry={e} />)}
-        </div>;
+        return (
+            <div className='msp-toast-container'>
+                {entries.map((e) => <ToastEntry key={e.serialNumber} entry={e} />)}
+            </div>
+        );
     }
 }

@@ -36,7 +36,6 @@ function getBasic(prmtop: PrmtopFile) {
 
     for (let i = 0, il = residueCount - 1; i < il; ++i) {
         addResidue(i, residuePointer.value(i) - 1, residuePointer.value(i + 1) - 1);
-
     }
     addResidue(residueCount - 1, residuePointer.value(residueCount - 1) - 1, atomCount);
 
@@ -117,7 +116,7 @@ function getBasic(prmtop: PrmtopFile) {
     const basic = createBasic({
         entity: entityBuilder.getEntityTable(),
         chem_comp: componentBuilder.getChemCompTable(),
-        atom_site
+        atom_site,
     });
 
     return basic;
@@ -127,7 +126,7 @@ function getBasic(prmtop: PrmtopFile) {
 
 export { PrmtopFormat };
 
-type PrmtopFormat = ModelFormat<PrmtopFile>
+type PrmtopFormat = ModelFormat<PrmtopFile>;
 
 namespace PrmtopFormat {
     export function is(x?: ModelFormat): x is PrmtopFormat {
@@ -140,7 +139,7 @@ namespace PrmtopFormat {
 }
 
 export function topologyFromPrmtop(prmtop: PrmtopFile): Task<Topology> {
-    return Task.create('Parse PRMTOP', async ctx => {
+    return Task.create('Parse PRMTOP', async (ctx) => {
         const format = PrmtopFormat.fromPrmtop(prmtop);
         const basic = getBasic(prmtop);
 
@@ -166,7 +165,7 @@ export function topologyFromPrmtop(prmtop: PrmtopFile): Task<Topology> {
                 rowCount: bondCount,
                 schema: Column.Schema.int,
             }),
-            order: Column.ofConst(1, bondCount, Column.Schema.int)
+            order: Column.ofConst(1, bondCount, Column.Schema.int),
         };
 
         return Topology.create(prmtop.title.join(' ') || 'PRMTOP', basic, bonds, format);

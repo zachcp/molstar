@@ -10,7 +10,7 @@
 import { FileHandle } from './file-handle.ts';
 import { SimpleBuffer } from './simple-buffer.ts';
 
-export type TypedArrayValueType = 'float32' | 'int8' | 'int16' | 'uint16'
+export type TypedArrayValueType = 'float32' | 'int8' | 'int16' | 'uint16';
 
 export namespace TypedArrayValueType {
     export const Float32: TypedArrayValueType = 'float32';
@@ -19,14 +19,14 @@ export namespace TypedArrayValueType {
     export const Uint16: TypedArrayValueType = 'uint16';
 }
 
-export type TypedArrayValueArray = Float32Array | Int8Array | Int16Array | Uint16Array
+export type TypedArrayValueArray = Float32Array | Int8Array | Int16Array | Uint16Array;
 
 export interface TypedArrayBufferContext {
-    type: TypedArrayValueType,
-    elementByteSize: number,
-    readBuffer: SimpleBuffer,
-    valuesBuffer: Uint8Array,
-    values: TypedArrayValueArray
+    type: TypedArrayValueType;
+    elementByteSize: number;
+    readBuffer: SimpleBuffer;
+    valuesBuffer: Uint8Array;
+    values: TypedArrayValueArray;
 }
 
 export function getElementByteSize(type: TypedArrayValueType) {
@@ -36,7 +36,12 @@ export function getElementByteSize(type: TypedArrayValueType) {
     return 1;
 }
 
-export function makeTypedArray(type: TypedArrayValueType, buffer: ArrayBuffer, byteOffset = 0, length?: number): TypedArrayValueArray {
+export function makeTypedArray(
+    type: TypedArrayValueType,
+    buffer: ArrayBuffer,
+    byteOffset = 0,
+    length?: number,
+): TypedArrayValueArray {
     if (type === TypedArrayValueType.Float32) return new Float32Array(buffer, byteOffset, length);
     if (type === TypedArrayValueType.Int16) return new Int16Array(buffer, byteOffset, length);
     if (type === TypedArrayValueType.Uint16) return new Uint16Array(buffer, byteOffset, length);
@@ -45,33 +50,59 @@ export function makeTypedArray(type: TypedArrayValueType, buffer: ArrayBuffer, b
 
 export function createTypedArray(type: TypedArrayValueType, size: number) {
     switch (type) {
-        case TypedArrayValueType.Float32: return new Float32Array(new ArrayBuffer(4 * size));
-        case TypedArrayValueType.Int8: return new Int8Array(new ArrayBuffer(1 * size));
-        case TypedArrayValueType.Int16: return new Int16Array(new ArrayBuffer(2 * size));
-        case TypedArrayValueType.Uint16: return new Uint16Array(new ArrayBuffer(2 * size));
+        case TypedArrayValueType.Float32:
+            return new Float32Array(new ArrayBuffer(4 * size));
+        case TypedArrayValueType.Int8:
+            return new Int8Array(new ArrayBuffer(1 * size));
+        case TypedArrayValueType.Int16:
+            return new Int16Array(new ArrayBuffer(2 * size));
+        case TypedArrayValueType.Uint16:
+            return new Uint16Array(new ArrayBuffer(2 * size));
     }
     throw Error(`${type} is not a supported value format.`);
 }
 
-export function createTypedArrayBufferContext(size: number, type: TypedArrayValueType): TypedArrayBufferContext {
+export function createTypedArrayBufferContext(
+    size: number,
+    type: TypedArrayValueType,
+): TypedArrayBufferContext {
     const elementByteSize = getElementByteSize(type);
     const arrayBuffer = new ArrayBuffer(elementByteSize * size);
     const readBuffer = SimpleBuffer.fromArrayBuffer(arrayBuffer);
-    const valuesBuffer = SimpleBuffer.IsNativeEndianLittle ? arrayBuffer : new ArrayBuffer(elementByteSize * size);
+    const valuesBuffer = SimpleBuffer.IsNativeEndianLittle
+        ? arrayBuffer
+        : new ArrayBuffer(elementByteSize * size);
     return {
         type,
         elementByteSize,
         readBuffer,
         valuesBuffer: new Uint8Array(valuesBuffer),
-        values: makeTypedArray(type, valuesBuffer)
+        values: makeTypedArray(type, valuesBuffer),
     };
 }
 
-export async function readTypedArray(ctx: TypedArrayBufferContext, file: FileHandle, position: number, byteCount: number, valueByteOffset: number, littleEndian?: boolean) {
+export async function readTypedArray(
+    ctx: TypedArrayBufferContext,
+    file: FileHandle,
+    position: number,
+    byteCount: number,
+    valueByteOffset: number,
+    littleEndian?: boolean,
+) {
     await file.readBuffer(position, ctx.readBuffer, byteCount, valueByteOffset);
-    if (ctx.elementByteSize > 1 && ((littleEndian !== void 0 && littleEndian !== SimpleBuffer.IsNativeEndianLittle) || !SimpleBuffer.IsNativeEndianLittle)) {
+    if (
+        ctx.elementByteSize > 1 &&
+        ((littleEndian !== void 0 && littleEndian !== SimpleBuffer.IsNativeEndianLittle) ||
+            !SimpleBuffer.IsNativeEndianLittle)
+    ) {
         // fix the endian
-        SimpleBuffer.flipByteOrder(ctx.readBuffer, ctx.valuesBuffer, byteCount, ctx.elementByteSize, valueByteOffset);
+        SimpleBuffer.flipByteOrder(
+            ctx.readBuffer,
+            ctx.valuesBuffer,
+            byteCount,
+            ctx.elementByteSize,
+            valueByteOffset,
+        );
     }
     return ctx.values;
 }

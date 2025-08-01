@@ -33,7 +33,16 @@ const normalVector = Vec3();
 const torsionVector = Vec3();
 
 /** set arrowHeight = 0 for no arrow */
-export function addRibbon(state: MeshBuilder.State, controlPoints: ArrayLike<number>, normalVectors: ArrayLike<number>, binormalVectors: ArrayLike<number>, linearSegments: number, widthValues: ArrayLike<number>, heightValues: ArrayLike<number>, arrowHeight: number) {
+export function addRibbon(
+    state: MeshBuilder.State,
+    controlPoints: ArrayLike<number>,
+    normalVectors: ArrayLike<number>,
+    binormalVectors: ArrayLike<number>,
+    linearSegments: number,
+    widthValues: ArrayLike<number>,
+    heightValues: ArrayLike<number>,
+    arrowHeight: number,
+) {
     const { currentGroup, vertices, normals, indices, groups } = state;
 
     const vertexCount = vertices.elementCount;
@@ -92,26 +101,26 @@ export function addRibbon(state: MeshBuilder.State, controlPoints: ArrayLike<num
             indices,
             vertexCount + i * 4,
             vertexCount + (i + 1) * 4 + 1,
-            vertexCount + i * 4 + 1
+            vertexCount + i * 4 + 1,
         );
         caAdd3(
             indices,
             vertexCount + i * 4,
             vertexCount + (i + 1) * 4,
-            vertexCount + (i + 1) * 4 + 1
+            vertexCount + (i + 1) * 4 + 1,
         );
 
         caAdd3(
             indices,
             vertexCount + i * 4 + 2 + 1,
             vertexCount + (i + 1) * 4 + 2 + 1,
-            vertexCount + i * 4 + 2
+            vertexCount + i * 4 + 2,
         );
         caAdd3(
             indices,
             vertexCount + i * 4 + 2,
             vertexCount + (i + 1) * 4 + 2 + 1,
-            vertexCount + (i + 1) * 4 + 2
+            vertexCount + (i + 1) * 4 + 2,
         );
     }
 

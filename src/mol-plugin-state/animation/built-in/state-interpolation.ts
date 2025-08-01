@@ -14,18 +14,18 @@ export const AnimateStateInterpolation = PluginStateAnimation.create({
     name: 'built-in.animate-state-interpolation',
     display: { name: 'Animate State (experimental)' },
     params: () => ({
-        transtionDurationInMs: PD.Numeric(2000, { min: 100, max: 30000, step: 10 })
+        transtionDurationInMs: PD.Numeric(2000, { min: 100, max: 30000, step: 10 }),
     }),
     canApply(plugin) {
         return { canApply: plugin.managers.snapshot.state.entries.size > 1 };
     },
-    initialState: () => ({ }),
+    initialState: () => ({}),
     async apply(animState, t, ctx) {
-
         const snapshots = ctx.plugin.managers.snapshot.state.entries;
         if (snapshots.size < 2) return { kind: 'finished' };
 
-        const currentT = (t.current % ctx.params.transtionDurationInMs) / ctx.params.transtionDurationInMs;
+        const currentT = (t.current % ctx.params.transtionDurationInMs) /
+            ctx.params.transtionDurationInMs;
 
         const srcIndex = Math.floor(t.current / ctx.params.transtionDurationInMs) % snapshots.size;
         let tarIndex = Math.ceil(t.current / ctx.params.transtionDurationInMs);
@@ -57,7 +57,12 @@ export const AnimateStateInterpolation = PluginStateAnimation.create({
                 if (!e.transformer.definition.interpolate) {
                     newState = currentT <= 0.5 ? e.params : f.params;
                 } else {
-                    newState = e.transformer.definition.interpolate(e.params, f.params, currentT, ctx.plugin);
+                    newState = e.transformer.definition.interpolate(
+                        e.params,
+                        f.params,
+                        currentT,
+                        ctx.plugin,
+                    );
                 }
 
                 if (!shallowEqual(oldState, newState)) {
@@ -66,8 +71,12 @@ export const AnimateStateInterpolation = PluginStateAnimation.create({
             }
         }
 
-        await PluginCommands.State.Update(ctx.plugin, { state, tree: update, options: { doNotLogTiming: true } });
+        await PluginCommands.State.Update(ctx.plugin, {
+            state,
+            tree: update,
+            options: { doNotLogTiming: true },
+        });
 
-        return { kind: 'next', state: { } };
-    }
+        return { kind: 'next', state: {} };
+    },
 });

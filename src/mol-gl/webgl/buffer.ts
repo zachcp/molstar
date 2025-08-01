@@ -16,41 +16,53 @@ import { getBytesPerElement, getFormat, getType, TextureFormat, TextureType } fr
 
 const getNextBufferId = idFactory();
 
-export type UsageHint = 'static' | 'dynamic' | 'stream'
-export type DataType = 'uint8' | 'int8' | 'uint16' | 'int16' | 'uint32' | 'int32' | 'float32'
-export type BufferType = 'attribute' | 'elements' | 'uniform' | 'pixel-pack'
+export type UsageHint = 'static' | 'dynamic' | 'stream';
+export type DataType = 'uint8' | 'int8' | 'uint16' | 'int16' | 'uint32' | 'int32' | 'float32';
+export type BufferType = 'attribute' | 'elements' | 'uniform' | 'pixel-pack';
 
 export type DataTypeArrayType = {
-    'uint8': Uint8Array
-    'int8': Int8Array
-    'uint16': Uint16Array
-    'int16': Int16Array
-    'uint32': Uint32Array
-    'int32': Int32Array
-    'float32': Float32Array
-}
-export type ArrayType = ValueOf<DataTypeArrayType>
-export type ArrayKind = keyof DataTypeArrayType
+    'uint8': Uint8Array;
+    'int8': Int8Array;
+    'uint16': Uint16Array;
+    'int16': Int16Array;
+    'uint32': Uint32Array;
+    'int32': Int32Array;
+    'float32': Float32Array;
+};
+export type ArrayType = ValueOf<DataTypeArrayType>;
+export type ArrayKind = keyof DataTypeArrayType;
 
 export function getUsageHint(gl: GLRenderingContext, usageHint: UsageHint) {
     switch (usageHint) {
-        case 'static': return gl.STATIC_DRAW;
-        case 'dynamic': return gl.DYNAMIC_DRAW;
-        case 'stream': return gl.STREAM_DRAW;
-        default: assertUnreachable(usageHint);
+        case 'static':
+            return gl.STATIC_DRAW;
+        case 'dynamic':
+            return gl.DYNAMIC_DRAW;
+        case 'stream':
+            return gl.STREAM_DRAW;
+        default:
+            assertUnreachable(usageHint);
     }
 }
 
 export function getDataType(gl: GLRenderingContext, dataType: DataType) {
     switch (dataType) {
-        case 'uint8': return gl.UNSIGNED_BYTE;
-        case 'int8': return gl.BYTE;
-        case 'uint16': return gl.UNSIGNED_SHORT;
-        case 'int16': return gl.SHORT;
-        case 'uint32': return gl.UNSIGNED_INT;
-        case 'int32': return gl.INT;
-        case 'float32': return gl.FLOAT;
-        default: assertUnreachable(dataType);
+        case 'uint8':
+            return gl.UNSIGNED_BYTE;
+        case 'int8':
+            return gl.BYTE;
+        case 'uint16':
+            return gl.UNSIGNED_SHORT;
+        case 'int16':
+            return gl.SHORT;
+        case 'uint32':
+            return gl.UNSIGNED_INT;
+        case 'int32':
+            return gl.INT;
+        case 'float32':
+            return gl.FLOAT;
+        default:
+            assertUnreachable(dataType);
     }
 }
 
@@ -75,8 +87,10 @@ function dataTypeFromArray(gl: GLRenderingContext, array: ArrayType) {
 
 export function getBufferType(gl: GLRenderingContext, bufferType: BufferType) {
     switch (bufferType) {
-        case 'attribute': return gl.ARRAY_BUFFER;
-        case 'elements': return gl.ELEMENT_ARRAY_BUFFER;
+        case 'attribute':
+            return gl.ARRAY_BUFFER;
+        case 'elements':
+            return gl.ELEMENT_ARRAY_BUFFER;
         case 'uniform':
             if (isWebGL2(gl)) {
                 return gl.UNIFORM_BUFFER;
@@ -93,21 +107,21 @@ export function getBufferType(gl: GLRenderingContext, bufferType: BufferType) {
 }
 
 export interface Buffer {
-    readonly id: number
+    readonly id: number;
 
-    readonly _usageHint: number
-    readonly _bufferType: number
-    readonly _dataType: number
-    readonly _bpe: number
+    readonly _usageHint: number;
+    readonly _bufferType: number;
+    readonly _dataType: number;
+    readonly _bpe: number;
 
-    readonly length: number
+    readonly length: number;
 
-    getBuffer: () => WebGLBuffer
-    updateData: (array: ArrayType) => void
-    updateSubData: (array: ArrayType, offset: number, count: number) => void
+    getBuffer: () => WebGLBuffer;
+    updateData: (array: ArrayType) => void;
+    updateSubData: (array: ArrayType, offset: number, count: number) => void;
 
-    reset: () => void
-    destroy: () => void
+    reset: () => void;
+    destroy: () => void;
 }
 
 export function getBuffer(gl: GLRenderingContext) {
@@ -118,7 +132,12 @@ export function getBuffer(gl: GLRenderingContext) {
     return buffer;
 }
 
-function createBuffer(gl: GLRenderingContext, array: ArrayType, usageHint: UsageHint, bufferType: BufferType): Buffer {
+function createBuffer(
+    gl: GLRenderingContext,
+    array: ArrayType,
+    usageHint: UsageHint,
+    bufferType: BufferType,
+): Buffer {
     let _buffer = getBuffer(gl);
 
     const _usageHint = getUsageHint(gl, usageHint);
@@ -152,7 +171,11 @@ function createBuffer(gl: GLRenderingContext, array: ArrayType, usageHint: Usage
             if (count - offset === array.length) {
                 gl.bufferSubData(_bufferType, 0, array);
             } else {
-                gl.bufferSubData(_bufferType, offset * _bpe, array.subarray(offset, offset + count));
+                gl.bufferSubData(
+                    _bufferType,
+                    offset * _bpe,
+                    array.subarray(offset, offset + count),
+                );
             }
         },
 
@@ -164,24 +187,33 @@ function createBuffer(gl: GLRenderingContext, array: ArrayType, usageHint: Usage
             if (destroyed) return;
             gl.deleteBuffer(_buffer);
             destroyed = true;
-        }
+        },
     };
 }
 
 //
 
-export type AttributeItemSize = 1 | 2 | 3 | 4 | 16
-export type AttributeKind = 'float32'
+export type AttributeItemSize = 1 | 2 | 3 | 4 | 16;
+export type AttributeKind = 'float32';
 
-export function getAttribType(gl: GLRenderingContext, kind: AttributeKind, itemSize: AttributeItemSize) {
+export function getAttribType(
+    gl: GLRenderingContext,
+    kind: AttributeKind,
+    itemSize: AttributeItemSize,
+) {
     switch (kind) {
         case 'float32':
             switch (itemSize) {
-                case 1: return gl.FLOAT;
-                case 2: return gl.FLOAT_VEC2;
-                case 3: return gl.FLOAT_VEC3;
-                case 4: return gl.FLOAT_VEC4;
-                case 16: return gl.FLOAT_MAT4;
+                case 1:
+                    return gl.FLOAT;
+                case 2:
+                    return gl.FLOAT_VEC2;
+                case 3:
+                    return gl.FLOAT_VEC3;
+                case 4:
+                    return gl.FLOAT_VEC4;
+                case 16:
+                    return gl.FLOAT_MAT4;
             }
         default:
             assertUnreachable(kind);
@@ -189,18 +221,26 @@ export function getAttribType(gl: GLRenderingContext, kind: AttributeKind, itemS
 }
 
 export type AttributeDefs = {
-    [k: string]: { kind: AttributeKind, itemSize: AttributeItemSize, divisor: number }
-}
-export type AttributeValues = { [k: string]: ValueCell<ArrayType> }
-export type AttributeBuffers = [string, AttributeBuffer][]
+    [k: string]: { kind: AttributeKind; itemSize: AttributeItemSize; divisor: number };
+};
+export type AttributeValues = { [k: string]: ValueCell<ArrayType> };
+export type AttributeBuffers = [string, AttributeBuffer][];
 
 export interface AttributeBuffer extends Buffer {
-    readonly divisor: number
-    bind: (location: number) => void
-    changeOffset: (location: number, offset: number) => void
+    readonly divisor: number;
+    bind: (location: number) => void;
+    changeOffset: (location: number, offset: number) => void;
 }
 
-export function createAttributeBuffer<T extends ArrayType, S extends AttributeItemSize>(gl: GLRenderingContext, state: WebGLState, extensions: WebGLExtensions, array: T, itemSize: S, divisor: number, usageHint: UsageHint = 'static'): AttributeBuffer {
+export function createAttributeBuffer<T extends ArrayType, S extends AttributeItemSize>(
+    gl: GLRenderingContext,
+    state: WebGLState,
+    extensions: WebGLExtensions,
+    array: T,
+    itemSize: S,
+    divisor: number,
+    usageHint: UsageHint = 'static',
+): AttributeBuffer {
     const { instancedArrays } = extensions;
 
     const buffer = createBuffer(gl, array, usageHint, 'attribute');
@@ -214,7 +254,14 @@ export function createAttributeBuffer<T extends ArrayType, S extends AttributeIt
             if (itemSize === 16) {
                 for (let i = 0; i < 4; ++i) {
                     state.enableVertexAttrib(location + i);
-                    gl.vertexAttribPointer(location + i, 4, _dataType, false, 4 * 4 * _bpe, i * 4 * _bpe);
+                    gl.vertexAttribPointer(
+                        location + i,
+                        4,
+                        _dataType,
+                        false,
+                        4 * 4 * _bpe,
+                        i * 4 * _bpe,
+                    );
                     instancedArrays.vertexAttribDivisor(location + i, divisor);
                 }
             } else {
@@ -228,21 +275,35 @@ export function createAttributeBuffer<T extends ArrayType, S extends AttributeIt
             gl.bindBuffer(_bufferType, buffer.getBuffer());
             if (itemSize === 16) {
                 for (let i = 0; i < 4; ++i) {
-                    gl.vertexAttribPointer(location + i, 4, _dataType, false, 4 * 4 * _bpe, (i * 4 * _bpe) + o);
+                    gl.vertexAttribPointer(
+                        location + i,
+                        4,
+                        _dataType,
+                        false,
+                        4 * 4 * _bpe,
+                        (i * 4 * _bpe) + o,
+                    );
                 }
             } else {
                 gl.vertexAttribPointer(location, itemSize, _dataType, false, 0, o);
             }
-        }
+        },
     };
 }
 
-export function createAttributeBuffers(ctx: WebGLContext, schema: RenderableSchema, values: AttributeValues) {
+export function createAttributeBuffers(
+    ctx: WebGLContext,
+    schema: RenderableSchema,
+    values: AttributeValues,
+) {
     const buffers: AttributeBuffers = [];
-    Object.keys(schema).forEach(k => {
+    Object.keys(schema).forEach((k) => {
         const spec = schema[k];
         if (spec.type === 'attribute') {
-            buffers[buffers.length] = [k, ctx.resources.attribute(values[k].ref.value, spec.itemSize, spec.divisor)];
+            buffers[buffers.length] = [
+                k,
+                ctx.resources.attribute(values[k].ref.value, spec.itemSize, spec.divisor),
+            ];
         }
     });
     return buffers;
@@ -250,41 +311,50 @@ export function createAttributeBuffers(ctx: WebGLContext, schema: RenderableSche
 
 //
 
-export type ElementsType = Uint16Array | Uint32Array
-export type ElementsKind = 'uint16' | 'uint32'
+export type ElementsType = Uint16Array | Uint32Array;
+export type ElementsKind = 'uint16' | 'uint32';
 
 export interface ElementsBuffer extends Buffer {
-    bind: () => void
+    bind: () => void;
 }
 
-export function createElementsBuffer(gl: GLRenderingContext, array: ElementsType, usageHint: UsageHint = 'static'): ElementsBuffer {
+export function createElementsBuffer(
+    gl: GLRenderingContext,
+    array: ElementsType,
+    usageHint: UsageHint = 'static',
+): ElementsBuffer {
     const buffer = createBuffer(gl, array, usageHint, 'elements');
 
     return {
         ...buffer,
         bind: () => {
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.getBuffer());
-        }
+        },
     };
 }
 
 //
 
 export interface PixelPackBuffer {
-    readonly id: number
+    readonly id: number;
 
-    readonly _type: number
-    readonly _format: number
-    readonly _bpe: number
+    readonly _type: number;
+    readonly _format: number;
+    readonly _bpe: number;
 
-    read: (x: number, y: number, width: number, height: number) => void
-    getSubData: (array: ArrayType) => void
+    read: (x: number, y: number, width: number, height: number) => void;
+    getSubData: (array: ArrayType) => void;
 
-    reset: () => void
-    destroy: () => void
+    reset: () => void;
+    destroy: () => void;
 }
 
-export function createPixelPackBuffer(gl: WebGL2RenderingContext, extensions: WebGLExtensions, format: TextureFormat, type: TextureType): PixelPackBuffer {
+export function createPixelPackBuffer(
+    gl: WebGL2RenderingContext,
+    extensions: WebGLExtensions,
+    format: TextureFormat,
+    type: TextureType,
+): PixelPackBuffer {
     let _buffer = getBuffer(gl);
 
     const _type = getType(gl, extensions, type);
@@ -323,6 +393,6 @@ export function createPixelPackBuffer(gl: WebGL2RenderingContext, extensions: We
             if (destroyed) return;
             gl.deleteBuffer(_buffer);
             destroyed = true;
-        }
+        },
     };
 }

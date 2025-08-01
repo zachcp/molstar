@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StateTransformer, StateTransform } from '../../mol-state/index.ts';
+import { StateTransform, StateTransformer } from '../../mol-state/index.ts';
 import { PluginContext } from '../../mol-plugin/context.ts';
-import { Download, ReadFile, DownloadBlob, RawData } from '../transforms/data.ts';
+import { Download, DownloadBlob, RawData, ReadFile } from '../transforms/data.ts';
 import { getFileNameInfo } from '../../mol-util/file-info.ts';
 
 export class DataBuilder {
@@ -24,13 +24,21 @@ export class DataBuilder {
         return data.commit({ revertOnError: true });
     }
 
-    downloadBlob(params: StateTransformer.Params<DownloadBlob>, options?: Partial<StateTransform.Options>) {
+    downloadBlob(
+        params: StateTransformer.Params<DownloadBlob>,
+        options?: Partial<StateTransform.Options>,
+    ) {
         const data = this.dataState.build().toRoot().apply(DownloadBlob, params, options);
         return data.commit({ revertOnError: true });
     }
 
-    async readFile(params: StateTransformer.Params<ReadFile>, options?: Partial<StateTransform.Options>) {
-        const data = await this.dataState.build().toRoot().apply(ReadFile, params, options).commit({ revertOnError: true });
+    async readFile(
+        params: StateTransformer.Params<ReadFile>,
+        options?: Partial<StateTransform.Options>,
+    ) {
+        const data = await this.dataState.build().toRoot().apply(ReadFile, params, options).commit({
+            revertOnError: true,
+        });
         const fileInfo = getFileNameInfo(params.file?.file?.name ?? '');
         return { data: data, fileInfo };
     }

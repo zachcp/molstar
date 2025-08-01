@@ -6,20 +6,35 @@
  */
 
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { StructureRepresentation, StructureRepresentationStateBuilder, StructureRepresentationState } from './representation.ts';
+import {
+    StructureRepresentation,
+    StructureRepresentationState,
+    StructureRepresentationStateBuilder,
+} from './representation.ts';
 import { Visual } from '../visual.ts';
-import { Representation, RepresentationContext, RepresentationParamsGetter } from '../representation.ts';
-import { Structure, Unit, StructureElement, Bond } from '../../mol-model/structure.ts';
+import {
+    Representation,
+    RepresentationContext,
+    RepresentationParamsGetter,
+} from '../representation.ts';
+import { Bond, Structure, StructureElement, Unit } from '../../mol-model/structure.ts';
 import { Subject } from 'rxjs';
 import { getNextMaterialId, GraphicsRenderObject } from '../../mol-gl/render-object.ts';
 import { Theme } from '../../mol-theme/theme.ts';
 import { Task } from '../../mol-task/index.ts';
 import { PickingId } from '../../mol-geo/geometry/picking.ts';
-import { Loci, EmptyLoci, isEmptyLoci, isEveryLoci, isDataLoci, EveryLoci } from '../../mol-model/loci.ts';
-import { MarkerAction, MarkerActions, applyMarkerAction } from '../../mol-util/marker-action.ts';
+import {
+    EmptyLoci,
+    EveryLoci,
+    isDataLoci,
+    isEmptyLoci,
+    isEveryLoci,
+    Loci,
+} from '../../mol-model/loci.ts';
+import { applyMarkerAction, MarkerAction, MarkerActions } from '../../mol-util/marker-action.ts';
 import { Overpaint } from '../../mol-theme/overpaint.ts';
 import { Transparency } from '../../mol-theme/transparency.ts';
-import { Mat4, EPSILON } from '../../mol-math/linear-algebra.ts';
+import { EPSILON, Mat4 } from '../../mol-math/linear-algebra.ts';
 import { Interval } from '../../mol-data/int.ts';
 import { StructureParams } from './params.ts';
 import { Clipping } from '../../mol-theme/clipping.ts';
@@ -29,9 +44,19 @@ import { Substance } from '../../mol-theme/substance.ts';
 import { LocationCallback } from '../util.ts';
 import { Emissive } from '../../mol-theme/emissive.ts';
 
-export interface UnitsVisual<P extends StructureParams> extends Visual<StructureGroup, P> { }
+export interface UnitsVisual<P extends StructureParams> extends Visual<StructureGroup, P> {}
 
-export function UnitsRepresentation<P extends StructureParams>(label: string, ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, P>, visualCtor: (materialId: number, structure: Structure, props: PD.Values<P>, webgl?: WebGLContext) => UnitsVisual<P>): StructureRepresentation<P> {
+export function UnitsRepresentation<P extends StructureParams>(
+    label: string,
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, P>,
+    visualCtor: (
+        materialId: number,
+        structure: Structure,
+        props: PD.Values<P>,
+        webgl?: WebGLContext,
+    ) => UnitsVisual<P>,
+): StructureRepresentation<P> {
     let version = 0;
     const { webgl } = ctx;
     const updated = new Subject<number>();
@@ -39,7 +64,7 @@ export function UnitsRepresentation<P extends StructureParams>(label: string, ct
     const renderObjects: GraphicsRenderObject[] = [];
     const geometryState = new Representation.GeometryState();
     const _state = StructureRepresentationStateBuilder.create();
-    let visuals = new Map<number, { group: Unit.SymmetryGroup, visual: UnitsVisual<P> }>();
+    let visuals = new Map<number, { group: Unit.SymmetryGroup; visual: UnitsVisual<P> }>();
 
     let _structure: Structure;
     let _groups: ReadonlyArray<Unit.SymmetryGroup>;
@@ -54,7 +79,7 @@ export function UnitsRepresentation<P extends StructureParams>(label: string, ct
         }
         _props = Object.assign({}, _props, props);
 
-        return Task.create('Creating or updating UnitsRepresentation', async runtime => {
+        return Task.create('Creating or updating UnitsRepresentation', async (runtime) => {
             if (!_structure && !structure) {
                 throw new Error('missing structure');
             } else if (structure && !_structure) {
@@ -64,13 +89,26 @@ export function UnitsRepresentation<P extends StructureParams>(label: string, ct
                 for (let i = 0; i < _groups.length; i++) {
                     const group = _groups[i];
                     const visual = visualCtor(materialId, structure, _props, webgl);
-                    const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, { group, structure });
+                    const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, {
+                        group,
+                        structure,
+                    });
                     if (promise) await promise;
                     setVisualState(visual, group, _state); // current state for new visual
                     visuals.set(group.hashCode, { visual, group });
-                    if (runtime.shouldUpdate) await runtime.update({ message: 'Creating or updating UnitsVisual', current: i, max: _groups.length });
+                    if (runtime.shouldUpdate) {
+                        await runtime.update({
+                            message: 'Creating or updating UnitsVisual',
+                            current: i,
+                            max: _groups.length,
+                        });
+                    }
                 }
-            } else if (structure && (!Structure.areUnitIdsAndIndicesEqual(structure, _structure) || structure.child !== _structure.child)) {
+            } else if (
+                structure &&
+                (!Structure.areUnitIdsAndIndicesEqual(structure, _structure) ||
+                    structure.child !== _structure.child)
+            ) {
                 // console.log(label, 'structures not equivalent');
                 // Tries to re-use existing visuals for the groups of the new structure.
                 // Creates additional visuals if needed, destroys left-over visuals.
@@ -89,11 +127,21 @@ export function UnitsRepresentation<P extends StructureParams>(label: string, ct
                         if (visual.mustRecreate?.({ group, structure }, _props, webgl)) {
                             visual.destroy();
                             visual = visualCtor(materialId, structure, _props, webgl);
-                            const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, { group, structure });
+                            const promise = visual.createOrUpdate(
+                                { webgl, runtime },
+                                _theme,
+                                _props,
+                                { group, structure },
+                            );
                             if (promise) await promise;
                             setVisualState(visual, group, _state); // current state for new visual
                         } else {
-                            const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, { group, structure });
+                            const promise = visual.createOrUpdate(
+                                { webgl, runtime },
+                                _theme,
+                                _props,
+                                { group, structure },
+                            );
                             if (promise) await promise;
                         }
                         visuals.set(group.hashCode, { visual, group });
@@ -103,24 +151,40 @@ export function UnitsRepresentation<P extends StructureParams>(label: string, ct
                         // TODO: remove selection too??
                         if (visual.renderObject) {
                             const arr = visual.renderObject.values.tMarker.ref.value.array;
-                            applyMarkerAction(arr, Interval.ofBounds(0, arr.length), MarkerAction.RemoveHighlight);
+                            applyMarkerAction(
+                                arr,
+                                Interval.ofBounds(0, arr.length),
+                                MarkerAction.RemoveHighlight,
+                            );
                         }
                     } else {
                         // console.log(label, 'did not find visualGroup to reuse, creating new');
                         // newGroups.push(group)
                         const visual = visualCtor(materialId, structure, _props, webgl);
-                        const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, { group, structure });
+                        const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, {
+                            group,
+                            structure,
+                        });
                         if (promise) await promise;
                         setVisualState(visual, group, _state); // current state for new visual
                         visuals.set(group.hashCode, { visual, group });
                     }
-                    if (runtime.shouldUpdate) await runtime.update({ message: 'Creating or updating UnitsVisual', current: i, max: _groups.length });
+                    if (runtime.shouldUpdate) {
+                        await runtime.update({
+                            message: 'Creating or updating UnitsVisual',
+                            current: i,
+                            max: _groups.length,
+                        });
+                    }
                 }
                 oldVisuals.forEach(({ visual }) => {
                     // console.log(label, 'removed unused visual');
                     visual.destroy();
                 });
-            } else if (structure && structure !== _structure && Structure.areUnitIdsAndIndicesEqual(structure, _structure)) {
+            } else if (
+                structure && structure !== _structure &&
+                Structure.areUnitIdsAndIndicesEqual(structure, _structure)
+            ) {
                 // console.log(label, 'structures equivalent but not identical');
                 // Expects that for structures with the same hashCode,
                 // the unitSymmetryGroups are the same as well.
@@ -137,38 +201,65 @@ export function UnitsRepresentation<P extends StructureParams>(label: string, ct
                             visual.destroy();
                             visual = visualCtor(materialId, structure, _props, ctx.webgl);
                             visualGroup.visual = visual;
-                            const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, { group, structure });
+                            const promise = visual.createOrUpdate(
+                                { webgl, runtime },
+                                _theme,
+                                _props,
+                                { group, structure },
+                            );
                             if (promise) await promise;
                             setVisualState(visual, group, _state); // current state for new visual
                         } else {
-                            const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, { group, structure });
+                            const promise = visual.createOrUpdate(
+                                { webgl, runtime },
+                                _theme,
+                                _props,
+                                { group, structure },
+                            );
                             if (promise) await promise;
                         }
                         visualGroup.group = group;
                     } else {
                         throw new Error(`expected to find visual for hashCode ${group.hashCode}`);
                     }
-                    if (runtime.shouldUpdate) await runtime.update({ message: 'Creating or updating UnitsVisual', current: i, max: _groups.length });
+                    if (runtime.shouldUpdate) {
+                        await runtime.update({
+                            message: 'Creating or updating UnitsVisual',
+                            current: i,
+                            max: _groups.length,
+                        });
+                    }
                 }
             } else {
                 // console.log(label, 'no new structure');
                 // No new structure given, just update all visuals with new props.
-                const visualsList: { group: Unit.SymmetryGroup, visual: UnitsVisual<P> }[] = []; // TODO avoid allocation
-                visuals.forEach(vg => visualsList.push(vg));
+                const visualsList: { group: Unit.SymmetryGroup; visual: UnitsVisual<P> }[] = []; // TODO avoid allocation
+                visuals.forEach((vg) => visualsList.push(vg));
                 for (let i = 0, il = visualsList.length; i < il; ++i) {
                     let { visual, group } = visualsList[i];
-                    if (visual.mustRecreate?.({ group, structure: _structure }, _props, ctx.webgl)) {
+                    if (
+                        visual.mustRecreate?.({ group, structure: _structure }, _props, ctx.webgl)
+                    ) {
                         visual.destroy();
                         visual = visualCtor(materialId, _structure, _props, webgl);
                         visualsList[i].visual = visual;
-                        const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, { group, structure: _structure });
+                        const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, {
+                            group,
+                            structure: _structure,
+                        });
                         if (promise) await promise;
                         setVisualState(visual, group, _state); // current state for new visual
                     } else {
                         const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props);
                         if (promise) await promise;
                     }
-                    if (runtime.shouldUpdate) await runtime.update({ message: 'Creating or updating UnitsVisual', current: i, max: il });
+                    if (runtime.shouldUpdate) {
+                        await runtime.update({
+                            message: 'Creating or updating UnitsVisual',
+                            current: i,
+                            max: il,
+                        });
+                    }
                 }
             }
             // update list of renderObjects
@@ -213,7 +304,10 @@ export function UnitsRepresentation<P extends StructureParams>(label: string, ct
             if (!Structure.areRootsEquivalent(loci.structure, _structure)) return false;
             // Remap `loci` from equivalent structure to the current `_structure`
             loci = Loci.remap(loci, _structure);
-            if (Structure.isLoci(loci) || (StructureElement.Loci.is(loci) && StructureElement.Loci.isWholeStructure(loci))) {
+            if (
+                Structure.isLoci(loci) ||
+                (StructureElement.Loci.is(loci) && StructureElement.Loci.isWholeStructure(loci))
+            ) {
                 // Change to `EveryLoci` to allow for downstream optimizations
                 loci = EveryLoci;
             }
@@ -229,8 +323,24 @@ export function UnitsRepresentation<P extends StructureParams>(label: string, ct
         return changed;
     }
 
-    function setVisualState(visual: UnitsVisual<P>, group: Unit.SymmetryGroup, state: Partial<StructureRepresentationState>) {
-        const { visible, alphaFactor, pickable, overpaint, transparency, emissive, substance, clipping, themeStrength, transform, unitTransforms } = state;
+    function setVisualState(
+        visual: UnitsVisual<P>,
+        group: Unit.SymmetryGroup,
+        state: Partial<StructureRepresentationState>,
+    ) {
+        const {
+            visible,
+            alphaFactor,
+            pickable,
+            overpaint,
+            transparency,
+            emissive,
+            substance,
+            clipping,
+            themeStrength,
+            transform,
+            unitTransforms,
+        } = state;
 
         if (visible !== undefined) visual.setVisibility(visible);
         if (alphaFactor !== undefined) visual.setAlphaFactor(alphaFactor);
@@ -242,7 +352,10 @@ export function UnitsRepresentation<P extends StructureParams>(label: string, ct
         if (clipping !== undefined) visual.setClipping(clipping);
         if (themeStrength !== undefined) visual.setThemeStrength(themeStrength);
         if (transform !== undefined) {
-            if (transform !== _state.transform || !Mat4.areEqual(transform, _state.transform, EPSILON)) {
+            if (
+                transform !== _state.transform ||
+                !Mat4.areEqual(transform, _state.transform, EPSILON)
+            ) {
                 visual.setTransform(transform);
             }
         }
@@ -257,7 +370,21 @@ export function UnitsRepresentation<P extends StructureParams>(label: string, ct
     }
 
     function setState(state: Partial<StructureRepresentationState>) {
-        const { visible, alphaFactor, pickable, overpaint, transparency, emissive, substance, clipping, themeStrength, transform, unitTransforms, syncManually, markerActions } = state;
+        const {
+            visible,
+            alphaFactor,
+            pickable,
+            overpaint,
+            transparency,
+            emissive,
+            substance,
+            clipping,
+            themeStrength,
+            transform,
+            unitTransforms,
+            syncManually,
+            markerActions,
+        } = state;
         const newState: Partial<StructureRepresentationState> = {};
 
         if (visible !== undefined) newState.visible = visible;
@@ -282,7 +409,10 @@ export function UnitsRepresentation<P extends StructureParams>(label: string, ct
         if (transform !== undefined && !Mat4.areEqual(transform, _state.transform, EPSILON)) {
             newState.transform = transform;
         }
-        if (unitTransforms !== _state.unitTransforms || unitTransforms?.version !== _state.unitTransformsVersion) {
+        if (
+            unitTransforms !== _state.unitTransforms ||
+            unitTransforms?.version !== _state.unitTransformsVersion
+        ) {
             newState.unitTransforms = unitTransforms;
             _state.unitTransformsVersion = unitTransforms ? unitTransforms?.version : -1;
         }
@@ -312,11 +442,21 @@ export function UnitsRepresentation<P extends StructureParams>(label: string, ct
             });
             return groupCount;
         },
-        get geometryVersion() { return geometryState.version; },
-        get props() { return _props; },
-        get params() { return _params; },
-        get state() { return _state; },
-        get theme() { return _theme; },
+        get geometryVersion() {
+            return geometryState.version;
+        },
+        get props() {
+            return _props;
+        },
+        get params() {
+            return _params;
+        },
+        get state() {
+            return _state;
+        },
+        get theme() {
+            return _theme;
+        },
         renderObjects,
         updated,
         createOrUpdate,
@@ -326,6 +466,6 @@ export function UnitsRepresentation<P extends StructureParams>(label: string, ct
         getAllLoci,
         eachLocation,
         mark,
-        destroy
+        destroy,
     };
 }

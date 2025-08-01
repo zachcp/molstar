@@ -12,17 +12,25 @@ import { Scheduler } from '../util/scheduler.ts';
 import { UserTiming } from '../util/user-timing.ts';
 
 interface ExposedTask<T> extends Task<T> {
-    f: (ctx: RuntimeContext) => Promise<T>,
-    onAbort?: () => void
+    f: (ctx: RuntimeContext) => Promise<T>;
+    onAbort?: () => void;
 }
 
-export function ExecuteObservable<T>(task: Task<T>, observer: Progress.Observer, updateRateMs = 250) {
+export function ExecuteObservable<T>(
+    task: Task<T>,
+    observer: Progress.Observer,
+    updateRateMs = 250,
+) {
     const info = ProgressInfo(task, observer, updateRateMs);
     const ctx = new ObservableRuntimeContext(info, info.root);
     return execute(task as ExposedTask<T>, ctx);
 }
 
-export function CreateObservableCtx<T>(task: Task<T>, observer: Progress.Observer, updateRateMs = 250) {
+export function CreateObservableCtx<T>(
+    task: Task<T>,
+    observer: Progress.Observer,
+    updateRateMs = 250,
+) {
     const info = ProgressInfo(task, observer, updateRateMs);
     return new ObservableRuntimeContext(info, info.root);
 }
@@ -31,7 +39,11 @@ export function ExecuteInContext<T>(ctx: RuntimeContext, task: Task<T>) {
     return execute(task as ExposedTask<T>, ctx as ObservableRuntimeContext);
 }
 
-export function ExecuteObservableChild<T>(ctx: RuntimeContext, task: Task<T>, progress?: string | Partial<RuntimeContext.ProgressUpdate>) {
+export function ExecuteObservableChild<T>(
+    ctx: RuntimeContext,
+    task: Task<T>,
+    progress?: string | Partial<RuntimeContext.ProgressUpdate>,
+) {
     return (ctx as ObservableRuntimeContext).runChild(task as ExposedTask<T>, progress);
 }
 
@@ -44,23 +56,31 @@ function defaultProgress(task: Task<any>): Task.Progress {
         canAbort: true,
         isIndeterminate: true,
         current: 0,
-        max: 0
+        max: 0,
     };
 }
 
 interface ProgressInfo {
-    updateRateMs: number,
-    lastNotified: number,
-    observer: Progress.Observer,
+    updateRateMs: number;
+    lastNotified: number;
+    observer: Progress.Observer;
 
-    abortToken: { abortRequested: boolean, treeAborted: boolean, reason: string },
+    abortToken: { abortRequested: boolean; treeAborted: boolean; reason: string };
     taskId: number;
     root: Progress.Node;
     tryAbort: (reason?: string) => void;
 }
 
-function ProgressInfo(task: Task<any>, observer: Progress.Observer, updateRateMs: number): ProgressInfo {
-    const abortToken: ProgressInfo['abortToken'] = { abortRequested: false, treeAborted: false, reason: '' };
+function ProgressInfo(
+    task: Task<any>,
+    observer: Progress.Observer,
+    updateRateMs: number,
+): ProgressInfo {
+    const abortToken: ProgressInfo['abortToken'] = {
+        abortRequested: false,
+        treeAborted: false,
+        reason: '',
+    };
 
     return {
         updateRateMs,
@@ -69,7 +89,7 @@ function ProgressInfo(task: Task<any>, observer: Progress.Observer, updateRateMs
         abortToken,
         taskId: task.id,
         root: { progress: defaultProgress(task), children: [] },
-        tryAbort: createAbortFunction(abortToken)
+        tryAbort: createAbortFunction(abortToken),
     };
 }
 
@@ -89,7 +109,11 @@ function canAbort(root: Progress.Node): boolean {
 }
 
 function snapshotProgress(info: ProgressInfo): Progress {
-    return { root: cloneTree(info.root), canAbort: canAbort(info.root), requestAbort: info.tryAbort };
+    return {
+        root: cloneTree(info.root),
+        canAbort: canAbort(info.root),
+        requestAbort: info.tryAbort,
+    };
 }
 
 async function execute<T>(task: ExposedTask<T>, ctx: ObservableRuntimeContext) {
@@ -109,7 +133,9 @@ async function execute<T>(task: ExposedTask<T>, ctx: ObservableRuntimeContext) {
 
             // wait for all child computations to go thru the abort phase.
             if (ctx.node.children.length > 0) {
-                await new Promise<void>(res => { ctx.onChildrenFinished = res; });
+                await new Promise<void>((res) => {
+                    ctx.onChildrenFinished = res;
+                });
             }
             if (task.onAbort) {
                 task.onAbort();
@@ -186,12 +212,18 @@ class ObservableRuntimeContext implements RuntimeContext {
             if (typeof update.message !== 'undefined') progress.message = update.message;
             if (typeof update.current !== 'undefined') progress.current = update.current;
             if (typeof update.max !== 'undefined') progress.max = update.max;
-            progress.isIndeterminate = typeof progress.current === 'undefined' || typeof progress.max === 'undefined';
-            if (typeof update.isIndeterminate !== 'undefined') progress.isIndeterminate = update.isIndeterminate;
+            progress.isIndeterminate = typeof progress.current === 'undefined' ||
+                typeof progress.max === 'undefined';
+            if (typeof update.isIndeterminate !== 'undefined') {
+                progress.isIndeterminate = update.isIndeterminate;
+            }
         }
     }
 
-    update(progress?: string | Partial<RuntimeContext.ProgressUpdate>, dontNotify?: boolean): Promise<void> | void {
+    update(
+        progress?: string | Partial<RuntimeContext.ProgressUpdate>,
+        dontNotify?: boolean,
+    ): Promise<void> | void {
         // The progress tracking and observer notification are separated
         // because the computation can have a tree structure.
         // All nodes of the tree should be regualarly updated at the specified frequency,
@@ -211,7 +243,10 @@ class ObservableRuntimeContext implements RuntimeContext {
         return Scheduler.immediatePromise();
     }
 
-    async runChild<T>(task: ExposedTask<T>, progress?: string | Partial<RuntimeContext.ProgressUpdate>): Promise<T> {
+    async runChild<T>(
+        task: ExposedTask<T>,
+        progress?: string | Partial<RuntimeContext.ProgressUpdate>,
+    ): Promise<T> {
         this.updateProgress(progress);
 
         // Create a new child context and add it to the progress tree.

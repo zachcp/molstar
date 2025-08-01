@@ -12,17 +12,20 @@ import { StateSelection } from '../../../../../mol-state/index.ts';
 import { PluginStateObject } from '../../../../../mol-plugin-state/objects.ts';
 import { StructureElement } from '../../../../../mol-model/structure/structure/element.ts';
 import { OrderedSet } from '../../../../../mol-data/int.ts';
-import { featureGroupLabel, featureTypeLabel } from '../../../../../mol-model-props/computed/interactions/common.ts';
+import {
+    featureGroupLabel,
+    featureTypeLabel,
+} from '../../../../../mol-model-props/computed/interactions/common.ts';
 import { Loci } from '../../../../../mol-model/loci.ts';
 import { arraySetAdd } from '../../../../../mol-util/array.ts';
 import { InteractionTypeColorThemeProvider } from '../../../../../mol-model-props/computed/themes/interaction-type.ts';
 import { InteractionsRepresentationProvider } from '../../../../../mol-model-props/computed/representations/interactions.ts';
 
-export const Interactions = PluginBehavior.create<{ autoAttach: boolean, showTooltip: boolean }>({
+export const Interactions = PluginBehavior.create<{ autoAttach: boolean; showTooltip: boolean }>({
     name: 'computed-interactions-prop',
     category: 'custom-props',
     display: { name: 'Interactions' },
-    ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean, showTooltip: boolean }> {
+    ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean; showTooltip: boolean }> {
         private provider = InteractionsProvider;
 
         private getStructures(structure: Structure) {
@@ -30,7 +33,12 @@ export const Interactions = PluginBehavior.create<{ autoAttach: boolean, showToo
             const root = this.ctx.helpers.substructureParent.get(structure);
             if (root) {
                 const state = this.ctx.state.data;
-                const selections = state.select(StateSelection.Generators.ofType(PluginStateObject.Molecule.Structure, root.transform.ref));
+                const selections = state.select(
+                    StateSelection.Generators.ofType(
+                        PluginStateObject.Molecule.Structure,
+                        root.transform.ref,
+                    ),
+                );
                 for (const s of selections) {
                     if (s.obj) arraySetAdd(structures, s.obj.data);
                 }
@@ -76,45 +84,57 @@ export const Interactions = PluginBehavior.create<{ autoAttach: boolean, showToo
                                 if (group) groupLabels.push(featureGroupLabel(group));
                             }
 
-                            if (typeLabels.length) label.push(`<small>Types</small> ${typeLabels.join(', ')}`);
-                            if (groupLabels.length) label.push(`<small>Groups</small> ${groupLabels.join(', ')}`);
-                            if (label.length) labels.push(`Interaction Feature: ${label.join(' | ')}`);
+                            if (typeLabels.length) {
+                                label.push(`<small>Types</small> ${typeLabels.join(', ')}`);
+                            }
+                            if (groupLabels.length) {
+                                label.push(`<small>Groups</small> ${groupLabels.join(', ')}`);
+                            }
+                            if (label.length) {
+                                labels.push(`Interaction Feature: ${label.join(' | ')}`);
+                            }
                         }
 
                         return labels.length ? labels.join('<br/>') : undefined;
 
-                    default: return void 0;
+                    default:
+                        return void 0;
                 }
-            }
+            },
         };
 
-        update(p: { autoAttach: boolean, showTooltip: boolean }) {
-            const updated = (
-                this.params.autoAttach !== p.autoAttach ||
-                this.params.showTooltip !== p.showTooltip
-            );
+        update(p: { autoAttach: boolean; showTooltip: boolean }) {
+            const updated = this.params.autoAttach !== p.autoAttach ||
+                this.params.showTooltip !== p.showTooltip;
             this.params.autoAttach = p.autoAttach;
             this.params.showTooltip = p.showTooltip;
-            this.ctx.customStructureProperties.setDefaultAutoAttach(this.provider.descriptor.name, this.params.autoAttach);
+            this.ctx.customStructureProperties.setDefaultAutoAttach(
+                this.provider.descriptor.name,
+                this.params.autoAttach,
+            );
             return updated;
         }
 
         register(): void {
             this.ctx.customStructureProperties.register(this.provider, this.params.autoAttach);
-            this.ctx.representation.structure.themes.colorThemeRegistry.add(InteractionTypeColorThemeProvider);
+            this.ctx.representation.structure.themes.colorThemeRegistry.add(
+                InteractionTypeColorThemeProvider,
+            );
             this.ctx.managers.lociLabels.addProvider(this.labelProvider);
             this.ctx.representation.structure.registry.add(InteractionsRepresentationProvider);
         }
 
         unregister() {
             this.ctx.customStructureProperties.unregister(this.provider.descriptor.name);
-            this.ctx.representation.structure.themes.colorThemeRegistry.remove(InteractionTypeColorThemeProvider);
+            this.ctx.representation.structure.themes.colorThemeRegistry.remove(
+                InteractionTypeColorThemeProvider,
+            );
             this.ctx.managers.lociLabels.removeProvider(this.labelProvider);
             this.ctx.representation.structure.registry.remove(InteractionsRepresentationProvider);
         }
     },
     params: () => ({
         autoAttach: PD.Boolean(false),
-        showTooltip: PD.Boolean(true)
-    })
+        showTooltip: PD.Boolean(true),
+    }),
 });

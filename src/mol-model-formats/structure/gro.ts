@@ -7,10 +7,10 @@
 import { Model } from '../../mol-model/structure/model.ts';
 import { Task } from '../../mol-task/index.ts';
 import { ModelFormat } from '../format.ts';
-import { GroFile, GroAtoms } from '../../mol-io/reader/gro/schema.d.ts';
+import { GroAtoms, GroFile } from '../../mol-io/reader/gro/schema.d.ts';
 import { Column, Table } from '../../mol-data/db.ts';
 import { guessElementSymbolString } from './util.ts';
-import { MoleculeType, getMoleculeType } from '../../mol-model/structure/model/types.ts';
+import { getMoleculeType, MoleculeType } from '../../mol-model/structure/model/types.ts';
 import { ComponentBuilder } from './common/component.ts';
 import { getChainId } from './common/util.ts';
 import { EntityBuilder } from './common/entity.ts';
@@ -45,12 +45,14 @@ function getBasic(atoms: GroAtoms, modelNum: number): BasicData {
             const compId = atoms.residueName.value(i);
             const moleculeType = getMoleculeType(componentBuilder.add(compId, i).type, compId);
 
-            if (moleculeType !== prevMoleculeType || (
-                residueNumber !== prevResidueNumber + 1 && !(
-                    // gro format allows only for 5 character residueNumbers, handle overflow here
-                    prevResidueNumber === 99999 && residueNumber === 0
+            if (
+                moleculeType !== prevMoleculeType || (
+                    residueNumber !== prevResidueNumber + 1 && !(
+                        // gro format allows only for 5 character residueNumbers, handle overflow here
+                        prevResidueNumber === 99999 && residueNumber === 0
+                    )
                 )
-            )) {
+            ) {
                 currentAsymId = getChainId(currentAsymIndex);
                 currentAsymIndex += 1;
                 currentSeqId = 0;
@@ -68,7 +70,10 @@ function getBasic(atoms: GroAtoms, modelNum: number): BasicData {
         seqIds[i] = currentSeqId;
         ids[i] = i;
 
-        typeSymbol[i] = guessElementSymbolString(atoms.atomName.value(i), atoms.residueName.value(i));
+        typeSymbol[i] = guessElementSymbolString(
+            atoms.atomName.value(i),
+            atoms.residueName.value(i),
+        );
     }
 
     const auth_asym_id = Column.ofStringArray(asymIds);
@@ -78,9 +83,9 @@ function getBasic(atoms: GroAtoms, modelNum: number): BasicData {
         auth_atom_id,
         auth_comp_id,
         auth_seq_id: atoms.residueNumber,
-        Cartn_x: Column.ofFloatArray(Column.mapToArray(atoms.x, x => x * 10, Float32Array)),
-        Cartn_y: Column.ofFloatArray(Column.mapToArray(atoms.y, y => y * 10, Float32Array)),
-        Cartn_z: Column.ofFloatArray(Column.mapToArray(atoms.z, z => z * 10, Float32Array)),
+        Cartn_x: Column.ofFloatArray(Column.mapToArray(atoms.x, (x) => x * 10, Float32Array)),
+        Cartn_y: Column.ofFloatArray(Column.mapToArray(atoms.y, (y) => y * 10, Float32Array)),
+        Cartn_z: Column.ofFloatArray(Column.mapToArray(atoms.z, (z) => z * 10, Float32Array)),
         id: Column.ofIntArray(ids),
 
         label_asym_id: auth_asym_id,
@@ -98,7 +103,7 @@ function getBasic(atoms: GroAtoms, modelNum: number): BasicData {
     return createBasic({
         entity: entityBuilder.getEntityTable(),
         chem_comp: componentBuilder.getChemCompTable(),
-        atom_site
+        atom_site,
     });
 }
 
@@ -106,7 +111,7 @@ function getBasic(atoms: GroAtoms, modelNum: number): BasicData {
 
 export { GroFormat };
 
-type GroFormat = ModelFormat<GroFile>
+type GroFormat = ModelFormat<GroFile>;
 
 namespace GroFormat {
     export function is(x?: ModelFormat): x is GroFormat {
@@ -122,7 +127,7 @@ namespace GroFormat {
 //      need to pass all gro.structures as one table into createModels
 
 export function trajectoryFromGRO(gro: GroFile): Task<Trajectory> {
-    return Task.create('Parse GRO', async ctx => {
+    return Task.create('Parse GRO', async (ctx) => {
         const format = GroFormat.fromGro(gro);
         const models: Model[] = [];
         for (let i = 0, il = gro.structures.length; i < il; ++i) {

@@ -7,71 +7,129 @@
 import { RuntimeContext } from '../mol-task/index.ts';
 import { GraphicsRenderObject } from '../mol-gl/render-object.ts';
 import { PickingId } from '../mol-geo/geometry/picking.ts';
-import { Loci, isEmptyLoci, isEveryLoci, EveryLoci } from '../mol-model/loci.ts';
-import { MarkerAction, applyMarkerAction, getMarkerInfo, setMarkerValue, getPartialMarkerAverage, MarkerActions, MarkerInfo } from '../mol-util/marker-action.ts';
+import { EveryLoci, isEmptyLoci, isEveryLoci, Loci } from '../mol-model/loci.ts';
+import {
+    applyMarkerAction,
+    getMarkerInfo,
+    getPartialMarkerAverage,
+    MarkerAction,
+    MarkerActions,
+    MarkerInfo,
+    setMarkerValue,
+} from '../mol-util/marker-action.ts';
 import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
 import { WebGLContext } from '../mol-gl/webgl/context.ts';
 import { Theme } from '../mol-theme/theme.ts';
 import { Mat4 } from '../mol-math/linear-algebra.ts';
-import { updateTransformData, fillIdentityTransform } from '../mol-geo/geometry/transform-data.ts';
+import { fillIdentityTransform, updateTransformData } from '../mol-geo/geometry/transform-data.ts';
 import { calculateTransformBoundingSphere } from '../mol-gl/renderable/util.ts';
 import { ValueCell } from '../mol-util/index.ts';
 import { Overpaint } from '../mol-theme/overpaint.ts';
-import { createOverpaint, clearOverpaint, applyOverpaintColor } from '../mol-geo/geometry/overpaint-data.ts';
+import {
+    applyOverpaintColor,
+    clearOverpaint,
+    createOverpaint,
+} from '../mol-geo/geometry/overpaint-data.ts';
 import { Interval } from '../mol-data/int.ts';
 import { Transparency } from '../mol-theme/transparency.ts';
-import { createTransparency, clearTransparency, applyTransparencyValue, getTransparencyAverage, getTransparencyMin } from '../mol-geo/geometry/transparency-data.ts';
+import {
+    applyTransparencyValue,
+    clearTransparency,
+    createTransparency,
+    getTransparencyAverage,
+    getTransparencyMin,
+} from '../mol-geo/geometry/transparency-data.ts';
 import { Clipping } from '../mol-theme/clipping.ts';
-import { createClipping, applyClippingGroups, clearClipping } from '../mol-geo/geometry/clipping-data.ts';
+import {
+    applyClippingGroups,
+    clearClipping,
+    createClipping,
+} from '../mol-geo/geometry/clipping-data.ts';
 import { getMarkersAverage } from '../mol-geo/geometry/marker-data.ts';
 import { Texture } from '../mol-gl/webgl/texture.ts';
 import { Geometry } from '../mol-geo/geometry/geometry.ts';
 import { getColorSmoothingProps, hasColorSmoothingProp } from '../mol-geo/geometry/base.ts';
-import { applyMeshEmissiveSmoothing, applyMeshOverpaintSmoothing, applyMeshSubstanceSmoothing, applyMeshTransparencySmoothing } from '../mol-geo/geometry/mesh/color-smoothing.ts';
-import { applyTextureMeshEmissiveSmoothing, applyTextureMeshOverpaintSmoothing, applyTextureMeshSubstanceSmoothing, applyTextureMeshTransparencySmoothing } from '../mol-geo/geometry/texture-mesh/color-smoothing.ts';
+import {
+    applyMeshEmissiveSmoothing,
+    applyMeshOverpaintSmoothing,
+    applyMeshSubstanceSmoothing,
+    applyMeshTransparencySmoothing,
+} from '../mol-geo/geometry/mesh/color-smoothing.ts';
+import {
+    applyTextureMeshEmissiveSmoothing,
+    applyTextureMeshOverpaintSmoothing,
+    applyTextureMeshSubstanceSmoothing,
+    applyTextureMeshTransparencySmoothing,
+} from '../mol-geo/geometry/texture-mesh/color-smoothing.ts';
 import { Substance } from '../mol-theme/substance.ts';
-import { applySubstanceMaterial, clearSubstance, createSubstance } from '../mol-geo/geometry/substance-data.ts';
+import {
+    applySubstanceMaterial,
+    clearSubstance,
+    createSubstance,
+} from '../mol-geo/geometry/substance-data.ts';
 import { LocationCallback } from './util.ts';
 import { Emissive } from '../mol-theme/emissive.ts';
-import { applyEmissiveValue, clearEmissive, createEmissive, getEmissiveAverage } from '../mol-geo/geometry/emissive-data.ts';
+import {
+    applyEmissiveValue,
+    clearEmissive,
+    createEmissive,
+    getEmissiveAverage,
+} from '../mol-geo/geometry/emissive-data.ts';
 
 export interface VisualContext {
-    readonly runtime: RuntimeContext
-    readonly webgl?: WebGLContext
+    readonly runtime: RuntimeContext;
+    readonly webgl?: WebGLContext;
 }
 
 export { Visual };
 interface Visual<D, P extends PD.Params> {
     /** Number of addressable groups in all instances of the visual */
-    readonly groupCount: number
-    readonly renderObject: GraphicsRenderObject | undefined
-    readonly geometryVersion: number
-    createOrUpdate: (ctx: VisualContext, theme: Theme, props: PD.Values<P>, data?: D) => Promise<void> | void
-    getLoci: (pickingId: PickingId) => Loci
-    eachLocation: (cb: LocationCallback) => void
-    mark: (loci: Loci, action: MarkerAction) => boolean
-    setVisibility: (visible: boolean) => void
-    setAlphaFactor: (alphaFactor: number) => void
-    setPickable: (pickable: boolean) => void
-    setColorOnly: (colorOnly: boolean) => void
-    setTransform: (matrix?: Mat4, instanceMatrices?: Float32Array | null) => void
-    setOverpaint: (overpaint: Overpaint, webgl?: WebGLContext) => void
-    setTransparency: (transparency: Transparency, webgl?: WebGLContext) => void
-    setEmissive: (emissive: Emissive, webgl?: WebGLContext) => void
-    setSubstance: (substance: Substance, webgl?: WebGLContext) => void
-    setClipping: (clipping: Clipping) => void
-    setThemeStrength: (strength: { overpaint: number, transparency: number, emissive: number, substance: number }) => void
-    destroy: () => void
-    mustRecreate?: (data: D, props: PD.Values<P>, webgl?: WebGLContext) => boolean
+    readonly groupCount: number;
+    readonly renderObject: GraphicsRenderObject | undefined;
+    readonly geometryVersion: number;
+    createOrUpdate: (
+        ctx: VisualContext,
+        theme: Theme,
+        props: PD.Values<P>,
+        data?: D,
+    ) => Promise<void> | void;
+    getLoci: (pickingId: PickingId) => Loci;
+    eachLocation: (cb: LocationCallback) => void;
+    mark: (loci: Loci, action: MarkerAction) => boolean;
+    setVisibility: (visible: boolean) => void;
+    setAlphaFactor: (alphaFactor: number) => void;
+    setPickable: (pickable: boolean) => void;
+    setColorOnly: (colorOnly: boolean) => void;
+    setTransform: (matrix?: Mat4, instanceMatrices?: Float32Array | null) => void;
+    setOverpaint: (overpaint: Overpaint, webgl?: WebGLContext) => void;
+    setTransparency: (transparency: Transparency, webgl?: WebGLContext) => void;
+    setEmissive: (emissive: Emissive, webgl?: WebGLContext) => void;
+    setSubstance: (substance: Substance, webgl?: WebGLContext) => void;
+    setClipping: (clipping: Clipping) => void;
+    setThemeStrength: (
+        strength: { overpaint: number; transparency: number; emissive: number; substance: number },
+    ) => void;
+    destroy: () => void;
+    mustRecreate?: (data: D, props: PD.Values<P>, webgl?: WebGLContext) => boolean;
 }
 namespace Visual {
-    export type LociApply = (loci: Loci, apply: (interval: Interval) => boolean, isMarking: boolean) => boolean
+    export type LociApply = (
+        loci: Loci,
+        apply: (interval: Interval) => boolean,
+        isMarking: boolean,
+    ) => boolean;
 
-    export function setVisibility(renderObject: GraphicsRenderObject | undefined, visible: boolean) {
+    export function setVisibility(
+        renderObject: GraphicsRenderObject | undefined,
+        visible: boolean,
+    ) {
         if (renderObject) renderObject.state.visible = visible;
     }
 
-    export function setAlphaFactor(renderObject: GraphicsRenderObject | undefined, alphaFactor: number) {
+    export function setAlphaFactor(
+        renderObject: GraphicsRenderObject | undefined,
+        alphaFactor: number,
+    ) {
         if (renderObject) renderObject.state.alphaFactor = alphaFactor;
     }
 
@@ -79,16 +137,33 @@ namespace Visual {
         if (renderObject) renderObject.state.pickable = pickable;
     }
 
-    export function setColorOnly(renderObject: GraphicsRenderObject | undefined, colorOnly: boolean) {
+    export function setColorOnly(
+        renderObject: GraphicsRenderObject | undefined,
+        colorOnly: boolean,
+    ) {
         if (renderObject) renderObject.state.colorOnly = colorOnly;
     }
 
-    export type PreviousMark = { loci: Loci, action: MarkerAction, status: MarkerInfo['status'] }
+    export type PreviousMark = { loci: Loci; action: MarkerAction; status: MarkerInfo['status'] };
 
-    export function mark(renderObject: GraphicsRenderObject | undefined, loci: Loci, action: MarkerAction, lociApply: LociApply, previous?: PreviousMark) {
+    export function mark(
+        renderObject: GraphicsRenderObject | undefined,
+        loci: Loci,
+        action: MarkerAction,
+        lociApply: LociApply,
+        previous?: PreviousMark,
+    ) {
         if (!renderObject || isEmptyLoci(loci)) return false;
 
-        const { tMarker, uMarker, markerAverage, markerStatus, uGroupCount, instanceCount, instanceGranularity: instanceGranularity } = renderObject.values;
+        const {
+            tMarker,
+            uMarker,
+            markerAverage,
+            markerStatus,
+            uGroupCount,
+            instanceCount,
+            instanceGranularity: instanceGranularity,
+        } = renderObject.values;
         const count = instanceGranularity.ref.value
             ? instanceCount.ref.value
             : uGroupCount.ref.value * instanceCount.ref.value;
@@ -98,7 +173,7 @@ namespace Visual {
         if (!isEveryLoci(loci)) {
             // assume that all interval are non-overlapping
             let intervalSize = 0;
-            lociApply(loci, interval => {
+            lociApply(loci, (interval) => {
                 intervalSize += Interval.size(interval);
                 return true;
             }, true);
@@ -120,10 +195,15 @@ namespace Visual {
             average = info.average;
             status = info.status;
         } else {
-            changed = lociApply(loci, interval => applyMarkerAction(array, interval, action), true);
+            changed = lociApply(
+                loci,
+                (interval) => applyMarkerAction(array, interval, action),
+                true,
+            );
             if (changed) {
                 average = getPartialMarkerAverage(action, currentStatus);
-                if (previous && previous.status !== -1 && average === -1 &&
+                if (
+                    previous && previous.status !== -1 && average === -1 &&
                     MarkerActions.isReverse(previous.action, action) &&
                     Loci.areEqual(loci, previous.loci)
                 ) {
@@ -151,23 +231,36 @@ namespace Visual {
     }
 
     type SurfaceMeta = {
-        resolution?: number
-        overpaintTexture?: Texture
-        transparencyTexture?: Texture
-        emissiveTexture?: Texture
-        substanceTexture?: Texture
-    }
+        resolution?: number;
+        overpaintTexture?: Texture;
+        transparencyTexture?: Texture;
+        emissiveTexture?: Texture;
+        substanceTexture?: Texture;
+    };
 
     type SmoothingContext = {
-        geometry: Geometry,
-        props: PD.Values<any>,
-        webgl?: WebGLContext
-    }
+        geometry: Geometry;
+        props: PD.Values<any>;
+        webgl?: WebGLContext;
+    };
 
-    export function setOverpaint(renderObject: GraphicsRenderObject | undefined, overpaint: Overpaint, lociApply: LociApply, clear: boolean, smoothing?: SmoothingContext) {
+    export function setOverpaint(
+        renderObject: GraphicsRenderObject | undefined,
+        overpaint: Overpaint,
+        lociApply: LociApply,
+        clear: boolean,
+        smoothing?: SmoothingContext,
+    ) {
         if (!renderObject) return;
 
-        const { tOverpaint, dOverpaintType, dOverpaint, uGroupCount, instanceCount, instanceGranularity: instanceGranularity } = renderObject.values;
+        const {
+            tOverpaint,
+            dOverpaintType,
+            dOverpaint,
+            uGroupCount,
+            instanceCount,
+            instanceGranularity: instanceGranularity,
+        } = renderObject.values;
         const count = instanceGranularity.ref.value
             ? instanceCount.ref.value
             : uGroupCount.ref.value * instanceCount.ref.value;
@@ -204,24 +297,53 @@ namespace Visual {
                 const { resolution, overpaintTexture } = geometry.meta as SurfaceMeta;
                 const csp = getColorSmoothingProps(props.smoothColors, true, resolution);
                 if (csp) {
-                    applyMeshOverpaintSmoothing(renderObject.values as any, csp.resolution, csp.stride, webgl, overpaintTexture);
-                    (geometry.meta as SurfaceMeta).overpaintTexture = renderObject.values.tOverpaintGrid.ref.value;
+                    applyMeshOverpaintSmoothing(
+                        renderObject.values as any,
+                        csp.resolution,
+                        csp.stride,
+                        webgl,
+                        overpaintTexture,
+                    );
+                    (geometry.meta as SurfaceMeta).overpaintTexture =
+                        renderObject.values.tOverpaintGrid.ref.value;
                 }
             } else if (webgl && geometry.kind === 'texture-mesh') {
                 const { resolution, overpaintTexture } = geometry.meta as SurfaceMeta;
                 const csp = getColorSmoothingProps(props.smoothColors, true, resolution);
                 if (csp) {
-                    applyTextureMeshOverpaintSmoothing(renderObject.values as any, csp.resolution, csp.stride, webgl, overpaintTexture);
-                    (geometry.meta as SurfaceMeta).overpaintTexture = renderObject.values.tOverpaintGrid.ref.value;
+                    applyTextureMeshOverpaintSmoothing(
+                        renderObject.values as any,
+                        csp.resolution,
+                        csp.stride,
+                        webgl,
+                        overpaintTexture,
+                    );
+                    (geometry.meta as SurfaceMeta).overpaintTexture =
+                        renderObject.values.tOverpaintGrid.ref.value;
                 }
             }
         }
     }
 
-    export function setTransparency(renderObject: GraphicsRenderObject | undefined, transparency: Transparency, lociApply: LociApply, clear: boolean, smoothing?: SmoothingContext) {
+    export function setTransparency(
+        renderObject: GraphicsRenderObject | undefined,
+        transparency: Transparency,
+        lociApply: LociApply,
+        clear: boolean,
+        smoothing?: SmoothingContext,
+    ) {
         if (!renderObject) return;
 
-        const { tTransparency, dTransparencyType, transparencyAverage, transparencyMin, dTransparency, uGroupCount, instanceCount, instanceGranularity: instanceGranularity } = renderObject.values;
+        const {
+            tTransparency,
+            dTransparencyType,
+            transparencyAverage,
+            transparencyMin,
+            dTransparency,
+            uGroupCount,
+            instanceCount,
+            instanceGranularity: instanceGranularity,
+        } = renderObject.values;
         const count = instanceGranularity.ref.value
             ? instanceCount.ref.value
             : uGroupCount.ref.value * instanceCount.ref.value;
@@ -258,24 +380,52 @@ namespace Visual {
                 const { resolution, transparencyTexture } = geometry.meta as SurfaceMeta;
                 const csp = getColorSmoothingProps(props.smoothColors, true, resolution);
                 if (csp) {
-                    applyMeshTransparencySmoothing(renderObject.values as any, csp.resolution, csp.stride, webgl, transparencyTexture);
-                    (geometry.meta as SurfaceMeta).transparencyTexture = renderObject.values.tTransparencyGrid.ref.value;
+                    applyMeshTransparencySmoothing(
+                        renderObject.values as any,
+                        csp.resolution,
+                        csp.stride,
+                        webgl,
+                        transparencyTexture,
+                    );
+                    (geometry.meta as SurfaceMeta).transparencyTexture =
+                        renderObject.values.tTransparencyGrid.ref.value;
                 }
             } else if (webgl && geometry.kind === 'texture-mesh') {
                 const { resolution, transparencyTexture } = geometry.meta as SurfaceMeta;
                 const csp = getColorSmoothingProps(props.smoothColors, true, resolution);
                 if (csp) {
-                    applyTextureMeshTransparencySmoothing(renderObject.values as any, csp.resolution, csp.stride, webgl, transparencyTexture);
-                    (geometry.meta as SurfaceMeta).transparencyTexture = renderObject.values.tTransparencyGrid.ref.value;
+                    applyTextureMeshTransparencySmoothing(
+                        renderObject.values as any,
+                        csp.resolution,
+                        csp.stride,
+                        webgl,
+                        transparencyTexture,
+                    );
+                    (geometry.meta as SurfaceMeta).transparencyTexture =
+                        renderObject.values.tTransparencyGrid.ref.value;
                 }
             }
         }
     }
 
-    export function setEmissive(renderObject: GraphicsRenderObject | undefined, emissive: Emissive, lociApply: LociApply, clear: boolean, smoothing?: SmoothingContext) {
+    export function setEmissive(
+        renderObject: GraphicsRenderObject | undefined,
+        emissive: Emissive,
+        lociApply: LociApply,
+        clear: boolean,
+        smoothing?: SmoothingContext,
+    ) {
         if (!renderObject) return;
 
-        const { tEmissive, dEmissiveType, emissiveAverage, dEmissive, uGroupCount, instanceCount, instanceGranularity: instanceGranularity } = renderObject.values;
+        const {
+            tEmissive,
+            dEmissiveType,
+            emissiveAverage,
+            dEmissive,
+            uGroupCount,
+            instanceCount,
+            instanceGranularity: instanceGranularity,
+        } = renderObject.values;
         const count = instanceGranularity.ref.value
             ? instanceCount.ref.value
             : uGroupCount.ref.value * instanceCount.ref.value;
@@ -311,24 +461,51 @@ namespace Visual {
                 const { resolution, emissiveTexture } = geometry.meta as SurfaceMeta;
                 const csp = getColorSmoothingProps(props.smoothColors, true, resolution);
                 if (csp) {
-                    applyMeshEmissiveSmoothing(renderObject.values as any, csp.resolution, csp.stride, webgl, emissiveTexture);
-                    (geometry.meta as SurfaceMeta).emissiveTexture = renderObject.values.tEmissiveGrid.ref.value;
+                    applyMeshEmissiveSmoothing(
+                        renderObject.values as any,
+                        csp.resolution,
+                        csp.stride,
+                        webgl,
+                        emissiveTexture,
+                    );
+                    (geometry.meta as SurfaceMeta).emissiveTexture =
+                        renderObject.values.tEmissiveGrid.ref.value;
                 }
             } else if (webgl && geometry.kind === 'texture-mesh') {
                 const { resolution, emissiveTexture } = geometry.meta as SurfaceMeta;
                 const csp = getColorSmoothingProps(props.smoothColors, true, resolution);
                 if (csp) {
-                    applyTextureMeshEmissiveSmoothing(renderObject.values as any, csp.resolution, csp.stride, webgl, emissiveTexture);
-                    (geometry.meta as SurfaceMeta).emissiveTexture = renderObject.values.tEmissiveGrid.ref.value;
+                    applyTextureMeshEmissiveSmoothing(
+                        renderObject.values as any,
+                        csp.resolution,
+                        csp.stride,
+                        webgl,
+                        emissiveTexture,
+                    );
+                    (geometry.meta as SurfaceMeta).emissiveTexture =
+                        renderObject.values.tEmissiveGrid.ref.value;
                 }
             }
         }
     }
 
-    export function setSubstance(renderObject: GraphicsRenderObject | undefined, substance: Substance, lociApply: LociApply, clear: boolean, smoothing?: SmoothingContext) {
+    export function setSubstance(
+        renderObject: GraphicsRenderObject | undefined,
+        substance: Substance,
+        lociApply: LociApply,
+        clear: boolean,
+        smoothing?: SmoothingContext,
+    ) {
         if (!renderObject) return;
 
-        const { tSubstance, dSubstanceType, dSubstance, uGroupCount, instanceCount, instanceGranularity: instanceGranularity } = renderObject.values;
+        const {
+            tSubstance,
+            dSubstanceType,
+            dSubstance,
+            uGroupCount,
+            instanceCount,
+            instanceGranularity: instanceGranularity,
+        } = renderObject.values;
         const count = instanceGranularity.ref.value
             ? instanceCount.ref.value
             : uGroupCount.ref.value * instanceCount.ref.value;
@@ -365,24 +542,50 @@ namespace Visual {
                 const { resolution, substanceTexture } = geometry.meta as SurfaceMeta;
                 const csp = getColorSmoothingProps(props.smoothColors, true, resolution);
                 if (csp) {
-                    applyMeshSubstanceSmoothing(renderObject.values as any, csp.resolution, csp.stride, webgl, substanceTexture);
-                    (geometry.meta as SurfaceMeta).substanceTexture = renderObject.values.tSubstanceGrid.ref.value;
+                    applyMeshSubstanceSmoothing(
+                        renderObject.values as any,
+                        csp.resolution,
+                        csp.stride,
+                        webgl,
+                        substanceTexture,
+                    );
+                    (geometry.meta as SurfaceMeta).substanceTexture =
+                        renderObject.values.tSubstanceGrid.ref.value;
                 }
             } else if (webgl && geometry.kind === 'texture-mesh') {
                 const { resolution, substanceTexture } = geometry.meta as SurfaceMeta;
                 const csp = getColorSmoothingProps(props.smoothColors, true, resolution);
                 if (csp) {
-                    applyTextureMeshSubstanceSmoothing(renderObject.values as any, csp.resolution, csp.stride, webgl, substanceTexture);
-                    (geometry.meta as SurfaceMeta).substanceTexture = renderObject.values.tSubstanceGrid.ref.value;
+                    applyTextureMeshSubstanceSmoothing(
+                        renderObject.values as any,
+                        csp.resolution,
+                        csp.stride,
+                        webgl,
+                        substanceTexture,
+                    );
+                    (geometry.meta as SurfaceMeta).substanceTexture =
+                        renderObject.values.tSubstanceGrid.ref.value;
                 }
             }
         }
     }
 
-    export function setClipping(renderObject: GraphicsRenderObject | undefined, clipping: Clipping, lociApply: LociApply, clear: boolean) {
+    export function setClipping(
+        renderObject: GraphicsRenderObject | undefined,
+        clipping: Clipping,
+        lociApply: LociApply,
+        clear: boolean,
+    ) {
         if (!renderObject) return;
 
-        const { tClipping, dClippingType, dClipping, uGroupCount, instanceCount, instanceGranularity: instanceGranularity } = renderObject.values;
+        const {
+            tClipping,
+            dClippingType,
+            dClipping,
+            uGroupCount,
+            instanceCount,
+            instanceGranularity: instanceGranularity,
+        } = renderObject.values;
         const count = instanceGranularity.ref.value
             ? instanceCount.ref.value
             : uGroupCount.ref.value * instanceCount.ref.value;
@@ -410,16 +613,26 @@ namespace Visual {
         ValueCell.updateIfChanged(dClipping, clipping.layers.length > 0);
     }
 
-    export function setThemeStrength(renderObject: GraphicsRenderObject | undefined, strength: { overpaint: number, transparency: number, emissive: number, substance: number }) {
+    export function setThemeStrength(
+        renderObject: GraphicsRenderObject | undefined,
+        strength: { overpaint: number; transparency: number; emissive: number; substance: number },
+    ) {
         if (renderObject) {
             ValueCell.updateIfChanged(renderObject.values.uOverpaintStrength, strength.overpaint);
-            ValueCell.updateIfChanged(renderObject.values.uTransparencyStrength, strength.transparency);
+            ValueCell.updateIfChanged(
+                renderObject.values.uTransparencyStrength,
+                strength.transparency,
+            );
             ValueCell.updateIfChanged(renderObject.values.uEmissiveStrength, strength.emissive);
             ValueCell.updateIfChanged(renderObject.values.uSubstanceStrength, strength.substance);
         }
     }
 
-    export function setTransform(renderObject: GraphicsRenderObject | undefined, transform?: Mat4, instanceTransforms?: Float32Array | null) {
+    export function setTransform(
+        renderObject: GraphicsRenderObject | undefined,
+        transform?: Mat4,
+        instanceTransforms?: Float32Array | null,
+    ) {
         if (!renderObject || (!transform && !instanceTransforms)) return;
 
         const { values } = renderObject;
@@ -434,8 +647,18 @@ namespace Visual {
             fillIdentityTransform(values.extraTransform.ref.value, values.instanceCount.ref.value);
             ValueCell.update(values.extraTransform, values.extraTransform.ref.value);
         }
-        updateTransformData(values, values.invariantBoundingSphere.ref.value, values.instanceGrid.ref.value.cellSize, values.instanceGrid.ref.value.batchSize);
-        const boundingSphere = calculateTransformBoundingSphere(values.invariantBoundingSphere.ref.value, values.transform.ref.value, values.instanceCount.ref.value, 0);
+        updateTransformData(
+            values,
+            values.invariantBoundingSphere.ref.value,
+            values.instanceGrid.ref.value.cellSize,
+            values.instanceGrid.ref.value.batchSize,
+        );
+        const boundingSphere = calculateTransformBoundingSphere(
+            values.invariantBoundingSphere.ref.value,
+            values.transform.ref.value,
+            values.instanceCount.ref.value,
+            0,
+        );
         ValueCell.update(values.boundingSphere, boundingSphere);
     }
 }

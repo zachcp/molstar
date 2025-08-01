@@ -5,18 +5,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { computeRings, getFingerprint, createIndex } from './rings/compute.ts';
+import { computeRings, createIndex, getFingerprint } from './rings/compute.ts';
 import { Unit } from '../unit.ts';
 import { StructureElement } from '../element.ts';
 import { SortedArray } from '../../../../mol-data/int.ts';
 import { ResidueIndex } from '../../model.ts';
-import { ElementSymbol, BondType } from '../../model/types.ts';
+import { BondType, ElementSymbol } from '../../model/types.ts';
 import { Elements } from '../../model/properties/atomic/types.ts';
 import { getPositions } from '../../util.ts';
 import { PrincipalAxes } from '../../../../mol-math/linear-algebra/matrix/principal-axes.ts';
 import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
 
-type UnitRing = SortedArray<StructureElement.UnitIndex>
+type UnitRing = SortedArray<StructureElement.UnitIndex>;
 
 class UnitRings {
     /** Each ring is specified as an array of indices in Unit.elements. */
@@ -24,10 +24,13 @@ class UnitRings {
 
     private _byFingerprint?: ReadonlyMap<UnitRing.Fingerprint, ReadonlyArray<UnitRings.Index>>;
     private _index?: {
-        readonly elementRingIndices: ReadonlyMap<StructureElement.UnitIndex, UnitRings.Index[]>,
-        readonly elementAromaticRingIndices: ReadonlyMap<StructureElement.UnitIndex, UnitRings.Index[]>,
-        readonly ringComponentIndex: ReadonlyArray<UnitRings.ComponentIndex>,
-        readonly ringComponents: ReadonlyArray<ReadonlyArray<UnitRings.Index>>
+        readonly elementRingIndices: ReadonlyMap<StructureElement.UnitIndex, UnitRings.Index[]>;
+        readonly elementAromaticRingIndices: ReadonlyMap<
+            StructureElement.UnitIndex,
+            UnitRings.Index[]
+        >;
+        readonly ringComponentIndex: ReadonlyArray<UnitRings.ComponentIndex>;
+        readonly ringComponents: ReadonlyArray<ReadonlyArray<UnitRings.Index>>;
     };
     private _aromaticRings?: ReadonlyArray<UnitRings.Index>;
 
@@ -73,14 +76,16 @@ class UnitRings {
 }
 
 namespace UnitRing {
-    export type Fingerprint = { readonly '@type': 'unit-ring-fingerprint' } & string
+    export type Fingerprint = { readonly '@type': 'unit-ring-fingerprint' } & string;
 
     export function fingerprint(unit: Unit.Atomic, ring: UnitRing): Fingerprint {
         const { elements } = unit;
         const { type_symbol } = unit.model.atomicHierarchy.atoms;
 
         const symbols: ElementSymbol[] = [];
-        for (let i = 0, _i = ring.length; i < _i; i++) symbols[symbols.length] = type_symbol.value(elements[ring[i]]);
+        for (let i = 0, _i = ring.length; i < _i; i++) {
+            symbols[symbols.length] = type_symbol.value(elements[ring[i]]);
+        }
         return elementFingerprint(symbols);
     }
 
@@ -89,11 +94,18 @@ namespace UnitRing {
     }
 
     const AromaticRingElements = new Set([
-        Elements.B, Elements.C, Elements.N, Elements.O,
-        Elements.SI, Elements.P, Elements.S,
-        Elements.GE, Elements.AS,
-        Elements.SN, Elements.SB,
-        Elements.BI
+        Elements.B,
+        Elements.C,
+        Elements.N,
+        Elements.O,
+        Elements.SI,
+        Elements.P,
+        Elements.S,
+        Elements.GE,
+        Elements.AS,
+        Elements.SN,
+        Elements.SB,
+        Elements.BI,
     ] as ElementSymbol[]);
     const AromaticRingPlanarityThreshold = 0.05;
 
@@ -109,7 +121,9 @@ namespace UnitRing {
 
         for (let i = 0, il = ring.length; i < il; ++i) {
             const aI = ring[i];
-            if (!hasAromaticRingElement && AromaticRingElements.has(type_symbol.value(elements[aI]))) {
+            if (
+                !hasAromaticRingElement && AromaticRingElements.has(type_symbol.value(elements[aI]))
+            ) {
                 hasAromaticRingElement = true;
             }
 
@@ -147,11 +161,14 @@ namespace UnitRing {
 
 namespace UnitRings {
     /** Index into UnitRings.all */
-    export type Index = { readonly '@type': 'unit-ring-index' } & number
-    export type ComponentIndex = { readonly '@type': 'unit-ring-component-index' } & number
+    export type Index = { readonly '@type': 'unit-ring-index' } & number;
+    export type ComponentIndex = { readonly '@type': 'unit-ring-component-index' } & number;
 
     export function create(unit: Unit.Atomic): UnitRings {
-        if (Unit.Traits.is(unit.traits, Unit.Trait.Water) || Unit.Traits.is(unit.traits, Unit.Trait.CoarseGrained)) {
+        if (
+            Unit.Traits.is(unit.traits, Unit.Trait.Water) ||
+            Unit.Traits.is(unit.traits, Unit.Trait.CoarseGrained)
+        ) {
             return new UnitRings([], unit);
         }
         const rings = computeRings(unit);
@@ -159,7 +176,10 @@ namespace UnitRings {
     }
 
     /** Creates a mapping ResidueIndex -> list or rings that are on that residue and have one of the specified fingerprints. */
-    export function byFingerprintAndResidue(rings: UnitRings, fingerprints: ReadonlyArray<UnitRing.Fingerprint>) {
+    export function byFingerprintAndResidue(
+        rings: UnitRings,
+        fingerprints: ReadonlyArray<UnitRing.Fingerprint>,
+    ) {
         const map = new Map<ResidueIndex, Index[]>();
 
         for (let fI = 0, _fI = fingerprints.length; fI < _fI; fI++) {
@@ -183,7 +203,10 @@ function createByFingerprint(unit: Unit.Atomic, rings: ReadonlyArray<UnitRing>) 
     return byFingerprint;
 }
 
-function ringResidueIdx(unit: Unit.Atomic, ring: ArrayLike<StructureElement.UnitIndex>): ResidueIndex {
+function ringResidueIdx(
+    unit: Unit.Atomic,
+    ring: ArrayLike<StructureElement.UnitIndex>,
+): ResidueIndex {
     const { elements } = unit;
     const residueIndex = unit.model.atomicHierarchy.residueAtomSegments.index;
     const idx = residueIndex[elements[ring[0]]];
@@ -193,7 +216,11 @@ function ringResidueIdx(unit: Unit.Atomic, ring: ArrayLike<StructureElement.Unit
     return idx;
 }
 
-function addSingleResidueRings(rings: UnitRings, fp: UnitRing.Fingerprint, map: Map<ResidueIndex, UnitRings.Index[]>) {
+function addSingleResidueRings(
+    rings: UnitRings,
+    fp: UnitRing.Fingerprint,
+    map: Map<ResidueIndex, UnitRings.Index[]>,
+) {
     const byFp = rings.byFingerprint.get(fp);
     if (!byFp) return;
     for (let rI = 0, _rI = byFp.length; rI < _rI; rI++) {
@@ -206,7 +233,10 @@ function addSingleResidueRings(rings: UnitRings, fp: UnitRing.Fingerprint, map: 
     }
 }
 
-function getAromaticRings(unit: Unit.Atomic, rings: ReadonlyArray<UnitRing>): ReadonlyArray<UnitRings.Index> {
+function getAromaticRings(
+    unit: Unit.Atomic,
+    rings: ReadonlyArray<UnitRing>,
+): ReadonlyArray<UnitRings.Index> {
     const aromaticRings: UnitRings.Index[] = [];
     for (let i = 0 as UnitRings.Index, il = rings.length; i < il; ++i) {
         if (UnitRing.isAromatic(unit, rings[i])) aromaticRings.push(i);

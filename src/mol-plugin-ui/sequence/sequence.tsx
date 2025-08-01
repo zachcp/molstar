@@ -15,17 +15,22 @@ import { StructureElement, StructureProperties, Unit } from '../../mol-model/str
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { Representation } from '../../mol-repr/representation.ts';
 import { Color } from '../../mol-util/color/index.ts';
-import { ButtonsType, getButton, getButtons, getModifiers, ModifiersKeys } from '../../mol-util/input/input-observer.ts';
+import {
+    ButtonsType,
+    getButton,
+    getButtons,
+    getModifiers,
+    ModifiersKeys,
+} from '../../mol-util/input/input-observer.ts';
 import { MarkerAction } from '../../mol-util/marker-action.ts';
 import { PluginUIComponent } from '../base.tsx';
 import { SequenceWrapper } from './wrapper.ts';
 
-
 type SequenceProps = {
-    sequenceWrapper: SequenceWrapper.Any,
-    sequenceNumberPeriod?: number,
-    hideSequenceNumbers?: boolean,
-}
+    sequenceWrapper: SequenceWrapper.Any;
+    sequenceNumberPeriod?: number;
+    hideSequenceNumbers?: boolean;
+};
 
 /** Note, if this is changed, the CSS for `msp-sequence-number` needs adjustment too */
 const MaxSequenceNumberSize = 5;
@@ -40,7 +45,9 @@ const DefaultMarkerColors = {
 export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
     protected parentDiv = React.createRef<HTMLDivElement>();
     protected lastMouseOverSeqIdx = -1;
-    protected highlightQueue = new Subject<{ seqIdx: number, buttons: number, button: number, modifiers: ModifiersKeys }>();
+    protected highlightQueue = new Subject<
+        { seqIdx: number; buttons: number; button: number; modifiers: ModifiersKeys }
+    >();
     protected markerColors = { ...DefaultMarkerColors };
 
     protected lociHighlightProvider = (loci: Representation.Loci, action: MarkerAction) => {
@@ -67,11 +74,16 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         this.plugin.managers.interactivity.lociHighlights.addProvider(this.lociHighlightProvider);
         this.plugin.managers.interactivity.lociSelects.addProvider(this.lociSelectionProvider);
 
-        this.subscribe(this.highlightQueue.pipe(throttleTime(3 * 16.666, void 0, { leading: true, trailing: true })), (e) => {
-            const loci = this.getLoci(e.seqIdx < 0 ? void 0 : e.seqIdx);
-            this.hover(loci, e.buttons, e.button, e.modifiers);
-        });
-        this.subscribe(this.plugin.managers.structure.focus.behaviors.current, focus => {
+        this.subscribe(
+            this.highlightQueue.pipe(
+                throttleTime(3 * 16.666, void 0, { leading: true, trailing: true }),
+            ),
+            (e) => {
+                const loci = this.getLoci(e.seqIdx < 0 ? void 0 : e.seqIdx);
+                this.hover(loci, e.buttons, e.button, e.modifiers);
+            },
+        );
+        this.subscribe(this.plugin.managers.structure.focus.behaviors.current, (focus) => {
             this.updateFocus(focus?.loci);
             this.updateMarker();
         });
@@ -85,8 +97,12 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
 
     updateColors() {
         if (this.plugin.canvas3d) {
-            this.markerColors.highlighted = Color.toHexStyle(this.plugin.canvas3d.props.renderer.highlightColor);
-            this.markerColors.selected = Color.toHexStyle(this.plugin.canvas3d.props.renderer.selectColor);
+            this.markerColors.highlighted = Color.toHexStyle(
+                this.plugin.canvas3d.props.renderer.highlightColor,
+            );
+            this.markerColors.selected = Color.toHexStyle(
+                this.plugin.canvas3d.props.renderer.selectColor,
+            );
         } else {
             this.markerColors.highlighted = DefaultMarkerColors.highlighted;
             this.markerColors.selected = DefaultMarkerColors.selected;
@@ -103,7 +119,9 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
     componentWillUnmount() {
         super.componentWillUnmount();
 
-        this.plugin.managers.interactivity.lociHighlights.removeProvider(this.lociHighlightProvider);
+        this.plugin.managers.interactivity.lociHighlights.removeProvider(
+            this.lociHighlightProvider,
+        );
         this.plugin.managers.interactivity.lociSelects.removeProvider(this.lociSelectionProvider);
     }
 
@@ -123,7 +141,12 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         return seqIdx;
     }
 
-    hover(loci: StructureElement.Loci | undefined, buttons: ButtonsType, button: ButtonsType.Flag, modifiers: ModifiersKeys) {
+    hover(
+        loci: StructureElement.Loci | undefined,
+        buttons: ButtonsType,
+        button: ButtonsType.Flag,
+        modifiers: ModifiersKeys,
+    ) {
         const ev = { current: Representation.Loci.Empty, buttons, button, modifiers };
         if (loci !== undefined && !StructureElement.Loci.isEmpty(loci)) {
             ev.current = { loci };
@@ -135,7 +158,10 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
 
                 const range = StructureElement.Loci(loci.structure, [{
                     unit: ref.unit,
-                    indices: OrderedSet.ofRange(min as StructureElement.UnitIndex, max as StructureElement.UnitIndex)
+                    indices: OrderedSet.ofRange(
+                        min as StructureElement.UnitIndex,
+                        max as StructureElement.UnitIndex,
+                    ),
                 }]);
                 ev.current = { loci: range };
             }
@@ -143,7 +169,12 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         this.plugin.behaviors.interaction.hover.next(ev);
     }
 
-    click(loci: StructureElement.Loci | undefined, buttons: ButtonsType, button: ButtonsType.Flag, modifiers: ModifiersKeys) {
+    click(
+        loci: StructureElement.Loci | undefined,
+        buttons: ButtonsType,
+        button: ButtonsType.Flag,
+        modifiers: ModifiersKeys,
+    ) {
         const ev = { current: Representation.Loci.Empty, buttons, button, modifiers };
         if (loci !== undefined && !StructureElement.Loci.isEmpty(loci)) {
             ev.current = { loci };
@@ -188,7 +219,10 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
 
                 range = StructureElement.Loci(loci.structure, [{
                     unit: ref.unit,
-                    indices: OrderedSet.ofRange(min as StructureElement.UnitIndex, max as StructureElement.UnitIndex)
+                    indices: OrderedSet.ofRange(
+                        min as StructureElement.UnitIndex,
+                        max as StructureElement.UnitIndex,
+                    ),
                 }]);
             }
 
@@ -209,7 +243,9 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         const seqWrapper = this.props.sequenceWrapper;
         const classes = [seqWrapper.residueClass(seqIdx)];
         if (label.length > 1) {
-            classes.push(seqIdx === 0 ? 'msp-sequence-residue-long-begin' : 'msp-sequence-residue-long');
+            classes.push(
+                seqIdx === 0 ? 'msp-sequence-residue-long-begin' : 'msp-sequence-residue-long',
+            );
         }
         if (seqWrapper.isHighlighted(seqIdx)) classes.push('msp-sequence-residue-highlighted');
         if (seqWrapper.isSelected(seqIdx)) classes.push('msp-sequence-residue-selected');
@@ -218,7 +254,16 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
     }
 
     protected residue(seqIdx: number, label: string) {
-        return <span key={seqIdx} data-seqid={seqIdx} style={{ backgroundColor: this.getBackgroundColor(seqIdx) }} className={this.getResidueClass(seqIdx, label)}>{`\u200b${label}\u200b`}</span>;
+        return (
+            <span
+                key={seqIdx}
+                data-seqid={seqIdx}
+                style={{ backgroundColor: this.getBackgroundColor(seqIdx) }}
+                className={this.getResidueClass(seqIdx, label)}
+            >
+                {`\u200b${label}\u200b`}
+            </span>
+        );
     }
 
     protected getSequenceNumberClass(seqIdx: number, seqNum: string, label: string) {
@@ -250,12 +295,21 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
     }
 
     protected padSeqNum(n: string) {
-        if (n.length < MaxSequenceNumberSize) return n + new Array(MaxSequenceNumberSize - n.length + 1).join('\u00A0');
+        if (n.length < MaxSequenceNumberSize) {
+            return n + new Array(MaxSequenceNumberSize - n.length + 1).join('\u00A0');
+        }
         return n;
     }
     protected getSequenceNumberSpan(seqIdx: number, label: string) {
         const seqNum = this.getSequenceNumber(seqIdx);
-        return <span key={`marker-${seqIdx}`} className={this.getSequenceNumberClass(seqIdx, seqNum, label)}>{this.padSeqNum(seqNum)}</span>;
+        return (
+            <span
+                key={`marker-${seqIdx}`}
+                className={this.getSequenceNumberClass(seqIdx, seqNum, label)}
+            >
+                {this.padSeqNum(seqNum)}
+            </span>
+        );
     }
 
     protected updateMarker() {
@@ -276,7 +330,9 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
             const className = this.getResidueClass(i, seqWrapper.residueLabel(i));
             if (span.className !== className) span.className = className;
             const backgroundColor = this.getBackgroundColor(i);
-            if (span.style.backgroundColor !== backgroundColor) span.style.backgroundColor = backgroundColor;
+            if (span.style.backgroundColor !== backgroundColor) {
+                span.style.backgroundColor = backgroundColor;
+            }
         }
     }
 
@@ -342,16 +398,18 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         // residue spans are updated as react won't update them
         this.updateMarker();
 
-        return <div
-            className='msp-sequence-wrapper'
-            onContextMenu={this.contextMenu}
-            onMouseDown={this.mouseDown}
-            onMouseUp={this.mouseUp}
-            onMouseMove={this.mouseMove}
-            onMouseLeave={this.mouseLeave}
-            ref={this.parentDiv}
-        >
-            {elems}
-        </div>;
+        return (
+            <div
+                className='msp-sequence-wrapper'
+                onContextMenu={this.contextMenu}
+                onMouseDown={this.mouseDown}
+                onMouseUp={this.mouseUp}
+                onMouseMove={this.mouseMove}
+                onMouseLeave={this.mouseLeave}
+                ref={this.parentDiv}
+            >
+                {elems}
+            </div>
+        );
     }
 }

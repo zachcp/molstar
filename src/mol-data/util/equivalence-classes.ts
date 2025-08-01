@@ -6,7 +6,7 @@
 
 export class EquivalenceClassesImpl<K, V> {
     private id = 0;
-    private byHash = new Map<number, { id: number, keys: K[], value: V }[]>();
+    private byHash = new Map<number, { id: number; keys: K[]; value: V }[]>();
 
     readonly groups: K[][] = [];
 
@@ -39,9 +39,12 @@ export class EquivalenceClassesImpl<K, V> {
         }
     }
 
-    constructor(private getHash: (v: V) => any, private areEqual: (a: V, b: V) => boolean) { }
+    constructor(private getHash: (v: V) => any, private areEqual: (a: V, b: V) => boolean) {}
 }
 
-export function EquivalenceClasses<K, V>(getHash: (x: V) => any, areEqual: (a: V, b: V) => boolean) {
+export function EquivalenceClasses<K, V>(
+    getHash: (x: V) => any,
+    areEqual: (a: V, b: V) => boolean,
+) {
     return new EquivalenceClassesImpl<K, V>(getHash, areEqual);
 }

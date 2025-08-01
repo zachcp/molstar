@@ -7,8 +7,12 @@
 import { StateTransforms } from '../../../mol-plugin-state/transforms.ts';
 import { PluginContext } from '../../../mol-plugin/context.ts';
 import { ChannelsDBdata, Tunnel, TunnelDB } from './data-model.ts';
-import { TunnelsFromRawData, SelectTunnel, TunnelShapeProvider, TunnelFromRawData } from './representation.ts';
-
+import {
+    SelectTunnel,
+    TunnelFromRawData,
+    TunnelsFromRawData,
+    TunnelShapeProvider,
+} from './representation.ts';
 
 export const DB_URL = 'https://channelsdb2.biodata.ceitec.cz/api/channels/';
 export const SUB_DB = 'pdb';
@@ -53,7 +57,9 @@ export async function runVisualizeTunnel(plugin: PluginContext) {
 
     update
         .toRoot()
-        .apply(TunnelFromRawData, { data: { data: tunnel.Profile, props: { id: tunnel.Id, type: tunnel.Type } } })
+        .apply(TunnelFromRawData, {
+            data: { data: tunnel.Profile, props: { id: tunnel.Id, type: tunnel.Type } },
+        })
         .apply(TunnelShapeProvider, {
             webgl,
         })

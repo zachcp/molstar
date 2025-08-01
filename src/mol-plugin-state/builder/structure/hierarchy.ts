@@ -13,12 +13,18 @@ import { isProductionMode } from '../../../mol-util/debug.ts';
 import { objectForEach } from '../../../mol-util/object.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { PluginStateObject } from '../../objects.ts';
-import { PresetTrajectoryHierarchy, TrajectoryHierarchyPresetProvider } from './hierarchy-preset.ts';
+import {
+    PresetTrajectoryHierarchy,
+    TrajectoryHierarchyPresetProvider,
+} from './hierarchy-preset.ts';
 import { arrayRemoveInPlace } from '../../../mol-util/array.ts';
 
 // TODO factor out code shared with StructureRepresentationBuilder?
 
-export type TrajectoryHierarchyPresetProviderRef = keyof PresetTrajectoryHierarchy | TrajectoryHierarchyPresetProvider | string
+export type TrajectoryHierarchyPresetProviderRef =
+    | keyof PresetTrajectoryHierarchy
+    | TrajectoryHierarchyPresetProvider
+    | string;
 
 export class TrajectoryHierarchyBuilder {
     private _providers: TrajectoryHierarchyPresetProvider[] = [];
@@ -28,7 +34,8 @@ export class TrajectoryHierarchyBuilder {
 
     private resolveProvider(ref: TrajectoryHierarchyPresetProviderRef) {
         return typeof ref === 'string'
-            ? PresetTrajectoryHierarchy[ref as keyof PresetTrajectoryHierarchy] ?? arrayFind(this._providers, p => p.id === ref)
+            ? PresetTrajectoryHierarchy[ref as keyof PresetTrajectoryHierarchy] ??
+                arrayFind(this._providers, (p) => p.id === ref)
             : ref;
     }
 
@@ -39,7 +46,9 @@ export class TrajectoryHierarchyBuilder {
         return false;
     }
 
-    get providers(): ReadonlyArray<TrajectoryHierarchyPresetProvider> { return this._providers; }
+    get providers(): ReadonlyArray<TrajectoryHierarchyPresetProvider> {
+        return this._providers;
+    }
 
     getPresets(t?: PluginStateObject.Molecule.Trajectory) {
         if (!t) return this.providers;
@@ -86,9 +95,21 @@ export class TrajectoryHierarchyBuilder {
         arrayRemoveInPlace(this._providers, provider);
     }
 
-    applyPreset<K extends keyof PresetTrajectoryHierarchy>(parent: StateObjectRef<PluginStateObject.Molecule.Trajectory>, preset: K, params?: Partial<TrajectoryHierarchyPresetProvider.Params<PresetTrajectoryHierarchy[K]>>): Promise<TrajectoryHierarchyPresetProvider.State<PresetTrajectoryHierarchy[K]>> | undefined
-    applyPreset<P = any, S = {}>(parent: StateObjectRef<PluginStateObject.Molecule.Trajectory>, provider: TrajectoryHierarchyPresetProvider<P, S>, params?: P): Promise<S> | undefined
-    applyPreset(parent: StateObjectRef, providerRef: string | TrajectoryHierarchyPresetProvider, params?: any): Promise<any> | undefined {
+    applyPreset<K extends keyof PresetTrajectoryHierarchy>(
+        parent: StateObjectRef<PluginStateObject.Molecule.Trajectory>,
+        preset: K,
+        params?: Partial<TrajectoryHierarchyPresetProvider.Params<PresetTrajectoryHierarchy[K]>>,
+    ): Promise<TrajectoryHierarchyPresetProvider.State<PresetTrajectoryHierarchy[K]>> | undefined;
+    applyPreset<P = any, S = {}>(
+        parent: StateObjectRef<PluginStateObject.Molecule.Trajectory>,
+        provider: TrajectoryHierarchyPresetProvider<P, S>,
+        params?: P,
+    ): Promise<S> | undefined;
+    applyPreset(
+        parent: StateObjectRef,
+        providerRef: string | TrajectoryHierarchyPresetProvider,
+        params?: any,
+    ): Promise<any> | undefined {
         const provider = this.resolveProvider(providerRef);
         if (!provider) return;
 
@@ -99,15 +120,19 @@ export class TrajectoryHierarchyBuilder {
             return;
         }
 
-        const prms = params || (provider.params
-            ? PD.getDefaultValues(provider.params(cell.obj, this.plugin) as PD.Params)
-            : {});
+        const prms = params ||
+            (provider.params
+                ? PD.getDefaultValues(provider.params(cell.obj, this.plugin) as PD.Params)
+                : {});
 
-        const task = Task.create(`${provider.display.name}`, () => provider.apply(cell, prms, this.plugin) as Promise<any>);
+        const task = Task.create(
+            `${provider.display.name}`,
+            () => provider.apply(cell, prms, this.plugin) as Promise<any>,
+        );
         return this.plugin.runTask(task);
     }
 
     constructor(public plugin: PluginContext) {
-        objectForEach(PresetTrajectoryHierarchy, r => this.registerPreset(r));
+        objectForEach(PresetTrajectoryHierarchy, (r) => this.registerPreset(r));
     }
 }

@@ -13,7 +13,7 @@ const defaultByteLength = 1024 * 8;
 const charArray: string[] = [];
 
 export interface IOBufferParameters {
-    offset?: number // Ignore the first n bytes of the ArrayBuffer
+    offset?: number; // Ignore the first n bytes of the ArrayBuffer
 }
 
 /**

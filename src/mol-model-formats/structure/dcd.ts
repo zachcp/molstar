@@ -16,7 +16,7 @@ import { EPSILON, equalEps } from '../../mol-math/linear-algebra/3d/common.ts';
 const charmmTimeUnitFactor = 20.45482949774598;
 
 export function coordinatesFromDcd(dcdFile: DcdFile): Task<Coordinates> {
-    return Task.create('Parse DCD', async ctx => {
+    return Task.create('Parse DCD', async (ctx) => {
         await ctx.update('Converting to coordinates');
 
         const { header } = dcdFile;
@@ -40,7 +40,7 @@ export function coordinatesFromDcd(dcdFile: DcdFile): Task<Coordinates> {
                 y: dcdFrame.y,
                 z: dcdFrame.z,
 
-                xyzOrdering: { isIdentity: true }
+                xyzOrdering: { isIdentity: true },
             };
 
             if (dcdFrame.cell) {
@@ -52,8 +52,8 @@ export function coordinatesFromDcd(dcdFile: DcdFile): Task<Coordinates> {
                         Vec3.create(
                             degToRad(90 - Math.asin(c[1]) * 90 / halfPI),
                             degToRad(90 - Math.asin(c[3]) * 90 / halfPI),
-                            degToRad(90 - Math.asin(c[4]) * 90 / halfPI)
-                        )
+                            degToRad(90 - Math.asin(c[4]) * 90 / halfPI),
+                        ),
                     );
                 } else if (
                     c[0] < 0 || c[1] < 0 || c[2] < 0 || c[3] < 0 || c[4] < 0 || c[5] < 0 ||
@@ -62,7 +62,7 @@ export function coordinatesFromDcd(dcdFile: DcdFile): Task<Coordinates> {
                     frame.cell = Cell.fromBasis(
                         Vec3.create(c[0], c[1], c[3]),
                         Vec3.create(c[1], c[2], c[4]),
-                        Vec3.create(c[3], c[4], c[5])
+                        Vec3.create(c[3], c[4], c[5]),
                     );
                 } else {
                     frame.cell = Cell.create(
@@ -71,8 +71,8 @@ export function coordinatesFromDcd(dcdFile: DcdFile): Task<Coordinates> {
                         Vec3.create(
                             degToRad(equalEps(c[1], 0, EPSILON) ? 90 : c[1]),
                             degToRad(equalEps(c[3], 0, EPSILON) ? 90 : c[3]),
-                            degToRad(equalEps(c[4], 0, EPSILON) ? 90 : c[4])
-                        )
+                            degToRad(equalEps(c[4], 0, EPSILON) ? 90 : c[4]),
+                        ),
                     );
                 }
             }

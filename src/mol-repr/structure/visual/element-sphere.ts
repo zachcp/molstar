@@ -6,14 +6,36 @@
  */
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { UnitsMeshParams, UnitsSpheresParams, UnitsVisual, UnitsSpheresVisual, UnitsMeshVisual } from '../units-visual.ts';
+import {
+    UnitsMeshParams,
+    UnitsMeshVisual,
+    UnitsSpheresParams,
+    UnitsSpheresVisual,
+    UnitsVisual,
+} from '../units-visual.ts';
 import { WebGLContext } from '../../../mol-gl/webgl/context.ts';
-import { createElementSphereImpostor, ElementIterator, getElementLoci, eachElement, createElementSphereMesh, createStructureElementSphereImpostor, getSerialElementLoci, eachSerialElement, createStructureElementSphereMesh } from './util/element.ts';
+import {
+    createElementSphereImpostor,
+    createElementSphereMesh,
+    createStructureElementSphereImpostor,
+    createStructureElementSphereMesh,
+    eachElement,
+    eachSerialElement,
+    ElementIterator,
+    getElementLoci,
+    getSerialElementLoci,
+} from './util/element.ts';
 import { VisualUpdateState } from '../../util.ts';
 import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 import { Structure } from '../../../mol-model/structure.ts';
 import { checkSphereImpostorSupport, StructureGroup } from './util/common.ts';
-import { ComplexMeshParams, ComplexMeshVisual, ComplexSpheresParams, ComplexSpheresVisual, ComplexVisual } from '../complex-visual.ts';
+import {
+    ComplexMeshParams,
+    ComplexMeshVisual,
+    ComplexSpheresParams,
+    ComplexSpheresVisual,
+    ComplexVisual,
+} from '../complex-visual.ts';
 
 export const CommonElementSphereParams = {
     sizeFactor: PD.Numeric(1, { min: 0, max: 10, step: 0.1 }),
@@ -32,9 +54,14 @@ export const ElementSphereParams = {
     ...UnitsSpheresParams,
     ...CommonElementSphereParams,
 };
-export type ElementSphereParams = typeof ElementSphereParams
+export type ElementSphereParams = typeof ElementSphereParams;
 
-export function ElementSphereVisual(materialId: number, structure: Structure, props: PD.Values<ElementSphereParams>, webgl?: WebGLContext) {
+export function ElementSphereVisual(
+    materialId: number,
+    structure: Structure,
+    props: PD.Values<ElementSphereParams>,
+    webgl?: WebGLContext,
+) {
     return props.tryUseImpostor && checkSphereImpostorSupport(webgl)
         ? ElementSphereImpostorVisual(materialId)
         : ElementSphereMeshVisual(materialId);
@@ -47,17 +74,23 @@ export function ElementSphereImpostorVisual(materialId: number): UnitsVisual<Ele
         createLocationIterator: ElementIterator.fromGroup,
         getLoci: getElementLoci,
         eachLocation: eachElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<ElementSphereParams>, currentProps: PD.Values<ElementSphereParams>) => {
-            state.createGeometry = (
-                newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<ElementSphereParams>,
+            currentProps: PD.Values<ElementSphereParams>,
+        ) => {
+            state.createGeometry = newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
                 newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant ||
                 newProps.traceOnly !== currentProps.traceOnly ||
-                newProps.stride !== currentProps.stride
-            );
+                newProps.stride !== currentProps.stride;
         },
-        mustRecreate: (structureGroup: StructureGroup, props: PD.Values<ElementSphereParams>, webgl?: WebGLContext) => {
+        mustRecreate: (
+            structureGroup: StructureGroup,
+            props: PD.Values<ElementSphereParams>,
+            webgl?: WebGLContext,
+        ) => {
             return !props.tryUseImpostor || !webgl;
-        }
+        },
     }, materialId);
 }
 
@@ -68,19 +101,25 @@ export function ElementSphereMeshVisual(materialId: number): UnitsVisual<Element
         createLocationIterator: ElementIterator.fromGroup,
         getLoci: getElementLoci,
         eachLocation: eachElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<ElementSphereParams>, currentProps: PD.Values<ElementSphereParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<ElementSphereParams>,
+            currentProps: PD.Values<ElementSphereParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.detail !== currentProps.detail ||
                 newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
                 newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant ||
                 newProps.traceOnly !== currentProps.traceOnly ||
-                newProps.stride !== currentProps.stride
-            );
+                newProps.stride !== currentProps.stride;
         },
-        mustRecreate: (structureGroup: StructureGroup, props: PD.Values<ElementSphereParams>, webgl?: WebGLContext) => {
+        mustRecreate: (
+            structureGroup: StructureGroup,
+            props: PD.Values<ElementSphereParams>,
+            webgl?: WebGLContext,
+        ) => {
             return props.tryUseImpostor && !!webgl;
-        }
+        },
     }, materialId);
 }
 
@@ -91,54 +130,76 @@ export const StructureElementSphereParams = {
     ...ComplexSpheresParams,
     ...CommonElementSphereParams,
 };
-export type StructureElementSphereParams = typeof ElementSphereParams
+export type StructureElementSphereParams = typeof ElementSphereParams;
 
-export function StructureElementSphereVisual(materialId: number, structure: Structure, props: PD.Values<ElementSphereParams>, webgl?: WebGLContext) {
-    return props.tryUseImpostor && webgl && webgl.extensions.fragDepth && webgl.extensions.textureFloat
+export function StructureElementSphereVisual(
+    materialId: number,
+    structure: Structure,
+    props: PD.Values<ElementSphereParams>,
+    webgl?: WebGLContext,
+) {
+    return props.tryUseImpostor && webgl && webgl.extensions.fragDepth &&
+            webgl.extensions.textureFloat
         ? StructureElementSphereImpostorVisual(materialId)
         : StructureElementSphereMeshVisual(materialId);
 }
 
-export function StructureElementSphereImpostorVisual(materialId: number): ComplexVisual<StructureElementSphereParams> {
+export function StructureElementSphereImpostorVisual(
+    materialId: number,
+): ComplexVisual<StructureElementSphereParams> {
     return ComplexSpheresVisual<StructureElementSphereParams>({
         defaultProps: PD.getDefaultValues(StructureElementSphereParams),
         createGeometry: createStructureElementSphereImpostor,
         createLocationIterator: ElementIterator.fromStructure,
         getLoci: getSerialElementLoci,
         eachLocation: eachSerialElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<StructureElementSphereParams>, currentProps: PD.Values<StructureElementSphereParams>) => {
-            state.createGeometry = (
-                newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<StructureElementSphereParams>,
+            currentProps: PD.Values<StructureElementSphereParams>,
+        ) => {
+            state.createGeometry = newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
                 newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant ||
                 newProps.traceOnly !== currentProps.traceOnly ||
-                newProps.stride !== currentProps.stride
-            );
+                newProps.stride !== currentProps.stride;
         },
-        mustRecreate: (structure: Structure, props: PD.Values<StructureElementSphereParams>, webgl?: WebGLContext) => {
+        mustRecreate: (
+            structure: Structure,
+            props: PD.Values<StructureElementSphereParams>,
+            webgl?: WebGLContext,
+        ) => {
             return !props.tryUseImpostor || !webgl;
-        }
+        },
     }, materialId);
 }
 
-export function StructureElementSphereMeshVisual(materialId: number): ComplexVisual<StructureElementSphereParams> {
+export function StructureElementSphereMeshVisual(
+    materialId: number,
+): ComplexVisual<StructureElementSphereParams> {
     return ComplexMeshVisual<StructureElementSphereParams>({
         defaultProps: PD.getDefaultValues(StructureElementSphereParams),
         createGeometry: createStructureElementSphereMesh,
         createLocationIterator: ElementIterator.fromStructure,
         getLoci: getSerialElementLoci,
         eachLocation: eachSerialElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<StructureElementSphereParams>, currentProps: PD.Values<StructureElementSphereParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<StructureElementSphereParams>,
+            currentProps: PD.Values<StructureElementSphereParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.detail !== currentProps.detail ||
                 newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
                 newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant ||
                 newProps.traceOnly !== currentProps.traceOnly ||
-                newProps.stride !== currentProps.stride
-            );
+                newProps.stride !== currentProps.stride;
         },
-        mustRecreate: (structure: Structure, props: PD.Values<StructureElementSphereParams>, webgl?: WebGLContext) => {
+        mustRecreate: (
+            structure: Structure,
+            props: PD.Values<StructureElementSphereParams>,
+            webgl?: WebGLContext,
+        ) => {
             return props.tryUseImpostor && !!webgl;
-        }
+        },
     }, materialId);
 }

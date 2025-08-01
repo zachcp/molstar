@@ -8,7 +8,6 @@
 
 import { ChunkedBigString, MAX_STRING_LENGTH, StringLike } from './string-like.ts';
 
-
 export function utf8Write(data: Uint8Array, offset: number, str: string) {
     for (let i = 0, l = str.length; i < l; i++) {
         const codePoint = str.charCodeAt(i);
@@ -73,16 +72,16 @@ function _utf8Read(data: Uint8Array, offset: number, length: number) {
             // Three byte character
             chunk[chunkOffset++] = String.fromCharCode(
                 ((byte & 0x0f) << 12) |
-                ((data[++i] & 0x3f) << 6) |
-                ((data[++i] & 0x3f) << 0)
+                    ((data[++i] & 0x3f) << 6) |
+                    ((data[++i] & 0x3f) << 0),
             );
         } else if ((byte & 0xf8) === 0xf0) {
             // Four byte character
             chunk[chunkOffset++] = String.fromCharCode(
                 ((byte & 0x07) << 18) |
-                ((data[++i] & 0x3f) << 12) |
-                ((data[++i] & 0x3f) << 6) |
-                ((data[++i] & 0x3f) << 0)
+                    ((data[++i] & 0x3f) << 12) |
+                    ((data[++i] & 0x3f) << 6) |
+                    ((data[++i] & 0x3f) << 0),
             );
         } else throwError('Invalid byte ' + byte.toString(16));
 
@@ -101,9 +100,15 @@ function _utf8Read(data: Uint8Array, offset: number, length: number) {
 
 const utf8Decoder = (typeof TextDecoder !== 'undefined') ? new TextDecoder() : undefined;
 /** Decode UTF8 data. Return as primitive `string` type, or fail if the result is longer than MAX_STRING_LENGTH. */
-export function utf8Read(data: Uint8Array, offset: number = 0, length: number = data.length): string {
+export function utf8Read(
+    data: Uint8Array,
+    offset: number = 0,
+    length: number = data.length,
+): string {
     if (utf8Decoder) {
-        const input = (offset || length !== data.length) ? data.subarray(offset, offset + length) : data;
+        const input = (offset || length !== data.length)
+            ? data.subarray(offset, offset + length)
+            : data;
         return utf8Decoder.decode(input);
     } else {
         return _utf8Read(data, offset, length);
@@ -111,7 +116,11 @@ export function utf8Read(data: Uint8Array, offset: number = 0, length: number = 
 }
 
 /** Decode UTF8 data, potentially exceeding MAX_STRING_LENGTH. Return as primitive `string` if possible; or as `ChunkedBigString` if the result is longer than MAX_STRING_LENGTH. */
-export function utf8ReadLong(data: Uint8Array, offset: number = 0, length: number = data.length): StringLike {
+export function utf8ReadLong(
+    data: Uint8Array,
+    offset: number = 0,
+    length: number = data.length,
+): StringLike {
     if (length <= MAX_STRING_LENGTH) {
         return utf8Read(data, offset, length);
     }

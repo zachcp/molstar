@@ -4,25 +4,80 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { IntraUnitBondCylinderVisual, IntraUnitBondCylinderParams, StructureIntraUnitBondCylinderParams, StructureIntraUnitBondCylinderVisual } from '../visual/bond-intra-unit-cylinder.ts';
-import { InterUnitBondCylinderParams, InterUnitBondCylinderVisual } from '../visual/bond-inter-unit-cylinder.ts';
-import { ElementSphereVisual, ElementSphereParams, StructureElementSphereVisual } from '../visual/element-sphere.ts';
+import {
+    IntraUnitBondCylinderParams,
+    IntraUnitBondCylinderVisual,
+    StructureIntraUnitBondCylinderParams,
+    StructureIntraUnitBondCylinderVisual,
+} from '../visual/bond-intra-unit-cylinder.ts';
+import {
+    InterUnitBondCylinderParams,
+    InterUnitBondCylinderVisual,
+} from '../visual/bond-inter-unit-cylinder.ts';
+import {
+    ElementSphereParams,
+    ElementSphereVisual,
+    StructureElementSphereVisual,
+} from '../visual/element-sphere.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { UnitsRepresentation } from '../units-representation.ts';
 import { ComplexRepresentation } from '../complex-representation.ts';
-import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation.ts';
+import {
+    StructureRepresentation,
+    StructureRepresentationProvider,
+    StructureRepresentationStateBuilder,
+} from '../representation.ts';
+import {
+    Representation,
+    RepresentationContext,
+    RepresentationParamsGetter,
+} from '../../representation.ts';
 import { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
 import { Structure } from '../../../mol-model/structure.ts';
 import { getUnitKindsParam } from '../params.ts';
 import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const BallAndStickVisuals = {
-    'element-sphere': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, ElementSphereParams>) => UnitsRepresentation('Element sphere', ctx, getParams, ElementSphereVisual),
-    'intra-bond': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, IntraUnitBondCylinderParams>) => UnitsRepresentation('Intra-unit bond cylinder', ctx, getParams, IntraUnitBondCylinderVisual),
-    'inter-bond': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, InterUnitBondCylinderParams>) => ComplexRepresentation('Inter-unit bond cylinder', ctx, getParams, InterUnitBondCylinderVisual),
-    'structure-element-sphere': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, ElementSphereParams>) => ComplexRepresentation('Structure element sphere', ctx, getParams, StructureElementSphereVisual),
-    'structure-intra-bond': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, StructureIntraUnitBondCylinderParams>) => ComplexRepresentation('Structure intra-unit bond cylinder', ctx, getParams, StructureIntraUnitBondCylinderVisual),
+    'element-sphere': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, ElementSphereParams>,
+    ) => UnitsRepresentation('Element sphere', ctx, getParams, ElementSphereVisual),
+    'intra-bond': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, IntraUnitBondCylinderParams>,
+    ) => UnitsRepresentation(
+        'Intra-unit bond cylinder',
+        ctx,
+        getParams,
+        IntraUnitBondCylinderVisual,
+    ),
+    'inter-bond': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, InterUnitBondCylinderParams>,
+    ) => ComplexRepresentation(
+        'Inter-unit bond cylinder',
+        ctx,
+        getParams,
+        InterUnitBondCylinderVisual,
+    ),
+    'structure-element-sphere': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, ElementSphereParams>,
+    ) => ComplexRepresentation(
+        'Structure element sphere',
+        ctx,
+        getParams,
+        StructureElementSphereVisual,
+    ),
+    'structure-intra-bond': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, StructureIntraUnitBondCylinderParams>,
+    ) => ComplexRepresentation(
+        'Structure intra-unit bond cylinder',
+        ctx,
+        getParams,
+        StructureIntraUnitBondCylinderVisual,
+    ),
 };
 
 export const BallAndStickParams = {
@@ -34,11 +89,14 @@ export const BallAndStickParams = {
     unitKinds: getUnitKindsParam(['atomic']),
     sizeFactor: PD.Numeric(0.15, { min: 0.01, max: 10, step: 0.01 }),
     sizeAspectRatio: PD.Numeric(2 / 3, { min: 0.01, max: 3, step: 0.01 }),
-    visuals: PD.MultiSelect(['element-sphere', 'intra-bond', 'inter-bond'], PD.objectToOptions(BallAndStickVisuals)),
+    visuals: PD.MultiSelect(
+        ['element-sphere', 'intra-bond', 'inter-bond'],
+        PD.objectToOptions(BallAndStickVisuals),
+    ),
     bumpFrequency: PD.Numeric(0, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
     density: PD.Numeric(0.1, { min: 0, max: 1, step: 0.01 }, BaseGeometry.ShadingCategory),
 };
-export type BallAndStickParams = typeof BallAndStickParams
+export type BallAndStickParams = typeof BallAndStickParams;
 export function getBallAndStickParams(ctx: ThemeRegistryContext, structure: Structure) {
     let params = BallAndStickParams;
     const size = Structure.getSize(structure);
@@ -52,9 +110,18 @@ export function getBallAndStickParams(ctx: ThemeRegistryContext, structure: Stru
     return params;
 }
 
-export type BallAndStickRepresentation = StructureRepresentation<BallAndStickParams>
-export function BallAndStickRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, BallAndStickParams>): BallAndStickRepresentation {
-    return Representation.createMulti('Ball & Stick', ctx, getParams, StructureRepresentationStateBuilder, BallAndStickVisuals as unknown as Representation.Def<Structure, BallAndStickParams>);
+export type BallAndStickRepresentation = StructureRepresentation<BallAndStickParams>;
+export function BallAndStickRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, BallAndStickParams>,
+): BallAndStickRepresentation {
+    return Representation.createMulti(
+        'Ball & Stick',
+        ctx,
+        getParams,
+        StructureRepresentationStateBuilder,
+        BallAndStickVisuals as unknown as Representation.Def<Structure, BallAndStickParams>,
+    );
 }
 
 export const BallAndStickRepresentationProvider = StructureRepresentationProvider({
@@ -70,7 +137,10 @@ export const BallAndStickRepresentationProvider = StructureRepresentationProvide
     getData: (structure: Structure, props: PD.Values<BallAndStickParams>) => {
         return props.includeParent ? structure.asParent() : structure;
     },
-    mustRecreate: (oldProps: PD.Values<BallAndStickParams>, newProps: PD.Values<BallAndStickParams>) => {
+    mustRecreate: (
+        oldProps: PD.Values<BallAndStickParams>,
+        newProps: PD.Values<BallAndStickParams>,
+    ) => {
         return oldProps.includeParent !== newProps.includeParent;
-    }
+    },
 });

@@ -7,25 +7,50 @@
  */
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { Structure, Unit, StructureElement } from '../../../mol-model/structure.ts';
-import { FeaturesBuilder, Features } from './features.ts';
-import { typeSymbol, compId, atomId } from '../chemistry/util.ts';
-import { Elements, isTransitionMetal, isHalogen } from '../../../mol-model/structure/model/properties/atomic/types.ts';
-import { FeatureType, FeatureGroup, InteractionType } from './common.ts';
+import { Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
+import { Features, FeaturesBuilder } from './features.ts';
+import { atomId, compId, typeSymbol } from '../chemistry/util.ts';
+import {
+    Elements,
+    isHalogen,
+    isTransitionMetal,
+} from '../../../mol-model/structure/model/properties/atomic/types.ts';
+import { FeatureGroup, FeatureType, InteractionType } from './common.ts';
 import { ContactProvider } from './contacts.ts';
-import { ElementSymbol, AminoAcidNames, BaseNames, ProteinBackboneAtoms, NucleicBackboneAtoms } from '../../../mol-model/structure/model/types.ts';
+import {
+    AminoAcidNames,
+    BaseNames,
+    ElementSymbol,
+    NucleicBackboneAtoms,
+    ProteinBackboneAtoms,
+} from '../../../mol-model/structure/model/types.ts';
 
 export const MetalCoordinationParams = {
     distanceMax: PD.Numeric(3.0, { min: 1, max: 5, step: 0.1 }),
 };
-export type MetalCoordinationParams = typeof MetalCoordinationParams
-export type MetalCoordinationProps = PD.Values<MetalCoordinationParams>
+export type MetalCoordinationParams = typeof MetalCoordinationParams;
+export type MetalCoordinationProps = PD.Values<MetalCoordinationParams>;
 
 const IonicTypeMetals = [
-    Elements.LI, Elements.NA, Elements.K, Elements.RB, Elements.CS,
-    Elements.MG, Elements.CA, Elements.SR, Elements.BA, Elements.AL,
-    Elements.GA, Elements.IN, Elements.TL, Elements.SC, Elements.SN,
-    Elements.PB, Elements.BI, Elements.SB, Elements.HG
+    Elements.LI,
+    Elements.NA,
+    Elements.K,
+    Elements.RB,
+    Elements.CS,
+    Elements.MG,
+    Elements.CA,
+    Elements.SR,
+    Elements.BA,
+    Elements.AL,
+    Elements.GA,
+    Elements.IN,
+    Elements.TL,
+    Elements.SC,
+    Elements.SN,
+    Elements.PB,
+    Elements.BI,
+    Elements.SB,
+    Elements.HG,
 ] as ElementSymbol[];
 
 function addMetal(structure: Structure, unit: Unit.Atomic, builder: FeaturesBuilder) {
@@ -38,7 +63,9 @@ function addMetal(structure: Structure, unit: Unit.Atomic, builder: FeaturesBuil
         let type = FeatureType.None;
         if (IonicTypeMetals.includes(element)) {
             type = FeatureType.IonicTypeMetal;
-        } else if (isTransitionMetal(element) || element === Elements.ZN || element === Elements.CD) {
+        } else if (
+            isTransitionMetal(element) || element === Elements.ZN || element === Elements.CD
+        ) {
             type = FeatureType.TransitionMetal;
         }
 
@@ -87,7 +114,10 @@ function addMetalBinding(structure: Structure, unit: Unit.Atomic, builder: Featu
         } else if (isStandardAminoacid) {
             // main chain oxygen atom or oxygen, nitrogen and sulfur from specific amino acids
             if (element === Elements.O) {
-                if (['ASP', 'GLU', 'SER', 'THR', 'TYR', 'ASN', 'GLN'].includes(resname) && isProteinSidechain(atomname)) {
+                if (
+                    ['ASP', 'GLU', 'SER', 'THR', 'TYR', 'ASN', 'GLN'].includes(resname) &&
+                    isProteinSidechain(atomname)
+                ) {
                     dative = true;
                     ionic = true;
                 } else if (isProteinBackbone(atomname)) {
@@ -117,10 +147,24 @@ function addMetalBinding(structure: Structure, unit: Unit.Atomic, builder: Featu
         }
 
         if (dative) {
-            builder.add(FeatureType.DativeBondPartner, FeatureGroup.None, x[elements[i]], y[elements[i]], z[elements[i]], i);
+            builder.add(
+                FeatureType.DativeBondPartner,
+                FeatureGroup.None,
+                x[elements[i]],
+                y[elements[i]],
+                z[elements[i]],
+                i,
+            );
         }
         if (ionic) {
-            builder.add(FeatureType.IonicTypePartner, FeatureGroup.None, x[elements[i]], y[elements[i]], z[elements[i]], i);
+            builder.add(
+                FeatureType.IonicTypePartner,
+                FeatureGroup.None,
+                x[elements[i]],
+                y[elements[i]],
+                z[elements[i]],
+                i,
+            );
         }
     }
 }
@@ -138,7 +182,12 @@ function isMetalCoordination(ti: FeatureType, tj: FeatureType) {
     }
 }
 
-function testMetalCoordination(structure: Structure, infoA: Features.Info, infoB: Features.Info, distanceSq: number): InteractionType | undefined {
+function testMetalCoordination(
+    structure: Structure,
+    infoA: Features.Info,
+    infoB: Features.Info,
+    distanceSq: number,
+): InteractionType | undefined {
     const typeA = infoA.types[infoA.feature];
     const typeB = infoB.types[infoB.feature];
 
@@ -149,8 +198,14 @@ function testMetalCoordination(structure: Structure, infoA: Features.Info, infoB
 
 //
 
-export const MetalProvider = Features.Provider([FeatureType.IonicTypeMetal, FeatureType.TransitionMetal], addMetal);
-export const MetalBindingProvider = Features.Provider([FeatureType.IonicTypePartner, FeatureType.DativeBondPartner], addMetalBinding);
+export const MetalProvider = Features.Provider([
+    FeatureType.IonicTypeMetal,
+    FeatureType.TransitionMetal,
+], addMetal);
+export const MetalBindingProvider = Features.Provider([
+    FeatureType.IonicTypePartner,
+    FeatureType.DativeBondPartner,
+], addMetalBinding);
 
 export const MetalCoordinationProvider: ContactProvider<MetalCoordinationParams> = {
     name: 'metal-coordination',
@@ -158,8 +213,14 @@ export const MetalCoordinationProvider: ContactProvider<MetalCoordinationParams>
     createTester: (props: MetalCoordinationProps) => {
         return {
             maxDistance: props.distanceMax,
-            requiredFeatures: new Set([FeatureType.IonicTypeMetal, FeatureType.TransitionMetal, FeatureType.IonicTypePartner, FeatureType.DativeBondPartner]),
-            getType: (structure, infoA, infoB, distanceSq) => testMetalCoordination(structure, infoA, infoB, distanceSq)
+            requiredFeatures: new Set([
+                FeatureType.IonicTypeMetal,
+                FeatureType.TransitionMetal,
+                FeatureType.IonicTypePartner,
+                FeatureType.DativeBondPartner,
+            ]),
+            getType: (structure, infoA, infoB, distanceSq) =>
+                testMetalCoordination(structure, infoA, infoB, distanceSq),
         };
-    }
+    },
 };

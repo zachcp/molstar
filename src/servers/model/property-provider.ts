@@ -15,29 +15,36 @@ import * as wwpdbProps from './properties/wwpdb.ts';
 
 const attachModelProperties: { [k: string]: AttachModelProperties } = {
     pdbe: pdbeProps.attachModelProperties,
-    wwpdb: wwpdbProps.attachModelProperties
+    wwpdb: wwpdbProps.attachModelProperties,
 };
 
 export interface ModelPropertyProviderConfig {
-    sources: string[],
-    params?: { [name: string]: any }
+    sources: string[];
+    params?: { [name: string]: any };
 }
 
-export type AttachModelProperty = (args: { model: Model, params: any, cache: any }) => Promise<any>
-export type AttachModelProperties = (args: { model: Model, params: any, cache: any }) => Promise<any>[]
-export type ModelPropertiesProvider = (model: Model, cache: any) => Promise<any>[]
+export type AttachModelProperty = (args: { model: Model; params: any; cache: any }) => Promise<any>;
+export type AttachModelProperties = (
+    args: { model: Model; params: any; cache: any },
+) => Promise<any>[];
+export type ModelPropertiesProvider = (model: Model, cache: any) => Promise<any>[];
 
 export function createModelPropertiesProviderFromConfig() {
     return createModelPropertiesProvider(Config.customProperties);
 }
 
-export function createModelPropertiesProvider(configOrPath: ModelPropertyProviderConfig | string | undefined): ModelPropertiesProvider | undefined {
+export function createModelPropertiesProvider(
+    configOrPath: ModelPropertyProviderConfig | string | undefined,
+): ModelPropertiesProvider | undefined {
     let config: ModelPropertyProviderConfig;
     if (typeof configOrPath === 'string') {
         try {
             config = JSON.parse(fs.readFileSync(configOrPath, 'utf8'));
         } catch {
-            ConsoleLogger.error('Config', `Could not read property provider config file '${configOrPath}', ignoring.`);
+            ConsoleLogger.error(
+                'Config',
+                `Could not read property provider config file '${configOrPath}', ignoring.`,
+            );
             return () => [];
         }
     } else {

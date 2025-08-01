@@ -31,9 +31,9 @@ const Orbitals = createGrid3dComputeRenderable({
     mainCode: MAIN,
     utilCode: UTILS,
     returnCode: 'v',
-    values(params: { grid: CubeGridInfo, orbital: AlphaOrbital }) {
+    values(params: { grid: CubeGridInfo; orbital: AlphaOrbital }) {
         return createTextureData(params.grid, params.orbital);
-    }
+    },
 });
 
 const Density = createGrid3dComputeRenderable({
@@ -45,40 +45,62 @@ const Density = createGrid3dComputeRenderable({
     mainCode: MAIN,
     utilCode: UTILS,
     returnCode: 'current + uOccupancy * v * v',
-    values(params: { grid: CubeGridInfo, orbitals: AlphaOrbital[] }) {
+    values(params: { grid: CubeGridInfo; orbitals: AlphaOrbital[] }) {
         return {
             ...createTextureData(params.grid, params.orbitals[0]),
-            uOccupancy: 0
+            uOccupancy: 0,
         };
     },
     cumulative: {
-        states(params: { grid: CubeGridInfo, orbitals: AlphaOrbital[] }) {
-            return params.orbitals.filter(o => o.occupancy !== 0);
+        states(params: { grid: CubeGridInfo; orbitals: AlphaOrbital[] }) {
+            return params.orbitals.filter((o) => o.occupancy !== 0);
         },
         update({ grid }, state: AlphaOrbital, values) {
-            const alpha = getNormalizedAlpha(grid.params.basis, state.alpha, grid.params.sphericalOrder);
+            const alpha = getNormalizedAlpha(
+                grid.params.basis,
+                state.alpha,
+                grid.params.sphericalOrder,
+            );
             ValueCell.updateIfChanged(values.uOccupancy, state.occupancy);
             ValueCell.update(values.tAlpha, { width: alpha.length, height: 1, array: alpha });
-        }
-    }
+        },
+    },
 });
 
-export function gpuComputeAlphaOrbitalsGridValues(ctx: RuntimeContext, webgl: WebGLContext, grid: CubeGridInfo, orbital: AlphaOrbital) {
+export function gpuComputeAlphaOrbitalsGridValues(
+    ctx: RuntimeContext,
+    webgl: WebGLContext,
+    grid: CubeGridInfo,
+    orbital: AlphaOrbital,
+) {
     return Orbitals(ctx, webgl, grid, { grid, orbital });
 }
 
-export function gpuComputeAlphaOrbitalsDensityGridValues(ctx: RuntimeContext, webgl: WebGLContext, grid: CubeGridInfo, orbitals: AlphaOrbital[]) {
+export function gpuComputeAlphaOrbitalsDensityGridValues(
+    ctx: RuntimeContext,
+    webgl: WebGLContext,
+    grid: CubeGridInfo,
+    orbitals: AlphaOrbital[],
+) {
     return Density(ctx, webgl, grid, { grid, orbitals });
 }
 
-function getNormalizedAlpha(basis: Basis, alphaOrbitals: number[], sphericalOrder: SphericalBasisOrder) {
+function getNormalizedAlpha(
+    basis: Basis,
+    alphaOrbitals: number[],
+    sphericalOrder: SphericalBasisOrder,
+) {
     const alpha = new Float32Array(alphaOrbitals.length);
 
     let aO = 0;
     for (const atom of basis.atoms) {
         for (const shell of atom.shells) {
             for (const L of shell.angularMomentum) {
-                const a0 = normalizeBasicOrder(L, alphaOrbitals.slice(aO, aO + 2 * L + 1), sphericalOrder);
+                const a0 = normalizeBasicOrder(
+                    L,
+                    alphaOrbitals.slice(aO, aO + 2 * L + 1),
+                    sphericalOrder,
+                );
                 for (let i = 0; i < a0.length; i++) alpha[aO + i] = a0[i];
                 aO += 2 * L + 1;
             }
@@ -88,7 +110,10 @@ function getNormalizedAlpha(basis: Basis, alphaOrbitals: number[], sphericalOrde
     return alpha;
 }
 
-function createTextureData(grid: CubeGridInfo, orbital: AlphaOrbital): UnboxedValues<typeof Schema> {
+function createTextureData(
+    grid: CubeGridInfo,
+    orbital: AlphaOrbital,
+): UnboxedValues<typeof Schema> {
     const { basis, sphericalOrder, cutoffThreshold } = grid.params;
 
     let centerCount = 0;
@@ -119,10 +144,13 @@ function createTextureData(grid: CubeGridInfo, orbital: AlphaOrbital): UnboxedVa
     let cO = 0, aO = 0, coeffO = 0;
     for (const atom of basis.atoms) {
         for (const shell of atom.shells) {
-
             let amIndex = 0;
             for (const L of shell.angularMomentum) {
-                const a0 = normalizeBasicOrder(L, orbital.alpha.slice(aO, aO + 2 * L + 1), sphericalOrder);
+                const a0 = normalizeBasicOrder(
+                    L,
+                    orbital.alpha.slice(aO, aO + 2 * L + 1),
+                    sphericalOrder,
+                );
 
                 const cutoffRadius = cutoffThreshold > 0
                     ? Math.sqrt(-Math.log(cutoffThreshold) / arrayMin(shell.exponents))

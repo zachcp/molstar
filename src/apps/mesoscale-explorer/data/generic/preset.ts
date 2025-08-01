@@ -11,11 +11,30 @@ import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/
 import { Color } from '../../../../mol-util/color/index.ts';
 import { utf8Read } from '../../../../mol-io/common/utf8.ts';
 import { Mat3, Quat, Vec3 } from '../../../../mol-math/linear-algebra.ts';
-import { GraphicsMode, MesoscaleGroup, MesoscaleState, getGraphicsModeProps, getMesoscaleGroupParams } from '../state.ts';
+import {
+    getGraphicsModeProps,
+    getMesoscaleGroupParams,
+    GraphicsMode,
+    MesoscaleGroup,
+    MesoscaleState,
+} from '../state.ts';
 import { ColorNames } from '../../../../mol-util/color/names.ts';
-import { ShapeRepresentation3D, StructureRepresentation3D } from '../../../../mol-plugin-state/transforms/representation.ts';
+import {
+    ShapeRepresentation3D,
+    StructureRepresentation3D,
+} from '../../../../mol-plugin-state/transforms/representation.ts';
 import { ParseCif, ParsePly, ReadFile } from '../../../../mol-plugin-state/transforms/data.ts';
-import { ModelFromTrajectory, ShapeFromPly, TrajectoryFromGRO, TrajectoryFromMOL, TrajectoryFromMOL2, TrajectoryFromMmCif, TrajectoryFromPDB, TrajectoryFromSDF, TrajectoryFromXYZ } from '../../../../mol-plugin-state/transforms/model.ts';
+import {
+    ModelFromTrajectory,
+    ShapeFromPly,
+    TrajectoryFromGRO,
+    TrajectoryFromMmCif,
+    TrajectoryFromMOL,
+    TrajectoryFromMOL2,
+    TrajectoryFromPDB,
+    TrajectoryFromSDF,
+    TrajectoryFromXYZ,
+} from '../../../../mol-plugin-state/transforms/model.ts';
 import { Euler } from '../../../../mol-math/linear-algebra/3d/euler.ts';
 import { Asset } from '../../../../mol-util/assets.ts';
 import { Clip } from '../../../../mol-util/clip.ts';
@@ -25,7 +44,12 @@ import { NumberArray } from '../../../../mol-util/type-helpers.ts';
 import { BaseGeometry } from '../../../../mol-geo/geometry/base.ts';
 import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
 
-function getSpacefillParams(color: Color, sizeFactor: number, graphics: GraphicsMode, clipVariant: Clip.Variant) {
+function getSpacefillParams(
+    color: Color,
+    sizeFactor: number,
+    graphics: GraphicsMode,
+    clipVariant: Clip.Variant,
+) {
     const gmp = getGraphicsModeProps(graphics === 'custom' ? 'quality' : graphics);
     return {
         type: {
@@ -35,10 +59,13 @@ function getSpacefillParams(color: Color, sizeFactor: number, graphics: Graphics
                 ignoreHydrogens: true,
                 instanceGranularity: true,
                 ignoreLight: true,
-                lodLevels: gmp.lodLevels.map(l => {
+                lodLevels: gmp.lodLevels.map((l) => {
                     return {
                         ...l,
-                        stride: Math.max(1, Math.round(l.stride / Math.pow(sizeFactor, l.scaleBias)))
+                        stride: Math.max(
+                            1,
+                            Math.round(l.stride / Math.pow(sizeFactor, l.scaleBias)),
+                        ),
                     };
                 }),
                 quality: 'lowest', // avoid 'auto', triggers boundary calc
@@ -58,13 +85,13 @@ function getSpacefillParams(color: Color, sizeFactor: number, graphics: Graphics
                 value: color,
                 saturation: 0,
                 lightness: 0,
-            }
+            },
         },
         sizeTheme: {
             name: 'physical',
             params: {
                 scale: 1,
-            }
+            },
         },
     };
 }
@@ -82,11 +109,11 @@ function getPlyShapeParams(color: Color, clipVariant: Clip.Variant) {
         doubleSided: true,
         coloring: {
             name: 'uniform',
-            params: { color }
+            params: { color },
         },
         grouping: {
             name: 'none',
-            params: {}
+            params: {},
         },
         material: {
             metalness: 0.0,
@@ -105,7 +132,12 @@ export async function createGenericHierarchy(plugin: PluginContext, file: Asset.
     if (asset.data['instanced_structure.json']) {
         const d = asset.data['instanced_structure.json'];
         const t = utf8Read(d, 0, d.length);
-        const martini = JSON.parse(t) as { model: string, positions: Vec3[], rotations: Vec3[], function: string }[];
+        const martini = JSON.parse(t) as {
+            model: string;
+            positions: Vec3[];
+            rotations: Vec3[];
+            function: string;
+        }[];
         console.log(martini);
         manifest = martiniToGeneric(martini);
     } else if (asset.data['manifest.json']) {
@@ -124,7 +156,29 @@ export async function createGenericHierarchy(plugin: PluginContext, file: Asset.
     async function addGroup(g: GenericGroup, cell: StateObjectSelector, parent: string) {
         const group = await state.build()
             .to(cell)
-            .apply(MesoscaleGroup, { ...groupParams, index: undefined, tag: `${g.root}:${g.id}`, label: g.label || g.id, description: g.description, color: { type: 'custom', illustrative: false, value: ColorNames.white, variability: 20, shift: 0, lightness: 0, alpha: 1, emissive: 0 } }, { tags: [`group:${g.root}:${g.id}`, g.root === parent ? `${g.root}:` : `${g.root}:${parent}`], state: { isCollapsed: true, isHidden: groupParams.hidden } })
+            .apply(MesoscaleGroup, {
+                ...groupParams,
+                index: undefined,
+                tag: `${g.root}:${g.id}`,
+                label: g.label || g.id,
+                description: g.description,
+                color: {
+                    type: 'custom',
+                    illustrative: false,
+                    value: ColorNames.white,
+                    variability: 20,
+                    shift: 0,
+                    lightness: 0,
+                    alpha: 1,
+                    emissive: 0,
+                },
+            }, {
+                tags: [
+                    `group:${g.root}:${g.id}`,
+                    g.root === parent ? `${g.root}:` : `${g.root}:${parent}`,
+                ],
+                state: { isCollapsed: true, isHidden: groupParams.hidden },
+            })
             .commit();
 
         if (g.children) {
@@ -137,7 +191,27 @@ export async function createGenericHierarchy(plugin: PluginContext, file: Asset.
     for (const r of manifest.roots) {
         const root = await state.build()
             .toRoot()
-            .apply(MesoscaleGroup, { ...groupParams, root: true, index: -1, tag: `${r.id}:`, label: r.label || r.id, description: r.description, color: { type: 'custom', illustrative: false, value: ColorNames.white, variability: 20, shift: 0, lightness: 0, alpha: 1, emissive: 0 } }, { tags: `group:${r.id}:`, state: { isCollapsed: false, isHidden: groupParams.hidden } })
+            .apply(MesoscaleGroup, {
+                ...groupParams,
+                root: true,
+                index: -1,
+                tag: `${r.id}:`,
+                label: r.label || r.id,
+                description: r.description,
+                color: {
+                    type: 'custom',
+                    illustrative: false,
+                    value: ColorNames.white,
+                    variability: 20,
+                    shift: 0,
+                    lightness: 0,
+                    alpha: 1,
+                    emissive: 0,
+                },
+            }, {
+                tags: `group:${r.id}:`,
+                state: { isCollapsed: false, isHidden: groupParams.hidden },
+            })
             .commit();
 
         if (r.children) {
@@ -159,24 +233,20 @@ export async function createGenericHierarchy(plugin: PluginContext, file: Asset.
     const getAssetInstances = (instances: GenericInstances<string>): GenericInstances<Asset> => {
         return {
             positions: {
-                data: Array.isArray(instances.positions.data)
-                    ? instances.positions.data
-                    : {
-                        file: getTransformAsset(instances.positions.data.file),
-                        view: instances.positions.data.view,
-                    },
+                data: Array.isArray(instances.positions.data) ? instances.positions.data : {
+                    file: getTransformAsset(instances.positions.data.file),
+                    view: instances.positions.data.view,
+                },
                 type: instances.positions.type,
             },
             rotations: {
-                data: Array.isArray(instances.rotations.data)
-                    ? instances.rotations.data
-                    : {
-                        file: getTransformAsset(instances.rotations.data.file),
-                        view: instances.rotations.data.view,
-                    },
+                data: Array.isArray(instances.rotations.data) ? instances.rotations.data : {
+                    file: getTransformAsset(instances.rotations.data.file),
+                    view: instances.rotations.data.view,
+                },
                 variant: instances.rotations.variant,
                 type: instances.rotations.type,
-            }
+            },
         };
     };
 
@@ -192,7 +262,9 @@ export async function createGenericHierarchy(plugin: PluginContext, file: Asset.
                 const t = isBinary ? d : utf8Read(d, 0, d.length);
                 const file = Asset.File(new File([t], ent.file));
 
-                const color = (ent.color) ? Color.fromRgb(ent.color[0], ent.color[1], ent.color[2]) : ColorNames.skyblue;
+                const color = (ent.color)
+                    ? Color.fromRgb(ent.color[0], ent.color[1], ent.color[2])
+                    : ColorNames.skyblue;
 
                 const sizeFactor = ent.sizeFactor || 1;
                 const tags = ent.groups.map(({ id, root }) => `${root}:${id}`);
@@ -204,7 +276,22 @@ export async function createGenericHierarchy(plugin: PluginContext, file: Asset.
                     .toRoot()
                     .apply(ReadFile, { file, label, isBinary });
 
-                if (['gro', 'cif', 'mmcif', 'mcif', 'bcif', 'pdb', 'ent', 'xyz', 'mol', 'sdf', 'sd', 'mol2'].includes(info.ext)) {
+                if (
+                    [
+                        'gro',
+                        'cif',
+                        'mmcif',
+                        'mcif',
+                        'bcif',
+                        'pdb',
+                        'ent',
+                        'xyz',
+                        'mol',
+                        'sdf',
+                        'sd',
+                        'mol2',
+                    ].includes(info.ext)
+                ) {
                     if (['gro'].includes(info.ext)) {
                         build = build.apply(TrajectoryFromGRO);
                     } else if (['cif', 'mmcif', 'mcif', 'bcif'].includes(info.ext)) {
@@ -224,7 +311,9 @@ export async function createGenericHierarchy(plugin: PluginContext, file: Asset.
                     let clipVariant: Clip.Variant = 'pixel';
                     if (ent.instances) {
                         if (Array.isArray(ent.instances.positions.data)) {
-                            clipVariant = ent.instances.positions.data.length <= 3 ? 'pixel' : 'instance';
+                            clipVariant = ent.instances.positions.data.length <= 3
+                                ? 'pixel'
+                                : 'instance';
                         } else {
                             const byteLength = ent.instances.positions.data.view
                                 ? ent.instances.positions.data.view.byteLength
@@ -236,7 +325,11 @@ export async function createGenericHierarchy(plugin: PluginContext, file: Asset.
                     build = build
                         .apply(ModelFromTrajectory, { modelIndex: 0 })
                         .apply(StructureFromGeneric, { instances, label, description })
-                        .apply(StructureRepresentation3D, getSpacefillParams(color, sizeFactor, graphicsMode, clipVariant), { tags });
+                        .apply(
+                            StructureRepresentation3D,
+                            getSpacefillParams(color, sizeFactor, graphicsMode, clipVariant),
+                            { tags },
+                        );
                 } else if (['ply'].includes(info.ext)) {
                     if (['ply'].includes(info.ext)) {
                         const transforms = await getTransforms(plugin, instances);
@@ -244,7 +337,9 @@ export async function createGenericHierarchy(plugin: PluginContext, file: Asset.
                         build = build
                             .apply(ParsePly)
                             .apply(ShapeFromPly, { label, transforms })
-                            .apply(ShapeRepresentation3D, getPlyShapeParams(color, clipVariant), { tags });
+                            .apply(ShapeRepresentation3D, getPlyShapeParams(color, clipVariant), {
+                                tags,
+                            });
                     }
                 } else {
                     console.warn(`unknown file format '${info.ext}'`);
@@ -265,20 +360,20 @@ export async function createGenericHierarchy(plugin: PluginContext, file: Asset.
 //
 
 type GenericRoot = {
-    id: string
-    label?: string
-    description?: string
-    children: GenericGroup[]
-}
+    id: string;
+    label?: string;
+    description?: string;
+    children: GenericGroup[];
+};
 
 type GenericGroup = {
-    id: string
+    id: string;
     /** reference to `${GenericRoot.id}` */
-    root: string
-    label?: string
-    description?: string
-    children?: GenericGroup[]
-}
+    root: string;
+    label?: string;
+    description?: string;
+    children?: GenericGroup[];
+};
 
 type GenericEntity = {
     /**
@@ -298,35 +393,35 @@ type GenericEntity = {
      * meshes
      * - ply
      */
-    file: string
-    label?: string
-    description?: string
-    color?: number[]
+    file: string;
+    label?: string;
+    description?: string;
+    color?: number[];
     groups: {
         /** reference to `${GenericGroup.id}` */
-        id: string,
+        id: string;
         /** reference to `${GenericGroup.root}` */
-        root: string
-    }[]
+        root: string;
+    }[];
     /**
      * defaults to a single, untransformed instance
      */
-    instances?: GenericInstances<string>
+    instances?: GenericInstances<string>;
     /**
      * defaults to 1 (assuming fully atomic structures)
      * for C-alpha only structures set to 2
      * for Martini coarse-grained set to 1.5
      */
-    sizeFactor?: number
-}
+    sizeFactor?: number;
+};
 
 type BinaryData<T extends string | Asset> = {
-    file: T,
+    file: T;
     view?: {
-        byteOffset: number,
-        byteLength: number
-    }
-}
+        byteOffset: number;
+        byteLength: number;
+    };
+};
 
 export type GenericInstances<T extends string | Asset> = {
     /**
@@ -337,15 +432,15 @@ export type GenericInstances<T extends string | Asset> = {
         /**
          * either the data itself or a pointer to binary data
          */
-        data: number[] | BinaryData<T>
+        data: number[] | BinaryData<T>;
         /**
          * how to interpret the data
          * defaults to `{ kind: 'Array', type: 'Float32' }`
          */
-        type?: { kind: 'Array', type: 'Float32' }
+        type?: { kind: 'Array'; type: 'Float32' };
         // TODO: maybe worthwhile in the future, mirroring encoders from BinaryCIF
         // | { kind: 'IntegerPackedFixedPoint', byteCount: number, srcSize: number, factor: number, srcType: 'Float32' }
-    }
+    };
     /**
      * euler angles in XYZ order
      * [x0, y0, z0, ..., xn, yn, zn] with n = count - 1
@@ -357,40 +452,40 @@ export type GenericInstances<T extends string | Asset> = {
      * [m00_0, m01_0, m02_0, ..., m20_n, m21_n, m22_n] with n = count - 1
      */
     rotations: {
-        variant: 'euler' | 'quaternion' | 'matrix',
+        variant: 'euler' | 'quaternion' | 'matrix';
         /**
          * either the data itself or a pointer to binary data
          */
-        data: number[] | BinaryData<T>
+        data: number[] | BinaryData<T>;
         /**
          * how to interpret the data
          * defaults to `{ kind: 'Array', type: 'Float32' }`
          */
-        type?: { kind: 'Array', type: 'Float32' }
-    }
-}
+        type?: { kind: 'Array'; type: 'Float32' };
+    };
+};
 
 type GenericFrame = {
-    time: number
+    time: number;
     entities: {
-        file: string
-        instances: GenericInstances<string>
-    }[]
-}
+        file: string;
+        instances: GenericInstances<string>;
+    }[];
+};
 
 type GenericTrajectory = {
-    label?: string
-    description?: string
-    frames: GenericFrame[]
-}
+    label?: string;
+    description?: string;
+    frames: GenericFrame[];
+};
 
 type GenericManifest = {
-    label?: string
-    description?: string
-    roots: GenericRoot[]
-    entities: GenericEntity[]
-    trajectories?: GenericTrajectory[]
-}
+    label?: string;
+    description?: string;
+    roots: GenericRoot[];
+    entities: GenericEntity[];
+    trajectories?: GenericTrajectory[];
+};
 
 //
 
@@ -399,7 +494,10 @@ const q = Quat();
 const m = Mat3();
 const e = Euler();
 
-async function getPositions(plugin: PluginContext, p: GenericInstances<Asset>['positions']): Promise<NumberArray> {
+async function getPositions(
+    plugin: PluginContext,
+    p: GenericInstances<Asset>['positions'],
+): Promise<NumberArray> {
     if (Array.isArray(p.data)) {
         return p.data;
     } else {
@@ -408,9 +506,12 @@ async function getPositions(plugin: PluginContext, p: GenericInstances<Asset>['p
         const l = p.data.view?.byteLength || a.data.byteLength;
         return new Float32Array(a.data.buffer, o + a.data.byteOffset, l / 4);
     }
-};
+}
 
-async function getRotations(plugin: PluginContext, r: GenericInstances<Asset>['rotations']): Promise<NumberArray> {
+async function getRotations(
+    plugin: PluginContext,
+    r: GenericInstances<Asset>['rotations'],
+): Promise<NumberArray> {
     if (Array.isArray(r.data)) {
         return r.data;
     } else {
@@ -419,7 +520,7 @@ async function getRotations(plugin: PluginContext, r: GenericInstances<Asset>['r
         const l = r.data.view?.byteLength || a.data.byteLength;
         return new Float32Array(a.data.buffer, o + a.data.byteOffset, l / 4);
     }
-};
+}
 
 export async function getTransforms(plugin: PluginContext, instances?: GenericInstances<Asset>) {
     const transforms: Mat4[] = [];
@@ -457,11 +558,11 @@ export async function getTransforms(plugin: PluginContext, instances?: GenericIn
 //
 
 type MartiniManifest = {
-    model: string,
-    positions: Vec3[],
-    rotations: Vec3[],
-    function: string
-}[]
+    model: string;
+    positions: Vec3[];
+    rotations: Vec3[];
+    function: string;
+}[];
 
 function martiniToGeneric(martini: MartiniManifest): GenericManifest {
     const functionRoot: GenericRoot = {
@@ -521,10 +622,10 @@ function martiniToGeneric(martini: MartiniManifest): GenericManifest {
         const group = e.function || 'Metabolite';
 
         const positions = {
-            data: e.positions.flat().map(x => Math.round((x * 10) * 100) / 100)
+            data: e.positions.flat().map((x) => Math.round((x * 10) * 100) / 100),
         };
         const rotations = {
-            data: e.rotations.flat().map(x => Math.round(x * 100) / 100),
+            data: e.rotations.flat().map((x) => Math.round(x * 100) / 100),
             variant: 'euler' as const,
         };
 

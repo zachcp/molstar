@@ -42,7 +42,10 @@ export function assignBends(ctx: DSSPContext) {
             const index = i + k - 2;
             p(traceElementIndex[index], cPos);
             p(nIndices[index + 1], nPosNext);
-            if (Vec3.squaredDistance(cPos, nPosNext) > 6.25 /* max squared peptide bond distance allowed */) {
+            if (
+                Vec3.squaredDistance(cPos, nPosNext) >
+                    6.25 /* max squared peptide bond distance allowed */
+            ) {
                 continue f1;
             }
         }

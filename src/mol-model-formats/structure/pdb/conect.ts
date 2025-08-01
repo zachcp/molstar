@@ -9,13 +9,19 @@ import { CifCategory, CifField } from '../../../mol-io/reader/cif.ts';
 import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
 import { Tokens } from '../../../mol-io/reader/common/text/tokenizer.ts';
 
-export function parseConect(lines: Tokens, lineStart: number, lineEnd: number, sites: { [K in keyof mmCIF_Schema['atom_site']]?: CifField }): CifCategory {
+export function parseConect(
+    lines: Tokens,
+    lineStart: number,
+    lineEnd: number,
+    sites: { [K in keyof mmCIF_Schema['atom_site']]?: CifField },
+): CifCategory {
     const idMap: { [k: string]: number } = {};
     for (let i = 0, il = sites.id!.rowCount; i < il; ++i) {
         idMap[sites.id!.str(i)] = i;
     }
 
-    const getLine = (n: number) => lines.data.substring(lines.indices[2 * n], lines.indices[2 * n + 1]);
+    const getLine = (n: number) =>
+        lines.data.substring(lines.indices[2 * n], lines.indices[2 * n + 1]);
 
     const id: string[] = [];
     const conn_type_id: string[] = [];
@@ -42,7 +48,7 @@ export function parseConect(lines: Tokens, lineStart: number, lineEnd: number, s
         const line = getLine(i);
         const idxA = idMap[parseInt(line.substr(6, 5))];
 
-        const bondIndex: {[k: number]: number} = {};
+        const bondIndex: { [k: number]: number } = {};
 
         if (idxA === undefined) continue;
 

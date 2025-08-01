@@ -23,10 +23,10 @@ import { StringLike } from '../../mol-io/common/string-like.ts';
 export { PluginStateSnapshotManager };
 
 class PluginStateSnapshotManager extends StatefulPluginComponent<{
-    current?: UUID | undefined,
-    entries: List<PluginStateSnapshotManager.Entry>,
-    isPlaying: boolean,
-    nextSnapshotDelayInMs: number
+    current?: UUID | undefined;
+    entries: List<PluginStateSnapshotManager.Entry>;
+    isPlaying: boolean;
+    nextSnapshotDelayInMs: number;
 }> {
     static DefaultNextSnapshotDelayInMs = 1500;
 
@@ -40,7 +40,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<{
 
     get current() {
         const id = this.state.current;
-        return this.state.entries.find(e => e.snapshot.id === id);
+        return this.state.entries.find((e) => e.snapshot.id === id);
     }
 
     getIndex(e: PluginStateSnapshotManager.Entry) {
@@ -60,7 +60,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<{
         this.entryMap.delete(id);
         this.updateState({
             current: this.state.current === id ? void 0 : this.state.current,
-            entries: this.state.entries.delete(this.getIndex(e))
+            entries: this.state.entries.delete(this.getIndex(e)),
         });
         this.events.changed.next(void 0);
     }
@@ -71,7 +71,11 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<{
         this.events.changed.next(void 0);
     }
 
-    replace(id: string, snapshot: PluginState.Snapshot, params?: PluginStateSnapshotManager.EntryParams) {
+    replace(
+        id: string,
+        snapshot: PluginState.Snapshot,
+        params?: PluginStateSnapshotManager.EntryParams,
+    ) {
         const old = this.getEntry(id);
         if (!old) return;
 
@@ -111,7 +115,15 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<{
         this.events.changed.next(void 0);
     }
 
-    update(e: PluginStateSnapshotManager.Entry, options: { key?: string, name?: string, description?: string, descriptionFormat?: PluginStateSnapshotManager.DescriptionFormat }) {
+    update(
+        e: PluginStateSnapshotManager.Entry,
+        options: {
+            key?: string;
+            name?: string;
+            description?: string;
+            descriptionFormat?: PluginStateSnapshotManager.DescriptionFormat;
+        },
+    ) {
         const idx = this.getIndex(e);
         if (idx < 0) return;
         const entries = this.state.entries.set(idx, {
@@ -129,7 +141,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<{
     clear() {
         if (this.state.entries.size === 0) return;
 
-        this.entryMap.forEach(e => {
+        this.entryMap.forEach((e) => {
             if (e?.image) this.plugin.managers.asset.delete(e.image);
         });
         this.entryMap.clear();
@@ -138,7 +150,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<{
     }
 
     applyKey(key: string) {
-        const e = this.state.entries.find(e => e.key === key);
+        const e = this.state.entries.find((e) => e.key === key);
         if (!e) return;
 
         this.updateState({ current: e.snapshot.id as UUID });
@@ -182,7 +194,9 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<{
         }
     }
 
-    async setStateSnapshot(snapshot: PluginStateSnapshotManager.StateSnapshot): Promise<PluginState.Snapshot | undefined> {
+    async setStateSnapshot(
+        snapshot: PluginStateSnapshotManager.StateSnapshot,
+    ): Promise<PluginState.Snapshot | undefined> {
         if (snapshot.version !== PLUGIN_VERSION) {
             // TODO
             // console.warn('state snapshot version mismatch');
@@ -197,13 +211,15 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<{
         const current = snapshot.current
             ? snapshot.current
             : snapshot.entries.length > 0
-                ? snapshot.entries[0].snapshot.id
-                : void 0;
+            ? snapshot.entries[0].snapshot.id
+            : void 0;
         this.updateState({
             current,
             entries: entries.asImmutable(),
             isPlaying: false,
-            nextSnapshotDelayInMs: snapshot.playback ? snapshot.playback.nextSnapshotDelayInMs : PluginStateSnapshotManager.DefaultNextSnapshotDelayInMs
+            nextSnapshotDelayInMs: snapshot.playback
+                ? snapshot.playback.nextSnapshotDelayInMs
+                : PluginStateSnapshotManager.DefaultNextSnapshotDelayInMs,
         });
         this.events.changed.next(void 0);
         if (!current) return;
@@ -215,16 +231,36 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<{
         return next;
     }
 
-    private async syncCurrent(options?: { name?: string, description?: string, descriptionFormat?: PluginStateSnapshotManager.DescriptionFormat, params?: PluginState.SnapshotParams }) {
+    private async syncCurrent(
+        options?: {
+            name?: string;
+            description?: string;
+            descriptionFormat?: PluginStateSnapshotManager.DescriptionFormat;
+            params?: PluginState.SnapshotParams;
+        },
+    ) {
         const isEmpty = this.state.entries.size === 0;
-        const canReplace = this.state.entries.size === 1 && this.state.current && (!this.defaultSnapshotId || this.state.current === this.defaultSnapshotId);
+        const canReplace = this.state.entries.size === 1 && this.state.current &&
+            (!this.defaultSnapshotId || this.state.current === this.defaultSnapshotId);
         if (!isEmpty && !canReplace) return;
 
         const snapshot = this.plugin.state.getSnapshot(options?.params);
-        const image = (options?.params?.image ?? this.plugin.state.snapshotParams.value.image) ? await PluginStateSnapshotManager.getCanvasImageAsset(this.plugin, `${snapshot.id}-image.png`) : undefined;
+        const image = (options?.params?.image ?? this.plugin.state.snapshotParams.value.image)
+            ? await PluginStateSnapshotManager.getCanvasImageAsset(
+                this.plugin,
+                `${snapshot.id}-image.png`,
+            )
+            : undefined;
 
         if (isEmpty) {
-            this.add(PluginStateSnapshotManager.Entry(snapshot, { name: options?.name, description: options?.description, descriptionFormat: options?.descriptionFormat, image }));
+            this.add(
+                PluginStateSnapshotManager.Entry(snapshot, {
+                    name: options?.name,
+                    description: options?.description,
+                    descriptionFormat: options?.descriptionFormat,
+                    image,
+                }),
+            );
         } else if (canReplace) {
             // Replace the current state only if there is a single snapshot that has been created automatically
             const current = this.getEntry(this.state.current);
@@ -235,7 +271,14 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<{
         this.defaultSnapshotId = snapshot.id;
     }
 
-    async getStateSnapshot(options?: { name?: string, description?: string, playOnLoad?: boolean, params?: PluginState.SnapshotParams }): Promise<PluginStateSnapshotManager.StateSnapshot> {
+    async getStateSnapshot(
+        options?: {
+            name?: string;
+            description?: string;
+            playOnLoad?: boolean;
+            params?: PluginState.SnapshotParams;
+        },
+    ): Promise<PluginStateSnapshotManager.StateSnapshot> {
         await this.syncCurrent(options);
 
         return {
@@ -246,14 +289,20 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<{
             current: this.state.current,
             playback: {
                 isPlaying: !!(options && options.playOnLoad),
-                nextSnapshotDelayInMs: this.state.nextSnapshotDelayInMs
+                nextSnapshotDelayInMs: this.state.nextSnapshotDelayInMs,
             },
-            entries: this.state.entries.valueSeq().toArray()
+            entries: this.state.entries.valueSeq().toArray(),
         };
     }
 
-    async serialize(options?: { type: 'json' | 'molj' | 'zip' | 'molx', params?: PluginState.SnapshotParams }) {
-        const json = JSON.stringify(await this.getStateSnapshot({ params: options?.params }), null, 2);
+    async serialize(
+        options?: { type: 'json' | 'molj' | 'zip' | 'molx'; params?: PluginState.SnapshotParams },
+    ) {
+        const json = JSON.stringify(
+            await this.getStateSnapshot({ params: options?.params }),
+            null,
+            2,
+        );
 
         if (!options?.type || options.type === 'json' || options.type === 'molj') {
             return new Blob([json], { type: 'application/json;charset=utf-8' });
@@ -262,7 +311,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<{
             utf8Write(state, 0, json);
 
             const zipDataObj: { [k: string]: Uint8Array } = {
-                'state.json': state
+                'state.json': state,
             };
 
             const assets: [UUID, Asset][] = [];
@@ -316,7 +365,10 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<{
                     const json = await this.plugin.runTask(readFromFile(file, 'json'));
 
                     for (const [id, asset] of json) {
-                        this.plugin.managers.asset.set(asset, new File([assetData[id]], asset.name));
+                        this.plugin.managers.asset.set(
+                            asset,
+                            new File([assetData[id]], asset.name),
+                        );
                     }
                 }
 
@@ -339,7 +391,9 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<{
         }
         const snapshot = this.setCurrent(next)!;
         await this.plugin.state.setSnapshot(snapshot);
-        const delay = typeof snapshot.durationInMs !== 'undefined' ? snapshot.durationInMs : this.state.nextSnapshotDelayInMs;
+        const delay = typeof snapshot.durationInMs !== 'undefined'
+            ? snapshot.durationInMs
+            : this.state.nextSnapshotDelayInMs;
         if (this.state.isPlaying) this.timeoutHandle = setTimeout(this.next, delay);
     };
 
@@ -354,7 +408,9 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<{
             }
             this.events.changed.next(void 0);
             const snapshot = e.snapshot;
-            const delay = typeof snapshot.durationInMs !== 'undefined' ? snapshot.durationInMs : this.state.nextSnapshotDelayInMs;
+            const delay = typeof snapshot.durationInMs !== 'undefined'
+                ? snapshot.durationInMs
+                : this.state.nextSnapshotDelayInMs;
             this.timeoutHandle = setTimeout(this.next, delay);
         } else {
             this.next();
@@ -387,7 +443,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<{
             current: void 0,
             entries: List(),
             isPlaying: false,
-            nextSnapshotDelayInMs: PluginStateSnapshotManager.DefaultNextSnapshotDelayInMs
+            nextSnapshotDelayInMs: PluginStateSnapshotManager.DefaultNextSnapshotDelayInMs,
         });
         // TODO make nextSnapshotDelayInMs editable
     }
@@ -397,18 +453,18 @@ namespace PluginStateSnapshotManager {
     export type DescriptionFormat = 'markdown' | 'plaintext';
 
     export interface EntryParams {
-        key?: string,
-        name?: string,
+        key?: string;
+        name?: string;
         /** Information about the snapshot, to be shown in the UI when the snapshot is loaded. */
-        description?: string,
+        description?: string;
         /** Toggle between markdown and plaintext interpretation of `description`. Default is markdown. */
-        descriptionFormat?: DescriptionFormat,
-        image?: Asset,
+        descriptionFormat?: DescriptionFormat;
+        image?: Asset;
     }
 
     export interface Entry extends EntryParams {
-        timestamp: number,
-        snapshot: PluginState.Snapshot
+        timestamp: number;
+        snapshot: PluginState.Snapshot;
     }
 
     export function Entry(snapshot: PluginState.Snapshot, params: EntryParams): Entry {
@@ -421,20 +477,23 @@ namespace PluginStateSnapshotManager {
     }
 
     export interface StateSnapshot {
-        timestamp: number,
-        version: string,
-        name?: string,
-        description?: string,
-        current: UUID | undefined,
+        timestamp: number;
+        version: string;
+        name?: string;
+        description?: string;
+        current: UUID | undefined;
         playback: {
-            isPlaying: boolean,
-            nextSnapshotDelayInMs: number,
-        },
-        entries: Entry[]
+            isPlaying: boolean;
+            nextSnapshotDelayInMs: number;
+        };
+        entries: Entry[];
     }
 
-    export async function getCanvasImageAsset(ctx: PluginContext, name: string): Promise<Asset | undefined> {
-        const task = Task.create('Render Screenshot', async runtime => {
+    export async function getCanvasImageAsset(
+        ctx: PluginContext,
+        name: string,
+    ): Promise<Asset | undefined> {
+        const task = Task.create('Render Screenshot', async (runtime) => {
             if (!ctx.helpers.viewportScreenshot) return;
             const p = await ctx.helpers.viewportScreenshot.getPreview(runtime, 512);
             if (!p) return;

@@ -47,13 +47,18 @@ function calcHbondEnergy(oPos: Vec3, cPos: Vec3, nPos: Vec3, hPos: Vec3) {
     const e = e1 + e2;
 
     // cap lowest possible energy
-    if (e < hbondEnergyMinimal)
+    if (e < hbondEnergyMinimal) {
         return hbondEnergyMinimal;
+    }
 
     return e;
 }
 
-export function calcUnitBackboneHbonds(unit: Unit.Atomic, proteinInfo: ProteinInfo, lookup3d: GridLookup3D): DsspHbonds {
+export function calcUnitBackboneHbonds(
+    unit: Unit.Atomic,
+    proteinInfo: ProteinInfo,
+    lookup3d: GridLookup3D,
+): DsspHbonds {
     const { residueIndices, cIndices, hIndices, nIndices, oIndices } = proteinInfo;
 
     const { index } = unit.model.atomicHierarchy;
@@ -138,8 +143,17 @@ export function calcUnitBackboneHbonds(unit: Unit.Atomic, proteinInfo: ProteinIn
     return buildHbondGraph(residueCount, oAtomResidues, nAtomResidues, energies);
 }
 
-function buildHbondGraph(residueCount: number, oAtomResidues: number[], nAtomResidues: number[], energies: number[]) {
-    const builder = new IntAdjacencyGraph.DirectedEdgeBuilder(residueCount, oAtomResidues, nAtomResidues);
+function buildHbondGraph(
+    residueCount: number,
+    oAtomResidues: number[],
+    nAtomResidues: number[],
+    energies: number[],
+) {
+    const builder = new IntAdjacencyGraph.DirectedEdgeBuilder(
+        residueCount,
+        oAtomResidues,
+        nAtomResidues,
+    );
     const _energies = new Float32Array(builder.slotCount);
 
     for (let i = 0, _i = builder.edgeCount; i < _i; i++) {

@@ -6,22 +6,26 @@
  */
 
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { Structure, Unit, StructureElement, Bond } from '../../mol-model/structure.ts';
+import { Bond, Structure, StructureElement, Unit } from '../../mol-model/structure.ts';
 import { RepresentationProps } from '../representation.ts';
 import { Visual, VisualContext } from '../visual.ts';
 import { Geometry, GeometryUtils } from '../../mol-geo/geometry/geometry.ts';
 import { LocationIterator } from '../../mol-geo/util/location-iterator.ts';
 import { Theme } from '../../mol-theme/theme.ts';
 import { createUnitsTransform, includesUnitKind, StructureGroup } from './visual/util/common.ts';
-import { createRenderObject, GraphicsRenderObject, RenderObjectValues } from '../../mol-gl/render-object.ts';
+import {
+    createRenderObject,
+    GraphicsRenderObject,
+    RenderObjectValues,
+} from '../../mol-gl/render-object.ts';
 import { PickingId } from '../../mol-geo/geometry/picking.ts';
-import { Loci, isEveryLoci, EmptyLoci } from '../../mol-model/loci.ts';
+import { EmptyLoci, isEveryLoci, Loci } from '../../mol-model/loci.ts';
 import { Interval } from '../../mol-data/int.ts';
 import { LocationCallback, VisualUpdateState } from '../util.ts';
 import { ColorTheme } from '../../mol-theme/color.ts';
 import { createMarkers } from '../../mol-geo/geometry/marker-data.ts';
 import { MarkerAction } from '../../mol-util/marker-action.ts';
-import { ValueCell, deepEqual } from '../../mol-util/index.ts';
+import { deepEqual, ValueCell } from '../../mol-util/index.ts';
 import { createSizes } from '../../mol-geo/geometry/size-data.ts';
 import { createColors } from '../../mol-geo/geometry/color-data.ts';
 import { Mat4 } from '../../mol-math/linear-algebra.ts';
@@ -38,45 +42,126 @@ import { DirectVolume } from '../../mol-geo/geometry/direct-volume/direct-volume
 import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh.ts';
 import { Image } from '../../mol-geo/geometry/image/image.ts';
 import { SizeValues } from '../../mol-gl/renderable/schema.ts';
-import { StructureParams, StructureMeshParams, StructureSpheresParams, StructurePointsParams, StructureLinesParams, StructureTextParams, StructureDirectVolumeParams, StructureTextureMeshParams, StructureCylindersParams, StructureImageParams } from './params.ts';
+import {
+    StructureCylindersParams,
+    StructureDirectVolumeParams,
+    StructureImageParams,
+    StructureLinesParams,
+    StructureMeshParams,
+    StructureParams,
+    StructurePointsParams,
+    StructureSpheresParams,
+    StructureTextParams,
+    StructureTextureMeshParams,
+} from './params.ts';
 import { Clipping } from '../../mol-theme/clipping.ts';
 import { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { isPromiseLike } from '../../mol-util/type-helpers.ts';
 import { Substance } from '../../mol-theme/substance.ts';
 import { Emissive } from '../../mol-theme/emissive.ts';
 
-export interface UnitsVisual<P extends RepresentationProps = {}> extends Visual<StructureGroup, P> { }
+export interface UnitsVisual<P extends RepresentationProps = {}>
+    extends Visual<StructureGroup, P> {}
 
-function createUnitsRenderObject<G extends Geometry>(structureGroup: StructureGroup, geometry: G, locationIt: LocationIterator, theme: Theme, props: PD.Values<StructureParams & Geometry.Params<G>>, materialId: number) {
+function createUnitsRenderObject<G extends Geometry>(
+    structureGroup: StructureGroup,
+    geometry: G,
+    locationIt: LocationIterator,
+    theme: Theme,
+    props: PD.Values<StructureParams & Geometry.Params<G>>,
+    materialId: number,
+) {
     const { createValues, createRenderableState } = Geometry.getUtils(geometry);
-    const transform = createUnitsTransform(structureGroup, props.includeParent, geometry.boundingSphere, props.cellSize, props.batchSize);
+    const transform = createUnitsTransform(
+        structureGroup,
+        props.includeParent,
+        geometry.boundingSphere,
+        props.cellSize,
+        props.batchSize,
+    );
     const values = createValues(geometry, transform, locationIt, theme, props);
     const state = createRenderableState(props);
     return createRenderObject(geometry.kind, values, state, materialId);
 }
 
 interface UnitsVisualBuilder<P extends StructureParams, G extends Geometry> {
-    defaultProps: PD.Values<P>
-    createGeometry(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PD.Values<P>, geometry?: G): Promise<G> | G
-    createLocationIterator(structureGroup: StructureGroup, props: PD.Values<P>): LocationIterator
-    getLoci(pickingId: PickingId, structureGroup: StructureGroup, id: number): Loci
-    eachLocation(loci: Loci, structureGroup: StructureGroup, apply: (interval: Interval) => boolean, isMarking: boolean): boolean
-    setUpdateState(state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructureGroup: StructureGroup, currentStructureGroup: StructureGroup): void
-    initUpdateState?: (state: VisualUpdateState, newProps: PD.Values<P>, newTheme: Theme, newStructureGroup: StructureGroup) => void
-    mustRecreate?: (structureGroup: StructureGroup, props: PD.Values<P>) => boolean
-    processValues?: (values: RenderObjectValues<G['kind']>, geometry: G, props: PD.Values<P>, theme: Theme, webgl?: WebGLContext) => void
-    dispose?: (geometry: G) => void
+    defaultProps: PD.Values<P>;
+    createGeometry(
+        ctx: VisualContext,
+        unit: Unit,
+        structure: Structure,
+        theme: Theme,
+        props: PD.Values<P>,
+        geometry?: G,
+    ): Promise<G> | G;
+    createLocationIterator(structureGroup: StructureGroup, props: PD.Values<P>): LocationIterator;
+    getLoci(pickingId: PickingId, structureGroup: StructureGroup, id: number): Loci;
+    eachLocation(
+        loci: Loci,
+        structureGroup: StructureGroup,
+        apply: (interval: Interval) => boolean,
+        isMarking: boolean,
+    ): boolean;
+    setUpdateState(
+        state: VisualUpdateState,
+        newProps: PD.Values<P>,
+        currentProps: PD.Values<P>,
+        newTheme: Theme,
+        currentTheme: Theme,
+        newStructureGroup: StructureGroup,
+        currentStructureGroup: StructureGroup,
+    ): void;
+    initUpdateState?: (
+        state: VisualUpdateState,
+        newProps: PD.Values<P>,
+        newTheme: Theme,
+        newStructureGroup: StructureGroup,
+    ) => void;
+    mustRecreate?: (structureGroup: StructureGroup, props: PD.Values<P>) => boolean;
+    processValues?: (
+        values: RenderObjectValues<G['kind']>,
+        geometry: G,
+        props: PD.Values<P>,
+        theme: Theme,
+        webgl?: WebGLContext,
+    ) => void;
+    dispose?: (geometry: G) => void;
 }
 
-interface UnitsVisualGeometryBuilder<P extends StructureParams, G extends Geometry> extends UnitsVisualBuilder<P, G> {
-    geometryUtils: GeometryUtils<G>
+interface UnitsVisualGeometryBuilder<P extends StructureParams, G extends Geometry>
+    extends UnitsVisualBuilder<P, G> {
+    geometryUtils: GeometryUtils<G>;
 }
 
-export function UnitsVisual<G extends Geometry, P extends StructureParams & Geometry.Params<G>>(builder: UnitsVisualGeometryBuilder<P, G>, materialId: number): UnitsVisual<P> {
-    const { defaultProps, createGeometry, createLocationIterator, getLoci, eachLocation, setUpdateState, initUpdateState, mustRecreate, processValues, dispose } = builder;
-    const { createEmpty: createEmptyGeometry, updateValues, updateBoundingSphere, updateRenderableState, createPositionIterator } = builder.geometryUtils;
+export function UnitsVisual<G extends Geometry, P extends StructureParams & Geometry.Params<G>>(
+    builder: UnitsVisualGeometryBuilder<P, G>,
+    materialId: number,
+): UnitsVisual<P> {
+    const {
+        defaultProps,
+        createGeometry,
+        createLocationIterator,
+        getLoci,
+        eachLocation,
+        setUpdateState,
+        initUpdateState,
+        mustRecreate,
+        processValues,
+        dispose,
+    } = builder;
+    const {
+        createEmpty: createEmptyGeometry,
+        updateValues,
+        updateBoundingSphere,
+        updateRenderableState,
+        createPositionIterator,
+    } = builder.geometryUtils;
     const updateState = VisualUpdateState.create();
-    const previousMark: Visual.PreviousMark = { loci: EmptyLoci, action: MarkerAction.None, status: -1 };
+    const previousMark: Visual.PreviousMark = {
+        loci: EmptyLoci,
+        action: MarkerAction.None,
+        status: -1,
+    };
 
     let renderObject: GraphicsRenderObject<G['kind']> | undefined;
 
@@ -112,9 +197,22 @@ export function UnitsVisual<G extends Geometry, P extends StructureParams & Geom
             return;
         }
 
-        setUpdateState(updateState, newProps, currentProps, newTheme, currentTheme, newStructureGroup, currentStructureGroup);
+        setUpdateState(
+            updateState,
+            newProps,
+            currentProps,
+            newTheme,
+            currentTheme,
+            newStructureGroup,
+            currentStructureGroup,
+        );
 
-        if (!Structure.areHierarchiesEqual(currentStructureGroup.structure, newStructureGroup.structure)) {
+        if (
+            !Structure.areHierarchiesEqual(
+                currentStructureGroup.structure,
+                newStructureGroup.structure,
+            )
+        ) {
             // console.log('new hierarchy');
             updateState.updateTransform = true;
             updateState.updateColor = true;
@@ -137,7 +235,11 @@ export function UnitsVisual<G extends Geometry, P extends StructureParams & Geom
             updateState.updateTransform = true;
         }
 
-        if (newProps.instanceGranularity !== currentProps.instanceGranularity || newProps.cellSize !== currentProps.cellSize || newProps.batchSize !== currentProps.batchSize) {
+        if (
+            newProps.instanceGranularity !== currentProps.instanceGranularity ||
+            newProps.cellSize !== currentProps.cellSize ||
+            newProps.batchSize !== currentProps.batchSize
+        ) {
             updateState.updateTransform = true;
         }
 
@@ -148,7 +250,10 @@ export function UnitsVisual<G extends Geometry, P extends StructureParams & Geom
 
         if (newStructureGroup.group.transformHash !== currentStructureGroup.group.transformHash) {
             // console.log('new transformHash');
-            if (newStructureGroup.group.units.length !== currentStructureGroup.group.units.length || updateState.updateColor) {
+            if (
+                newStructureGroup.group.units.length !== currentStructureGroup.group.units.length ||
+                updateState.updateColor
+            ) {
                 updateState.updateTransform = true;
             } else {
                 updateState.updateMatrix = true;
@@ -181,7 +286,8 @@ export function UnitsVisual<G extends Geometry, P extends StructureParams & Geom
                 updateState.updateColor = true;
                 updateState.updateSize = true;
             }
-            if (newTheme.color.granularity.startsWith('vertex') ||
+            if (
+                newTheme.color.granularity.startsWith('vertex') ||
                 renderObject.values.dColorType.ref.value.startsWith('vertex') ||
                 newTheme.color.granularity.startsWith('volume') ||
                 renderObject.values.dColorType.ref.value.startsWith('volume')
@@ -195,7 +301,14 @@ export function UnitsVisual<G extends Geometry, P extends StructureParams & Geom
         if (updateState.createNew) {
             locationIt = createLocationIterator(newStructureGroup, newProps);
             if (newGeometry) {
-                renderObject = createUnitsRenderObject(newStructureGroup, newGeometry, locationIt, newTheme, newProps, materialId);
+                renderObject = createUnitsRenderObject(
+                    newStructureGroup,
+                    newGeometry,
+                    locationIt,
+                    newTheme,
+                    newProps,
+                    materialId,
+                );
                 positionIt = createPositionIterator(newGeometry, renderObject.values);
             } else {
                 throw new Error('expected geometry to be given');
@@ -222,19 +335,39 @@ export function UnitsVisual<G extends Geometry, P extends StructureParams & Geom
 
             if (updateState.updateMatrix) {
                 // console.log('update matrix');
-                createUnitsTransform(newStructureGroup, newProps.includeParent, newGeometry?.boundingSphere || renderObject.values.invariantBoundingSphere.ref.value, newProps.cellSize, newProps.batchSize, renderObject.values);
+                createUnitsTransform(
+                    newStructureGroup,
+                    newProps.includeParent,
+                    newGeometry?.boundingSphere ||
+                        renderObject.values.invariantBoundingSphere.ref.value,
+                    newProps.cellSize,
+                    newProps.batchSize,
+                    renderObject.values,
+                );
                 if ('lodLevels' in renderObject.values) {
                     // to trigger `uLod` update in `renderable.cull`
-                    ValueCell.update(renderObject.values.lodLevels, renderObject.values.lodLevels.ref.value);
+                    ValueCell.update(
+                        renderObject.values.lodLevels,
+                        renderObject.values.lodLevels.ref.value,
+                    );
                 }
             }
 
             if (updateState.createGeometry) {
                 // console.log('update geometry');
                 if (newGeometry) {
-                    ValueCell.updateIfChanged(renderObject.values.drawCount, Geometry.getDrawCount(newGeometry));
-                    ValueCell.updateIfChanged(renderObject.values.uVertexCount, Geometry.getVertexCount(newGeometry));
-                    ValueCell.updateIfChanged(renderObject.values.uGroupCount, locationIt.groupCount);
+                    ValueCell.updateIfChanged(
+                        renderObject.values.drawCount,
+                        Geometry.getDrawCount(newGeometry),
+                    );
+                    ValueCell.updateIfChanged(
+                        renderObject.values.uVertexCount,
+                        Geometry.getVertexCount(newGeometry),
+                    );
+                    ValueCell.updateIfChanged(
+                        renderObject.values.uGroupCount,
+                        locationIt.groupCount,
+                    );
                 } else {
                     throw new Error('expected geometry to be given');
                 }
@@ -271,7 +404,14 @@ export function UnitsVisual<G extends Geometry, P extends StructureParams & Geom
         }
     }
 
-    function _createGeometry(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PD.Values<P>, geometry?: G) {
+    function _createGeometry(
+        ctx: VisualContext,
+        unit: Unit,
+        structure: Structure,
+        theme: Theme,
+        props: PD.Values<P>,
+        geometry?: G,
+    ) {
         return includesUnitKind(props.unitKinds, unit)
             ? createGeometry(ctx, unit, structure, theme, props, geometry)
             : createEmptyGeometry(geometry);
@@ -279,14 +419,24 @@ export function UnitsVisual<G extends Geometry, P extends StructureParams & Geom
 
     function lociIsSuperset(loci: Loci) {
         if (isEveryLoci(loci)) return true;
-        if (Structure.isLoci(loci) && Structure.areRootsEquivalent(loci.structure, currentStructureGroup.structure)) return true;
-        if (StructureElement.Loci.is(loci) && Structure.areRootsEquivalent(loci.structure, currentStructureGroup.structure)) {
+        if (
+            Structure.isLoci(loci) &&
+            Structure.areRootsEquivalent(loci.structure, currentStructureGroup.structure)
+        ) return true;
+        if (
+            StructureElement.Loci.is(loci) &&
+            Structure.areRootsEquivalent(loci.structure, currentStructureGroup.structure)
+        ) {
             if (StructureElement.Loci.isWholeStructure(loci)) return true;
         }
         return false;
     }
 
-    function eachInstance(loci: Loci, structureGroup: StructureGroup, apply: (interval: Interval) => boolean) {
+    function eachInstance(
+        loci: Loci,
+        structureGroup: StructureGroup,
+        apply: (interval: Interval) => boolean,
+    ) {
         let changed = false;
         if (Bond.isLoci(loci)) {
             const { structure, group } = structureGroup;
@@ -316,7 +466,9 @@ export function UnitsVisual<G extends Geometry, P extends StructureParams & Geom
             if (currentProps.instanceGranularity) {
                 return apply(Interval.ofBounds(0, locationIt.instanceCount));
             } else {
-                return apply(Interval.ofBounds(0, locationIt.groupCount * locationIt.instanceCount));
+                return apply(
+                    Interval.ofBounds(0, locationIt.groupCount * locationIt.instanceCount),
+                );
             }
         } else {
             if (currentProps.instanceGranularity) {
@@ -334,15 +486,33 @@ export function UnitsVisual<G extends Geometry, P extends StructureParams & Geom
     }
 
     return {
-        get groupCount() { return locationIt ? locationIt.count : 0; },
-        get renderObject() { return locationIt && locationIt.count ? renderObject : undefined; },
-        get geometryVersion() { return geometryVersion; },
-        createOrUpdate(ctx: VisualContext, theme: Theme, props: PD.Values<P>, structureGroup?: StructureGroup) {
+        get groupCount() {
+            return locationIt ? locationIt.count : 0;
+        },
+        get renderObject() {
+            return locationIt && locationIt.count ? renderObject : undefined;
+        },
+        get geometryVersion() {
+            return geometryVersion;
+        },
+        createOrUpdate(
+            ctx: VisualContext,
+            theme: Theme,
+            props: PD.Values<P>,
+            structureGroup?: StructureGroup,
+        ) {
             prepareUpdate(theme, props, structureGroup || currentStructureGroup);
             if (updateState.createGeometry) {
-                const newGeometry = _createGeometry(ctx, newStructureGroup.group.units[0], newStructureGroup.structure, newTheme, newProps, geometry);
+                const newGeometry = _createGeometry(
+                    ctx,
+                    newStructureGroup.group.units[0],
+                    newStructureGroup.structure,
+                    newTheme,
+                    newProps,
+                    geometry,
+                );
                 if (isPromiseLike(newGeometry)) {
-                    return newGeometry.then(g => {
+                    return newGeometry.then((g) => {
                         update(g);
                         finalize(ctx);
                     });
@@ -354,7 +524,9 @@ export function UnitsVisual<G extends Geometry, P extends StructureParams & Geom
             finalize(ctx);
         },
         getLoci(pickingId: PickingId) {
-            return renderObject ? getLoci(pickingId, currentStructureGroup, renderObject.id) : EmptyLoci;
+            return renderObject
+                ? getLoci(pickingId, currentStructureGroup, renderObject.id)
+                : EmptyLoci;
         },
         eachLocation(cb: LocationCallback) {
             locationIt.reset();
@@ -375,7 +547,9 @@ export function UnitsVisual<G extends Geometry, P extends StructureParams & Geom
                     }
                 }
             }
-            return hasInvariantId ? Visual.mark(renderObject, loci, action, lociApply, previousMark) : false;
+            return hasInvariantId
+                ? Visual.mark(renderObject, loci, action, lociApply, previousMark)
+                : false;
         },
         setVisibility(visible: boolean) {
             Visual.setVisibility(renderObject, visible);
@@ -411,7 +585,14 @@ export function UnitsVisual<G extends Geometry, P extends StructureParams & Geom
         setClipping(clipping: Clipping) {
             Visual.setClipping(renderObject, clipping, lociApply, true);
         },
-        setThemeStrength(strength: { overpaint: number, transparency: number, emissive: number, substance: number }) {
+        setThemeStrength(
+            strength: {
+                overpaint: number;
+                transparency: number;
+                emissive: number;
+                substance: number;
+            },
+        ) {
             Visual.setThemeStrength(renderObject, strength);
         },
         destroy() {
@@ -421,112 +602,236 @@ export function UnitsVisual<G extends Geometry, P extends StructureParams & Geom
                 renderObject = undefined;
             }
         },
-        mustRecreate
+        mustRecreate,
     };
 }
 
 // mesh
 
 export const UnitsMeshParams = { ...StructureMeshParams, ...StructureParams };
-export type UnitsMeshParams = typeof UnitsMeshParams
-export interface UnitsMeshVisualBuilder<P extends UnitsMeshParams> extends UnitsVisualBuilder<P, Mesh> { }
+export type UnitsMeshParams = typeof UnitsMeshParams;
+export interface UnitsMeshVisualBuilder<P extends UnitsMeshParams>
+    extends UnitsVisualBuilder<P, Mesh> {}
 
-export function UnitsMeshVisual<P extends UnitsMeshParams>(builder: UnitsMeshVisualBuilder<P>, materialId: number): UnitsVisual<P> {
+export function UnitsMeshVisual<P extends UnitsMeshParams>(
+    builder: UnitsMeshVisualBuilder<P>,
+    materialId: number,
+): UnitsVisual<P> {
     return UnitsVisual<Mesh, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructureGroup: StructureGroup, currentStructureGroup: StructureGroup) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructureGroup, currentStructureGroup);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructureGroup: StructureGroup,
+            currentStructureGroup: StructureGroup,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructureGroup,
+                currentStructureGroup,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.createGeometry = true;
         },
-        geometryUtils: Mesh.Utils
+        geometryUtils: Mesh.Utils,
     }, materialId);
 }
 
 // spheres
 
 export const UnitsSpheresParams = { ...StructureSpheresParams, ...StructureParams };
-export type UnitsSpheresParams = typeof UnitsSpheresParams
-export interface UnitsSpheresVisualBuilder<P extends UnitsSpheresParams> extends UnitsVisualBuilder<P, Spheres> { }
+export type UnitsSpheresParams = typeof UnitsSpheresParams;
+export interface UnitsSpheresVisualBuilder<P extends UnitsSpheresParams>
+    extends UnitsVisualBuilder<P, Spheres> {}
 
-export function UnitsSpheresVisual<P extends UnitsSpheresParams>(builder: UnitsSpheresVisualBuilder<P>, materialId: number): UnitsVisual<P> {
+export function UnitsSpheresVisual<P extends UnitsSpheresParams>(
+    builder: UnitsSpheresVisualBuilder<P>,
+    materialId: number,
+): UnitsVisual<P> {
     return UnitsVisual<Spheres, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructureGroup: StructureGroup, currentStructureGroup: StructureGroup) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructureGroup, currentStructureGroup);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructureGroup: StructureGroup,
+            currentStructureGroup: StructureGroup,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructureGroup,
+                currentStructureGroup,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.updateSize = true;
         },
-        geometryUtils: Spheres.Utils
+        geometryUtils: Spheres.Utils,
     }, materialId);
 }
 
 // cylinders
 
 export const UnitsCylindersParams = { ...StructureCylindersParams, ...StructureParams };
-export type UnitsCylindersParams = typeof UnitsCylindersParams
-export interface UnitsCylindersVisualBuilder<P extends UnitsCylindersParams> extends UnitsVisualBuilder<P, Cylinders> { }
+export type UnitsCylindersParams = typeof UnitsCylindersParams;
+export interface UnitsCylindersVisualBuilder<P extends UnitsCylindersParams>
+    extends UnitsVisualBuilder<P, Cylinders> {}
 
-export function UnitsCylindersVisual<P extends UnitsCylindersParams>(builder: UnitsCylindersVisualBuilder<P>, materialId: number): UnitsVisual<P> {
+export function UnitsCylindersVisual<P extends UnitsCylindersParams>(
+    builder: UnitsCylindersVisualBuilder<P>,
+    materialId: number,
+): UnitsVisual<P> {
     return UnitsVisual<Cylinders, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructureGroup: StructureGroup, currentStructureGroup: StructureGroup) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructureGroup, currentStructureGroup);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructureGroup: StructureGroup,
+            currentStructureGroup: StructureGroup,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructureGroup,
+                currentStructureGroup,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.updateSize = true;
         },
-        geometryUtils: Cylinders.Utils
+        geometryUtils: Cylinders.Utils,
     }, materialId);
 }
 
 // points
 
 export const UnitsPointsParams = { ...StructurePointsParams, ...StructureParams };
-export type UnitsPointsParams = typeof UnitsPointsParams
-export interface UnitsPointVisualBuilder<P extends UnitsPointsParams> extends UnitsVisualBuilder<P, Points> { }
+export type UnitsPointsParams = typeof UnitsPointsParams;
+export interface UnitsPointVisualBuilder<P extends UnitsPointsParams>
+    extends UnitsVisualBuilder<P, Points> {}
 
-export function UnitsPointsVisual<P extends UnitsPointsParams>(builder: UnitsPointVisualBuilder<P>, materialId: number): UnitsVisual<P> {
+export function UnitsPointsVisual<P extends UnitsPointsParams>(
+    builder: UnitsPointVisualBuilder<P>,
+    materialId: number,
+): UnitsVisual<P> {
     return UnitsVisual<Points, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructureGroup: StructureGroup, currentStructureGroup: StructureGroup) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructureGroup, currentStructureGroup);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructureGroup: StructureGroup,
+            currentStructureGroup: StructureGroup,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructureGroup,
+                currentStructureGroup,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.updateSize = true;
         },
-        geometryUtils: Points.Utils
+        geometryUtils: Points.Utils,
     }, materialId);
 }
 
 // lines
 
 export const UnitsLinesParams = { ...StructureLinesParams, ...StructureParams };
-export type UnitsLinesParams = typeof UnitsLinesParams
-export interface UnitsLinesVisualBuilder<P extends UnitsLinesParams> extends UnitsVisualBuilder<P, Lines> { }
+export type UnitsLinesParams = typeof UnitsLinesParams;
+export interface UnitsLinesVisualBuilder<P extends UnitsLinesParams>
+    extends UnitsVisualBuilder<P, Lines> {}
 
-export function UnitsLinesVisual<P extends UnitsLinesParams>(builder: UnitsLinesVisualBuilder<P>, materialId: number): UnitsVisual<P> {
+export function UnitsLinesVisual<P extends UnitsLinesParams>(
+    builder: UnitsLinesVisualBuilder<P>,
+    materialId: number,
+): UnitsVisual<P> {
     return UnitsVisual<Lines, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructureGroup: StructureGroup, currentStructureGroup: StructureGroup) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructureGroup, currentStructureGroup);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructureGroup: StructureGroup,
+            currentStructureGroup: StructureGroup,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructureGroup,
+                currentStructureGroup,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.updateSize = true;
         },
-        geometryUtils: Lines.Utils
+        geometryUtils: Lines.Utils,
     }, materialId);
 }
 
 // text
 
 export const UnitsTextParams = { ...StructureTextParams, ...StructureParams };
-export type UnitsTextParams = typeof UnitsTextParams
-export interface UnitsTextVisualBuilder<P extends UnitsTextParams> extends UnitsVisualBuilder<P, Text> { }
+export type UnitsTextParams = typeof UnitsTextParams;
+export interface UnitsTextVisualBuilder<P extends UnitsTextParams>
+    extends UnitsVisualBuilder<P, Text> {}
 
-export function UnitsTextVisual<P extends UnitsTextParams>(builder: UnitsTextVisualBuilder<P>, materialId: number): UnitsVisual<P> {
+export function UnitsTextVisual<P extends UnitsTextParams>(
+    builder: UnitsTextVisualBuilder<P>,
+    materialId: number,
+): UnitsVisual<P> {
     return UnitsVisual<Text, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructureGroup: StructureGroup, currentStructureGroup: StructureGroup) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructureGroup, currentStructureGroup);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructureGroup: StructureGroup,
+            currentStructureGroup: StructureGroup,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructureGroup,
+                currentStructureGroup,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.updateSize = true;
             if (newProps.background !== currentProps.background) state.createGeometry = true;
-            if (newProps.backgroundMargin !== currentProps.backgroundMargin) state.createGeometry = true;
+            if (newProps.backgroundMargin !== currentProps.backgroundMargin) {
+                state.createGeometry = true;
+            }
             if (newProps.tether !== currentProps.tether) state.createGeometry = true;
             if (newProps.tetherLength !== currentProps.tetherLength) state.createGeometry = true;
-            if (newProps.tetherBaseWidth !== currentProps.tetherBaseWidth) state.createGeometry = true;
+            if (newProps.tetherBaseWidth !== currentProps.tetherBaseWidth) {
+                state.createGeometry = true;
+            }
             if (newProps.attachment !== currentProps.attachment) state.createGeometry = true;
 
             if (newProps.fontFamily !== currentProps.fontFamily) state.createGeometry = true;
@@ -535,57 +840,117 @@ export function UnitsTextVisual<P extends UnitsTextParams>(builder: UnitsTextVis
             if (newProps.fontVariant !== currentProps.fontVariant) state.createGeometry = true;
             if (newProps.fontWeight !== currentProps.fontWeight) state.createGeometry = true;
         },
-        geometryUtils: Text.Utils
+        geometryUtils: Text.Utils,
     }, materialId);
 }
 
 // direct-volume
 
 export const UnitsDirectVolumeParams = { ...StructureDirectVolumeParams, ...StructureParams };
-export type UnitsDirectVolumeParams = typeof UnitsDirectVolumeParams
-export interface UnitsDirectVolumeVisualBuilder<P extends UnitsDirectVolumeParams> extends UnitsVisualBuilder<P, DirectVolume> { }
+export type UnitsDirectVolumeParams = typeof UnitsDirectVolumeParams;
+export interface UnitsDirectVolumeVisualBuilder<P extends UnitsDirectVolumeParams>
+    extends UnitsVisualBuilder<P, DirectVolume> {}
 
-export function UnitsDirectVolumeVisual<P extends UnitsDirectVolumeParams>(builder: UnitsDirectVolumeVisualBuilder<P>, materialId: number): UnitsVisual<P> {
+export function UnitsDirectVolumeVisual<P extends UnitsDirectVolumeParams>(
+    builder: UnitsDirectVolumeVisualBuilder<P>,
+    materialId: number,
+): UnitsVisual<P> {
     return UnitsVisual<DirectVolume, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructureGroup: StructureGroup, currentStructureGroup: StructureGroup) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructureGroup, currentStructureGroup);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructureGroup: StructureGroup,
+            currentStructureGroup: StructureGroup,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructureGroup,
+                currentStructureGroup,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.createGeometry = true;
         },
-        geometryUtils: DirectVolume.Utils
+        geometryUtils: DirectVolume.Utils,
     }, materialId);
 }
 
 // texture-mesh
 
 export const UnitsTextureMeshParams = { ...StructureTextureMeshParams, ...StructureParams };
-export type UnitsTextureMeshParams = typeof UnitsTextureMeshParams
-export interface UnitsTextureMeshVisualBuilder<P extends UnitsTextureMeshParams> extends UnitsVisualBuilder<P, TextureMesh> { }
+export type UnitsTextureMeshParams = typeof UnitsTextureMeshParams;
+export interface UnitsTextureMeshVisualBuilder<P extends UnitsTextureMeshParams>
+    extends UnitsVisualBuilder<P, TextureMesh> {}
 
-export function UnitsTextureMeshVisual<P extends UnitsTextureMeshParams>(builder: UnitsTextureMeshVisualBuilder<P>, materialId: number): UnitsVisual<P> {
+export function UnitsTextureMeshVisual<P extends UnitsTextureMeshParams>(
+    builder: UnitsTextureMeshVisualBuilder<P>,
+    materialId: number,
+): UnitsVisual<P> {
     return UnitsVisual<TextureMesh, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructureGroup: StructureGroup, currentStructureGroup: StructureGroup) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructureGroup, currentStructureGroup);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructureGroup: StructureGroup,
+            currentStructureGroup: StructureGroup,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructureGroup,
+                currentStructureGroup,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.createGeometry = true;
         },
-        geometryUtils: TextureMesh.Utils
+        geometryUtils: TextureMesh.Utils,
     }, materialId);
 }
 
 // image
 
 export const UnitsImageParams = { ...StructureImageParams, ...StructureParams };
-export type UnitsImageParams = typeof UnitsImageParams
-export interface UnitsImageVisualBuilder<P extends UnitsImageParams> extends UnitsVisualBuilder<P, Image> { }
+export type UnitsImageParams = typeof UnitsImageParams;
+export interface UnitsImageVisualBuilder<P extends UnitsImageParams>
+    extends UnitsVisualBuilder<P, Image> {}
 
-export function UnitsImageVisual<P extends UnitsImageParams>(builder: UnitsImageVisualBuilder<P>, materialId: number): UnitsVisual<P> {
+export function UnitsImageVisual<P extends UnitsImageParams>(
+    builder: UnitsImageVisualBuilder<P>,
+    materialId: number,
+): UnitsVisual<P> {
     return UnitsVisual<Image, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructureGroup: StructureGroup, currentStructureGroup: StructureGroup) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructureGroup, currentStructureGroup);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructureGroup: StructureGroup,
+            currentStructureGroup: StructureGroup,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructureGroup,
+                currentStructureGroup,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.createGeometry = true;
         },
-        geometryUtils: Image.Utils
+        geometryUtils: Image.Utils,
     }, materialId);
 }

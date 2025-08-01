@@ -4,10 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Renderable, RenderableState, createRenderable } from '../renderable.ts';
+import { createRenderable, Renderable, RenderableState } from '../renderable.ts';
 import { WebGLContext } from '../webgl/context.ts';
 import { createGraphicsRenderItem, Transparency } from '../webgl/render-item.ts';
-import { GlobalUniformSchema, BaseSchema, AttributeSpec, DefineSpec, Values, InternalSchema, SizeSchema, InternalValues, GlobalTextureSchema } from './schema.ts';
+import {
+    AttributeSpec,
+    BaseSchema,
+    DefineSpec,
+    GlobalTextureSchema,
+    GlobalUniformSchema,
+    InternalSchema,
+    InternalValues,
+    SizeSchema,
+    Values,
+} from './schema.ts';
 import { PointsShaderCode } from '../shader-code.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 
@@ -19,15 +29,35 @@ export const PointsSchema = {
     dPointSizeAttenuation: DefineSpec('boolean'),
     dPointStyle: DefineSpec('string', ['square', 'circle', 'fuzzy']),
 };
-export type PointsSchema = typeof PointsSchema
-export type PointsValues = Values<PointsSchema>
+export type PointsSchema = typeof PointsSchema;
+export type PointsValues = Values<PointsSchema>;
 
-export function PointsRenderable(ctx: WebGLContext, id: number, values: PointsValues, state: RenderableState, materialId: number, transparency: Transparency): Renderable<PointsValues> {
-    const schema = { ...GlobalUniformSchema, ...GlobalTextureSchema, ...InternalSchema, ...PointsSchema };
+export function PointsRenderable(
+    ctx: WebGLContext,
+    id: number,
+    values: PointsValues,
+    state: RenderableState,
+    materialId: number,
+    transparency: Transparency,
+): Renderable<PointsValues> {
+    const schema = {
+        ...GlobalUniformSchema,
+        ...GlobalTextureSchema,
+        ...InternalSchema,
+        ...PointsSchema,
+    };
     const internalValues: InternalValues = {
         uObjectId: ValueCell.create(id),
     };
     const shaderCode = PointsShaderCode;
-    const renderItem = createGraphicsRenderItem(ctx, 'points', shaderCode, schema, { ...values, ...internalValues }, materialId, transparency);
+    const renderItem = createGraphicsRenderItem(
+        ctx,
+        'points',
+        shaderCode,
+        schema,
+        { ...values, ...internalValues },
+        materialId,
+        transparency,
+    );
     return createRenderable(renderItem, values, state);
 }

@@ -25,30 +25,43 @@ function Category(data: EncodedCategory): Data.CifCategory {
     return {
         rowCount: data.rowCount,
         name: data.name.substring(1),
-        fieldNames: data.columns.map(c => c.name),
+        fieldNames: data.columns.map((c) => c.name),
         getField(name) {
             const col = map[name];
             if (!col) return void 0;
             if (!!cache[name]) return cache[name];
             cache[name] = Field(col);
             return cache[name];
-        }
+        },
     };
 }
 
 export function parseCifBinary(data: Uint8Array) {
-    return Task.create<Result<Data.CifFile>>('Parse BinaryCIF', async ctx => {
+    return Task.create<Result<Data.CifFile>>('Parse BinaryCIF', async (ctx) => {
         const minVersion = [0, 3];
 
         try {
             const unpacked = decodeMsgPack(data) as EncodedFile;
-            if (!checkVersions(minVersion, unpacked.version.match(/(\d)\.(\d)\.\d/)!.slice(1).map(v => +v))) {
-                return Result.error<Data.CifFile>(`Unsupported format version. Current ${unpacked.version}, required ${minVersion.join('.')}.`);
+            if (
+                !checkVersions(
+                    minVersion,
+                    unpacked.version.match(/(\d)\.(\d)\.\d/)!.slice(1).map((v) => +v),
+                )
+            ) {
+                return Result.error<Data.CifFile>(
+                    `Unsupported format version. Current ${unpacked.version}, required ${
+                        minVersion.join('.')
+                    }.`,
+                );
             }
-            const file = Data.CifFile(unpacked.dataBlocks.map(block => {
+            const file = Data.CifFile(unpacked.dataBlocks.map((block) => {
                 const cats = Object.create(null);
                 for (const cat of block.categories) cats[cat.name.substring(1)] = Category(cat);
-                return Data.CifBlock(block.categories.map(c => c.name.substring(1)), cats, block.header);
+                return Data.CifBlock(
+                    block.categories.map((c) => c.name.substring(1)),
+                    cats,
+                    block.header,
+                );
             }));
             return Result.success(file);
         } catch (e) {

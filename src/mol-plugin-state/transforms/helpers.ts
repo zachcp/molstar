@@ -15,20 +15,26 @@ import { PlaneData } from '../../mol-repr/shape/loci/plane.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 
-export function getDistanceDataFromStructureSelections(s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>): DistanceData {
+export function getDistanceDataFromStructureSelections(
+    s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>,
+): DistanceData {
     const lociA = s[0].loci;
     const lociB = s[1].loci;
     return { pairs: [{ loci: [lociA, lociB] as const }] };
 }
 
-export function getAngleDataFromStructureSelections(s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>): AngleData {
+export function getAngleDataFromStructureSelections(
+    s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>,
+): AngleData {
     const lociA = s[0].loci;
     const lociB = s[1].loci;
     const lociC = s[2].loci;
     return { triples: [{ loci: [lociA, lociB, lociC] as const }] };
 }
 
-export function getDihedralDataFromStructureSelections(s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>): DihedralData {
+export function getDihedralDataFromStructureSelections(
+    s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>,
+): DihedralData {
     const lociA = s[0].loci;
     const lociB = s[1].loci;
     const lociC = s[2].loci;
@@ -36,22 +42,29 @@ export function getDihedralDataFromStructureSelections(s: ReadonlyArray<PluginSt
     return { quads: [{ loci: [lociA, lociB, lociC, lociD] as const }] };
 }
 
-export function getLabelDataFromStructureSelections(s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>): LabelData {
+export function getLabelDataFromStructureSelections(
+    s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>,
+): LabelData {
     const loci = s[0].loci;
     return { infos: [{ loci }] };
 }
 
-export function getOrientationDataFromStructureSelections(s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>): OrientationData {
-    return { locis: s.map(v => v.loci) };
+export function getOrientationDataFromStructureSelections(
+    s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>,
+): OrientationData {
+    return { locis: s.map((v) => v.loci) };
 }
 
-export function getPlaneDataFromStructureSelections(s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>): PlaneData {
-    return { locis: s.map(v => v.loci) };
+export function getPlaneDataFromStructureSelections(
+    s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>,
+): PlaneData {
+    return { locis: s.map((v) => v.loci) };
 }
 
-export function getTransformFromParams(src:
-    | { name: 'matrix', params: { data: Mat4, transpose?: boolean } }
-    | { name: 'components', params: { translation: Vec3, axis: Vec3, angle: number } }
+export function getTransformFromParams(
+    src:
+        | { name: 'matrix'; params: { data: Mat4; transpose?: boolean } }
+        | { name: 'components'; params: { translation: Vec3; axis: Vec3; angle: number } },
 ) {
     if (src.name === 'matrix') {
         const transform = Mat4();
@@ -59,7 +72,11 @@ export function getTransformFromParams(src:
         if (src.params.transpose) Mat4.transpose(transform, transform);
         return transform;
     } else {
-        const transform = Mat4.fromRotation(Mat4(), src.params.angle * Math.PI / 180, src.params.axis);
+        const transform = Mat4.fromRotation(
+            Mat4(),
+            src.params.angle * Math.PI / 180,
+            src.params.axis,
+        );
         Mat4.setTranslation(transform, src.params.translation);
         return transform;
     }
@@ -73,15 +90,17 @@ export const TransformParam = PD.MappedStatic(
                 data: PD.Mat4(Mat4.identity()),
                 transpose: PD.Boolean(false),
             },
-            { isFlat: true }
+            { isFlat: true },
         ),
         components: PD.Group(
             {
                 translation: PD.Vec3(Vec3.create(0, 0, 0)),
                 axis: PD.Vec3(Vec3.create(1, 0, 0)),
-                angle: PD.Numeric(0, { min: -360, max: 360, step: 1 }, { description: 'Angle in Degrees' }),
+                angle: PD.Numeric(0, { min: -360, max: 360, step: 1 }, {
+                    description: 'Angle in Degrees',
+                }),
             },
-            { isFlat: true }
+            { isFlat: true },
         ),
     },
     { label: 'Kind' },

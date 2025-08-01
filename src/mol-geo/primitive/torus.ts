@@ -16,10 +16,13 @@ export const DefaultTorusProps = {
     tubularSegments: 6,
     arc: Math.PI * 2,
 };
-export type TorusProps = Partial<typeof DefaultTorusProps>
+export type TorusProps = Partial<typeof DefaultTorusProps>;
 
 export function Torus(props?: TorusProps): Primitive {
-    const { radius, tube, radialSegments, tubularSegments, arc } = { ...DefaultTorusProps, ...props };
+    const { radius, tube, radialSegments, tubularSegments, arc } = {
+        ...DefaultTorusProps,
+        ...props,
+    };
 
     // buffers
     const indices: number[] = [];
@@ -42,7 +45,7 @@ export function Torus(props?: TorusProps): Primitive {
                 vertex,
                 (radius + tube * Math.cos(v)) * Math.cos(u),
                 (radius + tube * Math.cos(v)) * Math.sin(u),
-                tube * Math.sin(v)
+                tube * Math.sin(v),
             );
             vertices.push(...vertex);
 
@@ -57,7 +60,6 @@ export function Torus(props?: TorusProps): Primitive {
     // generate indices
     for (let j = 1; j <= radialSegments; ++j) {
         for (let i = 1; i <= tubularSegments; ++i) {
-
             // indices
             const a = (tubularSegments + 1) * j + i - 1;
             const b = (tubularSegments + 1) * (j - 1) + i - 1;
@@ -73,6 +75,6 @@ export function Torus(props?: TorusProps): Primitive {
     return {
         vertices: new Float32Array(vertices),
         normals: new Float32Array(normals),
-        indices: new Uint32Array(indices)
+        indices: new Uint32Array(indices),
     };
 }

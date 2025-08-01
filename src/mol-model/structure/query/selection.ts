@@ -10,19 +10,37 @@ import { structureUnion } from './utils/structure-set.ts';
 import { OrderedSet, SortedArray } from '../../../mol-data/int.ts';
 
 // A selection is a pair of a Structure and a sequence of unique AtomSets
-type StructureSelection = StructureSelection.Singletons | StructureSelection.Sequence
+type StructureSelection = StructureSelection.Singletons | StructureSelection.Sequence;
 
 namespace StructureSelection {
     // If each element of the selection is a singleton, we can use a more efficient representation.
-    export interface Singletons { readonly kind: 'singletons', readonly source: Structure, readonly structure: Structure }
-    export interface Sequence { readonly kind: 'sequence', readonly source: Structure, readonly structures: Structure[] }
+    export interface Singletons {
+        readonly kind: 'singletons';
+        readonly source: Structure;
+        readonly structure: Structure;
+    }
+    export interface Sequence {
+        readonly kind: 'sequence';
+        readonly source: Structure;
+        readonly structures: Structure[];
+    }
 
-    export function Singletons(source: Structure, structure: Structure): Singletons { return { kind: 'singletons', source, structure }; }
-    export function Sequence(source: Structure, structures: Structure[]): Sequence { return { kind: 'sequence', source, structures }; }
-    export function Empty(source: Structure): StructureSelection { return Singletons(source, Structure.Empty); };
+    export function Singletons(source: Structure, structure: Structure): Singletons {
+        return { kind: 'singletons', source, structure };
+    }
+    export function Sequence(source: Structure, structures: Structure[]): Sequence {
+        return { kind: 'sequence', source, structures };
+    }
+    export function Empty(source: Structure): StructureSelection {
+        return Singletons(source, Structure.Empty);
+    }
 
-    export function isSingleton(s: StructureSelection): s is Singletons { return s.kind === 'singletons'; }
-    export function isEmpty(s: StructureSelection) { return isSingleton(s) ? s.structure.units.length === 0 : s.structures.length === 0; }
+    export function isSingleton(s: StructureSelection): s is Singletons {
+        return s.kind === 'singletons';
+    }
+    export function isEmpty(s: StructureSelection) {
+        return isSingleton(s) ? s.structure.units.length === 0 : s.structures.length === 0;
+    }
 
     export function structureCount(sel: StructureSelection) {
         if (isSingleton(sel)) return sel.structure.elementCount;
@@ -37,19 +55,24 @@ namespace StructureSelection {
 
     /** Convert selection to loci and use "current structure units" in Loci elements */
     export function toLociWithCurrentUnits(sel: StructureSelection): StructureElement.Loci {
-        const elements: { unit: Unit, indices: OrderedSet<StructureElement.UnitIndex> }[] = [];
+        const elements: { unit: Unit; indices: OrderedSet<StructureElement.UnitIndex> }[] = [];
         const { unitMap } = sel.source;
 
         for (const unit of unionStructure(sel).units) {
             if (unit === unitMap.get(unit.id)) {
                 elements[elements.length] = {
                     unit,
-                    indices: OrderedSet.ofBounds(0 as StructureElement.UnitIndex, unit.elements.length as StructureElement.UnitIndex)
+                    indices: OrderedSet.ofBounds(
+                        0 as StructureElement.UnitIndex,
+                        unit.elements.length as StructureElement.UnitIndex,
+                    ),
                 };
             } else {
                 elements[elements.length] = {
                     unit,
-                    indices: OrderedSet.ofSortedArray(SortedArray.indicesOf(unitMap.get(unit.id).elements, unit.elements))
+                    indices: OrderedSet.ofSortedArray(
+                        SortedArray.indicesOf(unitMap.get(unit.id).elements, unit.elements),
+                    ),
                 };
             }
         }
@@ -59,7 +82,7 @@ namespace StructureSelection {
 
     /** use source unit in loci.elements */
     export function toLociWithSourceUnits(sel: StructureSelection): StructureElement.Loci {
-        const elements: { unit: Unit, indices: OrderedSet<StructureElement.UnitIndex> }[] = [];
+        const elements: { unit: Unit; indices: OrderedSet<StructureElement.UnitIndex> }[] = [];
         const { unitMap } = sel.source;
 
         for (const _unit of unionStructure(sel).units) {
@@ -67,12 +90,17 @@ namespace StructureSelection {
             if (unit === _unit) {
                 elements[elements.length] = {
                     unit,
-                    indices: OrderedSet.ofBounds(0 as StructureElement.UnitIndex, unit.elements.length as StructureElement.UnitIndex)
+                    indices: OrderedSet.ofBounds(
+                        0 as StructureElement.UnitIndex,
+                        unit.elements.length as StructureElement.UnitIndex,
+                    ),
                 };
             } else {
                 elements[elements.length] = {
                     unit,
-                    indices: OrderedSet.ofSortedArray(SortedArray.indicesOf(unit.elements, _unit.elements))
+                    indices: OrderedSet.ofSortedArray(
+                        SortedArray.indicesOf(unit.elements, _unit.elements),
+                    ),
                 };
             }
         }
@@ -81,8 +109,8 @@ namespace StructureSelection {
     }
 
     export interface Builder {
-        add(structure: Structure): void,
-        getSelection(): StructureSelection
+        add(structure: Structure): void;
+        getSelection(): StructureSelection;
     }
 
     function getSelection(source: Structure, structures: Structure[], allSingletons: boolean) {
@@ -103,9 +131,11 @@ namespace StructureSelection {
             if (elementCount !== 1) this.allSingletons = false;
         }
 
-        getSelection() { return getSelection(this.source, this.structures, this.allSingletons); }
+        getSelection() {
+            return getSelection(this.source, this.structures, this.allSingletons);
+        }
 
-        constructor(private source: Structure) { }
+        constructor(private source: Structure) {}
     }
 
     class HashBuilderImpl implements Builder {
@@ -120,13 +150,19 @@ namespace StructureSelection {
             if (atomCount !== 1) this.allSingletons = false;
         }
 
-        getSelection() { return getSelection(this.structure, this.structures, this.allSingletons); }
+        getSelection() {
+            return getSelection(this.structure, this.structures, this.allSingletons);
+        }
 
-        constructor(private structure: Structure) { }
+        constructor(private structure: Structure) {}
     }
 
-    export function LinearBuilder(structure: Structure): Builder { return new LinearBuilderImpl(structure); }
-    export function UniqueBuilder(structure: Structure): Builder { return new HashBuilderImpl(structure); }
+    export function LinearBuilder(structure: Structure): Builder {
+        return new LinearBuilderImpl(structure);
+    }
+    export function UniqueBuilder(structure: Structure): Builder {
+        return new HashBuilderImpl(structure);
+    }
 
     // TODO: build timeout checking into this?
     export function forEach(sel: StructureSelection, fn: (s: Structure, i: number) => void) {
@@ -136,7 +172,9 @@ namespace StructureSelection {
                 const { elements } = unit;
                 for (let i = 0, _i = elements.length; i < _i; i++) {
                     // TODO: optimize this somehow???
-                    const s = Structure.create([unit.getChild(SortedArray.ofSingleton(elements[i]))], { parent: sel.source });
+                    const s = Structure.create([
+                        unit.getChild(SortedArray.ofSingleton(elements[i])),
+                    ], { parent: sel.source });
                     fn(s, idx++);
                 }
             }

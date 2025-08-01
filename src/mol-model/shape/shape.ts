@@ -15,34 +15,49 @@ import { GroupMapping } from '../../mol-geo/util.ts';
 import { ShapeGroupSizeTheme } from '../../mol-theme/size/shape-group.ts';
 import { ShapeGroupColorTheme } from '../../mol-theme/color/shape-group.ts';
 import { Theme } from '../../mol-theme/theme.ts';
-import { TransformData, createTransform as _createTransform } from '../../mol-geo/geometry/transform-data.ts';
-import { createRenderObject as _createRenderObject, getNextMaterialId } from '../../mol-gl/render-object.ts';
+import {
+    createTransform as _createTransform,
+    TransformData,
+} from '../../mol-geo/geometry/transform-data.ts';
+import {
+    createRenderObject as _createRenderObject,
+    getNextMaterialId,
+} from '../../mol-gl/render-object.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { LocationIterator } from '../../mol-geo/util/location-iterator.ts';
 
 export interface Shape<G extends Geometry = Geometry> {
     /** A uuid to identify a shape object */
-    readonly id: UUID
+    readonly id: UUID;
     /** A name to describe the shape */
-    readonly name: string
+    readonly name: string;
     /** The data used to create the shape */
-    readonly sourceData: unknown
+    readonly sourceData: unknown;
     /** The geometry of the shape, e.g. `Mesh` or `Lines` */
-    readonly geometry: G
+    readonly geometry: G;
     /** An array of transformation matrices to describe multiple instances of the geometry */
-    readonly transforms: Mat4[]
+    readonly transforms: Mat4[];
     /** Number of groups in the geometry */
-    readonly groupCount: number
+    readonly groupCount: number;
     /** Get color for a given group */
-    getColor(groupId: number, instanceId: number): Color
+    getColor(groupId: number, instanceId: number): Color;
     /** Get size for a given group */
-    getSize(groupId: number, instanceId: number): number
+    getSize(groupId: number, instanceId: number): number;
     /** Get label for a given group */
-    getLabel(groupId: number, instanceId: number): string
+    getLabel(groupId: number, instanceId: number): string;
 }
 
 export namespace Shape {
-    export function create<G extends Geometry>(name: string, sourceData: unknown, geometry: G, getColor: Shape['getColor'], getSize: Shape['getSize'], getLabel: Shape['getLabel'], transforms?: Mat4[], groupCount?: number): Shape<G> {
+    export function create<G extends Geometry>(
+        name: string,
+        sourceData: unknown,
+        geometry: G,
+        getColor: Shape['getColor'],
+        getSize: Shape['getSize'],
+        getLabel: Shape['getLabel'],
+        transforms?: Mat4[],
+        groupCount?: number,
+    ): Shape<G> {
         return {
             id: UUID.create22(),
             name,
@@ -54,14 +69,14 @@ export namespace Shape {
             },
             getColor,
             getSize,
-            getLabel
+            getLabel,
         };
     }
 
     export function getTheme(shape: Shape): Theme {
         return {
             color: ShapeGroupColorTheme({ shape }, {}),
-            size: ShapeGroupSizeTheme({ shape }, {})
+            size: ShapeGroupSizeTheme({ shape }, {}),
         };
     }
 
@@ -76,41 +91,76 @@ export namespace Shape {
         return LocationIterator(shape.groupCount, instanceCount, 1, getLocation);
     }
 
-    export function createTransform(transforms: Mat4[], invariantBoundingSphere: Sphere3D, cellSize: number, batchSize: number, transformData?: TransformData) {
-        const transformArray = transformData && transformData.aTransform.ref.value.length >= transforms.length * 16 ? transformData.aTransform.ref.value : new Float32Array(transforms.length * 16);
+    export function createTransform(
+        transforms: Mat4[],
+        invariantBoundingSphere: Sphere3D,
+        cellSize: number,
+        batchSize: number,
+        transformData?: TransformData,
+    ) {
+        const transformArray =
+            transformData && transformData.aTransform.ref.value.length >= transforms.length * 16
+                ? transformData.aTransform.ref.value
+                : new Float32Array(transforms.length * 16);
         for (let i = 0, il = transforms.length; i < il; ++i) {
             Mat4.toArray(transforms[i], transformArray, i * 16);
         }
-        return _createTransform(transformArray, transforms.length, invariantBoundingSphere, cellSize, batchSize, transformData);
+        return _createTransform(
+            transformArray,
+            transforms.length,
+            invariantBoundingSphere,
+            cellSize,
+            batchSize,
+            transformData,
+        );
     }
 
-    export function createRenderObject<G extends Geometry>(shape: Shape<G>, props: PD.Values<Geometry.Params<G>>) {
+    export function createRenderObject<G extends Geometry>(
+        shape: Shape<G>,
+        props: PD.Values<Geometry.Params<G>>,
+    ) {
         props;
         const theme = getTheme(shape);
         const utils = Geometry.getUtils(shape.geometry);
 
         const materialId = getNextMaterialId();
         const locationIt = groupIterator(shape);
-        const transform = createTransform(shape.transforms, shape.geometry.boundingSphere, props.cellSize, props.batchSize);
+        const transform = createTransform(
+            shape.transforms,
+            shape.geometry.boundingSphere,
+            props.cellSize,
+            props.batchSize,
+        );
         const values = utils.createValues(shape.geometry, transform, locationIt, theme, props);
         const state = utils.createRenderableState(props);
 
         return _createRenderObject(shape.geometry.kind, values, state, materialId);
     }
 
-    export interface Loci { readonly kind: 'shape-loci', readonly shape: Shape }
-    export function Loci(shape: Shape): Loci { return { kind: 'shape-loci', shape }; }
-    export function isLoci(x: any): x is Loci { return !!x && x.kind === 'shape-loci'; }
-    export function areLociEqual(a: Loci, b: Loci) { return a.shape === b.shape; }
-    export function isLociEmpty(loci: Loci) { return loci.shape.groupCount === 0; }
+    export interface Loci {
+        readonly kind: 'shape-loci';
+        readonly shape: Shape;
+    }
+    export function Loci(shape: Shape): Loci {
+        return { kind: 'shape-loci', shape };
+    }
+    export function isLoci(x: any): x is Loci {
+        return !!x && x.kind === 'shape-loci';
+    }
+    export function areLociEqual(a: Loci, b: Loci) {
+        return a.shape === b.shape;
+    }
+    export function isLociEmpty(loci: Loci) {
+        return loci.shape.groupCount === 0;
+    }
 }
 
 export namespace ShapeGroup {
     export interface Location {
-        readonly kind: 'group-location'
-        shape: Shape
-        group: number
-        instance: number
+        readonly kind: 'group-location';
+        shape: Shape;
+        group: number;
+        instance: number;
     }
 
     export function Location(shape?: Shape, group = 0, instance = 0): Location {
@@ -122,12 +172,12 @@ export namespace ShapeGroup {
     }
 
     export interface Loci {
-        readonly kind: 'group-loci',
-        readonly shape: Shape,
+        readonly kind: 'group-loci';
+        readonly shape: Shape;
         readonly groups: ReadonlyArray<{
-            readonly ids: OrderedSet<number>
-            readonly instance: number
-        }>
+            readonly ids: OrderedSet<number>;
+            readonly instance: number;
+        }>;
     }
 
     export function Loci(shape: Shape, groups: Loci['groups']): Loci {
@@ -164,10 +214,15 @@ export namespace ShapeGroup {
 
     const sphereHelper = new CentroidHelper(), tmpPos = Vec3.zero();
 
-    function sphereHelperInclude(groups: Loci['groups'], mapping: GroupMapping, positions: Float32Array, transforms: Mat4[]) {
+    function sphereHelperInclude(
+        groups: Loci['groups'],
+        mapping: GroupMapping,
+        positions: Float32Array,
+        transforms: Mat4[],
+    ) {
         const { indices, offsets } = mapping;
         for (const { ids, instance } of groups) {
-            OrderedSet.forEach(ids, v => {
+            OrderedSet.forEach(ids, (v) => {
                 for (let i = offsets[v], il = offsets[v + 1]; i < il; ++i) {
                     Vec3.fromArray(tmpPos, positions, indices[i] * 3);
                     Vec3.transformMat4(tmpPos, tmpPos, transforms[instance]);
@@ -177,10 +232,15 @@ export namespace ShapeGroup {
         }
     }
 
-    function sphereHelperRadius(groups: Loci['groups'], mapping: GroupMapping, positions: Float32Array, transforms: Mat4[]) {
+    function sphereHelperRadius(
+        groups: Loci['groups'],
+        mapping: GroupMapping,
+        positions: Float32Array,
+        transforms: Mat4[],
+    ) {
         const { indices, offsets } = mapping;
         for (const { ids, instance } of groups) {
-            OrderedSet.forEach(ids, v => {
+            OrderedSet.forEach(ids, (v) => {
                 for (let i = offsets[v], il = offsets[v + 1]; i < il; ++i) {
                     Vec3.fromArray(tmpPos, positions, indices[i] * 3);
                     Vec3.transformMat4(tmpPos, tmpPos, transforms[instance]);
@@ -219,7 +279,7 @@ export namespace ShapeGroup {
             sphereHelper.finishedIncludeStep();
             sphereHelperRadius(loci.groups, geometry.groupMapping, positions, transforms);
             for (const { ids, instance } of loci.groups) {
-                OrderedSet.forEach(ids, v => {
+                OrderedSet.forEach(ids, (v) => {
                     const value = loci.shape.getSize(v, instance);
                     if (padding < value) padding = value;
                 });

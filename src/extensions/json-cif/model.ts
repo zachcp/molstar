@@ -15,17 +15,20 @@ export interface JSONCifFile {
 }
 
 export interface JSONCifDataBlock {
-    header: string,
-    categoryNames: string[],
-    categories: Record<string, JSONCifCategory>,
+    header: string;
+    categoryNames: string[];
+    categories: Record<string, JSONCifCategory>;
 }
 
 export interface JSONCifCategory<T extends Record<string, any> = Record<string, any>> {
-    name: string,
-    fieldNames: string[],
-    rows: T[],
+    name: string;
+    fieldNames: string[];
+    rows: T[];
 }
 
-export function getJSONCifCategory<S extends Table.Schema>(block: JSONCifDataBlock, name: string): JSONCifCategory<Table.Row<S>> | undefined {
+export function getJSONCifCategory<S extends Table.Schema>(
+    block: JSONCifDataBlock,
+    name: string,
+): JSONCifCategory<Table.Row<S>> | undefined {
     return block.categories[name] as any;
 }

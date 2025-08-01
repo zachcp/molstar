@@ -9,12 +9,19 @@
 import { Column } from '../../../../mol-data/db.ts';
 import { encodeMsgPack } from '../../../common/msgpack/encode.ts';
 import {
-    EncodedColumn, EncodedData, EncodedFile, EncodedDataBlock, EncodedCategory, ArrayEncoder, ArrayEncoding as E, VERSION
+    ArrayEncoder,
+    ArrayEncoding as E,
+    EncodedCategory,
+    EncodedColumn,
+    EncodedData,
+    EncodedDataBlock,
+    EncodedFile,
+    VERSION,
 } from '../../../common/binary-cif.ts';
-import { Field, Category, Encoder } from '../encoder.ts';
+import { Category, Encoder, Field } from '../encoder.ts';
 import { Writer } from '../../writer.ts';
-import { getIncludedFields, getCategoryInstanceData, CategoryInstanceData } from './util.ts';
-import { classifyIntArray, classifyFloatArray } from '../../../common/binary-cif/classifier.ts';
+import { CategoryInstanceData, getCategoryInstanceData, getIncludedFields } from './util.ts';
+import { classifyFloatArray, classifyIntArray } from '../../../common/binary-cif/classifier.ts';
 import { ArrayCtor } from '../../../../mol-util/type-helpers.ts';
 
 export interface BinaryEncodingProvider {
@@ -47,11 +54,15 @@ export class BinaryEncoder implements Encoder<Uint8Array> {
     startDataBlock(header: string) {
         this.dataBlocks.push({
             header: (header || '').replace(/[ \n\t]/g, '').toUpperCase(),
-            categories: []
+            categories: [],
         });
     }
 
-    writeCategory<Ctx>(category: Category<Ctx>, context?: Ctx, options?: Encoder.WriteCategoryOptions) {
+    writeCategory<Ctx>(
+        category: Category<Ctx>,
+        context?: Ctx,
+        options?: Encoder.WriteCategoryOptions,
+    ) {
         if (!this.data) {
             throw new Error('The writer contents have already been encoded, no more writing.');
         }
@@ -72,7 +83,17 @@ export class BinaryEncoder implements Encoder<Uint8Array> {
             if (!this.filter.includeField(category.name, f.name)) continue;
 
             const format = this.formatter.getFormat(category.name, f.name);
-            cat.columns.push(encodeField(category.name, f, source, rowCount, format, this.binaryEncodingProvider, this.autoClassify));
+            cat.columns.push(
+                encodeField(
+                    category.name,
+                    f,
+                    source,
+                    rowCount,
+                    format,
+                    this.binaryEncodingProvider,
+                    this.autoClassify,
+                ),
+            );
         }
         // no columns included.
         if (!cat.columns.length) return;
@@ -83,8 +104,8 @@ export class BinaryEncoder implements Encoder<Uint8Array> {
     encode() {
         if (this.encodedData) return;
         this.encodedData = encodeMsgPack(this.data);
-        this.data = <any>null;
-        this.dataBlocks = <any>null;
+        this.data = <any> null;
+        this.dataBlocks = <any> null;
     }
 
     writeTo(writer: Writer) {
@@ -100,19 +121,25 @@ export class BinaryEncoder implements Encoder<Uint8Array> {
         return this.encodedData.length;
     }
 
-    constructor(encoder: string, encodingProvider: BinaryEncodingProvider | undefined, private autoClassify: boolean) {
+    constructor(
+        encoder: string,
+        encodingProvider: BinaryEncodingProvider | undefined,
+        private autoClassify: boolean,
+    ) {
         this.binaryEncodingProvider = encodingProvider;
         this.data = {
             encoder,
             version: VERSION,
-            dataBlocks: this.dataBlocks
+            dataBlocks: this.dataBlocks,
         };
     }
 }
 
 function getArrayCtor(field: Field, format: Field.Format | undefined): ArrayCtor<string | number> {
     if (format && format.typedArray) return format.typedArray;
-    if (field.defaultFormat && field.defaultFormat.typedArray) return field.defaultFormat.typedArray;
+    if (field.defaultFormat && field.defaultFormat.typedArray) {
+        return field.defaultFormat.typedArray;
+    }
     if (field.type === Field.Type.Str) return Array;
     if (field.type === Field.Type.Int) return Int32Array;
     return Float64Array;
@@ -123,7 +150,12 @@ function getDefaultEncoder(type: Field.Type): ArrayEncoder {
     return ArrayEncoder.by(E.byteArray);
 }
 
-function tryGetEncoder(categoryName: string, field: Field, format: Field.Format | undefined, provider: BinaryEncodingProvider | undefined) {
+function tryGetEncoder(
+    categoryName: string,
+    field: Field,
+    format: Field.Format | undefined,
+    provider: BinaryEncodingProvider | undefined,
+) {
     if (format && format.encoder) {
         return format.encoder;
     } else if (field.defaultFormat && field.defaultFormat.encoder) {
@@ -141,10 +173,21 @@ function classify(type: Field.Type, data: ArrayLike<any>) {
     return classifyFloatArray(data);
 }
 
-function encodeField(categoryName: string, field: Field, data: CategoryInstanceData['source'], totalCount: number,
-    format: Field.Format | undefined, encoderProvider: BinaryEncodingProvider | undefined, autoClassify: boolean): EncodedColumn {
-
-    const { array, allPresent, mask } = getFieldData(field, getArrayCtor(field, format), totalCount, data);
+function encodeField(
+    categoryName: string,
+    field: Field,
+    data: CategoryInstanceData['source'],
+    totalCount: number,
+    format: Field.Format | undefined,
+    encoderProvider: BinaryEncodingProvider | undefined,
+    autoClassify: boolean,
+): EncodedColumn {
+    const { array, allPresent, mask } = getFieldData(
+        field,
+        getArrayCtor(field, format),
+        totalCount,
+        data,
+    );
 
     let encoder: ArrayEncoder | undefined;
     if (field.type === Field.Type.Str) {
@@ -175,11 +218,16 @@ function encodeField(categoryName: string, field: Field, data: CategoryInstanceD
     return {
         name: field.name,
         data: encoded,
-        mask: maskData
+        mask: maskData,
     };
 }
 
-function getFieldData(field: Field<any, any>, arrayCtor: ArrayCtor<string | number>, totalCount: number, data: CategoryInstanceData['source']) {
+function getFieldData(
+    field: Field<any, any>,
+    arrayCtor: ArrayCtor<string | number>,
+    totalCount: number,
+    data: CategoryInstanceData['source'],
+) {
     const isStr = field.type === Field.Type.Str;
     const array = new arrayCtor(totalCount);
     const mask = new Uint8Array(totalCount);
@@ -195,8 +243,9 @@ function getFieldData(field: Field<any, any>, arrayCtor: ArrayCtor<string | numb
             const p = valueKind ? valueKind(key, d) : Column.ValueKinds.Present;
             if (p !== Column.ValueKinds.Present) {
                 mask[offset] = p;
-                if (isStr)
+                if (isStr) {
                     array[offset] = '';
+                }
                 allPresent = false;
             } else {
                 const value = getter(key, d, offset);

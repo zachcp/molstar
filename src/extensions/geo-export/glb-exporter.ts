@@ -6,15 +6,15 @@
  */
 
 import { asciiWrite } from '../../mol-io/common/ascii.ts';
-import { IsNativeEndianLittle, flipByteOrder } from '../../mol-io/common/binary.ts';
+import { flipByteOrder, IsNativeEndianLittle } from '../../mol-io/common/binary.ts';
 import { Box3D } from '../../mol-math/geometry.ts';
-import { Vec3, Mat4 } from '../../mol-math/linear-algebra.ts';
+import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { PLUGIN_VERSION } from '../../mol-plugin/version.ts';
 import { RuntimeContext } from '../../mol-task/index.ts';
 import { Color } from '../../mol-util/color/color.ts';
 import { fillSerial } from '../../mol-util/array.ts';
-import { NumberArray, assertUnreachable } from '../../mol-util/type-helpers.ts';
-import { MeshExporter, AddMeshInput, MeshGeoData } from './mesh-exporter.ts';
+import { assertUnreachable, NumberArray } from '../../mol-util/type-helpers.ts';
+import { AddMeshInput, MeshExporter, MeshGeoData } from './mesh-exporter.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3fromArray = Vec3.fromArray;
@@ -37,16 +37,20 @@ const BIN_PAD_CHAR = 0x00;
 
 function getPrimitiveMode(mode: 'points' | 'lines' | 'triangles'): number {
     switch (mode) {
-        case 'points': return 0;
-        case 'lines': return 1;
-        case 'triangles': return 4;
-        default: assertUnreachable(mode);
+        case 'points':
+            return 0;
+        case 'lines':
+            return 1;
+        case 'triangles':
+            return 4;
+        default:
+            assertUnreachable(mode);
     }
 }
 
 export type GlbData = {
-    glb: Uint8Array
-}
+    glb: Uint8Array;
+};
 
 export class GlbExporter extends MeshExporter<GlbData> {
     readonly fileExtension = 'glb';
@@ -72,7 +76,16 @@ export class GlbExporter extends MeshExporter<GlbData> {
         return [min, max];
     }
 
-    private addBuffer(buffer: ArrayBuffer, componentType: number, type: string, count: number, target: number, min?: any, max?: any, normalized?: boolean) {
+    private addBuffer(
+        buffer: ArrayBuffer,
+        componentType: number,
+        type: string,
+        count: number,
+        target: number,
+        min?: any,
+        max?: any,
+        normalized?: boolean,
+    ) {
         this.binaryBuffer.push(buffer);
 
         const bufferViewOffset = this.bufferViews.length;
@@ -80,7 +93,7 @@ export class GlbExporter extends MeshExporter<GlbData> {
             buffer: 0,
             byteOffset: this.byteOffset,
             byteLength: buffer.byteLength,
-            target
+            target,
         });
         this.byteOffset += buffer.byteLength;
 
@@ -93,12 +106,19 @@ export class GlbExporter extends MeshExporter<GlbData> {
             type,
             min,
             max,
-            normalized
+            normalized,
         });
         return accessorOffset;
     }
 
-    private addGeometryBuffers(vertices: Float32Array, normals: Float32Array | undefined, indices: Uint32Array | undefined, vertexCount: number, drawCount: number, isGeoTexture: boolean) {
+    private addGeometryBuffers(
+        vertices: Float32Array,
+        normals: Float32Array | undefined,
+        indices: Uint32Array | undefined,
+        vertexCount: number,
+        drawCount: number,
+        isGeoTexture: boolean,
+    ) {
         const tmpV = Vec3();
         const stride = isGeoTexture ? 4 : 3;
 
@@ -139,13 +159,34 @@ export class GlbExporter extends MeshExporter<GlbData> {
         }
 
         return {
-            vertexAccessorIndex: this.addBuffer(vertexBuffer, FLOAT, 'VEC3', vertexCount, ARRAY_BUFFER, vertexMin, vertexMax),
-            normalAccessorIndex: normalBuffer ? this.addBuffer(normalBuffer, FLOAT, 'VEC3', vertexCount, ARRAY_BUFFER) : undefined,
-            indexAccessorIndex: (isGeoTexture || !indexBuffer) ? undefined : this.addBuffer(indexBuffer, UNSIGNED_INT, 'SCALAR', drawCount, ELEMENT_ARRAY_BUFFER)
+            vertexAccessorIndex: this.addBuffer(
+                vertexBuffer,
+                FLOAT,
+                'VEC3',
+                vertexCount,
+                ARRAY_BUFFER,
+                vertexMin,
+                vertexMax,
+            ),
+            normalAccessorIndex: normalBuffer
+                ? this.addBuffer(normalBuffer, FLOAT, 'VEC3', vertexCount, ARRAY_BUFFER)
+                : undefined,
+            indexAccessorIndex: (isGeoTexture || !indexBuffer) ? undefined : this.addBuffer(
+                indexBuffer,
+                UNSIGNED_INT,
+                'SCALAR',
+                drawCount,
+                ELEMENT_ARRAY_BUFFER,
+            ),
         };
     }
 
-    private addColorBuffer(geoData: MeshGeoData, interpolatedColors: Uint8Array | undefined, interpolatedOverpaint: Uint8Array | undefined, interpolatedTransparency: Uint8Array | undefined) {
+    private addColorBuffer(
+        geoData: MeshGeoData,
+        interpolatedColors: Uint8Array | undefined,
+        interpolatedOverpaint: Uint8Array | undefined,
+        interpolatedTransparency: Uint8Array | undefined,
+    ) {
         const { values, vertexCount } = geoData;
         const uAlpha = values.uAlpha.ref.value;
 
@@ -167,10 +208,25 @@ export class GlbExporter extends MeshExporter<GlbData> {
             colorBuffer = flipByteOrder(new Uint8Array(colorBuffer), 4);
         }
 
-        return this.addBuffer(colorBuffer, UNSIGNED_BYTE, 'VEC4', vertexCount, ARRAY_BUFFER, undefined, undefined, true);
+        return this.addBuffer(
+            colorBuffer,
+            UNSIGNED_BYTE,
+            'VEC4',
+            vertexCount,
+            ARRAY_BUFFER,
+            undefined,
+            undefined,
+            true,
+        );
     }
 
-    private addMaterial(metalness: number, roughness: number, emissive: number, doubleSided: boolean, alpha: boolean) {
+    private addMaterial(
+        metalness: number,
+        roughness: number,
+        emissive: number,
+        doubleSided: boolean,
+        alpha: boolean,
+    ) {
         const hash = `${metalness}|${roughness}|${emissive}|${doubleSided}`;
         if (!this.materialMap.has(hash)) {
             this.materialMap.set(hash, this.materials.length);
@@ -178,7 +234,7 @@ export class GlbExporter extends MeshExporter<GlbData> {
                 pbrMetallicRoughness: {
                     baseColorFactor: [1, 1, 1, 1],
                     metallicFactor: metalness,
-                    roughnessFactor: roughness
+                    roughnessFactor: roughness,
                 },
                 emissiveFactor: [emissive, emissive, emissive],
                 doubleSided,
@@ -210,24 +266,43 @@ export class GlbExporter extends MeshExporter<GlbData> {
         let interpolatedColors: Uint8Array | undefined;
         if (webgl && mesh && (colorType === 'volume' || colorType === 'volumeInstance')) {
             const stride = isGeoTexture ? 4 : 3;
-            interpolatedColors = GlbExporter.getInterpolatedColors(webgl, { vertices: mesh.vertices, vertexCount: mesh.vertexCount, values, stride, colorType });
+            interpolatedColors = GlbExporter.getInterpolatedColors(webgl, {
+                vertices: mesh.vertices,
+                vertexCount: mesh.vertexCount,
+                values,
+                stride,
+                colorType,
+            });
         }
 
         let interpolatedOverpaint: Uint8Array | undefined;
         if (webgl && mesh && overpaintType === 'volumeInstance') {
             const stride = isGeoTexture ? 4 : 3;
-            interpolatedOverpaint = GlbExporter.getInterpolatedOverpaint(webgl, { vertices: mesh.vertices, vertexCount: mesh.vertexCount, values, stride, colorType: overpaintType });
+            interpolatedOverpaint = GlbExporter.getInterpolatedOverpaint(webgl, {
+                vertices: mesh.vertices,
+                vertexCount: mesh.vertexCount,
+                values,
+                stride,
+                colorType: overpaintType,
+            });
         }
 
         let interpolatedTransparency: Uint8Array | undefined;
         if (webgl && mesh && transparencyType === 'volumeInstance') {
             const stride = isGeoTexture ? 4 : 3;
-            interpolatedTransparency = GlbExporter.getInterpolatedTransparency(webgl, { vertices: mesh.vertices, vertexCount: mesh.vertexCount, values, stride, colorType: transparencyType });
+            interpolatedTransparency = GlbExporter.getInterpolatedTransparency(webgl, {
+                vertices: mesh.vertices,
+                vertexCount: mesh.vertexCount,
+                values,
+                stride,
+                colorType: transparencyType,
+            });
         }
 
         // instancing
         const sameGeometryBuffers = mesh !== undefined;
-        const sameColorBuffer = sameGeometryBuffers && colorType !== 'instance' && !colorType.endsWith('Instance') && !dTransparency;
+        const sameColorBuffer = sameGeometryBuffers && colorType !== 'instance' &&
+            !colorType.endsWith('Instance') && !dTransparency;
         let vertexAccessorIndex: number;
         let normalAccessorIndex: number | undefined;
         let indexAccessorIndex: number | undefined;
@@ -241,11 +316,19 @@ export class GlbExporter extends MeshExporter<GlbData> {
 
             // create a glTF mesh if needed
             if (instanceIndex === 0 || !sameGeometryBuffers || !sameColorBuffer) {
-                const { vertices, normals, indices, groups, vertexCount, drawCount } = GlbExporter.getInstance(input, instanceIndex);
+                const { vertices, normals, indices, groups, vertexCount, drawCount } = GlbExporter
+                    .getInstance(input, instanceIndex);
 
                 // create geometry buffers if needed
                 if (instanceIndex === 0 || !sameGeometryBuffers) {
-                    const accessorIndices = this.addGeometryBuffers(vertices, normals, indices, vertexCount, drawCount, isGeoTexture);
+                    const accessorIndices = this.addGeometryBuffers(
+                        vertices,
+                        normals,
+                        indices,
+                        vertexCount,
+                        drawCount,
+                        isGeoTexture,
+                    );
                     vertexAccessorIndex = accessorIndices.vertexAccessorIndex;
                     normalAccessorIndex = accessorIndices.normalAccessorIndex;
                     indexAccessorIndex = accessorIndices.indexAccessorIndex;
@@ -253,7 +336,12 @@ export class GlbExporter extends MeshExporter<GlbData> {
 
                 // create a color buffer if needed
                 if (instanceIndex === 0 || !sameColorBuffer) {
-                    colorAccessorIndex = this.addColorBuffer({ values, groups, vertexCount, instanceIndex, isGeoTexture, mode }, interpolatedColors, interpolatedOverpaint, interpolatedTransparency);
+                    colorAccessorIndex = this.addColorBuffer(
+                        { values, groups, vertexCount, instanceIndex, isGeoTexture, mode },
+                        interpolatedColors,
+                        interpolatedOverpaint,
+                        interpolatedTransparency,
+                    );
                 }
 
                 // glTF mesh
@@ -263,12 +351,12 @@ export class GlbExporter extends MeshExporter<GlbData> {
                         attributes: {
                             POSITION: vertexAccessorIndex!,
                             NORMAL: normalAccessorIndex!,
-                            COLOR_0: colorAccessorIndex!
+                            COLOR_0: colorAccessorIndex!,
                         },
                         indices: indexAccessorIndex,
                         material,
                         mode: getPrimitiveMode(mode),
-                    }]
+                    }],
                 });
             }
 
@@ -277,7 +365,7 @@ export class GlbExporter extends MeshExporter<GlbData> {
             Mat4.mul(t, this.centerTransform, t);
             const node: Record<string, any> = {
                 mesh: meshIndex!,
-                matrix: t.slice()
+                matrix: t.slice(),
             };
             this.nodes.push(node);
         }
@@ -289,10 +377,10 @@ export class GlbExporter extends MeshExporter<GlbData> {
         const gltf = {
             asset: {
                 version: '2.0',
-                generator: `Mol* ${PLUGIN_VERSION}`
+                generator: `Mol* ${PLUGIN_VERSION}`,
             },
             scenes: [{
-                nodes: fillSerial(new Array(this.nodes.length) as number[])
+                nodes: fillSerial(new Array(this.nodes.length) as number[]),
             }],
             nodes: this.nodes,
             meshes: this.meshes,
@@ -301,10 +389,15 @@ export class GlbExporter extends MeshExporter<GlbData> {
             }],
             bufferViews: this.bufferViews,
             accessors: this.accessors,
-            materials: this.materials
+            materials: this.materials,
         };
 
-        const createChunk = (chunkType: number, data: ArrayBuffer[], byteLength: number, padChar: number): [ArrayBuffer[], number] => {
+        const createChunk = (
+            chunkType: number,
+            data: ArrayBuffer[],
+            byteLength: number,
+            padChar: number,
+        ): [ArrayBuffer[], number] => {
             let padding = null;
             if (byteLength % 4 !== 0) {
                 const pad = 4 - (byteLength % 4);
@@ -326,8 +419,18 @@ export class GlbExporter extends MeshExporter<GlbData> {
         const jsonBuffer = new Uint8Array(jsonString.length);
         asciiWrite(jsonBuffer, jsonString);
 
-        const [jsonChunk, jsonChunkLength] = createChunk(JSON_CHUNK_TYPE, [jsonBuffer.buffer], jsonBuffer.length, JSON_PAD_CHAR);
-        const [binaryChunk, binaryChunkLength] = createChunk(BIN_CHUNK_TYPE, this.binaryBuffer, binaryBufferLength, BIN_PAD_CHAR);
+        const [jsonChunk, jsonChunkLength] = createChunk(
+            JSON_CHUNK_TYPE,
+            [jsonBuffer.buffer],
+            jsonBuffer.length,
+            JSON_PAD_CHAR,
+        );
+        const [binaryChunk, binaryChunkLength] = createChunk(
+            BIN_CHUNK_TYPE,
+            this.binaryBuffer,
+            binaryBufferLength,
+            BIN_PAD_CHAR,
+        );
 
         const glbBufferLength = 12 + jsonChunkLength + binaryChunkLength;
         const header = new ArrayBuffer(12);

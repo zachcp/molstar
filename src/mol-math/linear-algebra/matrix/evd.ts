@@ -8,11 +8,11 @@ import { Matrix } from './matrix.ts';
 
 export namespace EVD {
     export interface Cache {
-        size: number,
-        matrix: Matrix,
-        eigenValues: number[],
-        D: number[],
-        E: number[]
+        size: number;
+        matrix: Matrix;
+        eigenValues: number[];
+        D: number[];
+        E: number[];
     }
 
     export function createCache(size: number): Cache {
@@ -21,7 +21,7 @@ export namespace EVD {
             matrix: Matrix.create(size, size),
             eigenValues: <any> new Float64Array(size),
             D: <any> new Float64Array(size),
-            E: <any> new Float64Array(size)
+            E: <any> new Float64Array(size),
         };
     }
 
@@ -29,7 +29,13 @@ export namespace EVD {
      * Computes EVD and stores the result in the cache.
      */
     export function compute(cache: Cache): void {
-        symmetricEigenDecomp(cache.size, cache.matrix.data as number[], cache.eigenValues, cache.D, cache.E);
+        symmetricEigenDecomp(
+            cache.size,
+            cache.matrix.data as number[],
+            cache.eigenValues,
+            cache.D,
+            cache.E,
+        );
     }
 }
 
@@ -41,7 +47,13 @@ export namespace EVD {
 // FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-function symmetricEigenDecomp(order: number, matrixEv: number[], vectorEv: number[], d: number[], e: number[]) {
+function symmetricEigenDecomp(
+    order: number,
+    matrixEv: number[],
+    vectorEv: number[],
+    d: number[],
+    e: number[],
+) {
     for (let i = 0; i < order; i++) {
         e[i] = 0.0;
     }

@@ -5,7 +5,14 @@
  */
 
 import { PluginStateObject as SO } from '../../objects.ts';
-import { StateObject, StateTransform, State, StateObjectCell, StateTree, StateTransformer } from '../../../mol-state/index.ts';
+import {
+    State,
+    StateObject,
+    StateObjectCell,
+    StateTransform,
+    StateTransformer,
+    StateTree,
+} from '../../../mol-state/index.ts';
 import { StateTransforms } from '../../transforms.ts';
 
 export function buildVolumeHierarchy(state: State, previous?: VolumeHierarchy) {
@@ -16,9 +23,9 @@ export function buildVolumeHierarchy(state: State, previous?: VolumeHierarchy) {
 }
 
 export interface VolumeHierarchy {
-    volumes: VolumeRef[],
-    lazyVolumes: LazyVolumeRef[],
-    refs: Map<StateTransform.Ref, VolumeHierarchyRef>
+    volumes: VolumeRef[];
+    lazyVolumes: LazyVolumeRef[];
+    refs: Map<StateTransform.Ref, VolumeHierarchyRef>;
     // TODO: might be needed in the future
     // decorators: Map<StateTransform.Ref, StateTransform>,
 }
@@ -27,16 +34,20 @@ export function VolumeHierarchy(): VolumeHierarchy {
     return { volumes: [], lazyVolumes: [], refs: new Map() };
 }
 
-interface RefBase<K extends string = string, O extends StateObject = StateObject, T extends StateTransformer = StateTransformer> {
-    kind: K,
-    cell: StateObjectCell<O, StateTransform<T>>,
-    version: StateTransform['version']
+interface RefBase<
+    K extends string = string,
+    O extends StateObject = StateObject,
+    T extends StateTransformer = StateTransformer,
+> {
+    kind: K;
+    cell: StateObjectCell<O, StateTransform<T>>;
+    version: StateTransform['version'];
 }
 
-export type VolumeHierarchyRef = VolumeRef | LazyVolumeRef | VolumeRepresentationRef
+export type VolumeHierarchyRef = VolumeRef | LazyVolumeRef | VolumeRepresentationRef;
 
 export interface VolumeRef extends RefBase<'volume', SO.Volume.Data> {
-    representations: VolumeRepresentationRef[]
+    representations: VolumeRepresentationRef[];
 }
 
 function VolumeRef(cell: StateObjectCell<SO.Volume.Data>): VolumeRef {
@@ -50,31 +61,45 @@ function LazyVolumeRef(cell: StateObjectCell<SO.Volume.Lazy>): LazyVolumeRef {
     return { kind: 'lazy-volume', cell, version: cell.transform.version };
 }
 
-export interface VolumeRepresentationRef extends RefBase<'volume-representation', SO.Volume.Representation3D, StateTransforms['Representation']['VolumeRepresentation3D']> {
-    volume: VolumeRef
+export interface VolumeRepresentationRef extends
+    RefBase<
+        'volume-representation',
+        SO.Volume.Representation3D,
+        StateTransforms['Representation']['VolumeRepresentation3D']
+    > {
+    volume: VolumeRef;
 }
 
-function VolumeRepresentationRef(cell: StateObjectCell<SO.Volume.Representation3D>, volume: VolumeRef): VolumeRepresentationRef {
+function VolumeRepresentationRef(
+    cell: StateObjectCell<SO.Volume.Representation3D>,
+    volume: VolumeRef,
+): VolumeRepresentationRef {
     return { kind: 'volume-representation', cell, version: cell.transform.version, volume };
 }
 
 interface BuildState {
-    state: State,
-    oldHierarchy: VolumeHierarchy,
+    state: State;
+    oldHierarchy: VolumeHierarchy;
 
-    hierarchy: VolumeHierarchy,
+    hierarchy: VolumeHierarchy;
 
-    currentVolume?: VolumeRef,
+    currentVolume?: VolumeRef;
 
-    changed: boolean,
-    added: Set<StateTransform.Ref>
+    changed: boolean;
+    added: Set<StateTransform.Ref>;
 }
 
 function BuildState(state: State, oldHierarchy: VolumeHierarchy): BuildState {
     return { state, oldHierarchy, hierarchy: VolumeHierarchy(), changed: false, added: new Set() };
 }
 
-function createOrUpdateRefList<R extends VolumeHierarchyRef, C extends any[]>(state: BuildState, cell: StateObjectCell, list: R[], ctor: (...args: C) => R, ...args: C) {
+function createOrUpdateRefList<R extends VolumeHierarchyRef, C extends any[]>(
+    state: BuildState,
+    cell: StateObjectCell,
+    list: R[],
+    ctor: (...args: C) => R,
+    ...args: C
+) {
     const ref: R = ctor(...args);
     list.push(ref);
     state.hierarchy.refs.set(cell.transform.ref, ref);
@@ -88,39 +113,55 @@ function createOrUpdateRefList<R extends VolumeHierarchyRef, C extends any[]>(st
     return ref;
 }
 
-type TestCell = (cell: StateObjectCell, state: BuildState) => boolean
-type ApplyRef = (state: BuildState, cell: StateObjectCell) => boolean | void
-type LeaveRef = (state: BuildState) => any
+type TestCell = (cell: StateObjectCell, state: BuildState) => boolean;
+type ApplyRef = (state: BuildState, cell: StateObjectCell) => boolean | void;
+type LeaveRef = (state: BuildState) => any;
 
 function isTypeRoot(t: StateObject.Ctor, target: (state: BuildState) => any): TestCell {
     return (cell, state) => !target(state) && t.is(cell.obj);
 }
 
-function noop() { }
+function noop() {}
 
 const Mapping: [TestCell, ApplyRef, LeaveRef][] = [
-    [isTypeRoot(SO.Volume.Data, t => t.currentVolume), (state, cell) => {
-        state.currentVolume = createOrUpdateRefList(state, cell, state.hierarchy.volumes, VolumeRef, cell);
-    }, state => state.currentVolume = void 0],
+    [isTypeRoot(SO.Volume.Data, (t) => t.currentVolume), (state, cell) => {
+        state.currentVolume = createOrUpdateRefList(
+            state,
+            cell,
+            state.hierarchy.volumes,
+            VolumeRef,
+            cell,
+        );
+    }, (state) => state.currentVolume = void 0],
 
-    [cell => SO.Volume.Lazy.is(cell.obj), (state, cell) => {
+    [(cell) => SO.Volume.Lazy.is(cell.obj), (state, cell) => {
         createOrUpdateRefList(state, cell, state.hierarchy.lazyVolumes, LazyVolumeRef, cell);
     }, noop],
 
     [(cell, state) => {
-        return !cell.state.isGhost && !!state.currentVolume && SO.Volume.Representation3D.is(cell.obj);
+        return !cell.state.isGhost && !!state.currentVolume &&
+            SO.Volume.Representation3D.is(cell.obj);
     }, (state, cell) => {
         if (state.currentVolume) {
-            createOrUpdateRefList(state, cell, state.currentVolume.representations, VolumeRepresentationRef, cell, state.currentVolume);
+            createOrUpdateRefList(
+                state,
+                cell,
+                state.currentVolume.representations,
+                VolumeRepresentationRef,
+                cell,
+                state.currentVolume,
+            );
         }
         return false;
-    }, noop]
+    }, noop],
 ];
 
 function isValidCell(cell?: StateObjectCell): cell is StateObjectCell {
     if (!cell || !cell?.parent || !cell.parent.cells.has(cell.transform.ref)) return false;
     const { obj } = cell;
-    if (!obj || obj === StateObject.Null || (cell.status !== 'ok' && cell.status !== 'error')) return false;
+    if (!obj || obj === StateObject.Null || (cell.status !== 'ok' && cell.status !== 'error')) {
+        return false;
+    }
     return true;
 }
 
@@ -130,9 +171,11 @@ function isRemoved(this: BuildState, ref: VolumeHierarchyRef) {
     this.changed = true;
 }
 
-type VisitorCtx = { tree: StateTree, state: BuildState };
+type VisitorCtx = { tree: StateTree; state: BuildState };
 
-function _preOrderFunc(this: VisitorCtx, c: StateTransform.Ref | undefined) { _doPreOrder(this, this.tree.transforms.get(c!)!); }
+function _preOrderFunc(this: VisitorCtx, c: StateTransform.Ref | undefined) {
+    _doPreOrder(this, this.tree.transforms.get(c!)!);
+}
 function _doPreOrder(ctx: VisitorCtx, root: StateTransform) {
     const { state } = ctx;
     const cell = state.state.cells.get(root.ref);

@@ -26,13 +26,20 @@ export const MarkingParams = {
     enabled: PD.Boolean(true),
     highlightEdgeColor: PD.Color(Color.darken(Color.fromNormalizedRgb(1.0, 0.4, 0.6), 1.0)),
     selectEdgeColor: PD.Color(Color.darken(Color.fromNormalizedRgb(0.2, 1.0, 0.1), 1.0)),
-    edgeScale: PD.Numeric(1, { min: 1, max: 3, step: 1 }, { description: 'Thickness of the edge.' }),
+    edgeScale: PD.Numeric(1, { min: 1, max: 3, step: 1 }, {
+        description: 'Thickness of the edge.',
+    }),
     highlightEdgeStrength: PD.Numeric(1.0, { min: 0, max: 1, step: 0.1 }),
     selectEdgeStrength: PD.Numeric(1.0, { min: 0, max: 1, step: 0.1 }),
-    ghostEdgeStrength: PD.Numeric(0.3, { min: 0, max: 1, step: 0.1 }, { description: 'Opacity of the hidden edges that are covered by other geometry. When set to 1, one less geometry render pass is done.' }),
-    innerEdgeFactor: PD.Numeric(1.5, { min: 0, max: 3, step: 0.1 }, { description: 'Factor to multiply the inner edge color with - for added contrast.' }),
+    ghostEdgeStrength: PD.Numeric(0.3, { min: 0, max: 1, step: 0.1 }, {
+        description:
+            'Opacity of the hidden edges that are covered by other geometry. When set to 1, one less geometry render pass is done.',
+    }),
+    innerEdgeFactor: PD.Numeric(1.5, { min: 0, max: 3, step: 0.1 }, {
+        description: 'Factor to multiply the inner edge color with - for added contrast.',
+    }),
 };
-export type MarkingProps = PD.Values<typeof MarkingParams>
+export type MarkingProps = PD.Values<typeof MarkingParams>;
 
 export class MarkingPass {
     static isEnabled(props: MarkingProps) {
@@ -97,13 +104,27 @@ export class MarkingPass {
             this.maskTarget.setSize(width, height);
             this.edgesTarget.setSize(width, height);
 
-            ValueCell.update(this.edge.values.uTexSizeInv, Vec2.set(this.edge.values.uTexSizeInv.ref.value, 1 / width, 1 / height));
-            ValueCell.update(this.overlay.values.uTexSizeInv, Vec2.set(this.overlay.values.uTexSizeInv.ref.value, 1 / width, 1 / height));
+            ValueCell.update(
+                this.edge.values.uTexSizeInv,
+                Vec2.set(this.edge.values.uTexSizeInv.ref.value, 1 / width, 1 / height),
+            );
+            ValueCell.update(
+                this.overlay.values.uTexSizeInv,
+                Vec2.set(this.overlay.values.uTexSizeInv.ref.value, 1 / width, 1 / height),
+            );
         }
     }
 
     update(props: MarkingProps) {
-        const { highlightEdgeColor, selectEdgeColor, edgeScale, innerEdgeFactor, ghostEdgeStrength, highlightEdgeStrength, selectEdgeStrength } = props;
+        const {
+            highlightEdgeColor,
+            selectEdgeColor,
+            edgeScale,
+            innerEdgeFactor,
+            ghostEdgeStrength,
+            highlightEdgeStrength,
+            selectEdgeStrength,
+        } = props;
 
         const { values: edgeValues } = this.edge;
         const _edgeScale = Math.max(1, Math.round(edgeScale * this.webgl.pixelRatio));
@@ -113,8 +134,14 @@ export class MarkingPass {
         }
 
         const { values: overlayValues } = this.overlay;
-        ValueCell.update(overlayValues.uHighlightEdgeColor, Color.toVec3Normalized(overlayValues.uHighlightEdgeColor.ref.value, highlightEdgeColor));
-        ValueCell.update(overlayValues.uSelectEdgeColor, Color.toVec3Normalized(overlayValues.uSelectEdgeColor.ref.value, selectEdgeColor));
+        ValueCell.update(
+            overlayValues.uHighlightEdgeColor,
+            Color.toVec3Normalized(overlayValues.uHighlightEdgeColor.ref.value, highlightEdgeColor),
+        );
+        ValueCell.update(
+            overlayValues.uSelectEdgeColor,
+            Color.toVec3Normalized(overlayValues.uSelectEdgeColor.ref.value, selectEdgeColor),
+        );
         ValueCell.updateIfChanged(overlayValues.uInnerEdgeFactor, innerEdgeFactor);
         ValueCell.updateIfChanged(overlayValues.uGhostEdgeStrength, ghostEdgeStrength);
         ValueCell.updateIfChanged(overlayValues.uHighlightEdgeStrength, highlightEdgeStrength);
@@ -143,7 +170,7 @@ const EdgeSchema = {
     dEdgeScale: DefineSpec('number'),
 };
 const EdgeShaderCode = ShaderCode('edge', quad_vert, edge_frag);
-type EdgeRenderable = ComputeRenderable<Values<typeof EdgeSchema>>
+type EdgeRenderable = ComputeRenderable<Values<typeof EdgeSchema>>;
 
 function getEdgeRenderable(ctx: WebGLContext, maskTexture: Texture): EdgeRenderable {
     const width = maskTexture.getWidth();
@@ -176,7 +203,7 @@ const OverlaySchema = {
     uInnerEdgeFactor: UniformSpec('f'),
 };
 const OverlayShaderCode = ShaderCode('overlay', quad_vert, overlay_frag);
-type OverlayRenderable = ComputeRenderable<Values<typeof OverlaySchema>>
+type OverlayRenderable = ComputeRenderable<Values<typeof OverlaySchema>>;
 
 function getOverlayRenderable(ctx: WebGLContext, edgeTexture: Texture): OverlayRenderable {
     const width = edgeTexture.getWidth();

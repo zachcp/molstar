@@ -94,7 +94,9 @@ export class StructureSubsetBuilder {
 
             let child = parent.getChild(SortedArray.ofSortedArray(unit));
             const pivot = symmGroups.add(child.id, child);
-            if (child !== pivot) child = pivot.applyOperator(child.id, child.conformation.operator, true);
+            if (child !== pivot) {
+                child = pivot.applyOperator(child.id, child.conformation.operator, true);
+            }
             newUnits[newUnits.length] = child;
         }
 
@@ -120,6 +122,5 @@ export class StructureSubsetBuilder {
     }
 
     constructor(private parent: Structure, private isSorted: boolean) {
-
     }
 }

@@ -11,9 +11,18 @@ import { SymmetryOperator } from '../../../../mol-math/geometry.ts';
 import { Mat4 } from '../../../../mol-math/linear-algebra.ts';
 import { ModelSymmetry } from '../../../../mol-model-formats/structure/property/symmetry.ts';
 import { CustomStructureProperty } from '../../../../mol-model-props/common/custom-structure-property.ts';
-import { ElementIndex, EntityIndex, Model, Structure, Unit } from '../../../../mol-model/structure.ts';
+import {
+    ElementIndex,
+    EntityIndex,
+    Model,
+    Structure,
+    Unit,
+} from '../../../../mol-model/structure.ts';
 import { Assembly, Symmetry } from '../../../../mol-model/structure/model/properties/symmetry.ts';
-import { PluginStateObject as PSO, PluginStateTransform } from '../../../../mol-plugin-state/objects.ts';
+import {
+    PluginStateObject as PSO,
+    PluginStateTransform,
+} from '../../../../mol-plugin-state/objects.ts';
 import { PluginContext } from '../../../../mol-plugin/context.ts';
 import { Task } from '../../../../mol-task/index.ts';
 import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
@@ -26,8 +35,17 @@ function createModelChainMap(model: Model) {
     const { offsets } = model.atomicHierarchy.chainAtomSegments;
 
     for (let i = 0; i < _rowCount; i++) {
-        const elements = SortedArray.ofBounds(offsets[i] as ElementIndex, offsets[i + 1] as ElementIndex);
-        const unit = builder.addUnit(Unit.Kind.Atomic, model, SymmetryOperator.Default, elements, Unit.Trait.FastBoundary);
+        const elements = SortedArray.ofBounds(
+            offsets[i] as ElementIndex,
+            offsets[i + 1] as ElementIndex,
+        );
+        const unit = builder.addUnit(
+            Unit.Kind.Atomic,
+            model,
+            SymmetryOperator.Default,
+            elements,
+            Unit.Trait.FastBoundary,
+        );
         units.set(label_asym_id.value(i), unit);
     }
 
@@ -35,7 +53,9 @@ function createModelChainMap(model: Model) {
 }
 
 function buildCellpackAssembly(model: Model, assembly: Assembly) {
-    const coordinateSystem = SymmetryOperator.create(assembly.id, Mat4.identity(), { assembly: { id: assembly.id, operId: 0, operList: [] } });
+    const coordinateSystem = SymmetryOperator.create(assembly.id, Mat4.identity(), {
+        assembly: { id: assembly.id, operId: 0, operList: [] },
+    });
     const assembler = Structure.Builder({
         coordinateSystem,
         label: model.label,
@@ -60,21 +80,24 @@ function buildCellpackAssembly(model: Model, assembly: Assembly) {
 }
 
 export { CellpackAssembly };
-type CellpackAssembly = typeof CellpackAssembly
+type CellpackAssembly = typeof CellpackAssembly;
 const CellpackAssembly = PluginStateTransform.BuiltIn({
     name: 'cellpack-assembly',
     display: { name: 'Cellpack Assembly' },
     from: PSO.Molecule.Model,
     to: PSO.Molecule.Structure,
     params: {
-        id: PD.Text('', { label: 'Asm Id', description: 'Assembly Id (use empty for the 1st assembly)' }),
-    }
+        id: PD.Text('', {
+            label: 'Asm Id',
+            description: 'Assembly Id (use empty for the 1st assembly)',
+        }),
+    },
 })({
     canAutoUpdate({ newParams }) {
         return true;
     },
     apply({ a, params }, plugin: PluginContext) {
-        return Task.create('Build Structure', async ctx => {
+        return Task.create('Build Structure', async (ctx) => {
             const model = a.data;
 
             let id = params.id;
@@ -87,11 +110,15 @@ const CellpackAssembly = PluginStateTransform.BuiltIn({
             }
 
             if (!symmetry || symmetry.assemblies.length === 0) {
-                plugin.log.warn(`Model '${model.entryId}' has no assembly, returning model structure.`);
+                plugin.log.warn(
+                    `Model '${model.entryId}' has no assembly, returning model structure.`,
+                );
             } else {
                 asm = Symmetry.findAssembly(model, id || '');
                 if (!asm) {
-                    plugin.log.warn(`Model '${model.entryId}' has no assembly called '${id}', returning model structure.`);
+                    plugin.log.warn(
+                        `Model '${model.entryId}' has no assembly called '${id}', returning model structure.`,
+                    );
                 }
             }
 
@@ -103,17 +130,23 @@ const CellpackAssembly = PluginStateTransform.BuiltIn({
 
             const s = buildCellpackAssembly(model, asm);
 
-            const objProps = { label: `Assembly ${id}`, description: Structure.elementDescription(s) };
+            const objProps = {
+                label: `Assembly ${id}`,
+                description: Structure.elementDescription(s),
+            };
             return new PSO.Molecule.Structure(s, objProps);
         });
     },
     dispose({ b }) {
         b?.data.customPropertyDescriptors.dispose();
-    }
+    },
 });
 
 type UnitsByEntity = Map<EntityIndex, Unit[]>;
-const UnitsByEntity = CustomStructureProperty.createSimple<UnitsByEntity>('units_by_entity', 'root');
+const UnitsByEntity = CustomStructureProperty.createSimple<UnitsByEntity>(
+    'units_by_entity',
+    'root',
+);
 
 function getUnitsByEntity(structure: Structure): UnitsByEntity {
     if (UnitsByEntity.get(structure).value) {
@@ -139,7 +172,7 @@ function getUnitsByEntity(structure: Structure): UnitsByEntity {
 }
 
 export { CellpackStructure };
-type CellpackStructure = typeof CellpackStructure
+type CellpackStructure = typeof CellpackStructure;
 const CellpackStructure = PluginStateTransform.BuiltIn({
     name: 'cellpack-structure',
     display: { name: 'Cellpack Structure' },
@@ -147,14 +180,14 @@ const CellpackStructure = PluginStateTransform.BuiltIn({
     to: PSO.Molecule.Structure,
     params: {
         structureRef: PD.Text(''),
-        entityId: PD.Text('')
-    }
+        entityId: PD.Text(''),
+    },
 })({
     canAutoUpdate({ newParams }) {
         return true;
     },
     apply({ a, params, dependencies }) {
-        return Task.create('Build Structure', async ctx => {
+        return Task.create('Build Structure', async (ctx) => {
             const parent = dependencies![params.structureRef].data as Structure;
             const { entities } = parent.model;
             const idx = entities.getEntityIndex(params.entityId);
@@ -171,5 +204,5 @@ const CellpackStructure = PluginStateTransform.BuiltIn({
     },
     dispose({ b }) {
         b?.data.customPropertyDescriptors.dispose();
-    }
+    },
 });

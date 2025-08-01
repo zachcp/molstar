@@ -21,24 +21,29 @@ const DefaultColor = Color(0xFAFAFA);
 const Description = 'Assigns a color based on the relative accessible surface area of a residue.';
 
 export const AccessibleSurfaceAreaColorThemeParams = {
-    list: PD.ColorList('yellow-green-blue', { presetKind: 'scale' })
+    list: PD.ColorList('yellow-green-blue', { presetKind: 'scale' }),
 };
-export type AccessibleSurfaceAreaColorThemeParams = typeof AccessibleSurfaceAreaColorThemeParams
+export type AccessibleSurfaceAreaColorThemeParams = typeof AccessibleSurfaceAreaColorThemeParams;
 export function getAccessibleSurfaceAreaColorThemeParams(ctx: ThemeDataContext) {
     return AccessibleSurfaceAreaColorThemeParams; // TODO return copy
 }
-export function AccessibleSurfaceAreaColorTheme(ctx: ThemeDataContext, props: PD.Values<AccessibleSurfaceAreaColorThemeParams>): ColorTheme<AccessibleSurfaceAreaColorThemeParams> {
+export function AccessibleSurfaceAreaColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<AccessibleSurfaceAreaColorThemeParams>,
+): ColorTheme<AccessibleSurfaceAreaColorThemeParams> {
     let color: LocationColor;
 
     const scale = ColorScale.create({
         listOrName: props.list.colors,
         minLabel: 'buried',
         maxLabel: 'exposed',
-        domain: [0.0, 1.0]
+        domain: [0.0, 1.0],
     });
 
     const accessibleSurfaceArea = ctx.structure && AccessibleSurfaceAreaProvider.get(ctx.structure);
-    const contextHash = accessibleSurfaceArea ? hash2(accessibleSurfaceArea.id, accessibleSurfaceArea.version) : -1;
+    const contextHash = accessibleSurfaceArea
+        ? hash2(accessibleSurfaceArea.id, accessibleSurfaceArea.version)
+        : -1;
 
     if (accessibleSurfaceArea?.value && ctx.structure) {
         const l = StructureElement.Location.create(ctx.structure);
@@ -70,11 +75,14 @@ export function AccessibleSurfaceAreaColorTheme(ctx: ThemeDataContext, props: PD
         props,
         contextHash,
         description: Description,
-        legend: scale ? scale.legend : undefined
+        legend: scale ? scale.legend : undefined,
     };
 }
 
-export const AccessibleSurfaceAreaColorThemeProvider: ColorTheme.Provider<AccessibleSurfaceAreaColorThemeParams, 'accessible-surface-area'> = {
+export const AccessibleSurfaceAreaColorThemeProvider: ColorTheme.Provider<
+    AccessibleSurfaceAreaColorThemeParams,
+    'accessible-surface-area'
+> = {
     name: 'accessible-surface-area',
     label: 'Accessible Surface Area',
     category: ColorThemeCategory.Residue,
@@ -83,7 +91,11 @@ export const AccessibleSurfaceAreaColorThemeProvider: ColorTheme.Provider<Access
     defaultValues: PD.getDefaultValues(AccessibleSurfaceAreaColorThemeParams),
     isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
     ensureCustomProperties: {
-        attach: (ctx: CustomProperty.Context, data: ThemeDataContext) => data.structure ? AccessibleSurfaceAreaProvider.attach(ctx, data.structure, void 0, true) : Promise.resolve(),
-        detach: (data) => data.structure && AccessibleSurfaceAreaProvider.ref(data.structure, false)
-    }
+        attach: (ctx: CustomProperty.Context, data: ThemeDataContext) =>
+            data.structure
+                ? AccessibleSurfaceAreaProvider.attach(ctx, data.structure, void 0, true)
+                : Promise.resolve(),
+        detach: (data) =>
+            data.structure && AccessibleSurfaceAreaProvider.ref(data.structure, false),
+    },
 };

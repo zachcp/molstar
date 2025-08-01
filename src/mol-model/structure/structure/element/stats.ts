@@ -13,19 +13,19 @@ import { ChainIndex } from '../../model/indexing.ts';
 import { Structure } from '../structure.ts';
 
 export interface Stats {
-    elementCount: number
-    conformationCount: number
-    residueCount: number
-    chainCount: number
-    unitCount: number
-    structureCount: number
+    elementCount: number;
+    conformationCount: number;
+    residueCount: number;
+    chainCount: number;
+    unitCount: number;
+    structureCount: number;
 
-    firstElementLoc: Location
-    firstConformationLoc: Location
-    firstResidueLoc: Location
-    firstChainLoc: Location
-    firstUnitLoc: Location
-    firstStructureLoc: Location
+    firstElementLoc: Location;
+    firstConformationLoc: Location;
+    firstResidueLoc: Location;
+    firstChainLoc: Location;
+    firstUnitLoc: Location;
+    firstStructureLoc: Location;
 }
 
 export namespace Stats {
@@ -61,14 +61,24 @@ export namespace Stats {
         const residueAltIdCounts = new Map<string, number>();
 
         if (size > 0) {
-            Location.set(stats.firstElementLoc, structure, unit, elements[OrderedSet.start(indices)]);
+            Location.set(
+                stats.firstElementLoc,
+                structure,
+                unit,
+                elements[OrderedSet.start(indices)],
+            );
         }
 
         // count single element unit as unit not element
         if (size === elements.length) {
             stats.unitCount += 1;
             if (stats.unitCount === 1) {
-                Location.set(stats.firstUnitLoc, structure, unit, elements[OrderedSet.start(indices)]);
+                Location.set(
+                    stats.firstUnitLoc,
+                    structure,
+                    unit,
+                    elements[OrderedSet.start(indices)],
+                );
             }
         } else if (size === 1) {
             if (Unit.Traits.is(unit.traits, Unit.Trait.MultiChain)) {
@@ -77,7 +87,12 @@ export namespace Stats {
             } else {
                 stats.elementCount += 1;
                 if (stats.elementCount === 1) {
-                    Location.set(stats.firstElementLoc, structure, unit, elements[OrderedSet.start(indices)]);
+                    Location.set(
+                        stats.firstElementLoc,
+                        structure,
+                        unit,
+                        elements[OrderedSet.start(indices)],
+                    );
                 }
             }
         } else {
@@ -120,9 +135,18 @@ export namespace Stats {
                                 if (k !== '') {
                                     stats.conformationCount += 1;
                                     if (stats.conformationCount === 1) {
-                                        for (let l = offsets[rI], _l = offsets[rI + 1]; l < _l; ++l) {
+                                        for (
+                                            let l = offsets[rI], _l = offsets[rI + 1];
+                                            l < _l;
+                                            ++l
+                                        ) {
                                             if (k === label_alt_id.value(l)) {
-                                                Location.set(stats.firstConformationLoc, structure, unit, l);
+                                                Location.set(
+                                                    stats.firstConformationLoc,
+                                                    structure,
+                                                    unit,
+                                                    l,
+                                                );
                                                 break;
                                             }
                                         }
@@ -137,13 +161,22 @@ export namespace Stats {
             } else {
                 stats.elementCount += size;
                 if (stats.elementCount === 1) {
-                    Location.set(stats.firstElementLoc, structure, unit, elements[OrderedSet.start(indices)]);
+                    Location.set(
+                        stats.firstElementLoc,
+                        structure,
+                        unit,
+                        elements[OrderedSet.start(indices)],
+                    );
                 }
             }
         }
     }
 
-    function handleUnitChainsSimple(stats: Stats, structure: Structure, element: Loci['elements'][0]) {
+    function handleUnitChainsSimple(
+        stats: Stats,
+        structure: Structure,
+        element: Loci['elements'][0],
+    ) {
         const { indices, unit } = element;
         const size = OrderedSet.size(indices);
         if (size === 0) return;
@@ -154,7 +187,12 @@ export namespace Stats {
             if (size === elements.length) {
                 stats.chainCount += 1;
                 if (stats.chainCount === 1) {
-                    Location.set(stats.firstChainLoc, structure, unit, elements[OrderedSet.start(indices)]);
+                    Location.set(
+                        stats.firstChainLoc,
+                        structure,
+                        unit,
+                        elements[OrderedSet.start(indices)],
+                    );
                 }
             }
             return;
@@ -163,10 +201,10 @@ export namespace Stats {
         const segments = Unit.isAtomic(unit)
             ? unit.model.atomicHierarchy.chainAtomSegments
             : Unit.isSpheres(unit)
-                ? unit.model.coarseHierarchy.spheres.chainElementSegments
-                : Unit.isGaussians(unit)
-                    ? unit.model.coarseHierarchy.gaussians.chainElementSegments
-                    : void 0;
+            ? unit.model.coarseHierarchy.spheres.chainElementSegments
+            : Unit.isGaussians(unit)
+            ? unit.model.coarseHierarchy.gaussians.chainElementSegments
+            : void 0;
 
         if (!segments) {
             console.warn('StructureElement loci stats: unknown unit type');
@@ -204,17 +242,23 @@ export namespace Stats {
         }
     }
 
-    function handleUnitChainsPartitioned(stats: Stats, structure: Structure, lociElements: Loci['elements'], start: number, end: number) {
+    function handleUnitChainsPartitioned(
+        stats: Stats,
+        structure: Structure,
+        lociElements: Loci['elements'],
+        start: number,
+        end: number,
+    ) {
         let element = lociElements[start];
 
         // all the elements have the same model since they are part of the same group so this is ok.
         const segments = Unit.isAtomic(element.unit)
             ? element.unit.model.atomicHierarchy.chainAtomSegments
             : Unit.isSpheres(element.unit)
-                ? element.unit.model.coarseHierarchy.spheres.chainElementSegments
-                : Unit.isGaussians(element.unit)
-                    ? element.unit.model.coarseHierarchy.gaussians.chainElementSegments
-                    : void 0;
+            ? element.unit.model.coarseHierarchy.spheres.chainElementSegments
+            : Unit.isGaussians(element.unit)
+            ? element.unit.model.coarseHierarchy.gaussians.chainElementSegments
+            : void 0;
 
         if (!segments) {
             console.warn('StructureElement loci stats: unknown unit type');
@@ -301,7 +345,12 @@ export namespace Stats {
             stats.structureCount += 1;
             if (stats.structureCount === 1) {
                 const { unit, indices } = loci.elements[0];
-                Location.set(stats.firstStructureLoc, loci.structure, unit, unit.elements[OrderedSet.min(indices)]);
+                Location.set(
+                    stats.firstStructureLoc,
+                    loci.structure,
+                    unit,
+                    unit.elements[OrderedSet.min(indices)],
+                );
             }
         } else {
             for (const e of loci.elements) {

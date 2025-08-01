@@ -10,15 +10,14 @@ import { Tokenizer } from '../common/text/tokenizer.ts';
 import { FixedColumnProvider as FixedColumn } from '../common/text/column/fixed.ts';
 import * as Schema from './schema.d.ts';
 import { ReaderResult as Result } from '../result.ts';
-import { Task, RuntimeContext } from '../../../mol-task/index.ts';
+import { RuntimeContext, Task } from '../../../mol-task/index.ts';
 import { StringLike } from '../../common/string-like.ts';
 
-
 interface State {
-    tokenizer: Tokenizer,
-    header: Schema.GroHeader,
-    numberOfAtoms: number,
-    runtimeCtx: RuntimeContext
+    tokenizer: Tokenizer;
+    header: Schema.GroHeader;
+    numberOfAtoms: number;
+    runtimeCtx: RuntimeContext;
 }
 
 function createEmptyHeader(): Schema.GroHeader {
@@ -27,7 +26,7 @@ function createEmptyHeader(): Schema.GroHeader {
         timeInPs: 0,
         hasVelocities: false,
         precision: { position: 0, velocity: 0 },
-        box: [0, 0, 0]
+        box: [0, 0, 0],
     };
 }
 
@@ -36,7 +35,7 @@ function State(tokenizer: Tokenizer, runtimeCtx: RuntimeContext): State {
         tokenizer,
         header: createEmptyHeader(),
         numberOfAtoms: 0,
-        runtimeCtx
+        runtimeCtx,
     };
 }
 
@@ -92,9 +91,16 @@ function handleNumberOfAtoms(state: State) {
  */
 async function handleAtoms(state: State): Promise<Schema.GroAtoms> {
     const { tokenizer, numberOfAtoms } = state;
-    const lines = await Tokenizer.readLinesAsync(tokenizer, numberOfAtoms, state.runtimeCtx, 100000);
+    const lines = await Tokenizer.readLinesAsync(
+        tokenizer,
+        numberOfAtoms,
+        state.runtimeCtx,
+        100000,
+    );
 
-    const positionSample = tokenizer.data.substring(lines.indices[0], lines.indices[1]).substring(20);
+    const positionSample = tokenizer.data.substring(lines.indices[0], lines.indices[1]).substring(
+        20,
+    );
     const precisions = positionSample.match(/\.\d+/g)!;
     const hasVelocities = precisions.length === 6;
 
@@ -139,7 +145,10 @@ function handleBoxVectors(state: State) {
     state.header.box = [+values[0], +values[1], +values[2]];
 }
 
-async function parseInternal(data: StringLike, ctx: RuntimeContext): Promise<Result<Schema.GroFile>> {
+async function parseInternal(
+    data: StringLike,
+    ctx: RuntimeContext,
+): Promise<Result<Schema.GroFile>> {
     const tokenizer = Tokenizer(data);
 
     await ctx.update({ message: 'Parsing...', current: 0, max: data.length });
@@ -158,7 +167,7 @@ async function parseInternal(data: StringLike, ctx: RuntimeContext): Promise<Res
 }
 
 export function parseGRO(data: StringLike) {
-    return Task.create<Result<Schema.GroFile>>('Parse GRO', async ctx => {
+    return Task.create<Result<Schema.GroFile>>('Parse GRO', async (ctx) => {
         return await parseInternal(data, ctx);
     });
 }

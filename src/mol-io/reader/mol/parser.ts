@@ -12,30 +12,29 @@ import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.
 import { TokenBuilder, Tokenizer } from '../common/text/tokenizer.ts';
 import { ReaderResult as Result } from '../result.ts';
 
-
 /** Subset of the MolFile V2000 format */
 export interface MolFile {
-    readonly title: string,
-    readonly program: string,
-    readonly comment: string,
+    readonly title: string;
+    readonly program: string;
+    readonly comment: string;
     readonly atoms: {
-        readonly count: number,
-        readonly x: Column<number>,
-        readonly y: Column<number>,
-        readonly z: Column<number>,
-        readonly type_symbol: Column<string>,
-        readonly formal_charge: Column<number>
-    },
+        readonly count: number;
+        readonly x: Column<number>;
+        readonly y: Column<number>;
+        readonly z: Column<number>;
+        readonly type_symbol: Column<string>;
+        readonly formal_charge: Column<number>;
+    };
     readonly bonds: {
-        readonly count: number
-        readonly atomIdxA: Column<number>,
-        readonly atomIdxB: Column<number>,
-        readonly order: Column<number>
-    }
+        readonly count: number;
+        readonly atomIdxA: Column<number>;
+        readonly atomIdxB: Column<number>;
+        readonly order: Column<number>;
+    };
     readonly formalCharges: {
         readonly atomIdx: Column<number>;
         readonly charge: Column<number>;
-    }
+    };
     readonly attachmentPoints?: {
         readonly atomIdx: number;
         readonly kind: number;
@@ -75,14 +74,22 @@ export interface MolFile {
  */
 export function formalChargeMapper(key: number) {
     switch (key) {
-        case 7: return -3;
-        case 6: return -2;
-        case 5: return -1;
-        case 0: return 0;
-        case 3: return 1;
-        case 2: return 2;
-        case 1: return 3;
-        case 4: return 0;
+        case 7:
+            return -3;
+        case 6:
+            return -2;
+        case 5:
+            return -1;
+        case 0:
+            return 0;
+        case 3:
+            return 1;
+        case 2:
+            return 2;
+        case 1:
+            return 3;
+        case 4:
+            return 0;
         default:
             console.error(`Value ${key} is outside the 0-7 range, defaulting to 0.`);
             return 0;
@@ -118,7 +125,7 @@ export function handleAtoms(tokenizer: Tokenizer, count: number): MolFile['atoms
         y: TokenColumn(y)(Column.Schema.float),
         z: TokenColumn(z)(Column.Schema.float),
         type_symbol: TokenColumn(type_symbol)(Column.Schema.str),
-        formal_charge: TokenColumn(formal_charge)(Column.Schema.int)
+        formal_charge: TokenColumn(formal_charge)(Column.Schema.int),
     };
 }
 
@@ -143,7 +150,7 @@ export function handleBonds(tokenizer: Tokenizer, count: number): MolFile['bonds
         count,
         atomIdxA: TokenColumn(atomIdxA)(Column.Schema.int),
         atomIdxB: TokenColumn(atomIdxB)(Column.Schema.int),
-        order: TokenColumn(order)(Column.Schema.int)
+        order: TokenColumn(order)(Column.Schema.int),
     };
 }
 
@@ -151,7 +158,11 @@ interface FormalChargesRawData {
     atomIdx: Array<number>;
     charge: Array<number>;
 }
-export function handleFormalCharges(tokenizer: Tokenizer, lineStart: number, formalCharges: FormalChargesRawData) {
+export function handleFormalCharges(
+    tokenizer: Tokenizer,
+    lineStart: number,
+    formalCharges: FormalChargesRawData,
+) {
     Tokenizer.trim(tokenizer, lineStart + 6, lineStart + 9);
     const numOfCharges = parseInt(Tokenizer.getTokenString(tokenizer));
     for (let i = 0; i < numOfCharges; ++i) {
@@ -195,8 +206,8 @@ function handleAttachmentPoints(line: string): MolFile['attachmentPoints'] {
 /** Call an appropriate handler based on the property type.
  */
 export function handlePropertiesBlock(tokenizer: Tokenizer): {
-    formalCharges: MolFile['formalCharges'],
-    attachmentPoints: MolFile['attachmentPoints']
+    formalCharges: MolFile['formalCharges'];
+    attachmentPoints: MolFile['attachmentPoints'];
 } {
     const _atomIdx: Array<number> = [];
     const _charge: Array<number> = [];
@@ -217,7 +228,9 @@ export function handlePropertiesBlock(tokenizer: Tokenizer): {
                 handleFormalCharges(tokenizer, s, _formalCharges);
                 break;
             case 'APO':
-                attachmentPoints = handleAttachmentPoints(Tokenizer.getTokenString(tokenizer).substring(3));
+                attachmentPoints = handleAttachmentPoints(
+                    Tokenizer.getTokenString(tokenizer).substring(3),
+                );
                 break;
             default:
                 break;
@@ -226,7 +239,7 @@ export function handlePropertiesBlock(tokenizer: Tokenizer): {
 
     const formalCharges: MolFile['formalCharges'] = {
         atomIdx: Column.ofIntArray(_formalCharges.atomIdx),
-        charge: Column.ofIntArray(_formalCharges.charge)
+        charge: Column.ofIntArray(_formalCharges.charge),
     };
     return { formalCharges, attachmentPoints };
 }

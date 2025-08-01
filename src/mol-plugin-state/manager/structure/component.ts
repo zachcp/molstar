@@ -8,7 +8,13 @@
 import { VisualQualityOptions } from '../../../mol-geo/geometry/base.ts';
 import { InteractionsProvider } from '../../../mol-model-props/computed/interactions.ts';
 import { Structure, StructureElement, StructureSelection } from '../../../mol-model/structure.ts';
-import { structureAreEqual, structureAreIntersecting, structureIntersect, structureSubtract, structureUnion } from '../../../mol-model/structure/query/utils/structure-set.ts';
+import {
+    structureAreEqual,
+    structureAreIntersecting,
+    structureIntersect,
+    structureSubtract,
+    structureUnion,
+} from '../../../mol-model/structure/query/utils/structure-set.ts';
 import { setSubtreeVisibility } from '../../../mol-plugin/behavior/static/state.ts';
 import { PluginContext } from '../../../mol-plugin/context.ts';
 import { StateBuilder, StateObjectRef, StateTransformer } from '../../../mol-state/index.ts';
@@ -23,10 +29,21 @@ import { StructureRepresentationPresetProvider } from '../../builder/structure/r
 import { StatefulPluginComponent } from '../../component.ts';
 import { StructureComponentParams } from '../../helpers/structure-component.ts';
 import { setStructureOverpaint } from '../../helpers/structure-overpaint.ts';
-import { createStructureColorThemeParams, createStructureSizeThemeParams } from '../../helpers/structure-representation-params.ts';
-import { StructureSelectionQueries, StructureSelectionQuery } from '../../helpers/structure-selection-query.ts';
+import {
+    createStructureColorThemeParams,
+    createStructureSizeThemeParams,
+} from '../../helpers/structure-representation-params.ts';
+import {
+    StructureSelectionQueries,
+    StructureSelectionQuery,
+} from '../../helpers/structure-selection-query.ts';
 import { StructureRepresentation3D } from '../../transforms/representation.ts';
-import { StructureHierarchyRef, StructureComponentRef, StructureRef, StructureRepresentationRef } from './hierarchy-state.ts';
+import {
+    StructureComponentRef,
+    StructureHierarchyRef,
+    StructureRef,
+    StructureRepresentationRef,
+} from './hierarchy-state.ts';
 import { Clipping } from '../../../mol-theme/clipping.ts';
 import { setStructureClipping } from '../../helpers/structure-clipping.ts';
 import { setStructureTransparency } from '../../helpers/structure-transparency.ts';
@@ -39,12 +56,12 @@ import { setStructureEmissive } from '../../helpers/structure-emissive.ts';
 export { StructureComponentManager };
 
 interface StructureComponentManagerState {
-    options: StructureComponentManager.Options
+    options: StructureComponentManager.Options;
 }
 
 class StructureComponentManager extends StatefulPluginComponent<StructureComponentManagerState> {
     readonly events = {
-        optionsUpdated: this.ev<undefined>()
+        optionsUpdated: this.ev<undefined>(),
     };
 
     get currentStructures() {
@@ -76,7 +93,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
 
         return this.plugin.dataTransaction(async () => {
             await update.commit();
-            await this.plugin.state.updateBehavior(StructureFocusRepresentation, p => {
+            await this.plugin.state.updateBehavior(StructureFocusRepresentation, (p) => {
                 p.ignoreHydrogens = options.hydrogens !== 'all';
                 p.ignoreHydrogensVariant = options.hydrogens === 'only-polar' ? 'non-polar' : 'all';
                 p.ignoreLight = options.ignoreLight;
@@ -88,15 +105,30 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
     }
 
     private updateReprParams(update: StateBuilder.Root, component: StructureComponentRef) {
-        const { hydrogens, visualQuality: quality, ignoreLight, materialStyle: material, clipObjects: clip } = this.state.options;
+        const {
+            hydrogens,
+            visualQuality: quality,
+            ignoreLight,
+            materialStyle: material,
+            clipObjects: clip,
+        } = this.state.options;
         const ignoreHydrogens = hydrogens !== 'all';
         const ignoreHydrogensVariant = hydrogens === 'only-polar' ? 'non-polar' : 'all';
         for (const r of component.representations) {
             if (r.cell.transform.transformer !== StructureRepresentation3D) continue;
 
-            const params = r.cell.transform.params as StateTransformer.Params<StructureRepresentation3D>;
-            if (!!params.type.params.ignoreHydrogens !== ignoreHydrogens || params.type.params.ignoreHydrogensVariant !== ignoreHydrogensVariant || params.type.params.quality !== quality || params.type.params.ignoreLight !== ignoreLight || !shallowEqual(params.type.params.material, material) || !PD.areEqual(Clip.Params, params.type.params.clip, clip)) {
-                update.to(r.cell).update(old => {
+            const params = r.cell.transform.params as StateTransformer.Params<
+                StructureRepresentation3D
+            >;
+            if (
+                !!params.type.params.ignoreHydrogens !== ignoreHydrogens ||
+                params.type.params.ignoreHydrogensVariant !== ignoreHydrogensVariant ||
+                params.type.params.quality !== quality ||
+                params.type.params.ignoreLight !== ignoreLight ||
+                !shallowEqual(params.type.params.material, material) ||
+                !PD.areEqual(Clip.Params, params.type.params.clip, clip)
+            ) {
+                update.to(r.cell).update((old) => {
                     old.type.params.ignoreHydrogens = ignoreHydrogens;
                     old.type.params.ignoreHydrogensVariant = ignoreHydrogensVariant;
                     old.type.params.quality = quality;
@@ -113,28 +145,47 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
             const interactionParams = InteractionsProvider.getParams(s.cell.obj?.data!);
 
             if (s.properties) {
-                const oldParams = s.properties.cell.transform.params?.properties[InteractionsProvider.descriptor.name];
-                if (PD.areEqual(interactionParams, oldParams, this.state.options.interactions)) continue;
+                const oldParams = s.properties.cell.transform.params
+                    ?.properties[InteractionsProvider.descriptor.name];
+                if (PD.areEqual(interactionParams, oldParams, this.state.options.interactions)) {
+                    continue;
+                }
 
                 await this.dataState.build().to(s.properties.cell)
-                    .update(old => {
-                        old.properties[InteractionsProvider.descriptor.name] = this.state.options.interactions;
+                    .update((old) => {
+                        old.properties[InteractionsProvider.descriptor.name] =
+                            this.state.options.interactions;
                     })
                     .commit();
             } else {
                 const pd = this.plugin.customStructureProperties.getParams(s.cell.obj?.data);
                 const params = PD.getDefaultValues(pd);
-                if (PD.areEqual(interactionParams, params.properties[InteractionsProvider.descriptor.name], this.state.options.interactions)) continue;
-                params.properties[InteractionsProvider.descriptor.name] = this.state.options.interactions;
+                if (
+                    PD.areEqual(
+                        interactionParams,
+                        params.properties[InteractionsProvider.descriptor.name],
+                        this.state.options.interactions,
+                    )
+                ) continue;
+                params.properties[InteractionsProvider.descriptor.name] =
+                    this.state.options.interactions;
                 await this.plugin.builders.structure.insertStructureProperties(s.cell, params);
             }
         }
     }
 
-    applyPreset<P extends StructureRepresentationPresetProvider>(structures: ReadonlyArray<StructureRef>, provider: P, params?: StructureRepresentationPresetProvider.Params<P>): Promise<any> {
+    applyPreset<P extends StructureRepresentationPresetProvider>(
+        structures: ReadonlyArray<StructureRef>,
+        provider: P,
+        params?: StructureRepresentationPresetProvider.Params<P>,
+    ): Promise<any> {
         return this.plugin.dataTransaction(async () => {
             for (const s of structures) {
-                const preset = await this.plugin.builders.structure.representation.applyPreset(s.cell, provider, params);
+                const preset = await this.plugin.builders.structure.representation.applyPreset(
+                    s.cell,
+                    provider,
+                    params,
+                );
                 await this.syncPreset(s, preset);
             }
         }, { canUndo: 'Preset' });
@@ -144,12 +195,12 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         if (!preset || !preset.components) return this.clearComponents([root]);
 
         const keptRefs = new Set<string>();
-        objectForEach(preset.components, c => {
+        objectForEach(preset.components, (c) => {
             if (c) keptRefs.add(c.ref);
         });
 
         if (preset.representations) {
-            objectForEach(preset.representations, r => {
+            objectForEach(preset.representations, (r) => {
                 if (r) keptRefs.add(r.ref);
             });
         }
@@ -191,7 +242,10 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         const mng = this.plugin.managers.structure.selection;
         mng.clear();
         for (const c of components) {
-            const loci = Structure.toSubStructureElementLoci(c.structure.cell.obj!.data, c.cell.obj?.data!);
+            const loci = Structure.toSubStructureElementLoci(
+                c.structure.cell.obj!.data,
+                c.cell.obj?.data!,
+            );
             mng.fromLoci('set', loci);
         }
     }
@@ -200,21 +254,31 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         return this.plugin.builders.structure.isComponentTransform(ref.cell);
     }
 
-    modifyByCurrentSelection(components: ReadonlyArray<StructureComponentRef>, action: StructureComponentManager.ModifyAction) {
-        return this.plugin.runTask(Task.create('Modify Component', async taskCtx => {
+    modifyByCurrentSelection(
+        components: ReadonlyArray<StructureComponentRef>,
+        action: StructureComponentManager.ModifyAction,
+    ) {
+        return this.plugin.runTask(Task.create('Modify Component', async (taskCtx) => {
             const b = this.dataState.build();
             for (const c of components) {
                 if (!this.canBeModified(c)) continue;
 
-                const selection = this.plugin.managers.structure.selection.getStructure(c.structure.cell.obj!.data);
+                const selection = this.plugin.managers.structure.selection.getStructure(
+                    c.structure.cell.obj!.data,
+                );
                 if (!selection || selection.elementCount === 0) continue;
                 this.modifyComponent(b, c, selection, action);
             }
-            await this.dataState.updateTree(b, { canUndo: 'Modify Selection' }).runInContext(taskCtx);
+            await this.dataState.updateTree(b, { canUndo: 'Modify Selection' }).runInContext(
+                taskCtx,
+            );
         }));
     }
 
-    toggleVisibility(components: ReadonlyArray<StructureComponentRef>, reprPivot?: StructureRepresentationRef) {
+    toggleVisibility(
+        components: ReadonlyArray<StructureComponentRef>,
+        reprPivot?: StructureRepresentationRef,
+    ) {
         if (components.length === 0) return;
 
         if (!reprPivot) {
@@ -235,7 +299,10 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         }
     }
 
-    removeRepresentations(components: ReadonlyArray<StructureComponentRef>, pivot?: StructureRepresentationRef) {
+    removeRepresentations(
+        components: ReadonlyArray<StructureComponentRef>,
+        pivot?: StructureRepresentationRef,
+    ) {
         if (components.length === 0) return;
 
         const toRemove: StructureHierarchyRef[] = [];
@@ -257,7 +324,11 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         return this.plugin.managers.structure.hierarchy.remove(toRemove, true);
     }
 
-    updateRepresentations(components: ReadonlyArray<StructureComponentRef>, pivot: StructureRepresentationRef, params: StateTransformer.Params<StructureRepresentation3D>) {
+    updateRepresentations(
+        components: ReadonlyArray<StructureComponentRef>,
+        pivot: StructureRepresentationRef,
+        params: StateTransformer.Params<StructureRepresentation3D>,
+    ) {
         if (components.length === 0) return Promise.resolve();
 
         const index = components[0].representations.indexOf(pivot);
@@ -283,9 +354,26 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
      *      for (const s of structure.hierarchy.selection.structures) await updateRepresentationsTheme(s.componets, ...);
      *   }, { canUndo: 'Update Theme' });
      */
-    updateRepresentationsTheme<C extends ColorTheme.BuiltIn, S extends SizeTheme.BuiltIn>(components: ReadonlyArray<StructureComponentRef>, params: StructureComponentManager.UpdateThemeParams<C, S>): Promise<any> | undefined
-    updateRepresentationsTheme<C extends ColorTheme.BuiltIn, S extends SizeTheme.BuiltIn>(components: ReadonlyArray<StructureComponentRef>, params: (c: StructureComponentRef, r: StructureRepresentationRef) => StructureComponentManager.UpdateThemeParams<C, S>): Promise<any> | undefined
-    updateRepresentationsTheme(components: ReadonlyArray<StructureComponentRef>, paramsOrProvider: StructureComponentManager.UpdateThemeParams<any, any> | ((c: StructureComponentRef, r: StructureRepresentationRef) => StructureComponentManager.UpdateThemeParams<any, any>)) {
+    updateRepresentationsTheme<C extends ColorTheme.BuiltIn, S extends SizeTheme.BuiltIn>(
+        components: ReadonlyArray<StructureComponentRef>,
+        params: StructureComponentManager.UpdateThemeParams<C, S>,
+    ): Promise<any> | undefined;
+    updateRepresentationsTheme<C extends ColorTheme.BuiltIn, S extends SizeTheme.BuiltIn>(
+        components: ReadonlyArray<StructureComponentRef>,
+        params: (
+            c: StructureComponentRef,
+            r: StructureRepresentationRef,
+        ) => StructureComponentManager.UpdateThemeParams<C, S>,
+    ): Promise<any> | undefined;
+    updateRepresentationsTheme(
+        components: ReadonlyArray<StructureComponentRef>,
+        paramsOrProvider:
+            | StructureComponentManager.UpdateThemeParams<any, any>
+            | ((
+                c: StructureComponentRef,
+                r: StructureRepresentationRef,
+            ) => StructureComponentManager.UpdateThemeParams<any, any>),
+    ) {
         if (components.length === 0) return;
 
         const update = this.dataState.build();
@@ -293,21 +381,44 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         for (const c of components) {
             for (const repr of c.representations) {
                 const old = repr.cell.transform.params;
-                const params: StructureComponentManager.UpdateThemeParams<any, any> = typeof paramsOrProvider === 'function' ? paramsOrProvider(c, repr) : paramsOrProvider;
+                const params: StructureComponentManager.UpdateThemeParams<any, any> =
+                    typeof paramsOrProvider === 'function'
+                        ? paramsOrProvider(c, repr)
+                        : paramsOrProvider;
 
                 const colorTheme = params.color === 'default'
-                    ? createStructureColorThemeParams(this.plugin, c.structure.cell.obj?.data, old?.type.name)
+                    ? createStructureColorThemeParams(
+                        this.plugin,
+                        c.structure.cell.obj?.data,
+                        old?.type.name,
+                    )
                     : params.color
-                        ? createStructureColorThemeParams(this.plugin, c.structure.cell.obj?.data, old?.type.name, params.color, params.colorParams)
-                        : void 0;
+                    ? createStructureColorThemeParams(
+                        this.plugin,
+                        c.structure.cell.obj?.data,
+                        old?.type.name,
+                        params.color,
+                        params.colorParams,
+                    )
+                    : void 0;
                 const sizeTheme = params.size === 'default'
-                    ? createStructureSizeThemeParams(this.plugin, c.structure.cell.obj?.data, old?.type.name)
+                    ? createStructureSizeThemeParams(
+                        this.plugin,
+                        c.structure.cell.obj?.data,
+                        old?.type.name,
+                    )
                     : params.color
-                        ? createStructureSizeThemeParams(this.plugin, c.structure.cell.obj?.data, old?.type.name, params.size, params.sizeParams)
-                        : void 0;
+                    ? createStructureSizeThemeParams(
+                        this.plugin,
+                        c.structure.cell.obj?.data,
+                        old?.type.name,
+                        params.size,
+                        params.sizeParams,
+                    )
+                    : void 0;
 
                 if (colorTheme || sizeTheme) {
-                    update.to(repr.cell).update(prev => {
+                    update.to(repr.cell).update((prev) => {
                         if (colorTheme) prev.colorTheme = colorTheme;
                         if (sizeTheme) prev.sizeTheme = sizeTheme;
                     });
@@ -321,17 +432,33 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
     addRepresentation(components: ReadonlyArray<StructureComponentRef>, type: string) {
         if (components.length === 0) return;
 
-        const { hydrogens, visualQuality: quality, ignoreLight, materialStyle: material, clipObjects: clip } = this.state.options;
+        const {
+            hydrogens,
+            visualQuality: quality,
+            ignoreLight,
+            materialStyle: material,
+            clipObjects: clip,
+        } = this.state.options;
         const ignoreHydrogens = hydrogens !== 'all';
         const ignoreHydrogensVariant = hydrogens === 'only-polar' ? 'non-polar' : 'all';
-        const typeParams = { ignoreHydrogens, ignoreHydrogensVariant, quality, ignoreLight, material, clip };
+        const typeParams = {
+            ignoreHydrogens,
+            ignoreHydrogensVariant,
+            quality,
+            ignoreLight,
+            material,
+            clip,
+        };
 
         return this.plugin.dataTransaction(async () => {
             for (const component of components) {
-                await this.plugin.builders.structure.representation.addRepresentation(component.cell, {
-                    type: this.plugin.representation.structure.registry.get(type),
-                    typeParams
-                });
+                await this.plugin.builders.structure.representation.addRepresentation(
+                    component.cell,
+                    {
+                        type: this.plugin.representation.structure.registry.get(type),
+                        typeParams,
+                    },
+                );
             }
         }, { canUndo: 'Add Representation' });
     }
@@ -339,11 +466,12 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
     private tryFindComponent(structure: StructureRef, selection: StructureSelectionQuery) {
         if (structure.components.length === 0) return;
 
-        return this.plugin.runTask(Task.create('Find Component', async taskCtx => {
-
+        return this.plugin.runTask(Task.create('Find Component', async (taskCtx) => {
             const data = structure.cell.obj?.data;
             if (!data) return;
-            const sel = StructureSelection.unionStructure(await selection.getSelection(this.plugin, taskCtx, data));
+            const sel = StructureSelection.unionStructure(
+                await selection.getSelection(this.plugin, taskCtx, data),
+            );
 
             for (const c of structure.components) {
                 const comp = c.cell.obj?.data;
@@ -354,15 +482,31 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         }));
     }
 
-    async add(params: StructureComponentManager.AddParams, structures?: ReadonlyArray<StructureRef>) {
+    async add(
+        params: StructureComponentManager.AddParams,
+        structures?: ReadonlyArray<StructureRef>,
+    ) {
         return this.plugin.dataTransaction(async () => {
             const xs = structures || this.currentStructures;
             if (xs.length === 0) return;
 
-            const { hydrogens, visualQuality: quality, ignoreLight, materialStyle: material, clipObjects: clip } = this.state.options;
+            const {
+                hydrogens,
+                visualQuality: quality,
+                ignoreLight,
+                materialStyle: material,
+                clipObjects: clip,
+            } = this.state.options;
             const ignoreHydrogens = hydrogens !== 'all';
             const ignoreHydrogensVariant = hydrogens === 'only-polar' ? 'non-polar' : 'all';
-            const typeParams = { ignoreHydrogens, ignoreHydrogensVariant, quality, ignoreLight, material, clip };
+            const typeParams = {
+                ignoreHydrogens,
+                ignoreHydrogensVariant,
+                quality,
+                ignoreLight,
+                material,
+                clip,
+            };
 
             const componentKey = UUID.create22();
             for (const s of xs) {
@@ -373,62 +517,122 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
                 }
 
                 if (!component) {
-                    component = await this.plugin.builders.structure.tryCreateComponentFromSelection(s.cell, params.selection, componentKey, {
-                        label: params.options.label || (params.selection === StructureSelectionQueries.current ? 'Custom Selection' : ''),
-                    });
+                    component = await this.plugin.builders.structure
+                        .tryCreateComponentFromSelection(s.cell, params.selection, componentKey, {
+                            label: params.options.label ||
+                                (params.selection === StructureSelectionQueries.current
+                                    ? 'Custom Selection'
+                                    : ''),
+                        });
                 }
 
                 if (params.representation === 'none' || !component) continue;
                 await this.plugin.builders.structure.representation.addRepresentation(component, {
                     type: this.plugin.representation.structure.registry.get(params.representation),
-                    typeParams
+                    typeParams,
                 });
             }
         }, { canUndo: 'Add Selection' });
     }
 
-    async applyTheme(params: StructureComponentManager.ThemeParams, structures?: ReadonlyArray<StructureRef>) {
-        return this.plugin.dataTransaction(async ctx => {
+    async applyTheme(
+        params: StructureComponentManager.ThemeParams,
+        structures?: ReadonlyArray<StructureRef>,
+    ) {
+        return this.plugin.dataTransaction(async (ctx) => {
             const xs = structures || this.currentStructures;
             if (xs.length === 0) return;
 
-            const getLoci = async (s: Structure) => StructureSelection.toLociWithSourceUnits(await params.selection.getSelection(this.plugin, ctx, s));
+            const getLoci = async (s: Structure) =>
+                StructureSelection.toLociWithSourceUnits(
+                    await params.selection.getSelection(this.plugin, ctx, s),
+                );
             for (const s of xs) {
                 if (params.action.name === 'color') {
                     const p = params.action.params;
-                    await setStructureOverpaint(this.plugin, s.components, p.color, getLoci, params.representations);
+                    await setStructureOverpaint(
+                        this.plugin,
+                        s.components,
+                        p.color,
+                        getLoci,
+                        params.representations,
+                    );
                 } else if (params.action.name === 'resetColor') {
-                    await setStructureOverpaint(this.plugin, s.components, -1, getLoci, params.representations);
+                    await setStructureOverpaint(
+                        this.plugin,
+                        s.components,
+                        -1,
+                        getLoci,
+                        params.representations,
+                    );
                 } else if (params.action.name === 'transparency') {
                     const p = params.action.params;
-                    await setStructureTransparency(this.plugin, s.components, p.value, getLoci, params.representations);
+                    await setStructureTransparency(
+                        this.plugin,
+                        s.components,
+                        p.value,
+                        getLoci,
+                        params.representations,
+                    );
                 } else if (params.action.name === 'emissive') {
                     const p = params.action.params;
-                    await setStructureEmissive(this.plugin, s.components, p.value, getLoci, params.representations);
+                    await setStructureEmissive(
+                        this.plugin,
+                        s.components,
+                        p.value,
+                        getLoci,
+                        params.representations,
+                    );
                 } else if (params.action.name === 'material') {
                     const p = params.action.params;
-                    await setStructureSubstance(this.plugin, s.components, p.material, getLoci, params.representations);
+                    await setStructureSubstance(
+                        this.plugin,
+                        s.components,
+                        p.material,
+                        getLoci,
+                        params.representations,
+                    );
                 } else if (params.action.name === 'resetMaterial') {
-                    await setStructureSubstance(this.plugin, s.components, void 0, getLoci, params.representations);
+                    await setStructureSubstance(
+                        this.plugin,
+                        s.components,
+                        void 0,
+                        getLoci,
+                        params.representations,
+                    );
                 } else if (params.action.name === 'clipping') {
                     const p = params.action.params;
-                    await setStructureClipping(this.plugin, s.components, Clipping.Groups.fromNames(p.excludeGroups), getLoci, params.representations);
+                    await setStructureClipping(
+                        this.plugin,
+                        s.components,
+                        Clipping.Groups.fromNames(p.excludeGroups),
+                        getLoci,
+                        params.representations,
+                    );
                 }
             }
         }, { canUndo: 'Apply Theme' });
     }
 
-    private modifyComponent(builder: StateBuilder.Root, component: StructureComponentRef, by: Structure, action: StructureComponentManager.ModifyAction) {
+    private modifyComponent(
+        builder: StateBuilder.Root,
+        component: StructureComponentRef,
+        by: Structure,
+        action: StructureComponentManager.ModifyAction,
+    ) {
         const structure = component.cell.obj?.data;
         if (!structure) return;
-        if ((action === 'subtract' || action === 'intersect') && !structureAreIntersecting(structure, by)) return;
+        if (
+            (action === 'subtract' || action === 'intersect') &&
+            !structureAreIntersecting(structure, by)
+        ) return;
 
         const parent = component.structure.cell.obj?.data!;
         const modified = action === 'union'
             ? structureUnion(parent, [structure, by])
             : action === 'intersect'
-                ? structureIntersect(structure, by)
-                : structureSubtract(structure, by);
+            ? structureIntersect(structure, by)
+            : structureSubtract(structure, by);
 
         if (modified.elementCount === 0) {
             builder.delete(component.cell.transform.ref);
@@ -437,7 +641,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
             const params: StructureComponentParams = {
                 type: { name: 'bundle', params: bundle },
                 nullIfEmpty: true,
-                label: component.cell.obj?.label!
+                label: component.cell.obj?.label!,
             };
             builder.to(component.cell).update(params);
         }
@@ -447,7 +651,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         const params: StructureComponentParams = {
             type: component.cell.params?.values.type,
             nullIfEmpty: component.cell.params?.values.nullIfEmpty,
-            label
+            label,
         };
         this.dataState.build().to(component.cell).update(params).commit();
     }
@@ -476,37 +680,67 @@ namespace StructureComponentManager {
         hydrogens: PD.Select(
             'all',
             [['all', 'Show All'], ['hide-all', 'Hide All'], ['only-polar', 'Only Polar']] as const,
-            { description: 'Determine display of hydrogen atoms in representations' }
+            { description: 'Determine display of hydrogen atoms in representations' },
         ),
-        visualQuality: PD.Select('auto', VisualQualityOptions, { description: 'Control the visual/rendering quality of representations' }),
-        ignoreLight: PD.Boolean(false, { description: 'Ignore light for stylized rendering of representations' }),
+        visualQuality: PD.Select('auto', VisualQualityOptions, {
+            description: 'Control the visual/rendering quality of representations',
+        }),
+        ignoreLight: PD.Boolean(false, {
+            description: 'Ignore light for stylized rendering of representations',
+        }),
         materialStyle: Material.getParam(),
         clipObjects: PD.Group(Clip.Params),
-        interactions: PD.Group(InteractionsProvider.defaultParams, { label: 'Non-covalent Interactions' }),
+        interactions: PD.Group(InteractionsProvider.defaultParams, {
+            label: 'Non-covalent Interactions',
+        }),
     };
-    export type Options = PD.Values<typeof OptionsParams>
+    export type Options = PD.Values<typeof OptionsParams>;
 
-    export function getAddParams(plugin: PluginContext, params?: { pivot?: StructureRef, allowNone: boolean, hideSelection?: boolean, checkExisting?: boolean }) {
+    export function getAddParams(
+        plugin: PluginContext,
+        params?: {
+            pivot?: StructureRef;
+            allowNone: boolean;
+            hideSelection?: boolean;
+            checkExisting?: boolean;
+        },
+    ) {
         const { options } = plugin.query.structure.registry;
         params = {
             pivot: plugin.managers.structure.component.pivotStructure,
             allowNone: true,
             hideSelection: false,
             checkExisting: false,
-            ...params
+            ...params,
         };
         return {
             selection: PD.Select(options[1][0], options, { isHidden: params?.hideSelection }),
-            representation: getRepresentationTypesSelect(plugin, params?.pivot, params?.allowNone ? [['none', '< Create Later >']] : []),
+            representation: getRepresentationTypesSelect(
+                plugin,
+                params?.pivot,
+                params?.allowNone ? [['none', '< Create Later >']] : [],
+            ),
             options: PD.Group({
                 label: PD.Text(''),
-                checkExisting: PD.Boolean(!!params?.checkExisting, { help: () => ({ description: 'Checks if a selection with the specifield elements already exists to avoid creating duplicate components.' }) }),
-            })
+                checkExisting: PD.Boolean(!!params?.checkExisting, {
+                    help: () => ({
+                        description:
+                            'Checks if a selection with the specifield elements already exists to avoid creating duplicate components.',
+                    }),
+                }),
+            }),
         };
     }
-    export type AddParams = { selection: StructureSelectionQuery, options: { checkExisting: boolean, label: string }, representation: string }
+    export type AddParams = {
+        selection: StructureSelectionQuery;
+        options: { checkExisting: boolean; label: string };
+        representation: string;
+    };
 
-    export function getThemeParams(plugin: PluginContext, pivot: StructureRef | StructureComponentRef | undefined) {
+    export function getThemeParams(
+        plugin: PluginContext,
+        pivot: StructureRef | StructureComponentRef | undefined,
+    ) {
         const { options } = plugin.query.structure.registry;
         return {
             selection: PD.Select(options[1][0], options, { isHidden: false }),
@@ -526,37 +760,50 @@ namespace StructureComponentManager {
                 }, { isFlat: true }),
                 resetMaterial: PD.EmptyGroup({ label: 'Reset Material' }),
                 clipping: PD.Group({
-                    excludeGroups: PD.MultiSelect([] as Clipping.Groups.Names[], PD.objectToOptions(Clipping.Groups.Names)),
+                    excludeGroups: PD.MultiSelect(
+                        [] as Clipping.Groups.Names[],
+                        PD.objectToOptions(Clipping.Groups.Names),
+                    ),
                 }, { isFlat: true }),
             }),
-            representations: PD.MultiSelect([], getRepresentationTypes(plugin, pivot), { emptyValue: 'All' })
+            representations: PD.MultiSelect([], getRepresentationTypes(plugin, pivot), {
+                emptyValue: 'All',
+            }),
         };
     }
-    export type ThemeParams = PD.Values<ReturnType<typeof getThemeParams>>
+    export type ThemeParams = PD.Values<ReturnType<typeof getThemeParams>>;
 
-    export function getRepresentationTypes(plugin: PluginContext, pivot: StructureRef | StructureComponentRef | undefined) {
+    export function getRepresentationTypes(
+        plugin: PluginContext,
+        pivot: StructureRef | StructureComponentRef | undefined,
+    ) {
         return pivot?.cell.obj?.data
             ? plugin.representation.structure.registry.getApplicableTypes(pivot.cell.obj?.data!)
             : plugin.representation.structure.registry.types;
     }
 
-    function getRepresentationTypesSelect(plugin: PluginContext, pivot: StructureRef | undefined, custom: [string, string][], label?: string) {
+    function getRepresentationTypesSelect(
+        plugin: PluginContext,
+        pivot: StructureRef | undefined,
+        custom: [string, string][],
+        label?: string,
+    ) {
         const types = [
             ...custom,
-            ...getRepresentationTypes(plugin, pivot)
+            ...getRepresentationTypes(plugin, pivot),
         ] as [string, string][];
         return PD.Select(types[0][0], types, { label });
     }
 
-    export type ModifyAction = 'union' | 'subtract' | 'intersect'
+    export type ModifyAction = 'union' | 'subtract' | 'intersect';
 
     export interface UpdateThemeParams<C extends ColorTheme.BuiltIn, S extends SizeTheme.BuiltIn> {
         /**
          * this works for any theme name (use 'name as any'), but code completion will break
          */
-        color?: C | 'default',
-        colorParams?: ColorTheme.BuiltInParams<C>,
-        size?: S | 'default',
-        sizeParams?: SizeTheme.BuiltInParams<S>
+        color?: C | 'default';
+        colorParams?: ColorTheme.BuiltInParams<C>;
+        size?: S | 'default';
+        sizeParams?: SizeTheme.BuiltInParams<S>;
     }
 }

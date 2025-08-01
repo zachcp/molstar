@@ -24,15 +24,27 @@ import { FileHandle } from '../../../../mol-io/common/file-handle.ts';
 import { createTypedArray, TypedArrayValueType } from '../../../../mol-io/common/typed-array.ts';
 import { LimitsConfig } from '../../config.ts';
 import { fileHandleFromPathOrUrl } from '../../../common/file-handle.ts';
-import process from "node:process";
+import process from 'node:process';
 
-export async function execute(params: Data.QueryParams, outputProvider: () => Data.QueryOutputStream) {
+export async function execute(
+    params: Data.QueryParams,
+    outputProvider: () => Data.QueryOutputStream,
+) {
     const start = getTime();
     State.pendingQueries++;
 
     const guid = UUID.create22() as any as string;
-    params.detail = Math.min(Math.max(0, params.detail | 0), LimitsConfig.maxOutputSizeInVoxelCountByPrecisionLevel.length - 1);
-    ConsoleLogger.logId(guid, 'Info', `id=${params.sourceId},encoding=${params.asBinary ? 'binary' : 'text'},detail=${params.detail},${queryBoxToString(params.box)}`);
+    params.detail = Math.min(
+        Math.max(0, params.detail | 0),
+        LimitsConfig.maxOutputSizeInVoxelCountByPrecisionLevel.length - 1,
+    );
+    ConsoleLogger.logId(
+        guid,
+        'Info',
+        `id=${params.sourceId},encoding=${
+            params.asBinary ? 'binary' : 'text'
+        },detail=${params.detail},${queryBoxToString(params.box)}`,
+    );
 
     let sourceFile: FileHandle | undefined;
     try {
@@ -54,33 +66,49 @@ function getTime() {
     return t[0] * 1000 + t[1] / 1000000;
 }
 
-function blockDomain(domain: Coords.GridDomain<'Data'>, blockSize: number): Coords.GridDomain<'Block'> {
-    const delta = Coords.fractional(blockSize * domain.delta[0], blockSize * domain.delta[1], blockSize * domain.delta[2]);
+function blockDomain(
+    domain: Coords.GridDomain<'Data'>,
+    blockSize: number,
+): Coords.GridDomain<'Block'> {
+    const delta = Coords.fractional(
+        blockSize * domain.delta[0],
+        blockSize * domain.delta[1],
+        blockSize * domain.delta[2],
+    );
     return Coords.domain<'Block'>('Block', {
         origin: domain.origin,
         dimensions: domain.dimensions,
         delta,
-        sampleCount: Coords.sampleCounts(domain.dimensions, delta)
+        sampleCount: Coords.sampleCounts(domain.dimensions, delta),
     });
 }
 
-function createSampling(header: DataFormat.Header, index: number, dataOffset: number): Data.Sampling {
+function createSampling(
+    header: DataFormat.Header,
+    index: number,
+    dataOffset: number,
+): Data.Sampling {
     const sampling = header.sampling[index];
     const dataDomain = Coords.domain<'Data'>('Data', {
         origin: Coords.fractional(header.origin[0], header.origin[1], header.origin[2]),
-        dimensions: Coords.fractional(header.dimensions[0], header.dimensions[1], header.dimensions[2]),
+        dimensions: Coords.fractional(
+            header.dimensions[0],
+            header.dimensions[1],
+            header.dimensions[2],
+        ),
         delta: Coords.fractional(
             header.dimensions[0] / sampling.sampleCount[0],
             header.dimensions[1] / sampling.sampleCount[1],
-            header.dimensions[2] / sampling.sampleCount[2]),
-        sampleCount: sampling.sampleCount
+            header.dimensions[2] / sampling.sampleCount[2],
+        ),
+        sampleCount: sampling.sampleCount,
     });
     return {
         index,
         rate: sampling.rate,
         byteOffset: sampling.byteOffset + dataOffset,
         dataDomain,
-        blockDomain: blockDomain(dataDomain, header.blockSize)
+        blockDomain: blockDomain(dataDomain, header.blockSize),
     };
 }
 
@@ -88,37 +116,68 @@ async function createDataContext(file: FileHandle): Promise<Data.DataContext> {
     const { header, dataOffset } = await DataFormat.readHeader(file);
 
     const origin = Coords.fractional(header.origin[0], header.origin[1], header.origin[2]);
-    const dimensions = Coords.fractional(header.dimensions[0], header.dimensions[1], header.dimensions[2]);
+    const dimensions = Coords.fractional(
+        header.dimensions[0],
+        header.dimensions[1],
+        header.dimensions[2],
+    );
 
     return {
         file,
         header,
-        spacegroup: SpacegroupCell.create(header.spacegroup.number, Vec3.ofArray(header.spacegroup.size), Vec3.scale(Vec3.zero(), Vec3.ofArray(header.spacegroup.angles), Math.PI / 180)),
+        spacegroup: SpacegroupCell.create(
+            header.spacegroup.number,
+            Vec3.ofArray(header.spacegroup.size),
+            Vec3.scale(Vec3.zero(), Vec3.ofArray(header.spacegroup.angles), Math.PI / 180),
+        ),
         dataBox: { a: origin, b: Coords.add(origin, dimensions) },
-        sampling: header.sampling.map((s, i) => createSampling(header, i, dataOffset))
+        sampling: header.sampling.map((s, i) => createSampling(header, i, dataOffset)),
     };
 }
 
-function createQuerySampling(data: Data.DataContext, sampling: Data.Sampling, queryBox: Box.Fractional, queryParamsBox: Data.QueryParamsBox): Data.QuerySamplingInfo {
-    const fractionalBox = queryParamsBox.kind === 'Cell' ?
-        Box.gridToFractional(Box.fractionalToGrid(queryBox, sampling.dataDomain)) :
-        Box.gridToFractional(Box.expandGridBox(Box.fractionalToGrid(queryBox, sampling.dataDomain), 1));
+function createQuerySampling(
+    data: Data.DataContext,
+    sampling: Data.Sampling,
+    queryBox: Box.Fractional,
+    queryParamsBox: Data.QueryParamsBox,
+): Data.QuerySamplingInfo {
+    const fractionalBox = queryParamsBox.kind === 'Cell'
+        ? Box.gridToFractional(Box.fractionalToGrid(queryBox, sampling.dataDomain))
+        : Box.gridToFractional(
+            Box.expandGridBox(Box.fractionalToGrid(queryBox, sampling.dataDomain), 1),
+        );
     const blocks = findUniqueBlocks(data, sampling, fractionalBox);
     const ret = {
         sampling,
         fractionalBox,
-        gridDomain: Box.fractionalToDomain<'Query'>(fractionalBox, 'Query', sampling.dataDomain.delta),
-        blocks
+        gridDomain: Box.fractionalToDomain<'Query'>(
+            fractionalBox,
+            'Query',
+            sampling.dataDomain.delta,
+        ),
+        blocks,
     };
     return ret;
 }
 
-function pickSampling(data: Data.DataContext, queryBox: Box.Fractional, forcedLevel: number, precision: number, queryParamsBox: Data.QueryParamsBox): Data.QuerySamplingInfo {
+function pickSampling(
+    data: Data.DataContext,
+    queryBox: Box.Fractional,
+    forcedLevel: number,
+    precision: number,
+    queryParamsBox: Data.QueryParamsBox,
+): Data.QuerySamplingInfo {
     if (forcedLevel > 0) {
-        return createQuerySampling(data, data.sampling[Math.min(data.sampling.length, forcedLevel) - 1], queryBox, queryParamsBox);
+        return createQuerySampling(
+            data,
+            data.sampling[Math.min(data.sampling.length, forcedLevel) - 1],
+            queryBox,
+            queryParamsBox,
+        );
     }
 
-    const sizeLimit = LimitsConfig.maxOutputSizeInVoxelCountByPrecisionLevel[precision] || (2 * 1024 * 1024);
+    const sizeLimit = LimitsConfig.maxOutputSizeInVoxelCountByPrecisionLevel[precision] ||
+        (2 * 1024 * 1024);
 
     for (const s of data.sampling) {
         const gridBox = Box.fractionalToGrid(queryBox, s.dataDomain);
@@ -132,22 +191,41 @@ function pickSampling(data: Data.DataContext, queryBox: Box.Fractional, forcedLe
         }
     }
 
-    return createQuerySampling(data, data.sampling[data.sampling.length - 1], queryBox, queryParamsBox);
+    return createQuerySampling(
+        data,
+        data.sampling[data.sampling.length - 1],
+        queryBox,
+        queryParamsBox,
+    );
 }
 
-function emptyQueryContext(data: Data.DataContext, params: Data.QueryParams, guid: string): Data.QueryContext {
+function emptyQueryContext(
+    data: Data.DataContext,
+    params: Data.QueryParams,
+    guid: string,
+): Data.QueryContext {
     return { kind: 'Empty', guid, params, data };
 }
 
 function getQueryBox(data: Data.DataContext, queryBox: Data.QueryParamsBox) {
     switch (queryBox.kind) {
-        case 'Cartesian': return Box.fractionalBoxReorderAxes(Box.cartesianToFractional(queryBox, data.spacegroup), data.header.axisOrder);
-        case 'Fractional': return Box.fractionalBoxReorderAxes(queryBox, data.header.axisOrder);
-        default: return data.dataBox;
+        case 'Cartesian':
+            return Box.fractionalBoxReorderAxes(
+                Box.cartesianToFractional(queryBox, data.spacegroup),
+                data.header.axisOrder,
+            );
+        case 'Fractional':
+            return Box.fractionalBoxReorderAxes(queryBox, data.header.axisOrder);
+        default:
+            return data.dataBox;
     }
 }
 
-function allocateValues(domain: Coords.GridDomain<'Query'>, numChannels: number, valueType: TypedArrayValueType) {
+function allocateValues(
+    domain: Coords.GridDomain<'Query'>,
+    numChannels: number,
+    valueType: TypedArrayValueType,
+) {
     const values = [];
     for (let i = 0; i < numChannels; i++) {
         values[values.length] = createTypedArray(valueType, domain.sampleVolume);
@@ -155,7 +233,11 @@ function allocateValues(domain: Coords.GridDomain<'Query'>, numChannels: number,
     return values;
 }
 
-function createQueryContext(data: Data.DataContext, params: Data.QueryParams, guid: string): Data.QueryContext {
+function createQueryContext(
+    data: Data.DataContext,
+    params: Data.QueryParams,
+    guid: string,
+): Data.QueryContext {
     const inputQueryBox = getQueryBox(data, params.box);
     let queryBox;
     if (!data.header.spacegroup.isPeriodic) {
@@ -168,7 +250,7 @@ function createQueryContext(data: Data.DataContext, params: Data.QueryParams, gu
     }
 
     const dimensions = Box.dimensions(queryBox);
-    if (dimensions.some(d => isNaN(d))) {
+    if (dimensions.some((d) => isNaN(d))) {
         throw new Error('The query box is not defined.');
     }
 
@@ -176,7 +258,13 @@ function createQueryContext(data: Data.DataContext, params: Data.QueryParams, gu
         throw new Error('The query box volume is too big.');
     }
 
-    const samplingInfo = pickSampling(data, queryBox, params.forcedSamplingLevel !== void 0 ? params.forcedSamplingLevel : 0, params.detail, params.box);
+    const samplingInfo = pickSampling(
+        data,
+        queryBox,
+        params.forcedSamplingLevel !== void 0 ? params.forcedSamplingLevel : 0,
+        params.detail,
+        params.box,
+    );
 
     if (samplingInfo.blocks.length === 0) return emptyQueryContext(data, params, guid);
 
@@ -186,12 +274,20 @@ function createQueryContext(data: Data.DataContext, params: Data.QueryParams, gu
         data,
         params,
         samplingInfo,
-        values: allocateValues(samplingInfo.gridDomain, data.header.channels.length, data.header.valueType)
+        values: allocateValues(
+            samplingInfo.gridDomain,
+            data.header.channels.length,
+            data.header.valueType,
+        ),
     };
 }
 
-
-async function _execute(file: FileHandle, params: Data.QueryParams, guid: string, outputProvider: () => Data.QueryOutputStream) {
+async function _execute(
+    file: FileHandle,
+    params: Data.QueryParams,
+    guid: string,
+    outputProvider: () => Data.QueryOutputStream,
+) {
     let output: any = void 0;
     try {
         // Step 1a: Create data context
@@ -239,7 +335,9 @@ function queryBoxToString(queryBox: Data.QueryParamsBox) {
         case 'Fractional':
             const { a, b } = queryBox;
             const r = roundCoord;
-            return `box-type=${queryBox.kind},box-a=(${r(a[0])},${r(a[1])},${r(a[2])}),box-b=(${r(b[0])},${r(b[1])},${r(b[2])})`;
+            return `box-type=${queryBox.kind},box-a=(${r(a[0])},${r(a[1])},${r(a[2])}),box-b=(${
+                r(b[0])
+            },${r(b[1])},${r(b[2])})`;
         default:
             return `box-type=${queryBox.kind}`;
     }

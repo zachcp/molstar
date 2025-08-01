@@ -6,14 +6,18 @@
 
 import { isPlainObject } from './object.ts';
 
-
 /** A JSON-serializable value */
-export type Jsonable = string | number | boolean | null | Jsonable[] | { [key: string]: Jsonable | undefined }
+export type Jsonable = string | number | boolean | null | Jsonable[] | {
+    [key: string]: Jsonable | undefined;
+};
 
 /** Return a canonical string representation for a JSON-able object,
  * independent from object key order and undefined properties. */
 export function canonicalJsonString(obj: Jsonable) {
-    return JSON.stringify(obj, (key, value) => isPlainObject(value) ? sortObjectKeys(value) : value);
+    return JSON.stringify(
+        obj,
+        (key, value) => isPlainObject(value) ? sortObjectKeys(value) : value,
+    );
 }
 
 /** Return a pretty JSON representation for a JSON-able object,

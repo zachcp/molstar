@@ -8,7 +8,7 @@
 
 import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
 import { PluginStateObject } from '../../../../mol-plugin-state/objects.ts';
-import { Volume, Grid } from '../../../../mol-model/volume.ts';
+import { Grid, Volume } from '../../../../mol-model/volume.ts';
 import { VolumeServerHeader, VolumeServerInfo } from './model.ts';
 import { Box3D } from '../../../../mol-math/geometry.ts';
 import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra.ts';
@@ -20,9 +20,9 @@ import { CIF } from '../../../../mol-io/reader/cif.ts';
 import { volumeFromDensityServerData } from '../../../../mol-model-formats/volume/density-server.ts';
 import { PluginCommands } from '../../../commands.ts';
 import { StateSelection } from '../../../../mol-state/index.ts';
-import { StructureElement, Structure } from '../../../../mol-model/structure.ts';
+import { Structure, StructureElement } from '../../../../mol-model/structure.ts';
 import { PluginContext } from '../../../context.ts';
-import { EmptyLoci, Loci, isEmptyLoci } from '../../../../mol-model/loci.ts';
+import { EmptyLoci, isEmptyLoci, Loci } from '../../../../mol-model/loci.ts';
 import { Asset } from '../../../../mol-util/assets.ts';
 import { GlobalModelTransformInfo } from '../../../../mol-model/structure/model/properties/global-transform.ts';
 import { distinctUntilChanged, filter, map, Observable, throttleTime } from 'rxjs';
@@ -30,24 +30,32 @@ import { Camera } from '../../../../mol-canvas3d/camera.ts';
 import { PluginCommand } from '../../../command.ts';
 import { SingleAsyncQueue } from '../../../../mol-util/single-async-queue.ts';
 
-export class VolumeStreaming extends PluginStateObject.CreateBehavior<VolumeStreaming.Behavior>({ name: 'Volume Streaming' }) { }
+export class VolumeStreaming extends PluginStateObject.CreateBehavior<VolumeStreaming.Behavior>({
+    name: 'Volume Streaming',
+}) {}
 
 export namespace VolumeStreaming {
     export const RootTag = 'volume-streaming-info';
 
     export interface ChannelParams {
-        isoValue: Volume.IsoValue,
-        color: Color,
-        wireframe: boolean,
-        opacity: number
+        isoValue: Volume.IsoValue;
+        color: Color;
+        wireframe: boolean;
+        opacity: number;
     }
 
-    function channelParam(label: string, color: Color, defaultValue: Volume.IsoValue, stats: Grid['stats'], defaults: Partial<ChannelParams> = {}) {
+    function channelParam(
+        label: string,
+        color: Color,
+        defaultValue: Volume.IsoValue,
+        stats: Grid['stats'],
+        defaults: Partial<ChannelParams> = {},
+    ) {
         return PD.Group<ChannelParams>({
             isoValue: Volume.createIsoValueParam(defaults.isoValue ?? defaultValue, stats),
             color: PD.Color(defaults.color ?? color),
             wireframe: PD.Boolean(defaults.wireframe ?? false),
-            opacity: PD.Numeric(defaults.opacity ?? 0.3, { min: 0, max: 1, step: 0.01 })
+            opacity: PD.Numeric(defaults.opacity ?? 0.3, { min: 0, max: 1, step: 0.01 }),
         }, { label, isExpanded: true });
     }
 
@@ -55,28 +63,66 @@ export namespace VolumeStreaming {
         byteOffset: 0,
         rate: 1,
         sampleCount: [1, 1, 1],
-        valuesInfo: [{ mean: 0, min: -1, max: 1, sigma: 0.1 }, { mean: 0, min: -1, max: 1, sigma: 0.1 }]
+        valuesInfo: [{ mean: 0, min: -1, max: 1, sigma: 0.1 }, {
+            mean: 0,
+            min: -1,
+            max: 1,
+            sigma: 0.1,
+        }],
     };
 
-    export function createParams(options: { data?: VolumeServerInfo.Data, defaultView?: ViewTypes, channelParams?: DefaultChannelParams } = {}) {
+    export function createParams(
+        options: {
+            data?: VolumeServerInfo.Data;
+            defaultView?: ViewTypes;
+            channelParams?: DefaultChannelParams;
+        } = {},
+    ) {
         const { data, defaultView, channelParams } = options;
         const map = new Map<string, VolumeServerInfo.EntryData>();
-        if (data) data.entries.forEach(d => map.set(d.dataId, d));
-        const names = data ? data.entries.map(d => [d.dataId, d.dataId] as [string, string]) : [];
+        if (data) data.entries.forEach((d) => map.set(d.dataId, d));
+        const names = data ? data.entries.map((d) => [d.dataId, d.dataId] as [string, string]) : [];
         const defaultKey = data ? data.entries[0].dataId : '';
         return {
-            entry: PD.Mapped<EntryParams>(defaultKey, names, name => PD.Group(createEntryParams({ entryData: map.get(name)!, defaultView, structure: data && data.structure, channelParams }))),
+            entry: PD.Mapped<EntryParams>(
+                defaultKey,
+                names,
+                (name) =>
+                    PD.Group(
+                        createEntryParams({
+                            entryData: map.get(name)!,
+                            defaultView,
+                            structure: data && data.structure,
+                            channelParams,
+                        }),
+                    ),
+            ),
         };
     }
 
-    export type EntryParamDefinition = ReturnType<typeof createEntryParams>
-    export type EntryParams = PD.Values<EntryParamDefinition>
+    export type EntryParamDefinition = ReturnType<typeof createEntryParams>;
+    export type EntryParams = PD.Values<EntryParamDefinition>;
 
-    export function createEntryParams(options: { entryData?: VolumeServerInfo.EntryData, defaultView?: ViewTypes, structure?: Structure, channelParams?: DefaultChannelParams }) {
+    export function createEntryParams(
+        options: {
+            entryData?: VolumeServerInfo.EntryData;
+            defaultView?: ViewTypes;
+            structure?: Structure;
+            channelParams?: DefaultChannelParams;
+        },
+    ) {
         const { entryData, defaultView, structure, channelParams = {} } = options;
 
         // fake the info
-        const info = entryData || { kind: 'em', header: { sampling: [fakeSampling], availablePrecisions: [{ precision: 0, maxVoxels: 0 }] }, emDefaultContourLevel: Volume.IsoValue.relative(0) };
+        const info = entryData ||
+            {
+                kind: 'em',
+                header: {
+                    sampling: [fakeSampling],
+                    availablePrecisions: [{ precision: 0, maxVoxels: 0 }],
+                },
+                emDefaultContourLevel: Volume.IsoValue.relative(0),
+            };
         const box = (structure && structure.boundary.box) || Box3D();
 
         return {
@@ -87,47 +133,94 @@ export namespace VolumeStreaming {
                     topRight: PD.Vec3(box.max),
                 }, { description: 'Static box defined by cartesian coords.', isFlat: true }),
                 'selection-box': PD.Group({
-                    radius: PD.Numeric(5, { min: 0, max: 50, step: 0.5 }, { description: 'Radius in \u212B within which the volume is shown.' }),
+                    radius: PD.Numeric(5, { min: 0, max: 50, step: 0.5 }, {
+                        description: 'Radius in \u212B within which the volume is shown.',
+                    }),
                     bottomLeft: PD.Vec3(Vec3.create(0, 0, 0), {}, { isHidden: true }),
                     topRight: PD.Vec3(Vec3.create(0, 0, 0), {}, { isHidden: true }),
                 }, { description: 'Box around focused element.', isFlat: true }),
                 'camera-target': PD.Group({
-                    radius: PD.Numeric(0.5, { min: 0, max: 1, step: 0.05 }, { description: 'Radius within which the volume is shown (relative to the field of view).' }),
+                    radius: PD.Numeric(0.5, { min: 0, max: 1, step: 0.05 }, {
+                        description:
+                            'Radius within which the volume is shown (relative to the field of view).',
+                    }),
                     // Minimal detail level for the inside of the zoomed region (real detail can be higher, depending on the region size)
-                    dynamicDetailLevel: createDetailParams(info.header.availablePrecisions, 0, { label: 'Dynamic Detail' }),
+                    dynamicDetailLevel: createDetailParams(info.header.availablePrecisions, 0, {
+                        label: 'Dynamic Detail',
+                    }),
                     bottomLeft: PD.Vec3(Vec3.create(0, 0, 0), {}, { isHidden: true }),
                     topRight: PD.Vec3(Vec3.create(0, 0, 0), {}, { isHidden: true }),
                 }, { description: 'Box around camera target.', isFlat: true }),
                 'cell': PD.Group<{}>({}),
                 // Show selection-box if available and cell otherwise.
                 'auto': PD.Group({
-                    radius: PD.Numeric(5, { min: 0, max: 50, step: 0.5 }, { description: 'Radius in \u212B within which the volume is shown.' }),
-                    selectionDetailLevel: createDetailParams(info.header.availablePrecisions, 6, { label: 'Selection Detail' }),
+                    radius: PD.Numeric(5, { min: 0, max: 50, step: 0.5 }, {
+                        description: 'Radius in \u212B within which the volume is shown.',
+                    }),
+                    selectionDetailLevel: createDetailParams(info.header.availablePrecisions, 6, {
+                        label: 'Selection Detail',
+                    }),
                     isSelection: PD.Boolean(false, { isHidden: true }),
                     bottomLeft: PD.Vec3(box.min, {}, { isHidden: true }),
                     topRight: PD.Vec3(box.max, {}, { isHidden: true }),
-                }, { description: 'Box around focused element.', isFlat: true })
-            }, { options: ViewTypeOptions, description: 'Controls what of the volume is displayed. "Off" hides the volume alltogether. "Bounded box" shows the volume inside the given box. "Around Interaction" shows the volume around the focused element/atom. "Whole Structure" shows the volume for the whole structure.' }),
+                }, { description: 'Box around focused element.', isFlat: true }),
+            }, {
+                options: ViewTypeOptions,
+                description:
+                    'Controls what of the volume is displayed. "Off" hides the volume alltogether. "Bounded box" shows the volume inside the given box. "Around Interaction" shows the volume around the focused element/atom. "Whole Structure" shows the volume for the whole structure.',
+            }),
             detailLevel: createDetailParams(info.header.availablePrecisions, 3),
             channels: info.kind === 'em'
                 ? PD.Group({
-                    'em': channelParam('EM', Color(0x638F8F), info.emDefaultContourLevel || Volume.IsoValue.relative(1), info.header.sampling[0].valuesInfo[0], channelParams['em'])
+                    'em': channelParam(
+                        'EM',
+                        Color(0x638F8F),
+                        info.emDefaultContourLevel || Volume.IsoValue.relative(1),
+                        info.header.sampling[0].valuesInfo[0],
+                        channelParams['em'],
+                    ),
                 }, { isFlat: true })
                 : PD.Group({
-                    '2fo-fc': channelParam('2Fo-Fc', Color(0x3362B2), Volume.IsoValue.relative(1.5), info.header.sampling[0].valuesInfo[0], channelParams['2fo-fc']),
-                    'fo-fc(+ve)': channelParam('Fo-Fc(+ve)', Color(0x33BB33), Volume.IsoValue.relative(3), info.header.sampling[0].valuesInfo[1], channelParams['fo-fc(+ve)']),
-                    'fo-fc(-ve)': channelParam('Fo-Fc(-ve)', Color(0xBB3333), Volume.IsoValue.relative(-3), info.header.sampling[0].valuesInfo[1], channelParams['fo-fc(-ve)']),
+                    '2fo-fc': channelParam(
+                        '2Fo-Fc',
+                        Color(0x3362B2),
+                        Volume.IsoValue.relative(1.5),
+                        info.header.sampling[0].valuesInfo[0],
+                        channelParams['2fo-fc'],
+                    ),
+                    'fo-fc(+ve)': channelParam(
+                        'Fo-Fc(+ve)',
+                        Color(0x33BB33),
+                        Volume.IsoValue.relative(3),
+                        info.header.sampling[0].valuesInfo[1],
+                        channelParams['fo-fc(+ve)'],
+                    ),
+                    'fo-fc(-ve)': channelParam(
+                        'Fo-Fc(-ve)',
+                        Color(0xBB3333),
+                        Volume.IsoValue.relative(-3),
+                        info.header.sampling[0].valuesInfo[1],
+                        channelParams['fo-fc(-ve)'],
+                    ),
                 }, { isFlat: true }),
         };
     }
 
-    function createDetailParams(availablePrecisions: VolumeServerHeader.DetailLevel[], preferredPrecision: number, info?: PD.Info) {
-        return PD.Select<number>(Math.min(preferredPrecision, availablePrecisions.length - 1),
-            availablePrecisions.map((p, i) => [i, `${i + 1} [ ${Math.pow(p.maxVoxels, 1 / 3) | 0}^3 cells ]`] as [number, string]),
+    function createDetailParams(
+        availablePrecisions: VolumeServerHeader.DetailLevel[],
+        preferredPrecision: number,
+        info?: PD.Info,
+    ) {
+        return PD.Select<number>(
+            Math.min(preferredPrecision, availablePrecisions.length - 1),
+            availablePrecisions.map((p, i) =>
+                [i, `${i + 1} [ ${Math.pow(p.maxVoxels, 1 / 3) | 0}^3 cells ]`] as [number, string]
+            ),
             {
-                description: 'Determines the maximum number of voxels. Depending on the size of the volume options are in the range from 1 (0.52M voxels) to 7 (25.17M voxels).',
-                ...info
-            }
+                description:
+                    'Determines the maximum number of voxels. Depending on the size of the volume options are in the range from 1 (0.52M voxels) to 7 (25.17M voxels).',
+                ...info,
+            },
         );
     }
 
@@ -141,38 +234,56 @@ export namespace VolumeStreaming {
                     view: {
                         name: origParams.entry.params.view.name,
                         params: { ...origParams.entry.params.view.params } as any,
-                    }
-                }
-            }
+                    },
+                },
+            },
         };
     }
 
-    export const ViewTypeOptions = [['off', 'Off'], ['box', 'Bounded Box'], ['selection-box', 'Around Focus'], ['camera-target', 'Around Camera'], ['cell', 'Whole Structure'], ['auto', 'Auto']] as [ViewTypes, string][];
+    export const ViewTypeOptions = [
+        ['off', 'Off'],
+        ['box', 'Bounded Box'],
+        ['selection-box', 'Around Focus'],
+        ['camera-target', 'Around Camera'],
+        ['cell', 'Whole Structure'],
+        ['auto', 'Auto'],
+    ] as [ViewTypes, string][];
 
-    export type ViewTypes = 'off' | 'box' | 'selection-box' | 'camera-target' | 'cell' | 'auto'
+    export type ViewTypes = 'off' | 'box' | 'selection-box' | 'camera-target' | 'cell' | 'auto';
 
-    export type ParamDefinition = ReturnType<typeof createParams>
-    export type Params = PD.Values<ParamDefinition>
+    export type ParamDefinition = ReturnType<typeof createParams>;
+    export type Params = PD.Values<ParamDefinition>;
 
+    type ChannelsInfo = {
+        [name in ChannelType]?: {
+            isoValue: Volume.IsoValue;
+            color: Color;
+            wireframe: boolean;
+            opacity: number;
+        };
+    };
+    type ChannelsData = { [name in 'EM' | '2FO-FC' | 'FO-FC']?: Volume };
 
-    type ChannelsInfo = { [name in ChannelType]?: { isoValue: Volume.IsoValue, color: Color, wireframe: boolean, opacity: number } }
-    type ChannelsData = { [name in 'EM' | '2FO-FC' | 'FO-FC']?: Volume }
-
-    export type ChannelType = 'em' | '2fo-fc' | 'fo-fc(+ve)' | 'fo-fc(-ve)'
-    export const ChannelTypeOptions: [ChannelType, string][] = [['em', 'em'], ['2fo-fc', '2fo-fc'], ['fo-fc(+ve)', 'fo-fc(+ve)'], ['fo-fc(-ve)', 'fo-fc(-ve)']];
+    export type ChannelType = 'em' | '2fo-fc' | 'fo-fc(+ve)' | 'fo-fc(-ve)';
+    export const ChannelTypeOptions: [ChannelType, string][] = [
+        ['em', 'em'],
+        ['2fo-fc', '2fo-fc'],
+        ['fo-fc(+ve)', 'fo-fc(+ve)'],
+        ['fo-fc(-ve)', 'fo-fc(-ve)'],
+    ];
     export interface ChannelInfo {
-        data: Volume,
-        color: Color,
-        wireframe: boolean,
-        isoValue: Volume.IsoValue.Relative,
-        opacity: number
+        data: Volume;
+        color: Color;
+        wireframe: boolean;
+        isoValue: Volume.IsoValue.Relative;
+        opacity: number;
     }
-    export type Channels = { [name in ChannelType]?: ChannelInfo }
+    export type Channels = { [name in ChannelType]?: ChannelInfo };
 
-    export type DefaultChannelParams = { [name in ChannelType]?: Partial<ChannelParams> }
+    export type DefaultChannelParams = { [name in ChannelType]?: Partial<ChannelParams> };
 
     export class Behavior extends PluginBehavior.WithSubscribers<Params> {
-        private cache = LRUCache.create<{ data: ChannelsData, asset: Asset.Wrapper }>(25);
+        private cache = LRUCache.create<{ data: ChannelsData; asset: Asset.Wrapper }>(25);
         public params: Params = {} as any;
         private lastLoci: StructureElement.Loci | EmptyLoci = EmptyLoci;
         private ref: string = '';
@@ -182,7 +293,7 @@ export namespace VolumeStreaming {
             throttleTime(500, undefined, { 'leading': true, 'trailing': true }),
             map(() => this.plugin.canvas3d?.camera.getSnapshot()),
             distinctUntilChanged((a, b) => this.isCameraTargetSame(a, b)),
-            filter(a => a !== undefined),
+            filter((a) => a !== undefined),
         ) as Observable<Camera.Snapshot>;
         private cameraTargetSubscription?: PluginCommand.Subscription = undefined;
 
@@ -193,23 +304,32 @@ export namespace VolumeStreaming {
         }
 
         private async queryData(box?: Box3D) {
-            let url = urlCombine(this.data.serverUrl, `${this.info.kind}/${this.info.dataId.toLowerCase()}`);
+            let url = urlCombine(
+                this.data.serverUrl,
+                `${this.info.kind}/${this.info.dataId.toLowerCase()}`,
+            );
 
             if (box) {
                 const { min: a, max: b } = box;
-                url += `/box`
-                    + `/${a.map(v => Math.round(1000 * v) / 1000).join(',')}`
-                    + `/${b.map(v => Math.round(1000 * v) / 1000).join(',')}`;
+                url += `/box` +
+                    `/${a.map((v) => Math.round(1000 * v) / 1000).join(',')}` +
+                    `/${b.map((v) => Math.round(1000 * v) / 1000).join(',')}`;
             } else {
                 url += `/cell`;
             }
 
             let detail = this.params.entry.params.detailLevel;
-            if (this.params.entry.params.view.name === 'auto' && this.params.entry.params.view.params.isSelection) {
+            if (
+                this.params.entry.params.view.name === 'auto' &&
+                this.params.entry.params.view.params.isSelection
+            ) {
                 detail = this.params.entry.params.view.params.selectionDetailLevel;
             }
             if (this.params.entry.params.view.name === 'camera-target' && box) {
-                detail = this.decideDetail(box, this.params.entry.params.view.params.dynamicDetailLevel);
+                detail = this.decideDetail(
+                    box,
+                    this.params.entry.params.view.params.dynamicDetailLevel,
+                );
             }
 
             url += `?detail=${detail}`;
@@ -218,7 +338,9 @@ export namespace VolumeStreaming {
             if (entry) return entry.data;
 
             const urlAsset = Asset.getUrlAsset(this.plugin.managers.asset, url);
-            const asset = await this.plugin.runTask(this.plugin.managers.asset.resolve(urlAsset, 'binary'));
+            const asset = await this.plugin.runTask(
+                this.plugin.managers.asset.resolve(urlAsset, 'binary'),
+            );
             const data = await this.parseCif(asset.data);
             if (!data) return;
 
@@ -243,7 +365,9 @@ export namespace VolumeStreaming {
                 const block = parsed.result.blocks[i];
 
                 const densityServerCif = CIF.schema.densityServer(block);
-                const volume = await this.plugin.runTask(volumeFromDensityServerData(densityServerCif));
+                const volume = await this.plugin.runTask(
+                    volumeFromDensityServerData(densityServerCif),
+                );
                 (ret as any)[block.header as any] = volume;
             }
             return ret;
@@ -263,47 +387,64 @@ export namespace VolumeStreaming {
             const state = this.plugin.state.data;
             const update = state.build().to(this.ref).update(newParams);
 
-            await PluginCommands.State.Update(this.plugin, { state, tree: update, options: { doNotUpdateCurrent: true } });
+            await PluginCommands.State.Update(this.plugin, {
+                state,
+                tree: update,
+                options: { doNotUpdateCurrent: true },
+            });
         }
 
         private getStructureRoot() {
-            return this.plugin.state.data.select(StateSelection.Generators.byRef(this.ref).rootOfType(PluginStateObject.Molecule.Structure))[0];
+            return this.plugin.state.data.select(
+                StateSelection.Generators.byRef(this.ref).rootOfType(
+                    PluginStateObject.Molecule.Structure,
+                ),
+            )[0];
         }
 
         register(ref: string): void {
             this.ref = ref;
 
-            this.subscribeObservable(this.plugin.state.events.object.removed, o => {
-                if (!PluginStateObject.Molecule.Structure.is(o.obj) || !StructureElement.Loci.is(this.lastLoci)) return;
+            this.subscribeObservable(this.plugin.state.events.object.removed, (o) => {
+                if (
+                    !PluginStateObject.Molecule.Structure.is(o.obj) ||
+                    !StructureElement.Loci.is(this.lastLoci)
+                ) return;
                 if (this.lastLoci.structure === o.obj.data) {
                     this.lastLoci = EmptyLoci;
                 }
             });
 
-            this.subscribeObservable(this.plugin.state.events.object.updated, o => {
-                if (!PluginStateObject.Molecule.Structure.is(o.oldObj) || !StructureElement.Loci.is(this.lastLoci)) return;
+            this.subscribeObservable(this.plugin.state.events.object.updated, (o) => {
+                if (
+                    !PluginStateObject.Molecule.Structure.is(o.oldObj) ||
+                    !StructureElement.Loci.is(this.lastLoci)
+                ) return;
                 if (this.lastLoci.structure === o.oldObj.data) {
                     this.lastLoci = EmptyLoci;
                 }
             });
 
-            this.subscribeObservable(this.plugin.managers.structure.focus.behaviors.current, (entry) => {
-                if (!this.plugin.state.data.tree.children.has(this.ref)) return;
+            this.subscribeObservable(
+                this.plugin.managers.structure.focus.behaviors.current,
+                (entry) => {
+                    if (!this.plugin.state.data.tree.children.has(this.ref)) return;
 
-                const loci = entry ? entry.loci : EmptyLoci;
+                    const loci = entry ? entry.loci : EmptyLoci;
 
-                switch (this.params.entry.params.view.name) {
-                    case 'auto':
-                        this.updateAuto(loci);
-                        break;
-                    case 'selection-box':
-                        this.updateSelectionBox(loci);
-                        break;
-                    default:
-                        this.lastLoci = loci;
-                        break;
-                }
-            });
+                    switch (this.params.entry.params.view.name) {
+                        case 'auto':
+                            this.updateAuto(loci);
+                            break;
+                        case 'selection-box':
+                            this.updateSelectionBox(loci);
+                            break;
+                        default:
+                            this.lastLoci = loci;
+                            break;
+                    }
+                },
+            );
         }
 
         unregister() {
@@ -341,7 +482,10 @@ export namespace VolumeStreaming {
             if (transform) Mat4.invert(this._invTransform, transform);
 
             const extendedLoci = StructureElement.Loci.extendToWholeResidues(loci);
-            const box = StructureElement.Loci.getBoundary(extendedLoci, transform && !Number.isNaN(this._invTransform[0]) ? this._invTransform : void 0).box;
+            const box = StructureElement.Loci.getBoundary(
+                extendedLoci,
+                transform && !Number.isNaN(this._invTransform[0]) ? this._invTransform : void 0,
+            ).box;
 
             if (StructureElement.Loci.size(extendedLoci) === 1) {
                 Box3D.expand(box, box, Vec3.create(1, 1, 1));
@@ -354,7 +498,10 @@ export namespace VolumeStreaming {
             this.updateQueue.enqueue(async () => {
                 this.lastLoci = loci;
                 if (isEmptyLoci(loci)) {
-                    await this.updateParams(this.info.kind === 'x-ray' ? this.data.structure.boundary.box : void 0, false);
+                    await this.updateParams(
+                        this.info.kind === 'x-ray' ? this.data.structure.boundary.box : void 0,
+                        false,
+                    );
                 } else {
                     await this.updateParams(this.getBoxFromLoci(loci), true);
                 }
@@ -377,16 +524,25 @@ export namespace VolumeStreaming {
             this.updateQueue.enqueue(async () => {
                 const origManualReset = this.plugin.canvas3d?.props.camera.manualReset;
                 try {
-                    if (!origManualReset) this.plugin.canvas3d?.setProps({ camera: { manualReset: true } });
+                    if (!origManualReset) {
+                        this.plugin.canvas3d?.setProps({ camera: { manualReset: true } });
+                    }
                     const box = this.boxFromCameraTarget(snapshot, true);
                     await this.updateParams(box);
                 } finally {
-                    if (!origManualReset) this.plugin.canvas3d?.setProps({ camera: { manualReset: origManualReset } });
+                    if (!origManualReset) {
+                        this.plugin.canvas3d?.setProps({
+                            camera: { manualReset: origManualReset },
+                        });
+                    }
                 }
             });
         }
 
-        private boxFromCameraTarget(snapshot: Camera.Snapshot, boundByBoundarySize: boolean): Box3D {
+        private boxFromCameraTarget(
+            snapshot: Camera.Snapshot,
+            boundByBoundarySize: boolean,
+        ): Box3D {
             const target = snapshot.target;
             const distance = this.cameraTargetDistance(snapshot);
             const top = Math.tan(0.5 * snapshot.fov) * distance;
@@ -395,7 +551,9 @@ export namespace VolumeStreaming {
             if (viewport && viewport.width > viewport.height) {
                 radius *= viewport.width / viewport.height;
             }
-            const relativeRadius = this.params.entry.params.view.name === 'camera-target' ? this.params.entry.params.view.params.radius : 0.5;
+            const relativeRadius = this.params.entry.params.view.name === 'camera-target'
+                ? this.params.entry.params.view.params.radius
+                : 0.5;
             radius *= relativeRadius;
             let radiusX, radiusY, radiusZ;
             if (boundByBoundarySize) {
@@ -409,7 +567,7 @@ export namespace VolumeStreaming {
             }
             return Box3D.create(
                 Vec3.create(target[0] - radiusX, target[1] - radiusY, target[2] - radiusZ),
-                Vec3.create(target[0] + radiusX, target[1] + radiusY, target[2] + radiusZ)
+                Vec3.create(target[0] + radiusX, target[1] + radiusY, target[2] + radiusZ),
             );
         }
 
@@ -430,12 +588,17 @@ export namespace VolumeStreaming {
         }
 
         async update(params: Params) {
-            const switchedToSelection = params.entry.params.view.name === 'selection-box' && this.params && this.params.entry && this.params.entry.params && this.params.entry.params.view && this.params.entry.params.view.name !== 'selection-box';
+            const switchedToSelection = params.entry.params.view.name === 'selection-box' &&
+                this.params && this.params.entry && this.params.entry.params &&
+                this.params.entry.params.view &&
+                this.params.entry.params.view.name !== 'selection-box';
 
             this.params = params;
             let box: Box3D | undefined = void 0, emptyData = false;
 
-            if (params.entry.params.view.name !== 'camera-target' && this.cameraTargetSubscription) {
+            if (
+                params.entry.params.view.name !== 'camera-target' && this.cameraTargetSubscription
+            ) {
                 this.cameraTargetSubscription.unsubscribe();
                 this.cameraTargetSubscription = undefined;
             }
@@ -445,14 +608,20 @@ export namespace VolumeStreaming {
                     emptyData = true;
                     break;
                 case 'box':
-                    box = Box3D.create(params.entry.params.view.params.bottomLeft, params.entry.params.view.params.topRight);
+                    box = Box3D.create(
+                        params.entry.params.view.params.bottomLeft,
+                        params.entry.params.view.params.topRight,
+                    );
                     emptyData = Box3D.volume(box) < 0.0001;
                     break;
                 case 'selection-box': {
                     if (switchedToSelection) {
                         box = this.getBoxFromLoci(this.lastLoci) || Box3D();
                     } else {
-                        box = Box3D.create(Vec3.clone(params.entry.params.view.params.bottomLeft), Vec3.clone(params.entry.params.view.params.topRight));
+                        box = Box3D.create(
+                            Vec3.clone(params.entry.params.view.params.bottomLeft),
+                            Vec3.clone(params.entry.params.view.params.topRight),
+                        );
                     }
                     const r = params.entry.params.view.params.radius;
                     emptyData = Box3D.volume(box) < 0.0001;
@@ -461,18 +630,25 @@ export namespace VolumeStreaming {
                 }
                 case 'camera-target':
                     if (!this.cameraTargetSubscription) {
-                        this.cameraTargetSubscription = this.subscribeObservable(this.cameraTargetObservable, (e) => this.updateCameraTarget(e));
+                        this.cameraTargetSubscription = this.subscribeObservable(
+                            this.cameraTargetObservable,
+                            (e) => this.updateCameraTarget(e),
+                        );
                     }
-                    box = this.boxFromCameraTarget(this.plugin.canvas3d!.camera.getSnapshot(), true);
+                    box = this.boxFromCameraTarget(
+                        this.plugin.canvas3d!.camera.getSnapshot(),
+                        true,
+                    );
                     break;
                 case 'cell':
-                    box = this.info.kind === 'x-ray'
-                        ? this.data.structure.boundary.box
-                        : void 0;
+                    box = this.info.kind === 'x-ray' ? this.data.structure.boundary.box : void 0;
                     break;
                 case 'auto':
                     box = params.entry.params.view.params.isSelection || this.info.kind === 'x-ray'
-                        ? Box3D.create(Vec3.clone(params.entry.params.view.params.bottomLeft), Vec3.clone(params.entry.params.view.params.topRight))
+                        ? Box3D.create(
+                            Vec3.clone(params.entry.params.view.params.bottomLeft),
+                            Vec3.clone(params.entry.params.view.params.topRight),
+                        )
                         : void 0;
 
                     if (box) {
@@ -493,24 +669,46 @@ export namespace VolumeStreaming {
             const info = params.entry.params.channels as ChannelsInfo;
 
             if (this.info.kind === 'x-ray') {
-                this.channels['2fo-fc'] = this.createChannel(data['2FO-FC'] || Volume.One, info['2fo-fc'], this.info.header.sampling[0].valuesInfo[0]);
-                this.channels['fo-fc(+ve)'] = this.createChannel(data['FO-FC'] || Volume.One, info['fo-fc(+ve)'], this.info.header.sampling[0].valuesInfo[1]);
-                this.channels['fo-fc(-ve)'] = this.createChannel(data['FO-FC'] || Volume.One, info['fo-fc(-ve)'], this.info.header.sampling[0].valuesInfo[1]);
+                this.channels['2fo-fc'] = this.createChannel(
+                    data['2FO-FC'] || Volume.One,
+                    info['2fo-fc'],
+                    this.info.header.sampling[0].valuesInfo[0],
+                );
+                this.channels['fo-fc(+ve)'] = this.createChannel(
+                    data['FO-FC'] || Volume.One,
+                    info['fo-fc(+ve)'],
+                    this.info.header.sampling[0].valuesInfo[1],
+                );
+                this.channels['fo-fc(-ve)'] = this.createChannel(
+                    data['FO-FC'] || Volume.One,
+                    info['fo-fc(-ve)'],
+                    this.info.header.sampling[0].valuesInfo[1],
+                );
             } else {
-                this.channels['em'] = this.createChannel(data['EM'] || Volume.One, info['em'], this.info.header.sampling[0].valuesInfo[0]);
+                this.channels['em'] = this.createChannel(
+                    data['EM'] || Volume.One,
+                    info['em'],
+                    this.info.header.sampling[0].valuesInfo[0],
+                );
             }
 
             return true;
         }
 
-        private createChannel(data: Volume, info: ChannelsInfo['em'], stats: Grid['stats']): ChannelInfo {
+        private createChannel(
+            data: Volume,
+            info: ChannelsInfo['em'],
+            stats: Grid['stats'],
+        ): ChannelInfo {
             const i = info!;
             return {
                 data,
                 color: i.color,
                 wireframe: i.wireframe,
                 opacity: i.opacity,
-                isoValue: i.isoValue.kind === 'relative' ? i.isoValue : Volume.IsoValue.toRelative(i.isoValue, stats)
+                isoValue: i.isoValue.kind === 'relative'
+                    ? i.isoValue
+                    : Volume.IsoValue.toRelative(i.isoValue, stats),
             };
         }
 
@@ -526,7 +724,7 @@ export namespace VolumeStreaming {
             super(plugin, {} as any);
 
             this.infoMap = new Map<string, VolumeServerInfo.EntryData>();
-            this.data.entries.forEach(info => this.infoMap.set(info.dataId, info));
+            this.data.entries.forEach((info) => this.infoMap.set(info.dataId, info));
             this.updateQueue = new SingleAsyncQueue();
         }
     }

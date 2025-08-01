@@ -4,13 +4,20 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { JSONCifLigandGraph, JSONCifLigandGraphAtom } from '../../extensions/json-cif/ligand-graph.ts';
+import {
+    JSONCifLigandGraph,
+    JSONCifLigandGraphAtom,
+} from '../../extensions/json-cif/ligand-graph.ts';
 import { molfileToJSONCif } from '../../extensions/json-cif/utils.ts';
 import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 
 export type RGroupName = keyof typeof RGroups;
 
-export async function attachRGroup(pGraph: JSONCifLigandGraph, rgroupName: RGroupName, pAtomOrId: number | JSONCifLigandGraphAtom) {
+export async function attachRGroup(
+    pGraph: JSONCifLigandGraph,
+    rgroupName: RGroupName,
+    pAtomOrId: number | JSONCifLigandGraphAtom,
+) {
     const pAtom = pGraph.getAtom(pAtomOrId);
     if (pAtom?.row?.type_symbol !== 'H') {
         throw new Error('R-group attachment point must be a hydrogen atom.');
@@ -50,7 +57,10 @@ export async function attachRGroup(pGraph: JSONCifLigandGraph, rgroupName: RGrou
     Vec3.normalize(rDir, rDir);
 
     const rotation = Vec3.makeRotation(Mat4(), rDir, pDir);
-    const translation = Mat4.fromTranslation(Mat4(), Vec3.sub(Vec3(), pGraph.getAtomCoords(pPivot), rCoords));
+    const translation = Mat4.fromTranslation(
+        Mat4(),
+        Vec3.sub(Vec3(), pGraph.getAtomCoords(pPivot), rCoords),
+    );
 
     const C = Mat4.fromTranslation(Mat4(), Vec3.negate(Vec3(), rCoords));
     const CT = Mat4.fromTranslation(Mat4(), rCoords);
@@ -106,5 +116,5 @@ const RGroups = {
   1  4  1  0  0  0  0
   1  5  1  0  0  0  0
 M  APO  1   2   1
-M  END`
+M  END`,
 };

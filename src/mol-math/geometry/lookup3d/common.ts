@@ -9,9 +9,9 @@ import { Box3D } from '../primitives/box3d.ts';
 import { Sphere3D } from '../primitives/sphere3d.ts';
 
 export interface Result<T> {
-    count: number,
-    indices: T[],
-    squaredDistances: number[]
+    count: number;
+    indices: T[];
+    squaredDistances: number[];
 }
 
 export namespace Result {
@@ -40,11 +40,18 @@ export namespace Result {
 
 export interface Lookup3D<T = number> {
     // The result is mutated with each call to find.
-    find(x: number, y: number, z: number, radius: number, result?: Result<T>): Result<T>,
-    nearest(x: number, y: number, z: number, k: number, stopIf?: Function, result?: Result<T>): Result<T>,
-    check(x: number, y: number, z: number, radius: number): boolean,
-    approxNearest(x: number, y: number, z: number, radius: number, result?: Result<T>): Result<T>,
-    readonly boundary: { readonly box: Box3D, readonly sphere: Sphere3D }
+    find(x: number, y: number, z: number, radius: number, result?: Result<T>): Result<T>;
+    nearest(
+        x: number,
+        y: number,
+        z: number,
+        k: number,
+        stopIf?: Function,
+        result?: Result<T>,
+    ): Result<T>;
+    check(x: number, y: number, z: number, radius: number): boolean;
+    approxNearest(x: number, y: number, z: number, radius: number, result?: Result<T>): Result<T>;
+    readonly boundary: { readonly box: Box3D; readonly sphere: Sphere3D };
     /** transient result */
-    readonly result: Result<T>
+    readonly result: Result<T>;
 }

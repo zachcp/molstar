@@ -10,7 +10,6 @@ import { edt } from '../../../mol-math/geometry/distance-transform.ts';
 import { createTextureImage, TextureImage } from '../../../mol-gl/renderable/util.ts';
 import { RUNNING_IN_NODEJS } from '../../../mol-util/nodejs-shims.ts';
 
-
 const TextAtlasCache: { [k: string]: FontAtlas } = {};
 
 export function getFontAtlas(props: Partial<FontAtlasProps>) {
@@ -21,25 +20,50 @@ export function getFontAtlas(props: Partial<FontAtlasProps>) {
     return TextAtlasCache[hash];
 }
 
-export type FontFamily = 'sans-serif' | 'monospace' | 'serif' | 'cursive'
-export type FontStyle = 'normal' | 'italic' | 'oblique'
-export type FontVariant = 'normal' | 'small-caps'
-export type FontWeight = 'normal' | 'bold'
+export type FontFamily = 'sans-serif' | 'monospace' | 'serif' | 'cursive';
+export type FontStyle = 'normal' | 'italic' | 'oblique';
+export type FontVariant = 'normal' | 'small-caps';
+export type FontWeight = 'normal' | 'bold';
 
 export const FontAtlasParams = {
-    fontFamily: PD.Select('sans-serif', [['sans-serif', 'Sans Serif'], ['monospace', 'Monospace'], ['serif', 'Serif'], ['cursive', 'Cursive']] as [FontFamily, string][]),
-    fontQuality: PD.Select(3, [[0, 'lower'], [1, 'low'], [2, 'medium'], [3, 'high'], [4, 'higher']]),
-    fontStyle: PD.Select('normal', [['normal', 'Normal'], ['italic', 'Italic'], ['oblique', 'Oblique']] as [FontStyle, string][]),
-    fontVariant: PD.Select('normal', [['normal', 'Normal'], ['small-caps', 'Small Caps']] as [FontVariant, string][]),
-    fontWeight: PD.Select('normal', [['normal', 'Normal'], ['bold', 'Bold']] as [FontWeight, string][]),
+    fontFamily: PD.Select(
+        'sans-serif',
+        [['sans-serif', 'Sans Serif'], ['monospace', 'Monospace'], ['serif', 'Serif'], [
+            'cursive',
+            'Cursive',
+        ]] as [FontFamily, string][],
+    ),
+    fontQuality: PD.Select(3, [[0, 'lower'], [1, 'low'], [2, 'medium'], [3, 'high'], [
+        4,
+        'higher',
+    ]]),
+    fontStyle: PD.Select(
+        'normal',
+        [['normal', 'Normal'], ['italic', 'Italic'], ['oblique', 'Oblique']] as [
+            FontStyle,
+            string,
+        ][],
+    ),
+    fontVariant: PD.Select(
+        'normal',
+        [['normal', 'Normal'], ['small-caps', 'Small Caps']] as [FontVariant, string][],
+    ),
+    fontWeight: PD.Select(
+        'normal',
+        [['normal', 'Normal'], ['bold', 'Bold']] as [FontWeight, string][],
+    ),
 };
-export type FontAtlasParams = typeof FontAtlasParams
-export type FontAtlasProps = PD.Values<FontAtlasParams>
+export type FontAtlasParams = typeof FontAtlasParams;
+export type FontAtlasProps = PD.Values<FontAtlasParams>;
 
 export type FontAtlasMap = {
-    x: number, y: number, w: number, h: number,
-    nw: number, nh: number // normalized to lineheight
-}
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    nw: number;
+    nh: number; // normalized to lineheight
+};
 
 export class FontAtlas {
     readonly props: Readonly<FontAtlasProps>;
@@ -86,9 +110,12 @@ export class FontAtlas {
         this.texture = createTextureImage(350 * this.lineHeight * this.maxWidth, 1, Uint8Array);
 
         // prepare scratch canvas
-        this.scratchContext = createCanvasContext(this.maxWidth, this.lineHeight, { willReadFrequently: true })!;
+        this.scratchContext = createCanvasContext(this.maxWidth, this.lineHeight, {
+            willReadFrequently: true,
+        })!;
 
-        this.scratchContext.font = `${p.fontStyle} ${p.fontVariant} ${p.fontWeight} ${fontSize}px ${p.fontFamily}`;
+        this.scratchContext.font =
+            `${p.fontStyle} ${p.fontVariant} ${p.fontWeight} ${fontSize}px ${p.fontFamily}`;
         this.scratchContext.fillStyle = 'black';
         this.scratchContext.textBaseline = 'middle';
 
@@ -126,14 +153,18 @@ export class FontAtlas {
             }
 
             this.mapped[char] = {
-                x: this.currentX, y: this.currentY,
-                w: this.scratchW, h: this.scratchH,
-                nw: this.scratchW / this.lineHeight, nh: this.scratchH / this.lineHeight
+                x: this.currentX,
+                y: this.currentY,
+                w: this.scratchW,
+                h: this.scratchH,
+                nw: this.scratchW / this.lineHeight,
+                nh: this.scratchH / this.lineHeight,
             };
 
             for (let y = 0; y < this.scratchH; ++y) {
                 for (let x = 0; x < this.scratchW; ++x) {
-                    array[width * (this.currentY + y) + this.currentX + x] = data[y * this.scratchW + x];
+                    array[width * (this.currentY + y) + this.currentX + x] =
+                        data[y * this.scratchW + x];
                 }
             }
 
@@ -159,8 +190,16 @@ export class FontAtlas {
 
         for (let i = 0; i < n; i++) {
             const a = imageData.data[i * 4 + 3] / 255; // alpha value
-            this.gridOuter[i] = a === 1 ? 0 : a === 0 ? Number.MAX_SAFE_INTEGER : Math.pow(Math.max(0, 0.5 - a), 2);
-            this.gridInner[i] = a === 1 ? Number.MAX_SAFE_INTEGER : a === 0 ? 0 : Math.pow(Math.max(0, a - 0.5), 2);
+            this.gridOuter[i] = a === 1
+                ? 0
+                : a === 0
+                ? Number.MAX_SAFE_INTEGER
+                : Math.pow(Math.max(0, 0.5 - a), 2);
+            this.gridInner[i] = a === 1
+                ? Number.MAX_SAFE_INTEGER
+                : a === 0
+                ? 0
+                : Math.pow(Math.max(0, a - 0.5), 2);
         }
 
         edt(this.gridOuter, w, h, this.f, this.d, this.v, this.z);
@@ -168,7 +207,10 @@ export class FontAtlas {
 
         for (let i = 0; i < n; i++) {
             const d = this.gridOuter[i] - this.gridInner[i];
-            data[i] = Math.max(0, Math.min(255, Math.round(255 - 255 * (d / this.radius + this.cutoff))));
+            data[i] = Math.max(
+                0,
+                Math.min(255, Math.round(255 - 255 * (d / this.radius + this.cutoff))),
+            );
         }
 
         this.scratchW = w;
@@ -180,7 +222,11 @@ export class FontAtlas {
 type CanvasModule = any;
 let _canvas: CanvasModule | undefined;
 function getCanvasModule(): CanvasModule {
-    if (!_canvas) throw new Error('When running in Node.js and wanting to use Canvas API, call mol-util/data-source\'s setCanvasModule function first and pass imported `canvas` module to it.');
+    if (!_canvas) {
+        throw new Error(
+            "When running in Node.js and wanting to use Canvas API, call mol-util/data-source's setCanvasModule function first and pass imported `canvas` module to it.",
+        );
+    }
     return _canvas;
 }
 /** Set `canvas` module, before using Canvas API functionality in NodeJS. Usage: `setCanvasModule(require('canvas')); // some code `*/
@@ -188,7 +234,11 @@ export function setCanvasModule(canvas: CanvasModule) {
     _canvas = canvas;
 }
 /** Return a newly created canvas context (using a canvas HTML element in browser, canvas module in NodeJS) */
-function createCanvasContext(width: number, height: number, options?: CanvasRenderingContext2DSettings): CanvasRenderingContext2D | null {
+function createCanvasContext(
+    width: number,
+    height: number,
+    options?: CanvasRenderingContext2DSettings,
+): CanvasRenderingContext2D | null {
     if (RUNNING_IN_NODEJS) {
         const canvas = getCanvasModule().createCanvas(width, height);
         return canvas.getContext('2d', options) as unknown as CanvasRenderingContext2D;

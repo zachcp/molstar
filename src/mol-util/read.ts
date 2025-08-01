@@ -12,7 +12,11 @@ export function readFile(file: File, isBinary = false) {
             reject(new DOMException('Error parsing file.'));
         };
         fileReader.onload = () => {
-            resolve(isBinary ? new Uint8Array(fileReader.result as ArrayBuffer) : fileReader.result as string);
+            resolve(
+                isBinary
+                    ? new Uint8Array(fileReader.result as ArrayBuffer)
+                    : fileReader.result as string,
+            );
         };
         if (isBinary) {
             fileReader.readAsArrayBuffer(file);

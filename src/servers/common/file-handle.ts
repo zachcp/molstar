@@ -13,11 +13,13 @@ import { SimpleBuffer } from '../../mol-io/common/simple-buffer.ts';
 import { defaults, noop } from '../../mol-util/index.ts';
 import { openRead } from '../volume/common/file.ts';
 import { downloadGs } from './google-cloud-storage.ts';
-import { Buffer } from "node:buffer";
-
+import { Buffer } from 'node:buffer';
 
 /** Create a file handle from either a file path or a URL (supports file://, http(s)://, gs:// protocols).  */
-export async function fileHandleFromPathOrUrl(pathOrUrl: string, name: string): Promise<FileHandle> {
+export async function fileHandleFromPathOrUrl(
+    pathOrUrl: string,
+    name: string,
+): Promise<FileHandle> {
     if (pathOrUrl.startsWith('gs://')) {
         return fileHandleFromGS(pathOrUrl, name);
     } else if (pathOrUrl.startsWith('http://') || pathOrUrl.startsWith('https://')) {
@@ -33,7 +35,12 @@ export function fileHandleFromDescriptor(file: number, name: string): FileHandle
     if (fs === undefined) throw new Error('fs module not available');
     return {
         name,
-        readBuffer: (position: number, sizeOrBuffer: SimpleBuffer | number, length?: number, byteOffset?: number) => {
+        readBuffer: (
+            position: number,
+            sizeOrBuffer: SimpleBuffer | number,
+            length?: number,
+            byteOffset?: number,
+        ) => {
             return new Promise((res, rej) => {
                 let outBuffer: SimpleBuffer;
                 if (typeof sizeOrBuffer === 'number') {
@@ -74,9 +81,8 @@ export function fileHandleFromDescriptor(file: number, name: string): FileHandle
             try {
                 if (file !== void 0) fs.close(file, noop);
             } catch (e) {
-
             }
-        }
+        },
     };
 }
 
@@ -84,7 +90,12 @@ export function fileHandleFromDescriptor(file: number, name: string): FileHandle
 export function fileHandleFromGS(url: string, name: string): FileHandle {
     return {
         name,
-        readBuffer: async (position: number, sizeOrBuffer: SimpleBuffer | number, length?: number, byteOffset?: number) => {
+        readBuffer: async (
+            position: number,
+            sizeOrBuffer: SimpleBuffer | number,
+            length?: number,
+            byteOffset?: number,
+        ) => {
             let outBuffer: SimpleBuffer;
             if (typeof sizeOrBuffer === 'number') {
                 length = defaults(length, sizeOrBuffer);
@@ -95,7 +106,11 @@ export function fileHandleFromGS(url: string, name: string): FileHandle {
             }
             let data: Buffer;
             try {
-                data = await downloadGs(url, { decompress: false, start: position, end: position + length - 1 });
+                data = await downloadGs(url, {
+                    decompress: false,
+                    start: position,
+                    end: position + length - 1,
+                });
             } catch (err) {
                 err.isFileNotFound = true;
                 throw err;
@@ -112,7 +127,7 @@ export function fileHandleFromGS(url: string, name: string): FileHandle {
         writeBufferSync: () => {
             throw new Error('Writing to Google Cloud Storage file handle not supported');
         },
-        close: () => { },
+        close: () => {},
     };
 }
 
@@ -122,14 +137,21 @@ export function fileHandleFromHTTP(url: string, name: string): FileHandle {
 
     return {
         name,
-        readBuffer: async (position: number, sizeOrBuffer: SimpleBuffer | number, length?: number, byteOffset?: number) => {
+        readBuffer: async (
+            position: number,
+            sizeOrBuffer: SimpleBuffer | number,
+            length?: number,
+            byteOffset?: number,
+        ) => {
             if (!innerHandle) {
                 const response = await fetch(url);
                 if (response.ok) {
                     const buffer = await response.buffer();
                     innerHandle = FileHandle.fromBuffer(buffer, name);
                 } else {
-                    const error = new Error(`fileHandleFromHTTP: Fetch failed with status code ${response.status}`);
+                    const error = new Error(
+                        `fileHandleFromHTTP: Fetch failed with status code ${response.status}`,
+                    );
                     (error as any).isFileNotFound = true;
                     throw error;
                 }
@@ -142,6 +164,6 @@ export function fileHandleFromHTTP(url: string, name: string): FileHandle {
         writeBufferSync: () => {
             throw new Error('Writing to HTTP(S) file handle not supported');
         },
-        close: () => { },
+        close: () => {},
     };
 }

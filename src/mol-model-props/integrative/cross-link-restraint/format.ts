@@ -15,8 +15,8 @@ import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts'
 export { ModelCrossLinkRestraint };
 
 interface ModelCrossLinkRestraint {
-    getIndicesByElement: (element: ElementIndex, kind: Unit.Kind) => number[]
-    data: Table<mmCIF_Schema['ihm_cross_link_restraint']>
+    getIndicesByElement: (element: ElementIndex, kind: Unit.Kind) => number[];
+    data: Table<mmCIF_Schema['ihm_cross_link_restraint']>;
 }
 
 namespace ModelCrossLinkRestraint {
@@ -27,8 +27,10 @@ namespace ModelCrossLinkRestraint {
 
     export const Provider = FormatPropertyProvider.create<ModelCrossLinkRestraint>(Descriptor);
 
-    export function fromTable(table: Table<mmCIF_Schema['ihm_cross_link_restraint']>, model: Model): ModelCrossLinkRestraint {
-
+    export function fromTable(
+        table: Table<mmCIF_Schema['ihm_cross_link_restraint']>,
+        model: Model,
+    ): ModelCrossLinkRestraint {
         const p1 = {
             entity_id: table.entity_id_1,
             asym_id: table.asym_id_1,
@@ -63,11 +65,19 @@ namespace ModelCrossLinkRestraint {
                 });
                 if (atomicElement >= 0) _add(atomicElementMap, atomicElement as ElementIndex, row);
             } else if (model.coarseHierarchy.isDefined) {
-                const sphereElement = model.coarseHierarchy.spheres.findSequenceKey(entityId, asymId, seqId);
+                const sphereElement = model.coarseHierarchy.spheres.findSequenceKey(
+                    entityId,
+                    asymId,
+                    seqId,
+                );
                 if (sphereElement >= 0) {
                     _add(sphereElementMap, sphereElement, row);
                 } else {
-                    const gaussianElement = model.coarseHierarchy.gaussians.findSequenceKey(entityId, asymId, seqId);
+                    const gaussianElement = model.coarseHierarchy.gaussians.findSequenceKey(
+                        entityId,
+                        asymId,
+                        seqId,
+                    );
                     if (gaussianElement >= 0) _add(gaussianElementMap, gaussianElement, row);
                 }
             }
@@ -75,9 +85,12 @@ namespace ModelCrossLinkRestraint {
 
         function getMapByKind(kind: Unit.Kind) {
             switch (kind) {
-                case Unit.Kind.Atomic: return atomicElementMap;
-                case Unit.Kind.Spheres: return sphereElementMap;
-                case Unit.Kind.Gaussians: return gaussianElementMap;
+                case Unit.Kind.Atomic:
+                    return atomicElementMap;
+                case Unit.Kind.Spheres:
+                    return sphereElementMap;
+                case Unit.Kind.Gaussians:
+                    return gaussianElementMap;
             }
         }
 
@@ -101,7 +114,7 @@ namespace ModelCrossLinkRestraint {
                 const idx = map.get(element);
                 return idx !== undefined ? idx : emptyIndexArray;
             },
-            data: table
+            data: table,
         };
     }
 }

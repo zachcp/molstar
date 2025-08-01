@@ -4,9 +4,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { QuadPositions, } from '../../mol-gl/compute/util.ts';
+import { QuadPositions } from '../../mol-gl/compute/util.ts';
 import { ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
-import { AttributeSpec, DefineSpec, TextureSpec, UniformSpec, Values, ValueSpec } from '../../mol-gl/renderable/schema.ts';
+import {
+    AttributeSpec,
+    DefineSpec,
+    TextureSpec,
+    UniformSpec,
+    Values,
+    ValueSpec,
+} from '../../mol-gl/renderable/schema.ts';
 import { ShaderCode } from '../../mol-gl/shader-code.ts';
 import { background_frag } from '../../mol-gl/shader/background.frag.ts';
 import { background_vert } from '../../mol-gl/shader/background.vert.ts';
@@ -53,7 +60,10 @@ const SkyboxParams = {
             pz: PD.File({ label: 'Positive Z / Front', accept: 'image/*' }),
         }, { isExpanded: true, label: 'Files' }),
     }),
-    blur: PD.Numeric(0, { min: 0.0, max: 1.0, step: 0.01 }, { description: 'Note, this only works in WebGL2 or when "EXT_shader_texture_lod" is available.' }),
+    blur: PD.Numeric(0, { min: 0.0, max: 1.0, step: 0.01 }, {
+        description:
+            'Note, this only works in WebGL2 or when "EXT_shader_texture_lod" is available.',
+    }),
     rotation: PD.Group({
         x: PD.Numeric(0, { min: 0, max: 360, step: 1 }, { immediateUpdate: true }),
         y: PD.Numeric(0, { min: 0, max: 360, step: 1 }, { immediateUpdate: true }),
@@ -61,18 +71,21 @@ const SkyboxParams = {
     }),
     ...SharedParams,
 };
-type SkyboxProps = PD.Values<typeof SkyboxParams>
+type SkyboxProps = PD.Values<typeof SkyboxParams>;
 
 const ImageParams = {
     source: PD.MappedStatic('url', {
         url: PD.Text(''),
         file: PD.File({ accept: 'image/*' }),
     }),
-    blur: PD.Numeric(0, { min: 0.0, max: 1.0, step: 0.01 }, { description: 'Note, this only works in WebGL2 or with power-of-two images and when "EXT_shader_texture_lod" is available.' }),
+    blur: PD.Numeric(0, { min: 0.0, max: 1.0, step: 0.01 }, {
+        description:
+            'Note, this only works in WebGL2 or with power-of-two images and when "EXT_shader_texture_lod" is available.',
+    }),
     ...SharedParams,
     coverage: PD.Select('viewport', PD.arrayToOptions(['viewport', 'canvas'])),
 };
-type ImageProps = PD.Values<typeof ImageParams>
+type ImageProps = PD.Values<typeof ImageParams>;
 
 const HorizontalGradientParams = {
     topColor: PD.Color(Color(0xDDDDDD)),
@@ -97,23 +110,23 @@ export const BackgroundParams = {
         radialGradient: PD.Group(RadialGradientParams, { isExpanded: true }),
     }, { label: 'Environment' }),
 };
-export type BackgroundProps = PD.Values<typeof BackgroundParams>
+export type BackgroundProps = PD.Values<typeof BackgroundParams>;
 
 export class BackgroundPass {
     private renderable: BackgroundRenderable;
 
     private skybox: {
-        texture: Texture
-        props: SkyboxProps
-        assets: Asset[]
-        loaded: boolean
+        texture: Texture;
+        props: SkyboxProps;
+        assets: Asset[];
+        loaded: boolean;
     } | undefined;
 
     private image: {
-        texture: Texture
-        props: ImageProps
-        asset: Asset
-        loaded: boolean
+        texture: Texture;
+        props: ImageProps;
+        asset: Asset;
+        loaded: boolean;
     } | undefined;
 
     private readonly camera = new Camera();
@@ -123,7 +136,12 @@ export class BackgroundPass {
 
     readonly texture: Texture;
 
-    constructor(private readonly webgl: WebGLContext, private readonly assetManager: AssetManager, width: number, height: number) {
+    constructor(
+        private readonly webgl: WebGLContext,
+        private readonly assetManager: AssetManager,
+        width: number,
+        height: number,
+    ) {
         this.renderable = getBackgroundRenderable(webgl, width, height);
     }
 
@@ -131,14 +149,17 @@ export class BackgroundPass {
         const [w, h] = this.renderable.values.uTexSize.ref.value;
 
         if (width !== w || height !== h) {
-            ValueCell.update(this.renderable.values.uTexSize, Vec2.set(this.renderable.values.uTexSize.ref.value, width, height));
+            ValueCell.update(
+                this.renderable.values.uTexSize,
+                Vec2.set(this.renderable.values.uTexSize.ref.value, width, height),
+            );
         }
     }
 
     private clearSkybox() {
         if (this.skybox !== undefined) {
             this.skybox.texture.destroy();
-            this.skybox.assets.forEach(a => this.assetManager.release(a));
+            this.skybox.assets.forEach((a) => this.assetManager.release(a));
             this.skybox = undefined;
         }
     }
@@ -151,12 +172,19 @@ export class BackgroundPass {
             onload?.(false);
             return;
         }
-        if (!this.skybox || !tf || !areSkyboxTexturePropsEqual(props.faces, this.skybox.props.faces)) {
+        if (
+            !this.skybox || !tf || !areSkyboxTexturePropsEqual(props.faces, this.skybox.props.faces)
+        ) {
             this.clearSkybox();
-            const { texture, assets } = getSkyboxTexture(this.webgl, this.assetManager, props.faces, errored => {
-                if (this.skybox) this.skybox.loaded = !errored;
-                onload?.(true);
-            });
+            const { texture, assets } = getSkyboxTexture(
+                this.webgl,
+                this.assetManager,
+                props.faces,
+                (errored) => {
+                    if (this.skybox) this.skybox.loaded = !errored;
+                    onload?.(true);
+                },
+            );
             this.skybox = { texture, props: { ...props }, assets, loaded: false };
             ValueCell.update(this.renderable.values.tSkybox, texture);
             this.renderable.update();
@@ -186,11 +214,15 @@ export class BackgroundPass {
         ValueCell.update(this.renderable.values.uViewDirectionProjectionInverse, m);
 
         const r = this.renderable.values.uRotation.ref.value;
-        Mat3.fromEuler(r, Euler.create(
-            degToRad(props.rotation.x),
-            degToRad(props.rotation.y),
-            degToRad(props.rotation.z)
-        ), 'XYZ');
+        Mat3.fromEuler(
+            r,
+            Euler.create(
+                degToRad(props.rotation.x),
+                degToRad(props.rotation.y),
+                degToRad(props.rotation.z),
+            ),
+            'XYZ',
+        );
         ValueCell.update(this.renderable.values.uRotation, r);
 
         ValueCell.updateIfChanged(this.renderable.values.uBlur, props.blur);
@@ -215,12 +247,20 @@ export class BackgroundPass {
             onload?.(false);
             return;
         }
-        if (!this.image || !this.image.props.source.params || !areImageTexturePropsEqual(props.source, this.image.props.source)) {
+        if (
+            !this.image || !this.image.props.source.params ||
+            !areImageTexturePropsEqual(props.source, this.image.props.source)
+        ) {
             this.clearImage();
-            const { texture, asset } = getImageTexture(this.webgl, this.assetManager, props.source, errored => {
-                if (this.image) this.image.loaded = !errored;
-                onload?.(true);
-            });
+            const { texture, asset } = getImageTexture(
+                this.webgl,
+                this.assetManager,
+                props.source,
+                (errored) => {
+                    if (this.image) this.image.loaded = !errored;
+                    onload?.(true);
+                },
+            );
             this.image = { texture, props: { ...props }, asset, loaded: false };
             ValueCell.update(this.renderable.values.tImage, texture);
             this.renderable.update();
@@ -233,7 +273,10 @@ export class BackgroundPass {
         ValueCell.updateIfChanged(this.renderable.values.uOpacity, props.opacity);
         ValueCell.updateIfChanged(this.renderable.values.uSaturation, props.saturation);
         ValueCell.updateIfChanged(this.renderable.values.uLightness, props.lightness);
-        ValueCell.updateIfChanged(this.renderable.values.uViewportAdjusted, props.coverage === 'viewport' ? true : false);
+        ValueCell.updateIfChanged(
+            this.renderable.values.uViewportAdjusted,
+            props.coverage === 'viewport' ? true : false,
+        );
         ValueCell.updateIfChanged(this.renderable.values.dVariant, 'image');
         this.renderable.update();
     }
@@ -254,15 +297,33 @@ export class BackgroundPass {
         const [rw, rh] = v.uImageScale.ref.value;
         const sr = rw / rh;
         if (sr > r) {
-            ValueCell.update(v.uImageOffset, Vec2.set(v.uImageOffset.ref.value, (1 - r / sr) / 2, 0));
+            ValueCell.update(
+                v.uImageOffset,
+                Vec2.set(v.uImageOffset.ref.value, (1 - r / sr) / 2, 0),
+            );
         } else {
-            ValueCell.update(v.uImageOffset, Vec2.set(v.uImageOffset.ref.value, 0, (1 - sr / r) / 2));
+            ValueCell.update(
+                v.uImageOffset,
+                Vec2.set(v.uImageOffset.ref.value, 0, (1 - sr / r) / 2),
+            );
         }
     }
 
-    private updateGradient(colorA: Color, colorB: Color, ratio: number, variant: 'horizontalGradient' | 'radialGradient', viewportAdjusted: boolean) {
-        ValueCell.update(this.renderable.values.uGradientColorA, Color.toVec3Normalized(this.renderable.values.uGradientColorA.ref.value, colorA));
-        ValueCell.update(this.renderable.values.uGradientColorB, Color.toVec3Normalized(this.renderable.values.uGradientColorB.ref.value, colorB));
+    private updateGradient(
+        colorA: Color,
+        colorB: Color,
+        ratio: number,
+        variant: 'horizontalGradient' | 'radialGradient',
+        viewportAdjusted: boolean,
+    ) {
+        ValueCell.update(
+            this.renderable.values.uGradientColorA,
+            Color.toVec3Normalized(this.renderable.values.uGradientColorA.ref.value, colorA),
+        );
+        ValueCell.update(
+            this.renderable.values.uGradientColorB,
+            Color.toVec3Normalized(this.renderable.values.uGradientColorB.ref.value, colorB),
+        );
         ValueCell.updateIfChanged(this.renderable.values.uGradientRatio, ratio);
         ValueCell.updateIfChanged(this.renderable.values.uViewportAdjusted, viewportAdjusted);
         ValueCell.updateIfChanged(this.renderable.values.dVariant, variant);
@@ -284,17 +345,32 @@ export class BackgroundPass {
         } else if (props.variant.name === 'horizontalGradient') {
             this.clearSkybox();
             this.clearImage();
-            this.updateGradient(props.variant.params.topColor, props.variant.params.bottomColor, props.variant.params.ratio, props.variant.name, props.variant.params.coverage === 'viewport' ? true : false);
+            this.updateGradient(
+                props.variant.params.topColor,
+                props.variant.params.bottomColor,
+                props.variant.params.ratio,
+                props.variant.name,
+                props.variant.params.coverage === 'viewport' ? true : false,
+            );
             onload?.(false);
         } else if (props.variant.name === 'radialGradient') {
             this.clearSkybox();
             this.clearImage();
-            this.updateGradient(props.variant.params.centerColor, props.variant.params.edgeColor, props.variant.params.ratio, props.variant.name, props.variant.params.coverage === 'viewport' ? true : false);
+            this.updateGradient(
+                props.variant.params.centerColor,
+                props.variant.params.edgeColor,
+                props.variant.params.ratio,
+                props.variant.name,
+                props.variant.params.coverage === 'viewport' ? true : false,
+            );
             onload?.(false);
         }
 
         const { x, y, width, height } = camera.viewport;
-        ValueCell.update(this.renderable.values.uViewport, Vec4.set(this.renderable.values.uViewport.ref.value, x, y, width, height));
+        ValueCell.update(
+            this.renderable.values.uViewport,
+            Vec4.set(this.renderable.values.uViewport.ref.value, x, y, width, height),
+        );
     }
 
     private _isEnabled(props: BackgroundProps) {
@@ -333,7 +409,12 @@ export class BackgroundPass {
             }
             gl.clear(gl.COLOR_BUFFER_BIT);
             state.enable(gl.BLEND);
-            state.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+            state.blendFuncSeparate(
+                gl.SRC_ALPHA,
+                gl.ONE_MINUS_SRC_ALPHA,
+                gl.ONE,
+                gl.ONE_MINUS_SRC_ALPHA,
+            );
         } else {
             state.clearColor(0, 0, 0, 1);
             gl.clear(gl.COLOR_BUFFER_BIT);
@@ -388,7 +469,7 @@ function getCubeAssets(assetManager: AssetManager, faces: SkyboxProps['faces']):
 
 function getCubeFaces(assetManager: AssetManager, cubeAssets: CubeAssets): CubeFaces {
     const resolve = (asset: Asset) => {
-        return assetManager.resolve(asset, 'binary').run().then(a => new Blob([a.data]));
+        return assetManager.resolve(asset, 'binary').run().then((a) => new Blob([a.data]));
     };
 
     return {
@@ -413,10 +494,22 @@ function areSkyboxTexturePropsEqual(facesA: SkyboxProps['faces'], facesB: Skybox
     return getSkyboxHash(facesA) === getSkyboxHash(facesB);
 }
 
-function getSkyboxTexture(ctx: WebGLContext, assetManager: AssetManager, faces: SkyboxProps['faces'], onload?: (errored?: boolean) => void): { texture: Texture, assets: Asset[] } {
+function getSkyboxTexture(
+    ctx: WebGLContext,
+    assetManager: AssetManager,
+    faces: SkyboxProps['faces'],
+    onload?: (errored?: boolean) => void,
+): { texture: Texture; assets: Asset[] } {
     const cubeAssets = getCubeAssets(assetManager, faces);
     const cubeFaces = getCubeFaces(assetManager, cubeAssets);
-    const assets = [cubeAssets.nx, cubeAssets.ny, cubeAssets.nz, cubeAssets.px, cubeAssets.py, cubeAssets.pz];
+    const assets = [
+        cubeAssets.nx,
+        cubeAssets.ny,
+        cubeAssets.nz,
+        cubeAssets.px,
+        cubeAssets.py,
+        cubeAssets.pz,
+    ];
     if (typeof HTMLImageElement === 'undefined') {
         console.error(`Missing "HTMLImageElement" required for background skybox`);
         onload?.(true);
@@ -443,7 +536,12 @@ function areImageTexturePropsEqual(sourceA: ImageProps['source'], sourceB: Image
     return getImageHash(sourceA) === getImageHash(sourceB);
 }
 
-function getImageTexture(ctx: WebGLContext, assetManager: AssetManager, source: ImageProps['source'], onload?: (errored?: boolean) => void): { texture: Texture, asset: Asset } {
+function getImageTexture(
+    ctx: WebGLContext,
+    assetManager: AssetManager,
+    source: ImageProps['source'],
+    onload?: (errored?: boolean) => void,
+): { texture: Texture; asset: Asset } {
     const asset = source.name === 'url'
         ? Asset.getUrlAsset(assetManager, source.params)
         : source.params!;
@@ -466,7 +564,7 @@ function getImageTexture(ctx: WebGLContext, assetManager: AssetManager, source: 
         onload?.(true);
     };
 
-    assetManager.resolve(asset, 'binary').run().then(a => {
+    assetManager.resolve(asset, 'binary').run().then((a) => {
         const blob = new Blob([a.data]);
         img.src = URL.createObjectURL(blob);
     });
@@ -495,14 +593,24 @@ const BackgroundSchema = {
     uSaturation: UniformSpec('f'),
     uLightness: UniformSpec('f'),
     uRotation: UniformSpec('m3'),
-    dVariant: DefineSpec('string', ['skybox', 'image', 'verticalGradient', 'horizontalGradient', 'radialGradient']),
+    dVariant: DefineSpec('string', [
+        'skybox',
+        'image',
+        'verticalGradient',
+        'horizontalGradient',
+        'radialGradient',
+    ]),
 };
 const SkyboxShaderCode = ShaderCode('background', background_vert, background_frag, {
-    shaderTextureLod: 'optional'
+    shaderTextureLod: 'optional',
 });
-type BackgroundRenderable = ComputeRenderable<Values<typeof BackgroundSchema>>
+type BackgroundRenderable = ComputeRenderable<Values<typeof BackgroundSchema>>;
 
-function getBackgroundRenderable(ctx: WebGLContext, width: number, height: number): BackgroundRenderable {
+function getBackgroundRenderable(
+    ctx: WebGLContext,
+    width: number,
+    height: number,
+): BackgroundRenderable {
     const values: Values<typeof BackgroundSchema> = {
         drawCount: ValueCell.create(6),
         instanceCount: ValueCell.create(1),

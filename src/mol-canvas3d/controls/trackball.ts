@@ -9,9 +9,18 @@
  * copyright (c) 2010-2018 three.js authors. MIT License
  */
 
-import { Quat, Vec2, Vec3, EPSILON } from '../../mol-math/linear-algebra.ts';
+import { EPSILON, Quat, Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { Viewport } from '../camera/util.ts';
-import { InputObserver, DragInput, WheelInput, PinchInput, ButtonsType, ModifiersKeys, KeyInput, MoveInput } from '../../mol-util/input/input-observer.ts';
+import {
+    ButtonsType,
+    DragInput,
+    InputObserver,
+    KeyInput,
+    ModifiersKeys,
+    MoveInput,
+    PinchInput,
+    WheelInput,
+} from '../../mol-util/input/input-observer.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { Camera } from '../camera.ts';
 import { absMax, degToRad } from '../../mol-math/misc.ts';
@@ -25,17 +34,33 @@ const Key = Binding.TriggerKey;
 
 export const DefaultTrackballBindings = {
     dragRotate: Binding([Trigger(B.Flag.Primary, M.create())], 'Rotate', 'Drag using ${triggers}'),
-    dragRotateZ: Binding([Trigger(B.Flag.Primary, M.create({ shift: true, control: true }))], 'Rotate around z-axis (roll)', 'Drag using ${triggers}'),
-    dragPan: Binding([
-        Trigger(B.Flag.Secondary, M.create()),
-        Trigger(B.Flag.Primary, M.create({ control: true }))
-    ], 'Pan', 'Drag using ${triggers}'),
+    dragRotateZ: Binding(
+        [Trigger(B.Flag.Primary, M.create({ shift: true, control: true }))],
+        'Rotate around z-axis (roll)',
+        'Drag using ${triggers}',
+    ),
+    dragPan: Binding(
+        [
+            Trigger(B.Flag.Secondary, M.create()),
+            Trigger(B.Flag.Primary, M.create({ control: true })),
+        ],
+        'Pan',
+        'Drag using ${triggers}',
+    ),
     dragZoom: Binding.Empty,
     dragFocus: Binding([Trigger(B.Flag.Forth, M.create())], 'Focus', 'Drag using ${triggers}'),
-    dragFocusZoom: Binding([Trigger(B.Flag.Auxilary, M.create())], 'Focus and zoom', 'Drag using ${triggers}'),
+    dragFocusZoom: Binding(
+        [Trigger(B.Flag.Auxilary, M.create())],
+        'Focus and zoom',
+        'Drag using ${triggers}',
+    ),
 
     scrollZoom: Binding([Trigger(B.Flag.Auxilary, M.create())], 'Zoom', 'Scroll using ${triggers}'),
-    scrollFocus: Binding([Trigger(B.Flag.Auxilary, M.create({ shift: true }))], 'Clip', 'Scroll using ${triggers}'),
+    scrollFocus: Binding(
+        [Trigger(B.Flag.Auxilary, M.create({ shift: true }))],
+        'Clip',
+        'Scroll using ${triggers}',
+    ),
     scrollFocusZoom: Binding.Empty,
 
     keyMoveForward: Binding([Key('KeyW')], 'Move forward', 'Press ${triggers}'),
@@ -46,13 +71,33 @@ export const DefaultTrackballBindings = {
     keyMoveDown: Binding([Key('KeyF')], 'Move down', 'Press ${triggers}'),
     keyRollLeft: Binding([Key('KeyQ')], 'Roll left', 'Press ${triggers}'),
     keyRollRight: Binding([Key('KeyE')], 'Roll right', 'Press ${triggers}'),
-    keyPitchUp: Binding([Key('ArrowUp', M.create({ shift: true }))], 'Pitch up', 'Press ${triggers}'),
-    keyPitchDown: Binding([Key('ArrowDown', M.create({ shift: true }))], 'Pitch down', 'Press ${triggers}'),
-    keyYawLeft: Binding([Key('ArrowLeft', M.create({ shift: true }))], 'Yaw left', 'Press ${triggers}'),
-    keyYawRight: Binding([Key('ArrowRight', M.create({ shift: true }))], 'Yaw right', 'Press ${triggers}'),
+    keyPitchUp: Binding(
+        [Key('ArrowUp', M.create({ shift: true }))],
+        'Pitch up',
+        'Press ${triggers}',
+    ),
+    keyPitchDown: Binding(
+        [Key('ArrowDown', M.create({ shift: true }))],
+        'Pitch down',
+        'Press ${triggers}',
+    ),
+    keyYawLeft: Binding(
+        [Key('ArrowLeft', M.create({ shift: true }))],
+        'Yaw left',
+        'Press ${triggers}',
+    ),
+    keyYawRight: Binding(
+        [Key('ArrowRight', M.create({ shift: true }))],
+        'Yaw right',
+        'Press ${triggers}',
+    ),
 
     boostMove: Binding([Key('ShiftLeft')], 'Boost move', 'Press ${triggers}'),
-    enablePointerLock: Binding([Key('Space', M.create({ control: true }))], 'Enable pointer lock', 'Press ${triggers}'),
+    enablePointerLock: Binding(
+        [Key('Space', M.create({ control: true }))],
+        'Enable pointer lock',
+        'Press ${triggers}',
+    ),
 };
 
 export const TrackballControlsParams = {
@@ -68,12 +113,16 @@ export const TrackballControlsParams = {
     animate: PD.MappedStatic('off', {
         off: PD.EmptyGroup(),
         spin: PD.Group({
-            speed: PD.Numeric(1, { min: -20, max: 20, step: 1 }, { description: 'Rotation speed in radians per second' }),
+            speed: PD.Numeric(1, { min: -20, max: 20, step: 1 }, {
+                description: 'Rotation speed in radians per second',
+            }),
         }, { description: 'Spin the 3D scene around the x-axis in view space' }),
         rock: PD.Group({
             speed: PD.Numeric(0.3, { min: -5, max: 5, step: 0.1 }),
-            angle: PD.Numeric(10, { min: 0, max: 90, step: 1 }, { description: 'How many degrees to rotate in each direction.' }),
-        }, { description: 'Rock the 3D scene around the x-axis in view space' })
+            angle: PD.Numeric(10, { min: 0, max: 90, step: 1 }, {
+                description: 'How many degrees to rotate in each direction.',
+            }),
+        }, { description: 'Rock the 3D scene around the x-axis in view space' }),
     }),
 
     staticMoving: PD.Boolean(true, { isHidden: true }),
@@ -97,33 +146,38 @@ export const TrackballControlsParams = {
             minDistanceFactor: PD.Numeric(0),
             minDistancePadding: PD.Numeric(5),
             maxDistanceFactor: PD.Numeric(10),
-            maxDistanceMin: PD.Numeric(20)
-        })
-    }, { isHidden: true })
+            maxDistanceMin: PD.Numeric(20),
+        }),
+    }, { isHidden: true }),
 };
-export type TrackballControlsProps = PD.Values<typeof TrackballControlsParams>
+export type TrackballControlsProps = PD.Values<typeof TrackballControlsParams>;
 
 export { TrackballControls };
 interface TrackballControls {
-    readonly viewport: Viewport
-    readonly isAnimating: boolean
-    readonly isMoving: boolean
+    readonly viewport: Viewport;
+    readonly isAnimating: boolean;
+    readonly isMoving: boolean;
 
-    readonly props: Readonly<TrackballControlsProps>
-    setProps: (props: Partial<TrackballControlsProps>) => void
+    readonly props: Readonly<TrackballControlsProps>;
+    setProps: (props: Partial<TrackballControlsProps>) => void;
 
-    start: (t: number) => void
-    update: (t: number) => void
-    reset: () => void
-    dispose: () => void
+    start: (t: number) => void;
+    update: (t: number) => void;
+    reset: () => void;
+    dispose: () => void;
 }
 namespace TrackballControls {
-    export function create(input: InputObserver, camera: Camera, scene: Scene, props: Partial<TrackballControlsProps> = {}): TrackballControls {
+    export function create(
+        input: InputObserver,
+        camera: Camera,
+        scene: Scene,
+        props: Partial<TrackballControlsProps> = {},
+    ): TrackballControls {
         const p: TrackballControlsProps = {
             ...PD.getDefaultValues(TrackballControlsParams),
             ...props,
             // include default bindings for backwards state compatibility
-            bindings: { ...DefaultTrackballBindings, ...props.bindings }
+            bindings: { ...DefaultTrackballBindings, ...props.bindings },
         };
         const b = p.bindings;
 
@@ -179,7 +233,7 @@ namespace TrackballControls {
             return Vec2.set(
                 mouseOnScreenVec2,
                 (pageX - viewport.x) / viewport.width,
-                (pageY - viewport.y) / viewport.height
+                (pageY - viewport.y) / viewport.height,
             );
         }
 
@@ -188,7 +242,7 @@ namespace TrackballControls {
             return Vec2.set(
                 mouseOnCircleVec2,
                 (pageX - viewport.width * 0.5 - viewport.x) / (viewport.width * 0.5),
-                (viewport.height + 2 * (viewport.y - pageY)) / viewport.width // viewport.width intentional
+                (viewport.height + 2 * (viewport.y - pageY)) / viewport.width, // viewport.width intentional
             );
         }
 
@@ -371,8 +425,18 @@ namespace TrackballControls {
         }
 
         const keyState = {
-            moveUp: 0, moveDown: 0, moveLeft: 0, moveRight: 0, moveForward: 0, moveBack: 0,
-            pitchUp: 0, pitchDown: 0, yawLeft: 0, yawRight: 0, rollLeft: 0, rollRight: 0,
+            moveUp: 0,
+            moveDown: 0,
+            moveLeft: 0,
+            moveRight: 0,
+            moveForward: 0,
+            moveBack: 0,
+            pitchUp: 0,
+            pitchDown: 0,
+            yawLeft: 0,
+            yawRight: 0,
+            rollLeft: 0,
+            rollRight: 0,
             boostMove: 0,
         };
 
@@ -384,7 +448,8 @@ namespace TrackballControls {
             const minDistance = Math.max(camera.state.minNear, p.minDistance);
             Vec3.setMagnitude(moveEye, moveEye, minDistance);
 
-            const moveSpeed = deltaT * (60 / 1000) * p.moveSpeed * (keyState.boostMove === 1 ? p.boostMoveFactor : 1);
+            const moveSpeed = deltaT * (60 / 1000) * p.moveSpeed *
+                (keyState.boostMove === 1 ? p.boostMoveFactor : 1);
 
             if (keyState.moveForward === 1) {
                 Vec3.normalize(moveDir, moveEye);
@@ -449,7 +514,10 @@ namespace TrackballControls {
             }
 
             if (p.flyMode || input.pointerLock) {
-                const cameraDistance = Vec3.distance(camera.position, scene.boundingSphereVisible.center);
+                const cameraDistance = Vec3.distance(
+                    camera.position,
+                    scene.boundingSphereVisible.center,
+                );
                 camera.setState({ minFar: cameraDistance + scene.boundingSphereVisible.radius });
             }
         }
@@ -459,7 +527,10 @@ namespace TrackballControls {
          * and not too large compared to `camera.state.radiusMax`
          */
         function checkDistances() {
-            const maxDistance = Math.min(Math.max(camera.state.radiusMax * 1000, 0.01), p.maxDistance);
+            const maxDistance = Math.min(
+                Math.max(camera.state.radiusMax * 1000, 0.01),
+                p.maxDistance,
+            );
             if (Vec3.squaredMagnitude(_eye) > maxDistance * maxDistance) {
                 Vec3.setMagnitude(_eye, _eye, maxDistance);
                 Vec3.add(camera.position, camera.target, _eye);
@@ -559,7 +630,8 @@ namespace TrackballControls {
 
             const pr = input.pixelRatio;
             const vx = (x * pr - viewport.width / 2 - viewport.x) / viewport.width;
-            const vy = -(input.height - y * pr - viewport.height / 2 - viewport.y) / viewport.height;
+            const vy = -(input.height - y * pr - viewport.height / 2 - viewport.y) /
+                viewport.height;
 
             if (isStart) {
                 if (dragRotate) {
@@ -614,7 +686,18 @@ namespace TrackballControls {
             }
         }
 
-        function onPinch({ isStart, startX, startY, centerPageX, centerPageY, fractionDelta, buttons, modifiers }: PinchInput) {
+        function onPinch(
+            {
+                isStart,
+                startX,
+                startY,
+                centerPageX,
+                centerPageY,
+                fractionDelta,
+                buttons,
+                modifiers,
+            }: PinchInput,
+        ) {
             if (outsideViewport(startX, startY)) return;
 
             const pan = Binding.match(b.dragPan, buttons, modifiers);
@@ -760,7 +843,10 @@ namespace TrackballControls {
             Vec3.setMagnitude(moveEye, moveEye, minDistance);
             Vec3.sub(camera.target, camera.position, moveEye);
 
-            const cameraDistance = Vec3.distance(camera.position, scene.boundingSphereVisible.center);
+            const cameraDistance = Vec3.distance(
+                camera.position,
+                scene.boundingSphereVisible.center,
+            );
             camera.setState({ minFar: cameraDistance + scene.boundingSphereVisible.radius });
         }
 
@@ -860,7 +946,9 @@ namespace TrackballControls {
 
         return {
             viewport,
-            get isAnimating() { return p.animate.name !== 'off'; },
+            get isAnimating() {
+                return p.animate.name !== 'off';
+            },
             get isMoving() {
                 return (
                     keyState.moveForward === 1 || keyState.moveBack === 1 ||
@@ -872,7 +960,9 @@ namespace TrackballControls {
                 );
             },
 
-            get props() { return p as Readonly<TrackballControlsProps>; },
+            get props() {
+                return p as Readonly<TrackballControlsProps>;
+            },
             setProps: (props: Partial<TrackballControlsProps>) => {
                 if (props.animate?.name === 'rock' && p.animate.name !== 'rock') {
                     resetRock(); // start rocking from the center
@@ -891,7 +981,7 @@ namespace TrackballControls {
             start,
             update,
             reset,
-            dispose
+            dispose,
         };
     }
 }

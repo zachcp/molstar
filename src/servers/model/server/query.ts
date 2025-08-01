@@ -7,18 +7,30 @@
 import * as path from 'path';
 import { Column } from '../../../mol-data/db.ts';
 import { CifWriter } from '../../../mol-io/writer/cif.ts';
-import { Structure, StructureQuery, StructureSelection, Model } from '../../../mol-model/structure.ts';
+import {
+    Model,
+    Structure,
+    StructureQuery,
+    StructureSelection,
+} from '../../../mol-model/structure.ts';
 import { encode_mmCIF_categories } from '../../../mol-model/structure/export/mmcif.ts';
 import { Progress } from '../../../mol-task/index.ts';
 import { ConsoleLogger } from '../../../mol-util/console-logger.ts';
 import { now } from '../../../mol-util/now.ts';
 import { PerformanceMonitor } from '../../../mol-util/performance-monitor.ts';
 import { ModelServerConfig as Config } from '../config.ts';
-import { createModelPropertiesProviderFromConfig, ModelPropertiesProvider } from '../property-provider.ts';
+import {
+    createModelPropertiesProviderFromConfig,
+    ModelPropertiesProvider,
+} from '../property-provider.ts';
 import { VERSION } from '../version.ts';
 import { Job, JobEntry } from './jobs.ts';
-import { createStructureWrapperFromJobEntry, resolveStructures, StructureWrapper } from './structure-wrapper.ts';
-import CifField = CifWriter.Field
+import {
+    createStructureWrapperFromJobEntry,
+    resolveStructures,
+    StructureWrapper,
+} from './structure-wrapper.ts';
+import CifField = CifWriter.Field;
 import { splitCamelCase } from '../../../mol-util/string.ts';
 import { Encoder } from '../../../mol-io/writer/cif/encoder.ts';
 import { Encoding } from './api.ts';
@@ -33,10 +45,10 @@ import { Mat4 } from '../../../mol-math/linear-algebra.ts';
 import { GlobalModelTransformInfo } from '../../../mol-model/structure/model/properties/global-transform.ts';
 
 export interface Stats {
-    structure: StructureWrapper,
-    queryTimeMs: number,
-    encodeTimeMs: number,
-    resultSize: number
+    structure: StructureWrapper;
+    queryTimeMs: number;
+    encodeTimeMs: number;
+    resultSize: number;
 }
 
 const perf = new PerformanceMonitor();
@@ -57,12 +69,12 @@ export async function resolveJob(job: Job) {
 }
 
 const SharedParams = {
-    encoderName: `ModelServer ${VERSION}`
+    encoderName: `ModelServer ${VERSION}`,
 };
 
 const SharedLigandWritingParams = {
     ...SharedParams,
-    hydrogens: true
+    hydrogens: true,
 };
 
 function createEncoder(job: Job): Encoder {
@@ -71,36 +83,38 @@ function createEncoder(job: Job): Encoder {
             return CifWriter.createEncoder({
                 ...SharedParams,
                 binary: true,
-                binaryAutoClassifyEncoding: true
+                binaryAutoClassifyEncoding: true,
             });
         case 'sdf':
             ensureCompatibleQueryType(job);
             return SdfWriter.createEncoder({
-                ...SharedLigandWritingParams
+                ...SharedLigandWritingParams,
             });
         case 'mol':
             ensureCompatibleQueryType(job);
             return MolWriter.createEncoder({
-                ...SharedLigandWritingParams
+                ...SharedLigandWritingParams,
             });
         case 'mol2':
             ensureCompatibleQueryType(job);
             return Mol2Writer.createEncoder({
-                ...SharedLigandWritingParams
+                ...SharedLigandWritingParams,
             });
         default:
             return CifWriter.createEncoder({
                 ...SharedParams,
                 binary: false,
-                binaryAutoClassifyEncoding: true
+                binaryAutoClassifyEncoding: true,
             });
     }
 }
 
 function ensureCompatibleQueryType(job: Job) {
-    job.entries.forEach(e => {
+    job.entries.forEach((e) => {
         if (e.queryDefinition.niceName !== 'Ligand') {
-            throw Error("sdf, mol and mol2 encoding are only available for queries of type 'Ligand'");
+            throw Error(
+                "sdf, mol and mol2 encoding are only available for queries of type 'Ligand'",
+            );
         }
     });
 }
@@ -147,7 +161,9 @@ async function resolveSingleFile(job: Job) {
 }
 
 function getFilename(i: number, entry: JobEntry, header: string, encoding: Encoding) {
-    return `${i}_${header.toLowerCase()}_${splitCamelCase(entry.queryDefinition.name.replace(/\s/g, '_'), '-').toLowerCase()}.${encoding}`;
+    return `${i}_${header.toLowerCase()}_${
+        splitCamelCase(entry.queryDefinition.name.replace(/\s/g, '_'), '-').toLowerCase()
+    }.${encoding}`;
 }
 
 async function resolveMultiFile(job: Job) {
@@ -155,7 +171,6 @@ async function resolveMultiFile(job: Job) {
 
     let i = 0;
     for (const entry of job.entries) {
-
         const encoder = createEncoder(job);
 
         let hasDataBlock = false;
@@ -177,7 +192,10 @@ async function resolveMultiFile(job: Job) {
         ConsoleLogger.logId(job.id, 'Query', `Encoding ${entry.key}/${entry.queryDefinition.name}`);
         encoder.encode();
 
-        job.writer.beginEntry(getFilename(++i, entry, header, job.responseFormat.encoding), encoder.getSize());
+        job.writer.beginEntry(
+            getFilename(++i, entry, header, job.responseFormat.encoding),
+            encoder.getSize(),
+        );
         encoder.writeTo(job.writer);
         job.writer.endEntry();
         ConsoleLogger.logId(job.id, 'Query', `Written ${entry.key}/${entry.queryDefinition.name}`);
@@ -188,13 +206,18 @@ async function resolveMultiFile(job: Job) {
 
 function createErrorDataBlock(job: JobEntry, encoder: CifWriter.Encoder<any>) {
     let header;
-    if (job.sourceId === '_local_') header = path.basename(job.entryId).replace(/[^a-z0-9\-]/gi, '').toUpperCase();
-    else header = job.entryId.replace(/[^a-z0-9\-]/gi, '').toUpperCase();
+    if (job.sourceId === '_local_') {
+        header = path.basename(job.entryId).replace(/[^a-z0-9\-]/gi, '').toUpperCase();
+    } else header = job.entryId.replace(/[^a-z0-9\-]/gi, '').toUpperCase();
     encoder.startDataBlock(header);
     return header;
 }
 
-async function resolveJobEntry(entry: JobEntry, structure: StructureWrapper, encoder: CifWriter.Encoder<any>) {
+async function resolveJobEntry(
+    entry: JobEntry,
+    structure: StructureWrapper,
+    encoder: CifWriter.Encoder<any>,
+) {
     ConsoleLogger.logId(entry.job.id, 'Query', `Start ${entry.key}/${entry.queryDefinition.name}.`);
 
     try {
@@ -207,15 +230,21 @@ async function resolveJobEntry(entry: JobEntry, structure: StructureWrapper, enc
         if (entry.queryDefinition.structureTransform) {
             structures = [];
             for (const s of sourceStructures) {
-                structures.push(await entry.queryDefinition.structureTransform(entry.normalizedParams, s));
+                structures.push(
+                    await entry.queryDefinition.structureTransform(entry.normalizedParams, s),
+                );
             }
         }
 
-        const modelNums = entry.modelNums || (structure.models as Model[]).map(m => m.modelNum);
-        const queries = structures.map(s => entry.queryDefinition.query(entry.normalizedParams, s, modelNums));
+        const modelNums = entry.modelNums || (structure.models as Model[]).map((m) => m.modelNum);
+        const queries = structures.map((s) =>
+            entry.queryDefinition.query(entry.normalizedParams, s, modelNums)
+        );
         const result: Structure[] = [];
         for (let i = 0; i < structures.length; i++) {
-            const s = StructureSelection.unionStructure(StructureQuery.run(queries[i], structures[i], { timeoutMs: Config.queryTimeoutMs }));
+            const s = StructureSelection.unionStructure(
+                StructureQuery.run(queries[i], structures[i], { timeoutMs: Config.queryTimeoutMs }),
+            );
             if (s.elementCount > 0) {
                 if (!entry.transform || Mat4.isIdentity(entry.transform)) {
                     result.push(s);
@@ -226,7 +255,11 @@ async function resolveJobEntry(entry: JobEntry, structure: StructureWrapper, enc
         }
         perf.end('query');
 
-        ConsoleLogger.logId(entry.job.id, 'Query', `Queried ${entry.key}/${entry.queryDefinition.name}.`);
+        ConsoleLogger.logId(
+            entry.job.id,
+            'Query',
+            `Queried ${entry.key}/${entry.queryDefinition.name}.`,
+        );
 
         perf.start('encode');
 
@@ -244,10 +277,21 @@ async function resolveJobEntry(entry: JobEntry, structure: StructureWrapper, enc
         }
         // TODO propagate data for cif/bcif as well?
 
-        if (!entry.copyAllCategories && entry.queryDefinition.filter) encoder.setFilter(entry.queryDefinition.filter);
-        if (result.length > 0) encode_mmCIF_categories(encoder, result, { copyAllCategories: entry.copyAllCategories });
-        else ConsoleLogger.logId(entry.job.id, 'Warning', `Empty result for Query ${entry.key}/${entry.queryDefinition.name}`);
-        if (entry.transform && !Mat4.isIdentity(entry.transform)) GlobalModelTransformInfo.writeMmCif(encoder, entry.transform);
+        if (!entry.copyAllCategories && entry.queryDefinition.filter) {
+            encoder.setFilter(entry.queryDefinition.filter);
+        }
+        if (result.length > 0) {
+            encode_mmCIF_categories(encoder, result, {
+                copyAllCategories: entry.copyAllCategories,
+            });
+        } else {ConsoleLogger.logId(
+                entry.job.id,
+                'Warning',
+                `Empty result for Query ${entry.key}/${entry.queryDefinition.name}`,
+            );}
+        if (entry.transform && !Mat4.isIdentity(entry.transform)) {
+            GlobalModelTransformInfo.writeMmCif(encoder, entry.transform);
+        }
         if (!entry.copyAllCategories && entry.queryDefinition.filter) encoder.setFilter();
         perf.end('encode');
 
@@ -255,11 +299,15 @@ async function resolveJobEntry(entry: JobEntry, structure: StructureWrapper, enc
             structure: structure,
             queryTimeMs: perf.time('query'),
             encodeTimeMs: perf.time('encode'),
-            resultSize: result.reduce((n, s) => n + s.elementCount, 0)
+            resultSize: result.reduce((n, s) => n + s.elementCount, 0),
         };
 
         encoder.writeCategory(_model_server_stats, stats);
-        ConsoleLogger.logId(entry.job.id, 'Query', `Written ${entry.key}/${entry.queryDefinition.name}.`);
+        ConsoleLogger.logId(
+            entry.job.id,
+            'Query',
+            `Written ${entry.key}/${entry.queryDefinition.name}.`,
+        );
         return encoder;
     } catch (e) {
         ConsoleLogger.errorId(entry.job.id, e);
@@ -287,9 +335,16 @@ export function abortingObserver(p: Progress) {
     }
 }
 
-function string<T>(name: string, str: (data: T, i: number) => string, isSpecified?: (data: T) => boolean): CifField<number, T> {
+function string<T>(
+    name: string,
+    str: (data: T, i: number) => string,
+    isSpecified?: (data: T) => boolean,
+): CifField<number, T> {
     if (isSpecified) {
-        return CifField.str(name, (i, d) => str(d, i), { valueKind: (i, d) => isSpecified(d) ? Column.ValueKinds.Present : Column.ValueKinds.NotPresent });
+        return CifField.str(name, (i, d) => str(d, i), {
+            valueKind: (i, d) =>
+                isSpecified(d) ? Column.ValueKinds.Present : Column.ValueKinds.NotPresent,
+        });
     }
     return CifField.str(name, (i, d) => str(d, i));
 }
@@ -299,41 +354,43 @@ function int32<T>(name: string, value: (data: T) => number): CifField<number, T>
 }
 
 const _model_server_result_fields: CifField<any, JobEntry>[] = [
-    string<JobEntry>('job_id', ctx => '' + ctx.job.id),
-    string<JobEntry>('datetime_utc', ctx => ctx.job.datetime_utc),
-    string<JobEntry>('server_version', ctx => VERSION),
-    string<JobEntry>('query_name', ctx => ctx.queryDefinition.name),
-    string<JobEntry>('source_id', ctx => ctx.sourceId),
-    string<JobEntry>('entry_id', ctx => ctx.entryId),
+    string<JobEntry>('job_id', (ctx) => '' + ctx.job.id),
+    string<JobEntry>('datetime_utc', (ctx) => ctx.job.datetime_utc),
+    string<JobEntry>('server_version', (ctx) => VERSION),
+    string<JobEntry>('query_name', (ctx) => ctx.queryDefinition.name),
+    string<JobEntry>('source_id', (ctx) => ctx.sourceId),
+    string<JobEntry>('entry_id', (ctx) => ctx.entryId),
 ];
 
 const _model_server_params_fields: CifField<number, string[]>[] = [
     string<string[]>('name', (ctx, i) => ctx[i][0]),
-    string<string[]>('value', (ctx, i) => ctx[i][1])
+    string<string[]>('value', (ctx, i) => ctx[i][1]),
 ];
 
 const _model_server_error_fields: CifField<number, string>[] = [
-    string<string>('message', (ctx, i) => ctx)
+    string<string>('message', (ctx, i) => ctx),
 ];
 
 const _model_server_stats_fields: CifField<number, Stats>[] = [
-    int32<Stats>('io_time_ms', ctx => ctx.structure.info.readTime | 0),
-    int32<Stats>('parse_time_ms', ctx => ctx.structure.info.parseTime | 0),
+    int32<Stats>('io_time_ms', (ctx) => ctx.structure.info.readTime | 0),
+    int32<Stats>('parse_time_ms', (ctx) => ctx.structure.info.parseTime | 0),
     // int32<Stats>('attach_props_time_ms', ctx => ctx.structure.info.attachPropsTime | 0),
-    int32<Stats>('create_model_time_ms', ctx => ctx.structure.info.createModelTime | 0),
-    int32<Stats>('query_time_ms', ctx => ctx.queryTimeMs | 0),
-    int32<Stats>('encode_time_ms', ctx => ctx.encodeTimeMs | 0),
-    int32<Stats>('element_count', ctx => ctx.resultSize | 0),
+    int32<Stats>('create_model_time_ms', (ctx) => ctx.structure.info.createModelTime | 0),
+    int32<Stats>('query_time_ms', (ctx) => ctx.queryTimeMs | 0),
+    int32<Stats>('encode_time_ms', (ctx) => ctx.encodeTimeMs | 0),
+    int32<Stats>('element_count', (ctx) => ctx.resultSize | 0),
 ];
 
 const _model_server_result: CifWriter.Category<JobEntry> = {
     name: 'model_server_result',
-    instance: (job) => CifWriter.categoryInstance(_model_server_result_fields, { data: job, rowCount: 1 })
+    instance: (job) =>
+        CifWriter.categoryInstance(_model_server_result_fields, { data: job, rowCount: 1 }),
 };
 
 const _model_server_error: CifWriter.Category<string> = {
     name: 'model_server_error',
-    instance: (message) => CifWriter.categoryInstance(_model_server_error_fields, { data: message, rowCount: 1 })
+    instance: (message) =>
+        CifWriter.categoryInstance(_model_server_error_fields, { data: message, rowCount: 1 }),
 };
 
 const _model_server_params: CifWriter.Category<JobEntry> = {
@@ -343,11 +400,15 @@ const _model_server_params: CifWriter.Category<JobEntry> = {
         for (const k of Object.keys(job.normalizedParams)) {
             params.push([k, JSON.stringify(job.normalizedParams[k])]);
         }
-        return CifWriter.categoryInstance(_model_server_params_fields, { data: params, rowCount: params.length });
-    }
+        return CifWriter.categoryInstance(_model_server_params_fields, {
+            data: params,
+            rowCount: params.length,
+        });
+    },
 };
 
 const _model_server_stats: CifWriter.Category<Stats> = {
     name: 'model_server_stats',
-    instance: (stats) => CifWriter.categoryInstance(_model_server_stats_fields, { data: stats, rowCount: 1 })
+    instance: (stats) =>
+        CifWriter.categoryInstance(_model_server_stats_fields, { data: stats, rowCount: 1 }),
 };

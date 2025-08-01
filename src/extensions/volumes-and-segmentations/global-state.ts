@@ -12,17 +12,23 @@ import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { VolsegEntry } from './entry-root.ts';
 import { isDefined } from './helpers.ts';
 
-
 export const VolsegGlobalStateParams = {
-    tryUseGpu: PD.Boolean(true, { description: 'Attempt using GPU for faster rendering. \nCaution: with some hardware setups, this might render some objects incorrectly or not at all.' }),
-    selectionMode: PD.Boolean(true, { description: 'Allow selecting/deselecting a segment by clicking on it.' }),
+    tryUseGpu: PD.Boolean(true, {
+        description:
+            'Attempt using GPU for faster rendering. \nCaution: with some hardware setups, this might render some objects incorrectly or not at all.',
+    }),
+    selectionMode: PD.Boolean(true, {
+        description: 'Allow selecting/deselecting a segment by clicking on it.',
+    }),
 };
 export type VolsegGlobalStateParamValues = PD.Values<typeof VolsegGlobalStateParams>;
 
+export class VolsegGlobalState extends PluginStateObject.CreateBehavior<VolsegGlobalStateData>({
+    name: 'Vol & Seg Global State',
+}) {}
 
-export class VolsegGlobalState extends PluginStateObject.CreateBehavior<VolsegGlobalStateData>({ name: 'Vol & Seg Global State' }) { }
-
-export class VolsegGlobalStateData extends PluginBehavior.WithSubscribers<VolsegGlobalStateParamValues> {
+export class VolsegGlobalStateData
+    extends PluginBehavior.WithSubscribers<VolsegGlobalStateParamValues> {
     private ref: string;
     currentState = new BehaviorSubject(PD.getDefaultValues(VolsegGlobalStateParams));
 
@@ -44,7 +50,9 @@ export class VolsegGlobalStateData extends PluginBehavior.WithSubscribers<Volseg
         const oldState = this.currentState.value;
 
         const promises = [];
-        const allEntries = plugin.state.data.selectQ(q => q.ofType(VolsegEntry)).map(cell => cell.obj?.data).filter(isDefined);
+        const allEntries = plugin.state.data.selectQ((q) => q.ofType(VolsegEntry)).map((cell) =>
+            cell.obj?.data
+        ).filter(isDefined);
         if (state.tryUseGpu !== undefined && state.tryUseGpu !== oldState.tryUseGpu) {
             for (const entry of allEntries) {
                 promises.push(entry.setTryUseGpu(state.tryUseGpu));
@@ -60,6 +68,7 @@ export class VolsegGlobalStateData extends PluginBehavior.WithSubscribers<Volseg
     }
 
     static getGlobalState(plugin: PluginContext): VolsegGlobalStateParamValues | undefined {
-        return plugin.state.data.selectQ(q => q.ofType(VolsegGlobalState))[0]?.obj?.data.currentState.value;
+        return plugin.state.data.selectQ((q) => q.ofType(VolsegGlobalState))[0]?.obj?.data
+            .currentState.value;
     }
 }

@@ -6,19 +6,47 @@
  */
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { Structure, Unit, Bond } from '../../../mol-model/structure.ts';
+import { Bond, Structure, Unit } from '../../../mol-model/structure.ts';
 import { Features, FeaturesBuilder } from './features.ts';
 import { ValenceModelProvider } from '../valence-model.ts';
-import { InteractionsIntraContacts, InteractionsInterContacts, FeatureType, interactionTypeLabel } from './common.ts';
-import { IntraContactsBuilder, InterContactsBuilder } from './contacts-builder.ts';
+import {
+    FeatureType,
+    InteractionsInterContacts,
+    InteractionsIntraContacts,
+    interactionTypeLabel,
+} from './common.ts';
+import { InterContactsBuilder, IntraContactsBuilder } from './contacts-builder.ts';
 import { IntMap } from '../../../mol-data/int.ts';
-import { addUnitContacts, ContactTester, addStructureContacts, ContactsParams, ContactsProps } from './contacts.ts';
-import { HalogenDonorProvider, HalogenAcceptorProvider, HalogenBondsProvider } from './halogen-bonds.ts';
-import { HydrogenDonorProvider, WeakHydrogenDonorProvider, HydrogenAcceptorProvider, HydrogenBondsProvider, WeakHydrogenBondsProvider } from './hydrogen-bonds.ts';
-import { NegativChargeProvider, PositiveChargeProvider, AromaticRingProvider, IonicProvider, PiStackingProvider, CationPiProvider } from './charged.ts';
+import {
+    addStructureContacts,
+    addUnitContacts,
+    ContactsParams,
+    ContactsProps,
+    ContactTester,
+} from './contacts.ts';
+import {
+    HalogenAcceptorProvider,
+    HalogenBondsProvider,
+    HalogenDonorProvider,
+} from './halogen-bonds.ts';
+import {
+    HydrogenAcceptorProvider,
+    HydrogenBondsProvider,
+    HydrogenDonorProvider,
+    WeakHydrogenBondsProvider,
+    WeakHydrogenDonorProvider,
+} from './hydrogen-bonds.ts';
+import {
+    AromaticRingProvider,
+    CationPiProvider,
+    IonicProvider,
+    NegativChargeProvider,
+    PiStackingProvider,
+    PositiveChargeProvider,
+} from './charged.ts';
 import { HydrophobicAtomProvider, HydrophobicProvider } from './hydrophobic.ts';
 import { SetUtils } from '../../../mol-util/set.ts';
-import { MetalCoordinationProvider, MetalProvider, MetalBindingProvider } from './metal.ts';
+import { MetalBindingProvider, MetalCoordinationProvider, MetalProvider } from './metal.ts';
 import { refineInteractions } from './refine.ts';
 import { CustomProperty } from '../../common/custom-property.ts';
 import { DataLocation } from '../../../mol-model/location.ts';
@@ -32,30 +60,44 @@ export { Interactions };
 
 interface Interactions {
     /** Features of each unit */
-    unitsFeatures: IntMap<Features>
+    unitsFeatures: IntMap<Features>;
     /** Interactions of each unit */
-    unitsContacts: IntMap<InteractionsIntraContacts>
+    unitsContacts: IntMap<InteractionsIntraContacts>;
     /** Interactions between units */
-    contacts: InteractionsInterContacts
+    contacts: InteractionsInterContacts;
 }
 
 namespace Interactions {
-    type StructureInteractions = { readonly structure: Structure, readonly interactions: Interactions }
+    type StructureInteractions = {
+        readonly structure: Structure;
+        readonly interactions: Interactions;
+    };
 
     export interface Element {
-        unitA: Unit
+        unitA: Unit;
         /** Index into features of unitA */
-        indexA: Features.FeatureIndex
-        unitB: Unit
+        indexA: Features.FeatureIndex;
+        unitB: Unit;
         /** Index into features of unitB */
-        indexB: Features.FeatureIndex
+        indexB: Features.FeatureIndex;
     }
 
     export interface Location extends DataLocation<StructureInteractions, Element> {}
 
-    export function Location(interactions: Interactions, structure: Structure, unitA?: Unit, indexA?: Features.FeatureIndex, unitB?: Unit, indexB?: Features.FeatureIndex): Location {
-        return DataLocation('interactions', { structure, interactions },
-            { unitA: unitA as any, indexA: indexA as any, unitB: unitB as any, indexB: indexB as any });
+    export function Location(
+        interactions: Interactions,
+        structure: Structure,
+        unitA?: Unit,
+        indexA?: Features.FeatureIndex,
+        unitB?: Unit,
+        indexB?: Features.FeatureIndex,
+    ): Location {
+        return DataLocation('interactions', { structure, interactions }, {
+            unitA: unitA as any,
+            indexA: indexA as any,
+            unitB: unitB as any,
+            indexB: indexB as any,
+        });
     }
 
     export function isLocation(x: any): x is Location {
@@ -90,19 +132,31 @@ namespace Interactions {
         return _label(location.data.interactions, location.element);
     }
 
-    export interface Loci extends DataLoci<StructureInteractions, Element> { }
+    export interface Loci extends DataLoci<StructureInteractions, Element> {}
 
-    export function Loci(structure: Structure, interactions: Interactions, elements: ReadonlyArray<Element>): Loci {
-        return DataLoci('interactions', { structure, interactions }, elements,
+    export function Loci(
+        structure: Structure,
+        interactions: Interactions,
+        elements: ReadonlyArray<Element>,
+    ): Loci {
+        return DataLoci(
+            'interactions',
+            { structure, interactions },
+            elements,
             (boundingSphere) => getBoundingSphere(interactions, elements, boundingSphere),
-            () => getLabel(structure, interactions, elements));
+            () => getLabel(structure, interactions, elements),
+        );
     }
 
     export function isLoci(x: any): x is Loci {
         return !!x && x.kind === 'data-loci' && x.tag === 'interactions';
     }
 
-    export function getBoundingSphere(interactions: Interactions, elements: ReadonlyArray<Element>, boundingSphere: Sphere3D) {
+    export function getBoundingSphere(
+        interactions: Interactions,
+        elements: ReadonlyArray<Element>,
+        boundingSphere: Sphere3D,
+    ) {
         const { unitsFeatures } = interactions;
         return CentroidHelper.fromPairProvider(elements.length, (i, pA, pB) => {
             const e = elements[i];
@@ -111,7 +165,11 @@ namespace Interactions {
         }, boundingSphere);
     }
 
-    export function getLabel(structure: Structure, interactions: Interactions, elements: ReadonlyArray<Element>) {
+    export function getLabel(
+        structure: Structure,
+        interactions: Interactions,
+        elements: ReadonlyArray<Element>,
+    ) {
         const element = elements[0];
         if (element === undefined) return '';
         const { unitA, indexA, unitB, indexB } = element;
@@ -124,17 +182,26 @@ namespace Interactions {
         }
         return [
             _label(interactions, element),
-            bondLabel(Bond.Location(structure, unitA, mA[oA[indexA]], structure, unitB, mB[oB[indexB]]), options)
+            bondLabel(
+                Bond.Location(structure, unitA, mA[oA[indexA]], structure, unitB, mB[oB[indexB]]),
+                options,
+            ),
         ].join('</br>');
     }
 }
 
 const FeatureProviders = [
-    HydrogenDonorProvider, WeakHydrogenDonorProvider, HydrogenAcceptorProvider,
-    NegativChargeProvider, PositiveChargeProvider, AromaticRingProvider,
-    HalogenDonorProvider, HalogenAcceptorProvider,
+    HydrogenDonorProvider,
+    WeakHydrogenDonorProvider,
+    HydrogenAcceptorProvider,
+    NegativChargeProvider,
+    PositiveChargeProvider,
+    AromaticRingProvider,
+    HalogenDonorProvider,
+    HalogenAcceptorProvider,
     HydrophobicAtomProvider,
-    MetalProvider, MetalBindingProvider,
+    MetalProvider,
+    MetalBindingProvider,
 ];
 
 const ContactProviders = {
@@ -147,18 +214,22 @@ const ContactProviders = {
     'hydrophobic': HydrophobicProvider,
     'metal-coordination': MetalCoordinationProvider,
 };
-type ContactProviders = typeof ContactProviders
+type ContactProviders = typeof ContactProviders;
 
 function getProvidersParams(defaultOn: string[] = []) {
-    const params: { [k in keyof ContactProviders]: PD.Mapped<PD.NamedParamUnion<{
-        on: PD.Group<ContactProviders[k]['params']>
-        off: PD.Group<{}>
-    }>> } = Object.create(null);
+    const params: {
+        [k in keyof ContactProviders]: PD.Mapped<
+            PD.NamedParamUnion<{
+                on: PD.Group<ContactProviders[k]['params']>;
+                off: PD.Group<{}>;
+            }>
+        >;
+    } = Object.create(null);
 
-    Object.keys(ContactProviders).forEach(k => {
+    Object.keys(ContactProviders).forEach((k) => {
         (params as any)[k] = PD.MappedStatic(defaultOn.includes(k) ? 'on' : 'off', {
             on: PD.Group(ContactProviders[k as keyof ContactProviders].params),
-            off: PD.Group({})
+            off: PD.Group({}),
         }, { cycle: true });
     });
     return params;
@@ -178,22 +249,27 @@ export const InteractionsParams = {
     providers: PD.Group(ContactProviderParams, { isFlat: true }),
     contacts: PD.Group(ContactsParams, { label: 'Advanced Options' }),
 };
-export type InteractionsParams = typeof InteractionsParams
-export type InteractionsProps = PD.Values<InteractionsParams>
+export type InteractionsParams = typeof InteractionsParams;
+export type InteractionsProps = PD.Values<InteractionsParams>;
 
 export interface ComputeInterctionsOptions {
-    skipIntraContacts?: boolean,
-    unitPairTest?: (unitA: Unit, unitB: Unit) => boolean,
+    skipIntraContacts?: boolean;
+    unitPairTest?: (unitA: Unit, unitB: Unit) => boolean;
 }
 
-export async function computeInteractions(ctx: CustomProperty.Context, structure: Structure, props: Partial<InteractionsProps>, options?: ComputeInterctionsOptions): Promise<Interactions> {
+export async function computeInteractions(
+    ctx: CustomProperty.Context,
+    structure: Structure,
+    props: Partial<InteractionsProps>,
+    options?: ComputeInterctionsOptions,
+): Promise<Interactions> {
     const p = { ...PD.getDefaultValues(InteractionsParams), ...props };
     const cacheKey = JSON.stringify(p);
 
     await ValenceModelProvider.attach(ctx, structure);
 
     const contactTesters: ContactTester[] = [];
-    ObjectKeys(ContactProviders).forEach(k => {
+    ObjectKeys(ContactProviders).forEach((k) => {
         const { name, params } = p.providers[k];
         if (name === 'on') {
             contactTesters.push(ContactProviders[k].createTester(params as any));
@@ -201,8 +277,10 @@ export async function computeInteractions(ctx: CustomProperty.Context, structure
     });
 
     const requiredFeatures = new Set<FeatureType>();
-    contactTesters.forEach(l => SetUtils.add(requiredFeatures, l.requiredFeatures));
-    const featureProviders = FeatureProviders.filter(f => SetUtils.areIntersecting(requiredFeatures, f.types));
+    contactTesters.forEach((l) => SetUtils.add(requiredFeatures, l.requiredFeatures));
+    const featureProviders = FeatureProviders.filter((f) =>
+        SetUtils.areIntersecting(requiredFeatures, f.types)
+    );
 
     const unitsFeatures = IntMap.Mutable<Features>();
     const unitsContacts = IntMap.Mutable<InteractionsIntraContacts>();
@@ -220,21 +298,38 @@ export async function computeInteractions(ctx: CustomProperty.Context, structure
 
         if (options?.skipIntraContacts) continue;
 
-        const intraUnitContacts = findIntraUnitContacts(structure, group.units[0], features, contactTesters, p.contacts);
+        const intraUnitContacts = findIntraUnitContacts(
+            structure,
+            group.units[0],
+            features,
+            contactTesters,
+            p.contacts,
+        );
         for (let j = 0, jl = group.units.length; j < jl; ++j) {
             const u = group.units[j];
             unitsContacts.set(u.id, intraUnitContacts);
         }
     }
 
-    const contacts = findInterUnitContacts(structure, unitsFeatures, contactTesters, p.contacts, options);
+    const contacts = findInterUnitContacts(
+        structure,
+        unitsFeatures,
+        contactTesters,
+        p.contacts,
+        options,
+    );
 
     const interactions = { unitsFeatures, unitsContacts, contacts };
     refineInteractions(structure, interactions);
     return interactions;
 }
 
-function findUnitFeatures(structure: Structure, unit: Unit, featureProviders: Features.Provider[], cacheKey: string) {
+function findUnitFeatures(
+    structure: Structure,
+    unit: Unit,
+    featureProviders: Features.Provider[],
+    cacheKey: string,
+) {
     const key = `features-${cacheKey}`;
     if (unit.transientCache.has(key)) {
         return unit.transientCache.get(key) as Features;
@@ -252,7 +347,13 @@ function findUnitFeatures(structure: Structure, unit: Unit, featureProviders: Fe
     return features;
 }
 
-function findIntraUnitContacts(structure: Structure, unit: Unit, features: Features, contactTesters: ReadonlyArray<ContactTester>, props: ContactsProps) {
+function findIntraUnitContacts(
+    structure: Structure,
+    unit: Unit,
+    features: Features,
+    contactTesters: ReadonlyArray<ContactTester>,
+    props: ContactsProps,
+) {
     const builder = IntraContactsBuilder.create(features, unit.elements.length);
     if (Unit.isAtomic(unit)) {
         addUnitContacts(structure, unit, features, builder, contactTesters, props);
@@ -260,20 +361,35 @@ function findIntraUnitContacts(structure: Structure, unit: Unit, features: Featu
     return builder.getContacts();
 }
 
-function findInterUnitContacts(structure: Structure, unitsFeatures: IntMap<Features>, contactTesters: ReadonlyArray<ContactTester>, props: ContactsProps, options?: ComputeInterctionsOptions) {
+function findInterUnitContacts(
+    structure: Structure,
+    unitsFeatures: IntMap<Features>,
+    contactTesters: ReadonlyArray<ContactTester>,
+    props: ContactsProps,
+    options?: ComputeInterctionsOptions,
+) {
     const builder = InterContactsBuilder.create();
 
     Structure.eachUnitPair(structure, (unitA: Unit, unitB: Unit) => {
         const featuresA = unitsFeatures.get(unitA.id);
         const featuresB = unitsFeatures.get(unitB.id);
-        addStructureContacts(structure, unitA as Unit.Atomic, featuresA, unitB as Unit.Atomic, featuresB, builder, contactTesters, props);
+        addStructureContacts(
+            structure,
+            unitA as Unit.Atomic,
+            featuresA,
+            unitB as Unit.Atomic,
+            featuresB,
+            builder,
+            contactTesters,
+            props,
+        );
     }, {
-        maxRadius: Math.max(...contactTesters.map(t => t.maxDistance)),
+        maxRadius: Math.max(...contactTesters.map((t) => t.maxDistance)),
         validUnit: (unit: Unit) => Unit.isAtomic(unit),
         validUnitPair: (unitA: Unit, unitB: Unit) => {
             if (options?.unitPairTest) return options.unitPairTest(unitA, unitB);
             return Structure.validUnitPair(structure, unitA, unitB);
-        }
+        },
     });
 
     return builder.getContacts(unitsFeatures);

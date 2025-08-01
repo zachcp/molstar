@@ -20,8 +20,12 @@ namespace StateTreeSpine {
     export class Impl implements StateTreeSpine {
         private _current: StateObjectCell | undefined = void 0;
 
-        get current() { return this._current; }
-        set current(cell: StateObjectCell | undefined) { this._current = cell; }
+        get current() {
+            return this._current;
+        }
+        set current(cell: StateObjectCell | undefined) {
+            this._current = cell;
+        }
 
         getAncestorOfType<T extends StateObject.Ctor>(t: T): StateObject.From<T> | undefined {
             if (!this._current) return void 0;
@@ -43,7 +47,9 @@ namespace StateTreeSpine {
                 if (cell.obj.type === t.type) {
                     ret = cell;
                 }
-                if (cell.transform.ref === StateTransform.RootRef) return ret ? ret.obj as StateObject.From<T> : void 0;
+                if (cell.transform.ref === StateTransform.RootRef) {
+                    return ret ? ret.obj as StateObject.From<T> : void 0;
+                }
                 cell = this.cells.get(cell.transform.parent)!; // assign parent for next check
             }
         }
@@ -52,7 +58,10 @@ namespace StateTreeSpine {
         }
     }
 
-    export function getDecoratorChain(state: State, currentRef: StateTransform.Ref): StateObjectCell[] {
+    export function getDecoratorChain(
+        state: State,
+        currentRef: StateTransform.Ref,
+    ): StateObjectCell[] {
         const cells = state.cells;
         let current = cells.get(currentRef)!;
         const ret: StateObjectCell[] = [current];
@@ -63,7 +72,11 @@ namespace StateTreeSpine {
         return ret;
     }
 
-    export function getRootOfType<T extends StateObject.Ctor>(state: State, t: T, ref: string): StateObject.From<T> | undefined {
+    export function getRootOfType<T extends StateObject.Ctor>(
+        state: State,
+        t: T,
+        ref: string,
+    ): StateObject.From<T> | undefined {
         let ret: StateObjectCell | undefined = void 0;
         let cell = state.cells.get(ref);
         if (!cell) return void 0;
@@ -72,7 +85,9 @@ namespace StateTreeSpine {
             if (cell.obj.type === t.type) {
                 ret = cell;
             }
-            if (cell.transform.ref === StateTransform.RootRef) return ret ? ret.obj as StateObject.From<T> : void 0;
+            if (cell.transform.ref === StateTransform.RootRef) {
+                return ret ? ret.obj as StateObject.From<T> : void 0;
+            }
             cell = state.cells.get(cell.transform.parent)!; // assign parent for next check
         }
     }

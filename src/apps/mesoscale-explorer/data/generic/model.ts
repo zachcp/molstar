@@ -6,7 +6,10 @@
 
 import { Mat4 } from '../../../../mol-math/linear-algebra/3d/mat4.ts';
 import { ElementIndex, Model, Structure, Unit } from '../../../../mol-model/structure.ts';
-import { PluginStateObject as SO, PluginStateTransform } from '../../../../mol-plugin-state/objects.ts';
+import {
+    PluginStateObject as SO,
+    PluginStateTransform,
+} from '../../../../mol-plugin-state/objects.ts';
 import { Task } from '../../../../mol-task/index.ts';
 import { StateObject, StateTransformer } from '../../../../mol-state/index.ts';
 import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
@@ -28,8 +31,17 @@ function createModelChainMap(model: Model) {
     const { offsets } = model.atomicHierarchy.chainAtomSegments;
 
     for (let i = 0; i < _rowCount; i++) {
-        const elements = SortedArray.ofBounds(offsets[i] as ElementIndex, offsets[i + 1] as ElementIndex);
-        const unit = builder.addUnit(Unit.Kind.Atomic, model, SymmetryOperator.Default, elements, Unit.Trait.FastBoundary);
+        const elements = SortedArray.ofBounds(
+            offsets[i] as ElementIndex,
+            offsets[i + 1] as ElementIndex,
+        );
+        const unit = builder.addUnit(
+            Unit.Kind.Atomic,
+            model,
+            SymmetryOperator.Default,
+            elements,
+            Unit.Trait.FastBoundary,
+        );
         units.set(label_asym_id.value(i), unit);
     }
 
@@ -37,7 +49,9 @@ function createModelChainMap(model: Model) {
 }
 
 function buildAssembly(model: Model, assembly: Assembly) {
-    const coordinateSystem = SymmetryOperator.create(assembly.id, Mat4.identity(), { assembly: { id: assembly.id, operId: 0, operList: [] } });
+    const coordinateSystem = SymmetryOperator.create(assembly.id, Mat4.identity(), {
+        assembly: { id: assembly.id, operId: 0, operList: [] },
+    });
     const assembler = Structure.Builder({
         coordinateSystem,
         label: model.label,
@@ -63,14 +77,17 @@ function buildAssembly(model: Model, assembly: Assembly) {
 
 const EmptyInstances: GenericInstances<Asset> = {
     positions: { data: [] },
-    rotations: { variant: 'euler', data: [] }
+    rotations: { variant: 'euler', data: [] },
 };
 
 export { StructureFromGeneric };
-type StructureFromGeneric = typeof StructureFromGeneric
+type StructureFromGeneric = typeof StructureFromGeneric;
 const StructureFromGeneric = PluginStateTransform.BuiltIn({
     name: 'structure-from-generic',
-    display: { name: 'Structure from Generic', description: 'Create a molecular structure from Generic models.' },
+    display: {
+        name: 'Structure from Generic',
+        description: 'Create a molecular structure from Generic models.',
+    },
     from: SO.Molecule.Model,
     to: SO.Molecule.Structure,
     params: {
@@ -78,10 +95,10 @@ const StructureFromGeneric = PluginStateTransform.BuiltIn({
         label: PD.Optional(PD.Text('')),
         description: PD.Optional(PD.Text('')),
         cellSize: PD.Numeric(500, { min: 0, max: 10000, step: 100 }),
-    }
+    },
 })({
     apply({ a, params }, plugin: PluginContext) {
-        return Task.create('Build Structure', async ctx => {
+        return Task.create('Build Structure', async (ctx) => {
             const transforms = await getTransforms(plugin, params.instances);
             if (transforms.length === 0) return StateObject.Null;
 
@@ -112,7 +129,10 @@ const StructureFromGeneric = PluginStateTransform.BuiltIn({
                 structure = assembler.getStructure();
             }
 
-            const props = { label, description: params.description || Structure.elementDescription(structure) };
+            const props = {
+                label,
+                description: params.description || Structure.elementDescription(structure),
+            };
             return new SO.Molecule.Structure(structure, props);
         });
     },
@@ -127,7 +147,7 @@ const StructureFromGeneric = PluginStateTransform.BuiltIn({
     dispose({ b, params }, plugin: PluginContext) {
         b?.data.customPropertyDescriptors.dispose();
         if (params?.instances) releaseInstances(plugin, params.instances);
-    }
+    },
 });
 
 function releaseInstances(plugin: PluginContext, instances: GenericInstances<Asset>) {

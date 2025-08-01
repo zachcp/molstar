@@ -9,15 +9,38 @@ import { Structure, StructureElement } from '../../mol-model/structure.ts';
 import { PluginStateObject } from '../objects.ts';
 import { StateTransforms } from '../transforms.ts';
 import { PluginContext } from '../../mol-plugin/context.ts';
-import { StateBuilder, StateObjectCell, StateSelection, StateTransform } from '../../mol-state/index.ts';
+import {
+    StateBuilder,
+    StateObjectCell,
+    StateSelection,
+    StateTransform,
+} from '../../mol-state/index.ts';
 import { StructureComponentRef } from '../manager/structure/hierarchy-state.ts';
 import { EmptyLoci, isEmptyLoci, Loci } from '../../mol-model/loci.ts';
 import { Clipping } from '../../mol-theme/clipping.ts';
 
-type ClippingEachReprCallback = (update: StateBuilder.Root, repr: StateObjectCell<PluginStateObject.Molecule.Structure.Representation3D, StateTransform<typeof StateTransforms.Representation.StructureRepresentation3D>>, clipping?: StateObjectCell<any, StateTransform<typeof StateTransforms.Representation.ClippingStructureRepresentation3DFromBundle>>) => Promise<void>
+type ClippingEachReprCallback = (
+    update: StateBuilder.Root,
+    repr: StateObjectCell<
+        PluginStateObject.Molecule.Structure.Representation3D,
+        StateTransform<typeof StateTransforms.Representation.StructureRepresentation3D>
+    >,
+    clipping?: StateObjectCell<
+        any,
+        StateTransform<
+            typeof StateTransforms.Representation.ClippingStructureRepresentation3DFromBundle
+        >
+    >,
+) => Promise<void>;
 const ClippingManagerTag = 'clipping-controls';
 
-export async function setStructureClipping(plugin: PluginContext, components: StructureComponentRef[], groups: Clipping.Groups, lociGetter: (structure: Structure) => Promise<StructureElement.Loci | EmptyLoci>, types?: string[]) {
+export async function setStructureClipping(
+    plugin: PluginContext,
+    components: StructureComponentRef[],
+    groups: Clipping.Groups,
+    lociGetter: (structure: Structure) => Promise<StructureElement.Loci | EmptyLoci>,
+    types?: string[],
+) {
     await eachRepr(plugin, components, async (update, repr, clippingCell) => {
         if (types && types.length > 0 && !types.includes(repr.params!.values.type.name)) return;
 
@@ -29,7 +52,7 @@ export async function setStructureClipping(plugin: PluginContext, components: St
 
         const layer = {
             bundle: StructureElement.Bundle.fromLoci(loci),
-            groups
+            groups,
         };
 
         if (clippingCell) {
@@ -39,17 +62,30 @@ export async function setStructureClipping(plugin: PluginContext, components: St
         } else {
             const filtered = getFilteredBundle([layer], structure);
             update.to(repr.transform.ref)
-                .apply(StateTransforms.Representation.ClippingStructureRepresentation3DFromBundle, Clipping.toBundle(filtered), { tags: ClippingManagerTag });
+                .apply(
+                    StateTransforms.Representation.ClippingStructureRepresentation3DFromBundle,
+                    Clipping.toBundle(filtered),
+                    { tags: ClippingManagerTag },
+                );
         }
     });
 }
 
-async function eachRepr(plugin: PluginContext, components: StructureComponentRef[], callback: ClippingEachReprCallback) {
+async function eachRepr(
+    plugin: PluginContext,
+    components: StructureComponentRef[],
+    callback: ClippingEachReprCallback,
+) {
     const state = plugin.state.data;
     const update = state.build();
     for (const c of components) {
         for (const r of c.representations) {
-            const clipping = state.select(StateSelection.Generators.ofTransformer(StateTransforms.Representation.ClippingStructureRepresentation3DFromBundle, r.cell.transform.ref).withTag(ClippingManagerTag));
+            const clipping = state.select(
+                StateSelection.Generators.ofTransformer(
+                    StateTransforms.Representation.ClippingStructureRepresentation3DFromBundle,
+                    r.cell.transform.ref,
+                ).withTag(ClippingManagerTag),
+            );
             await callback(update, r.cell, clipping[0]);
         }
     }

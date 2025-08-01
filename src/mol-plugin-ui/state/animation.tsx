@@ -14,11 +14,11 @@ export class AnimationControls extends PluginUIComponent<{ onStart?: () => void 
         this.subscribe(this.plugin.managers.animation.events.updated, () => this.forceUpdate());
     }
 
-    updateParams: ParamOnChange = p => {
+    updateParams: ParamOnChange = (p) => {
         this.plugin.managers.animation.updateParams({ [p.name]: p.value });
     };
 
-    updateCurrentParams: ParamOnChange = p => {
+    updateCurrentParams: ParamOnChange = (p) => {
         this.plugin.managers.animation.updateCurrentParams({ [p.name]: p.value });
     };
 
@@ -38,15 +38,35 @@ export class AnimationControls extends PluginUIComponent<{ onStart?: () => void 
         const isDisabled = anim.state.animationState === 'playing';
         const canApply = anim.current.anim.canApply?.(this.plugin);
 
-        return <>
-            <ParameterControls params={anim.getParams()} values={anim.state.params} onChange={this.updateParams} isDisabled={isDisabled} />
-            <ParameterControls params={anim.current.params} values={anim.current.paramValues} onChange={this.updateCurrentParams} isDisabled={isDisabled} />
+        return (
+            <>
+                <ParameterControls
+                    params={anim.getParams()}
+                    values={anim.state.params}
+                    onChange={this.updateParams}
+                    isDisabled={isDisabled}
+                />
+                <ParameterControls
+                    params={anim.current.params}
+                    values={anim.current.paramValues}
+                    onChange={this.updateCurrentParams}
+                    isDisabled={isDisabled}
+                />
 
-            <div className='msp-flex-row'>
-                <Button icon={anim.state.animationState !== 'playing' ? void 0 : PlayArrowSvg} onClick={this.startOrStop} disabled={canApply !== void 0 && canApply.canApply === false}>
-                    {anim.state.animationState === 'playing' ? 'Stop' : canApply === void 0 || canApply.canApply ? 'Start' : canApply.reason || 'Start'}
-                </Button>
-            </div>
-        </>;
+                <div className='msp-flex-row'>
+                    <Button
+                        icon={anim.state.animationState !== 'playing' ? void 0 : PlayArrowSvg}
+                        onClick={this.startOrStop}
+                        disabled={canApply !== void 0 && canApply.canApply === false}
+                    >
+                        {anim.state.animationState === 'playing'
+                            ? 'Stop'
+                            : canApply === void 0 || canApply.canApply
+                            ? 'Start'
+                            : canApply.reason || 'Start'}
+                    </Button>
+                </div>
+            </>
+        );
     }
 }

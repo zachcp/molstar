@@ -9,28 +9,39 @@
  * - added `ungzip`
  */
 
-import { writeUint, writeUshort, sizeUTF8, writeUTF8, readUshort, readUint, readUTF8, toInt32 } from './bin.ts';
-import { crc, adler } from './checksum.ts';
+import {
+    readUint,
+    readUshort,
+    readUTF8,
+    sizeUTF8,
+    toInt32,
+    writeUint,
+    writeUshort,
+    writeUTF8,
+} from './bin.ts';
+import { adler, crc } from './checksum.ts';
 import { _inflate } from './inflate.ts';
 import { _deflateRaw } from './deflate.ts';
 import { RuntimeContext, Task } from '../../mol-task/index.ts';
 
 export function Unzip(buf: ArrayBuffer, onlyNames = false) {
-    return Task.create('Unzip', ctx => unzip(ctx, buf, onlyNames));
+    return Task.create('Unzip', (ctx) => unzip(ctx, buf, onlyNames));
 }
 
 export async function unzip(runtime: RuntimeContext, buf: ArrayBuffer, onlyNames = false) {
-    const out: { [k: string]: Uint8Array | { size: number, csize: number } } = Object.create(null);
+    const out: { [k: string]: Uint8Array | { size: number; csize: number } } = Object.create(null);
     const data = new Uint8Array(buf);
     if (readUshort(data, 0) !== 0x4b50) {
-        throw new Error('Invalid ZIP file. A valid ZIP file must start with two magic bytes \\x50\\x4b ("PK" in ASCII).');
+        throw new Error(
+            'Invalid ZIP file. A valid ZIP file must start with two magic bytes \\x50\\x4b ("PK" in ASCII).',
+        );
     }
     let eocd = data.length - 4;
 
     while (readUint(data, eocd) !== 0x06054b50) eocd--;
 
     let o = eocd;
-    o += 4;	// sign  = 0x06054b50
+    o += 4; // sign  = 0x06054b50
     o += 4; // disks = 0;
     const cnu = readUshort(data, o);
     o += 2;
@@ -39,7 +50,8 @@ export async function unzip(runtime: RuntimeContext, buf: ArrayBuffer, onlyNames
 
     // const csize = readUint(data, o);
     o += 4;
-    const coffs = readUint(data, o); o += 4;
+    const coffs = readUint(data, o);
+    o += 4;
 
     o = coffs;
     for (let i = 0; i < cnu; i++) {
@@ -62,7 +74,8 @@ export async function unzip(runtime: RuntimeContext, buf: ArrayBuffer, onlyNames
         o += 6; // name, extra, comment
         o += 8; // disk, attribs
 
-        const roff = readUint(data, o); o += 4;
+        const roff = readUint(data, o);
+        o += 4;
         o += nl + el + cl;
 
         await _readLocal(runtime, data, roff, out, onlyNames);
@@ -71,7 +84,13 @@ export async function unzip(runtime: RuntimeContext, buf: ArrayBuffer, onlyNames
     return out;
 }
 
-async function _readLocal(runtime: RuntimeContext, data: Uint8Array, o: number, out: { [k: string]: Uint8Array | { size: number, csize: number } }, onlyNames: boolean) {
+async function _readLocal(
+    runtime: RuntimeContext,
+    data: Uint8Array,
+    o: number,
+    out: { [k: string]: Uint8Array | { size: number; csize: number } },
+    onlyNames: boolean,
+) {
     // const sign  = readUint(data, o);
     o += 4;
     // const ver   = readUshort(data, o);
@@ -129,7 +148,11 @@ export function inflate(runtime: RuntimeContext, file: Uint8Array, buf?: Uint8Ar
     // const CM = (CMF&15)
     // const CINFO = (CMF>>>4);
     // console.log(CM, CINFO,CMF,FLG);
-    return inflateRaw(runtime, new Uint8Array(file.buffer, file.byteOffset + 2, file.length - 6), buf);
+    return inflateRaw(
+        runtime,
+        new Uint8Array(file.buffer, file.byteOffset + 2, file.length - 6),
+        buf,
+    );
 }
 
 // https://tools.ietf.org/html/rfc1952
@@ -183,17 +206,23 @@ export async function ungzip(runtime: RuntimeContext, file: Uint8Array, buf?: Ui
     return inflated;
 }
 
-export async function deflate(runtime: RuntimeContext, data: Uint8Array, opts?: { level: number }/* , buf, off*/) {
+export async function deflate(
+    runtime: RuntimeContext,
+    data: Uint8Array,
+    opts?: { level: number }, /* , buf, off*/
+) {
     if (opts === undefined) opts = { level: 6 };
     let off = 0;
     const buf = new Uint8Array(50 + Math.floor(data.length * 1.1));
-    buf[off] = 120; buf[off + 1] = 156; off += 2;
+    buf[off] = 120;
+    buf[off + 1] = 156;
+    off += 2;
     off = await _deflateRaw(runtime, data, buf, off, opts.level);
     const crcValue = adler(data, 0, data.length);
-    buf[off + 0] = ((crcValue >>> 24) & 255);
-    buf[off + 1] = ((crcValue >>> 16) & 255);
-    buf[off + 2] = ((crcValue >>> 8) & 255);
-    buf[off + 3] = ((crcValue >>> 0) & 255);
+    buf[off + 0] = (crcValue >>> 24) & 255;
+    buf[off + 1] = (crcValue >>> 16) & 255;
+    buf[off + 2] = (crcValue >>> 8) & 255;
+    buf[off + 3] = (crcValue >>> 0) & 255;
     return new Uint8Array(buf.buffer, 0, off + 4);
 }
 
@@ -205,12 +234,16 @@ async function deflateRaw(runtime: RuntimeContext, data: Uint8Array, opts?: { le
 }
 
 export function Zip(obj: { [k: string]: Uint8Array }, noCmpr = false) {
-    return Task.create('Zip', ctx => zip(ctx, obj, noCmpr));
+    return Task.create('Zip', (ctx) => zip(ctx, obj, noCmpr));
 }
 
-export async function zip(runtime: RuntimeContext, obj: { [k: string]: Uint8Array }, noCmpr = false) {
+export async function zip(
+    runtime: RuntimeContext,
+    obj: { [k: string]: Uint8Array },
+    noCmpr = false,
+) {
     let tot = 0;
-    const zpd: { [k: string]: { cpr: boolean, usize: number, crc: number, file: Uint8Array } } = {};
+    const zpd: { [k: string]: { cpr: boolean; usize: number; crc: number; file: Uint8Array } } = {};
     for (const p in obj) {
         const cpr = !_noNeed(p) && !noCmpr, buf = obj[p];
         const crcValue = crc(buf, 0, buf.length);
@@ -218,7 +251,7 @@ export async function zip(runtime: RuntimeContext, obj: { [k: string]: Uint8Arra
             cpr,
             usize: buf.length,
             crc: crcValue,
-            file: (cpr ? await deflateRaw(runtime, buf) : buf)
+            file: (cpr ? await deflateRaw(runtime, buf) : buf),
         };
     }
 
@@ -230,7 +263,8 @@ export async function zip(runtime: RuntimeContext, obj: { [k: string]: Uint8Arra
     const fof = [];
 
     for (const p in zpd) {
-        const file = zpd[p]; fof.push(o);
+        const file = zpd[p];
+        fof.push(o);
         o = _writeHeader(data, o, p, file, 0);
     }
     let i = 0;
@@ -242,12 +276,17 @@ export async function zip(runtime: RuntimeContext, obj: { [k: string]: Uint8Arra
     }
     const csize = o - ioff;
 
-    writeUint(data, o, 0x06054b50); o += 4;
+    writeUint(data, o, 0x06054b50);
+    o += 4;
     o += 4; // disks
-    writeUshort(data, o, i); o += 2;
-    writeUshort(data, o, i); o += 2;	// number of c d records
-    writeUint(data, o, csize); o += 4;
-    writeUint(data, o, ioff); o += 4;
+    writeUshort(data, o, i);
+    o += 2;
+    writeUshort(data, o, i);
+    o += 2; // number of c d records
+    writeUint(data, o, csize);
+    o += 4;
+    writeUint(data, o, ioff);
+    o += 4;
     o += 2;
     return data.buffer;
 }
@@ -258,30 +297,49 @@ function _noNeed(fn: string) {
     return 'png,jpg,jpeg,zip'.indexOf(ext) !== -1;
 }
 
-function _writeHeader(data: Uint8Array, o: number, p: string, obj: { cpr: boolean, usize: number, crc: number, file: Uint8Array }, t: number, roff = 0) {
+function _writeHeader(
+    data: Uint8Array,
+    o: number,
+    p: string,
+    obj: { cpr: boolean; usize: number; crc: number; file: Uint8Array },
+    t: number,
+    roff = 0,
+) {
     const file = obj.file;
 
-    writeUint(data, o, t === 0 ? 0x04034b50 : 0x02014b50); o += 4; // sign
+    writeUint(data, o, t === 0 ? 0x04034b50 : 0x02014b50);
+    o += 4; // sign
     if (t === 1) o += 2; // ver made by
-    writeUshort(data, o, 20); o += 2;	// ver
-    writeUshort(data, o, 0); o += 2; // gflip
-    writeUshort(data, o, obj.cpr ? 8 : 0); o += 2;	// cmpr
+    writeUshort(data, o, 20);
+    o += 2; // ver
+    writeUshort(data, o, 0);
+    o += 2; // gflip
+    writeUshort(data, o, obj.cpr ? 8 : 0);
+    o += 2; // cmpr
 
-    writeUint(data, o, 0); o += 4;	// time
-    writeUint(data, o, obj.crc); o += 4;	// crc32
-    writeUint(data, o, file.length); o += 4;	// csize
-    writeUint(data, o, obj.usize); o += 4;	// usize
+    writeUint(data, o, 0);
+    o += 4; // time
+    writeUint(data, o, obj.crc);
+    o += 4; // crc32
+    writeUint(data, o, file.length);
+    o += 4; // csize
+    writeUint(data, o, obj.usize);
+    o += 4; // usize
 
-    writeUshort(data, o, sizeUTF8(p)); o += 2;	// nlen
-    writeUshort(data, o, 0); o += 2;	// elen
+    writeUshort(data, o, sizeUTF8(p));
+    o += 2; // nlen
+    writeUshort(data, o, 0);
+    o += 2; // elen
 
     if (t === 1) {
         o += 2; // comment length
         o += 2; // disk number
         o += 6; // attributes
-        writeUint(data, o, roff); o += 4;	// usize
+        writeUint(data, o, roff);
+        o += 4; // usize
     }
-    const nlen = writeUTF8(data, o, p); o += nlen;
+    const nlen = writeUTF8(data, o, p);
+    o += nlen;
     if (t === 0) {
         data.set(file, o);
         o += file.length;

@@ -7,7 +7,11 @@
  */
 
 import { Coordinates, Frame, Time } from '../../mol-model/structure/coordinates.ts';
-import { LammpsTrajectoryFile, lammpsUnitStyles, UnitStyle } from '../../mol-io/reader/lammps/schema.ts';
+import {
+    LammpsTrajectoryFile,
+    lammpsUnitStyles,
+    UnitStyle,
+} from '../../mol-io/reader/lammps/schema.ts';
 import { Model } from '../../mol-model/structure/model.ts';
 import { RuntimeContext, Task } from '../../mol-task/index.ts';
 import { Column, Table } from '../../mol-data/db.ts';
@@ -19,8 +23,11 @@ import { createModels } from './basic/parser.ts';
 import { MoleculeType } from '../../mol-model/structure/model/types.ts';
 import { ModelFormat } from '../format.ts';
 
-export function coordinatesFromLammpsTrajectory(file: LammpsTrajectoryFile, unitsStyle: UnitStyle = 'real'): Task<Coordinates> {
-    return Task.create('Parse Lammps Trajectory', async ctx => {
+export function coordinatesFromLammpsTrajectory(
+    file: LammpsTrajectoryFile,
+    unitsStyle: UnitStyle = 'real',
+): Task<Coordinates> {
+    return Task.create('Parse Lammps Trajectory', async (ctx) => {
         await ctx.update('Converting to coordinates');
         const scale = lammpsUnitStyles[unitsStyle].scale;
         const deltaTime = Time(file.deltaTime, 'step');
@@ -57,7 +64,7 @@ export function coordinatesFromLammpsTrajectory(file: LammpsTrajectoryFile, unit
                 y: cy,
                 z: cz,
                 xyzOrdering: { isIdentity: true },
-                time: Time(offsetTime.value + deltaTime.value * i, deltaTime.unit)
+                time: Time(offsetTime.value + deltaTime.value * i, deltaTime.unit),
             });
         }
 
@@ -65,7 +72,11 @@ export function coordinatesFromLammpsTrajectory(file: LammpsTrajectoryFile, unit
     });
 }
 
-async function getModels(mol: LammpsTrajectoryFile, ctx: RuntimeContext, unitsStyle: UnitStyle = 'real') {
+async function getModels(
+    mol: LammpsTrajectoryFile,
+    ctx: RuntimeContext,
+    unitsStyle: UnitStyle = 'real',
+) {
     const atoms = mol.frames[0];
     const count = atoms.count;
     const atomsMode = atoms.atomMode;
@@ -143,7 +154,7 @@ async function getModels(mol: LammpsTrajectoryFile, ctx: RuntimeContext, unitsSt
     const basic = createBasic({
         entity: entityBuilder.getEntityTable(),
         chem_comp: componentBuilder.getChemCompTable(),
-        atom_site
+        atom_site,
     });
     const _models = await createModels(basic, LammpsTrajectoryFormat.create(mol), ctx);
     const first = _models.representative;
@@ -153,7 +164,7 @@ async function getModels(mol: LammpsTrajectoryFile, ctx: RuntimeContext, unitsSt
 
 export { LammpsTrajectoryFormat };
 
-type LammpsTrajectoryFormat = ModelFormat<LammpsTrajectoryFile>
+type LammpsTrajectoryFormat = ModelFormat<LammpsTrajectoryFile>;
 
 namespace LammpsTrajectoryFormat {
     export function is(x?: ModelFormat): x is LammpsTrajectoryFormat {
@@ -165,7 +176,10 @@ namespace LammpsTrajectoryFormat {
     }
 }
 
-export function trajectoryFromLammpsTrajectory(mol: LammpsTrajectoryFile, unitsStyle?: UnitStyle): Task<Trajectory> {
+export function trajectoryFromLammpsTrajectory(
+    mol: LammpsTrajectoryFile,
+    unitsStyle?: UnitStyle,
+): Task<Trajectory> {
     if (unitsStyle === void 0) unitsStyle = 'real';
-    return Task.create('Parse Lammps Traj Data', ctx => getModels(mol, ctx, unitsStyle));
+    return Task.create('Parse Lammps Traj Data', (ctx) => getModels(mol, ctx, unitsStyle));
 }

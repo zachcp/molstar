@@ -5,36 +5,50 @@
  */
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
-import { ElementIterator, getElementLoci, eachElement, getSerialElementLoci, eachSerialElement, makeElementIgnoreTest } from './util/element.ts';
+import { UnitsMeshParams, UnitsMeshVisual, UnitsVisual } from '../units-visual.ts';
+import {
+    eachElement,
+    eachSerialElement,
+    ElementIterator,
+    getElementLoci,
+    getSerialElementLoci,
+    makeElementIgnoreTest,
+} from './util/element.ts';
 import { VisualUpdateState } from '../../util.ts';
 import { VisualContext } from '../../visual.ts';
-import { Unit, Structure, StructureElement } from '../../../mol-model/structure.ts';
+import { Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
 import { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { sphereVertexCount } from '../../../mol-geo/primitive/sphere.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
-import { Vec3, Mat3, Tensor, EPSILON } from '../../../mol-math/linear-algebra.ts';
+import { EPSILON, Mat3, Tensor, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { addEllipsoid } from '../../../mol-geo/geometry/mesh/builder/ellipsoid.ts';
 import { AtomSiteAnisotrop } from '../../../mol-model-formats/structure/property/anisotropic.ts';
 import { equalEps } from '../../../mol-math/linear-algebra/3d/common.ts';
 import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
-import { ComplexMeshParams, ComplexVisual, ComplexMeshVisual } from '../complex-visual.ts';
+import { ComplexMeshParams, ComplexMeshVisual, ComplexVisual } from '../complex-visual.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3add = Vec3.add;
 
 export interface EllipsoidMeshProps {
-    detail: number,
-    sizeFactor: number,
-    ignoreHydrogens: boolean,
-    ignoreHydrogensVariant: 'all' | 'non-polar',
-    traceOnly: boolean,
+    detail: number;
+    sizeFactor: number;
+    ignoreHydrogens: boolean;
+    ignoreHydrogensVariant: 'all' | 'non-polar';
+    traceOnly: boolean;
 }
 
-export function createEllipsoidMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: EllipsoidMeshProps, mesh?: Mesh): Mesh {
+export function createEllipsoidMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: EllipsoidMeshProps,
+    mesh?: Mesh,
+): Mesh {
     const { child } = structure;
     const childUnit = child?.unitMap.get(unit.id);
     if (child && !childUnit) return Mesh.createEmpty(mesh);
@@ -89,7 +103,9 @@ export function createEllipsoidMesh(ctx: VisualContext, unit: Unit, structure: S
             eigvals[j] = sizeFactor * 1.5958 * Math.sqrt(Math.abs(eigvals[j]));
         }
 
-        if (equalEps(eigvals[0], eigvals[1], EPSILON) && equalEps(eigvals[1], eigvals[2], EPSILON)) {
+        if (
+            equalEps(eigvals[0], eigvals[1], EPSILON) && equalEps(eigvals[1], eigvals[2], EPSILON)
+        ) {
             addSphere(builderState, v, eigvals[0], detail);
         } else {
             addEllipsoid(builderState, v, eigvec2, eigvec1, eigvals, detail);
@@ -103,10 +119,17 @@ export function createEllipsoidMesh(ctx: VisualContext, unit: Unit, structure: S
     let boundingSphere: Sphere3D;
     Vec3.scale(center, center, 1 / count);
     const oldBoundingSphere = mesh ? Sphere3D.clone(mesh.boundingSphere) : undefined;
-    if (oldBoundingSphere && Vec3.distance(center, oldBoundingSphere.center) / oldBoundingSphere.radius < 0.1) {
+    if (
+        oldBoundingSphere &&
+        Vec3.distance(center, oldBoundingSphere.center) / oldBoundingSphere.radius < 0.1
+    ) {
         boundingSphere = oldBoundingSphere;
     } else {
-        boundingSphere = Sphere3D.expand(Sphere3D(), (childUnit ?? unit).boundary.sphere, 1 * sizeFactor * 2);
+        boundingSphere = Sphere3D.expand(
+            Sphere3D(),
+            (childUnit ?? unit).boundary.sphere,
+            1 * sizeFactor * 2,
+        );
     }
     m.setBoundingSphere(boundingSphere);
 
@@ -121,7 +144,7 @@ export const EllipsoidMeshParams = {
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     traceOnly: PD.Boolean(false),
 };
-export type EllipsoidMeshParams = typeof EllipsoidMeshParams
+export type EllipsoidMeshParams = typeof EllipsoidMeshParams;
 
 export function EllipsoidMeshVisual(materialId: number): UnitsVisual<EllipsoidMeshParams> {
     return UnitsMeshVisual<EllipsoidMeshParams>({
@@ -130,19 +153,27 @@ export function EllipsoidMeshVisual(materialId: number): UnitsVisual<EllipsoidMe
         createLocationIterator: ElementIterator.fromGroup,
         getLoci: getElementLoci,
         eachLocation: eachElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<EllipsoidMeshParams>, currentProps: PD.Values<EllipsoidMeshParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<EllipsoidMeshParams>,
+            currentProps: PD.Values<EllipsoidMeshParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.detail !== currentProps.detail ||
-                newProps.ignoreHydrogens !== currentProps.ignoreHydrogens
-            );
-        }
+                newProps.ignoreHydrogens !== currentProps.ignoreHydrogens;
+        },
     }, materialId);
 }
 
 //
 
-export function createStructureEllipsoidMesh(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<StructureEllipsoidMeshParams>, mesh?: Mesh): Mesh {
+export function createStructureEllipsoidMesh(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<StructureEllipsoidMeshParams>,
+    mesh?: Mesh,
+): Mesh {
     const { child } = structure;
 
     const { detail, sizeFactor } = props;
@@ -223,7 +254,10 @@ export function createStructureEllipsoidMesh(ctx: VisualContext, structure: Stru
                 eigvals[j] = sizeFactor * 1.5958 * Math.sqrt(Math.abs(eigvals[j]));
             }
 
-            if (equalEps(eigvals[0], eigvals[1], EPSILON) && equalEps(eigvals[1], eigvals[2], EPSILON)) {
+            if (
+                equalEps(eigvals[0], eigvals[1], EPSILON) &&
+                equalEps(eigvals[1], eigvals[2], EPSILON)
+            ) {
                 addSphere(builderState, v, eigvals[0], detail);
             } else {
                 addEllipsoid(builderState, v, eigvec2, eigvec1, eigvals, detail);
@@ -238,10 +272,17 @@ export function createStructureEllipsoidMesh(ctx: VisualContext, structure: Stru
     let boundingSphere: Sphere3D;
     Vec3.scale(center, center, 1 / count);
     const oldBoundingSphere = mesh ? Sphere3D.clone(mesh.boundingSphere) : undefined;
-    if (oldBoundingSphere && Vec3.distance(center, oldBoundingSphere.center) / oldBoundingSphere.radius < 1.0) {
+    if (
+        oldBoundingSphere &&
+        Vec3.distance(center, oldBoundingSphere.center) / oldBoundingSphere.radius < 1.0
+    ) {
         boundingSphere = oldBoundingSphere;
     } else {
-        boundingSphere = Sphere3D.expand(Sphere3D(), (child ?? structure).boundary.sphere, 1 * sizeFactor * 2);
+        boundingSphere = Sphere3D.expand(
+            Sphere3D(),
+            (child ?? structure).boundary.sphere,
+            1 * sizeFactor * 2,
+        );
     }
     m.setBoundingSphere(boundingSphere);
 
@@ -256,21 +297,25 @@ export const StructureEllipsoidMeshParams = {
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     traceOnly: PD.Boolean(false),
 };
-export type StructureEllipsoidMeshParams = typeof StructureEllipsoidMeshParams
+export type StructureEllipsoidMeshParams = typeof StructureEllipsoidMeshParams;
 
-export function StructureEllipsoidMeshVisual(materialId: number): ComplexVisual<StructureEllipsoidMeshParams> {
+export function StructureEllipsoidMeshVisual(
+    materialId: number,
+): ComplexVisual<StructureEllipsoidMeshParams> {
     return ComplexMeshVisual<StructureEllipsoidMeshParams>({
         defaultProps: PD.getDefaultValues(StructureEllipsoidMeshParams),
         createGeometry: createStructureEllipsoidMesh,
         createLocationIterator: ElementIterator.fromStructure,
         getLoci: getSerialElementLoci,
         eachLocation: eachSerialElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<StructureEllipsoidMeshParams>, currentProps: PD.Values<StructureEllipsoidMeshParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<StructureEllipsoidMeshParams>,
+            currentProps: PD.Values<StructureEllipsoidMeshParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.detail !== currentProps.detail ||
-                newProps.ignoreHydrogens !== currentProps.ignoreHydrogens
-            );
-        }
+                newProps.ignoreHydrogens !== currentProps.ignoreHydrogens;
+        },
     }, materialId);
 }

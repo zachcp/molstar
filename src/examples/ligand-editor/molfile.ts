@@ -6,7 +6,11 @@
 
 import { getJSONCifCategory, JSONCifDataBlock } from '../../extensions/json-cif/model.ts';
 import { mmCIF_Schema } from '../../mol-io/reader/cif/schema/mmcif.ts';
-import { MolstarBondSiteSchema, MolstarBondSiteTypeId, MolstarBondSiteValueOrder } from '../../mol-model/structure/export/categories/molstar_bond_site.ts';
+import {
+    MolstarBondSiteSchema,
+    MolstarBondSiteTypeId,
+    MolstarBondSiteValueOrder,
+} from '../../mol-model/structure/export/categories/molstar_bond_site.ts';
 
 function padLeft(v: any, n = 3) {
     let s = `${v}`;
@@ -22,13 +26,20 @@ function padRight(v: any, n = 3) {
 
 function mapMolChage(v: number) {
     switch (v) {
-        case 3: return 1;
-        case 2: return 2;
-        case 1: return 3;
-        case -1: return 5;
-        case -2: return 6;
-        case -3: return 7;
-        default: return 0;
+        case 3:
+            return 1;
+        case 2:
+            return 2;
+        case 1:
+            return 3;
+        case -1:
+            return 5;
+        case -2:
+            return 6;
+        case -3:
+            return 7;
+        default:
+            return 0;
     }
 }
 
@@ -36,26 +47,39 @@ function mapMolBondOrder(order: MolstarBondSiteValueOrder, type: MolstarBondSite
     if (type !== 'covale') return 8;
 
     switch (order) {
-        case 'sing': return 1;
-        case 'doub': return 2;
-        case 'trip': return 3;
-        case 'arom': return 4;
-        default: return 8;
+        case 'sing':
+            return 1;
+        case 'doub':
+            return 2;
+        case 'trip':
+            return 3;
+        case 'arom':
+            return 4;
+        default:
+            return 8;
     }
 }
 
-export function jsonCifToMolfile(data: JSONCifDataBlock, options?: { name?: string, comment?: string }) {
+export function jsonCifToMolfile(
+    data: JSONCifDataBlock,
+    options?: { name?: string; comment?: string },
+) {
     // The method works in the sense that Mol* can re-open the file.
     // For production use, this will likely need more testing and tweaks (e.g., support for M CHG property).
 
-    if (data.categories.atom_site === undefined || data.categories.molstar_bond_site === undefined) {
+    if (
+        data.categories.atom_site === undefined || data.categories.molstar_bond_site === undefined
+    ) {
         throw new Error('The data block must contain atom_site and molstar_bond_site categories.');
     }
 
     const { atom_site: _atoms, molstar_bond_site: _bonds } = data.categories;
 
     const atoms = getJSONCifCategory<mmCIF_Schema['atom_site']>(data, 'atom_site')!;
-    const bonds = getJSONCifCategory<MolstarBondSiteSchema['molstar_bond_site']>(data, 'molstar_bond_site')!;
+    const bonds = getJSONCifCategory<MolstarBondSiteSchema['molstar_bond_site']>(
+        data,
+        'molstar_bond_site',
+    )!;
 
     const lines = [
         `${options?.name ?? 'mol'}`,

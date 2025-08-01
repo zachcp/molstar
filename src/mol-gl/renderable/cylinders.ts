@@ -4,10 +4,23 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Renderable, RenderableState, createRenderable } from '../renderable.ts';
+import { createRenderable, Renderable, RenderableState } from '../renderable.ts';
 import { WebGLContext } from '../webgl/context.ts';
 import { createGraphicsRenderItem, Transparency } from '../webgl/render-item.ts';
-import { GlobalUniformSchema, BaseSchema, AttributeSpec, Values, InternalSchema, SizeSchema, InternalValues, ElementsSpec, ValueSpec, DefineSpec, GlobalTextureSchema, UniformSpec } from './schema.ts';
+import {
+    AttributeSpec,
+    BaseSchema,
+    DefineSpec,
+    ElementsSpec,
+    GlobalTextureSchema,
+    GlobalUniformSchema,
+    InternalSchema,
+    InternalValues,
+    SizeSchema,
+    UniformSpec,
+    Values,
+    ValueSpec,
+} from './schema.ts';
 import { CylindersShaderCode } from '../shader-code.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 
@@ -34,15 +47,35 @@ export const CylindersSchema = {
     uBumpAmplitude: UniformSpec('f', 'material'),
     dDualColor: DefineSpec('boolean'),
 };
-export type CylindersSchema = typeof CylindersSchema
-export type CylindersValues = Values<CylindersSchema>
+export type CylindersSchema = typeof CylindersSchema;
+export type CylindersValues = Values<CylindersSchema>;
 
-export function CylindersRenderable(ctx: WebGLContext, id: number, values: CylindersValues, state: RenderableState, materialId: number, transparency: Transparency): Renderable<CylindersValues> {
-    const schema = { ...GlobalUniformSchema, ...GlobalTextureSchema, ...InternalSchema, ...CylindersSchema };
+export function CylindersRenderable(
+    ctx: WebGLContext,
+    id: number,
+    values: CylindersValues,
+    state: RenderableState,
+    materialId: number,
+    transparency: Transparency,
+): Renderable<CylindersValues> {
+    const schema = {
+        ...GlobalUniformSchema,
+        ...GlobalTextureSchema,
+        ...InternalSchema,
+        ...CylindersSchema,
+    };
     const internalValues: InternalValues = {
         uObjectId: ValueCell.create(id),
     };
     const shaderCode = CylindersShaderCode;
-    const renderItem = createGraphicsRenderItem(ctx, 'triangles', shaderCode, schema, { ...values, ...internalValues }, materialId, transparency);
+    const renderItem = createGraphicsRenderItem(
+        ctx,
+        'triangles',
+        shaderCode,
+        schema,
+        { ...values, ...internalValues },
+        materialId,
+        transparency,
+    );
     return createRenderable(renderItem, values, state);
 }

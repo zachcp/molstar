@@ -5,23 +5,30 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { IntMap, SortedArray, Iterator, Segmentation, Interval } from '../../../mol-data/int.ts';
+import { Interval, IntMap, Iterator, Segmentation, SortedArray } from '../../../mol-data/int.ts';
 import { UniqueArray } from '../../../mol-data/generic.ts';
 import { SymmetryOperator } from '../../../mol-math/geometry/symmetry-operator.ts';
-import { Model, ElementIndex } from '../model.ts';
-import { sort, arraySwap, hash1, sortArray, hashString, hashFnv32a } from '../../../mol-data/util.ts';
+import { ElementIndex, Model } from '../model.ts';
+import {
+    arraySwap,
+    hash1,
+    hashFnv32a,
+    hashString,
+    sort,
+    sortArray,
+} from '../../../mol-data/util.ts';
 import { StructureElement } from './element.ts';
 import { Unit } from './unit.ts';
 import { StructureLookup3D } from './util/lookup3d.ts';
 import { CoarseElements } from '../model/properties/coarse.ts';
 import { StructureSubsetBuilder } from './util/subset-builder.ts';
-import { InterUnitBonds, computeInterUnitBonds, Bond } from './unit/bonds.ts';
+import { Bond, computeInterUnitBonds, InterUnitBonds } from './unit/bonds.ts';
 import { StructureSymmetry } from './symmetry.ts';
 import { StructureProperties } from './properties.ts';
-import { ResidueIndex, ChainIndex, EntityIndex } from '../model/indexing.ts';
+import { ChainIndex, EntityIndex, ResidueIndex } from '../model/indexing.ts';
 import { Carbohydrates } from './carbohydrates/data.ts';
 import { computeCarbohydrates } from './carbohydrates/compute.ts';
-import { Vec3, Mat4 } from '../../../mol-math/linear-algebra.ts';
+import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { idFactory } from '../../../mol-util/id-factory.ts';
 import { UUID } from '../../../mol-util/index.ts';
 import { CustomProperties } from '../../custom-property.ts';
@@ -33,45 +40,50 @@ import { Trajectory } from '../trajectory.ts';
 import { RuntimeContext, Task } from '../../../mol-task/index.ts';
 import { computeStructureBoundary } from './util/boundary.ts';
 import { PrincipalAxes } from '../../../mol-math/linear-algebra/matrix/principal-axes.ts';
-import { IntraUnitBondMapping, getIntraUnitBondMapping, getSerialMapping, SerialMapping } from './mapping.ts';
+import {
+    getIntraUnitBondMapping,
+    getSerialMapping,
+    IntraUnitBondMapping,
+    SerialMapping,
+} from './mapping.ts';
 
 /** Internal structure state */
 type State = {
-    parent?: Structure,
-    boundary?: Boundary,
-    lookup3d?: StructureLookup3D,
-    interUnitBonds?: InterUnitBonds,
-    dynamicBonds: boolean,
-    interBondsValidUnit?: (unit: Unit) => boolean,
-    interBondsValidUnitPair?: (structure: Structure, unitA: Unit, unitB: Unit) => boolean,
-    unitSymmetryGroups?: ReadonlyArray<Unit.SymmetryGroup>,
-    unitSymmetryGroupsIndexMap?: IntMap<number>,
+    parent?: Structure;
+    boundary?: Boundary;
+    lookup3d?: StructureLookup3D;
+    interUnitBonds?: InterUnitBonds;
+    dynamicBonds: boolean;
+    interBondsValidUnit?: (unit: Unit) => boolean;
+    interBondsValidUnitPair?: (structure: Structure, unitA: Unit, unitB: Unit) => boolean;
+    unitSymmetryGroups?: ReadonlyArray<Unit.SymmetryGroup>;
+    unitSymmetryGroupsIndexMap?: IntMap<number>;
     unitsSortedByVolume?: ReadonlyArray<Unit>;
-    carbohydrates?: Carbohydrates,
-    models?: ReadonlyArray<Model>,
-    model?: Model,
-    masterModel?: Model,
-    representativeModel?: Model,
-    uniqueResidueNames?: Set<string>,
-    uniqueElementSymbols?: Set<ElementSymbol>,
-    entityIndices?: ReadonlyArray<EntityIndex>,
-    uniqueAtomicResidueIndices?: ReadonlyMap<UUID, ReadonlyArray<ResidueIndex>>,
-    serialMapping?: SerialMapping,
-    intraUnitBondMapping?: IntraUnitBondMapping,
-    hashCode: number,
-    transformHash: number,
-    elementCount: number,
-    bondCount: number,
-    uniqueElementCount: number,
-    atomicResidueCount: number,
-    polymerResidueCount: number,
-    polymerGapCount: number,
-    polymerUnitCount: number,
-    coordinateSystem: SymmetryOperator,
-    label: string,
-    propertyData?: any,
-    customProps?: CustomProperties
-}
+    carbohydrates?: Carbohydrates;
+    models?: ReadonlyArray<Model>;
+    model?: Model;
+    masterModel?: Model;
+    representativeModel?: Model;
+    uniqueResidueNames?: Set<string>;
+    uniqueElementSymbols?: Set<ElementSymbol>;
+    entityIndices?: ReadonlyArray<EntityIndex>;
+    uniqueAtomicResidueIndices?: ReadonlyMap<UUID, ReadonlyArray<ResidueIndex>>;
+    serialMapping?: SerialMapping;
+    intraUnitBondMapping?: IntraUnitBondMapping;
+    hashCode: number;
+    transformHash: number;
+    elementCount: number;
+    bondCount: number;
+    uniqueElementCount: number;
+    atomicResidueCount: number;
+    polymerResidueCount: number;
+    polymerGapCount: number;
+    polymerUnitCount: number;
+    coordinateSystem: SymmetryOperator;
+    label: string;
+    propertyData?: any;
+    customProps?: CustomProperties;
+};
 
 class Structure {
     subsetBuilder(isSorted: boolean) {
@@ -86,7 +98,8 @@ class Structure {
     /** Count of all bonds (intra- and inter-unit) in the structure */
     get bondCount() {
         if (this.state.bondCount === -1) {
-            this.state.bondCount = (this.interUnitBonds.edgeCount / 2) + Bond.getIntraUnitBondCount(this);
+            this.state.bondCount = (this.interUnitBonds.edgeCount / 2) +
+                Bond.getIntraUnitBondCount(this);
         }
         return this.state.bondCount;
     }
@@ -157,7 +170,7 @@ class Structure {
      * @see Model.isCoarseGrained
      */
     get isCoarseGrained() {
-        return this.models.some(m => Model.isCoarseGrained(m));
+        return this.models.some((m) => Model.isCoarseGrained(m));
     }
 
     get isEmpty() {
@@ -172,7 +185,7 @@ class Structure {
     /** Hash based on all unit.id values in the structure, reflecting the units transformation */
     get transformHash() {
         if (this.state.transformHash !== -1) return this.state.transformHash;
-        this.state.transformHash = hashFnv32a(this.units.map(u => u.id));
+        this.state.transformHash = hashFnv32a(this.units.map((u) => u.id));
         return this.state.transformHash;
     }
 
@@ -234,7 +247,8 @@ class Structure {
 
     get interUnitBonds() {
         if (this.state.interUnitBonds) return this.state.interUnitBonds;
-        if (this.parent && this.state.dynamicBonds === this.parent.state.dynamicBonds &&
+        if (
+            this.parent && this.state.dynamicBonds === this.parent.state.dynamicBonds &&
             this.parent.state.interUnitBonds && this.parent.state.interUnitBonds.edgeCount === 0
         ) {
             // no need to compute InterUnitBonds if parent's ones are empty
@@ -271,7 +285,9 @@ class Structure {
     /** Maps unit.id to index of SymmetryGroup in unitSymmetryGroups array */
     get unitSymmetryGroupsIndexMap(): IntMap<number> {
         if (this.state.unitSymmetryGroupsIndexMap) return this.state.unitSymmetryGroupsIndexMap;
-        this.state.unitSymmetryGroupsIndexMap = Unit.SymmetryGroup.getUnitSymmetryGroupsIndexMap(this.unitSymmetryGroups);
+        this.state.unitSymmetryGroupsIndexMap = Unit.SymmetryGroup.getUnitSymmetryGroupsIndexMap(
+            this.unitSymmetryGroups,
+        );
         return this.state.unitSymmetryGroupsIndexMap;
     }
 
@@ -288,23 +304,23 @@ class Structure {
     }
 
     get uniqueResidueNames() {
-        return this.state.uniqueResidueNames
-            || (this.state.uniqueResidueNames = getUniqueResidueNames(this));
+        return this.state.uniqueResidueNames ||
+            (this.state.uniqueResidueNames = getUniqueResidueNames(this));
     }
 
     get uniqueElementSymbols() {
-        return this.state.uniqueElementSymbols
-            || (this.state.uniqueElementSymbols = getUniqueElementSymbols(this));
+        return this.state.uniqueElementSymbols ||
+            (this.state.uniqueElementSymbols = getUniqueElementSymbols(this));
     }
 
     get entityIndices() {
-        return this.state.entityIndices
-            || (this.state.entityIndices = getEntityIndices(this));
+        return this.state.entityIndices ||
+            (this.state.entityIndices = getEntityIndices(this));
     }
 
     get uniqueAtomicResidueIndices() {
-        return this.state.uniqueAtomicResidueIndices
-            || (this.state.uniqueAtomicResidueIndices = getUniqueAtomicResidueIndices(this));
+        return this.state.uniqueAtomicResidueIndices ||
+            (this.state.uniqueAtomicResidueIndices = getUniqueAtomicResidueIndices(this));
     }
 
     /** Contains only atomic units */
@@ -343,7 +359,8 @@ class Structure {
     }
 
     get intraUnitBondMapping() {
-        return this.state.intraUnitBondMapping || (this.state.intraUnitBondMapping = getIntraUnitBondMapping(this));
+        return this.state.intraUnitBondMapping ||
+            (this.state.intraUnitBondMapping = getIntraUnitBondMapping(this));
     }
 
     /**
@@ -356,7 +373,9 @@ class Structure {
         if (this.state.masterModel) return this.state.masterModel;
         const models = this.models;
         if (models.length > 1) {
-            throw new Error('The structure is based on multiple models and has neither a master- nor a representative-model.');
+            throw new Error(
+                'The structure is based on multiple models and has neither a master- nor a representative-model.',
+            );
         }
         this.state.model = models[0];
         return this.state.model;
@@ -416,9 +435,16 @@ class Structure {
     asParent(): Structure {
         if (this._proxy) return this._proxy;
         if (this.parent) {
-            const p = this.parent.coordinateSystem.isIdentity ? this.parent : Structure.transform(this.parent, this.parent.coordinateSystem.inverse);
-            const s = this.coordinateSystem.isIdentity ? p : Structure.transform(p, this.coordinateSystem.matrix);
-            this._proxy = new Structure(s.units, s.unitMap, s.unitIndexMap, { ...s.state, dynamicBonds: this.dynamicBonds }, { child: this, target: this.parent });
+            const p = this.parent.coordinateSystem.isIdentity
+                ? this.parent
+                : Structure.transform(this.parent, this.parent.coordinateSystem.inverse);
+            const s = this.coordinateSystem.isIdentity
+                ? p
+                : Structure.transform(p, this.coordinateSystem.matrix);
+            this._proxy = new Structure(s.units, s.unitMap, s.unitIndexMap, {
+                ...s.state,
+                dynamicBonds: this.dynamicBonds,
+            }, { child: this, target: this.parent });
         } else {
             this._proxy = this;
         }
@@ -439,7 +465,13 @@ class Structure {
      * @param unitMap Maps unit.id to index of unit in units array
      * @param unitIndexMap Array of all units in the structure, sorted by unit.id
      */
-    constructor(readonly units: ReadonlyArray<Unit>, readonly unitMap: IntMap<Unit>, readonly unitIndexMap: IntMap<number>, private readonly state: State, asParent?: { child: Structure, target: Structure }) {
+    constructor(
+        readonly units: ReadonlyArray<Unit>,
+        readonly unitMap: IntMap<Unit>,
+        readonly unitIndexMap: IntMap<number>,
+        private readonly state: State,
+        asParent?: { child: Structure; target: Structure },
+    ) {
         // always assign to ensure object shape
         this._child = asParent?.child;
         this._target = asParent?.target;
@@ -468,7 +500,10 @@ function getUniqueResidueNames(s: Structure) {
         const unit = unitGroup.units[0];
         // TODO: support coarse unit?
         if (!Unit.isAtomic(unit)) continue;
-        const residues = Segmentation.transientSegments(unit.model.atomicHierarchy.residueAtomSegments, unit.elements);
+        const residues = Segmentation.transientSegments(
+            unit.model.atomicHierarchy.residueAtomSegments,
+            unit.elements,
+        );
         loc.unit = unit;
         while (residues.hasNext) {
             const seg = residues.move();
@@ -502,12 +537,17 @@ function getEntityIndices(structure: Structure): ReadonlyArray<EntityIndex> {
     const keys = UniqueArray.create<number, EntityIndex>();
 
     for (const unit of units) {
-        const prop = unit.kind === Unit.Kind.Atomic ? StructureProperties.entity.key : StructureProperties.coarse.entityKey;
+        const prop = unit.kind === Unit.Kind.Atomic
+            ? StructureProperties.entity.key
+            : StructureProperties.coarse.entityKey;
 
         l.unit = unit;
         const elements = unit.elements;
 
-        const chainsIt = Segmentation.transientSegments(unit.model.atomicHierarchy.chainAtomSegments, elements);
+        const chainsIt = Segmentation.transientSegments(
+            unit.model.atomicHierarchy.chainAtomSegments,
+            elements,
+        );
         while (chainsIt.hasNext) {
             const chainSegment = chainsIt.move();
             l.element = elements[chainSegment.start];
@@ -520,7 +560,9 @@ function getEntityIndices(structure: Structure): ReadonlyArray<EntityIndex> {
     return keys.array;
 }
 
-function getUniqueAtomicResidueIndices(structure: Structure): ReadonlyMap<UUID, ReadonlyArray<ResidueIndex>> {
+function getUniqueAtomicResidueIndices(
+    structure: Structure,
+): ReadonlyMap<UUID, ReadonlyArray<ResidueIndex>> {
     const map = new Map<UUID, UniqueArray<ResidueIndex, ResidueIndex>>();
     const modelIds: UUID[] = [];
 
@@ -537,7 +579,10 @@ function getUniqueAtomicResidueIndices(structure: Structure): ReadonlyMap<UUID, 
             map.set(unit.model.id, uniqueResidues);
         }
 
-        const residues = Segmentation.transientSegments(unit.model.atomicHierarchy.residueAtomSegments, unit.elements);
+        const residues = Segmentation.transientSegments(
+            unit.model.atomicHierarchy.residueAtomSegments,
+            unit.elements,
+        );
         while (residues.hasNext) {
             const seg = residues.move();
             UniqueArray.add(uniqueResidues, seg.index, seg.index);
@@ -613,27 +658,27 @@ namespace Structure {
     export const Empty = create([]);
 
     export interface Props {
-        parent?: Structure
-        interUnitBonds?: InterUnitBonds
+        parent?: Structure;
+        interUnitBonds?: InterUnitBonds;
         /**
          * Ensure bonds are recalculated upon model changes.
          * Also enables calculation of inter-unit bonds in water molecules.
          */
-        dynamicBonds?: boolean,
-        interBondsValidUnit?: (unit: Unit) => boolean,
-        interBondsValidUnitPair?: (structure: Structure, unitA: Unit, unitB: Unit) => boolean,
-        coordinateSystem?: SymmetryOperator
-        label?: string
+        dynamicBonds?: boolean;
+        interBondsValidUnit?: (unit: Unit) => boolean;
+        interBondsValidUnitPair?: (structure: Structure, unitA: Unit, unitB: Unit) => boolean;
+        coordinateSystem?: SymmetryOperator;
+        label?: string;
         /** Master model for structures of a protein model and multiple ligand models */
-        masterModel?: Model
+        masterModel?: Model;
         /** Representative model for structures of a model trajectory */
-        representativeModel?: Model
+        representativeModel?: Model;
     }
 
     /** Represents a single structure */
     export interface Loci {
-        readonly kind: 'structure-loci',
-        readonly structure: Structure,
+        readonly kind: 'structure-loci';
+        readonly structure: Structure;
     }
     export function Loci(structure: Structure): Loci {
         return { kind: 'structure-loci', structure };
@@ -647,8 +692,13 @@ namespace Structure {
         return StructureElement.Loci(structure, elements);
     }
 
-    export function toSubStructureElementLoci(parent: Structure, structure: Structure): StructureElement.Loci {
-        return StructureSelection.toLociWithSourceUnits(StructureSelection.Singletons(parent, structure));
+    export function toSubStructureElementLoci(
+        parent: Structure,
+        structure: Structure,
+    ): StructureElement.Loci {
+        return StructureSelection.toLociWithSourceUnits(
+            StructureSelection.Singletons(parent, structure),
+        );
     }
 
     export function isLoci(x: any): x is Loci {
@@ -700,7 +750,7 @@ namespace Structure {
             polymerUnitCount: -1,
             dynamicBonds: false,
             coordinateSystem: SymmetryOperator.Default,
-            label: ''
+            label: '',
         };
 
         // handle props
@@ -710,8 +760,11 @@ namespace Structure {
         if (props.interBondsValidUnit) state.interBondsValidUnit = props.interBondsValidUnit;
         else if (props.parent) state.interBondsValidUnit = props.parent.interBondsValidUnit;
 
-        if (props.interBondsValidUnitPair) state.interBondsValidUnitPair = props.interBondsValidUnitPair;
-        else if (props.parent) state.interBondsValidUnitPair = props.parent.interBondsValidUnitPair;
+        if (props.interBondsValidUnitPair) {
+            state.interBondsValidUnitPair = props.interBondsValidUnitPair;
+        } else if (props.parent) {
+            state.interBondsValidUnitPair = props.parent.interBondsValidUnitPair;
+        }
 
         if (props.dynamicBonds) state.dynamicBonds = props.dynamicBonds;
         else if (props.parent) state.dynamicBonds = props.parent.dynamicBonds;
@@ -731,7 +784,10 @@ namespace Structure {
         return new Structure(units, unitMap, unitIndexMap, state);
     }
 
-    export async function ofTrajectory(trajectory: Trajectory, ctx: RuntimeContext): Promise<Structure> {
+    export async function ofTrajectory(
+        trajectory: Trajectory,
+        ctx: RuntimeContext,
+    ): Promise<Structure> {
         if (trajectory.frameCount === 0) return Empty;
 
         const units: Unit[] = [];
@@ -746,7 +802,16 @@ namespace Structure {
                 const u = structure.units[j];
                 const invariantId = u.invariantId + count;
                 const chainGroupId = u.chainGroupId + count;
-                const newUnit = Unit.create(units.length, invariantId, chainGroupId, u.traits, u.kind, u.model, u.conformation.operator, u.elements);
+                const newUnit = Unit.create(
+                    units.length,
+                    invariantId,
+                    chainGroupId,
+                    u.traits,
+                    u.kind,
+                    u.model,
+                    u.conformation.operator,
+                    u.elements,
+                );
                 units.push(newUnit);
             }
             count = units.length;
@@ -788,9 +853,10 @@ namespace Structure {
                 }
             } else {
                 // merge consecutive "single atom chains" with same entity_id and auth_asym_id
-                while (c + 1 < chains.count
-                    && chains.offsets[c + 1] - chains.offsets[c] === 1
-                    && chains.offsets[c + 2] - chains.offsets[c + 1] === 1
+                while (
+                    c + 1 < chains.count &&
+                    chains.offsets[c + 1] - chains.offsets[c] === 1 &&
+                    chains.offsets[c + 2] - chains.offsets[c + 1] === 1
                 ) {
                     const e1 = index.getEntityFromChain(c);
                     const e2 = index.getEntityFromChain(c + 1 as ChainIndex);
@@ -809,7 +875,10 @@ namespace Structure {
                 }
             }
 
-            const elements = SortedArray.ofBounds(start as ElementIndex, chains.offsets[c + 1] as ElementIndex);
+            const elements = SortedArray.ofBounds(
+                start as ElementIndex,
+                chains.offsets[c + 1] as ElementIndex,
+            );
 
             let traits = Unit.Trait.None;
             if (isMultiChain) traits |= Unit.Trait.MultiChain;
@@ -825,7 +894,12 @@ namespace Structure {
                 addCoarseUnits(builder, model, model.coarseHierarchy.spheres, Unit.Kind.Spheres);
             }
             if (cs.gaussians.count > 0) {
-                addCoarseUnits(builder, model, model.coarseHierarchy.gaussians, Unit.Kind.Gaussians);
+                addCoarseUnits(
+                    builder,
+                    model,
+                    model.coarseHierarchy.gaussians,
+                    Unit.Kind.Gaussians,
+                );
             }
         }
 
@@ -837,17 +911,27 @@ namespace Structure {
         return model.entities.data.type.value(e) === 'water';
     }
 
-    function addCoarseUnits(builder: StructureBuilder, model: Model, elements: CoarseElements, kind: Unit.Kind) {
+    function addCoarseUnits(
+        builder: StructureBuilder,
+        model: Model,
+        elements: CoarseElements,
+        kind: Unit.Kind,
+    ) {
         const { chainElementSegments } = elements;
         for (let cI = 0; cI < chainElementSegments.count; cI++) {
-            const elements = SortedArray.ofBounds<ElementIndex>(chainElementSegments.offsets[cI], chainElementSegments.offsets[cI + 1]);
+            const elements = SortedArray.ofBounds<ElementIndex>(
+                chainElementSegments.offsets[cI],
+                chainElementSegments.offsets[cI + 1],
+            );
             builder.addUnit(kind, model, SymmetryOperator.Default, elements, Unit.Trait.None);
         }
     }
 
     export function transform(s: Structure, transform: Mat4) {
         if (Mat4.isIdentity(transform)) return s;
-        if (!Mat4.isRotationAndTranslation(transform, SymmetryOperator.RotationTranslationEpsilon)) throw new Error('Only rotation/translation combination can be applied.');
+        if (
+            !Mat4.isRotationAndTranslation(transform, SymmetryOperator.RotationTranslationEpsilon)
+        ) throw new Error('Only rotation/translation combination can be applied.');
 
         const units: Unit[] = [];
         for (const u of s.units) {
@@ -861,7 +945,7 @@ namespace Structure {
         return create(units, { parent: s, coordinateSystem: newCS });
     }
 
-     export function instances(s: Structure, transforms: Mat4[]) {
+    export function instances(s: Structure, transforms: Mat4[]) {
         for (const t of transforms) {
             if (!Mat4.isRotationAndTranslation(t, SymmetryOperator.RotationTranslationEpsilon)) {
                 throw new Error('Only rotation/translation combination can be applied.');
@@ -885,7 +969,6 @@ namespace Structure {
         return create(units, { parent: s });
     }
 
-
     export class StructureBuilder {
         private units: Unit[] = [];
         private invariantId = idFactory();
@@ -905,10 +988,26 @@ namespace Structure {
             this.inChainGroup = false;
         }
 
-        addUnit(kind: Unit.Kind, model: Model, operator: SymmetryOperator, elements: StructureElement.Set, traits: Unit.Traits, invariantId?: number): Unit {
+        addUnit(
+            kind: Unit.Kind,
+            model: Model,
+            operator: SymmetryOperator,
+            elements: StructureElement.Set,
+            traits: Unit.Traits,
+            invariantId?: number,
+        ): Unit {
             if (invariantId === undefined) invariantId = this.invariantId();
             const chainGroupId = this.inChainGroup ? this.chainGroupId : ++this.chainGroupId;
-            const unit = Unit.create(this.units.length, invariantId, chainGroupId, traits, kind, model, operator, elements);
+            const unit = Unit.create(
+                this.units.length,
+                invariantId,
+                chainGroupId,
+                traits,
+                kind,
+                model,
+                operator,
+                elements,
+            );
             return this.add(unit);
         }
 
@@ -950,7 +1049,6 @@ namespace Structure {
         }
 
         constructor(private props: Props = {}) {
-
         }
     }
 
@@ -964,7 +1062,7 @@ namespace Structure {
 
     /** Hash based on all unit.model conformation values in the structure */
     export function conformationHash(s: Structure) {
-        return hashString(s.units.map(u => Unit.conformationId(u)).join('|'));
+        return hashString(s.units.map((u) => Unit.conformationId(u)).join('|'));
     }
 
     // TODO: there should be a version that properly supports partitioned units
@@ -1007,7 +1105,10 @@ namespace Structure {
     export function areEquivalent(a: Structure, b: Structure) {
         return a === b || (
             a.hashCode === b.hashCode &&
-            StructureSymmetry.areTransformGroupsEquivalent(a.unitSymmetryGroups, b.unitSymmetryGroups)
+            StructureSymmetry.areTransformGroupsEquivalent(
+                a.unitSymmetryGroups,
+                b.unitSymmetryGroups,
+            )
         );
     }
 
@@ -1039,7 +1140,9 @@ namespace Structure {
             if (this.idx < this.maxIdx) {
                 this.idx++;
 
-                if (this.idx === this.maxIdx) this.hasNext = this.unitIndex + 1 < this.structure.units.length;
+                if (this.idx === this.maxIdx) {
+                    this.hasNext = this.unitIndex + 1 < this.structure.units.length;
+                }
                 return;
             }
 
@@ -1122,18 +1225,22 @@ namespace Structure {
     }
 
     export interface EachUnitPairProps {
-        maxRadius: number
-        validUnit: (unit: Unit) => boolean
-        validUnitPair: (unitA: Unit, unitB: Unit) => boolean
+        maxRadius: number;
+        validUnit: (unit: Unit) => boolean;
+        validUnitPair: (unitA: Unit, unitB: Unit) => boolean;
     }
 
     /**
      * Iterate over all unit pairs of a structure and invokes callback for valid units
      * and unit pairs if their boundaries are within a max distance.
      */
-    export function eachUnitPair(structure: Structure, callback: (unitA: Unit, unitB: Unit) => void, props: EachUnitPairProps) {
+    export function eachUnitPair(
+        structure: Structure,
+        callback: (unitA: Unit, unitB: Unit) => void,
+        props: EachUnitPairProps,
+    ) {
         const { maxRadius, validUnit, validUnitPair } = props;
-        if (!structure.units.some(u => validUnit(u))) return;
+        if (!structure.units.some((u) => validUnit(u))) return;
 
         const lookup = structure.lookup3d;
         const imageCenter = Vec3();
@@ -1143,7 +1250,12 @@ namespace Structure {
 
             const bs = unitA.boundary.sphere;
             Vec3.transformMat4(imageCenter, bs.center, unitA.conformation.operator.matrix);
-            const closeUnits = lookup.findUnitIndices(imageCenter[0], imageCenter[1], imageCenter[2], bs.radius + maxRadius);
+            const closeUnits = lookup.findUnitIndices(
+                imageCenter[0],
+                imageCenter[1],
+                imageCenter[2],
+                bs.radius + maxRadius,
+            );
             for (let i = 0; i < closeUnits.count; i++) {
                 const unitB = structure.units[closeUnits.indices[i]];
                 if (unitA.id >= unitB.id) continue;
@@ -1158,14 +1270,17 @@ namespace Structure {
     export interface ForEachAtomicHierarchyElementParams {
         // Called for 1st element of each chain
         // Note that chains can be split, meaning each chain would be called multiple times.
-        chain?: (e: StructureElement.Location<Unit.Atomic>) => void,
+        chain?: (e: StructureElement.Location<Unit.Atomic>) => void;
         // Called for 1st element of each residue
-        residue?: (e: StructureElement.Location<Unit.Atomic>) => void,
+        residue?: (e: StructureElement.Location<Unit.Atomic>) => void;
         // Called for each element
-        atom?: (e: StructureElement.Location<Unit.Atomic>) => void,
-    };
+        atom?: (e: StructureElement.Location<Unit.Atomic>) => void;
+    }
 
-    export function eachAtomicHierarchyElement(structure: Structure, { chain, residue, atom }: ForEachAtomicHierarchyElementParams) {
+    export function eachAtomicHierarchyElement(
+        structure: Structure,
+        { chain, residue, atom }: ForEachAtomicHierarchyElementParams,
+    ) {
         const l = StructureElement.Location.create<Unit.Atomic>(structure);
         for (const unit of structure.units) {
             if (unit.kind !== Unit.Kind.Atomic) continue;
@@ -1173,8 +1288,14 @@ namespace Structure {
             l.unit = unit;
 
             const { elements } = unit;
-            const chainsIt = Segmentation.transientSegments(unit.model.atomicHierarchy.chainAtomSegments, elements);
-            const residuesIt = Segmentation.transientSegments(unit.model.atomicHierarchy.residueAtomSegments, elements);
+            const chainsIt = Segmentation.transientSegments(
+                unit.model.atomicHierarchy.chainAtomSegments,
+                elements,
+            );
+            const residuesIt = Segmentation.transientSegments(
+                unit.model.atomicHierarchy.residueAtomSegments,
+                elements,
+            );
 
             while (chainsIt.hasNext) {
                 const chainSegment = chainsIt.move();
@@ -1223,10 +1344,10 @@ namespace Structure {
         /** Fiber-like structure are consider small when below this */
         fiberResidueCount: 15,
     };
-    export type SizeThresholds = typeof DefaultSizeThresholds
+    export type SizeThresholds = typeof DefaultSizeThresholds;
 
     function getPolymerSymmetryGroups(structure: Structure) {
-        return structure.unitSymmetryGroups.filter(ug => ug.units[0].polymerElements.length > 0);
+        return structure.unitSymmetryGroups.filter((ug) => ug.units[0].polymerElements.length > 0);
     }
 
     /**
@@ -1249,13 +1370,23 @@ namespace Structure {
         );
     }
 
-    export enum Size { Small, Medium, Large, Huge, Gigantic }
+    export enum Size {
+        Small,
+        Medium,
+        Large,
+        Huge,
+        Gigantic,
+    }
 
     /**
      * @param residueCountFactor - modifies the threshold counts, useful when estimating
      *                             the size of a structure comprised of multiple models
      */
-    export function getSize(structure: Structure, thresholds: Partial<SizeThresholds> = {}, residueCountFactor = 1): Size {
+    export function getSize(
+        structure: Structure,
+        thresholds: Partial<SizeThresholds> = {},
+        residueCountFactor = 1,
+    ): Size {
         const t = { ...DefaultSizeThresholds, ...thresholds };
         if (structure.polymerResidueCount >= t.largeResidueCount * residueCountFactor) {
             if (hasHighSymmetry(structure, t)) {
@@ -1284,8 +1415,12 @@ namespace Structure {
 
     const PrincipalAxesProp = '__PrincipalAxes__';
     export function getPrincipalAxes(structure: Structure): PrincipalAxes {
-        if (structure.currentPropertyData[PrincipalAxesProp]) return structure.currentPropertyData[PrincipalAxesProp];
-        const principalAxes = StructureElement.Loci.getPrincipalAxes(Structure.toStructureElementLoci(structure));
+        if (structure.currentPropertyData[PrincipalAxesProp]) {
+            return structure.currentPropertyData[PrincipalAxesProp];
+        }
+        const principalAxes = StructureElement.Loci.getPrincipalAxes(
+            Structure.toStructureElementLoci(structure),
+        );
         structure.currentPropertyData[PrincipalAxesProp] = principalAxes;
         return principalAxes;
     }

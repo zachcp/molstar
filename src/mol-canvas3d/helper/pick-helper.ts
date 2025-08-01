@@ -14,13 +14,21 @@ import { Camera } from '../camera.ts';
 import { StereoCamera } from '../camera/stereo.ts';
 import { cameraUnproject, Viewport } from '../camera/util.ts';
 import { Helper } from './helper.ts';
-import { AsyncPickData, AsyncPickStatus, checkAsyncPickingSupport, PickBuffers, PickData, PickOptions, PickPass } from '../passes/pick.ts';
+import {
+    AsyncPickData,
+    AsyncPickStatus,
+    checkAsyncPickingSupport,
+    PickBuffers,
+    PickData,
+    PickOptions,
+    PickPass,
+} from '../passes/pick.ts';
 
 export class PickHelper {
     dirty = true;
 
     private pickPadding: number;
-    private buffers = new PickBuffers(this.webgl, this.pickPass);
+    private buffers!: PickBuffers;
     private viewport = Viewport();
 
     private pickRatio: number;
@@ -59,7 +67,12 @@ export class PickHelper {
             this.pickHeight = pickHeight;
             this.halfPickWidth = Math.floor(this.pickWidth / 2);
 
-            this.buffers.setViewport(this.pickX, this.pickY, this.pickWidth, this.pickHeight);
+            this.buffers.setViewport(
+                this.pickX,
+                this.pickY,
+                this.pickWidth,
+                this.pickHeight,
+            );
         }
 
         this.spiral = spiral2d(Math.ceil(this.pickRatio * this.pickPadding));
@@ -67,7 +80,9 @@ export class PickHelper {
     }
 
     private render(camera: Camera | StereoCamera) {
-        if (isTimingMode) this.webgl.timer.mark('PickHelper.render', { captureStats: true });
+        if (isTimingMode) {
+            this.webgl.timer.mark('PickHelper.render', { captureStats: true });
+        }
         const { pickX, pickY, pickWidth, pickHeight, halfPickWidth } = this;
         const { renderer, scene, helper } = this;
 
@@ -79,7 +94,12 @@ export class PickHelper {
             renderer.setViewport(pickX, pickY, halfPickWidth, pickHeight);
             this.pickPass.render(renderer, camera.left, scene, helper);
 
-            renderer.setViewport(pickX + halfPickWidth, pickY, pickWidth - halfPickWidth, pickHeight);
+            renderer.setViewport(
+                pickX + halfPickWidth,
+                pickY,
+                pickWidth - halfPickWidth,
+                pickHeight,
+            );
             this.pickPass.render(renderer, camera.right, scene, helper);
         } else {
             renderer.setViewport(pickX, pickY, pickWidth, pickHeight);
@@ -90,7 +110,11 @@ export class PickHelper {
         if (isTimingMode) this.webgl.timer.markEnd('PickHelper.render');
     }
 
-    private identifyInternal(x: number, y: number, camera: Camera | StereoCamera): PickData | undefined {
+    private identifyInternal(
+        x: number,
+        y: number,
+        camera: Camera | StereoCamera,
+    ): PickData | undefined {
         if (this.webgl.isContextLost) return;
 
         const { webgl, pickRatio } = this;
@@ -103,11 +127,14 @@ export class PickHelper {
         const { viewport } = this;
 
         // check if within viewport
-        if (x < viewport.x ||
+        if (
+            x < viewport.x ||
             y < viewport.y ||
             x > viewport.x + viewport.width ||
             y > viewport.y + viewport.height
-        ) return;
+        ) {
+            return;
+        }
 
         const xv = x - viewport.x;
         const yv = y - viewport.y;
@@ -124,13 +151,28 @@ export class PickHelper {
             const halfWidth = Math.floor(viewport.width / 2);
             if (x > viewport.x + halfWidth) {
                 position[0] = viewport.x + (xv - halfWidth) * 2;
-                cameraUnproject(position, position, viewport, camera.right.inverseProjectionView);
+                cameraUnproject(
+                    position,
+                    position,
+                    viewport,
+                    camera.right.inverseProjectionView,
+                );
             } else {
                 position[0] = viewport.x + xv * 2;
-                cameraUnproject(position, position, viewport, camera.left.inverseProjectionView);
+                cameraUnproject(
+                    position,
+                    position,
+                    viewport,
+                    camera.left.inverseProjectionView,
+                );
             }
         } else {
-            cameraUnproject(position, position, viewport, camera.inverseProjectionView);
+            cameraUnproject(
+                position,
+                position,
+                viewport,
+                camera.inverseProjectionView,
+            );
         }
 
         return { id: pickingId, position };
@@ -142,14 +184,22 @@ export class PickHelper {
         }
     }
 
-    private getPickData(x: number, y: number, camera: Camera | StereoCamera): PickData | undefined {
+    private getPickData(
+        x: number,
+        y: number,
+        camera: Camera | StereoCamera,
+    ): PickData | undefined {
         for (const d of this.spiral) {
             const pickData = this.identifyInternal(x + d[0], y + d[1], camera);
             if (pickData) return pickData;
         }
     }
 
-    identify(x: number, y: number, camera: Camera | StereoCamera): PickData | undefined {
+    identify(
+        x: number,
+        y: number,
+        camera: Camera | StereoCamera,
+    ): PickData | undefined {
         this.prepare();
 
         if (this.dirty) {
@@ -162,7 +212,11 @@ export class PickHelper {
         return this.getPickData(x, y, camera);
     }
 
-    asyncIdentify(x: number, y: number, camera: Camera | StereoCamera): AsyncPickData | undefined {
+    asyncIdentify(
+        x: number,
+        y: number,
+        camera: Camera | StereoCamera,
+    ): AsyncPickData | undefined {
         this.prepare();
 
         if (this.dirty) {
@@ -182,7 +236,7 @@ export class PickHelper {
                 } else if (status === AsyncPickStatus.Failed) {
                     this.dirty = true;
                 }
-            }
+            },
         };
     }
 
@@ -195,13 +249,22 @@ export class PickHelper {
         this.buffers.dispose();
     }
 
-    constructor(private webgl: WebGLContext, private renderer: Renderer, private scene: Scene, private helper: Helper, private pickPass: PickPass, viewport: Viewport, options: PickOptions) {
+    constructor(
+        private webgl: WebGLContext,
+        private renderer: Renderer,
+        private scene: Scene,
+        private helper: Helper,
+        private pickPass: PickPass,
+        viewport: Viewport,
+        options: PickOptions,
+    ) {
+        this.buffers = new PickBuffers(this.webgl, this.pickPass);
         this.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);
         this.pickPadding = options.pickPadding;
 
         if (!checkAsyncPickingSupport(webgl)) {
             this.asyncIdentify = (x, y, camera) => ({
-                tryGet: () => this.identify(x, y, camera)
+                tryGet: () => this.identify(x, y, camera),
             });
         }
     }

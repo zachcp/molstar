@@ -7,13 +7,13 @@
 import { merge } from 'rxjs';
 import { CollapsableControls, CollapsableState } from '../../mol-plugin-ui/base.tsx';
 import { Button } from '../../mol-plugin-ui/controls/common.tsx';
-import { GetAppSvg, CubeScanSvg, CubeSendSvg } from '../../mol-plugin-ui/controls/icons.tsx';
+import { CubeScanSvg, CubeSendSvg, GetAppSvg } from '../../mol-plugin-ui/controls/icons.tsx';
 import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.tsx';
 import { download } from '../../mol-util/download.ts';
-import { GeometryParams, GeometryControls } from './controls.ts';
+import { GeometryControls, GeometryParams } from './controls.ts';
 
 interface State {
-    busy?: boolean
+    busy?: boolean;
 }
 
 export class GeometryExporterUI extends CollapsableControls<{}, State> {
@@ -28,7 +28,7 @@ export class GeometryExporterUI extends CollapsableControls<{}, State> {
         return {
             header: 'Export Geometry',
             isCollapsed: true,
-            brand: { accent: 'cyan', svg: CubeSendSvg }
+            brand: { accent: 'cyan', svg: CubeSendSvg },
         };
     }
 
@@ -37,26 +37,35 @@ export class GeometryExporterUI extends CollapsableControls<{}, State> {
             this.isARSupported = !!document.createElement('a').relList?.supports?.('ar');
         }
         const ctrl = this.controls;
-        return <>
-            <ParameterControls
-                params={GeometryParams}
-                values={ctrl.behaviors.params.value}
-                onChangeValues={xs => ctrl.behaviors.params.next(xs)}
-                isDisabled={this.state.busy}
-            />
-            <Button icon={GetAppSvg}
-                onClick={this.save} style={{ marginTop: 1 }}
-                disabled={this.state.busy || !this.plugin.canvas3d?.reprCount.value}>
-                Save
-            </Button>
-            {this.isARSupported && ctrl.behaviors.params.value.format === 'usdz' &&
-                <Button icon={CubeScanSvg}
-                    onClick={this.viewInAR} style={{ marginTop: 1 }}
-                    disabled={this.state.busy || !this.plugin.canvas3d?.reprCount.value}>
-                    View in AR
+        return (
+            <>
+                <ParameterControls
+                    params={GeometryParams}
+                    values={ctrl.behaviors.params.value}
+                    onChangeValues={(xs) => ctrl.behaviors.params.next(xs)}
+                    isDisabled={this.state.busy}
+                />
+                <Button
+                    icon={GetAppSvg}
+                    onClick={this.save}
+                    style={{ marginTop: 1 }}
+                    disabled={this.state.busy || !this.plugin.canvas3d?.reprCount.value}
+                >
+                    Save
                 </Button>
-            }
-        </>;
+                {this.isARSupported && ctrl.behaviors.params.value.format === 'usdz' &&
+                    (
+                        <Button
+                            icon={CubeScanSvg}
+                            onClick={this.viewInAR}
+                            style={{ marginTop: 1 }}
+                            disabled={this.state.busy || !this.plugin.canvas3d?.reprCount.value}
+                        >
+                            View in AR
+                        </Button>
+                    )}
+            </>
+        );
     }
 
     componentDidMount() {
@@ -64,7 +73,7 @@ export class GeometryExporterUI extends CollapsableControls<{}, State> {
 
         const merged = merge(
             this.controls.behaviors.params,
-            this.plugin.canvas3d!.reprCount
+            this.plugin.canvas3d!.reprCount,
         );
 
         this.subscribe(merged, () => {

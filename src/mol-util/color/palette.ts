@@ -12,13 +12,13 @@ import { distinctColors, DistinctColorsParams } from './distinct.ts';
 import { ColorListName, getColorListFromName } from './lists.ts';
 import { ColorScale } from './scale.ts';
 
-type PaletteType = 'generate' | 'colors'
+type PaletteType = 'generate' | 'colors';
 
 const DefaultGetPaletteProps = {
     type: 'generate' as PaletteType,
-    colorList: 'red-yellow-blue' as ColorListName
+    colorList: 'red-yellow-blue' as ColorListName,
 };
-type GetPaletteProps = typeof DefaultGetPaletteProps
+type GetPaletteProps = typeof DefaultGetPaletteProps;
 
 export function getPaletteParams(props: Partial<GetPaletteProps> = {}) {
     const p = { ...DefaultGetPaletteProps, ...props };
@@ -30,32 +30,36 @@ export function getPaletteParams(props: Partial<GetPaletteProps> = {}) {
             generate: PD.Group({
                 ...DistinctColorsParams,
                 maxCount: PD.Numeric(75, { min: 1, max: 250, step: 1 }),
-            }, { isFlat: true })
+            }, { isFlat: true }),
         }, {
             options: [
                 ['colors', 'Color List'],
-                ['generate', 'Generate Distinct']
-            ]
-        })
+                ['generate', 'Generate Distinct'],
+            ],
+        }),
     };
 }
 
 const DefaultPaletteProps = PD.getDefaultValues(getPaletteParams());
-type PaletteProps = typeof DefaultPaletteProps
+type PaletteProps = typeof DefaultPaletteProps;
 
 const DefaultLabelOptions = {
     valueLabel: (i: number) => `${i + 1}`,
     minLabel: 'Start',
-    maxLabel: 'End'
+    maxLabel: 'End',
 };
-type LabelOptions = typeof DefaultLabelOptions
+type LabelOptions = typeof DefaultLabelOptions;
 
 export interface Palette {
-    color: (i: number) => Color
-    legend?: TableLegend | ScaleLegend
+    color: (i: number) => Color;
+    legend?: TableLegend | ScaleLegend;
 }
 
-export function getPalette(count: number, props: PaletteProps, labelOptions: Partial<LabelOptions> = {}) {
+export function getPalette(
+    count: number,
+    props: PaletteProps,
+    labelOptions: Partial<LabelOptions> = {},
+) {
     let color: (i: number) => Color;
     let legend: ScaleLegend | TableLegend | undefined;
 
@@ -65,7 +69,9 @@ export function getPalette(count: number, props: PaletteProps, labelOptions: Par
         const { minLabel, maxLabel } = { ...DefaultLabelOptions, ...labelOptions };
 
         let colors = list.colors;
-        if (colors.length === 0) colors = getColorListFromName(DefaultGetPaletteProps.colorList).list;
+        if (colors.length === 0) {
+            colors = getColorListFromName(DefaultGetPaletteProps.colorList).list;
+        }
 
         const scale = ColorScale.create({ listOrName: colors, domain, minLabel, maxLabel });
         legend = scale.legend;
@@ -73,8 +79,12 @@ export function getPalette(count: number, props: PaletteProps, labelOptions: Par
     } else {
         let colors: Color[];
         if (props.palette.name === 'colors') {
-            colors = props.palette.params.list.colors.map(c => Array.isArray(c) ? c[0] : c);
-            if (colors.length === 0) colors = getColorListFromName('dark-2').list.map(c => Array.isArray(c) ? c[0] : c);
+            colors = props.palette.params.list.colors.map((c) => Array.isArray(c) ? c[0] : c);
+            if (colors.length === 0) {
+                colors = getColorListFromName('dark-2').list.map((c) =>
+                    Array.isArray(c) ? c[0] : c
+                );
+            }
         } else {
             count = Math.min(count, props.palette.params.maxCount);
             colors = distinctColors(count, props.palette.params);

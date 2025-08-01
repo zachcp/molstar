@@ -9,16 +9,39 @@ import { Structure, StructureElement } from '../../mol-model/structure.ts';
 import { PluginStateObject } from '../objects.ts';
 import { StateTransforms } from '../transforms.ts';
 import { PluginContext } from '../../mol-plugin/context.ts';
-import { StateBuilder, StateObjectCell, StateSelection, StateTransform } from '../../mol-state/index.ts';
+import {
+    StateBuilder,
+    StateObjectCell,
+    StateSelection,
+    StateTransform,
+} from '../../mol-state/index.ts';
 import { Substance } from '../../mol-theme/substance.ts';
 import { StructureComponentRef } from '../manager/structure/hierarchy-state.ts';
 import { EmptyLoci, isEmptyLoci, Loci } from '../../mol-model/loci.ts';
 import { Material } from '../../mol-util/material.ts';
 
-type SubstanceEachReprCallback = (update: StateBuilder.Root, repr: StateObjectCell<PluginStateObject.Molecule.Structure.Representation3D, StateTransform<typeof StateTransforms.Representation.StructureRepresentation3D>>, substance?: StateObjectCell<any, StateTransform<typeof StateTransforms.Representation.SubstanceStructureRepresentation3DFromBundle>>) => Promise<void>
+type SubstanceEachReprCallback = (
+    update: StateBuilder.Root,
+    repr: StateObjectCell<
+        PluginStateObject.Molecule.Structure.Representation3D,
+        StateTransform<typeof StateTransforms.Representation.StructureRepresentation3D>
+    >,
+    substance?: StateObjectCell<
+        any,
+        StateTransform<
+            typeof StateTransforms.Representation.SubstanceStructureRepresentation3DFromBundle
+        >
+    >,
+) => Promise<void>;
 const SubstanceManagerTag = 'substance-controls';
 
-export async function setStructureSubstance(plugin: PluginContext, components: StructureComponentRef[], material: Material | undefined, lociGetter: (structure: Structure) => Promise<StructureElement.Loci | EmptyLoci>, types?: string[]) {
+export async function setStructureSubstance(
+    plugin: PluginContext,
+    components: StructureComponentRef[],
+    material: Material | undefined,
+    lociGetter: (structure: Structure) => Promise<StructureElement.Loci | EmptyLoci>,
+    types?: string[],
+) {
     await eachRepr(plugin, components, async (update, repr, substanceCell) => {
         if (types && types.length > 0 && !types.includes(repr.params!.values.type.name)) return;
 
@@ -31,7 +54,7 @@ export async function setStructureSubstance(plugin: PluginContext, components: S
         const layer = {
             bundle: StructureElement.Bundle.fromLoci(loci),
             material: material ?? Material(),
-            clear: !material
+            clear: !material,
         };
 
         if (substanceCell) {
@@ -41,12 +64,20 @@ export async function setStructureSubstance(plugin: PluginContext, components: S
         } else {
             const filtered = getFilteredBundle([layer], structure);
             update.to(repr.transform.ref)
-                .apply(StateTransforms.Representation.SubstanceStructureRepresentation3DFromBundle, Substance.toBundle(filtered), { tags: SubstanceManagerTag });
+                .apply(
+                    StateTransforms.Representation.SubstanceStructureRepresentation3DFromBundle,
+                    Substance.toBundle(filtered),
+                    { tags: SubstanceManagerTag },
+                );
         }
     });
 }
 
-export async function clearStructureSubstance(plugin: PluginContext, components: StructureComponentRef[], types?: string[]) {
+export async function clearStructureSubstance(
+    plugin: PluginContext,
+    components: StructureComponentRef[],
+    types?: string[],
+) {
     await eachRepr(plugin, components, async (update, repr, substanceCell) => {
         if (types && types.length > 0 && !types.includes(repr.params!.values.type.name)) return;
         if (substanceCell) {
@@ -55,12 +86,21 @@ export async function clearStructureSubstance(plugin: PluginContext, components:
     });
 }
 
-async function eachRepr(plugin: PluginContext, components: StructureComponentRef[], callback: SubstanceEachReprCallback) {
+async function eachRepr(
+    plugin: PluginContext,
+    components: StructureComponentRef[],
+    callback: SubstanceEachReprCallback,
+) {
     const state = plugin.state.data;
     const update = state.build();
     for (const c of components) {
         for (const r of c.representations) {
-            const substance = state.select(StateSelection.Generators.ofTransformer(StateTransforms.Representation.SubstanceStructureRepresentation3DFromBundle, r.cell.transform.ref).withTag(SubstanceManagerTag));
+            const substance = state.select(
+                StateSelection.Generators.ofTransformer(
+                    StateTransforms.Representation.SubstanceStructureRepresentation3DFromBundle,
+                    r.cell.transform.ref,
+                ).withTag(SubstanceManagerTag),
+            );
             await callback(update, r.cell, substance[0]);
         }
     }

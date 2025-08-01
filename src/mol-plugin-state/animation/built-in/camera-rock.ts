@@ -18,15 +18,22 @@ type State = { snapshot: Camera.Snapshot };
 
 export const AnimateCameraRock = PluginStateAnimation.create({
     name: 'built-in.animate-camera-rock',
-    display: { name: 'Camera Rock', description: 'Rock the 3D scene around the x-axis in view space' },
+    display: {
+        name: 'Camera Rock',
+        description: 'Rock the 3D scene around the x-axis in view space',
+    },
     isExportable: true,
     params: () => ({
         durationInMs: PD.Numeric(4000, { min: 100, max: 20000, step: 100 }),
-        speed: PD.Numeric(1, { min: 1, max: 10, step: 1 }, { description: 'How many times to rock from side to side.' }),
-        angle: PD.Numeric(10, { min: 0, max: 180, step: 1 }, { description: 'How many degrees to rotate in each direction.' }),
+        speed: PD.Numeric(1, { min: 1, max: 10, step: 1 }, {
+            description: 'How many times to rock from side to side.',
+        }),
+        angle: PD.Numeric(10, { min: 0, max: 180, step: 1 }, {
+            description: 'How many degrees to rotate in each direction.',
+        }),
     }),
     initialState: (p, ctx) => ({ snapshot: ctx.canvas3d!.camera.getSnapshot() }) as State,
-    getDuration: p => ({ kind: 'fixed', durationMs: p.durationInMs }),
+    getDuration: (p) => ({ kind: 'fixed', durationMs: p.durationInMs }),
     teardown: (_, state: State, ctx) => {
         ctx.canvas3d?.requestCameraReset({ snapshot: state.snapshot, durationMs: 0 });
     },
@@ -51,12 +58,15 @@ export const AnimateCameraRock = PluginStateAnimation.create({
         Quat.setAxisAngle(_rot, _axis, angle);
         Vec3.transformQuat(_dir, _dir, _rot);
         const position = Vec3.add(Vec3(), snapshot.target, _dir);
-        ctx.plugin.canvas3d?.requestCameraReset({ snapshot: { ...snapshot, position }, durationMs: 0 });
+        ctx.plugin.canvas3d?.requestCameraReset({
+            snapshot: { ...snapshot, position },
+            durationMs: 0,
+        });
 
         if (phase >= 0.99999) {
             return { kind: 'finished' };
         }
 
         return { kind: 'next', state: animState };
-    }
+    },
 });

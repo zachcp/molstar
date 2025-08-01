@@ -5,42 +5,54 @@
  */
 
 import { Column, ColumnHelpers } from '../../../../../mol-data/db.ts';
-import { trimStr, Tokens } from '../tokenizer.ts';
-import { parseIntSkipLeadingWhitespace, parseFloatSkipLeadingWhitespace } from '../number-parser.ts';
+import { Tokens, trimStr } from '../tokenizer.ts';
+import {
+    parseFloatSkipLeadingWhitespace,
+    parseIntSkipLeadingWhitespace,
+} from '../number-parser.ts';
 
 export function FixedColumnProvider(lines: Tokens) {
-    return function<T extends Column.Schema>(offset: number, width: number, type: T) {
+    return function <T extends Column.Schema>(offset: number, width: number, type: T) {
         return FixedColumn(lines, offset, width, type);
     };
 }
 
-export function FixedColumn<T extends Column.Schema>(lines: Tokens, offset: number, width: number, schema: T): Column<T['T']> {
+export function FixedColumn<T extends Column.Schema>(
+    lines: Tokens,
+    offset: number,
+    width: number,
+    schema: T,
+): Column<T['T']> {
     const { data, indices, count: rowCount } = lines;
     const { valueType: type } = schema;
 
-    const value: Column<T['T']>['value'] = type === 'str' ? row => {
-        const s = indices[2 * row] + offset, le = indices[2 * row + 1];
-        if (s >= le) return '';
-        let e = s + width;
-        if (e > le) e = le;
-        return trimStr(data, s, e);
-    } : type === 'int' ? row => {
-        const s = indices[2 * row] + offset;
-        if (s > indices[2 * row + 1]) return 0;
-        return parseIntSkipLeadingWhitespace(data, s, s + width);
-    } : row => {
-        const s = indices[2 * row] + offset;
-        if (s > indices[2 * row + 1]) return 0;
-        return parseFloatSkipLeadingWhitespace(data, s, s + width);
-    };
+    const value: Column<T['T']>['value'] = type === 'str'
+        ? (row) => {
+            const s = indices[2 * row] + offset, le = indices[2 * row + 1];
+            if (s >= le) return '';
+            let e = s + width;
+            if (e > le) e = le;
+            return trimStr(data, s, e);
+        }
+        : type === 'int'
+        ? (row) => {
+            const s = indices[2 * row] + offset;
+            if (s > indices[2 * row + 1]) return 0;
+            return parseIntSkipLeadingWhitespace(data, s, s + width);
+        }
+        : (row) => {
+            const s = indices[2 * row] + offset;
+            if (s > indices[2 * row + 1]) return 0;
+            return parseFloatSkipLeadingWhitespace(data, s, s + width);
+        };
     return {
         schema: schema,
         __array: void 0,
         isDefined: true,
         rowCount,
         value,
-        valueKind: row => Column.ValueKinds.Present,
-        toArray: params => ColumnHelpers.createAndFillArray(rowCount, value, params),
-        areValuesEqual: (rowA, rowB) => value(rowA) === value(rowB)
+        valueKind: (row) => Column.ValueKinds.Present,
+        toArray: (params) => ColumnHelpers.createAndFillArray(rowCount, value, params),
+        areValuesEqual: (rowA, rowB) => value(rowA) === value(rowB),
     };
 }

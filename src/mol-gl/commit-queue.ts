@@ -7,7 +7,7 @@
 import { LinkedList } from '../mol-data/generic.ts';
 import { GraphicsRenderObject } from './render-object.ts';
 
-type N = LinkedList.Node<GraphicsRenderObject>
+type N = LinkedList.Node<GraphicsRenderObject>;
 
 export class CommitQueue {
     private removeList = LinkedList<GraphicsRenderObject>();

@@ -7,13 +7,17 @@
 export { PixelData };
 
 interface PixelData {
-    readonly array: Uint8Array | Float32Array
-    readonly width: number
-    readonly height: number
+    readonly array: Uint8Array | Float32Array;
+    readonly width: number;
+    readonly height: number;
 }
 
 namespace PixelData {
-    export function create(array: Uint8Array | Float32Array, width: number, height: number): PixelData {
+    export function create(
+        array: Uint8Array | Float32Array,
+        width: number,
+        height: number,
+    ): PixelData {
         return { array, width, height };
     }
 

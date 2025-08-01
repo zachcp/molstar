@@ -7,58 +7,73 @@
 import { onelinerJsonString } from '../../../../mol-util/json.ts';
 import { isPlainObject, mapObjectMap } from '../../../../mol-util/object.ts';
 import { Field } from './field-schema.ts';
-import { AllRequired, ParamsSchema, SimpleParamsSchema, ValuesFor, paramsValidationIssues } from './params-schema.ts';
+import {
+    AllRequired,
+    ParamsSchema,
+    paramsValidationIssues,
+    SimpleParamsSchema,
+    ValuesFor,
+} from './params-schema.ts';
 import { treeToString } from './tree-utils.ts';
 
-
 /** Type of "custom" of a tree node (key-value storage with arbitrary JSONable values) */
-export type CustomProps = Partial<Record<string, any>>
+export type CustomProps = Partial<Record<string, any>>;
 
 /** Tree node without children */
-export type Node<TKind extends string = string, TParams extends {} = {}> =
-    {} extends TParams ? {
-        kind: TKind,
-        params?: TParams, // params can be dropped if {} is valid value for params
-        custom?: CustomProps,
-        ref?: string,
-    } : {
-        kind: TKind,
-        params: TParams, // params must be here if {} is not valid value for params
-        custom?: CustomProps,
-        ref?: string,
+export type Node<TKind extends string = string, TParams extends {} = {}> = {} extends TParams ? {
+        kind: TKind;
+        params?: TParams; // params can be dropped if {} is valid value for params
+        custom?: CustomProps;
+        ref?: string;
     }
+    : {
+        kind: TKind;
+        params: TParams; // params must be here if {} is not valid value for params
+        custom?: CustomProps;
+        ref?: string;
+    };
 
 /** Kind type for a tree node */
-export type Kind<TNode extends Node> = TNode['kind']
+export type Kind<TNode extends Node> = TNode['kind'];
 
 /** Params type for a tree node */
-export type Params<TNode extends Node> = NonNullable<TNode['params']>
-
+export type Params<TNode extends Node> = NonNullable<TNode['params']>;
 
 /** Tree (i.e. a node with optional children) where the root node is of type `TRoot` and other nodes are of type `TNode` */
 export type Tree<TNode extends Node<string, {}> = Node<string, {}>, TRoot extends TNode = TNode> =
-    TRoot & {
-        children?: Tree<TNode, TNode>[],
-    }
+    & TRoot
+    & {
+        children?: Tree<TNode, TNode>[];
+    };
 
 /** Type of any subtree that can occur within given `TTree` tree type */
-export type Subtree<TTree extends Tree> = NonNullable<TTree['children']>[number]
+export type Subtree<TTree extends Tree> = NonNullable<TTree['children']>[number];
 
 /** Type of any subtree that can occur within given `TTree` tree type and has kind type `TKind` */
-export type SubtreeOfKind<TTree extends Tree, TKind extends Kind<Subtree<TTree>> = Kind<Subtree<TTree>>> = RootOfKind<Subtree<TTree>, TKind>
+export type SubtreeOfKind<
+    TTree extends Tree,
+    TKind extends Kind<Subtree<TTree>> = Kind<Subtree<TTree>>,
+> = RootOfKind<Subtree<TTree>, TKind>;
 
-type RootOfKind<TTree extends Tree, TKind extends Kind<TTree>> = Extract<TTree, Tree<any, Node<TKind>>>
+type RootOfKind<TTree extends Tree, TKind extends Kind<TTree>> = Extract<
+    TTree,
+    Tree<any, Node<TKind>>
+>;
 
 /** Params type for a given kind type within a tree */
-export type ParamsOfKind<TTree extends Tree, TKind extends Kind<Subtree<TTree>> = Kind<Subtree<TTree>>> = NonNullable<SubtreeOfKind<TTree, TKind>['params']>
-
+export type ParamsOfKind<
+    TTree extends Tree,
+    TKind extends Kind<Subtree<TTree>> = Kind<Subtree<TTree>>,
+> = NonNullable<SubtreeOfKind<TTree, TKind>['params']>;
 
 /** Get params from a tree node */
 export function getParams<TNode extends Node>(node: TNode): Params<TNode> {
     return node.params ?? {};
 }
 /** Get custom properties from a tree node */
-export function getCustomProps<TCustomProps extends CustomProps = CustomProps>(node: Node): TCustomProps {
+export function getCustomProps<TCustomProps extends CustomProps = CustomProps>(
+    node: Node,
+): TCustomProps {
     return (node.custom ?? {}) as TCustomProps;
 }
 /** Get children from a tree node */
@@ -66,55 +81,79 @@ export function getChildren<TTree extends Tree>(tree: TTree): Subtree<TTree>[] {
     return tree.children ?? [];
 }
 
-
-type ParamsSchemas = { [kind: string]: ParamsSchema }
+type ParamsSchemas = { [kind: string]: ParamsSchema };
 
 /** Definition of tree type, specifying allowed node kinds, types of their params, required kind for the root, and allowed parent-child kind combinations */
-export interface TreeSchema<TParamsSchemas extends ParamsSchemas = ParamsSchemas, TRootKind extends keyof TParamsSchemas = string> {
+export interface TreeSchema<
+    TParamsSchemas extends ParamsSchemas = ParamsSchemas,
+    TRootKind extends keyof TParamsSchemas = string,
+> {
     /** Required kind of the root node */
-    rootKind: TRootKind,
+    rootKind: TRootKind;
     /** Definition of allowed node kinds */
     nodes: {
         [kind in keyof TParamsSchemas]: {
             /** Params schema for this node kind */
-            params: TParamsSchemas[kind],
+            params: TParamsSchemas[kind];
             /** Documentation for this node kind */
-            description?: string,
+            description?: string;
             /** Node kinds that can serve as parent for this node kind (`undefined` means the parent can be of any kind) */
-            parent?: (string & keyof TParamsSchemas)[],
-        }
-    },
+            parent?: (string & keyof TParamsSchemas)[];
+        };
+    };
 }
-export function TreeSchema<P extends ParamsSchemas = ParamsSchemas, R extends keyof P = string>(schema: TreeSchema<P, R>): TreeSchema<P, R> {
+export function TreeSchema<P extends ParamsSchemas = ParamsSchemas, R extends keyof P = string>(
+    schema: TreeSchema<P, R>,
+): TreeSchema<P, R> {
     return schema;
 }
 
 /** ParamsSchemas per node kind */
-type ParamsSchemasOf<TTreeSchema extends TreeSchema> = TTreeSchema extends TreeSchema<infer TParamsSchema, any> ? TParamsSchema : never;
+type ParamsSchemasOf<TTreeSchema extends TreeSchema> = TTreeSchema extends
+    TreeSchema<infer TParamsSchema, any> ? TParamsSchema : never;
 
 /** Variation of params schemas where all param fields are required */
-type ParamsSchemasWithAllRequired<TParamsSchemas extends ParamsSchemas> = { [kind in keyof TParamsSchemas]: AllRequired<TParamsSchemas[kind]> }
+type ParamsSchemasWithAllRequired<TParamsSchemas extends ParamsSchemas> = {
+    [kind in keyof TParamsSchemas]: AllRequired<TParamsSchemas[kind]>;
+};
 
 /** Variation of a tree schema where all param fields are required */
-export type TreeSchemaWithAllRequired<TTreeSchema extends TreeSchema> = TreeSchema<ParamsSchemasWithAllRequired<ParamsSchemasOf<TTreeSchema>>, TTreeSchema['rootKind']>
-export function TreeSchemaWithAllRequired<TTreeSchema extends TreeSchema>(schema: TTreeSchema): TreeSchemaWithAllRequired<TTreeSchema> {
+export type TreeSchemaWithAllRequired<TTreeSchema extends TreeSchema> = TreeSchema<
+    ParamsSchemasWithAllRequired<ParamsSchemasOf<TTreeSchema>>,
+    TTreeSchema['rootKind']
+>;
+export function TreeSchemaWithAllRequired<TTreeSchema extends TreeSchema>(
+    schema: TTreeSchema,
+): TreeSchemaWithAllRequired<TTreeSchema> {
     return {
         ...schema,
-        nodes: mapObjectMap(schema.nodes, node => ({ ...node, params: AllRequired(node.params) })) as any,
+        nodes: mapObjectMap(
+            schema.nodes,
+            (node) => ({ ...node, params: AllRequired(node.params) }),
+        ) as any,
     };
 }
 
 /** Type of tree node which can occur as the root of a tree conforming to tree schema `TTreeSchema` */
-export type RootFor<TTreeSchema extends TreeSchema> = NodeFor<TTreeSchema, TTreeSchema['rootKind']>
+export type RootFor<TTreeSchema extends TreeSchema> = NodeFor<TTreeSchema, TTreeSchema['rootKind']>;
 
 /** Type of tree node which can occur anywhere in a tree conforming to tree schema `TTreeSchema`,
  * optionally narrowing down to a given node kind */
-export type NodeFor<TTreeSchema extends TreeSchema, TKind extends keyof ParamsSchemasOf<TTreeSchema> = keyof ParamsSchemasOf<TTreeSchema>>
-    = { [key in keyof ParamsSchemasOf<TTreeSchema>]: Node<key & string, ValuesFor<ParamsSchemasOf<TTreeSchema>[key]>> }[TKind]
+export type NodeFor<
+    TTreeSchema extends TreeSchema,
+    TKind extends keyof ParamsSchemasOf<TTreeSchema> = keyof ParamsSchemasOf<TTreeSchema>,
+> = {
+    [key in keyof ParamsSchemasOf<TTreeSchema>]: Node<
+        key & string,
+        ValuesFor<ParamsSchemasOf<TTreeSchema>[key]>
+    >;
+}[TKind];
 
 /** Type of tree which conforms to tree schema `TTreeSchema` */
-export type TreeFor<TTreeSchema extends TreeSchema> = Tree<NodeFor<TTreeSchema>, RootFor<TTreeSchema> & NodeFor<TTreeSchema>>
-
+export type TreeFor<TTreeSchema extends TreeSchema> = Tree<
+    NodeFor<TTreeSchema>,
+    RootFor<TTreeSchema> & NodeFor<TTreeSchema>
+>;
 
 /** Return `undefined` if a tree conforms to the given schema,
  * return validation issues (as a list of lines) if it does not conform.
@@ -122,21 +161,45 @@ export type TreeFor<TTreeSchema extends TreeSchema> = Tree<NodeFor<TTreeSchema>,
  * If `options.noExtra` is true, presence of any extra parameters is treated as an issue.
  * If `options.anyRoot` is true, the kind of the root node is not enforced.
  */
-export function treeValidationIssues(schema: TreeSchema, tree: Tree, options: { requireAll?: boolean, noExtra?: boolean, anyRoot?: boolean, parent?: string } = {}): string[] | undefined {
+export function treeValidationIssues(
+    schema: TreeSchema,
+    tree: Tree,
+    options: { requireAll?: boolean; noExtra?: boolean; anyRoot?: boolean; parent?: string } = {},
+): string[] | undefined {
     if (!isPlainObject(tree)) return [`Node must be an object, not ${tree}`];
-    if (!options.anyRoot && tree.kind !== schema.rootKind) return [`Invalid root node kind "${tree.kind}", root must be of kind "${schema.rootKind}"`];
+    if (!options.anyRoot && tree.kind !== schema.rootKind) {
+        return [`Invalid root node kind "${tree.kind}", root must be of kind "${schema.rootKind}"`];
+    }
     const nodeSchema = schema.nodes[tree.kind];
     if (!nodeSchema) return [`Unknown node kind "${tree.kind}"`];
-    if (nodeSchema.parent && (options.parent !== undefined) && !nodeSchema.parent.includes(options.parent)) {
-        return [`Node of kind "${tree.kind}" cannot appear as a child of "${options.parent}". Allowed parents for "${tree.kind}" are: ${nodeSchema.parent.map(s => `"${s}"`).join(', ')}`];
+    if (
+        nodeSchema.parent && (options.parent !== undefined) &&
+        !nodeSchema.parent.includes(options.parent)
+    ) {
+        return [
+            `Node of kind "${tree.kind}" cannot appear as a child of "${options.parent}". Allowed parents for "${tree.kind}" are: ${
+                nodeSchema.parent.map((s) => `"${s}"`).join(', ')
+            }`,
+        ];
     }
     const issues = paramsValidationIssues(nodeSchema.params, getParams(tree), options);
-    if (issues) return [`Invalid parameters for node of kind "${tree.kind}":`, ...issues.map(s => '  ' + s)];
+    if (issues) {
+        return [
+            `Invalid parameters for node of kind "${tree.kind}":`,
+            ...issues.map((s) => '  ' + s),
+        ];
+    }
     if (tree.custom !== undefined && (typeof tree.custom !== 'object' || tree.custom === null)) {
-        return [`Invalid "custom" for node of kind "${tree.kind}": must be an object, not ${tree.custom}.`];
+        return [
+            `Invalid "custom" for node of kind "${tree.kind}": must be an object, not ${tree.custom}.`,
+        ];
     }
     for (const child of getChildren(tree)) {
-        const issues = treeValidationIssues(schema, child, { ...options, anyRoot: true, parent: tree.kind });
+        const issues = treeValidationIssues(schema, child, {
+            ...options,
+            anyRoot: true,
+            parent: tree.kind,
+        });
         if (issues) return issues;
     }
     return undefined;
@@ -186,7 +249,11 @@ function treeSchemaToString_<S extends TreeSchema>(schema: S, markdown: boolean 
         if (description) {
             out.push(`${p1}${description}`);
         }
-        out.push(`${p1}Parent: ${!parent ? 'any' : parent.length === 0 ? 'none' : parent.map(code).join(' or ')}`);
+        out.push(
+            `${p1}Parent: ${
+                !parent ? 'any' : parent.length === 0 ? 'none' : parent.map(code).join(' or ')
+            }`,
+        );
         out.push(`${p1}Params:${Object.keys(params).length > 0 ? '' : ' none'}`);
         if (params.type === 'simple') {
             formatSimpleParams(out, params, { h: h2, p: p2, code, bold });
@@ -208,11 +275,24 @@ function treeSchemaToString_<S extends TreeSchema>(schema: S, markdown: boolean 
     return out.join(newline);
 }
 
-function formatSimpleParams(out: string[], params: SimpleParamsSchema, formatting: { h: string, p: string, code: (str: string) => string, bold: (str: string) => string }): void {
+function formatSimpleParams(
+    out: string[],
+    params: SimpleParamsSchema,
+    formatting: {
+        h: string;
+        p: string;
+        code: (str: string) => string;
+        bold: (str: string) => string;
+    },
+): void {
     const { h, p, code, bold } = formatting;
     for (const key in params.fields) {
         const field = params.fields[key];
-        out.push(`${h}${bold(code(key + (field.required ? ': ' : '?: ')))}${code(formatFieldType(field))}`);
+        out.push(
+            `${h}${bold(code(key + (field.required ? ': ' : '?: ')))}${
+                code(formatFieldType(field))
+            }`,
+        );
         const defaultValue = field.required ? undefined : field.default;
         if (field.description) {
             out.push(`${p}${field.description}`);

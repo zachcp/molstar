@@ -6,18 +6,18 @@
 
 import { ValueCell } from '../../mol-util/value-cell.ts';
 import { Vec2 } from '../../mol-math/linear-algebra.ts';
-import { TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
+import { createTextureImage, TextureImage } from '../../mol-gl/renderable/util.ts';
 
 export type MarkerType = 'instance' | 'groupInstance';
 
 export type MarkerData = {
-    uMarker: ValueCell<number>
-    tMarker: ValueCell<TextureImage<Uint8Array>>
-    uMarkerTexDim: ValueCell<Vec2>
-    markerAverage: ValueCell<number>
-    markerStatus: ValueCell<number>
-    dMarkerType: ValueCell<string>
-}
+    uMarker: ValueCell<number>;
+    tMarker: ValueCell<TextureImage<Uint8Array>>;
+    uMarkerTexDim: ValueCell<Vec2>;
+    markerAverage: ValueCell<number>;
+    markerStatus: ValueCell<number>;
+    dMarkerType: ValueCell<string>;
+};
 
 const MarkerCountLut = new Uint8Array(0x0303 + 1);
 MarkerCountLut[0x0001] = 1;
@@ -67,8 +67,17 @@ export function getMarkersAverage(array: Uint8Array, count: number): number {
     return sum / count;
 }
 
-export function createMarkers(count: number, type: MarkerType, markerData?: MarkerData): MarkerData {
-    const markers = createTextureImage(Math.max(1, count), 1, Uint8Array, markerData && markerData.tMarker.ref.value.array);
+export function createMarkers(
+    count: number,
+    type: MarkerType,
+    markerData?: MarkerData,
+): MarkerData {
+    const markers = createTextureImage(
+        Math.max(1, count),
+        1,
+        Uint8Array,
+        markerData && markerData.tMarker.ref.value.array,
+    );
     const average = getMarkersAverage(markers.array, count);
     const status = average === 0 ? 0 : -1;
     if (markerData) {

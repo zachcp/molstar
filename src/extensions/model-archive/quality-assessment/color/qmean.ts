@@ -22,16 +22,20 @@ export function getQmeanScoreColorThemeParams(ctx: ThemeDataContext) {
         metricId: QualityAssessment.getLocalOptions(ctx.structure?.models[0], 'qmean'),
     };
 }
-export type QmeanScoreColorThemeParams = ReturnType<typeof getQmeanScoreColorThemeParams>
+export type QmeanScoreColorThemeParams = ReturnType<typeof getQmeanScoreColorThemeParams>;
 
-export function QmeanScoreColorTheme(ctx: ThemeDataContext, props: PD.Values<QmeanScoreColorThemeParams>): ColorTheme<QmeanScoreColorThemeParams> {
+export function QmeanScoreColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<QmeanScoreColorThemeParams>,
+): ColorTheme<QmeanScoreColorThemeParams> {
     let color: LocationColor = () => DefaultColor;
 
     const scale = ColorScale.create({
         domain: [0, 1],
         listOrName: [
-            [Color(0xFF5000), 0.5], [Color(0x025AFD), 1.0]
-        ]
+            [Color(0xFF5000), 0.5],
+            [Color(0x025AFD), 1.0],
+        ],
     });
 
     if (ctx.structure) {
@@ -41,8 +45,10 @@ export function QmeanScoreColorTheme(ctx: ThemeDataContext, props: PD.Values<Qme
             const { unit, element } = location;
             if (!Unit.isAtomic(unit)) return DefaultColor;
             const qualityAssessment = QualityAssessmentProvider.get(unit.model).value;
-            const metric = qualityAssessment?.localMap.get(props.metricId!)?.values ?? qualityAssessment?.qmean;
-            const score = metric?.get(unit.model.atomicHierarchy.residueAtomSegments.index[element]) ?? -1;
+            const metric = qualityAssessment?.localMap.get(props.metricId!)?.values ??
+                qualityAssessment?.qmean;
+            const score =
+                metric?.get(unit.model.atomicHierarchy.residueAtomSegments.index[element]) ?? -1;
             if (score < 0) {
                 return DefaultColor;
             } else {
@@ -69,18 +75,22 @@ export function QmeanScoreColorTheme(ctx: ThemeDataContext, props: PD.Values<Qme
         color,
         props,
         description: 'Assigns residue colors according to the QMEAN score.',
-        legend: scale.legend
+        legend: scale.legend,
     };
 }
 
-export const QmeanScoreColorThemeProvider: ColorTheme.Provider<QmeanScoreColorThemeParams, 'qmean-score'> = {
+export const QmeanScoreColorThemeProvider: ColorTheme.Provider<
+    QmeanScoreColorThemeParams,
+    'qmean-score'
+> = {
     name: 'qmean-score',
     label: 'QMEAN Score',
     category: ColorThemeCategory.Validation,
     factory: QmeanScoreColorTheme,
     getParams: getQmeanScoreColorThemeParams,
     defaultValues: PD.getDefaultValues(getQmeanScoreColorThemeParams({})),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure?.models.some(m => QualityAssessment.isApplicable(m, 'qmean')),
+    isApplicable: (ctx: ThemeDataContext) =>
+        !!ctx.structure?.models.some((m) => QualityAssessment.isApplicable(m, 'qmean')),
     ensureCustomProperties: {
         attach: async (ctx: CustomProperty.Context, data: ThemeDataContext) => {
             if (data.structure) {
@@ -95,6 +105,6 @@ export const QmeanScoreColorThemeProvider: ColorTheme.Provider<QmeanScoreColorTh
                     QualityAssessmentProvider.ref(m, false);
                 }
             }
-        }
-    }
+        },
+    },
 };

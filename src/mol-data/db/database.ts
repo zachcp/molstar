@@ -8,14 +8,14 @@ import { Table } from './table.ts';
 
 /** A collection of tables */
 type Database<Schema extends Database.Schema> = {
-    readonly _name: string,
-    readonly _tableNames: ReadonlyArray<string>,
-    readonly _schema: Schema
-} & Database.Tables<Schema>
+    readonly _name: string;
+    readonly _tableNames: ReadonlyArray<string>;
+    readonly _schema: Schema;
+} & Database.Tables<Schema>;
 
 namespace Database {
-    export type Tables<S extends Schema> = { [T in keyof S]: Table<S[T]> }
-    export type Schema = { [table: string]: Table.Schema }
+    export type Tables<S extends Schema> = { [T in keyof S]: Table<S[T]> };
+    export type Schema = { [table: string]: Table.Schema };
 
     export function ofTables<S extends Schema>(name: string, schema: Schema, tables: Tables<S>) {
         const keys = Object.keys(tables);

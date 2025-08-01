@@ -18,7 +18,9 @@ export class QueryRuntimeTable {
 
     addSymbol(runtime: QuerySymbolRuntime) {
         if (this.map.has(runtime.symbol.id)) {
-            console.warn(`Symbol '${runtime.symbol.id}' already added. Call removeSymbol/removeCustomProps re-adding the symbol.`);
+            console.warn(
+                `Symbol '${runtime.symbol.id}' already added. Call removeSymbol/removeCustomProps re-adding the symbol.`,
+            );
         }
         this.map.set(runtime.symbol.id, runtime);
     }
@@ -50,17 +52,24 @@ export class QueryCompilerCtx {
     constQueryContext: QueryContext = new QueryContext(Structure.Empty);
 
     constructor(public table: QueryRuntimeTable) {
-
     }
 }
 
-export type ConstQuerySymbolFn<S extends MSymbol = MSymbol> = (ctx: QueryContext, args: QueryRuntimeArguments<S>) => any
-export type QuerySymbolFn<S extends MSymbol = MSymbol> = (ctx: QueryContext, args: QueryRuntimeArguments<S>) => any
+export type ConstQuerySymbolFn<S extends MSymbol = MSymbol> = (
+    ctx: QueryContext,
+    args: QueryRuntimeArguments<S>,
+) => any;
+export type QuerySymbolFn<S extends MSymbol = MSymbol> = (
+    ctx: QueryContext,
+    args: QueryRuntimeArguments<S>,
+) => any;
 
+export type QueryCompiledSymbolRuntime = { kind: 'const'; value: any } | {
+    kind: 'dynamic';
+    runtime: QuerySymbolFn;
+};
 
-export type QueryCompiledSymbolRuntime = { kind: 'const', value: any } | { kind: 'dynamic', runtime: QuerySymbolFn }
-
-export type CompiledQueryFn<T = any> = { isConst: boolean, fn: QueryFn }
+export type CompiledQueryFn<T = any> = { isConst: boolean; fn: QueryFn };
 
 export namespace QueryCompiledSymbol {
     export function Const(value: any): QueryCompiledSymbolRuntime {
@@ -74,7 +83,12 @@ export namespace QueryCompiledSymbol {
 
 export namespace CompiledQueryFn {
     export function Const(value: any): CompiledQueryFn {
-        return { isConst: true, fn: function CompiledQueryFn_Const(ctx) { return value; } };
+        return {
+            isConst: true,
+            fn: function CompiledQueryFn_Const(ctx) {
+                return value;
+            },
+        };
     }
 
     export function Dynamic(fn: QueryFn): CompiledQueryFn {
@@ -83,15 +97,21 @@ export namespace CompiledQueryFn {
 }
 
 export interface QuerySymbolRuntime {
-    symbol: MSymbol,
-    compile(ctx: QueryCompilerCtx, args?: Expression.Arguments): CompiledQueryFn
+    symbol: MSymbol;
+    compile(ctx: QueryCompilerCtx, args?: Expression.Arguments): CompiledQueryFn;
 }
 
 export type QueryRuntimeArguments<S extends MSymbol> =
-    { length?: number } & { [P in keyof S['args']['@type']]: QueryFn<S['args']['@type'][P]> }
+    & { length?: number }
+    & { [P in keyof S['args']['@type']]: QueryFn<S['args']['@type'][P]> };
 
 export namespace QueryRuntimeArguments {
-    export function forEachEval<S extends MSymbol, Ctx>(xs: QueryRuntimeArguments<S>, queryCtx: QueryContext, f: (arg: any, i: number, ctx: Ctx) => void, ctx: Ctx): Ctx {
+    export function forEachEval<S extends MSymbol, Ctx>(
+        xs: QueryRuntimeArguments<S>,
+        queryCtx: QueryContext,
+        f: (arg: any, i: number, ctx: Ctx) => void,
+        ctx: Ctx,
+    ): Ctx {
         if (typeof xs.length === 'number') {
             for (let i = 0, _i = xs.length; i < _i; i++) f((xs as any)[i](queryCtx), i, ctx);
         } else {
@@ -103,11 +123,17 @@ export namespace QueryRuntimeArguments {
 }
 
 export namespace QuerySymbolRuntime {
-    export function Const<S extends MSymbol<any>>(symbol: S, fn: ConstQuerySymbolFn<S>): QuerySymbolRuntime {
+    export function Const<S extends MSymbol<any>>(
+        symbol: S,
+        fn: ConstQuerySymbolFn<S>,
+    ): QuerySymbolRuntime {
         return new SymbolRuntimeImpl(symbol, fn, true);
     }
 
-    export function Dynamic<S extends MSymbol<any>>(symbol: S, fn: QuerySymbolFn<S>): QuerySymbolRuntime {
+    export function Dynamic<S extends MSymbol<any>>(
+        symbol: S,
+        fn: QuerySymbolFn<S>,
+    ): QuerySymbolRuntime {
         return new SymbolRuntimeImpl(symbol, fn, false);
     }
 }
@@ -148,12 +174,13 @@ class SymbolRuntimeImpl<S extends MSymbol> implements QuerySymbolRuntime {
     }
 
     constructor(public symbol: S, private fn: QuerySymbolFn<S>, private isConst: boolean) {
-
     }
 }
 
 function createDynamicFn<S extends MSymbol>(fn: QuerySymbolFn<S>, args: any): QueryFn {
-    return function DynamicFn(ctx) { return fn(ctx, args); };
+    return function DynamicFn(ctx) {
+        return fn(ctx, args);
+    };
 }
 
 function _compile(ctx: QueryCompilerCtx, expression: Expression): CompiledQueryFn {

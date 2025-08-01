@@ -13,11 +13,15 @@ import { Camera, ICamera } from '../camera.ts';
 import { Viewport } from './util.ts';
 
 export const StereoCameraParams = {
-    eyeSeparation: PD.Numeric(0.062, { min: 0.02, max: 0.1, step: 0.001 }, { description: 'Distance between left and right camera.' }),
-    focus: PD.Numeric(10, { min: 1, max: 20, step: 0.1 }, { description: 'Apparent object distance.' }),
+    eyeSeparation: PD.Numeric(0.062, { min: 0.02, max: 0.1, step: 0.001 }, {
+        description: 'Distance between left and right camera.',
+    }),
+    focus: PD.Numeric(10, { min: 1, max: 20, step: 0.1 }, {
+        description: 'Apparent object distance.',
+    }),
 };
 export const DefaultStereoCameraProps = PD.getDefaultValues(StereoCameraParams);
-export type StereoCameraProps = PD.Values<typeof StereoCameraParams>
+export type StereoCameraProps = PD.Values<typeof StereoCameraParams>;
 
 export { StereoCamera };
 

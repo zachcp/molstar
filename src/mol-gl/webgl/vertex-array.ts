@@ -5,7 +5,7 @@
  */
 
 import { Program } from './program.ts';
-import { ElementsBuffer, AttributeBuffers } from './buffer.ts';
+import { AttributeBuffers, ElementsBuffer } from './buffer.ts';
 import { WebGLExtensions } from './extensions.ts';
 import { idFactory } from '../../mol-util/id-factory.ts';
 import { GLRenderingContext } from './compat.ts';
@@ -33,15 +33,21 @@ function getVertexArrayObject(extensions: WebGLExtensions) {
 }
 
 export interface VertexArray {
-    readonly id: number
+    readonly id: number;
 
-    bind: () => void
-    update: () => void
-    reset: () => void
-    destroy: () => void
+    bind: () => void;
+    update: () => void;
+    reset: () => void;
+    destroy: () => void;
 }
 
-export function createVertexArray(gl: GLRenderingContext, extensions: WebGLExtensions, program: Program, attributeBuffers: AttributeBuffers, elementsBuffer?: ElementsBuffer): VertexArray {
+export function createVertexArray(
+    gl: GLRenderingContext,
+    extensions: WebGLExtensions,
+    program: Program,
+    attributeBuffers: AttributeBuffers,
+    elementsBuffer?: ElementsBuffer,
+): VertexArray {
     const id = getNextVertexArrayId();
     let vertexArray = getVertexArray(extensions);
     let vertexArrayObject = getVertexArrayObject(extensions);
@@ -78,6 +84,6 @@ export function createVertexArray(gl: GLRenderingContext, extensions: WebGLExten
             }
             vertexArrayObject.deleteVertexArray(vertexArray);
             destroyed = true;
-        }
+        },
     };
 }

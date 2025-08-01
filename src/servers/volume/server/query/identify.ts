@@ -12,7 +12,11 @@ import * as Data from './data-model.ts';
 // import { FastMap } from '../utils/collections'
 
 /** Find a list of unique blocks+offsets that overlap with the query region. */
-export function findUniqueBlocks(data: Data.DataContext, sampling: Data.Sampling, queryBox: Box.Fractional) {
+export function findUniqueBlocks(
+    data: Data.DataContext,
+    sampling: Data.Sampling,
+    queryBox: Box.Fractional,
+) {
     const translations = data.header.spacegroup.isPeriodic
         // find all query box translations that overlap with the unit cell.
         ? findDataOverlapTranslationList(queryBox, sampling.dataDomain)
@@ -25,7 +29,9 @@ export function findUniqueBlocks(data: Data.DataContext, sampling: Data.Sampling
     }
 
     const blockList = [] as Data.QueryBlock[];
-    blocks.forEach(function (this: Data.QueryBlock[], b) { this.push(b); }, blockList);
+    blocks.forEach(function (this: Data.QueryBlock[], b) {
+        this.push(b);
+    }, blockList);
 
     // sort the data so that the first coodinate changes the fastest
     // this is because that's how the data is laid out in the underlaying
@@ -40,7 +46,7 @@ export function findUniqueBlocks(data: Data.DataContext, sampling: Data.Sampling
     return blockList;
 }
 
-type Translations = Coords.Fractional[]
+type Translations = Coords.Fractional[];
 
 /**
  * Find the integer interval [x, y] so that for all k \in [x, y]
@@ -59,15 +65,21 @@ function overlapMultiplierRange(a: number, b: number, u: number, v: number): num
  * shift(box, offset) has non-empty interaction with the region
  * described in the give domain.
  */
-function findDataOverlapTranslationList(box: Box.Fractional, domain: Coords.GridDomain<'Data'>): Translations {
+function findDataOverlapTranslationList(
+    box: Box.Fractional,
+    domain: Coords.GridDomain<'Data'>,
+): Translations {
     const ranges = [];
     const translations: Translations = [];
     const { origin, dimensions } = domain;
 
     for (let i = 0; i < 3; i++) {
         const range = overlapMultiplierRange(
-            box.a[i], box.b[i],
-            origin[i], origin[i] + dimensions[i]);
+            box.a[i],
+            box.b[i],
+            origin[i],
+            origin[i] + dimensions[i],
+        );
         if (!range) return translations;
         ranges[i] = range;
     }
@@ -85,9 +97,13 @@ function findDataOverlapTranslationList(box: Box.Fractional, domain: Coords.Grid
     return translations;
 }
 
-type UniqueBlocks = Map<number, Data.QueryBlock>
+type UniqueBlocks = Map<number, Data.QueryBlock>;
 
-function addUniqueBlock(blocks: UniqueBlocks, coord: Coords.Grid<'Block'>, offset: Coords.Fractional) {
+function addUniqueBlock(
+    blocks: UniqueBlocks,
+    coord: Coords.Grid<'Block'>,
+    offset: Coords.Fractional,
+) {
     const hash = Coords.linearGridIndex(coord);
     if (blocks.has(hash)) {
         const entry = blocks.get(hash)!;
@@ -97,7 +113,13 @@ function addUniqueBlock(blocks: UniqueBlocks, coord: Coords.Grid<'Block'>, offse
     }
 }
 
-function findUniqueBlocksOffset(data: Data.DataContext, sampling: Data.Sampling, queryBox: Box.Fractional, offset: Coords.Fractional, blocks: UniqueBlocks) {
+function findUniqueBlocksOffset(
+    data: Data.DataContext,
+    sampling: Data.Sampling,
+    queryBox: Box.Fractional,
+    offset: Coords.Fractional,
+    blocks: UniqueBlocks,
+) {
     const shifted = Box.shift(queryBox, offset);
     const intersection = Box.intersect(shifted, data.dataBox);
 
@@ -110,8 +132,9 @@ function findUniqueBlocksOffset(data: Data.DataContext, sampling: Data.Sampling,
     // with the query region.
     //
     // Clamping the data makes sure we avoid silly rounding errors (hopefully :))
-    const { a: min, b: max }
-        = Box.clampGridToSamples(Box.fractionalToGrid(intersection, blockDomain));
+    const { a: min, b: max } = Box.clampGridToSamples(
+        Box.fractionalToGrid(intersection, blockDomain),
+    );
 
     for (let i = min[0]; i < max[0]; i++) {
         for (let j = min[1]; j < max[1]; j++) {

@@ -12,33 +12,33 @@ import { PluginContext } from '../context.ts';
 import { PluginCommands } from '../commands.ts';
 
 export interface PluginToast {
-    title: string,
+    title: string;
     /**
      * The message can be either a string, html string, or an arbitrary React (Function) component.
      */
-    message: string | Function,
+    message: string | Function;
     /**
      * Only one message with a given key can be shown.
      */
-    key?: string,
+    key?: string;
     /**
      * Specify a timeout for the message in milliseconds.
      */
-    timeoutMs?: number
+    timeoutMs?: number;
 }
 
 export class PluginToastManager extends StatefulPluginComponent<{
-    entries: OrderedMap<number, PluginToastManager.Entry>
+    entries: OrderedMap<number, PluginToastManager.Entry>;
 }> {
     readonly events = {
-        changed: this.ev()
+        changed: this.ev(),
     };
 
     private serialNumber = 0;
     private serialId = 0;
 
     private findByKey(key: string): PluginToastManager.Entry | undefined {
-        return this.state.entries.find(e => !!e && e.key === key);
+        return this.state.entries.find((e) => !!e && e.key === key);
     }
 
     private show(toast: PluginToast) {
@@ -61,7 +61,7 @@ export class PluginToastManager extends StatefulPluginComponent<{
             title: toast.title,
             message: toast.message,
             timeout: this.timeout(id, toast.timeoutMs),
-            hide: () => this.hideId(id)
+            hide: () => this.hideId(id),
         };
 
         if (this.updateState({ entries: entries.set(id, e) })) this.events.changed.next(void 0);
@@ -71,7 +71,7 @@ export class PluginToastManager extends StatefulPluginComponent<{
         if (delay === void 0) return void 0;
 
         if (delay < 0) delay = 500;
-        return <number><any>setTimeout(() => {
+        return <number> <any> setTimeout(() => {
             const e = this.state.entries.get(id)!;
             e.timeout = void 0;
             this.hide(e);
@@ -86,25 +86,27 @@ export class PluginToastManager extends StatefulPluginComponent<{
         if (!e) return;
         if (e.timeout !== void 0) clearTimeout(e.timeout);
         e.hide = <any> void 0;
-        if (this.updateState({ entries: this.state.entries.delete(e.id) })) this.events.changed.next(void 0);
+        if (this.updateState({ entries: this.state.entries.delete(e.id) })) {
+            this.events.changed.next(void 0);
+        }
     }
 
     constructor(plugin: PluginContext) {
         super({ entries: OrderedMap<number, PluginToastManager.Entry>() });
 
-        PluginCommands.Toast.Show.subscribe(plugin, e => this.show(e));
-        PluginCommands.Toast.Hide.subscribe(plugin, e => this.hide(this.findByKey(e.key)));
+        PluginCommands.Toast.Show.subscribe(plugin, (e) => this.show(e));
+        PluginCommands.Toast.Hide.subscribe(plugin, (e) => this.hide(this.findByKey(e.key)));
     }
 }
 
 export namespace PluginToastManager {
     export interface Entry {
-        id: number,
-        serialNumber: number,
-        key?: string,
-        title: string,
-        message: string | Function,
-        hide: () => void,
-        timeout?: number
+        id: number;
+        serialNumber: number;
+        key?: string;
+        title: string;
+        message: string | Function;
+        hide: () => void;
+        timeout?: number;
     }
 }

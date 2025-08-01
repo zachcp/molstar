@@ -6,7 +6,7 @@
  */
 
 import { CustomElementProperty } from '../../mol-model-props/common/custom-element-property.ts';
-import { Model, ElementIndex } from '../../mol-model/structure.ts';
+import { ElementIndex, Model } from '../../mol-model/structure.ts';
 import { Color } from '../../mol-util/color/index.ts';
 
 export const StripedResidues = CustomElementProperty.create<number>({
@@ -21,10 +21,12 @@ export const StripedResidues = CustomElementProperty.create<number>({
         return { value: map };
     },
     coloring: {
-        getColor(e) { return e === 0 ? Color(0xff0000) : Color(0x0000ff); },
-        defaultColor: Color(0x777777)
+        getColor(e) {
+            return e === 0 ? Color(0xff0000) : Color(0x0000ff);
+        },
+        defaultColor: Color(0x777777),
     },
     getLabel(e) {
         return e === 0 ? 'Odd stripe' : 'Even stripe';
-    }
+    },
 });

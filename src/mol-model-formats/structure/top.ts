@@ -148,7 +148,7 @@ function getBasic(top: TopFile) {
     const basic = createBasic({
         entity: entityBuilder.getEntityTable(),
         chem_comp: componentBuilder.getChemCompTable(),
-        atom_site
+        atom_site,
     });
 
     return basic;
@@ -167,11 +167,8 @@ function getBonds(top: TopFile) {
         const count = molecules.molCount.value(i);
         const { atoms, bonds } = compounds[mol];
 
-
-
         if (bonds) {
             for (let j = 0; j < count; ++j) {
-
                 for (let l = 0, ll = bonds._rowCount; l < ll; ++l) {
                     indexA.push(bonds.ai.value(l) - 1 + atomOffset);
                     indexB.push(bonds.aj.value(l) - 1 + atomOffset);
@@ -195,7 +192,7 @@ function getBonds(top: TopFile) {
     return {
         indexA: Column.ofIntArray(indexA),
         indexB: Column.ofIntArray(indexB),
-        order: Column.ofConst(1, indexA.length, Column.Schema.int)
+        order: Column.ofConst(1, indexA.length, Column.Schema.int),
     };
 }
 
@@ -203,7 +200,7 @@ function getBonds(top: TopFile) {
 
 export { TopFormat };
 
-type TopFormat = ModelFormat<TopFile>
+type TopFormat = ModelFormat<TopFile>;
 
 namespace TopFormat {
     export function is(x?: ModelFormat): x is TopFormat {
@@ -216,7 +213,7 @@ namespace TopFormat {
 }
 
 export function topologyFromTop(top: TopFile): Task<Topology> {
-    return Task.create('Parse TOP', async ctx => {
+    return Task.create('Parse TOP', async (ctx) => {
         const format = TopFormat.fromTop(top);
         const basic = getBasic(top);
         const bonds = getBonds(top);

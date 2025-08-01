@@ -6,14 +6,26 @@
 
 import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { Box, PerforatedBox } from '../../../mol-geo/primitive/box.ts';
-import { OctagonalPyramid, PerforatedOctagonalPyramid } from '../../../mol-geo/primitive/pyramid.ts';
+import {
+    OctagonalPyramid,
+    PerforatedOctagonalPyramid,
+} from '../../../mol-geo/primitive/pyramid.ts';
 import { Star } from '../../../mol-geo/primitive/star.ts';
 import { Octahedron, PerforatedOctahedron } from '../../../mol-geo/primitive/octahedron.ts';
-import { DiamondPrism, PentagonalPrism, ShiftedHexagonalPrism, HexagonalPrism, HeptagonalPrism } from '../../../mol-geo/primitive/prism.ts';
+import {
+    DiamondPrism,
+    HeptagonalPrism,
+    HexagonalPrism,
+    PentagonalPrism,
+    ShiftedHexagonalPrism,
+} from '../../../mol-geo/primitive/prism.ts';
 import { Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
-import { getSaccharideShape, SaccharideShape } from '../../../mol-model/structure/structure/carbohydrates/constants.ts';
+import {
+    getSaccharideShape,
+    SaccharideShape,
+} from '../../../mol-model/structure/structure/carbohydrates/constants.ts';
 import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere.ts';
 import { ComplexMeshParams, ComplexMeshVisual } from '../complex-visual.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
@@ -21,7 +33,7 @@ import { ComplexVisual } from '../representation.ts';
 import { VisualUpdateState } from '../../util.ts';
 import { LocationIterator } from '../../../mol-geo/util/location-iterator.ts';
 import { PickingId } from '../../../mol-geo/geometry/picking.ts';
-import { OrderedSet, Interval } from '../../../mol-data/int.ts';
+import { Interval, OrderedSet } from '../../../mol-data/int.ts';
 import { EmptyLoci, Loci } from '../../../mol-model/loci.ts';
 import { VisualContext } from '../../visual.ts';
 import { Theme } from '../../../mol-theme/theme.ts';
@@ -47,7 +59,13 @@ const hexagonalPrism = HexagonalPrism();
 const shiftedHexagonalPrism = ShiftedHexagonalPrism();
 const heptagonalPrism = HeptagonalPrism();
 
-function createCarbohydrateSymbolMesh(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<CarbohydrateSymbolParams>, mesh?: Mesh) {
+function createCarbohydrateSymbolMesh(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<CarbohydrateSymbolParams>,
+    mesh?: Mesh,
+) {
     const builderState = MeshBuilder.createState(256, 128, mesh);
 
     const { detail, sizeFactor } = props;
@@ -166,21 +184,25 @@ export const CarbohydrateSymbolParams = {
     detail: PD.Numeric(0, { min: 0, max: 3, step: 1 }, BaseGeometry.CustomQualityParamInfo),
     sizeFactor: PD.Numeric(1.75, { min: 0, max: 10, step: 0.01 }),
 };
-export type CarbohydrateSymbolParams = typeof CarbohydrateSymbolParams
+export type CarbohydrateSymbolParams = typeof CarbohydrateSymbolParams;
 
-export function CarbohydrateSymbolVisual(materialId: number): ComplexVisual<CarbohydrateSymbolParams> {
+export function CarbohydrateSymbolVisual(
+    materialId: number,
+): ComplexVisual<CarbohydrateSymbolParams> {
     return ComplexMeshVisual<CarbohydrateSymbolParams>({
         defaultProps: PD.getDefaultValues(CarbohydrateSymbolParams),
         createGeometry: createCarbohydrateSymbolMesh,
         createLocationIterator: CarbohydrateElementIterator,
         getLoci: getCarbohydrateLoci,
         eachLocation: eachCarbohydrate,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<CarbohydrateSymbolParams>, currentProps: PD.Values<CarbohydrateSymbolParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
-                newProps.detail !== currentProps.detail
-            );
-        }
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<CarbohydrateSymbolParams>,
+            currentProps: PD.Values<CarbohydrateSymbolParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
+                newProps.detail !== currentProps.detail;
+        },
     }, materialId);
 }
 
@@ -215,7 +237,11 @@ function getCarbohydrateLoci(pickingId: PickingId, structure: Structure, id: num
 const __elementIndicesSet = new Set<number>();
 
 /** For each carbohydrate (usually a monosaccharide) when all its residue's elements are in a loci. */
-function eachCarbohydrate(loci: Loci, structure: Structure, apply: (interval: Interval) => boolean) {
+function eachCarbohydrate(
+    loci: Loci,
+    structure: Structure,
+    apply: (interval: Interval) => boolean,
+) {
     const { getElementIndices } = structure.carbohydrates;
     let changed = false;
     if (!StructureElement.Loci.is(loci)) return false;
@@ -225,7 +251,7 @@ function eachCarbohydrate(loci: Loci, structure: Structure, apply: (interval: In
         if (!Unit.isAtomic(unit)) continue;
 
         __elementIndicesSet.clear();
-        OrderedSet.forEach(indices, v => {
+        OrderedSet.forEach(indices, (v) => {
             const elementIndices = getElementIndices(unit, unit.elements[v]);
             for (let i = 0, il = elementIndices.length; i < il; ++i) {
                 if (!__elementIndicesSet.has(elementIndices[i])) {

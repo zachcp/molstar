@@ -7,8 +7,12 @@
 import { Column } from './column.ts';
 
 export function getArrayBounds(rowCount: number, params?: Column.ToArrayParams<any>) {
-    const start = params && typeof params.start !== 'undefined' ? Math.max(Math.min(params.start, rowCount - 1), 0) : 0;
-    const end = params && typeof params.end !== 'undefined' ? Math.min(params.end, rowCount) : rowCount;
+    const start = params && typeof params.start !== 'undefined'
+        ? Math.max(Math.min(params.start, rowCount - 1), 0)
+        : 0;
+    const end = params && typeof params.end !== 'undefined'
+        ? Math.min(params.end, rowCount)
+        : rowCount;
     return { start, end };
 }
 
@@ -23,18 +27,30 @@ export function fillArrayValues(value: (row: number) => any, target: any[], star
     return target;
 }
 
-export function createAndFillArray(rowCount: number, value: (row: number) => any, params?: Column.ToArrayParams<any>) {
+export function createAndFillArray(
+    rowCount: number,
+    value: (row: number) => any,
+    params?: Column.ToArrayParams<any>,
+) {
     const { array, start } = createArray(rowCount, params);
     return fillArrayValues(value, array, start);
 }
 
 export function isTypedArray(data: any): boolean {
-    return !!data.buffer && typeof data.byteLength === 'number' && typeof data.BYTES_PER_ELEMENT === 'number';
+    return !!data.buffer && typeof data.byteLength === 'number' &&
+        typeof data.BYTES_PER_ELEMENT === 'number';
 }
 
-export function typedArrayWindow(data: any, params?: Column.ToArrayParams<any>): ReadonlyArray<number> {
+export function typedArrayWindow(
+    data: any,
+    params?: Column.ToArrayParams<any>,
+): ReadonlyArray<number> {
     const { constructor, buffer, length, byteOffset, BYTES_PER_ELEMENT } = data;
     const { start, end } = getArrayBounds(length, params);
     if (start === 0 && end === length) return data;
-    return new constructor(buffer, byteOffset + BYTES_PER_ELEMENT * start, Math.min(length, end - start));
+    return new constructor(
+        buffer,
+        byteOffset + BYTES_PER_ELEMENT * start,
+        Math.min(length, end - start),
+    );
 }

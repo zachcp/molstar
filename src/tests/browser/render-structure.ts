@@ -108,30 +108,45 @@ async function getStructure(model: Model) {
 const reprCtx = {
     webgl: canvas3d.webgl,
     colorThemeRegistry: ColorTheme.createRegistry(),
-    sizeThemeRegistry: SizeTheme.createRegistry()
+    sizeThemeRegistry: SizeTheme.createRegistry(),
 };
 function getCartoonRepr() {
     return CartoonRepresentationProvider.factory(reprCtx, CartoonRepresentationProvider.getParams);
 }
 
 function getInteractionRepr() {
-    return InteractionsRepresentationProvider.factory(reprCtx, InteractionsRepresentationProvider.getParams);
+    return InteractionsRepresentationProvider.factory(
+        reprCtx,
+        InteractionsRepresentationProvider.getParams,
+    );
 }
 
 function getBallAndStickRepr() {
-    return BallAndStickRepresentationProvider.factory(reprCtx, BallAndStickRepresentationProvider.getParams);
+    return BallAndStickRepresentationProvider.factory(
+        reprCtx,
+        BallAndStickRepresentationProvider.getParams,
+    );
 }
 
 function getMolecularSurfaceRepr() {
-    return MolecularSurfaceRepresentationProvider.factory(reprCtx, MolecularSurfaceRepresentationProvider.getParams);
+    return MolecularSurfaceRepresentationProvider.factory(
+        reprCtx,
+        MolecularSurfaceRepresentationProvider.getParams,
+    );
 }
 
 function getGaussianSurfaceRepr() {
-    return GaussianSurfaceRepresentationProvider.factory(reprCtx, GaussianSurfaceRepresentationProvider.getParams);
+    return GaussianSurfaceRepresentationProvider.factory(
+        reprCtx,
+        GaussianSurfaceRepresentationProvider.getParams,
+    );
 }
 
 function getMembraneOrientationRepr() {
-    return MembraneOrientationRepresentationProvider.factory(reprCtx, MembraneOrientationRepresentationProvider.getParams);
+    return MembraneOrientationRepresentationProvider.factory(
+        reprCtx,
+        MembraneOrientationRepresentationProvider.getParams,
+    );
 }
 
 async function init() {
@@ -160,7 +175,7 @@ async function init() {
         ballAndStick: true,
         molecularSurface: false,
         gaussianSurface: false,
-        membrane: true
+        membrane: true,
     };
 
     const cartoonRepr = getCartoonRepr();
@@ -173,49 +188,75 @@ async function init() {
     if (show.cartoon) {
         cartoonRepr.setTheme({
             color: reprCtx.colorThemeRegistry.create('element-symbol', { structure }),
-            size: reprCtx.sizeThemeRegistry.create('uniform', { structure })
+            size: reprCtx.sizeThemeRegistry.create('uniform', { structure }),
         });
-        await cartoonRepr.createOrUpdate({ ...CartoonRepresentationProvider.defaultValues, quality: 'auto' }, structure).run();
+        await cartoonRepr.createOrUpdate({
+            ...CartoonRepresentationProvider.defaultValues,
+            quality: 'auto',
+        }, structure).run();
     }
 
     if (show.interaction) {
         interactionRepr.setTheme({
             color: reprCtx.colorThemeRegistry.create('interaction-type', { structure }),
-            size: reprCtx.sizeThemeRegistry.create('uniform', { structure })
+            size: reprCtx.sizeThemeRegistry.create('uniform', { structure }),
         });
-        await interactionRepr.createOrUpdate({ ...InteractionsRepresentationProvider.defaultValues, quality: 'auto' }, structure).run();
+        await interactionRepr.createOrUpdate({
+            ...InteractionsRepresentationProvider.defaultValues,
+            quality: 'auto',
+        }, structure).run();
     }
 
     if (show.ballAndStick) {
         ballAndStickRepr.setTheme({
             color: reprCtx.colorThemeRegistry.create('element-symbol', { structure }),
-            size: reprCtx.sizeThemeRegistry.create('uniform', { structure }, { value: 1 })
+            size: reprCtx.sizeThemeRegistry.create('uniform', { structure }, { value: 1 }),
         });
-        await ballAndStickRepr.createOrUpdate({ ...BallAndStickRepresentationProvider.defaultValues, quality: 'auto' }, structure).run();
+        await ballAndStickRepr.createOrUpdate({
+            ...BallAndStickRepresentationProvider.defaultValues,
+            quality: 'auto',
+        }, structure).run();
     }
 
     if (show.molecularSurface) {
         molecularSurfaceRepr.setTheme({
             color: reprCtx.colorThemeRegistry.create('secondary-structure', { structure }),
-            size: reprCtx.sizeThemeRegistry.create('physical', { structure })
+            size: reprCtx.sizeThemeRegistry.create('physical', { structure }),
         });
         console.time('molecular surface');
-        await molecularSurfaceRepr.createOrUpdate({ ...MolecularSurfaceRepresentationProvider.defaultValues, quality: 'custom', alpha: 0.5, flatShaded: true, doubleSided: true, resolution: 0.3 }, structure).run();
+        await molecularSurfaceRepr.createOrUpdate({
+            ...MolecularSurfaceRepresentationProvider.defaultValues,
+            quality: 'custom',
+            alpha: 0.5,
+            flatShaded: true,
+            doubleSided: true,
+            resolution: 0.3,
+        }, structure).run();
         console.timeEnd('molecular surface');
     }
 
     if (show.gaussianSurface) {
         gaussianSurfaceRepr.setTheme({
             color: reprCtx.colorThemeRegistry.create('secondary-structure', { structure }),
-            size: reprCtx.sizeThemeRegistry.create('physical', { structure })
+            size: reprCtx.sizeThemeRegistry.create('physical', { structure }),
         });
         console.time('gaussian surface');
-        await gaussianSurfaceRepr.createOrUpdate({ ...GaussianSurfaceRepresentationProvider.defaultValues, quality: 'custom', alpha: 1.0, flatShaded: true, doubleSided: true, resolution: 0.3 }, structure).run();
+        await gaussianSurfaceRepr.createOrUpdate({
+            ...GaussianSurfaceRepresentationProvider.defaultValues,
+            quality: 'custom',
+            alpha: 1.0,
+            flatShaded: true,
+            doubleSided: true,
+            resolution: 0.3,
+        }, structure).run();
         console.timeEnd('gaussian surface');
     }
 
     if (show.membrane) {
-        await membraneOrientationRepr.createOrUpdate({ ...MembraneOrientationRepresentationProvider.defaultValues, quality: 'auto' }, structure).run();
+        await membraneOrientationRepr.createOrUpdate({
+            ...MembraneOrientationRepresentationProvider.defaultValues,
+            quality: 'auto',
+        }, structure).run();
     }
 
     if (show.cartoon) canvas3d.add(cartoonRepr);

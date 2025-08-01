@@ -12,21 +12,26 @@ import { StateObjectRef } from '../../mol-state/index.ts';
 import { FileNameInfo } from '../../mol-util/file-info.ts';
 import { PluginStateObject } from '../objects.ts';
 
-
 export interface DataFormatProvider<P = any, R = any, V = any> {
-    label: string,
-    description: string,
-    category?: string,
-    stringExtensions?: string[],
-    binaryExtensions?: string[],
-    isApplicable?(info: FileNameInfo, data: StringLike | Uint8Array): boolean,
-    parse(plugin: PluginContext, data: StateObjectRef<PluginStateObject.Data.Binary | PluginStateObject.Data.String>, params?: P): Promise<R>,
-    visuals?(plugin: PluginContext, data: R): Promise<V> | undefined
+    label: string;
+    description: string;
+    category?: string;
+    stringExtensions?: string[];
+    binaryExtensions?: string[];
+    isApplicable?(info: FileNameInfo, data: StringLike | Uint8Array): boolean;
+    parse(
+        plugin: PluginContext,
+        data: StateObjectRef<PluginStateObject.Data.Binary | PluginStateObject.Data.String>,
+        params?: P,
+    ): Promise<R>;
+    visuals?(plugin: PluginContext, data: R): Promise<V> | undefined;
 }
 
-export function DataFormatProvider<P extends DataFormatProvider>(provider: P): P { return provider; }
+export function DataFormatProvider<P extends DataFormatProvider>(provider: P): P {
+    return provider;
+}
 
-type CifVariants = 'dscif' | 'segcif' | 'coreCif' | -1
+type CifVariants = 'dscif' | 'segcif' | 'coreCif' | -1;
 export function guessCifVariant(info: FileNameInfo, data: Uint8Array | StringLike): CifVariants {
     if (info.ext === 'bcif') {
         try {
@@ -43,7 +48,9 @@ export function guessCifVariant(info: FileNameInfo, data: Uint8Array | StringLik
         const str = data as StringLike;
         if (str.startsWith('data_SERVER\n#\n_density_server_result')) return 'dscif';
         if (str.startsWith('data_SERVER\n#\ndata_SEGMENTATION_DATA')) return 'segcif';
-        if (str.includes('atom_site_fract_x') || str.includes('atom_site.fract_x')) return 'coreCif';
+        if (str.includes('atom_site_fract_x') || str.includes('atom_site.fract_x')) {
+            return 'coreCif';
+        }
     }
     return -1;
 }

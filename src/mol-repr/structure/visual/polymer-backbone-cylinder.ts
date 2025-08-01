@@ -6,15 +6,27 @@
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { VisualContext } from '../../visual.ts';
-import { Unit, Structure, StructureElement, ElementIndex } from '../../../mol-model/structure.ts';
+import { ElementIndex, Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
 import { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { CylinderProps } from '../../../mol-geo/primitive/cylinder.ts';
-import { eachPolymerElement, getPolymerElementLoci, NucleicShift, PolymerLocationIterator, StandardShift } from './util/polymer.ts';
+import {
+    eachPolymerElement,
+    getPolymerElementLoci,
+    NucleicShift,
+    PolymerLocationIterator,
+    StandardShift,
+} from './util/polymer.ts';
 import { addCylinder } from '../../../mol-geo/geometry/mesh/builder/cylinder.ts';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual, UnitsCylindersVisual, UnitsCylindersParams } from '../units-visual.ts';
+import {
+    UnitsCylindersParams,
+    UnitsCylindersVisual,
+    UnitsMeshParams,
+    UnitsMeshVisual,
+    UnitsVisual,
+} from '../units-visual.ts';
 import { VisualUpdateState } from '../../util.ts';
 import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
@@ -34,35 +46,61 @@ export const PolymerBackboneCylinderParams = {
     ...UnitsMeshParams,
     ...UnitsCylindersParams,
     sizeFactor: PD.Numeric(0.3, { min: 0, max: 10, step: 0.01 }),
-    radialSegments: PD.Numeric(16, { min: 2, max: 56, step: 2 }, BaseGeometry.CustomQualityParamInfo),
+    radialSegments: PD.Numeric(
+        16,
+        { min: 2, max: 56, step: 2 },
+        BaseGeometry.CustomQualityParamInfo,
+    ),
     tryUseImpostor: PD.Boolean(true),
 };
-export type PolymerBackboneCylinderParams = typeof PolymerBackboneCylinderParams
+export type PolymerBackboneCylinderParams = typeof PolymerBackboneCylinderParams;
 
-export function PolymerBackboneCylinderVisual(materialId: number, structure: Structure, props: PD.Values<PolymerBackboneCylinderParams>, webgl?: WebGLContext) {
+export function PolymerBackboneCylinderVisual(
+    materialId: number,
+    structure: Structure,
+    props: PD.Values<PolymerBackboneCylinderParams>,
+    webgl?: WebGLContext,
+) {
     return props.tryUseImpostor && checkCylinderImpostorSupport(webgl)
         ? PolymerBackboneCylinderImpostorVisual(materialId)
         : PolymerBackboneCylinderMeshVisual(materialId);
 }
 
 interface PolymerBackboneCylinderProps {
-    radialSegments: number,
-    sizeFactor: number,
+    radialSegments: number;
+    sizeFactor: number;
 }
 
-function createPolymerBackboneCylinderImpostor(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PolymerBackboneCylinderProps, cylinders?: Cylinders) {
+function createPolymerBackboneCylinderImpostor(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PolymerBackboneCylinderProps,
+    cylinders?: Cylinders,
+) {
     const polymerElementCount = unit.polymerElements.length;
     if (!polymerElementCount) return Cylinders.createEmpty(cylinders);
 
     const cylindersCountEstimate = polymerElementCount * 2;
-    const builder = CylindersBuilder.create(cylindersCountEstimate, cylindersCountEstimate / 4, cylinders);
+    const builder = CylindersBuilder.create(
+        cylindersCountEstimate,
+        cylindersCountEstimate / 4,
+        cylinders,
+    );
 
     const uc = unit.conformation;
     const pA = Vec3();
     const pB = Vec3();
     const pM = Vec3();
 
-    const add = function (indexA: ElementIndex, indexB: ElementIndex, groupA: number, groupB: number, moleculeType: MoleculeType) {
+    const add = function (
+        indexA: ElementIndex,
+        indexB: ElementIndex,
+        groupA: number,
+        groupB: number,
+        moleculeType: MoleculeType,
+    ) {
         uc.invariantPosition(indexA, pA);
         uc.invariantPosition(indexB, pB);
 
@@ -84,28 +122,50 @@ function createPolymerBackboneCylinderImpostor(ctx: VisualContext, unit: Unit, s
     return c;
 }
 
-export function PolymerBackboneCylinderImpostorVisual(materialId: number): UnitsVisual<PolymerBackboneCylinderParams> {
+export function PolymerBackboneCylinderImpostorVisual(
+    materialId: number,
+): UnitsVisual<PolymerBackboneCylinderParams> {
     return UnitsCylindersVisual<PolymerBackboneCylinderParams>({
         defaultProps: PD.getDefaultValues(PolymerBackboneCylinderParams),
         createGeometry: createPolymerBackboneCylinderImpostor,
-        createLocationIterator: (structureGroup: StructureGroup) => PolymerLocationIterator.fromGroup(structureGroup),
+        createLocationIterator: (structureGroup: StructureGroup) =>
+            PolymerLocationIterator.fromGroup(structureGroup),
         getLoci: getPolymerElementLoci,
         eachLocation: eachPolymerElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<PolymerBackboneCylinderParams>, currentProps: PD.Values<PolymerBackboneCylinderParams>) => { },
-        mustRecreate: (structureGroup: StructureGroup, props: PD.Values<PolymerBackboneCylinderParams>, webgl?: WebGLContext) => {
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<PolymerBackboneCylinderParams>,
+            currentProps: PD.Values<PolymerBackboneCylinderParams>,
+        ) => {},
+        mustRecreate: (
+            structureGroup: StructureGroup,
+            props: PD.Values<PolymerBackboneCylinderParams>,
+            webgl?: WebGLContext,
+        ) => {
             return !props.tryUseImpostor || !webgl;
-        }
+        },
     }, materialId);
 }
 
-function createPolymerBackboneCylinderMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PolymerBackboneCylinderProps, mesh?: Mesh) {
+function createPolymerBackboneCylinderMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PolymerBackboneCylinderProps,
+    mesh?: Mesh,
+) {
     const polymerElementCount = unit.polymerElements.length;
     if (!polymerElementCount) return Mesh.createEmpty(mesh);
 
     const { radialSegments, sizeFactor } = props;
 
     const vertexCountEstimate = radialSegments * 2 * polymerElementCount * 2;
-    const builderState = MeshBuilder.createState(vertexCountEstimate, vertexCountEstimate / 10, mesh);
+    const builderState = MeshBuilder.createState(
+        vertexCountEstimate,
+        vertexCountEstimate / 10,
+        mesh,
+    );
 
     const c = unit.conformation;
     const pA = Vec3();
@@ -115,7 +175,13 @@ function createPolymerBackboneCylinderMesh(ctx: VisualContext, unit: Unit, struc
     const centerA = StructureElement.Location.create(structure, unit);
     const centerB = StructureElement.Location.create(structure, unit);
 
-    const add = function (indexA: ElementIndex, indexB: ElementIndex, groupA: number, groupB: number, moleculeType: MoleculeType) {
+    const add = function (
+        indexA: ElementIndex,
+        indexB: ElementIndex,
+        groupA: number,
+        groupB: number,
+        moleculeType: MoleculeType,
+    ) {
         centerA.element = indexA;
         centerB.element = indexB;
 
@@ -125,11 +191,13 @@ function createPolymerBackboneCylinderMesh(ctx: VisualContext, unit: Unit, struc
         const isNucleicType = isNucleic(moleculeType);
         const shift = isNucleicType ? NucleicShift : StandardShift;
 
-        cylinderProps.radiusTop = cylinderProps.radiusBottom = theme.size.size(centerA) * sizeFactor;
+        cylinderProps.radiusTop = cylinderProps.radiusBottom = theme.size.size(centerA) *
+            sizeFactor;
         builderState.currentGroup = groupA;
         addCylinder(builderState, pA, pB, shift, cylinderProps);
 
-        cylinderProps.radiusTop = cylinderProps.radiusBottom = theme.size.size(centerB) * sizeFactor;
+        cylinderProps.radiusTop = cylinderProps.radiusBottom = theme.size.size(centerB) *
+            sizeFactor;
         builderState.currentGroup = groupB;
         addCylinder(builderState, pB, pA, 1 - shift, cylinderProps);
     };
@@ -144,21 +212,30 @@ function createPolymerBackboneCylinderMesh(ctx: VisualContext, unit: Unit, struc
     return m;
 }
 
-export function PolymerBackboneCylinderMeshVisual(materialId: number): UnitsVisual<PolymerBackboneCylinderParams> {
+export function PolymerBackboneCylinderMeshVisual(
+    materialId: number,
+): UnitsVisual<PolymerBackboneCylinderParams> {
     return UnitsMeshVisual<PolymerBackboneCylinderParams>({
         defaultProps: PD.getDefaultValues(PolymerBackboneCylinderParams),
         createGeometry: createPolymerBackboneCylinderMesh,
-        createLocationIterator: (structureGroup: StructureGroup) => PolymerLocationIterator.fromGroup(structureGroup),
+        createLocationIterator: (structureGroup: StructureGroup) =>
+            PolymerLocationIterator.fromGroup(structureGroup),
         getLoci: getPolymerElementLoci,
         eachLocation: eachPolymerElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<PolymerBackboneCylinderParams>, currentProps: PD.Values<PolymerBackboneCylinderParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
-                newProps.radialSegments !== currentProps.radialSegments
-            );
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<PolymerBackboneCylinderParams>,
+            currentProps: PD.Values<PolymerBackboneCylinderParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
+                newProps.radialSegments !== currentProps.radialSegments;
         },
-        mustRecreate: (structureGroup: StructureGroup, props: PD.Values<PolymerBackboneCylinderParams>, webgl?: WebGLContext) => {
+        mustRecreate: (
+            structureGroup: StructureGroup,
+            props: PD.Values<PolymerBackboneCylinderParams>,
+            webgl?: WebGLContext,
+        ) => {
             return props.tryUseImpostor && !!webgl;
-        }
+        },
     }, materialId);
 }

@@ -15,7 +15,15 @@ import { Camera } from '../camera.ts';
 import { cameraUnproject } from '../camera/util.ts';
 import { Viewport } from '../camera/util.ts';
 import { Helper } from './helper.ts';
-import { AsyncPickData, PickBuffers, PickData, PickPass, PickOptions, checkAsyncPickingSupport, AsyncPickStatus } from '../passes/pick.ts';
+import {
+    AsyncPickData,
+    AsyncPickStatus,
+    checkAsyncPickingSupport,
+    PickBuffers,
+    PickData,
+    PickOptions,
+    PickPass,
+} from '../passes/pick.ts';
 import { Sphere3D } from '../../mol-math/geometry/primitives/sphere3d.ts';
 
 export class RayHelper {
@@ -100,7 +108,8 @@ export class RayHelper {
 
     private intersectsScene(ray: Ray3D, scale: number): boolean {
         Sphere3D.scaleNX(this.sphere, this.scene.boundingSphereVisible, scale);
-        return Ray3D.isInsideSphere3D(ray, this.sphere) || Ray3D.isIntersectingSphere3D(ray, this.sphere);
+        return Ray3D.isInsideSphere3D(ray, this.sphere) ||
+            Ray3D.isIntersectingSphere3D(ray, this.sphere);
     }
 
     identify(ray: Ray3D, cam: Camera): PickData | undefined {
@@ -134,7 +143,7 @@ export class RayHelper {
                 } else if (status === AsyncPickStatus.Pending) {
                     return 'pending';
                 }
-            }
+            },
         };
     }
 
@@ -148,7 +157,13 @@ export class RayHelper {
         this.pickPass.dispose();
     }
 
-    constructor(private webgl: WebGLContext, private renderer: Renderer, private scene: Scene, private helper: Helper, options: PickOptions) {
+    constructor(
+        private webgl: WebGLContext,
+        private renderer: Renderer,
+        private scene: Scene,
+        private helper: Helper,
+        options: PickOptions,
+    ) {
         const size = options.pickPadding * 2 + 1;
 
         this.camera = new Camera();
@@ -160,7 +175,7 @@ export class RayHelper {
 
         if (!checkAsyncPickingSupport(webgl)) {
             this.asyncIdentify = (ray, cam) => ({
-                tryGet: () => this.identify(ray, cam)
+                tryGet: () => this.identify(ray, cam),
             });
         }
     }
@@ -171,7 +186,8 @@ export class RayHelper {
 function updateOrthoRayCamera(camera: Camera, ray: Ray3D) {
     const { near, far, viewport } = camera;
 
-    const height = 2 * Math.tan(degToRad(0.1) / 2) * Vec3.distance(camera.position, camera.target) * camera.state.scale;
+    const height = 2 * Math.tan(degToRad(0.1) / 2) * Vec3.distance(camera.position, camera.target) *
+        camera.state.scale;
     const zoom = viewport.height / height;
 
     const fullLeft = -viewport.width / 2;

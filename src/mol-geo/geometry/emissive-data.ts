@@ -6,23 +6,23 @@
 
 import { ValueCell } from '../../mol-util/value-cell.ts';
 import { Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
-import { TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
+import { createTextureImage, TextureImage } from '../../mol-gl/renderable/util.ts';
 import { createNullTexture, Texture } from '../../mol-gl/webgl/texture.ts';
 
 export type EmissiveType = 'instance' | 'groupInstance' | 'volumeInstance';
 
 export type EmissiveData = {
-    tEmissive: ValueCell<TextureImage<Uint8Array>>
-    uEmissiveTexDim: ValueCell<Vec2>
-    dEmissive: ValueCell<boolean>,
-    emissiveAverage: ValueCell<number>,
+    tEmissive: ValueCell<TextureImage<Uint8Array>>;
+    uEmissiveTexDim: ValueCell<Vec2>;
+    dEmissive: ValueCell<boolean>;
+    emissiveAverage: ValueCell<number>;
 
-    tEmissiveGrid: ValueCell<Texture>,
-    uEmissiveGridDim: ValueCell<Vec3>,
-    uEmissiveGridTransform: ValueCell<Vec4>,
-    dEmissiveType: ValueCell<string>,
-    uEmissiveStrength: ValueCell<number>,
-}
+    tEmissiveGrid: ValueCell<Texture>;
+    uEmissiveGridDim: ValueCell<Vec3>;
+    uEmissiveGridTransform: ValueCell<Vec4>;
+    dEmissiveType: ValueCell<string>;
+    uEmissiveStrength: ValueCell<number>;
+};
 
 export function applyEmissiveValue(array: Uint8Array, start: number, end: number, value: number) {
     for (let i = start; i < end; ++i) {
@@ -44,13 +44,28 @@ export function clearEmissive(array: Uint8Array, start: number, end: number) {
     array.fill(0, start, end);
 }
 
-export function createEmissive(count: number, type: EmissiveType, emissiveData?: EmissiveData): EmissiveData {
-    const emissive = createTextureImage(Math.max(1, count), 1, Uint8Array, emissiveData && emissiveData.tEmissive.ref.value.array);
+export function createEmissive(
+    count: number,
+    type: EmissiveType,
+    emissiveData?: EmissiveData,
+): EmissiveData {
+    const emissive = createTextureImage(
+        Math.max(1, count),
+        1,
+        Uint8Array,
+        emissiveData && emissiveData.tEmissive.ref.value.array,
+    );
     if (emissiveData) {
         ValueCell.update(emissiveData.tEmissive, emissive);
-        ValueCell.update(emissiveData.uEmissiveTexDim, Vec2.create(emissive.width, emissive.height));
+        ValueCell.update(
+            emissiveData.uEmissiveTexDim,
+            Vec2.create(emissive.width, emissive.height),
+        );
         ValueCell.updateIfChanged(emissiveData.dEmissive, count > 0);
-        ValueCell.updateIfChanged(emissiveData.emissiveAverage, getEmissiveAverage(emissive.array, count));
+        ValueCell.updateIfChanged(
+            emissiveData.emissiveAverage,
+            getEmissiveAverage(emissive.array, count),
+        );
         ValueCell.updateIfChanged(emissiveData.dEmissiveType, type);
         return emissiveData;
     } else {

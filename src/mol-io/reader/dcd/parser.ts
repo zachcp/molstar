@@ -6,34 +6,34 @@
 
 import { ReaderResult as Result } from '../result.ts';
 import { Task } from '../../../mol-task/index.ts';
-import { Mutable, FiniteArray } from '../../../mol-util/type-helpers.ts';
+import { FiniteArray, Mutable } from '../../../mol-util/type-helpers.ts';
 import { uint8ToString } from '../../common/binary.ts';
 
 export interface DcdHeader {
-    readonly NSET: number,
-    readonly ISTART: number,
-    readonly NSAVC: number,
-    readonly NAMNF: number,
-    readonly DELTA: number,
-    readonly TITLE: string,
-    readonly NATOM: number
+    readonly NSET: number;
+    readonly ISTART: number;
+    readonly NSAVC: number;
+    readonly NAMNF: number;
+    readonly DELTA: number;
+    readonly TITLE: string;
+    readonly NATOM: number;
 }
 
 export interface DcdFrame {
-    readonly elementCount: number
+    readonly elementCount: number;
 
     // positions
-    readonly x: ArrayLike<number>
-    readonly y: ArrayLike<number>
-    readonly z: ArrayLike<number>
+    readonly x: ArrayLike<number>;
+    readonly y: ArrayLike<number>;
+    readonly z: ArrayLike<number>;
 
     // optional cell
-    readonly cell?: FiniteArray<number, 6>
+    readonly cell?: FiniteArray<number, 6>;
 }
 
 export interface DcdFile {
-    readonly header: DcdHeader
-    readonly frames: DcdFrame[]
+    readonly header: DcdHeader;
+    readonly frames: DcdFrame[];
 }
 
 export function _parseDcd(data: Uint8Array): DcdFile {
@@ -83,8 +83,10 @@ export function _parseDcd(data: Uint8Array): DcdFile {
 
     // format indicator, should read 'CORD'
     const formatString = String.fromCharCode(
-        dv.getUint8(4), dv.getUint8(5),
-        dv.getUint8(6), dv.getUint8(7)
+        dv.getUint8(4),
+        dv.getUint8(5),
+        dv.getUint8(6),
+        dv.getUint8(7),
     );
     if (formatString !== 'CORD') {
         throw new Error('dcd bad format, format string');
@@ -162,7 +164,7 @@ export function _parseDcd(data: Uint8Array): DcdFile {
                 dv.getFloat64(nextPos + 2 * 8, ef),
                 dv.getFloat64(nextPos + 3 * 8, ef),
                 dv.getFloat64(nextPos + 4 * 8, ef),
-                dv.getFloat64(nextPos + 5 * 8, ef)
+                dv.getFloat64(nextPos + 5 * 8, ef),
             ] as const;
             nextPos += 48;
             nextPos += 4; // block end
@@ -197,7 +199,7 @@ export function _parseDcd(data: Uint8Array): DcdFile {
 }
 
 export function parseDcd(data: Uint8Array) {
-    return Task.create<Result<DcdFile>>('Parse DCD', async ctx => {
+    return Task.create<Result<DcdFile>>('Parse DCD', async (ctx) => {
         try {
             const dcdFile = _parseDcd(data);
             return Result.success(dcdFile);

@@ -37,7 +37,7 @@ class MovingAverage {
         this.avgs.clear();
     }
 
-    constructor(private count: number) { }
+    constructor(private count: number) {}
 }
 
 function clearStats(stats: WebGLStats) {
@@ -52,53 +52,58 @@ function clearStats(stats: WebGLStats) {
 }
 
 export type TimerResult = {
-    readonly label: string
-    readonly gpuElapsed: number
-    readonly gpuAvg: number
-    readonly cpuElapsed: number
-    readonly cpuAvg: number
-    readonly children: TimerResult[]
-    readonly calls?: Calls
-    readonly note?: string
-}
+    readonly label: string;
+    readonly gpuElapsed: number;
+    readonly gpuAvg: number;
+    readonly cpuElapsed: number;
+    readonly cpuAvg: number;
+    readonly children: TimerResult[];
+    readonly calls?: Calls;
+    readonly note?: string;
+};
 
 function getQuery(extensions: WebGLExtensions) {
     return extensions.disjointTimerQuery ? extensions.disjointTimerQuery.createQuery() : null;
 }
 
-type WebGLTimerOptions = { captureStats?: boolean, note?: string }
+type WebGLTimerOptions = { captureStats?: boolean; note?: string };
 
 export type WebGLTimer = {
     /** Check with GPU for finished timers. */
-    resolve: () => TimerResult[]
-    mark: (label: string, options?: WebGLTimerOptions) => void
-    markEnd: (label: string) => void
-    stats: () => { gpu: Record<string, number>, cpu: Record<string, number> }
-    formatedStats: () => Record<string, string>
-    clear: () => void
-    destroy: () => void
-}
-
-type Calls = {
-    drawInstanced: number,
-    counts: number,
-}
-
-type Measure = {
-    label: string,
-    queries: WebGLQuery[],
-    children: Measure[],
-    root: boolean,
-    cpu: { start: number, end: number },
-    captureStats: boolean,
-    timeElapsed?: number,
-    calls?: Calls,
-    note?: string,
+    resolve: () => TimerResult[];
+    mark: (label: string, options?: WebGLTimerOptions) => void;
+    markEnd: (label: string) => void;
+    stats: () => { gpu: Record<string, number>; cpu: Record<string, number> };
+    formatedStats: () => Record<string, string>;
+    clear: () => void;
+    destroy: () => void;
 };
 
-type QueryResult = { timeElapsed?: number, refCount: number };
+type Calls = {
+    drawInstanced: number;
+    counts: number;
+};
 
-export function createTimer(gl: GLRenderingContext, extensions: WebGLExtensions, stats: WebGLStats, options?: { avgCount: number }): WebGLTimer {
+type Measure = {
+    label: string;
+    queries: WebGLQuery[];
+    children: Measure[];
+    root: boolean;
+    cpu: { start: number; end: number };
+    captureStats: boolean;
+    timeElapsed?: number;
+    calls?: Calls;
+    note?: string;
+};
+
+type QueryResult = { timeElapsed?: number; refCount: number };
+
+export function createTimer(
+    gl: GLRenderingContext,
+    extensions: WebGLExtensions,
+    stats: WebGLStats,
+    options?: { avgCount: number },
+): WebGLTimer {
     const dtq = extensions.disjointTimerQuery;
     const avgCount = options?.avgCount ?? 30;
 
@@ -169,7 +174,7 @@ export function createTimer(gl: GLRenderingContext, extensions: WebGLExtensions,
 
             const unresolved: Measure[] = [];
             for (const measure of measures) {
-                if (measure.queries.every(q => queries.get(q)?.timeElapsed !== undefined)) {
+                if (measure.queries.every((q) => queries.get(q)?.timeElapsed !== undefined)) {
                     let timeElapsed = 0;
                     for (const query of measure.queries) {
                         const result = queries.get(query)!;
@@ -311,7 +316,7 @@ export function createTimer(gl: GLRenderingContext, extensions: WebGLExtensions,
         clear,
         destroy: () => {
             clear();
-        }
+        },
     };
 }
 
@@ -324,7 +329,7 @@ function formatTimerResult(result: TimerResult) {
 }
 
 export function printTimerResults(results: TimerResult[]) {
-    results.map(r => {
+    results.map((r) => {
         const f = formatTimerResult(r);
         if (r.children.length || r.calls || r.note) {
             console.groupCollapsed(f);

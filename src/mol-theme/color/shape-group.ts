@@ -16,12 +16,15 @@ const DefaultColor = Color(0xCCCCCC);
 const Description = 'Assigns colors as defined by the shape object.';
 
 export const ShapeGroupColorThemeParams = {};
-export type ShapeGroupColorThemeParams = typeof ShapeGroupColorThemeParams
+export type ShapeGroupColorThemeParams = typeof ShapeGroupColorThemeParams;
 export function getShapeGroupColorThemeParams(ctx: ThemeDataContext) {
     return ShapeGroupColorThemeParams; // TODO return copy
 }
 
-export function ShapeGroupColorTheme(ctx: ThemeDataContext, props: PD.Values<ShapeGroupColorThemeParams>): ColorTheme<ShapeGroupColorThemeParams> {
+export function ShapeGroupColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<ShapeGroupColorThemeParams>,
+): ColorTheme<ShapeGroupColorThemeParams> {
     return {
         factory: ShapeGroupColorTheme,
         granularity: 'groupInstance',
@@ -32,16 +35,19 @@ export function ShapeGroupColorTheme(ctx: ThemeDataContext, props: PD.Values<Sha
             return DefaultColor;
         },
         props,
-        description: Description
+        description: Description,
     };
 }
 
-export const ShapeGroupColorThemeProvider: ColorTheme.Provider<ShapeGroupColorThemeParams, 'shape-group'> = {
+export const ShapeGroupColorThemeProvider: ColorTheme.Provider<
+    ShapeGroupColorThemeParams,
+    'shape-group'
+> = {
     name: 'shape-group',
     label: 'Shape Group',
     category: ColorThemeCategory.Misc,
     factory: ShapeGroupColorTheme,
     getParams: getShapeGroupColorThemeParams,
     defaultValues: PD.getDefaultValues(ShapeGroupColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.shape
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.shape,
 };

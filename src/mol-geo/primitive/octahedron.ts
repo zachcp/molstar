@@ -5,30 +5,98 @@
  */
 
 import { createPrimitive, Primitive } from './primitive.ts';
-import { createCage, Cage } from './cage.ts';
+import { Cage, createCage } from './cage.ts';
 
 export const octahedronVertices: ReadonlyArray<number> = [
-    0.5, 0, 0, -0.5, 0, 0, 0, 0.5, 0,
-    0, -0.5, 0, 0, 0, 0.5, 0, 0, -0.5
+    0.5,
+    0,
+    0,
+    -0.5,
+    0,
+    0,
+    0,
+    0.5,
+    0,
+    0,
+    -0.5,
+    0,
+    0,
+    0,
+    0.5,
+    0,
+    0,
+    -0.5,
 ];
 
 export const octahedronIndices: ReadonlyArray<number> = [
-    0, 2, 4, 0, 4, 3, 0, 3, 5,
-    0, 5, 2, 1, 2, 5, 1, 5, 3,
-    1, 3, 4, 1, 4, 2
+    0,
+    2,
+    4,
+    0,
+    4,
+    3,
+    0,
+    3,
+    5,
+    0,
+    5,
+    2,
+    1,
+    2,
+    5,
+    1,
+    5,
+    3,
+    1,
+    3,
+    4,
+    1,
+    4,
+    2,
 ];
 
 export const perforatedOctahedronIndices: ReadonlyArray<number> = [
-    0, 2, 4, 0, 4, 3,
+    0,
+    2,
+    4,
+    0,
+    4,
+    3,
     // 0, 3, 5,   0, 5, 2,
-    1, 2, 5, 1, 5, 3,
+    1,
+    2,
+    5,
+    1,
+    5,
+    3,
     // 1, 3, 4,   1, 4, 2
 ];
 
 const octahedronEdges: ReadonlyArray<number> = [
-    0, 2, 1, 3, 2, 1, 3, 0,
-    0, 4, 1, 4, 2, 4, 3, 4,
-    0, 5, 1, 5, 2, 5, 3, 5,
+    0,
+    2,
+    1,
+    3,
+    2,
+    1,
+    3,
+    0,
+    0,
+    4,
+    1,
+    4,
+    2,
+    4,
+    3,
+    4,
+    0,
+    5,
+    1,
+    5,
+    2,
+    5,
+    3,
+    5,
 ];
 
 let octahedron: Primitive;
@@ -39,7 +107,9 @@ export function Octahedron(): Primitive {
 
 let perforatedOctahedron: Primitive;
 export function PerforatedOctahedron(): Primitive {
-    if (!perforatedOctahedron) perforatedOctahedron = createPrimitive(octahedronVertices, perforatedOctahedronIndices);
+    if (!perforatedOctahedron) {
+        perforatedOctahedron = createPrimitive(octahedronVertices, perforatedOctahedronIndices);
+    }
     return perforatedOctahedron;
 }
 

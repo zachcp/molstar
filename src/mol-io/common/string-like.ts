@@ -6,7 +6,6 @@
 
 import { utf8Read } from './utf8.ts';
 
-
 /**
  * Essential subset of `string` functionality.
  * Can be builtin `string` or `String` type or a class instance implementing necessary methods (`StringLikeInterface` interface).
@@ -85,18 +84,18 @@ export const StringLike = {
         try {
             return str.toString();
         } catch (err) {
-            throw new Error(`Failed to convert StringLike object into string. This might be because the length ${str.length} exceeds maximum allowed string length ${MAX_STRING_LENGTH}. (${err})`);
+            throw new Error(
+                `Failed to convert StringLike object into string. This might be because the length ${str.length} exceeds maximum allowed string length ${MAX_STRING_LENGTH}. (${err})`,
+            );
         }
     },
 };
-
 
 /** Maximum allowed string length (might be bigger for some engines, but in Chrome 136 and Node 22 it is this). */
 export const MAX_STRING_LENGTH = 536_870_888;
 
 /** Binary logarithm of default string chunk size for `ChunkedBigString`. (string chunk size is chosen to be a power of 2, so we can use faster bit shift operator instead of integer division) */
 const DEFAULT_LOG_STRING_CHUNK_SIZE = 28; // 2**28 is the largest power of 2 which is <= MAX_STRING_LENGTH
-
 
 /** Implementation of `CustomString`, based on an array of fixed-length strings (chunks). */
 export class ChunkedBigString implements StringLikeInterface {
@@ -121,13 +120,19 @@ export class ChunkedBigString implements StringLikeInterface {
         this.STRING_CHUNK_MASK = 2 ** logStringChunkSize - 1;
     }
 
-    static fromString(content: string, logStringChunkSize: number = DEFAULT_LOG_STRING_CHUNK_SIZE): ChunkedBigString {
+    static fromString(
+        content: string,
+        logStringChunkSize: number = DEFAULT_LOG_STRING_CHUNK_SIZE,
+    ): ChunkedBigString {
         const out = new ChunkedBigString(logStringChunkSize);
         out._append(content);
         return out;
     }
 
-    static fromStrings(content: string[], logStringChunkSize: number = DEFAULT_LOG_STRING_CHUNK_SIZE): ChunkedBigString {
+    static fromStrings(
+        content: string[],
+        logStringChunkSize: number = DEFAULT_LOG_STRING_CHUNK_SIZE,
+    ): ChunkedBigString {
         const out = new ChunkedBigString(logStringChunkSize);
         for (const inputChunk of content) {
             out._append(inputChunk);
@@ -136,7 +141,12 @@ export class ChunkedBigString implements StringLikeInterface {
     }
 
     /** Create instance from UTF8 data. (Do not call directly, prefer `utf8ReadLong` in utf8.ts.) */
-    static fromUtf8Data(data: Uint8Array, start: number = 0, end: number = data.length, logStringChunkSize: number = DEFAULT_LOG_STRING_CHUNK_SIZE): ChunkedBigString {
+    static fromUtf8Data(
+        data: Uint8Array,
+        start: number = 0,
+        end: number = data.length,
+        logStringChunkSize: number = DEFAULT_LOG_STRING_CHUNK_SIZE,
+    ): ChunkedBigString {
         const bufferChunkSize = 2 ** logStringChunkSize; // n bytes will always decode to <=n characters
         const stringChunks: string[] = [];
         let readStart = start;
@@ -146,7 +156,11 @@ export class ChunkedBigString implements StringLikeInterface {
                 // This is buffer chunk boundary, adjust to avoid cutting multi-byte characters
                 while ((data[readEnd] & 0xC0) === 0x80) { // Byte after the cut is a continuation byte (10xxxxxx)
                     readEnd--;
-                    if (readEnd === readStart) throw new Error('Input is rubbish, no UTF-8 character start found in a chunk');
+                    if (readEnd === readStart) {
+                        throw new Error(
+                            'Input is rubbish, no UTF-8 character start found in a chunk',
+                        );
+                    }
                 }
             } // Else this is the end of the read region, let default error handling do its job
             const stringChunk = utf8Read(data, readStart, readEnd - readStart);
@@ -158,7 +172,10 @@ export class ChunkedBigString implements StringLikeInterface {
 
     private _append(inputChunk: string): void {
         const chunkSize = this.STRING_CHUNK_SIZE;
-        const tail = (this._chunks.length === 0 || this._chunks[this._chunks.length - 1].length === chunkSize) ? '' : this._chunks.pop()!;
+        const tail = (this._chunks.length === 0 ||
+                this._chunks[this._chunks.length - 1].length === chunkSize)
+            ? ''
+            : this._chunks.pop()!;
         let inputPtr = chunkSize - tail.length;
         this._chunks.push(tail + inputChunk.substring(0, inputPtr)); // Assuming .substring() deals with inputPtr > inputChunk.length
         while (inputPtr < inputChunk.length) {
@@ -210,7 +227,11 @@ export class ChunkedBigString implements StringLikeInterface {
         }
 
         if (end_ - start_ > MAX_STRING_LENGTH) {
-            throw new Error(`Trying to create get a substring longer (${end_ - start_}) than maximum allowed string length (${MAX_STRING_LENGTH}).`);
+            throw new Error(
+                `Trying to create get a substring longer (${
+                    end_ - start_
+                }) than maximum allowed string length (${MAX_STRING_LENGTH}).`,
+            );
         }
 
         const iFirstChunk = this._getChunkIndex(start_);
@@ -238,7 +259,9 @@ export class ChunkedBigString implements StringLikeInterface {
 
     indexOf(searchString: string, position: number = 0): number {
         if (searchString.length > this.STRING_CHUNK_SIZE) {
-            throw new Error('NotImplementedError: indexOf is only implemented for searchString shorter than STRING_CHUNK_SIZE');
+            throw new Error(
+                'NotImplementedError: indexOf is only implemented for searchString shorter than STRING_CHUNK_SIZE',
+            );
             // In real use-cases STRING_CHUNK_SIZE is big and it doesn't make sense to search for such long substrings.
         }
 
@@ -255,8 +278,12 @@ export class ChunkedBigString implements StringLikeInterface {
 
             // Try to find the substring overflowing to the next chunk (assumes searchString.length <= STRING_CHUNK_SIZE)
             if (iChunk !== this._chunks.length - 1) {
-                const start = Math.max(this.STRING_CHUNK_SIZE - searchString.length + 1, positionInChunk);
-                const aroundBoundary = chunk.substring(start, undefined) + this._chunks[iChunk + 1].substring(0, searchString.length - 1);
+                const start = Math.max(
+                    this.STRING_CHUNK_SIZE - searchString.length + 1,
+                    positionInChunk,
+                );
+                const aroundBoundary = chunk.substring(start, undefined) +
+                    this._chunks[iChunk + 1].substring(0, searchString.length - 1);
                 const found = aroundBoundary.indexOf(searchString);
                 if (found >= 0) return iChunk * this.STRING_CHUNK_SIZE + start + found;
             }
@@ -270,7 +297,9 @@ export class ChunkedBigString implements StringLikeInterface {
 
     startsWith(searchString: string, position: number = 0): boolean {
         if (searchString.length > this.STRING_CHUNK_SIZE) {
-            throw new Error('NotImplementedError: startsWith is only implemented for searchString shorter than STRING_CHUNK_SIZE');
+            throw new Error(
+                'NotImplementedError: startsWith is only implemented for searchString shorter than STRING_CHUNK_SIZE',
+            );
             // In real use-cases STRING_CHUNK_SIZE is big and it doesn't make sense to search for such long substrings.
         }
         return this.substring(position, position + searchString.length) === searchString;
@@ -280,7 +309,9 @@ export class ChunkedBigString implements StringLikeInterface {
         try {
             return this._chunks.join('');
         } catch (err) {
-            throw new Error(`Failed to convert StringLike object into string. This might be because the length ${this.length} exceeds maximum allowed string length ${MAX_STRING_LENGTH}. (${err})`);
+            throw new Error(
+                `Failed to convert StringLike object into string. This might be because the length ${this.length} exceeds maximum allowed string length ${MAX_STRING_LENGTH}. (${err})`,
+            );
         }
     }
 }

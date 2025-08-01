@@ -6,17 +6,37 @@
  */
 
 import { Structure, Unit } from '../../../mol-model/structure.ts';
-import { Representation, RepresentationContext, RepresentationParamsGetter } from '../../representation.ts';
+import {
+    Representation,
+    RepresentationContext,
+    RepresentationParamsGetter,
+} from '../../representation.ts';
 import { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
+import {
+    StructureRepresentation,
+    StructureRepresentationProvider,
+    StructureRepresentationStateBuilder,
+} from '../representation.ts';
 import { UnitsRepresentation } from '../units-representation.ts';
 import { NucleotideBlockParams, NucleotideBlockVisual } from '../visual/nucleotide-block-mesh.ts';
 import { NucleotideRingParams, NucleotideRingVisual } from '../visual/nucleotide-ring-mesh.ts';
-import { NucleotideAtomicRingFillParams, NucleotideAtomicRingFillVisual } from '../visual/nucleotide-atomic-ring-fill.ts';
-import { NucleotideAtomicBondParams, NucleotideAtomicBondVisual } from '../visual/nucleotide-atomic-bond.ts';
-import { NucleotideAtomicElementParams, NucleotideAtomicElementVisual } from '../visual/nucleotide-atomic-element.ts';
-import { PolymerDirectionParams, PolymerDirectionVisual } from '../visual/polymer-direction-wedge.ts';
+import {
+    NucleotideAtomicRingFillParams,
+    NucleotideAtomicRingFillVisual,
+} from '../visual/nucleotide-atomic-ring-fill.ts';
+import {
+    NucleotideAtomicBondParams,
+    NucleotideAtomicBondVisual,
+} from '../visual/nucleotide-atomic-bond.ts';
+import {
+    NucleotideAtomicElementParams,
+    NucleotideAtomicElementVisual,
+} from '../visual/nucleotide-atomic-element.ts';
+import {
+    PolymerDirectionParams,
+    PolymerDirectionVisual,
+} from '../visual/polymer-direction-wedge.ts';
 import { PolymerGapParams, PolymerGapVisual } from '../visual/polymer-gap-cylinder.ts';
 import { PolymerTraceParams, PolymerTraceVisual } from '../visual/polymer-trace-mesh.ts';
 import { SecondaryStructureProvider } from '../../../mol-model-props/computed/secondary-structure.ts';
@@ -25,14 +45,48 @@ import { HelixOrientationProvider } from '../../../mol-model-props/computed/heli
 import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const CartoonVisuals = {
-    'polymer-trace': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, PolymerTraceParams>) => UnitsRepresentation('Polymer trace mesh', ctx, getParams, PolymerTraceVisual),
-    'polymer-gap': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, PolymerGapParams>) => UnitsRepresentation('Polymer gap cylinder', ctx, getParams, PolymerGapVisual),
-    'nucleotide-block': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, NucleotideBlockParams>) => UnitsRepresentation('Nucleotide block mesh', ctx, getParams, NucleotideBlockVisual),
-    'nucleotide-ring': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, NucleotideRingParams>) => UnitsRepresentation('Nucleotide ring mesh', ctx, getParams, NucleotideRingVisual),
-    'nucleotide-atomic-ring-fill': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, NucleotideAtomicRingFillParams>) => UnitsRepresentation('Nucleotide atomic ring fill', ctx, getParams, NucleotideAtomicRingFillVisual),
-    'nucleotide-atomic-bond': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, NucleotideAtomicBondParams>) => UnitsRepresentation('Nucleotide atomic bond', ctx, getParams, NucleotideAtomicBondVisual),
-    'nucleotide-atomic-element': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, NucleotideAtomicElementParams>) => UnitsRepresentation('Nucleotide atomic element', ctx, getParams, NucleotideAtomicElementVisual),
-    'direction-wedge': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, PolymerDirectionParams>) => UnitsRepresentation('Polymer direction wedge', ctx, getParams, PolymerDirectionVisual),
+    'polymer-trace': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, PolymerTraceParams>,
+    ) => UnitsRepresentation('Polymer trace mesh', ctx, getParams, PolymerTraceVisual),
+    'polymer-gap': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, PolymerGapParams>,
+    ) => UnitsRepresentation('Polymer gap cylinder', ctx, getParams, PolymerGapVisual),
+    'nucleotide-block': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, NucleotideBlockParams>,
+    ) => UnitsRepresentation('Nucleotide block mesh', ctx, getParams, NucleotideBlockVisual),
+    'nucleotide-ring': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, NucleotideRingParams>,
+    ) => UnitsRepresentation('Nucleotide ring mesh', ctx, getParams, NucleotideRingVisual),
+    'nucleotide-atomic-ring-fill': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, NucleotideAtomicRingFillParams>,
+    ) => UnitsRepresentation(
+        'Nucleotide atomic ring fill',
+        ctx,
+        getParams,
+        NucleotideAtomicRingFillVisual,
+    ),
+    'nucleotide-atomic-bond': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, NucleotideAtomicBondParams>,
+    ) => UnitsRepresentation('Nucleotide atomic bond', ctx, getParams, NucleotideAtomicBondVisual),
+    'nucleotide-atomic-element': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, NucleotideAtomicElementParams>,
+    ) => UnitsRepresentation(
+        'Nucleotide atomic element',
+        ctx,
+        getParams,
+        NucleotideAtomicElementVisual,
+    ),
+    'direction-wedge': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, PolymerDirectionParams>,
+    ) => UnitsRepresentation('Polymer direction wedge', ctx, getParams, PolymerDirectionVisual),
 };
 
 export const CartoonParams = {
@@ -45,19 +99,31 @@ export const CartoonParams = {
     ...NucleotideAtomicRingFillParams,
     ...PolymerDirectionParams,
     sizeFactor: PD.Numeric(0.2, { min: 0, max: 10, step: 0.01 }),
-    visuals: PD.MultiSelect(['polymer-trace', 'polymer-gap', 'nucleotide-ring', 'nucleotide-atomic-ring-fill', 'nucleotide-atomic-bond', 'nucleotide-atomic-element'], PD.objectToOptions(CartoonVisuals)),
+    visuals: PD.MultiSelect([
+        'polymer-trace',
+        'polymer-gap',
+        'nucleotide-ring',
+        'nucleotide-atomic-ring-fill',
+        'nucleotide-atomic-bond',
+        'nucleotide-atomic-element',
+    ], PD.objectToOptions(CartoonVisuals)),
     bumpFrequency: PD.Numeric(2, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
     density: PD.Numeric(0.1, { min: 0, max: 1, step: 0.01 }, BaseGeometry.ShadingCategory),
-    colorMode: PD.Select('default', PD.arrayToOptions(['default', 'interpolate'] as const), { ...BaseGeometry.ShadingCategory, isHidden: true }),
+    colorMode: PD.Select('default', PD.arrayToOptions(['default', 'interpolate'] as const), {
+        ...BaseGeometry.ShadingCategory,
+        isHidden: true,
+    }),
 };
 
-export type CartoonParams = typeof CartoonParams
+export type CartoonParams = typeof CartoonParams;
 export function getCartoonParams(ctx: ThemeRegistryContext, structure: Structure) {
     const params = PD.clone(CartoonParams);
     let hasNucleotides = false;
     let hasGaps = false;
-    structure.units.forEach(u => {
-        if (!hasNucleotides && Unit.isAtomic(u) && u.nucleotideElements.length) hasNucleotides = true;
+    structure.units.forEach((u) => {
+        if (!hasNucleotides && Unit.isAtomic(u) && u.nucleotideElements.length) {
+            hasNucleotides = true;
+        }
         if (!hasGaps && u.gapElements.length) hasGaps = true;
     });
     params.visuals.defaultValue = ['polymer-trace'];
@@ -66,9 +132,18 @@ export function getCartoonParams(ctx: ThemeRegistryContext, structure: Structure
     return params;
 }
 
-export type CartoonRepresentation = StructureRepresentation<CartoonParams>
-export function CartoonRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, CartoonParams>): CartoonRepresentation {
-    return Representation.createMulti('Cartoon', ctx, getParams, StructureRepresentationStateBuilder, CartoonVisuals as unknown as Representation.Def<Structure, CartoonParams>);
+export type CartoonRepresentation = StructureRepresentation<CartoonParams>;
+export function CartoonRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, CartoonParams>,
+): CartoonRepresentation {
+    return Representation.createMulti(
+        'Cartoon',
+        ctx,
+        getParams,
+        StructureRepresentationStateBuilder,
+        CartoonVisuals as unknown as Representation.Def<Structure, CartoonParams>,
+    );
 }
 
 export const CartoonRepresentationProvider = StructureRepresentationProvider({
@@ -93,6 +168,6 @@ export const CartoonRepresentationProvider = StructureRepresentationProvider({
             for (const m of data.models) {
                 HelixOrientationProvider.ref(m, false);
             }
-        }
-    }
+        },
+    },
 });

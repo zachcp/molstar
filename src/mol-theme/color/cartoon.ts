@@ -20,7 +20,10 @@ import { StructureIndexColorTheme, StructureIndexColorThemeParams } from './stru
 import { ColorThemeCategory } from './categories.ts';
 import { ResidueNameColorTheme, ResidueNameColorThemeParams } from './residue-name.ts';
 import { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
-import { SecondaryStructureColorTheme, SecondaryStructureColorThemeParams } from './secondary-structure.ts';
+import {
+    SecondaryStructureColorTheme,
+    SecondaryStructureColorThemeParams,
+} from './secondary-structure.ts';
 import { ElementSymbolColorTheme, ElementSymbolColorThemeParams } from './element-symbol.ts';
 import { TrajectoryIndexColorTheme, TrajectoryIndexColorThemeParams } from './trajectory-index.ts';
 import { hash2 } from '../../mol-data/util.ts';
@@ -55,44 +58,66 @@ export const CartoonColorThemeParams = {
         'partial-charge': PD.Group(PartialChargeColorThemeParams),
     }),
 };
-export type CartoonColorThemeParams = typeof CartoonColorThemeParams
+export type CartoonColorThemeParams = typeof CartoonColorThemeParams;
 export function getCartoonColorThemeParams(ctx: ThemeDataContext) {
     const params = PD.clone(CartoonColorThemeParams);
     return params;
 }
 
-type CartoonColorThemeProps = PD.Values<CartoonColorThemeParams>
+type CartoonColorThemeProps = PD.Values<CartoonColorThemeParams>;
 
 function getMainchainTheme(ctx: ThemeDataContext, props: CartoonColorThemeProps['mainchain']) {
     switch (props.name) {
-        case 'uniform': return UniformColorTheme(ctx, props.params);
-        case 'chain-id': return ChainIdColorTheme(ctx, props.params);
-        case 'entity-id': return EntityIdColorTheme(ctx, props.params);
-        case 'entity-source': return EntitySourceColorTheme(ctx, props.params);
-        case 'molecule-type': return MoleculeTypeColorTheme(ctx, props.params);
-        case 'model-index': return ModelIndexColorTheme(ctx, props.params);
-        case 'structure-index': return StructureIndexColorTheme(ctx, props.params);
-        case 'secondary-structure': return SecondaryStructureColorTheme(ctx, props.params);
-        case 'trajectory-index': return TrajectoryIndexColorTheme(ctx, props.params);
-        default: assertUnreachable(props);
+        case 'uniform':
+            return UniformColorTheme(ctx, props.params);
+        case 'chain-id':
+            return ChainIdColorTheme(ctx, props.params);
+        case 'entity-id':
+            return EntityIdColorTheme(ctx, props.params);
+        case 'entity-source':
+            return EntitySourceColorTheme(ctx, props.params);
+        case 'molecule-type':
+            return MoleculeTypeColorTheme(ctx, props.params);
+        case 'model-index':
+            return ModelIndexColorTheme(ctx, props.params);
+        case 'structure-index':
+            return StructureIndexColorTheme(ctx, props.params);
+        case 'secondary-structure':
+            return SecondaryStructureColorTheme(ctx, props.params);
+        case 'trajectory-index':
+            return TrajectoryIndexColorTheme(ctx, props.params);
+        default:
+            assertUnreachable(props);
     }
 }
 
 function getSidechainTheme(ctx: ThemeDataContext, props: CartoonColorThemeProps['sidechain']) {
     switch (props.name) {
-        case 'uniform': return UniformColorTheme(ctx, props.params);
-        case 'residue-name': return ResidueNameColorTheme(ctx, props.params);
-        case 'element-symbol': return ElementSymbolColorTheme(ctx, props.params);
-        case 'hydrophobicity': return HydrophobicityColorTheme(ctx, props.params);
-        case 'uncertainty': return UncertaintyColorTheme(ctx, props.params);
-        case 'occupancy': return OccupancyColorTheme(ctx, props.params);
-        case 'sequence-id': return SequenceIdColorTheme(ctx, props.params);
-        case 'partial-charge': return PartialChargeColorTheme(ctx, props.params);
-        default: assertUnreachable(props);
+        case 'uniform':
+            return UniformColorTheme(ctx, props.params);
+        case 'residue-name':
+            return ResidueNameColorTheme(ctx, props.params);
+        case 'element-symbol':
+            return ElementSymbolColorTheme(ctx, props.params);
+        case 'hydrophobicity':
+            return HydrophobicityColorTheme(ctx, props.params);
+        case 'uncertainty':
+            return UncertaintyColorTheme(ctx, props.params);
+        case 'occupancy':
+            return OccupancyColorTheme(ctx, props.params);
+        case 'sequence-id':
+            return SequenceIdColorTheme(ctx, props.params);
+        case 'partial-charge':
+            return PartialChargeColorTheme(ctx, props.params);
+        default:
+            assertUnreachable(props);
     }
 }
 
-export function CartoonColorTheme(ctx: ThemeDataContext, props: PD.Values<CartoonColorThemeParams>): ColorTheme<CartoonColorThemeParams> {
+export function CartoonColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<CartoonColorThemeParams>,
+): ColorTheme<CartoonColorThemeParams> {
     const mainchain = getMainchainTheme(ctx, props.mainchain);
     const sidechain = getSidechainTheme(ctx, props.sidechain);
 
@@ -106,7 +131,7 @@ export function CartoonColorTheme(ctx: ThemeDataContext, props: PD.Values<Cartoo
     if (mainchain.legend?.kind === 'table-legend' && sidechain.legend?.kind === 'table-legend') {
         legend = {
             kind: 'table-legend',
-            table: [...mainchain.legend.table, ...sidechain.legend.table]
+            table: [...mainchain.legend.table, ...sidechain.legend.table],
         };
     }
 
@@ -129,5 +154,5 @@ export const CartoonColorThemeProvider: ColorTheme.Provider<CartoonColorThemePar
     factory: CartoonColorTheme,
     getParams: getCartoonColorThemeParams,
     defaultValues: PD.getDefaultValues(CartoonColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
 };

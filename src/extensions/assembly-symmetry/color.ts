@@ -7,9 +7,9 @@
 import { ThemeDataContext } from '../../mol-theme/theme.ts';
 import { ColorTheme, LocationColor } from '../../mol-theme/color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { AssemblySymmetryProvider, AssemblySymmetryData } from './prop.ts';
+import { AssemblySymmetryData, AssemblySymmetryProvider } from './prop.ts';
 import { Color } from '../../mol-util/color/index.ts';
-import { Unit, StructureElement, StructureProperties, Bond } from '../../mol-model/structure.ts';
+import { Bond, StructureElement, StructureProperties, Unit } from '../../mol-model/structure.ts';
 import { Location } from '../../mol-model/location.ts';
 import { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
 import { getPalette, getPaletteParams } from '../../mol-util/color/palette.ts';
@@ -35,13 +35,17 @@ function clusterMemberKey(asymId: string, operList: string[]) {
 export const AssemblySymmetryClusterColorThemeParams = {
     ...getPaletteParams({ colorList: 'red-yellow-blue' }),
 };
-export type AssemblySymmetryClusterColorThemeParams = typeof AssemblySymmetryClusterColorThemeParams
+export type AssemblySymmetryClusterColorThemeParams =
+    typeof AssemblySymmetryClusterColorThemeParams;
 export function getAssemblySymmetryClusterColorThemeParams(ctx: ThemeDataContext) {
     const params = PD.clone(AssemblySymmetryClusterColorThemeParams);
     return params;
 }
 
-export function AssemblySymmetryClusterColorTheme(ctx: ThemeDataContext, props: PD.Values<AssemblySymmetryClusterColorThemeParams>): ColorTheme<AssemblySymmetryClusterColorThemeParams> {
+export function AssemblySymmetryClusterColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<AssemblySymmetryClusterColorThemeParams>,
+): ColorTheme<AssemblySymmetryClusterColorThemeParams> {
     let color: LocationColor = () => DefaultColor;
     let legend: ScaleLegend | TableLegend | undefined;
 
@@ -73,7 +77,9 @@ export function AssemblySymmetryClusterColorTheme(ctx: ThemeDataContext, props: 
         const getColor = (location: StructureElement.Location) => {
             const { assembly } = location.unit.conformation.operator;
             const asymId = getAsymId(location.unit)(location);
-            const cluster = clusterByMember.get(clusterMemberKey(asymId, assembly?.operList || _emptyList));
+            const cluster = clusterByMember.get(
+                clusterMemberKey(asymId, assembly?.operList || _emptyList),
+            );
             return cluster !== undefined ? palette.color(cluster) : DefaultColor;
         };
 
@@ -95,12 +101,16 @@ export function AssemblySymmetryClusterColorTheme(ctx: ThemeDataContext, props: 
         color,
         props,
         contextHash,
-        description: 'Assigns chain colors according to assembly symmetry cluster membership data provided by RCSB PDB (calculated with BioJava) or by PDBe.',
-        legend
+        description:
+            'Assigns chain colors according to assembly symmetry cluster membership data provided by RCSB PDB (calculated with BioJava) or by PDBe.',
+        legend,
     };
 }
 
-export const AssemblySymmetryClusterColorThemeProvider: ColorTheme.Provider<AssemblySymmetryClusterColorThemeParams, AssemblySymmetryData.Tag.Cluster> = {
+export const AssemblySymmetryClusterColorThemeProvider: ColorTheme.Provider<
+    AssemblySymmetryClusterColorThemeParams,
+    AssemblySymmetryData.Tag.Cluster
+> = {
     name: AssemblySymmetryData.Tag.Cluster,
     label: 'Assembly Symmetry Cluster',
     category: ColorThemeCategory.Symmetry,
@@ -109,7 +119,10 @@ export const AssemblySymmetryClusterColorThemeProvider: ColorTheme.Provider<Asse
     defaultValues: PD.getDefaultValues(AssemblySymmetryClusterColorThemeParams),
     isApplicable: (ctx: ThemeDataContext) => AssemblySymmetryData.isApplicable(ctx.structure),
     ensureCustomProperties: {
-        attach: (ctx: CustomProperty.Context, data: ThemeDataContext) => data.structure ? AssemblySymmetryProvider.attach(ctx, data.structure, void 0, true) : Promise.resolve(),
-        detach: (data) => data.structure && AssemblySymmetryProvider.ref(data.structure, false)
-    }
+        attach: (ctx: CustomProperty.Context, data: ThemeDataContext) =>
+            data.structure
+                ? AssemblySymmetryProvider.attach(ctx, data.structure, void 0, true)
+                : Promise.resolve(),
+        detach: (data) => data.structure && AssemblySymmetryProvider.ref(data.structure, false),
+    },
 };

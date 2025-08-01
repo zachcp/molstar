@@ -9,11 +9,18 @@ import { ElementIndex, ResidueIndex, Unit } from '../../../../../mol-model/struc
 import { MoleculeType } from '../../../../../mol-model/structure/model/types.ts';
 import { getPolymerRanges } from '../polymer.ts';
 
-export type PolymerBackboneLinkCallback = (indexA: ElementIndex, indexB: ElementIndex, groupA: number, groupB: number, moleculeType: MoleculeType) => void
+export type PolymerBackboneLinkCallback = (
+    indexA: ElementIndex,
+    indexB: ElementIndex,
+    groupA: number,
+    groupB: number,
+    moleculeType: MoleculeType,
+) => void;
 
 export function eachPolymerBackboneLink(unit: Unit, callback: PolymerBackboneLinkCallback) {
     switch (unit.kind) {
-        case Unit.Kind.Atomic: return eachAtomicPolymerBackboneLink(unit, callback);
+        case Unit.Kind.Atomic:
+            return eachAtomicPolymerBackboneLink(unit, callback);
         case Unit.Kind.Spheres:
         case Unit.Kind.Gaussians:
             return eachCoarsePolymerBackboneLink(unit, callback);
@@ -23,8 +30,12 @@ export function eachPolymerBackboneLink(unit: Unit, callback: PolymerBackboneLin
 function eachAtomicPolymerBackboneLink(unit: Unit.Atomic, callback: PolymerBackboneLinkCallback) {
     const cyclicPolymerMap = unit.model.atomicRanges.cyclicPolymerMap;
     const polymerIt = SortedRanges.transientSegments(getPolymerRanges(unit), unit.elements);
-    const residueIt = Segmentation.transientSegments(unit.model.atomicHierarchy.residueAtomSegments, unit.elements);
-    const traceElementIndex = unit.model.atomicHierarchy.derived.residue.traceElementIndex as ArrayLike<ElementIndex>; // can assume it won't be -1 for polymer residues
+    const residueIt = Segmentation.transientSegments(
+        unit.model.atomicHierarchy.residueAtomSegments,
+        unit.elements,
+    );
+    const traceElementIndex = unit.model.atomicHierarchy.derived.residue
+        .traceElementIndex as ArrayLike<ElementIndex>; // can assume it won't be -1 for polymer residues
     const { moleculeType } = unit.model.atomicHierarchy.derived.residue;
 
     let indexA = -1 as ResidueIndex;
@@ -40,26 +51,42 @@ function eachAtomicPolymerBackboneLink(unit: Unit.Atomic, callback: PolymerBackb
             if (isFirst) {
                 const index_1 = residueIt.move().index;
                 ++i;
-                if (!residueIt.hasNext)
+                if (!residueIt.hasNext) {
                     continue;
+                }
                 isFirst = false;
                 indexB = index_1;
             }
             const index = residueIt.move().index;
             indexA = indexB;
             indexB = index;
-            callback(traceElementIndex[indexA], traceElementIndex[indexB], i - 1, i, moleculeType[indexA]);
+            callback(
+                traceElementIndex[indexA],
+                traceElementIndex[indexB],
+                i - 1,
+                i,
+                moleculeType[indexA],
+            );
             ++i;
         }
         if (cyclicPolymerMap.has(indexB)) {
             indexA = indexB;
             indexB = cyclicPolymerMap.get(indexA)!;
-            callback(traceElementIndex[indexA], traceElementIndex[indexB], i - 1, firstGroup, moleculeType[indexA]);
+            callback(
+                traceElementIndex[indexA],
+                traceElementIndex[indexB],
+                i - 1,
+                firstGroup,
+                moleculeType[indexA],
+            );
         }
     }
 }
 
-function eachCoarsePolymerBackboneLink(unit: Unit.Spheres | Unit.Gaussians, callback: PolymerBackboneLinkCallback) {
+function eachCoarsePolymerBackboneLink(
+    unit: Unit.Spheres | Unit.Gaussians,
+    callback: PolymerBackboneLinkCallback,
+) {
     const polymerIt = SortedRanges.transientSegments(getPolymerRanges(unit), unit.elements);
     const { elements } = unit;
 
@@ -72,8 +99,9 @@ function eachCoarsePolymerBackboneLink(unit: Unit.Spheres | Unit.Gaussians, call
             if (isFirst) {
                 ++j;
                 ++i;
-                if (j > jl)
+                if (j > jl) {
                     continue;
+                }
                 isFirst = false;
             }
             callback(elements[j - 1], elements[j], i - 1, i, 0 /* Unknown */);
@@ -84,21 +112,29 @@ function eachCoarsePolymerBackboneLink(unit: Unit.Spheres | Unit.Gaussians, call
 
 //
 
-export type PolymerBackboneElementCallback = (index: ElementIndex, group: number) => void
+export type PolymerBackboneElementCallback = (index: ElementIndex, group: number) => void;
 
 export function eachPolymerBackboneElement(unit: Unit, callback: PolymerBackboneElementCallback) {
     switch (unit.kind) {
-        case Unit.Kind.Atomic: return eachAtomicPolymerBackboneElement(unit, callback);
+        case Unit.Kind.Atomic:
+            return eachAtomicPolymerBackboneElement(unit, callback);
         case Unit.Kind.Spheres:
         case Unit.Kind.Gaussians:
             return eachCoarsePolymerBackboneElement(unit, callback);
     }
 }
 
-export function eachAtomicPolymerBackboneElement(unit: Unit.Atomic, callback: PolymerBackboneElementCallback) {
+export function eachAtomicPolymerBackboneElement(
+    unit: Unit.Atomic,
+    callback: PolymerBackboneElementCallback,
+) {
     const polymerIt = SortedRanges.transientSegments(getPolymerRanges(unit), unit.elements);
-    const residueIt = Segmentation.transientSegments(unit.model.atomicHierarchy.residueAtomSegments, unit.elements);
-    const traceElementIndex = unit.model.atomicHierarchy.derived.residue.traceElementIndex as ArrayLike<ElementIndex>; // can assume it won't be -1 for polymer residues
+    const residueIt = Segmentation.transientSegments(
+        unit.model.atomicHierarchy.residueAtomSegments,
+        unit.elements,
+    );
+    const traceElementIndex = unit.model.atomicHierarchy.derived.residue
+        .traceElementIndex as ArrayLike<ElementIndex>; // can assume it won't be -1 for polymer residues
 
     let i = 0;
     while (polymerIt.hasNext) {
@@ -111,7 +147,10 @@ export function eachAtomicPolymerBackboneElement(unit: Unit.Atomic, callback: Po
     }
 }
 
-function eachCoarsePolymerBackboneElement(unit: Unit.Spheres | Unit.Gaussians, callback: PolymerBackboneElementCallback) {
+function eachCoarsePolymerBackboneElement(
+    unit: Unit.Spheres | Unit.Gaussians,
+    callback: PolymerBackboneElementCallback,
+) {
     const polymerIt = SortedRanges.transientSegments(getPolymerRanges(unit), unit.elements);
     const { elements } = unit;
 

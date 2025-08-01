@@ -6,20 +6,27 @@
 
 import { Structure } from '../../mol-model/structure.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { computeInteractions, Interactions, InteractionsParams as _InteractionsParams } from './interactions/interactions.ts';
+import {
+    computeInteractions,
+    Interactions,
+    InteractionsParams as _InteractionsParams,
+} from './interactions/interactions.ts';
 import { CustomStructureProperty } from '../common/custom-structure-property.ts';
 import { CustomProperty } from '../common/custom-property.ts';
 import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
 
 export const InteractionsParams = {
-    ..._InteractionsParams
+    ..._InteractionsParams,
 };
-export type InteractionsParams = typeof InteractionsParams
-export type InteractionsProps = PD.Values<InteractionsParams>
+export type InteractionsParams = typeof InteractionsParams;
+export type InteractionsProps = PD.Values<InteractionsParams>;
 
-export type InteractionsValue = Interactions
+export type InteractionsValue = Interactions;
 
-export const InteractionsProvider: CustomStructureProperty.Provider<InteractionsParams, InteractionsValue> = CustomStructureProperty.createProvider({
+export const InteractionsProvider: CustomStructureProperty.Provider<
+    InteractionsParams,
+    InteractionsValue
+> = CustomStructureProperty.createProvider({
     label: 'Interactions',
     descriptor: CustomPropertyDescriptor({
         name: 'molstar_computed_interactions',
@@ -29,8 +36,12 @@ export const InteractionsProvider: CustomStructureProperty.Provider<Interactions
     defaultParams: InteractionsParams,
     getParams: (data: Structure) => InteractionsParams,
     isApplicable: (data: Structure) => !data.isCoarseGrained,
-    obtain: async (ctx: CustomProperty.Context, data: Structure, props: Partial<InteractionsProps>) => {
+    obtain: async (
+        ctx: CustomProperty.Context,
+        data: Structure,
+        props: Partial<InteractionsProps>,
+    ) => {
         const p = { ...PD.getDefaultValues(InteractionsParams), ...props };
         return { value: await computeInteractions(ctx, data, p) };
-    }
+    },
 });

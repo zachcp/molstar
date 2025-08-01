@@ -57,7 +57,7 @@ const IntraBondOrderTable = new Map([
     ['DA|C8|N7', 2],
     ['DT|C5|C6', 2],
     ['DT|C2|O2', 2],
-    ['DT|C4|O4', 2]
+    ['DT|C4|O4', 2],
 ]);
 
 /**
@@ -75,13 +75,18 @@ export function getIntraBondOrderFromTable(compId: string, atomId1: string, atom
  * The key is constructed as `${compId1}|${compId2}|${atomId1}|${atomId2}` with `compId1 < compId2`.
  */
 const InterBondOrderTable = new Map([
-    ['LYS|NZ|RET|C15', 2] // Schiff base in Rhodopsin and Bacteriorhodopsin
+    ['LYS|NZ|RET|C15', 2], // Schiff base in Rhodopsin and Bacteriorhodopsin
 ]);
 
 /**
  * Get order for bonds between component assuming PDBx/mmCIF naming.
  */
-export function getInterBondOrderFromTable(compId1: string, atomId1: string, compId2: string, atomId2: string) {
+export function getInterBondOrderFromTable(
+    compId1: string,
+    atomId1: string,
+    compId2: string,
+    atomId2: string,
+) {
     if (compId1 > compId2) {
         [compId1, compId2] = [compId2, compId1];
         [atomId1, atomId2] = [atomId2, atomId1];

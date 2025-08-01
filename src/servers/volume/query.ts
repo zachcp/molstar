@@ -11,7 +11,7 @@
 import * as fs from 'fs';
 import { configureLocal } from './config.ts';
 import * as LocalApi from './server/local-api.ts';
-import process from "node:process";
+import process from 'node:process';
 
 const config = configureLocal();
 
@@ -26,13 +26,13 @@ if (config.jobsTemplate) {
             kind: 'box',
             space: 'cartesian',
             bottomLeft: [-42.996, -64.169, -45.335],
-            topRight: [8.768, 15.316, 21.599]
+            topRight: [8.768, 15.316, 21.599],
         },
         params: {
             forcedSamplingLevel: 2,
-            asBinary: true
+            asBinary: true,
         },
-        outputFolder: 'g:/test/local-test'
+        outputFolder: 'g:/test/local-test',
     }, {
         source: {
             filename: `g:/test/mdb/emd-8116.mdb`,
@@ -40,14 +40,14 @@ if (config.jobsTemplate) {
             id: '8116',
         },
         query: {
-            kind: 'cell'
+            kind: 'cell',
         },
         params: {
             detail: 4,
-            asBinary: true
+            asBinary: true,
         },
         outputFolder: 'g:/test/local-test',
-        outputFilename: '8116_cell.bcif'
+        outputFilename: '8116_cell.bcif',
     }];
     console.log(JSON.stringify(exampleJobs, null, 2));
     process.exit();

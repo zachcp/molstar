@@ -5,8 +5,14 @@
  */
 
 import { Program } from './webgl/program.ts';
-import { RenderableValues, Values, RenderableSchema, BaseValues } from './renderable/schema.ts';
-import { GraphicsRenderItem, ComputeRenderItem, GraphicsRenderVariant, MultiDrawBaseData, Transparency } from './webgl/render-item.ts';
+import { BaseValues, RenderableSchema, RenderableValues, Values } from './renderable/schema.ts';
+import {
+    ComputeRenderItem,
+    GraphicsRenderItem,
+    GraphicsRenderVariant,
+    MultiDrawBaseData,
+    Transparency,
+} from './webgl/render-item.ts';
 import { ValueCell } from '../mol-util/index.ts';
 import { idFactory } from '../mol-util/id-factory.ts';
 import { clamp } from '../mol-math/interpolate.ts';
@@ -25,28 +31,33 @@ const s3fromArray = Sphere3D.fromArray;
 const getNextRenderableId = idFactory();
 
 export type RenderableState = {
-    disposed: boolean
-    visible: boolean
-    alphaFactor: number
-    pickable: boolean
-    colorOnly: boolean
-    opaque: boolean
-    writeDepth: boolean
-}
+    disposed: boolean;
+    visible: boolean;
+    alphaFactor: number;
+    pickable: boolean;
+    colorOnly: boolean;
+    opaque: boolean;
+    writeDepth: boolean;
+};
 
 export interface Renderable<T extends RenderableValues> {
-    readonly id: number
-    readonly materialId: number
-    readonly values: T
-    readonly state: RenderableState
+    readonly id: number;
+    readonly materialId: number;
+    readonly values: T;
+    readonly state: RenderableState;
 
-    cull: (cameraPlane: Plane3D, frustum: Frustum3D, isOccluded: ((s: Sphere3D) => boolean) | null, stats: WebGLStats) => void
-    uncull: () => void
-    render: (variant: GraphicsRenderVariant, sharedTexturesCount: number) => void
-    getProgram: (variant: GraphicsRenderVariant) => Program
-    setTransparency: (transparency: Transparency) => void
-    update: () => void
-    dispose: () => void
+    cull: (
+        cameraPlane: Plane3D,
+        frustum: Frustum3D,
+        isOccluded: ((s: Sphere3D) => boolean) | null,
+        stats: WebGLStats,
+    ) => void;
+    uncull: () => void;
+    render: (variant: GraphicsRenderVariant, sharedTexturesCount: number) => void;
+    getProgram: (variant: GraphicsRenderVariant) => Program;
+    setTransparency: (transparency: Transparency) => void;
+    update: () => void;
+    dispose: () => void;
 }
 
 function getMdbData(cellCount: number, mdbData?: MultiDrawBaseData): MultiDrawBaseData {
@@ -66,9 +77,13 @@ function getMdbData(cellCount: number, mdbData?: MultiDrawBaseData): MultiDrawBa
     }
 }
 
-type GraphicsRenderableValues = RenderableValues & BaseValues
+type GraphicsRenderableValues = RenderableValues & BaseValues;
 
-export function createRenderable<T extends GraphicsRenderableValues>(renderItem: GraphicsRenderItem, values: T, state: RenderableState): Renderable<T> {
+export function createRenderable<T extends GraphicsRenderableValues>(
+    renderItem: GraphicsRenderItem,
+    values: T,
+    state: RenderableState,
+): Renderable<T> {
     const id = getNextRenderableId();
 
     let mdbData = getMdbData(0);
@@ -79,7 +94,13 @@ export function createRenderable<T extends GraphicsRenderableValues>(renderItem:
     const s = Sphere3D();
 
     const updateLodLevels = () => {
-        const lodLevels: [minDistance: number, maxDistance: number, overlap: number, count: number, sizeFactor: number][] | undefined = values.lodLevels?.ref.value;
+        const lodLevels: [
+            minDistance: number,
+            maxDistance: number,
+            overlap: number,
+            count: number,
+            sizeFactor: number,
+        ][] | undefined = values.lodLevels?.ref.value;
 
         if (lodLevels && lodLevels.length > 0) {
             const { cellCount } = values.instanceGrid.ref.value;
@@ -95,7 +116,16 @@ export function createRenderable<T extends GraphicsRenderableValues>(renderItem:
                         mdbDataList[i].uniforms.length = 1;
                         mdbDataList[i].uniforms[0] = ['uLod', ValueCell.create(Vec4())];
                     }
-                    ValueCell.update(mdbDataList[i].uniforms[0][1], Vec4.set(mdbDataList[i].uniforms[0][1].ref.value as Vec4, lodLevels[i][0], lodLevels[i][1], lodLevels[i][2], lodLevels[i][4]));
+                    ValueCell.update(
+                        mdbDataList[i].uniforms[0][1],
+                        Vec4.set(
+                            mdbDataList[i].uniforms[0][1].ref.value as Vec4,
+                            lodLevels[i][0],
+                            lodLevels[i][1],
+                            lodLevels[i][2],
+                            lodLevels[i][4],
+                        ),
+                    );
                 }
                 lodLevelsVersion = values.lodLevels.ref.version;
             }
@@ -109,20 +139,40 @@ export function createRenderable<T extends GraphicsRenderableValues>(renderItem:
         values,
         state,
 
-        cull: (cameraPlane: Plane3D, frustum: Frustum3D, isOccluded: ((s: Sphere3D) => boolean) | null, stats: WebGLStats) => {
+        cull: (
+            cameraPlane: Plane3D,
+            frustum: Frustum3D,
+            isOccluded: ((s: Sphere3D) => boolean) | null,
+            stats: WebGLStats,
+        ) => {
             cullEnabled = false;
 
             if (values.drawCount.ref.value === 0) return;
             if (values.instanceCount.ref.value === 0) return;
             if (values.instanceGrid.ref.value.cellSize <= 1) return;
 
-            const { cellOffsets, cellSpheres, cellCount, batchOffsets, batchSpheres, batchCount, batchCell, batchSize } = values.instanceGrid.ref.value;
+            const {
+                cellOffsets,
+                cellSpheres,
+                cellCount,
+                batchOffsets,
+                batchSpheres,
+                batchCount,
+                batchCell,
+                batchSize,
+            } = values.instanceGrid.ref.value;
             const [minDistance, maxDistance] = values.uLod.ref.value;
             const hasLod = minDistance !== 0 || maxDistance !== 0;
 
             const checkCellOccludedDistance = 2 * batchSize;
 
-            const lodLevels: [minDistance: number, maxDistance: number, overlap: number, count: number, sizeFactor: number][] | undefined = values.lodLevels?.ref.value;
+            const lodLevels: [
+                minDistance: number,
+                maxDistance: number,
+                overlap: number,
+                count: number,
+                sizeFactor: number,
+            ][] | undefined = values.lodLevels?.ref.value;
 
             if (lodLevels && lodLevels.length > 0) {
                 if (values.lodLevels?.ref.version !== lodLevelsVersion) {
@@ -144,20 +194,23 @@ export function createRenderable<T extends GraphicsRenderableValues>(renderItem:
                     if (hasLod) {
                         if (d + s.radius < minDistance || d - s.radius > maxDistance) {
                             if (isTimingMode) {
-                                stats.culled.lod += cellOffsets[batchCell[cEnd - 1] + 1] - cellOffsets[batchCell[cBegin]];
+                                stats.culled.lod += cellOffsets[batchCell[cEnd - 1] + 1] -
+                                    cellOffsets[batchCell[cBegin]];
                             }
                             continue;
                         }
                     }
                     if (!f3intersectsSphere3D(frustum, s)) {
                         if (isTimingMode) {
-                            stats.culled.frustum += cellOffsets[batchCell[cEnd - 1] + 1] - cellOffsets[batchCell[cBegin]];
+                            stats.culled.frustum += cellOffsets[batchCell[cEnd - 1] + 1] -
+                                cellOffsets[batchCell[cBegin]];
                         }
                         continue;
                     }
                     if (isOccluded !== null && isOccluded(s)) {
                         if (isTimingMode) {
-                            stats.culled.occlusion += cellOffsets[batchCell[cEnd - 1] + 1] - cellOffsets[batchCell[cBegin]];
+                            stats.culled.occlusion += cellOffsets[batchCell[cEnd - 1] + 1] -
+                                cellOffsets[batchCell[cBegin]];
                         }
                         continue;
                     }
@@ -186,7 +239,10 @@ export function createRenderable<T extends GraphicsRenderableValues>(renderItem:
                             }
                             continue;
                         }
-                        if (isOccluded !== null && d - s.radius < checkCellOccludedDistance && isOccluded(s)) {
+                        if (
+                            isOccluded !== null && d - s.radius < checkCellOccludedDistance &&
+                            isOccluded(s)
+                        ) {
                             if (isTimingMode) {
                                 stats.culled.occlusion += count;
                             }
@@ -194,12 +250,18 @@ export function createRenderable<T extends GraphicsRenderableValues>(renderItem:
                         }
 
                         for (let j = 0, jl = lodLevels.length; j < jl; ++j) {
-                            if (d + s.radius < lodLevels[j][0] || d - s.radius > lodLevels[j][1]) continue;
+                            if (d + s.radius < lodLevels[j][0] || d - s.radius > lodLevels[j][1]) {
+                                continue;
+                            }
 
                             const l = mdbDataList[j];
                             const o = l.count;
 
-                            if (o > 0 && l.baseInstances[o - 1] + l.instanceCounts[o - 1] === begin && l.counts[o - 1] === lodLevels[j][3]) {
+                            if (
+                                o > 0 &&
+                                l.baseInstances[o - 1] + l.instanceCounts[o - 1] === begin &&
+                                l.counts[o - 1] === lodLevels[j][3]
+                            ) {
                                 l.instanceCounts[o - 1] += count;
                             } else {
                                 l.counts[o] = lodLevels[j][3];
@@ -227,20 +289,23 @@ export function createRenderable<T extends GraphicsRenderableValues>(renderItem:
                         const d = p3distanceToPoint(cameraPlane, s.center);
                         if (d + s.radius < minDistance || d - s.radius > maxDistance) {
                             if (isTimingMode) {
-                                stats.culled.lod += cellOffsets[batchCell[cEnd - 1] + 1] - cellOffsets[batchCell[cBegin]];
+                                stats.culled.lod += cellOffsets[batchCell[cEnd - 1] + 1] -
+                                    cellOffsets[batchCell[cBegin]];
                             }
                             continue;
                         }
                     }
                     if (!f3intersectsSphere3D(frustum, s)) {
                         if (isTimingMode) {
-                            stats.culled.frustum += cellOffsets[batchCell[cEnd - 1] + 1] - cellOffsets[batchCell[cBegin]];
+                            stats.culled.frustum += cellOffsets[batchCell[cEnd - 1] + 1] -
+                                cellOffsets[batchCell[cBegin]];
                         }
                         continue;
                     }
                     if (isOccluded !== null && isOccluded(s)) {
                         if (isTimingMode) {
-                            stats.culled.occlusion += cellOffsets[batchCell[cEnd - 1] + 1] - cellOffsets[batchCell[cBegin]];
+                            stats.culled.occlusion += cellOffsets[batchCell[cEnd - 1] + 1] -
+                                cellOffsets[batchCell[cBegin]];
                         }
                         continue;
                     }
@@ -269,7 +334,10 @@ export function createRenderable<T extends GraphicsRenderableValues>(renderItem:
                             }
                             continue;
                         }
-                        if (isOccluded !== null && d - s.radius < checkCellOccludedDistance && isOccluded(s)) {
+                        if (
+                            isOccluded !== null && d - s.radius < checkCellOccludedDistance &&
+                            isOccluded(s)
+                        ) {
                             if (isTimingMode) {
                                 stats.culled.occlusion += count;
                             }
@@ -306,7 +374,10 @@ export function createRenderable<T extends GraphicsRenderableValues>(renderItem:
         },
         render: (variant: GraphicsRenderVariant, sharedTexturesCount: number) => {
             if (values.uAlpha && values.alpha) {
-                ValueCell.updateIfChanged(values.uAlpha, clamp(values.alpha.ref.value * state.alphaFactor, 0, 1));
+                ValueCell.updateIfChanged(
+                    values.uAlpha,
+                    clamp(values.alpha.ref.value * state.alphaFactor, 0, 1),
+                );
             }
             renderItem.render(variant, sharedTexturesCount, cullEnabled ? mdbDataList : undefined);
         },
@@ -316,30 +387,33 @@ export function createRenderable<T extends GraphicsRenderableValues>(renderItem:
             renderItem.update();
             updateLodLevels();
         },
-        dispose: () => renderItem.destroy()
+        dispose: () => renderItem.destroy(),
     };
 }
 
-export type GraphicsRenderable = Renderable<GraphicsRenderableValues>
+export type GraphicsRenderable = Renderable<GraphicsRenderableValues>;
 
 //
 
 export interface ComputeRenderable<T extends RenderableValues> {
-    readonly id: number
-    readonly values: T
+    readonly id: number;
+    readonly values: T;
 
-    render: () => void
-    update: () => void
-    dispose: () => void
+    render: () => void;
+    update: () => void;
+    dispose: () => void;
 }
 
-export function createComputeRenderable<T extends Values<RenderableSchema>>(renderItem: ComputeRenderItem, values: T): ComputeRenderable<T> {
+export function createComputeRenderable<T extends Values<RenderableSchema>>(
+    renderItem: ComputeRenderItem,
+    values: T,
+): ComputeRenderable<T> {
     return {
         id: getNextRenderableId(),
         values,
 
         render: () => renderItem.render('compute', 0),
         update: () => renderItem.update(),
-        dispose: () => renderItem.destroy()
+        dispose: () => renderItem.destroy(),
     };
 }

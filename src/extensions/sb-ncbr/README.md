@@ -15,9 +15,10 @@ _sb_ncbr_partial_atomic_charges_meta.method     # calculation method name (e.g. 
 
 _sb_ncbr_partial_atomic_charges.type_id         # id of the charges (pointer to _sb_ncbr_partial_atomic_charges_meta.id)
 _sb_ncbr_partial_atomic_charges.atom_id         # atom id (pointer to _atom_site.id)
-_sb_ncbr_partial_atomic_charges.charge          # partial atomic charge 
+_sb_ncbr_partial_atomic_charges.charge          # partial atomic charge
 ```
-> Note that the mmcif item `_partial_atomic_charges_meta.method` is used as a description of the charge set in the UI (described in *Controls*).
+
+> Note that the mmcif item `_partial_atomic_charges_meta.method` is used as a description of the charge set in the UI (described in _Controls_).
 
 The extension will automatically read the charges from the mmcif file and color the structure accordingly.
 

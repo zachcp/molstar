@@ -16,14 +16,19 @@ import { Color } from '../../mol-util/color/index.ts';
 import './index.html';
 import '../../mol-plugin-ui/skin/light.scss';
 
-type LoadParams = { url: string, format?: BuiltInTrajectoryFormat, isBinary?: boolean, assemblyId?: string }
+type LoadParams = {
+    url: string;
+    format?: BuiltInTrajectoryFormat;
+    isBinary?: boolean;
+    assemblyId?: string;
+};
 
-type _Preset = Pick<Canvas3DProps, 'postprocessing' | 'renderer'>
-type Preset = { [K in keyof _Preset]: Partial<_Preset[K]> }
+type _Preset = Pick<Canvas3DProps, 'postprocessing' | 'renderer'>;
+type Preset = { [K in keyof _Preset]: Partial<_Preset[K]> };
 
 const Canvas3DPresets = {
     illustrative: {
-        canvas3d: <Preset>{
+        canvas3d: <Preset> {
             postprocessing: {
                 occlusion: {
                     name: 'on',
@@ -37,7 +42,7 @@ const Canvas3DPresets = {
                         resolutionScale: 1,
                         color: Color(0x000000),
                         transparentThreshold: 0.4,
-                    }
+                    },
                 },
                 outline: {
                     name: 'on',
@@ -46,21 +51,21 @@ const Canvas3DPresets = {
                         threshold: 0.33,
                         color: Color(0x000000),
                         includeTransparent: true,
-                    }
+                    },
                 },
                 shadow: {
                     name: 'off',
-                    params: {}
+                    params: {},
                 },
             },
             renderer: {
                 ambientIntensity: 1.0,
-                light: []
-            }
-        }
+                light: [],
+            },
+        },
     },
     occlusion: {
-        canvas3d: <Preset>{
+        canvas3d: <Preset> {
             postprocessing: {
                 occlusion: {
                     name: 'on',
@@ -71,26 +76,30 @@ const Canvas3DPresets = {
                         bias: 0.8,
                         blurKernelSize: 15,
                         resolutionScale: 1,
-                    }
+                    },
                 },
                 outline: {
                     name: 'off',
-                    params: {}
+                    params: {},
                 },
                 shadow: {
                     name: 'off',
-                    params: {}
+                    params: {},
                 },
             },
             renderer: {
                 ambientIntensity: 0.4,
-                light: [{ inclination: 180, azimuth: 0, color: Color.fromNormalizedRgb(1.0, 1.0, 1.0),
-                    intensity: 0.6 }]
-            }
-        }
+                light: [{
+                    inclination: 180,
+                    azimuth: 0,
+                    color: Color.fromNormalizedRgb(1.0, 1.0, 1.0),
+                    intensity: 0.6,
+                }],
+            },
+        },
     },
     standard: {
-        canvas3d: <Preset>{
+        canvas3d: <Preset> {
             postprocessing: {
                 occlusion: { name: 'off', params: {} },
                 outline: { name: 'off', params: {} },
@@ -98,15 +107,18 @@ const Canvas3DPresets = {
             },
             renderer: {
                 ambientIntensity: 0.4,
-                light: [{ inclination: 180, azimuth: 0, color: Color.fromNormalizedRgb(1.0, 1.0, 1.0),
-                    intensity: 0.6 }]
-            }
-        }
-    }
+                light: [{
+                    inclination: 180,
+                    azimuth: 0,
+                    color: Color.fromNormalizedRgb(1.0, 1.0, 1.0),
+                    intensity: 0.6,
+                }],
+            },
+        },
+    },
 };
 
-
-type Canvas3DPreset = keyof typeof Canvas3DPresets
+type Canvas3DPreset = keyof typeof Canvas3DPresets;
 
 class LightingDemo {
     plugin: PluginUIContext;
@@ -124,13 +136,13 @@ class LightingDemo {
                 layout: {
                     initial: {
                         isExpanded: false,
-                        showControls: false
+                        showControls: false,
                     },
                 },
                 components: {
-                    controls: { left: 'none', right: 'none', top: 'none', bottom: 'none' }
-                }
-            }
+                    controls: { left: 'none', right: 'none', top: 'none', bottom: 'none' },
+                },
+            },
         });
 
         this.setPreset('illustrative');
@@ -147,29 +159,57 @@ class LightingDemo {
                 ...props,
                 renderer: {
                     ...this.plugin.canvas3d!.props.renderer,
-                    ...props.canvas3d.renderer
+                    ...props.canvas3d.renderer,
                 },
                 postprocessing: {
                     ...this.plugin.canvas3d!.props.postprocessing,
-                    ...props.canvas3d.postprocessing
+                    ...props.canvas3d.postprocessing,
                 },
-            }
+            },
         });
     }
 
-    async load({ url, format = 'mmcif', isBinary = true, assemblyId = '' }: LoadParams, radius: number, bias: number) {
+    async load(
+        { url, format = 'mmcif', isBinary = true, assemblyId = '' }: LoadParams,
+        radius: number,
+        bias: number,
+    ) {
         await this.plugin.clear();
 
-        const data = await this.plugin.builders.data.download({ url: Asset.Url(url), isBinary }, { state: { isGhost: true } });
+        const data = await this.plugin.builders.data.download({ url: Asset.Url(url), isBinary }, {
+            state: { isGhost: true },
+        });
         const trajectory = await this.plugin.builders.structure.parseTrajectory(data, format);
         const model = await this.plugin.builders.structure.createModel(trajectory);
-        const structure = await this.plugin.builders.structure.createStructure(model, assemblyId ? { name: 'assembly', params: { id: assemblyId } } : { name: 'model', params: {} });
+        const structure = await this.plugin.builders.structure.createStructure(
+            model,
+            assemblyId
+                ? { name: 'assembly', params: { id: assemblyId } }
+                : { name: 'model', params: {} },
+        );
 
-        const polymer = await this.plugin.builders.structure.tryCreateComponentStatic(structure, 'polymer');
-        if (polymer) await this.plugin.builders.structure.representation.addRepresentation(polymer, { type: 'spacefill', color: 'illustrative' });
+        const polymer = await this.plugin.builders.structure.tryCreateComponentStatic(
+            structure,
+            'polymer',
+        );
+        if (polymer) {
+            await this.plugin.builders.structure.representation.addRepresentation(polymer, {
+                type: 'spacefill',
+                color: 'illustrative',
+            });
+        }
 
-        const ligand = await this.plugin.builders.structure.tryCreateComponentStatic(structure, 'ligand');
-        if (ligand) await this.plugin.builders.structure.representation.addRepresentation(ligand, { type: 'ball-and-stick', color: 'element-symbol', colorParams: { carbonColor: { name: 'element-symbol', params: {} } } });
+        const ligand = await this.plugin.builders.structure.tryCreateComponentStatic(
+            structure,
+            'ligand',
+        );
+        if (ligand) {
+            await this.plugin.builders.structure.representation.addRepresentation(ligand, {
+                type: 'ball-and-stick',
+                color: 'element-symbol',
+                colorParams: { carbonColor: { name: 'element-symbol', params: {} } },
+            });
+        }
 
         this.radius = radius;
         this.bias = bias;

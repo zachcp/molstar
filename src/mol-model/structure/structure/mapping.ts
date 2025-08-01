@@ -10,17 +10,17 @@ import { Structure } from './structure.ts';
 import { Unit } from './unit.ts';
 
 /** Serial index of an element in the structure across all units */
-export type SerialIndex = { readonly '@type': 'serial-index' } & number
+export type SerialIndex = { readonly '@type': 'serial-index' } & number;
 
 export interface SerialMapping {
     /** Cumulative count of preceding elements for each unit */
-    cumulativeUnitElementCount: ArrayLike<number>
+    cumulativeUnitElementCount: ArrayLike<number>;
     /** Unit index for each serial element in the structure */
-    unitIndices: ArrayLike<number>
+    unitIndices: ArrayLike<number>;
     /** Element index for each serial element in the structure */
-    elementIndices: ArrayLike<ElementIndex>
+    elementIndices: ArrayLike<ElementIndex>;
     /** Get serial index of element in the structure */
-    getSerialIndex: (unit: Unit, element: ElementIndex) => SerialIndex
+    getSerialIndex: (unit: Unit, element: ElementIndex) => SerialIndex;
 }
 
 export function getSerialMapping(structure: Structure): SerialMapping {
@@ -43,18 +43,20 @@ export function getSerialMapping(structure: Structure): SerialMapping {
         unitIndices,
         elementIndices,
 
-        getSerialIndex: (unit, element) => cumulativeUnitElementCount[unitIndexMap.get(unit.id)] + OrderedSet.indexOf(unit.elements, element) as SerialIndex
+        getSerialIndex: (unit, element) =>
+            cumulativeUnitElementCount[unitIndexMap.get(unit.id)] +
+            OrderedSet.indexOf(unit.elements, element) as SerialIndex,
     };
 }
 
 //
 
 export interface IntraUnitBondMapping {
-    bondCount: number
-    unitIndex: ArrayLike<number>
-    unitEdgeIndex: ArrayLike<number>
-    unitGroupIndex: ArrayLike<number>
-    unitGroupOffset: ArrayLike<number>
+    bondCount: number;
+    unitIndex: ArrayLike<number>;
+    unitEdgeIndex: ArrayLike<number>;
+    unitGroupIndex: ArrayLike<number>;
+    unitGroupOffset: ArrayLike<number>;
 }
 
 export function getIntraUnitBondMapping(structure: Structure): IntraUnitBondMapping {

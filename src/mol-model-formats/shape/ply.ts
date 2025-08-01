@@ -8,7 +8,7 @@
 import { RuntimeContext, Task } from '../../mol-task/index.ts';
 import { ShapeProvider } from '../../mol-model/shape/provider.ts';
 import { Color } from '../../mol-util/color/index.ts';
-import { PlyFile, PlyTable, PlyList } from '../../mol-io/reader/ply/schema.ts';
+import { PlyFile, PlyList, PlyTable } from '../../mol-io/reader/ply/schema.ts';
 import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
 import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
 import { Shape } from '../../mol-model/shape.ts';
@@ -26,15 +26,23 @@ import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4.ts';
 // TODO support missing face element
 
 export type PlyData = {
-    source: PlyFile,
-    transforms?: Mat4[],
-}
+    source: PlyFile;
+    transforms?: Mat4[];
+};
 
 function createPlyShapeParams(plyFile?: PlyFile) {
     const vertex = plyFile && plyFile.getElement('vertex') as PlyTable;
     const material = plyFile && plyFile.getElement('material') as PlyTable;
 
-    const defaultValues = { group: '', vRed: '', vGreen: '', vBlue: '', mRed: '', mGreen: '', mBlue: '' };
+    const defaultValues = {
+        group: '',
+        vRed: '',
+        vGreen: '',
+        vBlue: '',
+        mRed: '',
+        mGreen: '',
+        mBlue: '',
+    };
 
     const groupOptions: [string, string][] = [['', '']];
     const colorOptions: [string, string][] = [['', '']];
@@ -53,7 +61,9 @@ function createPlyShapeParams(plyFile?: PlyFile) {
 
         // TODO hardcoded as convenience for data provided by MegaMol
         if (vertex.propertyNames.includes('atomid')) defaultValues.group = 'atomid';
-        else if (vertex.propertyNames.includes('material_index')) defaultValues.group = 'material_index';
+        else if (vertex.propertyNames.includes('material_index')) {
+            defaultValues.group = 'material_index';
+        }
 
         if (vertex.propertyNames.includes('red')) defaultValues.vRed = 'red';
         if (vertex.propertyNames.includes('green')) defaultValues.vGreen = 'green';
@@ -73,8 +83,11 @@ function createPlyShapeParams(plyFile?: PlyFile) {
         if (material.propertyNames.includes('blue')) defaultValues.mBlue = 'blue';
     }
 
-    const defaultColoring = defaultValues.vRed && defaultValues.vGreen && defaultValues.vBlue ? 'vertex' :
-        defaultValues.mRed && defaultValues.mGreen && defaultValues.mBlue ? 'material' : 'uniform';
+    const defaultColoring = defaultValues.vRed && defaultValues.vGreen && defaultValues.vBlue
+        ? 'vertex'
+        : defaultValues.mRed && defaultValues.mGreen && defaultValues.mBlue
+        ? 'material'
+        : 'uniform';
 
     return {
         ...Mesh.Params,
@@ -87,28 +100,36 @@ function createPlyShapeParams(plyFile?: PlyFile) {
             }, { isFlat: true }),
             material: PD.Group({
                 red: PD.Select(defaultValues.mRed, materialOptions, { label: 'Red Property' }),
-                green: PD.Select(defaultValues.mGreen, materialOptions, { label: 'Green Property' }),
+                green: PD.Select(defaultValues.mGreen, materialOptions, {
+                    label: 'Green Property',
+                }),
                 blue: PD.Select(defaultValues.mBlue, materialOptions, { label: 'Blue Property' }),
             }, { isFlat: true }),
             uniform: PD.Group({
                 color: PD.Color(ColorNames.grey),
                 saturation: PD.Numeric(0, { min: -6, max: 6, step: 0.1 }),
                 lightness: PD.Numeric(0, { min: -6, max: 6, step: 0.1 }),
-            }, { isFlat: true })
+            }, { isFlat: true }),
         }),
         grouping: PD.MappedStatic(defaultValues.group ? 'vertex' : 'none', {
             vertex: PD.Group({
                 group: PD.Select(defaultValues.group, groupOptions, { label: 'Group Property' }),
             }, { isFlat: true }),
-            none: PD.Group({ })
+            none: PD.Group({}),
         }),
     };
 }
 
 export const PlyShapeParams = createPlyShapeParams();
-export type PlyShapeParams = typeof PlyShapeParams
+export type PlyShapeParams = typeof PlyShapeParams;
 
-function addVerticesRange(begI: number, endI: number, state: MeshBuilder.State, vertex: PlyTable, groupIds: ArrayLike<number>) {
+function addVerticesRange(
+    begI: number,
+    endI: number,
+    state: MeshBuilder.State,
+    vertex: PlyTable,
+    groupIds: ArrayLike<number>,
+) {
     const { vertices, normals, groups } = state;
 
     const x = vertex.getProperty('x');
@@ -145,7 +166,13 @@ function addFacesRange(begI: number, endI: number, state: MeshBuilder.State, fac
     }
 }
 
-async function getMesh(ctx: RuntimeContext, vertex: PlyTable, face: PlyList, groupIds: ArrayLike<number>, mesh?: Mesh) {
+async function getMesh(
+    ctx: RuntimeContext,
+    vertex: PlyTable,
+    face: PlyList,
+    groupIds: ArrayLike<number>,
+    mesh?: Mesh,
+) {
     const builderState = MeshBuilder.createState(vertex.rowCount, vertex.rowCount / 4, mesh);
 
     const x = vertex.getProperty('x');
@@ -187,22 +214,35 @@ async function getMesh(ctx: RuntimeContext, vertex: PlyTable, face: PlyList, gro
 
 const int = Column.Schema.int;
 
-type Grouping = { ids: ArrayLike<number>, map: ArrayLike<number>, label: string }
+type Grouping = { ids: ArrayLike<number>; map: ArrayLike<number>; label: string };
 function getGrouping(vertex: PlyTable, props: PD.Values<PlyShapeParams>): Grouping {
     const { grouping } = props;
     const { rowCount } = vertex;
-    const column = grouping.name === 'vertex' ? vertex.getProperty(grouping.params.group) : undefined;
+    const column = grouping.name === 'vertex'
+        ? vertex.getProperty(grouping.params.group)
+        : undefined;
     const label = grouping.name === 'vertex' ? stringToWords(grouping.params.group) : 'Vertex';
 
-    const ids = column ? column.toArray({ array: Uint32Array }) : fillSerial(new Uint32Array(rowCount));
+    const ids = column
+        ? column.toArray({ array: Uint32Array })
+        : fillSerial(new Uint32Array(rowCount));
     const maxId = column ? arrayMax(ids) : rowCount - 1; // assumes uint ids
     const map = new Uint32Array(maxId + 1);
     for (let i = 0, il = ids.length; i < il; ++i) map[ids[i]] = i;
     return { ids, map, label };
 }
 
-type Coloring = { kind: 'vertex' | 'material' | 'uniform', red: Column<number>, green: Column<number>, blue: Column<number> }
-function getColoring(vertex: PlyTable, material: PlyTable | undefined, props: PD.Values<PlyShapeParams>): Coloring {
+type Coloring = {
+    kind: 'vertex' | 'material' | 'uniform';
+    red: Column<number>;
+    green: Column<number>;
+    blue: Column<number>;
+};
+function getColoring(
+    vertex: PlyTable,
+    material: PlyTable | undefined,
+    props: PD.Values<PlyShapeParams>,
+): Coloring {
     const { coloring } = props;
     const { rowCount } = vertex;
 
@@ -212,9 +252,12 @@ function getColoring(vertex: PlyTable, material: PlyTable | undefined, props: PD
         green = vertex.getProperty(coloring.params.green) || Column.ofConst(127, rowCount, int);
         blue = vertex.getProperty(coloring.params.blue) || Column.ofConst(127, rowCount, int);
     } else if (coloring.name === 'material') {
-        red = (material && material.getProperty(coloring.params.red)) || Column.ofConst(127, rowCount, int);
-        green = (material && material.getProperty(coloring.params.green)) || Column.ofConst(127, rowCount, int);
-        blue = (material && material.getProperty(coloring.params.blue)) || Column.ofConst(127, rowCount, int);
+        red = (material && material.getProperty(coloring.params.red)) ||
+            Column.ofConst(127, rowCount, int);
+        green = (material && material.getProperty(coloring.params.green)) ||
+            Column.ofConst(127, rowCount, int);
+        blue = (material && material.getProperty(coloring.params.blue)) ||
+            Column.ofConst(127, rowCount, int);
     } else {
         let color = coloring.params.color;
         color = Color.saturate(color, coloring.params.saturation);
@@ -232,7 +275,9 @@ function createShape(plyData: PlyData, mesh: Mesh, coloring: Coloring, grouping:
     const { ids, map, label } = grouping;
     const { source, transforms } = plyData;
     return Shape.create(
-        'ply-mesh', source, mesh,
+        'ply-mesh',
+        source,
+        mesh,
         (groupId: number) => {
             const idx = kind === 'material' ? groupId : map[groupId];
             return Color.fromRgb(red.value(idx), green.value(idx), blue.value(idx));
@@ -241,7 +286,7 @@ function createShape(plyData: PlyData, mesh: Mesh, coloring: Coloring, grouping:
         (groupId: number) => {
             return `${label} ${ids[groupId]}`;
         },
-        transforms
+        transforms,
     );
 }
 
@@ -254,7 +299,12 @@ function makeShapeGetter() {
     let _coloring: Coloring;
     let _grouping: Grouping;
 
-    const getShape = async (ctx: RuntimeContext, plyData: PlyData, props: PD.Values<PlyShapeParams>, shape?: Shape<Mesh>) => {
+    const getShape = async (
+        ctx: RuntimeContext,
+        plyData: PlyData,
+        props: PD.Values<PlyShapeParams>,
+        shape?: Shape<Mesh>,
+    ) => {
         const vertex = plyData.source.getElement('vertex') as PlyTable;
         if (!vertex) throw new Error('missing vertex element');
 
@@ -297,13 +347,16 @@ function makeShapeGetter() {
 }
 
 export function shapeFromPly(source: PlyFile, params?: { transforms?: Mat4[] }) {
-    return Task.create<ShapeProvider<PlyData, Mesh, PlyShapeParams>>('Shape Provider', async ctx => {
-        return {
-            label: 'Mesh',
-            data: { source, transforms: params?.transforms },
-            params: createPlyShapeParams(source),
-            getShape: makeShapeGetter(),
-            geometryUtils: Mesh.Utils
-        };
-    });
+    return Task.create<ShapeProvider<PlyData, Mesh, PlyShapeParams>>(
+        'Shape Provider',
+        async (ctx) => {
+            return {
+                label: 'Mesh',
+                data: { source, transforms: params?.transforms },
+                params: createPlyShapeParams(source),
+                getShape: makeShapeGetter(),
+                geometryUtils: Mesh.Utils,
+            };
+        },
+    );
 }

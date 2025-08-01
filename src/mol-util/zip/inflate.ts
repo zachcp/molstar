@@ -8,7 +8,7 @@
  */
 
 import { NumberArray } from '../type-helpers.ts';
-import { U, makeCodes, codes2map, checkCompressionStreamSupport } from './util.ts';
+import { checkCompressionStreamSupport, codes2map, makeCodes, U } from './util.ts';
 import { RuntimeContext } from '../../mol-task/index.ts';
 
 function InflateContext(data: Uint8Array, buf?: Uint8Array) {
@@ -20,10 +20,10 @@ function InflateContext(data: Uint8Array, buf?: Uint8Array) {
         noBuf,
         BFINAL: 0,
         off: 0,
-        pos: 0
+        pos: 0,
     };
 }
-type InflateContext = ReturnType<typeof InflateContext>
+type InflateContext = ReturnType<typeof InflateContext>;
 
 function inflateBlocks(ctx: InflateContext, count: number) {
     const { data, noBuf } = ctx;
@@ -47,7 +47,7 @@ function inflateBlocks(ctx: InflateContext, count: number) {
             const len = data[p8 - 4] | (data[p8 - 3] << 8);
             if (noBuf) buf = _check(buf, off + len);
             buf.set(new Uint8Array(data.buffer, data.byteOffset + p8, len), off);
-            pos = ((p8 + len) << 3);
+            pos = (p8 + len) << 3;
             off += len;
             continue;
         }
@@ -82,7 +82,8 @@ function inflateBlocks(ctx: InflateContext, count: number) {
             makeCodes(U.itree, tl);
             codes2map(U.itree, tl, U.imap);
 
-            lmap = U.lmap; dmap = U.dmap;
+            lmap = U.lmap;
+            dmap = U.dmap;
 
             pos = _decodeTiny(U.imap, (1 << tl) - 1, HLIT + HDIST, data, pos, U.ttree);
             const mx0 = _copyOut(U.ttree, 0, HLIT, U.ltree);
@@ -174,7 +175,11 @@ export async function _inflate(runtime: RuntimeContext, data: Uint8Array, buf?: 
             if (done) return;
 
             if (runtime.shouldUpdate) {
-                await runtime.update({ message: 'Inflating blocks...', current: offset, max: buf?.length });
+                await runtime.update({
+                    message: 'Inflating blocks...',
+                    current: offset,
+                    max: buf?.length,
+                });
             }
             if (buf) {
                 buf.set(value, offset);
@@ -199,7 +204,11 @@ export async function _inflate(runtime: RuntimeContext, data: Uint8Array, buf?: 
     const ctx = InflateContext(data, buf);
     while (ctx.BFINAL === 0) {
         if (runtime.shouldUpdate) {
-            await runtime.update({ message: 'Inflating blocks...', current: ctx.pos, max: data.length });
+            await runtime.update({
+                message: 'Inflating blocks...',
+                current: ctx.pos,
+                max: data.length,
+            });
         }
         inflateBlocks(ctx, 100);
     }
@@ -214,7 +223,14 @@ function _check(buf: Uint8Array, len: number) {
     return nbuf;
 }
 
-function _decodeTiny(lmap: NumberArray, LL: number, len: number, data: Uint8Array, pos: number, tree: number[]) {
+function _decodeTiny(
+    lmap: NumberArray,
+    LL: number,
+    len: number,
+    data: Uint8Array,
+    pos: number,
+    tree: number[],
+) {
     let i = 0;
     while (i < len) {
         const code = lmap[_get17(data, pos) & LL];
@@ -226,14 +242,14 @@ function _decodeTiny(lmap: NumberArray, LL: number, len: number, data: Uint8Arra
         } else {
             let ll = 0, n = 0;
             if (lit === 16) {
-                n = (3 + _bitsE(data, pos, 2));
+                n = 3 + _bitsE(data, pos, 2);
                 pos += 2;
                 ll = tree[i - 1];
             } else if (lit === 17) {
-                n = (3 + _bitsE(data, pos, 3));
+                n = 3 + _bitsE(data, pos, 3);
                 pos += 3;
             } else if (lit === 18) {
-                n = (11 + _bitsE(data, pos, 7));
+                n = 11 + _bitsE(data, pos, 7);
                 pos += 7;
             }
             const ni = i + n;
@@ -251,13 +267,13 @@ function _copyOut(src: number[], off: number, len: number, tree: number[]) {
     const tl = tree.length >>> 1;
     while (i < len) {
         const v = src[i + off];
-        tree[(i << 1)] = 0;
+        tree[i << 1] = 0;
         tree[(i << 1) + 1] = v;
-        if (v > mx)mx = v;
+        if (v > mx) mx = v;
         i++;
     }
     while (i < tl) {
-        tree[(i << 1)] = 0;
+        tree[i << 1] = 0;
         tree[(i << 1) + 1] = 0;
         i++;
     }
@@ -269,9 +285,10 @@ function _bitsE(dt: NumberArray, pos: number, length: number) {
 }
 
 function _bitsF(dt: NumberArray, pos: number, length: number) {
-    return ((dt[pos >>> 3] | (dt[(pos >>> 3) + 1] << 8) | (dt[(pos >>> 3) + 2] << 16)) >>> (pos & 7)) & ((1 << length) - 1);
+    return ((dt[pos >>> 3] | (dt[(pos >>> 3) + 1] << 8) | (dt[(pos >>> 3) + 2] << 16)) >>>
+        (pos & 7)) & ((1 << length) - 1);
 }
 
-function _get17(dt: NumberArray, pos: number) {	// return at least 17 meaningful bytes
+function _get17(dt: NumberArray, pos: number) { // return at least 17 meaningful bytes
     return (dt[pos >>> 3] | (dt[(pos >>> 3) + 1] << 8) | (dt[(pos >>> 3) + 2] << 16)) >>> (pos & 7);
 }

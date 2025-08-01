@@ -36,8 +36,16 @@ export async function ensureAvailable(path: string, url: string, forceDownload =
 }
 
 export async function ensureDataAvailable(options: DataOptions) {
-    await ensureAvailable(CCD_PATH, options.ccdUrl || CCD_URL, !!options.ccdUrl || options.forceDownload);
-    await ensureAvailable(PVCD_PATH, options.pvcdUrl || PVCD_URL, !!options.pvcdUrl || options.forceDownload);
+    await ensureAvailable(
+        CCD_PATH,
+        options.ccdUrl || CCD_URL,
+        !!options.ccdUrl || options.forceDownload,
+    );
+    await ensureAvailable(
+        PVCD_PATH,
+        options.pvcdUrl || PVCD_URL,
+        !!options.pvcdUrl || options.forceDownload,
+    );
 }
 
 export async function readFileAsCollection<S extends Database.Schema>(path: string, schema: S) {
@@ -56,7 +64,7 @@ export async function readPVCD() {
 async function parseCif(data: string | Uint8Array) {
     const comp = CIF.parse(data);
     console.time('parse cif');
-    const parsed = await comp.run(p => console.log(Progress.format(p)), 250);
+    const parsed = await comp.run((p) => console.log(Progress.format(p)), 250);
     console.timeEnd('parse cif');
     if (parsed.isError) throw parsed;
     return parsed;
@@ -69,13 +77,13 @@ export function getEncodedCif(name: string, database: Database<Database.Schema>,
 }
 
 export type DataOptions = {
-    ccdUrl?: string,
-    pvcdUrl?: string,
-    forceDownload?: boolean
-}
+    ccdUrl?: string;
+    pvcdUrl?: string;
+    forceDownload?: boolean;
+};
 
 export const DefaultDataOptions: DataOptions = {
-    forceDownload: false
+    forceDownload: false,
 };
 
 const DATA_DIR = path.join(__dirname, '..', '..', '..', '..', 'build/data');

@@ -29,17 +29,28 @@ const BlendBackDpoitSchema = {
     uTexSize: UniformSpec('v2'),
 };
 const BlendBackDpoitShaderCode = ShaderCode('blend-back-dpoit', quad_vert, blendBackDpoit_frag);
-type BlendBackDpoitRenderable = ComputeRenderable<Values<typeof BlendBackDpoitSchema>>
+type BlendBackDpoitRenderable = ComputeRenderable<Values<typeof BlendBackDpoitSchema>>;
 
-function getBlendBackDpoitRenderable(ctx: WebGLContext, dopitBlendBackTexture: Texture): BlendBackDpoitRenderable {
+function getBlendBackDpoitRenderable(
+    ctx: WebGLContext,
+    dopitBlendBackTexture: Texture,
+): BlendBackDpoitRenderable {
     const values: Values<typeof BlendBackDpoitSchema> = {
         ...QuadValues,
         tDpoitBackColor: ValueCell.create(dopitBlendBackTexture),
-        uTexSize: ValueCell.create(Vec2.create(dopitBlendBackTexture.getWidth(), dopitBlendBackTexture.getHeight())),
+        uTexSize: ValueCell.create(
+            Vec2.create(dopitBlendBackTexture.getWidth(), dopitBlendBackTexture.getHeight()),
+        ),
     };
 
     const schema = { ...BlendBackDpoitSchema };
-    const renderItem = createComputeRenderItem(ctx, 'triangles', BlendBackDpoitShaderCode, schema, values);
+    const renderItem = createComputeRenderItem(
+        ctx,
+        'triangles',
+        BlendBackDpoitShaderCode,
+        schema,
+        values,
+    );
 
     return createComputeRenderable(renderItem, values);
 }
@@ -50,17 +61,28 @@ const EvaluateDpoitSchema = {
     uTexSize: UniformSpec('v2'),
 };
 const EvaluateDpoitShaderCode = ShaderCode('evaluate-dpoit', quad_vert, evaluateDpoit_frag);
-type EvaluateDpoitRenderable = ComputeRenderable<Values<typeof EvaluateDpoitSchema>>
+type EvaluateDpoitRenderable = ComputeRenderable<Values<typeof EvaluateDpoitSchema>>;
 
-function getEvaluateDpoitRenderable(ctx: WebGLContext, dpoitFrontColorTexture: Texture): EvaluateDpoitRenderable {
+function getEvaluateDpoitRenderable(
+    ctx: WebGLContext,
+    dpoitFrontColorTexture: Texture,
+): EvaluateDpoitRenderable {
     const values: Values<typeof EvaluateDpoitSchema> = {
         ...QuadValues,
         tDpoitFrontColor: ValueCell.create(dpoitFrontColorTexture),
-        uTexSize: ValueCell.create(Vec2.create(dpoitFrontColorTexture.getWidth(), dpoitFrontColorTexture.getHeight())),
+        uTexSize: ValueCell.create(
+            Vec2.create(dpoitFrontColorTexture.getWidth(), dpoitFrontColorTexture.getHeight()),
+        ),
     };
 
     const schema = { ...EvaluateDpoitSchema };
-    const renderItem = createComputeRenderItem(ctx, 'triangles', EvaluateDpoitShaderCode, schema, values);
+    const renderItem = createComputeRenderItem(
+        ctx,
+        'triangles',
+        EvaluateDpoitShaderCode,
+        schema,
+        values,
+    );
 
     return createComputeRenderable(renderItem, values);
 }
@@ -118,7 +140,7 @@ export class DpoitPass {
         return {
             depth: this.depthTextures[1],
             frontColor: this.colorFrontTextures[1],
-            backColor: this.colorBackTextures[1]
+            backColor: this.colorBackTextures[1],
         };
     }
 
@@ -145,7 +167,7 @@ export class DpoitPass {
         return {
             depth: this.depthTextures[this.readId],
             frontColor: this.colorFrontTextures[this.readId],
-            backColor: this.colorBackTextures[this.readId]
+            backColor: this.colorBackTextures[this.readId],
         };
     }
 
@@ -154,9 +176,17 @@ export class DpoitPass {
         const { state, gl } = this.webgl;
 
         state.blendEquation(gl.FUNC_ADD);
-        state.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        state.blendFuncSeparate(
+            gl.SRC_ALPHA,
+            gl.ONE_MINUS_SRC_ALPHA,
+            gl.ONE,
+            gl.ONE_MINUS_SRC_ALPHA,
+        );
 
-        ValueCell.update(this.blendBackRenderable.values.tDpoitBackColor, this.colorBackTextures[this.writeId]);
+        ValueCell.update(
+            this.blendBackRenderable.values.tDpoitBackColor,
+            this.colorBackTextures[this.writeId],
+        );
 
         this.blendBackRenderable.update();
         this.blendBackRenderable.render();
@@ -169,7 +199,10 @@ export class DpoitPass {
 
         state.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
-        ValueCell.update(this.renderable.values.tDpoitFrontColor, this.colorFrontTextures[this.writeId]);
+        ValueCell.update(
+            this.renderable.values.tDpoitFrontColor,
+            this.colorFrontTextures[this.writeId],
+        );
 
         this.renderable.update();
         this.renderable.render();
@@ -184,8 +217,14 @@ export class DpoitPass {
                 this.colorFrontTextures[i].define(width, height);
                 this.colorBackTextures[i].define(width, height);
             }
-            ValueCell.update(this.renderable.values.uTexSize, Vec2.set(this.renderable.values.uTexSize.ref.value, width, height));
-            ValueCell.update(this.blendBackRenderable.values.uTexSize, Vec2.set(this.blendBackRenderable.values.uTexSize.ref.value, width, height));
+            ValueCell.update(
+                this.renderable.values.uTexSize,
+                Vec2.set(this.renderable.values.uTexSize.ref.value, width, height),
+            );
+            ValueCell.update(
+                this.blendBackRenderable.values.uTexSize,
+                Vec2.set(this.blendBackRenderable.values.uTexSize.ref.value, width, height),
+            );
         }
     }
 
@@ -201,7 +240,7 @@ export class DpoitPass {
             drawBuffers!.drawBuffers([
                 drawBuffers!.COLOR_ATTACHMENT0,
                 drawBuffers!.COLOR_ATTACHMENT1,
-                drawBuffers!.COLOR_ATTACHMENT2
+                drawBuffers!.COLOR_ATTACHMENT2,
             ]);
 
             this.colorFrontTextures[i].attachFramebuffer(this.depthFramebuffers[i], 'color0');
@@ -212,7 +251,7 @@ export class DpoitPass {
             this.colorFramebuffers[i].bind();
             drawBuffers!.drawBuffers([
                 drawBuffers!.COLOR_ATTACHMENT0,
-                drawBuffers!.COLOR_ATTACHMENT1
+                drawBuffers!.COLOR_ATTACHMENT1,
             ]);
 
             this.colorFrontTextures[i].attachFramebuffer(this.colorFramebuffers[i], 'color0');
@@ -221,7 +260,9 @@ export class DpoitPass {
     }
 
     static isSupported(webgl: WebGLContext) {
-        const { extensions: { drawBuffers, textureFloat, colorBufferFloat, depthTexture, blendMinMax } } = webgl;
+        const {
+            extensions: { drawBuffers, textureFloat, colorBufferFloat, depthTexture, blendMinMax },
+        } = webgl;
         if (!textureFloat || !colorBufferFloat || !depthTexture || !drawBuffers || !blendMinMax) {
             if (isDebugMode) {
                 const missing: string[] = [];
@@ -248,40 +289,44 @@ export class DpoitPass {
         if (isWebGL2(webgl.gl)) {
             this.depthTextures = [
                 resources.texture('image-float32', 'rg', 'float', 'nearest'),
-                resources.texture('image-float32', 'rg', 'float', 'nearest')
+                resources.texture('image-float32', 'rg', 'float', 'nearest'),
             ];
 
-            this.colorFrontTextures = colorBufferHalfFloat && textureHalfFloat ? [
-                resources.texture('image-float16', 'rgba', 'fp16', 'nearest'),
-                resources.texture('image-float16', 'rgba', 'fp16', 'nearest')
-            ] : [
-                resources.texture('image-float32', 'rgba', 'float', 'nearest'),
-                resources.texture('image-float32', 'rgba', 'float', 'nearest')
-            ];
+            this.colorFrontTextures = colorBufferHalfFloat && textureHalfFloat
+                ? [
+                    resources.texture('image-float16', 'rgba', 'fp16', 'nearest'),
+                    resources.texture('image-float16', 'rgba', 'fp16', 'nearest'),
+                ]
+                : [
+                    resources.texture('image-float32', 'rgba', 'float', 'nearest'),
+                    resources.texture('image-float32', 'rgba', 'float', 'nearest'),
+                ];
 
-            this.colorBackTextures = colorBufferHalfFloat && textureHalfFloat ? [
-                resources.texture('image-float16', 'rgba', 'fp16', 'nearest'),
-                resources.texture('image-float16', 'rgba', 'fp16', 'nearest')
-            ] : [
-                resources.texture('image-float32', 'rgba', 'float', 'nearest'),
-                resources.texture('image-float32', 'rgba', 'float', 'nearest')
-            ];
+            this.colorBackTextures = colorBufferHalfFloat && textureHalfFloat
+                ? [
+                    resources.texture('image-float16', 'rgba', 'fp16', 'nearest'),
+                    resources.texture('image-float16', 'rgba', 'fp16', 'nearest'),
+                ]
+                : [
+                    resources.texture('image-float32', 'rgba', 'float', 'nearest'),
+                    resources.texture('image-float32', 'rgba', 'float', 'nearest'),
+                ];
         } else {
             // webgl1 requires consistent bit plane counts
 
             this.depthTextures = [
                 resources.texture('image-float32', 'rgba', 'float', 'nearest'),
-                resources.texture('image-float32', 'rgba', 'float', 'nearest')
+                resources.texture('image-float32', 'rgba', 'float', 'nearest'),
             ];
 
             this.colorFrontTextures = [
                 resources.texture('image-float32', 'rgba', 'float', 'nearest'),
-                resources.texture('image-float32', 'rgba', 'float', 'nearest')
+                resources.texture('image-float32', 'rgba', 'float', 'nearest'),
             ];
 
             this.colorBackTextures = [
                 resources.texture('image-float32', 'rgba', 'float', 'nearest'),
-                resources.texture('image-float32', 'rgba', 'float', 'nearest')
+                resources.texture('image-float32', 'rgba', 'float', 'nearest'),
             ];
         }
 

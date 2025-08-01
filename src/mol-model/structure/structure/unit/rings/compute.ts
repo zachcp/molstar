@@ -18,7 +18,10 @@ export function computeRings(unit: Unit.Atomic) {
     const size = largestResidue(unit);
     const state = State(unit, size);
 
-    const residuesIt = Segmentation.transientSegments(unit.model.atomicHierarchy.residueAtomSegments, unit.elements);
+    const residuesIt = Segmentation.transientSegments(
+        unit.model.atomicHierarchy.residueAtomSegments,
+        unit.elements,
+    );
     while (residuesIt.hasNext) {
         const seg = residuesIt.move();
         processResidue(state, seg.start, seg.end);
@@ -28,32 +31,32 @@ export function computeRings(unit: Unit.Atomic) {
 }
 
 const enum Constants {
-    MaxDepth = 5
+    MaxDepth = 5,
 }
 
 interface State {
-    startVertex: number,
-    endVertex: number,
-    count: number,
-    isRingAtom: Int32Array,
-    marked: Int32Array,
-    queue: Int32Array,
-    color: Int32Array,
-    pred: Int32Array,
-    depth: Int32Array,
+    startVertex: number;
+    endVertex: number;
+    count: number;
+    isRingAtom: Int32Array;
+    marked: Int32Array;
+    queue: Int32Array;
+    color: Int32Array;
+    pred: Int32Array;
+    depth: Int32Array;
 
-    left: Int32Array,
-    right: Int32Array,
+    left: Int32Array;
+    right: Int32Array;
 
-    currentColor: number,
-    currentAltLoc: string,
-    hasAltLoc: boolean,
+    currentColor: number;
+    currentAltLoc: string;
+    hasAltLoc: boolean;
 
-    rings: SortedArray<StructureElement.UnitIndex>[],
-    currentRings: SortedArray<StructureElement.UnitIndex>[],
-    bonds: IntraUnitBonds,
-    unit: Unit.Atomic,
-    altLoc: Column<string>
+    rings: SortedArray<StructureElement.UnitIndex>[];
+    currentRings: SortedArray<StructureElement.UnitIndex>[];
+    bonds: IntraUnitBonds;
+    unit: Unit.Atomic;
+    altLoc: Column<string>;
 }
 
 function State(unit: Unit.Atomic, capacity: number): State {
@@ -76,7 +79,7 @@ function State(unit: Unit.Atomic, capacity: number): State {
         currentRings: [],
         unit,
         bonds: unit.bonds,
-        altLoc: unit.model.atomicHierarchy.atoms.label_alt_id
+        altLoc: unit.model.atomicHierarchy.atoms.label_alt_id,
     };
 }
 
@@ -103,7 +106,10 @@ function resetDepth(state: State) {
 }
 
 function largestResidue(unit: Unit.Atomic) {
-    const residuesIt = Segmentation.transientSegments(unit.model.atomicHierarchy.residueAtomSegments, unit.elements);
+    const residuesIt = Segmentation.transientSegments(
+        unit.model.atomicHierarchy.residueAtomSegments,
+        unit.elements,
+    );
     let size = 0;
     while (residuesIt.hasNext) {
         const seg = residuesIt.move();
@@ -330,14 +336,16 @@ function getMinimalRotation(elements: string[]) {
     for (let j = 1; j < f.length; j++) {
         let i = f[j - k - 1];
         while (i !== -1) {
-            u = elements[j % len]; v = elements[(k + i + 1) % len];
+            u = elements[j % len];
+            v = elements[(k + i + 1) % len];
             if (u === v) break;
             if (u < v) k = j - i - 1;
             i = f[i];
         }
 
         if (i === -1) {
-            u = elements[j % len]; v = elements[(k + i + 1) % len];
+            u = elements[j % len];
+            v = elements[(k + i + 1) % len];
             if (u !== v) {
                 if (u < v) k = j;
                 f[j - k] = -1;
@@ -360,10 +368,13 @@ function buildFinderprint(elements: string[], offset: number) {
     return ret.join('');
 }
 
-type RingIndex = import('../rings.ts').UnitRings.Index
-type RingComponentIndex = import('../rings.ts').UnitRings.ComponentIndex
+type RingIndex = import('../rings.ts').UnitRings.Index;
+type RingComponentIndex = import('../rings.ts').UnitRings.ComponentIndex;
 
-export function createIndex(rings: ArrayLike<SortedArray<StructureElement.UnitIndex>>, aromaticRings: ReadonlyArray<RingIndex>) {
+export function createIndex(
+    rings: ArrayLike<SortedArray<StructureElement.UnitIndex>>,
+    aromaticRings: ReadonlyArray<RingIndex>,
+) {
     const elementRingIndices: Map<StructureElement.UnitIndex, RingIndex[]> = new Map();
     const elementAromaticRingIndices: Map<StructureElement.UnitIndex, RingIndex[]> = new Map();
 

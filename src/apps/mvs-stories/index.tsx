@@ -18,7 +18,10 @@ export function getContext(name?: string) {
     return getMVSStoriesContext({ name });
 }
 
-export function loadFromURL(url: string, options?: { format: 'mvsx' | 'mvsj', contextName?: string }) {
+export function loadFromURL(
+    url: string,
+    options?: { format: 'mvsx' | 'mvsj'; contextName?: string },
+) {
     setTimeout(() => {
         getContext(options?.contextName).dispatch({
             kind: 'load-mvs',
@@ -28,7 +31,10 @@ export function loadFromURL(url: string, options?: { format: 'mvsx' | 'mvsj', co
     }, 0);
 }
 
-export function loadFromData(data: MVSData | string | Uint8Array, options?: { format: 'mvsx' | 'mvsj', contextName?: string }) {
+export function loadFromData(
+    data: MVSData | string | Uint8Array,
+    options?: { format: 'mvsx' | 'mvsj'; contextName?: string },
+) {
     setTimeout(() => {
         getContext(options?.contextName).dispatch({
             kind: 'load-mvs',
@@ -42,23 +48,28 @@ function getStoryUrlFromId(id: string, format: 'mvsx' | 'mvsj' = 'mvsj') {
     return `https://stories.molstar.org/api/story/${id}/data`;
 }
 
-export function loadFromID(id: string, options?: { format?: 'mvsx' | 'mvsj', contextName?: string }) {
+export function loadFromID(
+    id: string,
+    options?: { format?: 'mvsx' | 'mvsj'; contextName?: string },
+) {
     loadFromURL(
         getStoryUrlFromId(id, options?.format),
         { format: options?.format ?? 'mvsj', contextName: options?.contextName },
     );
 }
 
-export function downloadCurrentStory(options?: { contextName?: string, filename?: string }) {
+export function downloadCurrentStory(options?: { contextName?: string; filename?: string }) {
     const story = getContext(options?.contextName).state.currentStoryData.value;
     if (!story) return;
 
     const isMVSJ = typeof story === 'string';
     const filename = `${options?.filename ?? 'story'}.${isMVSJ ? 'mvsj' : 'mvsx'}`;
     download(
-        new Blob([typeof story === 'string' ? story : story.buffer], { type: isMVSJ ? 'application/json' : 'application/octet-stream' }),
-        filename
+        new Blob([typeof story === 'string' ? story : story.buffer], {
+            type: isMVSJ ? 'application/json' : 'application/octet-stream',
+        }),
+        filename,
     );
-};
+}
 
 export { MVSData };

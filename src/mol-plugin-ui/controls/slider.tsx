@@ -11,19 +11,21 @@ import { noop } from '../../mol-util/index.ts';
 import { normalizeWheel } from '../../mol-util/input/input-observer.ts';
 
 export class Slider extends React.Component<{
-    min: number,
-    max: number,
-    value: number,
-    step?: number,
-    onChange: (v: number) => void,
-    onChangeImmediate?: (v: number) => void,
-    disabled?: boolean,
-    onEnter?: () => void
-}, { isChanging: boolean, current: number }> {
-
+    min: number;
+    max: number;
+    value: number;
+    step?: number;
+    onChange: (v: number) => void;
+    onChangeImmediate?: (v: number) => void;
+    disabled?: boolean;
+    onEnter?: () => void;
+}, { isChanging: boolean; current: number }> {
     state = { isChanging: false, current: 0 };
 
-    static getDerivedStateFromProps(props: { value: number }, state: { isChanging: boolean, current: number }) {
+    static getDerivedStateFromProps(
+        props: { value: number },
+        state: { isChanging: boolean; current: number },
+    ) {
         if (state.isChanging || props.value === state.current) return null;
         return { current: props.value };
     }
@@ -69,36 +71,56 @@ export class Slider extends React.Component<{
     render() {
         let step = this.props.step;
         if (step === void 0) step = 1;
-        return <div className='msp-slider'>
-            <div>
-                <SliderBase min={this.props.min} max={this.props.max} step={step} value={this.state.current} disabled={this.props.disabled}
-                    onBeforeChange={this.begin}
-                    onWheel={this.onMouseWheel}
-                    onChange={this.updateCurrent as any} onAfterChange={this.end as any} />
+        return (
+            <div className='msp-slider'>
+                <div>
+                    <SliderBase
+                        min={this.props.min}
+                        max={this.props.max}
+                        step={step}
+                        value={this.state.current}
+                        disabled={this.props.disabled}
+                        onBeforeChange={this.begin}
+                        onWheel={this.onMouseWheel}
+                        onChange={this.updateCurrent as any}
+                        onAfterChange={this.end as any}
+                    />
+                </div>
+                <div>
+                    <TextInput
+                        numeric
+                        delayMs={50}
+                        value={this.state.current}
+                        blurOnEnter
+                        onBlur={this.onManualBlur}
+                        isDisabled={this.props.disabled}
+                        onChange={this.updateManually}
+                    />
+                </div>
             </div>
-            <div>
-                <TextInput numeric delayMs={50}
-                    value={this.state.current} blurOnEnter onBlur={this.onManualBlur}
-                    isDisabled={this.props.disabled} onChange={this.updateManually} />
-            </div>
-        </div>;
+        );
     }
 }
 
 export class Slider2 extends React.Component<{
-    min: number,
-    max: number,
-    value: [number, number],
-    step?: number,
-    onChange: (v: [number, number]) => void,
-    disabled?: boolean,
-    onEnter?: () => void
-}, { isChanging: boolean, current: [number, number] }> {
-
+    min: number;
+    max: number;
+    value: [number, number];
+    step?: number;
+    onChange: (v: [number, number]) => void;
+    disabled?: boolean;
+    onEnter?: () => void;
+}, { isChanging: boolean; current: [number, number] }> {
     state = { isChanging: false, current: [0, 1] as [number, number] };
 
-    static getDerivedStateFromProps(props: { value: [number, number] }, state: { isChanging: boolean, current: [number, number] }) {
-        if (state.isChanging || (props.value[0] === state.current[0] && props.value[1] === state.current[1])) return null;
+    static getDerivedStateFromProps(
+        props: { value: [number, number] },
+        state: { isChanging: boolean; current: [number, number] },
+    ) {
+        if (
+            state.isChanging ||
+            (props.value[0] === state.current[0] && props.value[1] === state.current[1])
+        ) return null;
         return { current: props.value };
     }
 
@@ -136,22 +158,46 @@ export class Slider2 extends React.Component<{
     render() {
         let step = this.props.step;
         if (step === void 0) step = 1;
-        return <div className='msp-slider2'>
-            <div>
-                <TextInput numeric delayMs={50}
-                    value={this.state.current[0]} onEnter={this.props.onEnter} blurOnEnter
-                    isDisabled={this.props.disabled} onChange={this.updateMin} />
+        return (
+            <div className='msp-slider2'>
+                <div>
+                    <TextInput
+                        numeric
+                        delayMs={50}
+                        value={this.state.current[0]}
+                        onEnter={this.props.onEnter}
+                        blurOnEnter
+                        isDisabled={this.props.disabled}
+                        onChange={this.updateMin}
+                    />
+                </div>
+                <div>
+                    <SliderBase
+                        min={this.props.min}
+                        max={this.props.max}
+                        step={step}
+                        value={this.state.current}
+                        disabled={this.props.disabled}
+                        onBeforeChange={this.begin}
+                        onChange={this.updateCurrent as any}
+                        onAfterChange={this.end as any}
+                        range
+                        allowCross
+                    />
+                </div>
+                <div>
+                    <TextInput
+                        numeric
+                        delayMs={50}
+                        value={this.state.current[1]}
+                        onEnter={this.props.onEnter}
+                        blurOnEnter
+                        isDisabled={this.props.disabled}
+                        onChange={this.updateMax}
+                    />
+                </div>
             </div>
-            <div>
-                <SliderBase min={this.props.min} max={this.props.max} step={step} value={this.state.current} disabled={this.props.disabled}
-                    onBeforeChange={this.begin} onChange={this.updateCurrent as any} onAfterChange={this.end as any} range allowCross />
-            </div>
-            <div>
-                <TextInput numeric delayMs={50}
-                    value={this.state.current[1]} onEnter={this.props.onEnter} blurOnEnter
-                    isDisabled={this.props.disabled} onChange={this.updateMax} />
-            </div>
-        </div>;
+        );
     }
 }
 
@@ -220,9 +266,7 @@ function getMousePosition(vertical: boolean, e: MouseEvent) {
 
 function getHandleCenterPosition(vertical: boolean, handle: HTMLElement) {
     const coords = handle.getBoundingClientRect();
-    return vertical ?
-        coords.top + (coords.height * 0.5) :
-        coords.left + (coords.width * 0.5);
+    return vertical ? coords.top + (coords.height * 0.5) : coords.left + (coords.width * 0.5);
 }
 
 function pauseEvent(e: MouseEvent | TouchEvent) {
@@ -242,39 +286,36 @@ export class Handle extends React.Component<Partial<HandleProps>, {}> {
         } = this.props as HandleProps;
 
         const style = vertical ? { bottom: `${offset}%` } : { left: `${offset}%` };
-        return (
-            <div className={className} style={style} title={tipFormatter(value, index)}
-            />
-        );
+        return <div className={className} style={style} title={tipFormatter(value, index)} />;
     }
 }
 
 export interface SliderBaseProps {
-    min: number,
-    max: number,
-    step?: number,
-    defaultValue?: number | number[],
-    value?: number | number[],
-    marks?: any,
-    className?: string,
-    prefixCls?: string,
-    disabled?: boolean,
-    onBeforeChange?: (value: number | number[]) => void,
-    onChange?: (value: number | number[]) => void,
-    onAfterChange?: (value: number | number[]) => void,
-    handle?: JSX.Element,
-    tipFormatter?: (value: number, index: number) => any,
-    range?: boolean | number,
-    vertical?: boolean,
-    allowCross?: boolean,
-    pushable?: boolean | number,
-    onWheel?: (ev: WheelEvent) => any,
+    min: number;
+    max: number;
+    step?: number;
+    defaultValue?: number | number[];
+    value?: number | number[];
+    marks?: any;
+    className?: string;
+    prefixCls?: string;
+    disabled?: boolean;
+    onBeforeChange?: (value: number | number[]) => void;
+    onChange?: (value: number | number[]) => void;
+    onAfterChange?: (value: number | number[]) => void;
+    handle?: JSX.Element;
+    tipFormatter?: (value: number, index: number) => any;
+    range?: boolean | number;
+    vertical?: boolean;
+    allowCross?: boolean;
+    pushable?: boolean | number;
+    onWheel?: (ev: WheelEvent) => any;
 }
 
 export interface SliderBaseState {
-    handle: number | null,
-    recent: number,
-    bounds: number[]
+    handle: number | null;
+    recent: number;
+    bounds: number[];
 }
 
 export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState> {
@@ -286,8 +327,8 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
 
         const { range, min, max } = props;
         const initialValue = range ? Array.apply(null, Array(+range + 1)).map(() => min) : min;
-        const defaultValue = ('defaultValue' in props ? props.defaultValue : initialValue);
-        const value = (props.value !== undefined ? props.value : defaultValue);
+        const defaultValue = 'defaultValue' in props ? props.defaultValue : initialValue;
+        const value = props.value !== undefined ? props.value : defaultValue;
 
         const bounds = (range ? value : [min, value]).map((v: number) => this.trimAlignValue(v));
 
@@ -312,7 +353,16 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
         max: 100,
         step: 1,
         marks: {},
-        handle: <Handle className='' vertical={false} offset={0} tipFormatter={v => v} value={0} index={0} />,
+        handle: (
+            <Handle
+                className=''
+                vertical={false}
+                offset={0}
+                tipFormatter={(v) => v}
+                value={0}
+                index={0}
+            />
+        ),
         onBeforeChange: noop,
         onChange: noop,
         onAfterChange: noop,
@@ -335,11 +385,13 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
         const { bounds } = this.state;
         if (prevProps.range) {
             const value = this.props.value || bounds;
-            const nextBounds = (value as number[]).map((v: number) => this.trimAlignValue(v, this.props));
+            const nextBounds = (value as number[]).map((v: number) =>
+                this.trimAlignValue(v, this.props)
+            );
             if (nextBounds.every((v: number, i: number) => v === bounds[i])) return;
 
             this.setState({ bounds: nextBounds } as SliderBaseState);
-            if (bounds.some(v => this.isValueOutOfBounds(v, this.props))) {
+            if (bounds.some((v) => this.isValueOutOfBounds(v, this.props))) {
                 this.props.onChange!(nextBounds);
             }
         } else {
@@ -369,13 +421,16 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
     }
 
     onMouseDown = (e: MouseEvent) => {
-        if (e.button !== 0) { return; }
+        if (e.button !== 0) return;
 
         let position = getMousePosition(this.props.vertical!, e);
         if (!this.isEventFromHandle(e)) {
             this.dragOffset = 0;
         } else {
-            const handlePosition = getHandleCenterPosition(this.props.vertical!, e.target as HTMLElement);
+            const handlePosition = getHandleCenterPosition(
+                this.props.vertical!,
+                e.target as HTMLElement,
+            );
             this.dragOffset = position - handlePosition;
             position = handlePosition;
         }
@@ -435,20 +490,24 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
         if (this.props.range) {
             let closestBound = 0;
             for (let i = 1; i < bounds.length - 1; ++i) {
-                if (value > bounds[i]) { closestBound = i; }
+                if (value > bounds[i]) closestBound = i;
             }
-            if (Math.abs(bounds[closestBound + 1] - value) < Math.abs(bounds[closestBound] - value)) {
+            if (
+                Math.abs(bounds[closestBound + 1] - value) < Math.abs(bounds[closestBound] - value)
+            ) {
                 closestBound = closestBound + 1;
             }
             valueNeedChanging = closestBound;
 
-            const isAtTheSamePoint = (bounds[closestBound + 1] === bounds[closestBound]);
+            const isAtTheSamePoint = bounds[closestBound + 1] === bounds[closestBound];
             if (isAtTheSamePoint) {
                 valueNeedChanging = state.recent;
             }
 
             if (isAtTheSamePoint && (value !== bounds[closestBound + 1])) {
-                valueNeedChanging = value < bounds[closestBound + 1] ? closestBound : closestBound + 1;
+                valueNeedChanging = value < bounds[closestBound + 1]
+                    ? closestBound
+                    : closestBound + 1;
             }
         }
 
@@ -482,7 +541,10 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
         if (!this.isEventFromHandle(e)) {
             this.dragOffset = 0;
         } else {
-            const handlePosition = getHandleCenterPosition(this.props.vertical!, e.target as HTMLElement);
+            const handlePosition = getHandleCenterPosition(
+                this.props.vertical!,
+                e.target as HTMLElement,
+            );
             this.dragOffset = position - handlePosition;
             position = handlePosition;
         }
@@ -643,7 +705,7 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
             direction = -1;
         }
 
-        if (direction === 0) { return; }
+        if (direction === 0) return;
 
         const nextHandle = handle + direction;
         const diffToNext = direction * (bounds[nextHandle] - value);
@@ -665,7 +727,10 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
 
     trimAlignValue(v: number, props?: SliderBaseProps) {
         const { handle, bounds } = (this.state || {}) as this['state'];
-        const { marks, step, min, max, allowCross } = { ...this.props, ...(props || {}) } as SliderBaseProps;
+        const { marks, step, min, max, allowCross } = {
+            ...this.props,
+            ...(props || {}),
+        } as SliderBaseProps;
 
         let val = v;
         if (val <= min) {
@@ -677,7 +742,9 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
         if (!allowCross && handle != null && handle > 0 && val <= bounds[handle - 1]) {
             val = bounds[handle - 1];
         }
-        if (!allowCross && handle != null && handle < bounds.length - 1 && val >= bounds[handle + 1]) {
+        if (
+            !allowCross && handle != null && handle < bounds.length - 1 && val >= bounds[handle + 1]
+        ) {
             val = bounds[handle + 1];
         }
 
@@ -690,7 +757,9 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
         const diffs = points.map((point) => Math.abs(val - point));
         const closestPoint = points[diffs.indexOf(Math.min.apply(Math, diffs))];
 
-        return step !== null ? parseFloat(closestPoint.toFixed(this.getPrecision(step!))) : closestPoint;
+        return step !== null
+            ? parseFloat(closestPoint.toFixed(this.getPrecision(step!)))
+            : closestPoint;
     }
 
     render() {
@@ -706,7 +775,7 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
             range,
             step,
             marks,
-            tipFormatter
+            tipFormatter,
         } = this.props;
 
         const customHandle = this.props.handle;
@@ -715,12 +784,14 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
 
         const handleClassName = `${prefixCls}-handle`;
 
-        const handlesClassNames = bounds.map((v, i) => classNames({
-            [handleClassName]: true,
-            [`${handleClassName}-${i + 1}`]: true,
-            [`${handleClassName}-lower`]: i === 0,
-            [`${handleClassName}-upper`]: i === bounds.length - 1,
-        }));
+        const handlesClassNames = bounds.map((v, i) =>
+            classNames({
+                [handleClassName]: true,
+                [`${handleClassName}-${i + 1}`]: true,
+                [`${handleClassName}-lower`]: i === 0,
+                [`${handleClassName}-upper`]: i === bounds.length - 1,
+            })
+        );
 
         const isNoTip = (step === null) || (tipFormatter === null);
 
@@ -735,17 +806,19 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
             this.handleElements = []; // = [];
             for (let i = 0; i < bounds.length; i++) this.handleElements.push(React.createRef());
         }
-        const handles = bounds.map((v, i) => React.cloneElement(customHandle!, {
-            ...commonHandleProps,
-            className: handlesClassNames[i],
-            value: v,
-            offset: offsets[i],
-            dragging: handle === i,
-            index: i,
-            key: i,
-            ref: this.handleElements[i]
-        }));
-        if (!range) { handles.shift(); }
+        const handles = bounds.map((v, i) =>
+            React.cloneElement(customHandle!, {
+                ...commonHandleProps,
+                className: handlesClassNames[i],
+                value: v,
+                offset: offsets[i],
+                dragging: handle === i,
+                index: i,
+                key: i,
+                ref: this.handleElements[i],
+            })
+        );
+        if (!range) handles.shift();
 
         const sliderClassName = classNames({
             [prefixCls!]: true,
@@ -756,7 +829,9 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
         });
 
         return (
-            <div ref={this.sliderElement} className={sliderClassName}
+            <div
+                ref={this.sliderElement}
+                className={sliderClassName}
                 onTouchStart={disabled ? noop : this.onTouchStart as any}
                 onMouseDown={disabled ? noop : this.onMouseDown as any}
                 onWheel={disabled ? noop : this.props.onWheel as any}
@@ -769,10 +844,10 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
 }
 
 export interface HandleProps {
-    className: string,
-    vertical: boolean,
-    offset: number,
-    tipFormatter: (v: number, index: number) => any,
-    value: number,
-    index: number,
+    className: string;
+    vertical: boolean;
+    offset: number;
+    tipFormatter: (v: number, index: number) => any;
+    value: number;
+    index: number;
 }

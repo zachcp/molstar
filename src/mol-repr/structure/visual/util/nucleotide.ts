@@ -4,8 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Unit, StructureElement, Structure, ResidueIndex, ElementIndex } from '../../../../mol-model/structure.ts';
-import { Loci, EmptyLoci } from '../../../../mol-model/loci.ts';
+import {
+    ElementIndex,
+    ResidueIndex,
+    Structure,
+    StructureElement,
+    Unit,
+} from '../../../../mol-model/structure.ts';
+import { EmptyLoci, Loci } from '../../../../mol-model/loci.ts';
 import { Interval } from '../../../../mol-data/int.ts';
 import { LocationIterator } from '../../../../mol-geo/util/location-iterator.ts';
 import { PickingId } from '../../../../mol-geo/geometry/picking.ts';
@@ -32,7 +38,11 @@ export namespace NucleotideLocationIterator {
     }
 }
 
-export function getNucleotideElementLoci(pickingId: PickingId, structureGroup: StructureGroup, id: number) {
+export function getNucleotideElementLoci(
+    pickingId: PickingId,
+    structureGroup: StructureGroup,
+    id: number,
+) {
     const { objectId, instanceId, groupId } = pickingId;
     if (id === objectId) {
         const { structure, group } = structureGroup;
@@ -44,13 +54,19 @@ export function getNucleotideElementLoci(pickingId: PickingId, structureGroup: S
     return EmptyLoci;
 }
 
-function selectNuclotideElements(u: Unit.Atomic) { return u.nucleotideElements; }
+function selectNuclotideElements(u: Unit.Atomic) {
+    return u.nucleotideElements;
+}
 
 /**
  * Mark a nucleotide element (e.g. part of a cartoon block)
  * - mark only when all its residue's elements are in a loci
  */
-export function eachNucleotideElement(loci: Loci, structureGroup: StructureGroup, apply: (interval: Interval) => boolean) {
+export function eachNucleotideElement(
+    loci: Loci,
+    structureGroup: StructureGroup,
+    apply: (interval: Interval) => boolean,
+) {
     let changed = false;
     if (!StructureElement.Loci.is(loci)) return false;
     const { structure, group } = structureGroup;
@@ -66,7 +82,13 @@ export function eachNucleotideElement(loci: Loci, structureGroup: StructureGroup
         const intervalOffset = group.unitIndexMap.get(e.unit.id) * groupCount;
 
         if (Unit.isAtomic(e.unit)) {
-            changed = eachAtomicUnitTracedElement(intervalOffset, groupCount, selectNuclotideElements, apply, e) || changed;
+            changed = eachAtomicUnitTracedElement(
+                intervalOffset,
+                groupCount,
+                selectNuclotideElements,
+                apply,
+                e,
+            ) || changed;
         }
     }
     return changed;
@@ -91,7 +113,10 @@ export function getNucleotideBaseType(unit: Unit.Atomic, residueIndex: ResidueIn
         // detect Purine or Pyrimidin based on geometry
         const idxC4 = atomicIndex.findAtomOnResidue(residueIndex, 'C4');
         const idxN9 = atomicIndex.findAtomOnResidue(residueIndex, 'N9');
-        if (idxC4 !== -1 && idxN9 !== -1 && Vec3.distance(c.invariantPosition(idxC4, pC4), c.invariantPosition(idxN9, pN9)) < 1.6) {
+        if (
+            idxC4 !== -1 && idxN9 !== -1 &&
+            Vec3.distance(c.invariantPosition(idxC4, pC4), c.invariantPosition(idxN9, pN9)) < 1.6
+        ) {
             isPurine = true;
         } else {
             isPyrimidine = true;
@@ -120,9 +145,13 @@ export function createNucleicIndices() {
         O4_1: -1 as ElementIndex | -1,
     };
 }
-export type NucleicIndices = ReturnType<typeof createNucleicIndices>
+export type NucleicIndices = ReturnType<typeof createNucleicIndices>;
 
-export function setPurinIndices(idx: NucleicIndices, unit: Unit.Atomic, residueIndex: ResidueIndex) {
+export function setPurinIndices(
+    idx: NucleicIndices,
+    unit: Unit.Atomic,
+    residueIndex: ResidueIndex,
+) {
     const atomicIndex = unit.model.atomicHierarchy.index;
     const { traceElementIndex } = unit.model.atomicHierarchy.derived.residue;
 
@@ -148,11 +177,29 @@ export function setPurinIndices(idx: NucleicIndices, unit: Unit.Atomic, residueI
     return idx;
 }
 
-export function hasPurinIndices(idx: NucleicIndices): idx is NucleicIndices & { trace: ElementIndex, N1: ElementIndex, C2: ElementIndex, N3: ElementIndex, C4: ElementIndex, C5: ElementIndex, C6: ElementIndex, N7: ElementIndex, C8: ElementIndex, N9: ElementIndex } {
-    return idx.trace !== -1 && idx.N1 !== -1 && idx.C2 !== -1 && idx.N3 !== -1 && idx.C4 !== -1 && idx.C5 !== -1 && idx.C6 !== -1 && idx.N7 !== -1 && idx.C8 !== -1 && idx.N9 !== -1;
+export function hasPurinIndices(
+    idx: NucleicIndices,
+): idx is NucleicIndices & {
+    trace: ElementIndex;
+    N1: ElementIndex;
+    C2: ElementIndex;
+    N3: ElementIndex;
+    C4: ElementIndex;
+    C5: ElementIndex;
+    C6: ElementIndex;
+    N7: ElementIndex;
+    C8: ElementIndex;
+    N9: ElementIndex;
+} {
+    return idx.trace !== -1 && idx.N1 !== -1 && idx.C2 !== -1 && idx.N3 !== -1 && idx.C4 !== -1 &&
+        idx.C5 !== -1 && idx.C6 !== -1 && idx.N7 !== -1 && idx.C8 !== -1 && idx.N9 !== -1;
 }
 
-export function setPyrimidineIndices(idx: NucleicIndices, unit: Unit.Atomic, residueIndex: ResidueIndex) {
+export function setPyrimidineIndices(
+    idx: NucleicIndices,
+    unit: Unit.Atomic,
+    residueIndex: ResidueIndex,
+) {
     const atomicIndex = unit.model.atomicHierarchy.index;
     const { traceElementIndex } = unit.model.atomicHierarchy.derived.residue;
 
@@ -171,11 +218,26 @@ export function setPyrimidineIndices(idx: NucleicIndices, unit: Unit.Atomic, res
     return idx;
 }
 
-export function hasPyrimidineIndices(idx: NucleicIndices): idx is NucleicIndices & { trace: ElementIndex, N1: ElementIndex, C2: ElementIndex, N3: ElementIndex, C4: ElementIndex, C5: ElementIndex, C6: ElementIndex } {
-    return idx.trace !== -1 && idx.N1 !== -1 && idx.C2 !== -1 && idx.N3 !== -1 && idx.C4 !== -1 && idx.C5 !== -1 && idx.C6 !== -1;
+export function hasPyrimidineIndices(
+    idx: NucleicIndices,
+): idx is NucleicIndices & {
+    trace: ElementIndex;
+    N1: ElementIndex;
+    C2: ElementIndex;
+    N3: ElementIndex;
+    C4: ElementIndex;
+    C5: ElementIndex;
+    C6: ElementIndex;
+} {
+    return idx.trace !== -1 && idx.N1 !== -1 && idx.C2 !== -1 && idx.N3 !== -1 && idx.C4 !== -1 &&
+        idx.C5 !== -1 && idx.C6 !== -1;
 }
 
-export function setSugarIndices(idx: NucleicIndices, unit: Unit.Atomic, residueIndex: ResidueIndex) {
+export function setSugarIndices(
+    idx: NucleicIndices,
+    unit: Unit.Atomic,
+    residueIndex: ResidueIndex,
+) {
     const atomicIndex = unit.model.atomicHierarchy.index;
     const { traceElementIndex } = unit.model.atomicHierarchy.derived.residue;
 
@@ -189,6 +251,16 @@ export function setSugarIndices(idx: NucleicIndices, unit: Unit.Atomic, residueI
     return idx;
 }
 
-export function hasSugarIndices(idx: NucleicIndices): idx is NucleicIndices & { trace: ElementIndex, C1_1: ElementIndex, C2_1: ElementIndex, C3_1: ElementIndex, C4_1: ElementIndex, O4_1: ElementIndex } {
-    return idx.trace !== -1 && idx.C1_1 !== -1 && idx.C2_1 !== -1 && idx.C3_1 !== -1 && idx.C4_1 !== -1 && idx.O4_1 !== -1;
+export function hasSugarIndices(
+    idx: NucleicIndices,
+): idx is NucleicIndices & {
+    trace: ElementIndex;
+    C1_1: ElementIndex;
+    C2_1: ElementIndex;
+    C3_1: ElementIndex;
+    C4_1: ElementIndex;
+    O4_1: ElementIndex;
+} {
+    return idx.trace !== -1 && idx.C1_1 !== -1 && idx.C2_1 !== -1 && idx.C3_1 !== -1 &&
+        idx.C4_1 !== -1 && idx.O4_1 !== -1;
 }

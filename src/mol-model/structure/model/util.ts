@@ -10,7 +10,10 @@ import { CoarseConformation } from './properties/coarse.ts';
 import { arrayMinMax } from '../../../mol-util/array.ts';
 import { Model } from './model.ts';
 
-export function calcModelCenter(atomicConformation: AtomicConformation, coarseConformation?: CoarseConformation) {
+export function calcModelCenter(
+    atomicConformation: AtomicConformation,
+    coarseConformation?: CoarseConformation,
+) {
     const rangesX: number[] = [];
     const rangesY: number[] = [];
     const rangesZ: number[] = [];

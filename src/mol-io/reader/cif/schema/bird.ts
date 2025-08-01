@@ -6,7 +6,7 @@
  * @author molstar/ciftools package
  */
 
-import { Database, Column } from '../../../../mol-data/db.ts';
+import { Column, Database } from '../../../../mol-data/db.ts';
 
 import Schema = Column.Schema;
 
@@ -59,7 +59,40 @@ export const BIRD_Schema = {
         /**
          * Defines the structural classification of the entity.
          */
-        type: Aliased<'amino acid' | 'aminoglycoside' | 'anthracycline' | 'anthraquinone' | 'ansamycin' | 'chalkophore' | 'chromophore' | 'glycopeptide' | 'cyclic depsipeptide' | 'cyclic lipopeptide' | 'cyclic peptide' | 'heterocyclic' | 'imino sugar' | 'keto acid' | 'lipoglycopeptide' | 'lipopeptide' | 'macrolide' | 'non-polymer' | 'nucleoside' | 'oligopeptide' | 'oligosaccharide' | 'peptaibol' | 'peptide-like' | 'polycyclic' | 'polypeptide' | 'polysaccharide' | 'quinolone' | 'thiolactone' | 'thiopeptide' | 'siderophore' | 'unknown' | 'chalkophore, polypeptide'>(lstr),
+        type: Aliased<
+            | 'amino acid'
+            | 'aminoglycoside'
+            | 'anthracycline'
+            | 'anthraquinone'
+            | 'ansamycin'
+            | 'chalkophore'
+            | 'chromophore'
+            | 'glycopeptide'
+            | 'cyclic depsipeptide'
+            | 'cyclic lipopeptide'
+            | 'cyclic peptide'
+            | 'heterocyclic'
+            | 'imino sugar'
+            | 'keto acid'
+            | 'lipoglycopeptide'
+            | 'lipopeptide'
+            | 'macrolide'
+            | 'non-polymer'
+            | 'nucleoside'
+            | 'oligopeptide'
+            | 'oligosaccharide'
+            | 'peptaibol'
+            | 'peptide-like'
+            | 'polycyclic'
+            | 'polypeptide'
+            | 'polysaccharide'
+            | 'quinolone'
+            | 'thiolactone'
+            | 'thiopeptide'
+            | 'siderophore'
+            | 'unknown'
+            | 'chalkophore, polypeptide'
+        >(lstr),
         /**
          * Evidence for the assignment of _pdbx_reference_molecule.type
          */
@@ -67,7 +100,56 @@ export const BIRD_Schema = {
         /**
          * Broadly defines the function of the entity.
          */
-        class: Aliased<'antagonist' | 'antibiotic' | 'anticancer' | 'anticoagulant' | 'antifungal' | 'antigen' | 'antiinflammatory' | 'antimicrobial' | 'antineoplastic' | 'antiparasitic' | 'antiretroviral' | 'anthelmintic' | 'antithrombotic' | 'antitumor' | 'antiviral' | 'caspase inhibitor' | 'chaperone binding' | 'enzyme inhibitor' | 'drug delivery' | 'glycan component' | 'growth factor' | 'immunosuppressant' | 'inducer' | 'inhibitor' | 'lantibiotic' | 'metabolism' | 'metal transport' | 'nutrient' | 'oxidation-reduction' | 'protein binding' | 'receptor' | 'substrate analog' | 'synthetic opioid' | 'thrombin inhibitor' | 'transition state mimetic' | 'transport activator' | 'trypsin inhibitor' | 'toxin' | 'unknown' | 'water retention' | 'anticoagulant, antithrombotic' | 'antibiotic, antimicrobial' | 'antibiotic, anthelmintic' | 'antibiotic, antineoplastic' | 'antimicrobial, antiretroviral' | 'antimicrobial, antitumor' | 'antimicrobial, antiparasitic, antibiotic' | 'thrombin inhibitor, trypsin inhibitor'>(lstr),
+        class: Aliased<
+            | 'antagonist'
+            | 'antibiotic'
+            | 'anticancer'
+            | 'anticoagulant'
+            | 'antifungal'
+            | 'antigen'
+            | 'antiinflammatory'
+            | 'antimicrobial'
+            | 'antineoplastic'
+            | 'antiparasitic'
+            | 'antiretroviral'
+            | 'anthelmintic'
+            | 'antithrombotic'
+            | 'antitumor'
+            | 'antiviral'
+            | 'caspase inhibitor'
+            | 'chaperone binding'
+            | 'enzyme inhibitor'
+            | 'drug delivery'
+            | 'glycan component'
+            | 'growth factor'
+            | 'immunosuppressant'
+            | 'inducer'
+            | 'inhibitor'
+            | 'lantibiotic'
+            | 'metabolism'
+            | 'metal transport'
+            | 'nutrient'
+            | 'oxidation-reduction'
+            | 'protein binding'
+            | 'receptor'
+            | 'substrate analog'
+            | 'synthetic opioid'
+            | 'thrombin inhibitor'
+            | 'transition state mimetic'
+            | 'transport activator'
+            | 'trypsin inhibitor'
+            | 'toxin'
+            | 'unknown'
+            | 'water retention'
+            | 'anticoagulant, antithrombotic'
+            | 'antibiotic, antimicrobial'
+            | 'antibiotic, anthelmintic'
+            | 'antibiotic, antineoplastic'
+            | 'antimicrobial, antiretroviral'
+            | 'antimicrobial, antitumor'
+            | 'antimicrobial, antiparasitic, antibiotic'
+            | 'thrombin inhibitor, trypsin inhibitor'
+        >(lstr),
         /**
          * Evidence for the assignment of _pdbx_reference_molecule.class
          */
@@ -250,7 +332,9 @@ export const BIRD_Schema = {
         /**
          * The bond order target for the chemical linkage.
          */
-        value_order: Aliased<'sing' | 'doub' | 'trip' | 'quad' | 'arom' | 'poly' | 'delo' | 'pi'>(lstr),
+        value_order: Aliased<'sing' | 'doub' | 'trip' | 'quad' | 'arom' | 'poly' | 'delo' | 'pi'>(
+            lstr,
+        ),
         /**
          * The entity component identifier for the first of two entities containing the linkage.
          */
@@ -336,7 +420,9 @@ export const BIRD_Schema = {
         /**
          * The bond order target for the non-standard linkage.
          */
-        value_order: Aliased<'sing' | 'doub' | 'trip' | 'quad' | 'arom' | 'poly' | 'delo' | 'pi'>(lstr),
+        value_order: Aliased<'sing' | 'doub' | 'trip' | 'quad' | 'arom' | 'poly' | 'delo' | 'pi'>(
+            lstr,
+        ),
     },
     /**
      * Data items in the PDBX_REFERENCE_ENTITY_POLY category record details about
@@ -357,7 +443,9 @@ export const BIRD_Schema = {
         /**
          * The type of the polymer.
          */
-        type: Aliased<'peptide-like' | 'nucleic-acid-like' | 'polysaccharide-like' | 'oligosaccharide'>(str),
+        type: Aliased<
+            'peptide-like' | 'nucleic-acid-like' | 'polysaccharide-like' | 'oligosaccharide'
+        >(str),
         /**
          * The database code for this source information
          */
@@ -492,9 +580,22 @@ export const BIRD_Schema = {
         /**
          * The action associated with this audit record.
          */
-        action_type: Aliased<'Initial release' | 'Create molecule' | 'Modify type' | 'Modify class' | 'Modify molecule name' | 'Modify representation' | 'Modify sequence' | 'Modify linkage' | 'Modify taxonomy organism' | 'Modify audit' | 'Other modification' | 'Obsolete molecule'>(str),
+        action_type: Aliased<
+            | 'Initial release'
+            | 'Create molecule'
+            | 'Modify type'
+            | 'Modify class'
+            | 'Modify molecule name'
+            | 'Modify representation'
+            | 'Modify sequence'
+            | 'Modify linkage'
+            | 'Modify taxonomy organism'
+            | 'Modify audit'
+            | 'Other modification'
+            | 'Obsolete molecule'
+        >(str),
     },
 };
 
 export type BIRD_Schema = typeof BIRD_Schema;
-export interface BIRD_Database extends Database<BIRD_Schema> {};
+export interface BIRD_Database extends Database<BIRD_Schema> {}

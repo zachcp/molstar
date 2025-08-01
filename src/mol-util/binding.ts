@@ -10,9 +10,9 @@ import { camelCaseToWords, interpolate, stringToWords } from './string.ts';
 export { Binding };
 
 interface Binding {
-    triggers: Binding.Trigger[]
-    action: string
-    description: string
+    triggers: Binding.Trigger[];
+    action: string;
+    description: string;
 }
 
 function Binding(triggers: Binding.Trigger[], action = '', description = '') {
@@ -31,15 +31,22 @@ namespace Binding {
     export const Empty: Binding = { triggers: [], action: '', description: '' };
     export function isEmpty(binding: Binding) {
         return binding.triggers.length === 0 ||
-            binding.triggers.every(t => t.buttons === undefined && t.modifiers === undefined && !t.code);
+            binding.triggers.every((t) =>
+                t.buttons === undefined && t.modifiers === undefined && !t.code
+            );
     }
 
     export function match(binding: Binding, buttons: ButtonsType, modifiers: ModifiersKeys) {
-        return binding.triggers.some(t => Trigger.match(t, buttons, modifiers));
+        return binding.triggers.some((t) => Trigger.match(t, buttons, modifiers));
     }
 
-    export function matchKey(binding: Binding, code: KeyCode, modifiers: ModifiersKeys, key: string) {
-        return binding.triggers.some(t => Trigger.matchKey(t, code, modifiers, key));
+    export function matchKey(
+        binding: Binding,
+        code: KeyCode,
+        modifiers: ModifiersKeys,
+        key: string,
+    ) {
+        return binding.triggers.some((t) => Trigger.matchKey(t, code, modifiers, key));
     }
 
     export function formatTriggers(binding: Binding) {
@@ -52,9 +59,9 @@ namespace Binding {
     }
 
     export interface Trigger {
-        buttons?: ButtonsType,
-        modifiers?: ModifiersKeys
-        code?: KeyCode
+        buttons?: ButtonsType;
+        modifiers?: ModifiersKeys;
+        code?: KeyCode;
     }
 
     export function Trigger(buttons?: ButtonsType, modifiers?: ModifiersKeys) {
@@ -66,19 +73,32 @@ namespace Binding {
     }
 
     export namespace Trigger {
-        export function create(buttons?: ButtonsType, modifiers?: ModifiersKeys, code?: KeyCode): Trigger {
+        export function create(
+            buttons?: ButtonsType,
+            modifiers?: ModifiersKeys,
+            code?: KeyCode,
+        ): Trigger {
             return { buttons, modifiers, code };
         }
         export const Empty: Trigger = {};
 
-        export function match(trigger: Trigger, buttons: ButtonsType, modifiers: ModifiersKeys): boolean {
+        export function match(
+            trigger: Trigger,
+            buttons: ButtonsType,
+            modifiers: ModifiersKeys,
+        ): boolean {
             const { buttons: b, modifiers: m } = trigger;
             return b !== undefined &&
                 (b === buttons || ButtonsType.has(b, buttons)) &&
                 (!m || ModifiersKeys.areEqual(m, modifiers));
         }
 
-        export function matchKey(trigger: Trigger, code: KeyCode, modifiers: ModifiersKeys, key: string): boolean {
+        export function matchKey(
+            trigger: Trigger,
+            code: KeyCode,
+            modifiers: ModifiersKeys,
+            key: string,
+        ): boolean {
             const { modifiers: m, code: c } = trigger;
             return c !== undefined &&
                 (c === code || (

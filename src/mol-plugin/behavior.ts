@@ -19,11 +19,11 @@ export const BuiltInPluginBehaviors = {
     State: StaticState,
     Representation: StaticRepresentation,
     Camera: StaticCamera,
-    Misc: StaticMisc
+    Misc: StaticMisc,
 };
 
 export const PluginBehaviors = {
     Representation: DynamicRepresentation,
     Camera: DynamicCamera,
-    CustomProps: DynamicCustomProps
+    CustomProps: DynamicCustomProps,
 };

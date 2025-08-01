@@ -17,23 +17,32 @@ import pngjs from 'pngjs';
 import jpegjs from 'jpeg-js';
 
 import { Download, ParseCif } from '../../mol-plugin-state/transforms/data.ts';
-import { ModelFromTrajectory, StructureComponent, StructureFromModel, TrajectoryFromMmCif } from '../../mol-plugin-state/transforms/model.ts';
+import {
+    ModelFromTrajectory,
+    StructureComponent,
+    StructureFromModel,
+    TrajectoryFromMmCif,
+} from '../../mol-plugin-state/transforms/model.ts';
 import { StructureRepresentation3D } from '../../mol-plugin-state/transforms/representation.ts';
 import { HeadlessPluginContext } from '../../mol-plugin/headless-plugin-context.ts';
 import { DefaultPluginSpec } from '../../mol-plugin/spec.ts';
-import { ExternalModules, STYLIZED_POSTPROCESSING } from '../../mol-plugin/util/headless-screenshot.ts';
+import {
+    ExternalModules,
+    STYLIZED_POSTPROCESSING,
+} from '../../mol-plugin/util/headless-screenshot.ts';
 import { setFSModule } from '../../mol-util/data-source.ts';
-
 
 setFSModule(fs);
 
 interface Args {
-    pdbId: string,
-    outDirectory: string
+    pdbId: string;
+    outDirectory: string;
 }
 
 function parseArguments(): Args {
-    const parser = new ArgumentParser({ description: 'Example command-line application generating images of PDB structures' });
+    const parser = new ArgumentParser({
+        description: 'Example command-line application generating images of PDB structures',
+    });
     parser.add_argument('pdbId', { help: 'PDB identifier' });
     parser.add_argument('outDirectory', { help: 'Directory for outputs' });
     const args = parser.parse_args();
@@ -49,7 +58,10 @@ async function main() {
 
     // Create a headless plugin
     const externalModules: ExternalModules = { gl, pngjs, 'jpeg-js': jpegjs };
-    const plugin = new HeadlessPluginContext(externalModules, DefaultPluginSpec(), { width: 800, height: 800 });
+    const plugin = new HeadlessPluginContext(externalModules, DefaultPluginSpec(), {
+        width: 800,
+        height: 800,
+    });
     await plugin.init();
 
     // Download and visualize data in the plugin
@@ -60,15 +72,22 @@ async function main() {
         .apply(TrajectoryFromMmCif)
         .apply(ModelFromTrajectory)
         .apply(StructureFromModel);
-    const polymer = structure.apply(StructureComponent, { type: { name: 'static', params: 'polymer' } });
-    const ligand = structure.apply(StructureComponent, { type: { name: 'static', params: 'ligand' } });
+    const polymer = structure.apply(StructureComponent, {
+        type: { name: 'static', params: 'polymer' },
+    });
+    const ligand = structure.apply(StructureComponent, {
+        type: { name: 'static', params: 'ligand' },
+    });
     polymer.apply(StructureRepresentation3D, {
         type: { name: 'cartoon', params: { alpha: 1 } },
         colorTheme: { name: 'sequence-id', params: {} },
     });
     ligand.apply(StructureRepresentation3D, {
         type: { name: 'ball-and-stick', params: { sizeFactor: 1 } },
-        colorTheme: { name: 'element-symbol', params: { carbonColor: { name: 'element-symbol', params: {} } } },
+        colorTheme: {
+            name: 'element-symbol',
+            params: { carbonColor: { name: 'element-symbol', params: {} } },
+        },
         sizeTheme: { name: 'physical', params: {} },
     });
     await update.commit();
@@ -77,11 +96,31 @@ async function main() {
     fs.mkdirSync(args.outDirectory, { recursive: true });
     await plugin.saveImage(path.join(args.outDirectory, 'basic.png'));
     await plugin.saveImage(path.join(args.outDirectory, 'basic.jpg'));
-    await plugin.saveImage(path.join(args.outDirectory, 'large.png'), { width: 1600, height: 1200 });
-    await plugin.saveImage(path.join(args.outDirectory, 'large.jpg'), { width: 1600, height: 1200 });
-    await plugin.saveImage(path.join(args.outDirectory, 'stylized.png'), undefined, STYLIZED_POSTPROCESSING);
-    await plugin.saveImage(path.join(args.outDirectory, 'stylized.jpg'), undefined, STYLIZED_POSTPROCESSING);
-    await plugin.saveImage(path.join(args.outDirectory, 'stylized-compressed-jpg.jpg'), undefined, STYLIZED_POSTPROCESSING, undefined, 10);
+    await plugin.saveImage(path.join(args.outDirectory, 'large.png'), {
+        width: 1600,
+        height: 1200,
+    });
+    await plugin.saveImage(path.join(args.outDirectory, 'large.jpg'), {
+        width: 1600,
+        height: 1200,
+    });
+    await plugin.saveImage(
+        path.join(args.outDirectory, 'stylized.png'),
+        undefined,
+        STYLIZED_POSTPROCESSING,
+    );
+    await plugin.saveImage(
+        path.join(args.outDirectory, 'stylized.jpg'),
+        undefined,
+        STYLIZED_POSTPROCESSING,
+    );
+    await plugin.saveImage(
+        path.join(args.outDirectory, 'stylized-compressed-jpg.jpg'),
+        undefined,
+        STYLIZED_POSTPROCESSING,
+        undefined,
+        10,
+    );
 
     // Export state loadable in Mol* Viewer
     await plugin.saveStateSnapshot(path.join(args.outDirectory, 'molstar-state.molj'));

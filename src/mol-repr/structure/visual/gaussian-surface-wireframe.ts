@@ -6,24 +6,40 @@
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { VisualContext } from '../../visual.ts';
-import { Unit, Structure } from '../../../mol-model/structure.ts';
+import { Structure, Unit } from '../../../mol-model/structure.ts';
 import { Theme } from '../../../mol-theme/theme.ts';
 import { Lines } from '../../../mol-geo/geometry/lines/lines.ts';
-import { computeUnitGaussianDensity, GaussianDensityParams, GaussianDensityProps } from './util/gaussian.ts';
+import {
+    computeUnitGaussianDensity,
+    GaussianDensityParams,
+    GaussianDensityProps,
+} from './util/gaussian.ts';
 import { computeMarchingCubesLines } from '../../../mol-geo/util/marching-cubes/algorithm.ts';
-import { UnitsLinesParams, UnitsVisual, UnitsLinesVisual } from '../units-visual.ts';
-import { ElementIterator, getElementLoci, eachElement } from './util/element.ts';
+import { UnitsLinesParams, UnitsLinesVisual, UnitsVisual } from '../units-visual.ts';
+import { eachElement, ElementIterator, getElementLoci } from './util/element.ts';
 import { VisualUpdateState } from '../../util.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 
-async function createGaussianWireframe(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: GaussianDensityProps, lines?: Lines): Promise<Lines> {
+async function createGaussianWireframe(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: GaussianDensityProps,
+    lines?: Lines,
+): Promise<Lines> {
     const { smoothness } = props;
-    const { transform, field, idField, maxRadius } = await computeUnitGaussianDensity(structure, unit, theme.size, props).runInContext(ctx.runtime);
+    const { transform, field, idField, maxRadius } = await computeUnitGaussianDensity(
+        structure,
+        unit,
+        theme.size,
+        props,
+    ).runInContext(ctx.runtime);
 
     const params = {
         isoLevel: Math.exp(-smoothness),
         scalarField: field,
-        idField
+        idField,
     };
     const wireframe = await computeMarchingCubesLines(params, lines).runAsChild(ctx.runtime);
 
@@ -44,7 +60,7 @@ export const GaussianWireframeParams = {
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     includeParent: PD.Boolean(false, { isHidden: true }),
 };
-export type GaussianWireframeParams = typeof GaussianWireframeParams
+export type GaussianWireframeParams = typeof GaussianWireframeParams;
 
 export function GaussianWireframeVisual(materialId: number): UnitsVisual<GaussianWireframeParams> {
     return UnitsLinesVisual<GaussianWireframeParams>({
@@ -53,14 +69,22 @@ export function GaussianWireframeVisual(materialId: number): UnitsVisual<Gaussia
         createLocationIterator: ElementIterator.fromGroup,
         getLoci: getElementLoci,
         eachLocation: eachElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<GaussianWireframeParams>, currentProps: PD.Values<GaussianWireframeParams>) => {
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<GaussianWireframeParams>,
+            currentProps: PD.Values<GaussianWireframeParams>,
+        ) => {
             if (newProps.resolution !== currentProps.resolution) state.createGeometry = true;
             if (newProps.radiusOffset !== currentProps.radiusOffset) state.createGeometry = true;
             if (newProps.smoothness !== currentProps.smoothness) state.createGeometry = true;
-            if (newProps.ignoreHydrogens !== currentProps.ignoreHydrogens) state.createGeometry = true;
-            if (newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant) state.createGeometry = true;
+            if (newProps.ignoreHydrogens !== currentProps.ignoreHydrogens) {
+                state.createGeometry = true;
+            }
+            if (newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant) {
+                state.createGeometry = true;
+            }
             if (newProps.traceOnly !== currentProps.traceOnly) state.createGeometry = true;
             if (newProps.includeParent !== currentProps.includeParent) state.createGeometry = true;
-        }
+        },
     }, materialId);
 }

@@ -12,11 +12,14 @@ import { PerformanceMonitor } from '../../mol-util/performance-monitor.ts';
 import { configureServer, ModelServerConfig as ServerConfig } from './config.ts';
 import { initWebApi } from './server/api-web.ts';
 import { VERSION } from './version.ts';
-import process from "node:process";
+import process from 'node:process';
 
 function setupShutdown() {
     if (ServerConfig.shutdownTimeoutVarianceMinutes > ServerConfig.shutdownTimeoutMinutes) {
-        ConsoleLogger.log('Server', 'Shutdown timeout variance is greater than the timer itself, ignoring.');
+        ConsoleLogger.log(
+            'Server',
+            'Shutdown timeout variance is greater than the timer itself, ignoring.',
+        );
     } else {
         let tVar = 0;
         if (ServerConfig.shutdownTimeoutVarianceMinutes > 0) {
@@ -25,7 +28,11 @@ function setupShutdown() {
         const tMs = (ServerConfig.shutdownTimeoutMinutes + tVar) * 60 * 1000;
 
         console.log(`----------------------------------------------------------------------------`);
-        console.log(`  The server will shut down in ${PerformanceMonitor.format(tMs)} to prevent slow performance.`);
+        console.log(
+            `  The server will shut down in ${
+                PerformanceMonitor.format(tMs)
+            } to prevent slow performance.`,
+        );
         console.log(`  Please make sure a daemon is running that will automatically restart it.`);
         console.log(`----------------------------------------------------------------------------`);
         console.log();
@@ -46,12 +53,14 @@ configureServer();
 function startServer() {
     const app = express();
     app.use(compression({
-        level: 6, memLevel: 9, chunkSize: 16 * 16384,
+        level: 6,
+        memLevel: 9,
+        chunkSize: 16 * 16384,
         filter: (req, res) => {
             const ct = res.getHeader('Content-Type');
             if (typeof ct === 'string' && ct.indexOf('tar+gzip') > 0) return false;
             return true;
-        }
+        },
     }));
 
     initWebApi(app);

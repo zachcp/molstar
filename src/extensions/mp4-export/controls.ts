@@ -13,12 +13,14 @@ import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { encodeMp4Animation } from './encoder.ts';
 
 export interface Mp4AnimationInfo {
-    width: number,
-    height: number
+    width: number;
+    height: number;
 }
 
 export const Mp4AnimationParams = {
-    quantization: PD.Numeric(18, { min: 10, max: 51 }, { description: 'Lower is better, but slower.' })
+    quantization: PD.Numeric(18, { min: 10, max: 51 }, {
+        description: 'Lower is better, but slower.',
+    }),
 };
 
 export class Mp4Controls extends PluginComponent {
@@ -26,15 +28,19 @@ export class Mp4Controls extends PluginComponent {
     private animations: PluginStateAnimation[] = [];
 
     readonly behaviors = {
-        animations: this.ev.behavior<PD.Params>({ }),
-        current: this.ev.behavior<{ anim: PluginStateAnimation, params: PD.Params, values: any } | undefined>(void 0),
+        animations: this.ev.behavior<PD.Params>({}),
+        current: this.ev.behavior<
+            { anim: PluginStateAnimation; params: PD.Params; values: any } | undefined
+        >(void 0),
         canApply: this.ev.behavior<PluginStateAnimation.CanApply>({ canApply: false }),
         info: this.ev.behavior<Mp4AnimationInfo>({ width: 0, height: 0 }),
-        params: this.ev.behavior<PD.Values<typeof Mp4AnimationParams>>(PD.getDefaultValues(Mp4AnimationParams))
+        params: this.ev.behavior<PD.Values<typeof Mp4AnimationParams>>(
+            PD.getDefaultValues(Mp4AnimationParams),
+        ),
     };
 
     setCurrent(name?: string) {
-        const anim = this.animations.find(a => a.name === name);
+        const anim = this.animations.find((a) => a.name === name);
         if (!anim) {
             this.behaviors.current.next(anim);
             return;
@@ -56,7 +62,7 @@ export class Mp4Controls extends PluginComponent {
     }
 
     render() {
-        const task = Task.create('Export Animation', async ctx => {
+        const task = Task.create('Export Animation', async (ctx) => {
             try {
                 const resolution = this.plugin.helpers.viewportScreenshot?.getSizeAndViewport()!;
                 const anim = this.current!;
@@ -70,8 +76,16 @@ export class Mp4Controls extends PluginComponent {
                     pass: this.plugin.helpers.viewportScreenshot?.imagePass!,
                 });
 
-                const filename = anim.anim.display.name.toLowerCase().replace(/\s/g, '-').replace(/[^a-z0-9_\-]/g, '');
-                return { movie, filename: `${this.plugin.helpers.viewportScreenshot?.getFilename('')}_${filename}.mp4` };
+                const filename = anim.anim.display.name.toLowerCase().replace(/\s/g, '-').replace(
+                    /[^a-z0-9_\-]/g,
+                    '',
+                );
+                return {
+                    movie,
+                    filename: `${
+                        this.plugin.helpers.viewportScreenshot?.getFilename('')
+                    }_${filename}.mp4`,
+                };
             } catch (e) {
                 this.plugin.log.error('Error during animation export');
                 throw e;
@@ -94,21 +108,23 @@ export class Mp4Controls extends PluginComponent {
     }
 
     private sync() {
-        const animations = this.manager.animations.filter(a => a.isExportable);
+        const animations = this.manager.animations.filter((a) => a.isExportable);
 
-        const hasAll = animations.every(a => this.currentNames.has(a.name));
+        const hasAll = animations.every((a) => this.currentNames.has(a.name));
         if (hasAll && this.currentNames.size === animations.length) {
             return;
         }
 
         const params = {
-            current: PD.Select(animations[0]?.name,
-                animations.map(a => [a.name, a.display.name] as [string, string]),
-                { label: 'Animation' })
+            current: PD.Select(
+                animations[0]?.name,
+                animations.map((a) => [a.name, a.display.name] as [string, string]),
+                { label: 'Animation' },
+            ),
         };
 
         const current = this.behaviors.current.value;
-        const hasCurrent = !!animations.find(a => a.name === current?.anim.name);
+        const hasCurrent = !!animations.find((a) => a.name === current?.anim.name);
 
         this.animations = animations;
         if (!hasCurrent) {
@@ -125,10 +141,13 @@ export class Mp4Controls extends PluginComponent {
         });
 
         this.subscribe(this.plugin.canvas3d.resized, () => this.syncInfo());
-        this.subscribe(this.plugin.helpers.viewportScreenshot?.events.previewed!, () => this.syncInfo());
+        this.subscribe(
+            this.plugin.helpers.viewportScreenshot?.events.previewed!,
+            () => this.syncInfo(),
+        );
 
-        this.subscribe(this.plugin.behaviors.state.isBusy, b => this.updateCanApply(b));
-        this.subscribe(this.plugin.managers.snapshot.events.changed, b => this.updateCanApply(b));
+        this.subscribe(this.plugin.behaviors.state.isBusy, (b) => this.updateCanApply(b));
+        this.subscribe(this.plugin.managers.snapshot.events.changed, (b) => this.updateCanApply(b));
 
         this.sync();
         this.syncInfo();

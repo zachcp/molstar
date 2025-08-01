@@ -6,20 +6,27 @@
 
 import { Structure } from '../../mol-model/structure.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { calcValenceModel, ValenceModel, ValenceModelParams as _ValenceModelParams } from './chemistry/valence-model.ts';
+import {
+    calcValenceModel,
+    ValenceModel,
+    ValenceModelParams as _ValenceModelParams,
+} from './chemistry/valence-model.ts';
 import { CustomStructureProperty } from '../common/custom-structure-property.ts';
 import { CustomProperty } from '../common/custom-property.ts';
 import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
 
 export const ValenceModelParams = {
-    ..._ValenceModelParams
+    ..._ValenceModelParams,
 };
-export type ValenceModelParams = typeof ValenceModelParams
-export type ValenceModelProps = PD.Values<ValenceModelParams>
+export type ValenceModelParams = typeof ValenceModelParams;
+export type ValenceModelProps = PD.Values<ValenceModelParams>;
 
-export type ValenceModelValue = Map<number, ValenceModel>
+export type ValenceModelValue = Map<number, ValenceModel>;
 
-export const ValenceModelProvider: CustomStructureProperty.Provider<ValenceModelParams, ValenceModelValue> = CustomStructureProperty.createProvider({
+export const ValenceModelProvider: CustomStructureProperty.Provider<
+    ValenceModelParams,
+    ValenceModelValue
+> = CustomStructureProperty.createProvider({
     label: 'Valence Model',
     descriptor: CustomPropertyDescriptor({
         name: 'molstar_computed_valence_model',
@@ -29,8 +36,12 @@ export const ValenceModelProvider: CustomStructureProperty.Provider<ValenceModel
     defaultParams: ValenceModelParams,
     getParams: (data: Structure) => ValenceModelParams,
     isApplicable: (data: Structure) => true,
-    obtain: async (ctx: CustomProperty.Context, data: Structure, props: Partial<ValenceModelProps>) => {
+    obtain: async (
+        ctx: CustomProperty.Context,
+        data: Structure,
+        props: Partial<ValenceModelProps>,
+    ) => {
         const p = { ...PD.getDefaultValues(ValenceModelParams), ...props };
         return { value: await calcValenceModel(ctx.runtime, data, p) };
-    }
+    },
 });

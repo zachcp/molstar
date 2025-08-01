@@ -19,21 +19,26 @@ import { Features } from './features.ts';
 export const ContactsParams = {
     lineOfSightDistFactor: PD.Numeric(1.0, { min: 0, max: 3, step: 0.1 }),
 };
-export type ContactsParams = typeof ContactsParams
-export type ContactsProps = PD.Values<ContactsParams>
+export type ContactsParams = typeof ContactsParams;
+export type ContactsProps = PD.Values<ContactsParams>;
 
 const MAX_LINE_OF_SIGHT_DISTANCE = 3;
 
 export interface ContactProvider<P extends PD.Params> {
-    readonly name: string
-    readonly params: P
-    createTester(props: PD.Values<P>): ContactTester
+    readonly name: string;
+    readonly params: P;
+    createTester(props: PD.Values<P>): ContactTester;
 }
 
 export interface ContactTester {
-    readonly maxDistance: number
-    readonly requiredFeatures: ReadonlySet<FeatureType>
-    getType: (structure: Structure, infoA: Features.Info, infoB: Features.Info, distanceSq: number) => InteractionType | undefined
+    readonly maxDistance: number;
+    readonly requiredFeatures: ReadonlySet<FeatureType>;
+    getType: (
+        structure: Structure,
+        infoA: Features.Info,
+        infoB: Features.Info,
+        distanceSq: number,
+    ) => InteractionType | undefined;
 }
 
 function validPair(structure: Structure, infoA: Features.Info, infoB: Features.Info): boolean {
@@ -44,7 +49,12 @@ function validPair(structure: Structure, infoA: Features.Info, infoB: Features.I
     const altA = altLoc(infoA.unit, indexA);
     const altB = altLoc(infoB.unit, indexB);
     if (altA && altB && altA !== altB) return false; // incompatible alternate location id
-    if (infoA.unit === infoB.unit && infoA.unit.model.atomicHierarchy.residueAtomSegments.count > 1 && infoA.unit.residueIndex[infoA.unit.elements[indexA]] === infoB.unit.residueIndex[infoB.unit.elements[indexB]]) return false; // same residue (and more than one residue)
+    if (
+        infoA.unit === infoB.unit &&
+        infoA.unit.model.atomicHierarchy.residueAtomSegments.count > 1 &&
+        infoA.unit.residueIndex[infoA.unit.elements[indexA]] ===
+            infoB.unit.residueIndex[infoB.unit.elements[indexB]]
+    ) return false; // same residue (and more than one residue)
 
     // e.g. no hbond if donor and acceptor are bonded
     if (connectedTo(structure, infoA.unit, indexA, infoB.unit, indexB)) return false;
@@ -54,7 +64,12 @@ function validPair(structure: Structure, infoA: Features.Info, infoB: Features.I
 
 //
 
-function invalidAltLoc(unitA: Unit.Atomic, indexA: StructureElement.UnitIndex, unitB: Unit.Atomic, indexB: StructureElement.UnitIndex) {
+function invalidAltLoc(
+    unitA: Unit.Atomic,
+    indexA: StructureElement.UnitIndex,
+    unitB: Unit.Atomic,
+    indexB: StructureElement.UnitIndex,
+) {
     const altA = altLoc(unitA, indexA);
     const altB = altLoc(unitB, indexB);
     return altA && altB && altA !== altB;
@@ -75,7 +90,12 @@ const tmpVecB = Vec3();
 // need to use a separate context for structure.lookup3d.find because of nested queries
 const lineOfSightLookupCtx = StructureLookup3DResultContext();
 
-function checkLineOfSight(structure: Structure, infoA: Features.Info, infoB: Features.Info, distFactor: number) {
+function checkLineOfSight(
+    structure: Structure,
+    infoA: Features.Info,
+    infoB: Features.Info,
+    distFactor: number,
+) {
     const featureA = infoA.feature;
     const featureB = infoB.feature;
     const indexA = infoA.members[infoA.offsets[featureA]];
@@ -87,7 +107,13 @@ function checkLineOfSight(structure: Structure, infoA: Features.Info, infoB: Fea
 
     const distMax = distFactor * MAX_LINE_OF_SIGHT_DISTANCE;
 
-    const { count, indices, units, squaredDistances } = structure.lookup3d.find(tmpVec[0], tmpVec[1], tmpVec[2], distMax, lineOfSightLookupCtx);
+    const { count, indices, units, squaredDistances } = structure.lookup3d.find(
+        tmpVec[0],
+        tmpVec[1],
+        tmpVec[2],
+        distMax,
+        lineOfSightLookupCtx,
+    );
     if (count === 0) return true;
 
     for (let r = 0; r < count; ++r) {
@@ -104,14 +130,21 @@ function checkLineOfSight(structure: Structure, infoA: Features.Info, infoB: Fea
         if (vdw * vdw * distFactor * distFactor <= squaredDistances[r]) continue;
 
         // allow different altlocs
-        if (invalidAltLoc(unit, i, infoA.unit, indexA) || invalidAltLoc(unit, i, infoB.unit, indexB)) continue;
+        if (
+            invalidAltLoc(unit, i, infoA.unit, indexA) || invalidAltLoc(unit, i, infoB.unit, indexB)
+        ) continue;
 
         // allow member atoms
-        if ((infoA.unit === unit && isMember(i, infoA)) || (infoB.unit === unit && isMember(i, infoB))) continue;
+        if (
+            (infoA.unit === unit && isMember(i, infoA)) ||
+            (infoB.unit === unit && isMember(i, infoB))
+        ) continue;
 
         unit.conformation.position(unit.elements[i], tmpVec);
         // allow atoms at the center of functional groups
-        if (Vec3.squaredDistance(tmpVec, tmpVecA) < 1 || Vec3.squaredDistance(tmpVec, tmpVecB) < 1) continue;
+        if (
+            Vec3.squaredDistance(tmpVec, tmpVecA) < 1 || Vec3.squaredDistance(tmpVec, tmpVecB) < 1
+        ) continue;
 
         return false;
     }
@@ -122,13 +155,27 @@ function checkLineOfSight(structure: Structure, infoA: Features.Info, infoB: Fea
 /**
  * Add all intra-unit contacts, i.e. pairs of features
  */
-export function addUnitContacts(structure: Structure, unit: Unit.Atomic, features: Features, builder: IntraContactsBuilder, testers: ReadonlyArray<ContactTester>, props: ContactsProps) {
+export function addUnitContacts(
+    structure: Structure,
+    unit: Unit.Atomic,
+    features: Features,
+    builder: IntraContactsBuilder,
+    testers: ReadonlyArray<ContactTester>,
+    props: ContactsProps,
+) {
     for (const tester of testers) {
         _addUnitContacts(structure, unit, features, builder, tester, props);
     }
 }
 
-function _addUnitContacts(structure: Structure, unit: Unit.Atomic, features: Features, builder: IntraContactsBuilder, tester: ContactTester, props: ContactsProps) {
+function _addUnitContacts(
+    structure: Structure,
+    unit: Unit.Atomic,
+    features: Features,
+    builder: IntraContactsBuilder,
+    tester: ContactTester,
+    props: ContactsProps,
+) {
     const { x, y, z } = features;
     const { lookup3d, indices: subsetIndices } = features.subset(tester.requiredFeatures);
 
@@ -139,7 +186,12 @@ function _addUnitContacts(structure: Structure, unit: Unit.Atomic, features: Fea
 
     for (let t = 0, tl = OrderedSet.size(subsetIndices); t < tl; ++t) {
         const i = OrderedSet.getAt(subsetIndices, t);
-        const { count, indices, squaredDistances } = lookup3d.find(x[i], y[i], z[i], tester.maxDistance);
+        const { count, indices, squaredDistances } = lookup3d.find(
+            x[i],
+            y[i],
+            z[i],
+            tester.maxDistance,
+        );
         if (count === 0) continue;
 
         infoA.feature = i;
@@ -164,17 +216,30 @@ const _imageTransform = Mat4();
 /**
  * Add all inter-unit contacts, i.e. pairs of features
  */
-export function addStructureContacts(structure: Structure, unitA: Unit.Atomic, featuresA: Features, unitB: Unit.Atomic, featuresB: Features, builder: InterContactsBuilder, testers: ReadonlyArray<ContactTester>, props: ContactsProps) {
+export function addStructureContacts(
+    structure: Structure,
+    unitA: Unit.Atomic,
+    featuresA: Features,
+    unitB: Unit.Atomic,
+    featuresB: Features,
+    builder: InterContactsBuilder,
+    testers: ReadonlyArray<ContactTester>,
+    props: ContactsProps,
+) {
     const { count: countA, x: xA, y: yA, z: zA } = featuresA;
     const { lookup3d } = featuresB;
 
     // the lookup queries need to happen in the "unitB space".
     // that means imageA = inverseOperB(operA(i))
-    const imageTransform = Mat4.mul(_imageTransform, unitB.conformation.operator.inverse, unitA.conformation.operator.matrix);
+    const imageTransform = Mat4.mul(
+        _imageTransform,
+        unitB.conformation.operator.inverse,
+        unitA.conformation.operator.matrix,
+    );
     const isNotIdentity = !Mat4.isIdentity(imageTransform);
     const imageA = Vec3();
 
-    const maxDistance = Math.max(...testers.map(t => t.maxDistance));
+    const maxDistance = Math.max(...testers.map((t) => t.maxDistance));
     const { center, radius } = lookup3d.boundary.sphere;
     const testDistanceSq = (radius + maxDistance) * (radius + maxDistance);
 
@@ -190,7 +255,12 @@ export function addStructureContacts(structure: Structure, unitA: Unit.Atomic, f
         if (isNotIdentity) Vec3.transformMat4(imageA, imageA, imageTransform);
         if (Vec3.squaredDistance(imageA, center) > testDistanceSq) continue;
 
-        const { indices, count, squaredDistances } = lookup3d.find(imageA[0], imageA[1], imageA[2], maxDistance);
+        const { indices, count, squaredDistances } = lookup3d.find(
+            imageA[0],
+            imageA[1],
+            imageA[2],
+            maxDistance,
+        );
         if (count === 0) continue;
 
         infoA.feature = i;

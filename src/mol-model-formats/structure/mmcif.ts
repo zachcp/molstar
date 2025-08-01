@@ -9,7 +9,7 @@
 import { Model } from '../../mol-model/structure/model/model.ts';
 import { RuntimeContext, Task } from '../../mol-task/index.ts';
 import { ModelFormat } from '../format.ts';
-import { CifFrame, CIF, CifFile } from '../../mol-io/reader/cif.ts';
+import { CIF, CifFile, CifFrame } from '../../mol-io/reader/cif.ts';
 import { mmCIF_Database } from '../../mol-io/reader/cif/schema/mmcif.ts';
 import { createModels } from './basic/parser.ts';
 import { ModelSymmetry } from './property/symmetry.ts';
@@ -39,7 +39,11 @@ ModelSymmetry.Provider.formatRegistry.add('mmCIF', modelSymmetryFromMmcif);
 function secondaryStructureFromMmcif(model: Model) {
     if (!MmcifFormat.is(model.sourceData)) return;
     const { struct_conf, struct_sheet_range } = model.sourceData.data.db;
-    return ModelSecondaryStructure.fromStruct(struct_conf, struct_sheet_range, model.atomicHierarchy);
+    return ModelSecondaryStructure.fromStruct(
+        struct_conf,
+        struct_sheet_range,
+        model.atomicHierarchy,
+    );
 }
 ModelSecondaryStructure.Provider.formatRegistry.add('mmCIF', secondaryStructureFromMmcif);
 
@@ -47,14 +51,21 @@ function atomSiteAnisotropFromMmcif(model: Model) {
     if (!MmcifFormat.is(model.sourceData)) return;
     const { atom_site_anisotrop } = model.sourceData.data.db;
     const data = Table.ofColumns(AtomSiteAnisotrop.Schema, atom_site_anisotrop);
-    const elementToAnsiotrop = AtomSiteAnisotrop.getElementToAnsiotrop(model.atomicConformation.atomId, atom_site_anisotrop.id);
+    const elementToAnsiotrop = AtomSiteAnisotrop.getElementToAnsiotrop(
+        model.atomicConformation.atomId,
+        atom_site_anisotrop.id,
+    );
     return { data, elementToAnsiotrop };
 }
 function atomSiteAnisotropApplicableMmcif(model: Model) {
     if (!MmcifFormat.is(model.sourceData)) return false;
     return model.sourceData.data.db.atom_site_anisotrop.U.isDefined;
 }
-AtomSiteAnisotrop.Provider.formatRegistry.add('mmCIF', atomSiteAnisotropFromMmcif, atomSiteAnisotropApplicableMmcif);
+AtomSiteAnisotrop.Provider.formatRegistry.add(
+    'mmCIF',
+    atomSiteAnisotropFromMmcif,
+    atomSiteAnisotropApplicableMmcif,
+);
 
 function componentBondFromMmcif(model: Model) {
     if (!MmcifFormat.is(model.sourceData)) return;
@@ -62,7 +73,7 @@ function componentBondFromMmcif(model: Model) {
     if (chem_comp_bond._rowCount === 0) return;
     return {
         data: chem_comp_bond,
-        entries: ComponentBond.getEntriesFromChemCompBond(chem_comp_bond)
+        entries: ComponentBond.getEntriesFromChemCompBond(chem_comp_bond),
     };
 }
 ComponentBond.Provider.formatRegistry.add('mmCIF', componentBondFromMmcif);
@@ -76,7 +87,9 @@ function structConnFromMmcif(model: Model) {
     const residueCantorPairs = new Set<number>();
     for (const e of entries) {
         if (e.partnerA.residueIndex !== e.partnerB.residueIndex) {
-            residueCantorPairs.add(sortedCantorPairing(e.partnerA.residueIndex, e.partnerB.residueIndex));
+            residueCantorPairs.add(
+                sortedCantorPairing(e.partnerA.residueIndex, e.partnerB.residueIndex),
+            );
         }
     }
 
@@ -92,7 +105,10 @@ StructConn.Provider.formatRegistry.add('mmCIF', structConnFromMmcif);
 function indexPairBondsFromMolstarBondSite(model: Model) {
     if (!MmcifFormat.is(model.sourceData)) return;
 
-    const { molstar_bond_site: entries } = toDatabase(MolstarBondSiteSchema, model.sourceData.data.frame);
+    const { molstar_bond_site: entries } = toDatabase(
+        MolstarBondSiteSchema,
+        model.sourceData.data.frame,
+    );
 
     if (entries._rowCount === 0) return;
 
@@ -117,23 +133,39 @@ function indexPairBondsFromMolstarBondSite(model: Model) {
         let order = 1;
 
         switch (value_order.value(i)) {
-            case 'sing': order = 1; break;
-            case 'doub': order = 2; break;
-            case 'trip': order = 3; break;
-            case 'quad': order = 4; break;
-            case 'arom': order = 1; flag = BondType.Flag.Aromatic; break;
-            default: break;
+            case 'sing':
+                order = 1;
+                break;
+            case 'doub':
+                order = 2;
+                break;
+            case 'trip':
+                order = 3;
+                break;
+            case 'quad':
+                order = 4;
+                break;
+            case 'arom':
+                order = 1;
+                flag = BondType.Flag.Aromatic;
+                break;
+            default:
+                break;
         }
 
         switch (type_id.value(i)) {
             case 'covale':
                 flag |= BondType.Flag.Covalent;
                 break;
-            case 'disulf': flag |= BondType.Flag.Covalent | BondType.Flag.Disulfide; break;
+            case 'disulf':
+                flag |= BondType.Flag.Covalent | BondType.Flag.Disulfide;
+                break;
             case 'hydrog':
                 flag |= BondType.Flag.HydrogenBond;
                 break;
-            case 'metalc': flag |= BondType.Flag.MetallicCoordination; break;
+            case 'metalc':
+                flag |= BondType.Flag.MetallicCoordination;
+                break;
         }
 
         orders.push(order);
@@ -150,37 +182,46 @@ function indexPairBondsFromMolstarBondSite(model: Model) {
             },
             count: model.atomicHierarchy.atoms._rowCount,
         },
-        { maxDistance: Infinity }
+        { maxDistance: Infinity },
     );
     return pairBonds;
 }
 
 IndexPairBonds.Provider.formatRegistry.add('mmCIF', indexPairBondsFromMolstarBondSite);
 
-GlobalModelTransformInfo.Provider.formatRegistry.add('mmCIF', GlobalModelTransformInfo.fromMmCif, GlobalModelTransformInfo.hasData);
+GlobalModelTransformInfo.Provider.formatRegistry.add(
+    'mmCIF',
+    GlobalModelTransformInfo.fromMmCif,
+    GlobalModelTransformInfo.hasData,
+);
 
 //
 
 export { MmcifFormat };
 
-type MmcifFormat = ModelFormat<MmcifFormat.Data>
+type MmcifFormat = ModelFormat<MmcifFormat.Data>;
 
 namespace MmcifFormat {
     export type Data = {
-        db: mmCIF_Database,
-        frame: CifFrame,
-        file?: CifFile,
+        db: mmCIF_Database;
+        frame: CifFrame;
+        file?: CifFile;
         /**
          * Original source format. Some formats, including PDB, are converted
          * to mmCIF before further processing.
          */
-        source?: ModelFormat
-    }
+        source?: ModelFormat;
+    };
     export function is(x?: ModelFormat): x is MmcifFormat {
         return x?.kind === 'mmCIF';
     }
 
-    export function fromFrame(frame: CifFrame, db?: mmCIF_Database, source?: ModelFormat, file?: CifFile): MmcifFormat {
+    export function fromFrame(
+        frame: CifFrame,
+        db?: mmCIF_Database,
+        source?: ModelFormat,
+        file?: CifFile,
+    ): MmcifFormat {
         if (!db) db = CIF.schema.mmCIF(frame);
         return { kind: 'mmCIF', name: db._name, data: { db, file, frame, source } };
     }
@@ -189,28 +230,28 @@ namespace MmcifFormat {
 export function trajectoryFromMmCIF(frame: CifFrame, file?: CifFile): Task<Trajectory> {
     const format = MmcifFormat.fromFrame(frame, undefined, undefined, file);
     const basic = createBasic(format.data.db, true);
-    return Task.create('Create mmCIF Model', ctx => createModels(basic, format, ctx));
+    return Task.create('Create mmCIF Model', (ctx) => createModels(basic, format, ctx));
 }
 
 export { CCDFormat };
 
-type CCDFormat = ModelFormat<CCDFormat.Data>
+type CCDFormat = ModelFormat<CCDFormat.Data>;
 
 namespace CCDFormat {
     export type Data = {
-        db: CCD_Database,
-        frame: CifFrame
-    }
+        db: CCD_Database;
+        frame: CifFrame;
+    };
 
     const CoordinateTypeProp = '__CcdCoordinateType__';
-    export type CoordinateType = 'ideal' | 'model'
+    export type CoordinateType = 'ideal' | 'model';
     export const CoordinateType = {
         get(model: Model): CoordinateType | undefined {
             return model._staticPropertyData[CoordinateTypeProp];
         },
         set(model: Model, type: CoordinateType) {
             return model._staticPropertyData[CoordinateTypeProp] = type;
-        }
+        },
     };
 
     export function is(x?: ModelFormat): x is CCDFormat {
@@ -225,12 +266,25 @@ namespace CCDFormat {
 
 export function trajectoryFromCCD(frame: CifFrame): Task<Trajectory> {
     const format = CCDFormat.fromFrame(frame);
-    return Task.create('Create CCD Models', ctx => createCcdModels(format.data.db, CCDFormat.fromFrame(frame), ctx));
+    return Task.create(
+        'Create CCD Models',
+        (ctx) => createCcdModels(format.data.db, CCDFormat.fromFrame(frame), ctx),
+    );
 }
 
 async function createCcdModels(data: CCD_Database, format: CCDFormat, ctx: RuntimeContext) {
-    const ideal = await createCcdModel(data, format, { coordinateType: 'ideal', cartn_x: 'pdbx_model_Cartn_x_ideal', cartn_y: 'pdbx_model_Cartn_y_ideal', cartn_z: 'pdbx_model_Cartn_z_ideal' }, ctx);
-    const model = await createCcdModel(data, format, { coordinateType: 'model', cartn_x: 'model_Cartn_x', cartn_y: 'model_Cartn_y', cartn_z: 'model_Cartn_z' }, ctx);
+    const ideal = await createCcdModel(data, format, {
+        coordinateType: 'ideal',
+        cartn_x: 'pdbx_model_Cartn_x_ideal',
+        cartn_y: 'pdbx_model_Cartn_y_ideal',
+        cartn_z: 'pdbx_model_Cartn_z_ideal',
+    }, ctx);
+    const model = await createCcdModel(data, format, {
+        coordinateType: 'model',
+        cartn_x: 'model_Cartn_x',
+        cartn_y: 'model_Cartn_y',
+        cartn_z: 'model_Cartn_z',
+    }, ctx);
 
     const models = [];
     if (ideal) models.push(ideal);
@@ -242,8 +296,18 @@ async function createCcdModels(data: CCD_Database, format: CCDFormat, ctx: Runti
     return new ArrayTrajectory(models);
 }
 
-type CCDProps = { coordinateType: CCDFormat.CoordinateType, cartn_x: 'model_Cartn_x' | 'pdbx_model_Cartn_x_ideal', cartn_y: 'model_Cartn_y' | 'pdbx_model_Cartn_y_ideal', cartn_z: 'model_Cartn_z' | 'pdbx_model_Cartn_z_ideal' };
-async function createCcdModel(data: CCD_Database, format: CCDFormat, props: CCDProps, ctx: RuntimeContext) {
+type CCDProps = {
+    coordinateType: CCDFormat.CoordinateType;
+    cartn_x: 'model_Cartn_x' | 'pdbx_model_Cartn_x_ideal';
+    cartn_y: 'model_Cartn_y' | 'pdbx_model_Cartn_y_ideal';
+    cartn_z: 'model_Cartn_z' | 'pdbx_model_Cartn_z_ideal';
+};
+async function createCcdModel(
+    data: CCD_Database,
+    format: CCDFormat,
+    props: CCDProps,
+    ctx: RuntimeContext,
+) {
     const { chem_comp, chem_comp_atom, chem_comp_bond } = data;
     const { coordinateType, cartn_x, cartn_y, cartn_z } = props;
 
@@ -295,7 +359,7 @@ async function createCcdModel(data: CCD_Database, format: CCDFormat, props: CCDP
         type_symbol: filteredTypeSymbol,
 
         pdbx_PDB_model_num: model_num,
-        pdbx_formal_charge: filteredCharge
+        pdbx_formal_charge: filteredCharge,
     }, filteredRowCount);
 
     const entityBuilder = new EntityBuilder();
@@ -309,7 +373,7 @@ async function createCcdModel(data: CCD_Database, format: CCDFormat, props: CCDP
     const basicModel = createBasic({
         entity: entityBuilder.getEntityTable(),
         chem_comp: componentBuilder.getChemCompTable(),
-        atom_site: model_atom_site
+        atom_site: model_atom_site,
     });
     const models = await createModels(basicModel, format, ctx);
 

@@ -8,7 +8,15 @@
 import { Interval, OrderedSet, SortedArray } from '../../mol-data/int.ts';
 import { Loci } from '../../mol-model/loci.ts';
 import { Sequence } from '../../mol-model/sequence.ts';
-import { Queries, StructureProperties as SP, Structure, StructureElement, StructureQuery, StructureSelection, Unit } from '../../mol-model/structure.ts';
+import {
+    Queries,
+    Structure,
+    StructureElement,
+    StructureProperties as SP,
+    StructureQuery,
+    StructureSelection,
+    Unit,
+} from '../../mol-model/structure.ts';
 import { MissingResidues } from '../../mol-model/structure/model/properties/common.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import { SequenceWrapper, StructureUnit } from './wrapper.ts';
@@ -68,12 +76,22 @@ export class PolymerSequenceWrapper extends SequenceWrapper<StructureUnit> {
     }
 
     getLoci(seqIdx: number) {
-        const query = createResidueQuery(this.data.units[0].chainGroupId, this.data.units[0].conformation.operator.name, this.seqId(seqIdx));
-        return StructureSelection.toLociWithSourceUnits(StructureQuery.run(query, this.data.structure));
+        const query = createResidueQuery(
+            this.data.units[0].chainGroupId,
+            this.data.units[0].conformation.operator.name,
+            this.seqId(seqIdx),
+        );
+        return StructureSelection.toLociWithSourceUnits(
+            StructureQuery.run(query, this.data.structure),
+        );
     }
 
     constructor(data: StructureUnit) {
-        const l = StructureElement.Location.create(data.structure, data.units[0], data.units[0].elements[0]);
+        const l = StructureElement.Location.create(
+            data.structure,
+            data.units[0],
+            data.units[0].elements[0],
+        );
         const entitySeq = data.units[0].model.sequence.byEntityKey[SP.entity.key(l)];
 
         const length = entitySeq.sequence.length;
@@ -87,25 +105,30 @@ export class PolymerSequenceWrapper extends SequenceWrapper<StructureUnit> {
         this.missing = data.units[0].model.properties.missingResidues;
 
         this.modelNum = data.units[0].model.modelNum;
-        this.asymId = Unit.isAtomic(data.units[0]) ? SP.chain.label_asym_id(l) : SP.coarse.asym_id(l);
+        this.asymId = Unit.isAtomic(data.units[0])
+            ? SP.chain.label_asym_id(l)
+            : SP.coarse.asym_id(l);
 
         const missing: number[] = [];
         for (let i = 0; i < length; ++i) {
             if (this.missing.has(this.modelNum, this.asymId, this.seqId(i))) missing.push(i);
         }
-        this.observed = OrderedSet.subtract(Interval.ofBounds(0, length), SortedArray.ofSortedArray(missing));
+        this.observed = OrderedSet.subtract(
+            Interval.ofBounds(0, length),
+            SortedArray.ofSortedArray(missing),
+        );
     }
 }
 
 function createResidueQuery(chainGroupId: number, operatorName: string, label_seq_id: number) {
     return Queries.generators.atoms({
-        unitTest: ctx => {
+        unitTest: (ctx) => {
             return (
                 SP.unit.chainGroupId(ctx.element) === chainGroupId &&
                 SP.unit.operator_name(ctx.element) === operatorName
             );
         },
-        residueTest: ctx => {
+        residueTest: (ctx) => {
             if (ctx.element.unit.kind === Unit.Kind.Atomic) {
                 return SP.residue.label_seq_id(ctx.element) === label_seq_id;
             } else {
@@ -114,16 +137,20 @@ function createResidueQuery(chainGroupId: number, operatorName: string, label_se
                     SP.coarse.seq_id_end(ctx.element) >= label_seq_id
                 );
             }
-        }
+        },
     });
 }
 
-function collectSeqIdxAtomic(out: number[], e: StructureElement.Loci.Element, index: (seqId: number) => number) {
+function collectSeqIdxAtomic(
+    out: number[],
+    e: StructureElement.Loci.Element,
+    index: (seqId: number) => number,
+) {
     const { model, elements } = e.unit;
     const { index: residueIndex } = model.atomicHierarchy.residueAtomSegments;
     const { label_seq_id } = model.atomicHierarchy.residues;
 
-    OrderedSet.forEachSegment(e.indices, i => residueIndex[elements[i]], rI => {
+    OrderedSet.forEachSegment(e.indices, (i) => residueIndex[elements[i]], (rI) => {
         const seqId = label_seq_id.value(rI);
         const seqIdx = index(seqId);
         out.push(seqIdx);
@@ -131,12 +158,20 @@ function collectSeqIdxAtomic(out: number[], e: StructureElement.Loci.Element, in
     return true;
 }
 
-function collectSeqIdxCoarse(out: number[], e: StructureElement.Loci.Element, index: (seqId: number) => number) {
+function collectSeqIdxCoarse(
+    out: number[],
+    e: StructureElement.Loci.Element,
+    index: (seqId: number) => number,
+) {
     const { model, elements } = e.unit;
-    const begin = Unit.isSpheres(e.unit) ? model.coarseHierarchy.spheres.seq_id_begin : model.coarseHierarchy.gaussians.seq_id_begin;
-    const end = Unit.isSpheres(e.unit) ? model.coarseHierarchy.spheres.seq_id_end : model.coarseHierarchy.gaussians.seq_id_end;
+    const begin = Unit.isSpheres(e.unit)
+        ? model.coarseHierarchy.spheres.seq_id_begin
+        : model.coarseHierarchy.gaussians.seq_id_begin;
+    const end = Unit.isSpheres(e.unit)
+        ? model.coarseHierarchy.spheres.seq_id_end
+        : model.coarseHierarchy.gaussians.seq_id_end;
 
-    OrderedSet.forEach(e.indices, i => {
+    OrderedSet.forEach(e.indices, (i) => {
         const eI = elements[i];
         for (let s = index(begin.value(eI)), e = index(end.value(eI)); s <= e; s++) {
             out.push(s);

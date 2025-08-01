@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4, Mat3 } from '../mol-math/linear-algebra.ts';
+import { Mat3, Mat4, Vec3 } from '../mol-math/linear-algebra.ts';
 import { NumberArray } from '../mol-util/type-helpers.ts';
 import { arrayMax } from '../mol-util/array.ts';
 
@@ -31,7 +31,12 @@ export function transformPositionArray(t: Mat4, array: NumberArray, offset: numb
     }
 }
 
-export function transformDirectionArray(n: Mat3, array: NumberArray, offset: number, count: number) {
+export function transformDirectionArray(
+    n: Mat3,
+    array: NumberArray,
+    offset: number,
+    count: number,
+) {
     for (let i = 0, il = count * 3; i < il; i += 3) {
         Vec3.fromArray(tmpV3, array, offset + i);
         Vec3.transformMat3(tmpV3, tmpV3, n);
@@ -60,8 +65,13 @@ const ab = Vec3();
  *      http://www.iquilezles.org/www/articles/normals/normals.htm
  * - normals array must contain only zeros
  */
-export function computeIndexedVertexNormals<T extends NumberArray>(vertices: NumberArray, indices: NumberArray, normals: T, vertexCount: number, triangleCount: number) {
-
+export function computeIndexedVertexNormals<T extends NumberArray>(
+    vertices: NumberArray,
+    indices: NumberArray,
+    normals: T,
+    vertexCount: number,
+    triangleCount: number,
+) {
     for (let i = 0, il = triangleCount * 3; i < il; i += 3) {
         const ai = indices[i] * 3;
         const bi = indices[i + 1] * 3;
@@ -95,7 +105,11 @@ export function computeIndexedVertexNormals<T extends NumberArray>(vertices: Num
  * vertex normals for unindexed triangle soup
  * - normals array must contain only zeros
  */
-export function computeVertexNormals<T extends NumberArray>(vertices: NumberArray, normals: T, vertexCount: number) {
+export function computeVertexNormals<T extends NumberArray>(
+    vertices: NumberArray,
+    normals: T,
+    vertexCount: number,
+) {
     for (let i = 0, il = vertexCount * 3; i < il; i += 9) {
         Vec3.fromArray(a, vertices, i);
         Vec3.fromArray(b, vertices, i + 3);
@@ -126,15 +140,19 @@ export function computeVertexNormals<T extends NumberArray>(vertices: NumberArra
  */
 export type GroupMapping = {
     /** data indices */
-    readonly indices: ArrayLike<number>
+    readonly indices: ArrayLike<number>;
     /** range for group i is offsets[i] to offsets[i + 1] */
-    readonly offsets: ArrayLike<number>
-}
+    readonly offsets: ArrayLike<number>;
+};
 
 /**
  * The `step` parameter allows to skip over repeated values in `groups`
  */
-export function createGroupMapping(groups: ArrayLike<number>, dataCount: number, step = 1): GroupMapping {
+export function createGroupMapping(
+    groups: ArrayLike<number>,
+    dataCount: number,
+    step = 1,
+): GroupMapping {
     const maxId = arrayMax(groups);
 
     const offsets = new Int32Array(maxId + 2);

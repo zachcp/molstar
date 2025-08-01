@@ -9,15 +9,38 @@ import { Structure, StructureElement } from '../../mol-model/structure.ts';
 import { PluginStateObject } from '../objects.ts';
 import { StateTransforms } from '../transforms.ts';
 import { PluginContext } from '../../mol-plugin/context.ts';
-import { StateBuilder, StateObjectCell, StateSelection, StateTransform } from '../../mol-state/index.ts';
+import {
+    StateBuilder,
+    StateObjectCell,
+    StateSelection,
+    StateTransform,
+} from '../../mol-state/index.ts';
 import { StructureComponentRef } from '../manager/structure/hierarchy-state.ts';
 import { EmptyLoci, isEmptyLoci, Loci } from '../../mol-model/loci.ts';
 import { Emissive } from '../../mol-theme/emissive.ts';
 
-type EmissiveEachReprCallback = (update: StateBuilder.Root, repr: StateObjectCell<PluginStateObject.Molecule.Structure.Representation3D, StateTransform<typeof StateTransforms.Representation.StructureRepresentation3D>>, emissive?: StateObjectCell<any, StateTransform<typeof StateTransforms.Representation.EmissiveStructureRepresentation3DFromBundle>>) => Promise<void>
+type EmissiveEachReprCallback = (
+    update: StateBuilder.Root,
+    repr: StateObjectCell<
+        PluginStateObject.Molecule.Structure.Representation3D,
+        StateTransform<typeof StateTransforms.Representation.StructureRepresentation3D>
+    >,
+    emissive?: StateObjectCell<
+        any,
+        StateTransform<
+            typeof StateTransforms.Representation.EmissiveStructureRepresentation3DFromBundle
+        >
+    >,
+) => Promise<void>;
 const EmissiveManagerTag = 'emissive-controls';
 
-export async function setStructureEmissive(plugin: PluginContext, components: StructureComponentRef[], value: number, lociGetter: (structure: Structure) => Promise<StructureElement.Loci | EmptyLoci>, types?: string[]) {
+export async function setStructureEmissive(
+    plugin: PluginContext,
+    components: StructureComponentRef[],
+    value: number,
+    lociGetter: (structure: Structure) => Promise<StructureElement.Loci | EmptyLoci>,
+    types?: string[],
+) {
     await eachRepr(plugin, components, async (update, repr, emissiveCell) => {
         if (types && types.length > 0 && !types.includes(repr.params!.values.type.name)) return;
 
@@ -39,12 +62,20 @@ export async function setStructureEmissive(plugin: PluginContext, components: St
         } else {
             const filtered = getFilteredBundle([layer], structure);
             update.to(repr.transform.ref)
-                .apply(StateTransforms.Representation.EmissiveStructureRepresentation3DFromBundle, Emissive.toBundle(filtered), { tags: EmissiveManagerTag });
+                .apply(
+                    StateTransforms.Representation.EmissiveStructureRepresentation3DFromBundle,
+                    Emissive.toBundle(filtered),
+                    { tags: EmissiveManagerTag },
+                );
         }
     });
 }
 
-export async function clearStructureEmissive(plugin: PluginContext, components: StructureComponentRef[], types?: string[]) {
+export async function clearStructureEmissive(
+    plugin: PluginContext,
+    components: StructureComponentRef[],
+    types?: string[],
+) {
     await eachRepr(plugin, components, async (update, repr, emissiveCell) => {
         if (types && types.length > 0 && !types.includes(repr.params!.values.type.name)) return;
         if (emissiveCell) {
@@ -53,12 +84,21 @@ export async function clearStructureEmissive(plugin: PluginContext, components: 
     });
 }
 
-async function eachRepr(plugin: PluginContext, components: StructureComponentRef[], callback: EmissiveEachReprCallback) {
+async function eachRepr(
+    plugin: PluginContext,
+    components: StructureComponentRef[],
+    callback: EmissiveEachReprCallback,
+) {
     const state = plugin.state.data;
     const update = state.build();
     for (const c of components) {
         for (const r of c.representations) {
-            const emissive = state.select(StateSelection.Generators.ofTransformer(StateTransforms.Representation.EmissiveStructureRepresentation3DFromBundle, r.cell.transform.ref).withTag(EmissiveManagerTag));
+            const emissive = state.select(
+                StateSelection.Generators.ofTransformer(
+                    StateTransforms.Representation.EmissiveStructureRepresentation3DFromBundle,
+                    r.cell.transform.ref,
+                ).withTag(EmissiveManagerTag),
+            );
             await callback(update, r.cell, emissive[0]);
         }
     }

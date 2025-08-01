@@ -26,38 +26,45 @@ export const MolstarBondSiteSchema = {
         atom_id_2: Column.Schema.int,
         value_order: Column.Schema.Aliased<MolstarBondSiteValueOrder>(Column.Schema.lstr),
         type_id: Column.Schema.Aliased<MolstarBondSiteTypeId>(Column.Schema.lstr),
-    }
+    },
 };
 
 export type MolstarBondSiteSchema = typeof MolstarBondSiteSchema;
 
 interface Entry {
-    atom_id_1: number,
-    atom_id_2: number,
-    value_order?: MolstarBondSiteValueOrder,
-    type_id?: MolstarBondSiteTypeId,
+    atom_id_1: number;
+    atom_id_2: number;
+    value_order?: MolstarBondSiteValueOrder;
+    type_id?: MolstarBondSiteTypeId;
 }
 
 const Fields = CifWriter.fields<number, Entry[], keyof MolstarBondSiteSchema['molstar_bond_site']>()
     .int('atom_id_1', (i, xs) => xs[i].atom_id_1)
     .int('atom_id_2', (i, xs) => xs[i].atom_id_2)
     .str('value_order', (i, xs) => xs[i].value_order ?? '', {
-        valueKind: (i, xs) => xs[i].value_order === undefined ? Column.ValueKinds.NotPresent : Column.ValueKinds.Present,
+        valueKind: (i, xs) =>
+            xs[i].value_order === undefined
+                ? Column.ValueKinds.NotPresent
+                : Column.ValueKinds.Present,
     })
     .str('type_id', (i, xs) => xs[i].type_id ?? '', {
-        valueKind: (i, xs) => xs[i].type_id === undefined ? Column.ValueKinds.NotPresent : Column.ValueKinds.Present,
+        valueKind: (i, xs) =>
+            xs[i].type_id === undefined ? Column.ValueKinds.NotPresent : Column.ValueKinds.Present,
     })
     .getFields();
-
 
 const Category: CifWriter.Category<Entry[]> = {
     name: 'molstar_bond_site',
     instance(entries: Entry[]) {
         return { fields: Fields, source: [{ data: entries, rowCount: entries.length }] };
-    }
+    },
 };
 
-function assignValueOrder(order: number, flags: BondType.Flag, out: [MolstarBondSiteValueOrder | undefined, MolstarBondSiteTypeId | undefined]) {
+function assignValueOrder(
+    order: number,
+    flags: BondType.Flag,
+    out: [MolstarBondSiteValueOrder | undefined, MolstarBondSiteTypeId | undefined],
+) {
     out[0] = undefined;
     out[1] = undefined;
 
@@ -80,7 +87,10 @@ function getEntries(ctx: CifExportContext) {
     const loc = StructureElement.Location.create();
     const { id: atom_id } = StructureProperties.atom;
 
-    const info: [MolstarBondSiteValueOrder | undefined, MolstarBondSiteTypeId | undefined] = [undefined, undefined];
+    const info: [MolstarBondSiteValueOrder | undefined, MolstarBondSiteTypeId | undefined] = [
+        undefined,
+        undefined,
+    ];
 
     const add = (a: number, b: number) => {
         const key = sortedCantorPairing(a, b);

@@ -4,16 +4,24 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { SubstitutionMatrix, SubstitutionMatrices, SubstitutionMatrixData } from './substitution-matrix.ts';
+import {
+    SubstitutionMatrices,
+    SubstitutionMatrix,
+    SubstitutionMatrixData,
+} from './substitution-matrix.ts';
 
 const DefaultAlignmentOptions = {
     gapPenalty: -11,
     gapExtensionPenalty: -1,
-    substMatrix: 'default' as SubstitutionMatrix | 'default'
+    substMatrix: 'default' as SubstitutionMatrix | 'default',
 };
 export type AlignmentOptions = typeof DefaultAlignmentOptions;
 
-export function align(seqA: ArrayLike<string>, seqB: ArrayLike<string>, options: Partial<AlignmentOptions> = {}) {
+export function align(
+    seqA: ArrayLike<string>,
+    seqB: ArrayLike<string>,
+    options: Partial<AlignmentOptions> = {},
+) {
     const o = { ...DefaultAlignmentOptions, ...options };
     const alignment = new Alignment(seqA, seqB, o);
     alignment.calculate();
@@ -21,16 +29,26 @@ export function align(seqA: ArrayLike<string>, seqB: ArrayLike<string>, options:
 }
 
 class Alignment {
-    readonly gapPenalty: number; readonly gapExtensionPenalty: number;
+    readonly gapPenalty: number;
+    readonly gapExtensionPenalty: number;
     readonly substMatrix: SubstitutionMatrixData | undefined;
 
-    readonly n: number; readonly m: number;
-    readonly S: number[][] = []; readonly V: number[][] = []; readonly H: number[][] = [];
+    readonly n: number;
+    readonly m: number;
+    readonly S: number[][] = [];
+    readonly V: number[][] = [];
+    readonly H: number[][] = [];
 
-    constructor(readonly seqA: ArrayLike<string>, readonly seqB: ArrayLike<string>, options: AlignmentOptions) {
+    constructor(
+        readonly seqA: ArrayLike<string>,
+        readonly seqB: ArrayLike<string>,
+        options: AlignmentOptions,
+    ) {
         this.gapPenalty = options.gapPenalty;
         this.gapExtensionPenalty = options.gapExtensionPenalty;
-        this.substMatrix = options.substMatrix === 'default' ? undefined : SubstitutionMatrices[options.substMatrix];
+        this.substMatrix = options.substMatrix === 'default'
+            ? undefined
+            : SubstitutionMatrices[options.substMatrix];
 
         this.n = this.seqA.length;
         this.m = this.seqB.length;
@@ -92,24 +110,24 @@ class Alignment {
             for (let j = 1; j <= m; ++j) {
                 Vi[j] = Math.max(
                     Si1[j] + gapPenalty,
-                    Vi1[j] + gapExtensionPenalty
+                    Vi1[j] + gapExtensionPenalty,
                 );
 
                 Hi[j] = Math.max(
                     Si[j - 1] + gapPenalty,
-                    Hi[j - 1] + gapExtensionPenalty
+                    Hi[j - 1] + gapExtensionPenalty,
                 );
 
                 Si[j] = Math.max(
                     Si1[j - 1] + scoreFn(i - 1, j - 1), // match
                     Vi[j], // del
-                    Hi[j] // ins
+                    Hi[j], // ins
                 );
             }
         }
     }
 
-    trace(): { aliA: ArrayLike<string>, aliB: ArrayLike<string>, score: number } {
+    trace(): { aliA: ArrayLike<string>; aliB: ArrayLike<string>; score: number } {
         const scoreFn = this.makeScoreFn();
         const { V, H, S, seqA, seqB, gapExtensionPenalty, gapPenalty } = this;
 

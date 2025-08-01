@@ -5,7 +5,11 @@
  */
 
 import { Mp4EncoderUI } from '../../../extensions/mp4-export/ui.tsx';
-import { CollapsableControls, CollapsableState, PluginUIComponent } from '../../../mol-plugin-ui/base.tsx';
+import {
+    CollapsableControls,
+    CollapsableState,
+    PluginUIComponent,
+} from '../../../mol-plugin-ui/base.tsx';
 import { SectionHeader } from '../../../mol-plugin-ui/controls/common.tsx';
 import { ParameterControls } from '../../../mol-plugin-ui/controls/parameters.tsx';
 import { PluginCommands } from '../../../mol-plugin/commands.ts';
@@ -13,7 +17,15 @@ import { StructureMeasurementsControls } from '../../../mol-plugin-ui/structure/
 import { MesoscaleExplorerState } from '../app.ts';
 import { MesoscaleState } from '../data/state.ts';
 import { EntityControls, FocusInfo, ModelInfo, SelectionInfo } from './entities.tsx';
-import { LoaderControls, ExampleControls, SessionControls, SnapshotControls, DatabaseControls, MesoQuickStylesControls, ExplorerInfo } from './states.tsx';
+import {
+    DatabaseControls,
+    ExampleControls,
+    ExplorerInfo,
+    LoaderControls,
+    MesoQuickStylesControls,
+    SessionControls,
+    SnapshotControls,
+} from './states.tsx';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { TuneSvg } from '../../../mol-plugin-ui/controls/icons.tsx';
 import { RendererParams } from '../../../mol-gl/renderer.ts';
@@ -31,19 +43,27 @@ class ViewportSettingsUI extends CollapsableControls<{}, {}> {
         return {
             header: 'Viewport Settings',
             isCollapsed: true,
-            brand: { accent: 'cyan', svg: TuneSvg }
+            brand: { accent: 'cyan', svg: TuneSvg },
         };
     }
 
     protected renderControls(): JSX.Element | null {
-        return <>
-            {this.plugin.canvas3d && this.plugin.canvas3dContext && <>
-                <ParameterControls params={ViewportParams} values={this.plugin.canvas3d.props} onChange={this.setSettings} />
-            </>}
-        </>;
+        return (
+            <>
+                {this.plugin.canvas3d && this.plugin.canvas3dContext && (
+                    <>
+                        <ParameterControls
+                            params={ViewportParams}
+                            values={this.plugin.canvas3d.props}
+                            onChange={this.setSettings}
+                        />
+                    </>
+                )}
+            </>
+        );
     }
 
-    private setSettings = (p: { param: PD.Base<any>, name: string, value: any }) => {
+    private setSettings = (p: { param: PD.Base<any>; name: string; value: any }) => {
         PluginCommands.Canvas3D.SetSettings(this.plugin, { settings: { [p.name]: p.value } });
     };
 
@@ -57,36 +77,42 @@ export class LeftPanel extends PluginUIComponent {
     render() {
         const customState = this.plugin.customState as MesoscaleExplorerState;
 
-        return <div className='msp-scrollable-container'>
-            {customState.driver && <>
-                <ExplorerInfo />
+        return (
+            <div className='msp-scrollable-container'>
+                {customState.driver && (
+                    <>
+                        <ExplorerInfo />
+                        <Spacer />
+                    </>
+                )}
+                <SectionHeader title='Database' />
+                <DatabaseControls />
                 <Spacer />
-            </>}
-            <SectionHeader title='Database' />
-            <DatabaseControls />
-            <Spacer />
 
-            <SectionHeader title='Open' />
-            <LoaderControls />
-            <Spacer />
-
-            {customState.examples?.length && <>
-                <SectionHeader title='Example' />
-                <ExampleControls />
+                <SectionHeader title='Open' />
+                <LoaderControls />
                 <Spacer />
-            </>}
 
-            <SectionHeader title='Session' />
-            <SessionControls />
-            <Spacer />
+                {customState.examples?.length && (
+                    <>
+                        <SectionHeader title='Example' />
+                        <ExampleControls />
+                        <Spacer />
+                    </>
+                )}
 
-            <SectionHeader title='Snapshots' />
-            <SnapshotControls />
-            <Spacer />
+                <SectionHeader title='Session' />
+                <SessionControls />
+                <Spacer />
 
-            <Mp4EncoderUI />
-            <ViewportSettingsUI />
-        </div>;
+                <SectionHeader title='Snapshots' />
+                <SnapshotControls />
+                <Spacer />
+
+                <Mp4EncoderUI />
+                <ViewportSettingsUI />
+            </div>
+        );
     }
 }
 
@@ -111,17 +137,20 @@ export class RightPanel extends PluginUIComponent<{}, { isDisabled: boolean }> {
     }
 
     componentDidMount() {
-        this.subscribe(this.plugin.state.data.behaviors.isUpdating, v => {
+        this.subscribe(this.plugin.state.data.behaviors.isUpdating, (v) => {
             this.setState({ isDisabled: v });
         });
 
-        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
-            if (!this.state.isDisabled && MesoscaleState.has(this.plugin) && MesoscaleState.ref(this.plugin) === e.ref) {
+        this.subscribe(this.plugin.state.events.cell.stateUpdated, (e) => {
+            if (
+                !this.state.isDisabled && MesoscaleState.has(this.plugin) &&
+                MesoscaleState.ref(this.plugin) === e.ref
+            ) {
                 this.forceUpdate();
             }
         });
 
-        this.subscribe(this.plugin.managers.structure.selection.events.changed, e => {
+        this.subscribe(this.plugin.managers.structure.selection.events.changed, (e) => {
             if (!this.state.isDisabled) {
                 this.forceUpdate();
             }
@@ -129,29 +158,35 @@ export class RightPanel extends PluginUIComponent<{}, { isDisabled: boolean }> {
     }
 
     render() {
-        return <div className='msp-scrollable-container'>
-            {this.hasModelInfo && <>
-                <SectionHeader title='Model' />
-                <ModelInfo />
-                <Spacer />
-            </>}
+        return (
+            <div className='msp-scrollable-container'>
+                {this.hasModelInfo && (
+                    <>
+                        <SectionHeader title='Model' />
+                        <ModelInfo />
+                        <Spacer />
+                    </>
+                )}
 
-            <>
-                <SectionHeader title='Selection' />
-                <SelectionInfo />
+                <>
+                    <SectionHeader title='Selection' />
+                    <SelectionInfo />
+                    <Spacer />
+                    <StructureMeasurementsControls initiallyCollapsed />
+                </>
+                <MesoQuickStylesControls />
                 <Spacer />
-                <StructureMeasurementsControls initiallyCollapsed/>
-            </>
-            <MesoQuickStylesControls />
-            <Spacer />
-            <SectionHeader title='Entities' />
-            <EntityControls />
-            <Spacer />
-            {this.hasFocusInfo && <>
-                <SectionHeader title='Focus Info' />
-                <FocusInfo />
+                <SectionHeader title='Entities' />
+                <EntityControls />
                 <Spacer />
-            </>}
-        </div>;
+                {this.hasFocusInfo && (
+                    <>
+                        <SectionHeader title='Focus Info' />
+                        <FocusInfo />
+                        <Spacer />
+                    </>
+                )}
+            </div>
+        );
     }
 }

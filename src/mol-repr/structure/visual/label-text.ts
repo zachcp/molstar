@@ -12,8 +12,8 @@ import { Structure, StructureElement, StructureProperties } from '../../../mol-m
 import { Theme } from '../../../mol-theme/theme.ts';
 import { Text } from '../../../mol-geo/geometry/text/text.ts';
 import { TextBuilder } from '../../../mol-geo/geometry/text/text-builder.ts';
-import { ComplexTextVisual, ComplexTextParams, ComplexVisual } from '../complex-visual.ts';
-import { ElementIterator, getSerialElementLoci, eachSerialElement } from './util/element.ts';
+import { ComplexTextParams, ComplexTextVisual, ComplexVisual } from '../complex-visual.ts';
+import { eachSerialElement, ElementIterator, getSerialElementLoci } from './util/element.ts';
 import { ColorNames } from '../../../mol-util/color/names.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { BoundaryHelper } from '../../../mol-math/geometry/boundary-helper.ts';
@@ -26,16 +26,20 @@ export const LabelTextParams = {
     backgroundColor: PD.Color(ColorNames.black),
     backgroundOpacity: PD.Numeric(0.5, { min: 0, max: 1, step: 0.01 }),
     borderWidth: PD.Numeric(0.25, { min: 0, max: 0.5, step: 0.01 }),
-    level: PD.Select('residue', [['chain', 'Chain'], ['residue', 'Residue'], ['element', 'Element']] as const, { isEssential: true }),
+    level: PD.Select(
+        'residue',
+        [['chain', 'Chain'], ['residue', 'Residue'], ['element', 'Element']] as const,
+        { isEssential: true },
+    ),
     ignoreHydrogens: PD.Boolean(false),
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     chainScale: PD.Numeric(10, { min: 0, max: 20, step: 0.1 }),
     residueScale: PD.Numeric(1, { min: 0, max: 20, step: 0.1 }),
     elementScale: PD.Numeric(0.5, { min: 0, max: 20, step: 0.1 }),
 };
-export type LabelTextParams = typeof LabelTextParams
-export type LabelTextProps = PD.Values<LabelTextParams>
-export type LabelLevels = LabelTextProps['level']
+export type LabelTextParams = typeof LabelTextParams;
+export type LabelTextProps = PD.Values<LabelTextParams>;
+export type LabelLevels = LabelTextProps['level'];
 
 export function LabelTextVisual(materialId: number): ComplexVisual<LabelTextParams> {
     return ComplexTextVisual<LabelTextParams>({
@@ -44,25 +48,37 @@ export function LabelTextVisual(materialId: number): ComplexVisual<LabelTextPara
         createLocationIterator: ElementIterator.fromStructure,
         getLoci: getSerialElementLoci,
         eachLocation: eachSerialElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<LabelTextParams>, currentProps: PD.Values<LabelTextParams>) => {
-            state.createGeometry = (
-                newProps.level !== currentProps.level ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<LabelTextParams>,
+            currentProps: PD.Values<LabelTextParams>,
+        ) => {
+            state.createGeometry = newProps.level !== currentProps.level ||
                 (newProps.level === 'chain' && newProps.chainScale !== currentProps.chainScale) ||
-                (newProps.level === 'residue' && newProps.residueScale !== currentProps.residueScale) ||
-                (newProps.level === 'element' && newProps.elementScale !== currentProps.elementScale) ||
+                (newProps.level === 'residue' &&
+                    newProps.residueScale !== currentProps.residueScale) ||
+                (newProps.level === 'element' &&
+                    newProps.elementScale !== currentProps.elementScale) ||
                 newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
-                newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant
-            );
-        }
+                newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant;
+        },
     }, materialId);
 }
 
-function createLabelText(ctx: VisualContext, structure: Structure, theme: Theme, props: LabelTextProps, text?: Text): Text {
-
+function createLabelText(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: LabelTextProps,
+    text?: Text,
+): Text {
     switch (props.level) {
-        case 'chain': return createChainText(ctx, structure, theme, props, text);
-        case 'residue': return createResidueText(ctx, structure, theme, props, text);
-        case 'element': return createElementText(ctx, structure, theme, props, text);
+        case 'chain':
+            return createChainText(ctx, structure, theme, props, text);
+        case 'residue':
+            return createResidueText(ctx, structure, theme, props, text);
+        case 'element':
+            return createElementText(ctx, structure, theme, props, text);
     }
 }
 
@@ -71,7 +87,13 @@ function createLabelText(ctx: VisualContext, structure: Structure, theme: Theme,
 const tmpVec = Vec3();
 const boundaryHelper = new BoundaryHelper('98');
 
-function createChainText(ctx: VisualContext, structure: Structure, theme: Theme, props: LabelTextProps, text?: Text): Text {
+function createChainText(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: LabelTextProps,
+    text?: Text,
+): Text {
     const l = StructureElement.Location.create(structure);
     const { units, serialMapping } = structure;
     const { auth_asym_id, label_asym_id } = StructureProperties.chain;
@@ -90,13 +112,27 @@ function createChainText(ctx: VisualContext, structure: Structure, theme: Theme,
         const authId = auth_asym_id(l);
         const labelId = label_asym_id(l);
         const text = authId === labelId ? labelId : `${labelId} [${authId}]`;
-        builder.add(text, tmpVec[0], tmpVec[1], tmpVec[2], radius, chainScale, cumulativeUnitElementCount[i]);
+        builder.add(
+            text,
+            tmpVec[0],
+            tmpVec[1],
+            tmpVec[2],
+            radius,
+            chainScale,
+            cumulativeUnitElementCount[i],
+        );
     }
 
     return builder.getText();
 }
 
-function createResidueText(ctx: VisualContext, structure: Structure, theme: Theme, props: LabelTextProps, text?: Text): Text {
+function createResidueText(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: LabelTextProps,
+    text?: Text,
+): Text {
     const l = StructureElement.Location.create(structure);
     const { units, serialMapping } = structure;
     const { label_comp_id } = StructureProperties.atom;
@@ -142,14 +178,28 @@ function createResidueText(ctx: VisualContext, structure: Structure, theme: Them
             const compId = label_comp_id(l);
 
             const text = `${compId} ${authSeqId}`;
-            builder.add(text, center[0], center[1], center[2], radius, residueScale, groupOffset + start);
+            builder.add(
+                text,
+                center[0],
+                center[1],
+                center[2],
+                radius,
+                residueScale,
+                groupOffset + start,
+            );
         }
     }
 
     return builder.getText();
 }
 
-function createElementText(ctx: VisualContext, structure: Structure, theme: Theme, props: LabelTextProps, text?: Text): Text {
+function createElementText(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: LabelTextProps,
+    text?: Text,
+): Text {
     const l = StructureElement.Location.create(structure);
     const { units, serialMapping } = structure;
     const { label_atom_id, label_alt_id } = StructureProperties.atom;
@@ -178,7 +228,15 @@ function createElementText(ctx: VisualContext, structure: Structure, theme: Them
             const atomId = label_atom_id(l);
             const altId = label_alt_id(l);
             const text = altId ? `${atomId}%${altId}` : atomId;
-            builder.add(text, tmpVec[0], tmpVec[1], tmpVec[2], sizeTheme.size(l), elementScale, groupOffset + j);
+            builder.add(
+                text,
+                tmpVec[0],
+                tmpVec[1],
+                tmpVec[2],
+                sizeTheme.size(l),
+                elementScale,
+                groupOffset + j,
+            );
         }
     }
 

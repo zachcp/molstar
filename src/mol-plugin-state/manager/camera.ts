@@ -30,7 +30,7 @@ const DefaultCameraFocusOptions = {
     durationMs: 250,
 };
 
-export type CameraFocusOptions = typeof DefaultCameraFocusOptions
+export type CameraFocusOptions = typeof DefaultCameraFocusOptions;
 
 export class CameraManager {
     private boundaryHelper = new BoundaryHelper('98');
@@ -44,7 +44,10 @@ export class CameraManager {
         return loci;
     }
 
-    focusRenderObjects(objects?: ReadonlyArray<GraphicsRenderObject>, options?: Partial<CameraFocusOptions>) {
+    focusRenderObjects(
+        objects?: ReadonlyArray<GraphicsRenderObject>,
+        options?: Partial<CameraFocusOptions>,
+    ) {
         if (!objects) return;
         const spheres: Sphere3D[] = [];
 
@@ -54,7 +57,7 @@ export class CameraManager {
             spheres.push(s);
         }
 
-        this.focusSpheres(spheres, s => s, options);
+        this.focusSpheres(spheres, (s) => s, options);
     }
 
     focusLoci(loci: Loci | Loci[], options?: Partial<CameraFocusOptions>) {
@@ -93,7 +96,14 @@ export class CameraManager {
         }
     }
 
-    focusSpheres<T>(xs: ReadonlyArray<T>, sphere: (t: T) => Sphere3D | undefined, options?: Partial<CameraFocusOptions> & { principalAxes?: PrincipalAxes, positionToFlip?: Vec3 }) {
+    focusSpheres<T>(
+        xs: ReadonlyArray<T>,
+        sphere: (t: T) => Sphere3D | undefined,
+        options?: Partial<CameraFocusOptions> & {
+            principalAxes?: PrincipalAxes;
+            positionToFlip?: Vec3;
+        },
+    ) {
         const spheres = [];
 
         for (const x of xs) {
@@ -115,7 +125,13 @@ export class CameraManager {
         this.focusSphere(this.boundaryHelper.getSphere(), options);
     }
 
-    focusSphere(sphere: Sphere3D, options?: Partial<CameraFocusOptions> & { principalAxes?: PrincipalAxes, positionToFlip?: Vec3 }) {
+    focusSphere(
+        sphere: Sphere3D,
+        options?: Partial<CameraFocusOptions> & {
+            principalAxes?: PrincipalAxes;
+            positionToFlip?: Vec3;
+        },
+    ) {
         const { canvas3d } = this.plugin;
         if (!canvas3d) return;
 
@@ -123,7 +139,11 @@ export class CameraManager {
         const radius = Math.max(sphere.radius + extraRadius, minRadius);
 
         if (options?.principalAxes) {
-            const snapshot = pcaFocus(this.plugin, radius, options as { principalAxes: PrincipalAxes, positionToFlip?: Vec3 });
+            const snapshot = pcaFocus(
+                this.plugin,
+                radius,
+                options as { principalAxes: PrincipalAxes; positionToFlip?: Vec3 },
+            );
             this.plugin.canvas3d?.requestCameraReset({ durationMs, snapshot });
         } else {
             const snapshot = canvas3d.camera.getFocus(sphere.center, radius);
@@ -132,33 +152,54 @@ export class CameraManager {
     }
 
     /** Focus on a set of plugin state object cells (if `options.targets` is non-empty) or on the whole scene (if `options.targets` is empty). */
-    focusObject(options: PluginState.SnapshotFocusInfo & { minRadius?: number, durationMs?: number }) {
+    focusObject(
+        options: PluginState.SnapshotFocusInfo & { minRadius?: number; durationMs?: number },
+    ) {
         if (!this.plugin.canvas3d) return;
         const snapshot = getFocusSnapshot(this.plugin, {
             ...options,
-            targets: options.targets?.map(t => ({ ...t, extraRadius: t.extraRadius ?? DefaultCameraFocusOptions.extraRadius })),
+            targets: options.targets?.map((t) => ({
+                ...t,
+                extraRadius: t.extraRadius ?? DefaultCameraFocusOptions.extraRadius,
+            })),
             minRadius: options.minRadius ?? DefaultCameraFocusOptions.minRadius,
         });
-        this.plugin.canvas3d.requestCameraReset({ snapshot, durationMs: options.durationMs ?? DefaultCameraFocusOptions.durationMs });
+        this.plugin.canvas3d.requestCameraReset({
+            snapshot,
+            durationMs: options.durationMs ?? DefaultCameraFocusOptions.durationMs,
+        });
     }
 
     /** Align PCA axes of `structures` (default: all loaded structures) to the screen axes. */
     orientAxes(structures?: Structure[], durationMs?: number) {
         if (!this.plugin.canvas3d) return;
         if (!structures) {
-            const structCells = this.plugin.state.data.selectQ(q => q.ofType(PluginStateObject.Molecule.Structure));
-            const rootStructCells = structCells.filter(cell => cell.obj && !cell.transform.transformer.definition.isDecorator && !cell.obj.data.parent);
-            structures = rootStructCells.map(cell => cell.obj?.data).filter(struct => !!struct) as Structure[];
+            const structCells = this.plugin.state.data.selectQ((q) =>
+                q.ofType(PluginStateObject.Molecule.Structure)
+            );
+            const rootStructCells = structCells.filter((cell) =>
+                cell.obj && !cell.transform.transformer.definition.isDecorator &&
+                !cell.obj.data.parent
+            );
+            structures = rootStructCells.map((cell) => cell.obj?.data).filter((struct) =>
+                !!struct
+            ) as Structure[];
         }
         const { rotation } = structureLayingTransform(structures);
-        const newSnapshot = changeCameraRotation(this.plugin.canvas3d.camera.getSnapshot(), rotation);
+        const newSnapshot = changeCameraRotation(
+            this.plugin.canvas3d.camera.getSnapshot(),
+            rotation,
+        );
         this.setSnapshot(newSnapshot, durationMs);
     }
 
     /** Align Cartesian axes to the screen axes (X right, Y up). */
     resetAxes(durationMs?: number) {
         if (!this.plugin.canvas3d) return;
-        const newSnapshot = changeCameraRotation(this.plugin.canvas3d.camera.getSnapshot(), Mat3.Identity);
+        const newSnapshot = changeCameraRotation(
+            this.plugin.canvas3d.camera.getSnapshot(),
+            Mat3.Identity,
+        );
         this.setSnapshot(newSnapshot, durationMs);
     }
 

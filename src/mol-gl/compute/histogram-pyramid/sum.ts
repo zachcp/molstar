@@ -7,7 +7,7 @@
 import { ComputeRenderable, createComputeRenderable } from '../../renderable.ts';
 import { WebGLContext } from '../../webgl/context.ts';
 import { createComputeRenderItem } from '../../webgl/render-item.ts';
-import { Values, TextureSpec } from '../../renderable/schema.ts';
+import { TextureSpec, Values } from '../../renderable/schema.ts';
 import { Texture } from '../../webgl/texture.ts';
 import { ShaderCode } from '../../shader-code.ts';
 import { ValueCell } from '../../../mol-util/index.ts';
@@ -22,11 +22,14 @@ const HistopyramidSumSchema = {
     ...QuadSchema,
     tTexture: TextureSpec('texture', 'rgba', 'float', 'nearest'),
 };
-type HistopyramidSumValues = Values<typeof HistopyramidSumSchema>
+type HistopyramidSumValues = Values<typeof HistopyramidSumSchema>;
 
 const HistopyramidSumName = 'histopyramid-sum';
 
-function getHistopyramidSumRenderable(ctx: WebGLContext, texture: Texture): ComputeRenderable<HistopyramidSumValues> {
+function getHistopyramidSumRenderable(
+    ctx: WebGLContext,
+    texture: Texture,
+): ComputeRenderable<HistopyramidSumValues> {
     if (ctx.namedComputeRenderables[HistopyramidSumName]) {
         const v = ctx.namedComputeRenderables[HistopyramidSumName].values as HistopyramidSumValues;
 
@@ -34,7 +37,10 @@ function getHistopyramidSumRenderable(ctx: WebGLContext, texture: Texture): Comp
 
         ctx.namedComputeRenderables[HistopyramidSumName].update();
     } else {
-        ctx.namedComputeRenderables[HistopyramidSumName] = createHistopyramidSumRenderable(ctx, texture);
+        ctx.namedComputeRenderables[HistopyramidSumName] = createHistopyramidSumRenderable(
+            ctx,
+            texture,
+        );
     }
     return ctx.namedComputeRenderables[HistopyramidSumName];
 }
@@ -97,7 +103,5 @@ export function getHistopyramidSum(ctx: WebGLContext, pyramidTopTexture: Texture
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     if (isTimingMode) ctx.timer.markEnd('getHistopyramidSum');
 
-    return isWebGL2(gl)
-        ? sumInts[0]
-        : unpackRGBToInt(sumBytes[0], sumBytes[1], sumBytes[2]);
+    return isWebGL2(gl) ? sumInts[0] : unpackRGBToInt(sumBytes[0], sumBytes[1], sumBytes[2]);
 }

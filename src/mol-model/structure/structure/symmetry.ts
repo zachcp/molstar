@@ -8,10 +8,10 @@
 import { SortedArray } from '../../../mol-data/int.ts';
 import { EquivalenceClasses } from '../../../mol-data/util.ts';
 import { Spacegroup, SpacegroupCell, SymmetryOperator } from '../../../mol-math/geometry.ts';
-import { Vec3, Mat4 } from '../../../mol-math/linear-algebra.ts';
+import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { RuntimeContext, Task } from '../../../mol-task/index.ts';
-import { Symmetry, Model } from '../model.ts';
-import { QueryContext, StructureSelection, Queries as Q } from '../query.ts';
+import { Model, Symmetry } from '../model.ts';
+import { Queries as Q, QueryContext, StructureSelection } from '../query.ts';
 import { Structure } from './structure.ts';
 import { Unit } from './unit.ts';
 import { ModelSymmetry } from '../../../mol-model-formats/structure/property/symmetry.ts';
@@ -19,18 +19,22 @@ import { StructureProperties } from './properties.ts';
 
 namespace StructureSymmetry {
     export function buildAssembly(structure: Structure, asmName: string) {
-        return Task.create('Build Assembly', async ctx => {
+        return Task.create('Build Assembly', async (ctx) => {
             const models = structure.models;
-            if (models.length !== 1) throw new Error('Can only build assemblies from structures based on 1 model.');
+            if (models.length !== 1) {
+                throw new Error('Can only build assemblies from structures based on 1 model.');
+            }
 
             const assembly = Symmetry.findAssembly(models[0], asmName);
             if (!assembly) throw new Error(`Assembly '${asmName}' is not defined.`);
 
-            const coordinateSystem = SymmetryOperator.create(assembly.id, Mat4.identity(), { assembly: { id: assembly.id, operId: 0, operList: [] } });
+            const coordinateSystem = SymmetryOperator.create(assembly.id, Mat4.identity(), {
+                assembly: { id: assembly.id, operId: 0, operList: [] },
+            });
             const assembler = Structure.Builder({
                 coordinateSystem,
                 label: structure.label,
-                dynamicBonds: structure.dynamicBonds
+                dynamicBonds: structure.dynamicBonds,
             });
 
             const queryCtx = new QueryContext(structure);
@@ -53,18 +57,26 @@ namespace StructureSymmetry {
         });
     }
 
-    export type Generators = { operators: { index: number, shift: Vec3 }[], asymIds: string[] }[]
+    export type Generators = { operators: { index: number; shift: Vec3 }[]; asymIds: string[] }[];
 
-    export function buildSymmetryAssembly(structure: Structure, generators: Generators, symmetry: Symmetry) {
-        return Task.create('Build Symmetry Assembly', async ctx => {
+    export function buildSymmetryAssembly(
+        structure: Structure,
+        generators: Generators,
+        symmetry: Symmetry,
+    ) {
+        return Task.create('Build Symmetry Assembly', async (ctx) => {
             const models = structure.models;
-            if (models.length !== 1) throw new Error('Can only build symmetry assemblies from structures based on 1 model.');
+            if (models.length !== 1) {
+                throw new Error(
+                    'Can only build symmetry assemblies from structures based on 1 model.',
+                );
+            }
 
             const modelCenter = Vec3();
             const assembler = Structure.Builder({
                 label: structure.label,
                 representativeModel: models[0],
-                dynamicBonds: structure.dynamicBonds
+                dynamicBonds: structure.dynamicBonds,
             });
 
             const queryCtx = new QueryContext(structure);
@@ -92,20 +104,24 @@ namespace StructureSymmetry {
     }
 
     export function builderSymmetryMates(structure: Structure, radius: number) {
-        return Task.create('Find Symmetry Mates', ctx => findMatesRadius(ctx, structure, radius));
+        return Task.create('Find Symmetry Mates', (ctx) => findMatesRadius(ctx, structure, radius));
     }
 
     export function buildSymmetryRange(structure: Structure, ijkMin: Vec3, ijkMax: Vec3) {
-        return Task.create('Build Symmetry', ctx => findSymmetryRange(ctx, structure, ijkMin, ijkMax));
+        return Task.create(
+            'Build Symmetry',
+            (ctx) => findSymmetryRange(ctx, structure, ijkMin, ijkMax),
+        );
     }
 
     /** Builds NCS structure, returns the original if NCS operators are not present. */
     export function buildNcs(structure: Structure) {
-        return Task.create('Build NCS', ctx => _buildNCS(ctx, structure));
+        return Task.create('Build NCS', (ctx) => _buildNCS(ctx, structure));
     }
 
     export function areUnitsEquivalent(a: Unit, b: Unit) {
-        return a.invariantId === b.invariantId && a.model.id === b.model.id && SortedArray.areEqual(a.elements, b.elements);
+        return a.invariantId === b.invariantId && a.model.id === b.model.id &&
+            SortedArray.areEqual(a.elements, b.elements);
     }
 
     export function UnitEquivalenceBuilder() {
@@ -118,14 +134,17 @@ namespace StructureSymmetry {
 
         const ret: Unit.SymmetryGroup[] = [];
         for (const eqUnits of groups.groups) {
-            ret.push(Unit.SymmetryGroup(eqUnits.map(id => s.unitMap.get(id))));
+            ret.push(Unit.SymmetryGroup(eqUnits.map((id) => s.unitMap.get(id))));
         }
 
         return ret;
     }
 
     /** Checks if transform groups are equal up to their unit's transformations */
-    export function areTransformGroupsEquivalent(a: ReadonlyArray<Unit.SymmetryGroup>, b: ReadonlyArray<Unit.SymmetryGroup>) {
+    export function areTransformGroupsEquivalent(
+        a: ReadonlyArray<Unit.SymmetryGroup>,
+        b: ReadonlyArray<Unit.SymmetryGroup>,
+    ) {
         if (a.length !== b.length) return false;
         for (let i = 0, il = a.length; i < il; ++i) {
             const au = a[i].units, bu = b[i].units;
@@ -140,13 +159,25 @@ namespace StructureSymmetry {
 }
 
 function getSelector(asymIds: string[]) {
-    return Q.generators.atoms({ chainTest: Q.pred.and(
-        Q.pred.eq(ctx => StructureProperties.unit.operator_name(ctx.element), SymmetryOperator.DefaultName),
-        Q.pred.inSet(ctx => StructureProperties.chain.label_asym_id(ctx.element), asymIds)
-    ) });
+    return Q.generators.atoms({
+        chainTest: Q.pred.and(
+            Q.pred.eq(
+                (ctx) => StructureProperties.unit.operator_name(ctx.element),
+                SymmetryOperator.DefaultName,
+            ),
+            Q.pred.inSet((ctx) => StructureProperties.chain.label_asym_id(ctx.element), asymIds),
+        ),
+    });
 }
 
-function getOperatorsForIndex(symmetry: Symmetry, index: number, i: number, j: number, k: number, modelCenter: Vec3) {
+function getOperatorsForIndex(
+    symmetry: Symmetry,
+    index: number,
+    i: number,
+    j: number,
+    k: number,
+    modelCenter: Vec3,
+) {
     const { spacegroup, ncsOperators } = symmetry;
     const operators: SymmetryOperator[] = [];
 
@@ -162,7 +193,7 @@ function getOperatorsForIndex(symmetry: Symmetry, index: number, i: number, j: n
                 assembly: symOp.assembly,
                 ncsId: ncsOp.ncsId,
                 hkl: symOp.hkl,
-                spgrOp: symOp.spgrOp
+                spgrOp: symOp.spgrOp,
             });
             operators.push(operator);
         }
@@ -177,10 +208,12 @@ function getOperatorsForRange(symmetry: Symmetry, ijkMin: Vec3, ijkMax: Vec3, mo
     const ncsCount = (ncsOperators && ncsOperators.length) || 0;
     const operators: SymmetryOperator[] = [];
 
-    if (!ncsCount &&
+    if (
+        !ncsCount &&
         ijkMin[0] <= 0 && ijkMax[0] >= 0 &&
         ijkMin[1] <= 0 && ijkMax[1] >= 0 &&
-        ijkMin[2] <= 0 && ijkMax[2] >= 0) {
+        ijkMin[2] <= 0 && ijkMax[2] >= 0
+    ) {
         operators[0] = Spacegroup.getSymmetryOperator(spacegroup, 0, 0, 0, 0);
     }
 
@@ -204,7 +237,12 @@ function getOperatorsCached333(symmetry: Symmetry, ref: Vec3) {
     }
     symmetry._operators_333 = {
         ref: Vec3.clone(ref),
-        operators: getOperatorsForRange(symmetry, Vec3.create(-3, -3, -3), Vec3.create(3, 3, 3), ref)
+        operators: getOperatorsForRange(
+            symmetry,
+            Vec3.create(-3, -3, -3),
+            Vec3.create(3, 3, 3),
+            ref,
+        ),
     };
     return symmetry._operators_333.operators;
 }
@@ -212,7 +250,7 @@ function getOperatorsCached333(symmetry: Symmetry, ref: Vec3) {
 function assembleOperators(structure: Structure, operators: ReadonlyArray<SymmetryOperator>) {
     const assembler = Structure.Builder({
         label: structure.label,
-        dynamicBonds: structure.dynamicBonds
+        dynamicBonds: structure.dynamicBonds,
     });
     const { units } = structure;
     for (const oper of operators) {
@@ -225,7 +263,9 @@ function assembleOperators(structure: Structure, operators: ReadonlyArray<Symmet
 
 async function _buildNCS(ctx: RuntimeContext, structure: Structure) {
     const models = structure.models;
-    if (models.length !== 1) throw new Error('Can only build NCS from structures based on 1 model.');
+    if (models.length !== 1) {
+        throw new Error('Can only build NCS from structures based on 1 model.');
+    }
 
     const symmetry = ModelSymmetry.Provider.get(models[0]);
     if (!symmetry) return structure;
@@ -235,9 +275,16 @@ async function _buildNCS(ctx: RuntimeContext, structure: Structure) {
     return assembleOperators(structure, operators);
 }
 
-async function findSymmetryRange(ctx: RuntimeContext, structure: Structure, ijkMin: Vec3, ijkMax: Vec3) {
+async function findSymmetryRange(
+    ctx: RuntimeContext,
+    structure: Structure,
+    ijkMin: Vec3,
+    ijkMax: Vec3,
+) {
     const models = structure.models;
-    if (models.length !== 1) throw new Error('Can only build symmetries from structures based on 1 model.');
+    if (models.length !== 1) {
+        throw new Error('Can only build symmetries from structures based on 1 model.');
+    }
 
     const symmetry = ModelSymmetry.Provider.get(models[0]);
     if (!symmetry) return structure;
@@ -252,7 +299,9 @@ async function findSymmetryRange(ctx: RuntimeContext, structure: Structure, ijkM
 
 async function findMatesRadius(ctx: RuntimeContext, structure: Structure, radius: number) {
     const models = structure.models;
-    if (models.length !== 1) throw new Error('Can only build symmetries from structures based on 1 model.');
+    if (models.length !== 1) {
+        throw new Error('Can only build symmetries from structures based on 1 model.');
+    }
 
     const symmetry = ModelSymmetry.Provider.get(models[0]);
     if (!symmetry) return structure;
@@ -273,7 +322,7 @@ async function findMatesRadius(ctx: RuntimeContext, structure: Structure, radius
 
     const assembler = Structure.Builder({
         label: structure.label,
-        dynamicBonds: structure.dynamicBonds
+        dynamicBonds: structure.dynamicBonds,
     });
 
     const { units } = structure;
@@ -283,10 +332,22 @@ async function findMatesRadius(ctx: RuntimeContext, structure: Structure, radius
             const boundingSphere = unit.lookup3d.boundary.sphere;
             Vec3.transformMat4(center, boundingSphere.center, oper.matrix);
 
-            const closeUnits = lookup.findUnitIndices(center[0], center[1], center[2], boundingSphere.radius + radius);
+            const closeUnits = lookup.findUnitIndices(
+                center[0],
+                center[1],
+                center[2],
+                boundingSphere.radius + radius,
+            );
             for (let uI = 0, _uI = closeUnits.count; uI < _uI; uI++) {
                 const closeUnit = units[closeUnits.indices[uI]];
-                if (!closeUnit.lookup3d.check(center[0], center[1], center[2], boundingSphere.radius + radius)) continue;
+                if (
+                    !closeUnit.lookup3d.check(
+                        center[0],
+                        center[1],
+                        center[2],
+                        boundingSphere.radius + radius,
+                    )
+                ) continue;
 
                 const h = hash(unit, oper);
                 if (!added.has(h)) {

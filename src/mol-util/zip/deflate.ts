@@ -10,7 +10,7 @@
 import { RuntimeContext } from '../../mol-task/index.ts';
 import { assertUnreachable, NumberArray } from '../type-helpers.ts';
 import { _hufTree } from './huffman.ts';
-import { U, revCodes, makeCodes, checkCompressionStreamSupport } from './util.ts';
+import { checkCompressionStreamSupport, makeCodes, revCodes, U } from './util.ts';
 
 function DeflateContext(data: Uint8Array, out: Uint8Array, opos: number, lvl: number) {
     const { lits, strt, prev } = U;
@@ -32,11 +32,10 @@ function DeflateContext(data: Uint8Array, out: Uint8Array, opos: number, lvl: nu
 
         lits,
         strt,
-        prev
+        prev,
     };
 }
-type DeflateContext = ReturnType<typeof DeflateContext>
-
+type DeflateContext = ReturnType<typeof DeflateContext>;
 
 function deflateChunk(ctx: DeflateContext, count: number) {
     const { data, dlen, out, opt } = ctx;
@@ -50,7 +49,7 @@ function deflateChunk(ctx: DeflateContext, count: number) {
 
         if (i + 1 < dlen - 2) {
             nc = _hash(data, i + 1);
-            const ii = ((i + 1) & 0x7fff);
+            const ii = (i + 1) & 0x7fff;
             prev[ii] = strt[nc];
             strt[nc] = ii;
         }
@@ -62,7 +61,17 @@ function deflateChunk(ctx: DeflateContext, count: number) {
                     li += 2;
                     cvrd = i;
                 }
-                pos = _writeBlock(((i === dlen - 1) || (cvrd === dlen)) ? 1 : 0, lits, li, ebits, data, bs, i - bs, out, pos);
+                pos = _writeBlock(
+                    ((i === dlen - 1) || (cvrd === dlen)) ? 1 : 0,
+                    lits,
+                    li,
+                    ebits,
+                    data,
+                    bs,
+                    i - bs,
+                    out,
+                    pos,
+                );
                 li = lc = ebits = 0;
                 bs = i;
             }
@@ -74,9 +83,14 @@ function deflateChunk(ctx: DeflateContext, count: number) {
 
             if (mch !== 0) {
                 const len = mch >>> 16, dst = mch & 0xffff;
-                const lgi = _goodIndex(len, U.of0); U.lhst[257 + lgi]++;
-                const dgi = _goodIndex(dst, U.df0); U.dhst[dgi]++; ebits += U.exb[lgi] + U.dxb[dgi];
-                lits[li] = (len << 23) | (i - cvrd); lits[li + 1] = (dst << 16) | (lgi << 8) | dgi; li += 2;
+                const lgi = _goodIndex(len, U.of0);
+                U.lhst[257 + lgi]++;
+                const dgi = _goodIndex(dst, U.df0);
+                U.dhst[dgi]++;
+                ebits += U.exb[lgi] + U.dxb[dgi];
+                lits[li] = (len << 23) | (i - cvrd);
+                lits[li + 1] = (dst << 16) | (lgi << 8) | dgi;
+                li += 2;
                 cvrd = i + len;
             } else {
                 U.lhst[data[i]]++;
@@ -113,10 +127,16 @@ const Opts = [
     /* 6 */ [8, 16, 128, 128, 0],
     /* 7 */ [8, 32, 128, 256, 0],
     /* 8 */ [32, 128, 258, 1024, 1],
-    /* 9 */ [32, 258, 258, 4096, 1] /* max compression */
+    /* 9 */ [32, 258, 258, 4096, 1], /* max compression */
 ] as const;
 
-export async function _deflateRaw(runtime: RuntimeContext, data: Uint8Array, out: Uint8Array, opos: number, lvl: number): Promise<number> {
+export async function _deflateRaw(
+    runtime: RuntimeContext,
+    data: Uint8Array,
+    out: Uint8Array,
+    opos: number,
+    lvl: number,
+): Promise<number> {
     if (checkCompressionStreamSupport('deflate-raw')) {
         const cs = new CompressionStream('deflate-raw');
         const blob = new Blob([data]);
@@ -148,7 +168,7 @@ export async function _deflateRaw(runtime: RuntimeContext, data: Uint8Array, out
 
         while (i < dlen) {
             const len = Math.min(0xffff, dlen - i);
-            _putsE(out, pos, (i + len === dlen ? 1 : 0));
+            _putsE(out, pos, i + len === dlen ? 1 : 0);
             pos = _copyExact(data, i, len, out, pos + 8);
             i += len;
         }
@@ -182,10 +202,17 @@ export async function _deflateRaw(runtime: RuntimeContext, data: Uint8Array, out
     return pos >>> 3;
 }
 
-function _bestMatch(data: Uint8Array, i: number, prev: Uint16Array, c: number, nice: number, chain: number) {
-    let ci = (i & 0x7fff), pi = prev[ci];
+function _bestMatch(
+    data: Uint8Array,
+    i: number,
+    prev: Uint16Array,
+    c: number,
+    nice: number,
+    chain: number,
+) {
+    let ci = i & 0x7fff, pi = prev[ci];
     // console.log("----", i);
-    let dif = ((ci - pi + (1 << 15)) & 0x7fff);
+    let dif = (ci - pi + (1 << 15)) & 0x7fff;
     if (pi === ci || c !== _hash(data, i - dif)) return 0;
     let tl = 0, td = 0; // top length, top distance
     const dlim = Math.min(0x7fff, i);
@@ -193,26 +220,35 @@ function _bestMatch(data: Uint8Array, i: number, prev: Uint16Array, c: number, n
         if (tl === 0 || (data[i + tl] === data[i + tl - dif])) {
             let cl = _howLong(data, i, dif);
             if (cl > tl) {
-                tl = cl; td = dif; if (tl >= nice) break; //*
+                tl = cl;
+                td = dif;
+                if (tl >= nice) break; //*
                 if (dif + 2 < cl) cl = dif + 2;
                 let maxd = 0; // pi does not point to the start of the word
                 for (let j = 0; j < cl - 2; j++) {
                     const ei = (i - dif + j + (1 << 15)) & 0x7fff;
                     const li = prev[ei];
                     const curd = (ei - li + (1 << 15)) & 0x7fff;
-                    if (curd > maxd) { maxd = curd; pi = ei; }
+                    if (curd > maxd) {
+                        maxd = curd;
+                        pi = ei;
+                    }
                 }
             }
         }
 
-        ci = pi; pi = prev[ci];
-        dif += ((ci - pi + (1 << 15)) & 0x7fff);
+        ci = pi;
+        pi = prev[ci];
+        dif += (ci - pi + (1 << 15)) & 0x7fff;
     }
     return (tl << 16) | td;
 }
 
 function _howLong(data: Uint8Array, i: number, dif: number) {
-    if (data[i] !== data[i - dif] || data[i + 1] !== data[i + 1 - dif] || data[i + 2] !== data[i + 2 - dif]) return 0;
+    if (
+        data[i] !== data[i - dif] || data[i + 1] !== data[i + 1 - dif] ||
+        data[i + 2] !== data[i + 2 - dif]
+    ) return 0;
     const oi = i, l = Math.min(data.length, i + 258);
     i += 3;
     // while(i+4<l && data[i]==data[i-dif] && data[i+1]==data[i+1-dif] && data[i+2]==data[i+2-dif] && data[i+3]==data[i+3-dif]) i+=4;
@@ -231,14 +267,25 @@ function _hash(data: Uint8Array, i: number) {
     // return (data[i] | (data[i+1]<<8));
 }
 
-function _writeBlock(BFINAL: number, lits: Uint32Array, li: number, ebits: number, data: Uint8Array, o0: number, l0: number, out: Uint8Array, pos: number) {
+function _writeBlock(
+    BFINAL: number,
+    lits: Uint32Array,
+    li: number,
+    ebits: number,
+    data: Uint8Array,
+    o0: number,
+    l0: number,
+    out: Uint8Array,
+    pos: number,
+) {
     U.lhst[256]++;
     const [ML, MD, MH, numl, numd, numh, lset, dset] = getTrees();
 
     const cstSize = (((pos + 3) & 7) === 0 ? 0 : 8 - ((pos + 3) & 7)) + 32 + (l0 << 3);
     const fxdSize = ebits + contSize(U.fltree, U.lhst) + contSize(U.fdtree, U.dhst);
     let dynSize = ebits + contSize(U.ltree, U.lhst) + contSize(U.dtree, U.dhst);
-    dynSize += 14 + 3 * numh + contSize(U.itree, U.ihst) + (U.ihst[16] * 2 + U.ihst[17] * 3 + U.ihst[18] * 7);
+    dynSize += 14 + 3 * numh + contSize(U.itree, U.ihst) +
+        (U.ihst[16] * 2 + U.ihst[17] * 3 + U.ihst[18] * 7);
 
     for (let j = 0; j < 286; j++) U.lhst[j] = 0;
     for (let j = 0; j < 30; j++) U.dhst[j] = 0;
@@ -256,17 +303,25 @@ function _writeBlock(BFINAL: number, lits: Uint32Array, li: number, ebits: numbe
     } else {
         let ltree: number[], dtree: number[];
         if (BTYPE === 1) {
-            ltree = U.fltree; dtree = U.fdtree;
+            ltree = U.fltree;
+            dtree = U.fdtree;
         } else if (BTYPE === 2) {
-            makeCodes(U.ltree, ML); revCodes(U.ltree, ML);
-            makeCodes(U.dtree, MD); revCodes(U.dtree, MD);
-            makeCodes(U.itree, MH); revCodes(U.itree, MH);
+            makeCodes(U.ltree, ML);
+            revCodes(U.ltree, ML);
+            makeCodes(U.dtree, MD);
+            revCodes(U.dtree, MD);
+            makeCodes(U.itree, MH);
+            revCodes(U.itree, MH);
 
-            ltree = U.ltree; dtree = U.dtree;
+            ltree = U.ltree;
+            dtree = U.dtree;
 
-            _putsE(out, pos, numl - 257); pos += 5; // 286
-            _putsE(out, pos, numd - 1); pos += 5; // 30
-            _putsE(out, pos, numh - 4); pos += 4; // 19
+            _putsE(out, pos, numl - 257);
+            pos += 5; // 286
+            _putsE(out, pos, numd - 1);
+            pos += 5; // 30
+            _putsE(out, pos, numh - 4);
+            pos += 4; // 19
 
             for (let i = 0; i < numh; i++) _putsE(out, pos + i * 3, U.itree[(U.ordr[i] << 1) + 1]);
             pos += 3 * numh;
@@ -278,16 +333,19 @@ function _writeBlock(BFINAL: number, lits: Uint32Array, li: number, ebits: numbe
 
         let off = o0;
         for (let si = 0; si < li; si += 2) {
-            const qb = lits[si], len = (qb >>> 23), end = off + (qb & ((1 << 23) - 1));
+            const qb = lits[si], len = qb >>> 23, end = off + (qb & ((1 << 23) - 1));
             while (off < end) pos = _writeLit(data[off++], ltree, out, pos);
 
             if (len !== 0) {
-                const qc = lits[si + 1], dst = (qc >> 16), lgi = (qc >> 8) & 255, dgi = (qc & 255);
+                const qc = lits[si + 1], dst = qc >> 16, lgi = (qc >> 8) & 255, dgi = qc & 255;
                 pos = _writeLit(257 + lgi, ltree, out, pos);
-                _putsE(out, pos, len - U.of0[lgi]); pos += U.exb[lgi];
+                _putsE(out, pos, len - U.of0[lgi]);
+                pos += U.exb[lgi];
 
                 pos = _writeLit(dgi, dtree, out, pos);
-                _putsF(out, pos, dst - U.df0[dgi]); pos += U.dxb[dgi]; off += len;
+                _putsF(out, pos, dst - U.df0[dgi]);
+                pos += U.dxb[dgi];
+                off += len;
             }
         }
         pos = _writeLit(256, ltree, out, pos);
@@ -297,9 +355,9 @@ function _writeBlock(BFINAL: number, lits: Uint32Array, li: number, ebits: numbe
 }
 
 function _copyExact(data: Uint8Array, off: number, len: number, out: Uint8Array, pos: number) {
-    let p8 = (pos >>> 3);
-    out[p8] = (len);
-    out[p8 + 1] = (len >>> 8);
+    let p8 = pos >>> 3;
+    out[p8] = len;
+    out[p8 + 1] = len >>> 8;
     out[p8 + 2] = 255 - out[p8];
     out[p8 + 3] = 255 - out[p8 + 1];
     p8 += 4;
@@ -351,7 +409,10 @@ function _lenCodes(tree: number[], set: number[]) {
     let len = tree.length;
     while (len !== 2 && tree[len - 1] === 0) len -= 2; // when no distances, keep one code with length 0
     for (let i = 0; i < len; i += 2) {
-        const l = tree[i + 1], nxt = (i + 3 < len ? tree[i + 3] : -1), nnxt = (i + 5 < len ? tree[i + 5] : -1), prv = (i === 0 ? -1 : tree[i - 1]);
+        const l = tree[i + 1],
+            nxt = i + 3 < len ? tree[i + 3] : -1,
+            nnxt = i + 5 < len ? tree[i + 5] : -1,
+            prv = i === 0 ? -1 : tree[i - 1];
         if (l === 0 && nxt === l && nnxt === l) {
             let lz = i + 5;
             while (lz + 2 < len && tree[lz + 2] === l) lz += 2;
@@ -389,15 +450,15 @@ function _writeLit(ch: number, ltree: number[], out: Uint8Array, pos: number) {
 
 function _putsE(dt: NumberArray, pos: number, val: number) {
     val = val << (pos & 7);
-    const o = (pos >>> 3);
+    const o = pos >>> 3;
     dt[o] |= val;
-    dt[o + 1] |= (val >>> 8);
+    dt[o + 1] |= val >>> 8;
 }
 
 function _putsF(dt: NumberArray, pos: number, val: number) {
     val = val << (pos & 7);
-    const o = (pos >>> 3);
+    const o = pos >>> 3;
     dt[o] |= val;
-    dt[o + 1] |= (val >>> 8);
-    dt[o + 2] |= (val >>> 16);
+    dt[o + 1] |= val >>> 8;
+    dt[o + 2] |= val >>> 16;
 }

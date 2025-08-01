@@ -5,9 +5,16 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Unit, ElementIndex, StructureElement, Bond, Structure, ResidueIndex } from '../../../../mol-model/structure.ts';
+import {
+    Bond,
+    ElementIndex,
+    ResidueIndex,
+    Structure,
+    StructureElement,
+    Unit,
+} from '../../../../mol-model/structure.ts';
 import { SortedRanges } from '../../../../mol-data/int/sorted-ranges.ts';
-import { OrderedSet, Interval, SortedArray } from '../../../../mol-data/int.ts';
+import { Interval, OrderedSet, SortedArray } from '../../../../mol-data/int.ts';
 import { EmptyLoci, Loci } from '../../../../mol-model/loci.ts';
 import { LocationIterator } from '../../../../mol-geo/util/location-iterator.ts';
 import { PickingId } from '../../../../mol-geo/geometry/picking.ts';
@@ -26,22 +33,31 @@ export const OverhangFactor = 2;
 
 export function getPolymerRanges(unit: Unit): SortedRanges<ElementIndex> {
     switch (unit.kind) {
-        case Unit.Kind.Atomic: return unit.model.atomicRanges.polymerRanges;
-        case Unit.Kind.Spheres: return unit.model.coarseHierarchy.spheres.polymerRanges;
-        case Unit.Kind.Gaussians: return unit.model.coarseHierarchy.gaussians.polymerRanges;
+        case Unit.Kind.Atomic:
+            return unit.model.atomicRanges.polymerRanges;
+        case Unit.Kind.Spheres:
+            return unit.model.coarseHierarchy.spheres.polymerRanges;
+        case Unit.Kind.Gaussians:
+            return unit.model.coarseHierarchy.gaussians.polymerRanges;
     }
 }
 
 export function getGapRanges(unit: Unit): SortedRanges<ElementIndex> {
     switch (unit.kind) {
-        case Unit.Kind.Atomic: return unit.model.atomicRanges.gapRanges;
-        case Unit.Kind.Spheres: return unit.model.coarseHierarchy.spheres.gapRanges;
-        case Unit.Kind.Gaussians: return unit.model.coarseHierarchy.gaussians.gapRanges;
+        case Unit.Kind.Atomic:
+            return unit.model.atomicRanges.gapRanges;
+        case Unit.Kind.Spheres:
+            return unit.model.coarseHierarchy.spheres.gapRanges;
+        case Unit.Kind.Gaussians:
+            return unit.model.coarseHierarchy.gaussians.gapRanges;
     }
 }
 
 export namespace PolymerLocationIterator {
-    export function fromGroup(structureGroup: StructureGroup, options?: { asSecondary?: boolean }): LocationIterator {
+    export function fromGroup(
+        structureGroup: StructureGroup,
+        options?: { asSecondary?: boolean },
+    ): LocationIterator {
         const { group, structure } = structureGroup;
         const polymerElements = group.units[0].polymerElements;
         const groupCount = polymerElements.length;
@@ -62,7 +78,10 @@ export namespace PolymerLocationIterator {
 }
 
 export namespace PolymerGapLocationIterator {
-    export function fromGroup(structureGroup: StructureGroup, options?: { asSecondary?: boolean }): LocationIterator {
+    export function fromGroup(
+        structureGroup: StructureGroup,
+        options?: { asSecondary?: boolean },
+    ): LocationIterator {
         const { group, structure } = structureGroup;
         const gapElements = group.units[0].gapElements;
         const groupCount = gapElements.length;
@@ -83,7 +102,11 @@ export namespace PolymerGapLocationIterator {
 }
 
 /** Return a Loci for the elements of the whole residue of a polymer element. */
-export function getPolymerElementLoci(pickingId: PickingId, structureGroup: StructureGroup, id: number) {
+export function getPolymerElementLoci(
+    pickingId: PickingId,
+    structureGroup: StructureGroup,
+    id: number,
+) {
     const { objectId, instanceId, groupId } = pickingId;
     if (id === objectId) {
         const { structure, group } = structureGroup;
@@ -93,7 +116,9 @@ export function getPolymerElementLoci(pickingId: PickingId, structureGroup: Stru
         } else {
             const { elements } = unit;
             const elementIndex = unit.polymerElements[groupId];
-            const unitIndex = OrderedSet.indexOf(elements, elementIndex) as StructureElement.UnitIndex | -1;
+            const unitIndex = OrderedSet.indexOf(elements, elementIndex) as
+                | StructureElement.UnitIndex
+                | -1;
             if (unitIndex !== -1) {
                 const indices = OrderedSet.ofSingleton(unitIndex);
                 return StructureElement.Loci(structure, [{ unit, indices }]);
@@ -103,8 +128,14 @@ export function getPolymerElementLoci(pickingId: PickingId, structureGroup: Stru
     return EmptyLoci;
 }
 
-
-function tryApplyResidueInterval(offset: number, elements: SortedArray<ElementIndex>, traceElementIndex: ArrayLike<ElementIndex | -1>, apply: (interval: Interval) => boolean, r1: ResidueIndex, r2: ResidueIndex) {
+function tryApplyResidueInterval(
+    offset: number,
+    elements: SortedArray<ElementIndex>,
+    traceElementIndex: ArrayLike<ElementIndex | -1>,
+    apply: (interval: Interval) => boolean,
+    r1: ResidueIndex,
+    r2: ResidueIndex,
+) {
     let start = -1, startIdx = -1;
 
     for (let rI = r1; rI <= r2; rI++) {
@@ -136,7 +167,13 @@ function tryApplyResidueInterval(offset: number, elements: SortedArray<ElementIn
     return apply(Interval.ofRange(offset + start, offset + end));
 }
 
-export function eachAtomicUnitTracedElement(offset: number, groupSize: number, elementsSelector: (u: Unit.Atomic) => SortedArray<ElementIndex>, apply: (interval: Interval) => boolean, e: StructureElement.Loci['elements'][0]) {
+export function eachAtomicUnitTracedElement(
+    offset: number,
+    groupSize: number,
+    elementsSelector: (u: Unit.Atomic) => SortedArray<ElementIndex>,
+    apply: (interval: Interval) => boolean,
+    e: StructureElement.Loci['elements'][0],
+) {
     let changed = false;
 
     const { elements } = e.unit;
@@ -151,7 +188,9 @@ export function eachAtomicUnitTracedElement(offset: number, groupSize: number, e
         } else {
             const r1 = resIndex[elements[Interval.min(e.indices)]];
             const r2 = resIndex[elements[Interval.max(e.indices)]];
-            changed = tryApplyResidueInterval(offset, tracedElements, traceElementIndex, apply, r1, r2) || changed;
+            changed =
+                tryApplyResidueInterval(offset, tracedElements, traceElementIndex, apply, r1, r2) ||
+                changed;
         }
     } else {
         const { indices } = e;
@@ -168,17 +207,25 @@ export function eachAtomicUnitTracedElement(offset: number, groupSize: number, e
                 endI++;
             }
             i = endI - 1;
-            changed = tryApplyResidueInterval(offset, tracedElements, traceElementIndex, apply, r1, r2) || changed;
+            changed =
+                tryApplyResidueInterval(offset, tracedElements, traceElementIndex, apply, r1, r2) ||
+                changed;
         }
     }
 
     return changed;
 }
 
-function selectPolymerElements(u: Unit) { return u.polymerElements; }
+function selectPolymerElements(u: Unit) {
+    return u.polymerElements;
+}
 
 /** Mark a polymer element (e.g. part of a cartoon trace) */
-export function eachPolymerElement(loci: Loci, structureGroup: StructureGroup, apply: (interval: Interval) => boolean) {
+export function eachPolymerElement(
+    loci: Loci,
+    structureGroup: StructureGroup,
+    apply: (interval: Interval) => boolean,
+) {
     let changed = false;
     if (!StructureElement.Loci.is(loci)) return false;
     const { structure, group } = structureGroup;
@@ -190,7 +237,9 @@ export function eachPolymerElement(loci: Loci, structureGroup: StructureGroup, a
         const offset = group.unitIndexMap.get(e.unit.id) * groupCount; // to target unit instance
 
         if (Unit.isAtomic(e.unit)) {
-            changed = eachAtomicUnitTracedElement(offset, groupCount, selectPolymerElements, apply, e) || changed;
+            changed =
+                eachAtomicUnitTracedElement(offset, groupCount, selectPolymerElements, apply, e) ||
+                changed;
         } else {
             if (Interval.is(e.indices)) {
                 const start = offset + Interval.start(e.indices);
@@ -212,24 +261,38 @@ export function eachPolymerElement(loci: Loci, structureGroup: StructureGroup, a
 }
 
 /** Return a Loci for both directions of the polymer gap element. */
-export function getPolymerGapElementLoci(pickingId: PickingId, structureGroup: StructureGroup, id: number) {
+export function getPolymerGapElementLoci(
+    pickingId: PickingId,
+    structureGroup: StructureGroup,
+    id: number,
+) {
     const { objectId, instanceId, groupId } = pickingId;
     if (id === objectId) {
         const { structure, group } = structureGroup;
         const unit = group.units[instanceId];
-        const unitIndexA = OrderedSet.indexOf(unit.elements, unit.gapElements[groupId]) as StructureElement.UnitIndex;
-        const unitIndexB = OrderedSet.indexOf(unit.elements, unit.gapElements[groupId % 2 ? groupId - 1 : groupId + 1]) as StructureElement.UnitIndex;
+        const unitIndexA = OrderedSet.indexOf(
+            unit.elements,
+            unit.gapElements[groupId],
+        ) as StructureElement.UnitIndex;
+        const unitIndexB = OrderedSet.indexOf(
+            unit.elements,
+            unit.gapElements[groupId % 2 ? groupId - 1 : groupId + 1],
+        ) as StructureElement.UnitIndex;
         if (unitIndexA !== -1 && unitIndexB !== -1) {
             return Bond.Loci(structure, [
                 Bond.Location(structure, unit, unitIndexA, structure, unit, unitIndexB),
-                Bond.Location(structure, unit, unitIndexB, structure, unit, unitIndexA)
+                Bond.Location(structure, unit, unitIndexB, structure, unit, unitIndexA),
             ]);
         }
     }
     return EmptyLoci;
 }
 
-export function eachPolymerGapElement(loci: Loci, structureGroup: StructureGroup, apply: (interval: Interval) => boolean) {
+export function eachPolymerGapElement(
+    loci: Loci,
+    structureGroup: StructureGroup,
+    apply: (interval: Interval) => boolean,
+) {
     let changed = false;
     if (Bond.isLoci(loci)) {
         const { structure, group } = structureGroup;
@@ -254,13 +317,15 @@ export function eachPolymerGapElement(loci: Loci, structureGroup: StructureGroup
         for (const e of loci.elements) {
             const unitIdx = group.unitIndexMap.get(e.unit.id);
             if (unitIdx !== undefined) {
-                OrderedSet.forEach(e.indices, v => {
+                OrderedSet.forEach(e.indices, (v) => {
                     const idx = OrderedSet.indexOf(e.unit.gapElements, e.unit.elements[v]);
                     if (idx !== -1) {
                         if (apply(Interval.ofSingleton(unitIdx * groupCount + idx))) changed = true;
                         // need to check the next element in case of consecutive gaps
                         if (OrderedSet.getAt(e.unit.gapElements, idx + 1) === e.unit.elements[v]) {
-                            if (apply(Interval.ofSingleton(unitIdx * groupCount + idx + 1))) changed = true;
+                            if (apply(Interval.ofSingleton(unitIdx * groupCount + idx + 1))) {
+                                changed = true;
+                            }
                         }
                     }
                 });

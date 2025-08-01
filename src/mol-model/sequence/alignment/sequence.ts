@@ -5,22 +5,22 @@
  */
 
 import { StructureElement, Unit } from '../../structure/structure.ts';
-import { AlignmentOptions, align } from './alignment.ts';
+import { align, AlignmentOptions } from './alignment.ts';
 import { OrderedSet } from '../../../mol-data/int.ts';
 
 export { AlignSequences };
 
 namespace AlignSequences {
     export type Input = {
-        a: StructureElement.Loci.Element,
-        b: StructureElement.Loci.Element
-    }
+        a: StructureElement.Loci.Element;
+        b: StructureElement.Loci.Element;
+    };
     /** `a` and `b` contain matching pairs, i.e. `a.indices[0]` aligns with `b.indices[0]` */
     export type Result = {
-        a: StructureElement.Loci.Element,
-        b: StructureElement.Loci.Element,
-        score: number
-    }
+        a: StructureElement.Loci.Element;
+        b: StructureElement.Loci.Element;
+        score: number;
+    };
 
     export function createSeqIdIndicesMap(element: StructureElement.Loci.Element) {
         const seqIds = new Map<number, StructureElement.UnitIndex[]>();
@@ -89,7 +89,7 @@ namespace AlignSequences {
         return {
             a: { unit: input.a.unit, indices: outA },
             b: { unit: input.b.unit, indices: outB },
-            score
+            score,
         };
     }
 }
@@ -97,7 +97,9 @@ namespace AlignSequences {
 export function entityKey(unit: Unit) {
     switch (unit.kind) {
         case Unit.Kind.Atomic:
-            return unit.model.atomicHierarchy.index.getEntityFromChain(unit.chainIndex[unit.elements[0]]);
+            return unit.model.atomicHierarchy.index.getEntityFromChain(
+                unit.chainIndex[unit.elements[0]],
+            );
         case Unit.Kind.Spheres:
             return unit.model.coarseHierarchy.spheres.entityKey[unit.elements[0]];
         case Unit.Kind.Gaussians:

@@ -12,14 +12,19 @@ import { Vec3 } from '../../linear-algebra/3d/vec3.ts';
 import { Ray3D } from './ray3d.ts';
 import { Sphere3D } from './sphere3d.ts';
 
-interface Plane3D { normal: Vec3, constant: number }
+interface Plane3D {
+    normal: Vec3;
+    constant: number;
+}
 
 function Plane3D() {
     return Plane3D.create(Vec3.create(1, 0, 0), 0);
 }
 
 namespace Plane3D {
-    export function create(normal: Vec3, constant: number): Plane3D { return { normal, constant }; }
+    export function create(normal: Vec3, constant: number): Plane3D {
+        return { normal, constant };
+    }
 
     export function copy(out: Plane3D, p: Plane3D): Plane3D {
         Vec3.copy(out.normal, p.normal);
@@ -70,7 +75,13 @@ namespace Plane3D {
     }
 
     const unnormTmpV = Vec3();
-    export function setUnnormalized(out: Plane3D, nx: number, ny: number, nz: number, constant: number) {
+    export function setUnnormalized(
+        out: Plane3D,
+        nx: number,
+        ny: number,
+        nz: number,
+        constant: number,
+    ) {
         Vec3.set(unnormTmpV, nx, ny, nz);
         const inverseNormalLength = 1.0 / Vec3.magnitude(unnormTmpV);
         Vec3.scale(out.normal, unnormTmpV, inverseNormalLength);

@@ -10,9 +10,7 @@
  */
 export function polygon(sideCount: number, shift: boolean, radius = -1) {
     const points = new Float32Array(sideCount * 3);
-    const r = radius === -1
-        ? (sideCount <= 4 ? Math.sqrt(2) / 2 : 0.6)
-        : radius;
+    const r = radius === -1 ? (sideCount <= 4 ? Math.sqrt(2) / 2 : 0.6) : radius;
 
     const offset = shift ? 1 : 0;
 

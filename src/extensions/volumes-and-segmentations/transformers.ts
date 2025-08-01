@@ -9,10 +9,17 @@ import { PluginContext } from '../../mol-plugin/context.ts';
 import { StateTransformer } from '../../mol-state/index.ts';
 import { Task } from '../../mol-task/index.ts';
 
-import { VolsegEntry, VolsegEntryData, createVolsegEntryParams } from './entry-root.ts';
-import { VolsegState, VolsegStateParams, VOLSEG_STATE_FROM_ENTRY_TRANSFORMER_NAME } from './entry-state.ts';
-import { VolsegGlobalState, VolsegGlobalStateData, VolsegGlobalStateParams } from './global-state.ts';
-
+import { createVolsegEntryParams, VolsegEntry, VolsegEntryData } from './entry-root.ts';
+import {
+    VOLSEG_STATE_FROM_ENTRY_TRANSFORMER_NAME,
+    VolsegState,
+    VolsegStateParams,
+} from './entry-state.ts';
+import {
+    VolsegGlobalState,
+    VolsegGlobalStateData,
+    VolsegGlobalStateParams,
+} from './global-state.ts';
 
 export const VolsegEntryFromRoot = PluginStateTransform.BuiltIn({
     name: 'volseg-entry-from-root',
@@ -31,9 +38,8 @@ export const VolsegEntryFromRoot = PluginStateTransform.BuiltIn({
         Object.assign(newParams, oldParams);
         console.error('Changing params of existing VolsegEntry node is not allowed');
         return StateTransformer.UpdateResult.Unchanged;
-    }
+    },
 });
-
 
 export const VolsegStateFromEntry = PluginStateTransform.BuiltIn({
     name: VOLSEG_STATE_FROM_ENTRY_TRANSFORMER_NAME,
@@ -46,9 +52,8 @@ export const VolsegStateFromEntry = PluginStateTransform.BuiltIn({
         return Task.create('Create Vol & Seg Entry State', async () => {
             return new VolsegState(params, { label: 'State' });
         });
-    }
+    },
 });
-
 
 export const VolsegGlobalStateFromRoot = PluginStateTransform.BuiltIn({
     name: 'volseg-global-state-from-root',
@@ -60,11 +65,14 @@ export const VolsegGlobalStateFromRoot = PluginStateTransform.BuiltIn({
     apply({ a, params }, plugin: PluginContext) {
         return Task.create('Create Vol & Seg Global State', async () => {
             const data = new VolsegGlobalStateData(plugin, params);
-            return new VolsegGlobalState(data, { label: 'Global State', description: 'Vol & Seg Global State' });
+            return new VolsegGlobalState(data, {
+                label: 'Global State',
+                description: 'Vol & Seg Global State',
+            });
         });
     },
     update({ b, oldParams, newParams }) {
         b.data.currentState.next(newParams);
         return StateTransformer.UpdateResult.Updated;
-    }
+    },
 });

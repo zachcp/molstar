@@ -14,22 +14,27 @@ import fs from 'fs';
 
 import { setFSModule } from '../../mol-util/data-source.ts';
 import { MVSData } from '../../extensions/mvs/mvs-data.ts';
-import process from "node:process";
-
+import process from 'node:process';
 
 setFSModule(fs);
 
 /** Command line argument values for `main` */
 interface Args {
-    input: string[],
-    no_extra: boolean,
+    input: string[];
+    no_extra: boolean;
 }
 
 /** Return parsed command line arguments for `main` */
 function parseArguments(): Args {
-    const parser = new ArgumentParser({ description: 'Command-line application for validating MolViewSpec files. Prints validation status (OK/FAILED) to stdout, detailed validation issues to stderr. Exits with a zero exit code if all input files are OK.' });
+    const parser = new ArgumentParser({
+        description:
+            'Command-line application for validating MolViewSpec files. Prints validation status (OK/FAILED) to stdout, detailed validation issues to stderr. Exits with a zero exit code if all input files are OK.',
+    });
     parser.add_argument('input', { nargs: '+', help: 'Input file(s) in .mvsj format' });
-    parser.add_argument('--no-extra', { action: 'store_true', help: 'Treat presence of extra node params as an issue.' });
+    parser.add_argument('--no-extra', {
+        action: 'store_true',
+        help: 'Treat presence of extra node params as an issue.',
+    });
     const args = parser.parse_args();
     return { ...args };
 }

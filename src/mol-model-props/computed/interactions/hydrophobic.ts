@@ -8,18 +8,18 @@
  */
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { Structure, Unit, StructureElement } from '../../../mol-model/structure.ts';
-import { FeaturesBuilder, Features } from './features.ts';
-import { typeSymbol, eachBondedAtom } from '../chemistry/util.ts';
+import { Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
+import { Features, FeaturesBuilder } from './features.ts';
+import { eachBondedAtom, typeSymbol } from '../chemistry/util.ts';
 import { Elements } from '../../../mol-model/structure/model/properties/atomic/types.ts';
-import { FeatureType, FeatureGroup, InteractionType } from './common.ts';
+import { FeatureGroup, FeatureType, InteractionType } from './common.ts';
 import { ContactProvider } from './contacts.ts';
 
 const HydrophobicParams = {
     distanceMax: PD.Numeric(4.0, { min: 1, max: 5, step: 0.1 }),
 };
-type HydrophobicParams = typeof HydrophobicParams
-type HydrophobicProps = PD.Values<HydrophobicParams>
+type HydrophobicParams = typeof HydrophobicParams;
+type HydrophobicProps = PD.Values<HydrophobicParams>;
 
 /**
  * Hydropbobic atoms
@@ -44,7 +44,14 @@ function addHydrophobicAtom(structure: Structure, unit: Unit.Atomic, builder: Fe
         }
 
         if (flag) {
-            builder.add(FeatureType.HydrophobicAtom, FeatureGroup.None, x[elements[i]], y[elements[i]], z[elements[i]], i);
+            builder.add(
+                FeatureType.HydrophobicAtom,
+                FeatureGroup.None,
+                x[elements[i]],
+                y[elements[i]],
+                z[elements[i]],
+                i,
+            );
         }
     }
 }
@@ -53,7 +60,12 @@ function isHydrophobicContact(ti: FeatureType, tj: FeatureType) {
     return ti === FeatureType.HydrophobicAtom && tj === FeatureType.HydrophobicAtom;
 }
 
-function testHydrophobic(structure: Structure, infoA: Features.Info, infoB: Features.Info, distanceSq: number): InteractionType | undefined {
+function testHydrophobic(
+    structure: Structure,
+    infoA: Features.Info,
+    infoB: Features.Info,
+    distanceSq: number,
+): InteractionType | undefined {
     const typeA = infoA.types[infoA.feature];
     const typeB = infoB.types[infoB.feature];
 
@@ -61,14 +73,20 @@ function testHydrophobic(structure: Structure, infoA: Features.Info, infoB: Feat
 
     const indexA = infoA.members[infoA.offsets[infoA.feature]];
     const indexB = infoB.members[infoB.offsets[infoB.feature]];
-    if (typeSymbol(infoA.unit, indexA) === Elements.F && typeSymbol(infoB.unit, indexB) === Elements.F) return;
+    if (
+        typeSymbol(infoA.unit, indexA) === Elements.F &&
+        typeSymbol(infoB.unit, indexB) === Elements.F
+    ) return;
 
     return InteractionType.Hydrophobic;
 }
 
 //
 
-export const HydrophobicAtomProvider = Features.Provider([FeatureType.HydrophobicAtom], addHydrophobicAtom);
+export const HydrophobicAtomProvider = Features.Provider(
+    [FeatureType.HydrophobicAtom],
+    addHydrophobicAtom,
+);
 
 export const HydrophobicProvider: ContactProvider<HydrophobicParams> = {
     name: 'hydrophobic',
@@ -77,7 +95,8 @@ export const HydrophobicProvider: ContactProvider<HydrophobicParams> = {
         return {
             maxDistance: props.distanceMax,
             requiredFeatures: new Set([FeatureType.HydrophobicAtom]),
-            getType: (structure, infoA, infoB, distanceSq) => testHydrophobic(structure, infoA, infoB, distanceSq)
+            getType: (structure, infoA, infoB, distanceSq) =>
+                testHydrophobic(structure, infoA, infoB, distanceSq),
         };
-    }
+    },
 };

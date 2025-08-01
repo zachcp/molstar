@@ -7,12 +7,12 @@
 
 import { Color } from '../../mol-util/color/index.ts';
 import { Location } from '../../mol-model/location.ts';
-import { StructureElement, Bond, Model } from '../../mol-model/structure.ts';
+import { Bond, Model, StructureElement } from '../../mol-model/structure.ts';
 import type { ColorTheme, LocationColor } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { ThemeDataContext } from '../theme.ts';
-import { getPaletteParams, getPalette } from '../../mol-util/color/palette.ts';
-import { TableLegend, ScaleLegend } from '../../mol-util/legend.ts';
+import { getPalette, getPaletteParams } from '../../mol-util/color/palette.ts';
+import { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
 import { ColorThemeCategory } from './categories.ts';
 
 const DefaultColor = Color(0xCCCCCC);
@@ -21,12 +21,15 @@ const Description = 'Gives every model a unique color based on its index.';
 export const ModelIndexColorThemeParams = {
     ...getPaletteParams({ type: 'colors', colorList: 'many-distinct' }),
 };
-export type ModelIndexColorThemeParams = typeof ModelIndexColorThemeParams
+export type ModelIndexColorThemeParams = typeof ModelIndexColorThemeParams;
 export function getModelIndexColorThemeParams(ctx: ThemeDataContext) {
     return PD.clone(ModelIndexColorThemeParams);
 }
 
-export function ModelIndexColorTheme(ctx: ThemeDataContext, props: PD.Values<ModelIndexColorThemeParams>): ColorTheme<ModelIndexColorThemeParams> {
+export function ModelIndexColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<ModelIndexColorThemeParams>,
+): ColorTheme<ModelIndexColorThemeParams> {
     let color: LocationColor;
     let legend: ScaleLegend | TableLegend | undefined;
     let contextHash = -1;
@@ -58,16 +61,19 @@ export function ModelIndexColorTheme(ctx: ThemeDataContext, props: PD.Values<Mod
         props,
         contextHash,
         description: Description,
-        legend
+        legend,
     };
 }
 
-export const ModelIndexColorThemeProvider: ColorTheme.Provider<ModelIndexColorThemeParams, 'model-index'> = {
+export const ModelIndexColorThemeProvider: ColorTheme.Provider<
+    ModelIndexColorThemeParams,
+    'model-index'
+> = {
     name: 'model-index',
     label: 'Model Index',
     category: ColorThemeCategory.Chain,
     factory: ModelIndexColorTheme,
     getParams: getModelIndexColorThemeParams,
     defaultValues: PD.getDefaultValues(ModelIndexColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure && ctx.structure.elementCount > 0
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure && ctx.structure.elementCount > 0,
 };

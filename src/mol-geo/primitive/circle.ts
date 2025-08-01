@@ -10,9 +10,9 @@ export const DefaultCircleProps = {
     radius: 1,
     segments: 36,
     thetaStart: 0,
-    thetaLength: Math.PI * 2
+    thetaLength: Math.PI * 2,
 };
-export type CirclerProps = Partial<typeof DefaultCircleProps>
+export type CirclerProps = Partial<typeof DefaultCircleProps>;
 
 export function Circle(props?: CirclerProps): Primitive {
     const { radius, segments, thetaStart, thetaLength } = { ...DefaultCircleProps, ...props };
@@ -25,8 +25,12 @@ export function Circle(props?: CirclerProps): Primitive {
     const indices = new Uint32Array(segments * 3);
 
     // center
-    vertices[0] = 0; vertices[1] = 0; vertices[2] = 0;
-    normals[0] = 0; normals[1] = 1; normals[2] = 0;
+    vertices[0] = 0;
+    vertices[1] = 0;
+    vertices[2] = 0;
+    normals[0] = 0;
+    normals[1] = 1;
+    normals[2] = 0;
 
     // vertices & normals
     for (let s = 0, i = 3; s < segments; ++s, i += 3) {
@@ -36,12 +40,16 @@ export function Circle(props?: CirclerProps): Primitive {
         vertices[i + 1] = 0;
         vertices[i + 2] = radius * Math.cos(segment);
 
-        normals[i] = 0; normals[i + 1] = 1; normals[i + 2] = 0;
+        normals[i] = 0;
+        normals[i + 1] = 1;
+        normals[i + 2] = 0;
     }
 
     // indices
     for (let s = 1, i = 0; s < segments; ++s, i += 3) {
-        indices[i] = s; indices[i + 1] = s + 1; indices[i + 2] = 0;
+        indices[i] = s;
+        indices[i + 1] = s + 1;
+        indices[i + 2] = 0;
     }
 
     if (isFull) {
@@ -57,7 +65,9 @@ export function Circle(props?: CirclerProps): Primitive {
         vertices[i + 1] = 0;
         vertices[i + 2] = radius * Math.cos(segment);
 
-        normals[i] = 0; normals[i + 1] = 1; normals[i + 2] = 0;
+        normals[i] = 0;
+        normals[i + 1] = 1;
+        normals[i + 2] = 0;
 
         const j = (segments - 1) * 3;
         indices[j] = segments;

@@ -5,15 +5,15 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { Unit, ResidueIndex, ElementIndex } from '../../../../mol-model/structure.ts';
+import { ElementIndex, ResidueIndex, Unit } from '../../../../mol-model/structure.ts';
 import { SortedArray } from '../../../../mol-data/int.ts';
 
 export interface ProteinInfo {
-    readonly residueIndices: SortedArray<ResidueIndex>
-    readonly cIndices: ArrayLike<ElementIndex | -1>
-    readonly hIndices: ArrayLike<ElementIndex | -1>
-    readonly oIndices: ArrayLike<ElementIndex | -1>
-    readonly nIndices: ArrayLike<ElementIndex | -1>
+    readonly residueIndices: SortedArray<ResidueIndex>;
+    readonly cIndices: ArrayLike<ElementIndex | -1>;
+    readonly hIndices: ArrayLike<ElementIndex | -1>;
+    readonly oIndices: ArrayLike<ElementIndex | -1>;
+    readonly nIndices: ArrayLike<ElementIndex | -1>;
 }
 
 export function getUnitProteinInfo(unit: Unit.Atomic): ProteinInfo {

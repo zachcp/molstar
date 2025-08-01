@@ -18,7 +18,11 @@ import { NumberArray } from '../../../mol-util/type-helpers.ts';
  * furnished to do so, subject to the following conditions:
  */
 
-interface Vec2 extends Array<number> { [d: number]: number, '@type': 'vec2', length: 2 }
+interface Vec2 extends Array<number> {
+    [d: number]: number;
+    '@type': 'vec2';
+    length: 2;
+}
 
 function Vec2() {
     return Vec2.zero();

@@ -4,12 +4,28 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Database, Column, EnumCol, StrCol, IntCol, ListCol, FloatCol, CoordCol, MatrixCol, VectorCol } from './schema.ts';
+import {
+    Column,
+    CoordCol,
+    Database,
+    EnumCol,
+    FloatCol,
+    IntCol,
+    ListCol,
+    MatrixCol,
+    StrCol,
+    VectorCol,
+} from './schema.ts';
 import { parseImportGet } from './helper.ts';
 import * as Data from '../../../mol-io/reader/cif/data-model.ts';
 import { CifFrame } from '../../../mol-io/reader/cif/data-model.ts';
 
-export function getFieldType(type: string, description: string, values?: string[], container?: string): Column {
+export function getFieldType(
+    type: string,
+    description: string,
+    values?: string[],
+    container?: string,
+): Column {
     switch (type) {
         // mmCIF
         case 'code':
@@ -17,14 +33,18 @@ export function getFieldType(type: string, description: string, values?: string[
         case 'text':
         case 'char':
         case 'boolean':
-            return values && values.length ? EnumCol(values, 'str', description) : StrCol(description);
+            return values && values.length
+                ? EnumCol(values, 'str', description)
+                : StrCol(description);
         case 'ucode':
         case 'uline':
         case 'uchar3':
         case 'uchar1':
         case 'uchar5':
             // only force lower-case for enums
-            return values && values.length ? EnumCol(values.map(x => x.toLowerCase()), 'lstr', description) : StrCol(description);
+            return values && values.length
+                ? EnumCol(values.map((x) => x.toLowerCase()), 'lstr', description)
+                : StrCol(description);
         case 'aliasname':
         case 'name':
         case 'idname':
@@ -68,7 +88,9 @@ export function getFieldType(type: string, description: string, values?: string[
         case 'int':
         case 'non_negative_int':
         case 'positive_int':
-            return values && values.length ? EnumCol(values, 'int', description) : IntCol(description);
+            return values && values.length
+                ? EnumCol(values, 'int', description)
+                : IntCol(description);
         case 'float':
             return FloatCol(description);
         case 'ec-type':
@@ -98,7 +120,6 @@ export function getFieldType(type: string, description: string, values?: string[
             return wrapContainer('float', ',', description, container);
         case 'Integer':
             return wrapContainer('int', ',', description, container);
-
     }
     console.log(`unknown type '${type}'`);
     return StrCol(description);
@@ -106,26 +127,37 @@ export function getFieldType(type: string, description: string, values?: string[
 
 function ColFromType(type: 'int' | 'str' | 'float' | 'coord', description: string): Column {
     switch (type) {
-        case 'int': return IntCol(description);
-        case 'str': return StrCol(description);
-        case 'float': return FloatCol(description);
-        case 'coord': return CoordCol(description);
+        case 'int':
+            return IntCol(description);
+        case 'str':
+            return StrCol(description);
+        case 'float':
+            return FloatCol(description);
+        case 'coord':
+            return CoordCol(description);
     }
 }
 
-function wrapContainer(type: 'int' | 'str' | 'float' | 'coord', separator: string, description: string, container?: string) {
-    return container && container === 'List' ? ListCol(type, separator, description) : ColFromType(type, description);
+function wrapContainer(
+    type: 'int' | 'str' | 'float' | 'coord',
+    separator: string,
+    description: string,
+    container?: string,
+) {
+    return container && container === 'List'
+        ? ListCol(type, separator, description)
+        : ColFromType(type, description);
 }
 
-type FrameCategories = { [category: string]: Data.CifFrame }
-type FrameLinks = { [k: string]: string }
+type FrameCategories = { [category: string]: Data.CifFrame };
+type FrameLinks = { [k: string]: string };
 
 interface FrameData {
-    categories: FrameCategories
-    links: FrameLinks
+    categories: FrameCategories;
+    links: FrameLinks;
 }
 
-type Imports = Map<string, CifFrame[]>
+type Imports = Map<string, CifFrame[]>;
 
 function getImportFrames(d: Data.CifFrame, imports: Imports) {
     const frames: Data.CifFrame[] = [];
@@ -143,7 +175,9 @@ function getImportFrames(d: Data.CifFrame, imports: Imports) {
             console.warn(`missing '${file}' entry in imports`);
             continue;
         }
-        const importSave = importFrames.find(id => id.header.toLowerCase() === save.toLowerCase());
+        const importSave = importFrames.find((id) =>
+            id.header.toLowerCase() === save.toLowerCase()
+        );
         if (!importSave) {
             console.warn(`missing '${save}' save frame in '${file}'`);
             continue;
@@ -156,7 +190,13 @@ function getImportFrames(d: Data.CifFrame, imports: Imports) {
 }
 
 /** get field from given or linked category */
-function getField(category: string, field: string, d: Data.CifFrame, imports: Imports, ctx: FrameData): Data.CifField | undefined {
+function getField(
+    category: string,
+    field: string,
+    d: Data.CifFrame,
+    imports: Imports,
+    ctx: FrameData,
+): Data.CifField | undefined {
     const { categories, links } = ctx;
     const cat = d.categories[category];
     if (cat) {
@@ -195,8 +235,13 @@ function getContainer(d: Data.CifFrame, imports: Imports, ctx: FrameData) {
     return value ? value.str(0) : undefined;
 }
 
-function getCode(d: Data.CifFrame, imports: Imports, ctx: FrameData): [string, string[] | undefined, string | undefined ] | undefined {
-    const code = getField('item_type', 'code', d, imports, ctx) || getField('type', 'contents', d, imports, ctx);
+function getCode(
+    d: Data.CifFrame,
+    imports: Imports,
+    ctx: FrameData,
+): [string, string[] | undefined, string | undefined] | undefined {
+    const code = getField('item_type', 'code', d, imports, ctx) ||
+        getField('type', 'contents', d, imports, ctx);
     if (code) {
         return [code.str(0), getEnums(d, imports, ctx), getContainer(d, imports, ctx)];
     } else {
@@ -212,7 +257,8 @@ function getSubCategory(d: Data.CifFrame, imports: Imports, ctx: FrameData): str
 }
 
 function getDescription(d: Data.CifFrame, imports: Imports, ctx: FrameData): string | undefined {
-    const value = getField('item_description', 'description', d, imports, ctx) || getField('description', 'text', d, imports, ctx);
+    const value = getField('item_description', 'description', d, imports, ctx) ||
+        getField('description', 'text', d, imports, ctx);
     if (value) {
         // trim (after newlines) and remove references to square brackets
         return value.str(0).trim()
@@ -223,8 +269,9 @@ function getDescription(d: Data.CifFrame, imports: Imports, ctx: FrameData): str
 }
 
 function getAliases(d: Data.CifFrame, imports: Imports, ctx: FrameData): string[] | undefined {
-    const value = getField('item_aliases', 'alias_name', d, imports, ctx) || getField('alias', 'definition_id', d, imports, ctx);
-    return value ? value.toStringArray().map(v => v.substr(1)) : undefined;
+    const value = getField('item_aliases', 'alias_name', d, imports, ctx) ||
+        getField('alias', 'definition_id', d, imports, ctx);
+    return value ? value.toStringArray().map((v) => v.substr(1)) : undefined;
 }
 
 const reMatrixField = /\[[1-3]\]\[[1-3]\]/;
@@ -268,7 +315,7 @@ const FORCE_MATRIX_FIELDS = Object.keys(FORCE_MATRIX_FIELDS_MAP);
 const EXTRA_ALIASES: Database['aliases'] = {
     'atom_site_aniso.matrix_u': [
         'atom_site_anisotrop_U',
-        'atom_site_aniso.U'
+        'atom_site_aniso.U',
     ],
 };
 
@@ -307,7 +354,7 @@ const SPACE_SEPARATED_LIST_FIELDS = [
 ];
 
 const SEMICOLON_SEPARATED_LIST_FIELDS = [
-    '_chem_comp.pdbx_synonyms' // GLYCERIN; PROPANE-1,2,3-TRIOL
+    '_chem_comp.pdbx_synonyms', // GLYCERIN; PROPANE-1,2,3-TRIOL
 ];
 
 /**
@@ -315,9 +362,7 @@ const SEMICOLON_SEPARATED_LIST_FIELDS = [
  * By adding them here, the dictionary extension can be tested before the added enum
  * values are available in the existing dictionary.
  */
-const EXTRA_ENUM_VALUES: { [k: string]: string[] } = {
-
-};
+const EXTRA_ENUM_VALUES: { [k: string]: string[] } = {};
 
 export function generateSchema(frames: CifFrame[], imports: Imports = new Map()): Database {
     const tables: Database['tables'] = {};
@@ -328,7 +373,7 @@ export function generateSchema(frames: CifFrame[], imports: Imports = new Map())
     const ctx = { categories, links };
 
     // get category metadata
-    frames.forEach(d => {
+    frames.forEach((d) => {
         // category definitions in mmCIF start with '_' and don't include a '.'
         // category definitions in cifCore don't include a '.'
         if (d.header[0] === '_' || d.header.includes('.')) return;
@@ -377,7 +422,7 @@ export function generateSchema(frames: CifFrame[], imports: Imports = new Map())
     });
 
     // build list of links between categories
-    frames.forEach(d => {
+    frames.forEach((d) => {
         if (d.header[0] !== '_' && !d.header.includes('.')) return;
         categories[d.header] = d;
         const item_linked = d.categories['item_linked'];
@@ -389,7 +434,11 @@ export function generateSchema(frames: CifFrame[], imports: Imports = new Map())
                     const childName: string = child_name.str(i);
                     const parentName = parent_name.str(i);
                     if (childName in links && links[childName] !== parentName) {
-                        console.log(`${childName} linked to ${links[childName]}, ignoring link to ${parentName}`);
+                        console.log(
+                            `${childName} linked to ${
+                                links[childName]
+                            }, ignoring link to ${parentName}`,
+                        );
                     }
                     links[childName] = parentName;
                 }
@@ -398,7 +447,7 @@ export function generateSchema(frames: CifFrame[], imports: Imports = new Map())
     });
 
     // get field data
-    Object.keys(categories).forEach(fullName => {
+    Object.keys(categories).forEach((fullName) => {
         const d = categories[fullName];
         if (!d) {
             console.log(`'${fullName}' not found, moving on`);
@@ -421,7 +470,7 @@ export function generateSchema(frames: CifFrame[], imports: Imports = new Map())
             tables[categoryName] = {
                 description: '',
                 key: new Set(),
-                columns: fields
+                columns: fields,
             };
         }
 

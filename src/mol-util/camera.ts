@@ -20,7 +20,12 @@ function distanceAdjustment(mode: Camera.Mode, fov: number) {
  * as the "reference camera" placed at `refPosition` would fit, while keeping the camera orientation.
  * The "reference camera" is a camera which can just fit into view a sphere of radius R with center at distance 2R
  * (this corresponds to FOV = 2 * asin(1/2) in perspective mode or FOV = 2 * atan(1/2) in orthographic mode). */
-export function fovAdjustedPosition(target: Vec3, refPosition: Vec3, mode: Camera.Mode, fov: number) {
+export function fovAdjustedPosition(
+    target: Vec3,
+    refPosition: Vec3,
+    mode: Camera.Mode,
+    fov: number,
+) {
     const delta = Vec3.sub(Vec3(), refPosition, target);
     const adjustment = distanceAdjustment(mode, fov);
     return Vec3.scaleAndAdd(delta, target, delta, adjustment); // return target + delta * adjustment
@@ -29,7 +34,12 @@ export function fovAdjustedPosition(target: Vec3, refPosition: Vec3, mode: Camer
 /** Return the inverse of fovAdjustedPosition to be able to store invariant camera position,
  * e.g., in MolViewSpec snapshots.
  */
-export function fovNormalizedCameraPosition(target: Vec3, refPosition: Vec3, mode: Camera.Mode, fov: number) {
+export function fovNormalizedCameraPosition(
+    target: Vec3,
+    refPosition: Vec3,
+    mode: Camera.Mode,
+    fov: number,
+) {
     const delta = Vec3.sub(Vec3(), refPosition, target);
     const adjustment = distanceAdjustment(mode, fov) || 1;
     return Vec3.scaleAndAdd(delta, target, delta, 1 / adjustment); // return target + delta / adjustment

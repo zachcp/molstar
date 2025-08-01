@@ -6,35 +6,38 @@
  */
 
 import { mmCIF_Database, mmCIF_Schema } from '../../../../mol-io/reader/cif/schema/mmcif.ts';
-import { Table, Column } from '../../../../mol-data/db.ts';
+import { Column, Table } from '../../../../mol-data/db.ts';
 import { EntityIndex } from '../indexing.ts';
 import { mmCIF_chemComp_schema } from '../../../../mol-io/reader/cif/schema/mmcif-extras.ts';
 
-export type EntitySubtype = (
-    mmCIF_Schema['entity_poly']['type']['T'] |
-    mmCIF_Schema['pdbx_entity_branch']['type']['T'] |
-    'ion' |
-    'lipid' |
-    'peptide-like'
-)
+export type EntitySubtype =
+    | mmCIF_Schema['entity_poly']['type']['T']
+    | mmCIF_Schema['pdbx_entity_branch']['type']['T']
+    | 'ion'
+    | 'lipid'
+    | 'peptide-like';
 export const EntitySubtype = Column.Schema.Aliased<EntitySubtype>(Column.Schema.Str());
 
 export interface Entities {
-    data: mmCIF_Database['entity'],
-    subtype: Column<EntitySubtype>,
-    prd_id?: Column<string>,
-    getEntityIndex(id: string): EntityIndex
+    data: mmCIF_Database['entity'];
+    subtype: Column<EntitySubtype>;
+    prd_id?: Column<string>;
+    getEntityIndex(id: string): EntityIndex;
 }
 
-export type ChemicalComponent = Table.Row<mmCIF_chemComp_schema>
-export type ChemicalComponentMap = ReadonlyMap<string, ChemicalComponent>
+export type ChemicalComponent = Table.Row<mmCIF_chemComp_schema>;
+export type ChemicalComponentMap = ReadonlyMap<string, ChemicalComponent>;
 
-export type MissingResidue = Table.Row<Pick<mmCIF_Schema['pdbx_unobs_or_zero_occ_residues'], 'polymer_flag' | 'occupancy_flag'>>
+export type MissingResidue = Table.Row<
+    Pick<mmCIF_Schema['pdbx_unobs_or_zero_occ_residues'], 'polymer_flag' | 'occupancy_flag'>
+>;
 export interface MissingResidues {
-    has(model_num: number, asym_id: string, seq_id: number): boolean
-    get(model_num: number, asym_id: string, seq_id: number): MissingResidue | undefined
-    readonly size: number
+    has(model_num: number, asym_id: string, seq_id: number): boolean;
+    get(model_num: number, asym_id: string, seq_id: number): MissingResidue | undefined;
+    readonly size: number;
 }
 
-export type StructAsym = Table.Row<Pick<mmCIF_Schema['struct_asym'], 'id' | 'entity_id'> & { auth_id: Column.Schema.Str }>
-export type StructAsymMap = ReadonlyMap<string, StructAsym>
+export type StructAsym = Table.Row<
+    Pick<mmCIF_Schema['struct_asym'], 'id' | 'entity_id'> & { auth_id: Column.Schema.Str }
+>;
+export type StructAsymMap = ReadonlyMap<string, StructAsym>;

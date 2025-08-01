@@ -4,7 +4,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { RenderableSchema, Values, UnboxedValues, UniformSpec, TextureSpec, DefineSpec, RenderableValues } from '../renderable/schema.ts';
+import {
+    DefineSpec,
+    RenderableSchema,
+    RenderableValues,
+    TextureSpec,
+    UnboxedValues,
+    UniformSpec,
+    Values,
+} from '../renderable/schema.ts';
 import { WebGLContext } from '../webgl/context.ts';
 import { getRegularGrid3dDelta, RegularGrid3d } from '../../mol-math/geometry/common.ts';
 import { grid3dTemplate_frag } from '../shader/util/grid3d-template.frag.ts';
@@ -25,22 +33,22 @@ export function canComputeGrid3dOnGPU(webgl?: WebGLContext): webgl is WebGLConte
 }
 
 export interface Grid3DComputeRenderableSpec<S extends RenderableSchema, P, CS> {
-    schema: S,
+    schema: S;
     // indicate which params are loop bounds for WebGL1 compat
-    loopBounds?: (keyof S)[]
-    utilCode?: string,
-    mainCode: string,
-    returnCode: string,
+    loopBounds?: (keyof S)[];
+    utilCode?: string;
+    mainCode: string;
+    returnCode: string;
 
-    values(params: P, grid: RegularGrid3d): UnboxedValues<S>,
+    values(params: P, grid: RegularGrid3d): UnboxedValues<S>;
 
     cumulative?: {
-        states(params: P): CS[],
-        update(params: P, state: CS, values: Values<S>): void,
+        states(params: P): CS[];
+        update(params: P, state: CS, values: Values<S>): void;
         // call gl.readPixes every 'yieldPeriod' states to split the computation
         // into multiple parts, if not set, the computation will be synchronous
-        yieldPeriod?: number
-    }
+        yieldPeriod?: number;
+    };
 }
 
 const FrameBufferName = 'grid3d-computable' as const;
@@ -57,10 +65,12 @@ const SchemaBase = {
 };
 
 const CumulativeSumSchema = {
-    tCumulativeSum: TextureSpec('texture', 'rgba', 'ubyte', 'nearest')
+    tCumulativeSum: TextureSpec('texture', 'rgba', 'ubyte', 'nearest'),
 };
 
-export function createGrid3dComputeRenderable<S extends RenderableSchema, P, CS>(spec: Grid3DComputeRenderableSpec<S, P, CS>) {
+export function createGrid3dComputeRenderable<S extends RenderableSchema, P, CS>(
+    spec: Grid3DComputeRenderableSpec<S, P, CS>,
+) {
     const id = UUID.create22();
 
     const uniforms: string[] = [];
@@ -70,8 +80,9 @@ export function createGrid3dComputeRenderable<S extends RenderableSchema, P, CS>
         if (u.kind.indexOf('[]') >= 0) throw new Error('array uniforms are not supported');
         const isBound = (spec.loopBounds?.indexOf(k) ?? -1) >= 0;
         if (isBound) uniforms.push(`#ifndef ${k}`);
-        if (u.type === 'uniform') uniforms.push(`uniform ${getUniformGlslType(u.kind as any)} ${k};`);
-        else if (u.type === 'texture') uniforms.push(`uniform sampler2D ${k};`);
+        if (u.type === 'uniform') {
+            uniforms.push(`uniform ${getUniformGlslType(u.kind as any)} ${k};`);
+        } else if (u.type === 'texture') uniforms.push(`uniform sampler2D ${k};`);
         if (isBound) uniforms.push(`#endif`);
     });
 
@@ -109,10 +120,20 @@ export function createGrid3dComputeRenderable<S extends RenderableSchema, P, CS>
         const framebuffer = webgl.namedFramebuffers[FrameBufferName];
 
         if (!webgl.namedTextures[Texture0Name]) {
-            webgl.namedTextures[Texture0Name] = webgl.resources.texture('image-uint8', 'rgba', 'ubyte', 'nearest');
+            webgl.namedTextures[Texture0Name] = webgl.resources.texture(
+                'image-uint8',
+                'rgba',
+                'ubyte',
+                'nearest',
+            );
         }
         if (spec.cumulative && !webgl.namedTextures[Texture1Name]) {
-            webgl.namedTextures[Texture1Name] = webgl.resources.texture('image-uint8', 'rgba', 'ubyte', 'nearest');
+            webgl.namedTextures[Texture1Name] = webgl.resources.texture(
+                'image-uint8',
+                'rgba',
+                'ubyte',
+                'nearest',
+            );
         }
 
         const tex = [webgl.namedTextures[Texture0Name], webgl.namedTextures[Texture1Name]];
@@ -126,7 +147,7 @@ export function createGrid3dComputeRenderable<S extends RenderableSchema, P, CS>
             uDelta: getRegularGrid3dDelta(grid),
             uWidth,
             uLittleEndian: isLittleEndian(),
-            ...spec.values(params, grid)
+            ...spec.values(params, grid),
         } as any;
 
         if (!webgl.isWebGL2) {
@@ -155,7 +176,10 @@ export function createGrid3dComputeRenderable<S extends RenderableSchema, P, CS>
             cells = {} as any;
             objectForEach(QuadValues, (v, k) => (cells as any)[k] = v);
             objectForEach(values, (v, k) => (cells as any)[k] = ValueCell.create(v));
-            renderable = createComputeRenderable(createComputeRenderItem(webgl, 'triangles', shader, schema, cells), cells);
+            renderable = createComputeRenderable(
+                createComputeRenderItem(webgl, 'triangles', shader, schema, cells),
+                cells,
+            );
         }
 
         const array = new Uint8Array(uWidth * uWidth * 4);
@@ -178,7 +202,12 @@ export function createGrid3dComputeRenderable<S extends RenderableSchema, P, CS>
             gl.clear(gl.COLOR_BUFFER_BIT);
 
             if (spec.cumulative.yieldPeriod && !isTimingMode) {
-                await ctx.update({ message: 'Computing...', isIndeterminate: false, current: 0, max: states.length });
+                await ctx.update({
+                    message: 'Computing...',
+                    isIndeterminate: false,
+                    current: 0,
+                    max: states.length,
+                });
             }
 
             const yieldPeriod = Math.max(1, spec.cumulative.yieldPeriod ?? 1 | 0);

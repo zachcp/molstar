@@ -24,11 +24,14 @@ const globalAccessionMap = new Map<string, number>();
 export const SIFTSMappingColorThemeParams = {
     ...getPaletteParams({ type: 'colors', colorList: 'set-1' }),
 };
-export type SIFTSMappingColorThemeParams = typeof SIFTSMappingColorThemeParams
+export type SIFTSMappingColorThemeParams = typeof SIFTSMappingColorThemeParams;
 export function getSIFTSMappingColorThemeParams(ctx: ThemeDataContext) {
     return SIFTSMappingColorThemeParams; // TODO return copy
 }
-export function SIFTSMappingColorTheme(ctx: ThemeDataContext, props: PD.Values<SIFTSMappingColorThemeParams>): ColorTheme<SIFTSMappingColorThemeParams> {
+export function SIFTSMappingColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<SIFTSMappingColorThemeParams>,
+): ColorTheme<SIFTSMappingColorThemeParams> {
     let color: LocationColor;
 
     if (ctx.structure) {
@@ -42,7 +45,9 @@ export function SIFTSMappingColorTheme(ctx: ThemeDataContext, props: PD.Values<S
         }
 
         const l = StructureElement.Location.create(ctx.structure);
-        const palette = getPalette(globalAccessionMap.size + 1, props, { valueLabel: i => `${i}` });
+        const palette = getPalette(globalAccessionMap.size + 1, props, {
+            valueLabel: (i) => `${i}`,
+        });
         const colorMap = new Map<string, Color>();
 
         const getColor = (location: StructureElement.Location) => {
@@ -80,14 +85,18 @@ export function SIFTSMappingColorTheme(ctx: ThemeDataContext, props: PD.Values<S
     };
 }
 
-export const SIFTSMappingColorThemeProvider: ColorTheme.Provider<SIFTSMappingColorThemeParams, 'sifts-mapping'> = {
+export const SIFTSMappingColorThemeProvider: ColorTheme.Provider<
+    SIFTSMappingColorThemeParams,
+    'sifts-mapping'
+> = {
     name: 'sifts-mapping',
     label: 'SIFTS Mapping',
     category: ColorThemeCategory.Residue,
     factory: SIFTSMappingColorTheme,
     getParams: getSIFTSMappingColorThemeParams,
     defaultValues: PD.getDefaultValues(SIFTSMappingColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure?.models.some(m => SIFTSMapping.Provider.isApplicable(m)),
+    isApplicable: (ctx: ThemeDataContext) =>
+        !!ctx.structure?.models.some((m) => SIFTSMapping.Provider.isApplicable(m)),
     ensureCustomProperties: {
         attach: async (ctx: CustomProperty.Context, data: ThemeDataContext) => {
             if (!data.structure) return;
@@ -101,6 +110,6 @@ export const SIFTSMappingColorThemeProvider: ColorTheme.Provider<SIFTSMappingCol
             for (const m of data.structure.models) {
                 SIFTSMapping.Provider.ref(m, false);
             }
-        }
-    }
+        },
+    },
 };

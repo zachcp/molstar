@@ -6,7 +6,12 @@
 
 import { Features } from './features.ts';
 import { IntAdjacencyGraph } from '../../../mol-math/graph.ts';
-import { InteractionType, InteractionsIntraContacts, InteractionsInterContacts, InteractionFlag } from './common.ts';
+import {
+    InteractionFlag,
+    InteractionsInterContacts,
+    InteractionsIntraContacts,
+    InteractionType,
+} from './common.ts';
 import { Unit } from '../../../mol-model/structure/structure.ts';
 import { NumberArray } from '../../../mol-util/type-helpers.ts';
 import { IntMap } from '../../../mol-data/int.ts';
@@ -15,8 +20,12 @@ import { InterUnitGraph } from '../../../mol-math/graph/inter-unit-graph.ts';
 export { IntraContactsBuilder };
 
 interface IntraContactsBuilder {
-    add: (indexA: Features.FeatureIndex, indexB: Features.FeatureIndex, type: InteractionType) => void
-    getContacts: () => InteractionsIntraContacts
+    add: (
+        indexA: Features.FeatureIndex,
+        indexB: Features.FeatureIndex,
+        type: InteractionType,
+    ) => void;
+    getContacts: () => InteractionsIntraContacts;
 }
 
 namespace IntraContactsBuilder {
@@ -26,13 +35,21 @@ namespace IntraContactsBuilder {
         const types: number[] = [];
 
         return {
-            add(indexA: Features.FeatureIndex, indexB: Features.FeatureIndex, type: InteractionType) {
+            add(
+                indexA: Features.FeatureIndex,
+                indexB: Features.FeatureIndex,
+                type: InteractionType,
+            ) {
                 aIndices[aIndices.length] = indexA;
                 bIndices[bIndices.length] = indexB;
                 types[types.length] = type;
             },
             getContacts() {
-                const builder = new IntAdjacencyGraph.EdgeBuilder(features.count, aIndices, bIndices);
+                const builder = new IntAdjacencyGraph.EdgeBuilder(
+                    features.count,
+                    aIndices,
+                    bIndices,
+                );
                 const type = new Int8Array(builder.slotCount) as ArrayLike<InteractionType>;
                 const flag = new Int8Array(builder.slotCount) as NumberArray;
                 for (let i = 0, _i = builder.edgeCount; i < _i; i++) {
@@ -42,13 +59,22 @@ namespace IntraContactsBuilder {
                 const graph = builder.createGraph({ type, flag });
 
                 let elementsIndex: InteractionsIntraContacts.ElementsIndex;
-                const contacts: InteractionsIntraContacts = Object.defineProperty(graph, 'elementsIndex', {
-                    get: () => {
-                        return elementsIndex || (elementsIndex = InteractionsIntraContacts.createElementsIndex(graph, features, elementsCount));
-                    }
-                }) as any;
+                const contacts: InteractionsIntraContacts = Object.defineProperty(
+                    graph,
+                    'elementsIndex',
+                    {
+                        get: () => {
+                            return elementsIndex ||
+                                (elementsIndex = InteractionsIntraContacts.createElementsIndex(
+                                    graph,
+                                    features,
+                                    elementsCount,
+                                ));
+                        },
+                    },
+                ) as any;
                 return contacts;
-            }
+            },
         };
     }
 }
@@ -56,15 +82,23 @@ namespace IntraContactsBuilder {
 export { InterContactsBuilder };
 
 interface InterContactsBuilder {
-    startUnitPair: (unitA: Unit, unitB: Unit) => void
-    finishUnitPair: () => void
-    add: (indexA: Features.FeatureIndex, indexB: Features.FeatureIndex, type: InteractionType) => void
-    getContacts: (unitsFeatures: IntMap<Features>) => InteractionsInterContacts
+    startUnitPair: (unitA: Unit, unitB: Unit) => void;
+    finishUnitPair: () => void;
+    add: (
+        indexA: Features.FeatureIndex,
+        indexB: Features.FeatureIndex,
+        type: InteractionType,
+    ) => void;
+    getContacts: (unitsFeatures: IntMap<Features>) => InteractionsInterContacts;
 }
 
 namespace InterContactsBuilder {
     export function create(): InterContactsBuilder {
-        const builder = new InterUnitGraph.Builder<number, Features.FeatureIndex, InteractionsInterContacts.Props>();
+        const builder = new InterUnitGraph.Builder<
+            number,
+            Features.FeatureIndex,
+            InteractionsInterContacts.Props
+        >();
 
         return {
             startUnitPair(unitA: Unit, unitB: Unit) {
@@ -73,12 +107,16 @@ namespace InterContactsBuilder {
             finishUnitPair() {
                 builder.finishUnitPair();
             },
-            add(indexA: Features.FeatureIndex, indexB: Features.FeatureIndex, type: InteractionType) {
+            add(
+                indexA: Features.FeatureIndex,
+                indexB: Features.FeatureIndex,
+                type: InteractionType,
+            ) {
                 builder.add(indexA, indexB, { type, flag: InteractionFlag.None });
             },
             getContacts(unitsFeatures: IntMap<Features>) {
                 return new InteractionsInterContacts(builder.getMap(), unitsFeatures);
-            }
+            },
         };
     }
 }

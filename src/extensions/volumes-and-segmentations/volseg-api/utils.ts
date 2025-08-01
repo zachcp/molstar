@@ -7,7 +7,6 @@
 import { Color } from '../../../mol-util/color/index.ts';
 import { Metadata, Segment } from './data.ts';
 
-
 export class MetadataWrapper {
     raw: Metadata;
     private segmentMap?: { [id: number]: Segment };
@@ -21,7 +20,7 @@ export class MetadataWrapper {
     }
 
     get allSegmentIds() {
-        return this.allSegments.map(segment => segment.id);
+        return this.allSegments.map((segment) => segment.id);
     }
 
     getSegment(segmentId: number): Segment | undefined {
@@ -44,7 +43,7 @@ export class MetadataWrapper {
         const segmentIds = this.raw.grid.segmentation_meshes.mesh_component_numbers.segment_ids;
         if (!segmentIds) return [];
         const details = segmentIds[segmentId].detail_lvls;
-        return Object.keys(details).map(s => parseInt(s));
+        return Object.keys(details).map((s) => parseInt(s));
     }
 
     /** Get the worst available detail level that is not worse than preferredDetail.
@@ -53,7 +52,7 @@ export class MetadataWrapper {
     getSufficientMeshDetail(segmentId: number, preferredDetail: number | null) {
         let availDetails = this.getMeshDetailLevels(segmentId);
         if (preferredDetail !== null) {
-            availDetails = availDetails.filter(det => det <= preferredDetail);
+            availDetails = availDetails.filter((det) => det <= preferredDetail);
         }
         return Math.max(...availDetails);
     }
@@ -62,7 +61,7 @@ export class MetadataWrapper {
     get meshSegmentIds() {
         const segmentIds = this.raw.grid.segmentation_meshes.mesh_component_numbers.segment_ids;
         if (!segmentIds) return [];
-        return Object.keys(segmentIds).map(s => parseInt(s));
+        return Object.keys(segmentIds).map((s) => parseInt(s));
     }
 
     get gridTotalVolume() {
@@ -70,5 +69,4 @@ export class MetadataWrapper {
         const [gx, gy, gz] = this.raw.grid.volumes.grid_dimensions;
         return vx * vy * vz * gx * gy * gz;
     }
-
 }

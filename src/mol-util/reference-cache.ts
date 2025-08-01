@@ -4,15 +4,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-export interface Reference<T> { readonly value: T, usageCount: number }
+export interface Reference<T> {
+    readonly value: T;
+    usageCount: number;
+}
 
 export function createReference<T>(value: T, usageCount = 0) {
     return { value, usageCount };
 }
 
 export interface ReferenceItem<T> {
-    free: () => void
-    readonly value: T
+    free: () => void;
+    readonly value: T;
 }
 
 export function createReferenceItem<T>(ref: Reference<T>) {
@@ -20,18 +23,22 @@ export function createReferenceItem<T>(ref: Reference<T>) {
         free: () => {
             ref.usageCount -= 1;
         },
-        value: ref.value
+        value: ref.value,
     };
 }
 
 export interface ReferenceCache<T, P> {
-    get: (props: P) => ReferenceItem<T>
-    clear: () => void
-    readonly count: number
-    dispose: () => void
+    get: (props: P) => ReferenceItem<T>;
+    clear: () => void;
+    readonly count: number;
+    dispose: () => void;
 }
 
-export function createReferenceCache<T, P>(hashFn: (props: P) => string, ctor: (props: P) => T, deleteFn: (v: T) => void): ReferenceCache<T, P> {
+export function createReferenceCache<T, P>(
+    hashFn: (props: P) => string,
+    ctor: (props: P) => T,
+    deleteFn: (v: T) => void,
+): ReferenceCache<T, P> {
     const map: Map<string, Reference<T>> = new Map();
 
     return {
@@ -60,7 +67,7 @@ export function createReferenceCache<T, P>(hashFn: (props: P) => string, ctor: (
             return map.size;
         },
         dispose: () => {
-            map.forEach(ref => deleteFn(ref.value));
+            map.forEach((ref) => deleteFn(ref.value));
             map.clear();
         },
     };

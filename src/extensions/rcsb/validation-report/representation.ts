@@ -5,23 +5,45 @@
  */
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { Unit, Structure, StructureElement, Bond } from '../../../mol-model/structure.ts';
+import { Bond, Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
 import { Theme, ThemeRegistryContext } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { PickingId } from '../../../mol-geo/geometry/picking.ts';
-import { EmptyLoci, Loci, DataLoci } from '../../../mol-model/loci.ts';
+import { DataLoci, EmptyLoci, Loci } from '../../../mol-model/loci.ts';
 import { Interval } from '../../../mol-data/int.ts';
-import { RepresentationContext, RepresentationParamsGetter, Representation } from '../../../mol-repr/representation.ts';
-import { UnitsRepresentation, StructureRepresentation, StructureRepresentationStateBuilder, StructureRepresentationProvider, ComplexRepresentation } from '../../../mol-repr/structure/representation.ts';
+import {
+    Representation,
+    RepresentationContext,
+    RepresentationParamsGetter,
+} from '../../../mol-repr/representation.ts';
+import {
+    ComplexRepresentation,
+    StructureRepresentation,
+    StructureRepresentationProvider,
+    StructureRepresentationStateBuilder,
+    UnitsRepresentation,
+} from '../../../mol-repr/structure/representation.ts';
 import { VisualContext } from '../../../mol-repr/visual.ts';
-import { createLinkCylinderMesh, LinkCylinderParams, LinkStyle } from '../../../mol-repr/structure/visual/util/link.ts';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../../../mol-repr/structure/units-visual.ts';
+import {
+    createLinkCylinderMesh,
+    LinkCylinderParams,
+    LinkStyle,
+} from '../../../mol-repr/structure/visual/util/link.ts';
+import {
+    UnitsMeshParams,
+    UnitsMeshVisual,
+    UnitsVisual,
+} from '../../../mol-repr/structure/units-visual.ts';
 import { VisualUpdateState } from '../../../mol-repr/util.ts';
 import { LocationIterator } from '../../../mol-geo/util/location-iterator.ts';
-import { ClashesProvider, IntraUnitClashes, InterUnitClashes, ValidationReport } from './prop.ts';
+import { ClashesProvider, InterUnitClashes, IntraUnitClashes, ValidationReport } from './prop.ts';
 import { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
-import { ComplexMeshParams, ComplexVisual, ComplexMeshVisual } from '../../../mol-repr/structure/complex-visual.ts';
+import {
+    ComplexMeshParams,
+    ComplexMeshVisual,
+    ComplexVisual,
+} from '../../../mol-repr/structure/complex-visual.ts';
 import { Color } from '../../../mol-util/color/index.ts';
 import { MarkerActions } from '../../../mol-util/marker-action.ts';
 import { CentroidHelper } from '../../../mol-math/geometry/centroid-helper.ts';
@@ -32,7 +54,14 @@ import { StructureGroup } from '../../../mol-repr/structure/visual/util/common.t
 
 //
 
-function createIntraUnitClashCylinderMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PD.Values<IntraUnitClashParams>, mesh?: Mesh) {
+function createIntraUnitClashCylinderMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<IntraUnitClashParams>,
+    mesh?: Mesh,
+) {
     if (!Unit.isAtomic(unit)) return Mesh.createEmpty(mesh);
 
     const clashes = ClashesProvider.get(structure).value!.intraUnit.get(unit.id);
@@ -72,7 +101,7 @@ export const IntraUnitClashParams = {
     linkCap: PD.Boolean(true),
     sizeFactor: PD.Numeric(1, { min: 0, max: 10, step: 0.01 }),
 };
-export type IntraUnitClashParams = typeof IntraUnitClashParams
+export type IntraUnitClashParams = typeof IntraUnitClashParams;
 
 export function IntraUnitClashVisual(materialId: number): UnitsVisual<IntraUnitClashParams> {
     return UnitsMeshVisual<IntraUnitClashParams>({
@@ -81,26 +110,38 @@ export function IntraUnitClashVisual(materialId: number): UnitsVisual<IntraUnitC
         createLocationIterator: createIntraClashIterator,
         getLoci: getIntraClashLoci,
         eachLocation: eachIntraClash,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<IntraUnitClashParams>, currentProps: PD.Values<IntraUnitClashParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<IntraUnitClashParams>,
+            currentProps: PD.Values<IntraUnitClashParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.radialSegments !== currentProps.radialSegments ||
                 newProps.linkScale !== currentProps.linkScale ||
                 newProps.linkSpacing !== currentProps.linkSpacing ||
-                newProps.linkCap !== currentProps.linkCap
-            );
-        }
+                newProps.linkCap !== currentProps.linkCap;
+        },
     }, materialId);
 }
 
-function getIntraClashBoundingSphere(unit: Unit.Atomic, clashes: IntraUnitClashes, elements: number[], boundingSphere: Sphere3D) {
+function getIntraClashBoundingSphere(
+    unit: Unit.Atomic,
+    clashes: IntraUnitClashes,
+    elements: number[],
+    boundingSphere: Sphere3D,
+) {
     return CentroidHelper.fromPairProvider(elements.length, (i, pA, pB) => {
         unit.conformation.position(unit.elements[clashes.a[elements[i]]], pA);
         unit.conformation.position(unit.elements[clashes.b[elements[i]]], pB);
     }, boundingSphere);
 }
 
-function getIntraClashLabel(structure: Structure, unit: Unit.Atomic, clashes: IntraUnitClashes, elements: number[]) {
+function getIntraClashLabel(
+    structure: Structure,
+    unit: Unit.Atomic,
+    clashes: IntraUnitClashes,
+    elements: number[],
+) {
     const idx = elements[0];
     if (idx === undefined) return '';
     const { edgeProps: { id, magnitude, distance } } = clashes;
@@ -109,14 +150,24 @@ function getIntraClashLabel(structure: Structure, unit: Unit.Atomic, clashes: In
 
     return [
         `Clash id: ${id[idx]} | Magnitude: ${mag} \u212B | Distance: ${dist} \u212B`,
-        bondLabel(Bond.Location(structure, unit, clashes.a[idx], structure, unit, clashes.b[idx]))
+        bondLabel(Bond.Location(structure, unit, clashes.a[idx], structure, unit, clashes.b[idx])),
     ].join('</br>');
 }
 
-function IntraClashLoci(structure: Structure, unit: Unit.Atomic, clashes: IntraUnitClashes, elements: number[]) {
-    return DataLoci('intra-clashes', { unit, clashes }, elements,
-        (boundingSphere: Sphere3D) => getIntraClashBoundingSphere(unit, clashes, elements, boundingSphere),
-        () => getIntraClashLabel(structure, unit, clashes, elements));
+function IntraClashLoci(
+    structure: Structure,
+    unit: Unit.Atomic,
+    clashes: IntraUnitClashes,
+    elements: number[],
+) {
+    return DataLoci(
+        'intra-clashes',
+        { unit, clashes },
+        elements,
+        (boundingSphere: Sphere3D) =>
+            getIntraClashBoundingSphere(unit, clashes, elements, boundingSphere),
+        () => getIntraClashLabel(structure, unit, clashes, elements),
+    );
 }
 
 function getIntraClashLoci(pickingId: PickingId, structureGroup: StructureGroup, id: number) {
@@ -132,7 +183,11 @@ function getIntraClashLoci(pickingId: PickingId, structureGroup: StructureGroup,
     return EmptyLoci;
 }
 
-function eachIntraClash(loci: Loci, structureGroup: StructureGroup, apply: (interval: Interval) => boolean) {
+function eachIntraClash(
+    loci: Loci,
+    structureGroup: StructureGroup,
+    apply: (interval: Interval) => boolean,
+) {
     const changed = false;
     // TODO
     return changed;
@@ -157,7 +212,13 @@ function createIntraClashIterator(structureGroup: StructureGroup): LocationItera
 
 //
 
-function createInterUnitClashCylinderMesh(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<InterUnitClashParams>, mesh?: Mesh) {
+function createInterUnitClashCylinderMesh(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<InterUnitClashParams>,
+    mesh?: Mesh,
+) {
     const clashes = ClashesProvider.get(structure).value!.interUnit;
     const { edges, edgeCount } = clashes;
     const { sizeFactor } = props;
@@ -174,7 +235,7 @@ function createInterUnitClashCylinderMesh(ctx: VisualContext, structure: Structu
             uB.conformation.position(uB.elements[b.indexB], posB);
         },
         style: (edgeIndex: number) => LinkStyle.Disk,
-        radius: (edgeIndex: number) => edges[edgeIndex].props.magnitude * sizeFactor
+        radius: (edgeIndex: number) => edges[edgeIndex].props.magnitude * sizeFactor,
     };
 
     const { mesh: m, boundingSphere } = createLinkCylinderMesh(ctx, builderProps, props, mesh);
@@ -195,7 +256,7 @@ export const InterUnitClashParams = {
     linkCap: PD.Boolean(true),
     sizeFactor: PD.Numeric(1, { min: 0, max: 10, step: 0.01 }),
 };
-export type InterUnitClashParams = typeof InterUnitClashParams
+export type InterUnitClashParams = typeof InterUnitClashParams;
 
 export function InterUnitClashVisual(materialId: number): ComplexVisual<InterUnitClashParams> {
     return ComplexMeshVisual<InterUnitClashParams>({
@@ -204,19 +265,26 @@ export function InterUnitClashVisual(materialId: number): ComplexVisual<InterUni
         createLocationIterator: createInterClashIterator,
         getLoci: getInterClashLoci,
         eachLocation: eachInterClash,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<InterUnitClashParams>, currentProps: PD.Values<InterUnitClashParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<InterUnitClashParams>,
+            currentProps: PD.Values<InterUnitClashParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.radialSegments !== currentProps.radialSegments ||
                 newProps.linkScale !== currentProps.linkScale ||
                 newProps.linkSpacing !== currentProps.linkSpacing ||
-                newProps.linkCap !== currentProps.linkCap
-            );
-        }
+                newProps.linkCap !== currentProps.linkCap;
+        },
     }, materialId);
 }
 
-function getInterClashBoundingSphere(structure: Structure, clashes: InterUnitClashes, elements: number[], boundingSphere: Sphere3D) {
+function getInterClashBoundingSphere(
+    structure: Structure,
+    clashes: InterUnitClashes,
+    elements: number[],
+    boundingSphere: Sphere3D,
+) {
     return CentroidHelper.fromPairProvider(elements.length, (i, pA, pB) => {
         const c = clashes.edges[elements[i]];
         const uA = structure.unitMap.get(c.unitA);
@@ -237,14 +305,19 @@ function getInterClashLabel(structure: Structure, clashes: InterUnitClashes, ele
 
     return [
         `Clash id: ${c.props.id} | Magnitude: ${mag} \u212B | Distance: ${dist} \u212B`,
-        bondLabel(Bond.Location(structure, uA, c.indexA, structure, uB, c.indexB))
+        bondLabel(Bond.Location(structure, uA, c.indexA, structure, uB, c.indexB)),
     ].join('</br>');
 }
 
 function InterClashLoci(structure: Structure, clashes: InterUnitClashes, elements: number[]) {
-    return DataLoci('inter-clashes', clashes, elements,
-        (boundingSphere: Sphere3D) => getInterClashBoundingSphere(structure, clashes, elements, boundingSphere),
-        () => getInterClashLabel(structure, clashes, elements));
+    return DataLoci(
+        'inter-clashes',
+        clashes,
+        elements,
+        (boundingSphere: Sphere3D) =>
+            getInterClashBoundingSphere(structure, clashes, elements, boundingSphere),
+        () => getInterClashLabel(structure, clashes, elements),
+    );
 }
 
 function getInterClashLoci(pickingId: PickingId, structure: Structure, id: number) {
@@ -279,24 +352,39 @@ function createInterClashIterator(structure: Structure): LocationIterator {
 //
 
 const ClashesVisuals = {
-    'intra-clash': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, IntraUnitClashParams>) => UnitsRepresentation('Intra-unit clash cylinder', ctx, getParams, IntraUnitClashVisual),
-    'inter-clash': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, InterUnitClashParams>) => ComplexRepresentation('Inter-unit clash cylinder', ctx, getParams, InterUnitClashVisual),
+    'intra-clash': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, IntraUnitClashParams>,
+    ) => UnitsRepresentation('Intra-unit clash cylinder', ctx, getParams, IntraUnitClashVisual),
+    'inter-clash': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, InterUnitClashParams>,
+    ) => ComplexRepresentation('Inter-unit clash cylinder', ctx, getParams, InterUnitClashVisual),
 };
 
 export const ClashesParams = {
     ...IntraUnitClashParams,
     ...InterUnitClashParams,
     unitKinds: getUnitKindsParam(['atomic']),
-    visuals: PD.MultiSelect(['intra-clash', 'inter-clash'], PD.objectToOptions(ClashesVisuals))
+    visuals: PD.MultiSelect(['intra-clash', 'inter-clash'], PD.objectToOptions(ClashesVisuals)),
 };
-export type ClashesParams = typeof ClashesParams
+export type ClashesParams = typeof ClashesParams;
 export function getClashesParams(ctx: ThemeRegistryContext, structure: Structure) {
     return PD.clone(ClashesParams);
 }
 
-export type ClashesRepresentation = StructureRepresentation<ClashesParams>
-export function ClashesRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, ClashesParams>): ClashesRepresentation {
-    const repr = Representation.createMulti('Clashes', ctx, getParams, StructureRepresentationStateBuilder, ClashesVisuals as unknown as Representation.Def<Structure, ClashesParams>);
+export type ClashesRepresentation = StructureRepresentation<ClashesParams>;
+export function ClashesRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, ClashesParams>,
+): ClashesRepresentation {
+    const repr = Representation.createMulti(
+        'Clashes',
+        ctx,
+        getParams,
+        StructureRepresentationStateBuilder,
+        ClashesVisuals as unknown as Representation.Def<Structure, ClashesParams>,
+    );
     repr.setState({ markerActions: MarkerActions.Highlighting });
     return repr;
 }
@@ -304,7 +392,8 @@ export function ClashesRepresentation(ctx: RepresentationContext, getParams: Rep
 export const ClashesRepresentationProvider = StructureRepresentationProvider({
     name: ValidationReport.Tag.Clashes,
     label: 'Validation Clashes',
-    description: 'Displays clashes between atoms as disks. Data from wwPDB Validation Report, obtained via RCSB PDB.',
+    description:
+        'Displays clashes between atoms as disks. Data from wwPDB Validation Report, obtained via RCSB PDB.',
     factory: ClashesRepresentation,
     getParams: getClashesParams,
     defaultValues: PD.getDefaultValues(ClashesParams),
@@ -312,7 +401,8 @@ export const ClashesRepresentationProvider = StructureRepresentationProvider({
     defaultSizeTheme: { name: 'physical' },
     isApplicable: (structure: Structure) => structure.elementCount > 0,
     ensureCustomProperties: {
-        attach: (ctx: CustomProperty.Context, structure: Structure) => ClashesProvider.attach(ctx, structure, void 0, true),
-        detach: (data) => ClashesProvider.ref(data, false)
-    }
+        attach: (ctx: CustomProperty.Context, structure: Structure) =>
+            ClashesProvider.attach(ctx, structure, void 0, true),
+        detach: (data) => ClashesProvider.ref(data, false),
+    },
 });

@@ -8,40 +8,50 @@
 
 import * as UTF8 from '../../../mol-io/common/utf8.ts';
 import { SimpleBuffer } from '../../../mol-io/common/simple-buffer.ts';
-import { Buffer } from "node:buffer";
+import { Buffer } from 'node:buffer';
 
-export type Bool = { kind: 'bool' }
-export type Int = { kind: 'int' }
-export type Float = { kind: 'float' }
-export type Str = { kind: 'string' }
-export type Array = { kind: 'array', element: Element }
-export type Prop = { element: Element, prop: string }
-export type Obj = { kind: 'object', props: Prop[] }
-export type Element = Bool | Int | Float | Str | Array | Obj
+export type Bool = { kind: 'bool' };
+export type Int = { kind: 'int' };
+export type Float = { kind: 'float' };
+export type Str = { kind: 'string' };
+export type Array = { kind: 'array'; element: Element };
+export type Prop = { element: Element; prop: string };
+export type Obj = { kind: 'object'; props: Prop[] };
+export type Element = Bool | Int | Float | Str | Array | Obj;
 
 export const bool: Bool = { kind: 'bool' };
 export const int: Int = { kind: 'int' };
 export const float: Float = { kind: 'float' };
 export const str: Str = { kind: 'string' };
 
-export function array(element: Element): Array { return { kind: 'array', element }; }
+export function array(element: Element): Array {
+    return { kind: 'array', element };
+}
 export function obj<T>(schema: ((keyof T) | Element)[][]): Obj {
     return {
         kind: 'object',
-        props: schema.map(s => ({
+        props: schema.map((s) => ({
             element: s[1] as Element,
-            prop: s[0] as string
-        }))
+            prop: s[0] as string,
+        })),
     };
 }
 
 function byteCount(e: Element, src: any) {
     let size = 0;
     switch (e.kind) {
-        case 'bool': size += 1; break;
-        case 'int': size += 4; break;
-        case 'float': size += 8; break;
-        case 'string': size += 4 + UTF8.utf8ByteCount(src); break;
+        case 'bool':
+            size += 1;
+            break;
+        case 'int':
+            size += 4;
+            break;
+        case 'float':
+            size += 8;
+            break;
+        case 'string':
+            size += 4 + UTF8.utf8ByteCount(src);
+            break;
         case 'array': {
             size += 4; // array length
             for (const x of src) {
@@ -61,9 +71,18 @@ function byteCount(e: Element, src: any) {
 
 function writeElement(e: Element, buffer: Buffer, src: any, offset: number) {
     switch (e.kind) {
-        case 'bool': buffer.writeInt8(src ? 1 : 0, offset); offset += 1; break;
-        case 'int': buffer.writeInt32LE(src | 0, offset); offset += 4; break;
-        case 'float': buffer.writeDoubleLE(+src, offset); offset += 8; break;
+        case 'bool':
+            buffer.writeInt8(src ? 1 : 0, offset);
+            offset += 1;
+            break;
+        case 'int':
+            buffer.writeInt32LE(src | 0, offset);
+            offset += 4;
+            break;
+        case 'float':
+            buffer.writeDoubleLE(+src, offset);
+            offset += 8;
+            break;
         case 'string': {
             const val = '' + src;
             const size = UTF8.utf8ByteCount(val);
@@ -71,7 +90,7 @@ function writeElement(e: Element, buffer: Buffer, src: any, offset: number) {
             offset += 4; // str len
             const str = new Uint8Array(size);
             UTF8.utf8Write(str, 0, val);
-            for (const b of <number[]><any>str) {
+            for (const b of <number[]> <any> str) {
                 buffer.writeUInt8(b, offset);
                 offset++;
             }
@@ -108,9 +127,18 @@ export function encode(element: Element, src: any): Buffer {
 
 function decodeElement(e: Element, buffer: SimpleBuffer, offset: number, target: { value: any }) {
     switch (e.kind) {
-        case 'bool': target.value = !!buffer.readInt8(offset); offset += 1; break;
-        case 'int': target.value = buffer.readInt32LE(offset); offset += 4; break;
-        case 'float': target.value = buffer.readDoubleLE(offset); offset += 8; break;
+        case 'bool':
+            target.value = !!buffer.readInt8(offset);
+            offset += 1;
+            break;
+        case 'int':
+            target.value = buffer.readInt32LE(offset);
+            offset += 4;
+            break;
+        case 'float':
+            target.value = buffer.readDoubleLE(offset);
+            offset += 8;
+            break;
         case 'string': {
             const size = buffer.readInt32LE(offset);
             offset += 4; // str len

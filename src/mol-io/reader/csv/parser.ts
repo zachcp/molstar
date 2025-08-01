@@ -5,41 +5,40 @@
  */
 
 // import { Column } from 'mol-data/db'
-import { Tokens, TokenBuilder, Tokenizer } from '../common/text/tokenizer.ts';
+import { TokenBuilder, Tokenizer, Tokens } from '../common/text/tokenizer.ts';
 import * as Data from './data-model.ts';
 import { Field } from './field.ts';
 import { ReaderResult as Result } from '../result.ts';
-import { Task, RuntimeContext, chunkedSubtask, } from '../../../mol-task/index.ts';
+import { chunkedSubtask, RuntimeContext, Task } from '../../../mol-task/index.ts';
 
 const enum CsvTokenType {
     Value = 0,
     Comment = 1,
-    End = 2
+    End = 2,
 }
 
 interface State {
     data: string;
-    tokenizer: Tokenizer,
+    tokenizer: Tokenizer;
 
     tokenType: CsvTokenType;
-    runtimeCtx: RuntimeContext,
-    tokens: Tokens[],
+    runtimeCtx: RuntimeContext;
+    tokens: Tokens[];
 
-    fieldCount: number,
-    recordCount: number,
+    fieldCount: number;
+    recordCount: number;
 
-    columnCount: number,
-    columnNames: string[],
+    columnCount: number;
+    columnNames: string[];
 
-    quoteCharCode: number,
-    commentCharCode: number,
-    delimiterCharCode: number,
+    quoteCharCode: number;
+    commentCharCode: number;
+    delimiterCharCode: number;
 
-    noColumnNamesRecord: boolean
+    noColumnNamesRecord: boolean;
 }
 
 function State(data: string, runtimeCtx: RuntimeContext, opts: CsvOptions): State {
-
     const tokenizer = Tokenizer(data);
     return {
         data,
@@ -58,7 +57,7 @@ function State(data: string, runtimeCtx: RuntimeContext, opts: CsvOptions): Stat
         quoteCharCode: opts.quote.charCodeAt(0),
         commentCharCode: opts.comment.charCodeAt(0),
         delimiterCharCode: opts.delimiter.charCodeAt(0),
-        noColumnNamesRecord: opts.noColumnNames
+        noColumnNamesRecord: opts.noColumnNames,
     };
 }
 
@@ -215,7 +214,11 @@ function readRecordsChunk(chunkSize: number, state: State) {
     const { tokens, tokenizer } = state;
 
     while (state.tokenType === CsvTokenType.Value && counter < chunkSize) {
-        TokenBuilder.add(tokens[state.fieldCount % state.columnCount], tokenizer.tokenStart, tokenizer.tokenEnd);
+        TokenBuilder.add(
+            tokens[state.fieldCount % state.columnCount],
+            tokenizer.tokenStart,
+            tokenizer.tokenEnd,
+        );
         ++state.fieldCount;
         newRecord = moveNext(state);
         if (newRecord) {
@@ -229,8 +232,18 @@ function readRecordsChunk(chunkSize: number, state: State) {
 function readRecordsChunks(state: State) {
     const newRecord = moveNext(state);
     if (newRecord) ++state.recordCount;
-    return chunkedSubtask(state.runtimeCtx, 100000, state, readRecordsChunk,
-        (ctx, state) => ctx.update({ message: 'Parsing...', current: state.tokenizer.position, max: state.data.length }));
+    return chunkedSubtask(
+        state.runtimeCtx,
+        100000,
+        state,
+        readRecordsChunk,
+        (ctx, state) =>
+            ctx.update({
+                message: 'Parsing...',
+                current: state.tokenizer.position,
+                max: state.data.length,
+            }),
+    );
 }
 
 function addColumn(state: State) {
@@ -264,7 +277,11 @@ async function handleRecords(state: State): Promise<Data.CsvTable> {
     return Data.CsvTable(state.recordCount, state.columnNames, columns);
 }
 
-async function parseInternal(data: string, ctx: RuntimeContext, opts: CsvOptions): Promise<Result<Data.CsvFile>> {
+async function parseInternal(
+    data: string,
+    ctx: RuntimeContext,
+    opts: CsvOptions,
+): Promise<Result<Data.CsvFile>> {
     const state = State(data, ctx, opts);
 
     ctx.update({ message: 'Parsing...', current: 0, max: data.length });
@@ -281,8 +298,13 @@ interface CsvOptions {
 }
 
 export function parseCsv(data: string, opts?: Partial<CsvOptions>) {
-    const completeOpts = Object.assign({}, { quote: '"', comment: '#', delimiter: ',', noColumnNames: false }, opts);
-    return Task.create<Result<Data.CsvFile>>('Parse CSV', async ctx => {
+    const completeOpts = Object.assign({}, {
+        quote: '"',
+        comment: '#',
+        delimiter: ',',
+        noColumnNames: false,
+    }, opts);
+    return Task.create<Result<Data.CsvFile>>('Parse CSV', async (ctx) => {
         return await parseInternal(data, ctx, completeOpts);
     });
 }

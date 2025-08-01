@@ -11,7 +11,7 @@ import { Canvas3D, Canvas3DContext } from '../../mol-canvas3d/canvas3d.ts';
 import { lociLabel } from '../../mol-theme/label.ts';
 import { MarkerAction } from '../../mol-util/marker-action.ts';
 import { EveryLoci } from '../../mol-model/loci.ts';
-import { RuntimeContext, Progress } from '../../mol-task/index.ts';
+import { Progress, RuntimeContext } from '../../mol-task/index.ts';
 import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
 import { Mat4, Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
@@ -80,9 +80,15 @@ const commonData = {
     version: 0,
     // centers of spheres
     centers: [
-        0, 0, 0,
-        0, 3, 0,
-        1, 0, 4
+        0,
+        0,
+        0,
+        0,
+        3,
+        0,
+        1,
+        0,
+        4,
     ],
     // color per group
     colors: [ColorNames.tomato, ColorNames.springgreen, ColorNames.springgreen],
@@ -100,7 +106,7 @@ const commonData = {
     // transforms
     transforms: [
         Mat4.identity(),
-        Mat4.fromTranslation(Mat4(), Vec3.create(3, 0, 0))
+        Mat4.fromTranslation(Mat4(), Vec3.create(3, 0, 0)),
     ],
 };
 
@@ -110,13 +116,13 @@ const meshData = {
         sphereDetail: 3,
     },
 };
-type MeshData = typeof meshData
+type MeshData = typeof meshData;
 type MeshProps = ParamDefinition.Values<Mesh.Params>;
 
 const spheresData = {
     ...commonData,
 };
-type SpheresData = typeof spheresData
+type SpheresData = typeof spheresData;
 type SpheresProps = ParamDefinition.Values<Spheres.Params>;
 
 /**
@@ -145,7 +151,12 @@ async function getSphereMesh(ctx: RuntimeContext, data: MeshData, props: MeshPro
     return MeshBuilder.getMesh(builderState);
 }
 
-async function getSpheres(ctx: RuntimeContext, data: SpheresData, props: SpheresProps, spheres?: Spheres) {
+async function getSpheres(
+    ctx: RuntimeContext,
+    data: SpheresData,
+    props: SpheresProps,
+    spheres?: Spheres,
+) {
     console.log('getSpheres');
     const { centers } = data;
     const builder = SpheresBuilder.create(centers.length / 3, centers.length / 3, spheres);
@@ -160,7 +171,12 @@ async function getSpheres(ctx: RuntimeContext, data: SpheresData, props: Spheres
 /**
  * Get mesh shape from `MyData` object
  */
-async function getMeshShape(ctx: RuntimeContext, data: MeshData, props: MeshProps, shape?: Shape<Mesh>) {
+async function getMeshShape(
+    ctx: RuntimeContext,
+    data: MeshData,
+    props: MeshProps,
+    shape?: Shape<Mesh>,
+) {
     const currentData = shape ? shape.sourceData as MeshData : undefined;
     if (shape && currentData?.version === data.version) {
         return shape;
@@ -171,18 +187,25 @@ async function getMeshShape(ctx: RuntimeContext, data: MeshData, props: MeshProp
     const mesh = await getSphereMesh(ctx, data, props, shape && shape.geometry);
     const groupCount = centers.length / 3;
     return Shape.create(
-        'test', { ...data }, mesh,
+        'test',
+        { ...data },
+        mesh,
         (groupId: number) => colors[groupId], // color: per group, same for instances
         (groupId: number) => sizes[groupId], // size: per group, same for instances
         (groupId: number, instanceId: number) => labels[instanceId * groupCount + groupId], // label: per group and instance
-        transforms
+        transforms,
     );
 }
 
 /**
  * Get spheres shape from `MyData` object
  */
-async function getSpheresShape(ctx: RuntimeContext, data: SpheresData, props: SpheresProps, shape?: Shape<Spheres>) {
+async function getSpheresShape(
+    ctx: RuntimeContext,
+    data: SpheresData,
+    props: SpheresProps,
+    shape?: Shape<Spheres>,
+) {
     const currentData = shape ? shape.sourceData as SpheresData : undefined;
     if (shape && currentData?.version === data.version) {
         return shape;
@@ -193,11 +216,13 @@ async function getSpheresShape(ctx: RuntimeContext, data: SpheresData, props: Sp
     const mesh = await getSpheres(ctx, data, props, shape && shape.geometry);
     const groupCount = centers.length / 3;
     return Shape.create(
-        'test', { ...data }, mesh,
+        'test',
+        { ...data },
+        mesh,
         (groupId: number) => colors[groupId], // color: per group, same for instances
         (groupId: number) => sizes[groupId] / 3, // size: per group, same for instances
         (groupId: number, instanceId: number) => labels[instanceId * groupCount + groupId], // label: per group and instance
-        transforms
+        transforms,
     );
 }
 
@@ -225,12 +250,16 @@ async function toggleSpheresVisibility() {
 
 export async function init() {
     // Create shape from meshData and add to canvas3d
-    await meshRepr.createOrUpdate({ alpha: 0.5 }, meshData).run((p: Progress) => console.log(Progress.format(p)));
+    await meshRepr.createOrUpdate({ alpha: 0.5 }, meshData).run((p: Progress) =>
+        console.log(Progress.format(p))
+    );
     console.log('mesh shape', meshRepr);
     canvas3d.add(meshRepr);
 
     // Create shape from spheresData and add to canvas3d
-    await spheresRepr.createOrUpdate({}, spheresData).run((p: Progress) => console.log(Progress.format(p)));
+    await spheresRepr.createOrUpdate({}, spheresData).run((p: Progress) =>
+        console.log(Progress.format(p))
+    );
     console.log('spheres shape', spheresRepr);
     canvas3d.add(spheresRepr);
 

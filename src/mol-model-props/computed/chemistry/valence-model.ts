@@ -7,10 +7,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Structure, StructureElement, Unit, Bond } from '../../../mol-model/structure.ts';
+import { Bond, Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
 import { Elements, isMetal } from '../../../mol-model/structure/model/properties/atomic/types.ts';
-import { AtomGeometry, assignGeometry } from './geometry.ts';
-import { bondCount, typeSymbol, formalCharge, bondToElementCount } from './util.ts';
+import { assignGeometry, AtomGeometry } from './geometry.ts';
+import { bondCount, bondToElementCount, formalCharge, typeSymbol } from './util.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { RuntimeContext } from '../../../mol-task/index.ts';
 import { isDebugMode } from '../../../mol-util/debug.ts';
@@ -25,7 +25,6 @@ import { BondType } from '../../../mol-model/structure/model/types.ts';
  *   generally captured by better VM).
  *     Could we instead have a "delocalised negative/positive" charge
  *     feature and flag these up?
- *
  */
 
 const tmpConjBondItA = new Bond.ElementBondIterator();
@@ -54,8 +53,10 @@ function isConjugated(structure: Structure, unit: Unit.Atomic, index: StructureE
             while (tmpConjBondItB.hasNext) {
                 const bB = tmpConjBondItB.move();
                 if (bB.order > 1) {
-                    if ((elementB === Elements.P || elementB === Elements.S) &&
-                            typeSymbol(bB.otherUnit, bB.otherIndex) === Elements.O) {
+                    if (
+                        (elementB === Elements.P || elementB === Elements.S) &&
+                        typeSymbol(bB.otherUnit, bB.otherIndex) === Elements.O
+                    ) {
                         continue;
                     }
                     return true;
@@ -67,7 +68,11 @@ function isConjugated(structure: Structure, unit: Unit.Atomic, index: StructureE
     return false;
 }
 
-export function explicitValence(structure: Structure, unit: Unit.Atomic, index: StructureElement.UnitIndex) {
+export function explicitValence(
+    structure: Structure,
+    unit: Unit.Atomic,
+    index: StructureElement.UnitIndex,
+) {
     let v = 0;
     // intra-unit bonds
     const { offset, edgeProps: { flags, order } } = unit.bonds;
@@ -75,7 +80,7 @@ export function explicitValence(structure: Structure, unit: Unit.Atomic, index: 
         if (BondType.isCovalent(flags[i])) v += order[i];
     }
     // inter-unit bonds
-    structure.interUnitBonds.getEdgeIndices(index, unit.id).forEach(i => {
+    structure.interUnitBonds.getEdgeIndices(index, unit.id).forEach((i) => {
         const b = structure.interUnitBonds.edges[i];
         if (BondType.isCovalent(b.props.flag)) v += b.props.order;
     });
@@ -96,19 +101,27 @@ const tmpChargeBondItB = new Bond.ElementBondIterator();
  * If only charge or hydrogens are to be assigned it takes
  * a much simpler view and deduces one from the other
  */
-export function calculateHydrogensCharge(structure: Structure, unit: Unit.Atomic, index: StructureElement.UnitIndex, props: ValenceModelProps, hasExplicitH: boolean) {
+export function calculateHydrogensCharge(
+    structure: Structure,
+    unit: Unit.Atomic,
+    index: StructureElement.UnitIndex,
+    props: ValenceModelProps,
+    hasExplicitH: boolean,
+) {
     const hydrogenCount = bondToElementCount(structure, unit, index, Elements.H);
     const element = typeSymbol(unit, index);
     let charge = formalCharge(unit, index);
 
-    const assignCharge = (props.assignCharge === 'always' || (props.assignCharge === 'auto' && charge === 0));
-    const assignH = (props.assignH === 'always' || (props.assignH === 'auto' && !hasExplicitH && hydrogenCount === 0));
+    const assignCharge = props.assignCharge === 'always' ||
+        (props.assignCharge === 'auto' && charge === 0);
+    const assignH = props.assignH === 'always' ||
+        (props.assignH === 'auto' && !hasExplicitH && hydrogenCount === 0);
 
     const degree = bondCount(structure, unit, index);
     const valence = explicitValence(structure, unit, index);
 
     const conjugated = isConjugated(structure, unit, index);
-    const multiBond = (valence - degree > 0);
+    const multiBond = valence - degree > 0;
 
     let implicitHCount = 0;
     let geom = AtomGeometry.Unknown;
@@ -167,7 +180,6 @@ export function calculateHydrogensCharge(structure: Structure, unit: Unit.Atomic
                     }
                     // TODO: Planarity sanity check?
                 }
-
             }
 
             if (assignH) {
@@ -228,7 +240,9 @@ export function calculateHydrogensCharge(structure: Structure, unit: Unit.Atomic
         case Elements.S:
             if (assignCharge) {
                 if (!assignH) {
-                    if (valence <= 3 && bondToElementCount(structure, unit, index, Elements.O) === 0) {
+                    if (
+                        valence <= 3 && bondToElementCount(structure, unit, index, Elements.O) === 0
+                    ) {
                         charge = valence - 2; // e.g. explicitly deprotonated thiol
                     } else {
                         charge = 0;
@@ -320,7 +334,13 @@ function calcUnitValenceModel(structure: Structure, unit: Unit.Atomic, props: Va
 
     for (let i = 0; i < n; ++i) {
         const j = (hasParent ? mapping![i] : i) as StructureElement.UnitIndex;
-        const [chg, implH, totH, geom] = calculateHydrogensCharge(structure, unit, j, props, hasExplicitH);
+        const [chg, implH, totH, geom] = calculateHydrogensCharge(
+            structure,
+            unit,
+            j,
+            props,
+            hasExplicitH,
+        );
         charge[i] = chg;
         implicitH[i] = implH;
         totalH[i] = totH;
@@ -331,20 +351,24 @@ function calcUnitValenceModel(structure: Structure, unit: Unit.Atomic, props: Va
 }
 
 export interface ValenceModel {
-    charge: Int8Array,
-    implicitH: Int8Array,
-    totalH: Int8Array,
-    idealGeometry: Int8Array
+    charge: Int8Array;
+    implicitH: Int8Array;
+    totalH: Int8Array;
+    idealGeometry: Int8Array;
 }
 
 export const ValenceModelParams = {
     assignCharge: PD.Select('auto', [['always', 'always'], ['auto', 'auto'], ['never', 'never']]),
     assignH: PD.Select('auto', [['always', 'always'], ['auto', 'auto'], ['never', 'never']]),
 };
-export type ValenceModelParams = typeof ValenceModelParams
-export type ValenceModelProps = PD.Values<ValenceModelParams>
+export type ValenceModelParams = typeof ValenceModelParams;
+export type ValenceModelProps = PD.Values<ValenceModelParams>;
 
-export async function calcValenceModel(ctx: RuntimeContext, structure: Structure, props: Partial<ValenceModelProps>) {
+export async function calcValenceModel(
+    ctx: RuntimeContext,
+    structure: Structure,
+    props: Partial<ValenceModelProps>,
+) {
     const p = { ...PD.getDefaultValues(ValenceModelParams), ...props };
     const map = new Map<number, ValenceModel>();
 

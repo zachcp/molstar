@@ -7,60 +7,69 @@
 
 import { FileHandle } from '../../../mol-io/common/file-handle.ts';
 import { Ccp4Provider } from './format/ccp4.ts';
-import { TypedArrayBufferContext, TypedArrayValueArray, TypedArrayValueType, getElementByteSize, createTypedArrayBufferContext } from '../../../mol-io/common/typed-array.ts';
+import {
+    createTypedArrayBufferContext,
+    getElementByteSize,
+    TypedArrayBufferContext,
+    TypedArrayValueArray,
+    TypedArrayValueType,
+} from '../../../mol-io/common/typed-array.ts';
 import { Dsn6Provider } from './format/dsn6.ts';
 import { fileHandleFromPathOrUrl } from '../../common/file-handle.ts';
 
 export interface Header {
-    name: string,
-    valueType: TypedArrayValueType,
-    grid: number[], // grid is converted to the axis order!!
-    axisOrder: number[],
-    extent: number[],
-    origin: number[],
-    spacegroupNumber: number,
-    cellSize: number[],
-    cellAngles: number[],
-    littleEndian: boolean,
-    dataOffset: number
-    originalHeader: unknown // TODO
+    name: string;
+    valueType: TypedArrayValueType;
+    grid: number[]; // grid is converted to the axis order!!
+    axisOrder: number[];
+    extent: number[];
+    origin: number[];
+    spacegroupNumber: number;
+    cellSize: number[];
+    cellAngles: number[];
+    littleEndian: boolean;
+    dataOffset: number;
+    originalHeader: unknown; // TODO
 }
 
 /** Represents a circular buffer for 2 * blockSize layers */
 export interface SliceBuffer {
-    buffer: TypedArrayBufferContext,
-    maxBlockBytes: number
-    sliceCapacity: number,
-    slicesRead: number,
+    buffer: TypedArrayBufferContext;
+    maxBlockBytes: number;
+    sliceCapacity: number;
+    slicesRead: number;
 
-    values: TypedArrayValueArray,
-    sliceCount: number,
+    values: TypedArrayValueArray;
+    sliceCount: number;
 
     /** Have all the input slice been read? */
-    isFinished: boolean
+    isFinished: boolean;
 }
 
 export interface Data {
-    header: Header,
-    file: FileHandle,
-    slices: SliceBuffer
+    header: Header;
+    file: FileHandle;
+    slices: SliceBuffer;
 }
 
 export interface Provider {
-    readHeader: (name: string, file: FileHandle) => Promise<Header>,
-    readSlices: (data: Data) => Promise<void>
+    readHeader: (name: string, file: FileHandle) => Promise<Header>;
+    readSlices: (data: Data) => Promise<void>;
 }
 
 export interface Context {
-    data: Data,
-    provider: Provider
+    data: Data;
+    provider: Provider;
 }
 
 export function assignSliceBuffer(data: Data, blockSizeInMB: number) {
     const { extent, valueType } = data.header;
     const maxBlockBytes = blockSizeInMB * 1024 * 1024;
     const sliceSize = extent[0] * extent[1] * getElementByteSize(valueType);
-    const sliceCapacity = Math.max(1, Math.floor(Math.min(maxBlockBytes, sliceSize * extent[2]) / sliceSize));
+    const sliceCapacity = Math.max(
+        1,
+        Math.floor(Math.min(maxBlockBytes, sliceSize * extent[2]) / sliceSize),
+    );
     const buffer = createTypedArrayBufferContext(sliceCapacity * extent[0] * extent[1], valueType);
     data.slices = {
         buffer,
@@ -69,7 +78,7 @@ export function assignSliceBuffer(data: Data, blockSizeInMB: number) {
         slicesRead: 0,
         values: buffer.values,
         sliceCount: 0,
-        isFinished: false
+        isFinished: false,
     };
 }
 
@@ -85,18 +94,31 @@ function compareProp(a: any, b: any) {
 }
 
 export function compareHeaders(a: Header, b: Header) {
-    for (const p of ['grid', 'axisOrder', 'extent', 'origin', 'spacegroupNumber', 'cellSize', 'cellAngles', 'mode']) {
+    for (
+        const p of [
+            'grid',
+            'axisOrder',
+            'extent',
+            'origin',
+            'spacegroupNumber',
+            'cellSize',
+            'cellAngles',
+            'mode',
+        ]
+    ) {
         if (!compareProp((a as any)[p], (b as any)[p])) return false;
     }
     return true;
 }
 
-export type Type = 'ccp4' | 'dsn6'
+export type Type = 'ccp4' | 'dsn6';
 
 export function getProviderFromType(type: Type): Provider {
     switch (type) {
-        case 'ccp4': return Ccp4Provider;
-        case 'dsn6': return Dsn6Provider;
+        case 'ccp4':
+            return Ccp4Provider;
+        case 'dsn6':
+            return Dsn6Provider;
     }
 }
 

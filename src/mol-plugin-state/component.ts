@@ -6,7 +6,7 @@
 
 import { shallowMergeArray } from '../mol-util/object.ts';
 import { RxEventHelper } from '../mol-util/rx-event-helper.ts';
-import { Subscription, Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { arraySetRemove } from '../mol-util/array.ts';
 
 export class PluginComponent {
@@ -26,7 +26,7 @@ export class PluginComponent {
                     sub.unsubscribe();
                     sub = void 0;
                 }
-            }
+            },
         };
     }
 
