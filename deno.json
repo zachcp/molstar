@@ -74,7 +74,17 @@
         "require-await",
         "prefer-as-const",
         "prefer-const",
-        "no-fallthrough"
+        "no-fallthrough",
+        "getter-return",
+        "no-extra-boolean-cast",
+        "jsx-key",
+        "jsx-button-has-type",
+        "jsx-no-useless-fragment",
+        "no-cond-assign",
+        "no-empty",
+        "no-empty-interface",
+        "no-duplicate-case",
+        "no-extra-non-null-assertion"
       ]
     }
   },
