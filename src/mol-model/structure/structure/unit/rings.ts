@@ -212,7 +212,7 @@ namespace UnitRings {
   export function byFingerprintAndResidue(
     rings: UnitRings,
     fingerprints: ReadonlyArray<UnitRing.Fingerprint>,
-  ) {
+  ): Map<ResidueIndex, Index[]> {
     const map = new Map<ResidueIndex, Index[]>();
 
     for (let fI = 0, _fI = fingerprints.length; fI < _fI; fI++) {
