@@ -33,11 +33,11 @@ class StereoCamera {
   readonly left: ICamera = new EyeCamera();
   readonly right: ICamera = new EyeCamera();
 
-  get viewport() {
+  get viewport(): Viewport {
     return this.parent.viewport;
   }
 
-  get viewOffset() {
+  get viewOffset(): Camera.ViewOffset {
     return this.parent.viewOffset;
   }
 
