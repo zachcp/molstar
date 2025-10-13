@@ -21,8 +21,7 @@ export class PluginUIContext extends PluginContext {
         }
     }
 
-    dispose(options?: { doNotForceWebGLContextLoss?: boolean }) {
-        super.dispose(options);
+    override dispose(options?: { doNotForceWebGLContextLoss?: boolean }) {        super.dispose(options);
         this.layout.dispose();
     }
 

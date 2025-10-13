@@ -31,8 +31,7 @@ class StateTransformParameters extends PurePluginUIComponent<StateTransformParam
         this.props.events.onChange(params, this.areInitial(params), this.validate(params));
     };
 
-    render() {
-        return <ParameterControls params={this.props.info.params} values={this.props.params} onChange={this.onChange} onEnter={this.props.events.onEnter} isDisabled={this.props.isDisabled} />;
+    override render() {        return <ParameterControls params={this.props.info.params} values={this.props.params} onChange={this.onChange} onEnter={this.props.events.onEnter} isDisabled={this.props.isDisabled} />;
     }
 }
 
@@ -122,8 +121,7 @@ abstract class TransformControlBase<P, S extends TransformControlBase.ComponentS
     abstract applyText(): string;
     abstract isUpdate(): boolean;
     abstract getSourceAndTarget(): { a?: StateObject, b?: StateObject, bCell?: StateObjectCell };
-    abstract state: S;
-
+    override abstract state: S;
     private busy = new BehaviorSubject(false);
 
     private onEnter = () => {
@@ -166,8 +164,7 @@ abstract class TransformControlBase<P, S extends TransformControlBase.ComponentS
         }
     };
 
-    componentDidMount() {
-        this.subscribe(this.plugin.behaviors.state.isBusy, busy => {
+    override componentDidMount() {        this.subscribe(this.plugin.behaviors.state.isBusy, busy => {
             if (this.busy.value !== busy) this.busy.next(busy);
         });
         this.subscribe(this.busy.pipe(skip(1)), busy => {
@@ -271,8 +268,7 @@ abstract class TransformControlBase<P, S extends TransformControlBase.ComponentS
         </>;
     }
 
-    render() {
-        // console.log('rendering', ((this.props as any)?.transform?.transformer || (this.props as any)?.action)?.definition.display.name, +new Date)
+    override render() {        // console.log('rendering', ((this.props as any)?.transform?.transformer || (this.props as any)?.action)?.definition.display.name, +new Date)
         return this.props.simpleApply ? this.renderSimple() : this.renderDefault();
     }
 }

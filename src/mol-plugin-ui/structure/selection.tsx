@@ -31,8 +31,7 @@ import { AddComponentControls } from './components.tsx';
 
 
 export class ToggleSelectionModeButton extends PurePluginUIComponent<{ inline?: boolean }> {
-    componentDidMount() {
-        this.subscribe(this.plugin.events.canvas3d.settingsUpdated, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.plugin.events.canvas3d.settingsUpdated, () => this.forceUpdate());
         this.subscribe(this.plugin.layout.events.updated, () => this.forceUpdate());
         this.subscribe(this.plugin.behaviors.interaction.selectionMode, () => this.forceUpdate());
     }
@@ -41,8 +40,7 @@ export class ToggleSelectionModeButton extends PurePluginUIComponent<{ inline?: 
         this.plugin.selectionMode = !this.plugin.selectionMode;
     };
 
-    render() {
-        const style = this.props.inline
+    override render() {        const style = this.props.inline
             ? { background: 'transparent', width: 'auto', height: 'auto', lineHeight: 'unset' }
             : { background: 'transparent' };
         return <IconButton svg={SelectionModeSvg} onClick={this._toggleSelMode} title="Toggle Selection Mode" style={style} toggleState={this.plugin.selectionMode} />;
@@ -74,8 +72,7 @@ const ActionHeader = new Map<StructureSelectionModifier, string>([
 ] as const);
 
 export class StructureSelectionActionsControls extends PluginUIComponent<{}, StructureSelectionActionsControlsState> {
-    state = {
-        action: void 0 as StructureSelectionActionsControlsState['action'],
+    override state = {        action: void 0 as StructureSelectionActionsControlsState['action'],
         helper: void 0 as StructureSelectionActionsControlsState['helper'],
 
         isEmpty: true,
@@ -85,8 +82,7 @@ export class StructureSelectionActionsControls extends PluginUIComponent<{}, Str
         structureSelectionParams: StructureSelectionParams,
     };
 
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, c => {
+    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, c => {
             const isEmpty = c.hierarchy.structures.length === 0;
             if (this.state.isEmpty !== isEmpty) {
                 this.setState({ isEmpty });
@@ -235,8 +231,7 @@ export class StructureSelectionActionsControls extends PluginUIComponent<{}, Str
         this.plugin.managers.structure.component.modifyByCurrentSelection(components, 'subtract');
     };
 
-    render() {
-        const granularity = this.plugin.managers.interactivity.props.granularity;
+    override render() {        const granularity = this.plugin.managers.interactivity.props.granularity;
         const hide = this.plugin.spec.components?.selectionTools?.hide;
         const undoTitle = this.state.canUndo
             ? `Undo ${this.plugin.state.data.latestUndoLabel}`
@@ -303,13 +298,11 @@ export class StructureSelectionActionsControls extends PluginUIComponent<{}, Str
 }
 
 export class StructureSelectionStatsControls extends PluginUIComponent<{ hideOnEmpty?: boolean }, { isEmpty: boolean, isBusy: boolean }> {
-    state = {
-        isEmpty: true,
+    override state = {        isEmpty: true,
         isBusy: false
     };
 
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.structure.selection.events.changed, () => {
+    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.selection.events.changed, () => {
             this.forceUpdate();
         });
 
@@ -357,8 +350,7 @@ export class StructureSelectionStatsControls extends PluginUIComponent<{ hideOnE
         this.plugin.managers.interactivity.lociHighlights.clearHighlights();
     };
 
-    render() {
-        const stats = this.plugin.managers.structure.selection.stats;
+    override render() {        const stats = this.plugin.managers.structure.selection.stats;
         const empty = stats.structureCount === 0 || stats.elementCount === 0;
 
         if (empty && this.props.hideOnEmpty) return null;
@@ -387,8 +379,7 @@ class ApplyThemeControls extends PurePluginUIComponent<ApplyThemeControlsProps, 
     _params = memoizeLatest((pivot: StructureRef | undefined) => StructureComponentManager.getThemeParams(this.plugin, pivot));
     get params() { return this._params(this.plugin.managers.structure.component.pivotStructure); }
 
-    state = { values: ParamDefinition.getDefaultValues(this.params) };
-
+    override state = { values: ParamDefinition.getDefaultValues(this.params) };
     apply = () => {
         this.plugin.managers.structure.component.applyTheme(this.state.values, this.plugin.managers.structure.hierarchy.current.structures);
         this.props.onApply?.();
@@ -396,8 +387,7 @@ class ApplyThemeControls extends PurePluginUIComponent<ApplyThemeControlsProps, 
 
     paramsChanged = (values: any) => this.setState({ values });
 
-    render() {
-        return <>
+    override render() {        return <>
             <ParameterControls params={this.params} values={this.state.values} onChangeValues={this.paramsChanged} />
             <Button icon={BrushSvg} className='msp-btn-commit msp-btn-commit-on' onClick={this.apply} style={{ marginTop: '1px' }}>
                 Apply Theme

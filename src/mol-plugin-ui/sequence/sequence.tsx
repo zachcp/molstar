@@ -79,8 +79,7 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         return 1;
     }
 
-    componentDidMount() {
-        this.plugin.managers.interactivity.lociHighlights.addProvider(this.lociHighlightProvider);
+    override componentDidMount() {        this.plugin.managers.interactivity.lociHighlights.addProvider(this.lociHighlightProvider);
         this.plugin.managers.interactivity.lociSelects.addProvider(this.lociSelectionProvider);
 
         this.subscribe(this.highlightQueue.pipe(throttleTime(3 * 16.666, void 0, { leading: true, trailing: true })), (e) => {
@@ -124,8 +123,7 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         }
     }
 
-    componentWillUnmount() {
-        super.componentWillUnmount();
+    override componentWillUnmount() {        super.componentWillUnmount();
 
         this.plugin.managers.interactivity.lociHighlights.removeProvider(this.lociHighlightProvider);
         this.plugin.managers.interactivity.lociSelects.removeProvider(this.lociSelectionProvider);
@@ -347,8 +345,7 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         this.highlightQueue.next({ seqIdx: -1, buttons, button, modifiers });
     };
 
-    render() {
-        const sw = this.props.sequenceWrapper;
+    override render() {        const sw = this.props.sequenceWrapper;
         const elems: JSX.Element[] = [];
 
         if (this.customColorThemeWrapper) {

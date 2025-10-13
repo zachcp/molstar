@@ -61,8 +61,7 @@ class ProgressEntry extends PluginUIComponent<{ event: TaskManager.ProgressEvent
         this.plugin.managers.task.requestAbort(this.props.event.progress.root.progress.taskId, 'User Request');
     };
 
-    render() {
-        const root = this.props.event.progress.root;
+    override render() {        const root = this.props.event.progress.root;
         const subtaskCount = countSubtasks(this.props.event.progress.root) - 1;
         const pr = root.progress.isIndeterminate
             ? void 0

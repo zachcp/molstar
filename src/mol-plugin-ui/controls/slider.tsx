@@ -22,8 +22,7 @@ export class Slider extends React.Component<{
     hideInput?: boolean
 }, { isChanging: boolean, current: number }> {
 
-    state = { isChanging: false, current: 0 };
-
+    override state = { isChanging: false, current: 0 };
     static getDerivedStateFromProps(props: { value: number }, state: { isChanging: boolean, current: number }) {
         if (state.isChanging || props.value === state.current) return null;
         return { current: props.value };
@@ -67,8 +66,7 @@ export class Slider extends React.Component<{
         this.updateCurrent(this.state.current + delta);
     };
 
-    render() {
-        let step = this.props.step;
+    override render() {        let step = this.props.step;
         if (step === void 0) step = 1;
         return <div className={!this.props.hideInput ? 'msp-slider' : 'msp-slider msp-slider-no-input'}>
             <div>
@@ -96,8 +94,7 @@ export class Slider2 extends React.Component<{
     onEnter?: () => void
 }, { isChanging: boolean, current: [number, number] }> {
 
-    state = { isChanging: false, current: [0, 1] as [number, number] };
-
+    override state = { isChanging: false, current: [0, 1] as [number, number] };
     static getDerivedStateFromProps(props: { value: [number, number] }, state: { isChanging: boolean, current: [number, number] }) {
         if (state.isChanging || (props.value[0] === state.current[0] && props.value[1] === state.current[1])) return null;
         return { current: props.value };
@@ -134,8 +131,7 @@ export class Slider2 extends React.Component<{
         this.props.onChange([n, this.state.current[1]]);
     };
 
-    render() {
-        let step = this.props.step;
+    override render() {        let step = this.props.step;
         if (step === void 0) step = 1;
         return <div className='msp-slider2'>
             <div>
@@ -232,8 +228,7 @@ function pauseEvent(e: MouseEvent | TouchEvent) {
 }
 
 export class Handle extends React.Component<Partial<HandleProps>, {}> {
-    render() {
-        const {
+    override render() {        const {
             className,
             tipFormatter,
             vertical,
@@ -330,8 +325,7 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
     private startValue = 0;
     private _getPointsCache: any = void 0;
 
-    componentDidUpdate(prevProps: SliderBaseProps) {
-        if (!('value' in this.props || 'min' in this.props || 'max' in this.props)) return;
+    override componentDidUpdate(prevProps: SliderBaseProps) {        if (!('value' in this.props || 'min' in this.props || 'max' in this.props)) return;
 
         const { bounds } = this.state;
         if (prevProps.range) {
@@ -694,8 +688,7 @@ export class SliderBase extends React.Component<SliderBaseProps, SliderBaseState
         return step !== null ? parseFloat(closestPoint.toFixed(this.getPrecision(step!))) : closestPoint;
     }
 
-    render() {
-        const {
+    override render() {        const {
             handle,
             bounds,
         } = this.state;

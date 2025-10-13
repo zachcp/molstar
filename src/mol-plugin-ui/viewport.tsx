@@ -35,8 +35,7 @@ export class ViewportControls extends PluginUIComponent<ViewportControlsProps, V
         isScreenshotExpanded: false,
     };
 
-    state: ViewportControlsState = {
-        ...this.allCollapsedState,
+    override state: ViewportControlsState = {        ...this.allCollapsedState,
         isCameraResetEnabled: true,
     };
 
@@ -88,8 +87,7 @@ export class ViewportControls extends PluginUIComponent<ViewportControlsProps, V
         this.setState(old => ({ ...old, isCameraResetEnabled: enable }));
     };
 
-    componentDidMount() {
-        this.subscribe(this.plugin.events.canvas3d.settingsUpdated, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.plugin.events.canvas3d.settingsUpdated, () => this.forceUpdate());
         this.subscribe(this.plugin.layout.events.updated, () => this.forceUpdate());
         if (this.plugin.canvas3d) {
             this.subscribe(
@@ -105,8 +103,7 @@ export class ViewportControls extends PluginUIComponent<ViewportControlsProps, V
         return <IconButton svg={icon} toggleState={isOn} onClick={onClick} title={title} style={{ background: 'transparent' }} disabled={disabled} />;
     }
 
-    render() {
-        const showXr = this.plugin.config.get(PluginConfig.Viewport.ShowXR);
+    override render() {        const showXr = this.plugin.config.get(PluginConfig.Viewport.ShowXR);
         const xrIsSupported = !!this.plugin.canvas3d?.xr.isSupported.value;
         const xrIsPresenting = !!this.plugin.canvas3d?.xr.isPresenting.value;
         const xr = showXr === 'always' || (showXr === 'auto' && xrIsSupported);

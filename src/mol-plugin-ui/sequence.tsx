@@ -223,8 +223,7 @@ type SequenceViewState = {
 export class SequenceView extends PluginUIComponent<{ defaultMode?: SequenceViewMode }, SequenceViewState> {
     state: SequenceViewState = { structureOptions: { options: [], all: [] }, structure: Structure.Empty, structureRef: '', modelEntityId: '', chainGroupId: -1, operatorKey: '', mode: 'single', sequenceViewModeParam: SequenceViewModeParam };
 
-    componentDidMount() {
-        if (this.plugin.state.data.select(StateSelection.Generators.rootsOfType(PSO.Molecule.Structure)).length > 0) this.setState(this.getInitialState());
+    override componentDidMount() {        if (this.plugin.state.data.select(StateSelection.Generators.rootsOfType(PSO.Molecule.Structure)).length > 0) this.setState(this.getInitialState());
 
         this.subscribe(this.plugin.state.events.object.updated, ({ ref, obj }) => {
             if (ref === this.state.structureRef && obj && obj.type === PSO.Molecule.Structure.type && obj.data !== this.state.structure) {
@@ -374,8 +373,7 @@ export class SequenceView extends PluginUIComponent<{ defaultMode?: SequenceView
         this.setState(state);
     };
 
-    render() {
-        if (this.getStructure(this.state.structureRef) === Structure.Empty) {
+    override render() {        if (this.getStructure(this.state.structureRef) === Structure.Empty) {
             return <div className='msp-sequence'>
                 <div className='msp-sequence-select'>
                     <Icon svg={HelpOutlineSvg} style={{ cursor: 'help', position: 'absolute', right: 0, top: 0 }}

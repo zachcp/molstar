@@ -10,8 +10,7 @@ import { Button } from '../controls/common.tsx';
 import { PlayArrowSvg } from '../controls/icons.tsx';
 
 export class AnimationControls extends PluginUIComponent<{ onStart?: () => void }> {
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.animation.events.updated, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.plugin.managers.animation.events.updated, () => this.forceUpdate());
     }
 
     updateParams: ParamOnChange = p => {
@@ -31,8 +30,7 @@ export class AnimationControls extends PluginUIComponent<{ onStart?: () => void 
         }
     };
 
-    render() {
-        const anim = this.plugin.managers.animation;
+    override render() {        const anim = this.plugin.managers.animation;
         if (anim.isEmpty) return null;
 
         const isDisabled = anim.state.animationState === 'playing';

@@ -44,8 +44,7 @@ interface QuickStylesState {
 
 
 export class QuickStyles extends PurePluginUIComponent<{}, QuickStylesState> {
-    state: QuickStylesState = { busy: false, style: 'default' };
-
+    override state: QuickStylesState = { busy: false, style: 'default' };
     async applyRepresentation(preset: PresetName) {
         this.setState({ busy: true });
         await applyRepresentationPreset(this.plugin, preset);
@@ -59,8 +58,7 @@ export class QuickStyles extends PurePluginUIComponent<{}, QuickStylesState> {
         this.setState({ busy: false, style });
     }
 
-    render() {
-        return <>
+    override render() {        return <>
             <NoncollapsableGroup title='Apply Representation'>
                 <div className='msp-flex-row'>
                     <Button title='Applies default representation preset (depends on structure size)'

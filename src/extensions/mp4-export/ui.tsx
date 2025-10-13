@@ -87,8 +87,7 @@ export class Mp4EncoderUI extends CollapsableControls<{}, State> {
         </>;
     }
 
-    componentDidMount() {
-        const merged = merge(
+    override componentDidMount() {        const merged = merge(
             this.controls.behaviors.animations,
             this.controls.behaviors.current,
             this.controls.behaviors.canApply,
@@ -101,8 +100,7 @@ export class Mp4EncoderUI extends CollapsableControls<{}, State> {
         });
     }
 
-    componentWillUnmount() {
-        super.componentWillUnmount();
+    override componentWillUnmount() {        super.componentWillUnmount();
         this._controls?.dispose();
         this._controls = void 0;
     }

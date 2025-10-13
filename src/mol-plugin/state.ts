@@ -179,8 +179,7 @@ class PluginState extends PluginComponent {
         return this.plugin.runTask(this.behaviors.updateTree(tree));
     }
 
-    dispose() {
-        this.behaviors.cells.forEach(cell => {
+    override dispose() {        this.behaviors.cells.forEach(cell => {
             if (PluginBehavior.Behavior.is(cell.obj)) {
                 cell.obj.data.unregister?.();
                 cell.obj.data.dispose?.();

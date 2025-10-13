@@ -47,8 +47,7 @@ export class VolumeStreamingControls extends CollapsableControls<{}, VolumeStrea
         };
     }
 
-    componentDidMount() {
-        // TODO: do not hide this but instead show some help text??
+    override componentDidMount() {        // TODO: do not hide this but instead show some help text??
         this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, () => {
             this.setState({
                 isHidden: !this.canEnable(),
@@ -129,8 +128,7 @@ export class VolumeSourceControls extends CollapsableControls<{}, VolumeSourceCo
         };
     }
 
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.volume.hierarchy.behaviors.selection, sel => {
+    override componentDidMount() {        this.subscribe(this.plugin.managers.volume.hierarchy.behaviors.selection, sel => {
             this.setState({ isHidden: sel.hierarchy.volumes.length === 0 && sel.hierarchy.lazyVolumes.length === 0 });
         });
         this.subscribe(this.plugin.behaviors.state.isBusy, v => {
@@ -288,11 +286,9 @@ function VolumeEntryControls({ volume }: { volume: VolumeRef }) {
 type VolumeRepresentationEntryActions = 'update' | 'select-color'
 
 class VolumeRepresentationControls extends PurePluginUIComponent<{ volume: VolumeRef, representation: VolumeRepresentationRef }, { action?: VolumeRepresentationEntryActions }> {
-    state = { action: void 0 as VolumeRepresentationEntryActions | undefined };
-    updateIsoValueEvent = new Subject<{ isoValue: Volume.IsoValue }>();
+    override state = { action: void 0 as VolumeRepresentationEntryActions | undefined };    updateIsoValueEvent = new Subject<{ isoValue: Volume.IsoValue }>();
 
-    componentDidMount() {
-        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
+    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
             if (State.ObjectEvent.isCell(e, this.props.representation.cell)) this.forceUpdate();
         });
 
@@ -379,8 +375,7 @@ class VolumeRepresentationControls extends PurePluginUIComponent<{ volume: Volum
         return { isoValue: Volume.createIsoValueParam(params.type.params.isoValue, this.props.volume.cell.obj?.data.grid?.stats) };
     });
 
-    render() {
-        const repr = this.props.representation.cell;
+    override render() {        const repr = this.props.representation.cell;
         const params = repr.transform.params;
         const color = this.color;
         const isoParams = this.isoValueParams(repr.transform.ref, params?.type.name);

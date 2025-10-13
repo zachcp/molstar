@@ -15,8 +15,7 @@ import { TextInput, Button, ControlRow } from './common.tsx';
 import { DefaultColorSwatch } from '../../mol-util/color/swatches.ts';
 
 export class CombinedColorControl extends React.PureComponent<ParamProps<PD.Color> & { hideNameRow?: boolean }, { isExpanded: boolean, lightness: number }> {
-    state = {
-        isExpanded: !!this.props.param.isExpanded || !!this.props.hideNameRow,
+    override state = {        isExpanded: !!this.props.param.isExpanded || !!this.props.hideNameRow,
         lightness: 0
     };
 
@@ -74,8 +73,7 @@ export class CombinedColorControl extends React.PureComponent<ParamProps<PD.Colo
         </div>;
     }
 
-    render() {
-        const label = this.props.param.label || camelCaseToWords(this.props.name);
+    override render() {        const label = this.props.param.label || camelCaseToWords(this.props.name);
         const [r, g, b] = Color.toRgb(this.props.value);
 
         const inner = <>

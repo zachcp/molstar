@@ -13,8 +13,7 @@ import { CloseSvg, ArrowDropDownSvg, ArrowRightSvg, CheckSvg } from './icons.tsx
 export class ActionMenu extends React.PureComponent<ActionMenu.Props> {
     hide = () => this.props.onSelect(void 0);
 
-    render() {
-        const cmd = this.props;
+    override render() {        const cmd = this.props;
         const section = <Section items={cmd.items} onSelect={cmd.onSelect} current={cmd.current} multiselect={this.props.multiselect} noOffset={this.props.noOffset} noAccent={this.props.noAccent} />;
         return <div className={`msp-action-menu-options${cmd.header ? '' : ' msp-action-menu-options-no-header'}`}>
             {cmd.header && <ControlGroup header={cmd.header} title={cmd.title} initialExpanded hideExpander hideOffset onHeaderClick={this.hide} topRightIcon={CloseSvg}>
@@ -193,15 +192,13 @@ class Section extends React.PureComponent<SectionProps, SectionState> {
         };
     }
 
-    state = Section.createState(this.props);
-
+    override state = Section.createState(this.props);
     toggleExpanded = (e: React.MouseEvent<HTMLButtonElement>) => {
         this.setState({ isExpanded: !this.state.isExpanded });
         e.currentTarget.blur();
     };
 
-    componentDidUpdate(prevProps: SectionProps) {
-        if (this.props.items !== prevProps.items || this.props.current !== prevProps.current) {
+    override componentDidUpdate(prevProps: SectionProps) {        if (this.props.items !== prevProps.items || this.props.current !== prevProps.current) {
             // keep previously expanded section if the header label is the same
             const isExpanded = (
                 isItems(this.props.items) && isItems(prevProps.items) &&
@@ -248,8 +245,7 @@ class Section extends React.PureComponent<SectionProps, SectionState> {
         </div>;
     }
 
-    render() {
-        const { items, onSelect, current } = this.props;
+    override render() {        const { items, onSelect, current } = this.props;
 
         if (isHeader(items)) return null;
         if (isItem(items)) return <Action item={items} onSelect={onSelect} current={current} multiselect={this.props.multiselect} />;

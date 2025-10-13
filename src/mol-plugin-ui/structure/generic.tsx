@@ -19,8 +19,7 @@ export class GenericEntryListControls extends PurePluginUIComponent {
         return this.plugin.managers.structure.hierarchy.behaviors.selection;
     }
 
-    componentDidMount() {
-        this.subscribe(this.current, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.current, () => this.forceUpdate());
     }
 
     get unitcell() {
@@ -50,8 +49,7 @@ export class GenericEntryListControls extends PurePluginUIComponent {
         return controls.length > 0 ? controls : null;
     }
 
-    render() {
-        return <>
+    override render() {        return <>
             <div style={{ marginTop: '6px' }}>
                 {this.unitcell}
                 {this.customControls}
@@ -61,10 +59,8 @@ export class GenericEntryListControls extends PurePluginUIComponent {
 }
 
 export class GenericEntry<T extends StructureHierarchyRef> extends PurePluginUIComponent<{ refs: T[], labelMultiple?: string }, { showOptions: boolean }> {
-    state = { showOptions: false };
-
-    componentDidMount() {
-        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
+    override state = { showOptions: false };
+    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
             if (State.ObjectEvent.isCell(e, this.pivot?.cell)) this.forceUpdate();
         });
     }
@@ -120,8 +116,7 @@ export class GenericEntry<T extends StructureHierarchyRef> extends PurePluginUIC
 
     toggleOptions = () => this.setState({ showOptions: !this.state.showOptions });
 
-    render() {
-        const { refs, labelMultiple } = this.props;
+    override render() {        const { refs, labelMultiple } = this.props;
         if (refs.length === 0) return null;
 
         const pivot = refs[0];

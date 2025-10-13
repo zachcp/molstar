@@ -99,10 +99,8 @@ function getFocusEntries(structure: Structure) {
 }
 
 export class StructureFocusControls extends PluginUIComponent<{}, StructureFocusControlsState> {
-    state = { isBusy: false, showAction: false };
-
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.structure.focus.behaviors.current, c => {
+    override state = { isBusy: false, showAction: false };
+    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.focus.behaviors.current, c => {
             // clear the memo cache
             this.getSelectionItems([]);
             this.forceUpdate();
@@ -216,8 +214,7 @@ export class StructureFocusControls extends PluginUIComponent<{}, StructureFocus
         return Binding.formatTriggers(binding);
     }
 
-    render() {
-        const { current } = this.plugin.managers.structure.focus;
+    override render() {        const { current } = this.plugin.managers.structure.focus;
         const label = current?.label || 'Nothing Focused';
 
         let title = 'Click to Center Camera';

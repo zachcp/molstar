@@ -28,8 +28,7 @@ export class PointComponent extends React.Component<any, {show: boolean}> {
         this.props.delete(this.props.id);
     }
 
-    public render() {
-        return ([
+    public override render() {        return ([
             <circle
                 r="10"
                 key={`${this.props.id}circle`}

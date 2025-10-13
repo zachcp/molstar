@@ -32,8 +32,7 @@ import { AnimateStateSnapshotTransition } from '../mol-plugin-state/animation/bu
 import { PluginState } from '../mol-plugin/state.ts';
 
 export class TrajectoryViewportControls extends PluginUIComponent<{}, { show: boolean, label: string }> {
-    state = { show: false, label: '' };
-
+    override state = { show: false, label: '' };
     private update = () => {
         const state = this.plugin.state.data;
 
@@ -71,8 +70,7 @@ export class TrajectoryViewportControls extends PluginUIComponent<{}, { show: bo
         this.setState({ show: count > 0, label });
     };
 
-    componentDidMount() {
-        this.subscribe(this.plugin.state.data.events.changed, this.update);
+    override componentDidMount() {        this.subscribe(this.plugin.state.data.events.changed, this.update);
         this.subscribe(this.plugin.behaviors.state.isAnimating, this.update);
     }
 
@@ -91,8 +89,7 @@ export class TrajectoryViewportControls extends PluginUIComponent<{}, { show: bo
         action: UpdateTrajectory.create({ action: 'advance', by: 1 })
     });
 
-    render() {
-        const isAnimating = this.plugin.behaviors.state.isAnimating.value;
+    override render() {        const isAnimating = this.plugin.behaviors.state.isAnimating.value;
 
         if (!this.state.show || (isAnimating && !this.state.label) || !this.plugin.config.get(PluginConfig.Viewport.ShowTrajectoryControls)) return null;
 
@@ -106,16 +103,13 @@ export class TrajectoryViewportControls extends PluginUIComponent<{}, { show: bo
 }
 
 export class StateSnapshotViewportControls extends PluginUIComponent<{}, { isBusy: boolean, show: boolean, showAnimation: boolean }> {
-    state = { isBusy: false, show: true, showAnimation: false };
-
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.snapshot.events.changed, () => this.forceUpdate());
+    override state = { isBusy: false, show: true, showAnimation: false };
+    override componentDidMount() {        this.subscribe(this.plugin.managers.snapshot.events.changed, () => this.forceUpdate());
         this.subscribe(this.plugin.behaviors.state.isBusy, isBusy => this.setState({ isBusy }));
         this.subscribe(this.plugin.behaviors.state.isAnimating, isBusy => this.setState({ isBusy }));
     }
 
-    componentWillUnmount() {
-        super.componentWillUnmount();
+    override componentWillUnmount() {        super.componentWillUnmount();
     }
 
     async update(id: string) {
@@ -162,8 +156,7 @@ export class StateSnapshotViewportControls extends PluginUIComponent<{}, { isBus
         return this.plugin.managers.animation.isAnimatingStateTransition;
     }
 
-    render() {
-        const snapshots = this.plugin.managers.snapshot;
+    override render() {        const snapshots = this.plugin.managers.snapshot;
         const count = snapshots.state.entries.size;
 
         if (!count || !this.state.show) {
@@ -232,10 +225,8 @@ export function ViewportSnapshotDescription() {
 }
 
 export class AnimationViewportControls extends PluginUIComponent<{}, { isEmpty: boolean, isExpanded: boolean, isBusy: boolean, isAnimating: boolean, isPlaying: boolean }> {
-    state = { isEmpty: true, isExpanded: false, isBusy: false, isAnimating: false, isPlaying: false };
-
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.snapshot.events.changed, () => {
+    override state = { isEmpty: true, isExpanded: false, isBusy: false, isAnimating: false, isPlaying: false };
+    override componentDidMount() {        this.subscribe(this.plugin.managers.snapshot.events.changed, () => {
             if (this.plugin.managers.snapshot.state.isPlaying) this.setState({ isPlaying: true, isExpanded: false });
             else this.setState({ isPlaying: false });
         });
@@ -254,8 +245,7 @@ export class AnimationViewportControls extends PluginUIComponent<{}, { isEmpty: 
         this.plugin.managers.snapshot.stop();
     };
 
-    render() {
-        const isPlaying = this.plugin.managers.snapshot.state.isPlaying;
+    override render() {        const isPlaying = this.plugin.managers.snapshot.state.isPlaying;
         if (isPlaying || this.state.isEmpty || this.plugin.managers.animation.isEmpty || !this.plugin.config.get(PluginConfig.Viewport.ShowAnimation)) return null;
 
         const isAnimating = this.state.isAnimating;
@@ -275,12 +265,10 @@ export class AnimationViewportControls extends PluginUIComponent<{}, { isEmpty: 
 }
 
 export class SelectionViewportControls extends PluginUIComponent {
-    componentDidMount() {
-        this.subscribe(this.plugin.behaviors.interaction.selectionMode, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.plugin.behaviors.interaction.selectionMode, () => this.forceUpdate());
     }
 
-    render() {
-        if (!this.plugin.selectionMode) return null;
+    override render() {        if (!this.plugin.selectionMode) return null;
         return <div className='msp-selection-viewport-controls'>
             <StructureSelectionActionsControls />
         </div>;
@@ -288,14 +276,11 @@ export class SelectionViewportControls extends PluginUIComponent {
 }
 
 export class LociLabels extends PluginUIComponent<{}, { labels: ReadonlyArray<LociLabel> }> {
-    state = { labels: [] as string[] };
-
-    componentDidMount() {
-        this.subscribe(this.plugin.behaviors.labels.highlight, e => this.setState({ labels: e.labels }));
+    override state = { labels: [] as string[] };
+    override componentDidMount() {        this.subscribe(this.plugin.behaviors.labels.highlight, e => this.setState({ labels: e.labels }));
     }
 
-    render() {
-        if (this.state.labels.length === 0) {
+    override render() {        if (this.state.labels.length === 0) {
             return null;
         }
 
@@ -314,12 +299,10 @@ export class LociLabels extends PluginUIComponent<{}, { labels: ReadonlyArray<Lo
 }
 
 export class CustomStructureControls extends PluginUIComponent<{ initiallyCollapsed?: boolean }> {
-    componentDidMount() {
-        this.subscribe(this.plugin.state.behaviors.events.changed, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.plugin.state.behaviors.events.changed, () => this.forceUpdate());
     }
 
-    render() {
-        const controls: JSX.Element[] = [];
+    override render() {        const controls: JSX.Element[] = [];
         this.plugin.customStructureControls.forEach((Controls, key) => {
             controls.push(<Controls initiallyCollapsed={this.props.initiallyCollapsed} key={key} />);
         });
@@ -328,8 +311,7 @@ export class CustomStructureControls extends PluginUIComponent<{ initiallyCollap
 }
 
 export class DefaultStructureTools extends PluginUIComponent {
-    render() {
-        return <>
+    override render() {        return <>
             <div className='msp-section-header'><Icon svg={BuildSvg} />Structure Tools</div>
 
             <StructureSourceControls />

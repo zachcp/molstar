@@ -56,8 +56,7 @@ class InteractivityManager extends StatefulPluginComponent<InteractivityManagerS
         this.events.propsUpdated.next(void 0);
     }
 
-    dispose() {
-        super.dispose();
+    override dispose() {        super.dispose();
         this.lociSelects.dispose();
         this.lociHighlights.dispose();
     }
@@ -195,8 +194,7 @@ namespace InteractivityManager {
             }
         }
 
-        dispose() {
-            super.dispose();
+        override dispose() {            super.dispose();
             this.prev.length = 0;
         }
     }
@@ -269,8 +267,7 @@ namespace InteractivityManager {
             if (isEmptyLoci(current.loci)) this.deselectAll();
         }
 
-        protected mark(current: Representation.Loci, action: MarkerAction.Select | MarkerAction.Deselect) {
-            const { loci } = current;
+        protected override mark(current: Representation.Loci, action: MarkerAction.Select | MarkerAction.Deselect) {            const { loci } = current;
             if (!Loci.isEmpty(loci)) {
                 if (StructureElement.Loci.is(loci)) {
                     // do a full deselect/select for the current structure so visuals that are

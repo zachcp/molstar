@@ -48,8 +48,7 @@ export class StructureMeasurementsControls extends CollapsableControls {
 }
 
 export class MeasurementList extends PurePluginUIComponent {
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.structure.measurement.behaviors.state, () => {
+    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.measurement.behaviors.state, () => {
             this.forceUpdate();
         });
     }
@@ -62,8 +61,7 @@ export class MeasurementList extends PurePluginUIComponent {
         return group.length ? <ExpandGroup header={header} initiallyExpanded>{group}</ExpandGroup> : null;
     }
 
-    render() {
-        const measurements = this.plugin.managers.structure.measurement.state;
+    override render() {        const measurements = this.plugin.managers.structure.measurement.state;
         return <div style={{ marginTop: '6px' }}>
             {this.renderGroup(measurements.labels, 'Labels')}
             {this.renderGroup(measurements.distances, 'Distances')}
@@ -76,10 +74,8 @@ export class MeasurementList extends PurePluginUIComponent {
 }
 
 export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boolean, action?: 'add' | 'options' }> {
-    state = { isBusy: false, action: void 0 as 'add' | 'options' | undefined };
-
-    componentDidMount() {
-        this.subscribe(this.selection.events.additionsHistoryUpdated, () => {
+    override state = { isBusy: false, action: void 0 as 'add' | 'options' | undefined };
+    override componentDidMount() {        this.subscribe(this.selection.events.additionsHistoryUpdated, () => {
             this.forceUpdate();
             this.updateOrderLabels();
         });
@@ -89,13 +85,11 @@ export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boo
         });
     }
 
-    componentWillUnmount() {
-        this.clearOrderLabels();
+    override componentWillUnmount() {        this.clearOrderLabels();
         super.componentWillUnmount();
     }
 
-    componentDidUpdate(prevProps: {}, prevState: { isBusy: boolean, action?: 'add' | 'options' }) {
-        if (this.state.action !== prevState.action)
+    override componentDidUpdate(prevProps: {}, prevState: { isBusy: boolean, action?: 'add' | 'options' }) {        if (this.state.action !== prevState.action)
             this.updateOrderLabels();
     }
 
@@ -224,8 +218,7 @@ export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boo
         </>;
     }
 
-    render() {
-        return <>
+    override render() {        return <>
             <div className='msp-flex-row'>
                 <ToggleButton icon={AddSvg} label='Add' toggle={this.toggleAdd} isSelected={this.state.action === 'add'} disabled={this.state.isBusy} className='msp-btn-apply-simple' />
                 <ToggleButton icon={TuneSvg} label='' title='Options' toggle={this.toggleOptions} isSelected={this.state.action === 'options'} disabled={this.state.isBusy} style={{ flex: '0 0 40px', padding: 0 }} />
@@ -237,10 +230,8 @@ export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boo
 }
 
 class MeasurementsOptions extends PurePluginUIComponent<{}, { isDisabled: boolean }> {
-    state = { isDisabled: false };
-
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.structure.measurement.behaviors.state, () => {
+    override state = { isDisabled: false };
+    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.measurement.behaviors.state, () => {
             this.forceUpdate();
         });
 
@@ -253,8 +244,7 @@ class MeasurementsOptions extends PurePluginUIComponent<{}, { isDisabled: boolea
         this.plugin.managers.structure.measurement.setOptions(options);
     };
 
-    render() {
-        const measurements = this.plugin.managers.structure.measurement.state;
+    override render() {        const measurements = this.plugin.managers.structure.measurement.state;
 
         return <div className='msp-control-offset'>
             <ParameterControls params={StructureMeasurementParams} values={measurements.options} onChangeValues={this.changed} isDisabled={this.state.isDisabled} />
@@ -263,10 +253,8 @@ class MeasurementsOptions extends PurePluginUIComponent<{}, { isDisabled: boolea
 }
 
 class MeasurementEntry extends PurePluginUIComponent<{ cell: StructureMeasurementCell }, { showUpdate: boolean }> {
-    state = { showUpdate: false };
-
-    componentDidMount() {
-        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
+    override state = { showUpdate: false };
+    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
             this.forceUpdate();
         });
     }
@@ -351,8 +339,7 @@ class MeasurementEntry extends PurePluginUIComponent<{ cell: StructureMeasuremen
         (item?.value as any)();
     };
 
-    render() {
-        const { cell } = this.props;
+    override render() {        const { cell } = this.props;
         const { obj } = cell;
         if (!obj) return null;
 

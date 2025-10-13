@@ -173,8 +173,7 @@ export namespace VolumeStreaming {
 
     export class Behavior extends PluginBehavior.WithSubscribers<Params> {
         private cache = LRUCache.create<{ data: ChannelsData, asset: Asset.Wrapper }>(25);
-        public params: Params = {} as any;
-        private lastLoci: StructureElement.Loci | EmptyLoci = EmptyLoci;
+        public override params: Params = {} as any;        private lastLoci: StructureElement.Loci | EmptyLoci = EmptyLoci;
         private ref: string = '';
         public infoMap: Map<string, VolumeServerInfo.EntryData>;
         private updateQueue: SingleAsyncQueue;

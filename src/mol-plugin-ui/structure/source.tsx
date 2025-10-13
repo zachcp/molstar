@@ -33,8 +33,7 @@ export class StructureSourceControls extends CollapsableControls<{}, StructureSo
         };
     }
 
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, () => this.forceUpdate());
         this.subscribe(this.plugin.behaviors.state.isBusy, v => {
             this.setState({ isBusy: v });
         });

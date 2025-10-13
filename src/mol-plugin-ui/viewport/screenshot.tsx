@@ -28,8 +28,7 @@ interface ImageControlsState {
 }
 
 export class DownloadScreenshotControls extends PluginUIComponent<{ close: () => void }, ImageControlsState> {
-    state: ImageControlsState = {
-        showPreview: true,
+    override state: ImageControlsState = {        showPreview: true,
         isDisabled: false
     } as ImageControlsState;
 
@@ -56,14 +55,12 @@ export class DownloadScreenshotControls extends PluginUIComponent<{ close: () =>
         this.setState({ imageData: src });
     };
 
-    componentDidMount() {
-        this.subscribe(this.plugin.state.data.behaviors.isUpdating, v => {
+    override componentDidMount() {        this.subscribe(this.plugin.state.data.behaviors.isUpdating, v => {
             this.setState({ isDisabled: v });
         });
     }
 
-    componentWillUnmount() {
-        super.componentWillUnmount();
+    override componentWillUnmount() {        super.componentWillUnmount();
         this.setState({ imageData: void 0 });
     }
 
@@ -72,8 +69,7 @@ export class DownloadScreenshotControls extends PluginUIComponent<{ close: () =>
         PluginCommands.State.Snapshots.OpenFile(this.plugin, { file: e.target.files![0] });
     };
 
-    render() {
-        const hasClipboardApi = !!(navigator.clipboard as any)?.write;
+    override render() {        const hasClipboardApi = !!(navigator.clipboard as any)?.write;
 
         return <div>
             {this.state.showPreview && <div className='msp-image-preview'>

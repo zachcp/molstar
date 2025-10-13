@@ -22,8 +22,7 @@ import type { PluginStateSnapshotManager } from '../../mol-plugin-state/manager/
 import type { PluginContext } from '../../mol-plugin/context.ts';
 
 export class StateSnapshots extends PluginUIComponent<{}> {
-    render() {
-        return <div>
+    override render() {        return <div>
             <SectionHeader icon={SaveOutlinedSvg} title='Plugin State' />
 
             <div style={{ marginBottom: '10px' }}>
@@ -65,8 +64,7 @@ export class StateExportImportControls extends PluginUIComponent<{ onAction?: ()
         PluginCommands.State.Snapshots.OpenFile(this.plugin, { file: e.target.files[0] });
     };
 
-    render() {
-        return <>
+    override render() {        return <>
             <div className='msp-flex-row'>
                 <Button icon={GetAppSvg} onClick={this.downloadToFileJson} title='Save the state description. Input data are loaded using the provided sources. Does not work if local files are used as input.'>
                     State
@@ -86,20 +84,17 @@ export class StateExportImportControls extends PluginUIComponent<{ onAction?: ()
 }
 
 export class LocalStateSnapshotParams extends PluginUIComponent {
-    componentDidMount() {
-        this.subscribe(this.plugin.state.snapshotParams, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.plugin.state.snapshotParams, () => this.forceUpdate());
     }
 
-    render() {
-        return <ParameterControls params={PluginState.SnapshotParams} values={this.plugin.state.snapshotParams.value} onChangeValues={this.plugin.state.setSnapshotParams} />;
+    override render() {        return <ParameterControls params={PluginState.SnapshotParams} values={this.plugin.state.snapshotParams.value} onChangeValues={this.plugin.state.setSnapshotParams} />;
     }
 }
 
 export class LocalStateSnapshots extends PluginUIComponent<
 {},
 { params: PD.Values<typeof LocalStateSnapshots.Params> }> {
-    state = { params: PD.getDefaultValues(LocalStateSnapshots.Params) };
-
+    override state = { params: PD.getDefaultValues(LocalStateSnapshots.Params) };
     static Params = {
         name: PD.Text(),
         description: PD.Text()
@@ -118,12 +113,10 @@ export class LocalStateSnapshots extends PluginUIComponent<
         PluginCommands.State.Snapshots.Clear(this.plugin, {});
     };
 
-    shouldComponentUpdate(nextProps: any, nextState: any) {
-        return !shallowEqualObjects(this.props, nextProps) || !shallowEqualObjects(this.state, nextState);
+    override shouldComponentUpdate(nextProps: any, nextState: any) {        return !shallowEqualObjects(this.props, nextProps) || !shallowEqualObjects(this.state, nextState);
     }
 
-    render() {
-        return <div>
+    override render() {        return <div>
             <AddSnapshot parent={this} />
         </div>;
     }
@@ -163,10 +156,8 @@ function AddSnapshot({ parent }: { parent: LocalStateSnapshots }) {
 
 
 export class LocalStateSnapshotList extends PluginUIComponent<{}, { editingId?: string }> {
-    state = { editingId: undefined as string | undefined };
-
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.snapshot.events.changed, () => this.forceUpdate());
+    override state = { editingId: undefined as string | undefined };
+    override componentDidMount() {        this.subscribe(this.plugin.managers.snapshot.events.changed, () => this.forceUpdate());
     }
 
     edit = (e: React.MouseEvent<HTMLElement>) => {
@@ -209,8 +200,7 @@ export class LocalStateSnapshotList extends PluginUIComponent<{}, { editingId?: 
         PluginCommands.State.Snapshots.Replace(this.plugin, { id });
     };
 
-    render() {
-        const current = this.plugin.managers.snapshot.state.current;
+    override render() {        const current = this.plugin.managers.snapshot.state.current;
         const items: JSX.Element[] = [];
         this.plugin.managers.snapshot.state.entries.forEach(e => {
             items.push(<li key={e!.snapshot.id} className='msp-flex-row'>
@@ -336,8 +326,7 @@ export class RemoteStateSnapshots extends PluginUIComponent<
         })
     };
 
-    state = { params: PD.getDefaultValues(this.Params), entries: OrderedMap<string, RemoteEntry>(), isBusy: false };
-
+    override state = { params: PD.getDefaultValues(this.Params), entries: OrderedMap<string, RemoteEntry>(), isBusy: false };
     ListOnlyParams = {
         options: PD.Group({
             serverUrl: PD.Text(this.plugin.config.get(PluginConfig.State.CurrentServer))
@@ -345,15 +334,13 @@ export class RemoteStateSnapshots extends PluginUIComponent<
     };
 
     private _mounted = false;
-    componentDidMount() {
-        this.refresh();
+    override componentDidMount() {        this.refresh();
         // TODO: solve this by using "PluginComponent" with behaviors intead
         this._mounted = true;
         // this.subscribe(UploadedEvent, this.refresh);
     }
 
-    componentWillUnmount() {
-        super.componentWillUnmount();
+    override componentWillUnmount() {        super.componentWillUnmount();
         this._mounted = false;
     }
 
@@ -439,8 +426,7 @@ export class RemoteStateSnapshots extends PluginUIComponent<
         }
     };
 
-    render() {
-        return <>
+    override render() {        return <>
             <SectionHeader title='Remote States' accent='blue' />
 
             {!this.props.listOnly && <>
@@ -486,8 +472,7 @@ class RemoteStateSnapshotList extends PurePluginUIComponent<
         globalThis.open(`${url}?snapshot-url=${encodeURIComponent(entry.url)}`, '_blank');
     };
 
-    render() {
-        return <ul style={{ listStyle: 'none', marginTop: '10px' }} className='msp-state-list'>
+    override render() {        return <ul style={{ listStyle: 'none', marginTop: '10px' }} className='msp-state-list'>
             {this.props.entries.valueSeq().map(e => <li key={e!.id} className='msp-flex-row'>
                 <Button data-id={e!.id} onClick={this.props.fetch}
                     disabled={this.props.isBusy} onContextMenu={this.open} title='Click to download, right-click to open in a new tab.'>

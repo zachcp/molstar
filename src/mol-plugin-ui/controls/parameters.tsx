@@ -87,8 +87,7 @@ export class ParameterControls<P extends PD.Params> extends React.PureComponent<
 
     paramGroups = memoizeLatest((params: PD.Params) => classifyParams(params));
 
-    render() {
-        const groups = this.paramGroups(this.props.params);
+    override render() {        const groups = this.paramGroups(this.props.params);
 
         const essentials = this.renderPart(groups.essentials);
         const advanced = this.renderPart(groups.advanced);
@@ -109,8 +108,7 @@ export class ParameterControls<P extends PD.Params> extends React.PureComponent<
 }
 
 export class ParameterMappingControl<S, T> extends PluginUIComponent<{ mapping: ParamMapping<S, T, PluginUIContext> }, { isDisabled: boolean }> {
-    state = {
-        isDisabled: false,
+    override state = {        isDisabled: false,
     };
 
     setSettings = (p: { param: PD.Base<any>, name: string, value: any }, old: any) => {
@@ -119,14 +117,12 @@ export class ParameterMappingControl<S, T> extends PluginUIComponent<{ mapping: 
         this.props.mapping.apply(t, this.plugin);
     };
 
-    componentDidMount() {
-        this.subscribe(this.plugin.state.data.behaviors.isUpdating, v => {
+    override componentDidMount() {        this.subscribe(this.plugin.state.data.behaviors.isUpdating, v => {
             this.setState({ isDisabled: v });
         });
     }
 
-    render() {
-        const t = this.props.mapping.getTarget(this.plugin);
+    override render() {        const t = this.props.mapping.getTarget(this.plugin);
         const values = this.props.mapping.getValues(t, this.plugin);
         const params = this.props.mapping.params(this.plugin) as any as PD.Params;
         return <ParameterControls params={params} values={values} onChange={this.setSettings} isDisabled={this.state.isDisabled} />;
@@ -213,8 +209,7 @@ function controlFor(param: PD.Any): ParamControl | undefined {
 }
 
 export class ParamHelp<L extends LegendData> extends React.PureComponent<{ legend?: L, description?: string }> {
-    render() {
-        const { legend, description } = this.props;
+    override render() {        const { legend, description } = this.props;
         const Legend = legend && legendFor(legend);
 
         return <div className='msp-help-text'>
@@ -279,8 +274,7 @@ export function ToggleParamHelpButton({ show, toggle, title }: { show: boolean, 
 }
 
 export abstract class SimpleParam<P extends PD.Any> extends React.PureComponent<ParamProps<P>, { showHelp: boolean }> {
-    state = { showHelp: false };
-
+    override state = { showHelp: false };
     protected update(value: P['defaultValue']) {
         this.props.onChange({ param: this.props.param, name: this.props.name, value });
     }
@@ -290,8 +284,7 @@ export abstract class SimpleParam<P extends PD.Any> extends React.PureComponent<
 
     toggleHelp = () => this.setState({ showHelp: !this.state.showHelp });
 
-    render() {
-        return renderSimple({
+    override render() {        return renderSimple({
             props: this.props,
             state: this.state,
             control: this.renderControl(),
@@ -312,8 +305,7 @@ export class BoolControl extends SimpleParam<PD.BooleanParam> {
 }
 
 export class LineGraphControl extends React.PureComponent<ParamProps<PD.LineGraph>, { isExpanded: boolean, isOverPoint: boolean, message: string }> {
-    state = {
-        isExpanded: false,
+    override state = {        isExpanded: false,
         isOverPoint: false,
         message: `${this.props.param.defaultValue.length} points`,
     };
@@ -355,8 +347,7 @@ export class LineGraphControl extends React.PureComponent<ParamProps<PD.LineGrap
         e.currentTarget.blur();
     };
 
-    render() {
-        const label = this.props.param.label || camelCaseToWords(this.props.name);
+    override render() {        const label = this.props.param.label || camelCaseToWords(this.props.name);
         return <>
             <ControlRow label={label} control={<button onClick={this.toggleExpanded} disabled={this.props.isDisabled}>{`${this.state.message}`}</button>} />
             <div className='msp-control-offset' style={{ display: this.state.isExpanded ? 'block' : 'none', marginTop: 1 }}>
@@ -372,16 +363,14 @@ export class LineGraphControl extends React.PureComponent<ParamProps<PD.LineGrap
 }
 
 export class NumberInputControl extends React.PureComponent<ParamProps<PD.Numeric>> {
-    state = { value: '0' };
-
+    override state = { value: '0' };
     update = (value: number) => {
         const p = getPrecision(this.props.param.step || 0.01);
         value = parseFloat(value.toFixed(p));
         this.props.onChange({ param: this.props.param, name: this.props.name, value });
     };
 
-    render() {
-        const placeholder = this.props.param.label || camelCaseToWords(this.props.name);
+    override render() {        const placeholder = this.props.param.label || camelCaseToWords(this.props.name);
         const label = this.props.param.label || camelCaseToWords(this.props.name);
         const p = getPrecision(this.props.param.step || 0.01);
         return <ControlRow
@@ -467,8 +456,7 @@ export class PureSelectControl extends React.PureComponent<ParamProps<PD.Select<
         }
     };
 
-    render() {
-        const isInvalid = this.props.value !== void 0 && !this.props.param.options.some(e => e[0] === this.props.value);
+    override render() {        const isInvalid = this.props.value !== void 0 && !this.props.param.options.some(e => e[0] === this.props.value);
         return <select className='msp-form-control' title={this.props.title} value={this.props.value !== void 0 ? this.props.value : this.props.param.defaultValue} onChange={this.onChange} disabled={this.props.isDisabled}>
             {isInvalid && <option key={this.props.value} value={this.props.value}>{`[Invalid] ${this.props.value}`}</option>}
             {this.props.param.options.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
@@ -477,8 +465,7 @@ export class PureSelectControl extends React.PureComponent<ParamProps<PD.Select<
 }
 
 export class SelectControl extends React.PureComponent<ParamProps<PD.Select<string | number>>, { showHelp: boolean, showOptions: boolean }> {
-    state = { showHelp: false, showOptions: false };
-
+    override state = { showHelp: false, showOptions: false };
     onSelect: ActionMenu.OnSelect = item => {
         if (!item || item.value === this.props.value) {
             this.setState({ showOptions: false });
@@ -531,8 +518,7 @@ export class SelectControl extends React.PureComponent<ParamProps<PD.Select<stri
 
     toggleHelp = () => this.setState({ showHelp: !this.state.showHelp });
 
-    render() {
-        return renderSimple({
+    override render() {        return renderSimple({
             props: this.props,
             state: this.state,
             control: this.renderControl(),
@@ -543,8 +529,7 @@ export class SelectControl extends React.PureComponent<ParamProps<PD.Select<stri
 }
 
 export class ValueRefControl extends React.PureComponent<ParamProps<PD.ValueRef<any>>, { showHelp: boolean, showOptions: boolean }> {
-    state = { showHelp: false, showOptions: false };
-
+    override state = { showHelp: false, showOptions: false };
     onSelect: ActionMenu.OnSelect = item => {
         if (!item || item.value === this.props.value) {
             this.setState({ showOptions: false });
@@ -583,8 +568,7 @@ export class ValueRefControl extends React.PureComponent<ParamProps<PD.ValueRef<
 
     toggleHelp = () => this.setState({ showHelp: !this.state.showHelp });
 
-    render() {
-        return renderSimple({
+    override render() {        return renderSimple({
             props: this.props,
             state: this.state,
             control: this.renderControl(),
@@ -596,8 +580,7 @@ export class ValueRefControl extends React.PureComponent<ParamProps<PD.ValueRef<
 ValueRefControl.contextType = PluginReactContext;
 
 export class IntervalControl extends React.PureComponent<ParamProps<PD.Interval>, { isExpanded: boolean }> {
-    state = { isExpanded: false };
-
+    override state = { isExpanded: false };
     components = {
         0: PD.Numeric(0, { step: this.props.param.step }, { label: 'Min' }),
         1: PD.Numeric(0, { step: this.props.param.step }, { label: 'Max' })
@@ -618,8 +601,7 @@ export class IntervalControl extends React.PureComponent<ParamProps<PD.Interval>
         e.currentTarget.blur();
     };
 
-    render() {
-        const v = this.props.value;
+    override render() {        const v = this.props.value;
         const label = this.props.param.label || camelCaseToWords(this.props.name);
         const p = getPrecision(this.props.param.step || 0.01);
         const value = `[${v[0].toFixed(p)}, ${v[1].toFixed(p)}]`;
@@ -715,8 +697,7 @@ function ColorListHelpers() {
 }
 
 export class ColorListControl extends React.PureComponent<ParamProps<PD.ColorList>, { showHelp: boolean, show?: 'edit' | 'presets' }> {
-    state = { showHelp: false, show: void 0 as 'edit' | 'presets' | undefined };
-
+    override state = { showHelp: false, show: void 0 as 'edit' | 'presets' | undefined };
     protected update(value: PD.ColorList['defaultValue']) {
         this.props.onChange({ param: this.props.param, name: this.props.name, value });
     }
@@ -776,8 +757,7 @@ export class ColorListControl extends React.PureComponent<ParamProps<PD.ColorLis
 
     toggleHelp = () => this.setState({ showHelp: !this.state.showHelp });
 
-    render() {
-        return renderSimple({
+    override render() {        return renderSimple({
             props: this.props,
             state: this.state,
             control: this.renderControl(),
@@ -788,8 +768,7 @@ export class ColorListControl extends React.PureComponent<ParamProps<PD.ColorLis
 }
 
 export class OffsetColorListControl extends React.PureComponent<ParamProps<PD.ColorList>, { showHelp: boolean, show?: 'edit' | 'presets' }> {
-    state = { showHelp: false, show: void 0 as 'edit' | 'presets' | undefined };
-
+    override state = { showHelp: false, show: void 0 as 'edit' | 'presets' | undefined };
     protected update(value: PD.ColorList['defaultValue']) {
         this.props.onChange({ param: this.props.param, name: this.props.name, value });
     }
@@ -849,8 +828,7 @@ export class OffsetColorListControl extends React.PureComponent<ParamProps<PD.Co
 
     toggleHelp = () => this.setState({ showHelp: !this.state.showHelp });
 
-    render() {
-        return renderSimple({
+    override render() {        return renderSimple({
             props: this.props,
             state: this.state,
             control: this.renderControl(),
@@ -861,8 +839,7 @@ export class OffsetColorListControl extends React.PureComponent<ParamProps<PD.Co
 }
 
 export class Vec3Control extends React.PureComponent<ParamProps<PD.Vec3>, { isExpanded: boolean }> {
-    state = { isExpanded: false };
-
+    override state = { isExpanded: false };
     components = {
         0: PD.Numeric(0, { step: this.props.param.step }, { label: (this.props.param.fieldLabels && this.props.param.fieldLabels.x) || 'X' }),
         1: PD.Numeric(0, { step: this.props.param.step }, { label: (this.props.param.fieldLabels && this.props.param.fieldLabels.y) || 'Y' }),
@@ -884,8 +861,7 @@ export class Vec3Control extends React.PureComponent<ParamProps<PD.Vec3>, { isEx
         e.currentTarget.blur();
     };
 
-    render() {
-        const v = this.props.value;
+    override render() {        const v = this.props.value;
         const label = this.props.param.label || camelCaseToWords(this.props.name);
         const p = getPrecision(this.props.param.step || 0.01);
         const value = `[${v[0].toFixed(p)}, ${v[1].toFixed(p)}, ${v[2].toFixed(p)}]`;
@@ -901,8 +877,7 @@ export class Vec3Control extends React.PureComponent<ParamProps<PD.Vec3>, { isEx
 }
 
 export class Mat4Control extends React.PureComponent<ParamProps<PD.Mat4>, { isExpanded: boolean }> {
-    state = { isExpanded: false };
-
+    override state = { isExpanded: false };
     components = {
         json: PD.Text(JSON.stringify(Mat4()), { description: 'JSON array with 4x4 matrix in a column major (j * 4 + i indexing) format' })
     };
@@ -948,8 +923,7 @@ export class Mat4Control extends React.PureComponent<ParamProps<PD.Mat4>, { isEx
         return <div className='msp-parameter-matrix'>{rows}</div>;
     }
 
-    render() {
-        const v = {
+    override render() {        const v = {
             json: JSON.stringify(this.props.value)
         };
         const label = this.props.param.label || camelCaseToWords(this.props.name);
@@ -993,8 +967,7 @@ export class UrlControl extends SimpleParam<PD.UrlParam> {
 }
 
 export class FileControl extends React.PureComponent<ParamProps<PD.FileParam>> {
-    state = { showHelp: false };
-
+    override state = { showHelp: false };
     change(value: File) {
         this.props.onChange({ name: this.props.name, param: this.props.param, value: Asset.File(value) });
     }
@@ -1013,8 +986,7 @@ export class FileControl extends React.PureComponent<ParamProps<PD.FileParam>> {
         </div>;
     }
 
-    render() {
-        if (this.props.param.label) {
+    override render() {        if (this.props.param.label) {
             return renderSimple({
                 props: this.props,
                 state: this.state,
@@ -1029,8 +1001,7 @@ export class FileControl extends React.PureComponent<ParamProps<PD.FileParam>> {
 }
 
 export class FileListControl extends React.PureComponent<ParamProps<PD.FileListParam>> {
-    state = { showHelp: false };
-
+    override state = { showHelp: false };
     change(value: FileList) {
         const files: Asset.File[] = [];
         if (value) {
@@ -1065,8 +1036,7 @@ export class FileListControl extends React.PureComponent<ParamProps<PD.FileListP
         </div>;
     }
 
-    render() {
-        if (this.props.param.label) {
+    override render() {        if (this.props.param.label) {
             return renderSimple({
                 props: this.props,
                 state: this.state,
@@ -1081,8 +1051,7 @@ export class FileListControl extends React.PureComponent<ParamProps<PD.FileListP
 }
 
 export class MultiSelectControl extends React.PureComponent<ParamProps<PD.MultiSelect<any>>, { isExpanded: boolean }> {
-    state = { isExpanded: false };
-
+    override state = { isExpanded: false };
     change(value: PD.MultiSelect<any>['defaultValue']) {
         this.props.onChange({ name: this.props.name, param: this.props.param, value });
     }
@@ -1100,8 +1069,7 @@ export class MultiSelectControl extends React.PureComponent<ParamProps<PD.MultiS
         e.currentTarget.blur();
     };
 
-    render() {
-        const current = this.props.value;
+    override render() {        const current = this.props.value;
         const emptyLabel = this.props.param.emptyValue;
         const label = this.props.param.label || camelCaseToWords(this.props.name);
         return <>
@@ -1121,8 +1089,7 @@ export class MultiSelectControl extends React.PureComponent<ParamProps<PD.MultiS
 }
 
 export class GroupControl extends React.PureComponent<ParamProps<PD.Group<any>> & { inMapped?: boolean }, { isExpanded: boolean, showPresets: boolean, showHelp: boolean }> {
-    state = { isExpanded: !!this.props.param.isExpanded, showPresets: false, showHelp: false };
-
+    override state = { isExpanded: !!this.props.param.isExpanded, showPresets: false, showHelp: false };
     change(value: any) {
         this.props.onChange({ name: this.props.name, param: this.props.param, value });
     }
@@ -1202,8 +1169,7 @@ export class GroupControl extends React.PureComponent<ParamProps<PD.Group<any>> 
         </div>;
     }
 
-    render() {
-        const params = this.props.param.params;
+    override render() {        const params = this.props.param.params;
 
         // Do not show if there are no params.
         if (Object.keys(params).length === 0) return null;
@@ -1238,8 +1204,7 @@ export class GroupControl extends React.PureComponent<ParamProps<PD.Group<any>> 
 }
 
 export class MappedControl extends React.PureComponent<ParamProps<PD.Mapped<any>>, { isExpanded: boolean }> {
-    state = { isExpanded: false };
-
+    override state = { isExpanded: false };
     // TODO: this could lead to a rare bug where the component is reused with different mapped control.
     // I think there are currently no cases where this could happen in the UI, but still need to watch out..
     private valuesCache: { [name: string]: PD.Values<any> } = {};
@@ -1276,8 +1241,7 @@ export class MappedControl extends React.PureComponent<ParamProps<PD.Mapped<any>
         return true;
     }
 
-    render() {
-        const value: PD.Mapped<any>['defaultValue'] = this.props.value || this.props.param.defaultValue;
+    override render() {        const value: PD.Mapped<any>['defaultValue'] = this.props.value || this.props.param.defaultValue;
 
         const param = this.props.param.map(value.name);
         const label = this.props.param.label || camelCaseToWords(this.props.name);
@@ -1320,8 +1284,7 @@ export class MappedControl extends React.PureComponent<ParamProps<PD.Mapped<any>
 
 type ObjectListEditorProps = { params: PD.Params, value: object, isUpdate?: boolean, apply: (value: any) => void, isDisabled?: boolean }
 class ObjectListEditor extends React.PureComponent<ObjectListEditorProps, { current: object }> {
-    state = { current: this.props.value };
-
+    override state = { current: this.props.value };
     onChangeParam: ParamOnChange = e => {
         this.setState({ current: { ...this.state.current, [e.name]: e.value } });
     };
@@ -1330,14 +1293,12 @@ class ObjectListEditor extends React.PureComponent<ObjectListEditorProps, { curr
         this.props.apply(this.state.current);
     };
 
-    componentDidUpdate(prevProps: ObjectListEditorProps) {
-        if (this.props.params !== prevProps.params || this.props.value !== prevProps.value) {
+    override componentDidUpdate(prevProps: ObjectListEditorProps) {        if (this.props.params !== prevProps.params || this.props.value !== prevProps.value) {
             this.setState({ current: this.props.value });
         }
     }
 
-    render() {
-        return <>
+    override render() {        return <>
             <ParameterControls params={this.props.params} onChange={this.onChangeParam} values={this.state.current} onEnter={this.apply} isDisabled={this.props.isDisabled} />
             <button className={`msp-btn msp-btn-block msp-form-control msp-control-top-offset`} onClick={this.apply} disabled={this.props.isDisabled}>
                 {this.props.isUpdate ? 'Update' : 'Add'}
@@ -1348,8 +1309,7 @@ class ObjectListEditor extends React.PureComponent<ObjectListEditorProps, { curr
 
 type ObjectListItemProps = { param: PD.ObjectList, value: object, index: number, actions: ObjectListControl['actions'], isDisabled?: boolean }
 class ObjectListItem extends React.PureComponent<ObjectListItemProps, { isExpanded: boolean }> {
-    state = { isExpanded: false };
-
+    override state = { isExpanded: false };
     update = (v: object) => {
         // this.setState({ isExpanded: false }); // TODO auto update? mark changed state?
         this.props.actions.update(v, this.props.index);
@@ -1373,8 +1333,7 @@ class ObjectListItem extends React.PureComponent<ObjectListItemProps, { isExpand
         e.currentTarget.blur();
     };
 
-    render() {
-        return <>
+    override render() {        return <>
             <div className='msp-param-object-list-item'>
                 <button className='msp-btn msp-btn-block msp-form-control' onClick={this.toggleExpanded}>
                     <span>{`${this.props.index + 1}: `}</span>
@@ -1394,8 +1353,7 @@ class ObjectListItem extends React.PureComponent<ObjectListItemProps, { isExpand
 }
 
 export class ObjectListControl extends React.PureComponent<ParamProps<PD.ObjectList>, { isExpanded: boolean }> {
-    state = { isExpanded: false };
-
+    override state = { isExpanded: false };
     change(value: any) {
         this.props.onChange({ name: this.props.name, param: this.props.param, value });
     }
@@ -1438,8 +1396,7 @@ export class ObjectListControl extends React.PureComponent<ParamProps<PD.ObjectL
         e.currentTarget.blur();
     };
 
-    render() {
-        const v = this.props.value;
+    override render() {        const v = this.props.value;
         const label = this.props.param.label || camelCaseToWords(this.props.name);
         const value = `${v.length} item${v.length !== 1 ? 's' : ''}`;
         return <>
@@ -1467,8 +1424,7 @@ export class ConditionedControl extends React.PureComponent<ParamProps<PD.Condit
         this.change(e.value);
     };
 
-    render() {
-        const value = this.props.value;
+    override render() {        const value = this.props.value;
         const condition = this.props.param.conditionForValue(value) as string;
         const param = this.props.param.conditionParams[condition];
         const label = this.props.param.label || camelCaseToWords(this.props.name);
@@ -1498,8 +1454,7 @@ export class ConvertedControl extends React.PureComponent<ParamProps<PD.Converte
         });
     };
 
-    render() {
-        const value = this.props.param.fromValue(this.props.value);
+    override render() {        const value = this.props.param.fromValue(this.props.value);
         const Converted = controlFor(this.props.param.converted);
 
         if (!Converted) return null;
@@ -1515,8 +1470,7 @@ export class ScriptControl extends React.PureComponent<ParamProps<PD.Script>> {
         }
     };
 
-    render() {
-        // TODO: improve!
+    override render() {        // TODO: improve!
 
         const selectParam: PD.Select<PD.Script['defaultValue']['language']> = {
             defaultValue: this.props.value.language,

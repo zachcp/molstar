@@ -49,12 +49,10 @@ class Channel extends PluginUIComponent<{
 }> {
     private ref = StateSelection.findTagInSubtree(this.plugin.state.data.tree, this.props.bCell!.transform.ref, this.props.name);
 
-    componentDidUpdate() {
-        this.ref = StateSelection.findTagInSubtree(this.plugin.state.data.tree, this.props.bCell!.transform.ref, this.props.name);
+    override componentDidUpdate() {        this.ref = StateSelection.findTagInSubtree(this.plugin.state.data.tree, this.props.bCell!.transform.ref, this.props.name);
     }
 
-    componentDidMount() {
-        this.subscribe(this.plugin.state.data.events.cell.stateUpdated, e => {
+    override componentDidMount() {        this.subscribe(this.plugin.state.data.events.cell.stateUpdated, e => {
             if (this.ref === e.ref) this.forceUpdate();
         });
     }
@@ -73,8 +71,7 @@ class Channel extends PluginUIComponent<{
         setSubtreeVisibility(state, ref, !state.cells.get(ref)!.state.isHidden);
     };
 
-    render() {
-        const props = this.props;
+    override render() {        const props = this.props;
         const { isRelative, stats } = props;
         const channel = props.channels[props.name]!;
 
@@ -236,8 +233,7 @@ export class VolumeStreamingCustomControls extends PluginUIComponent<StateTransf
         }
     };
 
-    render() {
-        if (!this.props.b) return null;
+    override render() {        if (!this.props.b) return null;
         const b = (this.props.b as VolumeStreaming).data;
 
         const isEM = b.info.kind === 'em';

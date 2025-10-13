@@ -14,8 +14,7 @@ export class StateObjectActions extends PluginUIComponent<{ state: State, nodeRe
         return this.props.state.behaviors.currentObject.value;
     }
 
-    componentDidMount() {
-        // TODO: handle tree change: some state actions might become invalid
+    override componentDidMount() {        // TODO: handle tree change: some state actions might become invalid
         // this.subscribe(this.props.state.events.changed, o => {
         //     this.setState(createStateObjectActionSelectState(this.props));
         // });
@@ -30,8 +29,7 @@ export class StateObjectActions extends PluginUIComponent<{ state: State, nodeRe
         this.subscribe(this.plugin.state.data.actions.events.removed, () => this.forceUpdate());
     }
 
-    render() {
-        const { state, nodeRef: ref } = this.props;
+    override render() {        const { state, nodeRef: ref } = this.props;
         const cell = state.cells.get(ref)!;
         const actions = state.actions.fromCell(cell, this.plugin);
         if (actions.length === 0) return null;

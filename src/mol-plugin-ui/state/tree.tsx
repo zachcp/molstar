@@ -18,10 +18,8 @@ import { ApplyActionControl } from './apply-action.tsx';
 import { UpdateTransformControl } from './update-transform.tsx';
 
 export class StateTree extends PluginUIComponent<{ state: State }, { showActions: boolean }> {
-    state = { showActions: true };
-
-    componentDidMount() {
-        this.subscribe(this.plugin.state.events.cell.created, e => {
+    override state = { showActions: true };
+    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.created, e => {
             if (e.cell.transform.parent === StateTransform.RootRef) this.forceUpdate();
         });
 
@@ -38,8 +36,7 @@ export class StateTree extends PluginUIComponent<{ state: State }, { showActions
         return { showActions };
     }
 
-    render() {
-        const ref = this.props.state.tree.root.ref;
+    override render() {        const ref = this.props.state.tree.root.ref;
         if (this.state.showActions) {
             return <div style={{ margin: '10px', cursor: 'default' }}>
                 <p>Nothing to see here yet.</p>
@@ -59,8 +56,7 @@ class StateTreeNode extends PluginUIComponent<{ cell: StateObjectCell, depth: nu
         return this.props.cell.transform.ref;
     }
 
-    componentDidMount() {
-        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
+    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
             if (this.props.cell === e.cell && this.is(e) && e.state.cells.has(this.ref)) {
                 if (this.state.isCollapsed !== !!e.cell.state.isCollapsed
                     || this.state.isNull !== StateTreeNode.isNull(e.cell)
@@ -83,8 +79,7 @@ class StateTreeNode extends PluginUIComponent<{ cell: StateObjectCell, depth: nu
         });
     }
 
-    state = {
-        isCollapsed: !!this.props.cell.state.isCollapsed,
+    override state = {        isCollapsed: !!this.props.cell.state.isCollapsed,
         isNull: StateTreeNode.isNull(this.props.cell),
         showLabel: StateTreeNode.showLabel(this.props.cell)
     };
@@ -111,8 +106,7 @@ class StateTreeNode extends PluginUIComponent<{ cell: StateObjectCell, depth: nu
         return (cell.transform.ref !== StateTransform.RootRef) && (cell.status !== 'ok' || (!cell.state.isGhost && !StateTreeNode.hasDecorator(cell)));
     }
 
-    render() {
-        if (this.state.isNull) {
+    override render() {        if (this.state.isNull) {
             return null;
         }
 
@@ -156,8 +150,7 @@ class StateTreeNodeLabel extends PluginUIComponent<{ cell: StateObjectCell, dept
         return this.props.cell.transform.ref;
     }
 
-    componentDidMount() {
-        this.subscribe(this.plugin.state.events.cell.stateUpdated.pipe(filter(e => this.is(e)), debounceTime(33)), e => {
+    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.stateUpdated.pipe(filter(e => this.is(e)), debounceTime(33)), e => {
             this.forceUpdate();
         });
 
@@ -183,8 +176,7 @@ class StateTreeNodeLabel extends PluginUIComponent<{ cell: StateObjectCell, dept
         }
     }
 
-    state: StateTreeNodeLabelState = {
-        isCurrent: this.props.cell.parent!.current === this.ref,
+    override state: StateTreeNodeLabelState = {        isCurrent: this.props.cell.parent!.current === this.ref,
         isCollapsed: !!this.props.cell.state.isCollapsed,
         action: void 0,
         currentAction: void 0 as StateAction | undefined
@@ -275,8 +267,7 @@ class StateTreeNodeLabel extends PluginUIComponent<{ cell: StateObjectCell, dept
         return <div className='msp-tree-updates-wrapper'>{decorators}</div>;
     }
 
-    render() {
-        const cell = this.props.cell;
+    override render() {        const cell = this.props.cell;
         const n = cell.transform;
         if (!cell) return null;
 

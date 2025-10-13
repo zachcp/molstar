@@ -22,8 +22,7 @@ import { ParameterMappingControl } from '../controls/parameters.tsx';
 import { ViewportHelpContent } from './help.tsx';
 
 export class SimpleSettingsControl extends PluginUIComponent {
-    componentDidMount() {
-        if (!this.plugin.canvas3d) return;
+    override componentDidMount() {        if (!this.plugin.canvas3d) return;
 
         this.subscribe(this.plugin.events.canvas3d.settingsUpdated, () => this.forceUpdate());
 
@@ -34,8 +33,7 @@ export class SimpleSettingsControl extends PluginUIComponent {
         });
     }
 
-    render() {
-        if (!this.plugin.canvas3d) return null;
+    override render() {        if (!this.plugin.canvas3d) return null;
         return <>
             <ParameterMappingControl mapping={SimpleSettingsMapping} />
             <ViewportHelpContent />

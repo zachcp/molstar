@@ -76,8 +76,7 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
 
     }
 
-    public render() {
-        const points = this.renderPoints();
+    public override render() {        const points = this.renderPoints();
         const lines = this.renderLines();
         const histogram = this.renderHistogram();
 
@@ -109,8 +108,7 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
         ]);
     }
 
-    componentDidMount() {
-        this.gElement = document.getElementsByClassName('ghost-points')[0] as SVGElement;
+    override componentDidMount() {        this.gElement = document.getElementsByClassName('ghost-points')[0] as SVGElement;
     }
 
     private change(points: Vec2[]) {
