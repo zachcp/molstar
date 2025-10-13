@@ -168,7 +168,7 @@ const DeflateData = PluginStateTransform.BuiltIn({
 });
 
 type RawData = typeof RawData
-const RawData = PluginStateTransform.BuiltIn({
+const RawData: StateTransformer<SO.Root, SO.Data.String | SO.Data.Binary> = PluginStateTransform.BuiltIn({
     name: 'raw-data',
     display: { name: 'Raw Data', description: 'Raw data supplied by value.' },
     from: [SO.Root],
@@ -223,7 +223,7 @@ const RawData = PluginStateTransform.BuiltIn({
 });
 
 type ReadFile = typeof ReadFile
-const ReadFile = PluginStateTransform.BuiltIn({
+const ReadFile: StateTransformer<SO.Root, SO.Data.String | SO.Data.Binary> = PluginStateTransform.BuiltIn({
     name: 'read-file',
     display: { name: 'Read File', description: 'Read string or binary data from the specified file' },
     from: SO.Root,
@@ -307,7 +307,7 @@ const ParseBlob = PluginStateTransform.BuiltIn({
 });
 
 type ParseCif = typeof ParseCif
-const ParseCif = PluginStateTransform.BuiltIn({
+const ParseCif: StateTransformer<SO.Data.String | SO.Data.Binary, SO.Format.Cif> = PluginStateTransform.BuiltIn({
     name: 'parse-cif',
     display: { name: 'Parse CIF', description: 'Parse CIF from String or Binary data' },
     from: [SO.Data.String, SO.Data.Binary],
@@ -436,7 +436,7 @@ const ParseDsn6 = PluginStateTransform.BuiltIn({
 });
 
 type ParseDx = typeof ParseDx
-const ParseDx = PluginStateTransform.BuiltIn({
+const ParseDx: StateTransformer<SO.Data.String | SO.Data.Binary, SO.Format.Dx> = PluginStateTransform.BuiltIn({
     name: 'parse-dx',
     display: { name: 'Parse DX', description: 'Parse DX from Binary/String data' },
     from: [SO.Data.Binary, SO.Data.String],
@@ -502,7 +502,7 @@ const ImportJson = PluginStateTransform.BuiltIn({
 });
 
 type ParseJson = typeof ParseJson
-const ParseJson = PluginStateTransform.BuiltIn({
+const ParseJson: StateTransformer<SO.Data.String, SO.Format.Json> = PluginStateTransform.BuiltIn({
     name: 'parse-json',
     display: { name: 'Parse JSON', description: 'Parse JSON from String data' },
     from: [SO.Data.String],
