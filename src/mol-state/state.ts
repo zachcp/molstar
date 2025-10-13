@@ -93,11 +93,11 @@ class State {
         this.events.historyUpdated.next({ state: this });
     }
 
-    get latestUndoLabel() {
+    get latestUndoLabel(): string | undefined {
         return this.history.length > 0 ? this.history[0][1] : void 0;
     }
 
-    get canUndo() {
+    get canUndo(): boolean {
         return this.history.length > 0;
     }
 
@@ -238,7 +238,7 @@ class State {
      * Determines whether the state is currently "inside" updateTree function.
      * This is different from "isUpdating" which wraps entire transactions.
      */
-    get inUpdate() { return this._inUpdate; }
+    get inUpdate(): boolean { return this._inUpdate; }
 
     /**
      * Queues up a reconciliation of the existing state tree.

@@ -108,7 +108,7 @@ namespace StateBuilder {
 
     export class Root implements StateBuilder {
         private state: BuildState;
-        get editInfo() { return this.state.editInfo; }
+        get editInfo(): StateBuilder.EditInfo { return this.state.editInfo; }
         get currentTree() { return this.state.tree; }
 
         to<A extends StateObject, T extends StateTransformer>(ref: StateTransform.Ref): To<A, T>

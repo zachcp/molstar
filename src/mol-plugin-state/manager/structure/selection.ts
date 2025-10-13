@@ -63,13 +63,13 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
 
   private referenceLoci: StructureElement.Loci | undefined;
 
-  get entries() {
+  get entries(): Map<string, SelectionEntry> {
     return this.state.entries;
   }
-  get additionsHistory() {
+  get additionsHistory(): StructureSelectionHistoryEntry[] {
     return this.state.additionsHistory;
   }
-  get stats() {
+  get stats(): SelectionStats {
     if (this.state.stats) return this.state.stats;
     this.state.stats = this.calcStats();
     return this.state.stats;
@@ -635,7 +635,7 @@ class SelectionEntry {
   private _selection: StructureElement.Loci;
   private _structure?: Structure = void 0;
 
-  get selection() {
+  get selection(): StructureElement.Loci {
     return this._selection;
   }
   set selection(value: StructureElement.Loci) {
