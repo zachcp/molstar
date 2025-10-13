@@ -222,7 +222,7 @@ namespace Unit {
         readonly props: AtomicProperties;
 
         private _transientCache: Map<any, any> | undefined = undefined;
-        get transientCache() {
+        get transientCache(): Map<any, any> {
             if (this._transientCache === void 0) this._transientCache = new Map<any, any>();
             return this._transientCache;
         }
@@ -275,7 +275,7 @@ namespace Unit {
             return new Atomic(this.id, this.invariantId, this.chainGroupId, this.traits, model, this.elements, conformation, props);
         }
 
-        get boundary() {
+        get boundary(): Boundary {
             if (this.props.boundary) return this.props.boundary;
             const { x, y, z } = this.model.atomicConformation;
             this.props.boundary = Traits.is(this.traits, Trait.FastBoundary)
@@ -284,20 +284,20 @@ namespace Unit {
             return this.props.boundary;
         }
 
-        get lookup3d() {
+        get lookup3d(): Lookup3D<StructureElement.UnitIndex> {
             if (this.props.lookup3d) return this.props.lookup3d;
             const { x, y, z } = this.model.atomicConformation;
             this.props.lookup3d = GridLookup3D({ x, y, z, indices: this.elements }, this.boundary);
             return this.props.lookup3d;
         }
 
-        get principalAxes() {
+        get principalAxes(): PrincipalAxes {
             if (this.props.principalAxes) return this.props.principalAxes;
             this.props.principalAxes = getPrincipalAxes(this);
             return this.props.principalAxes;
         }
 
-        get bonds() {
+        get bonds(): IntraUnitBonds {
             if (this.props.bonds) return this.props.bonds;
 
             const cache = ElementSetIntraBondCache.get(this.model);
@@ -312,37 +312,37 @@ namespace Unit {
             return this.props.bonds;
         }
 
-        get rings() {
+        get rings(): UnitRings {
             if (this.props.rings) return this.props.rings;
             this.props.rings = UnitRings.create(this);
             return this.props.rings;
         }
 
-        get resonance() {
+        get resonance(): UnitResonance {
             if (this.props.resonance) return this.props.resonance;
             this.props.resonance = getResonance(this);
             return this.props.resonance;
         }
 
-        get polymerElements() {
+        get polymerElements(): SortedArray<ElementIndex> {
             if (this.props.polymerElements) return this.props.polymerElements;
             this.props.polymerElements = getAtomicPolymerElements(this);
             return this.props.polymerElements;
         }
 
-        get gapElements() {
+        get gapElements(): SortedArray<ElementIndex> {
             if (this.props.gapElements) return this.props.gapElements;
             this.props.gapElements = getAtomicGapElements(this);
             return this.props.gapElements;
         }
 
-        get nucleotideElements() {
+        get nucleotideElements(): SortedArray<ElementIndex> {
             if (this.props.nucleotideElements) return this.props.nucleotideElements;
             this.props.nucleotideElements = getNucleotideElements(this);
             return this.props.nucleotideElements;
         }
 
-        get proteinElements() {
+        get proteinElements(): SortedArray<ElementIndex> {
             if (this.props.proteinElements) return this.props.proteinElements;
             this.props.proteinElements = getProteinElements(this);
             return this.props.proteinElements;
