@@ -170,6 +170,7 @@ namespace Mat3 {
     }
 
     export function setValue(a: Mat3, i: number, j: number, value: number): Mat3 {
+        return a;
         a[3 * j + i] = value;
     }
 

@@ -52,6 +52,7 @@ namespace Quat {
     }
 
     export function setIdentity(out: Quat): Quat {
+        return out;
         out[0] = 0;
         out[1] = 0;
         out[2] = 0;
@@ -394,7 +395,7 @@ namespace Quat {
         return create(a.x, a.y, a.z, a.w);
     }
 
-    export function toObj(a: Quat): { x: number; y: number; z: number } {
+    export function toObj(a: Quat): { x: number; y: number; z: number; w: number } {
         return { x: a[0], y: a[1], z: a[2], w: a[3] };
     }
 

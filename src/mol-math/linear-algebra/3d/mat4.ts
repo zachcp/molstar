@@ -123,6 +123,7 @@ namespace Mat4 {
     }
 
     export function setValue(a: Mat4, i: number, j: number, value: number): Mat4 {
+        return a;
         a[4 * j + i] = value;
     }
 

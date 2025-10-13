@@ -1,0 +1,1354 @@
+[0m[32mTask[0m [0m[36mpublish[0m deno publish --dry-run
+Unsupported compiler options in "file:///Users/zcpowers/Documents/Projects/molstar/deno.json".
+  The following options were ignored:
+    allowSyntheticDefaultImports
+[0m[32mCheck[0m file:///Users/zcpowers/Documents/Projects/molstar/src/mod.ts
+[0m[32mCheck[0m file:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/index.ts
+[0m[32mCheck[0m file:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/index.ts
+[0m[32mCheck[0m file:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-state/index.ts
+[0m[32mCheck[0m file:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/index.ts
+[0m[32mCheck[0m file:///Users/zcpowers/Documents/Projects/molstar/src/mol-data/index.ts
+[0m[32mCheck[0m file:///Users/zcpowers/Documents/Projects/molstar/src/mol-state/index.ts
+[0m[32mCheck[0m file:///Users/zcpowers/Documents/Projects/molstar/src/mol-task/index.ts
+[0m[32mCheck[0m file:///Users/zcpowers/Documents/Projects/molstar/src/mol-util/index.ts
+[0m[1mTS2307 [0m[ERROR]: Cannot find module 'file:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/plugin.ts'.
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/index.ts[0m:[0m[33m10[0m:[0m[33m24[0m
+
+[0m[1mTS2307 [0m[ERROR]: Cannot find module 'file:///Users/zcpowers/Documents/Projects/molstar/src/mol-util/color.ts'.
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/context.ts[0m:[0m[33m44[0m:[0m[33m23[0m
+
+[0m[1mTS2307 [0m[ERROR]: Cannot find module 'file:///Users/zcpowers/Documents/Projects/molstar/src/extensions/mp4-export.ts'.
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/headless-plugin-context.ts[0m:[0m[33m11[0m:[0m[33m27[0m
+
+[0m[1mTS2307 [0m[ERROR]: Cannot find module 'file:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/state/common.ts'.
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/context.ts[0m:[0m[33m10[0m:[0m[33m47[0m
+
+[0m[1mTS2307 [0m[ERROR]: Cannot find module 'file:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/custom/volume.ts'.
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m14[0m:[0m[33m47[0m
+
+[0m[1mTS2307 [0m[ERROR]: Cannot find module 'file:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/sequence.ts'.
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m16[0m:[0m[33m39[0m
+
+[0m[1mTS2307 [0m[ERROR]: Cannot find module 'file:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d'. Maybe add a '.ts' extension or run with --sloppy-imports
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/interaction-events.ts[0m:[0m[33m20[0m:[0m[33m24[0m
+
+[0m[1mTS2307 [0m[ERROR]: Cannot find module 'file:///Users/zcpowers/Documents/Projects/molstar/src/mol-script/runtime/query/table'. Maybe add a '.ts' extension or run with --sloppy-imports
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-script/runtime/query/compiler.ts[0m:[0m[33m8[0m:[0m[33m8[0m
+
+[0m[1mTS2307 [0m[ERROR]: Cannot find module 'file:///Users/zcpowers/Documents/Projects/molstar/src/mol-theme/color/index.ts'.
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-theme/color/carbohydrate-symbol.ts[0m:[0m[33m10[0m:[0m[33m48[0m
+
+[0m[1mTS2307 [0m[ERROR]: Import "." not a dependency and not in import map from "file:///Users/zcpowers/Documents/Projects/molstar/src/mol-util/color/palette.ts"
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-util/color/palette.ts[0m:[0m[33m8[0m:[0m[33m28[0m
+
+[0m[1mTS2307 [0m[ERROR]: Cannot find module 'file:///Users/zcpowers/Documents/Projects/molstar/src/mol-util/color/color/index.ts'.
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-util/color/spaces/hcl.ts[0m:[0m[33m10[0m:[0m[33m28[0m
+
+[0m[1mTS2307 [0m[ERROR]: Cannot find module 'file:///Users/zcpowers/Documents/Projects/molstar/src/mol-io/reader/gro/schema.ts'.
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-io/reader/gro/parser.ts[0m:[0m[33m11[0m:[0m[33m30[0m
+
+[0m[1mTS2307 [0m[ERROR]: Cannot find module 'file:///Users/zcpowers/Documents/Projects/molstar/src/mol-model/structure/structure/unit/rings'. Maybe add a '.ts' extension or run with --sloppy-imports
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-model/structure/structure/unit/rings/compute.ts[0m:[0m[33m363[0m:[0m[33m25[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRViewerPose'.
+    update(xr?: { pose: XRViewerPose, layer: XRWebGLLayer }) {
+[0m[31m                        ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/camera/stereo.ts[0m:[0m[33m46[0m:[0m[33m25[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRWebGLLayer'.
+    update(xr?: { pose: XRViewerPose, layer: XRWebGLLayer }) {
+[0m[31m                                             ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/camera/stereo.ts[0m:[0m[33m46[0m:[0m[33m46[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRViewerPose'.
+function xrUpdate(camera: Camera, left: EyeCamera, right: EyeCamera, xr: { pose: XRViewerPose, layer: XRWebGLLayer }) {
+[0m[31m                                                                                 ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/camera/stereo.ts[0m:[0m[33m160[0m:[0m[33m82[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRWebGLLayer'.
+function xrUpdate(camera: Camera, left: EyeCamera, right: EyeCamera, xr: { pose: XRViewerPose, layer: XRWebGLLayer }) {
+[0m[31m                                                                                                      ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/camera/stereo.ts[0m:[0m[33m160[0m:[0m[33m103[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRView'.
+function _xrUpdate(camera: Camera, eye: EyeCamera, view: XRView, layer: XRWebGLLayer) {
+[0m[31m                                                         ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/camera/stereo.ts[0m:[0m[33m165[0m:[0m[33m58[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRWebGLLayer'.
+function _xrUpdate(camera: Camera, eye: EyeCamera, view: XRView, layer: XRWebGLLayer) {
+[0m[31m                                                                        ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/camera/stereo.ts[0m:[0m[33m165[0m:[0m[33m73[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRFrame'.
+    tick(t: now.Timestamp, options?: { isSynchronous?: boolean, manualDraw?: boolean, updateControls?: boolean, xrFrame?: XRFrame }): void
+[0m[31m                                                                                                                          ~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d.ts[0m:[0m[33m336[0m:[0m[33m123[0m
+
+[0m[1mTS2552 [0m[ERROR]: Cannot find name 'XRFrameRequestCallback'. Did you mean 'FrameRequestCallback'?
+    requestAnimationFrame(callback: FrameRequestCallback | XRFrameRequestCallback): number
+[0m[31m                                                           ~~~~~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d.ts[0m:[0m[33m354[0m:[0m[33m60[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Values<{ camera: Group<Normalize<{ mode: "perspective" | "orthographic"; helper: Normalize<{ axes: ...; }>; stereo: NamedParams<Normalize<unknown>, "off"> | NamedParams<Normalize<{ eyeSeparation: ...; focus: ...; }>, "on">; fov: number; manualReset: boolean; }>>; ... 20 more ...; xr: Group<...>; }>' is not assignable to parameter of type 'ShaderManagerProps'.
+  Types of property 'marking' are incompatible.
+    Type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' is not assignable to type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+      Property 'highlightEdgeColor' is optional in type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' but required in type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+        shaderManager.updateRequired(p);
+[0m[31m                                     ^[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d.ts[0m:[0m[33m464[0m:[0m[33m38[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+                    xr.requestFailed.next(e);
+[0m[31m                                          ^[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d.ts[0m:[0m[33m528[0m:[0m[33m43[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Values<{ camera: Group<Normalize<{ mode: "perspective" | "orthographic"; helper: Normalize<{ axes: ...; }>; stereo: NamedParams<Normalize<unknown>, "off"> | NamedParams<Normalize<{ eyeSeparation: ...; focus: ...; }>, "on">; fov: number; manualReset: boolean; }>>; ... 20 more ...; xr: Group<...>; }>' is not assignable to parameter of type 'ShaderManagerProps'.
+  Types of property 'marking' are incompatible.
+    Type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' is not assignable to type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+      Property 'highlightEdgeColor' is optional in type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' but required in type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+                shaderManager.updateRequired(p);
+[0m[31m                                             ^[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d.ts[0m:[0m[33m608[0m:[0m[33m46[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRFrame'.
+        function render(force: boolean, xrFrame?: XRFrame) {
+[0m[31m                                                  ~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d.ts[0m:[0m[33m631[0m:[0m[33m51[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Values<{ camera: Group<Normalize<{ mode: "perspective" | "orthographic"; helper: Normalize<{ axes: ...; }>; stereo: NamedParams<Normalize<unknown>, "off"> | NamedParams<Normalize<{ eyeSeparation: ...; focus: ...; }>, "on">; fov: number; manualReset: boolean; }>>; ... 20 more ...; xr: Group<...>; }>' is not assignable to parameter of type 'Props'.
+  Types of property 'renderer' are incompatible.
+    Type 'Normalize<{ backgroundColor: ColorData; pickingAlphaThreshold: number; interiorDarkening: number; interiorColorFlag: boolean; interiorColor: ColorData; colorMarker: boolean; highlightColor: ColorData; selectColor: ColorData; dimColor: ColorData; ... 9 more ...; ambientIntensity: number; }>' is not assignable to type 'Values<{ backgroundColor: Color; pickingAlphaThreshold: Numeric; interiorDarkening: Numeric; interiorColorFlag: BooleanParam; interiorColor: Color; ... 13 more ...; ambientIntensity: Numeric; }>'.
+      Property 'backgroundColor' is optional in type 'Normalize<{ backgroundColor: ColorData; pickingAlphaThreshold: number; interiorDarkening: number; interiorColorFlag: boolean; interiorColor: ColorData; colorMarker: boolean; highlightColor: ColorData; selectColor: ColorData; dimColor: ColorData; ... 9 more ...; ambientIntensity: number; }>' but required in type 'Values<{ backgroundColor: Color; pickingAlphaThreshold: Numeric; interiorDarkening: Numeric; interiorColorFlag: BooleanParam; interiorColor: Color; ... 13 more ...; ambientIntensity: Numeric; }>'.
+                    passes.illumination.render(ctx, p, true);
+[0m[31m                                                    ^[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d.ts[0m:[0m[33m682[0m:[0m[33m53[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Values<{ camera: Group<Normalize<{ mode: "perspective" | "orthographic"; helper: Normalize<{ axes: ...; }>; stereo: NamedParams<Normalize<unknown>, "off"> | NamedParams<Normalize<{ eyeSeparation: ...; focus: ...; }>, "on">; fov: number; manualReset: boolean; }>>; ... 20 more ...; xr: Group<...>; }>' is not assignable to parameter of type 'Props'.
+  Types of property 'marking' are incompatible.
+    Type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' is not assignable to type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+      Property 'highlightEdgeColor' is optional in type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' but required in type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+                        multiSampleHelper.render(ctx, p, true, forceOn);
+[0m[31m                                                      ^[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d.ts[0m:[0m[33m705[0m:[0m[33m55[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Values<{ camera: Group<Normalize<{ mode: "perspective" | "orthographic"; helper: Normalize<{ axes: ...; }>; stereo: NamedParams<Normalize<unknown>, "off"> | NamedParams<Normalize<{ eyeSeparation: ...; focus: ...; }>, "on">; fov: number; manualReset: boolean; }>>; ... 20 more ...; xr: Group<...>; }>' is not assignable to parameter of type 'Props'.
+  Types of property 'marking' are incompatible.
+    Type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' is not assignable to type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+      Property 'highlightEdgeColor' is optional in type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' but required in type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+                        passes.draw.render(ctx, p, true);
+[0m[31m                                                ^[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d.ts[0m:[0m[33m707[0m:[0m[33m49[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRFrame'.
+        function draw(options?: { force?: boolean, isSynchronous?: boolean, xrFrame?: XRFrame }) {
+[0m[31m                                                                                      ~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d.ts[0m:[0m[33m729[0m:[0m[33m87[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRFrame'.
+        function tick(t: now.Timestamp, options?: { isSynchronous?: boolean, manualDraw?: boolean, updateControls?: boolean, xrFrame?: XRFrame }) {
+[0m[31m                                                                                                                                       ~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d.ts[0m:[0m[33m746[0m:[0m[33m136[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRFrameRequestCallback'.
+        let animationFrameCB: FrameRequestCallback | XRFrameRequestCallback | undefined = undefined;
+[0m[31m                                                     ~~~~~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d.ts[0m:[0m[33m771[0m:[0m[33m54[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRFrameRequestCallback'.
+        function _requestAnimationFrame(callback: FrameRequestCallback | XRFrameRequestCallback): number {
+[0m[31m                                                                         ~~~~~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d.ts[0m:[0m[33m773[0m:[0m[33m74[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRFrame'.
+        function _animate(_timestamp: number, xrFrame?: XRFrame) {
+[0m[31m                                                        ~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d.ts[0m:[0m[33m787[0m:[0m[33m57[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Values<{ camera: Group<Normalize<{ mode: "perspective" | "orthographic"; helper: Normalize<{ axes: ...; }>; stereo: NamedParams<Normalize<unknown>, "off"> | NamedParams<Normalize<{ eyeSeparation: ...; focus: ...; }>, "on">; fov: number; manualReset: boolean; }>>; ... 20 more ...; xr: Group<...>; }>' is not assignable to parameter of type 'ShaderManagerProps'.
+  Types of property 'marking' are incompatible.
+    Type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' is not assignable to type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+      Property 'highlightEdgeColor' is optional in type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' but required in type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+            shaderManager.updateRequired(p);
+[0m[31m                                         ^[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d.ts[0m:[0m[33m842[0m:[0m[33m42[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Values<{ camera: Group<Normalize<{ mode: "perspective" | "orthographic"; helper: Normalize<{ axes: ...; }>; stereo: NamedParams<Normalize<unknown>, "off"> | NamedParams<Normalize<{ eyeSeparation: ...; focus: ...; }>, "on">; fov: number; manualReset: boolean; }>>; ... 20 more ...; xr: Group<...>; }>' is not assignable to parameter of type 'ShaderManagerProps'.
+  Types of property 'marking' are incompatible.
+    Type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' is not assignable to type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+      Property 'highlightEdgeColor' is optional in type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' but required in type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+                shaderManager.updateRequired(p);
+[0m[31m                                             ^[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/canvas3d.ts[0m:[0m[33m1358[0m:[0m[33m46[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type '{ scale: number; labelScale: number; alpha: number; location: "bottom-left" | "bottom-right" | "top-left" | "top-right"; radiusScale: number; locationOffsetX: number; locationOffsetY: number; ... 15 more ...; labelColorZ?: any; }' is not assignable to parameter of type 'Values<{ alpha: Numeric; colorX: Color; colorY: Color; colorZ: Color; scale: Numeric; location: Select<"bottom-left" | "bottom-right" | "top-left" | "top-right">; ... 16 more ...; labelScale: Numeric; }>'.
+  Property 'colorX' is optional in type '{ scale: number; labelScale: number; alpha: number; location: "bottom-left" | "bottom-right" | "top-left" | "top-right"; radiusScale: number; locationOffsetX: number; locationOffsetY: number; ... 15 more ...; labelColorZ?: any; }' but required in type 'Values<{ alpha: Numeric; colorX: Color; colorY: Color; colorZ: Color; scale: Numeric; location: Select<"bottom-left" | "bottom-right" | "top-left" | "top-right">; ... 16 more ...; labelScale: Numeric; }>'.
+                    this.meshRenderObject = createMeshRenderObject(params);
+[0m[31m                                                                   ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/camera-helper.ts[0m:[0m[33m103[0m:[0m[33m68[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type '{ scale: number; labelScale: number; alpha: number; location: "bottom-left" | "bottom-right" | "top-left" | "top-right"; radiusScale: number; locationOffsetX: number; locationOffsetY: number; ... 15 more ...; labelColorZ?: any; }' is not assignable to parameter of type 'Values<{ alpha: Numeric; colorX: Color; colorY: Color; colorZ: Color; scale: Numeric; location: Select<"bottom-left" | "bottom-right" | "top-left" | "top-right">; ... 16 more ...; labelScale: Numeric; }>'.
+  Property 'colorX' is optional in type '{ scale: number; labelScale: number; alpha: number; location: "bottom-left" | "bottom-right" | "top-left" | "top-right"; radiusScale: number; locationOffsetX: number; locationOffsetY: number; ... 15 more ...; labelColorZ?: any; }' but required in type 'Values<{ alpha: Numeric; colorX: Color; colorY: Color; colorZ: Color; scale: Numeric; location: Select<"bottom-left" | "bottom-right" | "top-left" | "top-right">; ... 16 more ...; labelScale: Numeric; }>'.
+                        this.textRenderObject = createTextRenderObject(params);
+[0m[31m                                                                       ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/camera-helper.ts[0m:[0m[33m106[0m:[0m[33m72[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type '{ scale: number; cellSize: number; emissive: number; alpha: number; material: PD.Normalize<{ metalness: number; roughness: number; bumpiness: number; }>; instanceGranularity: boolean; batchSize: number; ... 15 more ...; colorZ?: any; }' is not assignable to parameter of type 'Values<{ alpha: { defaultValue: number; type: "number"; immediateUpdate?: boolean | undefined; isOptional?: boolean | undefined; label?: string | undefined; description?: string | undefined; ... 11 more ...; step?: number | undefined; }; ... 21 more ...; batchSize: Numeric; }>'.
+  Property 'colorX' is optional in type '{ scale: number; cellSize: number; emissive: number; alpha: number; material: Normalize<{ metalness: number; roughness: number; bumpiness: number; }>; instanceGranularity: boolean; ... 16 more ...; colorZ?: any; }' but required in type 'Values<{ alpha: { defaultValue: number; type: "number"; immediateUpdate?: boolean | undefined; isOptional?: boolean | undefined; label?: string | undefined; description?: string | undefined; ... 11 more ...; step?: number | undefined; }; ... 21 more ...; batchSize: Numeric; }>'.
+                    this.renderObject = createHandleRenderObject(params);
+[0m[31m                                                                 ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/handle-helper.ts[0m:[0m[33m80[0m:[0m[33m66[0m
+
+[0m[1mTS2729 [0m[ERROR]: Property 'webgl' is used before its initialization.
+    private buffers = new PickBuffers(this.webgl, this.pickPass);
+[0m[31m                                           ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/pick-helper.ts[0m:[0m[33m23[0m:[0m[33m44[0m
+
+    'webgl' is declared here.
+        at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/pick-helper.ts[0m:[0m[33m198[0m:[0m[33m17[0m
+
+[0m[1mTS2729 [0m[ERROR]: Property 'pickPass' is used before its initialization.
+    private buffers = new PickBuffers(this.webgl, this.pickPass);
+[0m[31m                                                       ~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/pick-helper.ts[0m:[0m[33m23[0m:[0m[33m56[0m
+
+    'pickPass' is declared here.
+        at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/pick-helper.ts[0m:[0m[33m198[0m:[0m[33m120[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'pickRatio' has no initializer and is not definitely assigned in the constructor.
+    private pickRatio: number;
+[0m[31m            ~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/pick-helper.ts[0m:[0m[33m26[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'pickX' has no initializer and is not definitely assigned in the constructor.
+    private pickX: number;
+[0m[31m            ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/pick-helper.ts[0m:[0m[33m27[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'pickY' has no initializer and is not definitely assigned in the constructor.
+    private pickY: number;
+[0m[31m            ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/pick-helper.ts[0m:[0m[33m28[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'pickWidth' has no initializer and is not definitely assigned in the constructor.
+    private pickWidth: number;
+[0m[31m            ~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/pick-helper.ts[0m:[0m[33m29[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'pickHeight' has no initializer and is not definitely assigned in the constructor.
+    private pickHeight: number;
+[0m[31m            ~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/pick-helper.ts[0m:[0m[33m30[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'halfPickWidth' has no initializer and is not definitely assigned in the constructor.
+    private halfPickWidth: number;
+[0m[31m            ~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/pick-helper.ts[0m:[0m[33m31[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'spiral' has no initializer and is not definitely assigned in the constructor.
+    private spiral: [number, number][];
+[0m[31m            ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/pick-helper.ts[0m:[0m[33m33[0m:[0m[33m13[0m
+
+[0m[1mTS2565 [0m[ERROR]: Property 'shape' is used before being assigned.
+        this.shape = getPointerMeshShape(this.getData(), this.props, this.shape);
+[0m[31m                                                                          ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/pointer-helper.ts[0m:[0m[33m124[0m:[0m[33m75[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'size' has no initializer and is not definitely assigned in the constructor.
+    private size: number;
+[0m[31m            ~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/ray-helper.ts[0m:[0m[33m23[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'spiral' has no initializer and is not definitely assigned in the constructor.
+    private spiral: [number, number][];
+[0m[31m            ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/ray-helper.ts[0m:[0m[33m24[0m:[0m[33m13[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRRigidTransform'.
+function getRigidTransformFromMat4(m: Mat4): XRRigidTransform {
+[0m[31m                                             ~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m31[0m:[0m[33m46[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRRigidTransform'.
+    return new XRRigidTransform(Vec3.toObj(d.position), Quat.toObj(d.quaternion));
+[0m[31m               ~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m33[0m:[0m[33m16[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRPose'.
+function getRayFromPose(pose: XRPose, view?: Mat4): Ray3D {
+[0m[31m                              ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m36[0m:[0m[33m31[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRPose'.
+    targetRayPose: XRPose,
+[0m[31m                   ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m48[0m:[0m[33m20[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRSession'.
+    private xrSession: XRSession | undefined = undefined;
+[0m[31m                       ~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m80[0m:[0m[33m24[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRReferenceSpace'.
+    private xrRefSpace: XRReferenceSpace | undefined = undefined;
+[0m[31m                        ~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m85[0m:[0m[33m25[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRPose'.
+    private intersect(camera: ICamera, view: Mat4, plane: Plane3D, targetRayPose: XRPose): { point: Vec3, screen: Vec2 } | undefined {
+[0m[31m                                                                                  ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m98[0m:[0m[33m83[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRFrame'.
+    update(xrFrame?: XRFrame): boolean {
+[0m[31m                     ~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m118[0m:[0m[33m22[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRSession'.
+    private async setSession(xrSession: XRSession | undefined) {
+[0m[31m                                        ~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m228[0m:[0m[33m41[0m
+
+[0m[1mTS2339 [0m[ERROR]: Property 'xr' does not exist on type 'Navigator'.
+        if (!navigator.xr) return false;
+[0m[31m                       ~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m264[0m:[0m[33m24[0m
+
+[0m[1mTS2339 [0m[ERROR]: Property 'xr' does not exist on type 'Navigator'.
+            navigator.xr.isSessionSupported('immersive-ar'),
+[0m[31m                      ~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m267[0m:[0m[33m23[0m
+
+[0m[1mTS2339 [0m[ERROR]: Property 'xr' does not exist on type 'Navigator'.
+            navigator.xr.isSessionSupported('immersive-vr'),
+[0m[31m                      ~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m268[0m:[0m[33m23[0m
+
+[0m[1mTS2339 [0m[ERROR]: Property 'xr' does not exist on type 'Navigator'.
+        if (!navigator.xr) return;
+[0m[31m                       ~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m274[0m:[0m[33m24[0m
+
+[0m[1mTS2339 [0m[ERROR]: Property 'xr' does not exist on type 'Navigator'.
+        const session = await navigator.xr.isSessionSupported('immersive-ar')
+[0m[31m                                        ~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m276[0m:[0m[33m41[0m
+
+[0m[1mTS2339 [0m[ERROR]: Property 'xr' does not exist on type 'Navigator'.
+            ? await navigator.xr.requestSession('immersive-ar')
+[0m[31m                              ~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m277[0m:[0m[33m31[0m
+
+[0m[1mTS2339 [0m[ERROR]: Property 'xr' does not exist on type 'Navigator'.
+            : await navigator.xr.requestSession('immersive-vr');
+[0m[31m                              ~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m278[0m:[0m[33m31[0m
+
+[0m[1mTS2339 [0m[ERROR]: Property 'xr' does not exist on type 'Navigator'.
+        navigator.xr?.removeEventListener('devicechange', this.checkSupported);
+[0m[31m                  ~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m293[0m:[0m[33m19[0m
+
+[0m[1mTS2339 [0m[ERROR]: Property 'xr' does not exist on type 'Navigator'.
+        navigator.xr?.addEventListener('devicechange', this.checkSupported);
+[0m[31m                  ~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/helper/xr-manager.ts[0m:[0m[33m309[0m:[0m[33m19[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'writeId' has no initializer and is not definitely assigned in the constructor.
+    private writeId: number;
+[0m[31m            ~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/dpoit.ts[0m:[0m[33m74[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'readId' has no initializer and is not definitely assigned in the constructor.
+    private readId: number;
+[0m[31m            ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/dpoit.ts[0m:[0m[33m75[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'blendBackRenderable' has no initializer and is not definitely assigned in the constructor.
+    private readonly blendBackRenderable: BlendBackDpoitRenderable;
+[0m[31m                     ~~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/dpoit.ts[0m:[0m[33m77[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'renderable' has no initializer and is not definitely assigned in the constructor.
+    private readonly renderable: EvaluateDpoitRenderable;
+[0m[31m                     ~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/dpoit.ts[0m:[0m[33m78[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'depthFramebuffers' has no initializer and is not definitely assigned in the constructor.
+    private readonly depthFramebuffers: Framebuffer[];
+[0m[31m                     ~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/dpoit.ts[0m:[0m[33m80[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'colorFramebuffers' has no initializer and is not definitely assigned in the constructor.
+    private readonly colorFramebuffers: Framebuffer[];
+[0m[31m                     ~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/dpoit.ts[0m:[0m[33m81[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'depthTextures' has no initializer and is not definitely assigned in the constructor.
+    private readonly depthTextures: Texture[];
+[0m[31m                     ~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/dpoit.ts[0m:[0m[33m83[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'colorFrontTextures' has no initializer and is not definitely assigned in the constructor.
+    private readonly colorFrontTextures: Texture[];
+[0m[31m                     ~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/dpoit.ts[0m:[0m[33m84[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'colorBackTextures' has no initializer and is not definitely assigned in the constructor.
+    private readonly colorBackTextures: Texture[];
+[0m[31m                     ~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/dpoit.ts[0m:[0m[33m85[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'fb' has no initializer and is not definitely assigned in the constructor.
+    private readonly fb: Framebuffer;
+[0m[31m                     ~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/hi-z.ts[0m:[0m[33m130[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'buf' has no initializer and is not definitely assigned in the constructor.
+    private readonly buf: PixelPackBuffer;
+[0m[31m                     ~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/hi-z.ts[0m:[0m[33m131[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'tex' has no initializer and is not definitely assigned in the constructor.
+    private readonly tex: Texture;
+[0m[31m                     ~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/hi-z.ts[0m:[0m[33m132[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'renderable' has no initializer and is not definitely assigned in the constructor.
+    private readonly renderable: HiZRenderable;
+[0m[31m                     ~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/hi-z.ts[0m:[0m[33m133[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'tracing' has no initializer and is not definitely assigned in the constructor.
+    private readonly tracing: TracingPass;
+[0m[31m                     ~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/illumination.ts[0m:[0m[33m87[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'transparentTarget' has no initializer and is not definitely assigned in the constructor.
+    private readonly transparentTarget: RenderTarget;
+[0m[31m                     ~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/illumination.ts[0m:[0m[33m89[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'outputTarget' has no initializer and is not definitely assigned in the constructor.
+    private readonly outputTarget: RenderTarget;
+[0m[31m                     ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/illumination.ts[0m:[0m[33m90[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'packedDepth' has no initializer and is not definitely assigned in the constructor.
+    readonly packedDepth: boolean;
+[0m[31m             ~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/illumination.ts[0m:[0m[33m92[0m:[0m[33m14[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'copyRenderable' has no initializer and is not definitely assigned in the constructor.
+    private readonly copyRenderable: CopyRenderable;
+[0m[31m                     ~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/illumination.ts[0m:[0m[33m94[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'composeRenderable' has no initializer and is not definitely assigned in the constructor.
+    private readonly composeRenderable: ComposeRenderable;
+[0m[31m                     ~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/illumination.ts[0m:[0m[33m95[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'multiSampleComposeTarget' has no initializer and is not definitely assigned in the constructor.
+    private multiSampleComposeTarget: RenderTarget;
+[0m[31m            ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/illumination.ts[0m:[0m[33m97[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'multiSampleHoldTarget' has no initializer and is not definitely assigned in the constructor.
+    private multiSampleHoldTarget: RenderTarget;
+[0m[31m            ~~~~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/illumination.ts[0m:[0m[33m98[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'multiSampleAccumulateTarget' has no initializer and is not definitely assigned in the constructor.
+    private multiSampleAccumulateTarget: RenderTarget;
+[0m[31m            ~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/illumination.ts[0m:[0m[33m99[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'multiSampleCompose' has no initializer and is not definitely assigned in the constructor.
+    private multiSampleCompose: MultiSampleComposeRenderable;
+[0m[31m            ~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/illumination.ts[0m:[0m[33m100[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property '_colorTarget' has no initializer and is not definitely assigned in the constructor.
+    private _colorTarget: RenderTarget;
+[0m[31m            ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/illumination.ts[0m:[0m[33m105[0m:[0m[33m13[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Normalize<{ scale: number; threshold: number; color: ColorData; includeTransparent: boolean; }>' is not assignable to parameter of type 'Values<{ scale: Numeric; threshold: Numeric; color: Color; includeTransparent: BooleanParam; }>'.
+  Property 'color' is optional in type 'Normalize<{ scale: number; threshold: number; color: ColorData; includeTransparent: boolean; }>' but required in type 'Values<{ scale: Numeric; threshold: Numeric; color: Color; includeTransparent: BooleanParam; }>'.
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/illumination.ts[0m:[0m[33m361[0m:[0m[33m110[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property '_colorTarget' has no initializer and is not definitely assigned in the constructor.
+    private _colorTarget: RenderTarget;
+[0m[31m            ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/image.ts[0m:[0m[33m48[0m:[0m[33m13[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Values<{ transparentBackground: BooleanParam; dpoitIterations: Numeric; multiSample: Group<Normalize<{ mode: string; sampleLevel: number; reduceFlicker: boolean; reuseOcclusion: boolean; }>>; ... 4 more ...; renderer: Group<...>; }>' is not assignable to parameter of type 'ShaderManagerProps'.
+  Types of property 'marking' are incompatible.
+    Type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' is not assignable to type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+      Property 'highlightEdgeColor' is optional in type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' but required in type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+        ShaderManager.ensureRequired(this.webgl, this.scene, this.props);
+[0m[31m                                                             ~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/image.ts[0m:[0m[33m107[0m:[0m[33m62[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Values<{ transparentBackground: BooleanParam; dpoitIterations: Numeric; multiSample: Group<Normalize<{ mode: string; sampleLevel: number; reduceFlicker: boolean; reuseOcclusion: boolean; }>>; ... 4 more ...; renderer: Group<...>; }>' is not assignable to parameter of type 'Props'.
+  Types of property 'renderer' are incompatible.
+    Type 'Normalize<{ backgroundColor: ColorData; pickingAlphaThreshold: number; interiorDarkening: number; interiorColorFlag: boolean; interiorColor: ColorData; colorMarker: boolean; highlightColor: ColorData; selectColor: ColorData; dimColor: ColorData; ... 9 more ...; ambientIntensity: number; }>' is not assignable to type 'Values<{ backgroundColor: Color; pickingAlphaThreshold: Numeric; interiorDarkening: Numeric; interiorColorFlag: BooleanParam; interiorColor: Color; ... 13 more ...; ambientIntensity: Numeric; }>'.
+      Property 'backgroundColor' is optional in type 'Normalize<{ backgroundColor: ColorData; pickingAlphaThreshold: number; interiorDarkening: number; interiorColorFlag: boolean; interiorColor: ColorData; colorMarker: boolean; highlightColor: ColorData; selectColor: ColorData; dimColor: ColorData; ... 9 more ...; ambientIntensity: number; }>' but required in type 'Values<{ backgroundColor: Color; pickingAlphaThreshold: Numeric; interiorDarkening: Numeric; interiorColorFlag: BooleanParam; interiorColor: Color; ... 13 more ...; ambientIntensity: Numeric; }>'.
+                this.illuminationPass.render(ctx, this.props, false);
+[0m[31m                                                  ~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/image.ts[0m:[0m[33m118[0m:[0m[33m51[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Values<{ transparentBackground: BooleanParam; dpoitIterations: Numeric; multiSample: Group<Normalize<{ mode: string; sampleLevel: number; reduceFlicker: boolean; reuseOcclusion: boolean; }>>; ... 4 more ...; renderer: Group<...>; }>' is not assignable to parameter of type 'Props'.
+  Types of property 'marking' are incompatible.
+    Type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' is not assignable to type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+      Property 'highlightEdgeColor' is optional in type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' but required in type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+                this.multiSampleHelper.render(ctx, this.props, false);
+[0m[31m                                                   ~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/image.ts[0m:[0m[33m129[0m:[0m[33m52[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Values<{ transparentBackground: BooleanParam; dpoitIterations: Numeric; multiSample: Group<Normalize<{ mode: string; sampleLevel: number; reduceFlicker: boolean; reuseOcclusion: boolean; }>>; ... 4 more ...; renderer: Group<...>; }>' is not assignable to parameter of type 'Props'.
+  Types of property 'marking' are incompatible.
+    Type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' is not assignable to type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+      Property 'highlightEdgeColor' is optional in type 'Normalize<{ enabled: boolean; highlightEdgeColor: ColorData; selectEdgeColor: ColorData; edgeScale: number; highlightEdgeStrength: number; selectEdgeStrength: number; ghostEdgeStrength: number; innerEdgeFactor: number; }>' but required in type 'Values<{ enabled: BooleanParam; highlightEdgeColor: Color; selectEdgeColor: Color; edgeScale: Numeric; highlightEdgeStrength: Numeric; selectEdgeStrength: Numeric; ghostEdgeStrength: Numeric; innerEdgeFactor: Numeric; }>'.
+                this.drawPass.render(ctx, this.props, false);
+[0m[31m                                          ~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/image.ts[0m:[0m[33m132[0m:[0m[33m43[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'objectPickTarget' has no initializer and is not definitely assigned in the constructor.
+    private readonly objectPickTarget: RenderTarget;
+[0m[31m                     ~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m40[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'instancePickTarget' has no initializer and is not definitely assigned in the constructor.
+    private readonly instancePickTarget: RenderTarget;
+[0m[31m                     ~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m41[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'groupPickTarget' has no initializer and is not definitely assigned in the constructor.
+    private readonly groupPickTarget: RenderTarget;
+[0m[31m                     ~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m42[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'depthPickTarget' has no initializer and is not definitely assigned in the constructor.
+    private readonly depthPickTarget: RenderTarget;
+[0m[31m                     ~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m43[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'framebuffer' has no initializer and is not definitely assigned in the constructor.
+    private readonly framebuffer: Framebuffer;
+[0m[31m                     ~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m45[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'objectPickTexture' has no initializer and is not definitely assigned in the constructor.
+    private readonly objectPickTexture: Texture;
+[0m[31m                     ~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m47[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'instancePickTexture' has no initializer and is not definitely assigned in the constructor.
+    private readonly instancePickTexture: Texture;
+[0m[31m                     ~~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m48[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'groupPickTexture' has no initializer and is not definitely assigned in the constructor.
+    private readonly groupPickTexture: Texture;
+[0m[31m                     ~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m49[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'depthPickTexture' has no initializer and is not definitely assigned in the constructor.
+    private readonly depthPickTexture: Texture;
+[0m[31m                     ~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m50[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'objectPickFramebuffer' has no initializer and is not definitely assigned in the constructor.
+    private readonly objectPickFramebuffer: Framebuffer;
+[0m[31m                     ~~~~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m52[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'instancePickFramebuffer' has no initializer and is not definitely assigned in the constructor.
+    private readonly instancePickFramebuffer: Framebuffer;
+[0m[31m                     ~~~~~~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m53[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'groupPickFramebuffer' has no initializer and is not definitely assigned in the constructor.
+    private readonly groupPickFramebuffer: Framebuffer;
+[0m[31m                     ~~~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m54[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'depthPickFramebuffer' has no initializer and is not definitely assigned in the constructor.
+    private readonly depthPickFramebuffer: Framebuffer;
+[0m[31m                     ~~~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m55[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'depthRenderbuffer' has no initializer and is not definitely assigned in the constructor.
+    private readonly depthRenderbuffer: Renderbuffer;
+[0m[31m                     ~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m57[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'object' has no initializer and is not definitely assigned in the constructor.
+    private object: Uint8Array;
+[0m[31m            ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m316[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'instance' has no initializer and is not definitely assigned in the constructor.
+    private instance: Uint8Array;
+[0m[31m            ~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m317[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'group' has no initializer and is not definitely assigned in the constructor.
+    private group: Uint8Array;
+[0m[31m            ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m318[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'depth' has no initializer and is not definitely assigned in the constructor.
+    private depth: Uint8Array;
+[0m[31m            ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m319[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'objectBuffer' has no initializer and is not definitely assigned in the constructor.
+    private objectBuffer: PixelPackBuffer;
+[0m[31m            ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m321[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'instanceBuffer' has no initializer and is not definitely assigned in the constructor.
+    private instanceBuffer: PixelPackBuffer;
+[0m[31m            ~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m322[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'groupBuffer' has no initializer and is not definitely assigned in the constructor.
+    private groupBuffer: PixelPackBuffer;
+[0m[31m            ~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m323[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'depthBuffer' has no initializer and is not definitely assigned in the constructor.
+    private depthBuffer: PixelPackBuffer;
+[0m[31m            ~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/pick.ts[0m:[0m[33m324[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'edgesTarget' has no initializer and is not definitely assigned in the constructor.
+    private readonly edgesTarget: RenderTarget;
+[0m[31m                     ~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/smaa.ts[0m:[0m[33m34[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'weightsTarget' has no initializer and is not definitely assigned in the constructor.
+    private readonly weightsTarget: RenderTarget;
+[0m[31m                     ~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/smaa.ts[0m:[0m[33m35[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'edgesRenderable' has no initializer and is not definitely assigned in the constructor.
+    private readonly edgesRenderable: EdgesRenderable;
+[0m[31m                     ~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/smaa.ts[0m:[0m[33m37[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'weightsRenderable' has no initializer and is not definitely assigned in the constructor.
+    private readonly weightsRenderable: WeightsRenderable;
+[0m[31m                     ~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/smaa.ts[0m:[0m[33m38[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'blendRenderable' has no initializer and is not definitely assigned in the constructor.
+    private readonly blendRenderable: BlendRenderable;
+[0m[31m                     ~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/smaa.ts[0m:[0m[33m39[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'renderable' has no initializer and is not definitely assigned in the constructor.
+    private readonly renderable: EvaluateWboitRenderable;
+[0m[31m                     ~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/wboit.ts[0m:[0m[33m50[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'framebuffer' has no initializer and is not definitely assigned in the constructor.
+    private readonly framebuffer: Framebuffer;
+[0m[31m                     ~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/wboit.ts[0m:[0m[33m52[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'textureA' has no initializer and is not definitely assigned in the constructor.
+    private readonly textureA: Texture;
+[0m[31m                     ~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/wboit.ts[0m:[0m[33m53[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'textureB' has no initializer and is not definitely assigned in the constructor.
+    private readonly textureB: Texture;
+[0m[31m                     ~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/wboit.ts[0m:[0m[33m54[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'depthRenderbuffer' has no initializer and is not definitely assigned in the constructor.
+    private readonly depthRenderbuffer: Renderbuffer;
+[0m[31m                     ~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/wboit.ts[0m:[0m[33m55[0m:[0m[33m22[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'next' has no initializer and is not definitely assigned in the constructor.
+    private next: T;
+[0m[31m            ~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-data/iterator.ts[0m:[0m[33m80[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'edgeFilter' has no initializer and is not definitely assigned in the constructor.
+    private edgeFilter: number;
+[0m[31m            ~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-geo/util/marching-cubes/algorithm.ts[0m:[0m[33m75[0m:[0m[33m13[0m
+
+[0m[1mTS2322 [0m[ERROR]: Type '(vertexArray: WebGLVertexArrayObject | null) => boolean' is not assignable to type '(value: any) => value is WebGLVertexArrayObject'.
+  Signature '(vertexArray: WebGLVertexArrayObject | null): boolean' must be a type predicate.
+            isVertexArray: gl.isVertexArray.bind(gl)
+[0m[31m            ~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-gl/webgl/compat.ts[0m:[0m[33m117[0m:[0m[33m13[0m
+
+[0m[1mTS2322 [0m[ERROR]: Type '(arrayObject: WebGLVertexArrayObjectOES | null) => boolean' is not assignable to type '(value: any) => value is WebGLVertexArrayObject'.
+  Signature '(arrayObject: WebGLVertexArrayObjectOES | null): boolean' must be a type predicate.
+            isVertexArray: ext.isVertexArrayOES.bind(ext)
+[0m[31m            ~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-gl/webgl/compat.ts[0m:[0m[33m127[0m:[0m[33m13[0m
+
+[0m[1mTS2322 [0m[ERROR]: Type '(target: number, pname: number) => WebGLQuery | null' is not assignable to type '(target: number, pname: number) => number | WebGLQuery'.
+  Type 'WebGLQuery | null' is not assignable to type 'number | WebGLQuery'.
+    Type 'null' is not assignable to type 'number | WebGLQuery'.
+            getQuery: gl.getQuery.bind(gl),
+[0m[31m            ~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-gl/webgl/compat.ts[0m:[0m[33m512[0m:[0m[33m13[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRWebGLLayer'.
+function bindDrawingBuffer(gl: GLRenderingContext, xrLayer?: XRWebGLLayer) {
+[0m[31m                                                             ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-gl/webgl/context.ts[0m:[0m[33m154[0m:[0m[33m62[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRWebGLLayer'.
+function getDrawingBufferSize(gl: GLRenderingContext, xrLayer?: XRWebGLLayer) {
+[0m[31m                                                                ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-gl/webgl/context.ts[0m:[0m[33m162[0m:[0m[33m65[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRSession'.
+        readonly session?: XRSession
+[0m[31m                           ~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-gl/webgl/context.ts[0m:[0m[33m268[0m:[0m[33m28[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRSession'.
+        set: (session: XRSession | undefined, options?: { resolutionScale?: number }) => Promise<void>
+[0m[31m                       ~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-gl/webgl/context.ts[0m:[0m[33m270[0m:[0m[33m24[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRSession'.
+        session: undefined as XRSession | undefined,
+[0m[31m                              ~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-gl/webgl/context.ts[0m:[0m[33m331[0m:[0m[33m31[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRWebGLLayer'.
+        layer: undefined as XRWebGLLayer | undefined,
+[0m[31m                            ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-gl/webgl/context.ts[0m:[0m[33m332[0m:[0m[33m29[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRSession'.
+            set: async (session: XRSession | undefined, options?: { resolutionScale?: number }) => {
+[0m[31m                                 ~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-gl/webgl/context.ts[0m:[0m[33m397[0m:[0m[33m34[0m
+
+[0m[1mTS2339 [0m[ERROR]: Property 'makeXRCompatible' does not exist on type 'GLRenderingContext'.
+  Property 'makeXRCompatible' does not exist on type 'WebGLRenderingContext'.
+                    await gl.makeXRCompatible();
+[0m[31m                             ~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-gl/webgl/context.ts[0m:[0m[33m404[0m:[0m[33m30[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRWebGLLayer'.
+                    xr.layer = new XRWebGLLayer(xr.session, gl, {
+[0m[31m                                   ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-gl/webgl/context.ts[0m:[0m[33m406[0m:[0m[33m36[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'number[]'.
+  Type 'Uint8Array<ArrayBufferLike>' is missing the following properties from type 'number[]': pop, push, concat, shift, and 5 more.
+            c.push(String.fromCharCode.apply(null, array.subarray(i, i + ChunkSize)));
+[0m[31m                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-io/common/binary.ts[0m:[0m[33m26[0m:[0m[33m52[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'number[]'.
+  Type 'Uint8Array<ArrayBufferLike>' is missing the following properties from type 'number[]': pop, push, concat, shift, and 5 more.
+        return String.fromCharCode.apply(null, array);
+[0m[31m                                               ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-io/common/binary.ts[0m:[0m[33m30[0m:[0m[33m48[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+            return Result.error(e);
+[0m[31m                                ^[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-io/reader/ccp4/parser.ts[0m:[0m[33m172[0m:[0m[33m33[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+            return Result.error(e);
+[0m[31m                                ^[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-io/reader/dcd/parser.ts[0m:[0m[33m205[0m:[0m[33m33[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'SimpleBuffer' is not assignable to parameter of type 'number[]'.
+  Type 'SimpleBuffer' is missing the following properties from type 'number[]': pop, push, concat, shift, and 5 more.
+    const brixStr = String.fromCharCode.apply(null, buffer) as string;
+[0m[31m                                                    ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-io/reader/dsn6/parser.ts[0m:[0m[33m73[0m:[0m[33m53[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+            return Result.error(e);
+[0m[31m                                ^[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-io/reader/dsn6/parser.ts[0m:[0m[33m146[0m:[0m[33m33[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'encodedData' has no initializer and is not definitely assigned in the constructor.
+    private encodedData: Uint8Array<ArrayBuffer>;
+[0m[31m            ~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-io/writer/cif/encoder/binary.ts[0m:[0m[33m27[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'uA' has no initializer and is not definitely assigned in the constructor.
+        private uA: UnitId;
+[0m[31m                ~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-math/graph/inter-unit-graph.ts[0m:[0m[33m147[0m:[0m[33m17[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'uB' has no initializer and is not definitely assigned in the constructor.
+        private uB: UnitId;
+[0m[31m                ~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-math/graph/inter-unit-graph.ts[0m:[0m[33m148[0m:[0m[33m17[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'mapAB' has no initializer and is not definitely assigned in the constructor.
+        private mapAB: Map<number, EdgeInfo<VertexIndex, EdgeProps>[]>;
+[0m[31m                ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-math/graph/inter-unit-graph.ts[0m:[0m[33m149[0m:[0m[33m17[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'mapBA' has no initializer and is not definitely assigned in the constructor.
+        private mapBA: Map<number, EdgeInfo<VertexIndex, EdgeProps>[]>;
+[0m[31m                ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-math/graph/inter-unit-graph.ts[0m:[0m[33m150[0m:[0m[33m17[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'linkedA' has no initializer and is not definitely assigned in the constructor.
+        private linkedA: UniqueArray<VertexIndex, VertexIndex>;
+[0m[31m                ~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-math/graph/inter-unit-graph.ts[0m:[0m[33m151[0m:[0m[33m17[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'linkedB' has no initializer and is not definitely assigned in the constructor.
+        private linkedB: UniqueArray<VertexIndex, VertexIndex>;
+[0m[31m                ~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-math/graph/inter-unit-graph.ts[0m:[0m[33m152[0m:[0m[33m17[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'linkCount' has no initializer and is not definitely assigned in the constructor.
+        private linkCount: number;
+[0m[31m                ~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-math/graph/inter-unit-graph.ts[0m:[0m[33m153[0m:[0m[33m17[0m
+
+[0m[1mTS18046 [0m[ERROR]: 'x' is of type 'unknown'.
+        Cartn_x: Column.ofFloatArray(Column.mapToArray(atoms.x, x => x * 10, Float32Array)),
+[0m[31m                                                                     ^[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-model-formats/structure/gro.ts[0m:[0m[33m81[0m:[0m[33m70[0m
+
+[0m[1mTS18046 [0m[ERROR]: 'y' is of type 'unknown'.
+        Cartn_y: Column.ofFloatArray(Column.mapToArray(atoms.y, y => y * 10, Float32Array)),
+[0m[31m                                                                     ^[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-model-formats/structure/gro.ts[0m:[0m[33m82[0m:[0m[33m70[0m
+
+[0m[1mTS18046 [0m[ERROR]: 'z' is of type 'unknown'.
+        Cartn_z: Column.ofFloatArray(Column.mapToArray(atoms.z, z => z * 10, Float32Array)),
+[0m[31m                                                                     ^[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-model-formats/structure/gro.ts[0m:[0m[33m83[0m:[0m[33m70[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property '_operators' has no initializer and is not definitely assigned in the constructor.
+    private _operators: OperatorGroups;
+[0m[31m            ~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-model/structure/model/properties/symmetry.ts[0m:[0m[33m29[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'elements' has no initializer and is not definitely assigned in the constructor.
+        private elements: StructureElement.Set;
+[0m[31m                ~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-model/structure/structure/structure.ts[0m:[0m[33m1027[0m:[0m[33m17[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'structure' has no initializer and is not definitely assigned in the constructor.
+        private structure: Structure;
+[0m[31m                ~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-model/structure/structure/unit/bonds.ts[0m:[0m[33m188[0m:[0m[33m17[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'unit' has no initializer and is not definitely assigned in the constructor.
+        private unit: Unit.Atomic;
+[0m[31m                ~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-model/structure/structure/unit/bonds.ts[0m:[0m[33m189[0m:[0m[33m17[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'index' has no initializer and is not definitely assigned in the constructor.
+        private index: StructureElement.UnitIndex;
+[0m[31m                ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-model/structure/structure/unit/bonds.ts[0m:[0m[33m190[0m:[0m[33m17[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'interBondIndices' has no initializer and is not definitely assigned in the constructor.
+        private interBondIndices: ReadonlyArray<number>;
+[0m[31m                ~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-model/structure/structure/unit/bonds.ts[0m:[0m[33m192[0m:[0m[33m17[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'interBondCount' has no initializer and is not definitely assigned in the constructor.
+        private interBondCount: number;
+[0m[31m                ~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-model/structure/structure/unit/bonds.ts[0m:[0m[33m193[0m:[0m[33m17[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'interBondIndex' has no initializer and is not definitely assigned in the constructor.
+        private interBondIndex: number;
+[0m[31m                ~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-model/structure/structure/unit/bonds.ts[0m:[0m[33m194[0m:[0m[33m17[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'intraBondEnd' has no initializer and is not definitely assigned in the constructor.
+        private intraBondEnd: number;
+[0m[31m                ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-model/structure/structure/unit/bonds.ts[0m:[0m[33m196[0m:[0m[33m17[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'intraBondIndex' has no initializer and is not definitely assigned in the constructor.
+        private intraBondIndex: number;
+[0m[31m                ~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-model/structure/structure/unit/bonds.ts[0m:[0m[33m197[0m:[0m[33m17[0m
+
+[0m[1mTS2729 [0m[ERROR]: Property 'plugin' is used before its initialization.
+    readonly hierarchy = new TrajectoryHierarchyBuilder(this.plugin);
+[0m[31m                                                             ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-state/builder/structure.ts[0m:[0m[33m43[0m:[0m[33m62[0m
+
+    'plugin' is declared here.
+        constructor(public plugin: PluginContext) {
+    [0m[36m                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+        at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-state/builder/structure.ts[0m:[0m[33m183[0m:[0m[33m17[0m
+
+[0m[1mTS2729 [0m[ERROR]: Property 'plugin' is used before its initialization.
+    readonly representation = new StructureRepresentationBuilder(this.plugin);
+[0m[31m                                                                      ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-state/builder/structure.ts[0m:[0m[33m44[0m:[0m[33m71[0m
+
+    'plugin' is declared here.
+        constructor(public plugin: PluginContext) {
+    [0m[36m                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+        at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-state/builder/structure.ts[0m:[0m[33m183[0m:[0m[33m17[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property '_current' has no initializer and is not definitely assigned in the constructor.
+    private _current: PluginAnimationManager.Current;
+[0m[31m            ~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-state/manager/animation.ts[0m:[0m[33m23[0m:[0m[33m13[0m
+
+[0m[1mTS4114 [0m[ERROR]: This member must have an 'override' modifier because it overrides a member in the base class 'StatefulPluginComponent<InteractivityManagerState>'.
+    dispose() {
+[0m[31m    ~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-state/manager/interactivity.ts[0m:[0m[33m59[0m:[0m[33m5[0m
+
+[0m[1mTS4114 [0m[ERROR]: This member must have an 'override' modifier because it overrides a member in the base class 'LociMarkManager'.
+        dispose() {
+[0m[31m        ~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-state/manager/interactivity.ts[0m:[0m[33m198[0m:[0m[33m9[0m
+
+[0m[1mTS4114 [0m[ERROR]: This member must have an 'override' modifier because it overrides a member in the base class 'LociMarkManager'.
+        protected mark(current: Representation.Loci, action: MarkerAction.Select | MarkerAction.Deselect) {
+[0m[31m                  ~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-state/manager/interactivity.ts[0m:[0m[33m272[0m:[0m[33m19[0m
+
+[0m[1mTS4114 [0m[ERROR]: This member must have an 'override' modifier because it overrides a member in the base class 'StatefulPluginComponent<StateManagerState>'.
+    protected updateState(state: Partial<StateManagerState>) {
+[0m[31m              ~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-state/manager/snapshots.ts[0m:[0m[33m40[0m:[0m[33m15[0m
+
+[0m[1mTS4114 [0m[ERROR]: This member must have an 'override' modifier because it overrides a member in the base class 'StatefulPluginComponent<StateManagerState>'.
+    dispose() {
+[0m[31m    ~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-state/manager/snapshots.ts[0m:[0m[33m431[0m:[0m[33m5[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Normalize<{ url: string | Url; isBinary: boolean; format: string; entryId: string | string[]; isovalues: Normalize<{ type: ...; value: ...; color: ...; alpha: ...; volumeIndex: ...; }>[]; }>' is not assignable to parameter of type 'LazyInfo'.
+  Types of property 'isovalues' are incompatible.
+    Type 'Normalize<{ type: "absolute" | "relative"; value: number; color: ColorData; alpha: number; volumeIndex: number; }>[]' is not assignable to type '{ type: "absolute" | "relative"; value: number; color: Color; alpha?: number | undefined; volumeIndex?: number | undefined; }[]'.
+      Type 'Normalize<{ type: "absolute" | "relative"; value: number; color: ColorData; alpha: number; volumeIndex: number; }>' is not assignable to type '{ type: "absolute" | "relative"; value: number; color: Color; alpha?: number | undefined; volumeIndex?: number | undefined; }'.
+        Property 'color' is optional in type 'Normalize<{ type: "absolute" | "relative"; value: number; color: ColorData; alpha: number; volumeIndex: number; }>' but required in type '{ type: "absolute" | "relative"; value: number; color: Color; alpha?: number | undefined; volumeIndex?: number | undefined; }'.
+            return new SO.Volume.Lazy(params, { label: `${entryId || params.url}`, description: 'Lazy Volume' });
+[0m[31m                                      ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-state/transforms/data.ts[0m:[0m[33m542[0m:[0m[33m39[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Normalize<{ cellColor: ColorData; cellScale: number; ref: "model" | "origin"; attachment: "center" | "corner"; doubleSided: boolean; flipSided: boolean; flatShaded: boolean; ignoreLight: boolean; celShaded: boolean; ... 13 more ...; batchSize: number; }>' is not assignable to parameter of type 'Values<{ cellColor: Color; cellScale: Numeric; ref: Select<"model" | "origin">; attachment: Select<"center" | "corner">; doubleSided: BooleanParam; ... 17 more ...; batchSize: Numeric; }>'.
+  Property 'cellColor' is optional in type 'Normalize<{ cellColor: ColorData; cellScale: number; ref: "model" | "origin"; attachment: "center" | "corner"; doubleSided: boolean; flipSided: boolean; flatShaded: boolean; ignoreLight: boolean; celShaded: boolean; ... 13 more ...; batchSize: number; }>' but required in type 'Values<{ cellColor: Color; cellScale: Numeric; ref: Select<"model" | "origin">; attachment: Select<"center" | "corner">; doubleSided: BooleanParam; ... 17 more ...; batchSize: Numeric; }>'.
+            const data = getUnitcellData(a.data, symmetry, params);
+[0m[31m                                                           ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-state/transforms/representation.ts[0m:[0m[33m1095[0m:[0m[33m60[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type '{ emissive: number; alpha: number; material: PD.Normalize<{ metalness: number; roughness: number; bumpiness: number; }>; instanceGranularity: boolean; batchSize: number; ref: "model" | "origin"; ... 16 more ...; cellColor?: any; }' is not assignable to parameter of type 'Values<{ cellColor: Color; cellScale: Numeric; ref: Select<"model" | "origin">; attachment: Select<"center" | "corner">; doubleSided: BooleanParam; ... 17 more ...; batchSize: Numeric; }>'.
+  Property 'cellColor' is optional in type '{ emissive: number; alpha: number; material: Normalize<{ metalness: number; roughness: number; bumpiness: number; }>; instanceGranularity: boolean; batchSize: number; ref: "model" | "origin"; ... 16 more ...; cellColor?: any; }' but required in type 'Values<{ cellColor: Color; cellScale: Numeric; ref: Select<"model" | "origin">; attachment: Select<"center" | "corner">; doubleSided: BooleanParam; ... 17 more ...; batchSize: Numeric; }>'.
+            const data = getUnitcellData(a.data, symmetry, props);
+[0m[31m                                                           ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-state/transforms/representation.ts[0m:[0m[33m1106[0m:[0m[33m60[0m
+
+[0m[1mTS4114 [0m[ERROR]: This member must have an 'override' modifier because it overrides a member in the base class 'PluginContext'.
+    dispose(options?: { doNotForceWebGLContextLoss?: boolean }) {
+[0m[31m    ~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/context.ts[0m:[0m[33m24[0m:[0m[33m5[0m
+
+[0m[1mTS4115 [0m[ERROR]: This parameter property must have an 'override' modifier because it overrides a member in base class 'PluginContext'.
+    constructor(public spec: PluginUISpec) {
+[0m[31m                ~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/context.ts[0m:[0m[33m29[0m:[0m[33m17[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+        structureTools?: React.ComponentClass | React.FC,
+[0m[31m                         ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m23[0m:[0m[33m26[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+        structureTools?: React.ComponentClass | React.FC,
+[0m[31m                                                ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m23[0m:[0m[33m49[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+            view?: React.ComponentClass | React.FC,
+[0m[31m                   ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m25[0m:[0m[33m20[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+            view?: React.ComponentClass | React.FC,
+[0m[31m                                          ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m25[0m:[0m[33m43[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+            controls?: React.ComponentClass | React.FC,
+[0m[31m                       ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m26[0m:[0m[33m24[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+            controls?: React.ComponentClass | React.FC,
+[0m[31m                                              ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m26[0m:[0m[33m47[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+            snapshotDescription?: React.ComponentClass | React.FC,
+[0m[31m                                  ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m27[0m:[0m[33m35[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+            snapshotDescription?: React.ComponentClass | React.FC,
+[0m[31m                                                         ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m27[0m:[0m[33m58[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+            view?: React.ComponentClass | React.FC
+[0m[31m                   ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m30[0m:[0m[33m20[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+            view?: React.ComponentClass | React.FC
+[0m[31m                                          ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m30[0m:[0m[33m43[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+            controls?: React.ComponentClass | React.FC,
+[0m[31m                       ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m37[0m:[0m[33m24[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+            controls?: React.ComponentClass | React.FC,
+[0m[31m                                              ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m37[0m:[0m[33m47[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+        top?: React.ComponentClass | React.FC | 'none',
+[0m[31m              ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m58[0m:[0m[33m15[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+        top?: React.ComponentClass | React.FC | 'none',
+[0m[31m                                     ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m58[0m:[0m[33m38[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+        left?: React.ComponentClass | React.FC | 'none',
+[0m[31m               ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m59[0m:[0m[33m16[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+        left?: React.ComponentClass | React.FC | 'none',
+[0m[31m                                      ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m59[0m:[0m[33m39[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+        right?: React.ComponentClass | React.FC | 'none',
+[0m[31m                ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m60[0m:[0m[33m17[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+        right?: React.ComponentClass | React.FC | 'none',
+[0m[31m                                       ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m60[0m:[0m[33m40[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+        bottom?: React.ComponentClass | React.FC | 'none'
+[0m[31m                 ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m61[0m:[0m[33m18[0m
+
+[0m[1mTS2503 [0m[ERROR]: Cannot find namespace 'React'.
+        bottom?: React.ComponentClass | React.FC | 'none'
+[0m[31m                                        ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin-ui/spec.ts[0m:[0m[33m61[0m:[0m[33m41[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRFrame'.
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/animation-loop.ts[0m:[0m[33m31[0m:[0m[33m172[0m
+
+[0m[1mTS2304 [0m[ERROR]: Cannot find name 'XRFrame'.
+    private frame = (_timestamp?: number, xrFrame?: XRFrame) => {
+[0m[31m                                                    ~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/animation-loop.ts[0m:[0m[33m45[0m:[0m[33m53[0m
+
+[0m[1mTS4114 [0m[ERROR]: This member must have an 'override' modifier because it overrides a member in the base class 'Handler<{ autoAttach: boolean; showTooltip: boolean; }>'.
+        update(p: { autoAttach: boolean, showTooltip: boolean }) {
+[0m[31m        ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/behavior/dynamic/custom-props/computed/accessible-surface-area.ts[0m:[0m[33m32[0m:[0m[33m9[0m
+
+[0m[1mTS4114 [0m[ERROR]: This member must have an 'override' modifier because it overrides a member in the base class 'Handler<{ autoAttach: boolean; showTooltip: boolean; }>'.
+        update(p: { autoAttach: boolean, showTooltip: boolean }) {
+[0m[31m        ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/behavior/dynamic/custom-props/computed/interactions.ts[0m:[0m[33m91[0m:[0m[33m9[0m
+
+[0m[1mTS4114 [0m[ERROR]: This member must have an 'override' modifier because it overrides a member in the base class 'Handler<{ autoAttach: boolean; }>'.
+        update(p: { autoAttach: boolean, showTooltip: boolean }) {
+[0m[31m        ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/behavior/dynamic/custom-props/computed/secondary-structure.ts[0m:[0m[33m18[0m:[0m[33m9[0m
+
+[0m[1mTS4114 [0m[ERROR]: This member must have an 'override' modifier because it overrides a member in the base class 'Handler<{ autoAttach: boolean; showTooltip: boolean; }>'.
+        update(p: { autoAttach: boolean, showTooltip: boolean }) {
+[0m[31m        ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/behavior/dynamic/custom-props/computed/valence-model.ts[0m:[0m[33m78[0m:[0m[33m9[0m
+
+[0m[1mTS4114 [0m[ERROR]: This member must have an 'override' modifier because it overrides a member in the base class 'Handler<{ autoAttach: boolean; showTooltip: boolean; }>'.
+        update(p: { autoAttach: boolean, showTooltip: boolean }) {
+[0m[31m        ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/behavior/dynamic/custom-props/sequence/sifts-mapping.ts[0m:[0m[33m29[0m:[0m[33m9[0m
+
+[0m[1mTS4114 [0m[ERROR]: This member must have an 'override' modifier because it overrides a member in the base class 'WithSubscribers<Values<{ entry: Mapped<NamedParams<Values<{ view: Mapped<NamedParams<Normalize<{}>, "off"> | NamedParams<Normalize<{}>, "cell"> | NamedParams<Normalize<{ radius: number; selectionDetailLevel: number; isSelection: boolean; bottomLeft: Vec3; topRight: Vec3; }>, "auto"> | NamedParams<...> | NamedParams<...'.
+        public params: Params = {} as any;
+[0m[31m               ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/behavior/dynamic/volume-streaming/behavior.ts[0m:[0m[33m176[0m:[0m[33m16[0m
+
+[0m[1mTS2729 [0m[ERROR]: Property 'plugin' is used before its initialization.
+        private cameraTargetObservable = this.plugin.canvas3d!.didDraw!.pipe(
+[0m[31m                                              ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/behavior/dynamic/volume-streaming/behavior.ts[0m:[0m[33m181[0m:[0m[33m47[0m
+
+    'plugin' is declared here.
+            constructor(public plugin: PluginContext, public data: VolumeServerInfo.Data) {
+    [0m[36m                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+        at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/behavior/dynamic/volume-streaming/behavior.ts[0m:[0m[33m525[0m:[0m[33m21[0m
+
+[0m[1mTS4115 [0m[ERROR]: This parameter property must have an 'override' modifier because it overrides a member in base class 'WithSubscribers<Values<{ entry: Mapped<NamedParams<Values<{ view: Mapped<NamedParams<Normalize<{}>, "off"> | NamedParams<Normalize<{}>, "cell"> | NamedParams<Normalize<{ radius: number; selectionDetailLevel: number; isSelection: boolean; bottomLeft: Vec3; topRight: Vec3; }>, "auto"> | NamedParams<...> | NamedParams<...'.
+        constructor(public plugin: PluginContext, public data: VolumeServerInfo.Data) {
+[0m[31m                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/behavior/dynamic/volume-streaming/behavior.ts[0m:[0m[33m525[0m:[0m[33m21[0m
+
+[0m[1mTS2729 [0m[ERROR]: Property 'spec' is used before its initialization.
+    readonly config = new PluginConfigManager(this.spec.config); // needed to init state
+[0m[31m                                                   ~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/context.ts[0m:[0m[33m91[0m:[0m[33m52[0m
+
+    'spec' is declared here.
+        constructor(public spec: PluginSpec) {
+    [0m[36m                ~~~~~~~~~~~~~~~~~~~~~~~[0m
+        at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/context.ts[0m:[0m[33m534[0m:[0m[33m17[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'expandedViewport' has no initializer and is not definitely assigned in the constructor.
+    private expandedViewport: HTMLMetaElement;
+[0m[31m            ~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/layout.ts[0m:[0m[33m77[0m:[0m[33m13[0m
+
+[0m[1mTS2729 [0m[ERROR]: Property 'plugin' is used before its initialization.
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/state.ts[0m:[0m[33m37[0m:[0m[33m67[0m
+
+    'plugin' is declared here.
+        constructor(private plugin: PluginContext) {
+    [0m[36m                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+        at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/state.ts[0m:[0m[33m196[0m:[0m[33m17[0m
+
+[0m[1mTS2729 [0m[ERROR]: Property 'plugin' is used before its initialization.
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/state.ts[0m:[0m[33m37[0m:[0m[33m103[0m
+
+    'plugin' is declared here.
+        constructor(private plugin: PluginContext) {
+    [0m[36m                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+        at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/state.ts[0m:[0m[33m196[0m:[0m[33m17[0m
+
+[0m[1mTS2729 [0m[ERROR]: Property 'plugin' is used before its initialization.
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/state.ts[0m:[0m[33m37[0m:[0m[33m133[0m
+
+    'plugin' is declared here.
+        constructor(private plugin: PluginContext) {
+    [0m[36m                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+        at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/state.ts[0m:[0m[33m196[0m:[0m[33m17[0m
+
+[0m[1mTS2729 [0m[ERROR]: Property 'plugin' is used before its initialization.
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/state.ts[0m:[0m[33m38[0m:[0m[33m84[0m
+
+    'plugin' is declared here.
+        constructor(private plugin: PluginContext) {
+    [0m[36m                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+        at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/state.ts[0m:[0m[33m196[0m:[0m[33m17[0m
+
+[0m[1mTS2729 [0m[ERROR]: Property 'plugin' is used before its initialization.
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/state.ts[0m:[0m[33m38[0m:[0m[33m120[0m
+
+    'plugin' is declared here.
+        constructor(private plugin: PluginContext) {
+    [0m[36m                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+        at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/state.ts[0m:[0m[33m196[0m:[0m[33m17[0m
+
+[0m[1mTS4114 [0m[ERROR]: This member must have an 'override' modifier because it overrides a member in the base class 'PluginComponent'.
+    dispose() {
+[0m[31m    ~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/state.ts[0m:[0m[33m182[0m:[0m[33m5[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property '_previewPass' has no initializer and is not definitely assigned in the constructor.
+    private _previewPass: ImagePass;
+[0m[31m            ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/util/viewport-screenshot.ts[0m:[0m[33m189[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property '_imagePass' has no initializer and is not definitely assigned in the constructor.
+    private _imagePass: ImagePass;
+[0m[31m            ~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-plugin/util/viewport-screenshot.ts[0m:[0m[33m194[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'polymerSegment' has no initializer and is not definitely assigned in the constructor.
+    private polymerSegment: Segmentation.Segment<number>;
+[0m[31m            ~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-repr/structure/visual/util/polymer/trace-iterator.ts[0m:[0m[33m92[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'residueSegmentMin' has no initializer and is not definitely assigned in the constructor.
+    private residueSegmentMin: ResidueIndex;
+[0m[31m            ~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-repr/structure/visual/util/polymer/trace-iterator.ts[0m:[0m[33m94[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'residueSegmentMax' has no initializer and is not definitely assigned in the constructor.
+    private residueSegmentMax: ResidueIndex;
+[0m[31m            ~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-repr/structure/visual/util/polymer/trace-iterator.ts[0m:[0m[33m95[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'prevSecStrucType' has no initializer and is not definitely assigned in the constructor.
+    private prevSecStrucType: SecondaryStructureType;
+[0m[31m            ~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-repr/structure/visual/util/polymer/trace-iterator.ts[0m:[0m[33m96[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'currSecStrucType' has no initializer and is not definitely assigned in the constructor.
+    private currSecStrucType: SecondaryStructureType;
+[0m[31m            ~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-repr/structure/visual/util/polymer/trace-iterator.ts[0m:[0m[33m97[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'nextSecStrucType' has no initializer and is not definitely assigned in the constructor.
+    private nextSecStrucType: SecondaryStructureType;
+[0m[31m            ~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-repr/structure/visual/util/polymer/trace-iterator.ts[0m:[0m[33m98[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'prevCoarseBackbone' has no initializer and is not definitely assigned in the constructor.
+    private prevCoarseBackbone: boolean;
+[0m[31m            ~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-repr/structure/visual/util/polymer/trace-iterator.ts[0m:[0m[33m99[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'currCoarseBackbone' has no initializer and is not definitely assigned in the constructor.
+    private currCoarseBackbone: boolean;
+[0m[31m            ~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-repr/structure/visual/util/polymer/trace-iterator.ts[0m:[0m[33m100[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'nextCoarseBackbone' has no initializer and is not definitely assigned in the constructor.
+    private nextCoarseBackbone: boolean;
+[0m[31m            ~~~~~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-repr/structure/visual/util/polymer/trace-iterator.ts[0m:[0m[33m101[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'polymerSegment' has no initializer and is not definitely assigned in the constructor.
+    private polymerSegment: Segmentation.Segment<ResidueIndex>;
+[0m[31m            ~~~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-repr/structure/visual/util/polymer/trace-iterator.ts[0m:[0m[33m438[0m:[0m[33m13[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'elementIndex' has no initializer and is not definitely assigned in the constructor.
+    private elementIndex: number;
+[0m[31m            ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-repr/structure/visual/util/polymer/trace-iterator.ts[0m:[0m[33m441[0m:[0m[33m13[0m
+
+[0m[1mTS18046 [0m[ERROR]: 'e' is of type 'unknown'.
+        console.error(e.message);
+[0m[31m                      ^[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-script/transpile.ts[0m:[0m[33m23[0m:[0m[33m23[0m
+
+[0m[1mTS2564 [0m[ERROR]: Property 'query' has no initializer and is not definitely assigned in the constructor.
+    private query: StateSelection.Query;
+[0m[31m            ~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-state/object.ts[0m:[0m[33m120[0m:[0m[33m13[0m
+
+[0m[1mTS2729 [0m[ERROR]: Property 'tree' is used before its initialization.
+    transforms = this.tree.transforms as StateTree.MutableTransforms;
+[0m[31m                      ~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-state/tree/transient.ts[0m:[0m[33m17[0m:[0m[33m23[0m
+
+    'tree' is declared here.
+        constructor(private tree: StateTree) {
+    [0m[36m                ~~~~~~~~~~~~~~~~~~~~~~~[0m
+        at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-state/tree/transient.ts[0m:[0m[33m304[0m:[0m[33m17[0m
+
+[0m[1mTS2729 [0m[ERROR]: Property 'tree' is used before its initialization.
+    children = this.tree.children as StateTree.MutableChildren;
+[0m[31m                    ~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-state/tree/transient.ts[0m:[0m[33m18[0m:[0m[33m21[0m
+
+    'tree' is declared here.
+        constructor(private tree: StateTree) {
+    [0m[36m                ~~~~~~~~~~~~~~~~~~~~~~~[0m
+        at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-state/tree/transient.ts[0m:[0m[33m304[0m:[0m[33m17[0m
+
+[0m[1mTS2729 [0m[ERROR]: Property 'tree' is used before its initialization.
+    dependencies = this.tree.dependencies as StateTree.MutableDependencies;
+[0m[31m                        ~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-state/tree/transient.ts[0m:[0m[33m19[0m:[0m[33m25[0m
+
+    'tree' is declared here.
+        constructor(private tree: StateTree) {
+    [0m[36m                ~~~~~~~~~~~~~~~~~~~~~~~[0m
+        at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-state/tree/transient.ts[0m:[0m[33m304[0m:[0m[33m17[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Normalize<{ value: ColorData; saturation: number; lightness: number; }>' is not assignable to parameter of type 'Values<{ value: Color; saturation: Numeric; lightness: Numeric; }>'.
+  Property 'value' is optional in type 'Normalize<{ value: ColorData; saturation: number; lightness: number; }>' but required in type 'Values<{ value: Color; saturation: Numeric; lightness: Numeric; }>'.
+        case 'uniform': return UniformColorTheme(ctx, props.params);
+[0m[31m                                                      ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-theme/color/cartoon.ts[0m:[0m[33m68[0m:[0m[33m55[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Normalize<{ overrideWater: boolean; waterColor: ColorData; palette: NamedParams<Normalize<{ maxCount: ...; hue: ...; chroma: ...; luminance: ...; sort: ...; clusteringStepCount: ...; minSampleCount: ...; sampleCountFactor: ...; }>, "generate"> | NamedParams<...>; }>' is not assignable to parameter of type 'Values<{ overrideWater: BooleanParam; waterColor: Color; palette: Mapped<NamedParams<Normalize<{ maxCount: number; hue: [number, number]; chroma: [number, number]; luminance: [number, number]; sort: "none" | "contrast"; clusteringStepCount: number; minSampleCount: number; sampleCountFactor: number; }>, "generate"> |...'.
+  Property 'waterColor' is optional in type 'Normalize<{ overrideWater: boolean; waterColor: ColorData; palette: NamedParams<Normalize<{ maxCount: ...; hue: ...; chroma: ...; luminance: ...; sort: ...; clusteringStepCount: ...; minSampleCount: ...; sampleCountFactor: ...; }>, "generate"> | NamedParams<...>; }>' but required in type 'Values<{ overrideWater: BooleanParam; waterColor: Color; palette: Mapped<NamedParams<Normalize<{ maxCount: number; hue: [number, number]; chroma: [number, number]; luminance: [number, number]; sort: "none" | "contrast"; clusteringStepCount: number; minSampleCount: number; sampleCountFactor: number; }>, "generate"> |...'.
+        case 'entity-id': return EntityIdColorTheme(ctx, props.params);
+[0m[31m                                                         ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-theme/color/cartoon.ts[0m:[0m[33m70[0m:[0m[33m58[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Normalize<{ value: ColorData; saturation: number; lightness: number; }>' is not assignable to parameter of type 'Values<{ value: Color; saturation: Numeric; lightness: Numeric; }>'.
+  Property 'value' is optional in type 'Normalize<{ value: ColorData; saturation: number; lightness: number; }>' but required in type 'Values<{ value: Color; saturation: Numeric; lightness: Numeric; }>'.
+        case 'uniform': return UniformColorTheme(ctx, props.params);
+[0m[31m                                                      ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-theme/color/cartoon.ts[0m:[0m[33m83[0m:[0m[33m55[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Normalize<{ overrideWater: boolean; waterColor: ColorData; palette: NamedParams<Normalize<{ maxCount: ...; hue: ...; chroma: ...; luminance: ...; sort: ...; clusteringStepCount: ...; minSampleCount: ...; sampleCountFactor: ...; }>, "generate"> | NamedParams<...>; }>' is not assignable to parameter of type 'Values<{ overrideWater: BooleanParam; waterColor: Color; palette: Mapped<NamedParams<Normalize<{ maxCount: number; hue: [number, number]; chroma: [number, number]; luminance: [number, number]; sort: "none" | "contrast"; clusteringStepCount: number; minSampleCount: number; sampleCountFactor: number; }>, "generate"> |...'.
+  Property 'waterColor' is optional in type 'Normalize<{ overrideWater: boolean; waterColor: ColorData; palette: NamedParams<Normalize<{ maxCount: ...; hue: ...; chroma: ...; luminance: ...; sort: ...; clusteringStepCount: ...; minSampleCount: ...; sampleCountFactor: ...; }>, "generate"> | NamedParams<...>; }>' but required in type 'Values<{ overrideWater: BooleanParam; waterColor: Color; palette: Mapped<NamedParams<Normalize<{ maxCount: number; hue: [number, number]; chroma: [number, number]; luminance: [number, number]; sort: "none" | "contrast"; clusteringStepCount: number; minSampleCount: number; sampleCountFactor: number; }>, "generate"> |...'.
+        case 'entity-id': return EntityIdColorTheme(ctx, props.params);
+[0m[31m                                                         ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-theme/color/element-symbol.ts[0m:[0m[33m75[0m:[0m[33m58[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Normalize<{ value: ColorData; saturation: number; lightness: number; }>' is not assignable to parameter of type 'Values<{ value: Color; saturation: Numeric; lightness: Numeric; }>'.
+  Property 'value' is optional in type 'Normalize<{ value: ColorData; saturation: number; lightness: number; }>' but required in type 'Values<{ value: Color; saturation: Numeric; lightness: Numeric; }>'.
+        case 'uniform': return UniformColorTheme(ctx, props.params);
+[0m[31m                                                      ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-theme/color/element-symbol.ts[0m:[0m[33m81[0m:[0m[33m55[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Normalize<{ overrideWater: boolean; waterColor: ColorData; palette: NamedParams<Normalize<{ maxCount: ...; hue: ...; chroma: ...; luminance: ...; sort: ...; clusteringStepCount: ...; minSampleCount: ...; sampleCountFactor: ...; }>, "generate"> | NamedParams<...>; }>' is not assignable to parameter of type 'Values<{ overrideWater: BooleanParam; waterColor: Color; palette: Mapped<NamedParams<Normalize<{ maxCount: number; hue: [number, number]; chroma: [number, number]; luminance: [number, number]; sort: "none" | "contrast"; clusteringStepCount: number; minSampleCount: number; sampleCountFactor: number; }>, "generate"> |...'.
+  Property 'waterColor' is optional in type 'Normalize<{ overrideWater: boolean; waterColor: ColorData; palette: NamedParams<Normalize<{ maxCount: ...; hue: ...; chroma: ...; luminance: ...; sort: ...; clusteringStepCount: ...; minSampleCount: ...; sampleCountFactor: ...; }>, "generate"> | NamedParams<...>; }>' but required in type 'Values<{ overrideWater: BooleanParam; waterColor: Color; palette: Mapped<NamedParams<Normalize<{ maxCount: number; hue: [number, number]; chroma: [number, number]; luminance: [number, number]; sort: "none" | "contrast"; clusteringStepCount: number; minSampleCount: number; sampleCountFactor: number; }>, "generate"> |...'.
+        case 'entity-id': return EntityIdColorTheme(ctx, props.params);
+[0m[31m                                                         ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-theme/color/external-structure.ts[0m:[0m[33m61[0m:[0m[33m58[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Normalize<{ value: ColorData; saturation: number; lightness: number; }>' is not assignable to parameter of type 'Values<{ value: Color; saturation: Numeric; lightness: Numeric; }>'.
+  Property 'value' is optional in type 'Normalize<{ value: ColorData; saturation: number; lightness: number; }>' but required in type 'Values<{ value: Color; saturation: Numeric; lightness: Numeric; }>'.
+        case 'uniform': return UniformColorTheme(ctx, props.params);
+[0m[31m                                                      ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-theme/color/illustrative.ts[0m:[0m[33m51[0m:[0m[33m55[0m
+
+[0m[1mTS2345 [0m[ERROR]: Argument of type 'Normalize<{ overrideWater: boolean; waterColor: ColorData; palette: NamedParams<Normalize<{ maxCount: ...; hue: ...; chroma: ...; luminance: ...; sort: ...; clusteringStepCount: ...; minSampleCount: ...; sampleCountFactor: ...; }>, "generate"> | NamedParams<...>; }>' is not assignable to parameter of type 'Values<{ overrideWater: BooleanParam; waterColor: Color; palette: Mapped<NamedParams<Normalize<{ maxCount: number; hue: [number, number]; chroma: [number, number]; luminance: [number, number]; sort: "none" | "contrast"; clusteringStepCount: number; minSampleCount: number; sampleCountFactor: number; }>, "generate"> |...'.
+  Property 'waterColor' is optional in type 'Normalize<{ overrideWater: boolean; waterColor: ColorData; palette: NamedParams<Normalize<{ maxCount: ...; hue: ...; chroma: ...; luminance: ...; sort: ...; clusteringStepCount: ...; minSampleCount: ...; sampleCountFactor: ...; }>, "generate"> | NamedParams<...>; }>' but required in type 'Values<{ overrideWater: BooleanParam; waterColor: Color; palette: Mapped<NamedParams<Normalize<{ maxCount: number; hue: [number, number]; chroma: [number, number]; luminance: [number, number]; sort: "none" | "contrast"; clusteringStepCount: number; minSampleCount: number; sampleCountFactor: number; }>, "generate"> |...'.
+        case 'entity-id': return EntityIdColorTheme(ctx, props.params);
+[0m[31m                                                         ~~~~~~~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-theme/color/illustrative.ts[0m:[0m[33m53[0m:[0m[33m58[0m
+
+[0m[1mTS7006 [0m[ERROR]: Parameter 'data' implicitly has an 'any' type.
+        detach: (data) => data.structure && SecondaryStructureProvider.ref(data.structure, false)
+[0m[31m                 ~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-theme/color/secondary-structure.ts[0m:[0m[33m131[0m:[0m[33m18[0m
+
+[0m[1mTS18048 [0m[ERROR]: 'mapper' is possibly 'undefined'.
+            return mapper.apply(null, results);
+[0m[31m                   ~~~~~~[0m
+    at [0m[36mfile:///Users/zcpowers/Documents/Projects/molstar/src/mol-util/monadic-parser.ts[0m:[0m[33m244[0m:[0m[33m20[0m
+
+Found 250 errors.
+
+[0m[1m[31merror[0m: Type checking failed.
+
+  [33minfo:[39m The program failed type-checking, but it still might work correctly.
+  [36mhint:[39m Re-run with [4m--no-check[24m to skip type-checking.

@@ -37,13 +37,13 @@ namespace Sphere3D {
         return out;
     }
 
-    export function set(out: Sphere3D, center: Vec3, radius: number): Sphere3d {
+    export function set(out: Sphere3D, center: Vec3, radius: number): Sphere3D {
         Vec3.copy(out.center, center);
         out.radius = radius;
         return out;
     }
 
-    export function copy(out: Sphere3D, a: Sphere3D): Sphere3d {
+    export function copy(out: Sphere3D, a: Sphere3D): Sphere3D {
         Vec3.copy(out.center, a.center);
         out.radius = a.radius;
         if (hasExtrema(a)) setExtrema(out, a.extrema.map(e => Vec3.clone(e)));
@@ -110,7 +110,7 @@ namespace Sphere3D {
     }
 
     /** Scale sphere by a number */
-    export function scale(out: Sphere3D, sphere: Sphere3D, s: number): Sphere3d {
+    export function scale(out: Sphere3D, sphere: Sphere3D, s: number): Sphere3D {
         Vec3.scale(out.center, sphere.center, s);
         out.radius = sphere.radius * s;
         if (hasExtrema(sphere)) {
@@ -120,7 +120,7 @@ namespace Sphere3D {
     }
 
     /** Scale sphere by a number but without extrema */
-    export function scaleNX(out: Sphere3D, sphere: Sphere3D, s: number): Sphere3d {
+    export function scaleNX(out: Sphere3D, sphere: Sphere3D, s: number): Sphere3D {
         Vec3.scale(out.center, sphere.center, s);
         out.radius = sphere.radius * s;
         return out;
@@ -132,7 +132,7 @@ namespace Sphere3D {
         return out;
     }
 
-    export function fromArray(out: Sphere3D, array: NumberArray, offset: number): Sphere3d {
+    export function fromArray(out: Sphere3D, array: NumberArray, offset: number): Sphere3D {
         Vec3.fromArray(out.center, array, offset);
         out.radius = array[offset + 3];
         return out;
@@ -187,7 +187,7 @@ namespace Sphere3D {
     }
 
     const tmpAddVec3 = Vec3();
-    export function addVec3(out: Sphere3D, s: Sphere3D, v: Vec3): Sphere3d {
+    export function addVec3(out: Sphere3D, s: Sphere3D, v: Vec3): Sphere3D {
         const d = Vec3.distance(s.center, v);
         if (d < s.radius) return Sphere3D.copy(out, s);
         Vec3.sub(tmpAddVec3, s.center, v);

@@ -4,167 +4,221 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
-import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
-import { type Renderer, RendererParams } from '../../mol-gl/renderer.ts';
-import type { Scene } from '../../mol-gl/scene.ts';
-import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { DrawPass } from './draw.ts';
-import { PostprocessingParams } from './postprocessing.ts';
-import { MultiSamplePass, MultiSampleParams, MultiSampleHelper } from './multi-sample.ts';
-import { Camera } from '../camera.ts';
-import { Viewport } from '../camera/util.ts';
-import { PixelData } from '../../mol-util/image.ts';
-import type { Helper } from '../helper/helper.ts';
-import { CameraHelper, CameraHelperParams } from '../helper/camera-helper.ts';
-import { MarkingParams } from './marking.ts';
-import type { AssetManager } from '../../mol-util/assets.ts';
-import { IlluminationParams, IlluminationPass } from './illumination.ts';
-import type { RuntimeContext } from '../../mol-task/index.ts';
-import { isDebugMode, isTimingMode } from '../../mol-util/debug.ts';
-import { printTimerResults } from '../../mol-gl/webgl/timer.ts';
-import { ShaderManager } from '../helper/shader-manager.ts';
+import type { WebGLContext } from "../../mol-gl/webgl/context.ts";
+import type { RenderTarget } from "../../mol-gl/webgl/render-target.ts";
+import { type Renderer, RendererParams } from "../../mol-gl/renderer.ts";
+import type { Scene } from "../../mol-gl/scene.ts";
+import { ParamDefinition as PD } from "../../mol-util/param-definition.ts";
+import { DrawPass } from "./draw.ts";
+import { PostprocessingParams } from "./postprocessing.ts";
+import {
+  MultiSamplePass,
+  MultiSampleParams,
+  MultiSampleHelper,
+} from "./multi-sample.ts";
+import { Camera } from "../camera.ts";
+import { Viewport } from "../camera/util.ts";
+import { PixelData } from "../../mol-util/image.ts";
+import type { Helper } from "../helper/helper.ts";
+import { CameraHelper, CameraHelperParams } from "../helper/camera-helper.ts";
+import { MarkingParams } from "./marking.ts";
+import type { AssetManager } from "../../mol-util/assets.ts";
+import { IlluminationParams, IlluminationPass } from "./illumination.ts";
+import type { RuntimeContext } from "../../mol-task/index.ts";
+import { isDebugMode, isTimingMode } from "../../mol-util/debug.ts";
+import { printTimerResults } from "../../mol-gl/webgl/timer.ts";
+import { ShaderManager } from "../helper/shader-manager.ts";
 
 export const ImageParams = {
-    transparentBackground: PD.Boolean(false),
-    dpoitIterations: PD.Numeric(2, { min: 1, max: 10, step: 1 }),
-    multiSample: PD.Group(MultiSampleParams),
-    postprocessing: PD.Group(PostprocessingParams),
-    marking: PD.Group(MarkingParams),
-    illumination: PD.Group(IlluminationParams),
+  transparentBackground: PD.Boolean(false),
+  dpoitIterations: PD.Numeric(2, { min: 1, max: 10, step: 1 }),
+  multiSample: PD.Group(MultiSampleParams),
+  postprocessing: PD.Group(PostprocessingParams),
+  marking: PD.Group(MarkingParams),
+  illumination: PD.Group(IlluminationParams),
 
-    cameraHelper: PD.Group(CameraHelperParams),
-    renderer: PD.Group(RendererParams),
+  cameraHelper: PD.Group(CameraHelperParams),
+  renderer: PD.Group(RendererParams),
 };
-export type ImageProps = PD.Values<typeof ImageParams>
+export type ImageProps = PD.Values<typeof ImageParams>;
 
 export class ImagePass {
-    private _width = 0;
-    private _height = 0;
-    private _camera = new Camera();
+  private _width = 0;
+  private _height = 0;
+  private _camera = new Camera();
 
-    readonly props: ImageProps;
+  readonly props: ImageProps;
 
-    private _colorTarget!: RenderTarget;
-    get colorTarget(): RenderTarget { return this._colorTarget; }
+  private _colorTarget!: RenderTarget;
+  get colorTarget(): RenderTarget {
+    return this._colorTarget;
+  }
 
-    private readonly drawPass: DrawPass;
-    private readonly illuminationPass: IlluminationPass;
-    private readonly multiSamplePass: MultiSamplePass;
-    private readonly multiSampleHelper: MultiSampleHelper;
-    private readonly helper: Helper;
+  private readonly drawPass: DrawPass;
+  private readonly illuminationPass: IlluminationPass;
+  private readonly multiSamplePass: MultiSamplePass;
+  private readonly multiSampleHelper: MultiSampleHelper;
+  private readonly helper: Helper;
 
-    get width() { return this._width; }
-    get height() { return this._height; }
+  get width() {
+    return this._width;
+  }
+  get height() {
+    return this._height;
+  }
 
-    constructor(private webgl: WebGLContext, assetManager: AssetManager, private renderer: Renderer, private scene: Scene, private camera: Camera, helper: Helper, transparency: 'wboit' | 'dpoit' | 'blended', props: Partial<ImageProps>) {
-        this.props = { ...PD.getDefaultValues(ImageParams), ...props };
+  constructor(
+    private webgl: WebGLContext,
+    assetManager: AssetManager,
+    private renderer: Renderer,
+    private scene: Scene,
+    private camera: Camera,
+    helper: Helper,
+    transparency: "wboit" | "dpoit" | "blended",
+    props: Partial<ImageProps>,
+  ) {
+    this.props = { ...PD.getDefaultValues(ImageParams), ...props };
 
-        this.drawPass = new DrawPass(webgl, assetManager, 128, 128, transparency);
-        this.illuminationPass = new IlluminationPass(webgl, this.drawPass);
-        this.multiSamplePass = new MultiSamplePass(webgl, this.drawPass);
-        this.multiSampleHelper = new MultiSampleHelper(this.multiSamplePass);
+    this.drawPass = new DrawPass(webgl, assetManager, 128, 128, transparency);
+    this.illuminationPass = new IlluminationPass(webgl, this.drawPass);
+    this.multiSamplePass = new MultiSamplePass(webgl, this.drawPass);
+    this.multiSampleHelper = new MultiSampleHelper(this.multiSamplePass);
 
-        this.helper = {
-            camera: new CameraHelper(webgl, this.props.cameraHelper),
-            debug: helper.debug,
-            handle: helper.handle,
-            pointer: helper.pointer,
-        };
+    this.helper = {
+      camera: new CameraHelper(webgl, this.props.cameraHelper),
+      debug: helper.debug,
+      handle: helper.handle,
+      pointer: helper.pointer,
+    };
 
-        this.setSize(1024, 768);
-    }
+    this.setSize(1024, 768);
+  }
 
-    getByteCount() {
-        return this.drawPass.getByteCount() + this.illuminationPass.getByteCount() + this.multiSamplePass.getByteCount();
-    }
+  getByteCount() {
+    return (
+      this.drawPass.getByteCount() +
+      this.illuminationPass.getByteCount() +
+      this.multiSamplePass.getByteCount()
+    );
+  }
 
-    updateBackground() {
-        return new Promise<void>(resolve => {
-            this.drawPass.postprocessing.background.update(this.camera, this.props.postprocessing.background, () => {
-                resolve();
-            });
-        });
-    }
+  updateBackground() {
+    return new Promise<void>((resolve) => {
+      this.drawPass.postprocessing.background.update(
+        this.camera,
+        this.props.postprocessing.background,
+        () => {
+          resolve();
+        },
+      );
+    });
+  }
 
-    setSize(width: number, height: number) {
-        if (width === this._width && height === this._height) return;
+  setSize(width: number, height: number) {
+    if (width === this._width && height === this._height) return;
 
-        this._width = width;
-        this._height = height;
+    this._width = width;
+    this._height = height;
 
-        this.drawPass.setSize(width, height);
-        this.illuminationPass.setSize(width, height);
-        this.multiSamplePass.syncSize();
-    }
+    this.drawPass.setSize(width, height);
+    this.illuminationPass.setSize(width, height);
+    this.multiSamplePass.syncSize();
+  }
 
-    setProps(props: Partial<ImageProps> = {}) {
-        Object.assign(this.props, props);
-        if (props.cameraHelper) this.helper.camera.setProps(props.cameraHelper);
-    }
+  setProps(props: Partial<ImageProps> = {}) {
+    Object.assign(this.props, props);
+    if (props.cameraHelper) this.helper.camera.setProps(props.cameraHelper);
+  }
 
-    async render(runtime: RuntimeContext) {
-        ShaderManager.ensureRequired(this.webgl, this.scene, this.props);
-        Camera.copySnapshot(this._camera.state, this.camera.state);
-        Viewport.set(this._camera.viewport, 0, 0, this._width, this._height);
-        this._camera.update();
+  async render(runtime: RuntimeContext) {
+    ShaderManager.ensureRequired(this.webgl, this.scene, this.props);
+    Camera.copySnapshot(this._camera.state, this.camera.state);
+    Viewport.set(this._camera.viewport, 0, 0, this._width, this._height);
+    this._camera.update();
 
-        const ctx = { renderer: this.renderer, camera: this._camera, scene: this.scene, helper: this.helper };
-        if (this.illuminationPass.supported && this.props.illumination.enabled) {
-            await runtime.update({ message: 'Tracing...', current: 1, max: this.illuminationPass.getMaxIterations(this.props.illumination) });
-            this.illuminationPass.restart(true);
-            while (this.illuminationPass.shouldRender(this.props.illumination)) {
-                if (isTimingMode) this.webgl.timer.mark('ImagePass.render', { captureStats: true });
-                this.illuminationPass.render(ctx, this.props, false);
-                if (isTimingMode) this.webgl.timer.markEnd('ImagePass.render');
-                if (runtime.shouldUpdate) {
-                    await runtime.update({ current: this.illuminationPass.iteration });
-                }
-                await this.webgl.waitForGpuCommandsComplete();
-            }
-            this._colorTarget = this.illuminationPass.colorTarget;
-        } else {
-            if (isTimingMode) this.webgl.timer.mark('ImagePass.render', { captureStats: true });
-            if (MultiSamplePass.isEnabled(this.props.multiSample)) {
-                this.multiSampleHelper.render(ctx, this.props, false);
-                this._colorTarget = this.multiSamplePass.colorTarget;
-            } else {
-                this.drawPass.render(ctx, this.props, false);
-                this._colorTarget = this.drawPass.getColorTarget(this.props.postprocessing);
-            }
-            if (isTimingMode) this.webgl.timer.markEnd('ImagePass.render');
+    const ctx = {
+      renderer: this.renderer,
+      camera: this._camera,
+      scene: this.scene,
+      helper: this.helper,
+    };
+    if (this.illuminationPass.supported && this.props.illumination.enabled) {
+      await runtime.update({
+        message: "Tracing...",
+        current: 1,
+        max: this.illuminationPass.getMaxIterations(this.props.illumination),
+      });
+      this.illuminationPass.restart(true);
+      while (this.illuminationPass.shouldRender(this.props.illumination)) {
+        if (isTimingMode)
+          this.webgl.timer.mark("ImagePass.render", { captureStats: true });
+        this.illuminationPass.render(ctx, this.props, false);
+        if (isTimingMode) this.webgl.timer.markEnd("ImagePass.render");
+        if (runtime.shouldUpdate) {
+          await runtime.update({ current: this.illuminationPass.iteration });
         }
-
-        if (isTimingMode) {
-            const timerResults = this.webgl.timer.resolve();
-            if (timerResults) {
-                for (const result of timerResults) {
-                    printTimerResults([result]);
-                }
-            }
-        }
-
-        if (isDebugMode) {
-            console.log(`image pass byte count ${(this.getByteCount() / 1024 / 1024).toFixed(3)} MiB`);
-        }
+        await this.webgl.waitForGpuCommandsComplete();
+      }
+      this._colorTarget = this.illuminationPass.colorTarget;
+    } else {
+      if (isTimingMode)
+        this.webgl.timer.mark("ImagePass.render", { captureStats: true });
+      if (MultiSamplePass.isEnabled(this.props.multiSample)) {
+        this.multiSampleHelper.render(ctx, this.props, false);
+        this._colorTarget = this.multiSamplePass.colorTarget;
+      } else {
+        this.drawPass.render(ctx, this.props, false);
+        this._colorTarget = this.drawPass.getColorTarget(
+          this.props.postprocessing,
+        );
+      }
+      if (isTimingMode) this.webgl.timer.markEnd("ImagePass.render");
     }
 
-    async getImageData(runtime: RuntimeContext, width: number, height: number, viewport?: Viewport): Promise<ImageData> {
-        this.setSize(width, height);
-        await this.render(runtime);
-        this.colorTarget.bind();
-
-        const w = viewport?.width ?? width, h = viewport?.height ?? height;
-
-        const array = new Uint8Array(w * h * 4);
-        if (!viewport) {
-            this.webgl.readPixels(0, 0, w, h, array);
-        } else {
-            this.webgl.readPixels(viewport.x, height - viewport.y - viewport.height, w, h, array);
+    if (isTimingMode) {
+      const timerResults = this.webgl.timer.resolve();
+      if (timerResults) {
+        for (const result of timerResults) {
+          printTimerResults([result]);
         }
-        const pixelData = PixelData.create(array, w, h);
-        PixelData.flipY(pixelData);
-        PixelData.divideByAlpha(pixelData);
-        return new ImageData(new Uint8ClampedArray(array), w, h);
+      }
     }
+
+    if (isDebugMode) {
+      console.log(
+        `image pass byte count ${(this.getByteCount() / 1024 / 1024).toFixed(3)} MiB`,
+      );
+    }
+  }
+
+  async getImageData(
+    runtime: RuntimeContext,
+    width: number,
+    height: number,
+    viewport?: Viewport,
+  ): Promise<ImageData> {
+    this.setSize(width, height);
+    await this.render(runtime);
+    this.colorTarget.bind();
+
+    const w = viewport?.width ?? width,
+      h = viewport?.height ?? height;
+
+    const array = new Uint8Array(w * h * 4);
+    if (!viewport) {
+      this.webgl.readPixels(0, 0, w, h, array);
+    } else {
+      this.webgl.readPixels(
+        viewport.x,
+        height - viewport.y - viewport.height,
+        w,
+        h,
+        array,
+      );
+    }
+    const pixelData = PixelData.create(array, w, h);
+    PixelData.flipY(pixelData);
+    PixelData.divideByAlpha(pixelData);
+    return new ImageData(new Uint8ClampedArray(array), w, h);
+  }
 }
