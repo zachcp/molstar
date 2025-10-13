@@ -34,7 +34,7 @@ interface ReadonlyMat3 extends Array<number> {
   length: 9;
 }
 
-function Mat3() {
+function Mat3(): Mat3 {
   return Mat3.zero();
 }
 
@@ -140,12 +140,12 @@ namespace Mat3 {
   const _m4 = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   ] as unknown as Mat4;
-  export function fromEuler(out: Mat3, euler: Euler, order: Euler.Order) {
+  export function fromEuler(out: Mat3, euler: Euler, order: Euler.Order): Mat3 {
     Mat4.fromEuler(_m4, euler, order);
     return fromMat4(out, _m4);
   }
 
-  export function fromRotation(out: Mat3, rad: number, axis: Vec3) {
+  export function fromRotation(out: Mat3, rad: number, axis: Vec3): Mat3 {
     Mat4.fromRotation(_m4, rad, axis);
     return fromMat4(out, _m4);
   }
@@ -329,7 +329,7 @@ namespace Mat3 {
     return out;
   }
 
-  export function determinant(a: Mat3) {
+  export function determinant(a: Mat3): number {
     const a00 = a[0],
       a01 = a[1],
       a02 = a[2];
