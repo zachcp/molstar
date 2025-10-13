@@ -59,7 +59,7 @@ export namespace TextureMesh {
         private index = 0;
         private textures: ({ vertex: Texture, group: Texture, normal: Texture } | undefined)[] = [];
 
-        get() {
+        get(): { vertex: Texture; group: Texture; normal: Texture } | undefined {
             return this.textures[this.index];
         }
 

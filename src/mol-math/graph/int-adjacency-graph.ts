@@ -367,7 +367,7 @@ export namespace IntAdjacencyGraph {
     private ys: VertexIndex[] = [];
     private included = new Set<number>();
 
-    addEdge(i: VertexIndex, j: VertexIndex) {
+    addEdge(i: VertexIndex, j: VertexIndex): boolean {
       let u = i,
         v = j;
       if (i > j) {
@@ -387,7 +387,7 @@ export namespace IntAdjacencyGraph {
     }
 
     // if we cant to add custom props as well
-    getEdgeBuiler() {
+    getEdgeBuiler(): EdgeBuilder<VertexIndex> {
       return new EdgeBuilder(this.vertexCount, this.xs, this.ys);
     }
 
