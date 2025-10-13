@@ -69,7 +69,7 @@ function buildText(data: LabelData, props: LabelProps, text?: Text): Text {
     return builder.getText();
 }
 
-function getTextShape(ctx: RuntimeContext, data: LabelData, props: LabelProps, shape?: Shape<Text>) {
+function getTextShape(ctx: RuntimeContext, data: LabelData, props: LabelProps, shape?: Shape<Text>): Shape<Text> {
     const text = buildText(data, props, shape && shape.geometry);
     const name = getLabelName(data);
     const tooltip = props.tooltip?.trim() ?? '';

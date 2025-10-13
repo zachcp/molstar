@@ -81,7 +81,7 @@ function buildAxesMesh(data: OrientationData, props: OrientationProps, mesh?: Me
     return MeshBuilder.getMesh(state);
 }
 
-function getAxesShape(ctx: RuntimeContext, data: OrientationData, props: OrientationProps, shape?: Shape<Mesh>) {
+function getAxesShape(ctx: RuntimeContext, data: OrientationData, props: OrientationProps, shape?: Shape<Mesh>): Shape<Mesh> {
     const mesh = buildAxesMesh(data, props, shape && shape.geometry);
     const name = getAxesName(data.locis);
     return Shape.create(name, data, mesh, () => props.color, () => 1, () => name);
@@ -104,7 +104,7 @@ function buildBoxMesh(data: OrientationData, props: OrientationProps, mesh?: Mes
     return MeshBuilder.getMesh(state);
 }
 
-function getBoxShape(ctx: RuntimeContext, data: OrientationData, props: OrientationProps, shape?: Shape<Mesh>) {
+function getBoxShape(ctx: RuntimeContext, data: OrientationData, props: OrientationProps, shape?: Shape<Mesh>): Shape<Mesh> {
     const mesh = buildBoxMesh(data, props, shape && shape.geometry);
     const name = getBoxName(data.locis);
     return Shape.create(name, data, mesh, () => props.color, () => 1, () => name);

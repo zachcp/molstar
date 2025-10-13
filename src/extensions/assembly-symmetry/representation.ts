@@ -154,7 +154,7 @@ function getAxesMesh(data: AssemblySymmetryValue, props: PD.Values<AxesParams>, 
     return MeshBuilder.getMesh(builderState);
 }
 
-function getAxesShape(ctx: RuntimeContext, data: Structure, props: AssemblySymmetryProps, shape?: Shape<Mesh>) {
+function getAxesShape(ctx: RuntimeContext, data: Structure, props: AssemblySymmetryProps, shape?: Shape<Mesh>): Shape<Mesh> {
     const assemblySymmetry = AssemblySymmetryProvider.get(data).value!;
     const geo = getAxesMesh(assemblySymmetry, props, shape && shape.geometry);
     const getColor = (groupId: number) => {

@@ -102,7 +102,7 @@ function buildLines(data: DistanceData, props: DistanceProps, lines?: Lines): Li
     return builder.getLines();
 }
 
-function getLinesShape(ctx: RuntimeContext, data: DistanceData, props: DistanceProps, shape?: Shape<Lines>) {
+function getLinesShape(ctx: RuntimeContext, data: DistanceData, props: DistanceProps, shape?: Shape<Lines>): Shape<Lines> {
     const lines = buildLines(data, props, shape && shape.geometry);
     const name = getDistanceName(data, props.unitLabel);
     const getLabel = (groupId: number) => distanceLabel(data.pairs[groupId], props);
@@ -124,7 +124,7 @@ function buildText(data: DistanceData, props: DistanceProps, text?: Text): Text 
     return builder.getText();
 }
 
-function getTextShape(ctx: RuntimeContext, data: DistanceData, props: DistanceProps, shape?: Shape<Text>) {
+function getTextShape(ctx: RuntimeContext, data: DistanceData, props: DistanceProps, shape?: Shape<Text>): Shape<Text> {
     const text = buildText(data, props, shape && shape.geometry);
     const name = getDistanceName(data, props.unitLabel);
     const getLabel = (groupId: number) => distanceLabel(data.pairs[groupId], props);

@@ -151,7 +151,7 @@ function buildVectorsLines(data: AngleData, props: AngleProps, lines?: Lines): L
     return builder.getLines();
 }
 
-function getVectorsShape(ctx: RuntimeContext, data: AngleData, props: AngleProps, shape?: Shape<Lines>) {
+function getVectorsShape(ctx: RuntimeContext, data: AngleData, props: AngleProps, shape?: Shape<Lines>): Shape<Lines> {
     const lines = buildVectorsLines(data, props, shape && shape.geometry);
     const name = getAngleName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -181,7 +181,7 @@ function buildArcLines(data: AngleData, props: AngleProps, lines?: Lines): Lines
     return builder.getLines();
 }
 
-function getArcShape(ctx: RuntimeContext, data: AngleData, props: AngleProps, shape?: Shape<Lines>) {
+function getArcShape(ctx: RuntimeContext, data: AngleData, props: AngleProps, shape?: Shape<Lines>): Shape<Lines> {
     const lines = buildArcLines(data, props, shape && shape.geometry);
     const name = getAngleName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -201,7 +201,7 @@ function buildSectorMesh(data: AngleData, props: AngleProps, mesh?: Mesh): Mesh 
     return MeshBuilder.getMesh(state);
 }
 
-function getSectorShape(ctx: RuntimeContext, data: AngleData, props: AngleProps, shape?: Shape<Mesh>) {
+function getSectorShape(ctx: RuntimeContext, data: AngleData, props: AngleProps, shape?: Shape<Mesh>): Shape<Mesh> {
     const mesh = buildSectorMesh(data, props, shape && shape.geometry);
     const name = getAngleName(data);
     const getLabel = (groupId: number) => angleLabel(data.triples[groupId]);
@@ -228,7 +228,7 @@ function buildText(data: AngleData, props: AngleProps, text?: Text): Text {
     return builder.getText();
 }
 
-function getTextShape(ctx: RuntimeContext, data: AngleData, props: AngleProps, shape?: Shape<Text>) {
+function getTextShape(ctx: RuntimeContext, data: AngleData, props: AngleProps, shape?: Shape<Text>): Shape<Text> {
     const text = buildText(data, props, shape && shape.geometry);
     const name = getAngleName(data);
     const getLabel = (groupId: number) => angleLabel(data.triples[groupId]);

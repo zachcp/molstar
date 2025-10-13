@@ -203,7 +203,7 @@ function buildVectorsLines(data: DihedralData, props: DihedralProps, lines?: Lin
     return builder.getLines();
 }
 
-function getVectorsShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>) {
+function getVectorsShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>): Shape<Lines> {
     const lines = buildVectorsLines(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -220,7 +220,7 @@ function buildConnectorLine(data: DihedralData, props: DihedralProps, lines?: Li
     return builder.getLines();
 }
 
-function getConnectorShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>) {
+function getConnectorShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>): Shape<Lines> {
     const lines = buildConnectorLine(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -238,7 +238,7 @@ function buildArmsLines(data: DihedralData, props: DihedralProps, lines?: Lines)
     return builder.getLines();
 }
 
-function getArmsShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>) {
+function getArmsShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>): Shape<Lines> {
     const lines = buildArmsLines(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -256,7 +256,7 @@ function buildExtendersLines(data: DihedralData, props: DihedralProps, lines?: L
     return builder.getLines();
 }
 
-function getExtendersShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>) {
+function getExtendersShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>): Shape<Lines> {
     const lines = buildExtendersLines(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -286,7 +286,7 @@ function buildArcLines(data: DihedralData, props: DihedralProps, lines?: Lines):
     return builder.getLines();
 }
 
-function getArcShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>) {
+function getArcShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>): Shape<Lines> {
     const lines = buildArcLines(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -306,7 +306,7 @@ function buildSectorMesh(data: DihedralData, props: DihedralProps, mesh?: Mesh):
     return MeshBuilder.getMesh(state);
 }
 
-function getSectorShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Mesh>) {
+function getSectorShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Mesh>): Shape<Mesh> {
     const mesh = buildSectorMesh(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     const getLabel = (groupId: number) => dihedralLabel(data.quads[groupId]);
@@ -334,7 +334,7 @@ function buildText(data: DihedralData, props: DihedralProps, text?: Text): Text 
     return builder.getText();
 }
 
-function getTextShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Text>) {
+function getTextShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Text>): Shape<Text> {
     const text = buildText(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     const getLabel = (groupId: number) => dihedralLabel(data.quads[groupId]);
