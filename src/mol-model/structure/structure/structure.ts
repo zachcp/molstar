@@ -79,19 +79,19 @@ class Structure {
     }
 
     /** Count of all elements in the structure, i.e. the sum of the elements in the units */
-    get elementCount() {
+    get elementCount(): number {
         return this.state.elementCount;
     }
 
     /** Count of all bonds (intra- and inter-unit) in the structure */
-    get bondCount() {
+    get bondCount(): number {
         if (this.state.bondCount === -1) {
             this.state.bondCount = (this.interUnitBonds.edgeCount / 2) + Bond.getIntraUnitBondCount(this);
         }
         return this.state.bondCount;
     }
 
-    get hasCustomProperties() {
+    get hasCustomProperties(): boolean {
         return !!this.state.customProps && this.state.customProps.all.length > 0;
     }
 
@@ -116,7 +116,7 @@ class Structure {
     }
 
     /** Count of all polymer residues in the structure */
-    get polymerResidueCount() {
+    get polymerResidueCount(): number {
         if (this.state.polymerResidueCount === -1) {
             this.state.polymerResidueCount = getPolymerResidueCount(this);
         }
@@ -124,28 +124,28 @@ class Structure {
     }
 
     /** Count of all polymer gaps in the structure */
-    get polymerGapCount() {
+    get polymerGapCount(): number {
         if (this.state.polymerGapCount === -1) {
             this.state.polymerGapCount = getPolymerGapCount(this);
         }
         return this.state.polymerGapCount;
     }
 
-    get polymerUnitCount() {
+    get polymerUnitCount(): number {
         if (this.state.polymerUnitCount === -1) {
             this.state.polymerUnitCount = getPolymerUnitCount(this);
         }
         return this.state.polymerUnitCount;
     }
 
-    get uniqueElementCount() {
+    get uniqueElementCount(): number {
         if (this.state.uniqueElementCount === -1) {
             this.state.uniqueElementCount = getUniqueElementCount(this);
         }
         return this.state.uniqueElementCount;
     }
 
-    get atomicResidueCount() {
+    get atomicResidueCount(): number {
         if (this.state.atomicResidueCount === -1) {
             this.state.atomicResidueCount = getAtomicResidueCount(this);
         }
@@ -164,13 +164,13 @@ class Structure {
         return this.units.length === 0;
     }
 
-    get hashCode() {
+    get hashCode(): number {
         if (this.state.hashCode !== -1) return this.state.hashCode;
         return this.computeHash();
     }
 
     /** Hash based on all unit.id values in the structure, reflecting the units transformation */
-    get transformHash() {
+    get transformHash(): number {
         if (this.state.transformHash !== -1) return this.state.transformHash;
         this.state.transformHash = hashFnv32a(this.units.map(u => u.id));
         return this.state.transformHash;
@@ -216,7 +216,7 @@ class Structure {
         return this.state.coordinateSystem;
     }
 
-    get label() {
+    get label(): string {
         return this.state.label;
     }
 
@@ -250,7 +250,7 @@ class Structure {
         return this.state.interUnitBonds;
     }
 
-    get dynamicBonds() {
+    get dynamicBonds(): boolean {
         return this.state.dynamicBonds;
     }
 
@@ -314,7 +314,7 @@ class Structure {
     }
 
     /** Contains some atomic units */
-    get hasAtomic() {
+    get hasAtomic(): boolean {
         for (const u of this.units) if (Unit.isAtomic(u)) return true;
         return false;
     }
@@ -326,7 +326,7 @@ class Structure {
     }
 
     /** Contains some coarse units */
-    get hasCoarse() {
+    get hasCoarse(): boolean {
         for (const u of this.units) if (Unit.isCoarse(u)) return true;
         return false;
     }

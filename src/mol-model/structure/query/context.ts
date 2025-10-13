@@ -154,7 +154,7 @@ class QueryContextBondInfo<U extends Unit = Unit> {
         this.b.element = eA;
     }
 
-    get length() {
+    get length(): number {
         return StructureElement.Location.distance(this.a, this.b);
     }
 }
