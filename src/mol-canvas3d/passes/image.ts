@@ -60,10 +60,10 @@ export class ImagePass {
   private readonly multiSampleHelper: MultiSampleHelper;
   private readonly helper: Helper;
 
-  get width() {
+  get width(): number {
     return this._width;
   }
-  get height() {
+  get height(): number {
     return this._height;
   }
 
@@ -94,7 +94,7 @@ export class ImagePass {
     this.setSize(1024, 768);
   }
 
-  getByteCount() {
+  getByteCount(): number {
     return (
       this.drawPass.getByteCount() +
       this.illuminationPass.getByteCount() +

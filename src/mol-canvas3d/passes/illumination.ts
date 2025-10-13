@@ -106,7 +106,7 @@ export class IlluminationPass {
     get colorTarget(): RenderTarget { return this._colorTarget; }
 
     private _supported = false;
-    get supported() {
+    get supported(): boolean {
         return this._supported;
     }
 
@@ -122,15 +122,15 @@ export class IlluminationPass {
         );
     }
 
-    getMaxIterations(props: IlluminationProps) {
+    getMaxIterations(props: IlluminationProps): number {
         return Math.pow(2, props.maxIterations);
     }
 
-    static isSupported(webgl: WebGLContext) {
+    static isSupported(webgl: WebGLContext): boolean {
         return checkIlluminationSupport(webgl);
     }
 
-    static isEnabled(webgl: WebGLContext, props: IlluminationProps) {
+    static isEnabled(webgl: WebGLContext, props: IlluminationProps): boolean {
         return props.enabled && checkIlluminationSupport(webgl);
     }
 
@@ -263,7 +263,7 @@ export class IlluminationPass {
         if (isTimingMode) this.webgl.timer.markEnd('IlluminationPass.renderInput');
     }
 
-    shouldRender(props: IlluminationProps) {
+    shouldRender(props: IlluminationProps): boolean {
         return this._supported && props.enabled && this._iteration < this.getMaxIterations(props);
     }
 

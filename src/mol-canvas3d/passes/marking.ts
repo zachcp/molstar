@@ -35,7 +35,7 @@ export const MarkingParams = {
 export type MarkingProps = PD.Values<typeof MarkingParams>
 
 export class MarkingPass {
-    static isEnabled(props: MarkingProps) {
+    static isEnabled(props: MarkingProps): boolean {
         return props.enabled;
     }
 
@@ -55,7 +55,7 @@ export class MarkingPass {
         this.overlay = getOverlayRenderable(webgl, this.edgesTarget.texture);
     }
 
-    getByteCount() {
+    getByteCount(): number {
         return this.depthTarget.getByteCount() + this.maskTarget.getByteCount() + this.edgesTarget.getByteCount();
     }
 

@@ -85,11 +85,11 @@ export class DpoitPass {
     private readonly colorBackTextures!: Texture[];
 
     private _supported = false;
-    get supported() {
+    get supported(): boolean {
         return this._supported;
     }
 
-    getByteCount() {
+    getByteCount(): number {
         if (!this._supported) return 0;
         return (
             this.depthTextures[0].getByteCount() +
@@ -233,7 +233,7 @@ export class DpoitPass {
         }
     }
 
-    static isSupported(webgl: WebGLContext) {
+    static isSupported(webgl: WebGLContext): boolean {
         const { extensions: { drawBuffers, textureFloat, colorBufferFloat, depthTexture, blendMinMax } } = webgl;
         if (!textureFloat || !colorBufferFloat || !depthTexture || !drawBuffers || !blendMinMax) {
             if (isDebugMode) {

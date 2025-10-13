@@ -117,7 +117,7 @@ export class PickPass {
         }
     }
 
-    getByteCount() {
+    getByteCount(): number {
         if (this.webgl.extensions.drawBuffers) {
             return (
                 this.objectPickTexture.getByteCount() +
@@ -159,7 +159,7 @@ export class PickPass {
         }
     }
 
-    get pickRatio() {
+    get pickRatio(): number {
         return this.pickScale / this.webgl.pixelRatio;
     }
 
@@ -200,7 +200,7 @@ export class PickPass {
         }
     }
 
-    get drawingBufferHeight() {
+    get drawingBufferHeight(): number {
         return this.height;
     }
 

@@ -206,7 +206,7 @@ export function createRenderItem<T extends string>(ctx: WebGLContext, drawMode: 
     return {
         id,
         materialId,
-        getByteCount() {
+        getByteCount(): number {
             let count = 0;
             for (let i = 0, il = attributeBuffers.length; i < il; ++i) {
                 count += attributeBuffers[i][1].getByteCount();

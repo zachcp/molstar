@@ -45,7 +45,7 @@ export const OutlineParams = {
 export type OutlineProps = PD.Values<typeof OutlineParams>;
 
 export class OutlinePass {
-  static isEnabled(props: PostprocessingProps) {
+  static isEnabled(props: PostprocessingProps): boolean {
     return props.enabled && props.outline.name !== "off";
   }
 
@@ -68,7 +68,7 @@ export class OutlinePass {
     );
   }
 
-  getByteCount() {
+  getByteCount(): number {
     return this.target.getByteCount();
   }
 

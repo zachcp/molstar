@@ -304,7 +304,7 @@ export class BackgroundPass {
         );
     }
 
-    isEnabled(props: PostprocessingProps) {
+    isEnabled(props: PostprocessingProps): boolean {
         return props.enabled && this._isEnabled(props.background);
     }
 

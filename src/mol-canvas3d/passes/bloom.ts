@@ -37,7 +37,7 @@ export const BloomParams = {
 export type BloomProps = PD.Values<typeof BloomParams>
 
 export class BloomPass {
-    static isEnabled(props: PostprocessingProps) {
+    static isEnabled(props: PostprocessingProps): boolean {
         return props.enabled && props.bloom.name === 'on';
     }
 
@@ -75,7 +75,7 @@ export class BloomPass {
         this.copyRenderable = createCopyRenderable(webgl, this.compositeTarget.texture);
     }
 
-    getByteCount() {
+    getByteCount(): number {
         return (
             this.emissiveTarget.getByteCount() +
             this.luminosityTarget.getByteCount() +

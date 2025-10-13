@@ -15,7 +15,7 @@ type Viewport = {
     height: number
 }
 
-function Viewport() {
+function Viewport(): Viewport {
     return Viewport.zero();
 }
 

@@ -39,7 +39,7 @@ export class SmaaPass {
     private readonly blendRenderable!: BlendRenderable;
 
     private _supported = false;
-    get supported() {
+    get supported(): boolean {
         return this._supported;
     }
 
@@ -62,7 +62,7 @@ export class SmaaPass {
         this._supported = true;
     }
 
-    getByteCount() {
+    getByteCount(): number {
         if (!this.supported) return 0;
         return this.edgesTarget.getByteCount() + this.weightsTarget.getByteCount();
     }

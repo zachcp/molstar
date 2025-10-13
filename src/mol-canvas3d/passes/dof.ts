@@ -36,7 +36,7 @@ export const DofParams = {
 export type DofProps = PD.Values<typeof DofParams>
 
 export class DofPass {
-    static isEnabled(props: PostprocessingProps) {
+    static isEnabled(props: PostprocessingProps): boolean {
         return props.enabled && props.dof.name !== 'off';
     }
 
@@ -50,7 +50,7 @@ export class DofPass {
         this.renderable = getDofRenderable(webgl, nullTexture, nullTexture, nullTexture);
     }
 
-    getByteCount() {
+    getByteCount(): number {
         return this.target.getByteCount();
     }
 

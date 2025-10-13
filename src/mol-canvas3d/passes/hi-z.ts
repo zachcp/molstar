@@ -140,7 +140,7 @@ export class HiZPass {
 
     readonly props: HiZProps;
 
-    getByteCount() {
+    getByteCount(): number {
         if (!this.supported) return 0;
         return (
             this.tex.getByteCount() +

@@ -25,7 +25,7 @@ export class Passes {
         this.illumination = new IlluminationPass(webgl, this.draw);
     }
 
-    getByteCount() {
+    getByteCount(): number {
         return this.draw.getByteCount() + this.pick.getByteCount() + this.multiSample.getByteCount() + this.illumination.getByteCount();
     }
 

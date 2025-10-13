@@ -74,7 +74,7 @@ type RenderContext = {
 }
 
 export class MultiSamplePass {
-    static isEnabled(props: MultiSampleProps) {
+    static isEnabled(props: MultiSampleProps): boolean {
         return props.mode !== 'off';
     }
 
@@ -96,7 +96,7 @@ export class MultiSamplePass {
         this.compose = getComposeRenderable(webgl, drawPass.colorTarget.texture);
     }
 
-    getByteCount() {
+    getByteCount(): number {
         return this.colorTarget.getByteCount() + this.composeTarget.getByteCount() + this.holdTarget.getByteCount();
     }
 

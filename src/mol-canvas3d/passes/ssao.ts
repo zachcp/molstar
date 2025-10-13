@@ -79,7 +79,7 @@ function getLevels(props: { radius: number, bias: number }[], scale: number, lev
 }
 
 export class SsaoPass {
-    static isEnabled(props: PostprocessingProps) {
+    static isEnabled(props: PostprocessingProps): boolean {
         return props.enabled && props.occlusion.name !== 'off';
     }
 
@@ -212,7 +212,7 @@ export class SsaoPass {
         this.blurSecondPassRenderable = getSsaoBlurRenderable(webgl, this.depthBlurProxyTexture, 'vertical');
     }
 
-    getByteCount() {
+    getByteCount(): number {
         return (
             this.downsampledDepthTargetOpaque.getByteCount() +
             this.depthHalfTargetOpaque.getByteCount() +

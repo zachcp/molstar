@@ -55,7 +55,7 @@ export class WboitPass {
     private readonly depthRenderbuffer!: Renderbuffer;
 
     private _supported = false;
-    get supported() {
+    get supported(): boolean {
         return this._supported;
     }
 
@@ -119,7 +119,7 @@ export class WboitPass {
         this.depthRenderbuffer.attachFramebuffer(this.framebuffer);
     }
 
-    static isSupported(webgl: WebGLContext) {
+    static isSupported(webgl: WebGLContext): boolean {
         const { extensions: { drawBuffers, textureFloat, colorBufferFloat, depthTexture } } = webgl;
         if (!textureFloat || !colorBufferFloat || !depthTexture || !drawBuffers) {
             if (isDebugMode) {

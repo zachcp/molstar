@@ -34,7 +34,7 @@ export const ShadowParams = {
 export type ShadowProps = PD.Values<typeof ShadowParams>
 
 export class ShadowPass {
-    static isEnabled(props: PostprocessingProps) {
+    static isEnabled(props: PostprocessingProps): boolean {
         return props.enabled && props.shadow.name !== 'off';
     }
 
@@ -49,7 +49,7 @@ export class ShadowPass {
         this.renderable = getShadowsRenderable(webgl, depthTextureOpaque);
     }
 
-    getByteCount() {
+    getByteCount(): number {
         return this.target.getByteCount();
     }
 

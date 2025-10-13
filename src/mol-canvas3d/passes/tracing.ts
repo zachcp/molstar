@@ -126,7 +126,7 @@ export class TracingPass {
         this.accumulateRenderable = getAccumulateRenderable(webgl, this.holdTarget.texture);
     }
 
-    getByteCount() {
+    getByteCount(): number {
         return (
             this.thicknessTarget.getByteCount() +
             this.holdTarget.getByteCount() +

@@ -120,7 +120,7 @@ export class DrawPass {
         this.setTransparency(transparency);
     }
 
-    getByteCount() {
+    getByteCount(): number {
         return (
             this.drawTarget.getByteCount() +
             this.colorTarget.getByteCount() +

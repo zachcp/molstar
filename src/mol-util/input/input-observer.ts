@@ -1107,8 +1107,8 @@ namespace InputObserver {
             get noContextMenu() { return noContextMenu; },
             set noContextMenu(value: boolean) { noContextMenu = value; },
 
-            get width() { return width; },
-            get height() { return height; },
+            get width(): number { return width; },
+            get height(): number { return height; },
             get pixelRatio() { return pixelRatio(); },
             get pointerLock() { return isLocked; },
 

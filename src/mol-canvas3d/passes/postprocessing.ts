@@ -156,23 +156,23 @@ export const PostprocessingParams = {
 export type PostprocessingProps = PD.Values<typeof PostprocessingParams>
 
 export class PostprocessingPass {
-    static isEnabled(props: PostprocessingProps) {
+    static isEnabled(props: PostprocessingProps): boolean {
         return props.enabled && (SsaoPass.isEnabled(props) || ShadowPass.isEnabled(props) || OutlinePass.isEnabled(props) || props.background.variant.name !== 'off');
     }
 
-    static isTransparentDepthRequired(scene: Scene, props: PostprocessingProps) {
+    static isTransparentDepthRequired(scene: Scene, props: PostprocessingProps): boolean {
         return props.enabled && (DofPass.isEnabled(props) || OutlinePass.isEnabled(props) && PostprocessingPass.isTransparentOutlineEnabled(props) || SsaoPass.isEnabled(props) && PostprocessingPass.isTransparentSsaoEnabled(scene, props)) && scene.opacityAverage < 1;
     }
 
-    static isTransparentOutlineEnabled(props: PostprocessingProps) {
+    static isTransparentOutlineEnabled(props: PostprocessingProps): boolean {
         return props.enabled && OutlinePass.isEnabled(props) && ((props.outline.params as OutlineProps).includeTransparent ?? true);
     }
 
-    static isTransparentSsaoEnabled(scene: Scene, props: PostprocessingProps) {
+    static isTransparentSsaoEnabled(scene: Scene, props: PostprocessingProps): boolean {
         return props.enabled && SsaoPass.isEnabled(props) && SsaoPass.isTransparentEnabled(scene, props.occlusion.params as SsaoProps);
     }
 
-    static isSsaoEnabled(props: PostprocessingProps) {
+    static isSsaoEnabled(props: PostprocessingProps): boolean {
         return props.enabled && SsaoPass.isEnabled(props);
     }
 
@@ -202,7 +202,7 @@ export class PostprocessingPass {
         this.background = new BackgroundPass(webgl, assetManager, width, height);
     }
 
-    getByteCount() {
+    getByteCount(): number {
         return (
             this.target.getByteCount() +
             this.ssao.getByteCount() +
@@ -363,7 +363,7 @@ export class PostprocessingPass {
 }
 
 export class AntialiasingPass {
-    static isEnabled(props: PostprocessingProps) {
+    static isEnabled(props: PostprocessingProps): boolean {
         return props.enabled && (props.antialiasing.name !== 'off' || props.sharpening.name !== 'off');
     }
 
@@ -383,7 +383,7 @@ export class AntialiasingPass {
         this.cas = new CasPass(webgl, this.target.texture);
     }
 
-    getByteCount() {
+    getByteCount(): number {
         return (
             this.target.getByteCount() +
             this.internalTarget.getByteCount() +
