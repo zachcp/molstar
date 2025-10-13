@@ -291,7 +291,9 @@ class Structure {
     return this.state.interBondsValidUnit;
   }
 
-  get interBondsValidUnitPair(): ((structure: Structure, unitA: Unit, unitB: Unit) => boolean) | undefined {
+  get interBondsValidUnitPair():
+    | ((structure: Structure, unitA: Unit, unitB: Unit) => boolean)
+    | undefined {
     return this.state.interBondsValidUnitPair;
   }
 
@@ -344,7 +346,10 @@ class Structure {
     );
   }
 
-  get uniqueAtomicResidueIndices(): ReadonlyMap<UUID, ReadonlyArray<ResidueIndex>> {
+  get uniqueAtomicResidueIndices(): ReadonlyMap<
+    UUID,
+    ReadonlyArray<ResidueIndex>
+  > {
     return (
       this.state.uniqueAtomicResidueIndices ||
       (this.state.uniqueAtomicResidueIndices =
@@ -425,12 +430,12 @@ class Structure {
     return this.state.representativeModel;
   }
 
-  hasElement(e: StructureElement.Location) {
+  hasElement(e: StructureElement.Location): boolean {
     if (!this.unitMap.has(e.unit.id)) return false;
     return SortedArray.has(this.unitMap.get(e.unit.id).elements, e.element);
   }
 
-  getModelIndex(m: Model) {
+  getModelIndex(m: Model): number {
     return this.models.indexOf(m);
   }
 
@@ -763,7 +768,7 @@ namespace Structure {
     return loci.structure.isEmpty;
   }
 
-  export function remapLoci(loci: Loci, structure: Structure) {
+  export function remapLoci(loci: Loci, structure: Structure): Loci {
     if (structure === loci.structure) return loci;
     return Loci(structure);
   }
@@ -1002,7 +1007,7 @@ namespace Structure {
     }
   }
 
-  export function transform(s: Structure, transform: Mat4) {
+  export function transform(s: Structure, transform: Mat4): Structure {
     if (Mat4.isIdentity(transform)) return s;
     if (
       !Mat4.isRotationAndTranslation(
@@ -1027,7 +1032,7 @@ namespace Structure {
     return create(units, { parent: s, coordinateSystem: newCS });
   }
 
-  export function instances(s: Structure, transforms: Mat4[]) {
+  export function instances(s: Structure, transforms: Mat4[]): Structure {
     for (const t of transforms) {
       if (
         !Mat4.isRotationAndTranslation(
