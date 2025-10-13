@@ -25,7 +25,7 @@ export class DataFormatRegistry {
         return this._list.map(e => [e.name, e.provider.label] as [name: string, label: string]);
     }
 
-    get extensions() {
+    get extensions(): Set<string> {
         if (this._extensions) return this._extensions;
         const extensions = new Set<string>();
         this._list.forEach(({ provider }) => {
@@ -36,7 +36,7 @@ export class DataFormatRegistry {
         return extensions;
     }
 
-    get binaryExtensions() {
+    get binaryExtensions(): Set<string> {
         if (this._binaryExtensions) return this._binaryExtensions;
         const binaryExtensions = new Set<string>();
         this._list.forEach(({ provider }) => provider.binaryExtensions?.forEach(ext => binaryExtensions.add(ext)));
@@ -44,7 +44,7 @@ export class DataFormatRegistry {
         return binaryExtensions;
     }
 
-    get options() {
+    get options(): [name: string, label: string, category: string][] {
         if (this._options) return this._options;
         const options: [name: string, label: string, category: string][] = [];
         this._list.forEach(({ name, provider }) => options.push([name, provider.label, provider.category || '']));
@@ -98,7 +98,7 @@ export class DataFormatRegistry {
         }
     }
 
-    get list() {
+    get list(): { name: string, provider: DataFormatProvider }[] {
         return this._list;
     }
 }

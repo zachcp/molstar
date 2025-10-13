@@ -1,23 +1,23 @@
 # Next Session Quick-Start Guide
 
-**Last Updated:** Session 7 In Progress  
-**Status:** 984 errors remaining (18 fixed!) - Batch fixing works! 🎉
+**Last Updated:** Session 7 - In Progress  
+**Status:** 955 errors remaining (29 fixed this session!) 🎉
 
 ---
 
 ## 🎯 Current Status
 
-**Errors:** 1,002 → 984 (18 fixed)  
+**Errors:** 984 → 955 (29 fixed)  
 **Strategy:** ✅ **Batch fixing with sed is working great!**
 
 ### Error Breakdown
-- `missing-explicit-return-type`: 556 (down from 562)
-- `missing-explicit-type`: 406 
+- `missing-explicit-return-type`: ~949
+- `missing-explicit-type`: ~406 
 - `unsupported-super-class-expr`: 34
 
 ### By Pattern (Easiest → Hardest)
-1. **Getters: 79 remaining** (87 → 79, 8 fixed ✅) - **KEEP GOING HERE!**
-2. Export const functions: 291
+1. **Getters: 43 remaining** (70 → 43, **27 fixed!** ✅) - **KEEP GOING!**
+2. Export const functions: 230
 3. Regular functions: 16  
 4. Static methods: 1
 5. Methods: 242
@@ -37,53 +37,89 @@
 ### The Pattern That Works
 
 ```bash
-# 1. Identify file with multiple getter errors
-python3 scripts/analyze-deno-errors.py | grep "GETTER" -A20
+# 1. Run analysis
+python3 scripts/analyze-deno-errors.py
 
-# 2. Read the file to understand return types
+# 2. Read file to understand return types
 # Look for: property declarations, return statements, function signatures
 
 # 3. Fix with sed (one-liner for each getter)
-sed -i.bak 'LINE_NUMs/get name() {/get name(): ReturnType {/' FILE.ts
-rm FILE.ts.bak
+sed -i '' 'LINE_NUMs/get name() {/get name(): ReturnType {/' FILE.ts
 
 # 4. Verify
 deno publish --dry-run 2>&1 | grep -c "error\["
 ```
 
-### Example: Fixed 13 getters in structure.ts
+### Session 7 Fixes (29 total)
 
+**File: src/mol-model/structure/structure/unit.ts (17 fixes)**
 ```bash
-# File: src/mol-model/structure/structure/structure.ts
-sed -i.bak '125s/get customPropertyDescriptors() {/get customPropertyDescriptors(): CustomProperties {/' FILE
-sed -i.bak2 '234s/get parent() {/get parent(): Structure | undefined {/' FILE
-sed -i.bak3 '253s/get boundary() {/get boundary(): Boundary {/' FILE
-# ... etc
-rm FILE.bak*
+# Atomic class getters
+sed -i '' '225s/get transientCache() {/get transientCache(): Map<any, any> {/' unit.ts
+sed -i '' '278s/get boundary() {/get boundary(): Boundary {/' unit.ts
+sed -i '' '287s/get lookup3d() {/get lookup3d(): Lookup3D<StructureElement.UnitIndex> {/' unit.ts
+sed -i '' '294s/get principalAxes() {/get principalAxes(): PrincipalAxes {/' unit.ts
+sed -i '' '300s/get bonds() {/get bonds(): IntraUnitBonds {/' unit.ts
+sed -i '' '315s/get rings() {/get rings(): UnitRings {/' unit.ts
+sed -i '' '321s/get resonance() {/get resonance(): UnitResonance {/' unit.ts
+sed -i '' '327s/get polymerElements() {/get polymerElements(): SortedArray<ElementIndex> {/' unit.ts
+sed -i '' '333s/get gapElements() {/get gapElements(): SortedArray<ElementIndex> {/' unit.ts
+sed -i '' '339s/get nucleotideElements() {/get nucleotideElements(): SortedArray<ElementIndex> {/' unit.ts
+sed -i '' '345s/get proteinElements() {/get proteinElements(): SortedArray<ElementIndex> {/' unit.ts
+
+# Coarse class getters
+sed -i '' '415s/get transientCache() {/get transientCache(): Map<any, any> {/' unit.ts
+sed -i '' '457s/get boundary() {/get boundary(): Boundary {/' unit.ts
+sed -i '' '467s/get lookup3d() {/get lookup3d(): Lookup3D<StructureElement.UnitIndex> {/' unit.ts
+sed -i '' '475s/get principalAxes() {/get principalAxes(): PrincipalAxes {/' unit.ts
+sed -i '' '481s/get polymerElements() {/get polymerElements(): SortedArray<ElementIndex> {/' unit.ts
+sed -i '' '487s/get gapElements() {/get gapElements(): SortedArray<ElementIndex> {/' unit.ts
 ```
 
-**Result:** 13 getters fixed in ~5 minutes!
+**File: src/mol-model/structure/structure/unit/rings.ts (6 fixes)**
+```bash
+sed -i '' '40s/get byFingerprint() {/get byFingerprint(): ReadonlyMap<UnitRing.Fingerprint, ReadonlyArray<UnitRings.Index>> {/' rings.ts
+sed -i '' '47s/get elementRingIndices() {/get elementRingIndices(): ReadonlyMap<StructureElement.UnitIndex, UnitRings.Index[]> {/' rings.ts
+sed -i '' '51s/get elementAromaticRingIndices() {/get elementAromaticRingIndices(): ReadonlyMap<StructureElement.UnitIndex, UnitRings.Index[]> {/' rings.ts
+sed -i '' '56s/get ringComponentIndex() {/get ringComponentIndex(): ReadonlyArray<UnitRings.ComponentIndex> {/' rings.ts
+sed -i '' '60s/get ringComponents() {/get ringComponents(): ReadonlyArray<ReadonlyArray<UnitRings.Index>> {/' rings.ts
+sed -i '' '64s/get aromaticRings() {/get aromaticRings(): ReadonlyArray<UnitRings.Index> {/' rings.ts
+```
+
+**File: src/mol-model/structure/structure/util/lookup3d.ts (1 fix)**
+```bash
+# Added import: import type { Boundary } from '../../../../mol-math/geometry/boundary.ts';
+sed -i '' '274s/get boundary() {/get boundary(): Boundary {/' lookup3d.ts
+```
+
+**File: src/mol-state/state.ts (3 fixes)**
+```bash
+sed -i '' '63s/get transforms() {/get transforms(): StateTree.Transforms {/' state.ts
+sed -i '' '64s/get current() {/get current(): StateTransform.Ref {/' state.ts
+sed -i '' '65s/get root() {/get root(): StateObjectCell {/' state.ts
+```
 
 ---
 
 ## 📋 Next Steps (Start Here!)
 
-### Phase 1: Continue Fixing Getters (79 left)
+### Phase 1: Finish Remaining Getters (43 left)
 
-**Target Files with Multiple Getters:**
+**Remaining getters are in these files:**
+```bash
+python3 scripts/analyze-deno-errors.py 2>/dev/null | grep -A50 "^GETTER"
+```
 
-1. **`src/mol-model/structure/structure/unit.ts`** - Check for getters
-2. **`src/mol-model/structure/model/model.ts`** - Check for getters
-3. **`src/mol-plugin-state/`** - Many files with getters
+Look for files with multiple getters for efficiency.
 
 **Process:**
 ```bash
 # Find files with getter errors
 deno publish --dry-run 2>&1 | tee /tmp/deno_errors.txt
-python3 scripts/analyze-deno-errors.py | grep -A50 "GETTER"
+python3 scripts/analyze-deno-errors.py
 
 # Pick a file, read it to understand types
-# Fix 5-10 getters with sed
+# Fix 3-5 getters with sed
 # Verify: deno publish --dry-run 2>&1 | grep -c "error\["
 ```
 
@@ -95,7 +131,7 @@ Move to **Regular Functions** (only 16!) - these are easy too:
 
 ### Phase 3: Then Export Const Functions
 
-The 291 `export const` functions need more analysis but follow same pattern.
+The 230 `export const` functions need more analysis but follow same pattern.
 
 ---
 
@@ -107,13 +143,10 @@ deno publish --dry-run 2>&1 | tee /tmp/deno_errors.txt
 python3 scripts/analyze-deno-errors.py
 
 # Count errors
-grep -c "error\[" /tmp/deno_errors.txt
+deno publish --dry-run 2>&1 | grep -c "error\["
 
 # Find getter errors
-grep "get " /tmp/deno_errors.txt | head -20
-
-# Quick verify a fix
-deno check src/path/to/file.ts
+python3 scripts/analyze-deno-errors.py 2>/dev/null | grep -A50 "GETTER"
 ```
 
 ---
@@ -127,6 +160,7 @@ deno check src/path/to/file.ts
 3. **Lazy init:** Look at initialization value
 4. **With cast:** `as Type` → Use that Type
 5. **Readonly wrapper:** `as Readonly<T>` → Use `Readonly<T>`
+6. **One-liner return:** `{ return this.x; }` → Check `this.x` type
 
 ### Common Return Types
 
@@ -138,35 +172,60 @@ deno check src/path/to/file.ts
 - `ReadonlyArray<T>` - for arrays
 - `ReadonlySet<T>` - for sets
 - `ReadonlyMap<K, V>` - for maps
+- `StateTransform.Ref` - for refs
+- `StateObjectCell` - for cells
 
 ---
 
 ## 📊 Progress Tracker
 
-### Session 7 Fixes
-- ✅ 3 getters in stereo.ts
-- ✅ 1 getter in bounding-sphere-helper.ts  
-- ✅ 1 getter in draw.ts
-- ✅ 1 getter in illumination.ts
-- ✅ 13 getters in structure.ts
-- **Total: 18 fixes** 🎉
+### Session 7 Summary
+**Files Modified:** 4
+**Errors Fixed:** 29 (984 → 955)
+
+1. ✅ **unit.ts** - 17 getters (Atomic + Coarse classes)
+2. ✅ **rings.ts** - 6 getters (UnitRings class)
+3. ✅ **lookup3d.ts** - 1 getter + import fix
+4. ✅ **state.ts** - 3 getters
+
+**Commit:** `dbc685f` - "fix: add explicit return types to 29 getters"
+
+### Overall Progress
+- **Started:** 1,002 errors (Session 1)
+- **Session 7 Start:** 984 errors  
+- **Current:** 955 errors
+- **Fixed Total:** 47 errors
+- **Getters:** 70 → 43 (27 fixed!)
 
 ### Estimated Timeline
-- **79 getters** × 2 min/each = ~160 min (~3 hours total)
-- At current pace: ~30-40 getters per session
-- **2-3 more sessions to finish getters!**
+- **43 getters remaining** × 2 min/each = ~86 min (~1.5 hours)
+- **At current pace:** Could finish all getters in 1-2 more sessions!
+- **Then:** 16 regular functions (easy!)
+- **Then:** Export functions and methods
 
 ---
 
 ## ✅ Success Criteria for Next Session
 
-**Goal:** Fix 30+ more getters (get down to ~950 errors)
+**Goal:** Fix remaining 43 getters (get down to ~912 errors or less)
 
 **Steps:**
 1. Run `python3 scripts/analyze-deno-errors.py` to find getter files
-2. Pick files with 3+ getters (more efficient)
+2. Pick files with 2+ getters (more efficient)
 3. Use sed for batch fixes
 4. Verify after every 5-10 fixes
 5. Commit progress periodically
 
-**You're doing great! The sed approach is the winner!** 🏆
+**You're doing amazing! The sed approach is perfect!** 🏆
+
+---
+
+## 🎯 Key Learnings
+
+1. **sed preserves formatting** - Better than edit_file tool
+2. **Batch fixing is fast** - 17 getters in ~10 minutes
+3. **Type inference is straightforward** - Look at property types
+4. **Pattern consistency** - Same types repeat (Boundary, Lookup3D, etc.)
+5. **Commit often** - Makes it easy to track progress
+
+Keep using this strategy! 🚀
