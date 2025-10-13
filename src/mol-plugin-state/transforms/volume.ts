@@ -32,7 +32,7 @@ export { VolumeFromDensityServerCif };
 export { VolumeFromSegmentationCif };
 
 type VolumeFromCcp4 = typeof VolumeFromCcp4
-const VolumeFromCcp4 = PluginStateTransform.BuiltIn({
+const VolumeFromCcp4: StateTransformer<SO.Format.Ccp4, SO.Volume.Data> = PluginStateTransform.BuiltIn({
     name: 'volume-from-ccp4',
     display: { name: 'Volume from CCP4/MRC/MAP', description: 'Create Volume from CCP4/MRC/MAP data' },
     from: SO.Format.Ccp4,
@@ -58,7 +58,7 @@ const VolumeFromCcp4 = PluginStateTransform.BuiltIn({
 });
 
 type VolumeFromDsn6 = typeof VolumeFromDsn6
-const VolumeFromDsn6 = PluginStateTransform.BuiltIn({
+const VolumeFromDsn6: StateTransformer<SO.Format.Dsn6, SO.Volume.Data> = PluginStateTransform.BuiltIn({
     name: 'volume-from-dsn6',
     display: { name: 'Volume from DSN6/BRIX', description: 'Create Volume from DSN6/BRIX data' },
     from: SO.Format.Dsn6,
@@ -83,7 +83,7 @@ const VolumeFromDsn6 = PluginStateTransform.BuiltIn({
 });
 
 type VolumeFromCube = typeof VolumeFromCube
-const VolumeFromCube = PluginStateTransform.BuiltIn({
+const VolumeFromCube: StateTransformer<SO.Format.Cube, SO.Volume.Data> = PluginStateTransform.BuiltIn({
     name: 'volume-from-cube',
     display: { name: 'Volume from Cube', description: 'Create Volume from Cube data' },
     from: SO.Format.Cube,
@@ -128,7 +128,7 @@ const VolumeFromDx = PluginStateTransform.BuiltIn({
 });
 
 type VolumeFromDensityServerCif = typeof VolumeFromDensityServerCif
-const VolumeFromDensityServerCif = PluginStateTransform.BuiltIn({
+const VolumeFromDensityServerCif: StateTransformer<SO.Format.Cif, SO.Volume.Data> = PluginStateTransform.BuiltIn({
     name: 'volume-from-density-server-cif',
     display: { name: 'Volume from density-server CIF', description: 'Identify and create all separate models in the specified CIF data block' },
     from: SO.Format.Cif,
@@ -166,7 +166,7 @@ const VolumeFromDensityServerCif = PluginStateTransform.BuiltIn({
 });
 
 type VolumeFromSegmentationCif = typeof VolumeFromSegmentationCif
-const VolumeFromSegmentationCif = PluginStateTransform.BuiltIn({
+const VolumeFromSegmentationCif: StateTransformer<SO.Format.Cif, SO.Volume.Data> = PluginStateTransform.BuiltIn({
     name: 'volume-from-segmentation-cif',
     display: { name: 'Volume from Segmentation CIF' },
     from: SO.Format.Cif,
@@ -204,7 +204,7 @@ const VolumeFromSegmentationCif = PluginStateTransform.BuiltIn({
 });
 
 type AssignColorVolume = typeof AssignColorVolume
-const AssignColorVolume = PluginStateTransform.BuiltIn({
+const AssignColorVolume: StateTransformer<SO.Volume.Data, SO.Volume.Data> = PluginStateTransform.BuiltIn({
     name: 'assign-color-volume',
     display: { name: 'Assign Color Volume', description: 'Assigns another volume to be available for coloring.' },
     from: SO.Volume.Data,
