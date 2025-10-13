@@ -38,11 +38,7 @@ export namespace TrajectoryHierarchyPresetProvider {
   export const CommonParams = (
     a: PluginStateObject.Molecule.Trajectory | undefined,
     plugin: PluginContext,
-  ): {
-    modelProperties: PD.Optional<any>;
-    structureProperties: PD.Optional<any>;
-    representationPreset: PD.Optional<keyof PresetStructureRepresentations>;
-  } => ({
+  ) => ({
     modelProperties: PD.Optional(
       PD.Group(
         StateTransformer.getParamDefinition(

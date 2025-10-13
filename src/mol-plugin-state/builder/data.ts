@@ -7,6 +7,7 @@
 import type {
   StateTransformer,
   StateTransform,
+  StateObjectSelector,
 } from "../../mol-state/index.ts";
 import type { PluginContext } from "../../mol-plugin/context.ts";
 import {
@@ -16,6 +17,7 @@ import {
   RawData,
 } from "../transforms/data.ts";
 import { getFileNameInfo } from "../../mol-util/file-info.ts";
+import { PluginStateObject as SO } from "../objects.ts";
 
 export class DataBuilder {
   private get dataState() {
@@ -25,7 +27,7 @@ export class DataBuilder {
   rawData(
     params: StateTransformer.Params<RawData>,
     options?: Partial<StateTransform.Options>,
-  ): Promise<void> {
+  ): Promise<StateObjectSelector<SO.Data.String | SO.Data.Binary>> {
     const data = this.dataState
       .build()
       .toRoot()
@@ -36,7 +38,7 @@ export class DataBuilder {
   download(
     params: StateTransformer.Params<Download>,
     options?: Partial<StateTransform.Options>,
-  ): Promise<void> {
+  ): Promise<StateObjectSelector<SO.Data.String | SO.Data.Binary>> {
     const data = this.dataState
       .build()
       .toRoot()
@@ -47,7 +49,7 @@ export class DataBuilder {
   downloadBlob(
     params: StateTransformer.Params<DownloadBlob>,
     options?: Partial<StateTransform.Options>,
-  ): Promise<void> {
+  ): Promise<StateObjectSelector<SO.Data.Blob>> {
     const data = this.dataState
       .build()
       .toRoot()
@@ -58,7 +60,10 @@ export class DataBuilder {
   async readFile(
     params: StateTransformer.Params<ReadFile>,
     options?: Partial<StateTransform.Options>,
-  ): Promise<{ data: void; fileInfo: ReturnType<typeof getFileNameInfo> }> {
+  ): Promise<{
+    data: StateObjectSelector<SO.Data.String | SO.Data.Binary>;
+    fileInfo: ReturnType<typeof getFileNameInfo>;
+  }> {
     const data = await this.dataState
       .build()
       .toRoot()
