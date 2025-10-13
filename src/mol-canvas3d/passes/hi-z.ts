@@ -103,7 +103,7 @@ type LevelData = {
     offset: number
 }[]
 
-export const HiZParams = {
+export const HiZParams: PD.Params = {
     enabled: PD.Boolean(false, { description: 'Hierarchical Z-buffer occlusion culling. Only available for WebGL2.' }),
     maxFrameLag: PD.Numeric(10, { min: 1, max: 30, step: 1 }, { description: 'Maximum number of frames to wait for Z-buffer data.' }),
     minLevel: PD.Numeric(3, { min: 1, max: 10, step: 1 }),

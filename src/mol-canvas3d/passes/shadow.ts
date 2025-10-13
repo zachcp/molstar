@@ -25,7 +25,7 @@ import { getTransformedLightDirection, type Light } from '../../mol-gl/renderer.
 import { shadows_frag } from '../../mol-gl/shader/shadows.frag.ts';
 import type { PostprocessingProps } from './postprocessing.ts';
 
-export const ShadowParams = {
+export const ShadowParams: PD.Params = {
     steps: PD.Numeric(1, { min: 1, max: 64, step: 1 }),
     maxDistance: PD.Numeric(3, { min: 0, max: 256, step: 1 }),
     tolerance: PD.Numeric(1.0, { min: 0.0, max: 10.0, step: 0.1 }),

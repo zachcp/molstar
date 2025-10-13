@@ -20,7 +20,7 @@ import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
 import { isTimingMode } from '../../mol-util/debug.ts';
 import { cas_frag } from '../../mol-gl/shader/cas.frag.ts';
 
-export const CasParams = {
+export const CasParams: PD.Params = {
     sharpness: PD.Numeric(0.5, { min: 0, max: 1, step: 0.05 }),
     denoise: PD.Boolean(true),
 };

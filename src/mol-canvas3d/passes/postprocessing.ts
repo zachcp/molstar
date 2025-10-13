@@ -119,7 +119,7 @@ function getPostprocessingRenderable(ctx: WebGLContext, colorTexture: Texture, t
     return createComputeRenderable(renderItem, values);
 }
 
-export const PostprocessingParams = {
+export const PostprocessingParams: PD.Params = {
     enabled: PD.Boolean(true),
     occlusion: PD.MappedStatic('on', {
         on: PD.Group(SsaoParams),

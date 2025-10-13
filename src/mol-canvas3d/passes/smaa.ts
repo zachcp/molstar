@@ -24,7 +24,7 @@ import { edges_frag } from '../../mol-gl/shader/smaa/edges.frag.ts';
 import { Viewport } from '../camera/util.ts';
 import { isDebugMode, isTimingMode } from '../../mol-util/debug.ts';
 
-export const SmaaParams = {
+export const SmaaParams: PD.Params = {
     edgeThreshold: PD.Numeric(0.1, { min: 0.05, max: 0.15, step: 0.01 }),
     maxSearchSteps: PD.Numeric(16, { min: 0, max: 32, step: 1 }),
 };

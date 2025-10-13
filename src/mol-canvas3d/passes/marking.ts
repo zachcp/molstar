@@ -22,7 +22,7 @@ import { Color } from '../../mol-util/color/index.ts';
 import { edge_frag } from '../../mol-gl/shader/marking/edge.frag.ts';
 import { isTimingMode } from '../../mol-util/debug.ts';
 
-export const MarkingParams = {
+export const MarkingParams: PD.Params = {
     enabled: PD.Boolean(true),
     highlightEdgeColor: PD.Color(Color.darken(Color.fromNormalizedRgb(1.0, 0.4, 0.6), 1.0)),
     selectEdgeColor: PD.Color(Color.darken(Color.fromNormalizedRgb(0.2, 1.0, 0.1), 1.0)),

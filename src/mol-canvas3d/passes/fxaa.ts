@@ -20,7 +20,7 @@ import type { Viewport } from '../camera/util.ts';
 import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
 import { isTimingMode } from '../../mol-util/debug.ts';
 
-export const FxaaParams = {
+export const FxaaParams: PD.Params = {
     edgeThresholdMin: PD.Numeric(0.0312, { min: 0.0312, max: 0.0833, step: 0.0001 }, { description: 'Trims the algorithm from processing darks.' }),
     edgeThresholdMax: PD.Numeric(0.063, { min: 0.063, max: 0.333, step: 0.001 }, { description: 'The minimum amount of local contrast required to apply algorithm.' }),
     iterations: PD.Numeric(12, { min: 0, max: 16, step: 1 }, { description: 'Number of edge exploration steps.' }),

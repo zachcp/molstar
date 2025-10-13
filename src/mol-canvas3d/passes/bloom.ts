@@ -28,7 +28,7 @@ import type { PostprocessingProps } from './postprocessing.ts';
 
 const MipCount = 5;
 
-export const BloomParams = {
+export const BloomParams: PD.Params = {
     strength: PD.Numeric(1, { min: 0, max: 3, step: 0.1 }),
     radius: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }),
     threshold: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }, { description: 'Luminosity threshold', hideIf: p => p.mode === 'emissive' }),

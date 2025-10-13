@@ -24,7 +24,7 @@ import type { ICamera } from '../../mol-canvas3d/camera.ts';
 import type { Sphere3D } from '../../mol-math/geometry.ts';
 import type { PostprocessingProps } from './postprocessing.ts';
 
-export const DofParams = {
+export const DofParams: PD.Params = {
     blurSize: PD.Numeric(9, { min: 1, max: 32, step: 1 }),
     blurSpread: PD.Numeric(1.0, { min: 0.0, max: 10.0, step: 0.1 }),
     inFocus: PD.Numeric(0.0, { min: -5000.0, max: 5000.0, step: 1.0 }, { description: 'Distance from the scene center that will be in focus' }),

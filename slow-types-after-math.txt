@@ -1,4 +1,0 @@
-[0m[1m[31merror[0m: The module's source code could not be parsed: Unexpected token `:`. Expected an identifier, void, yield, null, await, break, a string literal, a numeric literal, true, false, `, -, import, this, typeof, {, [, ( at file:///Users/zcpowers/Documents/Projects/molstar/src/mol-canvas3d/passes/image.ts:49:24
-
-      get colorTarget(): : RenderTarget { return this._colorTarget; }
-                         ~

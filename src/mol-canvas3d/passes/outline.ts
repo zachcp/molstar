@@ -33,7 +33,7 @@ import { isTimingMode } from "../../mol-util/debug.ts";
 import { Color } from "../../mol-util/color/index.ts";
 import type { PostprocessingProps } from "./postprocessing.ts";
 
-export const OutlineParams = {
+export const OutlineParams: PD.Params = {
   scale: PD.Numeric(1, { min: 1, max: 5, step: 1 }),
   threshold: PD.Numeric(0.33, { min: 0.01, max: 1, step: 0.01 }),
   color: PD.Color(Color(0x000000)),
