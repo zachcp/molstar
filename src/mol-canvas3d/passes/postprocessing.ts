@@ -7,35 +7,35 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { QuadSchema, QuadValues } from '../../mol-gl/compute/util';
-import { TextureSpec, Values, UniformSpec, DefineSpec } from '../../mol-gl/renderable/schema';
-import { ShaderCode } from '../../mol-gl/shader-code';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { ValueCell } from '../../mol-util';
-import { createComputeRenderItem } from '../../mol-gl/webgl/render-item';
-import { createComputeRenderable, ComputeRenderable } from '../../mol-gl/renderable';
-import { Vec2, Vec3 } from '../../mol-math/linear-algebra';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { RenderTarget } from '../../mol-gl/webgl/render-target';
-import { DrawPass } from './draw';
-import { ICamera } from '../../mol-canvas3d/camera';
-import { Scene } from '../../mol-gl/scene';
-import { quad_vert } from '../../mol-gl/shader/quad.vert';
-import { postprocessing_frag } from '../../mol-gl/shader/postprocessing.frag';
-import { Color } from '../../mol-util/color';
-import { FxaaParams, FxaaPass } from './fxaa';
-import { SmaaParams, SmaaPass } from './smaa';
-import { isTimingMode } from '../../mol-util/debug';
-import { BackgroundParams, BackgroundPass } from './background';
-import { AssetManager } from '../../mol-util/assets';
-import { Light } from '../../mol-gl/renderer';
-import { CasParams, CasPass } from './cas';
-import { DofPass, DofParams } from './dof';
-import { BloomParams } from './bloom';
-import { OutlinePass, OutlineProps, OutlineParams } from './outline';
-import { ShadowPass, ShadowProps, ShadowParams } from './shadow';
-import { SsaoPass, SsaoProps, SsaoParams } from './ssao';
+import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
+import { TextureSpec, type Values, UniformSpec, DefineSpec } from '../../mol-gl/renderable/schema.ts';
+import { ShaderCode } from '../../mol-gl/shader-code.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import type { Texture } from '../../mol-gl/webgl/texture.ts';
+import { ValueCell } from '../../mol-util.ts';
+import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
+import { createComputeRenderable, type ComputeRenderable } from '../../mol-gl/renderable.ts';
+import { Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
+import type { DrawPass } from './draw.ts';
+import type { ICamera } from '../../mol-canvas3d/camera.ts';
+import type { Scene } from '../../mol-gl/scene.ts';
+import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
+import { postprocessing_frag } from '../../mol-gl/shader/postprocessing.frag.ts';
+import { Color } from '../../mol-util/color.ts';
+import { FxaaParams, FxaaPass } from './fxaa.ts';
+import { SmaaParams, SmaaPass } from './smaa.ts';
+import { isTimingMode } from '../../mol-util/debug.ts';
+import { BackgroundParams, BackgroundPass } from './background.ts';
+import type { AssetManager } from '../../mol-util/assets.ts';
+import type { Light } from '../../mol-gl/renderer.ts';
+import { CasParams, CasPass } from './cas.ts';
+import { DofPass, DofParams } from './dof.ts';
+import { BloomParams } from './bloom.ts';
+import { OutlinePass, type OutlineProps, OutlineParams } from './outline.ts';
+import { ShadowPass, type ShadowProps, ShadowParams } from './shadow.ts';
+import { SsaoPass, type SsaoProps, SsaoParams } from './ssao.ts';
 
 
 const PostprocessingSchema = {

@@ -4,19 +4,19 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { CreateGroup } from '../../mol-plugin-state/transforms/misc';
-import { ShapeRepresentation3D } from '../../mol-plugin-state/transforms/representation';
-import { setSubtreeVisibility } from '../../mol-plugin/behavior/static/state';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { Color } from '../../mol-util/color';
-import { ColorNames } from '../../mol-util/color/names';
+import type { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { CreateGroup } from '../../mol-plugin-state/transforms/misc.ts';
+import { ShapeRepresentation3D } from '../../mol-plugin-state/transforms/representation.ts';
+import { setSubtreeVisibility } from '../../mol-plugin/behavior/static/state.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { Color } from '../../mol-util/color.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
 
-import { BACKGROUND_SEGMENT_VOLUME_THRESHOLD } from '../meshes/mesh-streaming/behavior';
-import { createMeshFromUrl } from '../meshes/mesh-extension';
+import { BACKGROUND_SEGMENT_VOLUME_THRESHOLD } from '../meshes/mesh-streaming/behavior.ts';
+import { createMeshFromUrl } from '../meshes/mesh-extension.ts';
 
-import { Segment } from './volseg-api/data';
-import { VolsegEntryData } from './entry-root';
+import type { Segment } from './volseg-api/data.ts';
+import type { VolsegEntryData } from './entry-root.ts';
 
 
 const DEFAULT_MESH_DETAIL: number | null = 5; // null means worst

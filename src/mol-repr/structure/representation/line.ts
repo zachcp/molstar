@@ -4,20 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { IntraUnitBondLineVisual, IntraUnitBondLineParams, StructureIntraUnitBondLineParams, StructureIntraUnitBondLineVisual } from '../visual/bond-intra-unit-line';
-import { InterUnitBondLineVisual, InterUnitBondLineParams } from '../visual/bond-inter-unit-line';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { UnitsRepresentation } from '../units-representation';
-import { ComplexRepresentation } from '../complex-representation';
-import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../../mol-repr/representation';
-import { ThemeRegistryContext } from '../../../mol-theme/theme';
-import { Structure } from '../../../mol-model/structure';
-import { getUnitKindsParam } from '../params';
-import { ElementPointParams, ElementPointVisual, StructureElementPointParams, StructureElementPointVisual } from '../visual/element-point';
-import { ElementCrossParams, ElementCrossVisual, StructureElementCrossParams, StructureElementCrossVisual } from '../visual/element-cross';
-import { Points } from '../../../mol-geo/geometry/points/points';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
+import { IntraUnitBondLineVisual, IntraUnitBondLineParams, type StructureIntraUnitBondLineParams, StructureIntraUnitBondLineVisual } from '../visual/bond-intra-unit-line.ts';
+import { InterUnitBondLineVisual, InterUnitBondLineParams } from '../visual/bond-inter-unit-line.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { UnitsRepresentation } from '../units-representation.ts';
+import { ComplexRepresentation } from '../complex-representation.ts';
+import { type StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
+import { Representation, type RepresentationParamsGetter, type RepresentationContext } from '../../../mol-repr/representation.ts';
+import type { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import { Structure } from '../../../mol-model/structure.ts';
+import { getUnitKindsParam } from '../params.ts';
+import { ElementPointParams, ElementPointVisual, type StructureElementPointParams, StructureElementPointVisual } from '../visual/element-point.ts';
+import { ElementCrossParams, ElementCrossVisual, type StructureElementCrossParams, StructureElementCrossVisual } from '../visual/element-cross.ts';
+import { Points } from '../../../mol-geo/geometry/points/points.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const LineVisuals = {
     'intra-bond': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, IntraUnitBondLineParams>) => UnitsRepresentation('Intra-unit bond line', ctx, getParams, IntraUnitBondLineVisual),

@@ -4,39 +4,39 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Visual, VisualContext } from '../visual';
-import { Grid, Volume } from '../../mol-model/volume';
-import { Geometry, GeometryUtils } from '../../mol-geo/geometry/geometry';
-import { LocationIterator } from '../../mol-geo/util/location-iterator';
-import { Theme } from '../../mol-theme/theme';
-import { createTransform, TransformData } from '../../mol-geo/geometry/transform-data';
-import { createRenderObject, getNextMaterialId, GraphicsRenderObject } from '../../mol-gl/render-object';
-import { PickingId } from '../../mol-geo/geometry/picking';
-import { Loci, isEveryLoci, EmptyLoci, isEmptyLoci } from '../../mol-model/loci';
-import { Interval, OrderedSet } from '../../mol-data/int';
-import { getQualityProps, LocationCallback, VisualUpdateState } from '../util';
-import { ColorTheme } from '../../mol-theme/color';
-import { ValueCell } from '../../mol-util';
-import { createSizes } from '../../mol-geo/geometry/size-data';
-import { createColors } from '../../mol-geo/geometry/color-data';
-import { MarkerAction } from '../../mol-util/marker-action';
-import { EPSILON, Mat4 } from '../../mol-math/linear-algebra';
-import { Overpaint } from '../../mol-theme/overpaint';
-import { Transparency } from '../../mol-theme/transparency';
-import { Representation, RepresentationProvider, RepresentationContext, RepresentationParamsGetter } from '../representation';
-import { BaseGeometry } from '../../mol-geo/geometry/base';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Visual, type VisualContext } from '../visual.ts';
+import { Grid, Volume } from '../../mol-model/volume.ts';
+import { Geometry, type GeometryUtils } from '../../mol-geo/geometry/geometry.ts';
+import type { LocationIterator } from '../../mol-geo/util/location-iterator.ts';
+import { Theme } from '../../mol-theme/theme.ts';
+import { createTransform, type TransformData } from '../../mol-geo/geometry/transform-data.ts';
+import { createRenderObject, getNextMaterialId, type GraphicsRenderObject } from '../../mol-gl/render-object.ts';
+import type { PickingId } from '../../mol-geo/geometry/picking.ts';
+import { type Loci, isEveryLoci, EmptyLoci, isEmptyLoci } from '../../mol-model/loci.ts';
+import { Interval, OrderedSet } from '../../mol-data/int.ts';
+import { getQualityProps, type LocationCallback, VisualUpdateState } from '../util.ts';
+import { ColorTheme } from '../../mol-theme/color.ts';
+import { ValueCell } from '../../mol-util.ts';
+import { createSizes } from '../../mol-geo/geometry/size-data.ts';
+import { createColors } from '../../mol-geo/geometry/color-data.ts';
+import type { MarkerAction } from '../../mol-util/marker-action.ts';
+import { EPSILON, Mat4 } from '../../mol-math/linear-algebra.ts';
+import type { Overpaint } from '../../mol-theme/overpaint.ts';
+import type { Transparency } from '../../mol-theme/transparency.ts';
+import { Representation, type RepresentationProvider, type RepresentationContext, type RepresentationParamsGetter } from '../representation.ts';
+import { BaseGeometry } from '../../mol-geo/geometry/base.ts';
 import { Subject } from 'rxjs';
-import { RuntimeContext, Task } from '../../mol-task';
-import { SizeValues } from '../../mol-gl/renderable/schema';
-import { Clipping } from '../../mol-theme/clipping';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { isPromiseLike } from '../../mol-util/type-helpers';
-import { Substance } from '../../mol-theme/substance';
-import { createMarkers } from '../../mol-geo/geometry/marker-data';
-import { Emissive } from '../../mol-theme/emissive';
-import { SizeTheme } from '../../mol-theme/size';
-import { Sphere3D } from '../../mol-math/geometry/primitives/sphere3d';
+import { type RuntimeContext, Task } from '../../mol-task.ts';
+import type { SizeValues } from '../../mol-gl/renderable/schema.ts';
+import type { Clipping } from '../../mol-theme/clipping.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { isPromiseLike } from '../../mol-util/type-helpers.ts';
+import type { Substance } from '../../mol-theme/substance.ts';
+import { createMarkers } from '../../mol-geo/geometry/marker-data.ts';
+import type { Emissive } from '../../mol-theme/emissive.ts';
+import { SizeTheme } from '../../mol-theme/size.ts';
+import type { Sphere3D } from '../../mol-math/geometry/primitives/sphere3d.ts';
 
 export type VolumeKey = { volume: Volume, key: number }
 export interface VolumeVisual<P extends VolumeParams> extends Visual<VolumeKey, P> { }

@@ -5,16 +5,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Structure, StructureProperties, Unit } from '../../mol-model/structure';
-import { CustomPropertyDescriptor } from '../../mol-model/custom-property';
-import { ANVILParams, ANVILProps, computeANVIL, isInMembranePlane } from './algorithm';
-import { CustomStructureProperty } from '../../mol-model-props/common/custom-structure-property';
-import { CustomProperty } from '../../mol-model-props/common/custom-property';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { QuerySymbolRuntime } from '../../mol-script/runtime/query/base';
-import { CustomPropSymbol } from '../../mol-script/language/symbol';
-import { Type } from '../../mol-script/language/type';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { type Structure, StructureProperties, Unit } from '../../mol-model/structure.ts';
+import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
+import { ANVILParams, type ANVILProps, computeANVIL, isInMembranePlane } from './algorithm.ts';
+import { CustomStructureProperty } from '../../mol-model-props/common/custom-structure-property.ts';
+import type { CustomProperty } from '../../mol-model-props/common/custom-property.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { QuerySymbolRuntime } from '../../mol-script/runtime/query/base.ts';
+import { CustomPropSymbol } from '../../mol-script/language/symbol.ts';
+import { Type } from '../../mol-script/language/type.ts';
 
 export const MembraneOrientationParams = {
     ...ANVILParams

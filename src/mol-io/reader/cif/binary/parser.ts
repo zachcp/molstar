@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as Data from '../data-model';
-import { EncodedCategory, EncodedFile } from '../../../common/binary-cif';
-import { Field } from './field';
-import { ReaderResult as Result } from '../../result';
-import { decodeMsgPack } from '../../../common/msgpack/decode';
-import { Task } from '../../../../mol-task';
+import * as Data from '../data-model.ts';
+import type { EncodedCategory, EncodedFile } from '../../../common/binary-cif.ts';
+import { Field } from './field.ts';
+import { ReaderResult as Result } from '../../result.ts';
+import { decodeMsgPack } from '../../../common/msgpack/decode.ts';
+import { Task } from '../../../../mol-task.ts';
 
 function checkVersions(min: number[], current: number[]) {
     for (let i = 0; i < 2; i++) {

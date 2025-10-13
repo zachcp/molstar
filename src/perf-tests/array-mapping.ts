@@ -1,7 +1,7 @@
 import * as B from 'benchmark';
-import { SymmetryOperator } from '../mol-math/geometry/symmetry-operator';
-import { Mat4 } from '../mol-math/linear-algebra/3d/mat4';
-import { Vec3 } from '../mol-math/linear-algebra/3d/vec3';
+import { SymmetryOperator } from '../mol-math/geometry/symmetry-operator.ts';
+import { Mat4 } from '../mol-math/linear-algebra/3d/mat4.ts';
+import { Vec3 } from '../mol-math/linear-algebra/3d/vec3.ts';
 
 interface CoordinateMapper<T extends number> { (index: T, slot: Vec3): Vec3 }
 interface ArrayMapping<T extends number> {

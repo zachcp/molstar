@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginStateObject } from '../../../mol-plugin-state/objects';
-import { getTrajectory } from '../../../mol-plugin-state/transforms/model';
-import { Task } from '../../../mol-task';
-import { ParamDefinition } from '../../../mol-util/param-definition';
-import { getMVSReferenceObject } from '../helpers/utils';
-import { MVSTransform } from './annotation-structure-component';
+import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
+import { getTrajectory } from '../../../mol-plugin-state/transforms/model.ts';
+import { Task } from '../../../mol-task.ts';
+import { ParamDefinition } from '../../../mol-util/param-definition.ts';
+import { getMVSReferenceObject } from '../helpers/utils.ts';
+import { MVSTransform } from './annotation-structure-component.ts';
 
 export const MVSTrajectoryWithCoordinates = MVSTransform({
     name: 'trajectory-with-coordinates',

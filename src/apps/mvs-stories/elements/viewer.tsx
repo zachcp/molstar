@@ -4,19 +4,19 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { MolViewSpec } from '../../../extensions/mvs/behavior';
-import { loadMVSData } from '../../../extensions/mvs/components/formats';
-import { MVSData } from '../../../extensions/mvs/mvs-data';
-import { StringLike } from '../../../mol-io/common/string-like';
-import { PluginComponent } from '../../../mol-plugin-state/component';
-import { createPluginUI } from '../../../mol-plugin-ui';
-import { renderReact18 } from '../../../mol-plugin-ui/react18';
-import { DefaultPluginUISpec } from '../../../mol-plugin-ui/spec';
-import { PluginCommands } from '../../../mol-plugin/commands';
-import { PluginConfig } from '../../../mol-plugin/config';
-import { PluginContext } from '../../../mol-plugin/context';
-import { PluginSpec } from '../../../mol-plugin/spec';
-import { getMVSStoriesContext, MVSStoriesContext } from '../context';
+import { MolViewSpec } from '../../../extensions/mvs/behavior.ts';
+import { loadMVSData } from '../../../extensions/mvs/components/formats.ts';
+import type { MVSData } from '../../../extensions/mvs/mvs-data.ts';
+import { StringLike } from '../../../mol-io/common/string-like.ts';
+import { PluginComponent } from '../../../mol-plugin-state/component.ts';
+import { createPluginUI } from '../../../mol-plugin-ui.ts';
+import { renderReact18 } from '../../../mol-plugin-ui/react18.ts';
+import { DefaultPluginUISpec } from '../../../mol-plugin-ui/spec.ts';
+import { PluginCommands } from '../../../mol-plugin/commands.ts';
+import { PluginConfig } from '../../../mol-plugin/config.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import { PluginSpec } from '../../../mol-plugin/spec.ts';
+import { getMVSStoriesContext, type MVSStoriesContext } from '../context.ts';
 
 export class MVSStoriesViewerModel extends PluginComponent {
     readonly context: MVSStoriesContext;
@@ -128,4 +128,4 @@ export class MVSStoriesViewer extends HTMLElement {
     }
 }
 
-window.customElements.define('mvs-stories-viewer', MVSStoriesViewer);
+globalThis.customElements.define('mvs-stories-viewer', MVSStoriesViewer);

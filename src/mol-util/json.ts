@@ -4,7 +4,7 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { isPlainObject } from './object';
+import { isPlainObject } from './object.ts';
 
 
 /** A JSON-serializable value */

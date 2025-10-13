@@ -5,10 +5,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Type } from '../type';
-import * as Core from './core';
-import { Arguments, Argument } from '../symbol';
-import { symbol } from '../helpers';
+import { Type } from '../type.ts';
+import * as Core from './core.ts';
+import { Arguments, Argument } from '../symbol.ts';
+import { symbol } from '../helpers.ts';
 
 export namespace Types {
     export const ElementSymbol = Type.Value('Structure', 'ElementSymbol');

@@ -5,14 +5,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Volume } from '../../mol-model/volume';
-import { Task } from '../../mol-task';
-import { SpacegroupCell, Box3D } from '../../mol-math/geometry';
-import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra';
-import { ModelFormat } from '../format';
-import { CustomProperties } from '../../mol-model/custom-property';
-import { Segmentation_Data_Database } from '../../mol-io/reader/cif/schema/segmentation';
-import { objectForEach } from '../../mol-util/object';
+import { Volume } from '../../mol-model/volume.ts';
+import { Task } from '../../mol-task.ts';
+import { SpacegroupCell, Box3D } from '../../mol-math/geometry.ts';
+import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra.ts';
+import type { ModelFormat } from '../format.ts';
+import { CustomProperties } from '../../mol-model/custom-property.ts';
+import type { Segmentation_Data_Database } from '../../mol-io/reader/cif/schema/segmentation.ts';
+import { objectForEach } from '../../mol-util/object.ts';
 
 export function volumeFromSegmentationData(source: Segmentation_Data_Database, params?: Partial<{ label: string, segmentLabels: { [id: number]: string }, ownerId: string }>): Task<Volume> {
     return Task.create<Volume>('Create Segmentation Volume', async ctx => {

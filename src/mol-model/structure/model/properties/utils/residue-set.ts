@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StructureElement } from '../../../structure/element';
-import { StructureProperties } from '../../../structure/properties';
+import type { StructureElement } from '../../../structure/element.ts';
+import { StructureProperties } from '../../../structure/properties.ts';
 
 export interface ResidueSetEntry {
     label_asym_id: string,

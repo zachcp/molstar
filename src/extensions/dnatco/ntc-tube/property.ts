@@ -5,14 +5,14 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { NtCTubeTypes as NTT } from './types';
-import { Dnatco, DnatcoParams } from '../property';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
-import { Model } from '../../../mol-model/structure';
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property';
-import { PropertyWrapper } from '../../../mol-model-props/common/wrapper';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
+import type { NtCTubeTypes as NTT } from './types.ts';
+import { Dnatco, DnatcoParams } from '../property.ts';
+import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
+import type { Model } from '../../../mol-model/structure.ts';
+import type { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property.ts';
+import { PropertyWrapper } from '../../../mol-model-props/common/wrapper.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 
 export const NtCTubeParams = { ...DnatcoParams };
 export type NtCTubeParams = typeof NtCTubeParams;

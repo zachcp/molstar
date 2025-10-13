@@ -5,12 +5,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { BondType } from '../../../model/types';
-import { IntAdjacencyGraph } from '../../../../../mol-math/graph';
-import { Unit } from '../../unit';
-import { StructureElement } from '../../element';
-import { Bond } from '../bonds';
-import { InterUnitGraph } from '../../../../../mol-math/graph/inter-unit-graph';
+import type { BondType } from '../../../model/types.ts';
+import { IntAdjacencyGraph } from '../../../../../mol-math/graph.ts';
+import { Unit } from '../../unit.ts';
+import type { StructureElement } from '../../element.ts';
+import type { Bond } from '../bonds.ts';
+import { InterUnitGraph } from '../../../../../mol-math/graph/inter-unit-graph.ts';
 
 export type IntraUnitBondProps = {
     /** Can remap even with `dynamicBonds` on, e.g., for water molecules */

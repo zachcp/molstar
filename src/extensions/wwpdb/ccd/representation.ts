@@ -4,19 +4,19 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { PluginStateObject } from '../../../mol-plugin-state/objects';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { StateObjectRef, StateTransform } from '../../../mol-state';
-import { StateTransforms } from '../../../mol-plugin-state/transforms';
-import { StructureRepresentationPresetProvider, presetStaticComponent } from '../../../mol-plugin-state/builder/structure/representation-preset';
-import { PluginContext } from '../../../mol-plugin/context';
-import { Mat4 } from '../../../mol-math/linear-algebra';
-import { Structure } from '../../../mol-model/structure';
-import { CCDFormat } from '../../../mol-model-formats/structure/mmcif';
-import { MinimizeRmsd } from '../../../mol-math/linear-algebra/3d/minimize-rmsd';
-import { SetUtils } from '../../../mol-util/set';
-import { TrajectoryHierarchyPresetProvider } from '../../../mol-plugin-state/builder/structure/hierarchy-preset';
-import { capitalize } from '../../../mol-util/string';
+import type { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { StateObjectRef, StateTransform } from '../../../mol-state.ts';
+import { StateTransforms } from '../../../mol-plugin-state/transforms.ts';
+import { StructureRepresentationPresetProvider, presetStaticComponent } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import type { Mat4 } from '../../../mol-math/linear-algebra.ts';
+import type { Structure } from '../../../mol-model/structure.ts';
+import { CCDFormat } from '../../../mol-model-formats/structure/mmcif.ts';
+import { MinimizeRmsd } from '../../../mol-math/linear-algebra/3d/minimize-rmsd.ts';
+import { SetUtils } from '../../../mol-util/set.ts';
+import { TrajectoryHierarchyPresetProvider } from '../../../mol-plugin-state/builder/structure/hierarchy-preset.ts';
+import { capitalize } from '../../../mol-util/string.ts';
 
 const CCDParams = (a: PluginStateObject.Molecule.Trajectory | undefined, plugin: PluginContext) => ({
     representationPresetParams: PD.Optional(PD.Group(StructureRepresentationPresetProvider.CommonParams)),

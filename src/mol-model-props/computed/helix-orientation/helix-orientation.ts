@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ElementIndex } from '../../../mol-model/structure';
-import { Segmentation } from '../../../mol-data/int/segmentation';
-import { SortedRanges } from '../../../mol-data/int/sorted-ranges';
-import { OrderedSet } from '../../../mol-data/int';
-import { Model } from '../../../mol-model/structure/model';
-import { Vec3 } from '../../../mol-math/linear-algebra';
+import type { ElementIndex } from '../../../mol-model/structure.ts';
+import { Segmentation } from '../../../mol-data/int/segmentation.ts';
+import { SortedRanges } from '../../../mol-data/int/sorted-ranges.ts';
+import { OrderedSet } from '../../../mol-data/int.ts';
+import type { Model } from '../../../mol-model/structure/model.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 
 export interface HelixOrientation {
     centers: ArrayLike<number>

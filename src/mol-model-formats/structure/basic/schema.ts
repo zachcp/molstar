@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif';
-import { Table } from '../../../mol-data/db';
-import { mmCIF_chemComp_schema } from '../../../mol-io/reader/cif/schema/mmcif-extras';
-import { getNormalizedAtomSite } from './util';
+import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
+import { Table } from '../../../mol-data/db.ts';
+import { mmCIF_chemComp_schema } from '../../../mol-io/reader/cif/schema/mmcif-extras.ts';
+import { getNormalizedAtomSite } from './util.ts';
 
 // TODO split into conformation and hierarchy parts
 

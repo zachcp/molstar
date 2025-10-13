@@ -5,31 +5,31 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Camera } from '../../mol-canvas3d/camera';
-import { CameraFogParams, Canvas3DParams, Canvas3DProps, DefaultCanvas3DParams } from '../../mol-canvas3d/canvas3d';
-import { TrackballControlsParams } from '../../mol-canvas3d/controls/trackball';
-import { BackgroundParams } from '../../mol-canvas3d/passes/background';
-import { BloomParams } from '../../mol-canvas3d/passes/bloom';
-import { DofParams } from '../../mol-canvas3d/passes/dof';
-import { OutlineParams } from '../../mol-canvas3d/passes/outline';
-import { ShadowParams } from '../../mol-canvas3d/passes/shadow';
-import { SsaoParams } from '../../mol-canvas3d/passes/ssao';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { getFocusSnapshot, getPluginBoundingSphere } from '../../mol-plugin-state/manager/focus-camera/focus-object';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginContext } from '../../mol-plugin/context';
-import { PluginState } from '../../mol-plugin/state';
-import { StateObjectSelector } from '../../mol-state';
-import { fovAdjustedPosition } from '../../mol-util/camera';
-import { ColorNames } from '../../mol-util/color/names';
-import { deepClone } from '../../mol-util/object';
-import { ParamDefinition } from '../../mol-util/param-definition';
-import { decodeColor } from './helpers/utils';
-import { MolstarLoadingContext } from './load';
-import { SnapshotMetadata } from './mvs-data';
-import { MVSAnimationNode } from './tree/animation/animation-tree';
-import { MolstarNode, MolstarNodeParams } from './tree/molstar/molstar-tree';
-import { MVSTreeSchema } from './tree/mvs/mvs-tree';
+import type { Camera } from '../../mol-canvas3d/camera.ts';
+import { CameraFogParams, Canvas3DParams, type Canvas3DProps, DefaultCanvas3DParams } from '../../mol-canvas3d/canvas3d.ts';
+import { TrackballControlsParams } from '../../mol-canvas3d/controls/trackball.ts';
+import { BackgroundParams } from '../../mol-canvas3d/passes/background.ts';
+import { BloomParams } from '../../mol-canvas3d/passes/bloom.ts';
+import { DofParams } from '../../mol-canvas3d/passes/dof.ts';
+import { OutlineParams } from '../../mol-canvas3d/passes/outline.ts';
+import { ShadowParams } from '../../mol-canvas3d/passes/shadow.ts';
+import { SsaoParams } from '../../mol-canvas3d/passes/ssao.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { getFocusSnapshot, getPluginBoundingSphere } from '../../mol-plugin-state/manager/focus-camera/focus-object.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import type { PluginState } from '../../mol-plugin/state.ts';
+import type { StateObjectSelector } from '../../mol-state.ts';
+import { fovAdjustedPosition } from '../../mol-util/camera.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { deepClone } from '../../mol-util/object.ts';
+import { ParamDefinition } from '../../mol-util/param-definition.ts';
+import { decodeColor } from './helpers/utils.ts';
+import type { MolstarLoadingContext } from './load.ts';
+import type { SnapshotMetadata } from './mvs-data.ts';
+import type { MVSAnimationNode } from './tree/animation/animation-tree.ts';
+import type { MolstarNode, MolstarNodeParams } from './tree/molstar/molstar-tree.ts';
+import { MVSTreeSchema } from './tree/mvs/mvs-tree.ts';
 
 
 const DefaultFocusOptions = {

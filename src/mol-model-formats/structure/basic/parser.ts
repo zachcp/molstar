@@ -5,23 +5,23 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column, Table } from '../../../mol-data/db';
-import { RuntimeContext } from '../../../mol-task';
-import { UUID } from '../../../mol-util/uuid';
-import { Model } from '../../../mol-model/structure/model/model';
-import { Entities } from '../../../mol-model/structure/model/properties/common';
-import { CustomProperties } from '../../../mol-model/custom-property';
-import { getAtomicHierarchyAndConformation } from './atomic';
-import { getCoarse, EmptyCoarse, CoarseData } from './coarse';
-import { getSequence } from './sequence';
-import { sortAtomSite } from './sort';
-import { ModelFormat } from '../../format';
-import { getAtomicRanges } from '../../../mol-model/structure/model/properties/utils/atomic-ranges';
-import { AtomSite, BasicData } from './schema';
-import { getChemicalComponentMap, getMissingResidues, getSaccharideComponentMap, getStructAsymMap } from './properties';
-import { getEntitiesWithPRD, getEntityData } from './entities';
-import { getModelGroupName } from './util';
-import { ArrayTrajectory } from '../../../mol-model/structure/trajectory';
+import { Column, Table } from '../../../mol-data/db.ts';
+import type { RuntimeContext } from '../../../mol-task.ts';
+import { UUID } from '../../../mol-util/uuid.ts';
+import { Model } from '../../../mol-model/structure/model/model.ts';
+import type { Entities } from '../../../mol-model/structure/model/properties/common.ts';
+import { CustomProperties } from '../../../mol-model/custom-property.ts';
+import { getAtomicHierarchyAndConformation } from './atomic.ts';
+import { getCoarse, EmptyCoarse, type CoarseData } from './coarse.ts';
+import { getSequence } from './sequence.ts';
+import { sortAtomSite } from './sort.ts';
+import type { ModelFormat } from '../../format.ts';
+import { getAtomicRanges } from '../../../mol-model/structure/model/properties/utils/atomic-ranges.ts';
+import type { AtomSite, BasicData } from './schema.ts';
+import { getChemicalComponentMap, getMissingResidues, getSaccharideComponentMap, getStructAsymMap } from './properties.ts';
+import { getEntitiesWithPRD, getEntityData } from './entities.ts';
+import { getModelGroupName } from './util.ts';
+import { ArrayTrajectory } from '../../../mol-model/structure/trajectory.ts';
 
 export async function createModels(data: BasicData, format: ModelFormat, ctx: RuntimeContext) {
     const properties = getCommonProperties(data, format);

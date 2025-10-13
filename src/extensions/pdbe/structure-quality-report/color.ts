@@ -4,16 +4,16 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StructureQualityReport, StructureQualityReportProvider } from './prop';
-import { Location } from '../../../mol-model/location';
-import { Bond, StructureElement } from '../../../mol-model/structure';
-import { ColorTheme, LocationColor } from '../../../mol-theme/color';
-import { ThemeDataContext } from '../../../mol-theme/theme';
-import { Color } from '../../../mol-util/color';
-import { TableLegend } from '../../../mol-util/legend';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { ColorThemeCategory } from '../../../mol-theme/color/categories';
+import { StructureQualityReport, StructureQualityReportProvider } from './prop.ts';
+import type { Location } from '../../../mol-model/location.ts';
+import { Bond, StructureElement } from '../../../mol-model/structure.ts';
+import type { ColorTheme, LocationColor } from '../../../mol-theme/color.ts';
+import type { ThemeDataContext } from '../../../mol-theme/theme.ts';
+import { Color } from '../../../mol-util/color.ts';
+import { TableLegend } from '../../../mol-util/legend.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import { ColorThemeCategory } from '../../../mol-theme/color/categories.ts';
 
 const ValidationColors = [
     Color.fromRgb(170, 170, 170), // not applicable

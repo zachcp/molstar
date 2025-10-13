@@ -4,13 +4,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { CubeFile } from '../../mol-io/reader/cube/parser';
-import { Mat4, Tensor } from '../../mol-math/linear-algebra';
-import { Volume } from '../../mol-model/volume';
-import { Task } from '../../mol-task';
-import { arrayMax, arrayMean, arrayMin, arrayRms } from '../../mol-util/array';
-import { ModelFormat } from '../format';
-import { CustomProperties } from '../../mol-model/custom-property';
+import type { CubeFile } from '../../mol-io/reader/cube/parser.ts';
+import { Mat4, Tensor } from '../../mol-math/linear-algebra.ts';
+import type { Volume } from '../../mol-model/volume.ts';
+import { Task } from '../../mol-task.ts';
+import { arrayMax, arrayMean, arrayMin, arrayRms } from '../../mol-util/array.ts';
+import type { ModelFormat } from '../format.ts';
+import { CustomProperties } from '../../mol-model/custom-property.ts';
 
 export function volumeFromCube(source: CubeFile, params?: { dataIndex?: number, label?: string, entryId?: string }): Task<Volume> {
     return Task.create<Volume>('Create Volume', async () => {

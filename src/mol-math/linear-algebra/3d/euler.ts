@@ -7,11 +7,11 @@
  * copyright (c) 2010-2023 three.js authors. MIT License
  */
 
-import { Mat4 } from './mat4';
-import { assertUnreachable, NumberArray } from '../../../mol-util/type-helpers';
-import { Quat } from './quat';
-import { Vec3 } from './vec3';
-import { clamp } from '../../interpolate';
+import { Mat4 } from './mat4.ts';
+import { assertUnreachable, type NumberArray } from '../../../mol-util/type-helpers.ts';
+import type { Quat } from './quat.ts';
+import type { Vec3 } from './vec3.ts';
+import { clamp } from '../../interpolate.ts';
 
 interface Euler extends Array<number> { [d: number]: number, '@type': 'euler', length: 3 }
 

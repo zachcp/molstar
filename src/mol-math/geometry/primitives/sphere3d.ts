@@ -5,13 +5,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4, EPSILON } from '../../linear-algebra';
-import { PositionData } from '../common';
-import { OrderedSet } from '../../../mol-data/int';
-import { NumberArray, PickRequired } from '../../../mol-util/type-helpers';
-import { Box3D } from './box3d';
-import { Axes3D } from './axes3d';
-import { PrincipalAxes } from '../../linear-algebra/matrix/principal-axes';
+import { Vec3, Mat4, EPSILON } from '../../linear-algebra.ts';
+import type { PositionData } from '../common.ts';
+import { OrderedSet } from '../../../mol-data/int.ts';
+import type { NumberArray, PickRequired } from '../../../mol-util/type-helpers.ts';
+import type { Box3D } from './box3d.ts';
+import { Axes3D } from './axes3d.ts';
+import { PrincipalAxes } from '../../linear-algebra/matrix/principal-axes.ts';
 
 interface Sphere3D {
     center: Vec3,

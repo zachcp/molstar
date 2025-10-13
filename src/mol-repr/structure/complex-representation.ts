@@ -5,25 +5,25 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ComplexVisual, StructureRepresentation, StructureRepresentationStateBuilder, StructureRepresentationState } from './representation';
-import { Representation, RepresentationContext, RepresentationParamsGetter } from '../representation';
-import { Structure, StructureElement, Bond } from '../../mol-model/structure';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { type ComplexVisual, type StructureRepresentation, StructureRepresentationStateBuilder, type StructureRepresentationState } from './representation.ts';
+import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../representation.ts';
+import { Structure, StructureElement, Bond } from '../../mol-model/structure.ts';
 import { Subject } from 'rxjs';
-import { getNextMaterialId, GraphicsRenderObject } from '../../mol-gl/render-object';
-import { Theme } from '../../mol-theme/theme';
-import { Task } from '../../mol-task';
-import { PickingId } from '../../mol-geo/geometry/picking';
-import { EmptyLoci, Loci, isEveryLoci, isDataLoci, EveryLoci } from '../../mol-model/loci';
-import { MarkerAction, MarkerActions } from '../../mol-util/marker-action';
-import { Overpaint } from '../../mol-theme/overpaint';
-import { StructureParams } from './params';
-import { Clipping } from '../../mol-theme/clipping';
-import { Transparency } from '../../mol-theme/transparency';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Substance } from '../../mol-theme/substance';
-import { LocationCallback } from '../util';
-import { Emissive } from '../../mol-theme/emissive';
+import { getNextMaterialId, type GraphicsRenderObject } from '../../mol-gl/render-object.ts';
+import { Theme } from '../../mol-theme/theme.ts';
+import { Task } from '../../mol-task.ts';
+import type { PickingId } from '../../mol-geo/geometry/picking.ts';
+import { EmptyLoci, Loci, isEveryLoci, isDataLoci, EveryLoci } from '../../mol-model/loci.ts';
+import { type MarkerAction, MarkerActions } from '../../mol-util/marker-action.ts';
+import { Overpaint } from '../../mol-theme/overpaint.ts';
+import type { StructureParams } from './params.ts';
+import { Clipping } from '../../mol-theme/clipping.ts';
+import { Transparency } from '../../mol-theme/transparency.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { Substance } from '../../mol-theme/substance.ts';
+import type { LocationCallback } from '../util.ts';
+import { Emissive } from '../../mol-theme/emissive.ts';
 
 export function ComplexRepresentation<P extends StructureParams>(label: string, ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, P>, visualCtor: (materialId: number, structure: Structure, props: PD.Values<P>, webgl?: WebGLContext) => ComplexVisual<P>): StructureRepresentation<P> {
     let version = 0;

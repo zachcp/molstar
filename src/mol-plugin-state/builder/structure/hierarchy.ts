@@ -5,16 +5,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { arrayFind } from '../../../mol-data/util';
-import { PluginContext } from '../../../mol-plugin/context';
-import { StateObjectRef } from '../../../mol-state';
-import { Task } from '../../../mol-task';
-import { isProductionMode } from '../../../mol-util/debug';
-import { objectForEach } from '../../../mol-util/object';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { PluginStateObject } from '../../objects';
-import { PresetTrajectoryHierarchy, TrajectoryHierarchyPresetProvider } from './hierarchy-preset';
-import { arrayRemoveInPlace } from '../../../mol-util/array';
+import { arrayFind } from '../../../mol-data/util.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import { StateObjectRef } from '../../../mol-state.ts';
+import { Task } from '../../../mol-task.ts';
+import { isProductionMode } from '../../../mol-util/debug.ts';
+import { objectForEach } from '../../../mol-util/object.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { PluginStateObject } from '../../objects.ts';
+import { PresetTrajectoryHierarchy, type TrajectoryHierarchyPresetProvider } from './hierarchy-preset.ts';
+import { arrayRemoveInPlace } from '../../../mol-util/array.ts';
 
 // TODO factor out code shared with StructureRepresentationBuilder?
 

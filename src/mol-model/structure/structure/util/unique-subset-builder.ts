@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { IntMap, SortedArray } from '../../../../mol-data/int';
-import { sortArray } from '../../../../mol-data/util';
-import { StructureSymmetry } from '../symmetry';
-import { Unit } from '../unit';
-import { Structure } from '../structure';
-import { UniqueArray } from '../../../../mol-data/generic';
+import { IntMap, SortedArray } from '../../../../mol-data/int.ts';
+import { sortArray } from '../../../../mol-data/util.ts';
+import { StructureSymmetry } from '../symmetry.ts';
+import type { Unit } from '../unit.ts';
+import { Structure } from '../structure.ts';
+import { UniqueArray } from '../../../../mol-data/generic.ts';
 
 type UArray = UniqueArray<number, number>
 

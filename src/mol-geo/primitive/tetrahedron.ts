@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { createPrimitive, Primitive } from './primitive';
-import { createCage, Cage } from './cage';
+import { createPrimitive, type Primitive } from './primitive.ts';
+import { createCage, type Cage } from './cage.ts';
 
 export const tetrahedronVertices: ReadonlyArray<number> = [
     0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5

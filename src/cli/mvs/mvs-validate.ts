@@ -12,8 +12,9 @@
 import { ArgumentParser } from 'argparse';
 import fs from 'fs';
 
-import { setFSModule } from '../../mol-util/data-source';
-import { MVSData } from '../../extensions/mvs/mvs-data';
+import { setFSModule } from '../../mol-util/data-source.ts';
+import { MVSData } from '../../extensions/mvs/mvs-data.ts';
+import process from "node:process";
 
 
 setFSModule(fs);

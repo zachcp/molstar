@@ -5,32 +5,32 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { UUID } from '../../../mol-util/uuid';
-import { StructureSequence } from './properties/sequence';
-import { AtomicHierarchy, AtomicConformation, AtomicRanges } from './properties/atomic';
-import { CoarseHierarchy, CoarseConformation } from './properties/coarse';
-import { Entities, ChemicalComponentMap, MissingResidues, StructAsymMap } from './properties/common';
-import { CustomProperties } from '../../custom-property';
-import { SaccharideComponentMap } from '../structure/carbohydrates/constants';
-import { ModelFormat } from '../../../mol-model-formats/format';
-import { calcModelCenter, getAsymIdCount } from './util';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { Coordinates, Frame } from '../coordinates';
-import { Topology } from '../topology';
-import { Task } from '../../../mol-task';
-import { IndexPairBonds } from '../../../mol-model-formats/structure/property/bonds/index-pair';
-import { createModels } from '../../../mol-model-formats/structure/basic/parser';
-import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif';
-import { ChainIndex, ElementIndex } from './indexing';
-import { SymmetryOperator } from '../../../mol-math/geometry';
-import { ModelSymmetry } from '../../../mol-model-formats/structure/property/symmetry';
-import { Column } from '../../../mol-data/db';
-import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property';
-import { Trajectory, ArrayTrajectory } from '../trajectory';
-import { Unit } from '../structure';
-import { SortedArray } from '../../../mol-data/int/sorted-array';
-import { PolymerType } from './types';
-import { ModelSecondaryStructure } from '../../../mol-model-formats/structure/property/secondary-structure';
+import { UUID } from '../../../mol-util/uuid.ts';
+import type { StructureSequence } from './properties/sequence.ts';
+import type { AtomicHierarchy, AtomicConformation, AtomicRanges } from './properties/atomic.ts';
+import type { CoarseHierarchy, CoarseConformation } from './properties/coarse.ts';
+import type { Entities, ChemicalComponentMap, MissingResidues, StructAsymMap } from './properties/common.ts';
+import { CustomProperties } from '../../custom-property.ts';
+import type { SaccharideComponentMap } from '../structure/carbohydrates/constants.ts';
+import type { ModelFormat } from '../../../mol-model-formats/format.ts';
+import { calcModelCenter, getAsymIdCount } from './util.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { Coordinates, type Frame } from '../coordinates.ts';
+import type { Topology } from '../topology.ts';
+import { Task } from '../../../mol-task.ts';
+import { IndexPairBonds } from '../../../mol-model-formats/structure/property/bonds/index-pair.ts';
+import { createModels } from '../../../mol-model-formats/structure/basic/parser.ts';
+import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif.ts';
+import type { ChainIndex, ElementIndex } from './indexing.ts';
+import type { SymmetryOperator } from '../../../mol-math/geometry.ts';
+import { ModelSymmetry } from '../../../mol-model-formats/structure/property/symmetry.ts';
+import { Column } from '../../../mol-data/db.ts';
+import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property.ts';
+import { type Trajectory, ArrayTrajectory } from '../trajectory.ts';
+import type { Unit } from '../structure.ts';
+import type { SortedArray } from '../../../mol-data/int/sorted-array.ts';
+import { PolymerType } from './types.ts';
+import { ModelSecondaryStructure } from '../../../mol-model-formats/structure/property/secondary-structure.ts';
 
 /**
  * Interface to the "source data" of the molecule.

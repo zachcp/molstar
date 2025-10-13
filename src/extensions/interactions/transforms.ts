@@ -4,17 +4,17 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { InteractionsParams } from '../../mol-model-props/computed/interactions';
-import { Structure } from '../../mol-model/structure';
-import { PluginStateObject as SO } from '../../mol-plugin-state/objects';
-import { StateTransformer } from '../../mol-state';
-import { Task } from '../../mol-task';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { computeContacts } from './compute';
-import { getCustomInteractionData } from './custom';
-import { InteractionElementSchema, StructureInteractions } from './model';
-import { buildInteractionsShape, InteractionVisualParams } from './visuals';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { InteractionsParams } from '../../mol-model-props/computed/interactions.ts';
+import type { Structure } from '../../mol-model/structure.ts';
+import { PluginStateObject as SO } from '../../mol-plugin-state/objects.ts';
+import { StateTransformer } from '../../mol-state.ts';
+import { Task } from '../../mol-task.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { computeContacts } from './compute.ts';
+import { getCustomInteractionData } from './custom.ts';
+import type { InteractionElementSchema, StructureInteractions } from './model.ts';
+import { buildInteractionsShape, InteractionVisualParams } from './visuals.ts';
 
 const Factory = StateTransformer.builderFactory('interactions-extension');
 

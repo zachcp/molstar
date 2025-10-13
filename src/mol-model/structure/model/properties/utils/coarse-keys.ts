@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Entities } from '../common';
-import { CoarseElementData, CoarsedElementKeys } from '../coarse';
-import { ChainIndex, ElementIndex, EntityIndex } from '../../indexing';
-import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges';
-import { OrderedSet } from '../../../../../mol-data/int';
+import type { Entities } from '../common.ts';
+import type { CoarseElementData, CoarsedElementKeys } from '../coarse.ts';
+import type { ChainIndex, ElementIndex, EntityIndex } from '../../indexing.ts';
+import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges.ts';
+import { OrderedSet } from '../../../../../mol-data/int.ts';
 
 function getElementKey(map: Map<string, number>, key: string, counter: { index: number }) {
     if (map.has(key)) return map.get(key)!;

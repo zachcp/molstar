@@ -4,9 +4,9 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { Choice } from '../../mol-util/param-choice';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { Choice } from '../../mol-util/param-choice.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
 
 export const VolumeTypeChoice = new Choice({ 'isosurface': 'Isosurface', 'direct-volume': 'Direct volume', 'off': 'Off' }, 'isosurface');

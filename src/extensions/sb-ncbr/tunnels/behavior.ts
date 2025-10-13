@@ -4,18 +4,18 @@
  * @author Dušan Veľký <dvelky@mail.muni.cz>
  */
 
-import { PluginBehavior } from '../../../mol-plugin/behavior';
-import { DownloadTunnels } from './actions';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from '../../../mol-plugin-state/builder/structure/representation-preset';
-import { Model, Structure } from '../../../mol-model/structure';
-import { PluginContext } from '../../../mol-plugin/context';
-import { StateObjectRef } from '../../../mol-state';
-import { getTunnelsConfig, TunnelsDataParams } from './props';
-import { StateTransforms } from '../../../mol-plugin-state/transforms';
-import { Tunnel, ChannelsDBdata, TunnelDB } from './data-model';
-import { TunnelShapeProvider, TunnelFromRawData } from './representation';
-import { ColorGenerator } from '../../meshes/mesh-utils';
+import { PluginBehavior } from '../../../mol-plugin/behavior.ts';
+import { DownloadTunnels } from './actions.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
+import { Model, type Structure } from '../../../mol-model/structure.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import { StateObjectRef } from '../../../mol-state.ts';
+import { getTunnelsConfig, TunnelsDataParams } from './props.ts';
+import { StateTransforms } from '../../../mol-plugin-state/transforms.ts';
+import type { Tunnel, ChannelsDBdata, TunnelDB } from './data-model.ts';
+import { TunnelShapeProvider, TunnelFromRawData } from './representation.ts';
+import { ColorGenerator } from '../../meshes/mesh-utils.ts';
 
 export const SbNcbrTunnels = PluginBehavior.create<{ autoAttach: boolean }>({
     name: 'sb-ncbr-tunnels',

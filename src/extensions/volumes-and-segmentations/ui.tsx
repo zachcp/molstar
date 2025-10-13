@@ -6,22 +6,22 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { CollapsableControls, CollapsableState } from '../../mol-plugin-ui/base';
-import { Button, ControlRow, ExpandGroup, IconButton } from '../../mol-plugin-ui/controls/common';
-import * as Icons from '../../mol-plugin-ui/controls/icons';
-import { ParameterControls } from '../../mol-plugin-ui/controls/parameters';
-import { Slider } from '../../mol-plugin-ui/controls/slider';
-import { useBehavior } from '../../mol-plugin-ui/hooks/use-behavior';
-import { UpdateTransformControl } from '../../mol-plugin-ui/state/update-transform';
-import { PluginContext } from '../../mol-plugin/context';
-import { shallowEqualArrays } from '../../mol-util';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { sleep } from '../../mol-util/sleep';
+import { CollapsableControls, type CollapsableState } from '../../mol-plugin-ui/base.ts';
+import { Button, ControlRow, ExpandGroup, IconButton } from '../../mol-plugin-ui/controls/common.ts';
+import * as Icons from '../../mol-plugin-ui/controls/icons.ts';
+import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.ts';
+import { Slider } from '../../mol-plugin-ui/controls/slider.ts';
+import { useBehavior } from '../../mol-plugin-ui/hooks/use-behavior.ts';
+import { UpdateTransformControl } from '../../mol-plugin-ui/state/update-transform.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { shallowEqualArrays } from '../../mol-util.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { sleep } from '../../mol-util/sleep.ts';
 
-import { VolsegEntry, VolsegEntryData } from './entry-root';
-import { SimpleVolumeParams, SimpleVolumeParamValues } from './entry-volume';
-import { VolsegGlobalState, VolsegGlobalStateData, VolsegGlobalStateParams } from './global-state';
-import { isDefined } from './helpers';
+import { VolsegEntry, type VolsegEntryData } from './entry-root.ts';
+import { SimpleVolumeParams, type SimpleVolumeParamValues } from './entry-volume.ts';
+import { VolsegGlobalState, type VolsegGlobalStateData, VolsegGlobalStateParams } from './global-state.ts';
+import { isDefined } from './helpers.ts';
 
 
 interface VolsegUIData {

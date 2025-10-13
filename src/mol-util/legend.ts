@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color } from './color';
-import { ColorListEntry } from './color/color';
+import type { Color } from './color.ts';
+import type { ColorListEntry } from './color/color.ts';
 
 export type Legend = TableLegend | ScaleLegend
 

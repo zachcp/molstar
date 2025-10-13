@@ -1,10 +1,10 @@
 import {
     PresetStructureRepresentations,
     StructureRepresentationPresetProvider,
-} from '../../../mol-plugin-state/builder/structure/representation-preset';
-import { StateObjectRef } from '../../../mol-state';
-import { SbNcbrPartialChargesPropertyProvider } from './property';
-import { SbNcbrPartialChargesColorThemeProvider } from './color';
+} from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
+import { StateObjectRef } from '../../../mol-state.ts';
+import { SbNcbrPartialChargesPropertyProvider } from './property.ts';
+import { SbNcbrPartialChargesColorThemeProvider } from './color.ts';
 
 export const SbNcbrPartialChargesPreset = StructureRepresentationPresetProvider({
     id: 'sb-ncbr-partial-charges-preset',

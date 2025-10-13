@@ -5,8 +5,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ShrakeRupleyContext, VdWLookup } from './common';
-import { RuntimeContext } from '../../../../mol-task';
+import { type ShrakeRupleyContext, VdWLookup } from './common.ts';
+import type { RuntimeContext } from '../../../../mol-task.ts';
 
 // TODO
 // - iterate over units and elements

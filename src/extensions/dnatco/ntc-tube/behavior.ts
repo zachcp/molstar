@@ -5,14 +5,14 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { NtCTubeColorThemeProvider } from './color';
-import { NtCTubeProvider } from './property';
-import { NtCTubeRepresentationProvider } from './representation';
-import { DnatcoTypes } from '../types';
-import { Dnatco } from '../property';
-import { StructureRepresentationPresetProvider, PresetStructureRepresentations } from '../../../mol-plugin-state/builder/structure/representation-preset';
-import { StateObjectRef } from '../../../mol-state';
-import { Task } from '../../../mol-task';
+import { NtCTubeColorThemeProvider } from './color.ts';
+import { NtCTubeProvider } from './property.ts';
+import { NtCTubeRepresentationProvider } from './representation.ts';
+import type { DnatcoTypes } from '../types.ts';
+import { Dnatco } from '../property.ts';
+import { StructureRepresentationPresetProvider, PresetStructureRepresentations } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
+import { StateObjectRef } from '../../../mol-state.ts';
+import { Task } from '../../../mol-task.ts';
 
 export const NtCTubePreset = StructureRepresentationPresetProvider({
     id: 'preset-structure-representation-ntc-tube',

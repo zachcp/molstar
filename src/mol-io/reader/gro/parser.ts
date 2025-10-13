@@ -5,13 +5,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column } from '../../../mol-data/db';
-import { Tokenizer } from '../common/text/tokenizer';
-import { FixedColumnProvider as FixedColumn } from '../common/text/column/fixed';
-import * as Schema from './schema';
-import { ReaderResult as Result } from '../result';
-import { Task, RuntimeContext } from '../../../mol-task';
-import { StringLike } from '../../common/string-like';
+import { Column } from '../../../mol-data/db.ts';
+import { Tokenizer } from '../common/text/tokenizer.ts';
+import { FixedColumnProvider as FixedColumn } from '../common/text/column/fixed.ts';
+import type * as Schema from './schema.ts';
+import { ReaderResult as Result } from '../result.ts';
+import { Task, type RuntimeContext } from '../../../mol-task.ts';
+import type { StringLike } from '../../common/string-like.ts';
 
 
 interface State {

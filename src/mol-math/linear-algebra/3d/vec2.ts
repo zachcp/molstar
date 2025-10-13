@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { NumberArray } from '../../../mol-util/type-helpers';
+import type { NumberArray } from '../../../mol-util/type-helpers.ts';
 
 /*
  * This code has been modified from https://github.com/toji/gl-matrix/,

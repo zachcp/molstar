@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { StateTransformer } from '../../mol-state';
-import { Task } from '../../mol-task';
-import { ParamDefinition } from '../../mol-util/param-definition';
-import { JSONCifFile } from './model';
-import { parseJSONCif } from './parser';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { StateTransformer } from '../../mol-state.ts';
+import { Task } from '../../mol-task.ts';
+import { ParamDefinition } from '../../mol-util/param-definition.ts';
+import type { JSONCifFile } from './model.ts';
+import { parseJSONCif } from './parser.ts';
 
 const Transform = StateTransformer.builderFactory('json-cif');
 

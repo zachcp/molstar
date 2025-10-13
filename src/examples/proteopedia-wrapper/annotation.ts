@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { CustomElementProperty } from '../../mol-model-props/common/custom-element-property';
-import { Model, ElementIndex, ResidueIndex } from '../../mol-model/structure';
-import { Color } from '../../mol-util/color';
-import { CustomProperty } from '../../mol-model-props/common/custom-property';
-import { Asset } from '../../mol-util/assets';
+import { CustomElementProperty } from '../../mol-model-props/common/custom-element-property.ts';
+import type { Model, ElementIndex, ResidueIndex } from '../../mol-model/structure.ts';
+import { Color } from '../../mol-util/color.ts';
+import type { CustomProperty } from '../../mol-model-props/common/custom-property.ts';
+import { Asset } from '../../mol-util/assets.ts';
 
 const EvolutionaryConservationPalette: Color[] = [
     [255, 255, 129], // insufficient

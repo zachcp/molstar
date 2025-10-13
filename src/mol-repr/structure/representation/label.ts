@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder, ComplexRepresentation } from '../representation';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../../mol-repr/representation';
-import { ThemeRegistryContext } from '../../../mol-theme/theme';
-import { Structure } from '../../../mol-model/structure';
-import { LabelTextVisual, LabelTextParams } from '../visual/label-text';
-import { MarkerAction } from '../../../mol-util/marker-action';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { type StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder, ComplexRepresentation } from '../representation.ts';
+import { Representation, type RepresentationParamsGetter, type RepresentationContext } from '../../../mol-repr/representation.ts';
+import type { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import type { Structure } from '../../../mol-model/structure.ts';
+import { LabelTextVisual, LabelTextParams } from '../visual/label-text.ts';
+import { MarkerAction } from '../../../mol-util/marker-action.ts';
 
 const LabelVisuals = {
     'label-text': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, LabelTextParams>) => ComplexRepresentation('Label text', ctx, getParams, LabelTextVisual),

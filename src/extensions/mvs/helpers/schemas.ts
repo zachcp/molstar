@@ -5,9 +5,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column, Table } from '../../../mol-data/db';
-import { pickObjectKeys } from '../../../mol-util/object';
-import { Choice } from '../../../mol-util/param-choice';
+import { Column, type Table } from '../../../mol-data/db.ts';
+import { pickObjectKeys } from '../../../mol-util/object.ts';
+import { Choice } from '../../../mol-util/param-choice.ts';
 
 const { str, int } = Column.Schema;
 

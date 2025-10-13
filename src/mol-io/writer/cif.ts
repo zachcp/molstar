@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { TextEncoder } from './cif/encoder/text';
-import { BinaryEncoder, BinaryEncodingProvider } from './cif/encoder/binary';
-import * as _Encoder from './cif/encoder';
-import { ArrayEncoding, ArrayEncoder } from '../common/binary-cif';
-import { CifFrame } from '../reader/cif';
+import { TextEncoder } from './cif/encoder/text.ts';
+import { BinaryEncoder, type BinaryEncodingProvider } from './cif/encoder/binary.ts';
+import * as _Encoder from './cif/encoder.ts';
+import { ArrayEncoding, ArrayEncoder } from '../common/binary-cif.ts';
+import type { CifFrame } from '../reader/cif.ts';
 
 export namespace CifWriter {
     export import Encoder = _Encoder.Encoder

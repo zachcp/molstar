@@ -4,20 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Model } from '../../mol-model/structure/model';
-import { Task } from '../../mol-task';
-import { ModelFormat } from '../format';
-import { GroFile, GroAtoms } from '../../mol-io/reader/gro/schema';
-import { Column, Table } from '../../mol-data/db';
-import { guessElementSymbolString } from './util';
-import { MoleculeType, getMoleculeType } from '../../mol-model/structure/model/types';
-import { ComponentBuilder } from './common/component';
-import { getChainId } from './common/util';
-import { EntityBuilder } from './common/entity';
-import { BasicData, BasicSchema, createBasic } from './basic/schema';
-import { createModels } from './basic/parser';
-import { Trajectory } from '../../mol-model/structure';
-import { ArrayTrajectory } from '../../mol-model/structure/trajectory';
+import type { Model } from '../../mol-model/structure/model.ts';
+import { Task } from '../../mol-task.ts';
+import type { ModelFormat } from '../format.ts';
+import type { GroFile, GroAtoms } from '../../mol-io/reader/gro/schema.ts';
+import { Column, Table } from '../../mol-data/db.ts';
+import { guessElementSymbolString } from './util.ts';
+import { MoleculeType, getMoleculeType } from '../../mol-model/structure/model/types.ts';
+import { ComponentBuilder } from './common/component.ts';
+import { getChainId } from './common/util.ts';
+import { EntityBuilder } from './common/entity.ts';
+import { type BasicData, BasicSchema, createBasic } from './basic/schema.ts';
+import { createModels } from './basic/parser.ts';
+import type { Trajectory } from '../../mol-model/structure.ts';
+import { ArrayTrajectory } from '../../mol-model/structure/trajectory.ts';
 
 function getBasic(atoms: GroAtoms, modelNum: number): BasicData {
     const auth_atom_id = atoms.atomName;

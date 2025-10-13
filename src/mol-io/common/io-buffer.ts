@@ -7,7 +7,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { TypedArray } from '../../mol-util/type-helpers';
+import type { TypedArray } from '../../mol-util/type-helpers.ts';
 
 const defaultByteLength = 1024 * 8;
 const charArray: string[] = [];

@@ -5,29 +5,29 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { ConfalPyramidsProvider } from './property';
-import { ConfalPyramidsIterator } from './util';
-import { ConfalPyramidsTypes as CPT } from './types';
-import { Dnatco } from '../property';
-import { Interval } from '../../../mol-data/int';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { PickingId } from '../../../mol-geo/geometry/picking';
-import { PrimitiveBuilder } from '../../../mol-geo/primitive/primitive';
-import { LocationIterator } from '../../../mol-geo/util/location-iterator';
-import { Mat4, Vec3 } from '../../../mol-math/linear-algebra';
-import { EmptyLoci, Loci } from '../../../mol-model/loci';
-import { Structure, Unit } from '../../../mol-model/structure';
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { Representation, RepresentationContext, RepresentationParamsGetter } from '../../../mol-repr/representation';
-import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder, UnitsRepresentation } from '../../../mol-repr/structure/representation';
-import { UnitsMeshParams, UnitsMeshVisual, UnitsVisual } from '../../../mol-repr/structure/units-visual';
-import { VisualUpdateState } from '../../../mol-repr/util';
-import { VisualContext } from '../../../mol-repr/visual';
-import { StructureGroup } from '../../../mol-repr/structure/visual/util/common';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Theme, ThemeRegistryContext } from '../../../mol-theme/theme';
-import { NullLocation } from '../../../mol-model/location';
+import { ConfalPyramidsProvider } from './property.ts';
+import { ConfalPyramidsIterator } from './util.ts';
+import { ConfalPyramidsTypes as CPT } from './types.ts';
+import { Dnatco } from '../property.ts';
+import type { Interval } from '../../../mol-data/int.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import type { PickingId } from '../../../mol-geo/geometry/picking.ts';
+import { PrimitiveBuilder } from '../../../mol-geo/primitive/primitive.ts';
+import { LocationIterator } from '../../../mol-geo/util/location-iterator.ts';
+import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { EmptyLoci, type Loci } from '../../../mol-model/loci.ts';
+import { type Structure, Unit } from '../../../mol-model/structure.ts';
+import type { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../../../mol-repr/representation.ts';
+import { type StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder, UnitsRepresentation } from '../../../mol-repr/structure/representation.ts';
+import { UnitsMeshParams, UnitsMeshVisual, type UnitsVisual } from '../../../mol-repr/structure/units-visual.ts';
+import type { VisualUpdateState } from '../../../mol-repr/util.ts';
+import type { VisualContext } from '../../../mol-repr/visual.ts';
+import type { StructureGroup } from '../../../mol-repr/structure/visual/util/common.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { Theme, ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import { NullLocation } from '../../../mol-model/location.ts';
 
 const t = Mat4.identity();
 const w = Vec3.zero();

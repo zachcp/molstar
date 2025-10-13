@@ -12,8 +12,8 @@ if (typeof window !== 'undefined') {
         // https://github.com/paulmillr/console-polyfill
         // Make it safe to do console.log() always.
 
-        (window as any).console = window.console || {};
-        const con = window.console;
+        (window as any).console = globalThis.console || {};
+        const con = globalThis.console;
         let prop, method;
         const empty = {};
         const dummy = function () {};
@@ -29,12 +29,12 @@ if (typeof window !== 'undefined') {
     })();
 }
 
-if (typeof window.HTMLCanvasElement !== 'undefined' && !window.HTMLCanvasElement.prototype.toBlob) {
+if (typeof globalThis.HTMLCanvasElement !== 'undefined' && !globalThis.HTMLCanvasElement.prototype.toBlob) {
     // http://code.google.com/p/chromium/issues/detail?id=67587#57
-    Object.defineProperty(window.HTMLCanvasElement.prototype, 'toBlob', {
+    Object.defineProperty(globalThis.HTMLCanvasElement.prototype, 'toBlob', {
 
         value: function (callback: any, type: any, quality: any) {
-            const bin = window.atob(this.toDataURL(type, quality).split(',')[1]);
+            const bin = globalThis.atob(this.toDataURL(type, quality).split(',')[1]);
             const len = bin.length;
             const len32 = len >> 2;
             const a8 = new Uint8Array(len);
@@ -56,7 +56,7 @@ if (typeof window.HTMLCanvasElement !== 'undefined' && !window.HTMLCanvasElement
                 a8[j] = bin.charCodeAt(j++);
             }
 
-            callback(new window.Blob([a8], { 'type': type || 'image/png' }));
+            callback(new globalThis.Blob([a8], { 'type': type || 'image/png' }));
         }
 
     });
@@ -396,23 +396,23 @@ if (typeof window !== 'undefined') {
         let lastTime = 0;
         const vendors = ['ms', 'moz', 'webkit', 'o'];
 
-        for (let x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-            window.requestAnimationFrame = (
+        for (let x = 0; x < vendors.length && !globalThis.requestAnimationFrame; ++x) {
+            globalThis.requestAnimationFrame = (
                 (window as any)[vendors[x] + 'RequestAnimationFrame']
             );
 
-            window.cancelAnimationFrame = (
+            globalThis.cancelAnimationFrame = (
                 (window as any)[vendors[x] + 'CancelAnimationFrame'] ||
                 (window as any)[vendors[x] + 'CancelRequestAnimationFrame']
             );
         }
 
-        if (!window.requestAnimationFrame) {
-            window.requestAnimationFrame = function (callback/* , element */) {
+        if (!globalThis.requestAnimationFrame) {
+            globalThis.requestAnimationFrame = function (callback/* , element */) {
                 const currTime = new Date().getTime();
                 const timeToCall = Math.max(0, 16 - (currTime - lastTime));
 
-                const id = window.setTimeout(function () {
+                const id = globalThis.setTimeout(function () {
                     const time = currTime + timeToCall;
                     callback(time);
                 }, timeToCall);
@@ -423,8 +423,8 @@ if (typeof window !== 'undefined') {
             };
         }
 
-        if (!window.cancelAnimationFrame) {
-            window.cancelAnimationFrame = function (id) {
+        if (!globalThis.cancelAnimationFrame) {
+            globalThis.cancelAnimationFrame = function (id) {
                 clearTimeout(id);
             };
         }
@@ -443,16 +443,16 @@ if (Function.prototype.name === undefined && Object.defineProperty !== undefined
 }
 
 if (typeof window !== 'undefined') {
-    if (window.performance === undefined) {
+    if (globalThis.performance === undefined) {
         /* global self */
         (window as any).performance = {};
     }
 
-    if (window.performance.now === undefined) {
+    if (globalThis.performance.now === undefined) {
         (function () {
             const start = Date.now();
 
-            window.performance.now = function () {
+            globalThis.performance.now = function () {
                 return Date.now() - start;
             };
         })();

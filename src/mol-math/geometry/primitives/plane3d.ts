@@ -7,10 +7,10 @@
  * copyright (c) 2010-2022 three.js authors. MIT License
  */
 
-import { NumberArray } from '../../../mol-util/type-helpers';
-import { Vec3 } from '../../linear-algebra/3d/vec3';
-import { Ray3D } from './ray3d';
-import { Sphere3D } from './sphere3d';
+import type { NumberArray } from '../../../mol-util/type-helpers.ts';
+import { Vec3 } from '../../linear-algebra/3d/vec3.ts';
+import type { Ray3D } from './ray3d.ts';
+import type { Sphere3D } from './sphere3d.ts';
 
 interface Plane3D { normal: Vec3, constant: number }
 

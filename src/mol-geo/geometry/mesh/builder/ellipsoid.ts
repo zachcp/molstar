@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra';
-import { MeshBuilder } from '../mesh-builder';
-import { getSphere } from './sphere';
+import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra.ts';
+import { MeshBuilder } from '../mesh-builder.ts';
+import { getSphere } from './sphere.ts';
 
 const tmpEllipsoidMat = Mat4.identity();
 const tmpVec = Vec3();

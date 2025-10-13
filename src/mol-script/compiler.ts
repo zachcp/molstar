@@ -4,10 +4,10 @@
 //  * @author David Sehnal <david.sehnal@gmail.com>
 //  */
 
-// import Expression from './expression'
-// import Environment from './runtime/environment'
-// import RuntimeExpression from './runtime/expression'
-// import SymbolRuntime, { RuntimeArguments } from './runtime/symbol'
+// import Expression from './expression.ts'
+// import Environment from './runtime/environment.ts'
+// import RuntimeExpression from './runtime/expression.ts'
+// import SymbolRuntime, { RuntimeArguments } from './runtime/symbol.ts'
 
 // export type CompiledExpression<T> = () => T
 

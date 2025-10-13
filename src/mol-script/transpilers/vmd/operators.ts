@@ -7,13 +7,13 @@
  * Adapted from MolQL project
  */
 
-import * as P from '../../../mol-util/monadic-parser';
-import * as h from '../helper';
-import { MolScriptBuilder } from '../../../mol-script/language/builder';
+import * as P from '../../../mol-util/monadic-parser.ts';
+import * as h from '../helper.ts';
+import { MolScriptBuilder } from '../../../mol-script/language/builder.ts';
 const B = MolScriptBuilder;
-import { properties } from './properties';
-import { Expression } from '../../language/expression';
-import { OperatorList } from '../types';
+import { properties } from './properties.ts';
+import type { Expression } from '../../language/expression.ts';
+import type { OperatorList } from '../types.ts';
 
 const propNames = Object.keys(properties).sort(h.strLenSortFn)
     .filter(name => !properties[name].isUnsupported).join('|');

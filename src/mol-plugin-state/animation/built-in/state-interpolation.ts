@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginCommands } from '../../../mol-plugin/commands';
-import { StateTransform } from '../../../mol-state';
-import { shallowEqual } from '../../../mol-util';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { PluginStateAnimation } from '../model';
+import { PluginCommands } from '../../../mol-plugin/commands.ts';
+import { StateTransform } from '../../../mol-state.ts';
+import { shallowEqual } from '../../../mol-util.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { PluginStateAnimation } from '../model.ts';
 
 export const AnimateStateInterpolation = PluginStateAnimation.create({
     name: 'built-in.animate-state-interpolation',

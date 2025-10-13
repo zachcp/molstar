@@ -5,12 +5,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure, Model } from '../../../../mol-model/structure';
-import { VolumeServerInfo } from './model';
-import { PluginContext } from '../../../../mol-plugin/context';
-import { RuntimeContext } from '../../../../mol-task';
-import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif';
-import { PluginConfig } from '../../../config';
+import { type Structure, Model } from '../../../../mol-model/structure.ts';
+import type { VolumeServerInfo } from './model.ts';
+import type { PluginContext } from '../../../../mol-plugin/context.ts';
+import type { RuntimeContext } from '../../../../mol-task.ts';
+import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif.ts';
+import { PluginConfig } from '../../../config.ts';
 
 export function getStreamingMethod(s?: Structure, defaultKind: VolumeServerInfo.Kind = 'x-ray'): VolumeServerInfo.Kind {
     if (!s) return defaultKind;

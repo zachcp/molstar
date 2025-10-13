@@ -7,9 +7,9 @@
  * MIT License, Copyright (c) 2018 Photopea
  */
 
-import { NumberArray } from '../type-helpers';
-import { U, makeCodes, codes2map, checkCompressionStreamSupport } from './util';
-import { RuntimeContext } from '../../mol-task';
+import type { NumberArray } from '../type-helpers.ts';
+import { U, makeCodes, codes2map, checkCompressionStreamSupport } from './util.ts';
+import type { RuntimeContext } from '../../mol-task.ts';
 
 function InflateContext(data: Uint8Array<ArrayBuffer>, buf?: Uint8Array<ArrayBuffer>) {
     const noBuf = buf === undefined;

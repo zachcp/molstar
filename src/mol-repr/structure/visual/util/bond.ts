@@ -6,16 +6,16 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { BondType } from '../../../../mol-model/structure/model/types';
-import { Unit, StructureElement, Structure, Bond } from '../../../../mol-model/structure';
-import { ParamDefinition as PD } from '../../../../mol-util/param-definition';
-import { LocationIterator } from '../../../../mol-geo/util/location-iterator';
-import { LinkCylinderParams, LinkLineParams } from './link';
-import { ObjectKeys } from '../../../../mol-util/type-helpers';
-import { PickingId } from '../../../../mol-geo/geometry/picking';
-import { EmptyLoci, Loci } from '../../../../mol-model/loci';
-import { Interval, OrderedSet, SortedArray } from '../../../../mol-data/int';
-import { isHydrogen, StructureGroup } from './common';
+import { BondType } from '../../../../mol-model/structure/model/types.ts';
+import { Unit, StructureElement, Structure, Bond } from '../../../../mol-model/structure.ts';
+import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
+import { LocationIterator } from '../../../../mol-geo/util/location-iterator.ts';
+import { LinkCylinderParams, LinkLineParams } from './link.ts';
+import { ObjectKeys } from '../../../../mol-util/type-helpers.ts';
+import { PickingId } from '../../../../mol-geo/geometry/picking.ts';
+import { EmptyLoci, type Loci } from '../../../../mol-model/loci.ts';
+import { Interval, OrderedSet, SortedArray } from '../../../../mol-data/int.ts';
+import { isHydrogen, type StructureGroup } from './common.ts';
 
 export const BondParams = {
     includeTypes: PD.MultiSelect(ObjectKeys(BondType.Names), PD.objectToOptions(BondType.Names)),

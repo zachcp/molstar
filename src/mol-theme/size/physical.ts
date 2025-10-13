@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StructureElement, Unit, Bond, ElementIndex } from '../../mol-model/structure';
-import { Location } from '../../mol-model/location';
-import type { SizeTheme } from '../size';
-import { VdwRadius } from '../../mol-model/structure/model/properties/atomic';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../../mol-theme/theme';
+import { StructureElement, Unit, Bond, type ElementIndex } from '../../mol-model/structure.ts';
+import type { Location } from '../../mol-model/location.ts';
+import type { SizeTheme } from '../size.ts';
+import { VdwRadius } from '../../mol-model/structure/model/properties/atomic.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { ThemeDataContext } from '../../mol-theme/theme.ts';
 
 const DefaultSize = 1;
 const Description = 'Assigns a physical size, i.e. vdW radius for atoms or given radius for coarse spheres.';

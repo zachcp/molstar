@@ -4,22 +4,22 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Scene } from '../../mol-gl/scene';
-import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder';
-import { Mat4, Vec3 } from '../../mol-math/linear-algebra';
-import { GraphicsRenderObject } from '../../mol-gl/render-object';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { ColorNames } from '../../mol-util/color/names';
-import { ValueCell } from '../../mol-util';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Geometry } from '../../mol-geo/geometry/geometry';
-import { addCylinderFromRay3D } from '../../mol-geo/geometry/mesh/builder/cylinder';
-import { addSphere } from '../../mol-geo/geometry/mesh/builder/sphere';
-import { Camera, ICamera } from '../camera';
-import { Ray3D } from '../../mol-math/geometry/primitives/ray3d';
-import { Viewport } from '../camera/util';
-import { Shape } from '../../mol-model/shape/shape';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { Scene } from '../../mol-gl/scene.ts';
+import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
+import type { GraphicsRenderObject } from '../../mol-gl/render-object.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { ValueCell } from '../../mol-util.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Geometry } from '../../mol-geo/geometry/geometry.ts';
+import { addCylinderFromRay3D } from '../../mol-geo/geometry/mesh/builder/cylinder.ts';
+import { addSphere } from '../../mol-geo/geometry/mesh/builder/sphere.ts';
+import { Camera, type ICamera } from '../camera.ts';
+import type { Ray3D } from '../../mol-math/geometry/primitives/ray3d.ts';
+import { Viewport } from '../camera/util.ts';
+import { Shape } from '../../mol-model/shape/shape.ts';
 
 export const PointerHelperParams = {
     ...Mesh.Params,

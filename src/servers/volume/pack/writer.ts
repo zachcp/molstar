@@ -6,9 +6,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as Data from './data-model';
-import { getElementByteSize } from '../../../mol-io/common/typed-array';
-import { SimpleBuffer } from '../../../mol-io/common/simple-buffer';
+import type * as Data from './data-model.ts';
+import { getElementByteSize } from '../../../mol-io/common/typed-array.ts';
+import { SimpleBuffer } from '../../../mol-io/common/simple-buffer.ts';
+import process from "node:process";
 
 /** Converts a layer to blocks and writes them to the output file. */
 export async function writeBlockLayer(ctx: Data.Context, sampling: Data.Sampling) {

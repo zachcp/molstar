@@ -10,13 +10,13 @@ import * as fs from 'fs';
 import * as path from 'path';
 import fetch from 'node-fetch';
 
-import { parseCsv } from '../../mol-io/reader/csv/parser';
-import { CifFrame, CifBlock } from '../../mol-io/reader/cif';
-import { parseCifText } from '../../mol-io/reader/cif/text/parser';
-import { generateSchema } from './util/cif-dic';
-import { generate } from './util/generate';
-import { Filter, Database } from './util/schema';
-import { parseImportGet } from './util/helper';
+import { parseCsv } from '../../mol-io/reader/csv/parser.ts';
+import type { CifFrame, CifBlock } from '../../mol-io/reader/cif.ts';
+import { parseCifText } from '../../mol-io/reader/cif/text/parser.ts';
+import { generateSchema } from './util/cif-dic.ts';
+import { generate } from './util/generate.ts';
+import type { Filter, Database } from './util/schema.ts';
+import { parseImportGet } from './util/helper.ts';
 
 function getDicVersion(block: CifBlock) {
     return block.categories.dictionary.getField('version')!.str(0);

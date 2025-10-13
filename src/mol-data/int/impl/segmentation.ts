@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Iterator } from '../../iterator';
-import { OrderedSet } from '../ordered-set';
-import { Interval } from '../interval';
-import { SortedArray } from '../sorted-array';
-import { Segmentation as Segs } from '../segmentation';
+import type { Iterator } from '../../iterator.ts';
+import { OrderedSet } from '../ordered-set.ts';
+import { Interval } from '../interval.ts';
+import { SortedArray } from '../sorted-array.ts';
+import type { Segmentation as Segs } from '../segmentation.ts';
 
 interface Segmentation {
     /** Segments stored as a sorted array */

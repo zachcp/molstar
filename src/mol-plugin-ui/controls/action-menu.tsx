@@ -6,9 +6,9 @@
  */
 
 import * as React from 'react';
-import { ParamDefinition } from '../../mol-util/param-definition';
-import { Button, ControlGroup } from './common';
-import { CloseSvg, ArrowDropDownSvg, ArrowRightSvg, CheckSvg } from './icons';
+import type { ParamDefinition } from '../../mol-util/param-definition.ts';
+import { Button, ControlGroup } from './common.ts';
+import { CloseSvg, ArrowDropDownSvg, ArrowRightSvg, CheckSvg } from './icons.ts';
 
 export class ActionMenu extends React.PureComponent<ActionMenu.Props> {
     hide = () => this.props.onSelect(void 0);
@@ -17,7 +17,7 @@ export class ActionMenu extends React.PureComponent<ActionMenu.Props> {
         const cmd = this.props;
         const section = <Section items={cmd.items} onSelect={cmd.onSelect} current={cmd.current} multiselect={this.props.multiselect} noOffset={this.props.noOffset} noAccent={this.props.noAccent} />;
         return <div className={`msp-action-menu-options${cmd.header ? '' : ' msp-action-menu-options-no-header'}`}>
-            {cmd.header && <ControlGroup header={cmd.header} title={cmd.title} initialExpanded={true} hideExpander={true} hideOffset onHeaderClick={this.hide} topRightIcon={CloseSvg}>
+            {cmd.header && <ControlGroup header={cmd.header} title={cmd.title} initialExpanded hideExpander hideOffset onHeaderClick={this.hide} topRightIcon={CloseSvg}>
                 {section}
             </ControlGroup>}
             {!cmd.header && section}

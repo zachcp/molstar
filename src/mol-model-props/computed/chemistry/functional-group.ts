@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure, Unit } from '../../../mol-model/structure';
-import { StructureElement } from '../../../mol-model/structure/structure';
-import { Elements, isHalogen } from '../../../mol-model/structure/model/properties/atomic/types';
-import { ElementSymbol, BondType } from '../../../mol-model/structure/model/types';
-import { eachBondedAtom, bondCount, typeSymbol, bondToElementCount } from './util';
+import type { Structure, Unit } from '../../../mol-model/structure.ts';
+import type { StructureElement } from '../../../mol-model/structure/structure.ts';
+import { Elements, isHalogen } from '../../../mol-model/structure/model/properties/atomic/types.ts';
+import { type ElementSymbol, BondType } from '../../../mol-model/structure/model/types.ts';
+import { eachBondedAtom, bondCount, typeSymbol, bondToElementCount } from './util.ts';
 
 function isAromatic(unit: Unit.Atomic, index: StructureElement.UnitIndex) {
     // TODO also extend unit.rings with geometry/composition-based aromaticity detection and use it here in addition

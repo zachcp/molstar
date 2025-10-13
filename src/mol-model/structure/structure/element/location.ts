@@ -5,10 +5,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ElementIndex } from '../../model';
-import { Unit } from '../unit';
-import { Vec3 } from '../../../../mol-math/linear-algebra';
-import { Structure } from '../structure';
+import type { ElementIndex } from '../../model.ts';
+import type { Unit } from '../unit.ts';
+import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import type { Structure } from '../structure.ts';
 
 export { Location };
 

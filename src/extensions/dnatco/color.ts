@@ -5,7 +5,7 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { Color, ColorMap } from '../../mol-util/color';
+import { Color, ColorMap } from '../../mol-util/color.ts';
 
 export const DefaultNtCClassColors = {
     A: 0xFFC1C1,

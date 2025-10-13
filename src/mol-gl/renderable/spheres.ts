@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Renderable, RenderableState, createRenderable } from '../renderable';
-import { WebGLContext } from '../webgl/context';
-import { createGraphicsRenderItem, Transparency } from '../webgl/render-item';
-import { GlobalUniformSchema, BaseSchema, Values, InternalSchema, SizeSchema, InternalValues, ValueSpec, DefineSpec, GlobalTextureSchema, UniformSpec, TextureSpec, GlobalDefineValues, GlobalDefines, GlobalDefineSchema } from './schema';
-import { SpheresShaderCode } from '../shader-code';
-import { ValueCell } from '../../mol-util';
+import { type Renderable, type RenderableState, createRenderable } from '../renderable.ts';
+import type { WebGLContext } from '../webgl/context.ts';
+import { createGraphicsRenderItem, type Transparency } from '../webgl/render-item.ts';
+import { GlobalUniformSchema, BaseSchema, type Values, InternalSchema, SizeSchema, type InternalValues, ValueSpec, DefineSpec, GlobalTextureSchema, UniformSpec, TextureSpec, type GlobalDefineValues, type GlobalDefines, GlobalDefineSchema } from './schema.ts';
+import { SpheresShaderCode } from '../shader-code.ts';
+import { ValueCell } from '../../mol-util.ts';
 
 export const SpheresSchema = {
     ...BaseSchema,

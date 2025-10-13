@@ -5,8 +5,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { AtomSite, BasicData } from './schema';
-import { Column, Table } from '../../../mol-data/db';
+import type { AtomSite, BasicData } from './schema.ts';
+import { Column, Table } from '../../../mol-data/db.ts';
 
 export function getModelGroupName(model_id: number, data: BasicData) {
     const { ihm_model_group, ihm_model_group_link } = data;

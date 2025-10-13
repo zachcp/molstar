@@ -5,32 +5,32 @@
  */
 
 import * as path from 'path';
-import { Column } from '../../../mol-data/db';
-import { CifWriter } from '../../../mol-io/writer/cif';
-import { Structure, StructureQuery, StructureSelection, Model } from '../../../mol-model/structure';
-import { encode_mmCIF_categories } from '../../../mol-model/structure/export/mmcif';
-import { Progress } from '../../../mol-task';
-import { ConsoleLogger } from '../../../mol-util/console-logger';
-import { now } from '../../../mol-util/now';
-import { PerformanceMonitor } from '../../../mol-util/performance-monitor';
-import { ModelServerConfig as Config } from '../config';
-import { createModelPropertiesProviderFromConfig, ModelPropertiesProvider } from '../property-provider';
-import { VERSION } from '../version';
-import { Job, JobEntry } from './jobs';
-import { createStructureWrapperFromJobEntry, resolveStructures, StructureWrapper } from './structure-wrapper';
+import { Column } from '../../../mol-data/db.ts';
+import { CifWriter } from '../../../mol-io/writer/cif.ts';
+import { Structure, StructureQuery, StructureSelection, type Model } from '../../../mol-model/structure.ts';
+import { encode_mmCIF_categories } from '../../../mol-model/structure/export/mmcif.ts';
+import type { Progress } from '../../../mol-task.ts';
+import { ConsoleLogger } from '../../../mol-util/console-logger.ts';
+import { now } from '../../../mol-util/now.ts';
+import { PerformanceMonitor } from '../../../mol-util/performance-monitor.ts';
+import { ModelServerConfig as Config } from '../config.ts';
+import { createModelPropertiesProviderFromConfig, type ModelPropertiesProvider } from '../property-provider.ts';
+import { VERSION } from '../version.ts';
+import type { Job, JobEntry } from './jobs.ts';
+import { createStructureWrapperFromJobEntry, resolveStructures, type StructureWrapper } from './structure-wrapper.ts';
 import CifField = CifWriter.Field
-import { splitCamelCase } from '../../../mol-util/string';
-import { Encoder } from '../../../mol-io/writer/cif/encoder';
-import { Encoding } from './api';
-import { ComponentBond } from '../../../mol-model-formats/structure/property/bonds/chem_comp';
-import { SdfWriter } from '../../../mol-io/writer/sdf';
-import { MolWriter } from '../../../mol-io/writer/mol';
-import { Mol2Writer } from '../../../mol-io/writer/mol2';
-import { MolEncoder } from '../../../mol-io/writer/mol/encoder';
-import { Mol2Encoder } from '../../../mol-io/writer/mol2/encoder';
-import { ComponentAtom } from '../../../mol-model-formats/structure/property/atoms/chem_comp';
-import { Mat4 } from '../../../mol-math/linear-algebra';
-import { GlobalModelTransformInfo } from '../../../mol-model/structure/model/properties/global-transform';
+import { splitCamelCase } from '../../../mol-util/string.ts';
+import type { Encoder } from '../../../mol-io/writer/cif/encoder.ts';
+import type { Encoding } from './api.ts';
+import { ComponentBond } from '../../../mol-model-formats/structure/property/bonds/chem_comp.ts';
+import { SdfWriter } from '../../../mol-io/writer/sdf.ts';
+import { MolWriter } from '../../../mol-io/writer/mol.ts';
+import { Mol2Writer } from '../../../mol-io/writer/mol2.ts';
+import { MolEncoder } from '../../../mol-io/writer/mol/encoder.ts';
+import { Mol2Encoder } from '../../../mol-io/writer/mol2/encoder.ts';
+import { ComponentAtom } from '../../../mol-model-formats/structure/property/atoms/chem_comp.ts';
+import { Mat4 } from '../../../mol-math/linear-algebra.ts';
+import { GlobalModelTransformInfo } from '../../../mol-model/structure/model/properties/global-transform.ts';
 
 export interface Stats {
     structure: StructureWrapper,

@@ -7,28 +7,28 @@
  * @author Herman Bergwerf <post@hbergwerf.nl>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { VisualContext } from '../../visual';
-import { Unit, Structure, StructureElement, Bond } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { arrayEqual } from '../../../mol-util';
-import { createLinkCylinderImpostors, createLinkCylinderMesh, EmptyLinkBuilderProps, LinkBuilderProps, LinkStyle } from './util/link';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual, UnitsCylindersParams, UnitsCylindersVisual } from '../units-visual';
-import { VisualUpdateState } from '../../util';
-import { BondType } from '../../../mol-model/structure/model/types';
-import { BondCylinderParams, BondIterator, eachIntraBond, eachStructureGroupsBond, getIntraBondLoci, getStructureGroupsBondLoci, hasStructureVisibleBonds, hasUnitVisibleBonds, ignoreBondType, makeIntraBondIgnoreTest } from './util/bond';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { IntAdjacencyGraph } from '../../../mol-math/graph';
-import { WebGLContext } from '../../../mol-gl/webgl/context';
-import { Cylinders } from '../../../mol-geo/geometry/cylinders/cylinders';
-import { SortedArray } from '../../../mol-data/int';
-import { arrayIntersectionSize } from '../../../mol-util/array';
-import { checkCylinderImpostorSupport, StructureGroup } from './util/common';
-import { SizeTheme } from '../../../mol-theme/size';
-import { ComplexCylindersParams, ComplexMeshParams, ComplexCylindersVisual, ComplexMeshVisual, ComplexVisual } from '../complex-visual';
-import { EmptyLocationIterator } from '../../../mol-geo/util/location-iterator';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { VisualContext } from '../../visual.ts';
+import { Unit, type Structure, StructureElement, Bond } from '../../../mol-model/structure.ts';
+import type { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { arrayEqual } from '../../../mol-util.ts';
+import { createLinkCylinderImpostors, createLinkCylinderMesh, EmptyLinkBuilderProps, type LinkBuilderProps, LinkStyle } from './util/link.ts';
+import { UnitsMeshParams, type UnitsVisual, UnitsMeshVisual, UnitsCylindersParams, UnitsCylindersVisual } from '../units-visual.ts';
+import type { VisualUpdateState } from '../../util.ts';
+import { BondType } from '../../../mol-model/structure/model/types.ts';
+import { BondCylinderParams, BondIterator, eachIntraBond, eachStructureGroupsBond, getIntraBondLoci, getStructureGroupsBondLoci, hasStructureVisibleBonds, hasUnitVisibleBonds, ignoreBondType, makeIntraBondIgnoreTest } from './util/bond.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { IntAdjacencyGraph } from '../../../mol-math/graph.ts';
+import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
+import { Cylinders } from '../../../mol-geo/geometry/cylinders/cylinders.ts';
+import { SortedArray } from '../../../mol-data/int.ts';
+import { arrayIntersectionSize } from '../../../mol-util/array.ts';
+import { checkCylinderImpostorSupport, type StructureGroup } from './util/common.ts';
+import { SizeTheme } from '../../../mol-theme/size.ts';
+import { ComplexCylindersParams, ComplexMeshParams, ComplexCylindersVisual, ComplexMeshVisual, type ComplexVisual } from '../complex-visual.ts';
+import { EmptyLocationIterator } from '../../../mol-geo/util/location-iterator.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const isBondType = BondType.is;

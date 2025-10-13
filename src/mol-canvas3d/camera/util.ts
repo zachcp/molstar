@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mat4, Vec3, Vec4 } from '../../mol-math/linear-algebra';
+import { type Mat4, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
 
 export { Viewport };
 

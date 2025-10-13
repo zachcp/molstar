@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Model } from '../../mol-model/structure';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ValueBox } from '../../mol-util';
-import { CustomProperty } from './custom-property';
-import { CustomPropertyDescriptor } from '../../mol-model/custom-property';
-import { stringToWords } from '../../mol-util/string';
+import type { Model } from '../../mol-model/structure.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ValueBox } from '../../mol-util.ts';
+import type { CustomProperty } from './custom-property.ts';
+import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
+import { stringToWords } from '../../mol-util/string.ts';
 
 export { CustomModelProperty };
 

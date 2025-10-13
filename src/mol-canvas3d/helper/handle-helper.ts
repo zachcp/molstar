@@ -4,26 +4,26 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Scene } from '../../mol-gl/scene';
-import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder';
-import { Vec3, Mat4, Mat3 } from '../../mol-math/linear-algebra';
-import { addSphere } from '../../mol-geo/geometry/mesh/builder/sphere';
-import { GraphicsRenderObject } from '../../mol-gl/render-object';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { ColorNames } from '../../mol-util/color/names';
-import { addCylinder } from '../../mol-geo/geometry/mesh/builder/cylinder';
-import { ValueCell } from '../../mol-util';
-import { Sphere3D } from '../../mol-math/geometry';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { produce } from '../../mol-util/produce';
-import { Shape } from '../../mol-model/shape';
-import { PickingId } from '../../mol-geo/geometry/picking';
-import { Camera } from '../camera';
-import { DataLoci, EmptyLoci, isEveryLoci, Loci } from '../../mol-model/loci';
-import { MarkerAction, MarkerActions } from '../../mol-util/marker-action';
-import { Visual } from '../../mol-repr/visual';
-import { Interval } from '../../mol-data/int';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { Scene } from '../../mol-gl/scene.ts';
+import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Vec3, Mat4, type Mat3 } from '../../mol-math/linear-algebra.ts';
+import { addSphere } from '../../mol-geo/geometry/mesh/builder/sphere.ts';
+import type { GraphicsRenderObject } from '../../mol-gl/render-object.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { addCylinder } from '../../mol-geo/geometry/mesh/builder/cylinder.ts';
+import { ValueCell } from '../../mol-util.ts';
+import { Sphere3D } from '../../mol-math/geometry.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { produce } from '../../mol-util/produce.ts';
+import { Shape } from '../../mol-model/shape.ts';
+import type { PickingId } from '../../mol-geo/geometry/picking.ts';
+import type { Camera } from '../camera.ts';
+import { DataLoci, EmptyLoci, isEveryLoci, type Loci } from '../../mol-model/loci.ts';
+import { type MarkerAction, MarkerActions } from '../../mol-util/marker-action.ts';
+import { Visual } from '../../mol-repr/visual.ts';
+import { Interval } from '../../mol-data/int.ts';
 
 const HandleParams = {
     ...Mesh.Params,

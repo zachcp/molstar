@@ -4,15 +4,15 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PolymerTubeVisual, PolymerTubeParams } from '../visual/polymer-tube-mesh';
-import { PolymerGapVisual, PolymerGapParams } from '../visual/polymer-gap-cylinder';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { UnitsRepresentation } from '../units-representation';
-import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../../mol-repr/representation';
-import { Structure, Unit } from '../../../mol-model/structure';
-import { ThemeRegistryContext } from '../../../mol-theme/theme';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
+import { PolymerTubeVisual, PolymerTubeParams } from '../visual/polymer-tube-mesh.ts';
+import { PolymerGapVisual, PolymerGapParams } from '../visual/polymer-gap-cylinder.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { UnitsRepresentation } from '../units-representation.ts';
+import { type StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
+import { Representation, type RepresentationParamsGetter, type RepresentationContext } from '../../../mol-repr/representation.ts';
+import { type Structure, Unit } from '../../../mol-model/structure.ts';
+import type { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const PuttyVisuals = {
     'polymer-tube': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, PolymerTubeParams>) => UnitsRepresentation('Polymer tube mesh', ctx, getParams, PolymerTubeVisual),

@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color, ColorScale } from '../../../mol-util/color';
-import { Location } from '../../../mol-model/location';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { ThemeDataContext } from '../../../mol-theme/theme';
-import { ColorTheme, LocationColor } from '../../../mol-theme/color';
-import { CustomProperty } from '../../common/custom-property';
-import { CrossLinkRestraintProvider, CrossLinkRestraint } from './property';
-import { ColorThemeCategory } from '../../../mol-theme/color/categories';
+import { Color, ColorScale } from '../../../mol-util/color.ts';
+import type { Location } from '../../../mol-model/location.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { ThemeDataContext } from '../../../mol-theme/theme.ts';
+import type { ColorTheme, LocationColor } from '../../../mol-theme/color.ts';
+import type { CustomProperty } from '../../common/custom-property.ts';
+import { CrossLinkRestraintProvider, CrossLinkRestraint } from './property.ts';
+import { ColorThemeCategory } from '../../../mol-theme/color/categories.ts';
 
 const DefaultColor = Color(0xCCCCCC);
 const Description = 'Colors cross-links by the deviation of the observed distance versus the modeled distance (e.g. modeled / `ihm_cross_link_restraint.distance_threshold`).';

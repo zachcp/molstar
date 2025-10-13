@@ -5,12 +5,12 @@
  */
 
 import { merge } from 'rxjs';
-import { CollapsableControls, CollapsableState } from '../../mol-plugin-ui/base';
-import { Button } from '../../mol-plugin-ui/controls/common';
-import { GetAppSvg, CubeScanSvg, CubeSendSvg } from '../../mol-plugin-ui/controls/icons';
-import { ParameterControls } from '../../mol-plugin-ui/controls/parameters';
-import { download } from '../../mol-util/download';
-import { GeometryParams, GeometryControls } from './controls';
+import { CollapsableControls, type CollapsableState } from '../../mol-plugin-ui/base.ts';
+import { Button } from '../../mol-plugin-ui/controls/common.ts';
+import { GetAppSvg, CubeScanSvg, CubeSendSvg } from '../../mol-plugin-ui/controls/icons.ts';
+import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.ts';
+import { download } from '../../mol-util/download.ts';
+import { GeometryParams, GeometryControls } from './controls.ts';
 
 interface State {
     busy?: boolean

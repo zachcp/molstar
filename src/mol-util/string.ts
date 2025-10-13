@@ -5,7 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StringLike } from '../mol-io/common/string-like';
+import type { StringLike } from '../mol-io/common/string-like.ts';
 
 
 const reLine = /^/mg;

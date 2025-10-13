@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Primitive } from './primitive';
+import type { Primitive } from './primitive.ts';
 
 export const DefaultCircleProps = {
     radius: 1,

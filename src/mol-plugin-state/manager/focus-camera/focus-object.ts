@@ -4,17 +4,17 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Camera } from '../../../mol-canvas3d/camera';
-import { GraphicsRenderObject } from '../../../mol-gl/render-object';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { BoundaryHelper } from '../../../mol-math/geometry/boundary-helper';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { Loci } from '../../../mol-model/loci';
-import { Structure } from '../../../mol-model/structure';
-import { PluginContext } from '../../../mol-plugin/context';
-import { PluginState } from '../../../mol-plugin/state';
-import { StateObjectCell, StateSelection, StateTransform } from '../../../mol-state';
-import { PluginStateObject } from '../../objects';
+import type { Camera } from '../../../mol-canvas3d/camera.ts';
+import type { GraphicsRenderObject } from '../../../mol-gl/render-object.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { BoundaryHelper } from '../../../mol-math/geometry/boundary-helper.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { Loci } from '../../../mol-model/loci.ts';
+import { Structure } from '../../../mol-model/structure.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import type { PluginState } from '../../../mol-plugin/state.ts';
+import { type StateObjectCell, StateSelection, type StateTransform } from '../../../mol-state.ts';
+import { PluginStateObject } from '../../objects.ts';
 
 
 /** Return camera snapshot focused on a plugin state object cell (if `targetRef` is defined)

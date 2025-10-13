@@ -9,25 +9,25 @@
  */
 
 import * as React from 'react';
-import { Structure } from '../../mol-model/structure/structure/structure';
-import { getElementQueries, getNonStandardResidueQueries, getPolymerAndBranchedEntityQueries, StructureSelectionQueries, StructureSelectionQuery } from '../../mol-plugin-state/helpers/structure-selection-query';
-import { InteractivityManager } from '../../mol-plugin-state/manager/interactivity';
-import { StructureComponentManager } from '../../mol-plugin-state/manager/structure/component';
-import { StructureComponentRef, StructureRef } from '../../mol-plugin-state/manager/structure/hierarchy-state';
-import { StructureSelectionModifier } from '../../mol-plugin-state/manager/structure/selection';
-import { PluginConfig } from '../../mol-plugin/config';
-import { PluginContext } from '../../mol-plugin/context';
-import { compileIdListSelection } from '../../mol-script/util/id-list';
-import { memoizeLatest } from '../../mol-util/memoize';
-import { ParamDefinition } from '../../mol-util/param-definition';
-import { capitalize, stripTags } from '../../mol-util/string';
-import { PluginUIComponent, PurePluginUIComponent } from '../base';
-import { ActionMenu } from '../controls/action-menu';
-import { Button, ControlGroup, IconButton, ToggleButton } from '../controls/common';
-import { BrushSvg, CancelOutlinedSvg, CloseSvg, CubeOutlineSvg, HelpOutlineSvg, Icon, IntersectSvg, RemoveSvg, RestoreSvg, SelectionModeSvg, SetSvg, SubtractSvg, UnionSvg } from '../controls/icons';
-import { ParameterControls, ParamOnChange, PureSelectControl } from '../controls/parameters';
-import { HelpGroup, HelpText, ViewportHelpContent } from '../viewport/help';
-import { AddComponentControls } from './components';
+import type { Structure } from '../../mol-model/structure/structure/structure.ts';
+import { getElementQueries, getNonStandardResidueQueries, getPolymerAndBranchedEntityQueries, StructureSelectionQueries, type StructureSelectionQuery } from '../../mol-plugin-state/helpers/structure-selection-query.ts';
+import { InteractivityManager } from '../../mol-plugin-state/manager/interactivity.ts';
+import { StructureComponentManager } from '../../mol-plugin-state/manager/structure/component.ts';
+import type { StructureComponentRef, StructureRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
+import type { StructureSelectionModifier } from '../../mol-plugin-state/manager/structure/selection.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { compileIdListSelection } from '../../mol-script/util/id-list.ts';
+import { memoizeLatest } from '../../mol-util/memoize.ts';
+import { ParamDefinition } from '../../mol-util/param-definition.ts';
+import { capitalize, stripTags } from '../../mol-util/string.ts';
+import { PluginUIComponent, PurePluginUIComponent } from '../base.ts';
+import { ActionMenu } from '../controls/action-menu.ts';
+import { Button, ControlGroup, IconButton, ToggleButton } from '../controls/common.ts';
+import { BrushSvg, CancelOutlinedSvg, CloseSvg, CubeOutlineSvg, HelpOutlineSvg, Icon, IntersectSvg, RemoveSvg, RestoreSvg, SelectionModeSvg, SetSvg, SubtractSvg, UnionSvg } from '../controls/icons.ts';
+import { ParameterControls, type ParamOnChange, PureSelectControl } from '../controls/parameters.ts';
+import { HelpGroup, HelpText, ViewportHelpContent } from '../viewport/help.ts';
+import { AddComponentControls } from './components.ts';
 
 
 export class ToggleSelectionModeButton extends PurePluginUIComponent<{ inline?: boolean }> {
@@ -45,7 +45,7 @@ export class ToggleSelectionModeButton extends PurePluginUIComponent<{ inline?: 
         const style = this.props.inline
             ? { background: 'transparent', width: 'auto', height: 'auto', lineHeight: 'unset' }
             : { background: 'transparent' };
-        return <IconButton svg={SelectionModeSvg} onClick={this._toggleSelMode} title={'Toggle Selection Mode'} style={style} toggleState={this.plugin.selectionMode} />;
+        return <IconButton svg={SelectionModeSvg} onClick={this._toggleSelMode} title="Toggle Selection Mode" style={style} toggleState={this.plugin.selectionMode} />;
     }
 }
 
@@ -251,31 +251,31 @@ export class StructureSelectionActionsControls extends PluginUIComponent<{}, Str
                     <ActionMenu items={this.helpers} onSelect={this.selectHelper} noOffset />
                 </div>}
                 {this.state.action === 'theme' && <div className='msp-selection-viewport-controls-actions'>
-                    <ControlGroup header='Theme' title='Click to close.' initialExpanded={true} hideExpander={true} hideOffset={true} onHeaderClick={this.toggleTheme} topRightIcon={CloseSvg}>
+                    <ControlGroup header='Theme' title='Click to close.' initialExpanded hideExpander hideOffset onHeaderClick={this.toggleTheme} topRightIcon={CloseSvg}>
                         <ApplyThemeControls onApply={this.toggleTheme} />
                     </ControlGroup>
                 </div>}
                 {this.state.action === 'add-component' && <div className='msp-selection-viewport-controls-actions'>
-                    <ControlGroup header='Add Component' title='Click to close.' initialExpanded={true} hideExpander={true} hideOffset={true} onHeaderClick={this.toggleAddComponent} topRightIcon={CloseSvg}>
+                    <ControlGroup header='Add Component' title='Click to close.' initialExpanded hideExpander hideOffset onHeaderClick={this.toggleAddComponent} topRightIcon={CloseSvg}>
                         <AddComponentControls onApply={this.toggleAddComponent} forSelection />
                     </ControlGroup>
                 </div>}
                 {this.state.action === 'help' && <div className='msp-selection-viewport-controls-actions'>
-                    <ControlGroup header='Help' title='Click to close.' initialExpanded={true} hideExpander={true} hideOffset={true} onHeaderClick={this.toggleHelp} topRightIcon={CloseSvg} maxHeight='300px'>
+                    <ControlGroup header='Help' title='Click to close.' initialExpanded hideExpander hideOffset onHeaderClick={this.toggleHelp} topRightIcon={CloseSvg} maxHeight='300px'>
                         <HelpGroup header='Selection Operations'>
                             <HelpText>Use <Icon svg={UnionSvg} inline /> <Icon svg={SubtractSvg} inline /> <Icon svg={IntersectSvg} inline /> <Icon svg={SetSvg} inline /> to modify the selection.</HelpText>
                         </HelpGroup>
                         <HelpGroup header='Representation Operations'>
                             <HelpText>Use <Icon svg={BrushSvg} inline /> <Icon svg={CubeOutlineSvg} inline /> <Icon svg={RemoveSvg} inline /> <Icon svg={RestoreSvg} inline /> to color, create components, remove from components, or undo actions.</HelpText>
                         </HelpGroup>
-                        <ViewportHelpContent selectOnly={true} />
+                        <ViewportHelpContent selectOnly />
                     </ControlGroup>
                 </div>}
             </>;
         } else if (ActionHeader.has(this.state.action as any) && this.state.helper === 'residue-list') {
             const close = () => this.setState({ action: void 0, helper: void 0 });
             children = <div className='msp-selection-viewport-controls-actions'>
-                <ControlGroup header='Atom/Residue Identifier List' title='Click to close.' initialExpanded={true} hideExpander={true} hideOffset={true} onHeaderClick={close} topRightIcon={CloseSvg}>
+                <ControlGroup header='Atom/Residue Identifier List' title='Click to close.' initialExpanded hideExpander hideOffset onHeaderClick={close} topRightIcon={CloseSvg}>
                     <ResidueListSelectionHelper modifier={this.state.action as any} plugin={this.plugin} close={close} />
                 </ControlGroup>
             </div>;

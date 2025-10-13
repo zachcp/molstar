@@ -4,30 +4,30 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif';
-import { MmcifProvider } from '../../../mol-plugin-state/formats/trajectory';
-import { PluginStateObject } from '../../../mol-plugin-state/objects';
-import { Button, ExpandGroup, IconButton } from '../../../mol-plugin-ui/controls/common';
-import { GetAppSvg, HelpOutlineSvg, MagicWandSvg, TourSvg, Icon, OpenInBrowserSvg } from '../../../mol-plugin-ui/controls/icons';
-import { CollapsableControls, PluginUIComponent } from '../../../mol-plugin-ui/base';
-import { ApplyActionControl } from '../../../mol-plugin-ui/state/apply-action';
-import { LocalStateSnapshotList, LocalStateSnapshotParams, LocalStateSnapshots } from '../../../mol-plugin-ui/state/snapshots';
-import { PluginCommands } from '../../../mol-plugin/commands';
-import { PluginContext } from '../../../mol-plugin/context';
-import { StateAction, StateObjectRef, StateTransform } from '../../../mol-state';
-import { Task } from '../../../mol-task';
-import { Color } from '../../../mol-util/color/color';
-import { getFileNameInfo } from '../../../mol-util/file-info';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { ExampleEntry, MesoscaleExplorerState } from '../app';
-import { createCellpackHierarchy } from '../data/cellpack/preset';
-import { createGenericHierarchy } from '../data/generic/preset';
-import { createMmcifHierarchy } from '../data/mmcif/preset';
-import { createPetworldHierarchy } from '../data/petworld/preset';
-import { getAllEntities, getEntityLabel, MesoscaleState, MesoscaleStateObject, setGraphicsCanvas3DProps, updateStyle } from '../data/state';
-import { isTimingMode } from '../../../mol-util/debug';
-import { now } from '../../../mol-util/now';
-import { readFromFile } from '../../../mol-util/data-source';
+import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif.ts';
+import { MmcifProvider } from '../../../mol-plugin-state/formats/trajectory.ts';
+import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
+import { Button, ExpandGroup, IconButton } from '../../../mol-plugin-ui/controls/common.ts';
+import { GetAppSvg, HelpOutlineSvg, MagicWandSvg, TourSvg, Icon, OpenInBrowserSvg } from '../../../mol-plugin-ui/controls/icons.ts';
+import { CollapsableControls, PluginUIComponent } from '../../../mol-plugin-ui/base.ts';
+import { ApplyActionControl } from '../../../mol-plugin-ui/state/apply-action.ts';
+import { LocalStateSnapshotList, LocalStateSnapshotParams, LocalStateSnapshots } from '../../../mol-plugin-ui/state/snapshots.ts';
+import { PluginCommands } from '../../../mol-plugin/commands.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import { StateAction, StateObjectRef, StateTransform } from '../../../mol-state.ts';
+import { Task } from '../../../mol-task.ts';
+import { Color } from '../../../mol-util/color/color.ts';
+import { getFileNameInfo } from '../../../mol-util/file-info.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { ExampleEntry, MesoscaleExplorerState } from '../app.ts';
+import { createCellpackHierarchy } from '../data/cellpack/preset.ts';
+import { createGenericHierarchy } from '../data/generic/preset.ts';
+import { createMmcifHierarchy } from '../data/mmcif/preset.ts';
+import { createPetworldHierarchy } from '../data/petworld/preset.ts';
+import { getAllEntities, getEntityLabel, MesoscaleState, MesoscaleStateObject, setGraphicsCanvas3DProps, updateStyle } from '../data/state.ts';
+import { isTimingMode } from '../../../mol-util/debug.ts';
+import { now } from '../../../mol-util/now.ts';
+import { readFromFile } from '../../../mol-util/data-source.ts';
 
 function adjustPluginProps(ctx: PluginContext) {
     const customState = ctx.customState as MesoscaleExplorerState;
@@ -334,7 +334,7 @@ export class DatabaseControls extends PluginUIComponent {
 
     render() {
         return <div id='database' style={{ margin: '5px' }}>
-            <ApplyActionControl state={this.plugin.state.data} action={LoadDatabase} nodeRef={this.plugin.state.data.tree.root.ref} applyLabel={'Load'} hideHeader />
+            <ApplyActionControl state={this.plugin.state.data} action={LoadDatabase} nodeRef={this.plugin.state.data.tree.root.ref} applyLabel="Load" hideHeader />
         </div>;
     }
 }
@@ -346,7 +346,7 @@ export class LoaderControls extends PluginUIComponent {
 
     render() {
         return <div id='loader' style={{ margin: '5px' }}>
-            <ApplyActionControl state={this.plugin.state.data} action={LoadModel} nodeRef={this.plugin.state.data.tree.root.ref} applyLabel={'Load'} hideHeader />
+            <ApplyActionControl state={this.plugin.state.data} action={LoadModel} nodeRef={this.plugin.state.data.tree.root.ref} applyLabel="Load" hideHeader />
         </div>;
     }
 }
@@ -358,7 +358,7 @@ export class ExampleControls extends PluginUIComponent {
 
     render() {
         return <div id='example' style={{ margin: '5px' }}>
-            <ApplyActionControl state={this.plugin.state.data} action={LoadExample} nodeRef={this.plugin.state.data.tree.root.ref} applyLabel={'Load'} hideHeader />
+            <ApplyActionControl state={this.plugin.state.data} action={LoadExample} nodeRef={this.plugin.state.data.tree.root.ref} applyLabel="Load" hideHeader />
         </div>;
     }
 }
@@ -506,7 +506,7 @@ export class ExplorerInfo extends PluginUIComponent<{}, { isDisabled: boolean, s
 
     openHelp = () => {
         // open a new page with the documentation
-        window.open('https://molstar.org/me-docs/', '_blank');
+        globalThis.open('https://molstar.org/me-docs/', '_blank');
     };
 
     toggleHelp = () => {

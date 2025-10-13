@@ -4,23 +4,23 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ValueCell } from '../../../mol-util';
-import { createComputeRenderable, ComputeRenderable } from '../../../mol-gl/renderable';
-import { WebGLContext } from '../../../mol-gl/webgl/context';
-import { isNullTexture, Texture } from '../../../mol-gl/webgl/texture';
-import { ShaderCode } from '../../../mol-gl/shader-code';
-import { createComputeRenderItem } from '../../../mol-gl/webgl/render-item';
-import { ValueSpec, AttributeSpec, UniformSpec, TextureSpec, Values, DefineSpec } from '../../../mol-gl/renderable/schema';
-import { quad_vert } from '../../../mol-gl/shader/quad.vert';
-import { normalize_frag } from '../../../mol-gl/shader/compute/color-smoothing/normalize.frag';
-import { QuadSchema, QuadValues } from '../../../mol-gl/compute/util';
-import { Vec2, Vec3, Vec4 } from '../../../mol-math/linear-algebra';
-import { Box3D, Sphere3D } from '../../../mol-math/geometry';
-import { accumulate_frag } from '../../../mol-gl/shader/compute/color-smoothing/accumulate.frag';
-import { accumulate_vert } from '../../../mol-gl/shader/compute/color-smoothing/accumulate.vert';
-import { isWebGL2 } from '../../../mol-gl/webgl/compat';
-import { TextureMeshValues } from '../../../mol-gl/renderable/texture-mesh';
-import { isTimingMode } from '../../../mol-util/debug';
+import { ValueCell } from '../../../mol-util.ts';
+import { createComputeRenderable, type ComputeRenderable } from '../../../mol-gl/renderable.ts';
+import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
+import { isNullTexture, type Texture } from '../../../mol-gl/webgl/texture.ts';
+import { ShaderCode } from '../../../mol-gl/shader-code.ts';
+import { createComputeRenderItem } from '../../../mol-gl/webgl/render-item.ts';
+import { ValueSpec, AttributeSpec, UniformSpec, TextureSpec, type Values, DefineSpec } from '../../../mol-gl/renderable/schema.ts';
+import { quad_vert } from '../../../mol-gl/shader/quad.vert.ts';
+import { normalize_frag } from '../../../mol-gl/shader/compute/color-smoothing/normalize.frag.ts';
+import { QuadSchema, QuadValues } from '../../../mol-gl/compute/util.ts';
+import { Vec2, Vec3, Vec4 } from '../../../mol-math/linear-algebra.ts';
+import { Box3D, type Sphere3D } from '../../../mol-math/geometry.ts';
+import { accumulate_frag } from '../../../mol-gl/shader/compute/color-smoothing/accumulate.frag.ts';
+import { accumulate_vert } from '../../../mol-gl/shader/compute/color-smoothing/accumulate.vert.ts';
+import { isWebGL2 } from '../../../mol-gl/webgl/compat.ts';
+import type { TextureMeshValues } from '../../../mol-gl/renderable/texture-mesh.ts';
+import { isTimingMode } from '../../../mol-util/debug.ts';
 
 export const ColorAccumulateSchema = {
     drawCount: ValueSpec('number'),

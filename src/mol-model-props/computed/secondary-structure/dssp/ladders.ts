@@ -5,7 +5,7 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { DSSPContext, Ladder, BridgeType, Bridge } from './common';
+import { type DSSPContext, type Ladder, BridgeType, type Bridge } from './common.ts';
 
 function shouldExtendLadder(ladder: Ladder, bridge: Bridge): boolean {
     // in order to extend ladders, same type must be present

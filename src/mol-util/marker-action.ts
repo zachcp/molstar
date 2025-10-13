@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { OrderedSet, Interval } from '../mol-data/int';
-import { BitFlags } from './bit-flags';
-import { assertUnreachable } from './type-helpers';
+import { type OrderedSet, Interval } from '../mol-data/int.ts';
+import { BitFlags } from './bit-flags.ts';
+import { assertUnreachable } from './type-helpers.ts';
 
 export enum MarkerAction {
     None = 0x0,

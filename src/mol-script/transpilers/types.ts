@@ -7,8 +7,8 @@
  * Adapted from MolQL project
  */
 
-import * as P from '../../mol-util/monadic-parser';
-import { Expression } from '../language/expression';
+import type * as P from '../../mol-util/monadic-parser.ts';
+import type { Expression } from '../language/expression.ts';
 
 export interface AtomGroupArgs {
     [index: string]: any

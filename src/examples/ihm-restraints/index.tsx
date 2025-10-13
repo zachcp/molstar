@@ -4,24 +4,24 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { MolViewSpec } from '../../extensions/mvs/behavior';
-import { loadMVS } from '../../extensions/mvs/load';
-import { MVSData_States, Snapshot } from '../../extensions/mvs/mvs-data';
-import { createMVSBuilder } from '../../extensions/mvs/tree/mvs/mvs-builder';
-import { parseCifText } from '../../mol-io/reader/cif/text/parser';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { trajectoryFromMmCIF } from '../../mol-model-formats/structure/mmcif';
-import { Model } from '../../mol-model/structure';
-import { CoarseElementKey, CoarseElementReference } from '../../mol-model/structure/model/properties/coarse';
-import { createPluginUI } from '../../mol-plugin-ui';
-import { renderReact18 } from '../../mol-plugin-ui/react18';
-import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec';
-import { PluginConfig } from '../../mol-plugin/config';
-import { PluginContext } from '../../mol-plugin/context';
-import { PluginSpec } from '../../mol-plugin/spec';
-import { Task } from '../../mol-task';
-import { ajaxGet } from '../../mol-util/data-source';
-import { download } from '../../mol-util/download';
+import { MolViewSpec } from '../../extensions/mvs/behavior.ts';
+import { loadMVS } from '../../extensions/mvs/load.ts';
+import type { MVSData_States, Snapshot } from '../../extensions/mvs/mvs-data.ts';
+import { createMVSBuilder } from '../../extensions/mvs/tree/mvs/mvs-builder.ts';
+import { parseCifText } from '../../mol-io/reader/cif/text/parser.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { trajectoryFromMmCIF } from '../../mol-model-formats/structure/mmcif.ts';
+import type { Model } from '../../mol-model/structure.ts';
+import { CoarseElementKey, CoarseElementReference } from '../../mol-model/structure/model/properties/coarse.ts';
+import { createPluginUI } from '../../mol-plugin-ui.ts';
+import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
+import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { PluginSpec } from '../../mol-plugin/spec.ts';
+import { Task } from '../../mol-task.ts';
+import { ajaxGet } from '../../mol-util/data-source.ts';
+import { download } from '../../mol-util/download.ts';
 import './index.html';
 import '../../mol-plugin-ui/skin/light.scss';
 

@@ -7,9 +7,9 @@
  * Adapted from MolQL project
  */
 
-import { properties } from './properties';
-import { operators } from './operators';
-import { keywords } from './keywords';
+import { properties } from './properties.ts';
+import { operators } from './operators.ts';
+import { keywords } from './keywords.ts';
 
 const _docs: string[] = [
     'PyMol',

@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginBehavior } from '../../mol-plugin/behavior/behavior';
-import { Mp4EncoderUI } from './ui';
+import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
+import { Mp4EncoderUI } from './ui.ts';
 
 export const Mp4Export = PluginBehavior.create<{ }>({
     name: 'extension-mp4-export',

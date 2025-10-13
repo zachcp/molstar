@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { shallowMergeArray } from '../mol-util/object';
-import { RxEventHelper } from '../mol-util/rx-event-helper';
-import { Subscription, Observable } from 'rxjs';
-import { arraySetRemove } from '../mol-util/array';
+import { shallowMergeArray } from '../mol-util/object.ts';
+import { RxEventHelper } from '../mol-util/rx-event-helper.ts';
+import type { Subscription, Observable } from 'rxjs';
+import { arraySetRemove } from '../mol-util/array.ts';
 
 export class PluginComponent {
     private _ev: RxEventHelper | undefined;

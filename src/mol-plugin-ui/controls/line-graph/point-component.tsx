@@ -1,7 +1,7 @@
 
 import * as React from 'react';
 
-import { Vec2 } from '../../../mol-math/linear-algebra';
+import { Vec2 } from '../../../mol-math/linear-algebra.ts';
 
 export class PointComponent extends React.Component<any, {show: boolean}> {
     constructor(props: any) {

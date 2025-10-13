@@ -6,19 +6,19 @@
  * @author Aliaksei Chareshneu <chareshneu.tech@gmail.com>
  */
 
-import { StateTransforms } from '../transforms';
-import { DataFormatProvider, guessCifVariant } from './provider';
-import { PluginContext } from '../../mol-plugin/context';
-import { StateObjectSelector } from '../../mol-state';
-import { PluginStateObject } from '../objects';
-import { VolumeRepresentation3DHelpers } from '../transforms/representation';
-import { ColorNames } from '../../mol-util/color/names';
-import { Volume } from '../../mol-model/volume';
-import { createVolumeRepresentationParams } from '../helpers/volume-representation-params';
-import { objectForEach } from '../../mol-util/object';
-import { RecommendedIsoValue } from '../../mol-model-formats/volume/property';
-import { getContourLevelEmdb } from '../../mol-plugin/behavior/dynamic/volume-streaming/util';
-import { Task } from '../../mol-task';
+import { StateTransforms } from '../transforms.ts';
+import { DataFormatProvider, guessCifVariant } from './provider.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import type { StateObjectSelector } from '../../mol-state.ts';
+import type { PluginStateObject } from '../objects.ts';
+import { VolumeRepresentation3DHelpers } from '../transforms/representation.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { Volume } from '../../mol-model/volume.ts';
+import { createVolumeRepresentationParams } from '../helpers/volume-representation-params.ts';
+import { objectForEach } from '../../mol-util/object.ts';
+import { RecommendedIsoValue } from '../../mol-model-formats/volume/property.ts';
+import { getContourLevelEmdb } from '../../mol-plugin/behavior/dynamic/volume-streaming/util.ts';
+import { Task } from '../../mol-task.ts';
 
 export const VolumeFormatCategory = 'Volume';
 type Params = { entryId?: string };

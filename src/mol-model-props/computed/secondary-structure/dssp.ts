@@ -5,23 +5,23 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { SecondaryStructure } from '../../../mol-model/structure/model/properties/secondary-structure';
-import { SecondaryStructureType } from '../../../mol-model/structure/model/types';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { assignBends } from './dssp/bends';
-import { calcUnitBackboneHbonds } from './dssp/backbone-hbonds';
-import { Ladder, Bridge, DSSPContext, DSSPType } from './dssp/common';
-import { assignTurns } from './dssp/turns';
-import { assignHelices } from './dssp/helices';
-import { assignLadders } from './dssp/ladders';
-import { assignBridges } from './dssp/bridges';
-import { assignSheets } from './dssp/sheets';
-import { calculateUnitDihedralAngles } from './dssp/dihedral-angles';
-import { calcUnitProteinTraceLookup3D } from './dssp/trace-lookup';
-import { Unit } from '../../../mol-model/structure';
-import { getUnitProteinInfo } from './dssp/protein-info';
-import { ResidueIndex } from '../../../mol-model/structure/model';
-import { SortedArray } from '../../../mol-data/int';
+import { SecondaryStructure } from '../../../mol-model/structure/model/properties/secondary-structure.ts';
+import { SecondaryStructureType } from '../../../mol-model/structure/model/types.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { assignBends } from './dssp/bends.ts';
+import { calcUnitBackboneHbonds } from './dssp/backbone-hbonds.ts';
+import { type Ladder, type Bridge, type DSSPContext, DSSPType } from './dssp/common.ts';
+import { assignTurns } from './dssp/turns.ts';
+import { assignHelices } from './dssp/helices.ts';
+import { assignLadders } from './dssp/ladders.ts';
+import { assignBridges } from './dssp/bridges.ts';
+import { assignSheets } from './dssp/sheets.ts';
+import { calculateUnitDihedralAngles } from './dssp/dihedral-angles.ts';
+import { calcUnitProteinTraceLookup3D } from './dssp/trace-lookup.ts';
+import type { Unit } from '../../../mol-model/structure.ts';
+import { getUnitProteinInfo } from './dssp/protein-info.ts';
+import type { ResidueIndex } from '../../../mol-model/structure/model.ts';
+import { SortedArray } from '../../../mol-data/int.ts';
 
 /**
  * TODO bugs to fix:

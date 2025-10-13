@@ -5,12 +5,12 @@
  */
 
 import { molfileToJSONCif } from '../utils';
-import { CifFile } from '../../../mol-io/reader/cif';
+import type { CifFile } from '../../../mol-io/reader/cif';
 import { trajectoryFromMmCIF } from '../../../mol-model-formats/structure/mmcif';
 import { Task } from '../../../mol-task';
 import { JSONCifLigandGraph } from '../ligand-graph';
 import { parseJSONCif } from '../parser';
-import { JSONCifDataBlock } from '../model';
+import type { JSONCifDataBlock } from '../model';
 
 describe('json-cif', () => {
     it('roundtrips', async () => {

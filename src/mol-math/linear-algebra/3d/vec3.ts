@@ -17,12 +17,12 @@
  * furnished to do so, subject to the following conditions:
  */
 
-import { Mat4 } from './mat4';
-import { spline as _spline, quadraticBezier as _quadraticBezier, clamp as _clamp } from '../../interpolate';
-import { NumberArray } from '../../../mol-util/type-helpers';
-import { Mat3 } from './mat3';
-import { Quat } from './quat';
-import { EPSILON } from './common';
+import { Mat4 } from './mat4.ts';
+import { spline as _spline, quadraticBezier as _quadraticBezier, clamp as _clamp } from '../../interpolate.ts';
+import type { NumberArray } from '../../../mol-util/type-helpers.ts';
+import type { Mat3 } from './mat3.ts';
+import type { Quat } from './quat.ts';
+import { EPSILON } from './common.ts';
 
 const _isFinite = isFinite;
 

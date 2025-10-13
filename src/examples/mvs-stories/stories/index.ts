@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { buildStory as kinase } from './kinase';
-import { buildStory as tbp } from './tbp';
-import { buildStory as animation } from './animation';
-import { buildStory as audio } from './audio';
-import { buildStory as motm1 } from './motm1';
+import { buildStory as kinase } from './kinase.ts';
+import { buildStory as tbp } from './tbp.ts';
+import { buildStory as animation } from './animation.ts';
+import { buildStory as audio } from './audio.ts';
+import { buildStory as motm1 } from './motm1.ts';
 
 export const Stories = [
     { id: 'kinase', name: 'BCR-ABL: A Kinase Out of Control', buildStory: kinase },

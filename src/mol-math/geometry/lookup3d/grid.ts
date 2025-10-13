@@ -6,16 +6,16 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { Result, Lookup3D } from './common';
-import { Box3D } from '../primitives/box3d';
-import { Sphere3D } from '../primitives/sphere3d';
-import { PositionData } from '../common';
-import { Vec3 } from '../../linear-algebra';
-import { OrderedSet } from '../../../mol-data/int';
-import { Boundary } from '../boundary';
-import { FibonacciHeap } from '../../../mol-util/fibonacci-heap';
-import { memoize1 } from '../../../mol-util/memoize';
-import { Ray3D } from '../primitives/ray3d';
+import { Result, type Lookup3D } from './common.ts';
+import { Box3D } from '../primitives/box3d.ts';
+import type { Sphere3D } from '../primitives/sphere3d.ts';
+import type { PositionData } from '../common.ts';
+import { Vec3 } from '../../linear-algebra.ts';
+import { OrderedSet } from '../../../mol-data/int.ts';
+import type { Boundary } from '../boundary.ts';
+import { FibonacciHeap } from '../../../mol-util/fibonacci-heap.ts';
+import { memoize1 } from '../../../mol-util/memoize.ts';
+import { Ray3D } from '../primitives/ray3d.ts';
 
 interface GridLookup3D<T = number> extends Lookup3D<T> {
     readonly buckets: { readonly offset: ArrayLike<number>, readonly count: ArrayLike<number>, readonly array: ArrayLike<number> }

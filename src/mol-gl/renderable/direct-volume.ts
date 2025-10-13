@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Renderable, RenderableState, createRenderable } from '../renderable';
-import { WebGLContext } from '../webgl/context';
-import { createGraphicsRenderItem, Transparency } from '../webgl/render-item';
-import { AttributeSpec, Values, UniformSpec, GlobalUniformSchema, InternalSchema, TextureSpec, ElementsSpec, DefineSpec, InternalValues, GlobalTextureSchema, BaseSchema, ValueSpec, GlobalDefineValues, GlobalDefines, GlobalDefineSchema } from './schema';
-import { DirectVolumeShaderCode } from '../shader-code';
-import { ValueCell } from '../../mol-util';
+import { type Renderable, type RenderableState, createRenderable } from '../renderable.ts';
+import type { WebGLContext } from '../webgl/context.ts';
+import { createGraphicsRenderItem, type Transparency } from '../webgl/render-item.ts';
+import { AttributeSpec, type Values, UniformSpec, GlobalUniformSchema, InternalSchema, TextureSpec, ElementsSpec, DefineSpec, type InternalValues, GlobalTextureSchema, BaseSchema, ValueSpec, type GlobalDefineValues, type GlobalDefines, GlobalDefineSchema } from './schema.ts';
+import { DirectVolumeShaderCode } from '../shader-code.ts';
+import { ValueCell } from '../../mol-util.ts';
 
 export const DirectVolumeSchema = {
     ...BaseSchema,

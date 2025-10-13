@@ -4,19 +4,19 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginBehavior } from '../../../behavior';
-import { ParamDefinition as PD } from '../../../../../mol-util/param-definition';
-import { InteractionsProvider } from '../../../../../mol-model-props/computed/interactions';
-import { Structure } from '../../../../../mol-model/structure';
-import { StateSelection } from '../../../../../mol-state';
-import { PluginStateObject } from '../../../../../mol-plugin-state/objects';
-import { StructureElement } from '../../../../../mol-model/structure/structure/element';
-import { OrderedSet } from '../../../../../mol-data/int';
-import { featureGroupLabel, featureTypeLabel } from '../../../../../mol-model-props/computed/interactions/common';
-import { Loci } from '../../../../../mol-model/loci';
-import { arraySetAdd } from '../../../../../mol-util/array';
-import { InteractionTypeColorThemeProvider } from '../../../../../mol-model-props/computed/themes/interaction-type';
-import { InteractionsRepresentationProvider } from '../../../../../mol-model-props/computed/representations/interactions';
+import { PluginBehavior } from '../../../behavior.ts';
+import { ParamDefinition as PD } from '../../../../../mol-util/param-definition.ts';
+import { InteractionsProvider } from '../../../../../mol-model-props/computed/interactions.ts';
+import type { Structure } from '../../../../../mol-model/structure.ts';
+import { StateSelection } from '../../../../../mol-state.ts';
+import { PluginStateObject } from '../../../../../mol-plugin-state/objects.ts';
+import { StructureElement } from '../../../../../mol-model/structure/structure/element.ts';
+import { OrderedSet } from '../../../../../mol-data/int.ts';
+import { featureGroupLabel, featureTypeLabel } from '../../../../../mol-model-props/computed/interactions/common.ts';
+import type { Loci } from '../../../../../mol-model/loci.ts';
+import { arraySetAdd } from '../../../../../mol-util/array.ts';
+import { InteractionTypeColorThemeProvider } from '../../../../../mol-model-props/computed/themes/interaction-type.ts';
+import { InteractionsRepresentationProvider } from '../../../../../mol-model-props/computed/representations/interactions.ts';
 
 export const Interactions = PluginBehavior.create<{ autoAttach: boolean, showTooltip: boolean }>({
     name: 'computed-interactions-prop',

@@ -5,10 +5,10 @@
  */
 
 
-import { OpenFiles } from '../actions/file';
-import { Asset } from '../../mol-util/assets';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginContext } from '../../mol-plugin/context';
+import { OpenFiles } from '../actions/file.ts';
+import { Asset } from '../../mol-util/assets.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
 
 export type PluginDragAndDropHandler = (files: File[], plugin: PluginContext) => Promise<boolean> | boolean
 

@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Database, Filter, Column } from './schema';
-import { indentString } from '../../../mol-util/string';
-import { FieldPath } from '../../../mol-io/reader/cif/schema';
+import type { Database, Filter, Column } from './schema.ts';
+import { indentString } from '../../../mol-util/string.ts';
+import { FieldPath } from '../../../mol-io/reader/cif/schema.ts';
 
 function header(name: string, info: string, moldataImportPath: string) {
     return `/**

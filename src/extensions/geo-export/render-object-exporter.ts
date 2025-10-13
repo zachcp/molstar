@@ -4,9 +4,9 @@
  * @author Sukolsak Sakshuwong <sukolsak@stanford.edu>
  */
 
-import { GraphicsRenderObject } from '../../mol-gl/render-object';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { RuntimeContext } from '../../mol-task';
+import type { GraphicsRenderObject } from '../../mol-gl/render-object.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import type { RuntimeContext } from '../../mol-task.ts';
 
 export type RenderObjectExportData = {
     [k: string]: string | Uint8Array | ArrayBuffer | undefined

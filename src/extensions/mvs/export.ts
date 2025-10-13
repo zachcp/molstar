@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Zip } from '../../mol-util/zip/zip';
-import { MVSData } from './mvs-data';
+import { Zip } from '../../mol-util/zip/zip.ts';
+import type { MVSData } from './mvs-data.ts';
 
 /**
  * Creates an MVSX zip file with from the provided data and assets

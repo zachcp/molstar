@@ -5,18 +5,18 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { Unit, StructureElement, ElementIndex, ResidueIndex, Structure } from '../../../../../mol-model/structure';
-import { Segmentation, SortedArray } from '../../../../../mol-data/int';
-import { MoleculeType, SecondaryStructureType } from '../../../../../mol-model/structure/model/types';
-import { Iterator } from '../../../../../mol-data/iterator';
-import { Vec3 } from '../../../../../mol-math/linear-algebra';
-import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges';
-import { CoarseSphereConformation, CoarseGaussianConformation } from '../../../../../mol-model/structure/model/properties/coarse';
-import { getPolymerRanges } from '../polymer';
-import { AtomicConformation } from '../../../../../mol-model/structure/model/properties/atomic';
-import { SecondaryStructureProvider } from '../../../../../mol-model-props/computed/secondary-structure';
-import { HelixOrientationProvider } from '../../../../../mol-model-props/computed/helix-orientation';
-import { SecondaryStructure } from '../../../../../mol-model/structure/model/properties/secondary-structure';
+import { Unit, StructureElement, type ElementIndex, type ResidueIndex, type Structure } from '../../../../../mol-model/structure.ts';
+import { Segmentation, type SortedArray } from '../../../../../mol-data/int.ts';
+import { MoleculeType, SecondaryStructureType } from '../../../../../mol-model/structure/model/types.ts';
+import type { Iterator } from '../../../../../mol-data/iterator.ts';
+import { Vec3 } from '../../../../../mol-math/linear-algebra.ts';
+import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges.ts';
+import type { CoarseSphereConformation, CoarseGaussianConformation } from '../../../../../mol-model/structure/model/properties/coarse.ts';
+import { getPolymerRanges } from '../polymer.ts';
+import type { AtomicConformation } from '../../../../../mol-model/structure/model/properties/atomic.ts';
+import { SecondaryStructureProvider } from '../../../../../mol-model-props/computed/secondary-structure.ts';
+import { HelixOrientationProvider } from '../../../../../mol-model-props/computed/helix-orientation.ts';
+import type { SecondaryStructure } from '../../../../../mol-model/structure/model/properties/secondary-structure.ts';
 
 function isHelixSS(ss: SecondaryStructureType.Flag) {
     return SecondaryStructureType.is(ss, SecondaryStructureType.Flag.Helix);

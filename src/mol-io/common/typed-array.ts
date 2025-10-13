@@ -7,8 +7,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { FileHandle } from '../../mol-io/common/file-handle';
-import { SimpleBuffer } from '../../mol-io/common/simple-buffer';
+import type { FileHandle } from '../../mol-io/common/file-handle.ts';
+import { SimpleBuffer } from '../../mol-io/common/simple-buffer.ts';
 
 export type TypedArrayValueType = 'float32' | 'int8' | 'int16' | 'uint16'
 

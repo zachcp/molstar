@@ -4,16 +4,16 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Expression } from '../../mol-script/language/expression';
-import { MolScriptBuilder } from '../../mol-script/language/builder';
-import { StructureElement, Structure, StructureSelection as Sel, StructureQuery, Queries, QueryContext, Model } from '../../mol-model/structure';
-import { StructureQueryHelper } from './structure-query';
-import { PluginStateObject as SO } from '../objects';
-import { StructureSelectionQueries } from './structure-selection-query';
-import { StateTransformer, StateObject } from '../../mol-state';
-import { Script } from '../../mol-script/script';
-import { assertUnreachable } from '../../mol-util/type-helpers';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { Expression } from '../../mol-script/language/expression.ts';
+import { MolScriptBuilder } from '../../mol-script/language/builder.ts';
+import { StructureElement, Structure, StructureSelection as Sel, type StructureQuery, Queries, QueryContext, Model } from '../../mol-model/structure.ts';
+import { StructureQueryHelper } from './structure-query.ts';
+import { PluginStateObject as SO } from '../objects.ts';
+import { StructureSelectionQueries } from './structure-selection-query.ts';
+import { StateTransformer, StateObject } from '../../mol-state.ts';
+import { Script } from '../../mol-script/script.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
 
 export const StaticStructureComponentTypes = [
     'all',

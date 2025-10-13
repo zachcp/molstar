@@ -5,7 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ColorSwatch } from './color';
+import { ColorSwatch } from './color.ts';
 
 export const DefaultColorSwatch = ColorSwatch([
     ['black', 0x000000],

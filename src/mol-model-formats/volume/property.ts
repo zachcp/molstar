@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { CustomPropertyDescriptor } from '../../mol-model/custom-property';
-import { Volume } from '../../mol-model/volume/volume';
+import type { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
+import type { Volume } from '../../mol-model/volume/volume.ts';
 
 export { PropertyProvider };
 

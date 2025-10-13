@@ -4,23 +4,23 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Vec3, Mat4 } from '../../mol-math/linear-algebra';
-import { Box3D } from '../../mol-math/geometry';
-import { Grid, Volume } from '../../mol-model/volume';
-import { RuntimeContext } from '../../mol-task';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { DirectVolume } from '../../mol-geo/geometry/direct-volume/direct-volume';
-import { VisualContext } from '../visual';
-import { Theme, ThemeRegistryContext } from '../../mol-theme/theme';
-import { VolumeVisual, VolumeRepresentation, VolumeRepresentationProvider } from './representation';
-import { VisualUpdateState } from '../util';
-import { RepresentationContext, RepresentationParamsGetter } from '../representation';
-import { Interval, OrderedSet } from '../../mol-data/int';
-import { Loci, EmptyLoci } from '../../mol-model/loci';
-import { PickingId } from '../../mol-geo/geometry/picking';
-import { createVolumeCellLocationIterator, createVolumeTexture2d, createVolumeTexture3d, eachVolumeLoci, getVolumeTexture2dLayout } from './util';
-import { Texture } from '../../mol-gl/webgl/texture';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Vec3, Mat4 } from '../../mol-math/linear-algebra.ts';
+import { Box3D } from '../../mol-math/geometry.ts';
+import { Grid, Volume } from '../../mol-model/volume.ts';
+import type { RuntimeContext } from '../../mol-task.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { DirectVolume } from '../../mol-geo/geometry/direct-volume/direct-volume.ts';
+import type { VisualContext } from '../visual.ts';
+import type { Theme, ThemeRegistryContext } from '../../mol-theme/theme.ts';
+import { VolumeVisual, VolumeRepresentation, VolumeRepresentationProvider } from './representation.ts';
+import type { VisualUpdateState } from '../util.ts';
+import type { RepresentationContext, RepresentationParamsGetter } from '../representation.ts';
+import { Interval, OrderedSet } from '../../mol-data/int.ts';
+import { type Loci, EmptyLoci } from '../../mol-model/loci.ts';
+import type { PickingId } from '../../mol-geo/geometry/picking.ts';
+import { createVolumeCellLocationIterator, createVolumeTexture2d, createVolumeTexture3d, eachVolumeLoci, getVolumeTexture2dLayout } from './util.ts';
+import type { Texture } from '../../mol-gl/webgl/texture.ts';
 
 function getBoundingBox(gridDimension: Vec3, transform: Mat4) {
     const bbox = Box3D();

@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { EPSILON, Mat4, Quat, Vec3 } from '../mol-math/linear-algebra';
-import { degToRad } from '../mol-math/misc';
-import { ParamDefinition as PD } from './param-definition';
-import { stringToWords } from './string';
+import { EPSILON, Mat4, Quat, Vec3 } from '../mol-math/linear-algebra.ts';
+import { degToRad } from '../mol-math/misc.ts';
+import { ParamDefinition as PD } from './param-definition.ts';
+import { stringToWords } from './string.ts';
 
 export interface Clip {
     variant: Clip.Variant,

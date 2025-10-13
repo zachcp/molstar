@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { PluginBehavior } from '../behavior';
-import { Binding } from '../../../mol-util/binding';
-import { ModifiersKeys } from '../../../mol-util/input/input-observer';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { PluginBehavior } from '../behavior.ts';
+import { Binding } from '../../../mol-util/binding.ts';
+import { ModifiersKeys } from '../../../mol-util/input/input-observer.ts';
 
 const M = ModifiersKeys;
 const Key = Binding.TriggerKey;

@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginBehavior } from '../../mol-plugin/behavior/behavior';
-import { ModelExportUI } from './ui';
+import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
+import { ModelExportUI } from './ui.ts';
 
 export const ModelExport = PluginBehavior.create<{}>({
     name: 'extension-model-export',

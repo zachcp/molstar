@@ -5,6 +5,6 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as StructureElement from './element/element';
+import * as StructureElement from './element/element.ts';
 
 export { StructureElement };

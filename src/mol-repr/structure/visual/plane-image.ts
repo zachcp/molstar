@@ -4,26 +4,26 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { VisualUpdateState } from '../../util';
-import { VisualContext } from '../../visual';
-import { Structure, StructureElement } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { EPSILON, Mat4, Quat, Vec3 } from '../../../mol-math/linear-algebra';
-import { Axes3D, Box3D } from '../../../mol-math/geometry';
-import { ComplexImageParams, ComplexImageVisual, ComplexVisual } from '../complex-visual';
-import { eachSerialElement, ElementIterator, getSerialElementLoci } from './util/element';
-import { Image, InterpolationTypes } from '../../../mol-geo/geometry/image/image';
-import { transformPositionArray } from '../../../mol-geo/util';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
-import { PositionLocation } from '../../../mol-geo/util/location-iterator';
-import { Color } from '../../../mol-util/color/color';
-import { clamp } from '../../../mol-math/interpolate';
-import { ColorTheme } from '../../../mol-theme/color';
-import { packIntToRGBArray } from '../../../mol-util/number-packing';
-import { SizeTheme } from '../../../mol-theme/size';
-import { Plane3D } from '../../../mol-math/geometry/primitives/plane3d';
-import { degToRad } from '../../../mol-math/misc';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { VisualUpdateState } from '../../util.ts';
+import type { VisualContext } from '../../visual.ts';
+import { Structure, StructureElement } from '../../../mol-model/structure.ts';
+import type { Theme } from '../../../mol-theme/theme.ts';
+import { EPSILON, Mat4, Quat, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { Axes3D, Box3D } from '../../../mol-math/geometry.ts';
+import { ComplexImageParams, ComplexImageVisual, type ComplexVisual } from '../complex-visual.ts';
+import { eachSerialElement, ElementIterator, getSerialElementLoci } from './util/element.ts';
+import { Image, InterpolationTypes } from '../../../mol-geo/geometry/image/image.ts';
+import { transformPositionArray } from '../../../mol-geo/util.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
+import { PositionLocation } from '../../../mol-geo/util/location-iterator.ts';
+import { Color } from '../../../mol-util/color/color.ts';
+import { clamp } from '../../../mol-math/interpolate.ts';
+import { ColorTheme } from '../../../mol-theme/color.ts';
+import { packIntToRGBArray } from '../../../mol-util/number-packing.ts';
+import { SizeTheme } from '../../../mol-theme/size.ts';
+import { Plane3D } from '../../../mol-math/geometry/primitives/plane3d.ts';
+import { degToRad } from '../../../mol-math/misc.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3set = Vec3.set;

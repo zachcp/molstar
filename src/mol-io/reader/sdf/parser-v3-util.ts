@@ -5,10 +5,10 @@
  * @author Panagiotis Tourlas <panagiot_tourlov@hotmail.com>
  */
 
-import { Column } from '../../../mol-data/db';
-import { MolFile } from '../mol/parser';
-import { Tokenizer, TokenBuilder, Tokens } from '../common/text/tokenizer';
-import { TokenColumnProvider as TokenColumn } from '../common/text/column/token';
+import { Column } from '../../../mol-data/db.ts';
+import type { MolFile } from '../mol/parser.ts';
+import { Tokenizer, TokenBuilder, type Tokens } from '../common/text/tokenizer.ts';
+import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.ts';
 
 export function isV3(
     versionLine: string

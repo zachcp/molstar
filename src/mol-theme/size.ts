@@ -4,15 +4,15 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { SizeType, LocationSize } from '../mol-geo/geometry/size-data';
-import { UniformSizeThemeProvider } from './size/uniform';
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { ThemeDataContext, ThemeRegistry, ThemeProvider } from '../mol-theme/theme';
-import { PhysicalSizeThemeProvider } from './size/physical';
-import { deepEqual } from '../mol-util';
-import { ShapeGroupSizeThemeProvider } from './size/shape-group';
-import { UncertaintySizeThemeProvider } from './size/uncertainty';
-import { VolumeValueSizeThemeProvider } from './size/volume-value';
+import type { SizeType, LocationSize } from '../mol-geo/geometry/size-data.ts';
+import { UniformSizeThemeProvider } from './size/uniform.ts';
+import type { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import { type ThemeDataContext, ThemeRegistry, type ThemeProvider } from '../mol-theme/theme.ts';
+import { PhysicalSizeThemeProvider } from './size/physical.ts';
+import { deepEqual } from '../mol-util.ts';
+import { ShapeGroupSizeThemeProvider } from './size/shape-group.ts';
+import { UncertaintySizeThemeProvider } from './size/uncertainty.ts';
+import { VolumeValueSizeThemeProvider } from './size/volume-value.ts';
 
 export { SizeTheme };
 interface SizeTheme<P extends PD.Params> {

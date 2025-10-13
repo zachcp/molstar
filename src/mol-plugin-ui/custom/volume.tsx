@@ -5,20 +5,20 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { PluginUIComponent } from '../base';
-import { StateTransformParameters } from '../state/common';
-import { VolumeStreaming } from '../../mol-plugin/behavior/dynamic/volume-streaming/behavior';
-import { ExpandableControlRow, IconButton } from '../controls/common';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ParameterControls, ParamOnChange } from '../controls/parameters';
-import { Slider } from '../controls/slider';
-import { Volume, Grid } from '../../mol-model/volume';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { ColorNames } from '../../mol-util/color/names';
-import { toPrecision } from '../../mol-util/number';
-import { StateSelection, StateObjectCell } from '../../mol-state';
-import { setSubtreeVisibility } from '../../mol-plugin/behavior/static/state';
-import { VisibilityOutlinedSvg, VisibilityOffOutlinedSvg } from '../controls/icons';
+import { PluginUIComponent } from '../base.ts';
+import type { StateTransformParameters } from '../state/common.ts';
+import { VolumeStreaming } from '../../mol-plugin/behavior/dynamic/volume-streaming/behavior.ts';
+import { ExpandableControlRow, IconButton } from '../controls/common.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ParameterControls, type ParamOnChange } from '../controls/parameters.ts';
+import { Slider } from '../controls/slider.ts';
+import { Volume, type Grid } from '../../mol-model/volume.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { toPrecision } from '../../mol-util/number.ts';
+import { StateSelection, type StateObjectCell } from '../../mol-state.ts';
+import { setSubtreeVisibility } from '../../mol-plugin/behavior/static/state.ts';
+import { VisibilityOutlinedSvg, VisibilityOffOutlinedSvg } from '../controls/icons.ts';
 
 const ChannelParams = {
     color: PD.Color(ColorNames.black, { description: 'Display color of the volume.' }),

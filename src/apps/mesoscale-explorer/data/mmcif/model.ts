@@ -5,20 +5,20 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { SortedArray } from '../../../../mol-data/int';
-import { SymmetryOperator } from '../../../../mol-math/geometry';
-import { Mat4 } from '../../../../mol-math/linear-algebra';
-import { ModelSymmetry } from '../../../../mol-model-formats/structure/property/symmetry';
-import { CustomStructureProperty } from '../../../../mol-model-props/common/custom-structure-property';
-import { ElementIndex, EntityIndex, Model, Structure, Unit } from '../../../../mol-model/structure';
-import { Assembly, Symmetry } from '../../../../mol-model/structure/model/properties/symmetry';
-import { PluginStateObject as PSO, PluginStateTransform } from '../../../../mol-plugin-state/objects';
-import { PluginContext } from '../../../../mol-plugin/context';
-import { StateTransformer } from '../../../../mol-state/transformer';
-import { Task } from '../../../../mol-task';
-import { deepEqual } from '../../../../mol-util';
-import { ParamDefinition as PD } from '../../../../mol-util/param-definition';
-import { partitionUnits } from '../util';
+import { SortedArray } from '../../../../mol-data/int.ts';
+import { SymmetryOperator } from '../../../../mol-math/geometry.ts';
+import { Mat4 } from '../../../../mol-math/linear-algebra.ts';
+import { ModelSymmetry } from '../../../../mol-model-formats/structure/property/symmetry.ts';
+import { CustomStructureProperty } from '../../../../mol-model-props/common/custom-structure-property.ts';
+import { type ElementIndex, type EntityIndex, type Model, Structure, Unit } from '../../../../mol-model/structure.ts';
+import { type Assembly, Symmetry } from '../../../../mol-model/structure/model/properties/symmetry.ts';
+import { PluginStateObject as PSO, PluginStateTransform } from '../../../../mol-plugin-state/objects.ts';
+import type { PluginContext } from '../../../../mol-plugin/context.ts';
+import { StateTransformer } from '../../../../mol-state/transformer.ts';
+import { Task } from '../../../../mol-task.ts';
+import { deepEqual } from '../../../../mol-util.ts';
+import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
+import { partitionUnits } from '../util.ts';
 
 function createModelChainMap(model: Model) {
     const builder = new Structure.StructureBuilder();

@@ -5,20 +5,20 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { WebGLContext } from './webgl/context';
-import { GraphicsRenderObject, createRenderable } from './render-object';
-import { Object3D } from './object3d';
-import { Sphere3D } from '../mol-math/geometry/primitives/sphere3d';
-import { CommitQueue } from './commit-queue';
-import { now } from '../mol-util/now';
-import { arraySetRemove } from '../mol-util/array';
-import { BoundaryHelper } from '../mol-math/geometry/boundary-helper';
-import { hash1 } from '../mol-data/util';
-import { GraphicsRenderable } from './renderable';
-import { Transparency } from './webgl/render-item';
-import { clamp } from '../mol-math/interpolate';
-import { GlobalDefines } from './renderable/schema';
-import { ValueCell } from '../mol-util/value-cell';
+import type { WebGLContext } from './webgl/context.ts';
+import { type GraphicsRenderObject, createRenderable } from './render-object.ts';
+import { Object3D } from './object3d.ts';
+import { Sphere3D } from '../mol-math/geometry/primitives/sphere3d.ts';
+import { CommitQueue } from './commit-queue.ts';
+import { now } from '../mol-util/now.ts';
+import { arraySetRemove } from '../mol-util/array.ts';
+import { BoundaryHelper } from '../mol-math/geometry/boundary-helper.ts';
+import { hash1 } from '../mol-data/util.ts';
+import type { GraphicsRenderable } from './renderable.ts';
+import type { Transparency } from './webgl/render-item.ts';
+import { clamp } from '../mol-math/interpolate.ts';
+import type { GlobalDefines } from './renderable/schema.ts';
+import { ValueCell } from '../mol-util/value-cell.ts';
 
 const boundaryHelper = new BoundaryHelper('98');
 

@@ -4,10 +4,10 @@
 //  * @author David Sehnal <david.sehnal@gmail.com>
 //  */
 
-// import { MSymbol } from '../language/symbol'
-// import { SymbolRuntime } from './symbol'
-// import { Macro } from './macro';
-// import Expression from '../language/expression';
+// import { MSymbol } from '../language/symbol.ts'
+// import { SymbolRuntime } from './symbol.ts'
+// import { Macro } from './macro.ts';
+// import Expression from '../language/expression.ts';
 
 // class Environment {
 //     readonly runtimeTable: SymbolRuntime.Table;

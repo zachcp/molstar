@@ -5,11 +5,11 @@
  * @author Ludovic Autin <ludovic.autin@gmail.com>
  */
 
-import { StructureQuery } from '../../mol-model/structure/query';
-import { Expression } from '../language/expression';
-import { MolScriptBuilder as MS } from '../language/builder';
-import { compile } from '../runtime/query/base';
-import { UniqueArray } from '../../mol-data/generic';
+import type { StructureQuery } from '../../mol-model/structure/query.ts';
+import type { Expression } from '../language/expression.ts';
+import { MolScriptBuilder as MS } from '../language/builder.ts';
+import { compile } from '../runtime/query/base.ts';
+import { UniqueArray } from '../../mol-data/generic.ts';
 
 // TODO: make this into a separate "language"?
 

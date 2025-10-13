@@ -4,26 +4,26 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Column } from '../../../mol-data/db';
-import { CIF, CifBlock, CifCategory, CifFile } from '../../../mol-io/reader/cif';
-import { toTable } from '../../../mol-io/reader/cif/schema';
-import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif';
-import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property';
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
-import { Model } from '../../../mol-model/structure';
-import { Structure, StructureElement } from '../../../mol-model/structure/structure';
-import { Asset } from '../../../mol-util/assets';
-import { Jsonable, canonicalJsonString } from '../../../mol-util/json';
-import { objectOfArraysToArrayOfObjects, pickObjectKeysWithRemapping, promiseAllObj } from '../../../mol-util/object';
-import { Choice } from '../../../mol-util/param-choice';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { AtomRanges } from '../helpers/atom-ranges';
-import { IndicesAndSortings } from '../helpers/indexing';
-import { MaybeStringParamDefinition } from '../helpers/param-definition';
-import { MVSAnnotationRow, MVSAnnotationSchema, getCifAnnotationSchema } from '../helpers/schemas';
-import { getAtomRangesForRow } from '../helpers/selections';
-import { Maybe, isDefined, safePromise } from '../helpers/utils';
+import { Column } from '../../../mol-data/db.ts';
+import { CIF, CifBlock, type CifCategory, CifFile } from '../../../mol-io/reader/cif.ts';
+import { toTable } from '../../../mol-io/reader/cif/schema.ts';
+import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif.ts';
+import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property.ts';
+import type { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
+import type { Model } from '../../../mol-model/structure.ts';
+import type { Structure, StructureElement } from '../../../mol-model/structure/structure.ts';
+import { Asset } from '../../../mol-util/assets.ts';
+import { type Jsonable, canonicalJsonString } from '../../../mol-util/json.ts';
+import { objectOfArraysToArrayOfObjects, pickObjectKeysWithRemapping, promiseAllObj } from '../../../mol-util/object.ts';
+import { Choice } from '../../../mol-util/param-choice.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { AtomRanges } from '../helpers/atom-ranges.ts';
+import { IndicesAndSortings } from '../helpers/indexing.ts';
+import { MaybeStringParamDefinition } from '../helpers/param-definition.ts';
+import { type MVSAnnotationRow, MVSAnnotationSchema, getCifAnnotationSchema } from '../helpers/schemas.ts';
+import { getAtomRangesForRow } from '../helpers/selections.ts';
+import { type Maybe, isDefined, safePromise } from '../helpers/utils.ts';
 
 
 /** Allowed values for the annotation format parameter */

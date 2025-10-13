@@ -7,26 +7,26 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { CopyRenderable, createCopyRenderable, QuadSchema, QuadValues } from '../../mol-gl/compute/util';
-import { TextureSpec, Values, UniformSpec, DefineSpec } from '../../mol-gl/renderable/schema';
-import { ShaderCode } from '../../mol-gl/shader-code';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { deepEqual, ValueCell } from '../../mol-util';
-import { createComputeRenderItem } from '../../mol-gl/webgl/render-item';
-import { createComputeRenderable, ComputeRenderable } from '../../mol-gl/renderable';
-import { Mat4, Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { RenderTarget } from '../../mol-gl/webgl/render-target';
-import { ICamera } from '../../mol-canvas3d/camera';
-import { Scene } from '../../mol-gl/scene';
-import { quad_vert } from '../../mol-gl/shader/quad.vert';
-import { ssao_frag } from '../../mol-gl/shader/ssao.frag';
-import { ssaoBlur_frag } from '../../mol-gl/shader/ssao-blur.frag';
-import { Framebuffer } from '../../mol-gl/webgl/framebuffer';
-import { Color } from '../../mol-util/color';
-import { isTimingMode } from '../../mol-util/debug';
-import { PostprocessingProps } from './postprocessing';
+import { type CopyRenderable, createCopyRenderable, QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
+import { TextureSpec, type Values, UniformSpec, DefineSpec } from '../../mol-gl/renderable/schema.ts';
+import { ShaderCode } from '../../mol-gl/shader-code.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import type { Texture } from '../../mol-gl/webgl/texture.ts';
+import { deepEqual, ValueCell } from '../../mol-util.ts';
+import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
+import { createComputeRenderable, type ComputeRenderable } from '../../mol-gl/renderable.ts';
+import { Mat4, Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
+import type { ICamera } from '../../mol-canvas3d/camera.ts';
+import type { Scene } from '../../mol-gl/scene.ts';
+import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
+import { ssao_frag } from '../../mol-gl/shader/ssao.frag.ts';
+import { ssaoBlur_frag } from '../../mol-gl/shader/ssao-blur.frag.ts';
+import type { Framebuffer } from '../../mol-gl/webgl/framebuffer.ts';
+import { Color } from '../../mol-util/color.ts';
+import { isTimingMode } from '../../mol-util/debug.ts';
+import type { PostprocessingProps } from './postprocessing.ts';
 
 export const SsaoParams = {
     samples: PD.Numeric(32, { min: 1, max: 256, step: 1 }),

@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { defaults } from '../mol-util';
-import { Structure } from '../mol-model/structure';
-import { VisualQuality } from '../mol-geo/geometry/base';
-import { Box3D, SpacegroupCell } from '../mol-math/geometry';
-import { ModelSymmetry } from '../mol-model-formats/structure/property/symmetry';
-import { Volume } from '../mol-model/volume';
-import { Location } from '../mol-model/location';
+import { defaults } from '../mol-util.ts';
+import { Structure } from '../mol-model/structure.ts';
+import type { VisualQuality } from '../mol-geo/geometry/base.ts';
+import { Box3D, SpacegroupCell } from '../mol-math/geometry.ts';
+import { ModelSymmetry } from '../mol-model-formats/structure/property/symmetry.ts';
+import { Volume } from '../mol-model/volume.ts';
+import type { Location } from '../mol-model/location.ts';
 
 export interface VisualUpdateState {
     updateTransform: boolean

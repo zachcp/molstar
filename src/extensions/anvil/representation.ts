@@ -5,27 +5,27 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Vec3, Mat4 } from '../../mol-math/linear-algebra';
-import { Representation, RepresentationContext, RepresentationParamsGetter } from '../../mol-repr/representation';
-import { Structure } from '../../mol-model/structure';
-import { StructureRepresentationProvider, StructureRepresentation, StructureRepresentationStateBuilder } from '../../mol-repr/structure/representation';
-import { MembraneOrientation } from './prop';
-import { ThemeRegistryContext } from '../../mol-theme/theme';
-import { ShapeRepresentation } from '../../mol-repr/shape/representation';
-import { Shape } from '../../mol-model/shape';
-import { RuntimeContext } from '../../mol-task';
-import { Lines } from '../../mol-geo/geometry/lines/lines';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { LinesBuilder } from '../../mol-geo/geometry/lines/lines-builder';
-import { Circle } from '../../mol-geo/primitive/circle';
-import { transformPrimitive } from '../../mol-geo/primitive/primitive';
-import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder';
-import { MembraneOrientationProvider } from './prop';
-import { MarkerActions } from '../../mol-util/marker-action';
-import { lociLabel } from '../../mol-theme/label';
-import { ColorNames } from '../../mol-util/color/names';
-import { CustomProperty } from '../../mol-model-props/common/custom-property';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Vec3, Mat4 } from '../../mol-math/linear-algebra.ts';
+import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../../mol-repr/representation.ts';
+import { Structure } from '../../mol-model/structure.ts';
+import { StructureRepresentationProvider, type StructureRepresentation, StructureRepresentationStateBuilder } from '../../mol-repr/structure/representation.ts';
+import type { MembraneOrientation } from './prop.ts';
+import type { ThemeRegistryContext } from '../../mol-theme/theme.ts';
+import { ShapeRepresentation } from '../../mol-repr/shape/representation.ts';
+import { Shape } from '../../mol-model/shape.ts';
+import type { RuntimeContext } from '../../mol-task.ts';
+import { Lines } from '../../mol-geo/geometry/lines/lines.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { LinesBuilder } from '../../mol-geo/geometry/lines/lines-builder.ts';
+import { Circle } from '../../mol-geo/primitive/circle.ts';
+import { transformPrimitive } from '../../mol-geo/primitive/primitive.ts';
+import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { MembraneOrientationProvider } from './prop.ts';
+import { MarkerActions } from '../../mol-util/marker-action.ts';
+import { lociLabel } from '../../mol-theme/label.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import type { CustomProperty } from '../../mol-model-props/common/custom-property.ts';
 
 const SharedParams = {
     color: PD.Color(ColorNames.lightgrey),

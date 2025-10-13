@@ -5,7 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ArrayCtor } from '../../mol-util/type-helpers';
+import type { ArrayCtor } from '../../mol-util/type-helpers.ts';
 
 export function arrayFind<T>(array: ArrayLike<T>, f: (v: T) => boolean): T | undefined {
     for (let i = 0, _i = array.length; i < _i; i++) {

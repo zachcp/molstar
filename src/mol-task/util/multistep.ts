@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Task } from '../task';
-import { RuntimeContext } from '../execution/runtime-context';
+import { Task } from '../task.ts';
+import type { RuntimeContext } from '../execution/runtime-context.ts';
 
 export type MultistepFn<P, T> =
     (params: P, step: (s: number) => Promise<void> | void, ctx: RuntimeContext) => Promise<T>

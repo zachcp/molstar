@@ -4,15 +4,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Segmentation, SortedArray } from '../../../../../mol-data/int';
-import { IntAdjacencyGraph } from '../../../../../mol-math/graph';
-import { BondType } from '../../../model/types';
-import { StructureElement } from '../../../structure';
-import { Unit } from '../../unit';
-import { IntraUnitBonds } from '../bonds/data';
-import { sortArray } from '../../../../../mol-data/util';
-import { Column } from '../../../../../mol-data/db';
-import { arraySetAdd, arraySetRemove } from '../../../../../mol-util/array';
+import { Segmentation, SortedArray } from '../../../../../mol-data/int.ts';
+import { IntAdjacencyGraph } from '../../../../../mol-math/graph.ts';
+import { BondType } from '../../../model/types.ts';
+import type { StructureElement } from '../../../structure.ts';
+import type { Unit } from '../../unit.ts';
+import type { IntraUnitBonds } from '../bonds/data.ts';
+import { sortArray } from '../../../../../mol-data/util.ts';
+import type { Column } from '../../../../../mol-data/db.ts';
+import { arraySetAdd, arraySetRemove } from '../../../../../mol-util/array.ts';
 
 export function computeRings(unit: Unit.Atomic) {
     const size = largestResidue(unit);

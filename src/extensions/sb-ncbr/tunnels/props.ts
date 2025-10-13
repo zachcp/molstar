@@ -1,6 +1,6 @@
-import { PluginConfigItem } from '../../../mol-plugin/config';
-import { PluginContext } from '../../../mol-plugin/context';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
+import { PluginConfigItem } from '../../../mol-plugin/config.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 
 export namespace TunnelsData {
     export const DefaultServerUrl = 'https://channelsdb2.biodata.ceitec.cz/api';

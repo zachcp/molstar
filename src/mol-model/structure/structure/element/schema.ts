@@ -5,12 +5,12 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { MolScriptBuilder as MS } from '../../../../mol-script/language/builder';
-import { Expression } from '../../../../mol-script/language/expression';
-import { QueryContext } from '../../query';
-import { Structure } from '../structure';
-import { Bundle } from './bundle';
-import { Loci } from './loci';
+import { MolScriptBuilder as MS } from '../../../../mol-script/language/builder.ts';
+import type { Expression } from '../../../../mol-script/language/expression.ts';
+import type { QueryContext } from '../../query.ts';
+import type { Structure } from '../structure.ts';
+import { Bundle } from './bundle.ts';
+import { Loci } from './loci.ts';
 
 export interface SchemaItem {
     /** Corresponds to SymmetryOperator.name, e.g. 1_555, ASM_5 */

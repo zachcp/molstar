@@ -4,14 +4,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginReactContext, PluginUIComponent } from './base';
+import { PluginReactContext, PluginUIComponent } from './base.ts';
 import { OrderedMap } from 'immutable';
-import { TaskManager } from '../mol-plugin/util/task-manager';
-import { Progress } from '../mol-task';
-import { IconButton } from './controls/common';
-import { CancelSvg } from './controls/icons';
+import type { TaskManager } from '../mol-plugin/util/task-manager.ts';
+import type { Progress } from '../mol-task.ts';
+import { IconButton } from './controls/common.ts';
+import { CancelSvg } from './controls/icons.ts';
 import { useContext, useEffect, useState } from 'react';
-import { useBehavior } from './hooks/use-behavior';
+import { useBehavior } from './hooks/use-behavior.ts';
 
 export function BackgroundTaskProgress() {
     const plugin = useContext(PluginReactContext);

@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { lerp as scalar_lerp } from '../../mol-math/interpolate';
-import { Mat3 } from '../linear-algebra/3d/mat3';
-import { Mat4 } from '../linear-algebra/3d/mat4';
-import { Quat } from '../linear-algebra/3d/quat';
-import { Vec3 } from '../linear-algebra/3d/vec3';
+import { lerp as scalar_lerp } from '../../mol-math/interpolate.ts';
+import { Mat3 } from '../linear-algebra/3d/mat3.ts';
+import { Mat4 } from '../linear-algebra/3d/mat4.ts';
+import { Quat } from '../linear-algebra/3d/quat.ts';
+import { Vec3 } from '../linear-algebra/3d/vec3.ts';
 
 interface SymmetryOperator {
     /** Operator name, e.g. 1_555, ASM_1 */

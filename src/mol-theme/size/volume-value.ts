@@ -5,12 +5,12 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import type { SizeTheme } from '../size';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../../mol-theme/theme';
-import { LocationSize } from '../../mol-geo/geometry/size-data';
-import { Volume } from '../../mol-model/volume/volume';
-import { Location } from '../../mol-model/location';
+import type { SizeTheme } from '../size.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { ThemeDataContext } from '../../mol-theme/theme.ts';
+import type { LocationSize } from '../../mol-geo/geometry/size-data.ts';
+import { Volume } from '../../mol-model/volume/volume.ts';
+import type { Location } from '../../mol-model/location.ts';
 
 const Description = 'Assign size based on the given value of a volume cell. Negative values are made positive.';
 

@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StatefulPluginComponent } from '../component';
-import { PluginContext } from '../../mol-plugin/context';
-import { PluginStateAnimation } from '../animation/model';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { StatefulPluginComponent } from '../component.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import type { PluginStateAnimation } from '../animation/model.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
 export { PluginAnimationManager };
 

@@ -8,9 +8,9 @@ import fetch from 'node-fetch';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as argparse from 'argparse';
-import { makeDir } from '../../../mol-util/make-dir';
-import { now } from '../../../mol-util/now';
-import { PerformanceMonitor } from '../../../mol-util/performance-monitor';
+import { makeDir } from '../../../mol-util/make-dir.ts';
+import { now } from '../../../mol-util/now.ts';
+import { PerformanceMonitor } from '../../../mol-util/performance-monitor.ts';
 
 const cmdParser = new argparse.ArgumentParser({
     add_help: true,

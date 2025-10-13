@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { isDebugMode } from '../../mol-util/debug';
-import { getErrorDescription } from './context';
-import { getProgram } from './program';
-import { getShader } from './shader';
+import { isDebugMode } from '../../mol-util/debug.ts';
+import { getErrorDescription } from './context.ts';
+import { getProgram } from './program.ts';
+import { getShader } from './shader.ts';
 
 export type GLRenderingContext = WebGLRenderingContext | WebGL2RenderingContext
 
@@ -915,7 +915,7 @@ export function getNoNonInstancedActiveAttribs(gl: GLRenderingContext): boolean 
     if (!isWebGL2(gl)) return false;
 
     if (typeof navigator !== 'undefined') {
-        const ffMatch = window.navigator.userAgent.match(/Firefox\/([0-9]+)\./);
+        const ffMatch = globalThis.navigator.userAgent.match(/Firefox\/([0-9]+)\./);
         if (!ffMatch) return true;
 
         const ffVersion = parseInt(ffMatch[1]);

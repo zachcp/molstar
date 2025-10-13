@@ -5,18 +5,18 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { UnitsPointsParams, UnitsVisual, UnitsPointsVisual } from '../units-visual';
-import { VisualContext } from '../../visual';
-import { Unit, Structure } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Points } from '../../../mol-geo/geometry/points/points';
-import { PointsBuilder } from '../../../mol-geo/geometry/points/points-builder';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { ElementIterator, getElementLoci, eachElement, makeElementIgnoreTest, getSerialElementLoci, eachSerialElement } from './util/element';
-import { VisualUpdateState } from '../../util';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { ComplexPointsParams, ComplexPointsVisual, ComplexVisual } from '../complex-visual';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { UnitsPointsParams, type UnitsVisual, UnitsPointsVisual } from '../units-visual.ts';
+import type { VisualContext } from '../../visual.ts';
+import type { Unit, Structure } from '../../../mol-model/structure.ts';
+import type { Theme } from '../../../mol-theme/theme.ts';
+import { Points } from '../../../mol-geo/geometry/points/points.ts';
+import { PointsBuilder } from '../../../mol-geo/geometry/points/points-builder.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { ElementIterator, getElementLoci, eachElement, makeElementIgnoreTest, getSerialElementLoci, eachSerialElement } from './util/element.ts';
+import type { VisualUpdateState } from '../../util.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { ComplexPointsParams, ComplexPointsVisual, type ComplexVisual } from '../complex-visual.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3add = Vec3.add;

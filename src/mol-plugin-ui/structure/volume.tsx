@@ -5,31 +5,31 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as React from 'react';
-import { Volume } from '../../mol-model/volume';
-import { createVolumeRepresentationParams } from '../../mol-plugin-state/helpers/volume-representation-params';
-import { StructureHierarchyManager } from '../../mol-plugin-state/manager/structure/hierarchy';
-import { VolumeHierarchyManager } from '../../mol-plugin-state/manager/volume/hierarchy';
-import { LazyVolumeRef, VolumeRef, VolumeRepresentationRef } from '../../mol-plugin-state/manager/volume/hierarchy-state';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { StateTransforms } from '../../mol-plugin-state/transforms';
-import { FocusLoci } from '../../mol-plugin/behavior/dynamic/representation';
-import { VolumeStreaming } from '../../mol-plugin/behavior/dynamic/volume-streaming/behavior';
-import { InitVolumeStreaming } from '../../mol-plugin/behavior/dynamic/volume-streaming/transformers';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { State, StateObjectCell, StateObjectSelector, StateSelection, StateTransform } from '../../mol-state';
-import { Color } from '../../mol-util/color';
-import { memoizeLatest } from '../../mol-util/memoize';
-import { ParamDefinition } from '../../mol-util/param-definition';
-import { CollapsableControls, CollapsableState, PurePluginUIComponent } from '../base';
-import { ActionMenu } from '../controls/action-menu';
-import { CombinedColorControl } from '../controls/color';
-import { Button, ControlGroup, ExpandGroup, IconButton } from '../controls/common';
-import { AddSvg, BlurOnSvg, CheckSvg, CloseSvg, DeleteOutlinedSvg, ErrorSvg, MoreHorizSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg } from '../controls/icons';
-import { ParameterControls, ParamOnChange } from '../controls/parameters';
-import { ApplyActionControl } from '../state/apply-action';
-import { UpdateTransformControl } from '../state/update-transform';
-import { BindingsHelp } from '../viewport/help';
+import type * as React from 'react';
+import { Volume } from '../../mol-model/volume.ts';
+import { createVolumeRepresentationParams } from '../../mol-plugin-state/helpers/volume-representation-params.ts';
+import { StructureHierarchyManager } from '../../mol-plugin-state/manager/structure/hierarchy.ts';
+import { VolumeHierarchyManager } from '../../mol-plugin-state/manager/volume/hierarchy.ts';
+import type { LazyVolumeRef, VolumeRef, VolumeRepresentationRef } from '../../mol-plugin-state/manager/volume/hierarchy-state.ts';
+import type { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
+import { FocusLoci } from '../../mol-plugin/behavior/dynamic/representation.ts';
+import { VolumeStreaming } from '../../mol-plugin/behavior/dynamic/volume-streaming/behavior.ts';
+import { InitVolumeStreaming } from '../../mol-plugin/behavior/dynamic/volume-streaming/transformers.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { State, type StateObjectCell, type StateObjectSelector, StateSelection, StateTransform } from '../../mol-state.ts';
+import { Color } from '../../mol-util/color.ts';
+import { memoizeLatest } from '../../mol-util/memoize.ts';
+import { ParamDefinition } from '../../mol-util/param-definition.ts';
+import { CollapsableControls, type CollapsableState, PurePluginUIComponent } from '../base.ts';
+import { ActionMenu } from '../controls/action-menu.ts';
+import { CombinedColorControl } from '../controls/color.ts';
+import { Button, ControlGroup, ExpandGroup, IconButton } from '../controls/common.ts';
+import { AddSvg, BlurOnSvg, CheckSvg, CloseSvg, DeleteOutlinedSvg, ErrorSvg, MoreHorizSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg } from '../controls/icons.ts';
+import { ParameterControls, type ParamOnChange } from '../controls/parameters.ts';
+import { ApplyActionControl } from '../state/apply-action.ts';
+import { UpdateTransformControl } from '../state/update-transform.ts';
+import { BindingsHelp } from '../viewport/help.ts';
 import { Subject, throttleTime } from 'rxjs';
 
 interface VolumeStreamingControlState extends CollapsableState {
@@ -89,7 +89,7 @@ export class VolumeStreamingControls extends CollapsableControls<{}, VolumeStrea
                 ? { header: 'Error Enabling', icon: ErrorSvg, title: 'No Entry for Streaming Found' }
                 : { header: 'Enable', icon: CheckSvg, title: 'Enable' };
 
-        return <ApplyActionControl state={pivot.cell.parent} action={InitVolumeStreaming} initiallyCollapsed={true} nodeRef={pivot.cell.transform.ref} simpleApply={simpleApply} />;
+        return <ApplyActionControl state={pivot.cell.parent} action={InitVolumeStreaming} initiallyCollapsed nodeRef={pivot.cell.transform.ref} simpleApply={simpleApply} />;
     }
 
     renderParams() {
@@ -405,7 +405,7 @@ class VolumeRepresentationControls extends PurePluginUIComponent<{ volume: Volum
                 </div>
             </div>}
             {this.state.action === 'select-color' && color !== void 0 && <div style={{ marginBottom: '6px', marginTop: 1 }} className='msp-accent-offset'>
-                <ControlGroup header='Select Color' initialExpanded={true} hideExpander={true} hideOffset={true} onHeaderClick={this.toggleColor}
+                <ControlGroup header='Select Color' initialExpanded hideExpander hideOffset onHeaderClick={this.toggleColor}
                     topRightIcon={CloseSvg} noTopMargin childrenClassName='msp-viewport-controls-panel-controls'>
                     <CombinedColorControl param={VolumeColorParam} value={this.color} onChange={this.updateColor} name='color' hideNameRow />
                 </ControlGroup>

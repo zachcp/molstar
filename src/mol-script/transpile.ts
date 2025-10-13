@@ -6,10 +6,10 @@
  * Adapted from MolQL src/transpile.ts
  */
 
-import { Transpiler } from './transpilers/transpiler';
-import { _transpiler } from './transpilers/all';
-import { Expression } from './language/expression';
-import { Script } from './script';
+import type { Transpiler } from './transpilers/transpiler.ts';
+import { _transpiler } from './transpilers/all.ts';
+import type { Expression } from './language/expression.ts';
+import type { Script } from './script.ts';
 const transpiler: {[index: string]: Transpiler} = _transpiler;
 
 export function parse(lang: Script.Language, str: string): Expression {

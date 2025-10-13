@@ -5,8 +5,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { VOLUME_SERVER_VERSION } from './version';
-import { LimitsConfig, ServerConfig } from '../config';
+import { VOLUME_SERVER_VERSION } from './version.ts';
+import { LimitsConfig, ServerConfig } from '../config.ts';
 
 export function getSchema() {
     function detail(i: number) {

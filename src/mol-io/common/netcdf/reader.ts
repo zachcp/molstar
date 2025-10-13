@@ -8,7 +8,7 @@
  */
 
 
-import { IOBuffer } from '../io-buffer';
+import { IOBuffer } from '../io-buffer.ts';
 
 export interface NetCDFRecordDimension {
     length: number,

@@ -6,13 +6,13 @@
  * @author Eric E <etongfu@@outlook.com>
  */
 
-import { Column } from '../../../mol-data/db';
-import { TokenBuilder, Tokenizer, Tokens } from '../common/text/tokenizer';
-import { TokenColumnProvider as TokenColumn } from '../common/text/column/token';
-import { ReaderResult as Result } from '../result';
-import { Task, RuntimeContext, chunkedSubtask } from '../../../mol-task';
-import { StringLike } from '../../common/string-like';
-import { Mol2Atoms, Mol2Bonds, Mol2File, Mol2Molecule, Mol2Structure, Mol2Substructure } from './schema';
+import { Column } from '../../../mol-data/db.ts';
+import { TokenBuilder, Tokenizer, type Tokens } from '../common/text/tokenizer.ts';
+import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.ts';
+import { ReaderResult as Result } from '../result.ts';
+import { Task, type RuntimeContext, chunkedSubtask } from '../../../mol-task.ts';
+import type { StringLike } from '../../common/string-like.ts';
+import type { Mol2Atoms, Mol2Bonds, Mol2File, Mol2Molecule, Mol2Structure, Mol2Substructure } from './schema.ts';
 
 const { skipWhitespace, eatValue, markLine, getTokenString, skipStrictWhitespace } = Tokenizer;
 

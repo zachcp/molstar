@@ -4,18 +4,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { VisualContext } from '../../visual';
-import { Structure, Unit } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { GaussianDensityProps, computeStructureGaussianDensityTexture, computeUnitGaussianDensityTexture, GaussianDensityParams } from './util/gaussian';
-import { DirectVolume } from '../../../mol-geo/geometry/direct-volume/direct-volume';
-import { ComplexDirectVolumeParams, ComplexVisual, ComplexDirectVolumeVisual } from '../complex-visual';
-import { VisualUpdateState } from '../../util';
-import { Mat4, Vec3 } from '../../../mol-math/linear-algebra';
-import { eachElement, eachSerialElement, ElementIterator, getElementLoci, getSerialElementLoci } from './util/element';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { UnitsDirectVolumeParams, UnitsVisual, UnitsDirectVolumeVisual } from '../units-visual';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { VisualContext } from '../../visual.ts';
+import type { Structure, Unit } from '../../../mol-model/structure.ts';
+import type { Theme } from '../../../mol-theme/theme.ts';
+import { type GaussianDensityProps, computeStructureGaussianDensityTexture, computeUnitGaussianDensityTexture, GaussianDensityParams } from './util/gaussian.ts';
+import { DirectVolume } from '../../../mol-geo/geometry/direct-volume/direct-volume.ts';
+import { ComplexDirectVolumeParams, type ComplexVisual, ComplexDirectVolumeVisual } from '../complex-visual.ts';
+import type { VisualUpdateState } from '../../util.ts';
+import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { eachElement, eachSerialElement, ElementIterator, getElementLoci, getSerialElementLoci } from './util/element.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { UnitsDirectVolumeParams, type UnitsVisual, UnitsDirectVolumeVisual } from '../units-visual.ts';
 
 function createGaussianDensityVolume(ctx: VisualContext, structure: Structure, theme: Theme, props: GaussianDensityProps, directVolume?: DirectVolume): DirectVolume {
     const { webgl } = ctx;

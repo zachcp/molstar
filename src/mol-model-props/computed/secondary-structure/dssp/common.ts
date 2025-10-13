@@ -5,11 +5,11 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { BitFlags } from '../../../../mol-util';
-import { SecondaryStructureType } from '../../../../mol-model/structure/model/types';
-import { IntAdjacencyGraph } from '../../../../mol-math/graph';
-import { Unit } from '../../../../mol-model/structure/structure';
-import { ProteinInfo } from './protein-info';
+import { BitFlags } from '../../../../mol-util.ts';
+import type { SecondaryStructureType } from '../../../../mol-model/structure/model/types.ts';
+import type { IntAdjacencyGraph } from '../../../../mol-math/graph.ts';
+import type { Unit } from '../../../../mol-model/structure/structure.ts';
+import type { ProteinInfo } from './protein-info.ts';
 
 export interface DSSPContext {
     params: {

@@ -5,7 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { TypedIntArray, TypedFloatArray } from '../../../mol-util/type-helpers';
+import type { TypedIntArray, TypedFloatArray } from '../../../mol-util/type-helpers.ts';
 
 export const VERSION = '0.3.0';
 

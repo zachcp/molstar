@@ -4,16 +4,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ColorTheme } from './color';
-import { SizeTheme } from './size';
-import { Structure } from '../mol-model/structure';
-import { Volume } from '../mol-model/volume';
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { Shape } from '../mol-model/shape';
-import { CustomProperty } from '../mol-model-props/common/custom-property';
-import { objectForEach } from '../mol-util/object';
-import { ColorType } from '../mol-geo/geometry/color-data';
-import { Location } from '../mol-model/location';
+import { ColorTheme } from './color.ts';
+import { SizeTheme } from './size.ts';
+import type { Structure } from '../mol-model/structure.ts';
+import type { Volume } from '../mol-model/volume.ts';
+import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import type { Shape } from '../mol-model/shape.ts';
+import type { CustomProperty } from '../mol-model-props/common/custom-property.ts';
+import { objectForEach } from '../mol-util/object.ts';
+import type { ColorType } from '../mol-geo/geometry/color-data.ts';
+import type { Location } from '../mol-model/location.ts';
 
 export interface ThemeRegistryContext {
     colorThemeRegistry: ColorTheme.Registry

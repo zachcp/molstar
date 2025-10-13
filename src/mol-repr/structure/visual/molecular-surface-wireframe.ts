@@ -4,19 +4,19 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { UnitsVisual, UnitsLinesVisual, UnitsLinesParams } from '../units-visual';
-import { MolecularSurfaceCalculationParams } from '../../../mol-math/geometry/molecular-surface';
-import { VisualContext } from '../../visual';
-import { Unit, Structure } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Lines } from '../../../mol-geo/geometry/lines/lines';
-import { computeUnitMolecularSurface, MolecularSurfaceProps } from './util/molecular-surface';
-import { computeMarchingCubesLines } from '../../../mol-geo/util/marching-cubes/algorithm';
-import { ElementIterator, getElementLoci, eachElement } from './util/element';
-import { VisualUpdateState } from '../../util';
-import { CommonSurfaceParams } from './util/common';
-import { Sphere3D } from '../../../mol-math/geometry';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { type UnitsVisual, UnitsLinesVisual, UnitsLinesParams } from '../units-visual.ts';
+import { MolecularSurfaceCalculationParams } from '../../../mol-math/geometry/molecular-surface.ts';
+import type { VisualContext } from '../../visual.ts';
+import type { Unit, Structure } from '../../../mol-model/structure.ts';
+import type { Theme } from '../../../mol-theme/theme.ts';
+import { Lines } from '../../../mol-geo/geometry/lines/lines.ts';
+import { computeUnitMolecularSurface, type MolecularSurfaceProps } from './util/molecular-surface.ts';
+import { computeMarchingCubesLines } from '../../../mol-geo/util/marching-cubes/algorithm.ts';
+import { ElementIterator, getElementLoci, eachElement } from './util/element.ts';
+import type { VisualUpdateState } from '../../util.ts';
+import { CommonSurfaceParams } from './util/common.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
 
 export const MolecularSurfaceWireframeParams = {
     ...UnitsLinesParams,

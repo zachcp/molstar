@@ -4,28 +4,28 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { QuadSchema, QuadValues } from '../../mol-gl/compute/util';
-import { TextureSpec, UniformSpec, Values } from '../../mol-gl/renderable/schema';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { ValueCell } from '../../mol-util';
-import { Vec2 } from '../../mol-math/linear-algebra';
-import { ShaderCode } from '../../mol-gl/shader-code';
-import { createComputeRenderItem } from '../../mol-gl/webgl/render-item';
-import { createComputeRenderable, ComputeRenderable } from '../../mol-gl/renderable';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { RenderTarget } from '../../mol-gl/webgl/render-target';
-import { Camera } from '../../mol-canvas3d/camera';
-import { PostprocessingProps } from './postprocessing';
-import { DrawPass } from './draw';
-import { Renderer } from '../../mol-gl/renderer';
-import { Scene } from '../../mol-gl/scene';
-import { Helper } from '../helper/helper';
-import { StereoCamera } from '../camera/stereo';
-import { quad_vert } from '../../mol-gl/shader/quad.vert';
-import { compose_frag } from '../../mol-gl/shader/compose.frag';
-import { MarkingProps } from './marking';
-import { isTimingMode } from '../../mol-util/debug';
+import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
+import { TextureSpec, UniformSpec, type Values } from '../../mol-gl/renderable/schema.ts';
+import type { Texture } from '../../mol-gl/webgl/texture.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { ValueCell } from '../../mol-util.ts';
+import { Vec2 } from '../../mol-math/linear-algebra.ts';
+import { ShaderCode } from '../../mol-gl/shader-code.ts';
+import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
+import { createComputeRenderable, type ComputeRenderable } from '../../mol-gl/renderable.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
+import { Camera } from '../../mol-canvas3d/camera.ts';
+import type { PostprocessingProps } from './postprocessing.ts';
+import type { DrawPass } from './draw.ts';
+import type { Renderer } from '../../mol-gl/renderer.ts';
+import type { Scene } from '../../mol-gl/scene.ts';
+import type { Helper } from '../helper/helper.ts';
+import type { StereoCamera } from '../camera/stereo.ts';
+import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
+import { compose_frag } from '../../mol-gl/shader/compose.frag.ts';
+import type { MarkingProps } from './marking.ts';
+import { isTimingMode } from '../../mol-util/debug.ts';
 
 const ComposeSchema = {
     ...QuadSchema,

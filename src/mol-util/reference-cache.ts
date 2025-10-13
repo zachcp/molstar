@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { arrayRemoveInPlace } from './array';
+import { arrayRemoveInPlace } from './array.ts';
 
 export interface Reference<T> { readonly value: T, usageCount: number }
 

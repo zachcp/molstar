@@ -5,15 +5,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginStateObject } from '../objects';
-import { DistanceData } from '../../mol-repr/shape/loci/distance';
-import { LabelData } from '../../mol-repr/shape/loci/label';
-import { OrientationData } from '../../mol-repr/shape/loci/orientation';
-import { AngleData } from '../../mol-repr/shape/loci/angle';
-import { DihedralData } from '../../mol-repr/shape/loci/dihedral';
-import { PlaneData } from '../../mol-repr/shape/loci/plane';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Mat4, Vec3 } from '../../mol-math/linear-algebra';
+import type { PluginStateObject } from '../objects.ts';
+import type { DistanceData } from '../../mol-repr/shape/loci/distance.ts';
+import type { LabelData } from '../../mol-repr/shape/loci/label.ts';
+import type { OrientationData } from '../../mol-repr/shape/loci/orientation.ts';
+import type { AngleData } from '../../mol-repr/shape/loci/angle.ts';
+import type { DihedralData } from '../../mol-repr/shape/loci/dihedral.ts';
+import type { PlaneData } from '../../mol-repr/shape/loci/plane.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 
 export function getDistanceDataFromStructureSelections(s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>): DistanceData {
     const lociA = s[0].loci;

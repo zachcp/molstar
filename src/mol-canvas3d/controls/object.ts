@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec2, Vec3 } from '../../mol-math/linear-algebra';
-import { InputObserver } from '../../mol-util/input/input-observer';
-import { Camera } from '../camera';
-import { Viewport } from '../camera/util';
+import { Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
+import type { InputObserver } from '../../mol-util/input/input-observer.ts';
+import type { Camera } from '../camera.ts';
+import type { Viewport } from '../camera/util.ts';
 
 export namespace ObjectControls {
     function mouseOnScreen(out: Vec2, page: Vec2, viewport: Viewport) {

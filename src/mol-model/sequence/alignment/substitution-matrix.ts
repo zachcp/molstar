@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mutable } from '../../../mol-util/type-helpers';
+import type { Mutable } from '../../../mol-util/type-helpers.ts';
 
 const aminoacidsX = 'ACDEFGHIKLMNPQRSTVWY';
 const aminoacids = 'ARNDCQEGHILKMFPSTWYVBZX';

@@ -7,10 +7,10 @@
  * Copyright (c) 2011-2018, Gregor Aisch, BSD license
  */
 
-import { Color } from '../color';
-import { Hcl } from './hcl';
-import { radToDeg } from '../../../mol-math/misc';
-import { clamp } from '../../../mol-math/interpolate';
+import { Color } from '../color.ts';
+import { Hcl } from './hcl.ts';
+import { radToDeg } from '../../../mol-math/misc.ts';
+import { clamp } from '../../../mol-math/interpolate.ts';
 
 export { Lab };
 

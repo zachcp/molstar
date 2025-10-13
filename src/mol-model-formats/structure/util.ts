@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StringLike } from '../../mol-io/common/string-like';
-import { TokenBuilder, Tokens } from '../../mol-io/reader/common/text/tokenizer';
+import type { StringLike } from '../../mol-io/common/string-like.ts';
+import { TokenBuilder, type Tokens } from '../../mol-io/reader/common/text/tokenizer.ts';
 
 
 export function guessElementSymbolTokens(tokens: Tokens, str: StringLike, start: number, end: number) {

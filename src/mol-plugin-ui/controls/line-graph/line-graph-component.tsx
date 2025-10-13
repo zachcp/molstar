@@ -4,12 +4,12 @@
  * @author Paul Luna <paulluna0215@gmail.com>
  * @author David Sehnal <david.sehnal@gmail.com>
  */
-import { PointComponent } from './point-component';
+import { PointComponent } from './point-component.ts';
 
 import * as React from 'react';
-import { Vec2 } from '../../../mol-math/linear-algebra';
-import { Grid } from '../../../mol-model/volume';
-import { arrayMax } from '../../../mol-util/array';
+import { Vec2 } from '../../../mol-math/linear-algebra.ts';
+import { Grid } from '../../../mol-model/volume.ts';
+import { arrayMax } from '../../../mol-util/array.ts';
 
 interface LineGraphComponentState {
     points: Vec2[],

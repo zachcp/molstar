@@ -4,13 +4,13 @@
  * @author Dušan Veľký <dvelky@mail.muni.cz>
  */
 
-import { PluginStateObject } from '../../../mol-plugin-state/objects';
-import { StateTransformer } from '../../../mol-state';
-import { TunnelStateObject, Tunnel, TunnelShapeParams, TunnelsStateObject } from './data-model';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { Task } from '../../../mol-task';
-import { createTunnelShape, createSpheresShape } from './algorithm';
+import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
+import { StateTransformer } from '../../../mol-state.ts';
+import { TunnelStateObject, type Tunnel, TunnelShapeParams, TunnelsStateObject } from './data-model.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { Task } from '../../../mol-task.ts';
+import { createTunnelShape, createSpheresShape } from './algorithm.ts';
 
 const Transform = StateTransformer.builderFactory('sb-ncbr-tunnels');
 

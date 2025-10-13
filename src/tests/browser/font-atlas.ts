@@ -5,8 +5,8 @@
  */
 
 import './index.html';
-import { FontAtlas } from '../../mol-geo/geometry/text/font-atlas';
-import { printTextureImage } from '../../mol-gl/renderable/util';
+import { FontAtlas } from '../../mol-geo/geometry/text/font-atlas.ts';
+import { printTextureImage } from '../../mol-gl/renderable/util.ts';
 
 function test() {
     console.time('FontAtlas init');

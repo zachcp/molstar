@@ -5,9 +5,9 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { bool, dict, float, int, nullable, OptionalField, RequiredField, str, union } from '../generic/field-schema';
-import { SimpleParamsSchema, UnionParamsSchema } from '../generic/params-schema';
-import { ColorT, FloatList, IntList, PrimitivePositionT, Vector3 } from './param-types';
+import { bool, dict, float, int, nullable, OptionalField, RequiredField, str, union } from '../generic/field-schema.ts';
+import { SimpleParamsSchema, UnionParamsSchema } from '../generic/params-schema.ts';
+import { ColorT, FloatList, IntList, PrimitivePositionT, Vector3 } from './param-types.ts';
 
 
 const _TubeBase = {

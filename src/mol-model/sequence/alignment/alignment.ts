@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { SubstitutionMatrix, SubstitutionMatrices, SubstitutionMatrixData } from './substitution-matrix';
+import { type SubstitutionMatrix, SubstitutionMatrices, type SubstitutionMatrixData } from './substitution-matrix.ts';
 
 const DefaultAlignmentOptions = {
     gapPenalty: -11,

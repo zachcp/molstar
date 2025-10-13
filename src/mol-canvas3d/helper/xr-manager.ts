@@ -4,25 +4,25 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
-import { Quat } from '../../mol-math/linear-algebra/3d/quat';
-import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4';
-import { Camera, ICamera } from '../camera';
-import { PointerHelper } from './pointer-helper';
-import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2';
-import { ButtonsType, InputObserver, TrackedPointerInput } from '../../mol-util/input/input-observer';
-import { Plane3D } from '../../mol-math/geometry/primitives/plane3d';
-import { Vec4 } from '../../mol-math/linear-algebra/3d/vec4';
-import { StereoCamera } from '../camera/stereo';
-import { Ray3D } from '../../mol-math/geometry/primitives/ray3d';
-import { Scene } from '../../mol-gl/scene';
-import { Sphere3D } from '../../mol-math/geometry';
-import { Canvas3dInteractionHelper } from './interaction-events';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { cameraProject } from '../camera/util';
-import { Binding } from '../../mol-util/binding';
+import { BehaviorSubject, Subject, type Subscription } from 'rxjs';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
+import { Quat } from '../../mol-math/linear-algebra/3d/quat.ts';
+import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4.ts';
+import type { Camera, ICamera } from '../camera.ts';
+import type { PointerHelper } from './pointer-helper.ts';
+import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2.ts';
+import { ButtonsType, type InputObserver, type TrackedPointerInput } from '../../mol-util/input/input-observer.ts';
+import { Plane3D } from '../../mol-math/geometry/primitives/plane3d.ts';
+import { Vec4 } from '../../mol-math/linear-algebra/3d/vec4.ts';
+import type { StereoCamera } from '../camera/stereo.ts';
+import { Ray3D } from '../../mol-math/geometry/primitives/ray3d.ts';
+import type { Scene } from '../../mol-gl/scene.ts';
+import { Sphere3D } from '../../mol-math/geometry.ts';
+import type { Canvas3dInteractionHelper } from './interaction-events.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { cameraProject } from '../camera/util.ts';
+import { Binding } from '../../mol-util/binding.ts';
 
 const B = ButtonsType;
 const Trigger = Binding.Trigger;

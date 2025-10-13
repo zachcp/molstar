@@ -4,20 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ComputeRenderable, createComputeRenderable } from '../../renderable';
-import { WebGLContext } from '../../webgl/context';
-import { createComputeRenderItem } from '../../webgl/render-item';
-import { Values, TextureSpec, UniformSpec, DefineSpec } from '../../renderable/schema';
-import { Texture } from '../../../mol-gl/webgl/texture';
-import { ShaderCode } from '../../../mol-gl/shader-code';
-import { ValueCell } from '../../../mol-util';
-import { Vec3, Vec2 } from '../../../mol-math/linear-algebra';
-import { QuadSchema, QuadValues } from '../util';
-import { getTriCount } from './tables';
-import { quad_vert } from '../../../mol-gl/shader/quad.vert';
-import { activeVoxels_frag } from '../../../mol-gl/shader/marching-cubes/active-voxels.frag';
-import { isTimingMode } from '../../../mol-util/debug';
-import { isWebGL2 } from '../../webgl/compat';
+import { type ComputeRenderable, createComputeRenderable } from '../../renderable.ts';
+import type { WebGLContext } from '../../webgl/context.ts';
+import { createComputeRenderItem } from '../../webgl/render-item.ts';
+import { type Values, TextureSpec, UniformSpec, DefineSpec } from '../../renderable/schema.ts';
+import type { Texture } from '../../../mol-gl/webgl/texture.ts';
+import { ShaderCode } from '../../../mol-gl/shader-code.ts';
+import { ValueCell } from '../../../mol-util.ts';
+import type { Vec3, Vec2 } from '../../../mol-math/linear-algebra.ts';
+import { QuadSchema, QuadValues } from '../util.ts';
+import { getTriCount } from './tables.ts';
+import { quad_vert } from '../../../mol-gl/shader/quad.vert.ts';
+import { activeVoxels_frag } from '../../../mol-gl/shader/marching-cubes/active-voxels.frag.ts';
+import { isTimingMode } from '../../../mol-util/debug.ts';
+import { isWebGL2 } from '../../webgl/compat.ts';
 
 const ActiveVoxelsSchema = {
     ...QuadSchema,

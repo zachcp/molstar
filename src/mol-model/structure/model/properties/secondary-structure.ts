@@ -5,9 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { SecondaryStructureType } from '../types';
-import { ResidueIndex } from '../indexing';
-import { mmCIF_Schema } from '../../../../mol-io/reader/cif/schema/mmcif';
+import type { SecondaryStructureType } from '../types.ts';
+import type { ResidueIndex } from '../indexing.ts';
+import type { mmCIF_Schema } from '../../../../mol-io/reader/cif/schema/mmcif.ts';
 
 /** Secondary structure "indexed" by residues. */
 interface SecondaryStructure {

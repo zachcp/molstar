@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StructureElement, Unit, Structure } from '../../../mol-model/structure/structure';
-import { ChunkedArray } from '../../../mol-data/util';
-import { GridLookup3D } from '../../../mol-math/geometry';
-import { OrderedSet, SortedArray } from '../../../mol-data/int';
-import { FeatureGroup, FeatureType } from './common';
-import { ValenceModelProvider } from '../valence-model';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { getBoundary } from '../../../mol-math/geometry/boundary';
+import type { StructureElement, Unit, Structure } from '../../../mol-model/structure/structure.ts';
+import { ChunkedArray } from '../../../mol-data/util.ts';
+import { GridLookup3D } from '../../../mol-math/geometry.ts';
+import { OrderedSet, SortedArray } from '../../../mol-data/int.ts';
+import type { FeatureGroup, FeatureType } from './common.ts';
+import { ValenceModelProvider } from '../valence-model.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { getBoundary } from '../../../mol-math/geometry/boundary.ts';
 
 export { Features };
 

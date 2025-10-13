@@ -6,14 +6,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif';
-import { SecondaryStructureType } from '../../../mol-model/structure/model/types';
-import { AtomicHierarchy } from '../../../mol-model/structure/model/properties/atomic';
-import { SecondaryStructure } from '../../../mol-model/structure/model/properties/secondary-structure';
-import { Column, Table } from '../../../mol-data/db';
-import { ChainIndex, ResidueIndex } from '../../../mol-model/structure/model/indexing';
-import { FormatPropertyProvider } from '../common/property';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
+import type { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
+import { SecondaryStructureType } from '../../../mol-model/structure/model/types.ts';
+import { AtomicHierarchy } from '../../../mol-model/structure/model/properties/atomic.ts';
+import { SecondaryStructure } from '../../../mol-model/structure/model/properties/secondary-structure.ts';
+import { Column, type Table } from '../../../mol-data/db.ts';
+import type { ChainIndex, ResidueIndex } from '../../../mol-model/structure/model/indexing.ts';
+import { FormatPropertyProvider } from '../common/property.ts';
+import type { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
 
 export { ModelSecondaryStructure };
 

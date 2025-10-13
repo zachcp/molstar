@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { VERSION } from '../version';
-import { QueryParamInfo, QueryParamType, QueryDefinition, CommonQueryParamsInfo, QueryList } from './api';
-import { ModelServerConfig as ServerConfig } from '../config';
-import { MultipleQuerySpec } from './api-web-multiple';
+import { VERSION } from '../version.ts';
+import { type QueryParamInfo, QueryParamType, type QueryDefinition, CommonQueryParamsInfo, QueryList } from './api.ts';
+import { ModelServerConfig as ServerConfig } from '../config.ts';
+import type { MultipleQuerySpec } from './api-web-multiple.ts';
 
 export const shortcutIconLink = `<link rel='shortcut icon' href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAnUExURQAAAMIrHrspHr0oH7soILonHrwqH7onILsoHrsoH7soH7woILwpIKgVokoAAAAMdFJOUwAQHzNxWmBHS5XO6jdtAmoAAACZSURBVDjLxZNRCsQgDAVNXmwb9f7nXZEaLRgXloXOhwQdjMYYwpOLw55fBT46KhbOKhmRR2zLcFJQj8UR+HxFgArIF5BKJbEncC6NDEdI5SatBRSDJwGAoiFDONrEJXWYhGMIcRJGCrb1TOtDahfUuQXd10jkFYq0ViIrbUpNcVT6redeC1+b9tH2WLR93Sx2VCzkv/7NjfABxjQHksGB7lAAAAAASUVORK5CYII=' />`;
 

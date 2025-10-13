@@ -4,8 +4,8 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { PluginBehavior } from '../../../mol-plugin/behavior/behavior';
-import { ChemicalComponentPreset, ChemicalCompontentTrajectoryHierarchyPreset } from './representation';
+import { PluginBehavior } from '../../../mol-plugin/behavior/behavior.ts';
+import { ChemicalComponentPreset, ChemicalCompontentTrajectoryHierarchyPreset } from './representation.ts';
 
 export const wwPDBChemicalComponentDictionary = PluginBehavior.create<{ }>({
     name: 'wwpdb-chemical-component-dictionary',

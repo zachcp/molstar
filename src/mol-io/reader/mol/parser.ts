@@ -5,12 +5,12 @@
  * @author Panagiotis Tourlas <panagiot_tourlov@hotmail.com>
  */
 
-import { Column } from '../../../mol-data/db';
-import { Task } from '../../../mol-task';
-import { StringLike } from '../../common/string-like';
-import { TokenColumnProvider as TokenColumn } from '../common/text/column/token';
-import { TokenBuilder, Tokenizer } from '../common/text/tokenizer';
-import { ReaderResult as Result } from '../result';
+import { Column } from '../../../mol-data/db.ts';
+import { Task } from '../../../mol-task.ts';
+import type { StringLike } from '../../common/string-like.ts';
+import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.ts';
+import { TokenBuilder, Tokenizer } from '../common/text/tokenizer.ts';
+import { ReaderResult as Result } from '../result.ts';
 
 
 /** Subset of the MolFile V2000 format */

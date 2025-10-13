@@ -5,16 +5,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PdbFile } from '../../mol-io/reader/pdb/schema';
-import { pdbToMmCif } from './pdb/to-cif';
-import { Task } from '../../mol-task';
-import { MmcifFormat } from './mmcif';
-import { createModels } from './basic/parser';
-import { Column } from '../../mol-data/db';
-import { AtomPartialCharge } from './property/partial-charge';
-import { Trajectory } from '../../mol-model/structure';
-import { ModelFormat } from '../format';
-import { createBasic } from './basic/schema';
+import type { PdbFile } from '../../mol-io/reader/pdb/schema.ts';
+import { pdbToMmCif } from './pdb/to-cif.ts';
+import { Task } from '../../mol-task.ts';
+import { MmcifFormat } from './mmcif.ts';
+import { createModels } from './basic/parser.ts';
+import { Column } from '../../mol-data/db.ts';
+import { AtomPartialCharge } from './property/partial-charge.ts';
+import type { Trajectory } from '../../mol-model/structure.ts';
+import type { ModelFormat } from '../format.ts';
+import { createBasic } from './basic/schema.ts';
 
 export { PdbFormat };
 

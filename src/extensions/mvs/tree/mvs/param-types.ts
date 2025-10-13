@@ -6,8 +6,8 @@
  */
 
 import * as iots from 'io-ts';
-import { ColorName, HexColor } from '../../helpers/utils';
-import { ValueFor, bool, dict, float, int, list, literal, nullable, object, partial, str, tuple, union } from '../generic/field-schema';
+import { ColorName, HexColor } from '../../helpers/utils.ts';
+import { type ValueFor, bool, dict, float, int, list, literal, nullable, object, partial, str, tuple, union } from '../generic/field-schema.ts';
 
 
 /** `format` parameter values for `parse` node in MVS tree */

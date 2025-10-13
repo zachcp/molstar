@@ -7,19 +7,19 @@
 
 import { OrderedMap } from 'immutable';
 import * as React from 'react';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginConfig } from '../../mol-plugin/config';
-import { PluginState } from '../../mol-plugin/state';
-import { shallowEqualObjects } from '../../mol-util';
-import { formatTimespan } from '../../mol-util/now';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { urlCombine } from '../../mol-util/url';
-import { PluginUIComponent, PurePluginUIComponent } from '../base';
-import { Button, ControlRow, ExpandGroup, IconButton, SectionHeader } from '../controls/common';
-import { Icon, SaveOutlinedSvg, GetAppSvg, OpenInBrowserSvg, WarningSvg, DeleteOutlinedSvg, AddSvg, ArrowUpwardSvg, SwapHorizSvg, ArrowDownwardSvg, RefreshSvg, CloudUploadSvg, CheckSvg, TuneSvg } from '../controls/icons';
-import { ParamHelp, ParameterControls, ToggleParamHelpButton } from '../controls/parameters';
-import { PluginStateSnapshotManager } from '../../mol-plugin-state/manager/snapshots';
-import { PluginContext } from '../../mol-plugin/context';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import { PluginState } from '../../mol-plugin/state.ts';
+import { shallowEqualObjects } from '../../mol-util.ts';
+import { formatTimespan } from '../../mol-util/now.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { urlCombine } from '../../mol-util/url.ts';
+import { PluginUIComponent, PurePluginUIComponent } from '../base.ts';
+import { Button, ControlRow, ExpandGroup, IconButton, SectionHeader } from '../controls/common.ts';
+import { Icon, SaveOutlinedSvg, GetAppSvg, OpenInBrowserSvg, WarningSvg, DeleteOutlinedSvg, AddSvg, ArrowUpwardSvg, SwapHorizSvg, ArrowDownwardSvg, RefreshSvg, CloudUploadSvg, CheckSvg, TuneSvg } from '../controls/icons.ts';
+import { ParamHelp, ParameterControls, ToggleParamHelpButton } from '../controls/parameters.ts';
+import type { PluginStateSnapshotManager } from '../../mol-plugin-state/manager/snapshots.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
 
 export class StateSnapshots extends PluginUIComponent<{}> {
     render() {
@@ -286,7 +286,9 @@ function EditSnapshotParams({ state, setState, apply }: { state: PluginStateSnap
             <textarea
                 ref={descRef as any}
                 // NOTE: curly brackets are required to support \n in the placeholder, do not remove
-                placeholder={'Markdown Description\n\n- Use [title](#key) to link to a snapshot'}
+                placeholder="Markdown Description
+
+- Use [title](#key) to link to a snapshot"
                 className='msp-form-control'
                 value={state.description}
                 onChange={e => setState({ ...state, description: e.target.value })}
@@ -477,11 +479,11 @@ class RemoteStateSnapshotList extends PurePluginUIComponent<
         if (!entry) return;
 
         e.preventDefault();
-        let url = `${window.location}`;
+        let url = `${globalThis.location}`;
         const qi = url.indexOf('?');
         if (qi > 0) url = url.substr(0, qi);
 
-        window.open(`${url}?snapshot-url=${encodeURIComponent(entry.url)}`, '_blank');
+        globalThis.open(`${url}?snapshot-url=${encodeURIComponent(entry.url)}`, '_blank');
     };
 
     render() {

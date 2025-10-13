@@ -5,32 +5,32 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure } from '../../mol-model/structure';
-import { BuiltInTrajectoryFormat } from '../../mol-plugin-state/formats/trajectory';
-import { PluginStateObject as PSO, PluginStateTransform } from '../../mol-plugin-state/objects';
-import { createPluginUI } from '../../mol-plugin-ui';
-import { renderReact18 } from '../../mol-plugin-ui/react18';
-import { PluginUIContext } from '../../mol-plugin-ui/context';
-import { PluginLayoutControlsDisplay } from '../../mol-plugin/layout';
-import { DefaultPluginUISpec, PluginUISpec } from '../../mol-plugin-ui/spec';
-import { PluginBehaviors } from '../../mol-plugin/behavior';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginConfig } from '../../mol-plugin/config';
-import { PluginSpec } from '../../mol-plugin/spec';
-import { StateObject } from '../../mol-state';
-import { Task } from '../../mol-task';
-import { Color } from '../../mol-util/color';
-import { ColorNames } from '../../mol-util/color/names';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { Structure } from '../../mol-model/structure.ts';
+import type { BuiltInTrajectoryFormat } from '../../mol-plugin-state/formats/trajectory.ts';
+import { PluginStateObject as PSO, PluginStateTransform } from '../../mol-plugin-state/objects.ts';
+import { createPluginUI } from '../../mol-plugin-ui.ts';
+import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
+import type { PluginUIContext } from '../../mol-plugin-ui/context.ts';
+import type { PluginLayoutControlsDisplay } from '../../mol-plugin/layout.ts';
+import { DefaultPluginUISpec, type PluginUISpec } from '../../mol-plugin-ui/spec.ts';
+import { PluginBehaviors } from '../../mol-plugin/behavior.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import { PluginSpec } from '../../mol-plugin/spec.ts';
+import { StateObject } from '../../mol-state.ts';
+import { Task } from '../../mol-task.ts';
+import { Color } from '../../mol-util/color.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import '../../mol-util/polyfill';
-import { ObjectKeys } from '../../mol-util/type-helpers';
+import { ObjectKeys } from '../../mol-util/type-helpers.ts';
 import './index.html';
-import { ShowButtons, StructurePreset, ViewportComponent } from './viewport';
+import { ShowButtons, StructurePreset, ViewportComponent } from './viewport.ts';
 
 import '../../mol-plugin-ui/skin/light.scss';
 
-export { PLUGIN_VERSION as version } from '../../mol-plugin/version';
-export { setDebugMode, setProductionMode } from '../../mol-util/debug';
+export { PLUGIN_VERSION as version } from '../../mol-plugin/version.ts';
+export { setDebugMode, setProductionMode } from '../../mol-util/debug.ts';
 export { Viewer as DockingViewer };
 
 const DefaultViewerOptions = {

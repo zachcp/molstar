@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Database, Column } from '../../../../mol-data/db';
+import { type Database, Column } from '../../../../mol-data/db.ts';
 
 import Schema = Column.Schema
 

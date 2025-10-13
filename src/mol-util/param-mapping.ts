@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ParamDefinition as PD } from './param-definition';
-import { produce } from './produce';
-import { Mutable } from './type-helpers';
+import type { ParamDefinition as PD } from './param-definition.ts';
+import { produce } from './produce.ts';
+import type { Mutable } from './type-helpers.ts';
 
 export interface ParamMapping<S, T, Ctx> {
     params(ctx: Ctx): PD.For<S>,

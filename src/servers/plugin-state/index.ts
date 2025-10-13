@@ -9,11 +9,11 @@ import compression from 'compression';
 import cors from 'cors';
 import * as fs from 'fs';
 import * as path from 'path';
-import { swaggerUiIndexHandler, swaggerUiAssetsHandler } from '../common/swagger-ui';
-import { makeDir } from '../../mol-util/make-dir';
-import { getConfig } from './config';
-import { UUID } from '../../mol-util';
-import { shortcutIconLink, getSchema } from './api-schema';
+import { swaggerUiIndexHandler, swaggerUiAssetsHandler } from '../common/swagger-ui.ts';
+import { makeDir } from '../../mol-util/make-dir.ts';
+import { getConfig } from './config.ts';
+import { UUID } from '../../mol-util.ts';
+import { shortcutIconLink, getSchema } from './api-schema.ts';
 
 const Config = getConfig();
 

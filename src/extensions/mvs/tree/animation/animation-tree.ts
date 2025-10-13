@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { bool, float, int, list, OptionalField, RequiredField, str, union, nullable, literal, ValueFor, dict } from '../generic/field-schema';
-import { SimpleParamsSchema, UnionParamsSchema } from '../generic/params-schema';
-import { NodeFor, ParamsOfKind, SubtreeOfKind, TreeFor, TreeSchema } from '../generic/tree-schema';
-import { ColorT, ContinuousPalette, DiscretePalette, Matrix, Vector3 } from '../mvs/param-types';
+import { bool, float, int, list, OptionalField, RequiredField, str, union, nullable, literal, type ValueFor, dict } from '../generic/field-schema.ts';
+import { SimpleParamsSchema, UnionParamsSchema } from '../generic/params-schema.ts';
+import { type NodeFor, type ParamsOfKind, type SubtreeOfKind, type TreeFor, TreeSchema } from '../generic/tree-schema.ts';
+import { ColorT, ContinuousPalette, DiscretePalette, Matrix, Vector3 } from '../mvs/param-types.ts';
 
 const Easing = literal(
     'linear',

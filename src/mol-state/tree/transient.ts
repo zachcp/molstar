@@ -5,11 +5,11 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Map as ImmutableMap, OrderedSet } from 'immutable';
-import { StateTransform } from '../transform';
-import { StateTree } from './immutable';
-import { shallowEqual } from '../../mol-util/object';
-import { arrayEqual } from '../../mol-util/array';
+import { type Map as ImmutableMap, OrderedSet } from 'immutable';
+import { StateTransform } from '../transform.ts';
+import { StateTree } from './immutable.ts';
+import { shallowEqual } from '../../mol-util/object.ts';
+import { arrayEqual } from '../../mol-util/array.ts';
 
 export { TransientTree };
 

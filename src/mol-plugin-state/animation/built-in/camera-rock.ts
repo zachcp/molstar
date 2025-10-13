@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Camera } from '../../../mol-canvas3d/camera';
-import { clamp } from '../../../mol-math/interpolate';
-import { Quat } from '../../../mol-math/linear-algebra/3d/quat';
-import { Vec3 } from '../../../mol-math/linear-algebra/3d/vec3';
-import { degToRad } from '../../../mol-math/misc';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { PluginStateAnimation } from '../model';
+import type { Camera } from '../../../mol-canvas3d/camera.ts';
+import { clamp } from '../../../mol-math/interpolate.ts';
+import { Quat } from '../../../mol-math/linear-algebra/3d/quat.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra/3d/vec3.ts';
+import { degToRad } from '../../../mol-math/misc.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { PluginStateAnimation } from '../model.ts';
 
 const _dir = Vec3(), _axis = Vec3(), _rot = Quat();
 

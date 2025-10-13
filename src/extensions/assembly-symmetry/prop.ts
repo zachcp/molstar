@@ -4,19 +4,19 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Structure, Model, StructureSelection, QueryContext } from '../../mol-model/structure';
-import { Column } from '../../mol-data/db';
-import { GraphQLClient } from '../../mol-util/graphql-client';
-import { CustomProperty } from '../../mol-model-props/common/custom-property';
-import { CustomStructureProperty } from '../../mol-model-props/common/custom-structure-property';
-import { MmcifFormat } from '../../mol-model-formats/structure/mmcif';
-import { ReadonlyVec3 } from '../../mol-math/linear-algebra/3d/vec3';
-import { SetUtils } from '../../mol-util/set';
-import { MolScriptBuilder as MS } from '../../mol-script/language/builder';
-import { compile } from '../../mol-script/runtime/query/compiler';
-import { CustomPropertyDescriptor } from '../../mol-model/custom-property';
-import { Asset } from '../../mol-util/assets';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { type Structure, Model, StructureSelection, QueryContext } from '../../mol-model/structure.ts';
+import { Column } from '../../mol-data/db.ts';
+import { GraphQLClient } from '../../mol-util/graphql-client.ts';
+import type { CustomProperty } from '../../mol-model-props/common/custom-property.ts';
+import { CustomStructureProperty } from '../../mol-model-props/common/custom-structure-property.ts';
+import { MmcifFormat } from '../../mol-model-formats/structure/mmcif.ts';
+import type { ReadonlyVec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
+import { SetUtils } from '../../mol-util/set.ts';
+import { MolScriptBuilder as MS } from '../../mol-script/language/builder.ts';
+import { compile } from '../../mol-script/runtime/query/compiler.ts';
+import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
+import { Asset } from '../../mol-util/assets.ts';
 
 const rcsb_symmetry_gql = /* GraphQL */ `
 query AssemblySymmetry($assembly_id: String!, $entry_id: String!) {

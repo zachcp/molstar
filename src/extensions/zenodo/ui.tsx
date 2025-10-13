@@ -4,20 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { DownloadFile } from '../../mol-plugin-state/actions/file';
-import { DownloadStructure, LoadTrajectory } from '../../mol-plugin-state/actions/structure';
-import { DownloadDensity } from '../../mol-plugin-state/actions/volume';
-import { CoordinatesFormatCategory } from '../../mol-plugin-state/formats/coordinates';
-import { TopologyFormatCategory } from '../../mol-plugin-state/formats/topology';
-import { TrajectoryFormatCategory } from '../../mol-plugin-state/formats/trajectory';
-import { VolumeFormatCategory } from '../../mol-plugin-state/formats/volume';
-import { CollapsableControls, CollapsableState } from '../../mol-plugin-ui/base';
-import { Button } from '../../mol-plugin-ui/controls/common';
-import { OpenInBrowserSvg } from '../../mol-plugin-ui/controls/icons';
-import { ParameterControls } from '../../mol-plugin-ui/controls/parameters';
-import { PluginContext } from '../../mol-plugin/context';
-import { formatBytes } from '../../mol-util';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { DownloadFile } from '../../mol-plugin-state/actions/file.ts';
+import { DownloadStructure, LoadTrajectory } from '../../mol-plugin-state/actions/structure.ts';
+import { DownloadDensity } from '../../mol-plugin-state/actions/volume.ts';
+import { CoordinatesFormatCategory } from '../../mol-plugin-state/formats/coordinates.ts';
+import { TopologyFormatCategory } from '../../mol-plugin-state/formats/topology.ts';
+import { TrajectoryFormatCategory } from '../../mol-plugin-state/formats/trajectory.ts';
+import { VolumeFormatCategory } from '../../mol-plugin-state/formats/volume.ts';
+import { CollapsableControls, type CollapsableState } from '../../mol-plugin-ui/base.ts';
+import { Button } from '../../mol-plugin-ui/controls/common.ts';
+import { OpenInBrowserSvg } from '../../mol-plugin-ui/controls/icons.ts';
+import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { formatBytes } from '../../mol-util.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
 type ZenodoFile = {
     bucket: string

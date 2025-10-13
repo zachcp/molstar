@@ -5,19 +5,19 @@
  */
 
 import './index.html';
-import { resizeCanvas } from '../../mol-canvas3d/util';
-import { Canvas3D, Canvas3DContext } from '../../mol-canvas3d/canvas3d';
-import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder';
-import { Mat4 } from '../../mol-math/linear-algebra';
-import { HexagonalPrismCage } from '../../mol-geo/primitive/prism';
-import { SpikedBall } from '../../mol-geo/primitive/spiked-ball';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { Color } from '../../mol-util/color';
-import { createRenderObject } from '../../mol-gl/render-object';
-import { Representation } from '../../mol-repr/representation';
-import { Torus } from '../../mol-geo/primitive/torus';
-import { ParamDefinition } from '../../mol-util/param-definition';
-import { AssetManager } from '../../mol-util/assets';
+import { resizeCanvas } from '../../mol-canvas3d/util.ts';
+import { Canvas3D, Canvas3DContext } from '../../mol-canvas3d/canvas3d.ts';
+import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Mat4 } from '../../mol-math/linear-algebra.ts';
+import { HexagonalPrismCage } from '../../mol-geo/primitive/prism.ts';
+import { SpikedBall } from '../../mol-geo/primitive/spiked-ball.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { Color } from '../../mol-util/color.ts';
+import { createRenderObject } from '../../mol-gl/render-object.ts';
+import { Representation } from '../../mol-repr/representation.ts';
+import { Torus } from '../../mol-geo/primitive/torus.ts';
+import { ParamDefinition } from '../../mol-util/param-definition.ts';
+import { AssetManager } from '../../mol-util/assets.ts';
 
 const parent = document.getElementById('app')!;
 parent.style.width = '100%';

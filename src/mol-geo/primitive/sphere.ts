@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Polyhedron } from './polyhedron';
-import { Icosahedron } from './icosahedron';
-import { Primitive } from './primitive';
+import { Polyhedron } from './polyhedron.ts';
+import { Icosahedron } from './icosahedron.ts';
+import type { Primitive } from './primitive.ts';
 
 const { vertices, indices } = Icosahedron();
 

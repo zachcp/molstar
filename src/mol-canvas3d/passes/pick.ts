@@ -4,23 +4,23 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PickingId } from '../../mol-geo/geometry/picking';
-import { PickType, Renderer } from '../../mol-gl/renderer';
-import { Scene } from '../../mol-gl/scene';
-import { PixelPackBuffer } from '../../mol-gl/webgl/buffer';
-import { isWebGL2 } from '../../mol-gl/webgl/compat';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Framebuffer } from '../../mol-gl/webgl/framebuffer';
-import { RenderTarget } from '../../mol-gl/webgl/render-target';
-import { Renderbuffer } from '../../mol-gl/webgl/renderbuffer';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { isDebugMode, isTimingMode } from '../../mol-util/debug';
-import { now } from '../../mol-util/now';
-import { unpackRGBAToDepth, unpackRGBToInt } from '../../mol-util/number-packing';
-import { ICamera } from '../camera';
-import { Viewport } from '../camera/util';
-import { Helper } from '../helper/helper';
+import { PickingId } from '../../mol-geo/geometry/picking.ts';
+import { PickType, type Renderer } from '../../mol-gl/renderer.ts';
+import type { Scene } from '../../mol-gl/scene.ts';
+import type { PixelPackBuffer } from '../../mol-gl/webgl/buffer.ts';
+import { isWebGL2 } from '../../mol-gl/webgl/compat.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import type { Framebuffer } from '../../mol-gl/webgl/framebuffer.ts';
+import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
+import type { Renderbuffer } from '../../mol-gl/webgl/renderbuffer.ts';
+import type { Texture } from '../../mol-gl/webgl/texture.ts';
+import type { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { isDebugMode, isTimingMode } from '../../mol-util/debug.ts';
+import { now } from '../../mol-util/now.ts';
+import { unpackRGBAToDepth, unpackRGBToInt } from '../../mol-util/number-packing.ts';
+import type { ICamera } from '../camera.ts';
+import { Viewport } from '../camera/util.ts';
+import type { Helper } from '../helper/helper.ts';
 
 export type PickData = { id: PickingId, position: Vec3 }
 

@@ -23,11 +23,11 @@
  *
  */
 
-import * as Data from '../data-model';
-import { Tokens, TokenBuilder, Tokenizer } from '../../common/text/tokenizer';
-import { ReaderResult as Result } from '../../result';
-import { Task, RuntimeContext, chunkedSubtask } from '../../../../mol-task';
-import { StringLike } from '../../../common/string-like';
+import * as Data from '../data-model.ts';
+import { type Tokens, TokenBuilder, Tokenizer } from '../../common/text/tokenizer.ts';
+import { ReaderResult as Result } from '../../result.ts';
+import { Task, type RuntimeContext, chunkedSubtask } from '../../../../mol-task.ts';
+import type { StringLike } from '../../../common/string-like.ts';
 
 
 /**

@@ -5,21 +5,21 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Unit, Structure, ElementIndex, StructureElement, ResidueIndex } from '../../../../mol-model/structure';
-import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra';
-import { TransformData, createTransform } from '../../../../mol-geo/geometry/transform-data';
-import { OrderedSet, SortedArray } from '../../../../mol-data/int';
-import { EmptyLoci, Loci } from '../../../../mol-model/loci';
-import { AtomicNumbers } from '../../../../mol-model/structure/model/properties/atomic';
-import { fillSerial } from '../../../../mol-util/array';
-import { ParamDefinition as PD } from '../../../../mol-util/param-definition';
-import { AssignableArrayLike } from '../../../../mol-util/type-helpers';
-import { getBoundary } from '../../../../mol-math/geometry/boundary';
-import { Box3D, Sphere3D } from '../../../../mol-math/geometry';
-import { SizeTheme } from '../../../../mol-theme/size';
-import { hasPolarNeighbour } from '../../../../mol-model-props/computed/chemistry/functional-group';
-import { isDebugMode } from '../../../../mol-util/debug';
-import { WebGLContext } from '../../../../mol-gl/webgl/context';
+import { Unit, type Structure, type ElementIndex, StructureElement, type ResidueIndex } from '../../../../mol-model/structure.ts';
+import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { type TransformData, createTransform } from '../../../../mol-geo/geometry/transform-data.ts';
+import { OrderedSet, SortedArray } from '../../../../mol-data/int.ts';
+import { EmptyLoci, type Loci } from '../../../../mol-model/loci.ts';
+import { AtomicNumbers } from '../../../../mol-model/structure/model/properties/atomic.ts';
+import { fillSerial } from '../../../../mol-util/array.ts';
+import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
+import type { AssignableArrayLike } from '../../../../mol-util/type-helpers.ts';
+import { getBoundary } from '../../../../mol-math/geometry/boundary.ts';
+import { Box3D, type Sphere3D } from '../../../../mol-math/geometry.ts';
+import type { SizeTheme } from '../../../../mol-theme/size.ts';
+import { hasPolarNeighbour } from '../../../../mol-model-props/computed/chemistry/functional-group.ts';
+import { isDebugMode } from '../../../../mol-util/debug.ts';
+import type { WebGLContext } from '../../../../mol-gl/webgl/context.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const m4toArray = Mat4.toArray;

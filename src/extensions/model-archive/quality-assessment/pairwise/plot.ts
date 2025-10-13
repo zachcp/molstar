@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Model, ResidueIndex } from '../../../../mol-model/structure';
-import { AtomicHierarchy } from '../../../../mol-model/structure/model/properties/atomic';
-import { Color } from '../../../../mol-util/color';
-import { QualityAssessment } from '../prop';
+import type { Model, ResidueIndex } from '../../../../mol-model/structure.ts';
+import { AtomicHierarchy } from '../../../../mol-model/structure/model/properties/atomic.ts';
+import { Color } from '../../../../mol-util/color.ts';
+import type { QualityAssessment } from '../prop.ts';
 
 
 const DefaultMetricColorRange = [0x00441B, 0xF7FCF5] as [Color, Color];

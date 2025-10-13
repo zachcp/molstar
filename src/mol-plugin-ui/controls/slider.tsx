@@ -6,9 +6,9 @@
  */
 
 import * as React from 'react';
-import { TextInput } from './common';
-import { noop } from '../../mol-util';
-import { normalizeWheel } from '../../mol-util/input/input-observer';
+import { TextInput } from './common.ts';
+import { noop } from '../../mol-util.ts';
+import { normalizeWheel } from '../../mol-util/input/input-observer.ts';
 
 export class Slider extends React.Component<{
     min: number,
@@ -79,7 +79,7 @@ export class Slider extends React.Component<{
             </div>
             <div>
                 <TextInput numeric delayMs={50}
-                    value={this.state.current} blurOnEnter={true} onBlur={this.onManualBlur}
+                    value={this.state.current} blurOnEnter onBlur={this.onManualBlur}
                     isDisabled={this.props.disabled} onChange={this.updateManually} />
             </div>
         </div>;
@@ -140,16 +140,16 @@ export class Slider2 extends React.Component<{
         return <div className='msp-slider2'>
             <div>
                 <TextInput numeric delayMs={50}
-                    value={this.state.current[0]} onEnter={this.props.onEnter} blurOnEnter={true}
+                    value={this.state.current[0]} onEnter={this.props.onEnter} blurOnEnter
                     isDisabled={this.props.disabled} onChange={this.updateMin} />
             </div>
             <div>
                 <SliderBase min={this.props.min} max={this.props.max} step={step} value={this.state.current} disabled={this.props.disabled}
-                    onBeforeChange={this.begin} onChange={this.updateCurrent as any} onAfterChange={this.end as any} range={true} allowCross />
+                    onBeforeChange={this.begin} onChange={this.updateCurrent as any} onAfterChange={this.end as any} range allowCross />
             </div>
             <div>
                 <TextInput numeric delayMs={50}
-                    value={this.state.current[1]} onEnter={this.props.onEnter} blurOnEnter={true}
+                    value={this.state.current[1]} onEnter={this.props.onEnter} blurOnEnter
                     isDisabled={this.props.disabled} onChange={this.updateMax} />
             </div>
         </div>;

@@ -4,18 +4,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { IntraUnitBondCylinderVisual, IntraUnitBondCylinderParams, StructureIntraUnitBondCylinderParams, StructureIntraUnitBondCylinderVisual } from '../visual/bond-intra-unit-cylinder';
-import { InterUnitBondCylinderParams, InterUnitBondCylinderVisual } from '../visual/bond-inter-unit-cylinder';
-import { ElementSphereVisual, ElementSphereParams, StructureElementSphereVisual } from '../visual/element-sphere';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { UnitsRepresentation } from '../units-representation';
-import { ComplexRepresentation } from '../complex-representation';
-import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../../mol-repr/representation';
-import { ThemeRegistryContext } from '../../../mol-theme/theme';
-import { Structure } from '../../../mol-model/structure';
-import { getUnitKindsParam } from '../params';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
+import { IntraUnitBondCylinderVisual, IntraUnitBondCylinderParams, type StructureIntraUnitBondCylinderParams, StructureIntraUnitBondCylinderVisual } from '../visual/bond-intra-unit-cylinder.ts';
+import { InterUnitBondCylinderParams, InterUnitBondCylinderVisual } from '../visual/bond-inter-unit-cylinder.ts';
+import { ElementSphereVisual, ElementSphereParams, StructureElementSphereVisual } from '../visual/element-sphere.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { UnitsRepresentation } from '../units-representation.ts';
+import { ComplexRepresentation } from '../complex-representation.ts';
+import { type StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
+import { Representation, type RepresentationParamsGetter, type RepresentationContext } from '../../../mol-repr/representation.ts';
+import type { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import { Structure } from '../../../mol-model/structure.ts';
+import { getUnitKindsParam } from '../params.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const BallAndStickVisuals = {
     'element-sphere': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, ElementSphereParams>) => UnitsRepresentation('Element sphere', ctx, getParams, ElementSphereVisual),

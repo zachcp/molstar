@@ -4,17 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StateBuilder, StateObjectRef } from '../../../../mol-state';
-import { StructureFromPetworld } from './model';
-import { Color } from '../../../../mol-util/color';
-import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/representation/spacefill';
-import { StructureRepresentation3D } from '../../../../mol-plugin-state/transforms/representation';
-import { PluginContext } from '../../../../mol-plugin/context';
-import { PluginStateObject } from '../../../../mol-plugin-state/objects';
-import { GraphicsMode, MesoscaleGroup, MesoscaleState, getDistinctBaseColors, getGraphicsModeProps, getMesoscaleGroupParams } from '../state';
-import { ColorNames } from '../../../../mol-util/color/names';
-import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif';
-import { Task } from '../../../../mol-task';
+import { type StateBuilder, StateObjectRef } from '../../../../mol-state.ts';
+import { StructureFromPetworld } from './model.ts';
+import type { Color } from '../../../../mol-util/color.ts';
+import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/representation/spacefill.ts';
+import { StructureRepresentation3D } from '../../../../mol-plugin-state/transforms/representation.ts';
+import type { PluginContext } from '../../../../mol-plugin/context.ts';
+import type { PluginStateObject } from '../../../../mol-plugin-state/objects.ts';
+import { type GraphicsMode, MesoscaleGroup, MesoscaleState, getDistinctBaseColors, getGraphicsModeProps, getMesoscaleGroupParams } from '../state.ts';
+import { ColorNames } from '../../../../mol-util/color/names.ts';
+import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif.ts';
+import { Task } from '../../../../mol-task.ts';
 
 function getSpacefillParams(color: Color, graphics: GraphicsMode) {
     const gmp = getGraphicsModeProps(graphics === 'custom' ? 'quality' : graphics);

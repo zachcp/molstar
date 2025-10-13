@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as React from 'react';
+import type * as React from 'react';
 
 export function Icon(props: {
     svg?: React.FC,

@@ -7,13 +7,13 @@
 
 import * as React from 'react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Observable, Subscription } from 'rxjs';
-import { Viewport } from '../../mol-canvas3d/camera/util';
-import { PluginContext } from '../../mol-plugin/context';
-import { ViewportScreenshotHelper } from '../../mol-plugin/util/viewport-screenshot';
-import { shallowEqual } from '../../mol-util/object';
-import { useBehavior } from '../hooks/use-behavior';
-import { Task } from '../../mol-task';
+import type { Observable, Subscription } from 'rxjs';
+import type { Viewport } from '../../mol-canvas3d/camera/util.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import type { ViewportScreenshotHelper } from '../../mol-plugin/util/viewport-screenshot.ts';
+import { shallowEqual } from '../../mol-util/object.ts';
+import { useBehavior } from '../hooks/use-behavior.ts';
+import { Task } from '../../mol-task.ts';
 
 export interface ScreenshotPreviewProps {
     plugin: PluginContext,
@@ -249,8 +249,8 @@ function ViewportFrame({ plugin, canvas, color = 'rgba(255, 87, 45, 0.75)' }: { 
         const p = [t.pageX, t.pageY];
         setStart(p);
         setCurrent(p);
-        window.addEventListener('touchend', onTouchEnd);
-        window.addEventListener('touchmove', onTouchMove);
+        globalThis.addEventListener('touchend', onTouchEnd);
+        globalThis.addEventListener('touchmove', onTouchMove);
     };
 
     const onStart = (e: React.MouseEvent<HTMLElement>) => {
@@ -259,19 +259,19 @@ function ViewportFrame({ plugin, canvas, color = 'rgba(255, 87, 45, 0.75)' }: { 
         const p = [e.pageX, e.pageY];
         setStart(p);
         setCurrent(p);
-        window.addEventListener('mouseup', onEnd);
-        window.addEventListener('mousemove', onMove);
+        globalThis.addEventListener('mouseup', onEnd);
+        globalThis.addEventListener('mousemove', onMove);
     };
 
     const onEnd = () => {
-        window.removeEventListener('mouseup', onEnd);
-        window.removeEventListener('mousemove', onMove);
+        globalThis.removeEventListener('mouseup', onEnd);
+        globalThis.removeEventListener('mousemove', onMove);
         finish();
     };
 
     const onTouchEnd = () => {
-        window.removeEventListener('touchend', onTouchEnd);
-        window.removeEventListener('touchmove', onTouchMove);
+        globalThis.removeEventListener('touchend', onTouchEnd);
+        globalThis.removeEventListener('touchmove', onTouchMove);
         finish();
     };
 

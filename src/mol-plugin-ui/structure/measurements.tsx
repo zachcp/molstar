@@ -6,27 +6,27 @@
  * @author Jason Pattle <jpattle.exscientia.co.uk>
  */
 
-import * as React from 'react';
-import { Loci } from '../../mol-model/loci';
-import { StructureElement } from '../../mol-model/structure';
-import { StructureMeasurementCell, StructureMeasurementOptions, StructureMeasurementParams } from '../../mol-plugin-state/manager/structure/measurement';
-import { StructureSelectionHistoryEntry } from '../../mol-plugin-state/manager/structure/selection';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginConfig } from '../../mol-plugin/config';
-import { AngleData } from '../../mol-repr/shape/loci/angle';
-import { DihedralData } from '../../mol-repr/shape/loci/dihedral';
-import { DistanceData } from '../../mol-repr/shape/loci/distance';
-import { LabelData } from '../../mol-repr/shape/loci/label';
-import { OrientationData } from '../../mol-repr/shape/loci/orientation';
-import { angleLabel, dihedralLabel, distanceLabel, lociLabel, structureElementLociLabelMany } from '../../mol-theme/label';
-import { FiniteArray } from '../../mol-util/type-helpers';
-import { CollapsableControls, PurePluginUIComponent } from '../base';
-import { ActionMenu } from '../controls/action-menu';
-import { Button, ExpandGroup, IconButton, ToggleButton } from '../controls/common';
-import { AddSvg, ArrowDownwardSvg, ArrowUpwardSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, MoreHorizSvg, PencilRulerSvg, SetSvg, TuneSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg } from '../controls/icons';
-import { ParameterControls } from '../controls/parameters';
-import { UpdateTransformControl } from '../state/update-transform';
-import { ToggleSelectionModeButton } from './selection';
+import type * as React from 'react';
+import { Loci } from '../../mol-model/loci.ts';
+import type { StructureElement } from '../../mol-model/structure.ts';
+import { type StructureMeasurementCell, type StructureMeasurementOptions, StructureMeasurementParams } from '../../mol-plugin-state/manager/structure/measurement.ts';
+import type { StructureSelectionHistoryEntry } from '../../mol-plugin-state/manager/structure/selection.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import type { AngleData } from '../../mol-repr/shape/loci/angle.ts';
+import type { DihedralData } from '../../mol-repr/shape/loci/dihedral.ts';
+import type { DistanceData } from '../../mol-repr/shape/loci/distance.ts';
+import type { LabelData } from '../../mol-repr/shape/loci/label.ts';
+import type { OrientationData } from '../../mol-repr/shape/loci/orientation.ts';
+import { angleLabel, dihedralLabel, distanceLabel, lociLabel, structureElementLociLabelMany } from '../../mol-theme/label.ts';
+import type { FiniteArray } from '../../mol-util/type-helpers.ts';
+import { CollapsableControls, PurePluginUIComponent } from '../base.ts';
+import { ActionMenu } from '../controls/action-menu.ts';
+import { Button, ExpandGroup, IconButton, ToggleButton } from '../controls/common.ts';
+import { AddSvg, ArrowDownwardSvg, ArrowUpwardSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, MoreHorizSvg, PencilRulerSvg, SetSvg, TuneSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg } from '../controls/icons.ts';
+import { ParameterControls } from '../controls/parameters.ts';
+import { UpdateTransformControl } from '../state/update-transform.ts';
+import { ToggleSelectionModeButton } from './selection.ts';
 
 // TODO details, options (e.g. change text for labels)
 
@@ -59,7 +59,7 @@ export class MeasurementList extends PurePluginUIComponent {
         for (const cell of cells) {
             if (cell.obj) group.push(<MeasurementEntry key={cell.obj.id} cell={cell} />);
         }
-        return group.length ? <ExpandGroup header={header} initiallyExpanded={true}>{group}</ExpandGroup> : null;
+        return group.length ? <ExpandGroup header={header} initiallyExpanded>{group}</ExpandGroup> : null;
     }
 
     render() {
@@ -196,9 +196,9 @@ export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boo
             <Button noOverflow title='Click to focus. Hover to highlight.' onClick={() => this.focusLoci(e.loci)} style={{ width: 'auto', textAlign: 'left' }}>
                 {idx}. <span dangerouslySetInnerHTML={{ __html: e.label }} />
             </Button>
-            {history.length > 1 && <IconButton svg={ArrowUpwardSvg} small={true} className='msp-form-control' onClick={() => this.moveHistory(e, 'up')} flex='20px' title={'Move up'} />}
-            {history.length > 1 && <IconButton svg={ArrowDownwardSvg} small={true} className='msp-form-control' onClick={() => this.moveHistory(e, 'down')} flex='20px' title={'Move down'} />}
-            <IconButton svg={DeleteOutlinedSvg} small={true} className='msp-form-control' onClick={() => this.plugin.managers.structure.selection.modifyHistory(e, 'remove')} flex title={'Remove'} />
+            {history.length > 1 && <IconButton svg={ArrowUpwardSvg} small className='msp-form-control' onClick={() => this.moveHistory(e, 'up')} flex='20px' title="Move up" />}
+            {history.length > 1 && <IconButton svg={ArrowDownwardSvg} small className='msp-form-control' onClick={() => this.moveHistory(e, 'down')} flex='20px' title="Move down" />}
+            <IconButton svg={DeleteOutlinedSvg} small className='msp-form-control' onClick={() => this.plugin.managers.structure.selection.modifyHistory(e, 'remove')} flex title="Remove" />
         </div>;
     }
 

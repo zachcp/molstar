@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginBehavior } from '../../../behavior/behavior';
-import { Structure, Model } from '../../../../mol-model/structure';
-import { PluginStateObject } from '../../../../mol-plugin-state/objects';
-import { StateSelection, StateObject } from '../../../../mol-state';
+import { PluginBehavior } from '../../../behavior/behavior.ts';
+import { Structure, Model } from '../../../../mol-model/structure.ts';
+import { PluginStateObject } from '../../../../mol-plugin-state/objects.ts';
+import { StateSelection, type StateObject } from '../../../../mol-state.ts';
 
 export const StructureInfo = PluginBehavior.create({
     name: 'structure-info-prop',

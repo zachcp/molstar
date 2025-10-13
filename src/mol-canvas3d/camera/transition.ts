@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Camera } from '../camera';
-import { Quat, Vec3 } from '../../mol-math/linear-algebra';
-import { lerp } from '../../mol-math/interpolate';
+import { Camera } from '../camera.ts';
+import { Quat, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { lerp } from '../../mol-math/interpolate.ts';
 
 export { CameraTransitionManager };
 

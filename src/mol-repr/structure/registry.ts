@@ -4,25 +4,25 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure } from '../../mol-model/structure';
-import { objectForEach } from '../../mol-util/object';
-import { RepresentationRegistry, RepresentationProvider } from '../representation';
-import { StructureRepresentationState } from './representation';
-import { BallAndStickRepresentationProvider } from './representation/ball-and-stick';
-import { CarbohydrateRepresentationProvider } from './representation/carbohydrate';
-import { CartoonRepresentationProvider } from './representation/cartoon';
-import { EllipsoidRepresentationProvider } from './representation/ellipsoid';
-import { GaussianSurfaceRepresentationProvider } from './representation/gaussian-surface';
-import { LabelRepresentationProvider } from './representation/label';
-import { MolecularSurfaceRepresentationProvider } from './representation/molecular-surface';
-import { OrientationRepresentationProvider } from './representation/orientation';
-import { PointRepresentationProvider } from './representation/point';
-import { PuttyRepresentationProvider } from './representation/putty';
-import { SpacefillRepresentationProvider } from './representation/spacefill';
-import { LineRepresentationProvider } from './representation/line';
-import { GaussianVolumeRepresentationProvider } from './representation/gaussian-volume';
-import { BackboneRepresentationProvider } from './representation/backbone';
-import { PlaneRepresentationProvider } from './representation/plane';
+import type { Structure } from '../../mol-model/structure.ts';
+import { objectForEach } from '../../mol-util/object.ts';
+import { RepresentationRegistry, type RepresentationProvider } from '../representation.ts';
+import type { StructureRepresentationState } from './representation.ts';
+import { BallAndStickRepresentationProvider } from './representation/ball-and-stick.ts';
+import { CarbohydrateRepresentationProvider } from './representation/carbohydrate.ts';
+import { CartoonRepresentationProvider } from './representation/cartoon.ts';
+import { EllipsoidRepresentationProvider } from './representation/ellipsoid.ts';
+import { GaussianSurfaceRepresentationProvider } from './representation/gaussian-surface.ts';
+import { LabelRepresentationProvider } from './representation/label.ts';
+import { MolecularSurfaceRepresentationProvider } from './representation/molecular-surface.ts';
+import { OrientationRepresentationProvider } from './representation/orientation.ts';
+import { PointRepresentationProvider } from './representation/point.ts';
+import { PuttyRepresentationProvider } from './representation/putty.ts';
+import { SpacefillRepresentationProvider } from './representation/spacefill.ts';
+import { LineRepresentationProvider } from './representation/line.ts';
+import { GaussianVolumeRepresentationProvider } from './representation/gaussian-volume.ts';
+import { BackboneRepresentationProvider } from './representation/backbone.ts';
+import { PlaneRepresentationProvider } from './representation/plane.ts';
 
 export class StructureRepresentationRegistry extends RepresentationRegistry<Structure, StructureRepresentationState> {
     constructor() {

@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Model, ResidueIndex, ElementIndex } from './model';
-import { MoleculeType, AtomRole, PolymerTypeAtomRoleId, getMoleculeType, PolymerType } from './model/types';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { Unit } from './structure';
-import { NumberArray } from '../../mol-util/type-helpers';
+import type { Model, ResidueIndex, ElementIndex } from './model.ts';
+import { MoleculeType, type AtomRole, PolymerTypeAtomRoleId, getMoleculeType, type PolymerType } from './model/types.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { Unit } from './structure.ts';
+import type { NumberArray } from '../../mol-util/type-helpers.ts';
 
 export function getCoarseBegCompId(unit: Unit.Spheres | Unit.Gaussians, element: ElementIndex) {
     const entityKey = unit.coarseElements.entityKey[element];

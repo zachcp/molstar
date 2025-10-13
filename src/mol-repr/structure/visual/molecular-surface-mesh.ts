@@ -4,26 +4,26 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual';
-import { MolecularSurfaceCalculationParams } from '../../../mol-math/geometry/molecular-surface';
-import { VisualContext } from '../../visual';
-import { Unit, Structure } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { computeStructureMolecularSurface, computeUnitMolecularSurface } from './util/molecular-surface';
-import { computeMarchingCubesMesh } from '../../../mol-geo/util/marching-cubes/algorithm';
-import { ElementIterator, getElementLoci, eachElement, getSerialElementLoci, eachSerialElement } from './util/element';
-import { VisualUpdateState } from '../../util';
-import { CommonSurfaceParams } from './util/common';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { MeshValues } from '../../../mol-gl/renderable/mesh';
-import { Texture } from '../../../mol-gl/webgl/texture';
-import { WebGLContext } from '../../../mol-gl/webgl/context';
-import { applyMeshColorSmoothing } from '../../../mol-geo/geometry/mesh/color-smoothing';
-import { ColorSmoothingParams, getColorSmoothingProps } from '../../../mol-geo/geometry/base';
-import { ValueCell } from '../../../mol-util';
-import { ComplexMeshVisual, ComplexVisual } from '../complex-visual';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { UnitsMeshParams, type UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
+import { MolecularSurfaceCalculationParams } from '../../../mol-math/geometry/molecular-surface.ts';
+import type { VisualContext } from '../../visual.ts';
+import type { Unit, Structure } from '../../../mol-model/structure.ts';
+import type { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { computeStructureMolecularSurface, computeUnitMolecularSurface } from './util/molecular-surface.ts';
+import { computeMarchingCubesMesh } from '../../../mol-geo/util/marching-cubes/algorithm.ts';
+import { ElementIterator, getElementLoci, eachElement, getSerialElementLoci, eachSerialElement } from './util/element.ts';
+import type { VisualUpdateState } from '../../util.ts';
+import { CommonSurfaceParams } from './util/common.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import type { MeshValues } from '../../../mol-gl/renderable/mesh.ts';
+import type { Texture } from '../../../mol-gl/webgl/texture.ts';
+import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
+import { applyMeshColorSmoothing } from '../../../mol-geo/geometry/mesh/color-smoothing.ts';
+import { ColorSmoothingParams, getColorSmoothingProps } from '../../../mol-geo/geometry/base.ts';
+import { ValueCell } from '../../../mol-util.ts';
+import { ComplexMeshVisual, type ComplexVisual } from '../complex-visual.ts';
 
 export const MolecularSurfaceMeshParams = {
     ...UnitsMeshParams,

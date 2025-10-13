@@ -5,17 +5,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PickingId } from '../../mol-geo/geometry/picking';
-import { Representation } from '../../mol-repr/representation';
-import { InputObserver, ModifiersKeys, ButtonsType } from '../../mol-util/input/input-observer';
-import { RxEventHelper } from '../../mol-util/rx-event-helper';
-import { Vec2, Vec3 } from '../../mol-math/linear-algebra';
-import { Camera } from '../camera';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Bond } from '../../mol-model/structure';
-import { TrackballControls } from '../controls/trackball';
-import { Ray3D } from '../../mol-math/geometry/primitives/ray3d';
-import { AsyncPickData } from '../passes/pick';
+import type { PickingId } from '../../mol-geo/geometry/picking.ts';
+import { Representation } from '../../mol-repr/representation.ts';
+import { type InputObserver, ModifiersKeys, ButtonsType } from '../../mol-util/input/input-observer.ts';
+import { RxEventHelper } from '../../mol-util/rx-event-helper.ts';
+import { Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
+import type { Camera } from '../camera.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Bond } from '../../mol-model/structure.ts';
+import type { TrackballControls } from '../controls/trackball.ts';
+import { Ray3D } from '../../mol-math/geometry/primitives/ray3d.ts';
+import type { AsyncPickData } from '../passes/pick.ts';
 
 type Canvas3D = import('../canvas3d').Canvas3D
 type HoverEvent = import('../canvas3d').Canvas3D.HoverEvent

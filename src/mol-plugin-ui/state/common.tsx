@@ -4,15 +4,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { State, StateTransform, StateTransformer, StateAction, StateObject, StateObjectCell } from '../../mol-state';
-import * as React from 'react';
-import { PurePluginUIComponent } from '../base';
-import { ParameterControls, ParamOnChange } from '../controls/parameters';
-import { PluginContext } from '../../mol-plugin/context';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import type { State, StateTransform, StateTransformer, StateAction, StateObject, StateObjectCell } from '../../mol-state.ts';
+import type * as React from 'react';
+import { PurePluginUIComponent } from '../base.ts';
+import { ParameterControls, type ParamOnChange } from '../controls/parameters.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { BehaviorSubject, skip } from 'rxjs';
-import { Icon, RefreshSvg, CheckSvg, ArrowRightSvg, ArrowDropDownSvg, TuneSvg } from '../controls/icons';
-import { ExpandGroup, ToggleButton, Button, IconButton } from '../controls/common';
+import { Icon, RefreshSvg, CheckSvg, ArrowRightSvg, ArrowDropDownSvg, TuneSvg } from '../controls/icons.ts';
+import { ExpandGroup, ToggleButton, Button, IconButton } from '../controls/common.ts';
 
 export { StateTransformParameters, TransformControlBase };
 

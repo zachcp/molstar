@@ -4,17 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { OrderedSet } from '../../../mol-data/int';
-import { Mat4, Vec3 } from '../../../mol-math/linear-algebra';
-import { Structure, StructureElement, Unit } from '../../../mol-model/structure';
-import { VdwRadius } from '../../../mol-model/structure/model/properties/atomic';
-import { Elements } from '../../../mol-model/structure/model/properties/atomic/types';
-import { StructureLookup3DResultContext } from '../../../mol-model/structure/structure/util/lookup3d';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { altLoc, connectedTo, typeSymbol } from '../chemistry/util';
-import { FeatureType, InteractionType } from './common';
-import { InterContactsBuilder, IntraContactsBuilder } from './contacts-builder';
-import { Features } from './features';
+import { OrderedSet } from '../../../mol-data/int.ts';
+import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { type Structure, type StructureElement, Unit } from '../../../mol-model/structure.ts';
+import { VdwRadius } from '../../../mol-model/structure/model/properties/atomic.ts';
+import { Elements } from '../../../mol-model/structure/model/properties/atomic/types.ts';
+import { StructureLookup3DResultContext } from '../../../mol-model/structure/structure/util/lookup3d.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { altLoc, connectedTo, typeSymbol } from '../chemistry/util.ts';
+import type { FeatureType, InteractionType } from './common.ts';
+import type { InterContactsBuilder, IntraContactsBuilder } from './contacts-builder.ts';
+import { Features } from './features.ts';
 
 export const ContactsParams = {
     lineOfSightDistFactor: PD.Numeric(1.0, { min: 0, max: 3, step: 0.1 }),

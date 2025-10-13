@@ -4,16 +4,16 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Column } from '../../../mol-data/db';
-import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif';
-import { Model } from '../../../mol-model/structure';
-import { PluginStateObject } from '../../../mol-plugin-state/objects';
-import { StructureComponent } from '../../../mol-plugin-state/transforms/model';
-import { StructureRepresentation3D } from '../../../mol-plugin-state/transforms/representation';
-import { setSubtreeVisibility } from '../../../mol-plugin/behavior/static/state';
-import { PluginContext } from '../../../mol-plugin/context';
-import { MolScriptBuilder } from '../../../mol-script/language/builder';
-import { ColorNames } from '../../../mol-util/color/names';
+import { Column } from '../../../mol-data/db.ts';
+import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif.ts';
+import type { Model } from '../../../mol-model/structure.ts';
+import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
+import { StructureComponent } from '../../../mol-plugin-state/transforms/model.ts';
+import { StructureRepresentation3D } from '../../../mol-plugin-state/transforms/representation.ts';
+import { setSubtreeVisibility } from '../../../mol-plugin/behavior/static/state.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import { MolScriptBuilder } from '../../../mol-script/language/builder.ts';
+import { ColorNames } from '../../../mol-util/color/names.ts';
 
 
 /** Amount by which to expand the camera radius when zooming to atoms involved in struct_conn (angstroms) */

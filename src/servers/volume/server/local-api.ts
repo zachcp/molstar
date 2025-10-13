@@ -6,12 +6,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as Api from './api';
-import * as Data from './query/data-model';
-import * as Coordinate from './algebra/coordinate';
+import * as Api from './api.ts';
+import type * as Data from './query/data-model.ts';
+import * as Coordinate from './algebra/coordinate.ts';
 
 import * as fs from 'fs';
 import * as path from 'path';
+import process from "node:process";
+import { Buffer } from "node:buffer";
 
 export interface JobEntry {
     source: {

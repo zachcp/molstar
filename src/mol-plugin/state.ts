@@ -6,28 +6,28 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { produce } from '../mol-util/produce';
+import { produce } from '../mol-util/produce.ts';
 import { merge } from 'rxjs';
-import { Camera } from '../mol-canvas3d/camera';
-import { Canvas3DContext, Canvas3DParams, Canvas3DProps } from '../mol-canvas3d/canvas3d';
-import { Vec3 } from '../mol-math/linear-algebra';
-import { PluginComponent } from '../mol-plugin-state/component';
-import { PluginAnimationManager } from '../mol-plugin-state/manager/animation';
-import { InteractivityManager } from '../mol-plugin-state/manager/interactivity';
-import { StructureComponentManager } from '../mol-plugin-state/manager/structure/component';
-import { StructureFocusSnapshot } from '../mol-plugin-state/manager/structure/focus';
-import { StructureSelectionSnapshot } from '../mol-plugin-state/manager/structure/selection';
-import { PluginStateObject as SO } from '../mol-plugin-state/objects';
-import { State, StateTransform, StateTransformer } from '../mol-state';
-import { UUID } from '../mol-util';
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { PluginBehavior } from './behavior';
-import { PluginCommands } from './commands';
-import { PluginConfig } from './config';
-import { PluginContext } from './context';
-import { AnimateStateSnapshotTransition } from '../mol-plugin-state/animation/built-in/state-snapshots';
-import { Scheduler } from '../mol-task';
-import { memoizeLatest } from '../mol-util/memoize';
+import type { Camera } from '../mol-canvas3d/camera.ts';
+import { Canvas3DContext, Canvas3DParams, type Canvas3DProps } from '../mol-canvas3d/canvas3d.ts';
+import type { Vec3 } from '../mol-math/linear-algebra.ts';
+import { PluginComponent } from '../mol-plugin-state/component.ts';
+import type { PluginAnimationManager } from '../mol-plugin-state/manager/animation.ts';
+import type { InteractivityManager } from '../mol-plugin-state/manager/interactivity.ts';
+import type { StructureComponentManager } from '../mol-plugin-state/manager/structure/component.ts';
+import type { StructureFocusSnapshot } from '../mol-plugin-state/manager/structure/focus.ts';
+import type { StructureSelectionSnapshot } from '../mol-plugin-state/manager/structure/selection.ts';
+import { PluginStateObject as SO } from '../mol-plugin-state/objects.ts';
+import { State, type StateTransform, type StateTransformer } from '../mol-state.ts';
+import { UUID } from '../mol-util.ts';
+import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import { PluginBehavior } from './behavior.ts';
+import { PluginCommands } from './commands.ts';
+import { PluginConfig } from './config.ts';
+import type { PluginContext } from './context.ts';
+import { AnimateStateSnapshotTransition } from '../mol-plugin-state/animation/built-in/state-snapshots.ts';
+import { Scheduler } from '../mol-task.ts';
+import { memoizeLatest } from '../mol-util/memoize.ts';
 
 export { PluginState };
 

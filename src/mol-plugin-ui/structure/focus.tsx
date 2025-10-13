@@ -4,20 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { OrderedSet, SortedArray } from '../../mol-data/int';
-import { Structure, StructureElement, StructureProperties, Unit } from '../../mol-model/structure';
-import { UnitIndex } from '../../mol-model/structure/structure/element/element';
-import { FocusEntry } from '../../mol-plugin-state/manager/structure/focus';
-import { StructureRef } from '../../mol-plugin-state/manager/structure/hierarchy-state';
-import { FocusLoci } from '../../mol-plugin/behavior/dynamic/representation';
-import { StateTransform } from '../../mol-state';
-import { lociLabel } from '../../mol-theme/label';
-import { Binding } from '../../mol-util/binding';
-import { memoizeLatest } from '../../mol-util/memoize';
-import { PluginUIComponent } from '../base';
-import { ActionMenu } from '../controls/action-menu';
-import { Button, IconButton, ToggleButton } from '../controls/common';
-import { CancelOutlinedSvg, CenterFocusStrongSvg } from '../controls/icons';
+import { OrderedSet, SortedArray } from '../../mol-data/int.ts';
+import { type Structure, StructureElement, StructureProperties, Unit } from '../../mol-model/structure.ts';
+import type { UnitIndex } from '../../mol-model/structure/structure/element/element.ts';
+import type { FocusEntry } from '../../mol-plugin-state/manager/structure/focus.ts';
+import type { StructureRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
+import { FocusLoci } from '../../mol-plugin/behavior/dynamic/representation.ts';
+import type { StateTransform } from '../../mol-state.ts';
+import { lociLabel } from '../../mol-theme/label.ts';
+import { Binding } from '../../mol-util/binding.ts';
+import { memoizeLatest } from '../../mol-util/memoize.ts';
+import { PluginUIComponent } from '../base.ts';
+import { ActionMenu } from '../controls/action-menu.ts';
+import { Button, IconButton, ToggleButton } from '../controls/common.ts';
+import { CancelOutlinedSvg, CenterFocusStrongSvg } from '../controls/icons.ts';
 
 interface StructureFocusControlsState {
     isBusy: boolean

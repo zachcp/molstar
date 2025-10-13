@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginCommands } from '../../../mol-plugin/commands';
-import { StateSelection } from '../../../mol-state';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { PluginStateObject } from '../../objects';
-import { StateTransforms } from '../../transforms';
-import { PluginStateAnimation } from '../model';
+import { PluginCommands } from '../../../mol-plugin/commands.ts';
+import { StateSelection } from '../../../mol-state.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { PluginStateObject } from '../../objects.ts';
+import { StateTransforms } from '../../transforms.ts';
+import { PluginStateAnimation } from '../model.ts';
 
 export const AnimateModelIndex = PluginStateAnimation.create({
     name: 'built-in.animate-model-index',

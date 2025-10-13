@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Structure } from '../../mol-model/structure';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { State, StateObject, StateObjectCell, StateSelection } from '../../mol-state';
-import { PluginContext } from '../context';
-import { RxEventHelper } from '../../mol-util/rx-event-helper';
+import type { Structure } from '../../mol-model/structure.ts';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { type State, type StateObject, type StateObjectCell, StateSelection } from '../../mol-state.ts';
+import type { PluginContext } from '../context.ts';
+import { RxEventHelper } from '../../mol-util/rx-event-helper.ts';
 
 export { SubstructureParentHelper };
 

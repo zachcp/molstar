@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { SdfFileCompound } from '../../mol-io/reader/sdf/parser';
-import { Trajectory } from '../../mol-model/structure';
-import { Task } from '../../mol-task';
-import { ModelFormat } from '../format';
-import { getMolModels } from './mol';
+import type { SdfFileCompound } from '../../mol-io/reader/sdf/parser.ts';
+import type { Trajectory } from '../../mol-model/structure.ts';
+import { Task } from '../../mol-task.ts';
+import type { ModelFormat } from '../format.ts';
+import { getMolModels } from './mol.ts';
 
 export { SdfFormat };
 

@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { ComplexRepresentation, StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation';
-import { ThemeRegistryContext } from '../../../mol-theme/theme';
-import { Structure } from '../../../mol-model/structure';
-import { PlaneImageParams, PlaneImageVisual } from '../visual/plane-image';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { ComplexRepresentation, type StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../representation.ts';
+import { Representation, type RepresentationParamsGetter, type RepresentationContext } from '../../representation.ts';
+import type { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import type { Structure } from '../../../mol-model/structure.ts';
+import { PlaneImageParams, PlaneImageVisual } from '../visual/plane-image.ts';
 
 const PlaneVisuals = {
     'plane-image': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, PlaneImageParams>) => ComplexRepresentation('Plane image', ctx, getParams, PlaneImageVisual),

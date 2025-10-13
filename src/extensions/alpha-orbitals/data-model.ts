@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra';
-import { Grid } from '../../mol-model/volume';
-import { SphericalBasisOrder } from './spherical-functions';
-import { Box3D, RegularGrid3d } from '../../mol-math/geometry';
-import { arrayMin, arrayMax, arrayRms, arrayMean } from '../../mol-util/array';
-import { ModelFormat } from '../../mol-model-formats/format';
+import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra.ts';
+import type { Grid } from '../../mol-model/volume.ts';
+import type { SphericalBasisOrder } from './spherical-functions.ts';
+import { Box3D, type RegularGrid3d } from '../../mol-math/geometry.ts';
+import { arrayMin, arrayMax, arrayRms, arrayMean } from '../../mol-util/array.ts';
+import type { ModelFormat } from '../../mol-model-formats/format.ts';
 
 // Note: generally contracted gaussians are currently not supported.
 export interface SphericalElectronShell {

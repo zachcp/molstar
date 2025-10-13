@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Loci } from '../mol-model/loci';
-import { Structure, StructureElement } from '../mol-model/structure';
-import { Script } from '../mol-script/script';
-import { Material } from '../mol-util/material';
-import { shallowEqual } from '../mol-util/object';
+import { Loci } from '../mol-model/loci.ts';
+import { type Structure, StructureElement } from '../mol-model/structure.ts';
+import { Script } from '../mol-script/script.ts';
+import { Material } from '../mol-util/material.ts';
+import { shallowEqual } from '../mol-util/object.ts';
 
 export { Substance };
 

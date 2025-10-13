@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PrincipalAxes } from '../../../../mol-math/linear-algebra/matrix/principal-axes';
-import { Unit } from '../unit';
-import { Vec3 } from '../../../../mol-math/linear-algebra';
+import { PrincipalAxes } from '../../../../mol-math/linear-algebra/matrix/principal-axes.ts';
+import type { Unit } from '../unit.ts';
+import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
 
 const tempPos = Vec3();
 export function toPositionsArray(unit: Unit) {

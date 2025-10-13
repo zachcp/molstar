@@ -6,8 +6,8 @@
 
 // adapted from three.js, MIT License Copyright 2010-2021 three.js authors
 
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { Primitive } from './primitive';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import type { Primitive } from './primitive.ts';
 
 export const DefaultTorusProps = {
     radius: 1,

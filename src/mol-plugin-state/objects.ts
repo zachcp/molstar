@@ -5,28 +5,28 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Ccp4File } from '../mol-io/reader/ccp4/schema';
-import { CifFile } from '../mol-io/reader/cif';
-import { DcdFile } from '../mol-io/reader/dcd/parser';
-import { Dsn6File } from '../mol-io/reader/dsn6/schema';
-import { PlyFile } from '../mol-io/reader/ply/schema';
-import { PsfFile } from '../mol-io/reader/psf/parser';
-import { ShapeProvider } from '../mol-model/shape/provider';
-import { Coordinates as _Coordinates, Model as _Model, Structure as _Structure, Trajectory as _Trajectory, StructureElement, Topology as _Topology } from '../mol-model/structure';
-import { Volume as _Volume } from '../mol-model/volume';
-import { PluginBehavior } from '../mol-plugin/behavior/behavior';
-import { Representation } from '../mol-repr/representation';
-import { ShapeRepresentation } from '../mol-repr/shape/representation';
-import { StructureRepresentation, StructureRepresentationState } from '../mol-repr/structure/representation';
-import { VolumeRepresentation } from '../mol-repr/volume/representation';
-import { StateObject, StateTransformer } from '../mol-state';
-import { CubeFile } from '../mol-io/reader/cube/parser';
-import { DxFile } from '../mol-io/reader/dx/parser';
-import { Color } from '../mol-util/color/color';
-import { Asset } from '../mol-util/assets';
-import { PrmtopFile } from '../mol-io/reader/prmtop/parser';
-import { TopFile } from '../mol-io/reader/top/parser';
-import { StringLike } from '../mol-io/common/string-like';
+import type { Ccp4File } from '../mol-io/reader/ccp4/schema.ts';
+import type { CifFile } from '../mol-io/reader/cif.ts';
+import type { DcdFile } from '../mol-io/reader/dcd/parser.ts';
+import type { Dsn6File } from '../mol-io/reader/dsn6/schema.ts';
+import type { PlyFile } from '../mol-io/reader/ply/schema.ts';
+import type { PsfFile } from '../mol-io/reader/psf/parser.ts';
+import type { ShapeProvider } from '../mol-model/shape/provider.ts';
+import type { Coordinates as _Coordinates, Model as _Model, Structure as _Structure, Trajectory as _Trajectory, StructureElement, Topology as _Topology } from '../mol-model/structure.ts';
+import type { Volume as _Volume } from '../mol-model/volume.ts';
+import type { PluginBehavior } from '../mol-plugin/behavior/behavior.ts';
+import type { Representation } from '../mol-repr/representation.ts';
+import type { ShapeRepresentation } from '../mol-repr/shape/representation.ts';
+import type { StructureRepresentation, StructureRepresentationState } from '../mol-repr/structure/representation.ts';
+import type { VolumeRepresentation } from '../mol-repr/volume/representation.ts';
+import { StateObject, StateTransformer } from '../mol-state.ts';
+import type { CubeFile } from '../mol-io/reader/cube/parser.ts';
+import type { DxFile } from '../mol-io/reader/dx/parser.ts';
+import type { Color } from '../mol-util/color/color.ts';
+import type { Asset } from '../mol-util/assets.ts';
+import type { PrmtopFile } from '../mol-io/reader/prmtop/parser.ts';
+import type { TopFile } from '../mol-io/reader/top/parser.ts';
+import type { StringLike } from '../mol-io/common/string-like.ts';
 
 
 export type TypeClass = 'root' | 'data' | 'prop'

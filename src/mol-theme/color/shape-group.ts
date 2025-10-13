@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { ColorTheme } from '../color';
-import { Color } from '../../mol-util/color';
-import { Location } from '../../mol-model/location';
-import { ShapeGroup } from '../../mol-model/shape';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../../mol-theme/theme';
-import { ColorThemeCategory } from './categories';
+import type { ColorTheme } from '../color.ts';
+import { Color } from '../../mol-util/color.ts';
+import type { Location } from '../../mol-model/location.ts';
+import { ShapeGroup } from '../../mol-model/shape.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { ThemeDataContext } from '../../mol-theme/theme.ts';
+import { ColorThemeCategory } from './categories.ts';
 
 const DefaultColor = Color(0xCCCCCC);
 const Description = 'Assigns colors as defined by the shape object.';

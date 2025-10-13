@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Table, Column } from '../../../mol-data/db';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
-import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif';
-import { CifWriter } from '../../../mol-io/writer/cif';
-import { FormatPropertyProvider } from '../common/property';
-import { MmcifFormat } from '../mmcif';
+import type { Table, Column } from '../../../mol-data/db.ts';
+import type { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
+import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
+import { CifWriter } from '../../../mol-io/writer/cif.ts';
+import { FormatPropertyProvider } from '../common/property.ts';
+import { MmcifFormat } from '../mmcif.ts';
 
 export { AtomSiteAnisotrop };
 

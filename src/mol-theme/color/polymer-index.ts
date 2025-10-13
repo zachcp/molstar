@@ -4,16 +4,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color } from '../../mol-util/color';
-import { Location } from '../../mol-model/location';
-import { StructureElement, Bond, Structure } from '../../mol-model/structure';
-import type { ColorTheme, LocationColor } from '../color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../../mol-theme/theme';
-import { TableLegend, ScaleLegend } from '../../mol-util/legend';
-import { getPaletteParams, getPalette } from '../../mol-util/color/palette';
-import { ColorLists, getColorListFromName } from '../../mol-util/color/lists';
-import { ColorThemeCategory } from './categories';
+import { Color } from '../../mol-util/color.ts';
+import type { Location } from '../../mol-model/location.ts';
+import { StructureElement, Bond, type Structure } from '../../mol-model/structure.ts';
+import type { ColorTheme, LocationColor } from '../color.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { ThemeDataContext } from '../../mol-theme/theme.ts';
+import type { TableLegend, ScaleLegend } from '../../mol-util/legend.ts';
+import { getPaletteParams, getPalette } from '../../mol-util/color/palette.ts';
+import { ColorLists, getColorListFromName } from '../../mol-util/color/lists.ts';
+import { ColorThemeCategory } from './categories.ts';
 
 const DefaultList = 'dark-2';
 const DefaultColor = Color(0xCCCCCC);

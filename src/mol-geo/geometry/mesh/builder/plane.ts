@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra';
-import { SegmentedPlane } from '../../../primitive/plane';
-import { MeshBuilder } from '../mesh-builder';
+import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra.ts';
+import { SegmentedPlane } from '../../../primitive/plane.ts';
+import { MeshBuilder } from '../mesh-builder.ts';
 
 const tmpPlaneMat = Mat4.identity();
 const tmpVec = Vec3();

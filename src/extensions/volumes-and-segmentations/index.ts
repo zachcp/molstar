@@ -4,22 +4,22 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { PluginStateObject as SO } from '../../mol-plugin-state/objects';
-import { PluginBehavior } from '../../mol-plugin/behavior';
-import { PluginConfigItem } from '../../mol-plugin/config';
-import { PluginContext } from '../../mol-plugin/context';
-import { StateAction } from '../../mol-state';
-import { Task } from '../../mol-task';
-import { DEFAULT_VOLSEG_SERVER, VolumeApiV2 } from './volseg-api/api';
+import { PluginStateObject as SO } from '../../mol-plugin-state/objects.ts';
+import { PluginBehavior } from '../../mol-plugin/behavior.ts';
+import { PluginConfigItem } from '../../mol-plugin/config.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { StateAction } from '../../mol-state.ts';
+import { Task } from '../../mol-task.ts';
+import { DEFAULT_VOLSEG_SERVER, VolumeApiV2 } from './volseg-api/api.ts';
 
-import { VolsegEntryData, VolsegEntryParamValues, createLoadVolsegParams } from './entry-root';
-import { VolsegGlobalState } from './global-state';
-import { createEntryId } from './helpers';
-import { VolsegEntryFromRoot, VolsegGlobalStateFromRoot, VolsegStateFromEntry } from './transformers';
-import { VolsegUI } from './ui';
+import { VolsegEntryData, VolsegEntryParamValues, createLoadVolsegParams } from './entry-root.ts';
+import { VolsegGlobalState } from './global-state.ts';
+import { createEntryId } from './helpers.ts';
+import { VolsegEntryFromRoot, VolsegGlobalStateFromRoot, VolsegStateFromEntry } from './transformers.ts';
+import { VolsegUI } from './ui.ts';
 
 
-const DEBUGGING = typeof window !== 'undefined' ? window?.location?.hostname === 'localhost' : false;
+const DEBUGGING = typeof window !== 'undefined' ? globalThis?.location?.hostname === 'localhost' : false;
 
 export const VolsegVolumeServerConfig = {
     // DefaultServer: new PluginConfigItem('volseg-volume-server', DEFAULT_VOLUME_SERVER_V2),

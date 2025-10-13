@@ -4,19 +4,19 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ShaderCode, DefineValues, addShaderDefines } from '../shader-code';
-import { WebGLState } from './state';
-import { WebGLExtensions } from './extensions';
-import { getUniformSetters, UniformsList, getUniformType, UniformSetters, isArrayUniform, UniformType } from './uniform';
-import { AttributeBuffers, getAttribType } from './buffer';
-import { TextureId, Textures } from './texture';
-import { idFactory } from '../../mol-util/id-factory';
-import { RenderableSchema } from '../renderable/schema';
-import { isDebugMode } from '../../mol-util/debug';
-import { GLRenderingContext, isWebGL2 } from './compat';
-import { ShaderType, Shader } from './shader';
-import { WebGLParameters } from './context';
-import { ProgramVariant } from './render-item';
+import { type ShaderCode, type DefineValues, addShaderDefines } from '../shader-code.ts';
+import type { WebGLState } from './state.ts';
+import type { WebGLExtensions } from './extensions.ts';
+import { getUniformSetters, type UniformsList, getUniformType, type UniformSetters, isArrayUniform, type UniformType } from './uniform.ts';
+import { type AttributeBuffers, getAttribType } from './buffer.ts';
+import type { TextureId, Textures } from './texture.ts';
+import { idFactory } from '../../mol-util/id-factory.ts';
+import type { RenderableSchema } from '../renderable/schema.ts';
+import { isDebugMode } from '../../mol-util/debug.ts';
+import { type GLRenderingContext, isWebGL2 } from './compat.ts';
+import type { ShaderType, Shader } from './shader.ts';
+import type { WebGLParameters } from './context.ts';
+import type { ProgramVariant } from './render-item.ts';
 
 const getNextProgramId = idFactory();
 

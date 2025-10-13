@@ -4,26 +4,26 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mat4 } from '../../../../mol-math/linear-algebra/3d/mat4';
-import { StateBuilder, StateObjectSelector } from '../../../../mol-state';
-import { PluginContext } from '../../../../mol-plugin/context';
-import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/representation/spacefill';
-import { Color } from '../../../../mol-util/color';
-import { utf8Read } from '../../../../mol-io/common/utf8';
-import { Mat3, Quat, Vec3 } from '../../../../mol-math/linear-algebra';
-import { GraphicsMode, MesoscaleGroup, MesoscaleState, getGraphicsModeProps, getMesoscaleGroupParams } from '../state';
-import { ColorNames } from '../../../../mol-util/color/names';
-import { ShapeRepresentation3D, StructureRepresentation3D } from '../../../../mol-plugin-state/transforms/representation';
-import { ParseCif, ParsePly, ReadFile } from '../../../../mol-plugin-state/transforms/data';
-import { ModelFromTrajectory, ShapeFromPly, TrajectoryFromGRO, TrajectoryFromMOL, TrajectoryFromMOL2, TrajectoryFromMmCif, TrajectoryFromPDB, TrajectoryFromSDF, TrajectoryFromXYZ } from '../../../../mol-plugin-state/transforms/model';
-import { Euler } from '../../../../mol-math/linear-algebra/3d/euler';
-import { Asset } from '../../../../mol-util/assets';
-import { Clip } from '../../../../mol-util/clip';
-import { StructureFromGeneric } from './model';
-import { getFileNameInfo } from '../../../../mol-util/file-info';
-import { NumberArray } from '../../../../mol-util/type-helpers';
-import { BaseGeometry } from '../../../../mol-geo/geometry/base';
-import { ParamDefinition as PD } from '../../../../mol-util/param-definition';
+import { Mat4 } from '../../../../mol-math/linear-algebra/3d/mat4.ts';
+import type { StateBuilder, StateObjectSelector } from '../../../../mol-state.ts';
+import type { PluginContext } from '../../../../mol-plugin/context.ts';
+import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/representation/spacefill.ts';
+import { Color } from '../../../../mol-util/color.ts';
+import { utf8Read } from '../../../../mol-io/common/utf8.ts';
+import { Mat3, Quat, Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { type GraphicsMode, MesoscaleGroup, MesoscaleState, getGraphicsModeProps, getMesoscaleGroupParams } from '../state.ts';
+import { ColorNames } from '../../../../mol-util/color/names.ts';
+import { ShapeRepresentation3D, StructureRepresentation3D } from '../../../../mol-plugin-state/transforms/representation.ts';
+import { ParseCif, ParsePly, ReadFile } from '../../../../mol-plugin-state/transforms/data.ts';
+import { ModelFromTrajectory, ShapeFromPly, TrajectoryFromGRO, TrajectoryFromMOL, TrajectoryFromMOL2, TrajectoryFromMmCif, TrajectoryFromPDB, TrajectoryFromSDF, TrajectoryFromXYZ } from '../../../../mol-plugin-state/transforms/model.ts';
+import { Euler } from '../../../../mol-math/linear-algebra/3d/euler.ts';
+import { Asset } from '../../../../mol-util/assets.ts';
+import type { Clip } from '../../../../mol-util/clip.ts';
+import { StructureFromGeneric } from './model.ts';
+import { getFileNameInfo } from '../../../../mol-util/file-info.ts';
+import type { NumberArray } from '../../../../mol-util/type-helpers.ts';
+import { BaseGeometry } from '../../../../mol-geo/geometry/base.ts';
+import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
 
 function getSpacefillParams(color: Color, sizeFactor: number, graphics: GraphicsMode, clipVariant: Clip.Variant) {
     const gmp = getGraphicsModeProps(graphics === 'custom' ? 'quality' : graphics);

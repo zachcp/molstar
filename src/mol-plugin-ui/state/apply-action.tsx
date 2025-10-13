@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginContext } from '../../mol-plugin/context';
-import { State, StateTransform, StateAction } from '../../mol-state';
-import { memoizeLatest } from '../../mol-util/memoize';
-import { StateTransformParameters, TransformControlBase } from './common';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import type { State, StateTransform, StateAction } from '../../mol-state.ts';
+import { memoizeLatest } from '../../mol-util/memoize.ts';
+import { StateTransformParameters, TransformControlBase } from './common.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 export { ApplyActionControl };
 
 namespace ApplyActionControl {

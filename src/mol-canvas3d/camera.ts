@@ -5,13 +5,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mat4, Vec3, Vec4, EPSILON } from '../mol-math/linear-algebra';
-import { Viewport, cameraProject, cameraUnproject } from './camera/util';
-import { CameraTransitionManager } from './camera/transition';
+import { Mat4, Vec3, Vec4, EPSILON } from '../mol-math/linear-algebra.ts';
+import { Viewport, cameraProject, cameraUnproject } from './camera/util.ts';
+import { CameraTransitionManager } from './camera/transition.ts';
 import { BehaviorSubject } from 'rxjs';
-import { Scene } from '../mol-gl/scene';
-import { assertUnreachable } from '../mol-util/type-helpers';
-import { Ray3D } from '../mol-math/geometry/primitives/ray3d';
+import type { Scene } from '../mol-gl/scene.ts';
+import { assertUnreachable } from '../mol-util/type-helpers.ts';
+import type { Ray3D } from '../mol-math/geometry/primitives/ray3d.ts';
 
 export type { ICamera };
 

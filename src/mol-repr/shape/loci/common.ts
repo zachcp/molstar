@@ -5,9 +5,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { ColorNames } from '../../../mol-util/color/names';
-import { Text } from '../../../mol-geo/geometry/text/text';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { ColorNames } from '../../../mol-util/color/names.ts';
+import { Text } from '../../../mol-geo/geometry/text/text.ts';
 
 export const MeasurementRepresentationCommonTextParams = {
     customText: PD.Text('', { label: 'Text', description: 'Override the label with custom value.', isEssential: true }),

@@ -4,20 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginBehavior } from '../../mol-plugin/behavior/behavior';
-import { PluginConfig } from '../../mol-plugin/config';
-import { Color } from '../../mol-util/color/color';
+import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import { Color } from '../../mol-util/color/color.ts';
 
 // from https://visualsonline.cancer.gov/details.cfm?imageid=2304, public domain
-import image_cells from './images/cells.jpg';
+import image_cells from './images/cells.jpg.ts';
 
 // created with http://alexcpeterson.com/spacescape/
-import face_nebula_nx from './skyboxes/nebula/nebula_left2.jpg';
-import face_nebula_ny from './skyboxes/nebula/nebula_bottom4.jpg';
-import face_nebula_nz from './skyboxes/nebula/nebula_back6.jpg';
-import face_nebula_px from './skyboxes/nebula/nebula_right1.jpg';
-import face_nebula_py from './skyboxes/nebula/nebula_top3.jpg';
-import face_nebula_pz from './skyboxes/nebula/nebula_front5.jpg';
+import face_nebula_nx from './skyboxes/nebula/nebula_left2.jpg.ts';
+import face_nebula_ny from './skyboxes/nebula/nebula_bottom4.jpg.ts';
+import face_nebula_nz from './skyboxes/nebula/nebula_back6.jpg.ts';
+import face_nebula_px from './skyboxes/nebula/nebula_right1.jpg.ts';
+import face_nebula_py from './skyboxes/nebula/nebula_top3.jpg.ts';
+import face_nebula_pz from './skyboxes/nebula/nebula_front5.jpg.ts';
 
 export const Backgrounds = PluginBehavior.create<{ }>({
     name: 'extension-backgrounds',

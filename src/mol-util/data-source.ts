@@ -8,12 +8,12 @@
  * Adapted from LiteMol
  */
 
-import { StringLike } from '../mol-io/common/string-like';
-import { utf8Read, utf8ReadLong } from '../mol-io/common/utf8';
-import { RuntimeContext, Task } from '../mol-task';
-import { Asset, AssetManager } from './assets';
-import { RUNNING_IN_NODEJS } from './nodejs-shims';
-import { ungzip, unzip } from './zip/zip';
+import type { StringLike } from '../mol-io/common/string-like.ts';
+import { utf8Read, utf8ReadLong } from '../mol-io/common/utf8.ts';
+import { type RuntimeContext, Task } from '../mol-task.ts';
+import { Asset, type AssetManager } from './assets.ts';
+import { RUNNING_IN_NODEJS } from './nodejs-shims.ts';
+import { ungzip, unzip } from './zip/zip.ts';
 
 
 export enum DataCompressionMethod {

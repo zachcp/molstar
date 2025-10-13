@@ -5,15 +5,15 @@
  * @author Ludovic Autin <ludovic.autin@gmail.com>
  */
 
-import { PluginStateObject } from '../../../../mol-plugin-state/objects';
-import { StructureRepresentation3D } from '../../../../mol-plugin-state/transforms/representation';
-import { PluginContext } from '../../../../mol-plugin/context';
-import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/representation/spacefill';
-import { StateObjectRef, StateObjectSelector, StateBuilder } from '../../../../mol-state';
-import { Color } from '../../../../mol-util/color';
-import { ColorNames } from '../../../../mol-util/color/names';
-import { GraphicsMode, MesoscaleGroup, MesoscaleState, getDistinctBaseColors, getDistinctGroupColors, getGraphicsModeProps, getMesoscaleGroupParams } from '../state';
-import { CellpackAssembly, CellpackStructure } from './model';
+import type { PluginStateObject } from '../../../../mol-plugin-state/objects.ts';
+import { StructureRepresentation3D } from '../../../../mol-plugin-state/transforms/representation.ts';
+import type { PluginContext } from '../../../../mol-plugin/context.ts';
+import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/representation/spacefill.ts';
+import type { StateObjectRef, StateObjectSelector, StateBuilder } from '../../../../mol-state.ts';
+import type { Color } from '../../../../mol-util/color.ts';
+import { ColorNames } from '../../../../mol-util/color/names.ts';
+import { type GraphicsMode, MesoscaleGroup, MesoscaleState, getDistinctBaseColors, getDistinctGroupColors, getGraphicsModeProps, getMesoscaleGroupParams } from '../state.ts';
+import { CellpackAssembly, CellpackStructure } from './model.ts';
 
 function getSpacefillParams(color: Color, sizeFactor: number, graphics: GraphicsMode, merge?: boolean) {
     const gmp = getGraphicsModeProps(graphics === 'custom' ? 'quality' : graphics);

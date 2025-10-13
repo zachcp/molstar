@@ -6,7 +6,7 @@
  */
 
 import cluster from 'cluster';
-import { runChild } from './preprocess/parallel';
+import { runChild } from './preprocess/parallel.ts';
 
 if (cluster.isPrimary) {
     require('./preprocess/master');

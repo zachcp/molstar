@@ -6,10 +6,10 @@
  */
 
 import * as React from 'react';
-import { Observable, Subscription } from 'rxjs';
-import { PluginUIContext } from './context';
-import { Button, ColorAccent } from './controls/common';
-import { Icon, ArrowRightSvg, ArrowDropDownSvg } from './controls/icons';
+import type { Observable, Subscription } from 'rxjs';
+import type { PluginUIContext } from './context.ts';
+import { Button, type ColorAccent } from './controls/common.ts';
+import { Icon, ArrowRightSvg, ArrowDropDownSvg } from './controls/icons.ts';
 
 export const PluginReactContext = React.createContext(void 0 as any as PluginUIContext);
 

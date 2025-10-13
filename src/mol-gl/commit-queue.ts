@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { LinkedList } from '../mol-data/generic';
-import { GraphicsRenderObject } from './render-object';
+import { LinkedList } from '../mol-data/generic.ts';
+import type { GraphicsRenderObject } from './render-object.ts';
 
 type N = LinkedList.Node<GraphicsRenderObject>
 

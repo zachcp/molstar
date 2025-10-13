@@ -5,12 +5,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { OrderedSet } from '../../../../mol-data/int';
-import { Unit } from '../unit';
-import { Loci } from './loci';
-import { Location } from './location';
-import { ChainIndex } from '../../model/indexing';
-import { Structure } from '../structure';
+import { OrderedSet } from '../../../../mol-data/int.ts';
+import { Unit } from '../unit.ts';
+import { Loci } from './loci.ts';
+import { Location } from './location.ts';
+import type { ChainIndex } from '../../model/indexing.ts';
+import type { Structure } from '../structure.ts';
 
 export interface Stats {
     elementCount: number

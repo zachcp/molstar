@@ -7,12 +7,12 @@
  * Adapted from MolQL project
  */
 
-import * as P from '../../../mol-util/monadic-parser';
-import * as h from '../helper';
-import { MolScriptBuilder } from '../../../mol-script/language/builder';
+import * as P from '../../../mol-util/monadic-parser.ts';
+import * as h from '../helper.ts';
+import { MolScriptBuilder } from '../../../mol-script/language/builder.ts';
 const B = MolScriptBuilder;
-import { OperatorList } from '../types';
-import { Expression } from '../../language/expression';
+import type { OperatorList } from '../types.ts';
+import type { Expression } from '../../language/expression.ts';
 
 export const operators: OperatorList = [
     {

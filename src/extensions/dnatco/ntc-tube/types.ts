@@ -5,11 +5,11 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { NtCTubeSegmentLabel } from './behavior';
-import { DnatcoTypes } from '../types';
-import { Sphere3D } from '../../../mol-math/geometry/primitives/sphere3d';
-import { DataLocation } from '../../../mol-model/location';
-import { DataLoci } from '../../../mol-model/loci';
+import { NtCTubeSegmentLabel } from './behavior.ts';
+import type { DnatcoTypes } from '../types.ts';
+import type { Sphere3D } from '../../../mol-math/geometry/primitives/sphere3d.ts';
+import { DataLocation } from '../../../mol-model/location.ts';
+import { DataLoci } from '../../../mol-model/loci.ts';
 
 export namespace NtCTubeTypes {
     const DataTag = 'dnatco-tube-segment-data';

@@ -4,24 +4,24 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PDBeStructureQualityReport } from '../../extensions/pdbe';
-import { EmptyLoci } from '../../mol-model/loci';
-import { StructureSelection } from '../../mol-model/structure';
-import { AnimateModelIndex } from '../../mol-plugin-state/animation/built-in/model-index';
-import { BuiltInTrajectoryFormat } from '../../mol-plugin-state/formats/trajectory';
-import { createPluginUI } from '../../mol-plugin-ui';
-import { PluginUIContext } from '../../mol-plugin-ui/context';
-import { renderReact18 } from '../../mol-plugin-ui/react18';
-import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { Script } from '../../mol-script/script';
-import { Asset } from '../../mol-util/assets';
-import { Color } from '../../mol-util/color';
-import { StripedResidues } from './coloring';
-import { CustomToastMessage } from './controls';
-import { CustomColorThemeProvider } from './custom-theme';
+import { PDBeStructureQualityReport } from '../../extensions/pdbe.ts';
+import { EmptyLoci } from '../../mol-model/loci.ts';
+import { StructureSelection } from '../../mol-model/structure.ts';
+import { AnimateModelIndex } from '../../mol-plugin-state/animation/built-in/model-index.ts';
+import type { BuiltInTrajectoryFormat } from '../../mol-plugin-state/formats/trajectory.ts';
+import { createPluginUI } from '../../mol-plugin-ui.ts';
+import type { PluginUIContext } from '../../mol-plugin-ui/context.ts';
+import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
+import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { Script } from '../../mol-script/script.ts';
+import { Asset } from '../../mol-util/assets.ts';
+import { Color } from '../../mol-util/color.ts';
+import { StripedResidues } from './coloring.ts';
+import { CustomToastMessage } from './controls.ts';
+import { CustomColorThemeProvider } from './custom-theme.ts';
 import './index.html';
-import { buildStaticSuperposition, dynamicSuperpositionTest, StaticSuperpositionTestData } from './superposition';
+import { buildStaticSuperposition, dynamicSuperpositionTest, StaticSuperpositionTestData } from './superposition.ts';
 import '../../mol-plugin-ui/skin/light.scss';
 
 type LoadParams = { url: string, format?: BuiltInTrajectoryFormat, isBinary?: boolean, assemblyId?: string }

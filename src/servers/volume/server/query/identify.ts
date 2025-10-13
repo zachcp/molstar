@@ -6,10 +6,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as Coords from '../algebra/coordinate';
-import * as Box from '../algebra/box';
-import * as Data from './data-model';
-// import { FastMap } from '../utils/collections'
+import * as Coords from '../algebra/coordinate.ts';
+import * as Box from '../algebra/box.ts';
+import type * as Data from './data-model.ts';
+// import { FastMap } from '../utils/collections.ts'
 
 /** Find a list of unique blocks+offsets that overlap with the query region. */
 export function findUniqueBlocks(data: Data.DataContext, sampling: Data.Sampling, queryBox: Box.Fractional) {

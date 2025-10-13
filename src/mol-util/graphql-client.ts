@@ -6,8 +6,8 @@
  * Adapted from https://github.com/prisma/graphql-request, Copyright (c) 2017 Graphcool, MIT
  */
 
-import { RuntimeContext } from '../mol-task';
-import { AssetManager, Asset } from './assets';
+import type { RuntimeContext } from '../mol-task.ts';
+import { type AssetManager, Asset } from './assets.ts';
 
 type Variables = { [key: string]: any }
 

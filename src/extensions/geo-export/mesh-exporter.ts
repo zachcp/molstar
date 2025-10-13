@@ -5,31 +5,31 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { sort, arraySwap } from '../../mol-data/util';
-import { GraphicsRenderObject } from '../../mol-gl/render-object';
-import { MeshValues } from '../../mol-gl/renderable/mesh';
-import { LinesValues } from '../../mol-gl/renderable/lines';
-import { PointsValues } from '../../mol-gl/renderable/points';
-import { SpheresValues } from '../../mol-gl/renderable/spheres';
-import { CylindersValues } from '../../mol-gl/renderable/cylinders';
-import { TextureMeshValues } from '../../mol-gl/renderable/texture-mesh';
-import { BaseValues, SizeValues } from '../../mol-gl/renderable/schema';
-import { TextureImage } from '../../mol-gl/renderable/util';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { getTrilinearlyInterpolated } from '../../mol-geo/geometry/mesh/color-smoothing';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder';
-import { addSphere } from '../../mol-geo/geometry/mesh/builder/sphere';
-import { addCylinder } from '../../mol-geo/geometry/mesh/builder/cylinder';
-import { sizeDataFactor } from '../../mol-geo/geometry/size-data';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { RuntimeContext } from '../../mol-task';
-import { Color } from '../../mol-util/color/color';
-import { unpackRGBToInt } from '../../mol-util/number-packing';
-import { RenderObjectExporter, RenderObjectExportData } from './render-object-exporter';
-import { readAlphaTexture, readTexture } from '../../mol-gl/compute/util';
-import { assertUnreachable } from '../../mol-util/type-helpers';
-import { ValueCell } from '../../mol-util/value-cell';
+import { sort, arraySwap } from '../../mol-data/util.ts';
+import type { GraphicsRenderObject } from '../../mol-gl/render-object.ts';
+import type { MeshValues } from '../../mol-gl/renderable/mesh.ts';
+import type { LinesValues } from '../../mol-gl/renderable/lines.ts';
+import type { PointsValues } from '../../mol-gl/renderable/points.ts';
+import type { SpheresValues } from '../../mol-gl/renderable/spheres.ts';
+import type { CylindersValues } from '../../mol-gl/renderable/cylinders.ts';
+import type { TextureMeshValues } from '../../mol-gl/renderable/texture-mesh.ts';
+import type { BaseValues, SizeValues } from '../../mol-gl/renderable/schema.ts';
+import type { TextureImage } from '../../mol-gl/renderable/util.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { getTrilinearlyInterpolated } from '../../mol-geo/geometry/mesh/color-smoothing.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { addSphere } from '../../mol-geo/geometry/mesh/builder/sphere.ts';
+import { addCylinder } from '../../mol-geo/geometry/mesh/builder/cylinder.ts';
+import { sizeDataFactor } from '../../mol-geo/geometry/size-data.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import type { RuntimeContext } from '../../mol-task.ts';
+import { Color } from '../../mol-util/color/color.ts';
+import { unpackRGBToInt } from '../../mol-util/number-packing.ts';
+import type { RenderObjectExporter, RenderObjectExportData } from './render-object-exporter.ts';
+import { readAlphaTexture, readTexture } from '../../mol-gl/compute/util.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
+import type { ValueCell } from '../../mol-util/value-cell.ts';
 
 const GeoExportName = 'geo-export';
 

@@ -4,22 +4,22 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { createComputeRenderable, ComputeRenderable } from '../../renderable';
-import { WebGLContext } from '../../webgl/context';
-import { createComputeRenderItem } from '../../webgl/render-item';
-import { Values, TextureSpec, UniformSpec } from '../../renderable/schema';
-import { Texture, TextureFilter, TextureFormat, TextureKind, TextureType } from '../../../mol-gl/webgl/texture';
-import { ShaderCode } from '../../../mol-gl/shader-code';
-import { ValueCell } from '../../../mol-util';
-import { QuadSchema, QuadValues } from '../util';
-import { Vec2, Vec3 } from '../../../mol-math/linear-algebra';
-import { getHistopyramidSum } from './sum';
-import { Framebuffer } from '../../../mol-gl/webgl/framebuffer';
-import { isPowerOfTwo } from '../../../mol-math/misc';
-import { quad_vert } from '../../../mol-gl/shader/quad.vert';
-import { reduction_frag } from '../../../mol-gl/shader/histogram-pyramid/reduction.frag';
-import { isWebGL2 } from '../../webgl/compat';
-import { isTimingMode } from '../../../mol-util/debug';
+import { createComputeRenderable, type ComputeRenderable } from '../../renderable.ts';
+import type { WebGLContext } from '../../webgl/context.ts';
+import { createComputeRenderItem } from '../../webgl/render-item.ts';
+import { type Values, TextureSpec, UniformSpec } from '../../renderable/schema.ts';
+import type { Texture, TextureFilter, TextureFormat, TextureKind, TextureType } from '../../../mol-gl/webgl/texture.ts';
+import { ShaderCode } from '../../../mol-gl/shader-code.ts';
+import { ValueCell } from '../../../mol-util.ts';
+import { QuadSchema, QuadValues } from '../util.ts';
+import type { Vec2, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { getHistopyramidSum } from './sum.ts';
+import type { Framebuffer } from '../../../mol-gl/webgl/framebuffer.ts';
+import { isPowerOfTwo } from '../../../mol-math/misc.ts';
+import { quad_vert } from '../../../mol-gl/shader/quad.vert.ts';
+import { reduction_frag } from '../../../mol-gl/shader/histogram-pyramid/reduction.frag.ts';
+import { isWebGL2 } from '../../webgl/compat.ts';
+import { isTimingMode } from '../../../mol-util/debug.ts';
 
 const HistopyramidReductionSchema = {
     ...QuadSchema,

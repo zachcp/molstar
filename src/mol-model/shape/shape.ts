@@ -4,21 +4,21 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color } from '../../mol-util/color';
-import { UUID } from '../../mol-util';
-import { OrderedSet } from '../../mol-data/int';
-import { Geometry } from '../../mol-geo/geometry/geometry';
-import { Mat4, Vec3 } from '../../mol-math/linear-algebra';
-import { Sphere3D } from '../../mol-math/geometry';
-import { CentroidHelper } from '../../mol-math/geometry/centroid-helper';
-import { GroupMapping } from '../../mol-geo/util';
-import { ShapeGroupSizeTheme } from '../../mol-theme/size/shape-group';
-import { ShapeGroupColorTheme } from '../../mol-theme/color/shape-group';
-import { Theme } from '../../mol-theme/theme';
-import { TransformData, createTransform as _createTransform } from '../../mol-geo/geometry/transform-data';
-import { createRenderObject as _createRenderObject, getNextMaterialId } from '../../mol-gl/render-object';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { LocationIterator } from '../../mol-geo/util/location-iterator';
+import type { Color } from '../../mol-util/color.ts';
+import { UUID } from '../../mol-util.ts';
+import { OrderedSet } from '../../mol-data/int.ts';
+import { Geometry } from '../../mol-geo/geometry/geometry.ts';
+import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { Sphere3D } from '../../mol-math/geometry.ts';
+import { CentroidHelper } from '../../mol-math/geometry/centroid-helper.ts';
+import type { GroupMapping } from '../../mol-geo/util.ts';
+import { ShapeGroupSizeTheme } from '../../mol-theme/size/shape-group.ts';
+import { ShapeGroupColorTheme } from '../../mol-theme/color/shape-group.ts';
+import type { Theme } from '../../mol-theme/theme.ts';
+import { type TransformData, createTransform as _createTransform } from '../../mol-geo/geometry/transform-data.ts';
+import { createRenderObject as _createRenderObject, getNextMaterialId } from '../../mol-gl/render-object.ts';
+import type { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { LocationIterator } from '../../mol-geo/util/location-iterator.ts';
 
 export interface Shape<G extends Geometry = Geometry> {
     /** A uuid to identify a shape object */

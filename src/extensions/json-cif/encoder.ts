@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column } from '../../mol-data/db';
-import { Category, Encoder } from '../../mol-io/writer/cif/encoder';
-import { BinaryEncodingProvider } from '../../mol-io/writer/cif/encoder/binary';
-import { getCategoryInstanceData, getIncludedFields } from '../../mol-io/writer/cif/encoder/util';
-import { Writer } from '../../mol-io/writer/writer';
-import { JSONCifCategory, JSONCifDataBlock, JSONCifFile, JSONCifVERSION } from './model';
+import { Column } from '../../mol-data/db.ts';
+import { Category, type Encoder } from '../../mol-io/writer/cif/encoder.ts';
+import type { BinaryEncodingProvider } from '../../mol-io/writer/cif/encoder/binary.ts';
+import { getCategoryInstanceData, getIncludedFields } from '../../mol-io/writer/cif/encoder/util.ts';
+import type { Writer } from '../../mol-io/writer/writer.ts';
+import { type JSONCifCategory, type JSONCifDataBlock, type JSONCifFile, JSONCifVERSION } from './model.ts';
 
 export class JSONCifEncoder implements Encoder<string> {
     private data: JSONCifFile;

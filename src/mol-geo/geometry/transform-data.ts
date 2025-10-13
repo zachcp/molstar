@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ValueCell } from '../../mol-util';
-import { Mat4, Mat3 } from '../../mol-math/linear-algebra';
-import { fillSerial } from '../../mol-util/array';
-import { Sphere3D } from '../../mol-math/geometry';
-import { calcInstanceGrid, createEmptyInstanceGrid, InstanceGrid } from '../../mol-math/geometry/instance-grid';
+import { ValueCell } from '../../mol-util.ts';
+import { Mat4, Mat3 } from '../../mol-math/linear-algebra.ts';
+import { fillSerial } from '../../mol-util/array.ts';
+import type { Sphere3D } from '../../mol-math/geometry.ts';
+import { calcInstanceGrid, createEmptyInstanceGrid, type InstanceGrid } from '../../mol-math/geometry/instance-grid.ts';
 
 export type TransformData = {
     /**

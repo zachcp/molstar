@@ -5,12 +5,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column, Table } from '../../../../../mol-data/db';
-import { Segmentation } from '../../../../../mol-data/int';
-import { mmCIF_Schema as mmCIF } from '../../../../../mol-io/reader/cif/schema/mmcif';
-import { ElementSymbol, MoleculeType, PolymerType } from '../../types';
-import { ChainIndex, EntityIndex, ResidueIndex, ElementIndex } from '../../indexing';
-import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges';
+import { Column, type Table } from '../../../../../mol-data/db.ts';
+import type { Segmentation } from '../../../../../mol-data/int.ts';
+import { mmCIF_Schema as mmCIF } from '../../../../../mol-io/reader/cif/schema/mmcif.ts';
+import type { ElementSymbol, MoleculeType, PolymerType } from '../../types.ts';
+import type { ChainIndex, EntityIndex, ResidueIndex, ElementIndex } from '../../indexing.ts';
+import type { SortedRanges } from '../../../../../mol-data/int/sorted-ranges.ts';
 
 export const AtomsSchema = {
     /**

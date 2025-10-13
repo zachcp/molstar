@@ -6,10 +6,11 @@
 
 import * as path from 'path';
 import cluster from 'cluster';
-import { now } from '../../../mol-util/now';
-import { PerformanceMonitor } from '../../../mol-util/performance-monitor';
-import { preprocessFile } from './preprocess';
-import { createModelPropertiesProvider } from '../property-provider';
+import { now } from '../../../mol-util/now.ts';
+import { PerformanceMonitor } from '../../../mol-util/performance-monitor.ts';
+import { preprocessFile } from './preprocess.ts';
+import { createModelPropertiesProvider } from '../property-provider.ts';
+import process from "node:process";
 
 type PreprocessConfig = import('./master').PreprocessConfig
 

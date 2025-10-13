@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ReaderResult as Result } from '../result';
-import { Task, RuntimeContext } from '../../../mol-task';
-import { PlyFile, PlyType, PlyElement } from './schema';
-import { Tokenizer, TokenBuilder, Tokens } from '../common/text/tokenizer';
-import { Column } from '../../../mol-data/db';
-import { TokenColumn } from '../common/text/column/token';
-import { StringLike } from '../../common/string-like';
+import { ReaderResult as Result } from '../result.ts';
+import { Task, type RuntimeContext } from '../../../mol-task.ts';
+import { PlyFile, PlyType, type PlyElement } from './schema.ts';
+import { Tokenizer, TokenBuilder, type Tokens } from '../common/text/tokenizer.ts';
+import { Column } from '../../../mol-data/db.ts';
+import { TokenColumn } from '../common/text/column/token.ts';
+import type { StringLike } from '../../common/string-like.ts';
 
 
 // TODO add support for binary ply files

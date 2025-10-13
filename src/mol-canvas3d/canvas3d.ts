@@ -7,52 +7,54 @@
  * @author Herman Bergwerf <post@hbergwerf.nl>
  */
 
-import { BehaviorSubject, Subject, Subscription, debounceTime, merge } from 'rxjs';
-import { now } from '../mol-util/now';
-import { Vec3, Vec2 } from '../mol-math/linear-algebra';
-import { InputObserver, ModifiersKeys, ButtonsType } from '../mol-util/input/input-observer';
-import { Renderer, RendererStats, RendererParams } from '../mol-gl/renderer';
-import { GraphicsRenderObject } from '../mol-gl/render-object';
-import { DefaultTrackballControlsAttribs, TrackballControls, TrackballControlsParams } from './controls/trackball';
-import { Viewport } from './camera/util';
-import { createContext, WebGLContext, getGLContext } from '../mol-gl/webgl/context';
-import { Representation } from '../mol-repr/representation';
-import { Scene } from '../mol-gl/scene';
-import { PickingId } from '../mol-geo/geometry/picking';
-import { MarkerAction } from '../mol-util/marker-action';
-import { Loci, EmptyLoci, isEmptyLoci } from '../mol-model/loci';
-import { Camera } from './camera';
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { DebugHelperParams } from './helper/bounding-sphere-helper';
-import { SetUtils } from '../mol-util/set';
-import { Canvas3dInteractionHelper, Canvas3dInteractionHelperParams } from './helper/interaction-events';
-import { PostprocessingParams } from './passes/postprocessing';
-import { MultiSampleHelper, MultiSampleParams, MultiSamplePass } from './passes/multi-sample';
-import { AsyncPickData, DefaultPickOptions, PickData } from './passes/pick';
-import { PickHelper } from './helper/pick-helper';
-import { ImagePass, ImageProps } from './passes/image';
-import { Sphere3D } from '../mol-math/geometry';
-import { addConsoleStatsProvider, isDebugMode, isTimingMode, removeConsoleStatsProvider } from '../mol-util/debug';
-import { CameraHelperParams } from './helper/camera-helper';
-import { HandleHelperParams } from './helper/handle-helper';
-import { StereoCamera, StereoCameraParams } from './camera/stereo';
-import { Helper } from './helper/helper';
-import { Passes } from './passes/passes';
-import { shallowEqual } from '../mol-util';
-import { MarkingParams } from './passes/marking';
-import { degToRad, radToDeg } from '../mol-math/misc';
-import { AssetManager } from '../mol-util/assets';
-import { deepClone } from '../mol-util/object';
-import { HiZParams, HiZPass } from './passes/hi-z';
-import { IlluminationParams } from './passes/illumination';
-import { isMobileBrowser } from '../mol-util/browser';
-import { PointerHelperParams } from './helper/pointer-helper';
-import { DefaultXRManagerAttribs, XRManager, XRManagerParams } from './helper/xr-manager';
-import { Ray3D } from '../mol-math/geometry/primitives/ray3d';
-import { RayHelper } from './helper/ray-helper';
-import { produce } from '../mol-util/produce';
-import { ShaderManager } from './helper/shader-manager';
-import { toFixed } from '../mol-util/number';
+import { BehaviorSubject, Subject, type Subscription, debounceTime, merge } from 'rxjs';
+import { now } from '../mol-util/now.ts';
+import { Vec3, Vec2 } from '../mol-math/linear-algebra.ts';
+import { InputObserver, type ModifiersKeys, type ButtonsType } from '../mol-util/input/input-observer.ts';
+import { Renderer, type RendererStats, RendererParams } from '../mol-gl/renderer.ts';
+import type { GraphicsRenderObject } from '../mol-gl/render-object.ts';
+import { DefaultTrackballControlsAttribs, TrackballControls, TrackballControlsParams } from './controls/trackball.ts';
+import { Viewport } from './camera/util.ts';
+import { createContext, type WebGLContext, getGLContext } from '../mol-gl/webgl/context.ts';
+import { Representation } from '../mol-repr/representation.ts';
+import { Scene } from '../mol-gl/scene.ts';
+import type { PickingId } from '../mol-geo/geometry/picking.ts';
+import type { MarkerAction } from '../mol-util/marker-action.ts';
+import { Loci, EmptyLoci, isEmptyLoci } from '../mol-model/loci.ts';
+import { Camera } from './camera.ts';
+import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import { DebugHelperParams } from './helper/bounding-sphere-helper.ts';
+import { SetUtils } from '../mol-util/set.ts';
+import { Canvas3dInteractionHelper, Canvas3dInteractionHelperParams } from './helper/interaction-events.ts';
+import { PostprocessingParams } from './passes/postprocessing.ts';
+import { MultiSampleHelper, MultiSampleParams, MultiSamplePass } from './passes/multi-sample.ts';
+import { type AsyncPickData, DefaultPickOptions, type PickData } from './passes/pick.ts';
+import { PickHelper } from './helper/pick-helper.ts';
+import { ImagePass, type ImageProps } from './passes/image.ts';
+import { Sphere3D } from '../mol-math/geometry.ts';
+import { addConsoleStatsProvider, isDebugMode, isTimingMode, removeConsoleStatsProvider } from '../mol-util/debug.ts';
+import { CameraHelperParams } from './helper/camera-helper.ts';
+import { HandleHelperParams } from './helper/handle-helper.ts';
+import { StereoCamera, StereoCameraParams } from './camera/stereo.ts';
+import { Helper } from './helper/helper.ts';
+import { Passes } from './passes/passes.ts';
+import { shallowEqual } from '../mol-util.ts';
+import { MarkingParams } from './passes/marking.ts';
+import { degToRad, radToDeg } from '../mol-math/misc.ts';
+import type { AssetManager } from '../mol-util/assets.ts';
+import { deepClone } from '../mol-util/object.ts';
+import { HiZParams, HiZPass } from './passes/hi-z.ts';
+import { IlluminationParams } from './passes/illumination.ts';
+import { isMobileBrowser } from '../mol-util/browser.ts';
+import { PointerHelperParams } from './helper/pointer-helper.ts';
+import { DefaultXRManagerAttribs, XRManager, XRManagerParams } from './helper/xr-manager.ts';
+import type { Ray3D } from '../mol-math/geometry/primitives/ray3d.ts';
+import { RayHelper } from './helper/ray-helper.ts';
+import { produce } from '../mol-util/produce.ts';
+import { ShaderManager } from './helper/shader-manager.ts';
+import { toFixed } from '../mol-util/number.ts';
+import { setImmediate } from "node:timers";
+import { clearImmediate } from "node:timers";
 
 export const CameraFogParams = {
     intensity: PD.Numeric(15, { min: 1, max: 100, step: 1 }),
@@ -187,7 +189,7 @@ namespace Canvas3DContext {
         if (gl === null) throw new Error('Could not create a WebGL rendering context');
 
         const getPixelScale = () => {
-            const scaled = (p.pixelScale / (typeof window !== 'undefined' ? (window?.devicePixelRatio || 1) : 1));
+            const scaled = (p.pixelScale / (typeof window !== 'undefined' ? (globalThis?.devicePixelRatio || 1) : 1));
             if (p.resolutionMode === 'auto') {
                 return isMobileBrowser() ? scaled : p.pixelScale;
             }
@@ -395,10 +397,10 @@ interface Canvas3D {
 }
 
 const requestAnimationFrame = typeof window !== 'undefined'
-    ? window.requestAnimationFrame
+    ? globalThis.requestAnimationFrame
     : (f: (time: number) => void) => setImmediate(() => f(Date.now())) as unknown as number;
 const cancelAnimationFrame = typeof window !== 'undefined'
-    ? window.cancelAnimationFrame
+    ? globalThis.cancelAnimationFrame
     : (handle: number) => clearImmediate(handle as unknown as NodeJS.Immediate);
 
 namespace Canvas3D {

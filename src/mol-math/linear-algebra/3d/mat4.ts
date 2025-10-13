@@ -17,13 +17,13 @@
  * furnished to do so, subject to the following conditions:
  */
 
-import { EPSILON, equalEps } from './common';
-import { Vec3 } from './vec3';
-import { Quat } from './quat';
-import { degToRad } from '../../misc';
-import { NumberArray } from '../../../mol-util/type-helpers';
-import { Mat3 } from './mat3';
-import { Euler } from './euler';
+import { EPSILON, equalEps } from './common.ts';
+import { Vec3 } from './vec3.ts';
+import { Quat } from './quat.ts';
+import { degToRad } from '../../misc.ts';
+import type { NumberArray } from '../../../mol-util/type-helpers.ts';
+import type { Mat3 } from './mat3.ts';
+import type { Euler } from './euler.ts';
 
 interface Mat4 extends Array<number> { [d: number]: number, '@type': 'mat4', length: 16 }
 interface ReadonlyMat4 extends Array<number> { readonly [d: number]: number, '@type': 'mat4', length: 16 }

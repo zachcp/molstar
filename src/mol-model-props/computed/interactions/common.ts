@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { IntAdjacencyGraph } from '../../../mol-math/graph';
-import { InterUnitGraph } from '../../../mol-math/graph/inter-unit-graph';
-import { Unit } from '../../../mol-model/structure';
-import { AssignableArrayLike } from '../../../mol-util/type-helpers';
-import { Features } from './features';
-import { StructureElement } from '../../../mol-model/structure/structure';
-import { IntMap } from '../../../mol-data/int';
+import type { IntAdjacencyGraph } from '../../../mol-math/graph.ts';
+import { InterUnitGraph } from '../../../mol-math/graph/inter-unit-graph.ts';
+import type { Unit } from '../../../mol-model/structure.ts';
+import type { AssignableArrayLike } from '../../../mol-util/type-helpers.ts';
+import type { Features } from './features.ts';
+import type { StructureElement } from '../../../mol-model/structure/structure.ts';
+import type { IntMap } from '../../../mol-data/int.ts';
 
 export { InteractionsIntraContacts };
 interface InteractionsIntraContacts extends IntAdjacencyGraph<Features.FeatureIndex, InteractionsIntraContacts.Props> {

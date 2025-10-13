@@ -6,10 +6,10 @@
  * based in part on NGL (https://github.com/arose/ngl)
  */
 
-import { Interactions } from './interactions';
-import { InteractionType, InteractionFlag, InteractionsIntraContacts, FeatureType, InteractionsInterContacts } from './common';
-import { Unit, Structure } from '../../../mol-model/structure';
-import { Features } from './features';
+import type { Interactions } from './interactions.ts';
+import { InteractionType, InteractionFlag, type InteractionsIntraContacts, FeatureType, type InteractionsInterContacts } from './common.ts';
+import { Unit, type Structure } from '../../../mol-model/structure.ts';
+import { Features } from './features.ts';
 
 interface ContactRefiner {
     isApplicable: (type: InteractionType) => boolean

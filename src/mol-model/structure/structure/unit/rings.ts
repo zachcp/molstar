@@ -5,16 +5,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { computeRings, getFingerprint, createIndex } from './rings/compute';
-import { Unit } from '../unit';
-import { StructureElement } from '../element';
-import { SortedArray } from '../../../../mol-data/int';
-import { ResidueIndex } from '../../model';
-import { ElementSymbol, BondType } from '../../model/types';
-import { Elements } from '../../model/properties/atomic/types';
-import { getPositions } from '../../util';
-import { PrincipalAxes } from '../../../../mol-math/linear-algebra/matrix/principal-axes';
-import { Vec3 } from '../../../../mol-math/linear-algebra';
+import { computeRings, getFingerprint, createIndex } from './rings/compute.ts';
+import { Unit } from '../unit.ts';
+import type { StructureElement } from '../element.ts';
+import { SortedArray } from '../../../../mol-data/int.ts';
+import type { ResidueIndex } from '../../model.ts';
+import { type ElementSymbol, BondType } from '../../model/types.ts';
+import { Elements } from '../../model/properties/atomic/types.ts';
+import { getPositions } from '../../util.ts';
+import { PrincipalAxes } from '../../../../mol-math/linear-algebra/matrix/principal-axes.ts';
+import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
 
 type UnitRing = SortedArray<StructureElement.UnitIndex>
 

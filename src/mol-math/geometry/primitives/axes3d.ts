@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4, Mat3 } from '../../linear-algebra';
+import { Vec3, type Mat4, Mat3 } from '../../linear-algebra.ts';
 
 interface Axes3D { origin: Vec3, dirA: Vec3, dirB: Vec3, dirC: Vec3 }
 

@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Loci } from '../mol-model/loci';
-import { Color } from '../mol-util/color';
-import { Structure, StructureElement } from '../mol-model/structure';
-import { Script } from '../mol-script/script';
+import { Loci } from '../mol-model/loci.ts';
+import { Color } from '../mol-util/color.ts';
+import { type Structure, StructureElement } from '../mol-model/structure.ts';
+import { Script } from '../mol-script/script.ts';
 
 export { Overpaint };
 

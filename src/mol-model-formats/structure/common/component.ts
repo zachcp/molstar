@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Table, Column } from '../../../mol-data/db';
-import { WaterNames, PolymerNames } from '../../../mol-model/structure/model/types';
-import { SetUtils } from '../../../mol-util/set';
-import { BasicSchema } from '../basic/schema';
-import { mmCIF_chemComp_schema } from '../../../mol-io/reader/cif/schema/mmcif-extras';
-import { SaccharideCompIdMap } from '../../../mol-model/structure/structure/carbohydrates/constants';
+import { Table, Column } from '../../../mol-data/db.ts';
+import { WaterNames, PolymerNames } from '../../../mol-model/structure/model/types.ts';
+import { SetUtils } from '../../../mol-util/set.ts';
+import { BasicSchema } from '../basic/schema.ts';
+import type { mmCIF_chemComp_schema } from '../../../mol-io/reader/cif/schema/mmcif-extras.ts';
+import { SaccharideCompIdMap } from '../../../mol-model/structure/structure/carbohydrates/constants.ts';
 
 type Component = Table.Row<Pick<mmCIF_chemComp_schema, 'id' | 'name' | 'type'>>
 

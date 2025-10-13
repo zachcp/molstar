@@ -2,8 +2,8 @@
  * Copyright (c) 2016 - now, David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
  */
 
-import * as Coords from './coordinate';
-import { SpacegroupCell } from '../../../../mol-math/geometry';
+import * as Coords from './coordinate.ts';
+import type { SpacegroupCell } from '../../../../mol-math/geometry.ts';
 
 export interface Box<C extends Coords.Coord<Coords.Space>> { a: C, b: C }
 

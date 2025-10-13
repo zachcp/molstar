@@ -7,23 +7,23 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { QuadSchema, QuadValues } from '../../mol-gl/compute/util';
-import { TextureSpec, Values, UniformSpec, DefineSpec } from '../../mol-gl/renderable/schema';
-import { ShaderCode } from '../../mol-gl/shader-code';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { ValueCell } from '../../mol-util';
-import { createComputeRenderItem } from '../../mol-gl/webgl/render-item';
-import { createComputeRenderable, ComputeRenderable } from '../../mol-gl/renderable';
-import { Mat4, Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { RenderTarget } from '../../mol-gl/webgl/render-target';
-import { ICamera } from '../../mol-canvas3d/camera';
-import { quad_vert } from '../../mol-gl/shader/quad.vert';
-import { isTimingMode } from '../../mol-util/debug';
-import { getTransformedLightDirection, Light } from '../../mol-gl/renderer';
-import { shadows_frag } from '../../mol-gl/shader/shadows.frag';
-import { PostprocessingProps } from './postprocessing';
+import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
+import { TextureSpec, type Values, UniformSpec, DefineSpec } from '../../mol-gl/renderable/schema.ts';
+import { ShaderCode } from '../../mol-gl/shader-code.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import type { Texture } from '../../mol-gl/webgl/texture.ts';
+import { ValueCell } from '../../mol-util.ts';
+import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
+import { createComputeRenderable, type ComputeRenderable } from '../../mol-gl/renderable.ts';
+import { Mat4, Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
+import type { ICamera } from '../../mol-canvas3d/camera.ts';
+import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
+import { isTimingMode } from '../../mol-util/debug.ts';
+import { getTransformedLightDirection, type Light } from '../../mol-gl/renderer.ts';
+import { shadows_frag } from '../../mol-gl/shader/shadows.frag.ts';
+import type { PostprocessingProps } from './postprocessing.ts';
 
 export const ShadowParams = {
     steps: PD.Numeric(1, { min: 1, max: 64, step: 1 }),

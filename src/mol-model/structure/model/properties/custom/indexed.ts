@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ResidueIndex, ChainIndex, ElementIndex, EntityIndex } from '../../indexing';
-import { Unit, Structure, StructureElement } from '../../../structure';
-import { Segmentation } from '../../../../../mol-data/int';
-import { UUID } from '../../../../../mol-util';
-import { CifWriter } from '../../../../../mol-io/writer/cif';
-import { Model } from '../../model';
+import type { ResidueIndex, ChainIndex, ElementIndex, EntityIndex } from '../../indexing.ts';
+import { Unit, type Structure, StructureElement } from '../../../structure.ts';
+import { Segmentation } from '../../../../../mol-data/int.ts';
+import { UUID } from '../../../../../mol-util.ts';
+import type { CifWriter } from '../../../../../mol-io/writer/cif.ts';
+import type { Model } from '../../model.ts';
 
 export interface IndexedCustomProperty<Idx extends IndexedCustomProperty.Index, T = any> {
     readonly id: UUID,

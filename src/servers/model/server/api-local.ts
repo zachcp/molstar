@@ -4,15 +4,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Mat4 } from '../../../mol-math/linear-algebra';
-import { ConsoleLogger } from '../../../mol-util/console-logger';
-import { now } from '../../../mol-util/now';
-import { PerformanceMonitor } from '../../../mol-util/performance-monitor';
-import { FileResultWriter, TarballFileResultWriter } from '../utils/writer';
-import { QueryName, QueryParams } from './api';
-import { Job, JobEntry, JobManager } from './jobs';
-import { resolveJob } from './query';
-import { StructureCache } from './structure-wrapper';
+import { Mat4 } from '../../../mol-math/linear-algebra.ts';
+import { ConsoleLogger } from '../../../mol-util/console-logger.ts';
+import { now } from '../../../mol-util/now.ts';
+import { PerformanceMonitor } from '../../../mol-util/performance-monitor.ts';
+import { FileResultWriter, TarballFileResultWriter } from '../utils/writer.ts';
+import type { QueryName, QueryParams } from './api.ts';
+import { type Job, JobEntry, JobManager } from './jobs.ts';
+import { resolveJob } from './query.ts';
+import { StructureCache } from './structure-wrapper.ts';
 
 export type Entry<Q extends QueryName = QueryName> = {
     input: string,

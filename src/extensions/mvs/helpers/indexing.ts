@@ -4,11 +4,11 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Column } from '../../../mol-data/db';
-import { SortedArray } from '../../../mol-data/int';
-import { ChainIndex, ElementIndex, Model, ResidueIndex } from '../../../mol-model/structure';
-import { filterInPlace, range, sortIfNeeded } from '../../../mol-util/array';
-import { Mapping, MultiMap, NumberMap } from './utils';
+import { Column } from '../../../mol-data/db.ts';
+import { SortedArray } from '../../../mol-data/int.ts';
+import type { ChainIndex, ElementIndex, Model, ResidueIndex } from '../../../mol-model/structure.ts';
+import { filterInPlace, range, sortIfNeeded } from '../../../mol-util/array.ts';
+import { type Mapping, MultiMap, NumberMap } from './utils.ts';
 
 
 /** Auxiliary data structure for efficiently finding chains/residues/atoms in a model by their properties */

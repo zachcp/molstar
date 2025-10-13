@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import type { Color } from '../color';
+import type { Color } from '../color.ts';
 
 export { Rgb };
 

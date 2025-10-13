@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { createRangeArray, makeBuckets } from '../../../mol-data/util';
-import { Column, Table } from '../../../mol-data/db';
-import { RuntimeContext } from '../../../mol-task';
-import { AtomSite } from './schema';
-import { arrayIsIdentity } from '../../../mol-util/array';
+import { createRangeArray, makeBuckets } from '../../../mol-data/util.ts';
+import { Column, Table } from '../../../mol-data/db.ts';
+import type { RuntimeContext } from '../../../mol-task.ts';
+import type { AtomSite } from './schema.ts';
+import { arrayIsIdentity } from '../../../mol-util/array.ts';
 
 export type SortedAtomSite = {
     atom_site: AtomSite

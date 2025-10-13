@@ -5,21 +5,21 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Trajectory } from '../../mol-model/structure';
-import { TrajectoryFormatCategory, TrajectoryFormatProvider } from '../../mol-plugin-state/formats/trajectory';
-import { PluginStateObject as SO, PluginStateTransform } from '../../mol-plugin-state/objects';
-import { PluginBehavior } from '../../mol-plugin/behavior';
-import { PluginContext } from '../../mol-plugin/context';
-import { DefaultQueryRuntimeTable } from '../../mol-script/runtime/query/base';
-import { StateAction, StateObjectRef } from '../../mol-state';
-import { Task } from '../../mol-task';
-import { ParamDefinition } from '../../mol-util/param-definition';
-import { G3dHeader, getG3dDataBlock, getG3dHeader } from './data';
-import { g3dHaplotypeQuery, G3dLabelProvider, trajectoryFromG3D, G3dSymbols, G3dInfoDataProperty } from './model';
-import { StateTransforms } from '../../mol-plugin-state/transforms';
-import { createStructureRepresentationParams } from '../../mol-plugin-state/helpers/structure-representation-params';
-import { stringToWords } from '../../mol-util/string';
-import { objectForEach } from '../../mol-util/object';
+import type { Trajectory } from '../../mol-model/structure.ts';
+import { TrajectoryFormatCategory, type TrajectoryFormatProvider } from '../../mol-plugin-state/formats/trajectory.ts';
+import { PluginStateObject as SO, PluginStateTransform } from '../../mol-plugin-state/objects.ts';
+import { PluginBehavior } from '../../mol-plugin/behavior.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { DefaultQueryRuntimeTable } from '../../mol-script/runtime/query/base.ts';
+import { StateAction, type StateObjectRef } from '../../mol-state.ts';
+import { Task } from '../../mol-task.ts';
+import { ParamDefinition } from '../../mol-util/param-definition.ts';
+import { type G3dHeader, getG3dDataBlock, getG3dHeader } from './data.ts';
+import { g3dHaplotypeQuery, G3dLabelProvider, trajectoryFromG3D, G3dSymbols, G3dInfoDataProperty } from './model.ts';
+import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
+import { createStructureRepresentationParams } from '../../mol-plugin-state/helpers/structure-representation-params.ts';
+import { stringToWords } from '../../mol-util/string.ts';
+import { objectForEach } from '../../mol-util/object.ts';
 
 export const G3dProvider: TrajectoryFormatProvider = {
     label: 'G3D',

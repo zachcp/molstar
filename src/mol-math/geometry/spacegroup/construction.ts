@@ -5,9 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4 } from '../../linear-algebra';
-import { SpacegroupName, TransformData, GroupData, getSpacegroupIndex, OperatorData, SpacegroupNumber } from './tables';
-import { SymmetryOperator } from '../../geometry/symmetry-operator';
+import { Vec3, Mat4 } from '../../linear-algebra.ts';
+import { SpacegroupName, TransformData, GroupData, getSpacegroupIndex, OperatorData, SpacegroupNumber } from './tables.ts';
+import { SymmetryOperator } from '../../geometry/symmetry-operator.ts';
 
 interface SpacegroupCell {
     /** Index into spacegroup data table */

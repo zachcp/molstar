@@ -6,29 +6,29 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { Model } from '../../mol-model/structure/model/model';
-import { RuntimeContext, Task } from '../../mol-task';
-import { ModelFormat } from '../format';
-import { CifFrame, CIF, CifFile } from '../../mol-io/reader/cif';
-import { mmCIF_Database } from '../../mol-io/reader/cif/schema/mmcif';
-import { createModels } from './basic/parser';
-import { ModelSymmetry } from './property/symmetry';
-import { ModelSecondaryStructure } from './property/secondary-structure';
-import { Column, Table } from '../../mol-data/db';
-import { AtomSiteAnisotrop } from './property/anisotropic';
-import { ComponentBond } from './property/bonds/chem_comp';
-import { StructConn } from './property/bonds/struct_conn';
-import { ArrayTrajectory, Trajectory } from '../../mol-model/structure';
-import { GlobalModelTransformInfo } from '../../mol-model/structure/model/properties/global-transform';
-import { BasicSchema, createBasic } from './basic/schema';
-import { CCD_Database } from '../../mol-io/reader/cif/schema/ccd';
-import { EntityBuilder } from './common/entity';
-import { BondType, MoleculeType } from '../../mol-model/structure/model/types';
-import { ComponentBuilder } from './common/component';
-import { sortedCantorPairing } from '../../mol-data/util';
-import { IndexPairBonds } from './property/bonds/index-pair';
-import { toDatabase } from '../../mol-io/reader/cif/schema';
-import { MolstarBondSiteSchema } from '../../mol-model/structure/export/categories/molstar_bond_site';
+import { Model } from '../../mol-model/structure/model/model.ts';
+import { type RuntimeContext, Task } from '../../mol-task.ts';
+import type { ModelFormat } from '../format.ts';
+import { type CifFrame, CIF, type CifFile } from '../../mol-io/reader/cif.ts';
+import type { mmCIF_Database } from '../../mol-io/reader/cif/schema/mmcif.ts';
+import { createModels } from './basic/parser.ts';
+import { ModelSymmetry } from './property/symmetry.ts';
+import { ModelSecondaryStructure } from './property/secondary-structure.ts';
+import { Column, Table } from '../../mol-data/db.ts';
+import { AtomSiteAnisotrop } from './property/anisotropic.ts';
+import { ComponentBond } from './property/bonds/chem_comp.ts';
+import { StructConn } from './property/bonds/struct_conn.ts';
+import { ArrayTrajectory, type Trajectory } from '../../mol-model/structure.ts';
+import { GlobalModelTransformInfo } from '../../mol-model/structure/model/properties/global-transform.ts';
+import { BasicSchema, createBasic } from './basic/schema.ts';
+import type { CCD_Database } from '../../mol-io/reader/cif/schema/ccd.ts';
+import { EntityBuilder } from './common/entity.ts';
+import { BondType, MoleculeType } from '../../mol-model/structure/model/types.ts';
+import { ComponentBuilder } from './common/component.ts';
+import { sortedCantorPairing } from '../../mol-data/util.ts';
+import { IndexPairBonds } from './property/bonds/index-pair.ts';
+import { toDatabase } from '../../mol-io/reader/cif/schema.ts';
+import { MolstarBondSiteSchema } from '../../mol-model/structure/export/categories/molstar_bond_site.ts';
 
 function modelSymmetryFromMmcif(model: Model) {
     if (!MmcifFormat.is(model.sourceData)) return;

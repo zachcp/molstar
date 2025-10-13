@@ -4,7 +4,7 @@
 //  * @author David Sehnal <david.sehnal@gmail.com>
 //  */
 
-// import Environment from './environment'
+// import Environment from './environment.ts'
 
 // type RuntimeExpression<T = any> = (env: Environment) => T
 

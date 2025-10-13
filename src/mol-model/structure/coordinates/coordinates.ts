@@ -5,10 +5,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { arrayEqual, UUID } from '../../../mol-util';
-import { Cell } from '../../../mol-math/geometry/spacegroup/cell';
-import { AtomicConformation } from '../model/properties/atomic';
-import { Column } from '../../../mol-data/db';
+import { arrayEqual, UUID } from '../../../mol-util.ts';
+import type { Cell } from '../../../mol-math/geometry/spacegroup/cell.ts';
+import type { AtomicConformation } from '../model/properties/atomic.ts';
+import { Column } from '../../../mol-data/db.ts';
 
 export interface Frame {
     readonly elementCount: number

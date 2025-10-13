@@ -4,27 +4,27 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginStateObject as PSO, PluginStateTransform } from '../../../mol-plugin-state/objects';
-import { PluginContext } from '../../../mol-plugin/context';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Task } from '../../../mol-task';
-import { Color } from '../../../mol-util/color';
-import { Spheres } from '../../../mol-geo/geometry/spheres/spheres';
-import { Clip } from '../../../mol-util/clip';
-import { escapeRegExp, stringToWords } from '../../../mol-util/string';
-import { Mat4, Vec3 } from '../../../mol-math/linear-algebra';
-import { ParamMapping } from '../../../mol-util/param-mapping';
-import { EntityNode } from '../ui/entities';
-import { DistinctColorsProps, distinctColors } from '../../../mol-util/color/distinct';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { Hcl } from '../../../mol-util/color/spaces/hcl';
-import { StateObjectCell, StateObjectRef, StateSelection } from '../../../mol-state';
-import { ShapeRepresentation3D, StructureRepresentation3D } from '../../../mol-plugin-state/transforms/representation';
-import { SpacefillRepresentationProvider } from '../../../mol-repr/structure/representation/spacefill';
-import { assertUnreachable } from '../../../mol-util/type-helpers';
-import { MesoscaleExplorerState } from '../app';
-import { saturate } from '../../../mol-math/interpolate';
-import { Material } from '../../../mol-util/material';
+import { PluginStateObject as PSO, PluginStateTransform } from '../../../mol-plugin-state/objects.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Task } from '../../../mol-task.ts';
+import { Color } from '../../../mol-util/color.ts';
+import { Spheres } from '../../../mol-geo/geometry/spheres/spheres.ts';
+import { Clip } from '../../../mol-util/clip.ts';
+import { escapeRegExp, stringToWords } from '../../../mol-util/string.ts';
+import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { ParamMapping } from '../../../mol-util/param-mapping.ts';
+import type { EntityNode } from '../ui/entities.ts';
+import { type DistinctColorsProps, distinctColors } from '../../../mol-util/color/distinct.ts';
+import type { Sphere3D } from '../../../mol-math/geometry.ts';
+import { Hcl } from '../../../mol-util/color/spaces/hcl.ts';
+import { type StateObjectCell, StateObjectRef, StateSelection } from '../../../mol-state.ts';
+import { ShapeRepresentation3D, StructureRepresentation3D } from '../../../mol-plugin-state/transforms/representation.ts';
+import type { SpacefillRepresentationProvider } from '../../../mol-repr/structure/representation/spacefill.ts';
+import { assertUnreachable } from '../../../mol-util/type-helpers.ts';
+import type { MesoscaleExplorerState } from '../app.ts';
+import { saturate } from '../../../mol-math/interpolate.ts';
+import { Material } from '../../../mol-util/material.ts';
 
 function getHueRange(hue: number, variability: number) {
     let min = hue - variability;

@@ -7,9 +7,9 @@
  * Adapted from MolQL project
  */
 
-import { MolScriptBuilder } from '../../../mol-script/language/builder';
+import { MolScriptBuilder } from '../../../mol-script/language/builder.ts';
 const B = MolScriptBuilder;
-import { PropertyDict } from '../types';
+import type { PropertyDict } from '../types.ts';
 
 const reFloat = /[-+]?[0-9]*\.?[0-9]+/;
 const rePosInt = /[+]?[0-9]+/;

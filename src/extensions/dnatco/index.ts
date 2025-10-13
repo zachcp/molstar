@@ -5,4 +5,4 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-export { DnatcoNtCs } from './behavior';
+export { DnatcoNtCs } from './behavior.ts';

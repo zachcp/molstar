@@ -8,10 +8,10 @@
  */
 
 
-import { MolScriptBuilder } from '../../../mol-script/language/builder';
+import { MolScriptBuilder } from '../../../mol-script/language/builder.ts';
 const B = MolScriptBuilder;
-import * as h from '../helper';
-import { KeywordDict } from '../types';
+import * as h from '../helper.ts';
+import type { KeywordDict } from '../types.ts';
 
 const ResDict = {
     acidic: ['ASP', 'GLU'],

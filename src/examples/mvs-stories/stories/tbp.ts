@@ -5,17 +5,17 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { MVSData_States } from '../../../extensions/mvs/mvs-data';
-import { createMVSBuilder, Structure as MVSStructure, Root } from '../../../extensions/mvs/tree/mvs/mvs-builder';
-import { MVSNodeParams } from '../../../extensions/mvs/tree/mvs/mvs-tree';
+import type { MVSData_States } from '../../../extensions/mvs/mvs-data.ts';
+import { createMVSBuilder, type Structure as MVSStructure, type Root } from '../../../extensions/mvs/tree/mvs/mvs-builder.ts';
+import type { MVSNodeParams } from '../../../extensions/mvs/tree/mvs/mvs-tree.ts';
 import {
-    ColorT,
-    ComponentExpressionT,
+    type ColorT,
+    type ComponentExpressionT,
     isPrimitiveComponentExpressions,
-    PrimitivePositionT
-} from '../../../extensions/mvs/tree/mvs/param-types';
-import { Mat3, Mat4, Vec3 } from '../../../mol-math/linear-algebra';
-import { decodeColor } from '../../../extensions/mvs/helpers/utils';
+    type PrimitivePositionT
+} from '../../../extensions/mvs/tree/mvs/param-types.ts';
+import { Mat3, Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { decodeColor } from '../../../extensions/mvs/helpers/utils.ts';
 
 const Colors = {
     '1vok': '#4577B2' as ColorT,

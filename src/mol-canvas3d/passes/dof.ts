@@ -5,24 +5,24 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { QuadSchema, QuadValues } from '../../mol-gl/compute/util';
-import { ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable';
-import { TextureSpec, UniformSpec, DefineSpec, Values } from '../../mol-gl/renderable/schema';
-import { ShaderCode } from '../../mol-gl/shader-code';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { createComputeRenderItem } from '../../mol-gl/webgl/render-item';
-import { Texture, createNullTexture } from '../../mol-gl/webgl/texture';
-import { Mat4, Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra';
-import { ValueCell } from '../../mol-util';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { quad_vert } from '../../mol-gl/shader/quad.vert';
-import { dof_frag } from '../../mol-gl/shader/dof.frag';
-import { Viewport } from '../camera/util';
-import { RenderTarget } from '../../mol-gl/webgl/render-target';
-import { isTimingMode } from '../../mol-util/debug';
-import { ICamera } from '../../mol-canvas3d/camera';
-import { Sphere3D } from '../../mol-math/geometry';
-import { PostprocessingProps } from './postprocessing';
+import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
+import { type ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
+import { TextureSpec, UniformSpec, DefineSpec, type Values } from '../../mol-gl/renderable/schema.ts';
+import { ShaderCode } from '../../mol-gl/shader-code.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
+import { type Texture, createNullTexture } from '../../mol-gl/webgl/texture.ts';
+import { Mat4, Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
+import { ValueCell } from '../../mol-util.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
+import { dof_frag } from '../../mol-gl/shader/dof.frag.ts';
+import type { Viewport } from '../camera/util.ts';
+import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
+import { isTimingMode } from '../../mol-util/debug.ts';
+import type { ICamera } from '../../mol-canvas3d/camera.ts';
+import type { Sphere3D } from '../../mol-math/geometry.ts';
+import type { PostprocessingProps } from './postprocessing.ts';
 
 export const DofParams = {
     blurSize: PD.Numeric(9, { min: 1, max: 32, step: 1 }),

@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task } from '../../mol-task';
-import { DcdFile } from '../../mol-io/reader/dcd/parser';
-import { Coordinates, Frame, Time } from '../../mol-model/structure/coordinates';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { degToRad, halfPI } from '../../mol-math/misc';
-import { Cell } from '../../mol-math/geometry/spacegroup/cell';
-import { Mutable } from '../../mol-util/type-helpers';
-import { EPSILON, equalEps } from '../../mol-math/linear-algebra/3d/common';
+import { Task } from '../../mol-task.ts';
+import type { DcdFile } from '../../mol-io/reader/dcd/parser.ts';
+import { Coordinates, type Frame, Time } from '../../mol-model/structure/coordinates.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { degToRad, halfPI } from '../../mol-math/misc.ts';
+import { Cell } from '../../mol-math/geometry/spacegroup/cell.ts';
+import type { Mutable } from '../../mol-util/type-helpers.ts';
+import { EPSILON, equalEps } from '../../mol-math/linear-algebra/3d/common.ts';
 
 const charmmTimeUnitFactor = 20.45482949774598;
 

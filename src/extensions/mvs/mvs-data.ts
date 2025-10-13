@@ -5,11 +5,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { treeValidationIssues } from './tree/generic/tree-validation';
-import { treeToString } from './tree/generic/tree-utils';
-import { MVSAnimationSchema, MVSAnimationTree } from './tree/animation/animation-tree';
-import { Root, createMVSBuilder } from './tree/mvs/mvs-builder';
-import { MVSTree, MVSTreeSchema } from './tree/mvs/mvs-tree';
+import { treeValidationIssues } from './tree/generic/tree-validation.ts';
+import { treeToString } from './tree/generic/tree-utils.ts';
+import { MVSAnimationSchema, type MVSAnimationTree } from './tree/animation/animation-tree.ts';
+import { type Root, createMVSBuilder } from './tree/mvs/mvs-builder.ts';
+import { type MVSTree, MVSTreeSchema } from './tree/mvs/mvs-tree.ts';
 
 /** Top-level metadata for a MVS file (single-state or multi-state). */
 export interface GlobalMetadata {

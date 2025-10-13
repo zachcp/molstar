@@ -6,9 +6,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as Schema from './binary-schema';
-import { FileHandle } from '../../../mol-io/common/file-handle';
-import { TypedArrayValueType } from '../../../mol-io/common/typed-array';
+import * as Schema from './binary-schema.ts';
+import type { FileHandle } from '../../../mol-io/common/file-handle.ts';
+import type { TypedArrayValueType } from '../../../mol-io/common/typed-array.ts';
 
 export interface Spacegroup {
     number: number,

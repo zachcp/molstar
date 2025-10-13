@@ -8,16 +8,16 @@
  * based in part on NGL (https://github.com/arose/ngl)
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Structure, Unit, StructureElement } from '../../../mol-model/structure';
-import { calcAngles } from '../chemistry/geometry';
-import { FeaturesBuilder, Features } from './features';
-import { ElementSymbol } from '../../../mol-model/structure/model/types';
-import { typeSymbol, eachBondedAtom } from '../chemistry/util';
-import { Elements } from '../../../mol-model/structure/model/properties/atomic/types';
-import { degToRad } from '../../../mol-math/misc';
-import { FeatureType, FeatureGroup, InteractionType } from './common';
-import { ContactProvider } from './contacts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { Structure, Unit, StructureElement } from '../../../mol-model/structure.ts';
+import { calcAngles } from '../chemistry/geometry.ts';
+import { type FeaturesBuilder, Features } from './features.ts';
+import type { ElementSymbol } from '../../../mol-model/structure/model/types.ts';
+import { typeSymbol, eachBondedAtom } from '../chemistry/util.ts';
+import { Elements } from '../../../mol-model/structure/model/properties/atomic/types.ts';
+import { degToRad } from '../../../mol-math/misc.ts';
+import { FeatureType, FeatureGroup, InteractionType } from './common.ts';
+import type { ContactProvider } from './contacts.ts';
 
 const HalogenBondsParams = {
     distanceMax: PD.Numeric(4.0, { min: 1, max: 5, step: 0.1 }),

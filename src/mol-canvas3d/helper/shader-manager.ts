@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Scene } from '../../mol-gl/scene';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { GraphicsRenderVariant } from '../../mol-gl/webgl/render-item';
-import { BloomPass } from '../passes/bloom';
-import { IlluminationPass, IlluminationProps } from '../passes/illumination';
-import { MarkingPass, MarkingProps } from '../passes/marking';
-import { PostprocessingPass, PostprocessingProps } from '../passes/postprocessing';
+import type { Scene } from '../../mol-gl/scene.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import type { GraphicsRenderVariant } from '../../mol-gl/webgl/render-item.ts';
+import { BloomPass } from '../passes/bloom.ts';
+import { IlluminationPass, type IlluminationProps } from '../passes/illumination.ts';
+import { MarkingPass, type MarkingProps } from '../passes/marking.ts';
+import { PostprocessingPass, type PostprocessingProps } from '../passes/postprocessing.ts';
 
 export type ShaderManagerProps = {
     marking: MarkingProps

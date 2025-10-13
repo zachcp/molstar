@@ -9,14 +9,14 @@
  * copyright (c) 2010-2018 three.js authors. MIT License
  */
 
-import { Quat, Vec2, Vec3, EPSILON } from '../../mol-math/linear-algebra';
-import { Viewport } from '../camera/util';
-import { InputObserver, DragInput, WheelInput, PinchInput, ButtonsType, ModifiersKeys, KeyInput, MoveInput } from '../../mol-util/input/input-observer';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Camera } from '../camera';
-import { absMax, degToRad } from '../../mol-math/misc';
-import { Binding } from '../../mol-util/binding';
-import { Scene } from '../../mol-gl/scene';
+import { Quat, Vec2, Vec3, EPSILON } from '../../mol-math/linear-algebra.ts';
+import { Viewport } from '../camera/util.ts';
+import { type InputObserver, type DragInput, type WheelInput, type PinchInput, ButtonsType, ModifiersKeys, type KeyInput, type MoveInput } from '../../mol-util/input/input-observer.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { Camera } from '../camera.ts';
+import { absMax, degToRad } from '../../mol-math/misc.ts';
+import { Binding } from '../../mol-util/binding.ts';
+import type { Scene } from '../../mol-gl/scene.ts';
 
 const B = ButtonsType;
 const M = ModifiersKeys;

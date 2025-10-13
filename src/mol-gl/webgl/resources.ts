@@ -4,24 +4,24 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ProgramProps, createProgram, Program } from './program';
-import { ShaderType, createShader, Shader, ShaderProps } from './shader';
-import { GLRenderingContext, isWebGL2 } from './compat';
-import { Framebuffer, createFramebuffer } from './framebuffer';
-import { WebGLExtensions } from './extensions';
-import { WebGLState } from './state';
-import { AttributeBuffer, UsageHint, ArrayType, AttributeItemSize, createAttributeBuffer, ElementsBuffer, createElementsBuffer, ElementsType, AttributeBuffers, PixelPackBuffer, createPixelPackBuffer } from './buffer';
-import { createReferenceCache, ReferenceItem } from '../../mol-util/reference-cache';
-import { WebGLParameters, WebGLStats } from './context';
-import { hashString, hashFnv32a } from '../../mol-data/util';
-import { DefineValues, ShaderCode } from '../shader-code';
-import { RenderableSchema } from '../renderable/schema';
-import { createRenderbuffer, Renderbuffer, RenderbufferAttachment, RenderbufferFormat } from './renderbuffer';
-import { Texture, TextureKind, TextureFormat, TextureType, TextureFilter, createTexture, CubeFaces, createCubeTexture } from './texture';
-import { VertexArray, createVertexArray } from './vertex-array';
-import { now } from '../../mol-util/now';
-import { ProgramVariant } from './render-item';
-import { isTimingMode } from '../../mol-util/debug';
+import { type ProgramProps, createProgram, type Program } from './program.ts';
+import { type ShaderType, createShader, type Shader, type ShaderProps } from './shader.ts';
+import { type GLRenderingContext, isWebGL2 } from './compat.ts';
+import { type Framebuffer, createFramebuffer } from './framebuffer.ts';
+import type { WebGLExtensions } from './extensions.ts';
+import type { WebGLState } from './state.ts';
+import { type AttributeBuffer, type UsageHint, type ArrayType, type AttributeItemSize, createAttributeBuffer, type ElementsBuffer, createElementsBuffer, type ElementsType, type AttributeBuffers, type PixelPackBuffer, createPixelPackBuffer } from './buffer.ts';
+import { createReferenceCache, type ReferenceItem } from '../../mol-util/reference-cache.ts';
+import type { WebGLParameters, WebGLStats } from './context.ts';
+import { hashString, hashFnv32a } from '../../mol-data/util.ts';
+import type { DefineValues, ShaderCode } from '../shader-code.ts';
+import type { RenderableSchema } from '../renderable/schema.ts';
+import { createRenderbuffer, type Renderbuffer, type RenderbufferAttachment, type RenderbufferFormat } from './renderbuffer.ts';
+import { type Texture, type TextureKind, type TextureFormat, type TextureType, type TextureFilter, createTexture, type CubeFaces, createCubeTexture } from './texture.ts';
+import { type VertexArray, createVertexArray } from './vertex-array.ts';
+import { now } from '../../mol-util/now.ts';
+import type { ProgramVariant } from './render-item.ts';
+import { isTimingMode } from '../../mol-util/debug.ts';
 
 function defineValueHash(v: boolean | number | string): number {
     return typeof v === 'boolean' ? (v ? 1 : 0) :

@@ -5,27 +5,27 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { ElementSymbol } from '../../mol-model/structure/model/types';
-import { Color, ColorMap } from '../../mol-util/color';
-import { StructureElement, Unit, Bond } from '../../mol-model/structure';
-import { Location } from '../../mol-model/location';
-import type { ColorTheme } from '../color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../theme';
-import { TableLegend } from '../../mol-util/legend';
-import { getAdjustedColorMap } from '../../mol-util/color/color';
-import { getColorMapParams } from '../../mol-util/color/params';
-import { ChainIdColorTheme, ChainIdColorThemeParams } from './chain-id';
-import { OperatorNameColorThemeParams, OperatorNameColorTheme } from './operator-name';
-import { EntityIdColorTheme, EntityIdColorThemeParams } from './entity-id';
-import { assertUnreachable } from '../../mol-util/type-helpers';
-import { EntitySourceColorTheme, EntitySourceColorThemeParams } from './entity-source';
-import { ModelIndexColorTheme, ModelIndexColorThemeParams } from './model-index';
-import { StructureIndexColorTheme, StructureIndexColorThemeParams } from './structure-index';
-import { ColorThemeCategory } from './categories';
-import { UnitIndexColorTheme, UnitIndexColorThemeParams } from './unit-index';
-import { UniformColorTheme, UniformColorThemeParams } from './uniform';
-import { TrajectoryIndexColorTheme, TrajectoryIndexColorThemeParams } from './trajectory-index';
+import type { ElementSymbol } from '../../mol-model/structure/model/types.ts';
+import { Color, ColorMap } from '../../mol-util/color.ts';
+import { StructureElement, Unit, Bond } from '../../mol-model/structure.ts';
+import type { Location } from '../../mol-model/location.ts';
+import type { ColorTheme } from '../color.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { ThemeDataContext } from '../theme.ts';
+import { TableLegend } from '../../mol-util/legend.ts';
+import { getAdjustedColorMap } from '../../mol-util/color/color.ts';
+import { getColorMapParams } from '../../mol-util/color/params.ts';
+import { ChainIdColorTheme, ChainIdColorThemeParams } from './chain-id.ts';
+import { OperatorNameColorThemeParams, OperatorNameColorTheme } from './operator-name.ts';
+import { EntityIdColorTheme, EntityIdColorThemeParams } from './entity-id.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
+import { EntitySourceColorTheme, EntitySourceColorThemeParams } from './entity-source.ts';
+import { ModelIndexColorTheme, ModelIndexColorThemeParams } from './model-index.ts';
+import { StructureIndexColorTheme, StructureIndexColorThemeParams } from './structure-index.ts';
+import { ColorThemeCategory } from './categories.ts';
+import { UnitIndexColorTheme, UnitIndexColorThemeParams } from './unit-index.ts';
+import { UniformColorTheme, UniformColorThemeParams } from './uniform.ts';
+import { TrajectoryIndexColorTheme, TrajectoryIndexColorThemeParams } from './trajectory-index.ts';
 
 // from Jmol http://jmol.sourceforge.net/jscolors/ (or 0xFFFFFF)
 export const ElementSymbolColors = ColorMap({

@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Expression } from './expression';
-import { MSymbol } from './symbol';
-import { MolScriptSymbolTable as SymbolTable } from './symbol-table';
+import type { Expression } from './expression.ts';
+import type { MSymbol } from './symbol.ts';
+import { MolScriptSymbolTable as SymbolTable } from './symbol-table.ts';
 
 export namespace MolScriptBuilder {
     export const core = SymbolTable.core;

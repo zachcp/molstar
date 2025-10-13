@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { RepresentationRegistry, Representation, RepresentationProvider } from '../representation';
-import { Volume } from '../../mol-model/volume';
-import { IsosurfaceRepresentationProvider } from './isosurface';
-import { objectForEach } from '../../mol-util/object';
-import { SliceRepresentationProvider } from './slice';
-import { DirectVolumeRepresentationProvider } from './direct-volume';
-import { SegmentRepresentationProvider } from './segment';
-import { DotRepresentationProvider } from './dot';
+import { RepresentationRegistry, type Representation, type RepresentationProvider } from '../representation.ts';
+import type { Volume } from '../../mol-model/volume.ts';
+import { IsosurfaceRepresentationProvider } from './isosurface.ts';
+import { objectForEach } from '../../mol-util/object.ts';
+import { SliceRepresentationProvider } from './slice.ts';
+import { DirectVolumeRepresentationProvider } from './direct-volume.ts';
+import { SegmentRepresentationProvider } from './segment.ts';
+import { DotRepresentationProvider } from './dot.ts';
 
 export class VolumeRepresentationRegistry extends RepresentationRegistry<Volume, Representation.State> {
     constructor() {

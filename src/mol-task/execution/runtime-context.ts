@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { SyncRuntimeContext } from './synchronous';
+import { SyncRuntimeContext } from './synchronous.ts';
 
 interface RuntimeContext {
     readonly shouldUpdate: boolean,

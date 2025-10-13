@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { CCD_Schema } from './ccd';
+import { CCD_Schema } from './ccd.ts';
 
 // a reduced chem_comp_atom schema that provides charge and stereo_config information
 export const ccd_chemCompAtom_schema = {

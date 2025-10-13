@@ -4,15 +4,15 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { GaussianSurfaceMeshParams, StructureGaussianSurfaceMeshParams, StructureGaussianSurfaceVisual, GaussianSurfaceVisual } from '../visual/gaussian-surface-mesh';
-import { UnitsRepresentation } from '../units-representation';
-import { GaussianWireframeVisual, GaussianWireframeParams } from '../visual/gaussian-surface-wireframe';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder, ComplexRepresentation } from '../representation';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../../mol-repr/representation';
-import { ThemeRegistryContext } from '../../../mol-theme/theme';
-import { Structure } from '../../../mol-model/structure';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
+import { GaussianSurfaceMeshParams, type StructureGaussianSurfaceMeshParams, StructureGaussianSurfaceVisual, GaussianSurfaceVisual } from '../visual/gaussian-surface-mesh.ts';
+import { UnitsRepresentation } from '../units-representation.ts';
+import { GaussianWireframeVisual, GaussianWireframeParams } from '../visual/gaussian-surface-wireframe.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { type StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder, ComplexRepresentation } from '../representation.ts';
+import { Representation, type RepresentationParamsGetter, type RepresentationContext } from '../../../mol-repr/representation.ts';
+import type { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import type { Structure } from '../../../mol-model/structure.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const GaussianSurfaceVisuals = {
     'gaussian-surface-mesh': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, GaussianSurfaceMeshParams>) => UnitsRepresentation('Gaussian surface mesh', ctx, getParams, GaussianSurfaceVisual),

@@ -7,18 +7,19 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as express from 'express';
-import { ModelServerConfig as Config, ModelServerConfig, mapSourceAndIdToFilename } from '../config';
-import { ConsoleLogger } from '../../../mol-util/console-logger';
-import { resolveJob } from './query';
-import { JobManager, JobEntry, ResultWriterParams } from './jobs';
-import { UUID } from '../../../mol-util';
-import { QueryDefinition, normalizeRestQueryParams, normalizeRestCommonParams, QueryList } from './api';
-import { getApiSchema, shortcutIconLink } from './api-schema';
-import { swaggerUiAssetsHandler, swaggerUiIndexHandler } from '../../common/swagger-ui';
-import { MultipleQuerySpec, getMultiQuerySpecFilename } from './api-web-multiple';
-import { SimpleResponseResultWriter, WebResutlWriter, TarballResponseResultWriter } from '../utils/writer';
-import { splitCamelCase } from '../../../mol-util/string';
-import { healthCheck } from '../../common/util';
+import { ModelServerConfig as Config, ModelServerConfig, mapSourceAndIdToFilename } from '../config.ts';
+import { ConsoleLogger } from '../../../mol-util/console-logger.ts';
+import { resolveJob } from './query.ts';
+import { JobManager, JobEntry, type ResultWriterParams } from './jobs.ts';
+import type { UUID } from '../../../mol-util.ts';
+import { type QueryDefinition, normalizeRestQueryParams, normalizeRestCommonParams, QueryList } from './api.ts';
+import { getApiSchema, shortcutIconLink } from './api-schema.ts';
+import { swaggerUiAssetsHandler, swaggerUiIndexHandler } from '../../common/swagger-ui.ts';
+import { type MultipleQuerySpec, getMultiQuerySpecFilename } from './api-web-multiple.ts';
+import { SimpleResponseResultWriter, type WebResutlWriter, TarballResponseResultWriter } from '../utils/writer.ts';
+import { splitCamelCase } from '../../../mol-util/string.ts';
+import { healthCheck } from '../../common/util.ts';
+import { setImmediate } from "node:timers";
 
 function makePath(p: string) {
     return Config.apiPrefix + '/' + p;

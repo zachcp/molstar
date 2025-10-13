@@ -5,9 +5,9 @@
  */
 
 function openUrl(url: string) {
-    const opened = window.open(url, '_blank');
+    const opened = globalThis.open(url, '_blank');
     if (!opened) {
-        window.location.href = url;
+        globalThis.location.href = url;
     }
 }
 
@@ -43,7 +43,7 @@ export function download(data: Blob | string, downloadName = 'download') {
         // native saveAs in IE 10+
         (navigator as any).msSaveOrOpenBlob(data, downloadName);
     } else {
-        const ua = window.navigator.userAgent;
+        const ua = globalThis.navigator.userAgent;
         const isSafari = /Safari/i.test(ua);
         const isChromeIos = /CriOS\/[\d]+/.test(ua);
 

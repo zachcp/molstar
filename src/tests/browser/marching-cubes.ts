@@ -5,25 +5,25 @@
  */
 
 import './index.html';
-import { resizeCanvas } from '../../mol-canvas3d/util';
-import { Canvas3DParams, Canvas3D, Canvas3DContext } from '../../mol-canvas3d/canvas3d';
-import { ColorNames } from '../../mol-util/color/names';
-import { PositionData, Box3D, Sphere3D } from '../../mol-math/geometry';
-import { OrderedSet } from '../../mol-data/int';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { computeGaussianDensity } from '../../mol-math/geometry/gaussian-density';
-import { calcActiveVoxels } from '../../mol-gl/compute/marching-cubes/active-voxels';
-import { createHistogramPyramid } from '../../mol-gl/compute/histogram-pyramid/reduction';
-import { createIsosurfaceBuffers } from '../../mol-gl/compute/marching-cubes/isosurface';
-import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh';
-import { Color } from '../../mol-util/color';
-import { createRenderObject } from '../../mol-gl/render-object';
-import { Representation } from '../../mol-repr/representation';
-import { computeMarchingCubesMesh } from '../../mol-geo/util/marching-cubes/algorithm';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { AssetManager } from '../../mol-util/assets';
-import { GaussianDensityTexture2d } from '../../mol-math/geometry/gaussian-density/gpu';
+import { resizeCanvas } from '../../mol-canvas3d/util.ts';
+import { Canvas3DParams, Canvas3D, Canvas3DContext } from '../../mol-canvas3d/canvas3d.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { type PositionData, Box3D, Sphere3D } from '../../mol-math/geometry.ts';
+import { OrderedSet } from '../../mol-data/int.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { computeGaussianDensity } from '../../mol-math/geometry/gaussian-density.ts';
+import { calcActiveVoxels } from '../../mol-gl/compute/marching-cubes/active-voxels.ts';
+import { createHistogramPyramid } from '../../mol-gl/compute/histogram-pyramid/reduction.ts';
+import { createIsosurfaceBuffers } from '../../mol-gl/compute/marching-cubes/isosurface.ts';
+import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh.ts';
+import { Color } from '../../mol-util/color.ts';
+import { createRenderObject } from '../../mol-gl/render-object.ts';
+import { Representation } from '../../mol-repr/representation.ts';
+import { computeMarchingCubesMesh } from '../../mol-geo/util/marching-cubes/algorithm.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { AssetManager } from '../../mol-util/assets.ts';
+import { GaussianDensityTexture2d } from '../../mol-math/geometry/gaussian-density/gpu.ts';
 
 const parent = document.getElementById('app')!;
 parent.style.width = '100%';

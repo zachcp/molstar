@@ -5,21 +5,21 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as React from 'react';
-import { getStructureThemeTypes } from '../../mol-plugin-state/helpers/structure-representation-params';
-import { StructureComponentManager } from '../../mol-plugin-state/manager/structure/component';
-import { StructureHierarchyManager } from '../../mol-plugin-state/manager/structure/hierarchy';
-import { StructureComponentRef, StructureRepresentationRef } from '../../mol-plugin-state/manager/structure/hierarchy-state';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { State } from '../../mol-state';
-import { ParamDefinition } from '../../mol-util/param-definition';
-import { CollapsableControls, CollapsableState, PurePluginUIComponent } from '../base';
-import { ActionMenu } from '../controls/action-menu';
-import { Button, ExpandGroup, IconButton, ToggleButton, ControlRow, TextInput } from '../controls/common';
-import { CubeOutlineSvg, IntersectSvg, SetSvg, SubtractSvg, UnionSvg, BookmarksOutlinedSvg, AddSvg, TuneSvg, RestoreSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, DeleteOutlinedSvg, MoreHorizSvg, CheckSvg } from '../controls/icons';
-import { ParameterControls } from '../controls/parameters';
-import { UpdateTransformControl } from '../state/update-transform';
-import { GenericEntryListControls } from './generic';
+import type * as React from 'react';
+import { getStructureThemeTypes } from '../../mol-plugin-state/helpers/structure-representation-params.ts';
+import { StructureComponentManager } from '../../mol-plugin-state/manager/structure/component.ts';
+import { StructureHierarchyManager } from '../../mol-plugin-state/manager/structure/hierarchy.ts';
+import type { StructureComponentRef, StructureRepresentationRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { State } from '../../mol-state.ts';
+import { ParamDefinition } from '../../mol-util/param-definition.ts';
+import { CollapsableControls, type CollapsableState, PurePluginUIComponent } from '../base.ts';
+import { ActionMenu } from '../controls/action-menu.ts';
+import { Button, ExpandGroup, IconButton, ToggleButton, ControlRow, TextInput } from '../controls/common.ts';
+import { CubeOutlineSvg, IntersectSvg, SetSvg, SubtractSvg, UnionSvg, BookmarksOutlinedSvg, AddSvg, TuneSvg, RestoreSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, DeleteOutlinedSvg, MoreHorizSvg, CheckSvg } from '../controls/icons.ts';
+import { ParameterControls } from '../controls/parameters.ts';
+import { UpdateTransformControl } from '../state/update-transform.ts';
+import { GenericEntryListControls } from './generic.ts';
 
 interface StructureComponentControlState extends CollapsableState {
     isDisabled: boolean
@@ -347,7 +347,7 @@ class StructureComponentGroup extends PurePluginUIComponent<{ group: StructureCo
             </div>
             {this.state.action === 'label' && <div className='msp-control-offset' style={{ marginBottom: '6px' }}>
                 <ControlRow label='Label' control={<div style={{ display: 'flex', textAlignLast: 'center' }}>
-                    <TextInput onChange={this.updateLabel} value={label} style={{ flex: '1 1 auto', minWidth: 0 }} className='msp-form-control' blurOnEnter={true} blurOnEscape={true} />
+                    <TextInput onChange={this.updateLabel} value={label} style={{ flex: '1 1 auto', minWidth: 0 }} className='msp-form-control' blurOnEnter blurOnEscape />
                     <IconButton svg={CheckSvg} onClick={this.toggleLabel}className='msp-form-control msp-control-button-label' flex />
                 </div>}/>
             </div>}

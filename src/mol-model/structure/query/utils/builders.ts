@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StructureElement, Structure } from '../../structure';
-import { StructureSelection } from '../selection';
-import { HashSet } from '../../../../mol-data/generic';
-import { structureUnion } from './structure-set';
-import { StructureSubsetBuilder } from '../../structure/util/subset-builder';
-import { ElementIndex } from '../../model';
+import { StructureElement, Structure } from '../../structure.ts';
+import { StructureSelection } from '../selection.ts';
+import { HashSet } from '../../../../mol-data/generic.ts';
+import { structureUnion } from './structure-set.ts';
+import type { StructureSubsetBuilder } from '../../structure/util/subset-builder.ts';
+import type { ElementIndex } from '../../model.ts';
 
 export class UniqueStructuresBuilder {
     private set = HashSet(Structure.hashCode, Structure.areUnitIdsAndIndicesEqual);

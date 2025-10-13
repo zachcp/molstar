@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Type } from '../type';
-import * as Struct from './structure-query';
-import { Arguments, Argument } from '../symbol';
-import { symbol } from '../helpers';
+import { Type } from '../type.ts';
+import * as Struct from './structure-query.ts';
+import { Arguments, Argument } from '../symbol.ts';
+import { symbol } from '../helpers.ts';
 
 const generator = {
     '@header': 'Generators',

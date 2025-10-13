@@ -4,16 +4,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Unit, Structure } from '../../../../mol-model/structure';
-import { Task } from '../../../../mol-task';
-import { ParamDefinition as PD } from '../../../../mol-util/param-definition';
-import { GaussianDensityTexture, GaussianDensityTexture2d } from '../../../../mol-math/geometry/gaussian-density/gpu';
-import { Texture } from '../../../../mol-gl/webgl/texture';
-import { WebGLContext } from '../../../../mol-gl/webgl/context';
-import { getUnitConformationAndRadius, getStructureConformationAndRadius, CommonSurfaceParams, ensureReasonableResolution } from './common';
-import { BaseGeometry } from '../../../../mol-geo/geometry/base';
-import { GaussianDensityCPU } from '../../../../mol-math/geometry/gaussian-density/cpu';
-import { SizeTheme } from '../../../../mol-theme/size';
+import type { Unit, Structure } from '../../../../mol-model/structure.ts';
+import { Task } from '../../../../mol-task.ts';
+import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
+import { GaussianDensityTexture, GaussianDensityTexture2d } from '../../../../mol-math/geometry/gaussian-density/gpu.ts';
+import type { Texture } from '../../../../mol-gl/webgl/texture.ts';
+import type { WebGLContext } from '../../../../mol-gl/webgl/context.ts';
+import { getUnitConformationAndRadius, getStructureConformationAndRadius, CommonSurfaceParams, ensureReasonableResolution } from './common.ts';
+import { BaseGeometry } from '../../../../mol-geo/geometry/base.ts';
+import { GaussianDensityCPU } from '../../../../mol-math/geometry/gaussian-density/cpu.ts';
+import type { SizeTheme } from '../../../../mol-theme/size.ts';
 
 export const GaussianDensityParams = {
     resolution: PD.Numeric(1, { min: 0.1, max: 20, step: 0.1 }, { description: 'Grid resolution/cell spacing.', ...BaseGeometry.CustomQualityParamInfo }),

@@ -5,9 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as Base from './impl/ordered-set';
-import { Interval } from './interval';
-import { SortedArray } from './sorted-array';
+import * as Base from './impl/ordered-set.ts';
+import { Interval } from './interval.ts';
+import type { SortedArray } from './sorted-array.ts';
 
 namespace OrderedSet {
     export const Empty: OrderedSet = Base.Empty as any;

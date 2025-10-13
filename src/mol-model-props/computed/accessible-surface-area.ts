@@ -5,15 +5,15 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ShrakeRupleyComputationParams, AccessibleSurfaceArea } from './accessible-surface-area/shrake-rupley';
-import { Structure, Unit } from '../../mol-model/structure';
-import { CustomStructureProperty } from '../common/custom-structure-property';
-import { CustomProperty } from '../common/custom-property';
-import { QuerySymbolRuntime } from '../../mol-script/runtime/query/compiler';
-import { CustomPropSymbol } from '../../mol-script/language/symbol';
-import { Type } from '../../mol-script/language/type';
-import { CustomPropertyDescriptor } from '../../mol-model/custom-property';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ShrakeRupleyComputationParams, AccessibleSurfaceArea } from './accessible-surface-area/shrake-rupley.ts';
+import { type Structure, Unit } from '../../mol-model/structure.ts';
+import { CustomStructureProperty } from '../common/custom-structure-property.ts';
+import type { CustomProperty } from '../common/custom-property.ts';
+import { QuerySymbolRuntime } from '../../mol-script/runtime/query/compiler.ts';
+import { CustomPropSymbol } from '../../mol-script/language/symbol.ts';
+import { Type } from '../../mol-script/language/type.ts';
+import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
 
 export const AccessibleSurfaceAreaParams = {
     ...ShrakeRupleyComputationParams

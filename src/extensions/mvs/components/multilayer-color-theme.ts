@@ -4,19 +4,19 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { ColorTypeLocation } from '../../../mol-geo/geometry/color-data';
-import { Location } from '../../../mol-model/location';
-import { Bond, Structure, StructureElement } from '../../../mol-model/structure';
-import { ColorTheme, LocationColor } from '../../../mol-theme/color';
-import { ColorThemeCategory } from '../../../mol-theme/color/categories';
-import { ThemeDataContext } from '../../../mol-theme/theme';
-import { deepEqual } from '../../../mol-util';
-import { Color } from '../../../mol-util/color';
-import { ColorNames } from '../../../mol-util/color/names';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { stringToWords } from '../../../mol-util/string';
-import { isMVSStructure } from './is-mvs-model-prop';
-import { ElementSet, SelectorParams, isSelectorAll, substructureFromSelector } from './selector';
+import type { ColorTypeLocation } from '../../../mol-geo/geometry/color-data.ts';
+import type { Location } from '../../../mol-model/location.ts';
+import { Bond, Structure, StructureElement } from '../../../mol-model/structure.ts';
+import type { ColorTheme, LocationColor } from '../../../mol-theme/color.ts';
+import { ColorThemeCategory } from '../../../mol-theme/color/categories.ts';
+import type { ThemeDataContext } from '../../../mol-theme/theme.ts';
+import { deepEqual } from '../../../mol-util.ts';
+import { Color } from '../../../mol-util/color.ts';
+import { ColorNames } from '../../../mol-util/color/names.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { stringToWords } from '../../../mol-util/string.ts';
+import { isMVSStructure } from './is-mvs-model-prop.ts';
+import { ElementSet, SelectorParams, isSelectorAll, substructureFromSelector } from './selector.ts';
 
 
 /** Special value that can be used as color with null-like semantic (i.e. "no color provided").

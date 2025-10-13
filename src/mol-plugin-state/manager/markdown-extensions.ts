@@ -4,14 +4,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { getCellBoundingSphere } from '../../mol-plugin-state/manager/focus-camera/focus-object';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { StateObjectCell, StateSelection } from '../../mol-state';
-import { PluginContext } from '../../mol-plugin/context';
-import { Script } from '../../mol-script/script';
-import { QueryContext, QueryFn, StructureElement, StructureSelection } from '../../mol-model/structure';
+import { getCellBoundingSphere } from '../../mol-plugin-state/manager/focus-camera/focus-object.ts';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { type StateObjectCell, StateSelection } from '../../mol-state.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { Script } from '../../mol-script/script.ts';
+import { QueryContext, type QueryFn, StructureElement, StructureSelection } from '../../mol-model/structure.ts';
 import { BehaviorSubject } from 'rxjs';
-import { AnimateStateSnapshotTransition } from '../animation/built-in/state-snapshots';
+import { AnimateStateSnapshotTransition } from '../animation/built-in/state-snapshots.ts';
 
 export type MarkdownExtensionEvent = 'click' | 'mouse-enter' | 'mouse-leave';
 

@@ -4,7 +4,7 @@
  * Adapted from MolQL project
 **/
 
-import { Transpiler } from '../transpiler';
+import type { Transpiler } from '../transpiler';
 import { _transpiler as transpilers } from '../all';
 
 function testTranspilerExamples(name: string, transpiler: Transpiler) {

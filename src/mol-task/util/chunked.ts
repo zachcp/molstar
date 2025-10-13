@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { now } from '../../mol-util/now';
-import { RuntimeContext } from '../execution/runtime-context';
+import { now } from '../../mol-util/now.ts';
+import type { RuntimeContext } from '../execution/runtime-context.ts';
 
 type UniformlyChunkedFn<S> = (chunkSize: number, state: S) => number
 

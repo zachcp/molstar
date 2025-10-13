@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Structure, StructureElement } from '../../mol-model/structure';
-import { InteractionElementSchema, InteractionInfo, StructureInteractionElement, StructureInteractions } from './model';
+import { type Structure, StructureElement } from '../../mol-model/structure.ts';
+import type { InteractionElementSchema, InteractionInfo, StructureInteractionElement, StructureInteractions } from './model.ts';
 
 export function getCustomInteractionData(interactions: InteractionElementSchema[], structures: { [ref: string]: Structure }): StructureInteractions {
     const elements: StructureInteractionElement[] = [];

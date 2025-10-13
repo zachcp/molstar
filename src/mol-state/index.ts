@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-export * from './object';
-export * from './tree';
-export * from './state';
-export * from './state/builder';
-export * from './state/selection';
-export * from './transformer';
-export * from './transform';
-export * from './action';
+export * from './object.ts';
+export * from './tree.ts';
+export * from './state.ts';
+export * from './state/builder.ts';
+export * from './state/selection.ts';
+export * from './transformer.ts';
+export * from './transform.ts';
+export * from './action.ts';

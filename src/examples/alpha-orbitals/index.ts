@@ -6,27 +6,27 @@
 
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime, skip } from 'rxjs/operators';
-import { AlphaOrbital, Basis } from '../../extensions/alpha-orbitals/data-model';
-import { SphericalBasisOrder } from '../../extensions/alpha-orbitals/spherical-functions';
-import { BasisAndOrbitals, CreateOrbitalDensityVolume, CreateOrbitalRepresentation3D, CreateOrbitalVolume, StaticBasisAndOrbitals } from '../../extensions/alpha-orbitals/transforms';
-import { canComputeGrid3dOnGPU } from '../../mol-gl/compute/grid3d';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { createPluginUI } from '../../mol-plugin-ui';
-import { renderReact18 } from '../../mol-plugin-ui/react18';
-import { PluginUIContext } from '../../mol-plugin-ui/context';
-import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginConfig } from '../../mol-plugin/config';
-import { StateObjectSelector, StateTransformer } from '../../mol-state';
-import { Color } from '../../mol-util/color';
-import { ColorNames } from '../../mol-util/color/names';
-import { ParamDefinition } from '../../mol-util/param-definition';
-import { mountControls } from './controls';
-import { DemoMoleculeSDF, DemoOrbitals } from './example-data';
+import type { AlphaOrbital, Basis } from '../../extensions/alpha-orbitals/data-model.ts';
+import type { SphericalBasisOrder } from '../../extensions/alpha-orbitals/spherical-functions.ts';
+import { type BasisAndOrbitals, CreateOrbitalDensityVolume, CreateOrbitalRepresentation3D, CreateOrbitalVolume, StaticBasisAndOrbitals } from '../../extensions/alpha-orbitals/transforms.ts';
+import { canComputeGrid3dOnGPU } from '../../mol-gl/compute/grid3d.ts';
+import type { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { createPluginUI } from '../../mol-plugin-ui.ts';
+import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
+import type { PluginUIContext } from '../../mol-plugin-ui/context.ts';
+import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import type { StateObjectSelector, StateTransformer } from '../../mol-state.ts';
+import type { Color } from '../../mol-util/color.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { ParamDefinition } from '../../mol-util/param-definition.ts';
+import { mountControls } from './controls.ts';
+import { DemoMoleculeSDF, DemoOrbitals } from './example-data.ts';
 import './index.html';
 import '../../mol-plugin-ui/skin/light.scss';
 
-import { setDebugMode, setTimingMode, consoleStats } from '../../mol-util/debug';
+import { setDebugMode, setTimingMode, consoleStats } from '../../mol-util/debug.ts';
 
 interface DemoInput {
     moleculeSdf: string,

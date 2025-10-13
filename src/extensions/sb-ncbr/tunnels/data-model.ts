@@ -4,10 +4,10 @@
  * @author Dušan Veľký <dvelky@mail.muni.cz>
  */
 
-import { WebGLContext } from '../../../mol-gl/webgl/context';
-import { PluginStateObject } from '../../../mol-plugin-state/objects';
-import { Color } from '../../../mol-util/color';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
+import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
+import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
+import { Color } from '../../../mol-util/color.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 
 export interface Profile {
     Charge: number,

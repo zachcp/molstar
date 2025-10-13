@@ -7,11 +7,11 @@
  * copyright (c) 2010-2022 three.js authors. MIT License
  */
 
-import { Mat4 } from '../../linear-algebra/3d/mat4';
-import { Vec3 } from '../../linear-algebra/3d/vec3';
-import { Box3D } from './box3d';
-import { Plane3D } from './plane3d';
-import { Sphere3D } from './sphere3d';
+import type { Mat4 } from '../../linear-algebra/3d/mat4.ts';
+import { Vec3 } from '../../linear-algebra/3d/vec3.ts';
+import type { Box3D } from './box3d.ts';
+import { Plane3D } from './plane3d.ts';
+import type { Sphere3D } from './sphere3d.ts';
 
 interface Frustum3D { 0: Plane3D, 1: Plane3D, 2: Plane3D, 3: Plane3D, 4: Plane3D, 5: Plane3D; length: 6; }
 

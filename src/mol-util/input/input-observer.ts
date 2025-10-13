@@ -7,11 +7,11 @@
  * @author Herman Bergwerf <post@hbergwerf.nl>
  */
 
-import { Subject, Observable } from 'rxjs';
-import { Viewport } from '../../mol-canvas3d/camera/util';
-import { Vec2, EPSILON, Vec3 } from '../../mol-math/linear-algebra';
-import { BitFlags, noop } from '../../mol-util';
-import { Ray3D } from '../../mol-math/geometry/primitives/ray3d';
+import { Subject, type Observable } from 'rxjs';
+import { Viewport } from '../../mol-canvas3d/camera/util.ts';
+import { Vec2, EPSILON, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { BitFlags, noop } from '../../mol-util.ts';
+import type { Ray3D } from '../../mol-math/geometry/primitives/ray3d.ts';
 
 export function getButtons(event: MouseEvent | Touch) {
     if (typeof event === 'object') {
@@ -376,7 +376,7 @@ namespace InputObserver {
         };
 
         function pixelRatio() {
-            return window.devicePixelRatio * pixelScale;
+            return globalThis.devicePixelRatio * pixelScale;
         }
 
         function getModifierKeys(): ModifiersKeys {
@@ -395,8 +395,8 @@ namespace InputObserver {
         let hasMoved = false;
 
         let resizeObserver: ResizeObserver | undefined;
-        if (typeof window.ResizeObserver !== 'undefined') {
-            resizeObserver = new window.ResizeObserver(onResize);
+        if (typeof globalThis.ResizeObserver !== 'undefined') {
+            resizeObserver = new globalThis.ResizeObserver(onResize);
         }
 
         const events = createEvents();
@@ -412,8 +412,8 @@ namespace InputObserver {
 
             // for dragging to work outside canvas bounds,
             // mouse move/up events have to be added to a parent, i.e. window
-            window.addEventListener('mousemove', onMouseMove as any, false);
-            window.addEventListener('mouseup', onMouseUp as any, false);
+            globalThis.addEventListener('mousemove', onMouseMove as any, false);
+            globalThis.addEventListener('mouseup', onMouseUp as any, false);
 
             element.addEventListener('touchstart', onTouchStart as any, false);
             element.addEventListener('touchmove', onTouchMove as any, false);
@@ -424,10 +424,10 @@ namespace InputObserver {
             element.addEventListener('gestureend', onGestureEnd as any, false);
 
             // reset buttons and modifier keys state when browser window looses focus
-            window.addEventListener('blur', handleBlur);
-            window.addEventListener('keyup', handleKeyUp as EventListener, false);
-            window.addEventListener('keydown', handleKeyDown as EventListener, false);
-            window.addEventListener('keypress', handleKeyPress as EventListener, false);
+            globalThis.addEventListener('blur', handleBlur);
+            globalThis.addEventListener('keyup', handleKeyUp as EventListener, false);
+            globalThis.addEventListener('keydown', handleKeyDown as EventListener, false);
+            globalThis.addEventListener('keypress', handleKeyPress as EventListener, false);
 
             document.addEventListener('pointerlockchange', onPointerLockChange, false);
             document.addEventListener('pointerlockerror', onPointerLockError, false);
@@ -435,7 +435,7 @@ namespace InputObserver {
             if (resizeObserver != null) {
                 resizeObserver.observe(element.parentElement!);
             } else {
-                window.addEventListener('resize', onResize, false);
+                globalThis.addEventListener('resize', onResize, false);
             }
         }
 
@@ -447,8 +447,8 @@ namespace InputObserver {
 
             element.removeEventListener('wheel', onMouseWheel as any, false);
             element.removeEventListener('mousedown', onMouseDown as any, false);
-            window.removeEventListener('mousemove', onMouseMove as any, false);
-            window.removeEventListener('mouseup', onMouseUp as any, false);
+            globalThis.removeEventListener('mousemove', onMouseMove as any, false);
+            globalThis.removeEventListener('mouseup', onMouseUp as any, false);
 
             element.removeEventListener('touchstart', onTouchStart as any, false);
             element.removeEventListener('touchmove', onTouchMove as any, false);
@@ -458,10 +458,10 @@ namespace InputObserver {
             element.removeEventListener('gesturestart', onGestureStart as any, false);
             element.removeEventListener('gestureend', onGestureEnd as any, false);
 
-            window.removeEventListener('blur', handleBlur);
-            window.removeEventListener('keyup', handleKeyUp as EventListener, false);
-            window.removeEventListener('keydown', handleKeyDown as EventListener, false);
-            window.removeEventListener('keypress', handleKeyPress as EventListener, false);
+            globalThis.removeEventListener('blur', handleBlur);
+            globalThis.removeEventListener('keyup', handleKeyUp as EventListener, false);
+            globalThis.removeEventListener('keydown', handleKeyDown as EventListener, false);
+            globalThis.removeEventListener('keypress', handleKeyPress as EventListener, false);
 
             document.removeEventListener('pointerlockchange', onPointerLockChange, false);
             document.removeEventListener('pointerlockerror', onPointerLockError, false);
@@ -472,7 +472,7 @@ namespace InputObserver {
                 resizeObserver.unobserve(element.parentElement!);
                 resizeObserver.disconnect();
             } else {
-                window.removeEventListener('resize', onResize, false);
+                globalThis.removeEventListener('resize', onResize, false);
             }
         }
 
@@ -1050,8 +1050,8 @@ namespace InputObserver {
         function getPagePosition(ev: { pageX: number, pageY: number }) {
             if (isLocked) {
                 return {
-                    pageX: Math.round(window.innerWidth / 2) + lockedViewport.x,
-                    pageY: Math.round(window.innerHeight / 2) + lockedViewport.y
+                    pageX: Math.round(globalThis.innerWidth / 2) + lockedViewport.x,
+                    pageY: Math.round(globalThis.innerHeight / 2) + lockedViewport.y
                 };
             } else {
                 return {

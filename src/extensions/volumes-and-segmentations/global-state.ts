@@ -5,12 +5,12 @@
  */
 
 import { BehaviorSubject } from 'rxjs';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { PluginBehavior } from '../../mol-plugin/behavior';
-import { PluginContext } from '../../mol-plugin/context';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { VolsegEntry } from './entry-root';
-import { isDefined } from './helpers';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { PluginBehavior } from '../../mol-plugin/behavior.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { VolsegEntry } from './entry-root.ts';
+import { isDefined } from './helpers.ts';
 
 
 export const VolsegGlobalStateParams = {

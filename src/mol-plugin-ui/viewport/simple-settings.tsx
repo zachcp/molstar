@@ -5,21 +5,21 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { produce } from '../../mol-util/produce';
+import { produce } from '../../mol-util/produce.ts';
 import { throttleTime } from 'rxjs';
-import { Canvas3DContext, Canvas3DParams, Canvas3DProps } from '../../mol-canvas3d/canvas3d';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginConfig } from '../../mol-plugin/config';
-import { StateTransform } from '../../mol-state';
-import { Color } from '../../mol-util/color';
-import { deepClone } from '../../mol-util/object';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ParamMapping } from '../../mol-util/param-mapping';
-import { Mutable } from '../../mol-util/type-helpers';
-import { PluginUIComponent } from '../base';
-import { PluginUIContext } from '../context';
-import { ParameterMappingControl } from '../controls/parameters';
-import { ViewportHelpContent } from './help';
+import { Canvas3DContext, Canvas3DParams, type Canvas3DProps } from '../../mol-canvas3d/canvas3d.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import { StateTransform } from '../../mol-state.ts';
+import { Color } from '../../mol-util/color.ts';
+import { deepClone } from '../../mol-util/object.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ParamMapping } from '../../mol-util/param-mapping.ts';
+import type { Mutable } from '../../mol-util/type-helpers.ts';
+import { PluginUIComponent } from '../base.ts';
+import type { PluginUIContext } from '../context.ts';
+import { ParameterMappingControl } from '../controls/parameters.ts';
+import { ViewportHelpContent } from './help.ts';
 
 export class SimpleSettingsControl extends PluginUIComponent {
     componentDidMount() {

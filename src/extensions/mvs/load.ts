@@ -6,38 +6,38 @@
  * @author Aliaksei Chareshneu <chareshneu.tech@gmail.com>
  */
 
-import { PluginStateSnapshotManager } from '../../mol-plugin-state/manager/snapshots';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { Download, ParseCif, ParseCcp4 } from '../../mol-plugin-state/transforms/data';
-import { CoordinatesFromLammpstraj, CoordinatesFromXtc, CustomModelProperties, CustomStructureProperties, ModelFromTrajectory, StructureComponent, StructureFromModel, TrajectoryFromGRO, TrajectoryFromLammpsTrajData, TrajectoryFromMmCif, TrajectoryFromMOL, TrajectoryFromMOL2, TrajectoryFromPDB, TrajectoryFromSDF, TrajectoryFromXYZ } from '../../mol-plugin-state/transforms/model';
-import { StructureRepresentation3D, VolumeRepresentation3D } from '../../mol-plugin-state/transforms/representation';
-import { VolumeFromCcp4, VolumeFromDensityServerCif } from '../../mol-plugin-state/transforms/volume';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginContext } from '../../mol-plugin/context';
-import { PluginState } from '../../mol-plugin/state';
-import { StateObjectSelector, StateTree } from '../../mol-state';
-import { RuntimeContext, Task } from '../../mol-task';
-import { MolViewSpec } from './behavior';
-import { createPluginStateSnapshotCamera, modifyCanvasProps, resetCanvasProps } from './camera';
-import { MVSAnnotationsProvider } from './components/annotation-prop';
-import { MVSAnnotationStructureComponent } from './components/annotation-structure-component';
-import { MVSAnnotationTooltipsProvider } from './components/annotation-tooltips-prop';
-import { CustomLabelProps, CustomLabelRepresentationProvider } from './components/custom-label/representation';
-import { CustomTooltipsProvider } from './components/custom-tooltips-prop';
-import { IsMVSModelProps, IsMVSModelProvider } from './components/is-mvs-model-prop';
-import { getPrimitiveStructureRefs, MVSBuildPrimitiveShape, MVSDownloadPrimitiveData, MVSInlinePrimitiveData, MVSShapeRepresentation3D } from './components/primitives';
-import { MVSTrajectoryWithCoordinates } from './components/trajectory';
-import { generateStateTransition } from './helpers/animation';
-import { IsHiddenCustomStateExtension } from './load-extensions/is-hidden-custom-state';
-import { NonCovalentInteractionsExtension } from './load-extensions/non-covalent-interactions';
-import { LoadingActions, LoadingExtension, loadTreeVirtual, UpdateTarget } from './load-generic';
-import { AnnotationFromSourceKind, AnnotationFromUriKind, collectAnnotationReferences, collectAnnotationTooltips, collectInlineLabels, collectInlineTooltips, colorThemeForNode, componentFromXProps, componentPropsFromSelector, isPhantomComponent, labelFromXProps, makeNearestReprMap, prettyNameFromSelector, representationProps, structureProps, transformAndInstantiateStructure, transformAndInstantiateVolume, volumeColorThemeForNode, volumeRepresentationProps } from './load-helpers';
-import { MVSData, MVSData_States, Snapshot, SnapshotMetadata } from './mvs-data';
-import { MVSAnimationNode, MVSAnimationSchema } from './tree/animation/animation-tree';
-import { validateTree } from './tree/generic/tree-validation';
-import { convertMvsToMolstar, mvsSanityCheck } from './tree/molstar/conversion';
-import { MolstarNode, MolstarNodeParams, MolstarSubtree, MolstarTree, MolstarTreeSchema } from './tree/molstar/molstar-tree';
-import { MVSTreeSchema } from './tree/mvs/mvs-tree';
+import { PluginStateSnapshotManager } from '../../mol-plugin-state/manager/snapshots.ts';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { Download, ParseCif, ParseCcp4 } from '../../mol-plugin-state/transforms/data.ts';
+import { CoordinatesFromLammpstraj, CoordinatesFromXtc, CustomModelProperties, CustomStructureProperties, ModelFromTrajectory, StructureComponent, StructureFromModel, TrajectoryFromGRO, TrajectoryFromLammpsTrajData, TrajectoryFromMmCif, TrajectoryFromMOL, TrajectoryFromMOL2, TrajectoryFromPDB, TrajectoryFromSDF, TrajectoryFromXYZ } from '../../mol-plugin-state/transforms/model.ts';
+import { StructureRepresentation3D, VolumeRepresentation3D } from '../../mol-plugin-state/transforms/representation.ts';
+import { VolumeFromCcp4, VolumeFromDensityServerCif } from '../../mol-plugin-state/transforms/volume.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import type { PluginState } from '../../mol-plugin/state.ts';
+import { type StateObjectSelector, StateTree } from '../../mol-state.ts';
+import { type RuntimeContext, Task } from '../../mol-task.ts';
+import { MolViewSpec } from './behavior.ts';
+import { createPluginStateSnapshotCamera, modifyCanvasProps, resetCanvasProps } from './camera.ts';
+import { MVSAnnotationsProvider } from './components/annotation-prop.ts';
+import { MVSAnnotationStructureComponent } from './components/annotation-structure-component.ts';
+import { MVSAnnotationTooltipsProvider } from './components/annotation-tooltips-prop.ts';
+import { type CustomLabelProps, CustomLabelRepresentationProvider } from './components/custom-label/representation.ts';
+import { CustomTooltipsProvider } from './components/custom-tooltips-prop.ts';
+import { type IsMVSModelProps, IsMVSModelProvider } from './components/is-mvs-model-prop.ts';
+import { getPrimitiveStructureRefs, MVSBuildPrimitiveShape, MVSDownloadPrimitiveData, MVSInlinePrimitiveData, MVSShapeRepresentation3D } from './components/primitives.ts';
+import { MVSTrajectoryWithCoordinates } from './components/trajectory.ts';
+import { generateStateTransition } from './helpers/animation.ts';
+import { IsHiddenCustomStateExtension } from './load-extensions/is-hidden-custom-state.ts';
+import { NonCovalentInteractionsExtension } from './load-extensions/non-covalent-interactions.ts';
+import { type LoadingActions, type LoadingExtension, loadTreeVirtual, UpdateTarget } from './load-generic.ts';
+import { type AnnotationFromSourceKind, type AnnotationFromUriKind, collectAnnotationReferences, collectAnnotationTooltips, collectInlineLabels, collectInlineTooltips, colorThemeForNode, componentFromXProps, componentPropsFromSelector, isPhantomComponent, labelFromXProps, makeNearestReprMap, prettyNameFromSelector, representationProps, structureProps, transformAndInstantiateStructure, transformAndInstantiateVolume, volumeColorThemeForNode, volumeRepresentationProps } from './load-helpers.ts';
+import { MVSData, type MVSData_States, type Snapshot, type SnapshotMetadata } from './mvs-data.ts';
+import { type MVSAnimationNode, MVSAnimationSchema } from './tree/animation/animation-tree.ts';
+import { validateTree } from './tree/generic/tree-validation.ts';
+import { convertMvsToMolstar, mvsSanityCheck } from './tree/molstar/conversion.ts';
+import { type MolstarNode, type MolstarNodeParams, type MolstarSubtree, type MolstarTree, MolstarTreeSchema } from './tree/molstar/molstar-tree.ts';
+import { MVSTreeSchema } from './tree/mvs/mvs-tree.ts';
 
 
 export interface MVSLoadOptions {

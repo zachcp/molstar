@@ -1,16 +1,16 @@
-import { MolScriptBuilder } from '../mol-script/language/builder';
-import { compile, QuerySymbolRuntime, DefaultQueryRuntimeTable } from '../mol-script/runtime/query/compiler';
-import { QueryContext, Structure, StructureQuery } from '../mol-model/structure';
-import { readCifFile, getModelsAndStructure } from '../cli/structure-info/model';
-import { CustomPropSymbol } from '../mol-script/language/symbol';
-import { Type } from '../mol-script/language/type';
-import { parseMolScript } from '../mol-script/language/parser';
+import { MolScriptBuilder } from '../mol-script/language/builder.ts';
+import { compile, QuerySymbolRuntime, DefaultQueryRuntimeTable } from '../mol-script/runtime/query/compiler.ts';
+import { QueryContext, Structure, type StructureQuery } from '../mol-model/structure.ts';
+import { readCifFile, getModelsAndStructure } from '../cli/structure-info/model.ts';
+import { CustomPropSymbol } from '../mol-script/language/symbol.ts';
+import { Type } from '../mol-script/language/type.ts';
+import { parseMolScript } from '../mol-script/language/parser.ts';
 import * as util from 'util';
-import { transpileMolScript } from '../mol-script/script/mol-script/symbols';
-import { formatMolScript } from '../mol-script/language/expression-formatter';
-import { StructureQualityReport, StructureQualityReportProvider } from '../extensions/pdbe/structure-quality-report/prop';
+import { transpileMolScript } from '../mol-script/script/mol-script/symbols.ts';
+import { formatMolScript } from '../mol-script/language/expression-formatter.ts';
+import { StructureQualityReport, StructureQualityReportProvider } from '../extensions/pdbe/structure-quality-report/prop.ts';
 import fetch from 'node-fetch';
-import { CustomPropertyDescriptor } from '../mol-model/custom-property';
+import { CustomPropertyDescriptor } from '../mol-model/custom-property.ts';
 
 // import Examples from 'mol-script/script/mol-script/examples'
 // import { parseMolScript } from 'mol-script/script/mol-script/parser'

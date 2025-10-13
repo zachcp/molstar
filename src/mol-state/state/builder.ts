@@ -5,13 +5,13 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { StateTree } from '../tree/immutable';
-import { TransientTree } from '../tree/transient';
-import { StateObject, StateObjectCell, StateObjectSelector, StateObjectRef } from '../object';
-import { StateTransform } from '../transform';
-import { StateTransformer } from '../transformer';
-import { State } from '../state';
-import { produce } from '../../mol-util/produce';
+import { StateTree } from '../tree/immutable.ts';
+import type { TransientTree } from '../tree/transient.ts';
+import { type StateObject, StateObjectCell, StateObjectSelector, StateObjectRef } from '../object.ts';
+import { StateTransform } from '../transform.ts';
+import type { StateTransformer } from '../transformer.ts';
+import type { State } from '../state.ts';
+import { produce } from '../../mol-util/produce.ts';
 
 export { StateBuilder };
 

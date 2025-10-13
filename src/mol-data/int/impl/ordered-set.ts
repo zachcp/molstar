@@ -5,8 +5,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { SortedArray as S } from '../sorted-array';
-import { Interval as I } from '../interval';
+import { SortedArray as S } from '../sorted-array.ts';
+import { Interval as I } from '../interval.ts';
 
 type OrderedSetImpl = I | S
 type Nums = ArrayLike<number>

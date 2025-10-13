@@ -6,7 +6,8 @@
 
 import express from 'express';
 import fetch from 'node-fetch';
-import { createMapping } from './mapping';
+import { createMapping } from './mapping.ts';
+import process from "node:process";
 
 async function getMappings(id: string) {
     const data = await fetch(`https://www.ebi.ac.uk/pdbe/api/mappings/${id}`);

@@ -1,10 +1,10 @@
-import { LociLabelProvider } from '../../../mol-plugin-state/manager/loci-label';
-import { PluginBehavior } from '../../../mol-plugin/behavior';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { SbNcbrPartialChargesColorThemeProvider } from './color';
-import { SbNcbrPartialChargesPropertyProvider } from './property';
-import { SbNcbrPartialChargesLociLabelProvider } from './labels';
-import { SbNcbrPartialChargesPreset } from './preset';
+import type { LociLabelProvider } from '../../../mol-plugin-state/manager/loci-label.ts';
+import { PluginBehavior } from '../../../mol-plugin/behavior.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { SbNcbrPartialChargesColorThemeProvider } from './color.ts';
+import { SbNcbrPartialChargesPropertyProvider } from './property.ts';
+import { SbNcbrPartialChargesLociLabelProvider } from './labels.ts';
+import { SbNcbrPartialChargesPreset } from './preset.ts';
 
 export const SbNcbrPartialCharges = PluginBehavior.create<{ autoAttach: boolean; showToolTip: boolean }>({
     name: 'sb-ncbr-partial-charges',

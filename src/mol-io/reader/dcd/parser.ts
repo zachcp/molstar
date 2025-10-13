@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ReaderResult as Result } from '../result';
-import { Task } from '../../../mol-task';
-import { Mutable, FiniteArray } from '../../../mol-util/type-helpers';
-import { uint8ToString } from '../../common/binary';
+import { ReaderResult as Result } from '../result.ts';
+import { Task } from '../../../mol-task.ts';
+import type { Mutable, FiniteArray } from '../../../mol-util/type-helpers.ts';
+import { uint8ToString } from '../../common/binary.ts';
 
 export interface DcdHeader {
     readonly NSET: number,

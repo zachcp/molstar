@@ -4,7 +4,7 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { utf8Read } from './utf8';
+import { utf8Read } from './utf8.ts';
 
 
 /**

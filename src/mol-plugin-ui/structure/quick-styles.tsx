@@ -6,15 +6,15 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { PostprocessingParams } from '../../mol-canvas3d/passes/postprocessing';
-import { PresetStructureRepresentations } from '../../mol-plugin-state/builder/structure/representation-preset';
-import { PluginConfig } from '../../mol-plugin/config';
-import { PluginContext } from '../../mol-plugin/context';
-import { Color } from '../../mol-util/color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { CollapsableControls, PurePluginUIComponent } from '../base';
-import { Button } from '../controls/common';
-import { MagicWandSvg } from '../controls/icons';
+import { PostprocessingParams } from '../../mol-canvas3d/passes/postprocessing.ts';
+import { PresetStructureRepresentations } from '../../mol-plugin-state/builder/structure/representation-preset.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { Color } from '../../mol-util/color.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { CollapsableControls, PurePluginUIComponent } from '../base.ts';
+import { Button } from '../controls/common.ts';
+import { MagicWandSvg } from '../controls/icons.ts';
 
 
 export class StructureQuickStylesControls extends CollapsableControls {

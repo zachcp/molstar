@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ValueCell } from '../../mol-util/value-cell';
-import { Vec2 } from '../../mol-math/linear-algebra';
-import { TextureImage, createTextureImage } from '../../mol-gl/renderable/util';
+import { ValueCell } from '../../mol-util/value-cell.ts';
+import { Vec2 } from '../../mol-math/linear-algebra.ts';
+import { type TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
 
 export type MarkerType = 'instance' | 'groupInstance';
 

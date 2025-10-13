@@ -5,31 +5,31 @@
  */
 
 import * as ReactDOM from 'react-dom';
-import { Canvas3DProps, DefaultCanvas3DParams } from '../../mol-canvas3d/canvas3d';
-import { AnimateModelIndex } from '../../mol-plugin-state/animation/built-in/model-index';
-import { createStructureRepresentationParams } from '../../mol-plugin-state/helpers/structure-representation-params';
-import { PluginStateObject, PluginStateObject as PSO } from '../../mol-plugin-state/objects';
-import { StateTransforms } from '../../mol-plugin-state/transforms';
-import { createPluginUI } from '../../mol-plugin-ui';
-import { renderReact18 } from '../../mol-plugin-ui/react18';
-import { PluginUIContext } from '../../mol-plugin-ui/context';
-import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec';
-import { CreateVolumeStreamingInfo, InitVolumeStreaming } from '../../mol-plugin/behavior/dynamic/volume-streaming/transformers';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginState } from '../../mol-plugin/state';
-import { MolScriptBuilder as MS } from '../../mol-script/language/builder';
-import { StateBuilder, StateObject, StateSelection } from '../../mol-state';
-import { Asset } from '../../mol-util/assets';
-import { Color } from '../../mol-util/color';
-import { ColorNames } from '../../mol-util/color/names';
-import { getFormattedTime } from '../../mol-util/date';
-import { download } from '../../mol-util/download';
-import { RxEventHelper } from '../../mol-util/rx-event-helper';
-import { EvolutionaryConservation } from './annotation';
-import { createProteopediaCustomTheme } from './coloring';
-import { LoadParams, ModelInfo, RepresentationStyle, StateElements, SupportedFormats } from './helpers';
+import { type Canvas3DProps, DefaultCanvas3DParams } from '../../mol-canvas3d/canvas3d.ts';
+import { AnimateModelIndex } from '../../mol-plugin-state/animation/built-in/model-index.ts';
+import { createStructureRepresentationParams } from '../../mol-plugin-state/helpers/structure-representation-params.ts';
+import type { PluginStateObject, PluginStateObject as PSO } from '../../mol-plugin-state/objects.ts';
+import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
+import { createPluginUI } from '../../mol-plugin-ui.ts';
+import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
+import type { PluginUIContext } from '../../mol-plugin-ui/context.ts';
+import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';
+import { CreateVolumeStreamingInfo, InitVolumeStreaming } from '../../mol-plugin/behavior/dynamic/volume-streaming/transformers.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import type { PluginState } from '../../mol-plugin/state.ts';
+import { MolScriptBuilder as MS } from '../../mol-script/language/builder.ts';
+import { type StateBuilder, type StateObject, StateSelection } from '../../mol-state.ts';
+import { Asset } from '../../mol-util/assets.ts';
+import { Color } from '../../mol-util/color.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { getFormattedTime } from '../../mol-util/date.ts';
+import { download } from '../../mol-util/download.ts';
+import { RxEventHelper } from '../../mol-util/rx-event-helper.ts';
+import { EvolutionaryConservation } from './annotation.ts';
+import { createProteopediaCustomTheme } from './coloring.ts';
+import { type LoadParams, ModelInfo, type RepresentationStyle, StateElements, type SupportedFormats } from './helpers.ts';
 import './index.html';
-import { volumeStreamingControls } from './ui/controls';
+import { volumeStreamingControls } from './ui/controls.ts';
 require('../../mol-plugin-ui/skin/light.scss');
 
 class MolStarProteopediaWrapper {

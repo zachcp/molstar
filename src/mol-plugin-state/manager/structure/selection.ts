@@ -6,24 +6,24 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { OrderedSet } from '../../../mol-data/int';
-import { BoundaryHelper } from '../../../mol-math/geometry/boundary-helper';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { PrincipalAxes } from '../../../mol-math/linear-algebra/matrix/principal-axes';
-import { EmptyLoci, Loci } from '../../../mol-model/loci';
-import { QueryContext, Structure, StructureElement, StructureQuery, StructureSelection } from '../../../mol-model/structure';
-import { PluginContext } from '../../../mol-plugin/context';
-import { StateObjectRef, StateSelection } from '../../../mol-state';
-import { Task } from '../../../mol-task';
-import { structureElementStatsLabel } from '../../../mol-theme/label';
-import { arrayRemoveAtInPlace } from '../../../mol-util/array';
-import { StatefulPluginComponent } from '../../component';
-import { StructureSelectionQuery } from '../../helpers/structure-selection-query';
-import { PluginStateObject as PSO } from '../../objects';
-import { UUID } from '../../../mol-util';
-import { StructureRef } from './hierarchy-state';
-import { Boundary } from '../../../mol-math/geometry/boundary';
-import { iterableToArray } from '../../../mol-data/util';
+import { OrderedSet } from '../../../mol-data/int.ts';
+import { BoundaryHelper } from '../../../mol-math/geometry/boundary-helper.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import type { PrincipalAxes } from '../../../mol-math/linear-algebra/matrix/principal-axes.ts';
+import { EmptyLoci, Loci } from '../../../mol-model/loci.ts';
+import { QueryContext, Structure, StructureElement, type StructureQuery, StructureSelection } from '../../../mol-model/structure.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import { StateObjectRef, StateSelection } from '../../../mol-state.ts';
+import { Task } from '../../../mol-task.ts';
+import { structureElementStatsLabel } from '../../../mol-theme/label.ts';
+import { arrayRemoveAtInPlace } from '../../../mol-util/array.ts';
+import { StatefulPluginComponent } from '../../component.ts';
+import type { StructureSelectionQuery } from '../../helpers/structure-selection-query.ts';
+import { PluginStateObject as PSO } from '../../objects.ts';
+import { UUID } from '../../../mol-util.ts';
+import type { StructureRef } from './hierarchy-state.ts';
+import type { Boundary } from '../../../mol-math/geometry/boundary.ts';
+import { iterableToArray } from '../../../mol-data/util.ts';
 
 interface StructureSelectionManagerState {
     entries: Map<string, SelectionEntry>,

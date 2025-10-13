@@ -5,11 +5,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { deepClone, pickObjectKeys } from '../../../../mol-util/object';
-import { GlobalMetadata, MVSData_State, Snapshot, SnapshotMetadata } from '../../mvs-data';
-import { CustomProps } from '../generic/tree-schema';
-import { MVSAnimationNodeParams, MVSAnimationSubtree } from '../animation/animation-tree';
-import { MVSKind, MVSNode, MVSNodeParams, MVSSubtree } from './mvs-tree';
+import { deepClone, pickObjectKeys } from '../../../../mol-util/object.ts';
+import { GlobalMetadata, type MVSData_State, type Snapshot, type SnapshotMetadata } from '../../mvs-data.ts';
+import type { CustomProps } from '../generic/tree-schema.ts';
+import type { MVSAnimationNodeParams, MVSAnimationSubtree } from '../animation/animation-tree.ts';
+import type { MVSKind, MVSNode, MVSNodeParams, MVSSubtree } from './mvs-tree.ts';
 
 
 /** Create a new MolViewSpec builder containing only a root node. Example of MVS builder usage:

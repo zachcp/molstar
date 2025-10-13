@@ -5,18 +5,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Model } from '../../mol-model/structure';
-import { ModelRef, StructureHierarchyRef, TrajectoryRef } from '../../mol-plugin-state/manager/structure/hierarchy-state';
-import { StateTransforms } from '../../mol-plugin-state/transforms';
-import { StateSelection } from '../../mol-state';
-import { CollapsableControls, CollapsableState } from '../base';
-import { ActionMenu } from '../controls/action-menu';
-import { Button, ExpandGroup, IconButton } from '../controls/common';
-import { BookmarksOutlinedSvg, MoleculeSvg } from '../controls/icons';
-import { ParameterControls } from '../controls/parameters';
-import { UpdateTransformControl } from '../state/update-transform';
-import { StructureFocusControls } from './focus';
-import { StructureSelectionStatsControls } from './selection';
+import { Model } from '../../mol-model/structure.ts';
+import type { ModelRef, StructureHierarchyRef, TrajectoryRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
+import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
+import { StateSelection } from '../../mol-state.ts';
+import { CollapsableControls, type CollapsableState } from '../base.ts';
+import { ActionMenu } from '../controls/action-menu.ts';
+import { Button, ExpandGroup, IconButton } from '../controls/common.ts';
+import { BookmarksOutlinedSvg, MoleculeSvg } from '../controls/icons.ts';
+import { ParameterControls } from '../controls/parameters.ts';
+import { UpdateTransformControl } from '../state/update-transform.ts';
+import { StructureFocusControls } from './focus.ts';
+import { StructureSelectionStatsControls } from './selection.ts';
 
 interface StructureSourceControlState extends CollapsableState {
     isBusy: boolean,

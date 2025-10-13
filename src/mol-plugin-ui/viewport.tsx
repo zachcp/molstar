@@ -7,18 +7,18 @@
  * @author Chetan Mishra <chetan.s115@gmail.com>
  */
 
-import * as React from 'react';
+import type * as React from 'react';
 import { throttleTime } from 'rxjs';
-import { PluginCommands } from '../mol-plugin/commands';
-import { PluginConfig } from '../mol-plugin/config';
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { PluginUIComponent } from './base';
-import { Button, ControlGroup, IconButton } from './controls/common';
-import { AutorenewSvg, BuildOutlinedSvg, CameraOutlinedSvg, CloseSvg, FullscreenSvg, TuneSvg, HeadsetVRSvg } from './controls/icons';
-import { ToggleSelectionModeButton } from './structure/selection';
-import { ViewportCanvas } from './viewport/canvas';
-import { DownloadScreenshotControls } from './viewport/screenshot';
-import { SimpleSettingsControl } from './viewport/simple-settings';
+import { PluginCommands } from '../mol-plugin/commands.ts';
+import { PluginConfig } from '../mol-plugin/config.ts';
+import type { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import { PluginUIComponent } from './base.ts';
+import { Button, ControlGroup, IconButton } from './controls/common.ts';
+import { AutorenewSvg, BuildOutlinedSvg, CameraOutlinedSvg, CloseSvg, FullscreenSvg, TuneSvg, HeadsetVRSvg } from './controls/icons.ts';
+import { ToggleSelectionModeButton } from './structure/selection.ts';
+import { ViewportCanvas } from './viewport/canvas.ts';
+import { DownloadScreenshotControls } from './viewport/screenshot.ts';
+import { SimpleSettingsControl } from './viewport/simple-settings.ts';
 
 interface ViewportControlsState {
     isSettingsExpanded: boolean,
@@ -112,7 +112,7 @@ export class ViewportControls extends PluginUIComponent<ViewportControlsProps, V
         const xr = showXr === 'always' || (showXr === 'auto' && xrIsSupported);
         const xrTitle = !xrIsSupported ? 'Augmented/Virtual Reality unavailable' : (xrIsPresenting ? 'Exit XR' : 'Enter XR');
 
-        return <div className={'msp-viewport-controls'}>
+        return <div className="msp-viewport-controls">
             <div className='msp-viewport-controls-buttons'>
                 {this.plugin.config.get(PluginConfig.Viewport.ShowReset) &&
                     <div className='msp-hover-box-wrapper'>
@@ -157,13 +157,13 @@ export class ViewportControls extends PluginUIComponent<ViewportControlsProps, V
                 </div>}
             </div>
             {this.state.isScreenshotExpanded && <div className='msp-viewport-controls-panel'>
-                <ControlGroup header='Screenshot / State' title='Click to close.' initialExpanded={true} hideExpander={true} hideOffset={true} onHeaderClick={this.toggleScreenshotExpanded}
+                <ControlGroup header='Screenshot / State' title='Click to close.' initialExpanded hideExpander hideOffset onHeaderClick={this.toggleScreenshotExpanded}
                     topRightIcon={CloseSvg} noTopMargin childrenClassName='msp-viewport-controls-panel-controls'>
                     <DownloadScreenshotControls close={this.toggleScreenshotExpanded} />
                 </ControlGroup>
             </div>}
             {this.state.isSettingsExpanded && <div className='msp-viewport-controls-panel'>
-                <ControlGroup header='Settings / Controls Info' title='Click to close.' initialExpanded={true} hideExpander={true} hideOffset={true} onHeaderClick={this.toggleSettingsExpanded}
+                <ControlGroup header='Settings / Controls Info' title='Click to close.' initialExpanded hideExpander hideOffset onHeaderClick={this.toggleSettingsExpanded}
                     topRightIcon={CloseSvg} noTopMargin childrenClassName='msp-viewport-controls-panel-controls'>
                     <SimpleSettingsControl />
                 </ControlGroup>

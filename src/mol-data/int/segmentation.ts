@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Interval } from './interval';
-import { OrderedSet } from './ordered-set';
-import * as Impl from './impl/segmentation';
+import type { Interval } from './interval.ts';
+import type { OrderedSet } from './ordered-set.ts';
+import * as Impl from './impl/segmentation.ts';
 
 namespace Segmentation {
     export interface Segment<I extends number = number> { index: I, start: number, end: number }

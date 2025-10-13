@@ -5,13 +5,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Iterator } from '../../../mol-data/iterator';
-import { Column, Table, Database, DatabaseCollection } from '../../../mol-data/db';
-import { Tensor } from '../../../mol-math/linear-algebra';
-import { Encoder as EncoderBase } from '../encoder';
-import { ArrayEncoder, ArrayEncoding } from '../../common/binary-cif';
-import { BinaryEncodingProvider } from './encoder/binary';
-import { assertUnreachable } from '../../../mol-util/type-helpers';
+import { Iterator } from '../../../mol-data/iterator.ts';
+import type { Column, Table, Database, DatabaseCollection } from '../../../mol-data/db.ts';
+import type { Tensor } from '../../../mol-math/linear-algebra.ts';
+import type { Encoder as EncoderBase } from '../encoder.ts';
+import { type ArrayEncoder, ArrayEncoding } from '../../common/binary-cif.ts';
+import type { BinaryEncodingProvider } from './encoder/binary.ts';
+import { assertUnreachable } from '../../../mol-util/type-helpers.ts';
 
 // TODO: support for "coordinate fields", make "coordinate precision" a parameter of the encoder
 // TODO: automatically detect "precision" of floating point arrays.

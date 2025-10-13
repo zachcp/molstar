@@ -5,14 +5,14 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra';
-import { MeshBuilder } from '../mesh-builder';
-import { Primitive, transformPrimitive } from '../../../primitive/primitive';
-import { Cylinder, CylinderProps, DefaultCylinderProps } from '../../../primitive/cylinder';
-import { Prism } from '../../../primitive/prism';
-import { polygon } from '../../../primitive/polygon';
-import { hashFnv32a } from '../../../../mol-data/util';
-import { Ray3D } from '../../../../mol-math/geometry/primitives/ray3d';
+import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra.ts';
+import { MeshBuilder } from '../mesh-builder.ts';
+import { type Primitive, transformPrimitive } from '../../../primitive/primitive.ts';
+import { Cylinder, type CylinderProps, DefaultCylinderProps } from '../../../primitive/cylinder.ts';
+import { Prism } from '../../../primitive/prism.ts';
+import { polygon } from '../../../primitive/polygon.ts';
+import { hashFnv32a } from '../../../../mol-data/util.ts';
+import type { Ray3D } from '../../../../mol-math/geometry/primitives/ray3d.ts';
 
 const cylinderMap = new Map<number, Primitive>();
 const up = Vec3.create(0, 1, 0);

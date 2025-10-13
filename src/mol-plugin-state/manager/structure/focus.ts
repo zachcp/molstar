@@ -6,17 +6,17 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Sphere3D } from '../../../mol-math/geometry';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { Loci } from '../../../mol-model/loci';
-import { Structure, StructureElement } from '../../../mol-model/structure';
-import { PluginContext } from '../../../mol-plugin/context';
-import { StateSelection } from '../../../mol-state';
-import { lociLabel } from '../../../mol-theme/label';
-import { arrayRemoveAtInPlace } from '../../../mol-util/array';
-import { StatefulPluginComponent } from '../../component';
-import { PluginStateObject } from '../../objects';
-import { getLociRange } from './selection';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { Loci } from '../../../mol-model/loci.ts';
+import { type Structure, StructureElement } from '../../../mol-model/structure.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import { StateSelection } from '../../../mol-state.ts';
+import { lociLabel } from '../../../mol-theme/label.ts';
+import { arrayRemoveAtInPlace } from '../../../mol-util/array.ts';
+import { StatefulPluginComponent } from '../../component.ts';
+import { PluginStateObject } from '../../objects.ts';
+import { getLociRange } from './selection.ts';
 
 export type FocusEntry = {
     label: string

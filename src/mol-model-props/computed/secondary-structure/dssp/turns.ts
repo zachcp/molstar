@@ -5,7 +5,7 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { DSSPContext, DSSPType } from './common';
+import { type DSSPContext, DSSPType } from './common.ts';
 
 
 /**

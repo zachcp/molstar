@@ -6,10 +6,10 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import * as express from 'express';
+import type * as express from 'express';
 import { promises, constants } from 'fs';
 
-import { ConsoleLogger } from '../../mol-util/console-logger';
+import { ConsoleLogger } from '../../mol-util/console-logger.ts';
 
 export function getParam<T>(params: any, ...path: string[]): T | undefined {
     try {

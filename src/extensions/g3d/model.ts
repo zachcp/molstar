@@ -4,24 +4,24 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column, Table } from '../../mol-data/db';
-import { OrderedSet } from '../../mol-data/int';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { createModels } from '../../mol-model-formats/structure/basic/parser';
-import { BasicSchema, createBasic } from '../../mol-model-formats/structure/basic/schema';
-import { EntityBuilder } from '../../mol-model-formats/structure/common/entity';
-import { Loci } from '../../mol-model/loci';
-import { Trajectory, Unit } from '../../mol-model/structure';
-import { MoleculeType } from '../../mol-model/structure/model/types';
-import { LociLabelProvider } from '../../mol-plugin-state/manager/loci-label';
-import { MolScriptBuilder as MS } from '../../mol-script/language/builder';
-import { CustomPropSymbol } from '../../mol-script/language/symbol';
-import { Type } from '../../mol-script/language/type';
-import { QuerySymbolRuntime } from '../../mol-script/runtime/query/base';
-import { RuntimeContext, Task } from '../../mol-task';
-import { objectForEach } from '../../mol-util/object';
-import { G3dDataBlock } from './data';
-import { FormatPropertyProvider } from '../../mol-model-formats/structure/common/property';
+import { Column, Table } from '../../mol-data/db.ts';
+import { OrderedSet } from '../../mol-data/int.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { createModels } from '../../mol-model-formats/structure/basic/parser.ts';
+import { BasicSchema, createBasic } from '../../mol-model-formats/structure/basic/schema.ts';
+import { EntityBuilder } from '../../mol-model-formats/structure/common/entity.ts';
+import { Loci } from '../../mol-model/loci.ts';
+import { type Trajectory, Unit } from '../../mol-model/structure.ts';
+import { MoleculeType } from '../../mol-model/structure/model/types.ts';
+import type { LociLabelProvider } from '../../mol-plugin-state/manager/loci-label.ts';
+import { MolScriptBuilder as MS } from '../../mol-script/language/builder.ts';
+import { CustomPropSymbol } from '../../mol-script/language/symbol.ts';
+import { Type } from '../../mol-script/language/type.ts';
+import { QuerySymbolRuntime } from '../../mol-script/runtime/query/base.ts';
+import { type RuntimeContext, Task } from '../../mol-task.ts';
+import { objectForEach } from '../../mol-util/object.ts';
+import type { G3dDataBlock } from './data.ts';
+import { FormatPropertyProvider } from '../../mol-model-formats/structure/common/property.ts';
 
 interface NormalizedData {
     entity_id: string[],

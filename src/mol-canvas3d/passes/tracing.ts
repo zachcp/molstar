@@ -4,33 +4,33 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { QuadSchema, QuadValues } from '../../mol-gl/compute/util';
-import { DefineSpec, TextureSpec, UniformSpec, Values } from '../../mol-gl/renderable/schema';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { ValueCell } from '../../mol-util';
-import { isTimingMode } from '../../mol-util/debug';
-import { Renderer } from '../../mol-gl/renderer';
-import { Camera, ICamera } from '../camera';
-import { Scene } from '../../mol-gl/scene';
-import { RenderTarget } from '../../mol-gl/webgl/render-target';
-import { ShaderCode } from '../../mol-gl/shader-code';
-import { quad_vert } from '../../mol-gl/shader/quad.vert';
-import { ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable';
-import { trace_frag } from '../../mol-gl/shader/illumination/trace.frag';
-import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2';
-import { createComputeRenderItem } from '../../mol-gl/webgl/render-item';
-import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4';
-import { Vec4 } from '../../mol-math/linear-algebra/3d/vec4';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Color } from '../../mol-util/color/color';
-import { Framebuffer } from '../../mol-gl/webgl/framebuffer';
-import { Helper } from '../helper/helper';
-import { accumulate_frag } from '../../mol-gl/shader/illumination/accumulate.frag';
-import { now } from '../../mol-util/now';
-import { clamp } from '../../mol-math/interpolate';
-import { DrawPass } from './draw';
+import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
+import { DefineSpec, TextureSpec, UniformSpec, type Values } from '../../mol-gl/renderable/schema.ts';
+import type { Texture } from '../../mol-gl/webgl/texture.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { ValueCell } from '../../mol-util.ts';
+import { isTimingMode } from '../../mol-util/debug.ts';
+import type { Renderer } from '../../mol-gl/renderer.ts';
+import type { Camera, ICamera } from '../camera.ts';
+import type { Scene } from '../../mol-gl/scene.ts';
+import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
+import { ShaderCode } from '../../mol-gl/shader-code.ts';
+import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
+import { type ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
+import { trace_frag } from '../../mol-gl/shader/illumination/trace.frag.ts';
+import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2.ts';
+import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
+import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4.ts';
+import { Vec4 } from '../../mol-math/linear-algebra/3d/vec4.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Color } from '../../mol-util/color/color.ts';
+import type { Framebuffer } from '../../mol-gl/webgl/framebuffer.ts';
+import type { Helper } from '../helper/helper.ts';
+import { accumulate_frag } from '../../mol-gl/shader/illumination/accumulate.frag.ts';
+import { now } from '../../mol-util/now.ts';
+import { clamp } from '../../mol-math/interpolate.ts';
+import type { DrawPass } from './draw.ts';
 
 type RenderContext = {
     renderer: Renderer;

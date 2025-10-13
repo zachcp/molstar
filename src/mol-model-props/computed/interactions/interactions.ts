@@ -5,28 +5,28 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Structure, Unit, Bond } from '../../../mol-model/structure';
-import { Features, FeaturesBuilder } from './features';
-import { ValenceModelProvider } from '../valence-model';
-import { InteractionsIntraContacts, InteractionsInterContacts, FeatureType, interactionTypeLabel } from './common';
-import { IntraContactsBuilder, InterContactsBuilder } from './contacts-builder';
-import { IntMap } from '../../../mol-data/int';
-import { addUnitContacts, ContactTester, addStructureContacts, ContactsParams, ContactsProps } from './contacts';
-import { HalogenDonorProvider, HalogenAcceptorProvider, HalogenBondsProvider } from './halogen-bonds';
-import { HydrogenDonorProvider, WeakHydrogenDonorProvider, HydrogenAcceptorProvider, HydrogenBondsProvider, WeakHydrogenBondsProvider } from './hydrogen-bonds';
-import { NegativChargeProvider, PositiveChargeProvider, AromaticRingProvider, IonicProvider, PiStackingProvider, CationPiProvider } from './charged';
-import { HydrophobicAtomProvider, HydrophobicProvider } from './hydrophobic';
-import { SetUtils } from '../../../mol-util/set';
-import { MetalCoordinationProvider, MetalProvider, MetalBindingProvider } from './metal';
-import { refineInteractions } from './refine';
-import { CustomProperty } from '../../common/custom-property';
-import { DataLocation } from '../../../mol-model/location';
-import { CentroidHelper } from '../../../mol-math/geometry/centroid-helper';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { DataLoci } from '../../../mol-model/loci';
-import { bondLabel, LabelGranularity } from '../../../mol-theme/label';
-import { ObjectKeys } from '../../../mol-util/type-helpers';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Structure, Unit, Bond } from '../../../mol-model/structure.ts';
+import { Features, FeaturesBuilder } from './features.ts';
+import { ValenceModelProvider } from '../valence-model.ts';
+import { type InteractionsIntraContacts, type InteractionsInterContacts, type FeatureType, interactionTypeLabel } from './common.ts';
+import { IntraContactsBuilder, InterContactsBuilder } from './contacts-builder.ts';
+import { IntMap } from '../../../mol-data/int.ts';
+import { addUnitContacts, type ContactTester, addStructureContacts, ContactsParams, type ContactsProps } from './contacts.ts';
+import { HalogenDonorProvider, HalogenAcceptorProvider, HalogenBondsProvider } from './halogen-bonds.ts';
+import { HydrogenDonorProvider, WeakHydrogenDonorProvider, HydrogenAcceptorProvider, HydrogenBondsProvider, WeakHydrogenBondsProvider } from './hydrogen-bonds.ts';
+import { NegativChargeProvider, PositiveChargeProvider, AromaticRingProvider, IonicProvider, PiStackingProvider, CationPiProvider } from './charged.ts';
+import { HydrophobicAtomProvider, HydrophobicProvider } from './hydrophobic.ts';
+import { SetUtils } from '../../../mol-util/set.ts';
+import { MetalCoordinationProvider, MetalProvider, MetalBindingProvider } from './metal.ts';
+import { refineInteractions } from './refine.ts';
+import type { CustomProperty } from '../../common/custom-property.ts';
+import { DataLocation } from '../../../mol-model/location.ts';
+import { CentroidHelper } from '../../../mol-math/geometry/centroid-helper.ts';
+import type { Sphere3D } from '../../../mol-math/geometry.ts';
+import { DataLoci } from '../../../mol-model/loci.ts';
+import { bondLabel, type LabelGranularity } from '../../../mol-theme/label.ts';
+import { ObjectKeys } from '../../../mol-util/type-helpers.ts';
 
 export { Interactions };
 

@@ -6,14 +6,14 @@
  * @author Victoria Doshchenko <doshchenko.victoria@gmail.com>
  */
 
-import { decodeColor } from '../../../extensions/mvs/helpers/utils';
-import { MVSData_States } from '../../../extensions/mvs/mvs-data';
-import { createMVSBuilder, Structure as MVSStructure, Root } from '../../../extensions/mvs/tree/mvs/mvs-builder';
-import { MVSNodeParams } from '../../../extensions/mvs/tree/mvs/mvs-tree';
-import { Mat4 } from '../../../mol-math/linear-algebra/3d/mat4';
-import { Vec3 } from '../../../mol-math/linear-algebra/3d/vec3';
-import { MolScriptBuilder as MS } from '../../../mol-script/language/builder';
-import { formatMolScript } from '../../../mol-script/language/expression-formatter';
+import { decodeColor } from '../../../extensions/mvs/helpers/utils.ts';
+import type { MVSData_States } from '../../../extensions/mvs/mvs-data.ts';
+import { createMVSBuilder, type Structure as MVSStructure, type Root } from '../../../extensions/mvs/tree/mvs/mvs-builder.ts';
+import type { MVSNodeParams } from '../../../extensions/mvs/tree/mvs/mvs-tree.ts';
+import { Mat4 } from '../../../mol-math/linear-algebra/3d/mat4.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra/3d/vec3.ts';
+import { MolScriptBuilder as MS } from '../../../mol-script/language/builder.ts';
+import { formatMolScript } from '../../../mol-script/language/expression-formatter.ts';
 
 // 1pmb->1mbn
 const align = Mat4.fromArray(Mat4.zero(), [0.4634187130865737, -0.7131589697034304, 0.5259728687171936, 0, -0.22944227902330105, -0.6698811108214233, -0.7061273127008398, 0, 0.8559202154942049, 0.2065522332899299, -0.4740643150728161, 0, -52.54880970106205, 37.49099778180445, -6.133850309914719, 1], 0);

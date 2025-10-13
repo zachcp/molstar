@@ -5,36 +5,36 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { VisualQualityOptions } from '../../../mol-geo/geometry/base';
-import { InteractionsProvider } from '../../../mol-model-props/computed/interactions';
-import { Structure, StructureElement, StructureSelection } from '../../../mol-model/structure';
-import { structureAreEqual, structureAreIntersecting, structureIntersect, structureSubtract, structureUnion } from '../../../mol-model/structure/query/utils/structure-set';
-import { setSubtreeVisibility } from '../../../mol-plugin/behavior/static/state';
-import { PluginContext } from '../../../mol-plugin/context';
-import { StateBuilder, StateObjectRef, StateTransformer } from '../../../mol-state';
-import { Task } from '../../../mol-task';
-import { ColorTheme } from '../../../mol-theme/color';
-import { SizeTheme } from '../../../mol-theme/size';
-import { shallowEqual, UUID } from '../../../mol-util';
-import { ColorNames } from '../../../mol-util/color/names';
-import { objectForEach } from '../../../mol-util/object';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { StructureRepresentationPresetProvider } from '../../builder/structure/representation-preset';
-import { StatefulPluginComponent } from '../../component';
-import { StructureComponentParams } from '../../helpers/structure-component';
-import { setStructureOverpaint } from '../../helpers/structure-overpaint';
-import { createStructureColorThemeParams, createStructureSizeThemeParams } from '../../helpers/structure-representation-params';
-import { StructureSelectionQueries, StructureSelectionQuery } from '../../helpers/structure-selection-query';
-import { StructureRepresentation3D } from '../../transforms/representation';
-import { StructureHierarchyRef, StructureComponentRef, StructureRef, StructureRepresentationRef } from './hierarchy-state';
-import { Clipping } from '../../../mol-theme/clipping';
-import { setStructureClipping } from '../../helpers/structure-clipping';
-import { setStructureTransparency } from '../../helpers/structure-transparency';
-import { StructureFocusRepresentation } from '../../../mol-plugin/behavior/dynamic/selection/structure-focus-representation';
-import { setStructureSubstance } from '../../helpers/structure-substance';
-import { Material } from '../../../mol-util/material';
-import { Clip } from '../../../mol-util/clip';
-import { setStructureEmissive } from '../../helpers/structure-emissive';
+import { VisualQualityOptions } from '../../../mol-geo/geometry/base.ts';
+import { InteractionsProvider } from '../../../mol-model-props/computed/interactions.ts';
+import { Structure, StructureElement, StructureSelection } from '../../../mol-model/structure.ts';
+import { structureAreEqual, structureAreIntersecting, structureIntersect, structureSubtract, structureUnion } from '../../../mol-model/structure/query/utils/structure-set.ts';
+import { setSubtreeVisibility } from '../../../mol-plugin/behavior/static/state.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import type { StateBuilder, StateObjectRef, StateTransformer } from '../../../mol-state.ts';
+import { Task } from '../../../mol-task.ts';
+import type { ColorTheme } from '../../../mol-theme/color.ts';
+import type { SizeTheme } from '../../../mol-theme/size.ts';
+import { shallowEqual, UUID } from '../../../mol-util.ts';
+import { ColorNames } from '../../../mol-util/color/names.ts';
+import { objectForEach } from '../../../mol-util/object.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { StructureRepresentationPresetProvider } from '../../builder/structure/representation-preset.ts';
+import { StatefulPluginComponent } from '../../component.ts';
+import type { StructureComponentParams } from '../../helpers/structure-component.ts';
+import { setStructureOverpaint } from '../../helpers/structure-overpaint.ts';
+import { createStructureColorThemeParams, createStructureSizeThemeParams } from '../../helpers/structure-representation-params.ts';
+import { StructureSelectionQueries, type StructureSelectionQuery } from '../../helpers/structure-selection-query.ts';
+import { StructureRepresentation3D } from '../../transforms/representation.ts';
+import type { StructureHierarchyRef, StructureComponentRef, StructureRef, StructureRepresentationRef } from './hierarchy-state.ts';
+import { Clipping } from '../../../mol-theme/clipping.ts';
+import { setStructureClipping } from '../../helpers/structure-clipping.ts';
+import { setStructureTransparency } from '../../helpers/structure-transparency.ts';
+import { StructureFocusRepresentation } from '../../../mol-plugin/behavior/dynamic/selection/structure-focus-representation.ts';
+import { setStructureSubstance } from '../../helpers/structure-substance.ts';
+import { Material } from '../../../mol-util/material.ts';
+import { Clip } from '../../../mol-util/clip.ts';
+import { setStructureEmissive } from '../../helpers/structure-emissive.ts';
 
 export { StructureComponentManager };
 

@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginContext } from '../../../mol-plugin/context';
-import { PluginState } from '../../../mol-plugin/state';
-import { PluginStateSnapshotManager } from '../../manager/snapshots';
-import { PluginStateAnimation } from '../model';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import { PluginState } from '../../../mol-plugin/state.ts';
+import type { PluginStateSnapshotManager } from '../../manager/snapshots.ts';
+import { PluginStateAnimation } from '../model.ts';
 
 async function setPartialSnapshot(plugin: PluginContext, entry: Partial<PluginStateSnapshotManager.Entry['snapshot']>, first = false) {
     if (entry.data) {

@@ -10,6 +10,7 @@
 
 
 /** Determines whether the current code is running in Node.js */
+import process from "node:process";
 export const RUNNING_IN_NODEJS = typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
 
 /** Like `File` but works also in Node.js */

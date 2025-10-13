@@ -4,18 +4,18 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Mat4 } from '../../mol-math/linear-algebra';
-import { QueryContext, StructureSelection } from '../../mol-model/structure';
-import { superpose } from '../../mol-model/structure/structure/util/superposition';
-import { PluginStateObject as PSO } from '../../mol-plugin-state/objects';
-import { PluginContext } from '../../mol-plugin/context';
-import { MolScriptBuilder as MS } from '../../mol-script/language/builder';
-import { Expression } from '../../mol-script/language/expression';
-import { compile } from '../../mol-script/runtime/query/compiler';
-import { StateObjectRef } from '../../mol-state';
-import { BuiltInTrajectoryFormat } from '../../mol-plugin-state/formats/trajectory';
-import { StateTransforms } from '../../mol-plugin-state/transforms';
-import { Asset } from '../../mol-util/assets';
+import { Mat4 } from '../../mol-math/linear-algebra.ts';
+import { QueryContext, StructureSelection } from '../../mol-model/structure.ts';
+import { superpose } from '../../mol-model/structure/structure/util/superposition.ts';
+import type { PluginStateObject as PSO } from '../../mol-plugin-state/objects.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { MolScriptBuilder as MS } from '../../mol-script/language/builder.ts';
+import type { Expression } from '../../mol-script/language/expression.ts';
+import { compile } from '../../mol-script/runtime/query/compiler.ts';
+import type { StateObjectRef } from '../../mol-state.ts';
+import type { BuiltInTrajectoryFormat } from '../../mol-plugin-state/formats/trajectory.ts';
+import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
+import { Asset } from '../../mol-util/assets.ts';
 
 export type SuperpositionTestInput = {
     pdbId: string,

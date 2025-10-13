@@ -5,19 +5,19 @@
  */
 
 import fs from 'fs';
-import { type BufferRet as JpegBufferRet } from 'jpeg-js'; // Only import type here, the actual import must be provided by the caller
-import { type PNG } from 'pngjs'; // Only import type here, the actual import must be provided by the caller
+import type { BufferRet as JpegBufferRet } from 'jpeg-js'; // Only import type here, the actual import must be provided by the caller
+import type { PNG } from 'pngjs'; // Only import type here, the actual import must be provided by the caller
 
-import { Mp4Export } from '../extensions/mp4-export';
-import { encodeMp4Animation } from '../extensions/mp4-export/encoder';
-import { Canvas3D } from '../mol-canvas3d/canvas3d';
-import { ImagePass } from '../mol-canvas3d/passes/image';
-import { PostprocessingProps } from '../mol-canvas3d/passes/postprocessing';
-import { AnimateStateSnapshots } from '../mol-plugin-state/animation/built-in/state-snapshots';
-import { RuntimeContext, Task } from '../mol-task';
-import { PluginContext } from './context';
-import { PluginSpec } from './spec';
-import { ExternalModules, HeadlessScreenshotHelper, HeadlessScreenshotHelperOptions, RawImageData } from './util/headless-screenshot';
+import { Mp4Export } from '../extensions/mp4-export.ts';
+import { encodeMp4Animation } from '../extensions/mp4-export/encoder.ts';
+import type { Canvas3D } from '../mol-canvas3d/canvas3d.ts';
+import type { ImagePass } from '../mol-canvas3d/passes/image.ts';
+import type { PostprocessingProps } from '../mol-canvas3d/passes/postprocessing.ts';
+import { AnimateStateSnapshots } from '../mol-plugin-state/animation/built-in/state-snapshots.ts';
+import { type RuntimeContext, Task } from '../mol-task.ts';
+import { PluginContext } from './context.ts';
+import type { PluginSpec } from './spec.ts';
+import { type ExternalModules, HeadlessScreenshotHelper, type HeadlessScreenshotHelperOptions, type RawImageData } from './util/headless-screenshot.ts';
 
 
 /** PluginContext that can be used in Node.js (without DOM) */

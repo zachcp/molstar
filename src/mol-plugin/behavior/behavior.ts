@@ -5,14 +5,14 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { PluginStateTransform, PluginStateObject } from '../../mol-plugin-state/objects';
-import { StateTransformer, StateTransform } from '../../mol-state';
-import { Task } from '../../mol-task';
-import { PluginContext } from '../../mol-plugin/context';
-import { PluginCommand } from '../command';
-import { Observable } from 'rxjs';
-import { ParamDefinition } from '../../mol-util/param-definition';
-import { shallowEqualObjects } from '../../mol-util';
+import { PluginStateTransform, PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { StateTransformer, type StateTransform } from '../../mol-state.ts';
+import { Task } from '../../mol-task.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import type { PluginCommand } from '../command.ts';
+import type { Observable } from 'rxjs';
+import { ParamDefinition } from '../../mol-util/param-definition.ts';
+import { shallowEqualObjects } from '../../mol-util.ts';
 
 export { PluginBehavior };
 
