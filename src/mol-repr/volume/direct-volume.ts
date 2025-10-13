@@ -153,7 +153,7 @@ export const DirectVolumeParams = {
     dataType: PD.Select('byte', PD.arrayToOptions(['byte', 'float', 'halfFloat'] as const)),
 };
 export type DirectVolumeParams = typeof DirectVolumeParams
-export function getDirectVolumeParams(ctx: ThemeRegistryContext, volume: Volume) {
+export function getDirectVolumeParams(ctx: ThemeRegistryContext, volume: Volume): typeof DirectVolumeParams {
     const params = PD.clone(DirectVolumeParams);
     params.controlPoints.getVolume = () => volume;
     return params;

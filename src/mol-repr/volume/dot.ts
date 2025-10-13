@@ -309,8 +309,8 @@ function eachDot(loci: Loci, volume: Volume, key: number, props: VolumeDotProps,
 //
 
 const DotVisuals = {
-    'sphere': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, VolumeSphereParams>) => VolumeRepresentation('Dot sphere', ctx, getParams, VolumeSphereVisual, getLoci),
-    'point': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, VolumePointParams>) => VolumeRepresentation('Dot point', ctx, getParams, VolumePointVisual, getLoci),
+    'sphere': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, VolumeSphereParams>): VolumeRepresentation<VolumeSphereParams> => VolumeRepresentation('Dot sphere', ctx, getParams, VolumeSphereVisual, getLoci),
+    'point': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, VolumePointParams>): VolumeRepresentation<VolumePointParams> => VolumeRepresentation('Dot point', ctx, getParams, VolumePointVisual, getLoci),
 };
 
 export const DotParams = {
@@ -320,7 +320,7 @@ export const DotParams = {
     bumpFrequency: PD.Numeric(1, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
 };
 export type DotParams = typeof DotParams
-export function getDotParams(ctx: ThemeRegistryContext, volume: Volume) {
+export function getDotParams(ctx: ThemeRegistryContext, volume: Volume): typeof DotParams {
     const p = PD.clone(DotParams);
     p.isoValue = Volume.createIsoValueParam(Volume.IsoValue.relative(2), volume.grid.stats);
     return p;

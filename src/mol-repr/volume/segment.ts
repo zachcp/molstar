@@ -305,7 +305,7 @@ function getSegments(props: VolumeSegmentProps): SortedArray {
 }
 
 const SegmentVisuals = {
-    'segment': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, SegmentMeshParams>) => VolumeRepresentation('Segment mesh', ctx, getParams, SegmentVisual, getLoci, getSegments),
+    'segment': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, SegmentMeshParams>): VolumeRepresentation<SegmentMeshParams> => VolumeRepresentation('Segment mesh', ctx, getParams, SegmentVisual, getLoci, getSegments),
 };
 
 export const SegmentParams = {
@@ -314,7 +314,7 @@ export const SegmentParams = {
     bumpFrequency: PD.Numeric(1, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
 };
 export type SegmentParams = typeof SegmentParams
-export function getSegmentParams(ctx: ThemeRegistryContext, volume: Volume) {
+export function getSegmentParams(ctx: ThemeRegistryContext, volume: Volume): typeof SegmentParams {
     const p = PD.clone(SegmentParams);
 
     const segmentation = Volume.Segmentation.get(volume);

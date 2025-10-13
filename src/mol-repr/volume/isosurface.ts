@@ -302,8 +302,8 @@ export function IsosurfaceWireframeVisual(materialId: number): VolumeVisual<Isos
 //
 
 const IsosurfaceVisuals = {
-    'solid': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, IsosurfaceMeshParams>) => VolumeRepresentation('Isosurface mesh', ctx, getParams, IsosurfaceVisual, getLoci),
-    'wireframe': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, IsosurfaceWireframeParams>) => VolumeRepresentation('Isosurface wireframe', ctx, getParams, IsosurfaceWireframeVisual, getLoci),
+    'solid': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, IsosurfaceMeshParams>): VolumeRepresentation<IsosurfaceMeshParams> => VolumeRepresentation('Isosurface mesh', ctx, getParams, IsosurfaceVisual, getLoci),
+    'wireframe': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, IsosurfaceWireframeParams>): VolumeRepresentation<IsosurfaceWireframeParams> => VolumeRepresentation('Isosurface wireframe', ctx, getParams, IsosurfaceWireframeVisual, getLoci),
 };
 
 export const IsosurfaceParams = {
@@ -313,7 +313,7 @@ export const IsosurfaceParams = {
     bumpFrequency: PD.Numeric(1, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
 };
 export type IsosurfaceParams = typeof IsosurfaceParams
-export function getIsosurfaceParams(ctx: ThemeRegistryContext, volume: Volume) {
+export function getIsosurfaceParams(ctx: ThemeRegistryContext, volume: Volume): typeof IsosurfaceParams {
     const p = PD.clone(IsosurfaceParams);
     p.isoValue = Volume.createIsoValueParam(Volume.IsoValue.relative(2), volume.grid.stats);
     return p;

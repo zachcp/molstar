@@ -55,7 +55,7 @@ export const SliceParams = {
 export type SliceParams = typeof SliceParams
 export type SliceProps = PD.Values<SliceParams>
 
-export function getSliceParams(ctx: ThemeRegistryContext, volume: Volume) {
+export function getSliceParams(ctx: ThemeRegistryContext, volume: Volume): typeof SliceParams {
     const p = PD.clone(SliceParams);
     const dim = volume.grid.cells.space.dimensions;
     p.dimension = PD.MappedStatic('x', {
