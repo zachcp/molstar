@@ -37,7 +37,7 @@ namespace Euler {
         return out;
     }
 
-    export function set(out: Euler, x: number, y: number, z: number) {
+    export function set(out: Euler, x: number, y: number, z: number): Euler {
         out[0] = x;
         out[0] = y;
         out[0] = z;
@@ -156,7 +156,7 @@ namespace Euler {
         return e;
     }
 
-    export function toArray<T extends NumberArray>(e: Euler, out: T, offset: number) {
+    export function toArray<T extends NumberArray>(e: Euler, out: T, offset: number): T {
         out[offset + 0] = e[0];
         out[offset + 1] = e[1];
         out[offset + 2] = e[2];
