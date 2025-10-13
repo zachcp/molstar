@@ -48,7 +48,7 @@ namespace Bond {
         return !!x && x.kind === 'bond-location';
     }
 
-    export function areLocationsEqual(locA: Location, locB: Location) {
+    export function areLocationsEqual(locA: Location, locB: Location): boolean {
         return (
             locA.aStructure.label === locB.aStructure.label && locA.bStructure.label === locB.bStructure.label &&
             locA.aIndex === locB.aIndex && locA.bIndex === locB.bIndex &&

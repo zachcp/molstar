@@ -44,7 +44,7 @@ namespace ChunkedArray {
         array.chunks[array.chunks.length] = array.currentChunk;
     }
 
-    export function add4<T>(array: ChunkedArray<T, 4>, x: T, y: T, z: T, w: T) {
+    export function add4<T>(array: ChunkedArray<T, 4>, x: T, y: T, z: T, w: T): number {
         if (array.currentIndex >= array.currentSize) allocateNext(array);
         const c = array.currentChunk;
         const i = array.currentIndex;
@@ -56,7 +56,7 @@ namespace ChunkedArray {
         return array.elementCount++;
     }
 
-    export function add3<T>(array: ChunkedArray<T, 3>, x: T, y: T, z: T) {
+    export function add3<T>(array: ChunkedArray<T, 3>, x: T, y: T, z: T): number {
         if (array.currentIndex >= array.currentSize) allocateNext(array);
         const c = array.currentChunk;
         const i = array.currentIndex;
@@ -67,7 +67,7 @@ namespace ChunkedArray {
         return array.elementCount++;
     }
 
-    export function add2<T>(array: ChunkedArray<T, 2>, x: T, y: T) {
+    export function add2<T>(array: ChunkedArray<T, 2>, x: T, y: T): number {
         if (array.currentIndex >= array.currentSize) allocateNext(array);
         const c = array.currentChunk;
         const i = array.currentIndex;
@@ -77,14 +77,14 @@ namespace ChunkedArray {
         return array.elementCount++;
     }
 
-    export function add<T>(array: ChunkedArray<T, 1>, x: T) {
+    export function add<T>(array: ChunkedArray<T, 1>, x: T): number {
         if (array.currentIndex >= array.currentSize) allocateNext(array);
         array.currentChunk[array.currentIndex] = x;
         array.currentIndex += 1;
         return array.elementCount++;
     }
 
-    export function addRepeat<T>(array: ChunkedArray<T, 1>, n: number, x: T) {
+    export function addRepeat<T>(array: ChunkedArray<T, 1>, n: number, x: T): number {
         for (let i = 0; i < n; i++) {
             if (array.currentIndex >= array.currentSize) allocateNext(array);
             array.currentChunk[array.currentIndex++] = x;
@@ -93,7 +93,7 @@ namespace ChunkedArray {
         return array.elementCount;
     }
 
-    export function addMany<T>(array: ChunkedArray<T, any>, data: ArrayLike<T>) {
+    export function addMany<T>(array: ChunkedArray<T, any>, data: ArrayLike<T>): number {
         const { elementSize } = array;
         for (let i = 0, _i = data.length; i < _i; i += elementSize) {
             if (array.currentIndex >= array.currentSize) allocateNext(array);

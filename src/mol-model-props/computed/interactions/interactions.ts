@@ -62,7 +62,7 @@ namespace Interactions {
         return !!x && x.kind === 'data-location' && x.tag === 'interactions';
     }
 
-    export function areLocationsEqual(locA: Location, locB: Location) {
+    export function areLocationsEqual(locA: Location, locB: Location): boolean {
         return (
             locA.data.structure === locB.data.structure &&
             locA.data.interactions === locB.data.interactions &&

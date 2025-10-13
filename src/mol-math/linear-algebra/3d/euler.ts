@@ -136,20 +136,20 @@ namespace Euler {
     }
 
     const _mat4 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] as unknown as Mat4;
-    export function fromQuat(out: Euler, q: Quat, order: Order) {
+    export function fromQuat(out: Euler, q: Quat, order: Order): Euler {
         Mat4.fromQuat(_mat4, q);
         return fromMat4(out, _mat4, order);
     }
 
-    export function fromVec3(out: Euler, v: Vec3) {
+    export function fromVec3(out: Euler, v: Vec3): Euler {
         return set(out, v[0], v[1], v[2]);
     }
 
-    export function exactEquals(a: Euler, b: Euler) {
+    export function exactEquals(a: Euler, b: Euler): boolean {
         return a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
     }
 
-    export function fromArray(e: Euler, array: ArrayLike<number>, offset: number) {
+    export function fromArray(e: Euler, array: ArrayLike<number>, offset: number): Euler {
         e[0] = array[offset + 0];
         e[1] = array[offset + 1];
         e[2] = array[offset + 2];

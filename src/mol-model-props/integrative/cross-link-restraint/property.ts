@@ -73,7 +73,7 @@ namespace CrossLinkRestraint {
         return !!x && x.kind === 'data-location' && x.tag === 'cross-link-restraints';
     }
 
-    export function areLocationsEqual(locA: Location, locB: Location) {
+    export function areLocationsEqual(locA: Location, locB: Location): boolean {
         return (
             locA.data.structure === locB.data.structure &&
             locA.data.crossLinkRestraints === locB.data.crossLinkRestraints &&

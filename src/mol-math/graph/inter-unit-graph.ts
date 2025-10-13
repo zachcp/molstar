@@ -123,15 +123,15 @@ namespace InterUnitGraph {
         readonly props: EdgeProps
     }
 
-    export function getEdgeUnitKey<UnitId extends number>(unitA: UnitId, unitB: UnitId) {
+    export function getEdgeUnitKey<UnitId extends number>(unitA: UnitId, unitB: UnitId): number {
         return cantorPairing(unitA, unitB);
     }
 
-    export function getEdgeIndexKey<VertexIndex extends number>(indexA: VertexIndex, indexB: VertexIndex) {
+    export function getEdgeIndexKey<VertexIndex extends number>(indexA: VertexIndex, indexB: VertexIndex): number {
         return cantorPairing(indexA, indexB);
     }
 
-    export function getVertexKey<UnitId extends number, VertexIndex extends number>(index: VertexIndex, unit: UnitId) {
+    export function getVertexKey<UnitId extends number, VertexIndex extends number>(index: VertexIndex, unit: UnitId): number {
         return cantorPairing(index, unit);
     }
 
