@@ -95,8 +95,7 @@ export { CustomModelProperties };
 export { CustomStructureProperties };
 export { ShapeFromPly };
 
-type CoordinatesFromDcd = typeof CoordinatesFromDcd
-const CoordinatesFromDcd = PluginStateTransform.BuiltIn({
+const CoordinatesFromDcd: StateTransformer<SO.Data.Binary, SO.Molecule.Coordinates> = PluginStateTransform.BuiltIn({
     name: 'coordinates-from-dcd',
     display: { name: 'Parse DCD', description: 'Parse DCD binary data.' },
     from: [SO.Data.Binary],
@@ -111,9 +110,9 @@ const CoordinatesFromDcd = PluginStateTransform.BuiltIn({
         });
     }
 });
+type CoordinatesFromDcd = typeof CoordinatesFromDcd
 
-type CoordinatesFromXtc = typeof CoordinatesFromXtc
-const CoordinatesFromXtc = PluginStateTransform.BuiltIn({
+const CoordinatesFromXtc: StateTransformer<SO.Data.Binary, SO.Molecule.Coordinates> = PluginStateTransform.BuiltIn({
     name: 'coordinates-from-xtc',
     display: { name: 'Parse XTC', description: 'Parse XTC binary data.' },
     from: [SO.Data.Binary],
@@ -128,9 +127,9 @@ const CoordinatesFromXtc = PluginStateTransform.BuiltIn({
         });
     }
 });
+type CoordinatesFromXtc = typeof CoordinatesFromXtc
 
-type CoordinatesFromTrr = typeof CoordinatesFromTrr
-const CoordinatesFromTrr = PluginStateTransform.BuiltIn({
+const CoordinatesFromTrr: StateTransformer<SO.Data.Binary, SO.Molecule.Coordinates> = PluginStateTransform.BuiltIn({
     name: 'coordinates-from-trr',
     display: { name: 'Parse TRR', description: 'Parse TRR binary data.' },
     from: [SO.Data.Binary],
@@ -145,9 +144,9 @@ const CoordinatesFromTrr = PluginStateTransform.BuiltIn({
         });
     }
 });
+type CoordinatesFromTrr = typeof CoordinatesFromTrr
 
-type CoordinatesFromNctraj = typeof CoordinatesFromNctraj
-const CoordinatesFromNctraj = PluginStateTransform.BuiltIn({
+const CoordinatesFromNctraj: StateTransformer<SO.Data.Binary, SO.Molecule.Coordinates> = PluginStateTransform.BuiltIn({
     name: 'coordinates-from-nctraj',
     display: { name: 'Parse NCTRAJ', description: 'Parse NCTRAJ binary data.' },
     from: [SO.Data.Binary],
@@ -162,9 +161,9 @@ const CoordinatesFromNctraj = PluginStateTransform.BuiltIn({
         });
     }
 });
+type CoordinatesFromNctraj = typeof CoordinatesFromNctraj
 
-type CoordinatesFromLammpstraj = typeof CoordinatesFromLammpstraj
-const CoordinatesFromLammpstraj = PluginStateTransform.BuiltIn({
+const CoordinatesFromLammpstraj: StateTransformer<SO.Data.String, SO.Molecule.Coordinates> = PluginStateTransform.BuiltIn({
     name: 'coordinates-from-lammpstraj',
     display: { name: 'Parse LAMMPSTRAJ', description: 'Parse LAMMPSTRAJ data.' },
     from: [SO.Data.String],
@@ -179,9 +178,9 @@ const CoordinatesFromLammpstraj = PluginStateTransform.BuiltIn({
         });
     }
 });
+type CoordinatesFromLammpstraj = typeof CoordinatesFromLammpstraj
 
-type TopologyFromPsf = typeof TopologyFromPsf
-const TopologyFromPsf = PluginStateTransform.BuiltIn({
+const TopologyFromPsf: StateTransformer<SO.Format.Psf, SO.Molecule.Topology> = PluginStateTransform.BuiltIn({
     name: 'topology-from-psf',
     display: { name: 'PSF Topology', description: 'Create topology from PSF.' },
     from: [SO.Format.Psf],
@@ -194,9 +193,9 @@ const TopologyFromPsf = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TopologyFromPsf = typeof TopologyFromPsf
 
-type TopologyFromPrmtop = typeof TopologyFromPrmtop
-const TopologyFromPrmtop = PluginStateTransform.BuiltIn({
+const TopologyFromPrmtop: StateTransformer<SO.Format.Prmtop, SO.Molecule.Topology> = PluginStateTransform.BuiltIn({
     name: 'topology-from-prmtop',
     display: { name: 'PRMTOP Topology', description: 'Create topology from PRMTOP.' },
     from: [SO.Format.Prmtop],
@@ -209,9 +208,9 @@ const TopologyFromPrmtop = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TopologyFromPrmtop = typeof TopologyFromPrmtop
 
-type TopologyFromTop = typeof TopologyFromTop
-const TopologyFromTop = PluginStateTransform.BuiltIn({
+const TopologyFromTop: StateTransformer<SO.Format.Top, SO.Molecule.Topology> = PluginStateTransform.BuiltIn({
     name: 'topology-from-top',
     display: { name: 'TOP Topology', description: 'Create topology from TOP.' },
     from: [SO.Format.Top],
@@ -224,6 +223,7 @@ const TopologyFromTop = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TopologyFromTop = typeof TopologyFromTop
 
 export async function getTrajectory(ctx: RuntimeContext, obj: StateObject, coordinates: Coordinates) {
     if (obj.type === SO.Molecule.Topology.type) {
@@ -236,7 +236,6 @@ export async function getTrajectory(ctx: RuntimeContext, obj: StateObject, coord
     throw new Error('no model/topology found');
 }
 
-type TrajectoryFromModelAndCoordinates = typeof TrajectoryFromModelAndCoordinates
 const TrajectoryFromModelAndCoordinates = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-model-and-coordinates',
     display: { name: 'Trajectory from Topology & Coordinates', description: 'Create a trajectory from existing model/topology and coordinates.' },
@@ -256,8 +255,8 @@ const TrajectoryFromModelAndCoordinates = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromModelAndCoordinates = typeof TrajectoryFromModelAndCoordinates
 
-type TrajectoryFromBlob = typeof TrajectoryFromBlob
 const TrajectoryFromBlob = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-blob',
     display: { name: 'Parse Blob', description: 'Parse format blob into a single trajectory.' },
@@ -288,13 +287,13 @@ const TrajectoryFromBlob = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromBlob = typeof TrajectoryFromBlob
 
 function trajectoryProps(trajectory: Trajectory) {
     const first = trajectory.representative;
     return { label: `${first.entry}`, description: `${trajectory.frameCount} model${trajectory.frameCount === 1 ? '' : 's'}` };
 }
 
-type TrajectoryFromMmCif = typeof TrajectoryFromMmCif
 const TrajectoryFromMmCif = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-mmcif',
     display: { name: 'Trajectory from mmCIF', description: 'Identify and create all separate models in the specified CIF data block' },
@@ -347,9 +346,9 @@ const TrajectoryFromMmCif = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromMmCif = typeof TrajectoryFromMmCif
 
-type TrajectoryFromPDB = typeof TrajectoryFromPDB
-const TrajectoryFromPDB = PluginStateTransform.BuiltIn({
+const TrajectoryFromPDB: StateTransformer<SO.Data.String, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-pdb',
     display: { name: 'Parse PDB', description: 'Parse PDB string and create trajectory.' },
     from: [SO.Data.String],
@@ -368,9 +367,9 @@ const TrajectoryFromPDB = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromPDB = typeof TrajectoryFromPDB
 
-type TrajectoryFromGRO = typeof TrajectoryFromGRO
-const TrajectoryFromGRO = PluginStateTransform.BuiltIn({
+const TrajectoryFromGRO: StateTransformer<SO.Data.String, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-gro',
     display: { name: 'Parse GRO', description: 'Parse GRO string and create trajectory.' },
     from: [SO.Data.String],
@@ -386,9 +385,9 @@ const TrajectoryFromGRO = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromGRO = typeof TrajectoryFromGRO
 
-type TrajectoryFromXYZ = typeof TrajectoryFromXYZ
-const TrajectoryFromXYZ = PluginStateTransform.BuiltIn({
+const TrajectoryFromXYZ: StateTransformer<SO.Data.String, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-xyz',
     display: { name: 'Parse XYZ', description: 'Parse XYZ string and create trajectory.' },
     from: [SO.Data.String],
@@ -404,9 +403,9 @@ const TrajectoryFromXYZ = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromXYZ = typeof TrajectoryFromXYZ
 
-type TrajectoryFromLammpsData = typeof TrajectoryFromLammpsData
-const TrajectoryFromLammpsData = PluginStateTransform.BuiltIn({
+const TrajectoryFromLammpsData: StateTransformer<SO.Data.String, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-lammps-data',
     display: { name: 'Parse Lammps Data', description: 'Parse Lammps Data from string and create trajectory.' },
     from: [SO.Data.String],
@@ -425,9 +424,9 @@ const TrajectoryFromLammpsData = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromLammpsData = typeof TrajectoryFromLammpsData
 
-type TrajectoryFromLammpsTrajData = typeof TrajectoryFromLammpsTrajData
-const TrajectoryFromLammpsTrajData = PluginStateTransform.BuiltIn({
+const TrajectoryFromLammpsTrajData: StateTransformer<SO.Data.String, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-lammps-traj-data',
     display: { name: 'Parse Lammps traj Data', description: 'Parse Lammps Traj Data string and create trajectory.' },
     from: [SO.Data.String],
@@ -446,10 +445,10 @@ const TrajectoryFromLammpsTrajData = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromLammpsTrajData = typeof TrajectoryFromLammpsTrajData
 
 
-type TrajectoryFromMOL = typeof TrajectoryFromMOL
-const TrajectoryFromMOL = PluginStateTransform.BuiltIn({
+const TrajectoryFromMOL: StateTransformer<SO.Data.String, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-mol',
     display: { name: 'Parse MOL', description: 'Parse MOL string and create trajectory.' },
     from: [SO.Data.String],
@@ -465,9 +464,9 @@ const TrajectoryFromMOL = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromMOL = typeof TrajectoryFromMOL
 
-type TrajectoryFromSDF = typeof TrajectoryFromSDF
-const TrajectoryFromSDF = PluginStateTransform.BuiltIn({
+const TrajectoryFromSDF: StateTransformer<SO.Data.String, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-sdf',
     display: { name: 'Parse SDF', description: 'Parse SDF string and create trajectory.' },
     from: [SO.Data.String],
@@ -494,10 +493,11 @@ const TrajectoryFromSDF = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromSDF = typeof TrajectoryFromSDF
 
 
 type TrajectoryFromMOL2 = typeof TrajectoryFromMOL
-const TrajectoryFromMOL2 = PluginStateTransform.BuiltIn({
+const TrajectoryFromMOL2: StateTransformer<SO.Data.String, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-mol2',
     display: { name: 'Parse MOL2', description: 'Parse MOL2 string and create trajectory.' },
     from: [SO.Data.String],
@@ -514,7 +514,6 @@ const TrajectoryFromMOL2 = PluginStateTransform.BuiltIn({
     }
 });
 
-type TrajectoryFromCube = typeof TrajectoryFromCube
 const TrajectoryFromCube = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-cube',
     display: { name: 'Parse Cube', description: 'Parse Cube file to create a trajectory.' },
@@ -529,8 +528,8 @@ const TrajectoryFromCube = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromCube = typeof TrajectoryFromCube
 
-type TrajectoryFromCifCore = typeof TrajectoryFromCifCore
 const TrajectoryFromCifCore = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-cif-core',
     display: { name: 'Parse CIF Core', description: 'Identify and create all separate models in the specified CIF data block' },
@@ -560,9 +559,9 @@ const TrajectoryFromCifCore = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromCifCore = typeof TrajectoryFromCifCore
 
 const plus1 = (v: number) => v + 1, minus1 = (v: number) => v - 1;
-type ModelFromTrajectory = typeof ModelFromTrajectory
 const ModelFromTrajectory = PluginStateTransform.BuiltIn({
     name: 'model-from-trajectory',
     display: { name: 'Molecular Model', description: 'Create a molecular model from specified index in a trajectory.' },
@@ -594,8 +593,8 @@ const ModelFromTrajectory = PluginStateTransform.BuiltIn({
         b?.data.customProperties.dispose();
     }
 });
+type ModelFromTrajectory = typeof ModelFromTrajectory
 
-type StructureFromTrajectory = typeof StructureFromTrajectory
 const StructureFromTrajectory = PluginStateTransform.BuiltIn({
     name: 'structure-from-trajectory',
     display: { name: 'Structure from Trajectory', description: 'Create a molecular structure from a trajectory.' },
@@ -613,8 +612,8 @@ const StructureFromTrajectory = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type StructureFromTrajectory = typeof StructureFromTrajectory
 
-type StructureFromModel = typeof StructureFromModel
 const StructureFromModel = PluginStateTransform.BuiltIn({
     name: 'structure-from-model',
     display: { name: 'Structure', description: 'Create a molecular structure (model, assembly, or symmetry) from the specified model.' },
@@ -643,8 +642,8 @@ const StructureFromModel = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type StructureFromModel = typeof StructureFromModel
 
-type TransformStructureConformation = typeof TransformStructureConformation
 const TransformStructureConformation = PluginStateTransform.BuiltIn({
     name: 'transform-structure-conformation',
     display: { name: 'Transform Conformation' },
@@ -681,9 +680,9 @@ const TransformStructureConformation = PluginStateTransform.BuiltIn({
     //     return { axis, angle, translation };
     // }
 });
+type TransformStructureConformation = typeof TransformStructureConformation
 
 
-type StructureInstances = typeof StructureInstances
 const StructureInstances = PluginStateTransform.BuiltIn({
     name: 'structure-instances',
     display: { name: 'Structure Instances' },
@@ -711,8 +710,8 @@ const StructureInstances = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type StructureInstances = typeof StructureInstances
 
-type ModelWithCoordinates = typeof ModelWithCoordinates
 const ModelWithCoordinates = PluginStateTransform.BuiltIn({
     name: 'model-with-coordinates',
     display: { name: 'Model With Coordinates', description: 'Updates the current model with provided coordinate frame' },
@@ -746,8 +745,8 @@ const ModelWithCoordinates = PluginStateTransform.BuiltIn({
         return StateTransformer.UpdateResult.Updated;
     },
 });
+type ModelWithCoordinates = typeof ModelWithCoordinates
 
-type StructureSelectionFromExpression = typeof StructureSelectionFromExpression
 const StructureSelectionFromExpression = PluginStateTransform.BuiltIn({
     name: 'structure-selection-from-expression',
     display: { name: 'Selection', description: 'Create a molecular structure from the specified expression.' },
@@ -786,8 +785,8 @@ const StructureSelectionFromExpression = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type StructureSelectionFromExpression = typeof StructureSelectionFromExpression
 
-type MultiStructureSelectionFromExpression = typeof MultiStructureSelectionFromExpression
 const MultiStructureSelectionFromExpression = PluginStateTransform.BuiltIn({
     name: 'structure-multi-selection-from-expression',
     display: { name: 'Multi-structure Measurement Selection', description: 'Create selection object from multiple structures.' },
@@ -912,8 +911,8 @@ const MultiStructureSelectionFromExpression = PluginStateTransform.BuiltIn({
         return StateTransformer.UpdateResult.Updated;
     }
 });
+type MultiStructureSelectionFromExpression = typeof MultiStructureSelectionFromExpression
 
-type MultiStructureSelectionFromBundle = typeof MultiStructureSelectionFromBundle
 const MultiStructureSelectionFromBundle = PluginStateTransform.BuiltIn({
     name: 'structure-multi-selection-from-bundle',
     display: { name: 'Multi-structure Measurement Selection', description: 'Create selection object from multiple structures.' },
@@ -1012,8 +1011,8 @@ const MultiStructureSelectionFromBundle = PluginStateTransform.BuiltIn({
         return StateTransformer.UpdateResult.Updated;
     }
 });
+type MultiStructureSelectionFromBundle = typeof MultiStructureSelectionFromBundle
 
-type StructureSelectionFromScript = typeof StructureSelectionFromScript
 const StructureSelectionFromScript = PluginStateTransform.BuiltIn({
     name: 'structure-selection-from-script',
     display: { name: 'Selection', description: 'Create a molecular structure from the specified script.' },
@@ -1051,8 +1050,8 @@ const StructureSelectionFromScript = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type StructureSelectionFromScript = typeof StructureSelectionFromScript
 
-type StructureSelectionFromBundle = typeof StructureSelectionFromBundle
 const StructureSelectionFromBundle = PluginStateTransform.BuiltIn({
     name: 'structure-selection-from-bundle',
     display: { name: 'Selection', description: 'Create a molecular structure from the specified structure-element bundle.' },
@@ -1102,6 +1101,7 @@ const StructureSelectionFromBundle = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type StructureSelectionFromBundle = typeof StructureSelectionFromBundle
 
 export const StructureComplexElementTypes = {
     'polymer': 'polymer',
@@ -1125,7 +1125,6 @@ export type StructureComplexElementTypes = keyof typeof StructureComplexElementT
 
 const StructureComplexElementTypeTuples = PD.objectToOptions(StructureComplexElementTypes);
 
-type StructureComplexElement = typeof StructureComplexElement
 const StructureComplexElement = PluginStateTransform.BuiltIn({
     name: 'structure-complex-element',
     display: { name: 'Complex Element', description: 'Create a molecular structure from the specified model.' },
@@ -1168,8 +1167,8 @@ const StructureComplexElement = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type StructureComplexElement = typeof StructureComplexElement
 
-type StructureComponent = typeof StructureComponent
 const StructureComponent = PluginStateTransform.BuiltIn({
     name: 'structure-component',
     display: { name: 'Component', description: 'A molecular structure component.' },
@@ -1187,8 +1186,8 @@ const StructureComponent = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type StructureComponent = typeof StructureComponent
 
-type CustomModelProperties = typeof CustomModelProperties
 const CustomModelProperties = PluginStateTransform.BuiltIn({
     name: 'custom-model-properties',
     display: { name: 'Custom Model Properties' },
@@ -1223,6 +1222,7 @@ const CustomModelProperties = PluginStateTransform.BuiltIn({
         b?.data.customProperties.dispose();
     }
 });
+type CustomModelProperties = typeof CustomModelProperties
 async function attachModelProps(model: Model, ctx: PluginContext, taskCtx: RuntimeContext, params: ReturnType<CustomModelProperties['createDefaultParams']>) {
     const propertyCtx = { runtime: taskCtx, assetManager: ctx.managers.asset, errorContext: ctx.errorContext };
     const { autoAttach, properties } = params;
@@ -1241,7 +1241,6 @@ async function attachModelProps(model: Model, ctx: PluginContext, taskCtx: Runti
     }
 }
 
-type CustomStructureProperties = typeof CustomStructureProperties
 const CustomStructureProperties = PluginStateTransform.BuiltIn({
     name: 'custom-structure-properties',
     display: { name: 'Custom Structure Properties' },
@@ -1278,6 +1277,7 @@ const CustomStructureProperties = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type CustomStructureProperties = typeof CustomStructureProperties
 async function attachStructureProps(structure: Structure, ctx: PluginContext, taskCtx: RuntimeContext, params: ReturnType<CustomStructureProperties['createDefaultParams']>) {
     const propertyCtx = { runtime: taskCtx, assetManager: ctx.managers.asset, errorContext: ctx.errorContext };
     const { autoAttach, properties } = params;
@@ -1296,7 +1296,6 @@ async function attachStructureProps(structure: Structure, ctx: PluginContext, ta
     }
 }
 
-type ShapeFromPly = typeof ShapeFromPly
 const ShapeFromPly = PluginStateTransform.BuiltIn({
     name: 'shape-from-ply',
     display: { name: 'Shape from PLY', description: 'Create Shape from PLY data' },
@@ -1317,3 +1316,4 @@ const ShapeFromPly = PluginStateTransform.BuiltIn({
         });
     }
 });
+type ShapeFromPly = typeof ShapeFromPly
