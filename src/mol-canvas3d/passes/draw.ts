@@ -84,7 +84,7 @@ export class DrawPass {
         }
         this.depthTextureOpaque.detachFramebuffer(this.postprocessing.target.framebuffer, 'depth');
     }
-    get transparency() {
+    get transparency(): TransparencyMode {
         return this.transparencyMode;
     }
 
