@@ -17,10 +17,10 @@ import type { TrackballControls } from '../controls/trackball.ts';
 import { Ray3D } from '../../mol-math/geometry/primitives/ray3d.ts';
 import type { AsyncPickData } from '../passes/pick.ts';
 
-type Canvas3D = import('../canvas3d').Canvas3D
-type HoverEvent = import('../canvas3d').Canvas3D.HoverEvent
-type DragEvent = import('../canvas3d').Canvas3D.DragEvent
-type ClickEvent = import('../canvas3d').Canvas3D.ClickEvent
+type Canvas3D = import('../canvas3d.ts').Canvas3D
+type HoverEvent = import('../canvas3d.ts').Canvas3D.HoverEvent
+type DragEvent = import('../canvas3d.ts').Canvas3D.DragEvent
+type ClickEvent = import('../canvas3d.ts').Canvas3D.ClickEvent
 
 const tmpPosA = Vec3();
 const tmpPos = Vec3();

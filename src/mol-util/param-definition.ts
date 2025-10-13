@@ -5,7 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import type { Color as ColorData } from './color.ts';
+import type { Color as ColorData } from './color/color.ts';
 import { shallowEqualObjects } from './index.ts';
 import { Vec2 as Vec2Data, Vec3 as Vec3Data, Mat4 as Mat4Data, EPSILON } from '../mol-math/linear-algebra.ts';
 import { deepClone } from './object.ts';
