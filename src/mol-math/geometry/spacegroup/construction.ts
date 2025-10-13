@@ -89,7 +89,7 @@ namespace Spacegroup {
 
     const _ijkVec = Vec3();
     const _tempMat = Mat4();
-    export function setOperatorMatrix(spacegroup: Spacegroup, index: number, i: number, j: number, k: number, target: Mat4) {
+    export function setOperatorMatrix(spacegroup: Spacegroup, index: number, i: number, j: number, k: number, target: Mat4): Mat4 {
         Vec3.set(_ijkVec, i, j, k);
 
         Mat4.fromTranslation(_tempMat, _ijkVec);
@@ -118,7 +118,7 @@ namespace Spacegroup {
      * Get Symmetry operator for transformation around the given
      * reference point `ref` in fractional coordinates
      */
-    export function getSymmetryOperatorRef(spacegroup: Spacegroup, spgrOp: number, i: number, j: number, k: number, ref: Vec3) {
+    export function getSymmetryOperatorRef(spacegroup: Spacegroup, spgrOp: number, i: number, j: number, k: number, ref: Vec3): SymmetryOperator {
 
         const operator = Mat4.zero();
 

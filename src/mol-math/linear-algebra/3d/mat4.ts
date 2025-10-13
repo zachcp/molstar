@@ -832,7 +832,7 @@ namespace Mat4 {
         return { position, quaternion, scale };
     }
 
-    export function makeTable(m: Mat4) {
+    export function makeTable(m: Mat4): string {
         let ret = '';
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 4; j++) {
@@ -1271,7 +1271,7 @@ namespace Mat4 {
         return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
     }
 
-    export function extractBasis(m: Mat4) {
+    export function extractBasis(m: Mat4): { x: Vec3, y: Vec3, z: Vec3 } {
         return {
             x: Vec3.create(m[0], m[1], m[2]),
             y: Vec3.create(m[4], m[5], m[6]),

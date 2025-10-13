@@ -28,7 +28,7 @@ export namespace Result {
         return { count: 0, indices: [], squaredDistances: [] };
     }
 
-    export function copy<T = number>(out: Result<T>, result: Result<T>) {
+    export function copy<T = number>(out: Result<T>, result: Result<T>): Result<T> {
         for (let i = 0; i < result.count; ++i) {
             out.indices[i] = result.indices[i];
             out.squaredDistances[i] = result.squaredDistances[i];
