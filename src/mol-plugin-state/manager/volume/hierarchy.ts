@@ -31,12 +31,12 @@ export class VolumeHierarchyManager extends PluginComponent {
         return this.plugin.state.data;
     }
 
-    get current() {
+    get current(): VolumeHierarchy {
         this.sync(false);
         return this.state.hierarchy;
     }
 
-    get selection() {
+    get selection(): VolumeRef | undefined {
         this.sync(false);
         return this.state.selection;
     }

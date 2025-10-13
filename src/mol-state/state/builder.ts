@@ -109,7 +109,7 @@ namespace StateBuilder {
     export class Root implements StateBuilder {
         private state: BuildState;
         get editInfo(): StateBuilder.EditInfo { return this.state.editInfo; }
-        get currentTree() { return this.state.tree; }
+        get currentTree(): TransientTree { return this.state.tree; }
 
         to<A extends StateObject, T extends StateTransformer>(ref: StateTransform.Ref): To<A, T>
         to<A extends StateObject, T extends StateTransformer>(ref: StateObjectRef<A>): To<A, T>
@@ -143,8 +143,8 @@ namespace StateBuilder {
     }
 
     export class To<A extends StateObject, T extends StateTransformer = StateTransformer> implements StateBuilder {
-        get editInfo() { return this.state.editInfo; }
-        get selector() { return new StateObjectSelector<A, T>(this.ref, this.state.state); }
+        get editInfo(): StateBuilder.EditInfo { return this.state.editInfo; }
+        get selector(): StateObjectSelector<A, T> { return new StateObjectSelector<A, T>(this.ref, this.state.state); }
 
         readonly ref: StateTransform.Ref;
 

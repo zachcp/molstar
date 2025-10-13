@@ -93,7 +93,7 @@ export class RepresentationRegistry<D, S extends Representation.State> {
     private _map = new Map<string, RepresentationProvider<D, any, any>>();
     private _name = new Map<RepresentationProvider<D, any, any>, string>();
 
-    get default() { return this._list[0]; }
+    get default(): { name: string, provider: RepresentationProvider<D, any, any> } { return this._list[0]; }
     get types(): [string, string][] { return getTypes(this._list); }
 
     constructor() {};
@@ -128,7 +128,7 @@ export class RepresentationRegistry<D, S extends Representation.State> {
         return this._map.get(name) || EmptyRepresentationProvider;
     }
 
-    get list() {
+    get list(): { name: string, provider: RepresentationProvider<D, any, any> }[] {
         return this._list;
     }
 

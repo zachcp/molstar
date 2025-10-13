@@ -92,7 +92,7 @@ export class ViewportScreenshotHelper extends PluginComponent {
         };
     }
     private _params: ReturnType<ViewportScreenshotHelper['createParams']> = void 0 as any;
-    get params() {
+    get params(): ReturnType<ViewportScreenshotHelper['createParams']> {
         if (this._params) return this._params;
         return this._params = this.createParams();
     }
@@ -113,15 +113,15 @@ export class ViewportScreenshotHelper extends PluginComponent {
         previewed: this.ev<any>()
     };
 
-    get values() {
+    get values(): ViewportScreenshotHelperParams {
         return this.behaviors.values.value;
     }
 
-    get cropParams() {
+    get cropParams(): { auto: boolean, relativePadding: number } {
         return this.behaviors.cropParams.value;
     }
 
-    get relativeCrop() {
+    get relativeCrop(): Viewport {
         return this.behaviors.relativeCrop.value;
     }
 
@@ -192,7 +192,7 @@ export class ViewportScreenshotHelper extends PluginComponent {
     }
 
     private _imagePass!: ImagePass;
-    get imagePass() {
+    get imagePass(): ImagePass {
         if (this._imagePass) {
             const c = this.plugin.canvas3d!;
             this._imagePass.setProps({
