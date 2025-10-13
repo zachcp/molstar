@@ -50,7 +50,7 @@ export { ParseJson };
 export { LazyVolume };
 
 type Download = typeof Download
-const Download = PluginStateTransform.BuiltIn({
+const Download: StateTransformer<SO.Root, SO.Data.String | SO.Data.Binary> = PluginStateTransform.BuiltIn({
     name: 'download',
     display: { name: 'Download', description: 'Download string or binary data from the specified URL' },
     from: [SO.Root],
@@ -85,7 +85,7 @@ const Download = PluginStateTransform.BuiltIn({
 });
 
 type DownloadBlob = typeof DownloadBlob
-const DownloadBlob = PluginStateTransform.BuiltIn({
+const DownloadBlob: StateTransformer<SO.Root, SO.Data.Blob> = PluginStateTransform.BuiltIn({
     name: 'download-blob',
     display: { name: 'Download Blob', description: 'Download multiple string or binary data from the specified URLs.' },
     from: SO.Root,
@@ -141,7 +141,7 @@ const DownloadBlob = PluginStateTransform.BuiltIn({
 });
 
 type DeflateData = typeof DeflateData
-const DeflateData = PluginStateTransform.BuiltIn({
+const DeflateData: StateTransformer<SO.Data.Binary, SO.Data.Binary | SO.Data.String> = PluginStateTransform.BuiltIn({
     name: 'defalate-data',
     display: { name: 'Deflate', description: 'Deflate compressed data' },
     params: {
@@ -264,7 +264,7 @@ const ReadFile: StateTransformer<SO.Root, SO.Data.String | SO.Data.Binary> = Plu
 });
 
 type ParseBlob = typeof ParseBlob
-const ParseBlob = PluginStateTransform.BuiltIn({
+const ParseBlob: StateTransformer<SO.Data.Blob, SO.Format.Blob> = PluginStateTransform.BuiltIn({
     name: 'parse-blob',
     display: { name: 'Parse Blob', description: 'Parse multiple data enties' },
     from: SO.Data.Blob,
@@ -324,7 +324,7 @@ const ParseCif: StateTransformer<SO.Data.String | SO.Data.Binary, SO.Format.Cif>
 });
 
 type ParseCube = typeof ParseCube
-const ParseCube = PluginStateTransform.BuiltIn({
+const ParseCube: StateTransformer<SO.Format.Cube, SO.Volume.Data> = PluginStateTransform.BuiltIn({
     name: 'parse-cube',
     display: { name: 'Parse Cube', description: 'Parse Cube from String data' },
     from: SO.Data.String,
@@ -340,7 +340,7 @@ const ParseCube = PluginStateTransform.BuiltIn({
 });
 
 type ParsePsf = typeof ParsePsf
-const ParsePsf = PluginStateTransform.BuiltIn({
+const ParsePsf: StateTransformer<SO.Data.String, SO.Format.Psf> = PluginStateTransform.BuiltIn({
     name: 'parse-psf',
     display: { name: 'Parse PSF', description: 'Parse PSF from String data' },
     from: [SO.Data.String],
@@ -356,7 +356,7 @@ const ParsePsf = PluginStateTransform.BuiltIn({
 });
 
 type ParsePrmtop = typeof ParsePrmtop
-const ParsePrmtop = PluginStateTransform.BuiltIn({
+const ParsePrmtop: StateTransformer<SO.Data.String, SO.Format.Prmtop> = PluginStateTransform.BuiltIn({
     name: 'parse-prmtop',
     display: { name: 'Parse PRMTOP', description: 'Parse PRMTOP from String data' },
     from: [SO.Data.String],
@@ -372,7 +372,7 @@ const ParsePrmtop = PluginStateTransform.BuiltIn({
 });
 
 type ParseTop = typeof ParseTop
-const ParseTop = PluginStateTransform.BuiltIn({
+const ParseTop: StateTransformer<SO.Data.String, SO.Format.Top> = PluginStateTransform.BuiltIn({
     name: 'parse-top',
     display: { name: 'Parse TOP', description: 'Parse TOP from String data' },
     from: [SO.Data.String],
@@ -388,7 +388,7 @@ const ParseTop = PluginStateTransform.BuiltIn({
 });
 
 type ParsePly = typeof ParsePly
-const ParsePly = PluginStateTransform.BuiltIn({
+const ParsePly: StateTransformer<SO.Data.String, SO.Format.Ply> = PluginStateTransform.BuiltIn({
     name: 'parse-ply',
     display: { name: 'Parse PLY', description: 'Parse PLY from String data' },
     from: [SO.Data.String],
@@ -404,7 +404,7 @@ const ParsePly = PluginStateTransform.BuiltIn({
 });
 
 type ParseCcp4 = typeof ParseCcp4
-const ParseCcp4 = PluginStateTransform.BuiltIn({
+const ParseCcp4: StateTransformer<SO.Data.Binary, SO.Format.Ccp4> = PluginStateTransform.BuiltIn({
     name: 'parse-ccp4',
     display: { name: 'Parse CCP4/MRC/MAP', description: 'Parse CCP4/MRC/MAP from Binary data' },
     from: [SO.Data.Binary],
@@ -420,7 +420,7 @@ const ParseCcp4 = PluginStateTransform.BuiltIn({
 });
 
 type ParseDsn6 = typeof ParseDsn6
-const ParseDsn6 = PluginStateTransform.BuiltIn({
+const ParseDsn6: StateTransformer<SO.Data.Binary, SO.Format.Dsn6> = PluginStateTransform.BuiltIn({
     name: 'parse-dsn6',
     display: { name: 'Parse DSN6/BRIX', description: 'Parse CCP4/BRIX from Binary data' },
     from: [SO.Data.Binary],

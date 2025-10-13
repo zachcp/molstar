@@ -236,7 +236,7 @@ export async function getTrajectory(ctx: RuntimeContext, obj: StateObject, coord
     throw new Error('no model/topology found');
 }
 
-const TrajectoryFromModelAndCoordinates = PluginStateTransform.BuiltIn({
+const TrajectoryFromModelAndCoordinates: StateTransformer<SO.Root, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-model-and-coordinates',
     display: { name: 'Trajectory from Topology & Coordinates', description: 'Create a trajectory from existing model/topology and coordinates.' },
     from: SO.Root,
@@ -294,7 +294,7 @@ function trajectoryProps(trajectory: Trajectory) {
     return { label: `${first.entry}`, description: `${trajectory.frameCount} model${trajectory.frameCount === 1 ? '' : 's'}` };
 }
 
-const TrajectoryFromMmCif = PluginStateTransform.BuiltIn({
+const TrajectoryFromMmCif: StateTransformer<SO.Format.Cif, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-mmcif',
     display: { name: 'Trajectory from mmCIF', description: 'Identify and create all separate models in the specified CIF data block' },
     from: SO.Format.Cif,
@@ -530,7 +530,7 @@ const TrajectoryFromCube = PluginStateTransform.BuiltIn({
 });
 type TrajectoryFromCube = typeof TrajectoryFromCube
 
-const TrajectoryFromCifCore = PluginStateTransform.BuiltIn({
+const TrajectoryFromCifCore: StateTransformer<SO.Format.Cif, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-cif-core',
     display: { name: 'Parse CIF Core', description: 'Identify and create all separate models in the specified CIF data block' },
     from: SO.Format.Cif,
@@ -562,7 +562,7 @@ const TrajectoryFromCifCore = PluginStateTransform.BuiltIn({
 type TrajectoryFromCifCore = typeof TrajectoryFromCifCore
 
 const plus1 = (v: number) => v + 1, minus1 = (v: number) => v - 1;
-const ModelFromTrajectory = PluginStateTransform.BuiltIn({
+const ModelFromTrajectory: StateTransformer<SO.Molecule.Trajectory, SO.Molecule.Model> = PluginStateTransform.BuiltIn({
     name: 'model-from-trajectory',
     display: { name: 'Molecular Model', description: 'Create a molecular model from specified index in a trajectory.' },
     from: SO.Molecule.Trajectory,
@@ -614,7 +614,7 @@ const StructureFromTrajectory = PluginStateTransform.BuiltIn({
 });
 type StructureFromTrajectory = typeof StructureFromTrajectory
 
-const StructureFromModel = PluginStateTransform.BuiltIn({
+const StructureFromModel: StateTransformer<SO.Molecule.Model, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'structure-from-model',
     display: { name: 'Structure', description: 'Create a molecular structure (model, assembly, or symmetry) from the specified model.' },
     from: SO.Molecule.Model,
@@ -644,7 +644,7 @@ const StructureFromModel = PluginStateTransform.BuiltIn({
 });
 type StructureFromModel = typeof StructureFromModel
 
-const TransformStructureConformation = PluginStateTransform.BuiltIn({
+const TransformStructureConformation: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'transform-structure-conformation',
     display: { name: 'Transform Conformation' },
     isDecorator: true,
@@ -683,7 +683,7 @@ const TransformStructureConformation = PluginStateTransform.BuiltIn({
 type TransformStructureConformation = typeof TransformStructureConformation
 
 
-const StructureInstances = PluginStateTransform.BuiltIn({
+const StructureInstances: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'structure-instances',
     display: { name: 'Structure Instances' },
     isDecorator: true,
@@ -712,7 +712,7 @@ const StructureInstances = PluginStateTransform.BuiltIn({
 });
 type StructureInstances = typeof StructureInstances
 
-const ModelWithCoordinates = PluginStateTransform.BuiltIn({
+const ModelWithCoordinates: StateTransformer<SO.Molecule.Model, SO.Molecule.Model> = PluginStateTransform.BuiltIn({
     name: 'model-with-coordinates',
     display: { name: 'Model With Coordinates', description: 'Updates the current model with provided coordinate frame' },
     from: SO.Molecule.Model,
@@ -747,7 +747,7 @@ const ModelWithCoordinates = PluginStateTransform.BuiltIn({
 });
 type ModelWithCoordinates = typeof ModelWithCoordinates
 
-const StructureSelectionFromExpression = PluginStateTransform.BuiltIn({
+const StructureSelectionFromExpression: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'structure-selection-from-expression',
     display: { name: 'Selection', description: 'Create a molecular structure from the specified expression.' },
     from: SO.Molecule.Structure,
@@ -787,7 +787,7 @@ const StructureSelectionFromExpression = PluginStateTransform.BuiltIn({
 });
 type StructureSelectionFromExpression = typeof StructureSelectionFromExpression
 
-const MultiStructureSelectionFromExpression = PluginStateTransform.BuiltIn({
+const MultiStructureSelectionFromExpression: StateTransformer<SO.Root, SO.Molecule.Structure.Selections> = PluginStateTransform.BuiltIn({
     name: 'structure-multi-selection-from-expression',
     display: { name: 'Multi-structure Measurement Selection', description: 'Create selection object from multiple structures.' },
     from: SO.Root,
@@ -913,7 +913,7 @@ const MultiStructureSelectionFromExpression = PluginStateTransform.BuiltIn({
 });
 type MultiStructureSelectionFromExpression = typeof MultiStructureSelectionFromExpression
 
-const MultiStructureSelectionFromBundle = PluginStateTransform.BuiltIn({
+const MultiStructureSelectionFromBundle: StateTransformer<SO.Root, SO.Molecule.Structure.Selections> = PluginStateTransform.BuiltIn({
     name: 'structure-multi-selection-from-bundle',
     display: { name: 'Multi-structure Measurement Selection', description: 'Create selection object from multiple structures.' },
     from: SO.Root,
@@ -1013,7 +1013,7 @@ const MultiStructureSelectionFromBundle = PluginStateTransform.BuiltIn({
 });
 type MultiStructureSelectionFromBundle = typeof MultiStructureSelectionFromBundle
 
-const StructureSelectionFromScript = PluginStateTransform.BuiltIn({
+const StructureSelectionFromScript: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'structure-selection-from-script',
     display: { name: 'Selection', description: 'Create a molecular structure from the specified script.' },
     from: SO.Molecule.Structure,
@@ -1052,7 +1052,7 @@ const StructureSelectionFromScript = PluginStateTransform.BuiltIn({
 });
 type StructureSelectionFromScript = typeof StructureSelectionFromScript
 
-const StructureSelectionFromBundle = PluginStateTransform.BuiltIn({
+const StructureSelectionFromBundle: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'structure-selection-from-bundle',
     display: { name: 'Selection', description: 'Create a molecular structure from the specified structure-element bundle.' },
     from: SO.Molecule.Structure,
@@ -1125,7 +1125,7 @@ export type StructureComplexElementTypes = keyof typeof StructureComplexElementT
 
 const StructureComplexElementTypeTuples = PD.objectToOptions(StructureComplexElementTypes);
 
-const StructureComplexElement = PluginStateTransform.BuiltIn({
+const StructureComplexElement: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'structure-complex-element',
     display: { name: 'Complex Element', description: 'Create a molecular structure from the specified model.' },
     from: SO.Molecule.Structure,
@@ -1169,7 +1169,7 @@ const StructureComplexElement = PluginStateTransform.BuiltIn({
 });
 type StructureComplexElement = typeof StructureComplexElement
 
-const StructureComponent = PluginStateTransform.BuiltIn({
+const StructureComponent: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'structure-component',
     display: { name: 'Component', description: 'A molecular structure component.' },
     from: SO.Molecule.Structure,
@@ -1188,7 +1188,7 @@ const StructureComponent = PluginStateTransform.BuiltIn({
 });
 type StructureComponent = typeof StructureComponent
 
-const CustomModelProperties = PluginStateTransform.BuiltIn({
+const CustomModelProperties: StateTransformer<SO.Molecule.Model, SO.Molecule.Model> = PluginStateTransform.BuiltIn({
     name: 'custom-model-properties',
     display: { name: 'Custom Model Properties' },
     isDecorator: true,
@@ -1241,7 +1241,7 @@ async function attachModelProps(model: Model, ctx: PluginContext, taskCtx: Runti
     }
 }
 
-const CustomStructureProperties = PluginStateTransform.BuiltIn({
+const CustomStructureProperties: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'custom-structure-properties',
     display: { name: 'Custom Structure Properties' },
     isDecorator: true,
@@ -1296,7 +1296,7 @@ async function attachStructureProps(structure: Structure, ctx: PluginContext, ta
     }
 }
 
-const ShapeFromPly = PluginStateTransform.BuiltIn({
+const ShapeFromPly: StateTransformer<SO.Format.Ply, SO.Shape.Provider> = PluginStateTransform.BuiltIn({
     name: 'shape-from-ply',
     display: { name: 'Shape from PLY', description: 'Create Shape from PLY data' },
     from: SO.Format.Ply,
