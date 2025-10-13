@@ -19,7 +19,7 @@ interface Sphere3D {
     extrema?: Vec3[]
 }
 
-function Sphere3D() {
+function Sphere3D(): Sphere3D {
     return Sphere3D.zero();
 }
 
@@ -101,7 +101,7 @@ namespace Sphere3D {
     }
 
     /** Translate sphere by Vec3 */
-    export function translate(out: Sphere3D, sphere: Sphere3D, v: Vec3) {
+    export function translate(out: Sphere3D, sphere: Sphere3D, v: Vec3): Sphere3D {
         Vec3.add(out.center, sphere.center, v);
         if (hasExtrema(sphere)) {
             setExtrema(out, sphere.extrema.map(e => Vec3.add(Vec3(), e, v)));
@@ -138,7 +138,7 @@ namespace Sphere3D {
         return out;
     }
 
-    export function fromBox3D(out: Sphere3D, box: Box3D) {
+    export function fromBox3D(out: Sphere3D, box: Box3D): Sphere3D {
         Vec3.scale(out.center, Vec3.add(out.center, box.max, box.min), 0.5);
         out.radius = Vec3.distance(out.center, box.max);
 
@@ -156,7 +156,7 @@ namespace Sphere3D {
         return out;
     }
 
-    export function fromAxes3D(out: Sphere3D, axes: Axes3D) {
+    export function fromAxes3D(out: Sphere3D, axes: Axes3D): Sphere3D {
         Vec3.copy(out.center, axes.origin);
         out.radius = Math.max(Vec3.magnitude(axes.dirA), Vec3.magnitude(axes.dirB), Vec3.magnitude(axes.dirC));
         return out;
@@ -164,7 +164,7 @@ namespace Sphere3D {
 
     const tmpCenter = Vec3();
     /** Get a tight sphere around a transformed box */
-    export function fromDimensionsAndTransform(out: Sphere3D, dimensions: Vec3, transform: Mat4) {
+    export function fromDimensionsAndTransform(out: Sphere3D, dimensions: Vec3, transform: Mat4): Sphere3D {
         const [x, y, z] = dimensions;
 
         const cpA = Vec3.create(0, 0, 0); Vec3.transformMat4(cpA, cpA, transform);
@@ -199,7 +199,7 @@ namespace Sphere3D {
     }
 
     /** Expand sphere radius by another sphere */
-    export function expandBySphere(out: Sphere3D, sphere: Sphere3D, by: Sphere3D) {
+    export function expandBySphere(out: Sphere3D, sphere: Sphere3D, by: Sphere3D): Sphere3D {
         Vec3.copy(out.center, sphere.center);
         out.radius = Math.max(sphere.radius, Vec3.distance(sphere.center, by.center) + by.radius);
         if (hasExtrema(sphere) && hasExtrema(by)) {
@@ -275,7 +275,7 @@ namespace Sphere3D {
     /**
      * Check if `a` includes `b`, use `extrema` of `b` when available
      */
-    export function includes(a: Sphere3D, b: Sphere3D) {
+    export function includes(a: Sphere3D, b: Sphere3D): boolean {
         if (hasExtrema(b)) {
             for (const e of b.extrema) {
                 if (Vec3.distance(a.center, e) > a.radius) return false;
@@ -287,7 +287,7 @@ namespace Sphere3D {
     }
 
     /** Check if `a` and `b` are overlapping */
-    export function overlaps(a: Sphere3D, b: Sphere3D) {
+    export function overlaps(a: Sphere3D, b: Sphere3D): boolean {
         return Vec3.distance(a.center, b.center) <= a.radius + b.radius;
     }
 

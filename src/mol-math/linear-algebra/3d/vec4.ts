@@ -62,7 +62,7 @@ namespace Vec4 {
         return out;
     }
 
-    export function ofSphere(sphere: Sphere3D) {
+    export function ofSphere(sphere: Sphere3D): Vec4 {
         return fromSphere(zero(), sphere);
     }
 
@@ -189,7 +189,7 @@ namespace Vec4 {
         return Math.sqrt(x * x + y * y + z * z + w * w);
     }
 
-    export function squaredNorm(a: Vec4) {
+    export function squaredNorm(a: Vec4): number {
         const x = a[0],
             y = a[1],
             z = a[2],

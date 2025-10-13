@@ -29,7 +29,7 @@ const _isFinite = isFinite;
 export interface Vec3 extends Array<number> { [d: number]: number, '@type': 'vec3', length: 3 }
 export interface ReadonlyVec3 extends Array<number> { readonly [d: number]: number, '@type': 'vec3', length: 3 }
 
-export function Vec3() {
+export function Vec3(): Vec3 {
     return Vec3.zero();
 }
 
@@ -281,7 +281,7 @@ export namespace Vec3 {
         return Math.sqrt(x * x + y * y + z * z);
     }
 
-    export function squaredMagnitude(a: Vec3) {
+    export function squaredMagnitude(a: Vec3): number {
         const x = a[0],
             y = a[1],
             z = a[2];
@@ -637,7 +637,7 @@ export namespace Vec3 {
     /**
      * Get a normalized vector that is orthogonal to `dir`
      */
-    export function orthogonalDirection(out: Vec3, dir: Vec3) {
+    export function orthogonalDirection(out: Vec3, dir: Vec3): Vec3 {
         if (isZero(dir)) {
             return copy(out, Vec3.unitX);
         } else {

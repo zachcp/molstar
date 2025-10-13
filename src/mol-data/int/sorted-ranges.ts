@@ -12,10 +12,10 @@ type SortedRanges<T extends number = number> = SortedArray<T>
 
 namespace SortedRanges {
     export function ofSortedRanges<T extends number = number>(array: ArrayLike<T>) { return SortedArray.ofSortedArray<T>(array); }
-    export function start<T extends number = number>(ranges: SortedRanges<T>) { return ranges[0]; }
-    export function end<T extends number = number>(ranges: SortedRanges<T>) { return ranges[ranges.length - 1] + 1; }
-    export function min<T extends number = number>(ranges: SortedRanges<T>) { return ranges[0]; }
-    export function max<T extends number = number>(ranges: SortedRanges<T>) { return ranges[ranges.length - 1]; }
+    export function start<T extends number = number>(ranges: SortedRanges<T>): T { return ranges[0]; }
+    export function end<T extends number = number>(ranges: SortedRanges<T>): number { return ranges[ranges.length - 1] + 1; }
+    export function min<T extends number = number>(ranges: SortedRanges<T>): T { return ranges[0]; }
+    export function max<T extends number = number>(ranges: SortedRanges<T>): T { return ranges[ranges.length - 1]; }
     export function size<T extends number = number>(ranges: SortedRanges<T>) {
         let size = 0;
         for (let i = 0, il = ranges.length; i < il; i += 2) {
@@ -23,23 +23,23 @@ namespace SortedRanges {
         }
         return size;
     }
-    export function count<T extends number = number>(ranges: SortedRanges<T>) { return ranges.length / 2; }
+    export function count<T extends number = number>(ranges: SortedRanges<T>): number { return ranges.length / 2; }
 
-    export function startAt<T extends number = number>(ranges: SortedRanges<T>, index: number) {
+    export function startAt<T extends number = number>(ranges: SortedRanges<T>, index: number): T {
         return ranges[index * 2];
     }
-    export function endAt<T extends number = number>(ranges: SortedRanges<T>, index: number) {
+    export function endAt<T extends number = number>(ranges: SortedRanges<T>, index: number): number {
         return ranges[index * 2 + 1] + 1;
     }
 
-    export function minAt<T extends number = number>(ranges: SortedRanges<T>, index: number) {
+    export function minAt<T extends number = number>(ranges: SortedRanges<T>, index: number): T {
         return ranges[index * 2];
     }
-    export function maxAt<T extends number = number>(ranges: SortedRanges<T>, index: number) {
+    export function maxAt<T extends number = number>(ranges: SortedRanges<T>, index: number): T {
         return ranges[index * 2 + 1];
     }
 
-    export function areEqual<T extends number = number>(a: SortedRanges<T>, b: SortedRanges<T>) {
+    export function areEqual<T extends number = number>(a: SortedRanges<T>, b: SortedRanges<T>): boolean {
         if (a.length !== b.length) return false;
         for (let i = 0, il = a.length; i < il; ++i) {
             if (a[i] !== b[i]) return false;

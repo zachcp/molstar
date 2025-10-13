@@ -149,7 +149,7 @@ namespace Vec2 {
         return Math.sqrt(x * x + y * y);
     }
 
-    export function squaredMagnitude(a: Vec2) {
+    export function squaredMagnitude(a: Vec2): number {
         const x = a[0],
             y = a[1];
         return x * x + y * y;
