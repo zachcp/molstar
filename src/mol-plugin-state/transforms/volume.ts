@@ -17,7 +17,7 @@ import { PluginStateObject as SO, PluginStateTransform } from '../objects.ts';
 import { volumeFromCube } from '../../mol-model-formats/volume/cube.ts';
 import { volumeFromDx } from '../../mol-model-formats/volume/dx.ts';
 import { Grid, type Volume } from '../../mol-model/volume.ts';
-import { StateTransformer } from '../../mol-state/index.ts';
+import type { StateTransformer } from '../../mol-state/index.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { StateSelection } from '../../mol-state/index.ts';
 import { volumeFromSegmentationData } from '../../mol-model-formats/volume/segmentation.ts';

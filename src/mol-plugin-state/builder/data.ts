@@ -17,7 +17,7 @@ import {
   RawData,
 } from "../transforms/data.ts";
 import { getFileNameInfo } from "../../mol-util/file-info.ts";
-import { PluginStateObject as SO } from "../objects.ts";
+import type { PluginStateObject as SO } from "../objects.ts";
 
 export class DataBuilder {
   private get dataState() {
