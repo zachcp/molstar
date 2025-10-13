@@ -141,27 +141,27 @@ namespace Column {
         return arrayColumn(spec);
     }
 
-    export function ofIntArray(array: ArrayLike<number>) {
+    export function ofIntArray(array: ArrayLike<number>): Column<number> {
         return arrayColumn({ array, schema: Schema.int });
     }
 
-    export function ofFloatArray(array: ArrayLike<number>) {
+    export function ofFloatArray(array: ArrayLike<number>): Column<number> {
         return arrayColumn({ array, schema: Schema.float });
     }
 
-    export function ofStringArray(array: ArrayLike<string>) {
+    export function ofStringArray(array: ArrayLike<string>): Column<string> {
         return arrayColumn({ array, schema: Schema.str });
     }
 
-    export function ofStringAliasArray<T extends string>(array: ArrayLike<T>) {
+    export function ofStringAliasArray<T extends string>(array: ArrayLike<T>): Column<T> {
         return arrayColumn<Schema.Aliased<T>>({ array, schema: Schema.Aliased(Schema.str) });
     }
 
-    export function ofStringListArray<T extends string>(array: ArrayLike<T[]>, separator = ',') {
+    export function ofStringListArray<T extends string>(array: ArrayLike<T[]>, separator = ','): Column<T[]> {
         return arrayColumn<Schema.List<T>>({ array, schema: Schema.List<T>(separator, x => x as T) });
     }
 
-    export function ofIntTokens(tokens: Tokens) {
+    export function ofIntTokens(tokens: Tokens): Column<number> {
         const { count, data, indices } = tokens;
         return lambdaColumn({
             value: (row: number) => fastParseInt(data, indices[2 * row], indices[2 * row + 1]) || 0,
@@ -170,7 +170,7 @@ namespace Column {
         });
     }
 
-    export function ofFloatTokens(tokens: Tokens) {
+    export function ofFloatTokens(tokens: Tokens): Column<number> {
         const { count, data, indices } = tokens;
         return lambdaColumn({
             value: (row: number) => fastParseFloat(data, indices[2 * row], indices[2 * row + 1]) || 0,
