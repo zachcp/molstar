@@ -38,7 +38,7 @@ export function isEmpty(set: OrderedSetImpl): boolean { return size(set) === 0; 
 export function hashCode(set: OrderedSetImpl) { return I.is(set) ? I.hashCode(set) : S.hashCode(set); }
 // TODO: possibly add more hash functions to allow for multilevel hashing.
 
-export function toString(set: OrderedSetImpl) { return I.is(set) ? I.toString(set) : S.toString(set); }
+export function toString(set: OrderedSetImpl): string { return I.is(set) ? I.toString(set) : S.toString(set); }
 
 export function areEqual(a: OrderedSetImpl, b: OrderedSetImpl): boolean {
     if (I.is(a)) {

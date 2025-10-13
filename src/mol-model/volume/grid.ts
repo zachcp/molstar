@@ -47,7 +47,7 @@ namespace Grid {
         return Mat4.identity();
     }
 
-    export function areEquivalent(gridA: Grid, gridB: Grid) {
+    export function areEquivalent(gridA: Grid, gridB: Grid): boolean {
         return gridA === gridB;
     }
 

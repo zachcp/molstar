@@ -56,7 +56,7 @@ namespace Location {
     }
 
     const pA = Vec3(), pB = Vec3();
-    export function distance(a: Location, b: Location) {
+    export function distance(a: Location, b: Location): number {
         a.unit.conformation.position(a.element, pA);
         b.unit.conformation.position(b.element, pB);
         return Vec3.distance(pA, pB);

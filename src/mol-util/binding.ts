@@ -46,7 +46,7 @@ namespace Binding {
         return binding.triggers.map(Trigger.format).join(' or ');
     }
 
-    export function format(binding: Binding, name = '') {
+    export function format(binding: Binding, name = ''): string {
         const help = binding.description || stringToWords(name);
         return interpolate(help, { triggers: '<i>' + formatTriggers(binding) + '</i>' });
     }
@@ -91,7 +91,7 @@ namespace Binding {
                 (!m || ModifiersKeys.areEqual(m, modifiers));
         }
 
-        export function format(trigger: Trigger) {
+        export function format(trigger: Trigger): string {
             const s: string[] = [];
             const b = formatButtons(trigger.buttons, trigger.code);
             if (b) s.push(b);

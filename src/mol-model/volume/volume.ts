@@ -84,7 +84,7 @@ export namespace Volume {
             return value.kind === 'relative' ? value : { kind: 'relative', relativeValue: IsoValue.calcRelative(stats, value.absoluteValue) };
         }
 
-        export function toString(value: IsoValue) {
+        export function toString(value: IsoValue): string {
             return value.kind === 'relative'
                 ? `${value.relativeValue.toFixed(2)} σ`
                 : `${value.absoluteValue.toPrecision(4)}`;
@@ -158,7 +158,7 @@ export namespace Volume {
         _propertyData: Object.create(null),
     };
 
-    export function areEquivalent(volA: Volume, volB: Volume) {
+    export function areEquivalent(volA: Volume, volB: Volume): boolean {
         return Grid.areEquivalent(volA.grid, volB.grid) && areInstanceTransformsEqual(volA, volB);
     }
 

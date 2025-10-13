@@ -52,7 +52,7 @@ namespace Lab {
     }
 
     /** simple eucledian distance, not perceptually uniform */
-    export function distance(a: Lab, b: Lab) {
+    export function distance(a: Lab, b: Lab): number {
         const x = b[0] - a[0],
             y = b[1] - a[1],
             z = b[2] - a[2];

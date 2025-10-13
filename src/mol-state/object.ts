@@ -62,7 +62,7 @@ namespace StateObject {
     };
   }
 
-  export function hasTag(o: StateObject, t: string) {
+  export function hasTag(o: StateObject, t: string): boolean {
     if (!o.tags) return false;
     for (const s of o.tags) {
       if (s === t) return true;

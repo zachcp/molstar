@@ -156,7 +156,7 @@ namespace Transform {
         return create(RootRef, StateTransformer.ROOT, {}, { ref: RootRef, state });
     }
 
-    export function hasTag(t: Transform, tag: string) {
+    export function hasTag(t: Transform, tag: string): boolean {
         if (!t.tags) return false;
         return t.tags.indexOf(tag) >= 0;
     }

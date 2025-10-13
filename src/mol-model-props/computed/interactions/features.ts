@@ -178,7 +178,7 @@ namespace Features {
 
     const tmpVecA = Vec3();
     const tmpVecB = Vec3();
-    export function distance(infoA: Info, infoB: Info) {
+    export function distance(infoA: Info, infoB: Info): number {
         const elementA = infoA.members[infoA.offsets[infoA.feature]];
         const elementB = infoB.members[infoB.offsets[infoB.feature]];
         infoA.unit.conformation.position(infoA.unit.elements[elementA], tmpVecA);

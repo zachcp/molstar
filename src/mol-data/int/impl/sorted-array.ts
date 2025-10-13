@@ -37,7 +37,7 @@ export function hashCode(xs: Nums) {
     if (s > 2) return hash4(s, xs[0], xs[s - 1], xs[s >> 1]);
     return hash3(s, xs[0], xs[s - 1]);
 }
-export function toString(xs: Nums) {
+export function toString(xs: Nums): string {
     const s = xs.length;
     if (s > 5) return `[${xs[0]}, ${xs[1]}, ..., ${xs[s - 1]}], length ${s}`;
     return `[${(xs as number[]).join(', ')}]`;

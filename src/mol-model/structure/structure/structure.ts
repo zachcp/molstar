@@ -1004,7 +1004,7 @@ namespace Structure {
         return true;
     }
 
-    export function areEquivalent(a: Structure, b: Structure) {
+    export function areEquivalent(a: Structure, b: Structure): boolean {
         return a === b || (
             a.hashCode === b.hashCode &&
             StructureSymmetry.areTransformGroupsEquivalent(a.unitSymmetryGroups, b.unitSymmetryGroups)
@@ -1093,7 +1093,7 @@ namespace Structure {
     }
 
     const distPivot = Vec3();
-    export function distance(a: Structure, b: Structure) {
+    export function distance(a: Structure, b: Structure): number {
         if (a.elementCount === 0 || b.elementCount === 0) return 0;
 
         const { units } = a;

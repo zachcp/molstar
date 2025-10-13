@@ -30,7 +30,7 @@ export namespace Material {
         return array;
     }
 
-    export function toString({ metalness, roughness, bumpiness }: Material) {
+    export function toString({ metalness, roughness, bumpiness }: Material): string {
         return `M ${metalness.toFixed(2)} | R ${roughness.toFixed(2)} | B ${bumpiness.toFixed(2)}`;
     }
 

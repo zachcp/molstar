@@ -54,7 +54,7 @@ namespace CrossLinkRestraint {
     }
 
     const distVecA = Vec3(), distVecB = Vec3();
-    export function distance(pair: CrossLinkRestraint) {
+    export function distance(pair: CrossLinkRestraint): number {
         pair.unitA.conformation.position(pair.unitA.elements[pair.indexA], distVecA);
         pair.unitB.conformation.position(pair.unitB.elements[pair.indexB], distVecB);
         return Vec3.distance(distVecA, distVecB);

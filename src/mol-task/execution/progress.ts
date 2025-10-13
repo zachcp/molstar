@@ -33,7 +33,7 @@ namespace Progress {
         return `${prefix}${p.taskName}: [${p.current}/${p.max}] ${p.message}\n${subTree.join('\n')}`;
     }
 
-    export function format(p: Progress) { return _format(p.root); }
+    export function format(p: Progress): string { return _format(p.root); }
 }
 
 export { Progress };
