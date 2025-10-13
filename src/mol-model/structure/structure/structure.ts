@@ -122,7 +122,7 @@ class Structure {
     return !!this.state.customProps && this.state.customProps.all.length > 0;
   }
 
-  get customPropertyDescriptors() {
+  get customPropertyDescriptors(): CustomProperties {
     if (!this.state.customProps)
       this.state.customProps = new CustomProperties();
     return this.state.customProps;
@@ -131,7 +131,7 @@ class Structure {
   /**
    * Property data unique to this instance of the structure.
    */
-  get currentPropertyData() {
+  get currentPropertyData(): any {
     if (!this.state.propertyData) this.state.propertyData = Object.create(null);
     return this.state.propertyData;
   }
@@ -139,7 +139,7 @@ class Structure {
   /**
    * Property data of the parent structure if it exists, currentPropertyData otherwise.
    */
-  get inheritedPropertyData() {
+  get inheritedPropertyData(): any {
     return this.parent
       ? this.parent.currentPropertyData
       : this.currentPropertyData;
@@ -231,7 +231,7 @@ class Structure {
   }
 
   /** The root/top-most parent or `undefined` in case this is the root */
-  get parent() {
+  get parent(): Structure | undefined {
     return this.state.parent;
   }
 
@@ -250,19 +250,19 @@ class Structure {
     return this.state.label;
   }
 
-  get boundary() {
+  get boundary(): Boundary {
     if (this.state.boundary) return this.state.boundary;
     this.state.boundary = computeStructureBoundary(this);
     return this.state.boundary;
   }
 
-  get lookup3d() {
+  get lookup3d(): StructureLookup3D {
     if (this.state.lookup3d) return this.state.lookup3d;
     this.state.lookup3d = new StructureLookup3D(this);
     return this.state.lookup3d;
   }
 
-  get interUnitBonds() {
+  get interUnitBonds(): InterUnitBonds {
     if (this.state.interUnitBonds) return this.state.interUnitBonds;
     if (
       this.parent &&
@@ -287,11 +287,11 @@ class Structure {
     return this.state.dynamicBonds;
   }
 
-  get interBondsValidUnit() {
+  get interBondsValidUnit(): ((unit: Unit) => boolean) | undefined {
     return this.state.interBondsValidUnit;
   }
 
-  get interBondsValidUnitPair() {
+  get interBondsValidUnitPair(): ((structure: Structure, unitA: Unit, unitB: Unit) => boolean) | undefined {
     return this.state.interBondsValidUnitPair;
   }
 
@@ -323,28 +323,28 @@ class Structure {
     return this.state.models;
   }
 
-  get uniqueResidueNames() {
+  get uniqueResidueNames(): ReadonlySet<string> {
     return (
       this.state.uniqueResidueNames ||
       (this.state.uniqueResidueNames = getUniqueResidueNames(this))
     );
   }
 
-  get uniqueElementSymbols() {
+  get uniqueElementSymbols(): ReadonlySet<ElementSymbol> {
     return (
       this.state.uniqueElementSymbols ||
       (this.state.uniqueElementSymbols = getUniqueElementSymbols(this))
     );
   }
 
-  get entityIndices() {
+  get entityIndices(): ReadonlyArray<EntityIndex> {
     return (
       this.state.entityIndices ||
       (this.state.entityIndices = getEntityIndices(this))
     );
   }
 
-  get uniqueAtomicResidueIndices() {
+  get uniqueAtomicResidueIndices(): ReadonlyMap<UUID, ReadonlyArray<ResidueIndex>> {
     return (
       this.state.uniqueAtomicResidueIndices ||
       (this.state.uniqueAtomicResidueIndices =
@@ -383,14 +383,14 @@ class Structure {
    * into few symmetry groups. Use only when needed and prefer `StructureElement`
    * to address elements in a structure.
    */
-  get serialMapping() {
+  get serialMapping(): SerialMapping {
     return (
       this.state.serialMapping ||
       (this.state.serialMapping = getSerialMapping(this))
     );
   }
 
-  get intraUnitBondMapping() {
+  get intraUnitBondMapping(): IntraUnitBondMapping {
     return (
       this.state.intraUnitBondMapping ||
       (this.state.intraUnitBondMapping = getIntraUnitBondMapping(this))

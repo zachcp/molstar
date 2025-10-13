@@ -100,7 +100,7 @@ export class IlluminationPass {
     private multiSampleCompose!: MultiSampleComposeRenderable;
 
     private _iteration = 0;
-    get iteration() { return this._iteration; }
+    get iteration(): number { return this._iteration; }
 
     private _colorTarget!: RenderTarget;
     get colorTarget(): RenderTarget { return this._colorTarget; }
