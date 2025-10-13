@@ -42,7 +42,7 @@ namespace Features {
     /** Index into Features data arrays */
     export type FeatureIndex = { readonly '@type': 'feature-index' } & number
 
-    export function setPosition(out: Vec3, unit: Unit, index: FeatureIndex, features: Features) {
+    export function setPosition(out: Vec3, unit: Unit, index: FeatureIndex, features: Features): Vec3 {
         Vec3.set(out, features.x[index], features.y[index], features.z[index]);
         Vec3.transformMat4(out, out, unit.conformation.operator.matrix);
         return out;
@@ -170,7 +170,7 @@ namespace Features {
         };
     }
 
-    export function position(out: Vec3, info: Info) {
+    export function position(out: Vec3, info: Info): Vec3 {
         Vec3.set(out, info.x[info.feature], info.y[info.feature], info.z[info.feature]);
         Vec3.transformMat4(out, out, info.unit.conformation.operator.matrix);
         return out;

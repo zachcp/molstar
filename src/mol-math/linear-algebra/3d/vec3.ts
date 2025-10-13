@@ -443,7 +443,7 @@ export namespace Vec3 {
         return out;
     }
 
-    export function transformDirection(out: Vec3, a: Vec3, m: Mat4) {
+    export function transformDirection(out: Vec3, a: Vec3, m: Mat4): Vec3 {
         const x = a[0], y = a[1], z = a[2];
         out[0] = m[0] * x + m[4] * y + m[8] * z;
         out[1] = m[1] * x + m[5] * y + m[9] * z;
@@ -594,7 +594,7 @@ export namespace Vec3 {
     }
 
     /** Project `point` onto `vector` starting from `origin` */
-    export function projectPointOnVector(out: Vec3, point: Vec3, vector: Vec3, origin: Vec3) {
+    export function projectPointOnVector(out: Vec3, point: Vec3, vector: Vec3, origin: Vec3): Vec3 {
         sub(out, point, origin);
         const scalar = dot(vector, out) / squaredMagnitude(vector);
         return add(out, scale(out, vector, scalar), origin);
@@ -602,25 +602,25 @@ export namespace Vec3 {
 
     const tmpProjectPlane = zero();
     /** Project `point` onto `plane` defined by `normal` starting from `origin` */
-    export function projectPointOnPlane(out: Vec3, point: Vec3, normal: Vec3, origin: Vec3) {
+    export function projectPointOnPlane(out: Vec3, point: Vec3, normal: Vec3, origin: Vec3): Vec3 {
         normalize(tmpProjectPlane, normal);
         sub(out, point, origin);
         return sub(out, point, scale(tmpProjectPlane, tmpProjectPlane, dot(out, tmpProjectPlane)));
     }
 
-    export function projectOnVector(out: Vec3, p: Vec3, vector: Vec3) {
+    export function projectOnVector(out: Vec3, p: Vec3, vector: Vec3): Vec3 {
         const scalar = dot(vector, p) / squaredMagnitude(vector);
         return scale(out, vector, scalar);
     }
 
     const tmpProject = zero();
-    export function projectOnPlane(out: Vec3, p: Vec3, normal: Vec3) {
+    export function projectOnPlane(out: Vec3, p: Vec3, normal: Vec3): Vec3 {
         projectOnVector(tmpProject, p, normal);
         return sub(out, p, tmpProject);
     }
 
     /** Get a vector that is similar to `b` but orthogonal to `a` */
-    export function orthogonalize(out: Vec3, a: Vec3, b: Vec3) {
+    export function orthogonalize(out: Vec3, a: Vec3, b: Vec3): Vec3 {
         return normalize(out, cross(out, cross(out, a, b), a));
     }
 
@@ -665,7 +665,7 @@ export namespace Vec3 {
     const triangleNormalTmpAB = zero();
     const triangleNormalTmpAC = zero();
     /** Calculate normal for the triangle defined by `a`, `b` and `c` */
-    export function triangleNormal(out: Vec3, a: Vec3, b: Vec3, c: Vec3) {
+    export function triangleNormal(out: Vec3, a: Vec3, b: Vec3, c: Vec3): Vec3 {
         sub(triangleNormalTmpAB, b, a);
         sub(triangleNormalTmpAC, c, a);
         return normalize(out, cross(out, triangleNormalTmpAB, triangleNormalTmpAC));
