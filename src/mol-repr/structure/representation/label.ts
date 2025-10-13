@@ -4,42 +4,67 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { type StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder, ComplexRepresentation } from '../representation.ts';
-import { Representation, type RepresentationParamsGetter, type RepresentationContext } from '../../../mol-repr/representation.ts';
-import type { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
-import type { Structure } from '../../../mol-model/structure.ts';
-import { LabelTextVisual, LabelTextParams } from '../visual/label-text.ts';
-import { MarkerAction } from '../../../mol-util/marker-action.ts';
+import { ParamDefinition as PD } from "../../../mol-util/param-definition.ts";
+import {
+  type StructureRepresentation,
+  StructureRepresentationProvider,
+  StructureRepresentationStateBuilder,
+  ComplexRepresentation,
+} from "../representation.ts";
+import {
+  Representation,
+  type RepresentationParamsGetter,
+  type RepresentationContext,
+} from "../../../mol-repr/representation.ts";
+import type { ThemeRegistryContext } from "../../../mol-theme/theme.ts";
+import type { Structure } from "../../../mol-model/structure.ts";
+import { LabelTextVisual, LabelTextParams } from "../visual/label-text.ts";
+import { MarkerAction } from "../../../mol-util/marker-action.ts";
 
 const LabelVisuals = {
-    'label-text': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, LabelTextParams>) => ComplexRepresentation('Label text', ctx, getParams, LabelTextVisual),
+  "label-text": (
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, LabelTextParams>,
+  ): StructureRepresentation<LabelTextParams> =>
+    ComplexRepresentation("Label text", ctx, getParams, LabelTextVisual),
 };
 
 export const LabelParams = {
-    ...LabelTextParams,
-    visuals: PD.MultiSelect(['label-text'], PD.objectToOptions(LabelVisuals)),
+  ...LabelTextParams,
+  visuals: PD.MultiSelect(["label-text"], PD.objectToOptions(LabelVisuals)),
 };
-export type LabelParams = typeof LabelParams
-export function getLabelParams(ctx: ThemeRegistryContext, structure: Structure) {
-    return LabelParams;
+export type LabelParams = typeof LabelParams;
+export function getLabelParams(
+  ctx: ThemeRegistryContext,
+  structure: Structure,
+): typeof LabelParams {
+  return LabelParams;
 }
 
-export type LabelRepresentation = StructureRepresentation<LabelParams>
-export function LabelRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, LabelParams>): LabelRepresentation {
-    const repr = Representation.createMulti('Label', ctx, getParams, StructureRepresentationStateBuilder, LabelVisuals as unknown as Representation.Def<Structure, LabelParams>);
-    repr.setState({ pickable: false, markerActions: MarkerAction.None });
-    return repr;
+export type LabelRepresentation = StructureRepresentation<LabelParams>;
+export function LabelRepresentation(
+  ctx: RepresentationContext,
+  getParams: RepresentationParamsGetter<Structure, LabelParams>,
+): LabelRepresentation {
+  const repr = Representation.createMulti(
+    "Label",
+    ctx,
+    getParams,
+    StructureRepresentationStateBuilder,
+    LabelVisuals as unknown as Representation.Def<Structure, LabelParams>,
+  );
+  repr.setState({ pickable: false, markerActions: MarkerAction.None });
+  return repr;
 }
 
 export const LabelRepresentationProvider = StructureRepresentationProvider({
-    name: 'label',
-    label: 'Label',
-    description: 'Displays labels.',
-    factory: LabelRepresentation,
-    getParams: getLabelParams,
-    defaultValues: PD.getDefaultValues(LabelParams),
-    defaultColorTheme: { name: 'uniform' },
-    defaultSizeTheme: { name: 'physical' },
-    isApplicable: (structure: Structure) => structure.elementCount > 0
+  name: "label",
+  label: "Label",
+  description: "Displays labels.",
+  factory: LabelRepresentation,
+  getParams: getLabelParams,
+  defaultValues: PD.getDefaultValues(LabelParams),
+  defaultColorTheme: { name: "uniform" },
+  defaultSizeTheme: { name: "physical" },
+  isApplicable: (structure: Structure) => structure.elementCount > 0,
 });
