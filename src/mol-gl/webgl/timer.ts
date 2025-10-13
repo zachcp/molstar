@@ -33,7 +33,7 @@ class MovingAverage {
         return Object.fromEntries(this.avgs.entries());
     }
 
-    clear() {
+    clear(): void {
         this.avgs.clear();
     }
 

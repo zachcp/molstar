@@ -160,7 +160,7 @@ export class ThemeRegistry<T extends ColorTheme<any, any> | SizeTheme<any>> {
         return getTypes(this.getApplicableList(ctx));
     }
 
-    clear() {
+    clear(): void {
         this._list.length = 0;
         this._map.clear();
         this._name.clear();

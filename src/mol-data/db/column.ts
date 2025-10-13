@@ -179,7 +179,7 @@ namespace Column {
         });
     }
 
-    export function ofStringTokens(tokens: Tokens) {
+    export function ofStringTokens(tokens: Tokens): Column<string> {
         const { count, data, indices } = tokens;
         return lambdaColumn({
             value: (row: number) => {
@@ -201,11 +201,11 @@ namespace Column {
     }
 
     /** A map of the 1st occurence of each value. */
-    export function createFirstIndexMap<T>(column: Column<T>) {
+    export function createFirstIndexMap<T>(column: Column<T>): Map<T, number> {
         return createFirstIndexMapOfColumn(column);
     }
 
-    export function createIndexer<T, R extends number = number>(column: Column<T>) {
+    export function createIndexer<T, R extends number = number>(column: Column<T>): (value: T) => R {
         return createIndexerOfColumn(column) as ((e: T) => R);
     }
 
@@ -217,7 +217,7 @@ namespace Column {
         return areColumnsEqual(a, b);
     }
 
-    export function indicesOf<T>(c: Column<T>, test: (e: T) => boolean) {
+    export function indicesOf<T>(c: Column<T>, test: (e: T) => boolean): number[] {
         return columnIndicesOf(c, test);
     }
 
@@ -238,7 +238,7 @@ namespace Column {
         }
     }
 
-    export function isIdentity<T extends number>(c: Column<T>) {
+    export function isIdentity<T extends number>(c: Column<T>): boolean {
         for (let i = 0, _i = c.rowCount; i < _i; i++) {
             if (i !== c.value(i)) return false;
         }

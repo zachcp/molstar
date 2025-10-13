@@ -137,7 +137,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
         this.events.changed.next(void 0);
     }
 
-    clear() {
+    clear(): void {
         if (this.state.entries.size === 0) return;
 
         this.entryMap.forEach(e => {

@@ -149,7 +149,7 @@ export class HiZPass {
         );
     }
 
-    clear() {
+    clear(): void {
         if (!this.supported) return;
 
         const { gl } = this.webgl;

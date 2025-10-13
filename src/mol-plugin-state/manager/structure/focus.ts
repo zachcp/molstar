@@ -126,7 +126,7 @@ export class StructureFocusManager extends StatefulPluginComponent<StructureFocu
 
     }
 
-    clear() {
+    clear(): void {
         if (this.state.current) {
             this.state.current = undefined;
             this.behaviors.current.next(void 0);

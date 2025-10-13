@@ -50,7 +50,7 @@ export class LabelAsymIdHelper {
     private currAsymId = '';
     private currLabelAsymId = '';
 
-    clear() {
+    clear(): void {
         this.asymIdCounts.clear();
         this.currModelNum = undefined;
     }

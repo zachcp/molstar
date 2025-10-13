@@ -104,7 +104,7 @@ class AssetManager {
         return this._assets.delete(asset.id);
     }
 
-    has(asset: Asset) {
+    has(asset: Asset): boolean {
         return this._assets.has(asset.id);
     }
 
@@ -161,7 +161,7 @@ class AssetManager {
         }
     }
 
-    clear() {
+    clear(): void {
         this._assets.clear();
     }
 

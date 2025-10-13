@@ -529,7 +529,7 @@ export class PluginContext {
     return this.runTask(this.state.data.transaction(f, options));
   }
 
-  clear(resetViewportSettings = false) {
+  clear(resetViewportSettings = false): Promise<void> {
     if (resetViewportSettings) this.canvas3d?.setProps(DefaultCanvas3DParams);
     return PluginCommands.State.RemoveObject(this, {
       state: this.state.data,

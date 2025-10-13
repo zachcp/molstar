@@ -33,7 +33,7 @@ export class StructureUniqueSubsetBuilder {
         }
     }
 
-    has(parentId: number, e: number) {
+    has(parentId: number, e: number): boolean {
         const unit = this.unitMap.get(parentId);
         if (!unit) return false;
         return UniqueArray.has(unit, e);

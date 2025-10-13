@@ -140,7 +140,7 @@ export class RepresentationRegistry<D, S extends Representation.State> {
         return getTypes(this.getApplicableList(data));
     }
 
-    clear() {
+    clear(): void {
         this._list.length = 0;
         this._map.clear();
         this._name.clear();

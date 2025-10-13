@@ -108,7 +108,7 @@ export class BoundingSphereHelper {
         });
     }
 
-    clear() {
+    clear(): void {
         this.sceneData = undefined;
         this.objectsData.clear();
         this.scene.clear();
