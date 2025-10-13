@@ -60,7 +60,7 @@ class TransientTree implements StateTree {
     this.dependencies = this.dependencies.asMutable();
   }
 
-  get root() {
+  get root(): StateTransform {
     return this.transforms.get(StateTransform.RootRef)!;
   }
 

@@ -69,7 +69,7 @@ class AssetManager {
 
     private _assets = new Map<string, { asset: Asset, file: File, refCount: number, isStatic?: boolean, tag?: string }>();
 
-    get assets() {
+    get assets(): { asset: Asset, file: _File, refCount: number, isStatic?: boolean, tag?: string }[] {
         return iterableToArray(this._assets.values());
     }
 

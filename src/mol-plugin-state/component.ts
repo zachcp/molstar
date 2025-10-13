@@ -56,7 +56,7 @@ export class StatefulPluginComponent<State extends {}> extends PluginComponent {
         return false;
     }
 
-    get state() {
+    get state(): State {
         return this._state;
     }
 

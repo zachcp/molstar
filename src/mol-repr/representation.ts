@@ -285,7 +285,7 @@ namespace Representation {
         private next = new Set<number>();
 
         private _version = -1;
-        get version() {
+        get version(): number {
             return this._version;
         }
 

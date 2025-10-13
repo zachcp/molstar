@@ -49,7 +49,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
         opened: this.ev(),
     };
 
-    get current() {
+    get current(): PluginStateSnapshotManager.Entry | undefined {
         const id = this.state.current;
         return this.state.entries.find(e => e.snapshot.id === id);
     }

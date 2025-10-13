@@ -379,7 +379,7 @@ export class MarkdownExtensionManager {
         return audio;
     }
 
-    get audioPlayer() {
+    get audioPlayer(): HTMLAudioElement | null {
         return this.state.audioPlayer.value;
     }
 

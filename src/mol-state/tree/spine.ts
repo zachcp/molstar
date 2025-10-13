@@ -20,7 +20,7 @@ namespace StateTreeSpine {
     export class Impl implements StateTreeSpine {
         private _current: StateObjectCell | undefined = void 0;
 
-        get current() { return this._current; }
+        get current(): StateObjectCell | undefined { return this._current; }
         set current(cell: StateObjectCell | undefined) { this._current = cell; }
 
         getAncestorOfType<T extends StateObject.Ctor>(t: T): StateObject.From<T> | undefined {

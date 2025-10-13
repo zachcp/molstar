@@ -72,7 +72,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
     optionsUpdated: this.ev<undefined>(),
   };
 
-  get currentStructures() {
+  get currentStructures(): ReadonlyArray<StructureRef> {
     return this.plugin.managers.structure.hierarchy.selection.structures;
   }
 

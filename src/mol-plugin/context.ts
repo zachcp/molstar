@@ -514,7 +514,7 @@ export class PluginContext {
     );
   }
 
-  get selectionMode() {
+  get selectionMode(): boolean {
     return this.behaviors.interaction.selectionMode.value;
   }
 

@@ -92,8 +92,8 @@ export class ThemeRegistry<T extends ColorTheme<any, any> | SizeTheme<any>> {
     private _map = new Map<string, ThemeProvider<T, any>>();
     private _name = new Map<ThemeProvider<T, any>, string>();
 
-    get default() { return this._list[0]; }
-    get list() { return this._list; }
+    get default(): { name: string, provider: ThemeProvider<T, any> } { return this._list[0]; }
+    get list(): { name: string, provider: ThemeProvider<T, any> }[] { return this._list; }
     get types(): [string, string, string][] { return getTypes(this._list); }
 
     constructor(builtInThemes: { [k: string]: ThemeProvider<T, any> }, private emptyProvider: ThemeProvider<T, any>) {
