@@ -131,8 +131,7 @@
       "src/perf-tests/",
       "src/tests/",
       "src/cli/",
-      "src/servers/",
-      "src/extensions/mp4-export/**"
+      "src/servers/"
     ]
   }
 }
