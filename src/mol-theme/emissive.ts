@@ -125,7 +125,7 @@ namespace Emissive {
         return { kind: 'element-loci', layers };
     }
 
-    export function toBundle(emissive: Emissive<StructureElement.Loci>) {
+    export function toBundle(emissive: Emissive<StructureElement.Loci>): { kind: 'element-loci', layers: BundleLayer[] } {
         const layers: BundleLayer[] = [];
         for (let i = 0, il = emissive.layers.length; i < il; ++i) {
             const { loci, value } = emissive.layers[i];

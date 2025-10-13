@@ -102,7 +102,7 @@ namespace Interactions {
         return !!x && x.kind === 'data-loci' && x.tag === 'interactions';
     }
 
-    export function getBoundingSphere(interactions: Interactions, elements: ReadonlyArray<Element>, boundingSphere: Sphere3D) {
+    export function getBoundingSphere(interactions: Interactions, elements: ReadonlyArray<Element>, boundingSphere: Sphere3D): Sphere3D {
         const { unitsFeatures } = interactions;
         return CentroidHelper.fromPairProvider(elements.length, (i, pA, pB) => {
             const e = elements[i];

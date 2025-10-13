@@ -243,7 +243,7 @@ namespace Bond {
         }
     }
 
-    export function getBoundingSphere(loci: Loci, boundingSphere: Sphere3D) {
+    export function getBoundingSphere(loci: Loci, boundingSphere: Sphere3D): Sphere3D {
         return CentroidHelper.fromPairProvider(loci.bonds.length, (i, pA, pB) => {
             const { aUnit, aIndex, bUnit, bIndex } = loci.bonds[i];
             aUnit.conformation.position(aUnit.elements[aIndex], pA);

@@ -52,7 +52,7 @@ namespace Euler {
         return out;
     }
 
-    export function copy(out: Euler, a: Euler) {
+    export function copy(out: Euler, a: Euler): Euler {
         out[0] = a[0];
         out[1] = a[1];
         out[2] = a[2];

@@ -191,7 +191,7 @@ namespace Clipping {
         return { kind: 'element-loci', layers };
     }
 
-    export function toBundle(clipping: Clipping<StructureElement.Loci>) {
+    export function toBundle(clipping: Clipping<StructureElement.Loci>): { kind: 'element-loci', layers: BundleLayer[] } {
         const layers: BundleLayer[] = [];
         for (let i = 0, il = clipping.layers.length; i < il; ++i) {
             const { loci, groups } = clipping.layers[i];

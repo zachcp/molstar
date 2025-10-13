@@ -185,7 +185,7 @@ export namespace Volume {
     export function areLociEqual(a: Loci, b: Loci): boolean { return a.volume === b.volume && OrderedSet.areEqual(a.instances, b.instances); }
     export function isLociEmpty(loci: Loci): boolean { return isEmpty(loci.volume) || OrderedSet.isEmpty(loci.instances); }
 
-    export function getBoundingSphere(volume: Volume, boundingSphere?: Sphere3D) {
+    export function getBoundingSphere(volume: Volume, boundingSphere?: Sphere3D): Sphere3D {
         return Grid.getBoundingSphere(volume.grid, boundingSphere);
     }
 
@@ -197,7 +197,7 @@ export namespace Volume {
         export function isLociEmpty(loci: Loci): boolean { return isEmpty(loci.volume) || OrderedSet.isEmpty(loci.instances); }
 
         const bbox = Box3D();
-        export function getBoundingSphere(volume: Volume, isoValue: Volume.IsoValue, boundingSphere?: Sphere3D) {
+        export function getBoundingSphere(volume: Volume, isoValue: Volume.IsoValue, boundingSphere?: Sphere3D): Sphere3D {
             const value = Volume.IsoValue.toAbsolute(isoValue, volume.grid.stats).absoluteValue;
             const neg = value < 0;
 
@@ -290,7 +290,7 @@ export namespace Volume {
         const boundaryHelper = new BoundaryHelper('98');
         const tmpBoundaryPos = Vec3();
         const tmpBoundaryPos2 = Vec3();
-        export function getBoundingSphere(volume: Volume, elements: Loci['elements'], boundingSphere?: Sphere3D) {
+        export function getBoundingSphere(volume: Volume, elements: Loci['elements'], boundingSphere?: Sphere3D): Sphere3D {
             boundaryHelper.reset();
             const transform = Grid.getGridToCartesianTransform(volume.grid);
             const { getCoords } = volume.grid.cells.space;
@@ -370,7 +370,7 @@ export namespace Volume {
         const bbox = Box3D();
         const bbox2 = Box3D();
         const bbox3 = Box3D();
-        export function getBoundingSphere(volume: Volume, elements: Loci['elements'], boundingSphere?: Sphere3D) {
+        export function getBoundingSphere(volume: Volume, elements: Loci['elements'], boundingSphere?: Sphere3D): Sphere3D {
             const segmentation = Volume.Segmentation.get(volume);
             if (segmentation) {
                 Box3D.setEmpty(bbox);

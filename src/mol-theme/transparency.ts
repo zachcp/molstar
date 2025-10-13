@@ -124,7 +124,7 @@ namespace Transparency {
         return { kind: 'element-loci', layers };
     }
 
-    export function toBundle(transparency: Transparency<StructureElement.Loci>) {
+    export function toBundle(transparency: Transparency<StructureElement.Loci>): { kind: 'element-loci', layers: BundleLayer[] } {
         const layers: BundleLayer[] = [];
         for (let i = 0, il = transparency.layers.length; i < il; ++i) {
             const { loci, value } = transparency.layers[i];

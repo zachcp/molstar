@@ -32,7 +32,7 @@ export namespace StructureResult {
         return { count: 0, indices: [], units: [], squaredDistances: [] };
     }
 
-    export function copy(out: StructureResult, result: StructureResult) {
+    export function copy(out: StructureResult, result: StructureResult): StructureResult {
         for (let i = 0; i < result.count; ++i) {
             out.indices[i] = result.indices[i];
             out.units[i] = result.units[i];

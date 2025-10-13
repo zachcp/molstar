@@ -102,7 +102,7 @@ export class ImagePass {
     );
   }
 
-  updateBackground(): void {
+  updateBackground() {
     return new Promise<void>((resolve) => {
       this.drawPass.postprocessing.background.update(
         this.camera,

@@ -55,7 +55,7 @@ namespace Grid {
         return grid.cells.data.length === 0;
     }
 
-    export function getBoundingSphere(grid: Grid, boundingSphere?: Sphere3D) {
+    export function getBoundingSphere(grid: Grid, boundingSphere?: Sphere3D): Sphere3D {
         if (!boundingSphere) boundingSphere = Sphere3D();
 
         const dimensions = grid.cells.space.dimensions as Vec3;

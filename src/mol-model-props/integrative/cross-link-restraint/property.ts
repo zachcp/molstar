@@ -102,7 +102,7 @@ namespace CrossLinkRestraint {
         return !!x && x.kind === 'data-loci' && x.tag === 'interactions';
     }
 
-    export function getBoundingSphere(crossLinkRestraints: CrossLinkRestraintValue, elements: ReadonlyArray<Element>, boundingSphere: Sphere3D) {
+    export function getBoundingSphere(crossLinkRestraints: CrossLinkRestraintValue, elements: ReadonlyArray<Element>, boundingSphere: Sphere3D): Sphere3D {
         return CentroidHelper.fromPairProvider(elements.length, (i, pA, pB) => {
             const p = crossLinkRestraints.pairs[elements[i]];
             p.unitA.conformation.position(p.unitA.elements[p.indexA], pA);

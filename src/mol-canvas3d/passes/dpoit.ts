@@ -101,7 +101,7 @@ export class DpoitPass {
         );
     }
 
-    bind(): void {
+    bind() {
         const { state, gl, extensions: { blendMinMax } } = this.webgl;
 
         // initialize
@@ -134,7 +134,7 @@ export class DpoitPass {
         };
     }
 
-    bindDualDepthPeeling(): void {
+    bindDualDepthPeeling() {
         const { state, gl, extensions: { blendMinMax } } = this.webgl;
 
         this.readId = this.passCount % 2;

@@ -192,11 +192,11 @@ namespace Column {
         });
     }
 
-    export function window<T>(column: Column<T>, start: number, end: number) {
+    export function window<T>(column: Column<T>, start: number, end: number): Column<T> {
         return windowColumn(column, start, end);
     }
 
-    export function view<T>(column: Column<T>, indices: ArrayLike<number>, checkIndentity = true) {
+    export function view<T>(column: Column<T>, indices: ArrayLike<number>, checkIndentity = true): Column<T> {
         return columnView(column, indices, checkIndentity);
     }
 

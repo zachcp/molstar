@@ -190,7 +190,7 @@ export namespace ShapeGroup {
         }
     }
 
-    export function getBoundingSphere(loci: Loci, boundingSphere?: Sphere3D) {
+    export function getBoundingSphere(loci: Loci, boundingSphere?: Sphere3D): Sphere3D {
         if (!boundingSphere) boundingSphere = Sphere3D();
 
         sphereHelper.reset();
