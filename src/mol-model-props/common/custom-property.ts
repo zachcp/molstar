@@ -56,7 +56,7 @@ namespace CustomProperty {
     private defaultAutoAttachValues = new Map<string, boolean>();
 
     /** Get params for all applicable property providers */
-    getParams(data?: Data) {
+    getParams(data?: Data): PD.Params {
       const propertiesParams: PD.Params = {};
       const autoAttachOptions: [string, string][] = [];
       const autoAttachDefault: string[] = [];

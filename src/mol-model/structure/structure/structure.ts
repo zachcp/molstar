@@ -100,7 +100,7 @@ type State = {
 };
 
 class Structure {
-  subsetBuilder(isSorted: boolean) {
+  subsetBuilder(isSorted: boolean): StructureSubsetBuilder {
     return new StructureSubsetBuilder(this, isSorted);
   }
 
@@ -1174,12 +1174,12 @@ namespace Structure {
   }
 
   /** Hash based on all unit.model conformation values in the structure */
-  export function conformationHash(s: Structure) {
+  export function conformationHash(s: Structure): number {
     return hashString(s.units.map((u) => Unit.conformationId(u)).join("|"));
   }
 
   // TODO: there should be a version that properly supports partitioned units
-  export function areUnitIdsEqual(a: Structure, b: Structure) {
+  export function areUnitIdsEqual(a: Structure, b: Structure): boolean {
     if (a === b) return true;
 
     if (a.elementCount !== b.elementCount) return false;
@@ -1193,7 +1193,10 @@ namespace Structure {
     return true;
   }
 
-  export function areUnitIdsAndIndicesEqual(a: Structure, b: Structure) {
+  export function areUnitIdsAndIndicesEqual(
+    a: Structure,
+    b: Structure,
+  ): boolean {
     if (a === b) return true;
     if (!areUnitIdsEqual(a, b)) return false;
 
@@ -1228,12 +1231,12 @@ namespace Structure {
   }
 
   /** Check if the structures or their parents are equivalent */
-  export function areRootsEquivalent(a: Structure, b: Structure) {
+  export function areRootsEquivalent(a: Structure, b: Structure): boolean {
     return areEquivalent(a.root, b.root);
   }
 
   /** Check if the structures or their parents are equal */
-  export function areRootsEqual(a: Structure, b: Structure) {
+  export function areRootsEqual(a: Structure, b: Structure): boolean {
     return a.root === b.root;
   }
 
@@ -1305,7 +1308,7 @@ namespace Structure {
     s: Structure,
     point: Vec3,
     radius: number,
-  ) {
+  ): number {
     const { units } = s;
     let minD = Number.MAX_VALUE;
     for (let i = 0, _i = units.length; i < _i; i++) {
@@ -1335,11 +1338,11 @@ namespace Structure {
     return minD;
   }
 
-  export function elementDescription(s: Structure) {
+  export function elementDescription(s: Structure): string {
     return s.elementCount === 1 ? "1 element" : `${s.elementCount} elements`;
   }
 
-  export function validUnitPair(s: Structure, a: Unit, b: Unit) {
+  export function validUnitPair(s: Structure, a: Unit, b: Unit): boolean {
     return s.masterModel
       ? a.model === b.model ||
           a.model === s.masterModel ||

@@ -97,7 +97,7 @@ export class QueryContext implements QueryContextView {
     }
   }
 
-  tryGetCurrentSelection() {
+  tryGetCurrentSelection(): StructureSelection {
     if (!this.currentSelection)
       throw new Error("The current selection is not assigned.");
     return this.currentSelection;
@@ -142,7 +142,7 @@ class QueryContextBondInfo<U extends Unit = Unit> {
     this.testFn = fn || defaultBondTest;
   }
 
-  test(ctx: QueryContext, trySwap: boolean) {
+  test(ctx: QueryContext, trySwap: boolean): boolean {
     if (this.testFn(ctx)) return true;
     if (trySwap) {
       this.swap();
