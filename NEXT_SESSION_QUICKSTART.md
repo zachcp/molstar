@@ -1,24 +1,96 @@
 # Next Session Quick-Start Guide
 
-**Last Updated:** Session 10 - 74 Representation Files Fixed! 🎉
-**Status:** 798 errors remaining (74 fixed this session!)
-**Errors:** 872 → 798 (74 fixed!)
-**Strategy:** ✅ **Representation file pattern fixing is HIGHLY effective!**
+**Last Updated:** Session 11 - Volume & Helper Functions Fixed! 🎉
+**Status:** 783 errors remaining (15 fixed this session!)
+**Errors:** 798 → 783 (15 fixed!)
+**Strategy:** ✅ **Skip "export const Params" patterns - focus on functions!**
 
 
 ### Error Breakdown
-- `missing-explicit-return-type`: ~366
-- `missing-explicit-type`: ~398
-- `unsupported-super-class-expr`: 34
+- `missing-explicit-return-type`: ~337
+- `missing-explicit-type`: ~414
+- `unsupported-super-class-expr`: 34 (unfixable)
 
 ### By Pattern (Remaining)
 1. ✅ **Getters: 0 remaining** (70 → 0, **ALL FIXED!** 🏆)
-2. ✅ **Regular functions: 7 remaining** (16 → 7, **9 FIXED!**)
+2. ✅ **Regular functions: 5 remaining** (16 → 5, **11 FIXED!** 🎯)
 3. ✅ **Static methods: 0 remaining** (1 → 0, **FIXED!** ✅)
-4. **Methods: 185 remaining** (242 → 185, **57 FIXED!** 🎯)
-5. **Export functions: 196 remaining** (230 → 196, **34 FIXED!** 🎯)
-6. **Export const functions: 275 remaining** (292 → 275, **17 FIXED!** 🎯)
-7. **Other: 135 remaining**
+4. **Methods: 170 remaining** (242 → 170, **72 FIXED!** 🎯)
+5. **Export functions: 179 remaining** (230 → 179, **51 FIXED!** 🎯)
+6. **Export const functions: 292 remaining** (292 → 292, **0 FIXED** - skipping for now)
+7. **Other: 137 remaining**
+
+---
+
+## 🚀 **Session 11 Summary - Volume Functions & Helpers Fixed!**
+
+### What We Fixed (15 total fixes)
+
+**Volume Representation Functions (9 fixes):**
+1. ✅ `dot.ts` - VolumeSphereVisual + getDotParams + 2 arrow functions (4 errors)
+2. ✅ `isosurface.ts` - IsosurfaceVisual + getIsosurfaceParams + 2 arrow functions (4 errors)
+3. ✅ `segment.ts` - SegmentVisual + getSegmentParams + 1 arrow function (3 errors)
+4. ✅ `slice.ts` - getSliceParams (1 error)
+5. ✅ `direct-volume.ts` - getDirectVolumeParams (1 error)
+
+**Core Representation Functions (4 fixes):**
+6. ✅ `representation.ts` - getDefaultParams + 2 registry methods (3 errors)
+7. ✅ `visual.ts` - mark function (1 error)
+
+**Helper Functions (2 fixes):**
+8. ✅ `camera-helper.ts` - CameraAxesLoci function (1 error)
+9. ✅ `handle-helper.ts` - HandleLoci function (1 error)
+
+### Key Learnings
+
+**Pattern: getParams Functions**
+All volume representation files have a `getParams` function that returns `typeof SomeParams`:
+```typescript
+export function getDotParams(ctx: ThemeRegistryContext, volume: Volume): typeof DotParams {
+    return PD.clone(DotParams);
+}
+```
+
+**Pattern: Visual Factory Functions**
+Volume visual functions return `VolumeVisual<ParamsType>`:
+```typescript
+export function VolumeSphereVisual(
+    materialId: number, 
+    volume: Volume, 
+    key: number, 
+    props: PD.Values<VolumeSphereParams>, 
+    webgl?: WebGLContext
+): VolumeVisual<VolumeSphereParams> {
+    return props.tryUseImpostor ? ImpostorVisual() : MeshVisual();
+}
+```
+
+**Pattern: Arrow Functions in Object Literals**
+Visual registries need return types on arrow functions:
+```typescript
+const DotVisuals = {
+    'sphere': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, VolumeSphereParams>): VolumeRepresentation<VolumeSphereParams> => 
+        VolumeRepresentation('Dot sphere', ctx, getParams, VolumeSphereVisual, getLoci),
+};
+```
+
+**Discovery: Export Const Params Pattern**
+We discovered that `export const SomeParams = { ... }` patterns are tricky:
+- Using `PD.Params` as the type is too generic and breaks type inference
+- The `typeof` pattern works but Deno may still flag it
+- **Decision:** Skip these for now (292 errors) and focus on fixable patterns
+
+**Pattern: DataLoci Helper Functions**
+Helper functions that create DataLoci need explicit return types:
+```typescript
+function CameraAxesLoci(cameraHelper: CameraHelper, groupId: number, instanceId: number): DataLoci<CameraHelper, { groupId: number, instanceId: number }> {
+    return DataLoci('camera-axes', cameraHelper, [{ groupId, instanceId }], ...);
+}
+```
+
+### Commits This Session (Session 11)
+1. `bd356c556` - Add return types to volume representation functions (13 errors: 798 → 785)
+2. `66d99b3ec` - Add return types to CameraAxesLoci and HandleLoci functions (2 errors: 785 → 783)
 
 ---
 
@@ -294,27 +366,27 @@ sed -i'.bak' 'NUMBERs/BEFORE/AFTER/' path/to/file.ts && rm path/to/file.ts.bak
 
 **Starting:** 1,002 errors (Session 1)
 **After Session 9:** 872 errors
-**Current (Session 10):** 798 errors
-**Total Fixed:** 204 errors
-**Success Rate:** ~20% complete! 🎉
+**Current (Session 11):** 783 errors
+**Total Fixed:** 219 errors
+**Success Rate:** ~22% complete! 🎉
 
 ### By Category Progress
 
 | Category | Starting | Current | Fixed | % Done |
 |----------|----------|---------|-------|--------|
 | Getters | 70 | 0 | 70 | 100% ✅ |
-| Regular Functions | 16 | 7 | 9 | 56% |
+| Regular Functions | 16 | 5 | 11 | 69% ⬅️ |
 | Static Methods | 1 | 0 | 1 | 100% ✅ |
-| Methods | ~242 | 185 | 57 | 24% ⬅️ |
-| Export Functions | ~230 | 196 | 34 | 15% ⬅️ |
-| Export Consts | ~291 | 275 | 16 | 5% ⬅️ |
-| Other | ~132 | 135 | -3 | 0% |
+| Methods | ~242 | 170 | 72 | 30% ⬅️ |
+| Export Functions | ~230 | 179 | 51 | 22% ⬅️ |
+| Export Consts | ~292 | 292 | 0 | 0% (skipping) |
+| Other | ~132 | 137 | -5 | 0% |
 
-*Note: Some error shifting between categories as we fix issues*
+*Note: Some error shifting between categories as we fix issues. Export Consts remain at 292 as we're skipping the Params definitions for now.*
 
-### Commits This Session (Session 10)
-1. `555d26f3f` - Add return types to representation files in mol-repr (872 → 811)
-2. `9fe8431e2` - Add return types to remaining representation files (872 → 798)
+### Commits This Session (Session 11)
+1. `bd356c556` - Add return types to volume representation functions (798 → 785)
+2. `66d99b3ec` - Add return types to CameraAxesLoci and HandleLoci functions (785 → 783)
 
 ---
 
@@ -323,17 +395,18 @@ sed -i'.bak' 'NUMBERs/BEFORE/AFTER/' path/to/file.ts && rm path/to/file.ts.bak
 **Goal:** Fix 40-60 more errors - continue directory-focused approach
 
 **Focus Areas:**
-1. Finish mol-repr directory (108 remaining - down from 182!)
-2. Start on mol-plugin-state (169 errors - now highest!)
-3. Look for similar directory-wide patterns
-4. Continue systematic file-by-file approach
+1. Continue with mol-plugin-state (169 errors - highest!)
+2. Focus on methods and export functions (170 + 179 = 349 remaining)
+3. Skip "export const Params" patterns (292 errors - too complex for now)
+4. Look for more helper function patterns like CameraAxesLoci
 
 **Strategy:**
 1. Run analysis to find clustered errors in specific files
 2. Group by return type similarity
-3. Use sed for batch fixes where possible
+3. Use perl/sed for surgical single-line fixes
 4. Test after every 5-10 fixes
-5. Commit frequently (every 5-10 fixes)
+5. Commit frequently (every 10-15 fixes)
+6. **Skip export const Params definitions** - they're too complex
 
 ---
 
@@ -343,12 +416,14 @@ sed -i'.bak' 'NUMBERs/BEFORE/AFTER/' path/to/file.ts && rm path/to/file.ts.bak
 - ✅ **Session 8:** Fixed 11 functions + 1 static → 908 errors
 - ✅ **Session 9:** Fixed 36 functions/methods → 872 errors
 - ✅ **Session 10:** Fixed 74 representation files → 798 errors (BEST SESSION YET! 🚀)
-- **Session 11-13:** Finish mol-repr + mol-plugin-state → ~650 errors
-- **Session 14-17:** Fix remaining methods (~150) → ~500 errors
-- **Session 18-21:** Export consts (275) → ~225 errors
-- **Session 22-25:** Cleanup & other → 0 errors! 🎯
+- ✅ **Session 11:** Fixed 15 volume/helper functions → 783 errors
+- **Session 12-15:** mol-plugin-state methods/functions → ~650 errors
+- **Session 16-19:** Fix remaining methods (~170) → ~480 errors
+- **Session 20-22:** Export functions (179) → ~300 errors
+- **Session 23-25:** Export consts (292) - if possible → varies
+- **Session 26-28:** Cleanup & other → goal: <100 errors! 🎯
 
-**At current pace:** Could finish in 12-15 more sessions!
+**At current pace:** Could reach <100 errors in 15-17 more sessions!
 
 ---
 
@@ -359,9 +434,10 @@ sed -i'.bak' 'NUMBERs/BEFORE/AFTER/' path/to/file.ts && rm path/to/file.ts.bak
 - ✅ All static methods complete (Session 8)
 - ✅ Under 900 errors! (Session 9)
 - ✅ Under 800 errors! (Session 10) 🎊
-- ✅ 204 total errors fixed! (20% complete!) 🎉
-- ✅ Best single session: 74 errors! 🚀
+- ✅ 219 total errors fixed! (22% complete!) 🎉
+- ✅ Best single session: 74 errors! (Session 10) 🚀
 - ✅ All 15 representation files complete! 🏆
+- ✅ All volume representation functions fixed! (Session 11) 🎯
 
 ### Directories Making Progress:
 - ✅ mol-data: 7 → 4 errors (57% reduction!)
@@ -369,7 +445,8 @@ sed -i'.bak' 'NUMBERs/BEFORE/AFTER/' path/to/file.ts && rm path/to/file.ts.bak
 - ✅ mol-geo: 19 → 13 errors (32% reduction!)
 - ✅ mol-math: 5 → 1 error (80% reduction!)
 - ✅ mol-model: 90 → 77 errors (14% reduction)
-- ✅ **mol-repr: 182 → 108 errors (41% reduction! Session 10)** 🎯
+- ✅ **mol-repr: 182 → 95 errors (48% reduction! Sessions 10-11)** 🎯
+- 🔄 mol-plugin-state: 169 errors (highest remaining)
 
 ### Techniques Mastered:
 - ✅ sed batch fixing (super efficient!)
@@ -381,7 +458,9 @@ sed -i'.bak' 'NUMBERs/BEFORE/AFTER/' path/to/file.ts && rm path/to/file.ts.bak
 - ✅ Union types for multiple return possibilities
 - ✅ Object literal return types
 - ✅ **Directory-wide pattern recognition (Session 10)** 🎯
-- ✅ **typeof return types for param functions** 🎯
+- ✅ **typeof return types for param functions (Sessions 10-11)** 🎯
+- ✅ **DataLoci return types for helper functions (Session 11)** 🎯
+- ✅ **Perl for single-line regex replacements (Session 11)** 🎯
 
 **The momentum is AMAZING! Directory-focused approach is the key!** 💪🚀
 
@@ -396,35 +475,42 @@ Session 7:    912 errors (-72, all getters!)
 Session 8:    908 errors (-4, functions!)
 Session 9:    872 errors (-36, major progress!)
 Session 10:   798 errors (-74, BEST SESSION! 🚀)
+Session 11:   783 errors (-15, volume functions)
 ```
 
-**Average per session (7-10):** ~51 errors fixed
-**Projected sessions to completion:** 12-15 more sessions
+**Average per session (7-11):** ~44 errors fixed
+**Projected sessions to completion:** 15-18 more sessions
 
-**Directory-focused approach is HIGHLY effective! Keep it up!** 🏆
+**Note:** 34 "unsupported-super-class-expr" errors are unfixable. Real progress: 751 fixable errors remaining.
+
+**Directory-focused + pattern-based approach is working! Keep it up!** 🏆
 
 ---
 
 ## 📝 Notes for Next Session
 
 ### High-Value Targets
-1. **mol-repr (108 errors remaining)** - Finish this directory! (down from 182)
-2. **mol-plugin-state (169 errors)** - Now the highest, start here next!
-3. **mol-plugin (107 errors)** - Third highest
+1. **mol-plugin-state (169 errors)** - Highest directory, focus here!
+2. **mol-plugin (107 errors)** - Second highest
+3. **mol-repr (95 errors remaining)** - Continue progress (down from 182!)
 
-### Pattern to Watch
-The "export const" category (292 errors) will be tricky - these are likely:
-- Parameter definitions: `export const Params = { ... }`
-- Event objects: `readonly events = { ... }`
-- Behavior objects: `readonly behaviors = { ... }`
+### Patterns to Handle
+1. **Export const Params (292 errors)** - Skipping for now:
+   - `export const SomeParams = { ... }` - Complex, breaks inference with explicit types
+   - Already have `typeof` pattern, but Deno still flags them
+   - Will revisit after easier wins
 
-These may need more complex type annotations.
+2. **readonly events/behaviors** - Top patterns (16 + 7 = 23 occurrences):
+   - Need RxEvent helper return types
+   - Example: `readonly events = { hover: this.ev<HoverEvent>(), ... }`
+   - Type: `{ hover: Subject<HoverEvent>, ... }`
 
 ### Keep Momentum
-- Commit every 5-10 fixes
+- Commit every 10-15 fixes
 - Test frequently
-- Use sed for surgical edits
+- Use perl/sed for surgical single-line edits
 - Batch similar patterns together
+- **Skip export const Params for now** - too complex
 - Don't get stuck - skip hard ones and come back later
 
-**Session 10 was INCREDIBLE! 74 fixes! Keep this momentum!** 🌟🚀🎉
+**Sessions 10-11: 89 fixes total! Great progress!** 🌟🚀🎉
