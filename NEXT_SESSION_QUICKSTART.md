@@ -1,23 +1,23 @@
 # Next Session Quick-Start Guide
 
-**Status:** 736 errors remaining (702 fixable)
-**Current State:** 28 errors fixed from starting point of 730 fixable
-**Progress:** 3.8% complete
+**Status:** 697 errors remaining (664 fixable)
+**Current State:** 66 errors fixed from starting point of 730 fixable
+**Progress:** 9.0% complete
 
 ---
 
 ## 🎯 Reality Check
 
-We currently have **736 Deno slow-type errors**:
-- `missing-explicit-return-type`: ~296 errors (down from 314)
-- `missing-explicit-type`: ~406 errors (parameter types)
-- `unsupported-super-class-expr`: **34 errors** (unfixable by design)
+We currently have **697 Deno slow-type errors**:
+- `missing-explicit-return-type`: ~255 errors (down from 314)
+- `missing-explicit-type`: ~43 errors (parameter types)
+- `unsupported-super-class-expr`: **33 errors** (unfixable by design)
 
-**Fixable errors: 702** (down from 730)
+**Fixable errors: 664** (down from 730)
 
 ---
 
-## 📊 What We've Fixed So Far (28 errors)
+## 📊 What We've Fixed So Far (66 errors)
 
 ### Files Modified:
 1. ✅ **src/mol-model-formats/structure/property/anisotropic.ts** (2 errors)
@@ -73,26 +73,62 @@ We currently have **736 Deno slow-type errors**:
     - Added `TransformData` return type to `Shape.createTransform()`
     - Added `GraphicsRenderObject` return type to `Shape.createRenderObject()`
 
-17. ✅ **src/mol-model/structure/structure/structure.ts** (5 errors)
+17. ✅ **src/mol-model/structure/structure/structure.ts** (14 errors)
     - Added `boolean` return type to `hasElement()`
     - Added `number` return type to `getModelIndex()`
     - Added `Loci` return type to `remapLoci()`
     - Added `Structure` return types to `transform()` and `instances()`
+    - Added return types to namespace functions: `conformationHash()`, `areUnitIdsEqual()`, `areUnitIdsAndIndicesEqual()`, `areRootsEquivalent()`, `areRootsEqual()`, `minDistanceToPoint()`, `elementDescription()`, `validUnitPair()`
+    - Added `StructureSubsetBuilder` return type to `subsetBuilder()`
+
+18. ✅ **src/mol-model/structure/structure/unit.ts** (9 errors)
+    - Added `SymmetryGroup` return type to `SymmetryGroup()` factory function
+    - Added `boolean` return type to `SymmetryGroup.areInvariantElementsEqual()`
+    - Added `UUID` return type to `conformationId()`
+    - Added `number` return type to `hashUnit()`
+    - Added return types to comparison functions: `areSameChainOperatorGroup()`, `areOperatorsEqual()`, `areConformationsEqual()`, `isSameConformation()`
+    - Added union return types to `getModelConformationOfKind()`, `getConformation()`, `getModelHierarchyOfKind()`, `getHierarchy()`
+    - Added `number` return type to `getResidueIndex()`
+
+19. ✅ **src/mol-model/structure/query/context.ts** (2 errors)
+    - Added `StructureSelection` return type to `tryGetCurrentSelection()`
+    - Added `boolean` return type to `test()`
+
+20. ✅ **src/mol-model/structure/structure/unit/bonds/data.ts** (2 errors)
+    - Added return types to `getBondFromLocation()` and `getBondIndexFromLocation()`
+
+21. ✅ **src/mol-model/structure/structure/unit/rings.ts** (3 errors)
+    - Added `Fingerprint` return type to `elementFingerprint()`
+    - Added `string` return type to `getAltId()`
+    - Added `Map<ResidueIndex, Index[]>` return type to `byFingerprintAndResidue()`
+
+22. ✅ **src/mol-model-props/common/custom-property.ts** (1 error)
+    - Added `PD.Params` return type to `getParams()`
+
+23. ✅ **src/mol-model/structure/structure/util/subset-builder.ts** (2 errors)
+    - Added `Structure` return types to `getStructure()` and `getStructureDeduplicate()`
+
+24. ✅ **src/mol-model/structure/structure/util/unit-transforms.ts** (1 error)
+    - Added `Mat4` return type to `getTransform()`
+
+25. ✅ **src/mol-model/volume/grid.ts** (3 errors)
+    - Added `Mat4` return type to `getGridToCartesianTransform()`
+    - Added `Histogram` return type to `getHistogram()`
 
 ---
 
-## 📈 Top Files by Error Count (Updated)
+## 📈 Top Directories by Error Count (Updated)
 
-1. **src/mol-plugin-state/objects.ts** - 32 errors remaining (was 34, now likely ~30) ⭐
-2. **src/mol-plugin/context.ts** - 29 errors
-3. **src/mol-state/state/selection.ts** - 27 errors
-4. **src/mol-script/language/symbol-table/structure-query.ts** - 25 errors
-5. **src/mol-script/language/symbol-table/core.ts** - 21 errors
-6. **src/mol-model/structure/structure/structure.ts** - 19 errors
-7. **src/mol-plugin-state/builder/structure/representation-preset.ts** - 14 errors
-8. **src/mol-model/structure/structure/unit.ts** - 14 errors
-9. **src/mol-script/language/builder.ts** - 13 errors
-10. **src/mol-plugin-state/manager/structure/component.ts** - 13 errors
+1. **src/mol-plugin-state** - 67 errors
+2. **src/mol-state** - 63 errors
+3. **src/mol-util** - 38 errors
+4. **src/mol-plugin** - 34 errors
+5. **src/mol-canvas3d** - 33 errors
+6. **src/mol-script** - 27 errors
+7. **src/mol-model** - 9 errors (down from ~50!)
+8. **src/mol-geo** - 9 errors
+9. **src/mol-theme** - 7 errors
+10. **src/mol-repr** - 5 errors
 
 ---
 
@@ -399,19 +435,25 @@ grep -A 5 "export function name" src/path/file.ts
 
 ```
 Starting point: 730 fixable errors
-Current: 702 fixable errors (28 fixed, 3.8%)
+Current: 664 fixable errors (66 fixed, 9.0%)
 
 Milestone targets:
-- 🎯 < 650 errors (10% complete) - 52 more to go!
+- ✅ < 700 errors - ACHIEVED!
+- 🎯 < 650 errors (10% complete) - 14 more to go!
 - 🎯 < 500 errors (30% complete)
 - 🎯 < 250 errors (65% complete)
 - 🎯 < 100 errors (85% complete)
 - 🎯 < 50 errors (93% complete)
 - 🏁 0 errors (100% complete!)
 
-At current pace: ~7.4 errors per 1% completed
-Estimated: ~194 more errors to reach 100%
+At current pace: ~7.3 errors per 1% completed
+Estimated: ~664 more errors to reach 100%
 This is a marathon, not a sprint!
+
+Recent session (latest): 34 errors fixed (697 → 664)
+- Heavy focus on mol-model/structure files
+- Many boolean/number return types
+- Complex union types for conformation/hierarchy getters
 ```
 
 ---
@@ -427,17 +469,18 @@ This is a marathon, not a sprint!
    ```
 
 2. **Pick your target:**
-   - **Easy:** Simple export functions with obvious return types
-   - **Medium:** Methods in classes (has, get, dispose)
-   - **Hard:** Complex factory functions or parameter types
+   - **Easy:** Export functions with obvious return types (123 remaining)
+   - **Medium:** Methods in classes (101 remaining) 
+   - **Hard:** Export const params (37 remaining)
+   - **Very Hard:** Parameter types (43 remaining)
 
-3. **Try VS Code Quick Fix** on one file:
-   - Open `src/mol-plugin-state/objects.ts`
-   - Use Cmd+. on function names
-   - See if Quick Fix works well
+3. **Current best targets:**
+   - mol-state files (63 errors) - selection.ts, tree.ts
+   - mol-plugin-state files (67 errors) - many small files
+   - mol-util files (38 errors) - utility functions
+   - mol-canvas3d files (33 errors)
 
-4. **If Quick Fix works:** Blast through files!
-5. **If Quick Fix doesn't work:** Continue manual batching
+4. **Continue the momentum:** Focus on one directory at a time for consistent patterns
 
 ---
 
