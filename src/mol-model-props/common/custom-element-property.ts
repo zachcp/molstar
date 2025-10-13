@@ -10,7 +10,7 @@ import { StructureElement } from '../../mol-model/structure/structure.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ThemeDataContext } from '../../mol-theme/theme.ts';
 import type { ColorTheme, LocationColor } from '../../mol-theme/color.ts';
-import type { Color } from '../../mol-util/color.ts';
+import type { Color } from '../../mol-util/color/index.ts';
 import type { Loci } from '../../mol-model/loci.ts';
 import { OrderedSet } from '../../mol-data/int.ts';
 import { CustomModelProperty } from './custom-model-property.ts';

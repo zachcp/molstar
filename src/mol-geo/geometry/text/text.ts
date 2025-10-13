@@ -17,7 +17,7 @@ import { ColorNames } from '../../../mol-util/color/names.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { type TextureImage, createTextureImage, calculateInvariantBoundingSphere, calculateTransformBoundingSphere } from '../../../mol-gl/renderable/util.ts';
 import type { TextValues } from '../../../mol-gl/renderable/text.ts';
-import { Color } from '../../../mol-util/color.ts';
+import { Color } from '../../../mol-util/color/index.ts';
 import { Vec3, Vec4 } from '../../../mol-math/linear-algebra.ts';
 import { FontAtlasParams } from './font-atlas.ts';
 import type { RenderableState } from '../../../mol-gl/renderable.ts';

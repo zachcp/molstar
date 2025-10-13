@@ -16,7 +16,7 @@ import { PluginComponent } from '../../mol-plugin-state/component.ts';
 import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
 import { StateSelection } from '../../mol-state/index.ts';
 import { type RuntimeContext, Task } from '../../mol-task/index.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { download } from '../../mol-util/download.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { SetUtils } from '../../mol-util/set.ts';

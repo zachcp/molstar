@@ -6,7 +6,7 @@
 
 import { type StateBuilder, StateObjectRef } from '../../../../mol-state/index.ts';
 import { StructureFromPetworld } from './model.ts';
-import type { Color } from '../../../../mol-util/color.ts';
+import type { Color } from '../../../../mol-util/color/index.ts';
 import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/representation/spacefill.ts';
 import { StructureRepresentation3D } from '../../../../mol-plugin-state/transforms/representation.ts';
 import type { PluginContext } from '../../../../mol-plugin/context.ts';

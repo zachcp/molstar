@@ -6,7 +6,7 @@
 
 import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
 import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
-import { Color } from '../../../mol-util/color.ts';
+import { Color } from '../../../mol-util/color/index.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 
 export interface Profile {

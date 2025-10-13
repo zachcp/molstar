@@ -13,7 +13,7 @@ import { ParameterControls, ParameterMappingControl, type ParamOnChange, SelectC
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { Clip } from '../../../mol-util/clip.ts';
 import type { StructureRepresentation3D } from '../../../mol-plugin-state/transforms/representation.ts';
-import { Color } from '../../../mol-util/color.ts';
+import { Color } from '../../../mol-util/color/index.ts';
 import { CombinedColorControl } from '../../../mol-plugin-ui/controls/color.tsx';
 import { MarkerAction } from '../../../mol-util/marker-action.ts';
 import { EveryLoci, Loci } from '../../../mol-model/loci.ts';

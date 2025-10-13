@@ -7,7 +7,7 @@
 
 import { type RuntimeContext, Task } from '../../mol-task/index.ts';
 import type { ShapeProvider } from '../../mol-model/shape/provider.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import type { PlyFile, PlyTable, PlyList } from '../../mol-io/reader/ply/schema.ts';
 import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
 import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';

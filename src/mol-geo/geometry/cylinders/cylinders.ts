@@ -18,7 +18,7 @@ import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { calculateInvariantBoundingSphere, calculateTransformBoundingSphere } from '../../../mol-gl/renderable/util.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
-import type { Color } from '../../../mol-util/color.ts';
+import type { Color } from '../../../mol-util/color/index.ts';
 import { BaseGeometry } from '../base.ts';
 import { createEmptyOverpaint } from '../overpaint-data.ts';
 import { createEmptyTransparency } from '../transparency-data.ts';

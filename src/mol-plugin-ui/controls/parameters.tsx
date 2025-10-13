@@ -11,7 +11,7 @@ import { Mat4, type Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
 import type { Volume } from '../../mol-model/volume.ts';
 import { Script } from '../../mol-script/script.ts';
 import { Asset } from '../../mol-util/assets.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import type { ColorListEntry } from '../../mol-util/color/color.ts';
 import { type ColorListName, ColorListOptions, ColorListOptionsScale, ColorListOptionsSet, getColorListFromName } from '../../mol-util/color/lists.ts';
 import type { Legend as LegendData } from '../../mol-util/legend.ts';

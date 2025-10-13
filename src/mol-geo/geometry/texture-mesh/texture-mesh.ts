@@ -14,7 +14,7 @@ import { createColors } from '../color-data.ts';
 import { createMarkers } from '../marker-data.ts';
 import type { GeometryUtils } from '../geometry.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
-import type { Color } from '../../../mol-util/color.ts';
+import type { Color } from '../../../mol-util/color/index.ts';
 import { BaseGeometry } from '../base.ts';
 import { createEmptyOverpaint } from '../overpaint-data.ts';
 import { createEmptyTransparency } from '../transparency-data.ts';

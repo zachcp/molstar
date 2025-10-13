@@ -8,7 +8,7 @@ import { Mat4 } from '../../../../mol-math/linear-algebra/3d/mat4.ts';
 import type { StateBuilder, StateObjectSelector } from '../../../../mol-state/index.ts';
 import type { PluginContext } from '../../../../mol-plugin/context.ts';
 import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/representation/spacefill.ts';
-import { Color } from '../../../../mol-util/color.ts';
+import { Color } from '../../../../mol-util/color/index.ts';
 import { utf8Read } from '../../../../mol-io/common/utf8.ts';
 import { Mat3, Quat, Vec3 } from '../../../../mol-math/linear-algebra.ts';
 import { type GraphicsMode, MesoscaleGroup, MesoscaleState, getGraphicsModeProps, getMesoscaleGroupParams } from '../state.ts';

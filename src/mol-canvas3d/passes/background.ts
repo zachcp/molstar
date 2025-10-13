@@ -20,7 +20,7 @@ import { isTimingMode } from '../../mol-util/debug.ts';
 import { Camera, type ICamera } from '../camera.ts';
 import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
 import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { Asset, type AssetManager } from '../../mol-util/assets.ts';
 import { Vec4 } from '../../mol-math/linear-algebra/3d/vec4.ts';
 import { degToRad, isPowerOfTwo } from '../../mol-math/misc.ts';

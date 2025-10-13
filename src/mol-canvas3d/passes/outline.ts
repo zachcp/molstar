@@ -22,7 +22,7 @@ import type { ICamera } from '../../mol-canvas3d/camera.ts';
 import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
 import { outlines_frag } from '../../mol-gl/shader/outlines.frag.ts';
 import { isTimingMode } from '../../mol-util/debug.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import type { PostprocessingProps } from './postprocessing.ts';
 
 export const OutlineParams = {

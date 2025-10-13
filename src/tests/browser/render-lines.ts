@@ -11,7 +11,7 @@ import { LinesBuilder } from '../../mol-geo/geometry/lines/lines-builder.ts';
 import { Mat4 } from '../../mol-math/linear-algebra.ts';
 import { DodecahedronCage } from '../../mol-geo/primitive/dodecahedron.ts';
 import { Lines } from '../../mol-geo/geometry/lines/lines.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { createRenderObject } from '../../mol-gl/render-object.ts';
 import { Representation } from '../../mol-repr/representation.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';

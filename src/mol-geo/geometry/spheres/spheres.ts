@@ -16,7 +16,7 @@ import { createMarkers } from '../marker-data.ts';
 import { type TextureImage, calculateInvariantBoundingSphere, calculateTransformBoundingSphere, createTextureImage } from '../../../mol-gl/renderable/util.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { createSizes, getMaxSize } from '../size-data.ts';
-import type { Color } from '../../../mol-util/color.ts';
+import type { Color } from '../../../mol-util/color/index.ts';
 import { BaseGeometry } from '../base.ts';
 import { createEmptyOverpaint } from '../overpaint-data.ts';
 import { createEmptyTransparency } from '../transparency-data.ts';

@@ -8,7 +8,7 @@
 
 import { Unit, StructureProperties, StructureElement, Bond } from '../../mol-model/structure.ts';
 
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ColorTheme, LocationColor } from '../../mol-theme/color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';

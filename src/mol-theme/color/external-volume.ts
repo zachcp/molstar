@@ -6,7 +6,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color, ColorScale } from '../../mol-util/color.ts';
+import { Color, ColorScale } from '../../mol-util/color/index.ts';
 import type { Location } from '../../mol-model/location.ts';
 import { ColorTheme, type LocationColor } from '../color/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';

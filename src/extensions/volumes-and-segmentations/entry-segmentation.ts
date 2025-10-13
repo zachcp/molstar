@@ -11,7 +11,7 @@ import { Download, ParseCif } from '../../mol-plugin-state/transforms/data.ts';
 import { CreateGroup } from '../../mol-plugin-state/transforms/misc.ts';
 import { VolumeFromSegmentationCif } from '../../mol-plugin-state/transforms/volume.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 
 import type { Segment } from './volseg-api/data.ts';
 import { BOX, type VolsegEntryData, MAX_VOXELS } from './entry-root.ts';

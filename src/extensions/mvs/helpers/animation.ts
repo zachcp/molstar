@@ -11,7 +11,7 @@ import { clamp, lerp } from '../../../mol-math/interpolate.ts';
 import { EPSILON, Mat3, Mat4, Quat, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import type { RuntimeContext } from '../../../mol-task/index.ts';
 import { deepEqual } from '../../../mol-util/index.ts';
-import { Color } from '../../../mol-util/color.ts';
+import { Color } from '../../../mol-util/color/index.ts';
 import { decodeColor } from '../../../mol-util/color/utils.ts';
 import { produce } from '../../../mol-util/produce.ts';
 import { makeContinuousPaletteCheckpoints, type MVSContinuousPaletteProps, type MVSDiscretePaletteProps } from '../components/annotation-color-theme.ts';

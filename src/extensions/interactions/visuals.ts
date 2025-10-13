@@ -12,7 +12,7 @@ import { Vec3 } from '../../mol-math/linear-algebra.ts';
 import { Shape } from '../../mol-model/shape.ts';
 import { StructureElement } from '../../mol-model/structure.ts';
 import { addLinkCylinderMesh, type AddLinkOptions, type AddLinkParams, DefaultLinkCylinderProps, LinkStyle } from '../../mol-repr/structure/visual/util/link.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { stringToWords } from '../../mol-util/string.ts';
 import { InteractionKinds, type StructureInteractions } from './model.ts';

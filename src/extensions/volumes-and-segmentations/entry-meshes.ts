@@ -9,7 +9,7 @@ import { CreateGroup } from '../../mol-plugin-state/transforms/misc.ts';
 import { ShapeRepresentation3D } from '../../mol-plugin-state/transforms/representation.ts';
 import { setSubtreeVisibility } from '../../mol-plugin/behavior/static/state.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 
 import { BACKGROUND_SEGMENT_VOLUME_THRESHOLD } from '../meshes/mesh-streaming/behavior.ts';

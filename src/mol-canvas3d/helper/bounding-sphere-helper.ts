@@ -12,7 +12,7 @@ import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { Scene } from '../../mol-gl/scene.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { Sphere3D } from '../../mol-math/geometry.ts';
-import type { Color } from '../../mol-util/color.ts';
+import type { Color } from '../../mol-util/color/index.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import type { TransformData } from '../../mol-geo/geometry/transform-data.ts';
 import { sphereVertexCount } from '../../mol-geo/primitive/sphere.ts';

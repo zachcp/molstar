@@ -10,7 +10,7 @@ import type { Location } from '../../../../mol-model/location.ts';
 import { Bond, StructureElement, Unit } from '../../../../mol-model/structure.ts';
 import type { ColorTheme, LocationColor } from '../../../../mol-theme/color.ts';
 import type { ThemeDataContext } from '../../../../mol-theme/theme.ts';
-import { Color, ColorScale } from '../../../../mol-util/color.ts';
+import { Color, ColorScale } from '../../../../mol-util/color/index.ts';
 import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
 import type { CustomProperty } from '../../../../mol-model-props/common/custom-property.ts';
 import { ColorThemeCategory } from '../../../../mol-theme/color/categories.ts';

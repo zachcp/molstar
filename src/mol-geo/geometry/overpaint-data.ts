@@ -7,7 +7,7 @@
 import { ValueCell } from '../../mol-util/value-cell.ts';
 import { Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
 import { type TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { createNullTexture, type Texture } from '../../mol-gl/webgl/texture.ts';
 
 export type OverpaintType = 'instance' | 'groupInstance' | 'volumeInstance';

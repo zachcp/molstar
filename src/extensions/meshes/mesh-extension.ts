@@ -21,7 +21,7 @@ import { ShapeRepresentation3D } from '../../mol-plugin-state/transforms/represe
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { type StateObjectRef, type StateObjectSelector, StateTransformer } from '../../mol-state/index.ts';
 import { Task } from '../../mol-task/index.ts';
-import type { Color } from '../../mol-util/color.ts';
+import type { Color } from '../../mol-util/color/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import * as MeshUtils from './mesh-utils.ts';
 

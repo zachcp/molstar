@@ -18,7 +18,7 @@ import { VolumeStreaming } from '../../mol-plugin/behavior/dynamic/volume-stream
 import { InitVolumeStreaming } from '../../mol-plugin/behavior/dynamic/volume-streaming/transformers.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { State, type StateObjectCell, type StateObjectSelector, StateSelection, StateTransform } from '../../mol-state/index.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { memoizeLatest } from '../../mol-util/memoize.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';
 import { CollapsableControls, type CollapsableState, PurePluginUIComponent } from '../base.tsx';

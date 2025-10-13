@@ -15,7 +15,7 @@ import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import type { StateObjectSelector } from '../../mol-state/index.ts';
 import { Asset } from '../../mol-util/assets.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';
 
 import { createMeshFromUrl } from './mesh-extension.ts';

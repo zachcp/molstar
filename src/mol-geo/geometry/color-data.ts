@@ -8,7 +8,7 @@
 
 import { ValueCell } from '../../mol-util/index.ts';
 import { type TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
 import type { LocationIterator } from '../util/location-iterator.ts';
 import { NullLocation } from '../../mol-model/location.ts';

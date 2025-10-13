@@ -20,7 +20,7 @@ import { PluginConfig } from '../../mol-plugin/config.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { MolScriptBuilder as MS } from '../../mol-script/language/builder.ts';
 import { StateObjectRef } from '../../mol-state/index.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { Material } from '../../mol-util/material.ts';
 
 function shinyStyle(plugin: PluginContext) {

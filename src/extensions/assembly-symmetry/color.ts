@@ -8,7 +8,7 @@ import type { ThemeDataContext } from '../../mol-theme/theme.ts';
 import type { ColorTheme, LocationColor } from '../../mol-theme/color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { AssemblySymmetryProvider, AssemblySymmetryData } from './prop.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { Unit, StructureElement, StructureProperties, Bond } from '../../mol-model/structure.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';

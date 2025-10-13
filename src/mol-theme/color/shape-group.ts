@@ -5,7 +5,7 @@
  */
 
 import type { ColorTheme } from '../color/index.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import type { Location } from '../../mol-model/location.ts';
 import { ShapeGroup } from '../../mol-model/shape.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';

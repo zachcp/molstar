@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { Color } from '../../mol-util/color.ts';
+import type { Color } from '../../mol-util/color/index.ts';
 import { UUID } from '../../mol-util/index.ts';
 import { OrderedSet } from '../../mol-data/int.ts';
 import { Geometry } from '../../mol-geo/geometry/geometry.ts';

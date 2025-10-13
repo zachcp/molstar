@@ -6,7 +6,7 @@
 
 import type { Model, ResidueIndex } from '../../../../mol-model/structure.ts';
 import { AtomicHierarchy } from '../../../../mol-model/structure/model/properties/atomic.ts';
-import { Color } from '../../../../mol-util/color.ts';
+import { Color } from '../../../../mol-util/color/index.ts';
 import type { QualityAssessment } from '../prop.ts';
 
 

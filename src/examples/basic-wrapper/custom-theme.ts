@@ -3,7 +3,7 @@ import { Vec3 } from '../../mol-math/linear-algebra.ts';
 import { ColorTheme } from '../../mol-theme/color.ts';
 import { ColorThemeCategory } from '../../mol-theme/color/categories.ts';
 import type { ThemeDataContext } from '../../mol-theme/theme.ts';
-import type { Color } from '../../mol-util/color.ts';
+import type { Color } from '../../mol-util/color/index.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import type { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 

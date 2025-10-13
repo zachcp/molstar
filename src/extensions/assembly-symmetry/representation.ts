@@ -20,7 +20,7 @@ import { Wedge, WedgeCage } from '../../mol-geo/primitive/wedge.ts';
 import { type Primitive, transformPrimitive } from '../../mol-geo/primitive/primitive.ts';
 import { memoize1 } from '../../mol-util/memoize.ts';
 import { polygon } from '../../mol-geo/primitive/polygon.ts';
-import { ColorMap, type Color } from '../../mol-util/color.ts';
+import { ColorMap, type Color } from '../../mol-util/color/index.ts';
 import { TableLegend } from '../../mol-util/legend.ts';
 import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../../mol-repr/representation.ts';
 import { type Cage, transformCage, cloneCage } from '../../mol-geo/primitive/cage.ts';

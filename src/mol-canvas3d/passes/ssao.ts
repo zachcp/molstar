@@ -24,7 +24,7 @@ import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
 import { ssao_frag } from '../../mol-gl/shader/ssao.frag.ts';
 import { ssaoBlur_frag } from '../../mol-gl/shader/ssao-blur.frag.ts';
 import type { Framebuffer } from '../../mol-gl/webgl/framebuffer.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { isTimingMode } from '../../mol-util/debug.ts';
 import type { PostprocessingProps } from './postprocessing.ts';
 

@@ -5,7 +5,7 @@
  */
 
 import type { Location } from '../../../mol-model/location.ts';
-import { Color, ColorMap } from '../../../mol-util/color.ts';
+import { Color, ColorMap } from '../../../mol-util/color/index.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { InteractionsProvider } from '../interactions.ts';
 import type { ThemeDataContext } from '../../../mol-theme/theme.ts';

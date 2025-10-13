@@ -16,7 +16,7 @@ import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { Script } from '../../mol-script/script.ts';
 import { Asset } from '../../mol-util/assets.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { StripedResidues } from './coloring.ts';
 import { CustomToastMessage } from './controls.tsx';
 import { CustomColorThemeProvider } from './custom-theme.ts';

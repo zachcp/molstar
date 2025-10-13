@@ -18,7 +18,7 @@ import { ObjectKeys } from '../../mol-util/type-helpers.ts';
 import type { SaccharideCompIdMapType } from '../../mol-model/structure/structure/carbohydrates/constants.ts';
 import { Backgrounds } from '../../extensions/backgrounds.ts';
 import { LeftPanel, RightPanel } from './ui/panels.tsx';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { SpacefillRepresentationProvider } from '../../mol-repr/structure/representation/spacefill.ts';
 import { PluginBehaviors } from '../../mol-plugin/behavior.ts';
 import { MesoFocusLoci } from './behavior/camera.ts';

@@ -18,7 +18,7 @@ import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { PluginConfig } from '../../mol-plugin/config.ts';
 import type { StateObjectSelector, StateTransformer } from '../../mol-state/index.ts';
-import type { Color } from '../../mol-util/color.ts';
+import type { Color } from '../../mol-util/color/index.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';
 import { mountControls } from './controls.tsx';

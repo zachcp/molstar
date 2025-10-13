@@ -11,7 +11,7 @@ import type { PluginContext } from '../../../../mol-plugin/context.ts';
 import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/representation/spacefill.ts';
 import type { StateObjectRef, StateObjectSelector, StateBuilder } from '../../../../mol-state/index.ts';
 import type { Clip } from '../../../../mol-util/clip.ts';
-import type { Color } from '../../../../mol-util/color.ts';
+import type { Color } from '../../../../mol-util/color/index.ts';
 import { ColorNames } from '../../../../mol-util/color/names.ts';
 import { type GraphicsMode, MesoscaleGroup, MesoscaleState, getDistinctBaseColors, getDistinctGroupColors, getGraphicsModeProps, getMesoscaleGroupParams } from '../state.ts';
 import { MmcifAssembly, MmcifStructure } from './model.ts';

@@ -22,7 +22,7 @@ import { LocationIterator } from '../../../mol-geo/util/location-iterator.ts';
 import { ClashesProvider, type IntraUnitClashes, type InterUnitClashes, ValidationReport } from './prop.ts';
 import type { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
 import { ComplexMeshParams, type ComplexVisual, ComplexMeshVisual } from '../../../mol-repr/structure/complex-visual.ts';
-import { Color } from '../../../mol-util/color.ts';
+import { Color } from '../../../mol-util/color/index.ts';
 import { MarkerActions } from '../../../mol-util/marker-action.ts';
 import { CentroidHelper } from '../../../mol-math/geometry/centroid-helper.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';

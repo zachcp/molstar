@@ -16,7 +16,7 @@ import { calcActiveVoxels } from '../../mol-gl/compute/marching-cubes/active-vox
 import { createHistogramPyramid } from '../../mol-gl/compute/histogram-pyramid/reduction.ts';
 import { createIsosurfaceBuffers } from '../../mol-gl/compute/marching-cubes/isosurface.ts';
 import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { createRenderObject } from '../../mol-gl/render-object.ts';
 import { Representation } from '../../mol-repr/representation.ts';
 import { computeMarchingCubesMesh } from '../../mol-geo/util/marching-cubes/algorithm.ts';

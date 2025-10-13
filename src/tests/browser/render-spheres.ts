@@ -9,7 +9,7 @@ import { resizeCanvas } from '../../mol-canvas3d/util.ts';
 import { Canvas3D, Canvas3DContext } from '../../mol-canvas3d/canvas3d.ts';
 import { SpheresBuilder } from '../../mol-geo/geometry/spheres/spheres-builder.ts';
 import { Spheres } from '../../mol-geo/geometry/spheres/spheres.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { createRenderObject } from '../../mol-gl/render-object.ts';
 import { Representation } from '../../mol-repr/representation.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';

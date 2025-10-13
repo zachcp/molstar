@@ -12,7 +12,7 @@ import { Mat4 } from '../../mol-math/linear-algebra.ts';
 import { HexagonalPrismCage } from '../../mol-geo/primitive/prism.ts';
 import { SpikedBall } from '../../mol-geo/primitive/spiked-ball.ts';
 import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { createRenderObject } from '../../mol-gl/render-object.ts';
 import { Representation } from '../../mol-repr/representation.ts';
 import { Torus } from '../../mol-geo/primitive/torus.ts';

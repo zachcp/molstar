@@ -18,7 +18,7 @@ import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
 import { overlay_frag } from '../../mol-gl/shader/marking/overlay.frag.ts';
 import type { Viewport } from '../camera/util.ts';
 import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { edge_frag } from '../../mol-gl/shader/marking/edge.frag.ts';
 import { isTimingMode } from '../../mol-util/debug.ts';
 

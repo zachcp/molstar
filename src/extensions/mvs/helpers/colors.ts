@@ -7,7 +7,7 @@
 import { ElementSymbolColors } from '../../../mol-theme/color/element-symbol.ts';
 import { ResidueNameColors } from '../../../mol-theme/color/residue-name.ts';
 import { SecondaryStructureColors as SecStrColors } from '../../../mol-theme/color/secondary-structure.ts';
-import { Color } from '../../../mol-util/color.ts';
+import { Color } from '../../../mol-util/color/index.ts';
 import type { ColorList } from '../../../mol-util/color/color.ts';
 import { ColorLists } from '../../../mol-util/color/lists.ts';
 import { omitObjectKeys } from '../../../mol-util/object.ts';

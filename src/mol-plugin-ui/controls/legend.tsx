@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import * as React from 'react';
 import type { _Props, _State } from '../base.tsx';
 import type { Legend as LegendData, ScaleLegend as ScaleLegendData, TableLegend as TableLegendData } from '../../mol-util/legend.ts';

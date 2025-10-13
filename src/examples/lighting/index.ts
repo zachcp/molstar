@@ -12,7 +12,7 @@ import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
 import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { Asset } from '../../mol-util/assets.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import './index.html';
 import '../../mol-plugin-ui/skin/light.scss';
 

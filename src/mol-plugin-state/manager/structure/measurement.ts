@@ -17,7 +17,7 @@ import { StatefulPluginComponent } from '../../component.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { MeasurementRepresentationCommonTextParams, type LociLabelTextParams } from '../../../mol-repr/shape/loci/common.ts';
 import type { LineParams } from '../../../mol-repr/structure/representation/line.ts';
-import { Color } from '../../../mol-util/color.ts';
+import { Color } from '../../../mol-util/color/index.ts';
 
 export { StructureMeasurementManager };
 

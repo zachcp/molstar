@@ -7,7 +7,7 @@
  * Copyright (c) 2011-2018, Gregor Aisch, BSD license
  */
 
-import type { Color } from '../color/index.ts';
+import type { Color } from '../color.ts';
 import { degToRad } from '../../../mol-math/misc.ts';
 import { Lab } from './lab.ts';
 

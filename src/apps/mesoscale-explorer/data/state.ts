@@ -8,7 +8,7 @@ import { PluginStateObject as PSO, PluginStateTransform } from '../../../mol-plu
 import type { PluginContext } from '../../../mol-plugin/context.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { Task } from '../../../mol-task/index.ts';
-import { Color } from '../../../mol-util/color.ts';
+import { Color } from '../../../mol-util/color/index.ts';
 import { Spheres } from '../../../mol-geo/geometry/spheres/spheres.ts';
 import { Clip } from '../../../mol-util/clip.ts';
 import { escapeRegExp, stringToWords } from '../../../mol-util/string.ts';

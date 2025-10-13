@@ -6,7 +6,7 @@
 
 import { Unit, StructureElement, Bond, type ElementIndex } from '../../mol-model/structure.ts';
 
-import { ColorScale, Color } from '../../mol-util/color.ts';
+import { ColorScale, Color } from '../../mol-util/color/index.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ColorTheme } from '../color/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';

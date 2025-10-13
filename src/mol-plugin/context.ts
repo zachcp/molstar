@@ -41,7 +41,7 @@ import { ColorTheme } from '../mol-theme/color.ts';
 import { SizeTheme } from '../mol-theme/size.ts';
 import type { ThemeRegistryContext } from '../mol-theme/theme.ts';
 import { AssetManager } from '../mol-util/assets.ts';
-import { Color } from '../mol-util/color.ts';
+import { Color } from '../mol-util/color/index.ts';
 import { ajaxGet } from '../mol-util/data-source.ts';
 import { isDebugMode, isProductionMode } from '../mol-util/debug.ts';
 import { EmptyKeyInput, type KeyInput, ModifiersKeys } from '../mol-util/input/input-observer.ts';

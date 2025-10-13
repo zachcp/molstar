@@ -14,7 +14,7 @@ import type { SizeType } from './size-data.ts';
 import { Lines } from './lines/lines.ts';
 import type { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { DirectVolume } from './direct-volume/direct-volume.ts';
-import type { Color } from '../../mol-util/color.ts';
+import type { Color } from '../../mol-util/color/index.ts';
 import { Spheres } from './spheres/spheres.ts';
 import { arrayMax } from '../../mol-util/array.ts';
 import type { TransformData } from './transform-data.ts';

@@ -14,7 +14,7 @@ import { VolumeInstances, VolumeTransform } from '../../mol-plugin-state/transfo
 import type { StateTransformer } from '../../mol-state/index.ts';
 import { arrayDistinct } from '../../mol-util/array.ts';
 import type { Clip } from '../../mol-util/clip.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import type { ColorListEntry } from '../../mol-util/color/color.ts';
 import { canonicalJsonString } from '../../mol-util/json.ts';
 import { stringToWords } from '../../mol-util/string.ts';

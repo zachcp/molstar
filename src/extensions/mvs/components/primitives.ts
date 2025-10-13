@@ -33,7 +33,7 @@ import { Task } from '../../../mol-task/index.ts';
 import { round } from '../../../mol-util/index.ts';
 import { range } from '../../../mol-util/array.ts';
 import { Asset } from '../../../mol-util/assets.ts';
-import { Color } from '../../../mol-util/color.ts';
+import { Color } from '../../../mol-util/color/index.ts';
 import { MarkerActions } from '../../../mol-util/marker-action.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { capitalize } from '../../../mol-util/string.ts';

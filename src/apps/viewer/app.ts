@@ -54,7 +54,7 @@ import type { PluginState } from '../../mol-plugin/state.ts';
 import { StateObjectRef, type StateObjectSelector } from '../../mol-state/index.ts';
 import { Task } from '../../mol-task/index.ts';
 import { Asset } from '../../mol-util/assets.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import '../../mol-util/polyfill';
 import { ObjectKeys } from '../../mol-util/type-helpers.ts';
 import { OpenFiles } from '../../mol-plugin-state/actions/file.ts';

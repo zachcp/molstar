@@ -10,7 +10,7 @@ import { PostprocessingParams } from '../../mol-canvas3d/passes/postprocessing.t
 import { PresetStructureRepresentations } from '../../mol-plugin-state/builder/structure/representation-preset.ts';
 import { PluginConfig } from '../../mol-plugin/config.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { CollapsableControls, PurePluginUIComponent } from '../base.tsx';
 import { Button } from '../controls/common.tsx';

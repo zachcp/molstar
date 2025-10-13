@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import type { Location } from '../../mol-model/location.ts';
 import { StructureElement, Bond } from '../../mol-model/structure.ts';
 import type { ColorTheme, LocationColor } from '../color/index.ts';

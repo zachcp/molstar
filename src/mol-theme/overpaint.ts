@@ -5,7 +5,7 @@
  */
 
 import { Loci } from '../mol-model/loci.ts';
-import { Color } from '../mol-util/color.ts';
+import { Color } from '../mol-util/color/index.ts';
 import { type Structure, StructureElement } from '../mol-model/structure.ts';
 import { Script } from '../mol-script/script.ts';
 

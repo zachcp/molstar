@@ -1,7 +1,7 @@
 import { Bond, StructureElement, StructureProperties, Unit } from '../../../mol-model/structure.ts';
 import type { ColorTheme, LocationColor } from '../../../mol-theme/color.ts';
 import type { ThemeDataContext } from '../../../mol-theme/theme.ts';
-import { Color } from '../../../mol-util/color.ts';
+import { Color } from '../../../mol-util/color/index.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import type { Location } from '../../../mol-model/location.ts';
 import { SbNcbrPartialChargesPropertyProvider } from './property.ts';

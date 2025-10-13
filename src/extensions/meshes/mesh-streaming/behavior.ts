@@ -15,7 +15,7 @@ import { PluginCommands } from '../../../mol-plugin/commands.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
 import { UUID } from '../../../mol-util/index.ts';
 import { Asset } from '../../../mol-util/assets.ts';
-import type { Color } from '../../../mol-util/color.ts';
+import type { Color } from '../../../mol-util/color/index.ts';
 import { ColorNames } from '../../../mol-util/color/names.ts';
 import { Choice } from '../../../mol-util/param-choice.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';

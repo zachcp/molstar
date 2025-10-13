@@ -5,7 +5,7 @@
  */
 
 import type { ColorTheme } from '../color/index.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../theme.ts';
 import { TableLegend } from '../../mol-util/legend.ts';

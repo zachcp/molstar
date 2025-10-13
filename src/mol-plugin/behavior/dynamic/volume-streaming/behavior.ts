@@ -12,7 +12,7 @@ import { Volume, type Grid } from '../../../../mol-model/volume.ts';
 import type { VolumeServerHeader, VolumeServerInfo } from './model.ts';
 import { Box3D } from '../../../../mol-math/geometry.ts';
 import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra.ts';
-import { Color } from '../../../../mol-util/color.ts';
+import { Color } from '../../../../mol-util/color/index.ts';
 import { PluginBehavior } from '../../behavior.ts';
 import { LRUCache } from '../../../../mol-util/lru-cache.ts';
 import { urlCombine } from '../../../../mol-util/url.ts';

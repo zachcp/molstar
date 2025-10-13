@@ -20,7 +20,7 @@ import type { PluginState } from '../../mol-plugin/state.ts';
 import { MolScriptBuilder as MS } from '../../mol-script/language/builder.ts';
 import { type StateBuilder, type StateObject, StateSelection } from '../../mol-state/index.ts';
 import { Asset } from '../../mol-util/assets.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import { getFormattedTime } from '../../mol-util/date.ts';
 import { download } from '../../mol-util/download.ts';

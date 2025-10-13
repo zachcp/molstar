@@ -20,7 +20,7 @@ import { ColorNames } from '../../mol-util/color/names.ts';
 import { ShapeRepresentation } from '../../mol-repr/shape/representation.ts';
 import { StructureUnitTransforms } from '../../mol-model/structure/structure/util/unit-transforms.ts';
 import { unwindStructureAssembly, explodeStructure, spinStructure, SpinStructureParams, getSpinStructureAxisAndOrigin } from '../animation/helpers.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { Overpaint } from '../../mol-theme/overpaint.ts';
 import { Transparency } from '../../mol-theme/transparency.ts';
 import { BaseGeometry, hasColorSmoothingProp } from '../../mol-geo/geometry/base.ts';

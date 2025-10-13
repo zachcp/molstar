@@ -5,7 +5,7 @@
  * @author Lukáš Polák <admin@lukaspolak.cz>
  */
 
-import { Color, ColorScale } from '../../mol-util/color.ts';
+import { Color, ColorScale } from '../../mol-util/color/index.ts';
 import { StructureElement, Unit, Bond, type ElementIndex } from '../../mol-model/structure.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ColorTheme } from '../color/index.ts';

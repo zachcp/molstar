@@ -19,7 +19,7 @@ import { useBehavior } from '../../../../mol-plugin-ui/hooks/use-behavior.ts';
 import type { PluginContext } from '../../../../mol-plugin/context.ts';
 import type { StateBuilder, StateTransform } from '../../../../mol-state/index.ts';
 import { round } from '../../../../mol-util/index.ts';
-import { Color } from '../../../../mol-util/color.ts';
+import { Color } from '../../../../mol-util/color/index.ts';
 import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
 import { SingleAsyncQueue } from '../../../../mol-util/single-async-queue.ts';
 import { QualityAssessment } from '../prop.ts';

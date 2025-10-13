@@ -20,7 +20,7 @@ import { Shape } from '../../../mol-model/shape.ts';
 import { ensureReasonableResolution } from '../../../mol-repr/structure/visual/util/common.ts';
 import { Task, type RuntimeContext } from '../../../mol-task/index.ts';
 import { ValueCell } from '../../../mol-util/index.ts';
-import { Color } from '../../../mol-util/color.ts';
+import { Color } from '../../../mol-util/color/index.ts';
 import type { Tunnel, Profile } from './data-model.ts';
 
 type MolecularSurfaceMeta = {

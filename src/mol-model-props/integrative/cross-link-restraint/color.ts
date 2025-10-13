@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color, ColorScale } from '../../../mol-util/color.ts';
+import { Color, ColorScale } from '../../../mol-util/color/index.ts';
 import type { Location } from '../../../mol-model/location.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../../../mol-theme/theme.ts';

@@ -19,7 +19,7 @@ import { PluginConfig } from '../../mol-plugin/config.ts';
 import { PluginSpec } from '../../mol-plugin/spec.ts';
 import { StateObject } from '../../mol-state/index.ts';
 import { Task } from '../../mol-task/index.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import '../../mol-util/polyfill';

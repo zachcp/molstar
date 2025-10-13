@@ -11,7 +11,7 @@ import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { type StateBuilder, type StateObjectCell, StateSelection, type StateTransform } from '../../mol-state/index.ts';
 import { Overpaint } from '../../mol-theme/overpaint.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import type { StructureComponentRef } from '../manager/structure/hierarchy-state.ts';
 import { type EmptyLoci, isEmptyLoci, Loci } from '../../mol-model/loci.ts';
 

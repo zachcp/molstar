@@ -9,7 +9,7 @@ import { Bond, StructureElement, Unit } from '../../../mol-model/structure.ts';
 import type { ColorTheme, LocationColor } from '../../../mol-theme/color.ts';
 import { ColorThemeCategory } from '../../../mol-theme/color/categories.ts';
 import type { ThemeDataContext } from '../../../mol-theme/theme.ts';
-import { Color } from '../../../mol-util/color.ts';
+import { Color } from '../../../mol-util/color/index.ts';
 import { getPalette, getPaletteParams } from '../../../mol-util/color/palette.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import type { CustomProperty } from '../../common/custom-property.ts';

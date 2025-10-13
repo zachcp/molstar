@@ -17,7 +17,7 @@ import { PickingId } from '../../mol-geo/geometry/picking.ts';
 import { EmptyLoci, type Loci } from '../../mol-model/loci.ts';
 import { Interval, OrderedSet, SortedArray } from '../../mol-data/int.ts';
 import { transformPositionArray } from '../../mol-geo/util.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { ColorTheme } from '../../mol-theme/color.ts';
 import { packIntToRGBArray } from '../../mol-util/number-packing.ts';
 import { createVolumeCellLocationIterator, eachVolumeLoci } from './util.ts';

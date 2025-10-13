@@ -14,7 +14,7 @@ import { CreateGroup } from '../../mol-plugin-state/transforms/misc.ts';
 import { setSubtreeVisibility } from '../../mol-plugin/behavior/static/state.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import type { StateObjectSelector } from '../../mol-state/index.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
 import { BOX, type VolsegEntryData, MAX_VOXELS } from './entry-root.ts';

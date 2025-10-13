@@ -11,7 +11,7 @@ import { Canvas3DContext, Canvas3DParams, type Canvas3DProps } from '../../mol-c
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { PluginConfig } from '../../mol-plugin/config.ts';
 import { StateTransform } from '../../mol-state/index.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { deepClone } from '../../mol-util/object.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { ParamMapping } from '../../mol-util/param-mapping.ts';

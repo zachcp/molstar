@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import type { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { camelCaseToWords, stringToWords } from '../../mol-util/string.ts';
 import * as React from 'react';

@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color } from '../mol-util/color.ts';
+import { Color } from '../mol-util/color/index.ts';
 import type { Location } from '../mol-model/location.ts';
 import type { ColorType, ColorTypeDirect, ColorTypeGrid, ColorTypeLocation } from '../mol-geo/geometry/color-data.ts';
 import { CarbohydrateSymbolColorThemeProvider } from './color/carbohydrate-symbol.ts';

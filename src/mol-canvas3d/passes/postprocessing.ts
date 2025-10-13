@@ -23,7 +23,7 @@ import type { ICamera } from '../../mol-canvas3d/camera.ts';
 import type { Scene } from '../../mol-gl/scene.ts';
 import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
 import { postprocessing_frag } from '../../mol-gl/shader/postprocessing.frag.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { FxaaParams, FxaaPass } from './fxaa.ts';
 import { SmaaParams, SmaaPass } from './smaa.ts';
 import { isTimingMode } from '../../mol-util/debug.ts';
