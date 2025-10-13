@@ -28,8 +28,8 @@ namespace Mask {
     class EmptyMask implements Mask {
         '@type': 'mask';
         size = 0;
-        has(i: number) { return false; }
-        forEach<Ctx>(f: (i: number, ctx?: Ctx) => void, ctx: Ctx) { return ctx; }
+        has(i: number): boolean { return false; }
+        forEach<Ctx>(f: (i: number, ctx?: Ctx) => void, ctx: Ctx): Ctx { return ctx; }
         constructor() { }
     }
 
@@ -102,14 +102,14 @@ namespace Mask {
         }
     }
 
-    export function always(size: number) { return new AllMask(size); }
+    export function always(size: number): Mask { return new AllMask(size); }
     export const never = new EmptyMask();
 
     export function ofSet(set: Set<number>): Mask {
         return new SetMask(set);
     }
 
-    export function singleton(i: number) {
+    export function singleton(i: number): Mask {
         return new SingletonMask(i);
     }
 
@@ -142,14 +142,14 @@ namespace Mask {
         return new BitMask(mask, size);
     }
 
-    export function hasAny(mask: Mask, xs: number[]) {
+    export function hasAny(mask: Mask, xs: number[]): boolean {
         for (const x of xs) {
             if (mask.has(x)) return true;
         }
         return false;
     }
 
-    export function complement(mask: Mask, against: Mask) {
+    export function complement(mask: Mask, against: Mask): Mask {
         let count = 0;
         let max = 0;
         against.forEach(i => {

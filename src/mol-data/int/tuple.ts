@@ -37,7 +37,7 @@ namespace IntTuple {
     }
 
     /** snd - fst */
-    export function diff(t: IntTuple) {
+    export function diff(t: IntTuple): number {
         _float64[0] = t as any;
         return _int32[1] - _int32[0];
     }
@@ -53,13 +53,13 @@ namespace IntTuple {
     }
 
     /** Normal equality does not work, because NaN === NaN ~> false */
-    export function areEqual(a: IntTuple, b: IntTuple) {
+    export function areEqual(a: IntTuple, b: IntTuple): boolean {
         _float64[0] = a as any;
         _float64_1[0] = b as any;
         return _int32[0] === _int32_1[0] && _int32[1] === _int32_1[1];
     }
 
-    export function compare(a: IntTuple, b: IntTuple) {
+    export function compare(a: IntTuple, b: IntTuple): number {
         _float64[0] = a as any;
         _float64_1[0] = b as any;
         const x = _int32[0] - _int32_1[0];
@@ -67,7 +67,7 @@ namespace IntTuple {
         return _int32[1] - _int32_1[1];
     }
 
-    export function compareInArray(xs: ArrayLike<IntTuple>, i: number, j: number) {
+    export function compareInArray(xs: ArrayLike<IntTuple>, i: number, j: number): number {
         _float64[0] = xs[i] as any;
         _float64_1[0] = xs[j] as any;
         const x = _int32[0] - _int32_1[0];
@@ -75,12 +75,12 @@ namespace IntTuple {
         return _int32[1] - _int32_1[1];
     }
 
-    export function hashCode(t: IntTuple) {
+    export function hashCode(t: IntTuple): number {
         _float64[0] = t as any;
         return hash2(_int32[0], _int32[1]);
     }
 
-    export function toString(t: IntTuple) {
+    export function toString(t: IntTuple): string {
         _float64[0] = t as any;
         return `(${_int32[0]}, ${_int32[1]})`;
     }

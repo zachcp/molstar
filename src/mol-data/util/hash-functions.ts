@@ -7,14 +7,14 @@
  */
 
 // from http://burtleburtle.net/bob/hash/integer.html
-export function hash1(i: number) {
+export function hash1(i: number): number {
     let a = i ^ (i >> 4);
     a = (a ^ 0xdeadbeef) + (a << 5);
     a = a ^ (a >> 11);
     return a;
 }
 
-export function hash2(i: number, j: number) {
+export function hash2(i: number, j: number): number {
     let a = 23;
     a = (31 * a + i) | 0;
     a = (31 * a + j) | 0;
@@ -24,7 +24,7 @@ export function hash2(i: number, j: number) {
     return a;
 }
 
-export function hash3(i: number, j: number, k: number) {
+export function hash3(i: number, j: number, k: number): number {
     let a = 23;
     a = (31 * a + i) | 0;
     a = (31 * a + j) | 0;
@@ -35,7 +35,7 @@ export function hash3(i: number, j: number, k: number) {
     return a;
 }
 
-export function hash4(i: number, j: number, k: number, l: number) {
+export function hash4(i: number, j: number, k: number, l: number): number {
     let a = 23;
     a = (31 * a + i) | 0;
     a = (31 * a + j) | 0;
@@ -47,7 +47,7 @@ export function hash4(i: number, j: number, k: number, l: number) {
     return a;
 }
 
-export function hashString(s: string) {
+export function hashString(s: string): number {
     let h = 0;
     for (let i = 0, l = s.length; i < l; i++) {
         h = (h << 5) - h + s.charCodeAt(i) | 0;
@@ -59,7 +59,7 @@ export function hashString(s: string) {
  * A unique number for each pair of integers
  * Biggest representable pair is (67108863, 67108863) (limit imposed by Number.MAX_SAFE_INTEGER)
  */
-export function cantorPairing(a: number, b: number) {
+export function cantorPairing(a: number, b: number): number {
     return (a + b) * (a + b + 1) / 2 + b;
 }
 
@@ -67,11 +67,11 @@ export function cantorPairing(a: number, b: number) {
  * A unique number for each sorted pair of integers
  * Biggest representable pair is (67108863, 67108863) (limit imposed by Number.MAX_SAFE_INTEGER)
  */
-export function sortedCantorPairing(a: number, b: number) {
+export function sortedCantorPairing(a: number, b: number): number {
     return a < b ? cantorPairing(a, b) : cantorPairing(b, a);
 }
 
-export function invertCantorPairing(out: [number, number], z: number) {
+export function invertCantorPairing(out: [number, number], z: number): [number, number] {
     const w = Math.floor((Math.sqrt(8 * z + 1) - 1) / 2);
     const t = (w * w + w) / 2;
     const y = z - t;
