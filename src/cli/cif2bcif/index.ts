@@ -7,9 +7,9 @@
  */
 
 import * as argparse from 'argparse';
-import * as util from 'util';
-import * as fs from 'fs';
-import * as zlib from 'zlib';
+import * as util from 'node:util';
+import * as fs from 'node:fs';
+import * as zlib from 'node:zlib';
 import { convert } from './converter.ts';
 import type { Buffer } from "node:buffer";
 

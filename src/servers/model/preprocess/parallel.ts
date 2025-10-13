@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as path from 'path';
-import cluster from 'cluster';
+import * as path from 'node:path';
+import cluster from 'node:cluster';
 import { now } from '../../../mol-util/now.ts';
 import { PerformanceMonitor } from '../../../mol-util/performance-monitor.ts';
 import { preprocessFile } from './preprocess.ts';

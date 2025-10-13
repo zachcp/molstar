@@ -6,7 +6,7 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import fetch from 'node-fetch';
 import { FileHandle } from '../../mol-io/common/file-handle.ts';
 import { SimpleBuffer } from '../../mol-io/common/simple-buffer.ts';

@@ -8,7 +8,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import { configureLocal } from './config.ts';
 import * as LocalApi from './server/local-api.ts';
 import process from "node:process";

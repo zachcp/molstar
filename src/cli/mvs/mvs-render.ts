@@ -16,10 +16,10 @@
  */
 
 import { ArgumentParser } from 'argparse';
-import fs from 'fs';
+import fs from 'node:fs';
 import gl from 'gl';
 import jpegjs from 'jpeg-js';
-import path from 'path';
+import path from 'node:path';
 import pngjs from 'pngjs';
 
 import { Canvas3DParams } from '../../mol-canvas3d/canvas3d.ts';

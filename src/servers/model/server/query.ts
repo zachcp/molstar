@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as path from 'path';
+import * as path from 'node:path';
 import { Column } from '../../../mol-data/db.ts';
 import { CifWriter } from '../../../mol-io/writer/cif.ts';
 import { Structure, StructureQuery, StructureSelection, type Model } from '../../../mol-model/structure.ts';

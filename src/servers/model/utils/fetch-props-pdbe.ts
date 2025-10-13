@@ -5,8 +5,8 @@
  */
 
 import fetch from 'node-fetch';
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import * as argparse from 'argparse';
 import { makeDir } from '../../../mol-util/make-dir.ts';
 import { now } from '../../../mol-util/now.ts';

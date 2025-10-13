@@ -6,8 +6,8 @@
  */
 
 import * as argparse from 'argparse';
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import fetch from 'node-fetch';
 
 import { parseCsv } from '../../mol-io/reader/csv/parser.ts';

@@ -8,8 +8,8 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import type { BufferRet as JpegBufferRet } from 'jpeg-js'; // Only import type here, the actual import must be provided by the caller
 import type { PNG } from 'pngjs'; // Only import type here, the actual import must be provided by the caller
 

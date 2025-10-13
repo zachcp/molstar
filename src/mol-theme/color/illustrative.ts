@@ -8,7 +8,7 @@ import type { ElementSymbol } from '../../mol-model/structure/model/types.ts';
 import { Color } from '../../mol-util/color/index.ts';
 import { StructureElement, Unit, Bond } from '../../mol-model/structure.ts';
 import type { Location } from '../../mol-model/location.ts';
-import type { ColorTheme } from '../color/index.ts';
+import type { ColorTheme } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../theme.ts';
 import { ChainIdColorTheme, ChainIdColorThemeParams } from './chain-id.ts';

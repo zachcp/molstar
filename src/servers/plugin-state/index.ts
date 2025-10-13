@@ -7,8 +7,8 @@
 import express from 'express';
 import compression from 'compression';
 import cors from 'cors';
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { swaggerUiIndexHandler, swaggerUiAssetsHandler } from '../common/swagger-ui.ts';
 import { makeDir } from '../../mol-util/make-dir.ts';
 import { getConfig } from './config.ts';

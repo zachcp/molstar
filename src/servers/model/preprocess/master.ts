@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import * as argparse from 'argparse';
 import { runMaster, type PreprocessEntry } from './parallel.ts';
 import type { ModelPropertyProviderConfig } from '../property-provider.ts';

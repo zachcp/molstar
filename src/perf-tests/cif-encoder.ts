@@ -5,7 +5,7 @@
  */
 
 import { CifWriter } from '../mol-io/writer/cif.ts';
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import { Buffer } from "node:buffer";
 
 const category1fields: CifWriter.Field[] = [

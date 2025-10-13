@@ -10,7 +10,7 @@
  */
 
 import { ArgumentParser } from 'argparse';
-import fs from 'fs';
+import fs from 'node:fs';
 
 import { setFSModule } from '../../mol-util/data-source.ts';
 import { MVSData } from '../../extensions/mvs/mvs-data.ts';

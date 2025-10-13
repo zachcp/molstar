@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as fs from 'fs';
-import * as util from 'util';
+import * as fs from 'node:fs';
+import * as util from 'node:util';
 import type { AttachModelProperty } from '../../property-provider.ts';
 import { CIF } from '../../../../mol-io/reader/cif.ts';
 import { getParam } from '../../../common/util.ts';

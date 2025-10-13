@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import { parseXtc } from '../mol-io/reader/xtc/parser.ts';
 
 console.log('reading');

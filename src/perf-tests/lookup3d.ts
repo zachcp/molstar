@@ -1,5 +1,5 @@
-import * as util from 'util';
-import * as fs from 'fs';
+import * as util from 'node:util';
+import * as fs from 'node:fs';
 import { CIF } from '../mol-io/reader/cif.ts';
 
 import { Structure } from '../mol-model/structure.ts';

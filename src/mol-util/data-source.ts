@@ -290,7 +290,7 @@ function ajaxGetInternal<T extends DataType>(title: string | undefined, url: str
 }
 
 // NOTE: a workaround for using this in Node.js
-let _fs: (typeof import('fs')) | undefined = undefined;
+let _fs: (typeof import('node:fs')) | undefined = undefined;
 function getFS() {
     if (!_fs) {
         throw new Error('When running in Node.js and reading from files, call mol-util/data-source\'s setFSModule function first.');
@@ -298,7 +298,7 @@ function getFS() {
     return _fs;
 }
 
-export function setFSModule(fs: typeof import('fs')) {
+export function setFSModule(fs: typeof import('node:fs')) {
     _fs = fs;
 }
 

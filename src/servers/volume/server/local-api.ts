@@ -10,8 +10,8 @@ import * as Api from './api.ts';
 import type * as Data from './query/data-model.ts';
 import * as Coordinate from './algebra/coordinate.ts';
 
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import process from "node:process";
 import { Buffer } from "node:buffer";
 

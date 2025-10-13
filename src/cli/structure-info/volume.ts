@@ -5,9 +5,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import * as argparse from 'argparse';
-import * as util from 'util';
+import * as util from 'node:util';
 
 import { Volume } from '../../mol-model/volume.ts';
 import { downloadCif } from './helpers.ts';

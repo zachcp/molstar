@@ -1,6 +1,6 @@
 // import { resolveJob } from './server/query';
-// import * as fs from 'fs'
-// import * as path from 'path'
+// import * as fs from 'node:fs'
+// import * as path from 'node:path'
 // import { StructureCache } from './server/structure-wrapper';
 // import { createJob } from './server/jobs';
 

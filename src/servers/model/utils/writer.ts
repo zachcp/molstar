@@ -5,11 +5,11 @@
  */
 
 import type * as express from 'express';
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { makeDir } from '../../../mol-util/make-dir.ts';
 import { encodeTarHeader, END_OF_TAR } from './tar.ts';
-import * as zlib from 'zlib';
+import * as zlib from 'node:zlib';
 import { Buffer } from "node:buffer";
 
 export interface ResultWriter {

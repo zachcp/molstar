@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as util from 'util';
-import * as path from 'path';
-import * as fs from 'fs';
-import * as zlib from 'zlib';
+import * as util from 'node:util';
+import * as path from 'node:path';
+import * as fs from 'node:fs';
+import * as zlib from 'node:zlib';
 import fetch from 'node-fetch';
 require('util.promisify').shim();
 const readFile = util.promisify(fs.readFile);

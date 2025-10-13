@@ -5,7 +5,7 @@ import { readCifFile, getModelsAndStructure } from '../cli/structure-info/model.
 import { CustomPropSymbol } from '../mol-script/language/symbol.ts';
 import { Type } from '../mol-script/language/type.ts';
 import { parseMolScript } from '../mol-script/language/parser.ts';
-import * as util from 'util';
+import * as util from 'node:util';
 import { transpileMolScript } from '../mol-script/script/mol-script/symbols.ts';
 import { formatMolScript } from '../mol-script/language/expression-formatter.ts';
 import { StructureQualityReport, StructureQualityReportProvider } from '../extensions/pdbe/structure-quality-report/prop.ts';

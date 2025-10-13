@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ColorTheme } from '../color/index.ts';
+import { ColorTheme } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../theme.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';

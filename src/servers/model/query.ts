@@ -5,7 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import { VERSION } from './version.ts';
 import { type LocalInput, runLocal } from './server/api-local.ts';
 import process from "node:process";

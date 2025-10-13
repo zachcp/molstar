@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import * as express from 'express';
 import { ModelServerConfig as Config, ModelServerConfig, mapSourceAndIdToFilename } from '../config.ts';
 import { ConsoleLogger } from '../../../mol-util/console-logger.ts';

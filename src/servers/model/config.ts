@@ -8,7 +8,7 @@
 import * as argparse from 'argparse';
 import { ObjectKeys } from '../../mol-util/type-helpers.ts';
 import { VERSION } from './version.ts';
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import type { ModelPropertyProviderConfig } from './property-provider.ts';
 import process from "node:process";
 

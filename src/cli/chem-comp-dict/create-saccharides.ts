@@ -6,9 +6,9 @@
  */
 
 import * as argparse from 'argparse';
-import * as path from 'path';
-import util from 'util';
-import fs from 'fs';
+import * as path from 'node:path';
+import util from 'node:util';
+import fs from 'node:fs';
 require('util.promisify').shim();
 const writeFile = util.promisify(fs.writeFile);
 

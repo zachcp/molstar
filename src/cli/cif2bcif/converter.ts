@@ -7,9 +7,9 @@
 
 import { CIF, type CifCategory, getCifFieldType, type CifField, type CifFile } from '../../mol-io/reader/cif.ts';
 import { CifWriter, type EncodingStrategyHint } from '../../mol-io/writer/cif.ts';
-import * as util from 'util';
-import * as fs from 'fs';
-import * as zlib from 'zlib';
+import * as util from 'node:util';
+import * as fs from 'node:fs';
+import * as zlib from 'node:zlib';
 import { Progress, Task, type RuntimeContext } from '../../mol-task/index.ts';
 import { classifyFloatArray, classifyIntArray } from '../../mol-io/common/binary-cif.ts';
 import type { BinaryEncodingProvider } from '../../mol-io/writer/cif/encoder/binary.ts';

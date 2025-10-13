@@ -7,7 +7,7 @@
 import { StructureElement, Bond, type ElementIndex, Unit, Model } from '../../mol-model/structure.ts';
 import { SaccharideColors, MonosaccharidesColorTable } from '../../mol-model/structure/structure/carbohydrates/constants.ts';
 import type { Location } from '../../mol-model/location.ts';
-import type { ColorTheme, LocationColor } from '../color/index.ts';
+import type { ColorTheme, LocationColor } from '../color.ts';
 import { Color } from '../../mol-util/color/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../theme.ts';

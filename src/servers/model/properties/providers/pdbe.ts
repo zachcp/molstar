@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import type { Model } from '../../../../mol-model/structure.ts';
 import { StructureQualityReportProvider, StructureQualityReport } from '../../../../extensions/pdbe/structure-quality-report/prop.ts';
 import { fetchRetry } from '../../utils/fetch-retry.ts';

@@ -6,8 +6,8 @@
 
 import * as B from 'benchmark';
 
-import * as util from 'util';
-import * as fs from 'fs';
+import * as util from 'node:util';
+import * as fs from 'node:fs';
 import fetch from 'node-fetch';
 import { CIF } from '../mol-io/reader/cif.ts';
 
