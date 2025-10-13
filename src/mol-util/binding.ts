@@ -15,7 +15,7 @@ interface Binding {
     description: string
 }
 
-function Binding(triggers: Binding.Trigger[], action = '', description = '') {
+function Binding(triggers: Binding.Trigger[], action = '', description = ''): Binding {
     return Binding.create(triggers, action, description);
 }
 

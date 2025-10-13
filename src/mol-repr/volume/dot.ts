@@ -279,7 +279,7 @@ export function createVolumePoint(ctx: VisualContext, volume: Volume, key: numbe
 
 //
 
-function getLoci(volume: Volume, props: VolumeDotProps) {
+function getLoci(volume: Volume, props: VolumeDotProps): Volume.Isosurface.Loci {
     const instances = Interval.ofLength(volume.instances.length as Volume.InstanceIndex);
     return Volume.Isosurface.Loci(volume, props.isoValue, instances);
 }

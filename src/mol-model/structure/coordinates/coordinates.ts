@@ -52,7 +52,7 @@ interface Time {
     unit: Time.Unit
 }
 
-function Time(value: number, unit: Time.Unit) {
+function Time(value: number, unit: Time.Unit): Time {
     return { value, unit };
 }
 

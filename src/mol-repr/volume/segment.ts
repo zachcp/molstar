@@ -69,7 +69,7 @@ export function SegmentVisual(materialId: number, volume: Volume, key: number, p
     return SegmentMeshVisual(materialId);
 }
 
-function getLoci(volume: Volume, props: VolumeSegmentProps) {
+function getLoci(volume: Volume, props: VolumeSegmentProps): Volume.Segment.Loci {
     const segments = SortedArray.ofUnsortedArray<Volume.SegmentIndex>(props.segments);
     const instances = Interval.ofLength(volume.instances.length as Volume.InstanceIndex);
     return Volume.Segment.Loci(volume, [{ segments, instances }]);

@@ -149,7 +149,7 @@ const ContactProviders = {
 };
 type ContactProviders = typeof ContactProviders
 
-function getProvidersParams(defaultOn: string[] = []) {
+function getProvidersParams(defaultOn: string[] = []): { [k in keyof ContactProviders]: PD.Mapped<PD.NamedParamUnion<{ on: PD.Group<ContactProviders[k]["params"]>; off: PD.Group<{}> }>> } {
     const params: { [k in keyof ContactProviders]: PD.Mapped<PD.NamedParamUnion<{
         on: PD.Group<ContactProviders[k]['params']>
         off: PD.Group<{}>

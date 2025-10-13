@@ -241,7 +241,36 @@ type WebGLShaderPrecisionFormats = ReturnType<typeof getShaderPrecisionFormats>;
 
 //
 
-function createStats() {
+export type WebGLStats = {
+  resourceCounts: {
+    attribute: number;
+    elements: number;
+    pixelPack: number;
+    framebuffer: number;
+    program: number;
+    renderbuffer: number;
+    shader: number;
+    texture: number;
+    cubeTexture: number;
+    vertexArray: number;
+  };
+  drawCount: number;
+  instanceCount: number;
+  instancedDrawCount: number;
+  calls: {
+    drawInstanced: number;
+    drawInstancedBase: number;
+    multiDrawInstancedBase: number;
+    counts: number;
+  };
+  culled: {
+    lod: number;
+    frustum: number;
+    occlusion: number;
+  };
+};
+
+function createStats(): WebGLStats {
   const stats = {
     resourceCounts: {
       attribute: 0,
@@ -275,8 +304,6 @@ function createStats() {
   };
   return stats;
 }
-
-export type WebGLStats = ReturnType<typeof createStats>;
 
 //
 

@@ -26,7 +26,7 @@ interface CustomPropertyDescriptor<ExportCtx = CifExportContext, Symbols extends
     symbols?: Symbols
 }
 
-function CustomPropertyDescriptor<Ctx, Desc extends CustomPropertyDescriptor<Ctx>>(desc: Desc) {
+function CustomPropertyDescriptor<Ctx, Desc extends CustomPropertyDescriptor<Ctx>>(desc: Desc): Desc {
     return desc;
 }
 

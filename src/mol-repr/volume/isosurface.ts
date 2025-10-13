@@ -66,7 +66,7 @@ export function IsosurfaceVisual(materialId: number, volume: Volume, key: number
     return IsosurfaceMeshVisual(materialId);
 }
 
-function getLoci(volume: Volume, props: VolumeIsosurfaceProps) {
+function getLoci(volume: Volume, props: VolumeIsosurfaceProps): Volume.Isosurface.Loci {
     const instances = Interval.ofLength(volume.instances.length as Volume.InstanceIndex);
     return Volume.Isosurface.Loci(volume, props.isoValue, instances);
 }

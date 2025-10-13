@@ -83,7 +83,7 @@ export class SsaoPass {
         return props.enabled && props.occlusion.name !== 'off';
     }
 
-    static isTransparentEnabled(scene: Scene, props: SsaoProps) {
+    static isTransparentEnabled(scene: Scene, props: SsaoProps): boolean {
         return scene.opacityAverage < 1 && scene.transparencyMin < props.transparentThreshold;
     }
 

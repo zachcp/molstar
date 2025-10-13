@@ -20,7 +20,7 @@ export class PluginConfigItem<T = any> {
     constructor(public key: string, public defaultValue?: T) { }
 }
 
-function item<T>(key: string, defaultValue?: T) { return new PluginConfigItem(key, defaultValue); }
+function item<T>(key: string, defaultValue?: T): PluginConfigItem<T> { return new PluginConfigItem(key, defaultValue); }
 
 export const PluginConfig = {
     item,
