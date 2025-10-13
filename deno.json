@@ -29,6 +29,8 @@
     "react-dom": "npm:react-dom@^18.3.1",
     "react-markdown": "npm:react-markdown@^10.1.0",
     "react/jsx-runtime": "npm:react@^18.3.1/jsx-runtime",
+    "@types/react": "npm:@types/react@^18.3.18",
+    "@types/react-dom": "npm:@types/react-dom@^18.3.5",
     "remark-gfm": "npm:remark-gfm@^4.0.1",
     "rxjs": "npm:rxjs@^7.8.2",
     "swagger-ui-dist": "npm:swagger-ui-dist@^5.29.0",
