@@ -738,7 +738,7 @@ export namespace Loci {
     loci: Loci,
     positions: NumberArray,
     offset = 0,
-  ) {
+  ): NumberArray {
     let m = offset;
     for (const e of loci.elements) {
       const { indices } = e;
@@ -784,7 +784,7 @@ export namespace Loci {
         element;
   }
 
-  export function toExpression(loci: Loci) {
+  export function toExpression(loci: Loci): Expression {
     if (Loci.isEmpty(loci)) return MS.struct.generator.empty();
 
     const models = loci.structure.models;

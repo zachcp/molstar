@@ -1165,11 +1165,11 @@ namespace Structure {
     constructor(private props: Props = {}) {}
   }
 
-  export function Builder(props: Props = {}) {
+  export function Builder(props: Props = {}): StructureBuilder {
     return new StructureBuilder(props);
   }
 
-  export function hashCode(s: Structure) {
+  export function hashCode(s: Structure): number {
     return s.hashCode;
   }
 

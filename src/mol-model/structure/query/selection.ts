@@ -220,7 +220,7 @@ namespace StructureSelection {
   export function withInputStructure(
     selection: StructureSelection,
     structure: Structure,
-  ) {
+  ): StructureSelection {
     if (isSingleton(selection))
       return Singletons(structure, selection.structure);
     return Sequence(structure, selection.structures);
