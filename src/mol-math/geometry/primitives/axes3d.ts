@@ -8,7 +8,7 @@ import { Vec3, type Mat4, Mat3 } from '../../linear-algebra.ts';
 
 interface Axes3D { origin: Vec3, dirA: Vec3, dirB: Vec3, dirC: Vec3 }
 
-function Axes3D() {
+function Axes3D(): Axes3D {
     return Axes3D.empty();
 }
 
@@ -40,7 +40,7 @@ namespace Axes3D {
         return tmpSizeV[0] * tmpSizeV[1] * tmpSizeV[2];
     }
 
-    export function normalize(out: Axes3D, a: Axes3D) {
+    export function normalize(out: Axes3D, a: Axes3D): Axes3D {
         Vec3.copy(out.origin, a.origin);
         Vec3.normalize(out.dirA, a.dirA);
         Vec3.normalize(out.dirB, a.dirB);

@@ -12,7 +12,7 @@ import type { Sphere3D } from './sphere3d.ts';
 
 interface Ray3D { origin: Vec3, direction: Vec3 }
 
-function Ray3D() {
+function Ray3D(): Ray3D {
     return Ray3D.create(Vec3.create(0, 0, 0), Vec3.create(1, 0, 0));
 }
 

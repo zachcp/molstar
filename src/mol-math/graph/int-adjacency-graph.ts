@@ -49,7 +49,7 @@ export interface IntAdjacencyGraph<VertexIndex extends number, EdgeProps extends
 export namespace IntAdjacencyGraph {
     export type EdgePropsBase = { [name: string]: ArrayLike<any> }
 
-    export function areEqual<VertexIndex extends number, EdgeProps extends IntAdjacencyGraph.EdgePropsBase>(a: IntAdjacencyGraph<VertexIndex, EdgeProps>, b: IntAdjacencyGraph<VertexIndex, EdgeProps>) {
+    export function areEqual<VertexIndex extends number, EdgeProps extends IntAdjacencyGraph.EdgePropsBase>(a: IntAdjacencyGraph<VertexIndex, EdgeProps>, b: IntAdjacencyGraph<VertexIndex, EdgeProps>): boolean {
         if (a === b) return true;
 
         if (a.vertexCount !== b.vertexCount || a.edgeCount !== b.edgeCount) return false;
