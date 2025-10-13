@@ -361,12 +361,18 @@ export namespace VolumeStreaming {
     private ref: string = "";
     public infoMap: Map<string, VolumeServerInfo.EntryData>;
     private updateQueue: SingleAsyncQueue;
-    private cameraTargetObservable = this.plugin.canvas3d!.didDraw!.pipe(
-      throttleTime(500, undefined, { leading: true, trailing: true }),
-      map(() => this.plugin.canvas3d?.camera.getSnapshot()),
-      distinctUntilChanged((a, b) => this.isCameraTargetSame(a, b)),
-      filter((a) => a !== undefined),
-    ) as Observable<Camera.Snapshot>;
+    private _cameraTargetObservable?: Observable<Camera.Snapshot>;
+    private get cameraTargetObservable(): Observable<Camera.Snapshot> {
+      if (!this._cameraTargetObservable) {
+        this._cameraTargetObservable = this.plugin.canvas3d!.didDraw!.pipe(
+          throttleTime(500, undefined, { leading: true, trailing: true }),
+          map(() => this.plugin.canvas3d?.camera.getSnapshot()),
+          distinctUntilChanged((a, b) => this.isCameraTargetSame(a, b)),
+          filter((a) => a !== undefined),
+        ) as Observable<Camera.Snapshot>;
+      }
+      return this._cameraTargetObservable;
+    }
     private cameraTargetSubscription?: PluginCommand.Subscription = undefined;
 
     channels: Channels = {};
