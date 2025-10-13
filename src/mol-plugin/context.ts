@@ -170,7 +170,7 @@ export class PluginContext {
     this.initializedPromiseCallbacks = [res, rej];
   });
 
-  get isInitialized() {
+  get isInitialized(): boolean {
     return this._isInitialized;
   }
 
@@ -507,7 +507,7 @@ export class PluginContext {
   readonly fetch = ajaxGet;
 
   /** return true is animating or updating */
-  get isBusy() {
+  get isBusy(): boolean {
     return (
       this.behaviors.state.isAnimating.value ||
       this.behaviors.state.isUpdating.value

@@ -119,7 +119,7 @@ export class CameraHelper {
         });
     }
 
-    get isEnabled() {
+    get isEnabled(): boolean {
         return this.props.axes.name === 'on';
     }
 

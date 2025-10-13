@@ -93,7 +93,7 @@ export class StructureUniqueSubsetBuilder {
         return Structure.create(newUnits, { parent: this.parent });
     }
 
-    get isEmpty() {
+    get isEmpty(): boolean {
         return this.elementCount === 0;
     }
 

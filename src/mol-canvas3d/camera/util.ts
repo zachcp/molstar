@@ -48,7 +48,7 @@ namespace Viewport {
         return v4;
     }
 
-    export function equals(a: Viewport, b: Viewport) {
+    export function equals(a: Viewport, b: Viewport): boolean {
         return a.x === b.x && a.y === b.y && a.width === b.width && a.height === b.height;
     }
 }

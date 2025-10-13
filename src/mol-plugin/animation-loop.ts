@@ -24,7 +24,7 @@ export class PluginAnimationLoop {
     private currentFrame: number | undefined = undefined;
     private _isAnimating = false;
 
-    get isAnimating() {
+    get isAnimating(): boolean {
         return this._isAnimating;
     }
 

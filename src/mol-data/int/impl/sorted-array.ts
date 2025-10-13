@@ -55,7 +55,7 @@ export function indexOfInRange(xs: Nums, v: number, s: number, e: number) {
     const l = xs.length;
     return l === 0 || e <= s ? -1 : xs[s] <= v && v <= xs[e - 1] ? binarySearchRange(xs, v, s, e) : -1;
 }
-export function has(xs: Nums, v: number) { return indexOf(xs, v) >= 0; }
+export function has(xs: Nums, v: number): boolean { return indexOf(xs, v) >= 0; }
 
 export function getAt(xs: Nums, i: number) { return xs[i]; }
 

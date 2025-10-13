@@ -15,7 +15,7 @@ export class CommitQueue {
     private addList = LinkedList<GraphicsRenderObject>();
     private addMap = new Map<GraphicsRenderObject, N>();
 
-    get isEmpty() {
+    get isEmpty(): boolean {
         return this.removeList.count === 0 && this.addList.count === 0;
     }
 

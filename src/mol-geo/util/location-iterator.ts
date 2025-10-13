@@ -61,7 +61,7 @@ export function LocationIterator(groupCount: number, instanceCount: number, stri
 
     return {
         get hasNext() { return hasNext; },
-        get isNextNewInstance() { return isNextNewInstance; },
+        get isNextNewInstance(): boolean { return isNextNewInstance; },
         groupCount,
         instanceCount,
         count: groupCount * instanceCount,
@@ -117,7 +117,7 @@ export function LocationIterator(groupCount: number, instanceCount: number, stri
 
 export const EmptyLocationIterator: LocationIterator = {
     get hasNext() { return false; },
-    get isNextNewInstance() { return false; },
+    get isNextNewInstance(): boolean { return false; },
     groupCount: 0,
     instanceCount: 0,
     count: 0,

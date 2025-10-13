@@ -57,7 +57,7 @@ export class PointerHelper {
     if (this.props.enabled !== "on") this.props.enabled = "on";
   }
 
-  get isEnabled() {
+  get isEnabled(): boolean {
     return this.props.enabled === "on";
   }
 

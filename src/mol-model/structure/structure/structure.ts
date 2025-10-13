@@ -156,11 +156,11 @@ class Structure {
      * True if any model the structure is based on is coarse grained.
      * @see Model.isCoarseGrained
      */
-    get isCoarseGrained() {
+    get isCoarseGrained(): boolean {
         return this.models.some(m => Model.isCoarseGrained(m));
     }
 
-    get isEmpty() {
+    get isEmpty(): boolean {
         return this.units.length === 0;
     }
 
@@ -308,7 +308,7 @@ class Structure {
     }
 
     /** Contains only atomic units */
-    get isAtomic() {
+    get isAtomic(): boolean {
         for (const u of this.units) if (!Unit.isAtomic(u)) return false;
         return true;
     }
@@ -320,7 +320,7 @@ class Structure {
     }
 
     /** Contains only coarse units */
-    get isCoarse() {
+    get isCoarse(): boolean {
         for (const u of this.units) if (!Unit.isCoarse(u)) return false;
         return true;
     }
@@ -945,7 +945,7 @@ namespace Structure {
             return create(this.units, this.props);
         }
 
-        get isEmpty() {
+        get isEmpty(): boolean {
             return this.units.length === 0;
         }
 

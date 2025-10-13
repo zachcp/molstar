@@ -115,7 +115,7 @@ export class StructureSubsetBuilder {
         location.element = this.unitMap.get(id)[0];
     }
 
-    get isEmpty() {
+    get isEmpty(): boolean {
         return this.elementCount === 0;
     }
 

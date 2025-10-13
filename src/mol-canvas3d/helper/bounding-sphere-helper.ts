@@ -114,7 +114,7 @@ export class BoundingSphereHelper {
         this.scene.clear();
     }
 
-    get isEnabled() {
+    get isEnabled(): boolean {
         return (
             this._props.sceneBoundingSpheres || this._props.visibleSceneBoundingSpheres ||
             this._props.objectBoundingSpheres || this._props.instanceBoundingSpheres

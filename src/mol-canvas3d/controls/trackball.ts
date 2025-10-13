@@ -894,8 +894,8 @@ namespace TrackballControls {
 
         return {
             viewport,
-            get isAnimating() { return p.animate.name !== 'off'; },
-            get isMoving() {
+            get isAnimating(): boolean { return p.animate.name !== 'off'; },
+            get isMoving(): boolean {
                 return (
                     keyState.moveForward === 1 || keyState.moveBack === 1 ||
                     keyState.moveLeft === 1 || keyState.moveRight === 1 ||

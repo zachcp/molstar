@@ -461,7 +461,7 @@ export function createContext(
     namedFramebuffers: Object.create(null),
     namedTextures: Object.create(null),
 
-    get isContextLost() {
+    get isContextLost(): boolean {
       return isContextLost || gl.isContextLost();
     },
     contextRestored,

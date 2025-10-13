@@ -87,7 +87,7 @@ export class HandleHelper {
         });
     }
 
-    get isEnabled() {
+    get isEnabled(): boolean {
         return this.props.handle.name === 'on';
     }
 

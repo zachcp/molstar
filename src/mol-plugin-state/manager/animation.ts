@@ -28,12 +28,12 @@ class PluginAnimationManager extends StatefulPluginComponent<PluginAnimationMana
         applied: this.ev(),
     };
 
-    get isEmpty() { return this._animations.length === 0; }
+    get isEmpty(): boolean { return this._animations.length === 0; }
     get current() { return this._current!; }
 
     get animations() { return this._animations; }
 
-    get isAnimatingStateTransition() {
+    get isAnimatingStateTransition(): boolean {
         return this._current.anim.name === 'built-in.animate-state-snapshot-transition';
     }
 
@@ -159,7 +159,7 @@ class PluginAnimationManager extends StatefulPluginComponent<PluginAnimationMana
         return this.stop();
     }
 
-    get isAnimating() {
+    get isAnimating(): boolean {
         return this.state.animationState === 'playing';
     }
 

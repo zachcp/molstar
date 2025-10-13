@@ -245,7 +245,7 @@ export class ViewportScreenshotHelper extends PluginComponent {
         }
     }
 
-    get isFullFrame() {
+    get isFullFrame(): boolean {
         const crop = this.relativeCrop;
         return equalEps(crop.x, 0, 1e-5) && equalEps(crop.y, 0, 1e-5) && equalEps(crop.width, 1, 1e-5) && equalEps(crop.height, 1, 1e-5);
     }
