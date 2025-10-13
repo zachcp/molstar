@@ -113,7 +113,7 @@ export class MultiSamplePass {
         }
     }
 
-    render(sampleIndex: number, ctx: RenderContext, props: Props, toDrawingBuffer: boolean, forceOn: boolean) {
+    render(sampleIndex: number, ctx: RenderContext, props: Props, toDrawingBuffer: boolean, forceOn: boolean): number {
         if (props.multiSample.mode === 'temporal' && !forceOn) {
             return this.renderTemporalMultiSample(sampleIndex, ctx, props, toDrawingBuffer);
         } else {

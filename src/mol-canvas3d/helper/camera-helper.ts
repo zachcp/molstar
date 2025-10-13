@@ -123,7 +123,7 @@ export class CameraHelper {
         return this.props.axes.name === 'on';
     }
 
-    getLoci(pickingId: PickingId) {
+    getLoci(pickingId: PickingId): EmptyLoci | CameraAxesLoci {
         const { objectId, groupId, instanceId } = pickingId;
         if ((
             (!this.meshRenderObject || objectId !== this.meshRenderObject.id) &&

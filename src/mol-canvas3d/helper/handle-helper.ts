@@ -56,7 +56,7 @@ export class HandleHelper {
     private pixelRatio = 1;
 
     private _transform = Mat4();
-    getBoundingSphere(out: Sphere3D, instanceId: number) {
+    getBoundingSphere(out: Sphere3D, instanceId: number): Sphere3D {
         if (this.renderObject) {
             Sphere3D.copy(out, this.renderObject.values.invariantBoundingSphere.ref.value);
             Mat4.fromArray(this._transform, this.renderObject.values.aTransform.ref.value, instanceId * 16);
@@ -109,7 +109,7 @@ export class HandleHelper {
         this.scene.update([this.renderObject], true);
     }
 
-    getLoci(pickingId: PickingId) {
+    getLoci(pickingId: PickingId): EmptyLoci | HandleLoci {
         const { objectId, groupId, instanceId } = pickingId;
         if (!this.renderObject || objectId !== this.renderObject.id) return EmptyLoci;
         return HandleLoci(this, groupId, instanceId);
