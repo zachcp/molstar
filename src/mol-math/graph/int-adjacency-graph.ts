@@ -179,7 +179,7 @@ export namespace IntAdjacencyGraph {
     createGraph<EdgeProps extends IntAdjacencyGraph.EdgePropsBase, Props>(
       edgeProps: EdgeProps,
       props?: Props,
-    ) {
+    ): IntAdjacencyGraph<VertexIndex, EdgeProps, Props> {
       return create<VertexIndex, EdgeProps, Props>(
         this.offsets,
         this.a,
@@ -288,7 +288,7 @@ export namespace IntAdjacencyGraph {
     createGraph<EdgeProps extends IntAdjacencyGraph.EdgePropsBase, Props>(
       edgeProps: EdgeProps,
       props?: Props,
-    ) {
+    ): IntAdjacencyGraph<VertexIndex, EdgeProps, Props> {
       return create<VertexIndex, EdgeProps, Props>(
         this.offsets,
         this.a,

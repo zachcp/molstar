@@ -254,7 +254,7 @@ namespace Table {
     return ret;
   }
 
-  export function areEqual<T extends Table<any>>(a: T, b: T) {
+  export function areEqual<T extends Table<any>>(a: T, b: T): boolean {
     if (a._rowCount !== b._rowCount) return false;
     if (a._columns.length !== b._columns.length) return false;
     for (const c of a._columns) {

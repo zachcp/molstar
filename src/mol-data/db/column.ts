@@ -213,7 +213,7 @@ namespace Column {
         return mapToArrayImpl<T, S>(column, f, ctor || Array);
     }
 
-    export function areEqual<T>(a: Column<T>, b: Column<T>) {
+    export function areEqual<T>(a: Column<T>, b: Column<T>): boolean {
         return areColumnsEqual(a, b);
     }
 
