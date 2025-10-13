@@ -57,8 +57,8 @@ namespace CustomProperty {
 
     /** Get params for all applicable property providers */
     getParams(data?: Data): {
-      autoAttach: PD.Definition<string[]>;
-      properties: PD.Definition<PD.Params>;
+      autoAttach: PD.MultiSelect<string>;
+      properties: PD.Group<PD.Params>;
     } {
       const propertiesParams: PD.Params = {};
       const autoAttachOptions: [string, string][] = [];
