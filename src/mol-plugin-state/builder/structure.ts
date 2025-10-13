@@ -97,7 +97,7 @@ export class StructureBuilder {
       StateTransforms["Model"]["ModelFromTrajectory"]
     >,
     initialState?: Partial<StateTransform.State>,
-  ) {
+  ): Promise<void> {
     const state = this.dataState;
     const model = state
       .build()
@@ -117,7 +117,7 @@ export class StructureBuilder {
       StateTransforms["Model"]["CustomModelProperties"]
     >,
     initialState?: Partial<StateTransform.State>,
-  ) {
+  ): Promise<void> {
     const state = this.dataState;
     const props = state
       .build()
@@ -134,7 +134,7 @@ export class StructureBuilder {
       StateTransforms["Representation"]["ModelUnitcell3D"]
     >,
     initialState?: Partial<StateTransform.State>,
-  ) {
+  ): Promise<void> | undefined {
     const state = this.dataState;
     const m = StateObjectRef.resolveAndCheck(state, model)?.obj?.data;
     if (!m) return;
@@ -155,7 +155,7 @@ export class StructureBuilder {
     params?: RootStructureDefinition.Params,
     initialState?: Partial<StateTransform.State>,
     tags?: string | string[],
-  ) {
+  ): Promise<void> {
     const state = this.dataState;
 
     if (!params) {
@@ -184,7 +184,7 @@ export class StructureBuilder {
     params?: StateTransformer.Params<
       StateTransforms["Model"]["CustomStructureProperties"]
     >,
-  ) {
+  ): Promise<void> {
     const state = this.dataState;
     const props = state
       .build()
@@ -237,7 +237,7 @@ export class StructureBuilder {
     expression: Expression,
     key: string,
     params?: { label?: string; tags?: string[] },
-  ) {
+  ): Promise<StateObjectSelector<SO.Molecule.Structure> | undefined> {
     return this.tryCreateComponent(
       structure,
       {
@@ -254,7 +254,7 @@ export class StructureBuilder {
     structure: StateObjectRef<SO.Molecule.Structure>,
     type: StaticStructureComponentType,
     params?: { label?: string; tags?: string[] },
-  ) {
+  ): Promise<StateObjectSelector<SO.Molecule.Structure> | undefined> {
     return this.tryCreateComponent(
       structure,
       {

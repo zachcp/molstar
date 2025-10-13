@@ -144,7 +144,7 @@ namespace Table {
     table: Table<S>,
     schema: R,
     view: ArrayLike<number>,
-  ) {
+  ): Table<R> {
     const ret = Object.create(null);
     const columns = Object.keys(schema);
     ret._rowCount = view.length;

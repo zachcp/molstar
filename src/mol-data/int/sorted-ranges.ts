@@ -35,7 +35,9 @@ namespace SortedRanges {
   export function max<T extends number = number>(ranges: SortedRanges<T>): T {
     return ranges[ranges.length - 1];
   }
-  export function size<T extends number = number>(ranges: SortedRanges<T>): number {
+  export function size<T extends number = number>(
+    ranges: SortedRanges<T>,
+  ): number {
     let size = 0;
     for (let i = 0, il = ranges.length; i < il; i += 2) {
       size += ranges[i + 1] - ranges[i] + 1;
@@ -102,7 +104,7 @@ namespace SortedRanges {
   export function has<T extends number = number>(
     ranges: SortedRanges<T>,
     set: OrderedSet<T>,
-  ) {
+  ): boolean {
     return firstIntersectionIndex(ranges, set) !== -1;
   }
 
@@ -111,7 +113,7 @@ namespace SortedRanges {
     ranges: SortedRanges<T>,
     set: OrderedSet<T>,
     from: number,
-  ) {
+  ): boolean {
     return firstIntersectionIndexFrom(ranges, set, from) !== -1;
   }
 
