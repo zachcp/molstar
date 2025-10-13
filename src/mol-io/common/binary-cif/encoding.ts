@@ -87,7 +87,7 @@ export namespace Encoding {
         return srcType;
     }
 
-    export function isSignedIntegerDataType(data: TypedIntArray) {
+    export function isSignedIntegerDataType(data: TypedIntArray): boolean {
         if (data instanceof Int8Array || data instanceof Int16Array || data instanceof Int32Array) return true;
         for (let i = 0, _i = data.length; i < _i; i++) {
             if (i < 0) return false;

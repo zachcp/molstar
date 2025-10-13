@@ -463,7 +463,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function mul3(out: Mat4, a: Mat4, b: Mat4, c: Mat4) {
+    export function mul3(out: Mat4, a: Mat4, b: Mat4, c: Mat4): Mat4 {
         return mul(out, mul(out, a, b), c);
     }
 
@@ -844,7 +844,7 @@ namespace Mat4 {
         return ret;
     }
 
-    export function determinant(a: Mat4) {
+    export function determinant(a: Mat4): number {
         const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3],
             a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7],
             a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11],

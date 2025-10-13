@@ -110,7 +110,7 @@ namespace SymmetryOperator {
     }
 
     const _m = Mat4();
-    export function checkIfRotationAndTranslation(rot: Mat3, offset: Vec3) {
+    export function checkIfRotationAndTranslation(rot: Mat3, offset: Vec3): boolean {
         Mat4.setIdentity(_m);
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {

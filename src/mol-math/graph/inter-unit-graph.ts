@@ -97,7 +97,7 @@ namespace InterUnitGraph {
             return this.edgeMap.get(indexA)!;
         }
 
-        get areUnitsOrdered() {
+        get areUnitsOrdered(): boolean {
             return this.unitA < this.unitB;
         }
 
