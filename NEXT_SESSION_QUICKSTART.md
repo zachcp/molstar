@@ -1,23 +1,23 @@
 # Next Session Quick-Start Guide
 
-**Status:** 753 errors remaining (719 fixable)
-**Current State:** 11 errors fixed from starting point of 730 fixable
-**Progress:** 1.5% complete
+**Status:** 736 errors remaining (702 fixable)
+**Current State:** 28 errors fixed from starting point of 730 fixable
+**Progress:** 3.8% complete
 
 ---
 
 ## 🎯 Reality Check
 
-We currently have **753 Deno slow-type errors**:
-- `missing-explicit-return-type`: ~314 errors (down from 316)
-- `missing-explicit-type`: ~414 errors (parameter types)
+We currently have **736 Deno slow-type errors**:
+- `missing-explicit-return-type`: ~296 errors (down from 314)
+- `missing-explicit-type`: ~406 errors (parameter types)
 - `unsupported-super-class-expr`: **34 errors** (unfixable by design)
 
-**Fixable errors: 719** (down from 730)
+**Fixable errors: 702** (down from 730)
 
 ---
 
-## 📊 What We've Fixed So Far (11 errors)
+## 📊 What We've Fixed So Far (28 errors)
 
 ### Files Modified:
 1. ✅ **src/mol-model-formats/structure/property/anisotropic.ts** (2 errors)
@@ -48,11 +48,42 @@ We currently have **753 Deno slow-type errors**:
    - Added return types to factory functions: `CreateRepresentation3D()` and `CreateBehavior()`
    - Pattern: `ReturnType<typeof Create<T>>`
 
+10. ✅ **src/mol-model/structure/model/types.ts** (2 errors)
+    - Added `boolean` return types to `isCovalent()` and `isAll()` in BondType namespace
+
+11. ✅ **src/mol-model/structure/structure/element/loci.ts** (1 error)
+    - Added `boolean` return type to `isWholeStructure()`
+
+12. ✅ **src/mol-model/structure/model/model.ts** (3 errors)
+    - Added `AtomicConformation` return type to `getAtomicConformationFromFrame()`
+    - Added `Model` return type to `getRoot()`
+    - Added `boolean` return type to `areHierarchiesEqual()`
+
+13. ✅ **src/mol-model/structure/query/query.ts** (2 errors)
+    - Added `StructureSelection` return type to `run()`
+    - Added `StructureElement.Loci` return type to `loci()`
+
+14. ✅ **src/mol-model/structure/query/selection.ts** (1 error)
+    - Added `number` return type to `structureCount()`
+
+15. ✅ **src/mol-model/structure/structure/element/bundle.ts** (2 errors)
+    - Added `Bundle` return types to `fromSubStructure()` and `fromSelection()`
+
+16. ✅ **src/mol-model/shape/shape.ts** (2 errors)
+    - Added `TransformData` return type to `Shape.createTransform()`
+    - Added `GraphicsRenderObject` return type to `Shape.createRenderObject()`
+
+17. ✅ **src/mol-model/structure/structure/structure.ts** (5 errors)
+    - Added `boolean` return type to `hasElement()`
+    - Added `number` return type to `getModelIndex()`
+    - Added `Loci` return type to `remapLoci()`
+    - Added `Structure` return types to `transform()` and `instances()`
+
 ---
 
 ## 📈 Top Files by Error Count (Updated)
 
-1. **src/mol-plugin-state/objects.ts** - 32 errors remaining (was 34) ⭐
+1. **src/mol-plugin-state/objects.ts** - 32 errors remaining (was 34, now likely ~30) ⭐
 2. **src/mol-plugin/context.ts** - 29 errors
 3. **src/mol-state/state/selection.ts** - 27 errors
 4. **src/mol-script/language/symbol-table/structure-query.ts** - 25 errors
@@ -368,17 +399,18 @@ grep -A 5 "export function name" src/path/file.ts
 
 ```
 Starting point: 730 fixable errors
-Current: 719 fixable errors (11 fixed, 1.5%)
+Current: 702 fixable errors (28 fixed, 3.8%)
 
 Milestone targets:
-- 🎯 < 650 errors (10% complete) 
+- 🎯 < 650 errors (10% complete) - 52 more to go!
 - 🎯 < 500 errors (30% complete)
 - 🎯 < 250 errors (65% complete)
 - 🎯 < 100 errors (85% complete)
 - 🎯 < 50 errors (93% complete)
 - 🏁 0 errors (100% complete!)
 
-At current pace: ~60 errors per 1% = ~43,000 errors worth of work
+At current pace: ~7.4 errors per 1% completed
+Estimated: ~194 more errors to reach 100%
 This is a marathon, not a sprint!
 ```
 
