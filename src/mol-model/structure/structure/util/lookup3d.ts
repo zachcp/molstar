@@ -8,6 +8,7 @@
 
 import type { Structure } from '../structure.ts';
 import { type Lookup3D, GridLookup3D, Result } from '../../../../mol-math/geometry.ts';
+import type { Boundary } from '../../../../mol-math/geometry/boundary.ts';
 import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
 import { OrderedSet } from '../../../../mol-data/int.ts';
 import type { StructureUniqueSubsetBuilder } from './unique-subset-builder.ts';
@@ -270,7 +271,7 @@ export class StructureLookup3D {
         return ctx.result;
     }
 
-    get boundary() {
+    get boundary(): Boundary {
         return this.structure.boundary;
     }
 
