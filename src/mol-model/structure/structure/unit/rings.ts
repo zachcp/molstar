@@ -37,31 +37,31 @@ class UnitRings {
         return this._index;
     }
 
-    get byFingerprint() {
+    get byFingerprint(): ReadonlyMap<UnitRing.Fingerprint, ReadonlyArray<UnitRings.Index>> {
         if (this._byFingerprint) return this._byFingerprint;
         this._byFingerprint = createByFingerprint(this.unit, this.all);
         return this._byFingerprint;
     }
 
     /** Maps atom index inside a Unit to ring indices (an atom can be part of more than one ring) */
-    get elementRingIndices() {
+    get elementRingIndices(): ReadonlyMap<StructureElement.UnitIndex, UnitRings.Index[]> {
         return this.index.elementRingIndices;
     }
 
-    get elementAromaticRingIndices() {
+    get elementAromaticRingIndices(): ReadonlyMap<StructureElement.UnitIndex, UnitRings.Index[]> {
         return this.index.elementAromaticRingIndices;
     }
 
     /** Maps UnitRings.Index to index to ringComponents */
-    get ringComponentIndex() {
+    get ringComponentIndex(): ReadonlyArray<UnitRings.ComponentIndex> {
         return this.index.ringComponentIndex;
     }
 
-    get ringComponents() {
+    get ringComponents(): ReadonlyArray<ReadonlyArray<UnitRings.Index>> {
         return this.index.ringComponents;
     }
 
-    get aromaticRings() {
+    get aromaticRings(): ReadonlyArray<UnitRings.Index> {
         if (this._aromaticRings) return this._aromaticRings;
         this._aromaticRings = getAromaticRings(this.unit, this.all);
         return this._aromaticRings;
