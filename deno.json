@@ -84,7 +84,9 @@
         "no-empty",
         "no-empty-interface",
         "no-duplicate-case",
-        "no-extra-non-null-assertion"
+        "no-extra-non-null-assertion",
+        "no-irregular-whitespace",
+        "no-this-alias"
       ]
     }
   },
