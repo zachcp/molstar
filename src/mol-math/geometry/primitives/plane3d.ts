@@ -14,7 +14,7 @@ import type { Sphere3D } from './sphere3d.ts';
 
 interface Plane3D { normal: Vec3, constant: number }
 
-function Plane3D() {
+function Plane3D(): Plane3D {
     return Plane3D.create(Vec3.create(1, 0, 0), 0);
 }
 
@@ -45,32 +45,32 @@ namespace Plane3D {
         return out;
     }
 
-    export function toArray<T extends NumberArray>(p: Plane3D, out: T, offset: number) {
+    export function toArray<T extends NumberArray>(p: Plane3D, out: T, offset: number): T {
         Vec3.toArray(p.normal, out, offset);
         out[offset + 3] = p.constant;
         return out;
     }
 
-    export function fromArray(out: Plane3D, array: NumberArray, offset: number) {
+    export function fromArray(out: Plane3D, array: NumberArray, offset: number): Plane3D {
         Vec3.fromArray(out.normal, array, offset);
         out.constant = array[offset + 3];
         return out;
     }
 
-    export function fromNormalAndCoplanarPoint(out: Plane3D, normal: Vec3, point: Vec3) {
+    export function fromNormalAndCoplanarPoint(out: Plane3D, normal: Vec3, point: Vec3): Plane3D {
         Vec3.copy(out.normal, normal);
         out.constant = -Vec3.dot(out.normal, point);
         return out;
     }
 
-    export function fromCoplanarPoints(out: Plane3D, a: Vec3, b: Vec3, c: Vec3) {
+    export function fromCoplanarPoints(out: Plane3D, a: Vec3, b: Vec3, c: Vec3): Plane3D {
         const normal = Vec3.triangleNormal(Vec3(), a, b, c);
         fromNormalAndCoplanarPoint(out, normal, a);
         return out;
     }
 
     const unnormTmpV = Vec3();
-    export function setUnnormalized(out: Plane3D, nx: number, ny: number, nz: number, constant: number) {
+    export function setUnnormalized(out: Plane3D, nx: number, ny: number, nz: number, constant: number): Plane3D {
         Vec3.set(unnormTmpV, nx, ny, nz);
         const inverseNormalLength = 1.0 / Vec3.magnitude(unnormTmpV);
         Vec3.scale(out.normal, unnormTmpV, inverseNormalLength);
@@ -78,15 +78,15 @@ namespace Plane3D {
         return out;
     }
 
-    export function distanceToPoint(plane: Plane3D, point: Vec3) {
+    export function distanceToPoint(plane: Plane3D, point: Vec3): number {
         return Vec3.dot(plane.normal, point) + plane.constant;
     }
 
-    export function distanceToSphere3D(plane: Plane3D, sphere: Sphere3D) {
+    export function distanceToSphere3D(plane: Plane3D, sphere: Sphere3D): number {
         return distanceToPoint(plane, sphere.center) - sphere.radius;
     }
 
-    export function projectPoint(out: Vec3, plane: Plane3D, point: Vec3) {
+    export function projectPoint(out: Vec3, plane: Plane3D, point: Vec3): Vec3 {
         return Vec3.scaleAndAdd(out, point, plane.normal, -distanceToPoint(plane, point));
     }
 
