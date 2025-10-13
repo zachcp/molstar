@@ -29,7 +29,7 @@ export function start(xs: Nums) { return xs[0]; }
 export function end(xs: Nums) { return xs[xs.length - 1] + 1; }
 export function min(xs: Nums) { return xs[0]; }
 export function max(xs: Nums) { return xs[xs.length - 1]; }
-export function size(xs: Nums) { return xs.length; }
+export function size(xs: Nums): number { return xs.length; }
 export function hashCode(xs: Nums) {
     // hash of tuple (size, min, max, mid)
     const s = xs.length;

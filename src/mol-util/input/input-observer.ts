@@ -86,7 +86,7 @@ export namespace ModifiersKeys {
         return areEqual(a, None);
     }
 
-    export function size(a?: ModifiersKeys) {
+    export function size(a?: ModifiersKeys): number {
         if (!a) return 0;
         let ret = 0;
         if (!!a.shift) ret++;

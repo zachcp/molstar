@@ -154,7 +154,7 @@ export namespace ShapeGroup {
         return size(loci) === 0 ? true : false;
     }
 
-    export function size(loci: Loci) {
+    export function size(loci: Loci): number {
         let size = 0;
         for (const group of loci.groups) {
             size += OrderedSet.size(group.ids);

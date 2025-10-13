@@ -81,7 +81,7 @@ export namespace Loci {
         return size(loci) === loci.structure.elementCount;
     }
 
-    export function size(loci: Loci) {
+    export function size(loci: Loci): number {
         let s = 0;
         // inlined for max performance, crucial for marking large cellpack models
         // `for (const u of loci.elements) s += OrderedSet.size(u.indices);`
