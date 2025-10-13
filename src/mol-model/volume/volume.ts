@@ -92,7 +92,7 @@ export namespace Volume {
     }
 
     // Converts iso value to relative if using downsample VolumeServer data
-    export function adjustedIsoValue(volume: Volume, value: number, kind: 'absolute' | 'relative') {
+    export function adjustedIsoValue(volume: Volume, value: number, kind: 'absolute' | 'relative'): IsoValue {
         if (kind === 'relative') return IsoValue.relative(value);
 
         const absolute = IsoValue.absolute(value);
@@ -174,7 +174,7 @@ export namespace Volume {
         return Grid.isEmpty(vol.grid) || vol.instances.length === 0;
     }
 
-    export function isOrbitals(volume: Volume) {
+    export function isOrbitals(volume: Volume): boolean {
         if (!CubeFormat.is(volume.sourceData)) return false;
         return volume.sourceData.data.header.orbitals;
     }

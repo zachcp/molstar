@@ -366,7 +366,7 @@ namespace Scene {
             forEach: (callbackFn: (value: GraphicsRenderable, key: GraphicsRenderObject) => void) => {
                 renderableMap.forEach(callbackFn);
             },
-            get count() {
+            get count(): number {
                 return renderables.length;
             },
             get boundingSphere() {
