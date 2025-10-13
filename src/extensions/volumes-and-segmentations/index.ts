@@ -16,7 +16,7 @@ import { VolsegEntryData, VolsegEntryParamValues, createLoadVolsegParams } from 
 import { VolsegGlobalState } from './global-state.ts';
 import { createEntryId } from './helpers.ts';
 import { VolsegEntryFromRoot, VolsegGlobalStateFromRoot, VolsegStateFromEntry } from './transformers.ts';
-import { VolsegUI } from './ui.ts';
+import { VolsegUI } from './ui.tsx';
 
 
 const DEBUGGING = typeof window !== 'undefined' ? globalThis?.location?.hostname === 'localhost' : false;

@@ -17,7 +17,7 @@ import { ModelFromTrajectory, StructureFromModel, TrajectoryFromMmCif } from '..
 import { StructureRepresentation3D } from '../../mol-plugin-state/transforms/representation.ts';
 import { PluginUIContext } from '../../mol-plugin-ui/context.ts';
 import { useBehavior } from '../../mol-plugin-ui/hooks/use-behavior.ts';
-import { Plugin } from '../../mol-plugin-ui/plugin.ts';
+import { Plugin } from '../../mol-plugin-ui/plugin.tsx';
 import '../../mol-plugin-ui/skin/light.scss';
 import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';

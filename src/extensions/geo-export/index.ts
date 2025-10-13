@@ -5,7 +5,7 @@
  */
 
 import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
-import { GeometryExporterUI } from './ui.ts';
+import { GeometryExporterUI } from './ui.tsx';
 
 export const GeometryExport = PluginBehavior.create<{ }>({
     name: 'extension-geo-export',

@@ -22,7 +22,7 @@ import { Color } from '../../mol-util/color.ts';
 import { ButtonsType, getButton, getButtons, getModifiers, type ModifiersKeys } from '../../mol-util/input/input-observer.ts';
 import type { MarkerAction } from '../../mol-util/marker-action.ts';
 import { memoizeLatest } from '../../mol-util/memoize.ts';
-import { PluginUIComponent } from '../base.ts';
+import { PluginUIComponent } from '../base.tsx';
 import type { SequenceWrapper } from './wrapper.ts';
 import type { ThemeDataContext } from '../../mol-theme/theme.ts';
 import type { ParamDefinition as PD } from '../../mol-util/param-definition.ts';

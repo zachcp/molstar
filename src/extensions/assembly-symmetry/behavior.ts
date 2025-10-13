@@ -15,7 +15,7 @@ import { PluginConfigItem } from '../../mol-plugin/config.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { StateTransformer, StateAction, StateObject, type StateTransform, StateObjectRef } from '../../mol-state/index.ts';
 import type { GenericRepresentationRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
-import { AssemblySymmetryControls } from './ui.ts';
+import { AssemblySymmetryControls } from './ui.tsx';
 import { StructureRepresentationPresetProvider, PresetStructureRepresentations } from '../../mol-plugin-state/builder/structure/representation-preset.ts';
 
 const Tag = AssemblySymmetryData.Tag;

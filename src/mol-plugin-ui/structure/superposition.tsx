@@ -21,11 +21,11 @@ import { type StateObjectCell, StateObjectRef } from '../../mol-state/index.ts';
 import { elementLabel, structureElementStatsLabel } from '../../mol-theme/label.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { stripTags } from '../../mol-util/string.ts';
-import { CollapsableControls, PurePluginUIComponent } from '../base.ts';
-import { Button, IconButton, ToggleButton } from '../controls/common.ts';
-import { ArrowDownwardSvg, ArrowUpwardSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, SuperposeAtomsSvg, SuperposeChainsSvg, SuperpositionSvg, TuneSvg } from '../controls/icons.ts';
-import { ParameterControls } from '../controls/parameters.ts';
-import { ToggleSelectionModeButton } from './selection.ts';
+import { CollapsableControls, PurePluginUIComponent } from '../base.tsx';
+import { Button, IconButton, ToggleButton } from '../controls/common.tsx';
+import { ArrowDownwardSvg, ArrowUpwardSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, SuperposeAtomsSvg, SuperposeChainsSvg, SuperpositionSvg, TuneSvg } from '../controls/icons.tsx';
+import { ParameterControls } from '../controls/parameters.tsx';
+import { ToggleSelectionModeButton } from './selection.tsx';
 
 export class StructureSuperpositionControls extends CollapsableControls {
     defaultState() {

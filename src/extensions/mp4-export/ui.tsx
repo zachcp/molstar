@@ -6,10 +6,10 @@
 
 import { merge } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { CollapsableControls, type CollapsableState } from '../../mol-plugin-ui/base.ts';
-import { Button } from '../../mol-plugin-ui/controls/common.ts';
-import { CameraOutlinedSvg, GetAppSvg, Icon, SubscriptionsOutlinedSvg } from '../../mol-plugin-ui/controls/icons.ts';
-import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.ts';
+import { CollapsableControls, type CollapsableState } from '../../mol-plugin-ui/base.tsx';
+import { Button } from '../../mol-plugin-ui/controls/common.tsx';
+import { CameraOutlinedSvg, GetAppSvg, Icon, SubscriptionsOutlinedSvg } from '../../mol-plugin-ui/controls/icons.tsx';
+import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.tsx';
 import { download } from '../../mol-util/download.ts';
 import { Mp4AnimationParams, Mp4Controls } from './controls.ts';
 

@@ -18,7 +18,7 @@ import { Script } from '../../mol-script/script.ts';
 import { Asset } from '../../mol-util/assets.ts';
 import { Color } from '../../mol-util/color.ts';
 import { StripedResidues } from './coloring.ts';
-import { CustomToastMessage } from './controls.ts';
+import { CustomToastMessage } from './controls.tsx';
 import { CustomColorThemeProvider } from './custom-theme.ts';
 import './index.html';
 import { buildStaticSuperposition, dynamicSuperpositionTest, StaticSuperpositionTestData } from './superposition.ts';

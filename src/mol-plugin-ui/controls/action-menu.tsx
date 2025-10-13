@@ -7,8 +7,8 @@
 
 import * as React from 'react';
 import type { ParamDefinition } from '../../mol-util/param-definition.ts';
-import { Button, ControlGroup } from './common.ts';
-import { CloseSvg, ArrowDropDownSvg, ArrowRightSvg, CheckSvg } from './icons.ts';
+import { Button, ControlGroup } from './common.tsx';
+import { CloseSvg, ArrowDropDownSvg, ArrowRightSvg, CheckSvg } from './icons.tsx';
 
 export class ActionMenu extends React.PureComponent<ActionMenu.Props> {
     hide = () => this.props.onSelect(void 0);

@@ -29,7 +29,7 @@ import { EvolutionaryConservation } from './annotation.ts';
 import { createProteopediaCustomTheme } from './coloring.ts';
 import { type LoadParams, ModelInfo, type RepresentationStyle, StateElements, type SupportedFormats } from './helpers.ts';
 import './index.html';
-import { volumeStreamingControls } from './ui/controls.ts';
+import { volumeStreamingControls } from './ui/controls.tsx';
 require('../../mol-plugin-ui/skin/light.scss');
 
 class MolStarProteopediaWrapper {

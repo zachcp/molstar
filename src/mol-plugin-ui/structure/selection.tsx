@@ -21,13 +21,13 @@ import { compileIdListSelection } from '../../mol-script/util/id-list.ts';
 import { memoizeLatest } from '../../mol-util/memoize.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';
 import { capitalize, stripTags } from '../../mol-util/string.ts';
-import { PluginUIComponent, PurePluginUIComponent } from '../base.ts';
-import { ActionMenu } from '../controls/action-menu.ts';
-import { Button, ControlGroup, IconButton, ToggleButton } from '../controls/common.ts';
-import { BrushSvg, CancelOutlinedSvg, CloseSvg, CubeOutlineSvg, HelpOutlineSvg, Icon, IntersectSvg, RemoveSvg, RestoreSvg, SelectionModeSvg, SetSvg, SubtractSvg, UnionSvg } from '../controls/icons.ts';
-import { ParameterControls, type ParamOnChange, PureSelectControl } from '../controls/parameters.ts';
-import { HelpGroup, HelpText, ViewportHelpContent } from '../viewport/help.ts';
-import { AddComponentControls } from './components.ts';
+import { PluginUIComponent, PurePluginUIComponent } from '../base.tsx';
+import { ActionMenu } from '../controls/action-menu.tsx';
+import { Button, ControlGroup, IconButton, ToggleButton } from '../controls/common.tsx';
+import { BrushSvg, CancelOutlinedSvg, CloseSvg, CubeOutlineSvg, HelpOutlineSvg, Icon, IntersectSvg, RemoveSvg, RestoreSvg, SelectionModeSvg, SetSvg, SubtractSvg, UnionSvg } from '../controls/icons.tsx';
+import { ParameterControls, type ParamOnChange, PureSelectControl } from '../controls/parameters.tsx';
+import { HelpGroup, HelpText, ViewportHelpContent } from '../viewport/help.tsx';
+import { AddComponentControls } from './components.tsx';
 
 
 export class ToggleSelectionModeButton extends PurePluginUIComponent<{ inline?: boolean }> {

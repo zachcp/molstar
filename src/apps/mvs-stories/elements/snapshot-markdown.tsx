@@ -7,13 +7,13 @@
 import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { PluginComponent } from '../../../mol-plugin-state/component.ts';
 import { getMVSStoriesContext, type MVSStoriesContext } from '../context.ts';
-import type { MVSStoriesViewerModel } from './viewer.ts';
+import type { MVSStoriesViewerModel } from './viewer.tsx';
 import { useBehavior } from '../../../mol-plugin-ui/hooks/use-behavior.ts';
 import { createRoot } from 'react-dom/client';
 import type { PluginStateSnapshotManager } from '../../../mol-plugin-state/manager/snapshots.ts';
-import { PluginReactContext } from '../../../mol-plugin-ui/base.ts';
+import { PluginReactContext } from '../../../mol-plugin-ui/base.tsx';
 import type { CSSProperties } from 'react';
-import { Markdown } from '../../../mol-plugin-ui/controls/markdown.ts';
+import { Markdown } from '../../../mol-plugin-ui/controls/markdown.tsx';
 
 export class MVSStoriesSnapshotMarkdownModel extends PluginComponent {
     readonly context: MVSStoriesContext;

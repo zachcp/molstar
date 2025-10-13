@@ -13,13 +13,13 @@ import type { StructureComponentRef, StructureRepresentationRef } from '../../mo
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { State } from '../../mol-state/index.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';
-import { CollapsableControls, type CollapsableState, PurePluginUIComponent } from '../base.ts';
-import { ActionMenu } from '../controls/action-menu.ts';
-import { Button, ExpandGroup, IconButton, ToggleButton, ControlRow, TextInput } from '../controls/common.ts';
-import { CubeOutlineSvg, IntersectSvg, SetSvg, SubtractSvg, UnionSvg, BookmarksOutlinedSvg, AddSvg, TuneSvg, RestoreSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, DeleteOutlinedSvg, MoreHorizSvg, CheckSvg } from '../controls/icons.ts';
-import { ParameterControls } from '../controls/parameters.ts';
-import { UpdateTransformControl } from '../state/update-transform.ts';
-import { GenericEntryListControls } from './generic.ts';
+import { CollapsableControls, type CollapsableState, PurePluginUIComponent } from '../base.tsx';
+import { ActionMenu } from '../controls/action-menu.tsx';
+import { Button, ExpandGroup, IconButton, ToggleButton, ControlRow, TextInput } from '../controls/common.tsx';
+import { CubeOutlineSvg, IntersectSvg, SetSvg, SubtractSvg, UnionSvg, BookmarksOutlinedSvg, AddSvg, TuneSvg, RestoreSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, DeleteOutlinedSvg, MoreHorizSvg, CheckSvg } from '../controls/icons.tsx';
+import { ParameterControls } from '../controls/parameters.tsx';
+import { UpdateTransformControl } from '../state/update-transform.tsx';
+import { GenericEntryListControls } from './generic.tsx';
 
 interface StructureComponentControlState extends CollapsableState {
     isDisabled: boolean

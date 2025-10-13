@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginReactContext, PluginUIComponent } from './base.ts';
+import { PluginReactContext, PluginUIComponent } from './base.tsx';
 import { OrderedMap } from 'immutable';
 import type { TaskManager } from '../mol-plugin/util/task-manager.ts';
 import type { Progress } from '../mol-task/index.ts';
-import { IconButton } from './controls/common.ts';
-import { CancelSvg } from './controls/icons.ts';
+import { IconButton } from './controls/common.tsx';
+import { CancelSvg } from './controls/icons.tsx';
 import { useContext, useEffect, useState } from 'react';
 import { useBehavior } from './hooks/use-behavior.ts';
 

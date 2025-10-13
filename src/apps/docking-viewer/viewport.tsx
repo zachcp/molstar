@@ -9,12 +9,12 @@ import { InteractionTypeColorThemeProvider } from '../../mol-model-props/compute
 import { presetStaticComponent, StructureRepresentationPresetProvider } from '../../mol-plugin-state/builder/structure/representation-preset.ts';
 import { StructureSelectionQueries, StructureSelectionQuery } from '../../mol-plugin-state/helpers/structure-selection-query.ts';
 import type { StructureRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
-import { PluginUIComponent } from '../../mol-plugin-ui/base.ts';
-import { LociLabels } from '../../mol-plugin-ui/controls.ts';
-import { Button } from '../../mol-plugin-ui/controls/common.ts';
-import { BackgroundTaskProgress } from '../../mol-plugin-ui/task.ts';
-import { Toasts } from '../../mol-plugin-ui/toast.ts';
-import { Viewport, ViewportControls } from '../../mol-plugin-ui/viewport.ts';
+import { PluginUIComponent } from '../../mol-plugin-ui/base.tsx';
+import { LociLabels } from '../../mol-plugin-ui/controls.tsx';
+import { Button } from '../../mol-plugin-ui/controls/common.tsx';
+import { BackgroundTaskProgress } from '../../mol-plugin-ui/task.tsx';
+import { Toasts } from '../../mol-plugin-ui/toast.tsx';
+import { Viewport, ViewportControls } from '../../mol-plugin-ui/viewport.tsx';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { PluginConfig } from '../../mol-plugin/config.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';

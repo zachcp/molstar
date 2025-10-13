@@ -7,7 +7,7 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { PluginReactContext } from '../base.ts';
+import { PluginReactContext } from '../base.tsx';
 import type { PluginUIContext } from '../context.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import type { MarkdownExtension } from '../../mol-plugin-state/manager/markdown-extensions.ts';

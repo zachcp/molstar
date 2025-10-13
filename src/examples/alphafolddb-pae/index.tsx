@@ -7,7 +7,7 @@
 
 import { createRoot } from 'react-dom/client';
 import { Viewer } from '../../apps/viewer/app.ts';
-import { MAPairwiseScorePlot } from '../../extensions/model-archive/quality-assessment/pairwise/ui.ts';
+import { MAPairwiseScorePlot } from '../../extensions/model-archive/quality-assessment/pairwise/ui.tsx';
 import type { QualityAssessment } from '../../extensions/model-archive/quality-assessment/prop.ts';
 import type { Model, ResidueIndex } from '../../mol-model/structure.ts';
 import './index.html';

@@ -9,10 +9,10 @@ import type * as React from 'react';
 import type { StructureHierarchyRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { State } from '../../mol-state/index.ts';
-import { PurePluginUIComponent } from '../base.ts';
-import { IconButton } from '../controls/common.ts';
-import { UpdateTransformControl } from '../state/update-transform.ts';
-import { VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, MoreHorizSvg } from '../controls/icons.ts';
+import { PurePluginUIComponent } from '../base.tsx';
+import { IconButton } from '../controls/common.tsx';
+import { UpdateTransformControl } from '../state/update-transform.tsx';
+import { VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, MoreHorizSvg } from '../controls/icons.tsx';
 
 export class GenericEntryListControls extends PurePluginUIComponent {
     get current() {

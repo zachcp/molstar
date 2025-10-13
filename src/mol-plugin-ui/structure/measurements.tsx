@@ -20,13 +20,13 @@ import type { LabelData } from '../../mol-repr/shape/loci/label.ts';
 import type { OrientationData } from '../../mol-repr/shape/loci/orientation.ts';
 import { angleLabel, dihedralLabel, distanceLabel, lociLabel, structureElementLociLabelMany } from '../../mol-theme/label.ts';
 import type { FiniteArray } from '../../mol-util/type-helpers.ts';
-import { CollapsableControls, PurePluginUIComponent } from '../base.ts';
-import { ActionMenu } from '../controls/action-menu.ts';
-import { Button, ExpandGroup, IconButton, ToggleButton } from '../controls/common.ts';
-import { AddSvg, ArrowDownwardSvg, ArrowUpwardSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, MoreHorizSvg, PencilRulerSvg, SetSvg, TuneSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg } from '../controls/icons.ts';
-import { ParameterControls } from '../controls/parameters.ts';
-import { UpdateTransformControl } from '../state/update-transform.ts';
-import { ToggleSelectionModeButton } from './selection.ts';
+import { CollapsableControls, PurePluginUIComponent } from '../base.tsx';
+import { ActionMenu } from '../controls/action-menu.tsx';
+import { Button, ExpandGroup, IconButton, ToggleButton } from '../controls/common.tsx';
+import { AddSvg, ArrowDownwardSvg, ArrowUpwardSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, MoreHorizSvg, PencilRulerSvg, SetSvg, TuneSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg } from '../controls/icons.tsx';
+import { ParameterControls } from '../controls/parameters.tsx';
+import { UpdateTransformControl } from '../state/update-transform.tsx';
+import { ToggleSelectionModeButton } from './selection.tsx';
 
 // TODO details, options (e.g. change text for labels)
 

@@ -9,14 +9,14 @@ import { Model } from '../../mol-model/structure.ts';
 import type { ModelRef, StructureHierarchyRef, TrajectoryRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
 import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
 import { StateSelection } from '../../mol-state/index.ts';
-import { CollapsableControls, type CollapsableState } from '../base.ts';
-import { ActionMenu } from '../controls/action-menu.ts';
-import { Button, ExpandGroup, IconButton } from '../controls/common.ts';
-import { BookmarksOutlinedSvg, MoleculeSvg } from '../controls/icons.ts';
-import { ParameterControls } from '../controls/parameters.ts';
-import { UpdateTransformControl } from '../state/update-transform.ts';
-import { StructureFocusControls } from './focus.ts';
-import { StructureSelectionStatsControls } from './selection.ts';
+import { CollapsableControls, type CollapsableState } from '../base.tsx';
+import { ActionMenu } from '../controls/action-menu.tsx';
+import { Button, ExpandGroup, IconButton } from '../controls/common.tsx';
+import { BookmarksOutlinedSvg, MoleculeSvg } from '../controls/icons.tsx';
+import { ParameterControls } from '../controls/parameters.tsx';
+import { UpdateTransformControl } from '../state/update-transform.tsx';
+import { StructureFocusControls } from './focus.tsx';
+import { StructureSelectionStatsControls } from './selection.tsx';
 
 interface StructureSourceControlState extends CollapsableState {
     isBusy: boolean,

@@ -16,10 +16,10 @@ import { deepClone } from '../../mol-util/object.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { ParamMapping } from '../../mol-util/param-mapping.ts';
 import type { Mutable } from '../../mol-util/type-helpers.ts';
-import { PluginUIComponent } from '../base.ts';
+import { PluginUIComponent } from '../base.tsx';
 import type { PluginUIContext } from '../context.ts';
-import { ParameterMappingControl } from '../controls/parameters.ts';
-import { ViewportHelpContent } from './help.ts';
+import { ParameterMappingControl } from '../controls/parameters.tsx';
+import { ViewportHelpContent } from './help.tsx';
 
 export class SimpleSettingsControl extends PluginUIComponent {
     componentDidMount() {

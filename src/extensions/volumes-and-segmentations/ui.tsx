@@ -6,13 +6,13 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { CollapsableControls, type CollapsableState } from '../../mol-plugin-ui/base.ts';
-import { Button, ControlRow, ExpandGroup, IconButton } from '../../mol-plugin-ui/controls/common.ts';
-import * as Icons from '../../mol-plugin-ui/controls/icons.ts';
-import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.ts';
-import { Slider } from '../../mol-plugin-ui/controls/slider.ts';
+import { CollapsableControls, type CollapsableState } from '../../mol-plugin-ui/base.tsx';
+import { Button, ControlRow, ExpandGroup, IconButton } from '../../mol-plugin-ui/controls/common.tsx';
+import * as Icons from '../../mol-plugin-ui/controls/icons.tsx';
+import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.tsx';
+import { Slider } from '../../mol-plugin-ui/controls/slider.tsx';
 import { useBehavior } from '../../mol-plugin-ui/hooks/use-behavior.ts';
-import { UpdateTransformControl } from '../../mol-plugin-ui/state/update-transform.ts';
+import { UpdateTransformControl } from '../../mol-plugin-ui/state/update-transform.tsx';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { shallowEqualArrays } from '../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';

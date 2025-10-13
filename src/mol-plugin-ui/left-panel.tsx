@@ -12,14 +12,14 @@ import { PluginCommands } from '../mol-plugin/commands.ts';
 import type { LeftPanelTabName } from '../mol-plugin/layout.ts';
 import { StateTransform } from '../mol-state/index.ts';
 import type { ParamDefinition as PD } from '../mol-util/param-definition.ts';
-import { PluginUIComponent } from './base.ts';
-import { IconButton, SectionHeader } from './controls/common.ts';
-import { AccountTreeOutlinedSvg, DeleteOutlinedSvg, HelpOutlineSvg, HomeOutlinedSvg, SaveOutlinedSvg, TuneSvg } from './controls/icons.ts';
-import { ParameterControls } from './controls/parameters.ts';
-import { StateObjectActions } from './state/actions.ts';
-import { RemoteStateSnapshots, StateSnapshots } from './state/snapshots.ts';
-import { StateTree } from './state/tree.ts';
-import { HelpContent } from './viewport/help.ts';
+import { PluginUIComponent } from './base.tsx';
+import { IconButton, SectionHeader } from './controls/common.tsx';
+import { AccountTreeOutlinedSvg, DeleteOutlinedSvg, HelpOutlineSvg, HomeOutlinedSvg, SaveOutlinedSvg, TuneSvg } from './controls/icons.tsx';
+import { ParameterControls } from './controls/parameters.tsx';
+import { StateObjectActions } from './state/actions.tsx';
+import { RemoteStateSnapshots, StateSnapshots } from './state/snapshots.tsx';
+import { StateTree } from './state/tree.tsx';
+import { HelpContent } from './viewport/help.tsx';
 
 export class CustomImportControls extends PluginUIComponent<{ initiallyCollapsed?: boolean }> {
     componentDidMount() {

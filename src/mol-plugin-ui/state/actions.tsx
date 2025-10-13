@@ -5,9 +5,9 @@
  */
 
 import type { State } from '../../mol-state/index.ts';
-import { PluginUIComponent } from '../base.ts';
-import { Icon, CodeSvg } from '../controls/icons.ts';
-import { ApplyActionControl } from './apply-action.ts';
+import { PluginUIComponent } from '../base.tsx';
+import { Icon, CodeSvg } from '../controls/icons.tsx';
+import { ApplyActionControl } from './apply-action.tsx';
 
 export class StateObjectActions extends PluginUIComponent<{ state: State, nodeRef: string, hideHeader?: boolean, initiallyCollapsed?: boolean, alwaysExpandFirst?: boolean }> {
     get current() {

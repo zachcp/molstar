@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { TextInput } from './common.ts';
+import { TextInput } from './common.tsx';
 import { noop } from '../../mol-util/index.ts';
 import { normalizeWheel } from '../../mol-util/input/input-observer.ts';
 

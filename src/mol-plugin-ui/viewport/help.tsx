@@ -6,12 +6,12 @@
 
 import * as React from 'react';
 import { Binding } from '../../mol-util/binding.ts';
-import { PluginUIComponent } from '../base.ts';
+import { PluginUIComponent } from '../base.tsx';
 import { type StateTransformer, StateSelection, type State } from '../../mol-state/index.ts';
 import { SelectLoci } from '../../mol-plugin/behavior/dynamic/representation.ts';
 import { FocusLoci } from '../../mol-plugin/behavior/dynamic/representation.ts';
-import { Icon, ArrowDropDownSvg, ArrowRightSvg, CameraSvg } from '../controls/icons.ts';
-import { Button } from '../controls/common.ts';
+import { Icon, ArrowDropDownSvg, ArrowRightSvg, CameraSvg } from '../controls/icons.tsx';
+import { Button } from '../controls/common.tsx';
 import { memoizeLatest } from '../../mol-util/memoize.ts';
 
 function getBindingsList(bindings: { [k: string]: Binding }) {

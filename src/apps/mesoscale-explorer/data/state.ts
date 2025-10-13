@@ -14,7 +14,7 @@ import { Clip } from '../../../mol-util/clip.ts';
 import { escapeRegExp, stringToWords } from '../../../mol-util/string.ts';
 import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { ParamMapping } from '../../../mol-util/param-mapping.ts';
-import type { EntityNode } from '../ui/entities.ts';
+import type { EntityNode } from '../ui/entities.tsx';
 import { type DistinctColorsProps, distinctColors } from '../../../mol-util/color/distinct.ts';
 import type { Sphere3D } from '../../../mol-math/geometry.ts';
 import { Hcl } from '../../../mol-util/color/spaces/hcl.ts';

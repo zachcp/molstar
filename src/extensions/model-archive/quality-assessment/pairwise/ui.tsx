@@ -12,9 +12,9 @@ import { AtomicHierarchy } from '../../../../mol-model/structure/model/propertie
 import { atoms } from '../../../../mol-model/structure/query/queries/generators.ts';
 import { PluginStateObject } from '../../../../mol-plugin-state/objects.ts';
 import { OverpaintStructureRepresentation3DFromBundle } from '../../../../mol-plugin-state/transforms/representation.ts';
-import { CollapsableControls, type CollapsableState } from '../../../../mol-plugin-ui/base.ts';
-import { ScatterPlotSvg } from '../../../../mol-plugin-ui/controls/icons.ts';
-import { ParameterControls } from '../../../../mol-plugin-ui/controls/parameters.ts';
+import { CollapsableControls, type CollapsableState } from '../../../../mol-plugin-ui/base.tsx';
+import { ScatterPlotSvg } from '../../../../mol-plugin-ui/controls/icons.tsx';
+import { ParameterControls } from '../../../../mol-plugin-ui/controls/parameters.tsx';
 import { useBehavior } from '../../../../mol-plugin-ui/hooks/use-behavior.ts';
 import type { PluginContext } from '../../../../mol-plugin/context.ts';
 import type { StateBuilder, StateTransform } from '../../../../mol-state/index.ts';

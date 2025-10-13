@@ -14,10 +14,10 @@ import { shallowEqualObjects } from '../../mol-util/index.ts';
 import { formatTimespan } from '../../mol-util/now.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { urlCombine } from '../../mol-util/url.ts';
-import { PluginUIComponent, PurePluginUIComponent } from '../base.ts';
-import { Button, ControlRow, ExpandGroup, IconButton, SectionHeader } from '../controls/common.ts';
-import { Icon, SaveOutlinedSvg, GetAppSvg, OpenInBrowserSvg, WarningSvg, DeleteOutlinedSvg, AddSvg, ArrowUpwardSvg, SwapHorizSvg, ArrowDownwardSvg, RefreshSvg, CloudUploadSvg, CheckSvg, TuneSvg } from '../controls/icons.ts';
-import { ParamHelp, ParameterControls, ToggleParamHelpButton } from '../controls/parameters.ts';
+import { PluginUIComponent, PurePluginUIComponent } from '../base.tsx';
+import { Button, ControlRow, ExpandGroup, IconButton, SectionHeader } from '../controls/common.tsx';
+import { Icon, SaveOutlinedSvg, GetAppSvg, OpenInBrowserSvg, WarningSvg, DeleteOutlinedSvg, AddSvg, ArrowUpwardSvg, SwapHorizSvg, ArrowDownwardSvg, RefreshSvg, CloudUploadSvg, CheckSvg, TuneSvg } from '../controls/icons.tsx';
+import { ParamHelp, ParameterControls, ToggleParamHelpButton } from '../controls/parameters.tsx';
 import type { PluginStateSnapshotManager } from '../../mol-plugin-state/manager/snapshots.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 

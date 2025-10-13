@@ -6,9 +6,9 @@
 
 import type { State, StateTransform, StateTransformer } from '../../mol-state/index.ts';
 import { memoizeLatest } from '../../mol-util/memoize.ts';
-import { StateTransformParameters, TransformControlBase } from './common.ts';
+import { StateTransformParameters, TransformControlBase } from './common.tsx';
 import type { Observable } from 'rxjs';
-import { PluginUIComponent } from '../base.ts';
+import { PluginUIComponent } from '../base.tsx';
 
 export { UpdateTransformControl, TransformUpdaterControl };
 

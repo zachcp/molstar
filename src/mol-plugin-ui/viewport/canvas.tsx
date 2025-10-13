@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { PluginUIComponent } from '../base.ts';
+import { PluginUIComponent } from '../base.tsx';
 
 interface ViewportCanvasState {
     noWebGl: boolean

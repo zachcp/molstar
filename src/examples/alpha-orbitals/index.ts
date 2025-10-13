@@ -21,7 +21,7 @@ import type { StateObjectSelector, StateTransformer } from '../../mol-state/inde
 import type { Color } from '../../mol-util/color.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';
-import { mountControls } from './controls.ts';
+import { mountControls } from './controls.tsx';
 import { DemoMoleculeSDF, DemoOrbitals } from './example-data.ts';
 import './index.html';
 import '../../mol-plugin-ui/skin/light.scss';

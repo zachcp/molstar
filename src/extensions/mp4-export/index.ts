@@ -5,7 +5,7 @@
  */
 
 import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
-import { Mp4EncoderUI } from './ui.ts';
+import { Mp4EncoderUI } from './ui.tsx';
 
 export const Mp4Export = PluginBehavior.create<{ }>({
     name: 'extension-mp4-export',

@@ -5,10 +5,10 @@
  */
 
 import { merge } from 'rxjs';
-import { CollapsableControls, type CollapsableState } from '../../mol-plugin-ui/base.ts';
-import { Button } from '../../mol-plugin-ui/controls/common.ts';
-import { GetAppSvg, CubeScanSvg, CubeSendSvg } from '../../mol-plugin-ui/controls/icons.ts';
-import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.ts';
+import { CollapsableControls, type CollapsableState } from '../../mol-plugin-ui/base.tsx';
+import { Button } from '../../mol-plugin-ui/controls/common.tsx';
+import { GetAppSvg, CubeScanSvg, CubeSendSvg } from '../../mol-plugin-ui/controls/icons.tsx';
+import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.tsx';
 import { download } from '../../mol-util/download.ts';
 import { GeometryParams, GeometryControls } from './controls.ts';
 

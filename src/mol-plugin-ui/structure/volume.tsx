@@ -21,15 +21,15 @@ import { State, type StateObjectCell, type StateObjectSelector, StateSelection, 
 import { Color } from '../../mol-util/color.ts';
 import { memoizeLatest } from '../../mol-util/memoize.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';
-import { CollapsableControls, type CollapsableState, PurePluginUIComponent } from '../base.ts';
-import { ActionMenu } from '../controls/action-menu.ts';
-import { CombinedColorControl } from '../controls/color.ts';
-import { Button, ControlGroup, ExpandGroup, IconButton } from '../controls/common.ts';
-import { AddSvg, BlurOnSvg, CheckSvg, CloseSvg, DeleteOutlinedSvg, ErrorSvg, MoreHorizSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg } from '../controls/icons.ts';
-import { ParameterControls, type ParamOnChange } from '../controls/parameters.ts';
-import { ApplyActionControl } from '../state/apply-action.ts';
-import { UpdateTransformControl } from '../state/update-transform.ts';
-import { BindingsHelp } from '../viewport/help.ts';
+import { CollapsableControls, type CollapsableState, PurePluginUIComponent } from '../base.tsx';
+import { ActionMenu } from '../controls/action-menu.tsx';
+import { CombinedColorControl } from '../controls/color.tsx';
+import { Button, ControlGroup, ExpandGroup, IconButton } from '../controls/common.tsx';
+import { AddSvg, BlurOnSvg, CheckSvg, CloseSvg, DeleteOutlinedSvg, ErrorSvg, MoreHorizSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg } from '../controls/icons.tsx';
+import { ParameterControls, type ParamOnChange } from '../controls/parameters.tsx';
+import { ApplyActionControl } from '../state/apply-action.tsx';
+import { UpdateTransformControl } from '../state/update-transform.tsx';
+import { BindingsHelp } from '../viewport/help.tsx';
 import { Subject, throttleTime } from 'rxjs';
 
 interface VolumeStreamingControlState extends CollapsableState {

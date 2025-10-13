@@ -5,7 +5,7 @@
  */
 
 import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
-import { ModelExportUI } from './ui.ts';
+import { ModelExportUI } from './ui.tsx';
 
 export const ModelExport = PluginBehavior.create<{}>({
     name: 'extension-model-export',

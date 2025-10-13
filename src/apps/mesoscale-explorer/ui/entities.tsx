@@ -4,17 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginReactContext, PluginUIComponent } from '../../../mol-plugin-ui/base.ts';
-import { Button, ControlGroup, IconButton } from '../../../mol-plugin-ui/controls/common.ts';
-import { ArrowDropDownSvg, ArrowRightSvg, CloseSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, ContentCutSvg, BrushSvg, SearchSvg, TooltipTextSvg, TooltipTextOutlineSvg, PlusBoxSvg, MinusBoxSvg } from '../../../mol-plugin-ui/controls/icons.ts';
+import { PluginReactContext, PluginUIComponent } from '../../../mol-plugin-ui/base.tsx';
+import { Button, ControlGroup, IconButton } from '../../../mol-plugin-ui/controls/common.tsx';
+import { ArrowDropDownSvg, ArrowRightSvg, CloseSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, ContentCutSvg, BrushSvg, SearchSvg, TooltipTextSvg, TooltipTextOutlineSvg, PlusBoxSvg, MinusBoxSvg } from '../../../mol-plugin-ui/controls/icons.tsx';
 import { PluginCommands } from '../../../mol-plugin/commands.ts';
 import { type State, type StateObjectCell, StateSelection, type StateTransformer } from '../../../mol-state/index.ts';
-import { ParameterControls, ParameterMappingControl, type ParamOnChange, SelectControl } from '../../../mol-plugin-ui/controls/parameters.ts';
+import { ParameterControls, ParameterMappingControl, type ParamOnChange, SelectControl } from '../../../mol-plugin-ui/controls/parameters.tsx';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { Clip } from '../../../mol-util/clip.ts';
 import type { StructureRepresentation3D } from '../../../mol-plugin-state/transforms/representation.ts';
 import { Color } from '../../../mol-util/color.ts';
-import { CombinedColorControl } from '../../../mol-plugin-ui/controls/color.ts';
+import { CombinedColorControl } from '../../../mol-plugin-ui/controls/color.tsx';
 import { MarkerAction } from '../../../mol-util/marker-action.ts';
 import { EveryLoci, Loci } from '../../../mol-model/loci.ts';
 import { deepEqual } from '../../../mol-util/index.ts';
@@ -29,7 +29,7 @@ import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { MesoFocusLoci } from '../behavior/camera.ts';
 import Markdown from 'react-markdown';
 import { combineLatest } from 'rxjs';
-import { ColorLoaderControls } from './states.ts';
+import { ColorLoaderControls } from './states.tsx';
 
 function centerLoci(plugin: PluginContext, loci: Loci, durationMs = 250) {
     const { canvas3d } = plugin;

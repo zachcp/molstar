@@ -11,10 +11,10 @@ import { CoordinatesFormatCategory } from '../../mol-plugin-state/formats/coordi
 import { TopologyFormatCategory } from '../../mol-plugin-state/formats/topology.ts';
 import { TrajectoryFormatCategory } from '../../mol-plugin-state/formats/trajectory.ts';
 import { VolumeFormatCategory } from '../../mol-plugin-state/formats/volume.ts';
-import { CollapsableControls, type CollapsableState } from '../../mol-plugin-ui/base.ts';
-import { Button } from '../../mol-plugin-ui/controls/common.ts';
-import { OpenInBrowserSvg } from '../../mol-plugin-ui/controls/icons.ts';
-import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.ts';
+import { CollapsableControls, type CollapsableState } from '../../mol-plugin-ui/base.tsx';
+import { Button } from '../../mol-plugin-ui/controls/common.tsx';
+import { OpenInBrowserSvg } from '../../mol-plugin-ui/controls/icons.tsx';
+import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.tsx';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { formatBytes } from '../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';

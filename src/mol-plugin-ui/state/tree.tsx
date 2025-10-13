@@ -10,12 +10,12 @@ import type { PluginStateObject } from '../../mol-plugin-state/objects.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { type State, type StateAction, StateObject, type StateObjectCell, StateTransform } from '../../mol-state/index.ts';
 import { StateTreeSpine } from '../../mol-state/tree/spine.ts';
-import { PluginUIComponent, type _Props, type _State } from '../base.ts';
-import { ActionMenu } from '../controls/action-menu.ts';
-import { Button, ControlGroup, IconButton } from '../controls/common.ts';
-import { Icon, HomeOutlinedSvg, ArrowRightSvg, ArrowDropDownSvg, DeleteOutlinedSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, CloseSvg } from '../controls/icons.ts';
-import { ApplyActionControl } from './apply-action.ts';
-import { UpdateTransformControl } from './update-transform.ts';
+import { PluginUIComponent, type _Props, type _State } from '../base.tsx';
+import { ActionMenu } from '../controls/action-menu.tsx';
+import { Button, ControlGroup, IconButton } from '../controls/common.tsx';
+import { Icon, HomeOutlinedSvg, ArrowRightSvg, ArrowDropDownSvg, DeleteOutlinedSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, CloseSvg } from '../controls/icons.tsx';
+import { ApplyActionControl } from './apply-action.tsx';
+import { UpdateTransformControl } from './update-transform.tsx';
 
 export class StateTree extends PluginUIComponent<{ state: State }, { showActions: boolean }> {
     state = { showActions: true };

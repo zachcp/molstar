@@ -6,13 +6,13 @@
 
 import type { State, StateTransform, StateTransformer, StateAction, StateObject, StateObjectCell } from '../../mol-state/index.ts';
 import type * as React from 'react';
-import { PurePluginUIComponent } from '../base.ts';
-import { ParameterControls, type ParamOnChange } from '../controls/parameters.ts';
+import { PurePluginUIComponent } from '../base.tsx';
+import { ParameterControls, type ParamOnChange } from '../controls/parameters.tsx';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { BehaviorSubject, skip } from 'rxjs';
-import { Icon, RefreshSvg, CheckSvg, ArrowRightSvg, ArrowDropDownSvg, TuneSvg } from '../controls/icons.ts';
-import { ExpandGroup, ToggleButton, Button, IconButton } from '../controls/common.ts';
+import { Icon, RefreshSvg, CheckSvg, ArrowRightSvg, ArrowDropDownSvg, TuneSvg } from '../controls/icons.tsx';
+import { ExpandGroup, ToggleButton, Button, IconButton } from '../controls/common.tsx';
 
 export { StateTransformParameters, TransformControlBase };
 

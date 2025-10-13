@@ -4,18 +4,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { type CollapsableState, CollapsableControls } from '../../mol-plugin-ui/base.ts';
-import { ApplyActionControl } from '../../mol-plugin-ui/state/apply-action.ts';
+import { type CollapsableState, CollapsableControls } from '../../mol-plugin-ui/base.tsx';
+import { ApplyActionControl } from '../../mol-plugin-ui/state/apply-action.tsx';
 import { InitAssemblySymmetry3D, AssemblySymmetry3D, AssemblySymmetryPreset, tryCreateAssemblySymmetry, getAssemblySymmetryConfig } from './behavior.ts';
 import { AssemblySymmetryProvider, type AssemblySymmetryProps, AssemblySymmetryDataProvider, AssemblySymmetryData } from './prop.ts';
-import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.ts';
+import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.tsx';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { StructureHierarchyManager } from '../../mol-plugin-state/manager/structure/hierarchy.ts';
 import { StateAction, StateSelection } from '../../mol-state/index.ts';
 import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { Task } from '../../mol-task/index.ts';
-import { ExtensionSvg, CheckSvg } from '../../mol-plugin-ui/controls/icons.ts';
+import { ExtensionSvg, CheckSvg } from '../../mol-plugin-ui/controls/icons.tsx';
 
 interface AssemblySymmetryControlState extends CollapsableState {
     isBusy: boolean

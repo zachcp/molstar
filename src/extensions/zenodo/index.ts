@@ -5,7 +5,7 @@
  */
 
 import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
-import { ZenodoImportUI } from './ui.ts';
+import { ZenodoImportUI } from './ui.tsx';
 
 export const ZenodoImport = PluginBehavior.create<{ }>({
     name: 'extension-zenodo-import',

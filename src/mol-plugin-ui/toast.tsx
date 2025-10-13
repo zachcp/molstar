@@ -6,10 +6,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginUIComponent } from './base.ts';
+import { PluginUIComponent } from './base.tsx';
 import type { PluginToastManager } from '../mol-plugin/util/toast.ts';
-import { IconButton } from './controls/common.ts';
-import { CancelSvg } from './controls/icons.ts';
+import { IconButton } from './controls/common.tsx';
+import { CancelSvg } from './controls/icons.tsx';
 
 class ToastEntry extends PluginUIComponent<{ entry: PluginToastManager.Entry }> {
     private hide = () => {

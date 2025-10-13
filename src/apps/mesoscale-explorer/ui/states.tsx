@@ -7,11 +7,11 @@
 import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif.ts';
 import { MmcifProvider } from '../../../mol-plugin-state/formats/trajectory.ts';
 import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
-import { Button, ExpandGroup, IconButton } from '../../../mol-plugin-ui/controls/common.ts';
-import { GetAppSvg, HelpOutlineSvg, MagicWandSvg, TourSvg, Icon, OpenInBrowserSvg } from '../../../mol-plugin-ui/controls/icons.ts';
-import { CollapsableControls, PluginUIComponent } from '../../../mol-plugin-ui/base.ts';
-import { ApplyActionControl } from '../../../mol-plugin-ui/state/apply-action.ts';
-import { LocalStateSnapshotList, LocalStateSnapshotParams, LocalStateSnapshots } from '../../../mol-plugin-ui/state/snapshots.ts';
+import { Button, ExpandGroup, IconButton } from '../../../mol-plugin-ui/controls/common.tsx';
+import { GetAppSvg, HelpOutlineSvg, MagicWandSvg, TourSvg, Icon, OpenInBrowserSvg } from '../../../mol-plugin-ui/controls/icons.tsx';
+import { CollapsableControls, PluginUIComponent } from '../../../mol-plugin-ui/base.tsx';
+import { ApplyActionControl } from '../../../mol-plugin-ui/state/apply-action.tsx';
+import { LocalStateSnapshotList, LocalStateSnapshotParams, LocalStateSnapshots } from '../../../mol-plugin-ui/state/snapshots.tsx';
 import { PluginCommands } from '../../../mol-plugin/commands.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
 import { StateAction, StateObjectRef, StateTransform } from '../../../mol-state/index.ts';

@@ -8,7 +8,7 @@ import { PluginCommands } from '../../mol-plugin/commands.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import type { State, StateTransform, StateAction } from '../../mol-state/index.ts';
 import { memoizeLatest } from '../../mol-util/memoize.ts';
-import { StateTransformParameters, TransformControlBase } from './common.ts';
+import { StateTransformParameters, TransformControlBase } from './common.tsx';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 export { ApplyActionControl };
 

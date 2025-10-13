@@ -18,7 +18,7 @@ import { cantorPairing } from '../../../mol-data/util.ts';
 import { QmeanScoreColorThemeProvider } from './color/qmean.ts';
 import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
 import { StateObjectRef } from '../../../mol-state/index.ts';
-import { MAPairwiseScorePlotPanel } from './pairwise/ui.ts';
+import { MAPairwiseScorePlotPanel } from './pairwise/ui.tsx';
 import { PluginConfigItem } from '../../../mol-plugin/config.ts';
 
 export const MAQualityAssessmentConfig = {

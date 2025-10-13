@@ -7,7 +7,7 @@
 
 
 import { createElement } from 'react';
-import { Plugin } from './plugin.ts';
+import { Plugin } from './plugin.tsx';
 import { PluginUIContext } from './context.ts';
 import { DefaultPluginUISpec, type PluginUISpec } from './spec.ts';
 

@@ -14,10 +14,10 @@ import type { StateTransform } from '../../mol-state/index.ts';
 import { lociLabel } from '../../mol-theme/label.ts';
 import { Binding } from '../../mol-util/binding.ts';
 import { memoizeLatest } from '../../mol-util/memoize.ts';
-import { PluginUIComponent } from '../base.ts';
-import { ActionMenu } from '../controls/action-menu.ts';
-import { Button, IconButton, ToggleButton } from '../controls/common.ts';
-import { CancelOutlinedSvg, CenterFocusStrongSvg } from '../controls/icons.ts';
+import { PluginUIComponent } from '../base.tsx';
+import { ActionMenu } from '../controls/action-menu.tsx';
+import { Button, IconButton, ToggleButton } from '../controls/common.tsx';
+import { CancelOutlinedSvg, CenterFocusStrongSvg } from '../controls/icons.tsx';
 
 interface StructureFocusControlsState {
     isBusy: boolean

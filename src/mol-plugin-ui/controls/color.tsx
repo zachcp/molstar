@@ -9,9 +9,9 @@ import { Color } from '../../mol-util/color.ts';
 import type { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { camelCaseToWords, stringToWords } from '../../mol-util/string.ts';
 import * as React from 'react';
-import type { _Props, _State } from '../base.ts';
-import type { ParamProps } from './parameters.ts';
-import { TextInput, Button, ControlRow } from './common.ts';
+import type { _Props, _State } from '../base.tsx';
+import type { ParamProps } from './parameters.tsx';
+import { TextInput, Button, ControlRow } from './common.tsx';
 import { DefaultColorSwatch } from '../../mol-util/color/swatches.ts';
 
 export class CombinedColorControl extends React.PureComponent<ParamProps<PD.Color> & { hideNameRow?: boolean }, { isExpanded: boolean, lightness: number }> {

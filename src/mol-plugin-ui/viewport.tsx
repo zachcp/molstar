@@ -12,13 +12,13 @@ import { throttleTime } from 'rxjs';
 import { PluginCommands } from '../mol-plugin/commands.ts';
 import { PluginConfig } from '../mol-plugin/config.ts';
 import type { ParamDefinition as PD } from '../mol-util/param-definition.ts';
-import { PluginUIComponent } from './base.ts';
-import { Button, ControlGroup, IconButton } from './controls/common.ts';
-import { AutorenewSvg, BuildOutlinedSvg, CameraOutlinedSvg, CloseSvg, FullscreenSvg, TuneSvg, HeadsetVRSvg } from './controls/icons.ts';
-import { ToggleSelectionModeButton } from './structure/selection.ts';
-import { ViewportCanvas } from './viewport/canvas.ts';
-import { DownloadScreenshotControls } from './viewport/screenshot.ts';
-import { SimpleSettingsControl } from './viewport/simple-settings.ts';
+import { PluginUIComponent } from './base.tsx';
+import { Button, ControlGroup, IconButton } from './controls/common.tsx';
+import { AutorenewSvg, BuildOutlinedSvg, CameraOutlinedSvg, CloseSvg, FullscreenSvg, TuneSvg, HeadsetVRSvg } from './controls/icons.tsx';
+import { ToggleSelectionModeButton } from './structure/selection.tsx';
+import { ViewportCanvas } from './viewport/canvas.tsx';
+import { DownloadScreenshotControls } from './viewport/screenshot.tsx';
+import { SimpleSettingsControl } from './viewport/simple-settings.tsx';
 
 interface ViewportControlsState {
     isSettingsExpanded: boolean,

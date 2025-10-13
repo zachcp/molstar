@@ -6,7 +6,7 @@
 
 import { Color } from '../../mol-util/color.ts';
 import * as React from 'react';
-import type { _Props, _State } from '../base.ts';
+import type { _Props, _State } from '../base.tsx';
 import type { Legend as LegendData, ScaleLegend as ScaleLegendData, TableLegend as TableLegendData } from '../../mol-util/legend.ts';
 
 export type LegendProps<L extends LegendData> = { legend: L }

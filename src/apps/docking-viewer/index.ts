@@ -25,7 +25,7 @@ import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import '../../mol-util/polyfill';
 import { ObjectKeys } from '../../mol-util/type-helpers.ts';
 import './index.html';
-import { ShowButtons, StructurePreset, ViewportComponent } from './viewport.ts';
+import { ShowButtons, StructurePreset, ViewportComponent } from './viewport.tsx';
 
 import '../../mol-plugin-ui/skin/light.scss';
 

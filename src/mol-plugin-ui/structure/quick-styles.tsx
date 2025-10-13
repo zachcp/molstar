@@ -12,9 +12,9 @@ import { PluginConfig } from '../../mol-plugin/config.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { Color } from '../../mol-util/color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { CollapsableControls, PurePluginUIComponent } from '../base.ts';
-import { Button } from '../controls/common.ts';
-import { MagicWandSvg } from '../controls/icons.ts';
+import { CollapsableControls, PurePluginUIComponent } from '../base.tsx';
+import { Button } from '../controls/common.tsx';
+import { MagicWandSvg } from '../controls/icons.tsx';
 
 
 export class StructureQuickStylesControls extends CollapsableControls {

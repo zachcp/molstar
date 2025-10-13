@@ -4,18 +4,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mp4EncoderUI } from '../../../extensions/mp4-export/ui.ts';
-import { CollapsableControls, type CollapsableState, PluginUIComponent } from '../../../mol-plugin-ui/base.ts';
-import { SectionHeader } from '../../../mol-plugin-ui/controls/common.ts';
-import { ParameterControls } from '../../../mol-plugin-ui/controls/parameters.ts';
+import { Mp4EncoderUI } from '../../../extensions/mp4-export/ui.tsx';
+import { CollapsableControls, type CollapsableState, PluginUIComponent } from '../../../mol-plugin-ui/base.tsx';
+import { SectionHeader } from '../../../mol-plugin-ui/controls/common.tsx';
+import { ParameterControls } from '../../../mol-plugin-ui/controls/parameters.tsx';
 import { PluginCommands } from '../../../mol-plugin/commands.ts';
-import { StructureMeasurementsControls } from '../../../mol-plugin-ui/structure/measurements.ts';
+import { StructureMeasurementsControls } from '../../../mol-plugin-ui/structure/measurements.tsx';
 import type { MesoscaleExplorerState } from '../app.ts';
 import { MesoscaleState } from '../data/state.ts';
-import { EntityControls, FocusInfo, ModelInfo, SelectionInfo } from './entities.ts';
-import { LoaderControls, ExampleControls, SessionControls, SnapshotControls, DatabaseControls, MesoQuickStylesControls, ExplorerInfo } from './states.ts';
+import { EntityControls, FocusInfo, ModelInfo, SelectionInfo } from './entities.tsx';
+import { LoaderControls, ExampleControls, SessionControls, SnapshotControls, DatabaseControls, MesoQuickStylesControls, ExplorerInfo } from './states.tsx';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { TuneSvg } from '../../../mol-plugin-ui/controls/icons.ts';
+import { TuneSvg } from '../../../mol-plugin-ui/controls/icons.tsx';
 import { RendererParams } from '../../../mol-gl/renderer.ts';
 import { TrackballControlsParams } from '../../../mol-canvas3d/controls/trackball.ts';
 import { XRManagerParams } from '../../../mol-canvas3d/helper/xr-manager.ts';
