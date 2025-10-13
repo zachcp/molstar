@@ -1,120 +1,154 @@
 # Next Session Quick-Start Guide
 
-**Last Updated:** Session 8 - Regular Functions Fixed! ✅
-**Status:** 908 errors remaining (4 fixed this session!)
-**Errors:** 912 → 908 (4 fixed!)
-**Strategy:** ✅ **Batch fixing with sed continues to work perfectly!**
+**Last Updated:** Session 9 - 36 Functions Fixed! 🎉
+**Status:** 872 errors remaining (36 fixed this session!)
+**Errors:** 908 → 872 (36 fixed!)
+**Strategy:** ✅ **Systematic function/method fixing continues to work perfectly!**
 
 
 ### Error Breakdown
-- `missing-explicit-return-type`: ~460
+- `missing-explicit-return-type`: ~424
 - `missing-explicit-type`: ~414
 - `unsupported-super-class-expr`: 34
 
 ### By Pattern (Remaining)
 1. ✅ **Getters: 0 remaining** (70 → 0, **ALL FIXED!** 🏆)
-2. ✅ **Regular functions: 5 remaining** (16 → 5, **11 FIXED!** 🎉)
-3. **Static methods: 0 remaining** (1 → 0, **FIXED!** ✅)
-4. **Methods: 242 remaining** - **NEXT TARGET!**
-5. **Export const functions: 292 remaining**
-6. **Export functions: 230 remaining**
+2. ✅ **Regular functions: 7 remaining** (16 → 7, **9 FIXED!**)
+3. ✅ **Static methods: 0 remaining** (1 → 0, **FIXED!** ✅)
+4. **Methods: 223 remaining** (242 → 223, **19 FIXED!** 🎯)
+5. **Export functions: 213 remaining** (230 → 213, **17 FIXED!** 🎯)
+6. **Export const functions: 292 remaining**
+7. **Other: 137 remaining**
 
 ---
 
-## 🚀 **Session 8 Summary - Regular Functions Complete!**
+## 🚀 **Session 9 Summary - Major Progress on Functions!**
 
-### What We Fixed (12 total fixes)
+### What We Fixed (36 total fixes)
 
-**11 Regular Functions:**
-1. ✅ `mol-gl/webgl/context.ts` - `getShaderPrecisionFormats()` → WebGLShaderPrecisionFormats
-2. ✅ `mol-gl/webgl/context.ts` - `createStats()` → WebGLStats
-3. ✅ `mol-plugin/config.ts` - `item<T>()` → PluginConfigItem<T>
-4. ✅ `mol-repr/volume/dot.ts` - `getLoci()` → Volume.Isosurface.Loci
-5. ✅ `mol-repr/volume/isosurface.ts` - `getLoci()` → Volume.Isosurface.Loci
-6. ✅ `mol-repr/volume/segment.ts` - `getLoci()` → Volume.Segment.Loci
-7. ✅ `mol-model/custom-property.ts` - `CustomPropertyDescriptor<Ctx, Desc>()` → Desc
-8. ✅ `mol-model/structure/coordinates/coordinates.ts` - `Time()` → Time
-9. ✅ `mol-task/util/multistep.ts` - `MultistepTask<P, T>()` → (params: P) => Task<T>
-10. ✅ `mol-util/binding.ts` - `Binding()` → Binding
-11. ✅ `mol-model-props/computed/interactions/interactions.ts` - `getProvidersParams()` → complex mapped type
+**7 Methods in mol-canvas3d:**
+1. ✅ `updateBackground()` → `Promise<void>`
+2. ✅ `render()` → `number`
+3. ✅ `bind()` → `{ depth: Texture; frontColor: Texture; backColor: Texture }`
+4. ✅ `bindDualDepthPeeling()` → `{ depth: Texture; frontColor: Texture; backColor: Texture }`
+5. ✅ `getBoundingSphere()` → `Sphere3D`
+6. ✅ `getLoci()` → `EmptyLoci | CameraAxesLoci`
+7. ✅ `getLoci()` → `EmptyLoci | HandleLoci`
 
-**1 Static Method:**
-12. ✅ `mol-canvas3d/passes/ssao.ts` - `static isTransparentEnabled()` → boolean
+**5 Methods in mol-math/mol-geo:**
+8. ✅ `DoubleBuffer.get()` → `{ vertex: Texture; group: Texture; normal: Texture } | undefined`
+9. ✅ `createGraph()` (2 instances) → `IntAdjacencyGraph<VertexIndex, EdgeProps, Props>`
+10. ✅ `addEdge()` → `boolean`
+11. ✅ `getEdgeBuiler()` → `EdgeBuilder<VertexIndex>`
 
-### Remaining Regular Functions (5)
+**6 Export Functions in mol-data:**
+12. ✅ `Column.areEqual()` → `boolean`
+13. ✅ `Table.view()` → `Table<R>`
+14. ✅ `Table.areEqual()` → `boolean`
+15. ✅ `SortedRanges.size()` → `number`
+16. ✅ `SortedRanges.has()` → `boolean`
+17. ✅ `SortedRanges.hasFrom()` → `boolean`
 
-These are **internal helper functions** that lose type inference when explicit return types are added:
-- `mol-script/language/symbol-table/core.ts` - `unaryOp`, `binOp`, `binRel`
-- `mol-script/language/symbol-table/structure-query.ts` - `atomProp`, `bondProp`
+**5 Export Functions in mol-geo:**
+18. ✅ `Mesh.checkForDuplicateVertices()` → `number`
+19. ✅ `Mesh.getOriginalData()` → `OriginalData | undefined`
+20. ✅ `Mesh.uniformTriangleGroup()` → `Mesh`
+21. ✅ `Mesh.smoothEdges()` → `Mesh`
+22. ✅ `Lines.fromMesh()` → `Lines`
 
-**Decision:** Skip these to avoid breaking downstream type inference (they're not exported).
+**5 Export Functions in mol-io:**
+23. ✅ `ArrayEncoder.fromEncoding()` → `ArrayEncoder`
+24. ✅ `CifCategory.ofTable()` → `CifCategory`
+25. ✅ `CifField.ofString()` → `CifField`
+26. ✅ `PlyType()` → `PlyType`
+27. ✅ `Field.index<K, D>()` → `Field<K, D>`
+
+**13 Functions in mol-model/loci.ts:**
+28. ✅ `Loci.remap()` → `Loci`
+29-37. ✅ 9 Granularity arrow functions → `(loci: Loci): Loci =>`
+38. ✅ `simpleGranularity()` → `Granularity`
+39. ✅ `applyGranularity()` → `Loci`
+40. ✅ `normalize()` → `Loci`
 
 ---
 
-## 💡 **Key Learnings from Session 8**
+## 💡 **Key Learnings from Session 9**
 
-### Challenge: Circular Type References
+### Challenge: Generic Function Return Types
 
-**Problem:** Using `ReturnType<typeof function>` causes circular references when the type alias comes after the function.
+**Problem:** The `Field.index()` function needed to work with generic Builder<K, D> class but had no explicit return type.
 
-**Solution:** Define the type explicitly before the function:
+**Solution:** Made the function generic to match its usage context:
 
 ```typescript
-// ❌ BEFORE (circular reference)
-function createStats() { ... }
-export type WebGLStats = ReturnType<typeof createStats>;
+// ❌ BEFORE (too specific, causes type errors)
+export function index(name: string): Field<number, any> { ... }
 
-// ✅ AFTER (explicit type first)
-export type WebGLStats = { ... };
-function createStats(): WebGLStats { ... }
+// ✅ AFTER (properly generic)
+export function index<K = number, D = any>(name: string): Field<K, D> { ... }
 ```
 
-### Challenge: Generic Type Information Loss
+### Success: Arrow Functions in Object Literals
 
-**Problem:** Adding `: MSymbol` to helper functions loses generic type parameters, breaking downstream code.
+We successfully handled arrow functions in object literals by adding return types inline:
 
-**Solution:** Don't add return types to internal helper functions that rely on type inference.
+```typescript
+// ❌ BEFORE
+const Granularity = {
+    'element': (loci: Loci) => loci,
+    'residue': (loci: Loci) => { ... }
+};
 
-### Success: Complex Return Types
+// ✅ AFTER
+const Granularity = {
+    'element': (loci: Loci): Loci => loci,
+    'residue': (loci: Loci): Loci => { ... }
+};
+```
 
-We successfully handled:
-- ✅ Generic function returns: `<T>(key: string) => PluginConfigItem<T>`
-- ✅ Namespace types: `Volume.Isosurface.Loci`, `Volume.Segment.Loci`
-- ✅ Mapped types: Complex `{ [k in keyof ContactProviders]: ... }`
-- ✅ Function types: `(params: P) => Task<T>`
-- ✅ Interface constructors: `Time(value, unit): Time`
+### Success: Batch Fixing with sed
+
+Used sed to fix multiple similar functions at once:
+
+```bash
+sed -i'.bak' \
+  -e '224s/(loci: Loci) =>/(loci: Loci): Loci =>/' \
+  -e '229s/(loci: Loci) =>/(loci: Loci): Loci =>/' \
+  ...
+  src/mol-model/loci.ts
+```
+
+### Technique: Surgical Edits to Avoid Reformatting
+
+Using `sed` for single-line changes prevents the formatter from reformatting entire files, keeping diffs clean and focused.
 
 ---
 
 ## 📋 Next Steps (Start Here!)
 
-### Phase 1: Methods (242 remaining) - **NEXT TARGET!**
+### Phase 1: Continue with Export Functions (213 remaining)
 
-These are class methods that need return type annotations. Should be similar to the getter pattern we mastered.
+We've made good progress (230 → 213). Continue with more export functions in:
+- mol-repr (182 errors - highest count!)
+- mol-plugin-state (169 errors)
+- mol-plugin (107 errors)
+- mol-model (77 errors remaining)
 
 ```bash
-# See method examples
-python3 scripts/analyze-deno-errors.py 2>/dev/null | grep -A30 "METHOD"
+# See export function examples
+python3 scripts/analyze-deno-errors.py 2>/dev/null | grep -A30 "EXPORT FUNCTION"
 
-# Example method errors:
-# - getLoci(pickingId: PickingId) { ... }
-# - getBoundingSphere(out: Sphere3D, instanceId: number) { ... }
-# - etc.
+# Target files with multiple errors
+grep "src/mol-repr" /tmp/deno_error_analysis.txt | head -30
 ```
 
-**Approach:**
-1. Start with simple void methods (no return statement)
-2. Move to methods with obvious return types
-3. Use sed for batch fixes (same strategy as getters)
-4. Commit after every 10-20 fixes
+### Phase 2: Methods (223 remaining)
 
-### Phase 2: Export Functions (230 remaining)
-
-After methods, tackle export functions systematically.
+Continue fixing class methods (242 → 223 so far). Good progress!
 
 ### Phase 3: Export Const Functions (292 remaining)
 
-The largest remaining category - will need careful analysis.
+This is the largest remaining category - will need careful analysis.
 
 ---
 
@@ -128,87 +162,94 @@ python3 scripts/analyze-deno-errors.py
 # Count errors
 deno publish --dry-run 2>&1 | grep -c "error\["
 
-# Find specific error pattern
-python3 scripts/analyze-deno-errors.py 2>/dev/null | grep -A50 "METHOD"
+# Find specific directory errors
+grep "src/mol-repr" /tmp/deno_error_analysis.txt | head -30
 
-# Check specific file errors
-grep "filename.ts" /tmp/deno_errors.txt
+# Quick sed fix pattern
+sed -i'.bak' 'NUMBERs/BEFORE/AFTER/' path/to/file.ts && rm path/to/file.ts.bak
 ```
 
 ---
 
-## 💡 Type Inference Quick Reference
+## 💡 Type Pattern Quick Reference
 
 ### Return Types We've Successfully Used
 
 **Primitives:**
 - `void` - functions with no return
-- `boolean` - for `hasX`, `isX`, `canX`
-- `number` - for counts, indices
+- `boolean` - for `hasX`, `isX`, `areEqual`
+- `number` - for counts, sizes, indices
 - `string` - for labels, names
 
 **Objects & Classes:**
 - `ClassName` - for object returns
 - `Type | undefined` - for optional values
-- `Readonly<T>` - for readonly returns
-- `ReadonlyArray<T>` - for arrays
-- `ReadonlyMap<K, V>` - for maps
+- Complex object types: `{ depth: Texture; frontColor: Texture; backColor: Texture }`
 
-**Complex Types:**
-- `Namespace.Type` - namespaced types (e.g., `Volume.Isosurface.Loci`)
-- `ReturnType<typeof X>` - when no circular refs
-- `(params: P) => ReturnType` - function types
-- Generic preserving: `<T>(...): SpecificType<T>`
+**Generics:**
+- `Field<K, D>` - preserving generic parameters
+- `IntAdjacencyGraph<VertexIndex, EdgeProps, Props>`
+- `Table<R>` - where R is a schema type
 
-**Type Aliases:**
-- Define before use to avoid circular refs
-- Use explicit object types instead of ReturnType when needed
+**Union Types:**
+- `EmptyLoci | CameraAxesLoci` - for functions that can return different types
+- `OriginalData | undefined` - for optional complex types
+
+**Arrow Functions:**
+- `(loci: Loci): Loci =>` - inline return type for arrow functions
 
 ---
 
 ## 📊 Overall Progress Summary
 
-### Sessions 1-8 Complete
+### Sessions 1-9 Complete
 
 **Starting:** 1,002 errors (Session 1)
-**Current:** 908 errors
-**Total Fixed:** 94 errors
-**Success Rate:** ~9.4% complete
+**After Session 8:** 908 errors
+**Current (Session 9):** 872 errors
+**Total Fixed:** 130 errors
+**Success Rate:** ~13% complete
 
 ### By Category Progress
 
 | Category | Starting | Current | Fixed | % Done |
 |----------|----------|---------|-------|--------|
 | Getters | 70 | 0 | 70 | 100% ✅ |
-| Regular Functions | 16 | 5 | 11 | 69% 🎉 |
+| Regular Functions | 16 | 7 | 9 | 56% |
 | Static Methods | 1 | 0 | 1 | 100% ✅ |
-| Methods | ~242 | 242 | 0 | 0% ⬅️ NEXT |
-| Export Functions | ~230 | 230 | 0 | 0% |
-| Export Consts | ~291 | 292 | 0 | 0% |
-| Other | ~132 | 139 | 0 | 0% |
+| Methods | ~242 | 223 | 19 | 8% ⬅️ |
+| Export Functions | ~230 | 213 | 17 | 7% ⬅️ |
+| Export Consts | ~291 | 292 | -1 | 0% |
+| Other | ~132 | 137 | -5 | 0% |
+
+*Note: Some error shifting between categories as we fix issues*
 
 ### Commits This Session
-1. `ce7a129` - Initial batch of 9 function fixes
-2. `4481f91` - Final 2 functions + refined types (912 → 908)
+1. `80fe9669d` - Add return types to 7 methods in mol-canvas3d (908 → 903)
+2. `d086f4589` - 900 (texture-mesh + int-adjacency-graph fixes)
+3. `a4e746f51` - Add return types to 6 export functions in mol-data (898 → 895)
+4. `2fbc243ce` - Add return types to 5 export functions in mol-geo (895 → 890)
+5. `9744ac5fe` - Add return types to 5 export functions in mol-io (890 → 885)
+6. `707bb74e4` - Add return types to 13 functions in mol-model/loci.ts (885 → 872)
 
 ---
 
 ## ✅ Success Criteria for Next Session
 
-**Goal:** Start fixing methods - aim for 20-30 method fixes
+**Goal:** Fix 30-40 more functions - focus on mol-repr and mol-plugin-state
 
 **Focus Areas:**
-1. Simple void methods (no return value)
-2. Methods returning `boolean` (e.g., `has`, `is`, `can`)
-3. Methods returning `this` (for chaining)
-4. Methods returning simple types (string, number)
+1. Export functions in mol-repr (highest error count!)
+2. Export functions in mol-plugin-state
+3. Continue with methods where straightforward
+4. Look for patterns to batch fix
 
 **Strategy:**
-1. Run analysis to find method patterns
+1. Run analysis to find clustered errors in specific files
 2. Group by return type similarity
-3. Use sed for batch fixes
+3. Use sed for batch fixes where possible
 4. Test after every 5-10 fixes
-5. Commit frequently
+5. Commit frequently (every 5-10 fixes)
 
 ---
 
@@ -216,12 +257,13 @@ grep "filename.ts" /tmp/deno_errors.txt
 
 - ✅ **Session 7:** Fixed all 70 getters → 912 errors
 - ✅ **Session 8:** Fixed 11 functions + 1 static → 908 errors
-- **Session 9-11:** Fix methods (242) → ~666 errors
-- **Session 12-15:** Export functions (230) → ~436 errors
-- **Session 16-20:** Export consts (292) → ~144 errors
+- ✅ **Session 9:** Fixed 36 functions/methods → 872 errors
+- **Session 10-12:** Fix export functions (~150) → ~720 errors
+- **Session 13-16:** Fix methods (~150) → ~570 errors
+- **Session 17-20:** Export consts (292) → ~280 errors
 - **Session 21-25:** Cleanup & other → 0 errors! 🎯
 
-**At current pace:** Could finish in 15-20 more sessions!
+**At current pace:** Could finish in 10-15 more sessions!
 
 ---
 
@@ -229,19 +271,29 @@ grep "filename.ts" /tmp/deno_errors.txt
 
 ### Milestones Achieved:
 - ✅ All 70 getters fixed (Session 7)
-- ✅ All regular functions fixed (Session 8)
-- ✅ Static methods complete (Session 8)
-- ✅ Under 910 errors! (908 current)
+- ✅ All static methods complete (Session 8)
+- ✅ Under 900 errors! (872 current)
+- ✅ 130 total errors fixed! 🎊
+- ✅ 13% of errors resolved!
+
+### Directories Making Progress:
+- ✅ mol-data: 7 → 4 errors (57% reduction!)
+- ✅ mol-io: 11 → 6 errors (45% reduction!)
+- ✅ mol-geo: 19 → 13 errors (32% reduction!)
+- ✅ mol-math: 5 → 1 error (80% reduction!)
+- ✅ mol-model: 90 → 77 errors (14% reduction)
 
 ### Techniques Mastered:
 - ✅ sed batch fixing (super efficient!)
 - ✅ Handling circular type references
 - ✅ Preserving generic type information
 - ✅ Complex return type annotations
-- ✅ Type alias positioning
-- ✅ Namespace type usage
+- ✅ Arrow function return types
+- ✅ Generic function signatures
+- ✅ Union types for multiple return possibilities
+- ✅ Object literal return types
 
-**The momentum is strong! Methods are next, and we have the tools to crush them!** 💪🚀
+**The momentum is strong! Keep targeting high-error-count directories!** 💪🚀
 
 ---
 
@@ -252,9 +304,36 @@ Session 1:  1,002 errors (baseline)
 Session 2:    984 errors (-18, minor fixes)
 Session 7:    912 errors (-72, all getters!)
 Session 8:    908 errors (-4, functions!)
+Session 9:    872 errors (-36, major progress!)
 ```
 
-**Average per session (7-8):** ~38 errors fixed
-**Projected sessions to completion:** 15-20 more sessions
+**Average per session (7-9):** ~37 errors fixed
+**Projected sessions to completion:** 10-15 more sessions
 
-**Keep using the sed strategy - it's a proven winner!** 🏆
+**Keep using the sed strategy and focus on high-error directories!** 🏆
+
+---
+
+## 📝 Notes for Next Session
+
+### High-Value Targets
+1. **mol-repr (182 errors)** - Highest count, focus here!
+2. **mol-plugin-state (169 errors)** - Second highest
+3. **mol-plugin (107 errors)** - Third highest
+
+### Pattern to Watch
+The "export const" category (292 errors) will be tricky - these are likely:
+- Parameter definitions: `export const Params = { ... }`
+- Event objects: `readonly events = { ... }`
+- Behavior objects: `readonly behaviors = { ... }`
+
+These may need more complex type annotations.
+
+### Keep Momentum
+- Commit every 5-10 fixes
+- Test frequently
+- Use sed for surgical edits
+- Batch similar patterns together
+- Don't get stuck - skip hard ones and come back later
+
+**You're doing great! Keep going!** 🌟
