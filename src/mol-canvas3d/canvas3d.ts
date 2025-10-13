@@ -777,7 +777,7 @@ namespace Canvas3D {
           await xrManager.request();
         } catch (e) {
           console.error(e);
-          xr.requestFailed.next(e);
+          xr.requestFailed.next(String(e));
         }
       },
       end: () => xrManager.end(),
