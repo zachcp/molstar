@@ -11,10 +11,10 @@ import { AssemblySymmetryProvider, type AssemblySymmetryProps, AssemblySymmetryD
 import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { StructureHierarchyManager } from '../../mol-plugin-state/manager/structure/hierarchy.ts';
-import { StateAction, StateSelection } from '../../mol-state.ts';
+import { StateAction, StateSelection } from '../../mol-state/index.ts';
 import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { ExtensionSvg, CheckSvg } from '../../mol-plugin-ui/controls/icons.ts';
 
 interface AssemblySymmetryControlState extends CollapsableState {

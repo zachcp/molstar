@@ -11,8 +11,8 @@ import { NtCTubeRepresentationProvider } from './representation.ts';
 import type { DnatcoTypes } from '../types.ts';
 import { Dnatco } from '../property.ts';
 import { StructureRepresentationPresetProvider, PresetStructureRepresentations } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
-import { StateObjectRef } from '../../../mol-state.ts';
-import { Task } from '../../../mol-task.ts';
+import { StateObjectRef } from '../../../mol-state/index.ts';
+import { Task } from '../../../mol-task/index.ts';
 
 export const NtCTubePreset = StructureRepresentationPresetProvider({
     id: 'preset-structure-representation-ntc-tube',

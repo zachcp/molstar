@@ -9,7 +9,7 @@
 
 import type { List } from 'immutable';
 import * as React from 'react';
-import { formatTime } from '../mol-util.ts';
+import { formatTime } from '../mol-util/index.ts';
 import type { LogEntry } from '../mol-util/log-entry.ts';
 import { PluginReactContext, PluginUIComponent } from './base.ts';
 import { AnimationViewportControls, DefaultStructureTools, LociLabels, StateSnapshotViewportControls, TrajectoryViewportControls, SelectionViewportControls, ViewportSnapshotDescription } from './controls.ts';

@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { ColorTheme } from '../color.ts';
+import type { ColorTheme } from '../color/index.ts';
 import { Color } from '../../mol-util/color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../theme.ts';
 import { TableLegend } from '../../mol-util/legend.ts';
-import { defaults } from '../../mol-util.ts';
+import { defaults } from '../../mol-util/index.ts';
 import { ColorThemeCategory } from './categories.ts';
 
 const DefaultColor = Color(0xCCCCCC);

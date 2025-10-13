@@ -16,7 +16,7 @@ import { Volume, type Grid } from '../../mol-model/volume.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import { toPrecision } from '../../mol-util/number.ts';
-import { StateSelection, type StateObjectCell } from '../../mol-state.ts';
+import { StateSelection, type StateObjectCell } from '../../mol-state/index.ts';
 import { setSubtreeVisibility } from '../../mol-plugin/behavior/static/state.ts';
 import { VisibilityOutlinedSvg, VisibilityOffOutlinedSvg } from '../controls/icons.ts';
 

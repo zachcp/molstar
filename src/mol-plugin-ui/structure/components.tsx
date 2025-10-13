@@ -11,7 +11,7 @@ import { StructureComponentManager } from '../../mol-plugin-state/manager/struct
 import { StructureHierarchyManager } from '../../mol-plugin-state/manager/structure/hierarchy.ts';
 import type { StructureComponentRef, StructureRepresentationRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
-import { State } from '../../mol-state.ts';
+import { State } from '../../mol-state/index.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';
 import { CollapsableControls, type CollapsableState, PurePluginUIComponent } from '../base.ts';
 import { ActionMenu } from '../controls/action-menu.ts';

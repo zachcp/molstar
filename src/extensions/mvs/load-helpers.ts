@@ -11,7 +11,7 @@ import type { StructureComponentParams } from '../../mol-plugin-state/helpers/st
 import { type StructureFromModel, StructureInstances, TransformStructureConformation } from '../../mol-plugin-state/transforms/model.ts';
 import type { StructureRepresentation3D, VolumeRepresentation3D } from '../../mol-plugin-state/transforms/representation.ts';
 import { VolumeInstances, VolumeTransform } from '../../mol-plugin-state/transforms/volume.ts';
-import type { StateTransformer } from '../../mol-state.ts';
+import type { StateTransformer } from '../../mol-state/index.ts';
 import { arrayDistinct } from '../../mol-util/array.ts';
 import type { Clip } from '../../mol-util/clip.ts';
 import { Color } from '../../mol-util/color.ts';

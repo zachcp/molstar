@@ -19,7 +19,7 @@ import type { Representation } from '../mol-repr/representation.ts';
 import type { ShapeRepresentation } from '../mol-repr/shape/representation.ts';
 import type { StructureRepresentation, StructureRepresentationState } from '../mol-repr/structure/representation.ts';
 import type { VolumeRepresentation } from '../mol-repr/volume/representation.ts';
-import { StateObject, StateTransformer } from '../mol-state.ts';
+import { StateObject, StateTransformer } from '../mol-state/index.ts';
 import type { CubeFile } from '../mol-io/reader/cube/parser.ts';
 import type { DxFile } from '../mol-io/reader/dx/parser.ts';
 import type { Color } from '../mol-util/color/color.ts';

@@ -7,8 +7,8 @@
 import { createGrid3dComputeRenderable } from '../../../mol-gl/compute/grid3d.ts';
 import { TextureSpec, type UnboxedValues, UniformSpec } from '../../../mol-gl/renderable/schema.ts';
 import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
-import type { RuntimeContext } from '../../../mol-task.ts';
-import { ValueCell } from '../../../mol-util.ts';
+import type { RuntimeContext } from '../../../mol-task/index.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import { arrayMin } from '../../../mol-util/array.ts';
 import type { AlphaOrbital, Basis, CubeGridInfo } from '../data-model.ts';
 import { normalizeBasicOrder, type SphericalBasisOrder } from '../spherical-functions.ts';

@@ -10,7 +10,7 @@ import { createComputeRenderItem } from '../../webgl/render-item.ts';
 import { type Values, TextureSpec, UniformSpec } from '../../renderable/schema.ts';
 import type { Texture, TextureFilter, TextureFormat, TextureKind, TextureType } from '../../../mol-gl/webgl/texture.ts';
 import { ShaderCode } from '../../../mol-gl/shader-code.ts';
-import { ValueCell } from '../../../mol-util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import { QuadSchema, QuadValues } from '../util.ts';
 import type { Vec2, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { getHistopyramidSum } from './sum.ts';

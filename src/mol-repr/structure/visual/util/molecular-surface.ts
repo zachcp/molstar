@@ -5,7 +5,7 @@
  */
 
 import type { Unit, Structure } from '../../../../mol-model/structure.ts';
-import { Task, type RuntimeContext } from '../../../../mol-task.ts';
+import { Task, type RuntimeContext } from '../../../../mol-task/index.ts';
 import { getUnitConformationAndRadius, type CommonSurfaceProps, ensureReasonableResolution, getStructureConformationAndRadius } from './common.ts';
 import type { PositionData, DensityData, Box3D } from '../../../../mol-math/geometry.ts';
 import { type MolecularSurfaceCalculationProps, calcMolecularSurface } from '../../../../mol-math/geometry/molecular-surface.ts';

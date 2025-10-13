@@ -7,8 +7,8 @@
 import { Mat4 } from '../../../../mol-math/linear-algebra/3d/mat4.ts';
 import { type ElementIndex, type Model, Structure, Unit } from '../../../../mol-model/structure.ts';
 import { PluginStateObject as SO, PluginStateTransform } from '../../../../mol-plugin-state/objects.ts';
-import { Task } from '../../../../mol-task.ts';
-import { StateObject, StateTransformer } from '../../../../mol-state.ts';
+import { Task } from '../../../../mol-task/index.ts';
+import { StateObject, StateTransformer } from '../../../../mol-state/index.ts';
 import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
 import { SymmetryOperator } from '../../../../mol-math/geometry.ts';
 import { mergeUnits, partitionUnits } from '../util.ts';
@@ -18,7 +18,7 @@ import { SortedArray } from '../../../../mol-data/int.ts';
 import { type GenericInstances, getTransforms } from './preset.ts';
 import type { Asset } from '../../../../mol-util/assets.ts';
 import type { PluginContext } from '../../../../mol-plugin/context.ts';
-import { deepEqual } from '../../../../mol-util.ts';
+import { deepEqual } from '../../../../mol-util/index.ts';
 
 function createModelChainMap(model: Model) {
     const builder = new Structure.StructureBuilder();

@@ -16,7 +16,7 @@ import { StructureElement, StructureProperties, Unit } from '../../mol-model/str
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { Representation } from '../../mol-repr/representation.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import type { ColorTheme, LocationColor } from '../../mol-theme/color.ts';
 import { Color } from '../../mol-util/color.ts';
 import { ButtonsType, getButton, getButtons, getModifiers, type ModifiersKeys } from '../../mol-util/input/input-observer.ts';

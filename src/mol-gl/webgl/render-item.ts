@@ -12,7 +12,7 @@ import type { ShaderCode, DefineValues } from '../shader-code.ts';
 import type { Program, Programs } from './program.ts';
 import { type RenderableSchema, type RenderableValues, AttributeSpec, getValueVersions, splitValues, DefineSpec } from '../renderable/schema.ts';
 import { idFactory } from '../../mol-util/id-factory.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import type { TextureImage, TextureVolume } from '../../mol-gl/renderable/util.ts';
 import { isDebugMode, isTimingMode } from '../../mol-util/debug.ts';
 import type { VertexArray } from './vertex-array.ts';

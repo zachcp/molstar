@@ -9,7 +9,7 @@ import { EmptyLoci } from '../../mol-model/loci.ts';
 import { StructureSelection } from '../../mol-model/structure.ts';
 import { AnimateModelIndex } from '../../mol-plugin-state/animation/built-in/model-index.ts';
 import type { BuiltInTrajectoryFormat } from '../../mol-plugin-state/formats/trajectory.ts';
-import { createPluginUI } from '../../mol-plugin-ui.ts';
+import { createPluginUI } from '../../mol-plugin-ui/index.ts';
 import type { PluginUIContext } from '../../mol-plugin-ui/context.ts';
 import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
 import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';

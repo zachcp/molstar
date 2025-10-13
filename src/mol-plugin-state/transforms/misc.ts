@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StateTransformer } from '../../mol-state.ts';
-import { shallowEqualObjects } from '../../mol-util.ts';
+import { StateTransformer } from '../../mol-state/index.ts';
+import { shallowEqualObjects } from '../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { PluginStateObject as SO, PluginStateTransform } from '../objects.ts';
 

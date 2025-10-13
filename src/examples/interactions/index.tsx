@@ -14,7 +14,7 @@ import { atoms } from '../../mol-model/structure/query/queries/generators.ts';
 import type { BuiltInTrajectoryFormat } from '../../mol-plugin-state/formats/trajectory.ts';
 import { MultiStructureSelectionFromBundle, StructureSelectionFromBundle } from '../../mol-plugin-state/transforms/model.ts';
 import { ShapeRepresentation3D, StructureRepresentation3D } from '../../mol-plugin-state/transforms/representation.ts';
-import { createPluginUI } from '../../mol-plugin-ui.ts';
+import { createPluginUI } from '../../mol-plugin-ui/index.ts';
 import { useBehavior } from '../../mol-plugin-ui/hooks/use-behavior.ts';
 import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
 import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';
@@ -25,7 +25,7 @@ import { PluginSpec } from '../../mol-plugin/spec.ts';
 
 import '../../mol-plugin-ui/skin/light.scss';
 import './index.html';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { computeContacts } from '../../extensions/interactions/compute.ts';
 
 async function createViewer(root: HTMLElement) {

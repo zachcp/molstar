@@ -9,7 +9,7 @@ import { SortedArray } from '../../../mol-data/int.ts';
 import { EquivalenceClasses } from '../../../mol-data/util.ts';
 import { Spacegroup, SpacegroupCell, SymmetryOperator } from '../../../mol-math/geometry.ts';
 import { Vec3, Mat4 } from '../../../mol-math/linear-algebra.ts';
-import { type RuntimeContext, Task } from '../../../mol-task.ts';
+import { type RuntimeContext, Task } from '../../../mol-task/index.ts';
 import { Symmetry, Model } from '../model.ts';
 import { QueryContext, StructureSelection, Queries as Q } from '../query.ts';
 import { Structure } from './structure.ts';

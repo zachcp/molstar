@@ -6,8 +6,8 @@
  */
 
 import * as _ from '../../mol-plugin-state/transforms.ts';
-import { StateTransformer, type StateObject } from '../../mol-state.ts';
-import { StringBuilder } from '../../mol-util.ts';
+import { StateTransformer, type StateObject } from '../../mol-state/index.ts';
+import { StringBuilder } from '../../mol-util/index.ts';
 import * as fs from 'fs';
 import { paramsToMd } from './pd-to-md.ts';
 import { PluginContext } from '../../mol-plugin/context.ts';

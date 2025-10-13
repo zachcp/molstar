@@ -10,7 +10,7 @@ import { throttleTime } from 'rxjs';
 import { Canvas3DContext, Canvas3DParams } from '../mol-canvas3d/canvas3d.ts';
 import { PluginCommands } from '../mol-plugin/commands.ts';
 import type { LeftPanelTabName } from '../mol-plugin/layout.ts';
-import { StateTransform } from '../mol-state.ts';
+import { StateTransform } from '../mol-state/index.ts';
 import type { ParamDefinition as PD } from '../mol-util/param-definition.ts';
 import { PluginUIComponent } from './base.ts';
 import { IconButton, SectionHeader } from './controls/common.ts';

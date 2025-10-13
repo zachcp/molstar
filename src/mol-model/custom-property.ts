@@ -8,7 +8,7 @@
 import type { CifWriter } from '../mol-io/writer/cif.ts';
 import type { CifExportContext } from './structure/export/mmcif.ts';
 import type { QuerySymbolRuntime } from '../mol-script/runtime/query/compiler.ts';
-import { UUID } from '../mol-util.ts';
+import { UUID } from '../mol-util/index.ts';
 
 export { CustomPropertyDescriptor, CustomProperties };
 

@@ -7,8 +7,8 @@
 
 import { arrayFind } from '../../../mol-data/util.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
-import { StateObjectRef } from '../../../mol-state.ts';
-import { Task } from '../../../mol-task.ts';
+import { StateObjectRef } from '../../../mol-state/index.ts';
+import { Task } from '../../../mol-task/index.ts';
 import { isProductionMode } from '../../../mol-util/debug.ts';
 import { objectForEach } from '../../../mol-util/object.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';

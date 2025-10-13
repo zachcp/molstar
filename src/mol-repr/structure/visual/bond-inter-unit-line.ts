@@ -9,7 +9,7 @@ import type { VisualContext } from '../../visual.ts';
 import { type Structure, StructureElement, Bond, type Unit } from '../../../mol-model/structure.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
-import { BitFlags, arrayEqual } from '../../../mol-util.ts';
+import { BitFlags, arrayEqual } from '../../../mol-util/index.ts';
 import { LinkStyle, createLinkLines, type LinkBuilderProps } from './util/link.ts';
 import { type ComplexVisual, ComplexLinesVisual, ComplexLinesParams } from '../complex-visual.ts';
 import type { VisualUpdateState } from '../../util.ts';

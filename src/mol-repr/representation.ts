@@ -12,7 +12,7 @@ import type { SizeTheme } from '../mol-theme/size.ts';
 import { type ThemeRegistryContext, Theme } from '../mol-theme/theme.ts';
 import { Subject } from 'rxjs';
 import type { GraphicsRenderObject } from '../mol-gl/render-object.ts';
-import { Task } from '../mol-task.ts';
+import { Task } from '../mol-task/index.ts';
 import type { PickingId } from '../mol-geo/geometry/picking.ts';
 import { type MarkerAction, MarkerActions } from '../mol-util/marker-action.ts';
 import { Loci as ModelLoci, EmptyLoci, isEmptyLoci } from '../mol-model/loci.ts';

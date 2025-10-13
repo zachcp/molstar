@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import type { StateObject, StateObjectRef } from '../../mol-state.ts';
+import type { StateObject, StateObjectRef } from '../../mol-state/index.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import type { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 

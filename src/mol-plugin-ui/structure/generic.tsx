@@ -8,7 +8,7 @@
 import type * as React from 'react';
 import type { StructureHierarchyRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
-import { State } from '../../mol-state.ts';
+import { State } from '../../mol-state/index.ts';
 import { PurePluginUIComponent } from '../base.ts';
 import { IconButton } from '../controls/common.ts';
 import { UpdateTransformControl } from '../state/update-transform.ts';

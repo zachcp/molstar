@@ -5,8 +5,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, type RuntimeContext } from '../../../mol-task.ts';
-// import { BitFlags } from '../../../mol-util.ts';
+import { Task, type RuntimeContext } from '../../../mol-task/index.ts';
+// import { BitFlags } from '../../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { type Structure, type StructureElement, StructureProperties } from '../../../mol-model/structure.ts';

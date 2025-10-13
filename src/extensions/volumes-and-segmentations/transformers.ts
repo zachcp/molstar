@@ -6,8 +6,8 @@
 
 import { PluginStateObject, PluginStateTransform } from '../../mol-plugin-state/objects.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import { StateTransformer } from '../../mol-state.ts';
-import { Task } from '../../mol-task.ts';
+import { StateTransformer } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
 
 import { VolsegEntry, VolsegEntryData, createVolsegEntryParams } from './entry-root.ts';
 import { VolsegState, VolsegStateParams, VOLSEG_STATE_FROM_ENTRY_TRANSFORMER_NAME } from './entry-state.ts';

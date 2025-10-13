@@ -6,7 +6,7 @@
 
 import type { TextureImage } from '../../../mol-gl/renderable/util.ts';
 import { spline } from '../../../mol-math/interpolate.ts';
-import { ValueCell } from '../../../mol-util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import type { Vec2 } from '../../../mol-math/linear-algebra.ts';
 
 export interface ControlPoint { x: number, alpha: number }

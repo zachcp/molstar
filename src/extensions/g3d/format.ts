@@ -11,8 +11,8 @@ import { PluginStateObject as SO, PluginStateTransform } from '../../mol-plugin-
 import { PluginBehavior } from '../../mol-plugin/behavior.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { DefaultQueryRuntimeTable } from '../../mol-script/runtime/query/base.ts';
-import { StateAction, type StateObjectRef } from '../../mol-state.ts';
-import { Task } from '../../mol-task.ts';
+import { StateAction, type StateObjectRef } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';
 import { type G3dHeader, getG3dDataBlock, getG3dHeader } from './data.ts';
 import { g3dHaplotypeQuery, G3dLabelProvider, trajectoryFromG3D, G3dSymbols, G3dInfoDataProperty } from './model.ts';

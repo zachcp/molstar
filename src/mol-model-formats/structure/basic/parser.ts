@@ -6,7 +6,7 @@
  */
 
 import { Column, Table } from '../../../mol-data/db.ts';
-import type { RuntimeContext } from '../../../mol-task.ts';
+import type { RuntimeContext } from '../../../mol-task/index.ts';
 import { UUID } from '../../../mol-util/uuid.ts';
 import { Model } from '../../../mol-model/structure/model/model.ts';
 import type { Entities } from '../../../mol-model/structure/model/properties/common.ts';

@@ -5,7 +5,7 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { ErrorColor, NtCColors } from '../color.ts';
+import { ErrorColor, NtCColors } from '../color/index.ts';
 import { ConfalPyramidsProvider } from './property.ts';
 import { ConfalPyramidsTypes as CPT } from './types.ts';
 import { Dnatco } from '../property.ts';

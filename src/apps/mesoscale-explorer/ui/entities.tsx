@@ -8,7 +8,7 @@ import { PluginReactContext, PluginUIComponent } from '../../../mol-plugin-ui/ba
 import { Button, ControlGroup, IconButton } from '../../../mol-plugin-ui/controls/common.ts';
 import { ArrowDropDownSvg, ArrowRightSvg, CloseSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, ContentCutSvg, BrushSvg, SearchSvg, TooltipTextSvg, TooltipTextOutlineSvg, PlusBoxSvg, MinusBoxSvg } from '../../../mol-plugin-ui/controls/icons.ts';
 import { PluginCommands } from '../../../mol-plugin/commands.ts';
-import { type State, type StateObjectCell, StateSelection, type StateTransformer } from '../../../mol-state.ts';
+import { type State, type StateObjectCell, StateSelection, type StateTransformer } from '../../../mol-state/index.ts';
 import { ParameterControls, ParameterMappingControl, type ParamOnChange, SelectControl } from '../../../mol-plugin-ui/controls/parameters.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { Clip } from '../../../mol-util/clip.ts';
@@ -17,7 +17,7 @@ import { Color } from '../../../mol-util/color.ts';
 import { CombinedColorControl } from '../../../mol-plugin-ui/controls/color.ts';
 import { MarkerAction } from '../../../mol-util/marker-action.ts';
 import { EveryLoci, Loci } from '../../../mol-model/loci.ts';
-import { deepEqual } from '../../../mol-util.ts';
+import { deepEqual } from '../../../mol-util/index.ts';
 import { ColorValueParam, ColorParams, type ColorProps, DimLightness, LightnessParams, LodParams, MesoscaleGroup, type MesoscaleGroupProps, OpacityParams, SimpleClipParams, type SimpleClipProps, createClipMapping, getClipObjects, getDistinctGroupColors, RootParams, MesoscaleState, getRoots, getAllGroups, getAllLeafGroups, getFilteredEntities, getAllFilteredEntities, getGroups, getEntities, getAllEntities, getEntityLabel, updateColors, getGraphicsModeProps, type GraphicsMode, MesoscaleStateParams, setGraphicsCanvas3DProps, PatternParams, expandAllGroups, EmissiveParams, IllustrativeParams, getCellDescription, getEntityDescription, getEveryEntity } from '../data/state.ts';
 import React, { useState } from 'react';
 import type { MesoscaleExplorerState } from '../app.ts';

@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { RuntimeContext } from '../../mol-task.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
 import type { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import type { ValueBox } from '../../mol-util.ts';
+import type { ValueBox } from '../../mol-util/index.ts';
 import { OrderedMap } from 'immutable';
 import type { AssetManager, Asset } from '../../mol-util/assets.ts';
 import type { ErrorContext } from '../../mol-util/error-context.ts';

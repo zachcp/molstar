@@ -6,7 +6,7 @@
 
 import type { Structure } from '../../mol-model/structure.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { ValueBox } from '../../mol-util.ts';
+import { ValueBox } from '../../mol-util/index.ts';
 import type { CustomProperty } from './custom-property.ts';
 import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
 import { stringToWords } from '../../mol-util/string.ts';

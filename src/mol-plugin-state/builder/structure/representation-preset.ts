@@ -13,7 +13,7 @@ import { type VisualQuality, VisualQualityOptions } from '../../../mol-geo/geome
 import type { ColorTheme } from '../../../mol-theme/color.ts';
 import { Structure } from '../../../mol-model/structure.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
-import { StateObjectRef, type StateObjectSelector } from '../../../mol-state.ts';
+import { StateObjectRef, type StateObjectSelector } from '../../../mol-state/index.ts';
 import type { StaticStructureComponentType } from '../../helpers/structure-component.ts';
 import { StructureSelectionQueries as Q } from '../../helpers/structure-selection-query.ts';
 import { PluginConfig } from '../../../mol-plugin/config.ts';

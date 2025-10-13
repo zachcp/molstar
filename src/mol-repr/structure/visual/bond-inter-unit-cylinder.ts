@@ -11,7 +11,7 @@ import { type Structure, StructureElement, Bond, type Unit } from '../../../mol-
 import type { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
-import { BitFlags, arrayEqual } from '../../../mol-util.ts';
+import { BitFlags, arrayEqual } from '../../../mol-util/index.ts';
 import { createLinkCylinderImpostors, createLinkCylinderMesh, type LinkBuilderProps, LinkStyle } from './util/link.ts';
 import { ComplexMeshParams, type ComplexVisual, ComplexMeshVisual, ComplexCylindersParams, ComplexCylindersVisual } from '../complex-visual.ts';
 import type { VisualUpdateState } from '../../util.ts';

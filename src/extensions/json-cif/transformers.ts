@@ -5,8 +5,8 @@
  */
 
 import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
-import { StateTransformer } from '../../mol-state.ts';
-import { Task } from '../../mol-task.ts';
+import { StateTransformer } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';
 import type { JSONCifFile } from './model.ts';
 import { parseJSONCif } from './parser.ts';

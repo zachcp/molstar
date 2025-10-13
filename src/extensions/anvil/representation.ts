@@ -14,7 +14,7 @@ import type { MembraneOrientation } from './prop.ts';
 import type { ThemeRegistryContext } from '../../mol-theme/theme.ts';
 import { ShapeRepresentation } from '../../mol-repr/shape/representation.ts';
 import { Shape } from '../../mol-model/shape.ts';
-import type { RuntimeContext } from '../../mol-task.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
 import { Lines } from '../../mol-geo/geometry/lines/lines.ts';
 import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
 import { LinesBuilder } from '../../mol-geo/geometry/lines/lines-builder.ts';

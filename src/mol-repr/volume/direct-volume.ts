@@ -8,7 +8,7 @@ import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { Vec3, Mat4 } from '../../mol-math/linear-algebra.ts';
 import { Box3D } from '../../mol-math/geometry.ts';
 import { Grid, Volume } from '../../mol-model/volume.ts';
-import type { RuntimeContext } from '../../mol-task.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { DirectVolume } from '../../mol-geo/geometry/direct-volume/direct-volume.ts';
 import type { VisualContext } from '../visual.ts';

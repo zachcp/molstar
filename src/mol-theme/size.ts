@@ -9,7 +9,7 @@ import { UniformSizeThemeProvider } from './size/uniform.ts';
 import type { ParamDefinition as PD } from '../mol-util/param-definition.ts';
 import { type ThemeDataContext, ThemeRegistry, type ThemeProvider } from '../mol-theme/theme.ts';
 import { PhysicalSizeThemeProvider } from './size/physical.ts';
-import { deepEqual } from '../mol-util.ts';
+import { deepEqual } from '../mol-util/index.ts';
 import { ShapeGroupSizeThemeProvider } from './size/shape-group.ts';
 import { UncertaintySizeThemeProvider } from './size/uncertainty.ts';
 import { VolumeValueSizeThemeProvider } from './size/volume-value.ts';

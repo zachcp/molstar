@@ -22,7 +22,7 @@ import type { Texture } from '../../../mol-gl/webgl/texture.ts';
 import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
 import { applyMeshColorSmoothing } from '../../../mol-geo/geometry/mesh/color-smoothing.ts';
 import { ColorSmoothingParams, getColorSmoothingProps } from '../../../mol-geo/geometry/base.ts';
-import { ValueCell } from '../../../mol-util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import { ComplexMeshVisual, type ComplexVisual } from '../complex-visual.ts';
 
 export const MolecularSurfaceMeshParams = {

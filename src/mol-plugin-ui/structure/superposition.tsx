@@ -17,7 +17,7 @@ import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
 import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { PluginConfig } from '../../mol-plugin/config.ts';
-import { type StateObjectCell, StateObjectRef } from '../../mol-state.ts';
+import { type StateObjectCell, StateObjectRef } from '../../mol-state/index.ts';
 import { elementLabel, structureElementStatsLabel } from '../../mol-theme/label.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { stripTags } from '../../mol-util/string.ts';

@@ -5,7 +5,7 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { ValueCell } from '../../../mol-util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import { type Mat4, Vec3, Vec4 } from '../../../mol-math/linear-algebra.ts';
 import { transformPositionArray, type GroupMapping, createGroupMapping } from '../../util.ts';
 import type { GeometryUtils } from '../geometry.ts';

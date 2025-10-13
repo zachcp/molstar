@@ -15,7 +15,7 @@ import { type ElementIndex, type EntityIndex, type Model, Structure, Unit } from
 import { type Assembly, Symmetry } from '../../../../mol-model/structure/model/properties/symmetry.ts';
 import { PluginStateObject as PSO, PluginStateTransform } from '../../../../mol-plugin-state/objects.ts';
 import type { PluginContext } from '../../../../mol-plugin/context.ts';
-import { Task } from '../../../../mol-task.ts';
+import { Task } from '../../../../mol-task/index.ts';
 import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
 
 function createModelChainMap(model: Model) {

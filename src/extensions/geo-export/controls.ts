@@ -7,9 +7,9 @@
 import { Box3D } from '../../mol-math/geometry.ts';
 import { PluginComponent } from '../../mol-plugin-state/component.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
-import { StateSelection } from '../../mol-state.ts';
+import { StateSelection } from '../../mol-state/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { SetUtils } from '../../mol-util/set.ts';
 import { GlbExporter } from './glb-exporter.ts';

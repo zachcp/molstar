@@ -5,7 +5,7 @@
  */
 
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import { StateObjectSelector, StateTree } from '../../mol-state.ts';
+import { StateObjectSelector, StateTree } from '../../mol-state/index.ts';
 
 
 /**

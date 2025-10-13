@@ -10,7 +10,7 @@
 import type { StateTransformParameters } from '../mol-plugin-ui/state/common.ts';
 import { CreateVolumeStreamingBehavior } from '../mol-plugin/behavior/dynamic/volume-streaming/transformers.ts';
 import { DefaultPluginSpec, type PluginSpec } from '../mol-plugin/spec.ts';
-import type { StateAction, StateTransformer } from '../mol-state.ts';
+import type { StateAction, StateTransformer } from '../mol-state/index.ts';
 import { VolumeStreamingCustomControls } from './custom/volume.ts';
 import type { Loci } from '../mol-model/loci.ts';
 import type { SequenceViewMode } from './sequence.ts';

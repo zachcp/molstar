@@ -9,7 +9,7 @@
 
 import { Vec3, Tensor } from '../../mol-math/linear-algebra.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import type { RuntimeContext } from '../../mol-task.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
 import { OrderedSet } from '../../mol-data/int.ts';
 import type { PositionData } from './common.ts';
 import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4.ts';

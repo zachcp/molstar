@@ -38,7 +38,7 @@ import { HandleHelperParams } from './helper/handle-helper.ts';
 import { StereoCamera, StereoCameraParams } from './camera/stereo.ts';
 import { Helper } from './helper/helper.ts';
 import { Passes } from './passes/passes.ts';
-import { shallowEqual } from '../mol-util.ts';
+import { shallowEqual } from '../mol-util/index.ts';
 import { MarkingParams } from './passes/marking.ts';
 import { degToRad, radToDeg } from '../mol-math/misc.ts';
 import type { AssetManager } from '../mol-util/assets.ts';

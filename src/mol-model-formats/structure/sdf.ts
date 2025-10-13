@@ -6,7 +6,7 @@
 
 import type { SdfFileCompound } from '../../mol-io/reader/sdf/parser.ts';
 import type { Trajectory } from '../../mol-model/structure.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import type { ModelFormat } from '../format.ts';
 import { getMolModels } from './mol.ts';
 

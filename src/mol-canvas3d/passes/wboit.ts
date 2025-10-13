@@ -12,7 +12,7 @@ import { ShaderCode } from '../../mol-gl/shader-code.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
 import type { Texture } from '../../mol-gl/webgl/texture.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
 import { evaluateWboit_frag } from '../../mol-gl/shader/evaluate-wboit.frag.ts';
 import type { Framebuffer } from '../../mol-gl/webgl/framebuffer.ts';

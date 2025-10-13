@@ -6,7 +6,7 @@
 
 import { Box3D, fillGridDim } from '../../geometry.ts';
 import { Vec3, Mat4, Tensor } from '../../linear-algebra.ts';
-import type { RuntimeContext } from '../../../mol-task.ts';
+import type { RuntimeContext } from '../../../mol-task/index.ts';
 import type { PositionData } from '../common.ts';
 import { OrderedSet } from '../../../mol-data/int.ts';
 import type { GaussianDensityProps, GaussianDensityData } from '../gaussian-density.ts';

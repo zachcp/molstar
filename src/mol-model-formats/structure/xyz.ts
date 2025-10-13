@@ -8,7 +8,7 @@ import { Column, Table } from '../../mol-data/db.ts';
 import type { XyzFile } from '../../mol-io/reader/xyz/parser.ts';
 import type { Trajectory } from '../../mol-model/structure.ts';
 import { MoleculeType } from '../../mol-model/structure/model/types.ts';
-import { type RuntimeContext, Task } from '../../mol-task.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
 import type { ModelFormat } from '../format.ts';
 import { createModels } from './basic/parser.ts';
 import { BasicSchema, createBasic } from './basic/schema.ts';

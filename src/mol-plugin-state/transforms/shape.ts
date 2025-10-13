@@ -10,7 +10,7 @@ import { BoxCage } from '../../mol-geo/primitive/box.ts';
 import { Box3D, Sphere3D } from '../../mol-math/geometry.ts';
 import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { Shape } from '../../mol-model/shape.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { PluginStateObject as SO, PluginStateTransform } from '../objects.ts';

@@ -7,7 +7,7 @@
 import { molfileToJSONCif } from '../utils';
 import type { CifFile } from '../../../mol-io/reader/cif';
 import { trajectoryFromMmCIF } from '../../../mol-model-formats/structure/mmcif';
-import { Task } from '../../../mol-task';
+import { Task } from '../../../mol-task/index.ts';
 import { JSONCifLigandGraph } from '../ligand-graph';
 import { parseJSONCif } from '../parser';
 import type { JSONCifDataBlock } from '../model';

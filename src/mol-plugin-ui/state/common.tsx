@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import type { State, StateTransform, StateTransformer, StateAction, StateObject, StateObjectCell } from '../../mol-state.ts';
+import type { State, StateTransform, StateTransformer, StateAction, StateObject, StateObjectCell } from '../../mol-state/index.ts';
 import type * as React from 'react';
 import { PurePluginUIComponent } from '../base.ts';
 import { ParameterControls, type ParamOnChange } from '../controls/parameters.ts';

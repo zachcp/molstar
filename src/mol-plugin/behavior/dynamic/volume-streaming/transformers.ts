@@ -9,11 +9,11 @@
 import { PluginStateObject as SO, PluginStateTransform } from '../../../../mol-plugin-state/objects.ts';
 import { VolumeServerInfo, type VolumeServerHeader } from './model.ts';
 import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
-import { Task } from '../../../../mol-task.ts';
+import { Task } from '../../../../mol-task/index.ts';
 import type { PluginContext } from '../../../../mol-plugin/context.ts';
 import { urlCombine } from '../../../../mol-util/url.ts';
 import { Volume } from '../../../../mol-model/volume.ts';
-import { StateAction, StateObject, StateTransformer } from '../../../../mol-state.ts';
+import { StateAction, StateObject, StateTransformer } from '../../../../mol-state/index.ts';
 import { getStreamingMethod, getIds, getContourLevel, getEmdbIds } from './util.ts';
 import { VolumeStreaming } from './behavior.ts';
 import { VolumeRepresentation3DHelpers } from '../../../../mol-plugin-state/transforms/representation.ts';

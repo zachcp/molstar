@@ -10,7 +10,7 @@ import * as React from 'react';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { PluginConfig } from '../../mol-plugin/config.ts';
 import { PluginState } from '../../mol-plugin/state.ts';
-import { shallowEqualObjects } from '../../mol-util.ts';
+import { shallowEqualObjects } from '../../mol-util/index.ts';
 import { formatTimespan } from '../../mol-util/now.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { urlCombine } from '../../mol-util/url.ts';

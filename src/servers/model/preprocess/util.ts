@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Progress } from '../../../mol-task.ts';
+import { Progress } from '../../../mol-task/index.ts';
 import process from "node:process";
 
 export function showProgress(p: Progress) {

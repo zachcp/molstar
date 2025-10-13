@@ -6,7 +6,7 @@
  * @author Cai Huiyu <szmun.caihy@gmail.com>
  */
 
-import type { Iterator } from '../../mol-data.ts';
+import type { Iterator } from '../../mol-data/index.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
 import { NullLocation, type Location } from '../../mol-model/location.ts';
 

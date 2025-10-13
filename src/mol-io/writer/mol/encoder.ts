@@ -4,7 +4,7 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { StringBuilder } from '../../../mol-util.ts';
+import { StringBuilder } from '../../../mol-util/index.ts';
 import type { Category } from '../cif/encoder.ts';
 import { getCategoryInstanceData } from '../cif/encoder/util.ts';
 import { LigandEncoder } from '../ligand-encoder.ts';

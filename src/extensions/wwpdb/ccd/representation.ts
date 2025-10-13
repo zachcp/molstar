@@ -6,7 +6,7 @@
 
 import type { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { StateObjectRef, StateTransform } from '../../../mol-state.ts';
+import { StateObjectRef, StateTransform } from '../../../mol-state/index.ts';
 import { StateTransforms } from '../../../mol-plugin-state/transforms.ts';
 import { StructureRepresentationPresetProvider, presetStaticComponent } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';

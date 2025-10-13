@@ -5,7 +5,7 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import type { ValueCell } from '../../mol-util.ts';
+import type { ValueCell } from '../../mol-util/index.ts';
 import type { AttributeItemSize, ElementsKind, AttributeValues, AttributeKind, DataTypeArrayType } from '../webgl/buffer.ts';
 import type { UniformKind, UniformValues, UniformKindValue } from '../webgl/uniform.ts';
 import type { DefineKind, DefineValues } from '../shader-code.ts';

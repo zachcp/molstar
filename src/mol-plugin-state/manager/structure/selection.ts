@@ -13,14 +13,14 @@ import type { PrincipalAxes } from '../../../mol-math/linear-algebra/matrix/prin
 import { EmptyLoci, Loci } from '../../../mol-model/loci.ts';
 import { QueryContext, Structure, StructureElement, type StructureQuery, StructureSelection } from '../../../mol-model/structure.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
-import { StateObjectRef, StateSelection } from '../../../mol-state.ts';
-import { Task } from '../../../mol-task.ts';
+import { StateObjectRef, StateSelection } from '../../../mol-state/index.ts';
+import { Task } from '../../../mol-task/index.ts';
 import { structureElementStatsLabel } from '../../../mol-theme/label.ts';
 import { arrayRemoveAtInPlace } from '../../../mol-util/array.ts';
 import { StatefulPluginComponent } from '../../component.ts';
 import type { StructureSelectionQuery } from '../../helpers/structure-selection-query.ts';
 import { PluginStateObject as PSO } from '../../objects.ts';
-import { UUID } from '../../../mol-util.ts';
+import { UUID } from '../../../mol-util/index.ts';
 import type { StructureRef } from './hierarchy-state.ts';
 import type { Boundary } from '../../../mol-math/geometry/boundary.ts';
 import { iterableToArray } from '../../../mol-data/util.ts';

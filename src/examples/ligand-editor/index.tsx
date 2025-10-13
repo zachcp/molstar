@@ -23,7 +23,7 @@ import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { PluginConfig } from '../../mol-plugin/config.ts';
 import { PluginSpec } from '../../mol-plugin/spec.ts';
-import type { StateObjectSelector } from '../../mol-state.ts';
+import type { StateObjectSelector } from '../../mol-state/index.ts';
 import { download } from '../../mol-util/download.ts';
 import { type GeometryEditFn, GeometryEdits, TopologyEdits } from './edits.ts';
 import { ExampleMol } from './example-data.ts';

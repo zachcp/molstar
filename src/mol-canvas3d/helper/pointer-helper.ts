@@ -11,7 +11,7 @@ import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 import type { GraphicsRenderObject } from '../../mol-gl/render-object.ts';
 import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { Geometry } from '../../mol-geo/geometry/geometry.ts';
 import { addCylinderFromRay3D } from '../../mol-geo/geometry/mesh/builder/cylinder.ts';

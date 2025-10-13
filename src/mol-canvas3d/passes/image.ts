@@ -20,7 +20,7 @@ import { CameraHelper, CameraHelperParams } from '../helper/camera-helper.ts';
 import { MarkingParams } from './marking.ts';
 import type { AssetManager } from '../../mol-util/assets.ts';
 import { IlluminationParams, IlluminationPass } from './illumination.ts';
-import type { RuntimeContext } from '../../mol-task.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
 import { isDebugMode, isTimingMode } from '../../mol-util/debug.ts';
 import { printTimerResults } from '../../mol-gl/webgl/timer.ts';
 import { ShaderManager } from '../helper/shader-manager.ts';

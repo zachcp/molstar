@@ -5,7 +5,7 @@
  */
 
 import { ReaderResult as Result } from '../result.ts';
-import { Task, type RuntimeContext } from '../../../mol-task.ts';
+import { Task, type RuntimeContext } from '../../../mol-task/index.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 
 async function parseInternal(data: string, ctx: RuntimeContext): Promise<Result<Mesh>> {

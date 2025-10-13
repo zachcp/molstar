@@ -6,7 +6,7 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { type TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
 import { Color } from '../../mol-util/color.ts';
 import { Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';

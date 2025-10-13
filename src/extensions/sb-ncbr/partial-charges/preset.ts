@@ -2,7 +2,7 @@ import {
     PresetStructureRepresentations,
     StructureRepresentationPresetProvider,
 } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
-import { StateObjectRef } from '../../../mol-state.ts';
+import { StateObjectRef } from '../../../mol-state/index.ts';
 import { SbNcbrPartialChargesPropertyProvider } from './property.ts';
 import { SbNcbrPartialChargesColorThemeProvider } from './color.ts';
 

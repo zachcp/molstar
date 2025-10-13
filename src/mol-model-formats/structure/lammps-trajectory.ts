@@ -9,7 +9,7 @@
 import { Coordinates, type Frame, Time } from '../../mol-model/structure/coordinates.ts';
 import { type LammpsTrajectoryFile, lammpsUnitStyles, type UnitStyle } from '../../mol-io/reader/lammps/schema.ts';
 import { Model } from '../../mol-model/structure/model.ts';
-import { type RuntimeContext, Task } from '../../mol-task.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
 import { Column, Table } from '../../mol-data/db.ts';
 import type { Trajectory } from '../../mol-model/structure.ts';
 import { BasicSchema, createBasic } from './basic/schema.ts';

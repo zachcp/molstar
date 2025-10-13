@@ -10,7 +10,7 @@ import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
 import { Model, type Structure } from '../../../mol-model/structure.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
-import { StateObjectRef } from '../../../mol-state.ts';
+import { StateObjectRef } from '../../../mol-state/index.ts';
 import { getTunnelsConfig, TunnelsDataParams } from './props.ts';
 import { StateTransforms } from '../../../mol-plugin-state/transforms.ts';
 import type { Tunnel, ChannelsDBdata, TunnelDB } from './data-model.ts';

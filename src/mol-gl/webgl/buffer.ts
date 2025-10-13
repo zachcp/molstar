@@ -5,7 +5,7 @@
  */
 
 import type { WebGLContext } from './context.ts';
-import type { ValueCell } from '../../mol-util.ts';
+import type { ValueCell } from '../../mol-util/index.ts';
 import type { RenderableSchema } from '../renderable/schema.ts';
 import { idFactory } from '../../mol-util/id-factory.ts';
 import { assertUnreachable, type ValueOf } from '../../mol-util/type-helpers.ts';

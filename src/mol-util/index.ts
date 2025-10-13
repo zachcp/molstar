@@ -9,7 +9,7 @@ import { BitFlags } from './bit-flags.ts';
 import { StringBuilder } from './string-builder.ts';
 import { UUID } from './uuid.ts';
 import { Mask } from './mask.ts';
-import type { Progress } from '../mol-task.ts';
+import type { Progress } from '../mol-task/index.ts';
 
 export * from './value-cell.ts';
 export { BitFlags, StringBuilder, UUID, Mask };

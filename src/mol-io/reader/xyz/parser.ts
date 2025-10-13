@@ -5,7 +5,7 @@
  */
 
 import { Column } from '../../../mol-data/db.ts';
-import { Task } from '../../../mol-task.ts';
+import { Task } from '../../../mol-task/index.ts';
 import type { StringLike } from '../../common/string-like.ts';
 import { Tokenizer } from '../common/text/tokenizer.ts';
 import { ReaderResult as Result } from '../result.ts';

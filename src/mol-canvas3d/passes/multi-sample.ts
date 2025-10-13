@@ -8,7 +8,7 @@ import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
 import { TextureSpec, UniformSpec, type Values } from '../../mol-gl/renderable/schema.ts';
 import type { Texture } from '../../mol-gl/webgl/texture.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { Vec2 } from '../../mol-math/linear-algebra.ts';
 import { ShaderCode } from '../../mol-gl/shader-code.ts';
 import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';

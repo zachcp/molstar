@@ -5,7 +5,7 @@
  */
 
 import type { PluginContext } from './context.ts';
-import { UUID } from '../mol-util.ts';
+import { UUID } from '../mol-util/index.ts';
 
 export { PluginCommand, PluginCommandManager };
 

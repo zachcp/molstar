@@ -6,7 +6,7 @@
 
 import type { GraphicsRenderObject } from '../../mol-gl/render-object.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
-import type { RuntimeContext } from '../../mol-task.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
 
 export type RenderObjectExportData = {
     [k: string]: string | Uint8Array | ArrayBuffer | undefined

@@ -12,7 +12,7 @@ import { AnimateModelIndex } from '../mol-plugin-state/animation/built-in/model-
 import { AnimateStateSnapshotTransition, AnimateStateSnapshots } from '../mol-plugin-state/animation/built-in/state-snapshots.ts';
 import type { PluginStateAnimation } from '../mol-plugin-state/animation/model.ts';
 import type { DataFormatProvider } from '../mol-plugin-state/formats/provider.ts';
-import type { StateAction, StateTransformer } from '../mol-state.ts';
+import type { StateAction, StateTransformer } from '../mol-state/index.ts';
 import { PluginBehaviors } from './behavior.ts';
 import { StructureFocusRepresentation } from './behavior/dynamic/selection/structure-focus-representation.ts';
 import type { PluginConfigItem } from './config.ts';

@@ -10,7 +10,7 @@ import { stringToWords } from '../../mol-util/string.ts';
 import { SpacegroupCell, Spacegroup } from '../../mol-math/geometry.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
-import type { RuntimeContext } from '../../mol-task.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { type Assembly, Symmetry } from '../../mol-model/structure/model/properties/symmetry.ts';
 import { PluginStateObject as SO } from '../objects.ts';

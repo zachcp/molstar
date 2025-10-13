@@ -5,11 +5,11 @@
  */
 
 import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
-import { StateTransformer } from '../../../mol-state.ts';
+import { StateTransformer } from '../../../mol-state/index.ts';
 import { TunnelStateObject, type Tunnel, TunnelShapeParams, TunnelsStateObject } from './data-model.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
-import { Task } from '../../../mol-task.ts';
+import { Task } from '../../../mol-task/index.ts';
 import { createTunnelShape, createSpheresShape } from './algorithm.ts';
 
 const Transform = StateTransformer.builderFactory('sb-ncbr-tunnels');

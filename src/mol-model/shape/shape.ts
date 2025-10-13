@@ -5,7 +5,7 @@
  */
 
 import type { Color } from '../../mol-util/color.ts';
-import { UUID } from '../../mol-util.ts';
+import { UUID } from '../../mol-util/index.ts';
 import { OrderedSet } from '../../mol-data/int.ts';
 import { Geometry } from '../../mol-geo/geometry/geometry.ts';
 import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';

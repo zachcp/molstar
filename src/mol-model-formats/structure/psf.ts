@@ -8,7 +8,7 @@ import { Column, Table } from '../../mol-data/db.ts';
 import type { PsfFile } from '../../mol-io/reader/psf/parser.ts';
 import { getMoleculeType, MoleculeType } from '../../mol-model/structure/model/types.ts';
 import { Topology } from '../../mol-model/structure/topology/topology.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import type { ModelFormat } from '../format.ts';
 import { BasicSchema, createBasic } from './basic/schema.ts';
 import { ComponentBuilder } from './common/component.ts';

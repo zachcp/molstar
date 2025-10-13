@@ -10,7 +10,7 @@ import { Model } from '../model.ts';
 import { GridLookup3D, type Lookup3D, Spacegroup } from '../../../mol-math/geometry.ts';
 import { type IntraUnitBonds, computeIntraUnitBonds } from './unit/bonds.ts';
 import type { CoarseElements, CoarseSphereConformation, CoarseGaussianConformation } from '../model/properties/coarse.ts';
-import { BitFlags } from '../../../mol-util.ts';
+import { BitFlags } from '../../../mol-util/index.ts';
 import { UnitRings } from './unit/rings.ts';
 import type { StructureElement } from './element.ts';
 import type { ChainIndex, ResidueIndex, ElementIndex } from '../model/indexing.ts';

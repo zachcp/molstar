@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ValueCell } from '../../../mol-util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import { createComputeRenderable, type ComputeRenderable } from '../../../mol-gl/renderable.ts';
 import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
 import { isNullTexture, type Texture } from '../../../mol-gl/webgl/texture.ts';

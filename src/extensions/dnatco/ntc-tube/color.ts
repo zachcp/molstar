@@ -5,7 +5,7 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { ErrorColor, NtCColors } from '../color.ts';
+import { ErrorColor, NtCColors } from '../color/index.ts';
 import { NtCTubeProvider } from './property.ts';
 import { NtCTubeTypes as NTT } from './types.ts';
 import { Dnatco } from '../property.ts';

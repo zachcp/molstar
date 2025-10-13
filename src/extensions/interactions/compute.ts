@@ -8,7 +8,7 @@ import type { InteractionsProps } from '../../mol-model-props/computed/interacti
 import { FeatureType } from '../../mol-model-props/computed/interactions/common.ts';
 import { computeInteractions, type Interactions } from '../../mol-model-props/computed/interactions/interactions.ts';
 import { Structure, StructureElement, type Unit } from '../../mol-model/structure.ts';
-import type { RuntimeContext } from '../../mol-task.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
 import { AssetManager } from '../../mol-util/assets.ts';
 import { type InteractionInfo, InteractionTypeToKind, type StructureInteractions } from './model.ts';
 

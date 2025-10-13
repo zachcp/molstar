@@ -9,7 +9,7 @@ import { type Structure, StructureElement } from '../../mol-model/structure.ts';
 import type { PluginStateObject } from '../objects.ts';
 import { StateTransforms } from '../transforms.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import { type StateBuilder, type StateObjectCell, StateSelection, type StateTransform } from '../../mol-state.ts';
+import { type StateBuilder, type StateObjectCell, StateSelection, type StateTransform } from '../../mol-state/index.ts';
 import type { StructureComponentRef } from '../manager/structure/hierarchy-state.ts';
 import { type EmptyLoci, isEmptyLoci, Loci } from '../../mol-model/loci.ts';
 import { Emissive } from '../../mol-theme/emissive.ts';

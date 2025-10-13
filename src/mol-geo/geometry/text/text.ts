@@ -5,7 +5,7 @@
  */
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { ValueCell } from '../../../mol-util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import type { GeometryUtils } from '../geometry.ts';
 import { LocationIterator, PositionLocation } from '../../../mol-geo/util/location-iterator.ts';
 import type { TransformData } from '../transform-data.ts';

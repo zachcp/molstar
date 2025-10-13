@@ -7,7 +7,7 @@
 import type { Volume } from '../../mol-model/volume.ts';
 import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
 import { setSubtreeVisibility } from '../../mol-plugin/behavior/static/state.ts';
-import { type StateBuilder, type StateObjectSelector, StateTransformer } from '../../mol-state.ts';
+import { type StateBuilder, type StateObjectSelector, StateTransformer } from '../../mol-state/index.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';
 import type { Source } from './entry-root.ts';
 

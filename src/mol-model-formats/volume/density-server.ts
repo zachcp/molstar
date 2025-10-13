@@ -6,7 +6,7 @@
 
 import type { DensityServer_Data_Database } from '../../mol-io/reader/cif/schema/density-server.ts';
 import type { Volume } from '../../mol-model/volume.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { SpacegroupCell, Box3D } from '../../mol-math/geometry.ts';
 import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra.ts';
 import type { ModelFormat } from '../format.ts';

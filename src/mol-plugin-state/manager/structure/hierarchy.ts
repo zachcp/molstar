@@ -9,7 +9,7 @@ import type { Structure } from '../../../mol-model/structure.ts';
 import { setSubtreeVisibility } from '../../../mol-plugin/behavior/static/state.ts';
 import { PluginCommands } from '../../../mol-plugin/commands.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
-import { type StateTransform, StateTree } from '../../../mol-state.ts';
+import { type StateTransform, StateTree } from '../../../mol-state/index.ts';
 import { SetUtils } from '../../../mol-util/set.ts';
 import type { TrajectoryHierarchyPresetProvider } from '../../builder/structure/hierarchy-preset.ts';
 import { PluginComponent } from '../../component.ts';

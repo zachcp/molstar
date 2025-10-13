@@ -9,7 +9,7 @@ import { ParamDefinition as PD } from '../../../../../mol-util/param-definition.
 import { ValenceModelProvider } from '../../../../../mol-model-props/computed/valence-model.ts';
 import type { Loci } from '../../../../../mol-model/loci.ts';
 import { PluginStateObject } from '../../../../../mol-plugin-state/objects.ts';
-import { StateSelection } from '../../../../../mol-state.ts';
+import { StateSelection } from '../../../../../mol-state/index.ts';
 import { type Structure, StructureElement } from '../../../../../mol-model/structure.ts';
 import { OrderedSet } from '../../../../../mol-data/int.ts';
 import { geometryLabel } from '../../../../../mol-model-props/computed/chemistry/geometry.ts';

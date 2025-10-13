@@ -6,7 +6,7 @@
  */
 
 import { type Structure, StructureElement, StructureProperties, Unit } from '../../mol-model/structure.ts';
-import { Task, type RuntimeContext } from '../../mol-task.ts';
+import { Task, type RuntimeContext } from '../../mol-task/index.ts';
 import { CentroidHelper } from '../../mol-math/geometry/centroid-helper.ts';
 import { AccessibleSurfaceAreaParams } from '../../mol-model-props/computed/accessible-surface-area.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';

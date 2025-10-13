@@ -12,7 +12,7 @@ import type { Renderer } from '../../mol-gl/renderer.ts';
 import type { Scene } from '../../mol-gl/scene.ts';
 import type { Texture } from '../../mol-gl/webgl/texture.ts';
 import type { Camera, ICamera } from '../camera.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { Vec2 } from '../../mol-math/linear-algebra.ts';
 import type { Helper } from '../helper/helper.ts';
 

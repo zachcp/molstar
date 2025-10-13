@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import type { State } from '../../mol-state.ts';
+import type { State } from '../../mol-state/index.ts';
 import { PluginUIComponent } from '../base.ts';
 import { Icon, CodeSvg } from '../controls/icons.ts';
 import { ApplyActionControl } from './apply-action.ts';

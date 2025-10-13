@@ -8,7 +8,7 @@
 
 import { StateTransforms } from '../transforms.ts';
 import { guessCifVariant, type DataFormatProvider } from './provider.ts';
-import type { StateTransformer, StateObjectRef } from '../../mol-state.ts';
+import type { StateTransformer, StateObjectRef } from '../../mol-state/index.ts';
 import type { PluginStateObject } from '../objects.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 

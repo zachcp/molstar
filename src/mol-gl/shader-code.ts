@@ -5,7 +5,7 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import type { ValueCell } from '../mol-util.ts';
+import type { ValueCell } from '../mol-util/index.ts';
 import { idFactory } from '../mol-util/id-factory.ts';
 import type { WebGLExtensions } from './webgl/extensions.ts';
 import { isWebGL2, type GLRenderingContext } from './webgl/compat.ts';

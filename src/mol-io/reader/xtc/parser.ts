@@ -7,7 +7,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { type RuntimeContext, Task } from '../../../mol-task.ts';
+import { type RuntimeContext, Task } from '../../../mol-task/index.ts';
 import { ReaderResult as Result } from '../result.ts';
 
 export interface XtcFile {

@@ -5,7 +5,7 @@
  * @author Cai Huiyu <szmun.caihy@gmail.com>
  */
 
-import { ValueCell } from '../../../mol-util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { LocationIterator, PositionLocation } from '../../../mol-geo/util/location-iterator.ts';

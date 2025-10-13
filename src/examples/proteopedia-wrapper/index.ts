@@ -10,7 +10,7 @@ import { AnimateModelIndex } from '../../mol-plugin-state/animation/built-in/mod
 import { createStructureRepresentationParams } from '../../mol-plugin-state/helpers/structure-representation-params.ts';
 import type { PluginStateObject, PluginStateObject as PSO } from '../../mol-plugin-state/objects.ts';
 import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
-import { createPluginUI } from '../../mol-plugin-ui.ts';
+import { createPluginUI } from '../../mol-plugin-ui/index.ts';
 import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
 import type { PluginUIContext } from '../../mol-plugin-ui/context.ts';
 import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';
@@ -18,7 +18,7 @@ import { CreateVolumeStreamingInfo, InitVolumeStreaming } from '../../mol-plugin
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import type { PluginState } from '../../mol-plugin/state.ts';
 import { MolScriptBuilder as MS } from '../../mol-script/language/builder.ts';
-import { type StateBuilder, type StateObject, StateSelection } from '../../mol-state.ts';
+import { type StateBuilder, type StateObject, StateSelection } from '../../mol-state/index.ts';
 import { Asset } from '../../mol-util/assets.ts';
 import { Color } from '../../mol-util/color.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';

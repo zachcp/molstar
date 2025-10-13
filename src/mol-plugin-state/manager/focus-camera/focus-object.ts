@@ -13,7 +13,7 @@ import { Loci } from '../../../mol-model/loci.ts';
 import { Structure } from '../../../mol-model/structure.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
 import type { PluginState } from '../../../mol-plugin/state.ts';
-import { type StateObjectCell, StateSelection, type StateTransform } from '../../../mol-state.ts';
+import { type StateObjectCell, StateSelection, type StateTransform } from '../../../mol-state/index.ts';
 import { PluginStateObject } from '../../objects.ts';
 
 

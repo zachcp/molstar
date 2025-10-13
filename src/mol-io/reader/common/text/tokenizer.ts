@@ -6,7 +6,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { chunkedSubtask, type RuntimeContext } from '../../../../mol-task.ts';
+import { chunkedSubtask, type RuntimeContext } from '../../../../mol-task/index.ts';
 import type { StringLike } from '../../../common/string-like.ts';
 
 export { Tokenizer };

@@ -7,7 +7,7 @@
  */
 
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
-import type { RuntimeContext } from '../../mol-task.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
 import { arrayMin } from '../../mol-util/array.ts';
 import type { AlphaOrbital, CubeGridInfo } from './data-model.ts';
 import { normalizeBasicOrder, SphericalFunctions } from './spherical-functions.ts';

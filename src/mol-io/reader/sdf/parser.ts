@@ -9,7 +9,7 @@
 
 import { Column } from '../../../mol-data/db.ts';
 import { type MolFile, handleAtoms, handleBonds, handlePropertiesBlock } from '../mol/parser.ts';
-import { Task } from '../../../mol-task.ts';
+import { Task } from '../../../mol-task/index.ts';
 import { ReaderResult as Result } from '../result.ts';
 import { Tokenizer, TokenBuilder } from '../common/text/tokenizer.ts';
 import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.ts';

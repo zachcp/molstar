@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import type { NctrajFile } from '../../mol-io/reader/nctraj/parser.ts';
 import { Coordinates, type Frame, Time } from '../../mol-model/structure/coordinates.ts';
 import { Cell } from '../../mol-math/geometry/spacegroup/cell.ts';

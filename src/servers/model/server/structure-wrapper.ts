@@ -17,7 +17,7 @@ import { ConsoleLogger } from '../../../mol-util/console-logger.ts';
 import type { ModelPropertiesProvider } from '../property-provider.ts';
 import { trajectoryFromMmCIF } from '../../../mol-model-formats/structure/mmcif.ts';
 import { fetchRetry } from '../utils/fetch-retry.ts';
-import { Task } from '../../../mol-task.ts';
+import { Task } from '../../../mol-task/index.ts';
 import type { Buffer } from "node:buffer";
 
 require('util.promisify').shim();

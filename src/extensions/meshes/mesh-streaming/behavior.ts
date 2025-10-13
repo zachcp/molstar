@@ -13,7 +13,7 @@ import { PluginBehavior } from '../../../mol-plugin/behavior.ts';
 import type { PluginCommand } from '../../../mol-plugin/command.ts';
 import { PluginCommands } from '../../../mol-plugin/commands.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
-import { UUID } from '../../../mol-util.ts';
+import { UUID } from '../../../mol-util/index.ts';
 import { Asset } from '../../../mol-util/assets.ts';
 import type { Color } from '../../../mol-util/color.ts';
 import { ColorNames } from '../../../mol-util/color/names.ts';

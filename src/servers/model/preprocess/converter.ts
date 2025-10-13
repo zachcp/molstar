@@ -6,7 +6,7 @@
 
 import { type CifCategory, type CifField, type CifFrame, getCifFieldType } from '../../../mol-io/reader/cif.ts';
 import { CifWriter } from '../../../mol-io/writer/cif.ts';
-import { Task } from '../../../mol-task.ts';
+import { Task } from '../../../mol-task/index.ts';
 // import { showProgress } from './util.ts';
 
 function getCategoryInstanceProvider(cat: CifCategory, fields: CifWriter.Field[]): CifWriter.Category {

@@ -5,7 +5,7 @@
  */
 
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import { StateObjectRef, type StateObjectSelector, type StateTransformer, type StateTransform, type StateObjectCell } from '../../mol-state.ts';
+import { StateObjectRef, type StateObjectSelector, type StateTransformer, type StateTransform, type StateObjectCell } from '../../mol-state/index.ts';
 import { PluginStateObject as SO } from '../objects.ts';
 import { StateTransforms } from '../transforms.ts';
 import type { RootStructureDefinition } from '../helpers/root-structure.ts';
@@ -13,7 +13,7 @@ import type { StructureComponentParams, StaticStructureComponentType } from '../
 import type { BuiltInTrajectoryFormat, TrajectoryFormatProvider } from '../formats/trajectory.ts';
 import { StructureRepresentationBuilder } from './structure/representation.ts';
 import type { StructureSelectionQuery } from '../helpers/structure-selection-query.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { StructureElement } from '../../mol-model/structure.ts';
 import { ModelSymmetry } from '../../mol-model-formats/structure/property/symmetry.ts';
 import { SpacegroupCell } from '../../mol-math/geometry.ts';

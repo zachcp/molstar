@@ -6,7 +6,7 @@
 
 import { getCellBoundingSphere } from '../../mol-plugin-state/manager/focus-camera/focus-object.ts';
 import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
-import { type StateObjectCell, StateSelection } from '../../mol-state.ts';
+import { type StateObjectCell, StateSelection } from '../../mol-state/index.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { Script } from '../../mol-script/script.ts';
 import { QueryContext, type QueryFn, StructureElement, StructureSelection } from '../../mol-model/structure.ts';

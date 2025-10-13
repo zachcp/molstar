@@ -8,7 +8,7 @@
 
 import { Color, ColorScale } from '../../mol-util/color.ts';
 import type { Location } from '../../mol-model/location.ts';
-import { ColorTheme, type LocationColor } from '../color.ts';
+import { ColorTheme, type LocationColor } from '../color/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../theme.ts';
 import { Grid, Volume } from '../../mol-model/volume.ts';

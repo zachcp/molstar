@@ -6,7 +6,7 @@
 
 import { decodeMsgPack } from '../../mol-io/common/msgpack/decode.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { inflate } from '../../mol-util/zip/zip.ts';
 
 export interface G3dHeader {

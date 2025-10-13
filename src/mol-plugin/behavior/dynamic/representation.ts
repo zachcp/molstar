@@ -13,7 +13,7 @@ import { PluginStateObject as SO } from '../../../mol-plugin-state/objects.ts';
 import { lociLabel } from '../../../mol-theme/label.ts';
 import { PluginBehavior } from '../behavior.ts';
 import { StateTreeSpine } from '../../../mol-state/tree/spine.ts';
-import { StateSelection } from '../../../mol-state.ts';
+import { StateSelection } from '../../../mol-state/index.ts';
 import { ButtonsType, ModifiersKeys } from '../../../mol-util/input/input-observer.ts';
 import { Binding } from '../../../mol-util/binding.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';

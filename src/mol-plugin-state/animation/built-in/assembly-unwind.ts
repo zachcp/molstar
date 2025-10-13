@@ -7,7 +7,7 @@
 import { PluginStateAnimation } from '../model.ts';
 import { PluginStateObject } from '../../objects.ts';
 import { StateTransforms } from '../../transforms.ts';
-import { StateSelection, StateTransform } from '../../../mol-state.ts';
+import { StateSelection, StateTransform } from '../../../mol-state/index.ts';
 import { PluginCommands } from '../../../mol-plugin/commands.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';

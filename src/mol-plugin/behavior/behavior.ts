@@ -6,13 +6,13 @@
  */
 
 import { PluginStateTransform, PluginStateObject } from '../../mol-plugin-state/objects.ts';
-import { StateTransformer, type StateTransform } from '../../mol-state.ts';
-import { Task } from '../../mol-task.ts';
+import { StateTransformer, type StateTransform } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import type { PluginCommand } from '../command.ts';
 import type { Observable } from 'rxjs';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';
-import { shallowEqualObjects } from '../../mol-util.ts';
+import { shallowEqualObjects } from '../../mol-util/index.ts';
 
 export { PluginBehavior };
 

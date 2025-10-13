@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { type RuntimeContext, Task } from '../../mol-task.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
 import type { ShapeProvider } from '../../mol-model/shape/provider.ts';
 import { Color } from '../../mol-util/color.ts';
 import type { PlyFile, PlyTable, PlyList } from '../../mol-io/reader/ply/schema.ts';

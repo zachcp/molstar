@@ -8,7 +8,7 @@
 
 import { StructureElement } from '../../../mol-model/structure.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
-import { StateSelection, StateTransform, type StateTransformer, type StateObject, type StateObjectCell } from '../../../mol-state.ts';
+import { StateSelection, StateTransform, type StateTransformer, type StateObject, type StateObjectCell } from '../../../mol-state/index.ts';
 import { StateTransforms } from '../../transforms.ts';
 import { PluginCommands } from '../../../mol-plugin/commands.ts';
 import { arraySetAdd } from '../../../mol-util/array.ts';

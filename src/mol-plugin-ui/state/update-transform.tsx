@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import type { State, StateTransform, StateTransformer } from '../../mol-state.ts';
+import type { State, StateTransform, StateTransformer } from '../../mol-state/index.ts';
 import { memoizeLatest } from '../../mol-util/memoize.ts';
 import { StateTransformParameters, TransformControlBase } from './common.ts';
 import type { Observable } from 'rxjs';

@@ -11,14 +11,14 @@ import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { volumeFromCcp4 } from '../../mol-model-formats/volume/ccp4.ts';
 import { volumeFromDensityServerData } from '../../mol-model-formats/volume/density-server.ts';
 import { volumeFromDsn6 } from '../../mol-model-formats/volume/dsn6.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { PluginStateObject as SO, PluginStateTransform } from '../objects.ts';
 import { volumeFromCube } from '../../mol-model-formats/volume/cube.ts';
 import { volumeFromDx } from '../../mol-model-formats/volume/dx.ts';
 import { Grid, type Volume } from '../../mol-model/volume.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import { StateSelection } from '../../mol-state.ts';
+import { StateSelection } from '../../mol-state/index.ts';
 import { volumeFromSegmentationData } from '../../mol-model-formats/volume/segmentation.ts';
 import { getTransformFromParams, TransformParam, transformParamsNeedCentroid } from './helpers.ts';
 

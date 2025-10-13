@@ -9,7 +9,7 @@ import type { Location } from '../mol-model/location.ts';
 import type { ColorType, ColorTypeDirect, ColorTypeGrid, ColorTypeLocation } from '../mol-geo/geometry/color-data.ts';
 import { CarbohydrateSymbolColorThemeProvider } from './color/carbohydrate-symbol.ts';
 import { UniformColorThemeProvider } from './color/uniform.ts';
-import { deepEqual } from '../mol-util.ts';
+import { deepEqual } from '../mol-util/index.ts';
 import type { ParamDefinition as PD } from '../mol-util/param-definition.ts';
 import { type ThemeDataContext, ThemeRegistry, type ThemeProvider } from './theme.ts';
 import { ChainIdColorThemeProvider } from './color/chain-id.ts';

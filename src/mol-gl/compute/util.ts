@@ -6,7 +6,7 @@
 
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { createNullTexture, type Texture } from '../../mol-gl/webgl/texture.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { ValueSpec, AttributeSpec, UniformSpec, type Values, TextureSpec } from '../../mol-gl/renderable/schema.ts';
 import { Vec2 } from '../../mol-math/linear-algebra.ts';
 import { ShaderCode } from '../shader-code.ts';

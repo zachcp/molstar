@@ -10,7 +10,7 @@ import { Bond, Structure, StructureElement } from '../../../mol-model/structure.
 import type { ColorTheme, LocationColor } from '../../../mol-theme/color.ts';
 import { ColorThemeCategory } from '../../../mol-theme/color/categories.ts';
 import type { ThemeDataContext } from '../../../mol-theme/theme.ts';
-import { deepEqual } from '../../../mol-util.ts';
+import { deepEqual } from '../../../mol-util/index.ts';
 import { Color } from '../../../mol-util/color.ts';
 import { ColorNames } from '../../../mol-util/color/names.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';

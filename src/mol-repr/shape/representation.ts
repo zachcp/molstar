@@ -14,14 +14,14 @@ import type { LocationIterator } from '../../mol-geo/util/location-iterator.ts';
 import { type LocationCallback, VisualUpdateState } from '../util.ts';
 import { createMarkers } from '../../mol-geo/geometry/marker-data.ts';
 import { type MarkerAction, MarkerActions } from '../../mol-util/marker-action.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { createColors } from '../../mol-geo/geometry/color-data.ts';
 import { createSizes, type SizeData } from '../../mol-geo/geometry/size-data.ts';
 import { type Loci, isEveryLoci, EmptyLoci } from '../../mol-model/loci.ts';
 import { Interval, OrderedSet } from '../../mol-data/int.ts';
 import { PickingId } from '../../mol-geo/geometry/picking.ts';
 import { Visual } from '../visual.ts';
-import { type RuntimeContext, Task } from '../../mol-task.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { isDebugMode } from '../../mol-util/debug.ts';
 

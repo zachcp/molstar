@@ -12,7 +12,7 @@ import type { PluginContext } from '../../mol-plugin/context.ts';
 import { MolScriptBuilder as MS } from '../../mol-script/language/builder.ts';
 import type { Expression } from '../../mol-script/language/expression.ts';
 import { compile } from '../../mol-script/runtime/query/compiler.ts';
-import type { StateObjectRef } from '../../mol-state.ts';
+import type { StateObjectRef } from '../../mol-state/index.ts';
 import type { BuiltInTrajectoryFormat } from '../../mol-plugin-state/formats/trajectory.ts';
 import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
 import { Asset } from '../../mol-util/assets.ts';

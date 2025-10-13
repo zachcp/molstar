@@ -5,7 +5,7 @@
  */
 
 import { Mat4 } from '../../../../mol-math/linear-algebra/3d/mat4.ts';
-import type { StateBuilder, StateObjectSelector } from '../../../../mol-state.ts';
+import type { StateBuilder, StateObjectSelector } from '../../../../mol-state/index.ts';
 import type { PluginContext } from '../../../../mol-plugin/context.ts';
 import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/representation/spacefill.ts';
 import { Color } from '../../../../mol-util/color.ts';

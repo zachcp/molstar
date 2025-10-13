@@ -11,7 +11,7 @@ import { ModelServerConfig as Config, ModelServerConfig, mapSourceAndIdToFilenam
 import { ConsoleLogger } from '../../../mol-util/console-logger.ts';
 import { resolveJob } from './query.ts';
 import { JobManager, JobEntry, type ResultWriterParams } from './jobs.ts';
-import type { UUID } from '../../../mol-util.ts';
+import type { UUID } from '../../../mol-util/index.ts';
 import { type QueryDefinition, normalizeRestQueryParams, normalizeRestCommonParams, QueryList } from './api.ts';
 import { getApiSchema, shortcutIconLink } from './api-schema.ts';
 import { swaggerUiAssetsHandler, swaggerUiIndexHandler } from '../../common/swagger-ui.ts';

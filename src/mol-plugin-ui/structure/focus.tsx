@@ -10,7 +10,7 @@ import type { UnitIndex } from '../../mol-model/structure/structure/element/elem
 import type { FocusEntry } from '../../mol-plugin-state/manager/structure/focus.ts';
 import type { StructureRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
 import { FocusLoci } from '../../mol-plugin/behavior/dynamic/representation.ts';
-import type { StateTransform } from '../../mol-state.ts';
+import type { StateTransform } from '../../mol-state/index.ts';
 import { lociLabel } from '../../mol-theme/label.ts';
 import { Binding } from '../../mol-util/binding.ts';
 import { memoizeLatest } from '../../mol-util/memoize.ts';

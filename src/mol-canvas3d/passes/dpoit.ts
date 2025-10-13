@@ -14,7 +14,7 @@ import { ShaderCode } from '../../mol-gl/shader-code.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
 import type { Texture } from '../../mol-gl/webgl/texture.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
 import { evaluateDpoit_frag } from '../../mol-gl/shader/evaluate-dpoit.frag.ts';
 import { blendBackDpoit_frag } from '../../mol-gl/shader/blend-back-dpoit.frag.ts';

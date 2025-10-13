@@ -5,7 +5,7 @@
  */
 
 import type { Mat3, Mat4, Quat, Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import type { GLRenderingContext } from './compat.ts';
 import type { RenderableSchema } from '../../mol-gl/renderable/schema.ts';
 import type { ValueOf } from '../../mol-util/type-helpers.ts';

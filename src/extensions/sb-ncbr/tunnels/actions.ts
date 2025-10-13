@@ -7,8 +7,8 @@
 import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
 import { StateTransforms } from '../../../mol-plugin-state/transforms.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
-import { StateAction } from '../../../mol-state.ts';
-import { Task } from '../../../mol-task.ts';
+import { StateAction } from '../../../mol-state/index.ts';
+import { Task } from '../../../mol-task/index.ts';
 import type { Asset } from '../../../mol-util/assets.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { assertUnreachable } from '../../../mol-util/type-helpers.ts';

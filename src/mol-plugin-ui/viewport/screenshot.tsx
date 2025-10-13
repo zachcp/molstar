@@ -16,7 +16,7 @@ import { ScreenshotPreview } from '../controls/screenshot.ts';
 import { useBehavior } from '../hooks/use-behavior.ts';
 import { LocalStateSnapshotParams, StateExportImportControls } from '../state/snapshots.ts';
 import { useEffect, useState } from 'react';
-import { round } from '../../mol-util.ts';
+import { round } from '../../mol-util/index.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
 import type { Camera } from '../../mol-canvas3d/camera.ts';
 import { fovNormalizedCameraPosition } from '../../mol-util/camera.ts';

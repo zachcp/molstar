@@ -10,7 +10,7 @@ import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
 import { Vec3, Mat4, Mat3 } from '../../mol-math/linear-algebra.ts';
 import { addCylinder } from '../../mol-geo/geometry/mesh/builder/cylinder.ts';
 import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
-import type { RuntimeContext } from '../../mol-task.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
 import { Shape } from '../../mol-model/shape.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import { ShapeRepresentation } from '../../mol-repr/shape/representation.ts';

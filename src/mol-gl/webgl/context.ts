@@ -6,7 +6,7 @@
 
 import { type GLRenderingContext, isWebGL2 } from './compat.ts';
 import { checkFramebufferStatus, createNullFramebuffer, type Framebuffer } from './framebuffer.ts';
-import { Scheduler } from '../../mol-task.ts';
+import { Scheduler } from '../../mol-task/index.ts';
 import { isDebugMode } from '../../mol-util/debug.ts';
 import { createExtensions, resetExtensions, type WebGLExtensions } from './extensions.ts';
 import { type WebGLState, createState } from './state.ts';

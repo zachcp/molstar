@@ -6,7 +6,7 @@
 
 import type { Category } from '../cif/encoder.ts';
 import { LigandEncoder } from '../ligand-encoder.ts';
-import { StringBuilder } from '../../../mol-util.ts';
+import { StringBuilder } from '../../../mol-util/index.ts';
 import { getCategoryInstanceData } from '../cif/encoder/util.ts';
 import { BondType } from '../../../mol-model/structure/model/types.ts';
 import type { ComponentBond } from '../../../mol-model-formats/structure/property/bonds/chem_comp.ts';

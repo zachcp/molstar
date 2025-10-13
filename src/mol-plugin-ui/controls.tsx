@@ -13,7 +13,7 @@ import type { PluginStateObject } from '../mol-plugin-state/objects.ts';
 import { StateTransforms } from '../mol-plugin-state/transforms.ts';
 import type { ModelFromTrajectory } from '../mol-plugin-state/transforms/model.ts';
 import { PluginCommands } from '../mol-plugin/commands.ts';
-import type { StateTransformer } from '../mol-state.ts';
+import type { StateTransformer } from '../mol-state/index.ts';
 import { PluginReactContext, PluginUIComponent } from './base.ts';
 import { IconButton } from './controls/common.ts';
 import { Icon, NavigateBeforeSvg, NavigateNextSvg, SkipPreviousSvg, StopSvg, PlayArrowSvg, SubscriptionsOutlinedSvg, BuildSvg, AnimationSvg, RefreshSvg } from './controls/icons.ts';

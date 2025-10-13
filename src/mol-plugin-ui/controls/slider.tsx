@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import { TextInput } from './common.ts';
-import { noop } from '../../mol-util.ts';
+import { noop } from '../../mol-util/index.ts';
 import { normalizeWheel } from '../../mol-util/input/input-observer.ts';
 
 export class Slider extends React.Component<{

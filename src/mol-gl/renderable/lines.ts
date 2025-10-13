@@ -8,7 +8,7 @@ import { type Renderable, type RenderableState, createRenderable } from '../rend
 import type { WebGLContext } from '../webgl/context.ts';
 import { createGraphicsRenderItem, type Transparency } from '../webgl/render-item.ts';
 import { GlobalUniformSchema, BaseSchema, AttributeSpec, DefineSpec, type Values, InternalSchema, SizeSchema, ElementsSpec, type InternalValues, GlobalTextureSchema, UniformSpec, type GlobalDefineValues, type GlobalDefines, GlobalDefineSchema } from './schema.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { LinesShaderCode } from '../shader-code.ts';
 
 export const LinesSchema = {

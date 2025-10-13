@@ -6,7 +6,7 @@
 
 import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
 import { getTrajectory } from '../../../mol-plugin-state/transforms/model.ts';
-import { Task } from '../../../mol-task.ts';
+import { Task } from '../../../mol-task/index.ts';
 import { ParamDefinition } from '../../../mol-util/param-definition.ts';
 import { getMVSReferenceObject } from '../helpers/utils.ts';
 import { MVSTransform } from './annotation-structure-component.ts';

@@ -7,7 +7,7 @@
 import { PluginBehavior } from '../../../behavior/behavior.ts';
 import { Structure, Model } from '../../../../mol-model/structure.ts';
 import { PluginStateObject } from '../../../../mol-plugin-state/objects.ts';
-import { StateSelection, type StateObject } from '../../../../mol-state.ts';
+import { StateSelection, type StateObject } from '../../../../mol-state/index.ts';
 
 export const StructureInfo = PluginBehavior.create({
     name: 'structure-info-prop',

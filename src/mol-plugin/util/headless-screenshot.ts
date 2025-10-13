@@ -23,7 +23,7 @@ import { ColorNames } from '../../mol-util/color/names.ts';
 import { PixelData } from '../../mol-util/image.ts';
 import { InputObserver } from '../../mol-util/input/input-observer.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';
-import type { RuntimeContext } from '../../mol-task.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
 import { Buffer } from "node:buffer";
 
 export interface ExternalModules {

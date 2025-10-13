@@ -17,7 +17,7 @@ import { calcModelCenter, getAsymIdCount } from './util.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { Coordinates, type Frame } from '../coordinates.ts';
 import type { Topology } from '../topology.ts';
-import { Task } from '../../../mol-task.ts';
+import { Task } from '../../../mol-task/index.ts';
 import { IndexPairBonds } from '../../../mol-model-formats/structure/property/bonds/index-pair.ts';
 import { createModels } from '../../../mol-model-formats/structure/basic/parser.ts';
 import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif.ts';

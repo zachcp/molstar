@@ -18,7 +18,7 @@ import { type Loci, isEveryLoci, EmptyLoci } from '../../mol-model/loci.ts';
 import { Interval } from '../../mol-data/int.ts';
 import { type LocationCallback, VisualUpdateState } from '../util.ts';
 import { ColorTheme } from '../../mol-theme/color.ts';
-import { ValueCell, deepEqual } from '../../mol-util.ts';
+import { ValueCell, deepEqual } from '../../mol-util/index.ts';
 import { createSizes, type SizeData } from '../../mol-geo/geometry/size-data.ts';
 import { createColors } from '../../mol-geo/geometry/color-data.ts';
 import { MarkerAction } from '../../mol-util/marker-action.ts';

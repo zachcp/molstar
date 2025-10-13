@@ -8,7 +8,7 @@
 import { utf8ByteCount, utf8Write } from '../../mol-io/common/utf8.ts';
 import { type Structure, to_mmCIF, Unit } from '../../mol-model/structure.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { getFormattedTime } from '../../mol-util/date.ts';
 import { download } from '../../mol-util/download.ts';
 import { zip } from '../../mol-util/zip/zip.ts';

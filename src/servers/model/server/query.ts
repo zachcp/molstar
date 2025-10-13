@@ -9,7 +9,7 @@ import { Column } from '../../../mol-data/db.ts';
 import { CifWriter } from '../../../mol-io/writer/cif.ts';
 import { Structure, StructureQuery, StructureSelection, type Model } from '../../../mol-model/structure.ts';
 import { encode_mmCIF_categories } from '../../../mol-model/structure/export/mmcif.ts';
-import type { Progress } from '../../../mol-task.ts';
+import type { Progress } from '../../../mol-task/index.ts';
 import { ConsoleLogger } from '../../../mol-util/console-logger.ts';
 import { now } from '../../../mol-util/now.ts';
 import { PerformanceMonitor } from '../../../mol-util/performance-monitor.ts';

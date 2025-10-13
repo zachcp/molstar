@@ -7,8 +7,8 @@
 import { Structure, StructureSelection } from '../../../mol-model/structure.ts';
 import { StructureQueryHelper } from '../../../mol-plugin-state/helpers/structure-query.ts';
 import { PluginStateObject as SO } from '../../../mol-plugin-state/objects.ts';
-import { StateObject, StateTransformer } from '../../../mol-state.ts';
-import { deepEqual } from '../../../mol-util.ts';
+import { StateObject, StateTransformer } from '../../../mol-state/index.ts';
+import { deepEqual } from '../../../mol-util/index.ts';
 import { omitObjectKeys } from '../../../mol-util/object.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { rowsToExpression } from '../helpers/selections.ts';

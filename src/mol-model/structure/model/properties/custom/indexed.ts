@@ -7,7 +7,7 @@
 import type { ResidueIndex, ChainIndex, ElementIndex, EntityIndex } from '../../indexing.ts';
 import { Unit, type Structure, StructureElement } from '../../../structure.ts';
 import { Segmentation } from '../../../../../mol-data/int.ts';
-import { UUID } from '../../../../../mol-util.ts';
+import { UUID } from '../../../../../mol-util/index.ts';
 import type { CifWriter } from '../../../../../mol-io/writer/cif.ts';
 import type { Model } from '../../model.ts';
 

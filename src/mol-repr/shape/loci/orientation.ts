@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { RuntimeContext } from '../../../mol-task.ts';
+import type { RuntimeContext } from '../../../mol-task/index.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { ColorNames } from '../../../mol-util/color/names.ts';
 import { ShapeRepresentation } from '../representation.ts';

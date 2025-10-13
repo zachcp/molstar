@@ -4,7 +4,7 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { StringBuilder } from '../../mol-util.ts';
+import { StringBuilder } from '../../mol-util/index.ts';
 import type { Writer } from './writer.ts';
 import type { Encoder, Category, Field } from './cif/encoder.ts';
 import type { ComponentAtom } from '../../mol-model-formats/structure/property/atoms/chem_comp.ts';

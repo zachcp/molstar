@@ -7,14 +7,14 @@
 import { PluginStateObject, PluginStateTransform } from '../../mol-plugin-state/objects.ts';
 import { createSphericalCollocationGrid } from './orbitals.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { CustomProperties } from '../../mol-model/custom-property.ts';
 import type { SphericalBasisOrder } from './spherical-functions.ts';
 import type { Volume } from '../../mol-model/volume.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import { createVolumeRepresentationParams } from '../../mol-plugin-state/helpers/volume-representation-params.ts';
-import { StateTransformer } from '../../mol-state.ts';
+import { StateTransformer } from '../../mol-state/index.ts';
 import { VolumeRepresentation3DHelpers } from '../../mol-plugin-state/transforms/representation.ts';
 import { type AlphaOrbital, type Basis, type CubeGrid, CubeGridFormat, isCubeGridData } from './data-model.ts';
 import { createSphericalCollocationDensityGrid } from './density.ts';

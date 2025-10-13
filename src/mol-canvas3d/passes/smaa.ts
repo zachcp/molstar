@@ -13,7 +13,7 @@ import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
 import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
 import { loadImageTexture, type Texture } from '../../mol-gl/webgl/texture.ts';
 import { Vec2, Vec4 } from '../../mol-math/linear-algebra.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { blend_vert } from '../../mol-gl/shader/smaa/blend.vert.ts';
 import { blend_frag } from '../../mol-gl/shader/smaa/blend.frag.ts';

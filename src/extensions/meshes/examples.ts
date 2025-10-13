@@ -13,7 +13,7 @@ import { createVolumeRepresentationParams } from '../../mol-plugin-state/helpers
 import type { PluginStateObject } from '../../mol-plugin-state/objects.ts';
 import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import type { StateObjectSelector } from '../../mol-state.ts';
+import type { StateObjectSelector } from '../../mol-state/index.ts';
 import { Asset } from '../../mol-util/assets.ts';
 import { Color } from '../../mol-util/color.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';

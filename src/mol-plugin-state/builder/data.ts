@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import type { StateTransformer, StateTransform } from '../../mol-state.ts';
+import type { StateTransformer, StateTransform } from '../../mol-state/index.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { Download, ReadFile, DownloadBlob, RawData } from '../transforms/data.ts';
 import { getFileNameInfo } from '../../mol-util/file-info.ts';

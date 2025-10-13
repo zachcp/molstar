@@ -7,7 +7,7 @@
 
 import { type DatabaseCollection, Database, type Table, Column, ColumnHelpers } from '../../../mol-data/db.ts';
 import { Tensor } from '../../../mol-math/linear-algebra.ts';
-import { arrayEqual } from '../../../mol-util.ts';
+import { arrayEqual } from '../../../mol-util/index.ts';
 import * as Data from './data-model.ts';
 
 export namespace FieldPath {

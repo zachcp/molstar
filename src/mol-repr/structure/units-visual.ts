@@ -21,7 +21,7 @@ import { type LocationCallback, VisualUpdateState } from '../util.ts';
 import { ColorTheme } from '../../mol-theme/color.ts';
 import { createMarkers } from '../../mol-geo/geometry/marker-data.ts';
 import { MarkerAction } from '../../mol-util/marker-action.ts';
-import { ValueCell, deepEqual } from '../../mol-util.ts';
+import { ValueCell, deepEqual } from '../../mol-util/index.ts';
 import { createSizes } from '../../mol-geo/geometry/size-data.ts';
 import { createColors } from '../../mol-geo/geometry/color-data.ts';
 import type { Mat4 } from '../../mol-math/linear-algebra.ts';

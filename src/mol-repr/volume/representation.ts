@@ -17,7 +17,7 @@ import { type Loci, isEveryLoci, EmptyLoci, isEmptyLoci } from '../../mol-model/
 import { Interval, OrderedSet } from '../../mol-data/int.ts';
 import { getQualityProps, type LocationCallback, VisualUpdateState } from '../util.ts';
 import { ColorTheme } from '../../mol-theme/color.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { createSizes } from '../../mol-geo/geometry/size-data.ts';
 import { createColors } from '../../mol-geo/geometry/color-data.ts';
 import type { MarkerAction } from '../../mol-util/marker-action.ts';
@@ -27,7 +27,7 @@ import type { Transparency } from '../../mol-theme/transparency.ts';
 import { Representation, type RepresentationProvider, type RepresentationContext, type RepresentationParamsGetter } from '../representation.ts';
 import { BaseGeometry } from '../../mol-geo/geometry/base.ts';
 import { Subject } from 'rxjs';
-import { type RuntimeContext, Task } from '../../mol-task.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
 import type { SizeValues } from '../../mol-gl/renderable/schema.ts';
 import type { Clipping } from '../../mol-theme/clipping.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';

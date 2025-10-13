@@ -7,7 +7,7 @@
 import { parseMol } from '../../mol-io/reader/mol/parser.ts';
 import { trajectoryFromMol } from '../../mol-model-formats/structure/mol.ts';
 import { Structure, to_mmCIF } from '../../mol-model/structure.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { JSONCifEncoder } from './encoder.ts';
 
 export async function molfileToJSONCif(molfile: string) {

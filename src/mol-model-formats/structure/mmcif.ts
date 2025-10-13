@@ -7,7 +7,7 @@
  */
 
 import { Model } from '../../mol-model/structure/model/model.ts';
-import { type RuntimeContext, Task } from '../../mol-task.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
 import type { ModelFormat } from '../format.ts';
 import { type CifFrame, CIF, type CifFile } from '../../mol-io/reader/cif.ts';
 import type { mmCIF_Database } from '../../mol-io/reader/cif/schema/mmcif.ts';

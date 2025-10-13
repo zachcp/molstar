@@ -12,7 +12,7 @@ import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
 import type { Texture } from '../../mol-gl/webgl/texture.ts';
 import { Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
 import { overlay_frag } from '../../mol-gl/shader/marking/overlay.frag.ts';

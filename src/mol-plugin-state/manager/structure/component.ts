@@ -11,11 +11,11 @@ import { Structure, StructureElement, StructureSelection } from '../../../mol-mo
 import { structureAreEqual, structureAreIntersecting, structureIntersect, structureSubtract, structureUnion } from '../../../mol-model/structure/query/utils/structure-set.ts';
 import { setSubtreeVisibility } from '../../../mol-plugin/behavior/static/state.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
-import type { StateBuilder, StateObjectRef, StateTransformer } from '../../../mol-state.ts';
-import { Task } from '../../../mol-task.ts';
+import type { StateBuilder, StateObjectRef, StateTransformer } from '../../../mol-state/index.ts';
+import { Task } from '../../../mol-task/index.ts';
 import type { ColorTheme } from '../../../mol-theme/color.ts';
 import type { SizeTheme } from '../../../mol-theme/size.ts';
-import { shallowEqual, UUID } from '../../../mol-util.ts';
+import { shallowEqual, UUID } from '../../../mol-util/index.ts';
 import { ColorNames } from '../../../mol-util/color/names.ts';
 import { objectForEach } from '../../../mol-util/object.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';

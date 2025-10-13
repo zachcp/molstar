@@ -10,7 +10,7 @@ import { CifWriter, type EncodingStrategyHint } from '../../mol-io/writer/cif.ts
 import * as util from 'util';
 import * as fs from 'fs';
 import * as zlib from 'zlib';
-import { Progress, Task, type RuntimeContext } from '../../mol-task.ts';
+import { Progress, Task, type RuntimeContext } from '../../mol-task/index.ts';
 import { classifyFloatArray, classifyIntArray } from '../../mol-io/common/binary-cif.ts';
 import type { BinaryEncodingProvider } from '../../mol-io/writer/cif/encoder/binary.ts';
 import { Category } from '../../mol-io/writer/cif/encoder.ts';

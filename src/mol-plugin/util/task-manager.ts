@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Task, type Progress, type RuntimeContext } from '../../mol-task.ts';
+import { Task, type Progress, type RuntimeContext } from '../../mol-task/index.ts';
 import { RxEventHelper } from '../../mol-util/rx-event-helper.ts';
 import { now } from '../../mol-util/now.ts';
 import { CreateObservableCtx, ExecuteInContext } from '../../mol-task/execution/observable.ts';

@@ -9,7 +9,7 @@ import type { EncodedCategory, EncodedFile } from '../../../common/binary-cif.ts
 import { Field } from './field.ts';
 import { ReaderResult as Result } from '../../result.ts';
 import { decodeMsgPack } from '../../../common/msgpack/decode.ts';
-import { Task } from '../../../../mol-task.ts';
+import { Task } from '../../../../mol-task/index.ts';
 
 function checkVersions(min: number[], current: number[]) {
     for (let i = 0; i < 2; i++) {

@@ -17,7 +17,7 @@ import { MarkerAction } from '../mol-util/marker-action.ts';
 import { PureSelectControl } from './controls/parameters.ts';
 import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
 import { HeteroSequenceWrapper } from './sequence/hetero.ts';
-import { type State, StateSelection } from '../mol-state.ts';
+import { type State, StateSelection } from '../mol-state/index.ts';
 import { ChainSequenceWrapper } from './sequence/chain.ts';
 import { ElementSequenceWrapper } from './sequence/element.ts';
 import { elementLabel } from '../mol-theme/label.ts';

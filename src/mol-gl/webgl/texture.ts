@@ -7,7 +7,7 @@
 
 import type { WebGLContext } from './context.ts';
 import type { TextureImage, TextureVolume } from '../renderable/util.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import type { RenderableSchema } from '../renderable/schema.ts';
 import { idFactory } from '../../mol-util/id-factory.ts';
 import type { Framebuffer } from './framebuffer.ts';

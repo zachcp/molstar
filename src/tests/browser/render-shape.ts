@@ -11,7 +11,7 @@ import { Canvas3D, Canvas3DContext } from '../../mol-canvas3d/canvas3d.ts';
 import { lociLabel } from '../../mol-theme/label.ts';
 import { MarkerAction } from '../../mol-util/marker-action.ts';
 import { EveryLoci } from '../../mol-model/loci.ts';
-import { type RuntimeContext, Progress } from '../../mol-task.ts';
+import { type RuntimeContext, Progress } from '../../mol-task/index.ts';
 import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
 import { Mat4, Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';

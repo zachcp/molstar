@@ -10,7 +10,7 @@
 import { Subject, type Observable } from 'rxjs';
 import { Viewport } from '../../mol-canvas3d/camera/util.ts';
 import { Vec2, EPSILON, Vec3 } from '../../mol-math/linear-algebra.ts';
-import { BitFlags, noop } from '../../mol-util.ts';
+import { BitFlags, noop } from '../../mol-util/index.ts';
 import type { Ray3D } from '../../mol-math/geometry/primitives/ray3d.ts';
 
 export function getButtons(event: MouseEvent | Touch) {

@@ -12,7 +12,7 @@ import { TextureSpec, type Values, UniformSpec, DefineSpec } from '../../mol-gl/
 import { ShaderCode } from '../../mol-gl/shader-code.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import type { Texture } from '../../mol-gl/webgl/texture.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
 import { createComputeRenderable, type ComputeRenderable } from '../../mol-gl/renderable.ts';
 import { Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';

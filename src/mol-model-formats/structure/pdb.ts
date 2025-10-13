@@ -7,7 +7,7 @@
 
 import type { PdbFile } from '../../mol-io/reader/pdb/schema.ts';
 import { pdbToMmCif } from './pdb/to-cif.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { MmcifFormat } from './mmcif.ts';
 import { createModels } from './basic/parser.ts';
 import { Column } from '../../mol-data/db.ts';

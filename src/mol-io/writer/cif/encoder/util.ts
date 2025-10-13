@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Iterator } from '../../../../mol-data.ts';
+import { Iterator } from '../../../../mol-data/index.ts';
 import type { Field, Category } from '../encoder.ts';
 
 export function getFieldDigitCount(field: Field) {

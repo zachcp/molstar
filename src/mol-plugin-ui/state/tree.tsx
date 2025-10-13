@@ -8,7 +8,7 @@ import type * as React from 'react';
 import { debounceTime, filter } from 'rxjs/operators';
 import type { PluginStateObject } from '../../mol-plugin-state/objects.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
-import { type State, type StateAction, StateObject, type StateObjectCell, StateTransform } from '../../mol-state.ts';
+import { type State, type StateAction, StateObject, type StateObjectCell, StateTransform } from '../../mol-state/index.ts';
 import { StateTreeSpine } from '../../mol-state/tree/spine.ts';
 import { PluginUIComponent, type _Props, type _State } from '../base.ts';
 import { ActionMenu } from '../controls/action-menu.ts';

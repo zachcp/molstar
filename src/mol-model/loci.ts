@@ -12,7 +12,7 @@ import { Vec3 } from '../mol-math/linear-algebra.ts';
 import { Structure } from './structure/structure.ts';
 import type { PrincipalAxes } from '../mol-math/linear-algebra/matrix/principal-axes.ts';
 import { ParamDefinition } from '../mol-util/param-definition.ts';
-import { shallowEqual } from '../mol-util.ts';
+import { shallowEqual } from '../mol-util/index.ts';
 import type { FiniteArray } from '../mol-util/type-helpers.ts';
 import { BoundaryHelper } from '../mol-math/geometry/boundary-helper.ts';
 import { stringToWords } from '../mol-util/string.ts';

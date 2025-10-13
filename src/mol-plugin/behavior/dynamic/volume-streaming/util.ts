@@ -8,7 +8,7 @@
 import { type Structure, Model } from '../../../../mol-model/structure.ts';
 import type { VolumeServerInfo } from './model.ts';
 import type { PluginContext } from '../../../../mol-plugin/context.ts';
-import type { RuntimeContext } from '../../../../mol-task.ts';
+import type { RuntimeContext } from '../../../../mol-task/index.ts';
 import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif.ts';
 import { PluginConfig } from '../../../config.ts';
 

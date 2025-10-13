@@ -6,7 +6,7 @@
  */
 
 import { PluginStateObject as SO } from '../../objects.ts';
-import { StateObject, type StateTransform, type State, type StateObjectCell, type StateTree, type StateTransformer } from '../../../mol-state.ts';
+import { StateObject, type StateTransform, type State, type StateObjectCell, type StateTree, type StateTransformer } from '../../../mol-state/index.ts';
 import { StateTransforms } from '../../transforms.ts';
 import { VolumeStreaming } from '../../../mol-plugin/behavior/dynamic/volume-streaming/behavior.ts';
 import type { CreateVolumeStreamingBehavior } from '../../../mol-plugin/behavior/dynamic/volume-streaming/transformers.ts';

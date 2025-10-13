@@ -9,7 +9,7 @@ import type { WebGLContext } from '../webgl/context.ts';
 import { createGraphicsRenderItem, type Transparency } from '../webgl/render-item.ts';
 import { AttributeSpec, type Values, UniformSpec, GlobalUniformSchema, InternalSchema, TextureSpec, ElementsSpec, DefineSpec, type InternalValues, GlobalTextureSchema, BaseSchema, ValueSpec, type GlobalDefineValues, type GlobalDefines, GlobalDefineSchema } from './schema.ts';
 import { DirectVolumeShaderCode } from '../shader-code.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 
 export const DirectVolumeSchema = {
     ...BaseSchema,

@@ -15,8 +15,8 @@ import { type Assembly, Symmetry } from '../../../../mol-model/structure/model/p
 import { PluginStateObject as PSO, PluginStateTransform } from '../../../../mol-plugin-state/objects.ts';
 import type { PluginContext } from '../../../../mol-plugin/context.ts';
 import { StateTransformer } from '../../../../mol-state/transformer.ts';
-import { Task } from '../../../../mol-task.ts';
-import { deepEqual } from '../../../../mol-util.ts';
+import { Task } from '../../../../mol-task/index.ts';
+import { deepEqual } from '../../../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
 import { partitionUnits } from '../util.ts';
 

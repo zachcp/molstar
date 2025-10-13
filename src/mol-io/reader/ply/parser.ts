@@ -5,7 +5,7 @@
  */
 
 import { ReaderResult as Result } from '../result.ts';
-import { Task, type RuntimeContext } from '../../../mol-task.ts';
+import { Task, type RuntimeContext } from '../../../mol-task/index.ts';
 import { PlyFile, PlyType, type PlyElement } from './schema.ts';
 import { Tokenizer, TokenBuilder, type Tokens } from '../common/text/tokenizer.ts';
 import { Column } from '../../../mol-data/db.ts';

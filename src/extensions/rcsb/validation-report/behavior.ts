@@ -17,9 +17,9 @@ import { cantorPairing } from '../../../mol-data/util.ts';
 import { DefaultQueryRuntimeTable } from '../../../mol-script/runtime/query/compiler.ts';
 import { StructureSelectionQuery, StructureSelectionCategory } from '../../../mol-plugin-state/helpers/structure-selection-query.ts';
 import { MolScriptBuilder as MS } from '../../../mol-script/language/builder.ts';
-import { Task } from '../../../mol-task.ts';
+import { Task } from '../../../mol-task/index.ts';
 import { StructureRepresentationPresetProvider, PresetStructureRepresentations } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
-import { StateObjectRef } from '../../../mol-state.ts';
+import { StateObjectRef } from '../../../mol-state/index.ts';
 import { Model } from '../../../mol-model/structure.ts';
 
 export const RCSBValidationReport = PluginBehavior.create<{ autoAttach: boolean, showTooltip: boolean }>({

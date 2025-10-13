@@ -7,7 +7,7 @@
  */
 
 import { ChunkedArray } from '../../../mol-data/util.ts';
-import { noop } from '../../../mol-util.ts';
+import { noop } from '../../../mol-util/index.ts';
 import { Mesh } from '../../geometry/mesh/mesh.ts';
 import { AllowedContours } from './tables.ts';
 import { LinesBuilder } from '../../geometry/lines/lines-builder.ts';

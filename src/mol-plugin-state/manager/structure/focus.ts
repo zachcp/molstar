@@ -11,7 +11,7 @@ import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { Loci } from '../../../mol-model/loci.ts';
 import { type Structure, StructureElement } from '../../../mol-model/structure.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
-import { StateSelection } from '../../../mol-state.ts';
+import { StateSelection } from '../../../mol-state/index.ts';
 import { lociLabel } from '../../../mol-theme/label.ts';
 import { arrayRemoveAtInPlace } from '../../../mol-util/array.ts';
 import { StatefulPluginComponent } from '../../component.ts';

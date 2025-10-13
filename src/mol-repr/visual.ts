@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { RuntimeContext } from '../mol-task.ts';
+import type { RuntimeContext } from '../mol-task/index.ts';
 import type { GraphicsRenderObject } from '../mol-gl/render-object.ts';
 import type { PickingId } from '../mol-geo/geometry/picking.ts';
 import { Loci, isEmptyLoci, isEveryLoci, EveryLoci } from '../mol-model/loci.ts';
@@ -15,7 +15,7 @@ import type { Theme } from '../mol-theme/theme.ts';
 import { Mat4 } from '../mol-math/linear-algebra.ts';
 import { updateTransformData, fillIdentityTransform } from '../mol-geo/geometry/transform-data.ts';
 import { calculateTransformBoundingSphere } from '../mol-gl/renderable/util.ts';
-import { ValueCell } from '../mol-util.ts';
+import { ValueCell } from '../mol-util/index.ts';
 import type { Overpaint } from '../mol-theme/overpaint.ts';
 import { createOverpaint, clearOverpaint, applyOverpaintColor } from '../mol-geo/geometry/overpaint-data.ts';
 import { Interval } from '../mol-data/int.ts';

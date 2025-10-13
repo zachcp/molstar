@@ -11,7 +11,7 @@ import { ButtonsType, ModifiersKeys } from '../../../mol-util/input/input-observ
 import { Binding } from '../../../mol-util/binding.ts';
 import { PluginStateObject as SO } from '../../../mol-plugin-state/objects.ts';
 import { Structure, StructureElement } from '../../../mol-model/structure.ts';
-import { StateSelection } from '../../../mol-state.ts';
+import { StateSelection } from '../../../mol-state/index.ts';
 import { StateTreeSpine } from '../../../mol-state/tree/spine.ts';
 import type { Representation } from '../../../mol-repr/representation.ts';
 import { MarkerAction } from '../../../mol-util/marker-action.ts';

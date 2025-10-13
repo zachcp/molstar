@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Task, type Progress, Scheduler, MultistepTask, chunkedSubtask } from '../mol-task.ts';
+import { Task, type Progress, Scheduler, MultistepTask, chunkedSubtask } from '../mol-task/index.ts';
 import { now } from '../mol-util/now.ts';
 
 export async function test1() {

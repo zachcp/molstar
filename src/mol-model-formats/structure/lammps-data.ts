@@ -11,7 +11,7 @@ import type { Model } from '../../mol-model/structure/model.ts';
 import { type LammpsDataFile, lammpsUnitStyles, type UnitStyle } from '../../mol-io/reader/lammps/schema.ts';
 import { type Trajectory, ArrayTrajectory } from '../../mol-model/structure.ts';
 import { BondType, MoleculeType } from '../../mol-model/structure/model/types.ts';
-import { type RuntimeContext, Task } from '../../mol-task.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
 import type { ModelFormat } from '../format.ts';
 import { createModels } from './basic/parser.ts';
 import { BasicSchema, createBasic } from './basic/schema.ts';

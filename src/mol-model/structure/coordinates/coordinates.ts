@@ -5,7 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { arrayEqual, UUID } from '../../../mol-util.ts';
+import { arrayEqual, UUID } from '../../../mol-util/index.ts';
 import type { Cell } from '../../../mol-math/geometry/spacegroup/cell.ts';
 import type { AtomicConformation } from '../model/properties/atomic.ts';
 import { Column } from '../../../mol-data/db.ts';

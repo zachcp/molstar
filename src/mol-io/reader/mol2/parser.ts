@@ -10,7 +10,7 @@ import { Column } from '../../../mol-data/db.ts';
 import { TokenBuilder, Tokenizer, type Tokens } from '../common/text/tokenizer.ts';
 import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.ts';
 import { ReaderResult as Result } from '../result.ts';
-import { Task, type RuntimeContext, chunkedSubtask } from '../../../mol-task.ts';
+import { Task, type RuntimeContext, chunkedSubtask } from '../../../mol-task/index.ts';
 import type { StringLike } from '../../common/string-like.ts';
 import type { Mol2Atoms, Mol2Bonds, Mol2File, Mol2Molecule, Mol2Structure, Mol2Substructure } from './schema.ts';
 

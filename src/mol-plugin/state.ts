@@ -18,15 +18,15 @@ import type { StructureComponentManager } from '../mol-plugin-state/manager/stru
 import type { StructureFocusSnapshot } from '../mol-plugin-state/manager/structure/focus.ts';
 import type { StructureSelectionSnapshot } from '../mol-plugin-state/manager/structure/selection.ts';
 import { PluginStateObject as SO } from '../mol-plugin-state/objects.ts';
-import { State, type StateTransform, type StateTransformer } from '../mol-state.ts';
-import { UUID } from '../mol-util.ts';
+import { State, type StateTransform, type StateTransformer } from '../mol-state/index.ts';
+import { UUID } from '../mol-util/index.ts';
 import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
 import { PluginBehavior } from './behavior.ts';
 import { PluginCommands } from './commands.ts';
 import { PluginConfig } from './config.ts';
 import type { PluginContext } from './context.ts';
 import { AnimateStateSnapshotTransition } from '../mol-plugin-state/animation/built-in/state-snapshots.ts';
-import { Scheduler } from '../mol-task.ts';
+import { Scheduler } from '../mol-task/index.ts';
 import { memoizeLatest } from '../mol-util/memoize.ts';
 
 export { PluginState };

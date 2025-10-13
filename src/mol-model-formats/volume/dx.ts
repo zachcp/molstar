@@ -7,7 +7,7 @@
 import type { DxFile } from '../../mol-io/reader/dx/parser.ts';
 import { Mat4, Tensor } from '../../mol-math/linear-algebra.ts';
 import type { Volume } from '../../mol-model/volume.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { arrayMax, arrayMean, arrayMin, arrayRms } from '../../mol-util/array.ts';
 import type { ModelFormat } from '../format.ts';
 import { CustomProperties } from '../../mol-model/custom-property.ts';

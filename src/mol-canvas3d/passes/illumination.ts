@@ -8,7 +8,7 @@ import { type CopyRenderable, QuadSchema, QuadValues, createCopyRenderable } fro
 import { DefineSpec, TextureSpec, UniformSpec, type Values } from '../../mol-gl/renderable/schema.ts';
 import type { Texture } from '../../mol-gl/webgl/texture.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { isDebugMode, isTimingMode } from '../../mol-util/debug.ts';
 import type { Renderer, RendererProps } from '../../mol-gl/renderer.ts';
 import { Camera, type ICamera } from '../camera.ts';

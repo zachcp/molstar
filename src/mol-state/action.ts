@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import type { Task } from '../mol-task.ts';
-import { UUID } from '../mol-util.ts';
+import type { Task } from '../mol-task/index.ts';
+import { UUID } from '../mol-util/index.ts';
 import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
 import type { StateObject, StateObjectCell } from './object.ts';
 import type { State } from './state.ts';

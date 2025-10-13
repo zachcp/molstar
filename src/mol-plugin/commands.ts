@@ -8,7 +8,7 @@
 
 import type { Camera } from '../mol-canvas3d/camera.ts';
 import { PluginCommand } from './command.ts';
-import type { StateTransform, State, StateAction } from '../mol-state.ts';
+import type { StateTransform, State, StateAction } from '../mol-state/index.ts';
 import type { Canvas3DProps } from '../mol-canvas3d/canvas3d.ts';
 import type { PluginLayoutStateProps } from './layout.ts';
 import type { Structure, StructureElement } from '../mol-model/structure.ts';

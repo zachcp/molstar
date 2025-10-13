@@ -8,7 +8,7 @@
  */
 
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
-import { chunkedSubtask, type RuntimeContext, Task } from '../../../mol-task.ts';
+import { chunkedSubtask, type RuntimeContext, Task } from '../../../mol-task/index.ts';
 import { StringLike } from '../../common/string-like.ts';
 import { utf8Read } from '../../common/utf8.ts';
 import { parseFloat as fastParseFloat } from '../common/text/number-parser.ts';

@@ -12,7 +12,7 @@ import { Elements, isMetal } from '../../../mol-model/structure/model/properties
 import { AtomGeometry, assignGeometry } from './geometry.ts';
 import { bondCount, typeSymbol, formalCharge, bondToElementCount } from './util.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import type { RuntimeContext } from '../../../mol-task.ts';
+import type { RuntimeContext } from '../../../mol-task/index.ts';
 import { isDebugMode } from '../../../mol-util/debug.ts';
 import { SortedArray } from '../../../mol-data/int.ts';
 import { BondType } from '../../../mol-model/structure/model/types.ts';

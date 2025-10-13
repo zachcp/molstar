@@ -28,7 +28,7 @@ import type { PluginContext } from '../../mol-plugin/context.ts';
 import { HeadlessPluginContext } from '../../mol-plugin/headless-plugin-context.ts';
 import { DefaultPluginSpec, PluginSpec } from '../../mol-plugin/spec.ts';
 import { type ExternalModules, defaultCanvas3DParams } from '../../mol-plugin/util/headless-screenshot.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { setFSModule } from '../../mol-util/data-source.ts';
 import { onelinerJsonString } from '../../mol-util/json.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';

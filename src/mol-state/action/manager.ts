@@ -7,7 +7,7 @@
 import type { StateAction } from '../action.ts';
 import type { StateObject, StateObjectCell } from '../object.ts';
 import { StateTransformer } from '../transformer.ts';
-import { UUID } from '../../mol-util.ts';
+import { UUID } from '../../mol-util/index.ts';
 import { arraySetRemove } from '../../mol-util/array.ts';
 import { RxEventHelper } from '../../mol-util/rx-event-helper.ts';
 

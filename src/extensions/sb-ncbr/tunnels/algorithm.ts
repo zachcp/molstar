@@ -18,8 +18,8 @@ import { lerp, spline } from '../../../mol-math/interpolate.ts';
 import { Vec3, Tensor, Mat4 } from '../../../mol-math/linear-algebra.ts';
 import { Shape } from '../../../mol-model/shape.ts';
 import { ensureReasonableResolution } from '../../../mol-repr/structure/visual/util/common.ts';
-import { Task, type RuntimeContext } from '../../../mol-task.ts';
-import { ValueCell } from '../../../mol-util.ts';
+import { Task, type RuntimeContext } from '../../../mol-task/index.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import { Color } from '../../../mol-util/color.ts';
 import type { Tunnel, Profile } from './data-model.ts';
 

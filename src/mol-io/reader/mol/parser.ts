@@ -6,7 +6,7 @@
  */
 
 import { Column } from '../../../mol-data/db.ts';
-import { Task } from '../../../mol-task.ts';
+import { Task } from '../../../mol-task/index.ts';
 import type { StringLike } from '../../common/string-like.ts';
 import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.ts';
 import { TokenBuilder, Tokenizer } from '../common/text/tokenizer.ts';

@@ -12,7 +12,7 @@ import { Box3D, type Sphere3D } from '../../../mol-math/geometry.ts';
 import { lerp } from '../../../mol-math/interpolate.ts';
 import { Vec2, Vec3, Vec4 } from '../../../mol-math/linear-algebra.ts';
 import { getVolumeTexture2dLayout } from '../../../mol-repr/volume/util.ts';
-import { ValueCell } from '../../../mol-util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 
 interface ColorSmoothingInput {
     vertexCount: number

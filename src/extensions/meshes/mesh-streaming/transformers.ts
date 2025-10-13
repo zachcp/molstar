@@ -8,9 +8,9 @@ import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
 import { ShapeRepresentation } from '../../../mol-repr/shape/representation.ts';
-import { StateAction, StateTransformer } from '../../../mol-state.ts';
-import { Task } from '../../../mol-task.ts';
-import { shallowEqualObjects } from '../../../mol-util.ts';
+import { StateAction, StateTransformer } from '../../../mol-state/index.ts';
+import { Task } from '../../../mol-task/index.ts';
+import { shallowEqualObjects } from '../../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 
 import { BACKGROUND_OPACITY, FOREROUND_OPACITY, MeshlistData, VolsegTransform } from '../mesh-extension.ts';

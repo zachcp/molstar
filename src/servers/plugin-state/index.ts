@@ -12,7 +12,7 @@ import * as path from 'path';
 import { swaggerUiIndexHandler, swaggerUiAssetsHandler } from '../common/swagger-ui.ts';
 import { makeDir } from '../../mol-util/make-dir.ts';
 import { getConfig } from './config.ts';
-import { UUID } from '../../mol-util.ts';
+import { UUID } from '../../mol-util/index.ts';
 import { shortcutIconLink, getSchema } from './api-schema.ts';
 
 const Config = getConfig();

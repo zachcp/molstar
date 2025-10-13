@@ -13,7 +13,7 @@ import { writeUint, writeUshort, sizeUTF8, writeUTF8, readUshort, readUint, read
 import { crc, adler } from './checksum.ts';
 import { _inflate } from './inflate.ts';
 import { _deflateRaw } from './deflate.ts';
-import { type RuntimeContext, Task } from '../../mol-task.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
 
 export function Unzip(buf: ArrayBuffer, onlyNames = false) {
     return Task.create('Unzip', ctx => unzip(ctx, buf, onlyNames));

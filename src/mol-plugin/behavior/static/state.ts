@@ -8,7 +8,7 @@
 import { Structure } from '../../../mol-model/structure.ts';
 import { PluginStateSnapshotManager } from '../../../mol-plugin-state/manager/snapshots.ts';
 import { PluginStateObject as SO } from '../../../mol-plugin-state/objects.ts';
-import { type State, type StateTransform, StateTree } from '../../../mol-state.ts';
+import { type State, type StateTransform, StateTree } from '../../../mol-state/index.ts';
 import { getFormattedTime } from '../../../mol-util/date.ts';
 import { download } from '../../../mol-util/download.ts';
 import { urlCombine } from '../../../mol-util/url.ts';

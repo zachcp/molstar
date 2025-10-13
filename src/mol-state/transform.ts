@@ -5,7 +5,7 @@
  */
 
 import { StateTransformer } from './transformer.ts';
-import { UUID } from '../mol-util.ts';
+import { UUID } from '../mol-util/index.ts';
 import { hashMurmur128o } from '../mol-data/util.ts';
 
 export { Transform as StateTransform };

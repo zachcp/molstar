@@ -12,8 +12,8 @@ import type { LociLabelProvider } from '../../mol-plugin-state/manager/loci-labe
 import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import type { StructureRepresentationProvider } from '../../mol-repr/structure/representation.ts';
-import { type StateAction, type StateObjectCell, StateTree } from '../../mol-state.ts';
-import { Task } from '../../mol-task.ts';
+import { type StateAction, type StateObjectCell, StateTree } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
 import type { ColorTheme } from '../../mol-theme/color.ts';
 import { fileToDataUri } from '../../mol-util/file.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';

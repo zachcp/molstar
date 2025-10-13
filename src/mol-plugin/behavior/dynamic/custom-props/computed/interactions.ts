@@ -8,7 +8,7 @@ import { PluginBehavior } from '../../../behavior.ts';
 import { ParamDefinition as PD } from '../../../../../mol-util/param-definition.ts';
 import { InteractionsProvider } from '../../../../../mol-model-props/computed/interactions.ts';
 import type { Structure } from '../../../../../mol-model/structure.ts';
-import { StateSelection } from '../../../../../mol-state.ts';
+import { StateSelection } from '../../../../../mol-state/index.ts';
 import { PluginStateObject } from '../../../../../mol-plugin-state/objects.ts';
 import { StructureElement } from '../../../../../mol-model/structure/structure/element.ts';
 import { OrderedSet } from '../../../../../mol-data/int.ts';

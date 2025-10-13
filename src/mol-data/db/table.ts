@@ -6,7 +6,7 @@
 
 import { Column } from './column.ts';
 import { sortArray } from '../util/sort.ts';
-import { StringBuilder } from '../../mol-util.ts';
+import { StringBuilder } from '../../mol-util/index.ts';
 
 /** A collection of columns */
 type Table<Schema extends Table.Schema = any> = {

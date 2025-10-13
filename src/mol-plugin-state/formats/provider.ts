@@ -8,7 +8,7 @@
 import { decodeMsgPack } from '../../mol-io/common/msgpack/decode.ts';
 import type { StringLike } from '../../mol-io/common/string-like.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import type { StateObjectRef } from '../../mol-state.ts';
+import type { StateObjectRef } from '../../mol-state/index.ts';
 import type { FileNameInfo } from '../../mol-util/file-info.ts';
 import type { PluginStateObject } from '../objects.ts';
 

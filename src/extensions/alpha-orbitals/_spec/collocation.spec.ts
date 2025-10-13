@@ -6,7 +6,7 @@
 
 import { Box3D } from '../../../mol-math/geometry';
 import { Vec3 } from '../../../mol-math/linear-algebra';
-import { RuntimeContext } from '../../../mol-task';
+import { RuntimeContext } from '../../../mol-task/index.ts';
 import { sphericalCollocation } from '../collocation';
 import type { Basis, CubeGridInfo } from '../data-model';
 

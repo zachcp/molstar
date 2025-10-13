@@ -15,8 +15,8 @@ import { VolumeFromCcp4, VolumeFromDensityServerCif } from '../../mol-plugin-sta
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import type { PluginState } from '../../mol-plugin/state.ts';
-import { type StateObjectSelector, StateTree } from '../../mol-state.ts';
-import { type RuntimeContext, Task } from '../../mol-task.ts';
+import { type StateObjectSelector, StateTree } from '../../mol-state/index.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
 import { MolViewSpec } from './behavior.ts';
 import { createPluginStateSnapshotCamera, modifyCanvasProps, resetCanvasProps } from './camera.ts';
 import { MVSAnnotationsProvider } from './components/annotation-prop.ts';

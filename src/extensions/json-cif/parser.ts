@@ -7,7 +7,7 @@
 import { Column, ColumnHelpers } from '../../mol-data/db.ts';
 import { CifBlock, type CifCategory, type CifField, CifFile } from '../../mol-io/reader/cif.ts';
 import { ReaderResult } from '../../mol-io/reader/result.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import type { JSONCifCategory, JSONCifFile } from './model.ts';
 
 function Field(rows: Record<string, any>[], name: string): CifField {

@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, type RuntimeContext } from '../../../mol-task.ts';
+import { Task, type RuntimeContext } from '../../../mol-task/index.ts';
 import type { Tensor } from '../../../mol-math/linear-algebra.ts';
 import type { Mesh } from '../../geometry/mesh/mesh.ts';
 import { type Index, EdgeIdInfo, CubeEdges, EdgeTable, TriTable } from './tables.ts';
-import { defaults } from '../../../mol-util.ts';
+import { defaults } from '../../../mol-util/index.ts';
 import { type MarchingCubesBuilder, MarchingCubesMeshBuilder, MarchingCubesLinesBuilder } from './builder.ts';
 import type { Lines } from '../../geometry/lines/lines.ts';
 

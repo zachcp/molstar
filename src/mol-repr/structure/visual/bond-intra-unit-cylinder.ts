@@ -13,7 +13,7 @@ import { Unit, type Structure, StructureElement, Bond } from '../../../mol-model
 import type { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
-import { arrayEqual } from '../../../mol-util.ts';
+import { arrayEqual } from '../../../mol-util/index.ts';
 import { createLinkCylinderImpostors, createLinkCylinderMesh, EmptyLinkBuilderProps, type LinkBuilderProps, LinkStyle } from './util/link.ts';
 import { UnitsMeshParams, type UnitsVisual, UnitsMeshVisual, UnitsCylindersParams, UnitsCylindersVisual } from '../units-visual.ts';
 import type { VisualUpdateState } from '../../util.ts';

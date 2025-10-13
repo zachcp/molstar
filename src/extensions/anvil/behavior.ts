@@ -8,8 +8,8 @@
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { StructureRepresentationPresetProvider, PresetStructureRepresentations } from '../../mol-plugin-state/builder/structure/representation-preset.ts';
 import { MembraneOrientationProvider, MembraneOrientation } from './prop.ts';
-import { StateObjectRef, StateTransformer, type StateTransform } from '../../mol-state.ts';
-import { Task } from '../../mol-task.ts';
+import { StateObjectRef, StateTransformer, type StateTransform } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
 import { PluginBehavior } from '../../mol-plugin/behavior.ts';
 import { MembraneOrientationRepresentationProvider, MembraneOrientationParams, MembraneOrientationRepresentation } from './representation.ts';
 import { HydrophobicityColorThemeProvider } from '../../mol-theme/color/hydrophobicity.ts';

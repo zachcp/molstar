@@ -6,7 +6,7 @@
  */
 
 import { type ShrakeRupleyContext, VdWLookup } from './common.ts';
-import type { RuntimeContext } from '../../../../mol-task.ts';
+import type { RuntimeContext } from '../../../../mol-task/index.ts';
 
 // TODO
 // - iterate over units and elements

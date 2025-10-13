@@ -5,7 +5,7 @@
  */
 
 import type { Model } from '../../mol-model/structure/model.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import type { ModelFormat } from '../format.ts';
 import type { GroFile, GroAtoms } from '../../mol-io/reader/gro/schema.ts';
 import { Column, Table } from '../../mol-data/db.ts';

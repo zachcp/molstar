@@ -19,7 +19,7 @@ import { compose } from './compose.ts';
 import { encode } from './encode.ts';
 import { SpacegroupCell } from '../../../../mol-math/geometry.ts';
 import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
-import { UUID } from '../../../../mol-util.ts';
+import { UUID } from '../../../../mol-util/index.ts';
 import type { FileHandle } from '../../../../mol-io/common/file-handle.ts';
 import { createTypedArray, type TypedArrayValueType } from '../../../../mol-io/common/typed-array.ts';
 import { LimitsConfig } from '../../config.ts';

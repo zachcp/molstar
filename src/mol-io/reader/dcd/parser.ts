@@ -5,7 +5,7 @@
  */
 
 import { ReaderResult as Result } from '../result.ts';
-import { Task } from '../../../mol-task.ts';
+import { Task } from '../../../mol-task/index.ts';
 import type { Mutable, FiniteArray } from '../../../mol-util/type-helpers.ts';
 import { uint8ToString } from '../../common/binary.ts';
 

@@ -11,8 +11,8 @@ import { DataFormatProvider } from '../../../mol-plugin-state/formats/provider.t
 import { PluginStateObject as SO } from '../../../mol-plugin-state/objects.ts';
 import { Download } from '../../../mol-plugin-state/transforms/data.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
-import { StateAction, StateObjectRef } from '../../../mol-state.ts';
-import { type RuntimeContext, Task } from '../../../mol-task.ts';
+import { StateAction, StateObjectRef } from '../../../mol-state/index.ts';
+import { type RuntimeContext, Task } from '../../../mol-task/index.ts';
 import { Asset, type AssetManager } from '../../../mol-util/assets.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { unzip } from '../../../mol-util/zip/zip.ts';

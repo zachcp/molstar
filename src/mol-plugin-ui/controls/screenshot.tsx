@@ -13,7 +13,7 @@ import type { PluginContext } from '../../mol-plugin/context.ts';
 import type { ViewportScreenshotHelper } from '../../mol-plugin/util/viewport-screenshot.ts';
 import { shallowEqual } from '../../mol-util/object.ts';
 import { useBehavior } from '../hooks/use-behavior.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 
 export interface ScreenshotPreviewProps {
     plugin: PluginContext,

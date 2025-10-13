@@ -5,7 +5,7 @@
  */
 
 import { Loci } from '../../../mol-model/loci.ts';
-import type { RuntimeContext } from '../../../mol-task.ts';
+import type { RuntimeContext } from '../../../mol-task/index.ts';
 import { Lines } from '../../../mol-geo/geometry/lines/lines.ts';
 import { Text } from '../../../mol-geo/geometry/text/text.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';

@@ -11,7 +11,7 @@ import { StructureElement, Structure, StructureSelection as Sel, type StructureQ
 import { StructureQueryHelper } from './structure-query.ts';
 import { PluginStateObject as SO } from '../objects.ts';
 import { StructureSelectionQueries } from './structure-selection-query.ts';
-import { StateTransformer, StateObject } from '../../mol-state.ts';
+import { StateTransformer, StateObject } from '../../mol-state/index.ts';
 import { Script } from '../../mol-script/script.ts';
 import { assertUnreachable } from '../../mol-util/type-helpers.ts';
 

@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task } from '../../../mol-task.ts';
+import { Task } from '../../../mol-task/index.ts';
 import type { Mutable } from '../../../mol-util/type-helpers.ts';
 import { NetcdfReader } from '../../common/netcdf/reader.ts';
 import { ReaderResult as Result } from '../result.ts';

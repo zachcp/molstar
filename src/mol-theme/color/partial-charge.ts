@@ -7,7 +7,7 @@
 import { Color, ColorScale } from '../../mol-util/color.ts';
 import { StructureElement, type Unit, Bond, type ElementIndex } from '../../mol-model/structure.ts';
 import type { Location } from '../../mol-model/location.ts';
-import type { ColorTheme } from '../color.ts';
+import type { ColorTheme } from '../color/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../theme.ts';
 import { AtomPartialCharge } from '../../mol-model-formats/structure/property/partial-charge.ts';

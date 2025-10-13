@@ -6,7 +6,7 @@
  */
 
 import { hashString } from '../../../mol-data/util.ts';
-import type { StateObject } from '../../../mol-state.ts';
+import type { StateObject } from '../../../mol-state/index.ts';
 import { Color } from '../../../mol-util/color.ts';
 import { ColorNames } from '../../../mol-util/color/names.ts';
 import { decodeColor as _decodeColor } from '../../../mol-util/color/utils.ts';

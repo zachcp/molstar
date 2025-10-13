@@ -6,7 +6,7 @@
 
 import { createRangeArray, makeBuckets } from '../../../mol-data/util.ts';
 import { Column, Table } from '../../../mol-data/db.ts';
-import type { RuntimeContext } from '../../../mol-task.ts';
+import type { RuntimeContext } from '../../../mol-task/index.ts';
 import type { AtomSite } from './schema.ts';
 import { arrayIsIdentity } from '../../../mol-util/array.ts';
 

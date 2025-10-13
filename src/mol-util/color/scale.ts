@@ -7,7 +7,7 @@
 
 import { Color, type ColorListEntry } from './color.ts';
 import { getColorListFromName, type ColorListName } from './lists.ts';
-import { defaults } from '../../mol-util.ts';
+import { defaults } from '../../mol-util/index.ts';
 import type { NumberArray } from '../../mol-util/type-helpers.ts';
 import { ScaleLegend } from '../legend.ts';
 import { SortedArray } from '../../mol-data/int.ts';

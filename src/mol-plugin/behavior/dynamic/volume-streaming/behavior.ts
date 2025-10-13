@@ -19,7 +19,7 @@ import { urlCombine } from '../../../../mol-util/url.ts';
 import { CIF } from '../../../../mol-io/reader/cif.ts';
 import { volumeFromDensityServerData } from '../../../../mol-model-formats/volume/density-server.ts';
 import { PluginCommands } from '../../../commands.ts';
-import { StateSelection } from '../../../../mol-state.ts';
+import { StateSelection } from '../../../../mol-state/index.ts';
 import { StructureElement, type Structure } from '../../../../mol-model/structure.ts';
 import type { PluginContext } from '../../../context.ts';
 import { EmptyLoci, Loci, isEmptyLoci } from '../../../../mol-model/loci.ts';

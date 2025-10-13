@@ -9,7 +9,7 @@
 import { Column, Table } from '../../mol-data/db.ts';
 import { type MolFile, formalChargeMapper } from '../../mol-io/reader/mol/parser.ts';
 import { MoleculeType } from '../../mol-model/structure/model/types.ts';
-import { type RuntimeContext, Task } from '../../mol-task.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
 import { createModels } from './basic/parser.ts';
 import { BasicSchema, createBasic } from './basic/schema.ts';
 import { ComponentBuilder } from './common/component.ts';

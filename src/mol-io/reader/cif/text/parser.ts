@@ -26,7 +26,7 @@
 import * as Data from '../data-model.ts';
 import { type Tokens, TokenBuilder, Tokenizer } from '../../common/text/tokenizer.ts';
 import { ReaderResult as Result } from '../../result.ts';
-import { Task, type RuntimeContext, chunkedSubtask } from '../../../../mol-task.ts';
+import { Task, type RuntimeContext, chunkedSubtask } from '../../../../mol-task/index.ts';
 import type { StringLike } from '../../../common/string-like.ts';
 
 

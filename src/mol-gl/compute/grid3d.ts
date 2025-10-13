@@ -10,14 +10,14 @@ import { getRegularGrid3dDelta, type RegularGrid3d } from '../../mol-math/geomet
 import { grid3dTemplate_frag } from '../shader/util/grid3d-template.frag.ts';
 import { quad_vert } from '../shader/quad.vert.ts';
 import { ShaderCode } from '../shader-code.ts';
-import { UUID, ValueCell } from '../../mol-util.ts';
+import { UUID, ValueCell } from '../../mol-util/index.ts';
 import { objectForEach } from '../../mol-util/object.ts';
 import { getUniformGlslType, isUniformValueScalar } from '../webgl/uniform.ts';
 import { QuadSchema, QuadValues } from './util.ts';
 import { createComputeRenderItem } from '../webgl/render-item.ts';
 import { createComputeRenderable } from '../renderable.ts';
 import { isLittleEndian } from '../../mol-util/is-little-endian.ts';
-import type { RuntimeContext } from '../../mol-task.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
 import { isTimingMode } from '../../mol-util/debug.ts';
 
 export function canComputeGrid3dOnGPU(webgl?: WebGLContext): webgl is WebGLContext {

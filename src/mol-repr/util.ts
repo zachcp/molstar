@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { defaults } from '../mol-util.ts';
+import { defaults } from '../mol-util/index.ts';
 import { Structure } from '../mol-model/structure.ts';
 import type { VisualQuality } from '../mol-geo/geometry/base.ts';
 import { Box3D, SpacegroupCell } from '../mol-math/geometry.ts';

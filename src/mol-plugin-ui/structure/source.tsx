@@ -8,7 +8,7 @@
 import { Model } from '../../mol-model/structure.ts';
 import type { ModelRef, StructureHierarchyRef, TrajectoryRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
 import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
-import { StateSelection } from '../../mol-state.ts';
+import { StateSelection } from '../../mol-state/index.ts';
 import { CollapsableControls, type CollapsableState } from '../base.ts';
 import { ActionMenu } from '../controls/action-menu.ts';
 import { Button, ExpandGroup, IconButton } from '../controls/common.ts';

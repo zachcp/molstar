@@ -9,7 +9,7 @@ import * as path from 'path';
 import type { Model } from '../../../../mol-model/structure.ts';
 import { StructureQualityReportProvider, StructureQualityReport } from '../../../../extensions/pdbe/structure-quality-report/prop.ts';
 import { fetchRetry } from '../../utils/fetch-retry.ts';
-import { UUID } from '../../../../mol-util.ts';
+import { UUID } from '../../../../mol-util/index.ts';
 import { PDBePreferredAssembly } from '../../../../extensions/pdbe/preferred-assembly.ts';
 import { PDBeStructRefDomain } from '../../../../extensions/pdbe/struct-ref-domain.ts';
 import type { AttachModelProperty } from '../../property-provider.ts';

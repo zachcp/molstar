@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { type StateBuilder, StateObjectRef } from '../../../../mol-state.ts';
+import { type StateBuilder, StateObjectRef } from '../../../../mol-state/index.ts';
 import { StructureFromPetworld } from './model.ts';
 import type { Color } from '../../../../mol-util/color.ts';
 import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/representation/spacefill.ts';
@@ -14,7 +14,7 @@ import type { PluginStateObject } from '../../../../mol-plugin-state/objects.ts'
 import { type GraphicsMode, MesoscaleGroup, MesoscaleState, getDistinctBaseColors, getGraphicsModeProps, getMesoscaleGroupParams } from '../state.ts';
 import { ColorNames } from '../../../../mol-util/color/names.ts';
 import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif.ts';
-import { Task } from '../../../../mol-task.ts';
+import { Task } from '../../../../mol-task/index.ts';
 
 function getSpacefillParams(color: Color, graphics: GraphicsMode) {
     const gmp = getGraphicsModeProps(graphics === 'custom' ? 'quality' : graphics);

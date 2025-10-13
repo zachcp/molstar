@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ValueCell } from '../../../mol-util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import type { GeometryUtils } from '../geometry.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import type { TransformData } from '../transform-data.ts';

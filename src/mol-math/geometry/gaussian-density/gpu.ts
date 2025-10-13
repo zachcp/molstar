@@ -10,7 +10,7 @@ import { Box3D } from '../../geometry.ts';
 import type { GaussianDensityProps, GaussianDensityData, GaussianDensityTextureData } from '../gaussian-density.ts';
 import { OrderedSet } from '../../../mol-data/int.ts';
 import { Vec3, Tensor, Mat4, Vec2 } from '../../linear-algebra.ts';
-import { ValueCell } from '../../../mol-util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import { createComputeRenderable, type ComputeRenderable } from '../../../mol-gl/renderable.ts';
 import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
 import type { Texture, TextureFilter, TextureFormat, TextureKind, TextureType } from '../../../mol-gl/webgl/texture.ts';

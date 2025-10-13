@@ -14,7 +14,7 @@ import type { Canvas3D } from '../mol-canvas3d/canvas3d.ts';
 import type { ImagePass } from '../mol-canvas3d/passes/image.ts';
 import type { PostprocessingProps } from '../mol-canvas3d/passes/postprocessing.ts';
 import { AnimateStateSnapshots } from '../mol-plugin-state/animation/built-in/state-snapshots.ts';
-import { type RuntimeContext, Task } from '../mol-task.ts';
+import { type RuntimeContext, Task } from '../mol-task/index.ts';
 import { PluginContext } from './context.ts';
 import type { PluginSpec } from './spec.ts';
 import { type ExternalModules, HeadlessScreenshotHelper, type HeadlessScreenshotHelperOptions, type RawImageData } from './util/headless-screenshot.ts';

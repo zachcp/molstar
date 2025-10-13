@@ -7,7 +7,7 @@
 import type { Program } from './webgl/program.ts';
 import type { RenderableValues, Values, RenderableSchema, BaseValues } from './renderable/schema.ts';
 import type { GraphicsRenderItem, ComputeRenderItem, GraphicsRenderVariant, MultiDrawBaseData, Transparency } from './webgl/render-item.ts';
-import { ValueCell } from '../mol-util.ts';
+import { ValueCell } from '../mol-util/index.ts';
 import { idFactory } from '../mol-util/id-factory.ts';
 import { clamp } from '../mol-math/interpolate.ts';
 import { Frustum3D } from '../mol-math/geometry/primitives/frustum3d.ts';

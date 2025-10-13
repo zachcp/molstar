@@ -11,8 +11,8 @@ import { ConfalPyramidsRepresentationProvider } from './representation.ts';
 import { Dnatco } from '../property.ts';
 import type { DnatcoTypes } from '../types.ts';
 import { StructureRepresentationPresetProvider, PresetStructureRepresentations } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
-import { StateObjectRef } from '../../../mol-state.ts';
-import { Task } from '../../../mol-task.ts';
+import { StateObjectRef } from '../../../mol-state/index.ts';
+import { Task } from '../../../mol-task/index.ts';
 
 export const ConfalPyramidsPreset = StructureRepresentationPresetProvider({
     id: 'preset-structure-representation-confal-pyramids',

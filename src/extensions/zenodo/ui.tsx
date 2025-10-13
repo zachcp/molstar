@@ -16,7 +16,7 @@ import { Button } from '../../mol-plugin-ui/controls/common.ts';
 import { OpenInBrowserSvg } from '../../mol-plugin-ui/controls/icons.ts';
 import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import { formatBytes } from '../../mol-util.ts';
+import { formatBytes } from '../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
 type ZenodoFile = {

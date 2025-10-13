@@ -11,7 +11,7 @@
 import { Lab } from './spaces/lab.ts';
 import { Hcl } from './spaces/hcl.ts';
 import { deepClone } from '../../mol-util/object.ts';
-import { deepEqual } from '../../mol-util.ts';
+import { deepEqual } from '../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { ColorNames } from './names.ts';
 import type { Color } from './color.ts';

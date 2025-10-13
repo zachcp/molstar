@@ -7,7 +7,7 @@
 import { PluginReactContext, PluginUIComponent } from './base.ts';
 import { OrderedMap } from 'immutable';
 import type { TaskManager } from '../mol-plugin/util/task-manager.ts';
-import type { Progress } from '../mol-task.ts';
+import type { Progress } from '../mol-task/index.ts';
 import { IconButton } from './controls/common.ts';
 import { CancelSvg } from './controls/icons.ts';
 import { useContext, useEffect, useState } from 'react';

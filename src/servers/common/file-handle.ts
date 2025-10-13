@@ -10,7 +10,7 @@ import * as fs from 'fs';
 import fetch from 'node-fetch';
 import { FileHandle } from '../../mol-io/common/file-handle.ts';
 import { SimpleBuffer } from '../../mol-io/common/simple-buffer.ts';
-import { defaults, noop } from '../../mol-util.ts';
+import { defaults, noop } from '../../mol-util/index.ts';
 import { openRead } from '../volume/common/file.ts';
 import { downloadGs } from './google-cloud-storage.ts';
 import type { Buffer } from "node:buffer";

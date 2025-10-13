@@ -13,7 +13,7 @@ require('util.promisify').shim();
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 
-import { Progress } from '../../mol-task.ts';
+import { Progress } from '../../mol-task/index.ts';
 import type { Database } from '../../mol-data/db.ts';
 import { CIF } from '../../mol-io/reader/cif.ts';
 import { CifWriter } from '../../mol-io/writer/cif.ts';

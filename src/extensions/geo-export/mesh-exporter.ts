@@ -23,7 +23,7 @@ import { addSphere } from '../../mol-geo/geometry/mesh/builder/sphere.ts';
 import { addCylinder } from '../../mol-geo/geometry/mesh/builder/cylinder.ts';
 import { sizeDataFactor } from '../../mol-geo/geometry/size-data.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
-import type { RuntimeContext } from '../../mol-task.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
 import { Color } from '../../mol-util/color/color.ts';
 import { unpackRGBToInt } from '../../mol-util/number-packing.ts';
 import type { RenderObjectExporter, RenderObjectExportData } from './render-object-exporter.ts';

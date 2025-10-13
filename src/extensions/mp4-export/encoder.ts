@@ -9,7 +9,7 @@ import type { Viewport } from '../../mol-canvas3d/camera/util.ts';
 import type { ImagePass } from '../../mol-canvas3d/passes/image.ts';
 import { PluginStateAnimation } from '../../mol-plugin-state/animation/model.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import type { RuntimeContext } from '../../mol-task.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
 import type { Color } from '../../mol-util/color.ts';
 
 export interface Mp4EncoderParams<A extends PluginStateAnimation = PluginStateAnimation> {

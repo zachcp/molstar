@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { Mat4, Mat3 } from '../../mol-math/linear-algebra.ts';
 import { fillSerial } from '../../mol-util/array.ts';
 import type { Sphere3D } from '../../mol-math/geometry.ts';

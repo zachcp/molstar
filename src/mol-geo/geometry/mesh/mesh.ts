@@ -5,7 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ValueCell } from '../../../mol-util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import { Vec3, Mat4, Mat3, Vec4 } from '../../../mol-math/linear-algebra.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { transformPositionArray, transformDirectionArray, computeIndexedVertexNormals, type GroupMapping, createGroupMapping } from '../../util.ts';

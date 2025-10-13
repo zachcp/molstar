@@ -7,7 +7,7 @@
  * MIT License, Copyright (c) 2018 Photopea
  */
 
-import type { RuntimeContext } from '../../mol-task.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
 import { assertUnreachable, type NumberArray } from '../type-helpers.ts';
 import { _hufTree } from './huffman.ts';
 import { U, revCodes, makeCodes, checkCompressionStreamSupport } from './util.ts';

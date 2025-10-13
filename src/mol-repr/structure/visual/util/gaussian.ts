@@ -5,7 +5,7 @@
  */
 
 import type { Unit, Structure } from '../../../../mol-model/structure.ts';
-import { Task } from '../../../../mol-task.ts';
+import { Task } from '../../../../mol-task/index.ts';
 import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
 import { GaussianDensityTexture, GaussianDensityTexture2d } from '../../../../mol-math/geometry/gaussian-density/gpu.ts';
 import type { Texture } from '../../../../mol-gl/webgl/texture.ts';

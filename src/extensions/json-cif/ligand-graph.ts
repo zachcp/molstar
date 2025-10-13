@@ -8,7 +8,7 @@ import type { Table } from '../../mol-data/db.ts';
 import type { mmCIF_Schema } from '../../mol-io/reader/cif/schema/mmcif.ts';
 import { type Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 import type { MolstarBondSiteTypeId, MolstarBondSiteValueOrder } from '../../mol-model/structure/export/categories/molstar_bond_site.ts';
-import { UUID } from '../../mol-util.ts';
+import { UUID } from '../../mol-util/index.ts';
 import { arrayMapAdd } from '../../mol-util/map.ts';
 import type { JSONCifDataBlock } from './model.ts';
 

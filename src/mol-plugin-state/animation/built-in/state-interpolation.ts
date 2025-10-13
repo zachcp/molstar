@@ -5,8 +5,8 @@
  */
 
 import { PluginCommands } from '../../../mol-plugin/commands.ts';
-import { StateTransform } from '../../../mol-state.ts';
-import { shallowEqual } from '../../../mol-util.ts';
+import { StateTransform } from '../../../mol-state/index.ts';
+import { shallowEqual } from '../../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { PluginStateAnimation } from '../model.ts';
 

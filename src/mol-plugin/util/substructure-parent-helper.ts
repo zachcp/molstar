@@ -6,7 +6,7 @@
 
 import type { Structure } from '../../mol-model/structure.ts';
 import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
-import { type State, type StateObject, type StateObjectCell, StateSelection } from '../../mol-state.ts';
+import { type State, type StateObject, type StateObjectCell, StateSelection } from '../../mol-state/index.ts';
 import type { PluginContext } from '../context.ts';
 import { RxEventHelper } from '../../mol-util/rx-event-helper.ts';
 

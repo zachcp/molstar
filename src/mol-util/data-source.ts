@@ -10,7 +10,7 @@
 
 import type { StringLike } from '../mol-io/common/string-like.ts';
 import { utf8Read, utf8ReadLong } from '../mol-io/common/utf8.ts';
-import { type RuntimeContext, Task } from '../mol-task.ts';
+import { type RuntimeContext, Task } from '../mol-task/index.ts';
 import { Asset, type AssetManager } from './assets.ts';
 import { RUNNING_IN_NODEJS } from './nodejs-shims.ts';
 import { ungzip, unzip } from './zip/zip.ts';

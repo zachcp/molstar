@@ -18,7 +18,7 @@ import { MolScriptBuilder as MS } from '../../mol-script/language/builder.ts';
 import { CustomPropSymbol } from '../../mol-script/language/symbol.ts';
 import { Type } from '../../mol-script/language/type.ts';
 import { QuerySymbolRuntime } from '../../mol-script/runtime/query/base.ts';
-import { type RuntimeContext, Task } from '../../mol-task.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
 import { objectForEach } from '../../mol-util/object.ts';
 import type { G3dDataBlock } from './data.ts';
 import { FormatPropertyProvider } from '../../mol-model-formats/structure/common/property.ts';

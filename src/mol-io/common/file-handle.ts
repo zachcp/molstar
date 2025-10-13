@@ -5,7 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { defaults, noop } from '../../mol-util.ts';
+import { defaults, noop } from '../../mol-util/index.ts';
 import { SimpleBuffer } from './simple-buffer.ts';
 
 export interface FileHandle {

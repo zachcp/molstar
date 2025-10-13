@@ -8,8 +8,8 @@ import { PluginStateObject as SO } from '../../mol-plugin-state/objects.ts';
 import { PluginBehavior } from '../../mol-plugin/behavior.ts';
 import { PluginConfigItem } from '../../mol-plugin/config.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import { StateAction } from '../../mol-state.ts';
-import { Task } from '../../mol-task.ts';
+import { StateAction } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
 import { DEFAULT_VOLSEG_SERVER, VolumeApiV2 } from './volseg-api/api.ts';
 
 import { VolsegEntryData, VolsegEntryParamValues, createLoadVolsegParams } from './entry-root.ts';

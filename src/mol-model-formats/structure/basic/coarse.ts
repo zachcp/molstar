@@ -9,7 +9,7 @@ import { CoarseHierarchy, type CoarseConformation, type CoarseElementData, type 
 import type { Entities } from '../../../mol-model/structure/model/properties/common.ts';
 import type { Column } from '../../../mol-data/db.ts';
 import { getCoarseKeys } from '../../../mol-model/structure/model/properties/utils/coarse-keys.ts';
-import { UUID } from '../../../mol-util.ts';
+import { UUID } from '../../../mol-util/index.ts';
 import { Segmentation, Interval } from '../../../mol-data/int.ts';
 import { Mat3, Tensor } from '../../../mol-math/linear-algebra.ts';
 import type { ElementIndex, ChainIndex } from '../../../mol-model/structure/model/indexing.ts';

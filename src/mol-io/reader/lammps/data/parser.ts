@@ -6,7 +6,7 @@
  * @author Ludovic Autin <ludovic.autin@gmail.com>
  */
 
-import { Task, type RuntimeContext, chunkedSubtask } from '../../../../mol-task.ts';
+import { Task, type RuntimeContext, chunkedSubtask } from '../../../../mol-task/index.ts';
 import { Tokenizer, TokenBuilder } from '../../common/text/tokenizer.ts';
 import { ReaderResult as Result } from '../../result.ts';
 import { TokenColumnProvider as TokenColumn } from '../../common/text/column/token.ts';

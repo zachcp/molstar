@@ -9,7 +9,7 @@ import { type Tokens, TokenBuilder, Tokenizer } from '../common/text/tokenizer.t
 import * as Data from './data-model.ts';
 import { Field } from './field.ts';
 import { ReaderResult as Result } from '../result.ts';
-import { Task, type RuntimeContext, chunkedSubtask, } from '../../../mol-task.ts';
+import { Task, type RuntimeContext, chunkedSubtask, } from '../../../mol-task/index.ts';
 
 const enum CsvTokenType {
     Value = 0,

@@ -11,7 +11,7 @@ import { calculateTransformBoundingSphere, createTextureImage, type TextureImage
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { Vec2, Vec4, Vec3, Quat, Mat4 } from '../../../mol-math/linear-algebra.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
-import { ValueCell } from '../../../mol-util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import type { Color } from '../../../mol-util/color.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { BaseGeometry } from '../base.ts';

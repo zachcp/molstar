@@ -10,7 +10,7 @@ import { IsNativeEndianLittle, flipByteOrder } from '../../mol-io/common/binary.
 import type { Box3D } from '../../mol-math/geometry.ts';
 import { Vec3, Mat4 } from '../../mol-math/linear-algebra.ts';
 import { PLUGIN_VERSION } from '../../mol-plugin/version.ts';
-import type { RuntimeContext } from '../../mol-task.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
 import { Color } from '../../mol-util/color/color.ts';
 import { fillSerial } from '../../mol-util/array.ts';
 import { type NumberArray, assertUnreachable } from '../../mol-util/type-helpers.ts';

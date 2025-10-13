@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { Vec2 } from '../../mol-math/linear-algebra.ts';
 import { type TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
 import type { LocationIterator } from '../util/location-iterator.ts';

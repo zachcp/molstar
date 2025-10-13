@@ -10,7 +10,7 @@ import { createComputeRenderItem } from '../../webgl/render-item.ts';
 import { type Values, TextureSpec } from '../../renderable/schema.ts';
 import type { Texture } from '../../../mol-gl/webgl/texture.ts';
 import { ShaderCode } from '../../../mol-gl/shader-code.ts';
-import { ValueCell } from '../../../mol-util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import { unpackRGBToInt } from '../../../mol-util/number-packing.ts';
 import { QuadSchema, QuadValues } from '../util.ts';
 import { quad_vert } from '../../../mol-gl/shader/quad.vert.ts';

@@ -6,7 +6,7 @@
 
 import { Mp4Export } from '../../extensions/mp4-export.ts';
 import type { DataFormatProvider } from '../../mol-plugin-state/formats/provider.ts';
-import { createPluginUI } from '../../mol-plugin-ui.ts';
+import { createPluginUI } from '../../mol-plugin-ui/index.ts';
 import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
 import type { PluginUIContext } from '../../mol-plugin-ui/context.ts';
 import { DefaultPluginUISpec, type PluginUISpec } from '../../mol-plugin-ui/spec.ts';

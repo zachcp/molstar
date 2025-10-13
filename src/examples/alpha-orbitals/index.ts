@@ -11,13 +11,13 @@ import type { SphericalBasisOrder } from '../../extensions/alpha-orbitals/spheri
 import { type BasisAndOrbitals, CreateOrbitalDensityVolume, CreateOrbitalRepresentation3D, CreateOrbitalVolume, StaticBasisAndOrbitals } from '../../extensions/alpha-orbitals/transforms.ts';
 import { canComputeGrid3dOnGPU } from '../../mol-gl/compute/grid3d.ts';
 import type { PluginStateObject } from '../../mol-plugin-state/objects.ts';
-import { createPluginUI } from '../../mol-plugin-ui.ts';
+import { createPluginUI } from '../../mol-plugin-ui/index.ts';
 import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
 import type { PluginUIContext } from '../../mol-plugin-ui/context.ts';
 import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { PluginConfig } from '../../mol-plugin/config.ts';
-import type { StateObjectSelector, StateTransformer } from '../../mol-state.ts';
+import type { StateObjectSelector, StateTransformer } from '../../mol-state/index.ts';
 import type { Color } from '../../mol-util/color.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';

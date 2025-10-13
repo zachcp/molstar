@@ -5,8 +5,8 @@
  */
 
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import { StateAction } from '../../mol-state.ts';
-import { Task } from '../../mol-task.ts';
+import { StateAction } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
 import { Asset } from '../../mol-util/assets.ts';
 import { getFileNameInfo } from '../../mol-util/file-info.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';

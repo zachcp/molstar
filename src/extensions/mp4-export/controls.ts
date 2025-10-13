@@ -8,7 +8,7 @@ import { debounceTime } from 'rxjs/operators';
 import type { PluginStateAnimation } from '../../mol-plugin-state/animation/model.ts';
 import { PluginComponent } from '../../mol-plugin-state/component.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { encodeMp4Animation } from './encoder.ts';
 

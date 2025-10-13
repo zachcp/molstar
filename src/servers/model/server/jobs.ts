@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { UUID } from '../../../mol-util.ts';
+import { UUID } from '../../../mol-util/index.ts';
 import { getQueryByName, type QueryDefinition, type QueryName, type QueryParams, type Encoding } from './api.ts';
 import { LinkedList } from '../../../mol-data/generic.ts';
 import type { ResultWriter } from '../utils/writer.ts';

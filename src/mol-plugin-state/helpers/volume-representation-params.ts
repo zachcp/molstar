@@ -8,7 +8,7 @@ import { Volume } from '../../mol-model/volume.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import type { RepresentationProvider } from '../../mol-repr/representation.ts';
 import type { VolumeRepresentationRegistry } from '../../mol-repr/volume/registry.ts';
-import type { StateTransformer } from '../../mol-state.ts';
+import type { StateTransformer } from '../../mol-state/index.ts';
 import type { ColorTheme } from '../../mol-theme/color.ts';
 import type { SizeTheme } from '../../mol-theme/size.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';

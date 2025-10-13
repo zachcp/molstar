@@ -7,7 +7,7 @@
 import { PluginStateObject as PSO, PluginStateTransform } from '../../../mol-plugin-state/objects.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { Task } from '../../../mol-task.ts';
+import { Task } from '../../../mol-task/index.ts';
 import { Color } from '../../../mol-util/color.ts';
 import { Spheres } from '../../../mol-geo/geometry/spheres/spheres.ts';
 import { Clip } from '../../../mol-util/clip.ts';
@@ -18,7 +18,7 @@ import type { EntityNode } from '../ui/entities.ts';
 import { type DistinctColorsProps, distinctColors } from '../../../mol-util/color/distinct.ts';
 import type { Sphere3D } from '../../../mol-math/geometry.ts';
 import { Hcl } from '../../../mol-util/color/spaces/hcl.ts';
-import { type StateObjectCell, StateObjectRef, StateSelection } from '../../../mol-state.ts';
+import { type StateObjectCell, StateObjectRef, StateSelection } from '../../../mol-state/index.ts';
 import { ShapeRepresentation3D, StructureRepresentation3D } from '../../../mol-plugin-state/transforms/representation.ts';
 import type { SpacefillRepresentationProvider } from '../../../mol-repr/structure/representation/spacefill.ts';
 import { assertUnreachable } from '../../../mol-util/type-helpers.ts';

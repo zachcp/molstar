@@ -14,7 +14,7 @@ import { Slider } from '../../mol-plugin-ui/controls/slider.ts';
 import { useBehavior } from '../../mol-plugin-ui/hooks/use-behavior.ts';
 import { UpdateTransformControl } from '../../mol-plugin-ui/state/update-transform.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import { shallowEqualArrays } from '../../mol-util.ts';
+import { shallowEqualArrays } from '../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { sleep } from '../../mol-util/sleep.ts';
 

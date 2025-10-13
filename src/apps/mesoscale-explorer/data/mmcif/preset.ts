@@ -9,7 +9,7 @@ import type { PluginStateObject } from '../../../../mol-plugin-state/objects.ts'
 import { StructureRepresentation3D } from '../../../../mol-plugin-state/transforms/representation.ts';
 import type { PluginContext } from '../../../../mol-plugin/context.ts';
 import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/representation/spacefill.ts';
-import type { StateObjectRef, StateObjectSelector, StateBuilder } from '../../../../mol-state.ts';
+import type { StateObjectRef, StateObjectSelector, StateBuilder } from '../../../../mol-state/index.ts';
 import type { Clip } from '../../../../mol-util/clip.ts';
 import type { Color } from '../../../../mol-util/color.ts';
 import { ColorNames } from '../../../../mol-util/color/names.ts';

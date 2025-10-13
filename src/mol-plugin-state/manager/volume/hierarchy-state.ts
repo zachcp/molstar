@@ -5,7 +5,7 @@
  */
 
 import { PluginStateObject as SO } from '../../objects.ts';
-import { StateObject, type StateTransform, type State, type StateObjectCell, type StateTree, type StateTransformer } from '../../../mol-state.ts';
+import { StateObject, type StateTransform, type State, type StateObjectCell, type StateTree, type StateTransformer } from '../../../mol-state/index.ts';
 import type { StateTransforms } from '../../transforms.ts';
 
 export function buildVolumeHierarchy(state: State, previous?: VolumeHierarchy) {

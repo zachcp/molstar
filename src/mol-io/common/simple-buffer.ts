@@ -5,7 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { defaults } from '../../mol-util.ts';
+import { defaults } from '../../mol-util/index.ts';
 import type { Buffer } from "node:buffer";
 
 export interface SimpleBuffer extends Uint8Array {

@@ -10,7 +10,7 @@
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { Tokenizer } from '../common/text/tokenizer.ts';
 import { Column } from '../../../mol-data/db.ts';
-import { Task, chunkedSubtask, type RuntimeContext } from '../../../mol-task.ts';
+import { Task, chunkedSubtask, type RuntimeContext } from '../../../mol-task/index.ts';
 import { ReaderResult as Result } from '../result.ts';
 import { parseFloat as fastParseFloat } from '../common/text/number-parser.ts';
 import type { StringLike } from '../../common/string-like.ts';

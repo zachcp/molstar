@@ -8,7 +8,7 @@
 import type { PresetProvider } from '../preset-provider.ts';
 import type { PluginStateObject } from '../../objects.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { StateObjectRef, StateTransformer } from '../../../mol-state.ts';
+import { StateObjectRef, StateTransformer } from '../../../mol-state/index.ts';
 import { StateTransforms } from '../../transforms.ts';
 import { RootStructureDefinition } from '../../helpers/root-structure.ts';
 import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from './representation-preset.ts';

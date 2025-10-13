@@ -13,7 +13,7 @@ import type { GraphicsRenderObject } from '../../mol-gl/render-object.ts';
 import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import { addCylinder } from '../../mol-geo/geometry/mesh/builder/cylinder.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { Sphere3D } from '../../mol-math/geometry.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { produce } from '../../mol-util/produce.ts';

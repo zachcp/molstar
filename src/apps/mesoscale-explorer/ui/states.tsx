@@ -14,8 +14,8 @@ import { ApplyActionControl } from '../../../mol-plugin-ui/state/apply-action.ts
 import { LocalStateSnapshotList, LocalStateSnapshotParams, LocalStateSnapshots } from '../../../mol-plugin-ui/state/snapshots.ts';
 import { PluginCommands } from '../../../mol-plugin/commands.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
-import { StateAction, StateObjectRef, StateTransform } from '../../../mol-state.ts';
-import { Task } from '../../../mol-task.ts';
+import { StateAction, StateObjectRef, StateTransform } from '../../../mol-state/index.ts';
+import { Task } from '../../../mol-task/index.ts';
 import { Color } from '../../../mol-util/color/color.ts';
 import { getFileNameInfo } from '../../../mol-util/file-info.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';

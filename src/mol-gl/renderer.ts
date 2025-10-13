@@ -12,7 +12,7 @@ import type { WebGLContext } from './webgl/context.ts';
 import { Mat4, Vec3, Vec4, Vec2 } from '../mol-math/linear-algebra.ts';
 import type { GraphicsRenderable } from './renderable.ts';
 import { Color } from '../mol-util/color.ts';
-import { ValueCell, deepEqual } from '../mol-util.ts';
+import { ValueCell, deepEqual } from '../mol-util/index.ts';
 import type { GlobalUniformValues } from './renderable/schema.ts';
 import type { GraphicsRenderVariant } from './webgl/render-item.ts';
 import { ParamDefinition as PD } from '../mol-util/param-definition.ts';

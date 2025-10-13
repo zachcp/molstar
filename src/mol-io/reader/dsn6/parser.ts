@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, type RuntimeContext } from '../../../mol-task.ts';
+import { Task, type RuntimeContext } from '../../../mol-task/index.ts';
 import type { Dsn6File, Dsn6Header } from './schema.ts';
 import { ReaderResult as Result } from '../result.ts';
 import { FileHandle } from '../../common/file-handle.ts';

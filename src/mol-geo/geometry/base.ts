@@ -5,7 +5,7 @@
  */
 
 import type { RenderableState } from '../../mol-gl/renderable.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import type { BaseValues } from '../../mol-gl/renderable/schema.ts';
 import { LocationIterator } from '../util/location-iterator.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';

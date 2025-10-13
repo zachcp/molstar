@@ -8,7 +8,7 @@ import { Model, Symmetry } from '../../../mol-model/structure.ts';
 import { ShapeRepresentation } from '../representation.ts';
 import { Shape } from '../../../mol-model/shape.ts';
 import { ColorNames } from '../../../mol-util/color/names.ts';
-import type { RuntimeContext } from '../../../mol-task.ts';
+import type { RuntimeContext } from '../../../mol-task/index.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';

@@ -7,7 +7,7 @@
 import { Column, Table } from '../../mol-data/db.ts';
 import type { Model, Symmetry } from '../../mol-model/structure/model.ts';
 import { BondType, getMoleculeType, MoleculeType } from '../../mol-model/structure/model/types.ts';
-import { type RuntimeContext, Task } from '../../mol-task.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
 import { createModels } from './basic/parser.ts';
 import { BasicSchema, createBasic } from './basic/schema.ts';
 import { ComponentBuilder } from './common/component.ts';

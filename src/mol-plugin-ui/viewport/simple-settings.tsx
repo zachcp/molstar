@@ -10,7 +10,7 @@ import { throttleTime } from 'rxjs';
 import { Canvas3DContext, Canvas3DParams, type Canvas3DProps } from '../../mol-canvas3d/canvas3d.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { PluginConfig } from '../../mol-plugin/config.ts';
-import { StateTransform } from '../../mol-state.ts';
+import { StateTransform } from '../../mol-state/index.ts';
 import { Color } from '../../mol-util/color.ts';
 import { deepClone } from '../../mol-util/object.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';

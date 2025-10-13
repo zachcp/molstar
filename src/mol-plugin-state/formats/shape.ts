@@ -8,7 +8,7 @@
 import { StateTransforms } from '../transforms.ts';
 import { DataFormatProvider } from './provider.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import type { StateObjectRef } from '../../mol-state.ts';
+import type { StateObjectRef } from '../../mol-state/index.ts';
 import type { PluginStateObject } from '../objects.ts';
 
 export const ShapeFormatCategory = 'Shape';

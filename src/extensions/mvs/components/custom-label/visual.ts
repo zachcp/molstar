@@ -14,7 +14,7 @@ import { ElementIterator, eachSerialElement, getSerialElementLoci } from '../../
 import type { VisualUpdateState } from '../../../../mol-repr/util.ts';
 import type { VisualContext } from '../../../../mol-repr/visual.ts';
 import type { Theme } from '../../../../mol-theme/theme.ts';
-import { deepEqual } from '../../../../mol-util.ts';
+import { deepEqual } from '../../../../mol-util/index.ts';
 import { ColorNames } from '../../../../mol-util/color/names.ts';
 import { omitObjectKeys } from '../../../../mol-util/object.ts';
 import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';

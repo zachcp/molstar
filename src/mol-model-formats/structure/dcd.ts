@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import type { DcdFile } from '../../mol-io/reader/dcd/parser.ts';
 import { Coordinates, type Frame, Time } from '../../mol-model/structure/coordinates.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';

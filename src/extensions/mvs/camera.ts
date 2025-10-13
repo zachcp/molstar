@@ -19,7 +19,7 @@ import { getFocusSnapshot, getPluginBoundingSphere } from '../../mol-plugin-stat
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import type { PluginState } from '../../mol-plugin/state.ts';
-import type { StateObjectSelector } from '../../mol-state.ts';
+import type { StateObjectSelector } from '../../mol-state/index.ts';
 import { fovAdjustedPosition } from '../../mol-util/camera.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import { deepClone } from '../../mol-util/object.ts';

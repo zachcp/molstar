@@ -16,7 +16,7 @@ import type { Color } from '../../mol-util/color.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import type { TransformData } from '../../mol-geo/geometry/transform-data.ts';
 import { sphereVertexCount } from '../../mol-geo/primitive/sphere.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 import { Geometry } from '../../mol-geo/geometry/geometry.ts';
 
 export const DebugHelperParams = {

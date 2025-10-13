@@ -5,7 +5,7 @@
  */
 
 import { PluginCommands } from '../../../mol-plugin/commands.ts';
-import { StateSelection } from '../../../mol-state.ts';
+import { StateSelection } from '../../../mol-state/index.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { PluginStateObject } from '../../objects.ts';
 import { StateTransforms } from '../../transforms.ts';

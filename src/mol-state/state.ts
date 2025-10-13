@@ -8,7 +8,7 @@ import { StateObject, type StateObjectCell, StateObjectSelector } from './object
 import { StateTree } from './tree.ts';
 import { StateTransform } from './transform.ts';
 import { StateTransformer } from './transformer.ts';
-import { type RuntimeContext, Task } from '../mol-task.ts';
+import { type RuntimeContext, Task } from '../mol-task/index.ts';
 import { StateSelection } from './state/selection.ts';
 import { RxEventHelper } from '../mol-util/rx-event-helper.ts';
 import { StateBuilder } from './state/builder.ts';

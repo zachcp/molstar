@@ -16,7 +16,7 @@ import fs from 'fs';
 import path from 'path';
 import gl from 'gl';
 
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { Download } from '../../mol-plugin-state/transforms/data.ts';
 import type { GraphicsRenderObject } from '../../mol-gl/render-object.ts';
 import { GlbExporter } from '../../extensions/geo-export/glb-exporter.ts';

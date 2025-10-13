@@ -9,7 +9,7 @@ import { loadMVSData } from '../../../extensions/mvs/components/formats.ts';
 import type { MVSData } from '../../../extensions/mvs/mvs-data.ts';
 import { StringLike } from '../../../mol-io/common/string-like.ts';
 import { PluginComponent } from '../../../mol-plugin-state/component.ts';
-import { createPluginUI } from '../../../mol-plugin-ui.ts';
+import { createPluginUI } from '../../../mol-plugin-ui/index.ts';
 import { renderReact18 } from '../../../mol-plugin-ui/react18.ts';
 import { DefaultPluginUISpec } from '../../../mol-plugin-ui/spec.ts';
 import { PluginCommands } from '../../../mol-plugin/commands.ts';

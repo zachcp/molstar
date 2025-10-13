@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, type RuntimeContext } from '../../../mol-task.ts';
+import { Task, type RuntimeContext } from '../../../mol-task/index.ts';
 import type { Ccp4File, Ccp4Header } from './schema.ts';
 import { ReaderResult as Result } from '../result.ts';
 import { FileHandle } from '../../common/file-handle.ts';

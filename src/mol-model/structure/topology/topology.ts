@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { UUID } from '../../../mol-util.ts';
+import { UUID } from '../../../mol-util/index.ts';
 import type { Column } from '../../../mol-data/db.ts';
 import type { BasicData } from '../../../mol-model-formats/structure/basic/schema.ts';
 import type { ModelFormat } from '../../../mol-model-formats/format.ts';

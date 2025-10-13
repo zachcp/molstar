@@ -6,8 +6,8 @@
  */
 
 import type { PluginContext } from '../../mol-plugin/context.ts';
-import { StateAction, StateSelection, type StateTransformer } from '../../mol-state.ts';
-import { Task } from '../../mol-task.ts';
+import { StateAction, StateSelection, type StateTransformer } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from '../builder/structure/representation-preset.ts';
 import { type BuiltInTrajectoryFormat, BuiltInTrajectoryFormats, TrajectoryFormatCategory } from '../formats/trajectory.ts';
