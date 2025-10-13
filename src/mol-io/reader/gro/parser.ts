@@ -8,7 +8,7 @@
 import { Column } from "../../../mol-data/db.ts";
 import { Tokenizer } from "../common/text/tokenizer.ts";
 import { FixedColumnProvider as FixedColumn } from "../common/text/column/fixed.ts";
-import type * as Schema from "./schema.d.ts";
+import type * as Schema from "./schema.ts";
 import { ReaderResult as Result } from "../result.ts";
 import { Task, type RuntimeContext } from "../../../mol-task/index.ts";
 import type { StringLike } from "../../common/string-like.ts";
