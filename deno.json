@@ -1,0 +1,119 @@
+{
+  "name": "@molstar/molstar",
+  "version": "5.0.0",
+  "exports": {
+    ".": "./src/mod.ts",
+    "./plugin-ui": "./src/mol-plugin-ui/index.ts",
+    "./plugin": "./src/mol-plugin/index.ts",
+    "./plugin-state": "./src/mol-plugin-state/index.ts",
+    "./canvas3d": "./src/mol-canvas3d/index.ts",
+    "./data": "./src/mol-data/index.ts",
+    "./state": "./src/mol-state/index.ts",
+    "./task": "./src/mol-task/index.ts",
+    "./util": "./src/mol-util/index.ts"
+  },
+  "imports": {
+    "argparse": "npm:argparse@^2.0.1",
+    "compression": "npm:compression@^1.8.1",
+    "cors": "npm:cors@^2.8.5",
+    "express": "npm:express@^5.1.0",
+    "h264-mp4-encoder": "npm:h264-mp4-encoder@^1.0.12",
+    "immutable": "npm:immutable@^5.1.3",
+    "io-ts": "npm:io-ts@^2.2.22",
+    "mutative": "npm:mutative@^1.3.0",
+    "node-fetch": "npm:node-fetch@^2.7.0",
+    "react": "npm:react@^18.3.1",
+    "react-dom": "npm:react-dom@^18.3.1",
+    "react-markdown": "npm:react-markdown@^10.1.0",
+    "react/jsx-runtime": "npm:react@^18.3.1/jsx-runtime",
+    "remark-gfm": "npm:remark-gfm@^4.0.1",
+    "rxjs": "npm:rxjs@^7.8.2",
+    "swagger-ui-dist": "npm:swagger-ui-dist@^5.29.0",
+    "tslib": "npm:tslib@^2.8.1",
+    "util.promisify": "npm:util.promisify@^1.1.3"
+  },
+  "tasks": {
+    "check": "deno check src/mod.ts",
+    "lint": "deno lint src/",
+    "fmt": "deno fmt src/",
+    "fmt-check": "deno fmt --check src/",
+    "publish": "deno publish --dry-run",
+    "publish-prod": "deno publish"
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "lint": {
+    "exclude": [
+      "build/",
+      "lib/",
+      "node_modules/",
+      "data/",
+      "docs/",
+      "examples/",
+      "scripts/"
+    ],
+    "rules": {
+      "exclude": [
+        "no-explicit-any",
+        "no-unused-vars",
+        "ban-unused-ignore",
+        "no-slow-types",
+        "ban-types",
+        "no-case-declarations",
+        "no-namespace",
+        "require-await",
+        "prefer-as-const",
+        "prefer-const",
+        "no-fallthrough"
+      ]
+    }
+  },
+  "fmt": {
+    "exclude": [
+      "build/",
+      "lib/",
+      "node_modules/",
+      "data/",
+      "docs/",
+      "examples/",
+      "scripts/"
+    ],
+    "semiColons": true,
+    "singleQuote": true,
+    "lineWidth": 120,
+    "indentWidth": 4
+  },
+  "publish": {
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.tsx",
+      "src/**/*.scss",
+      "src/**/*.html",
+      "src/**/*.ico",
+      "src/**/*.jpg",
+      "LICENSE",
+      "README.md"
+    ],
+    "exclude": [
+      "src/**/_spec/",
+      "src/**/test.ts",
+      "src/**/*.spec.ts",
+      "src/apps/",
+      "src/examples/",
+      "src/perf-tests/",
+      "src/tests/",
+      "src/cli/",
+      "src/servers/"
+    ]
+  }
+}
