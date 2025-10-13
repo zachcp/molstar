@@ -149,7 +149,7 @@ export class ImagePass {
         }
     }
 
-    async getImageData(runtime: RuntimeContext, width: number, height: number, viewport?: Viewport): void {
+    async getImageData(runtime: RuntimeContext, width: number, height: number, viewport?: Viewport): Promise<ImageData> {
         this.setSize(width, height);
         await this.render(runtime);
         this.colorTarget.bind();
