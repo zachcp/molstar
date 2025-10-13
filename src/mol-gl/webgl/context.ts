@@ -223,10 +223,19 @@ function getShaderPrecisionFormat(
   return gl.getShaderPrecisionFormat(glShader, glPrecisionType);
 }
 
+type WebGLShaderPrecisionFormats = {
+  lowFloat: WebGLShaderPrecisionFormat | null;
+  mediumFloat: WebGLShaderPrecisionFormat | null;
+  highFloat: WebGLShaderPrecisionFormat | null;
+  lowInt: WebGLShaderPrecisionFormat | null;
+  mediumInt: WebGLShaderPrecisionFormat | null;
+  highInt: WebGLShaderPrecisionFormat | null;
+};
+
 function getShaderPrecisionFormats(
   gl: GLRenderingContext,
   shader: "vertex" | "fragment",
-) {
+): WebGLShaderPrecisionFormats {
   return {
     lowFloat: getShaderPrecisionFormat(gl, shader, "low", "float"),
     mediumFloat: getShaderPrecisionFormat(gl, shader, "medium", "float"),
@@ -236,8 +245,6 @@ function getShaderPrecisionFormats(
     highInt: getShaderPrecisionFormat(gl, shader, "high", "int"),
   };
 }
-
-type WebGLShaderPrecisionFormats = ReturnType<typeof getShaderPrecisionFormats>;
 
 //
 
