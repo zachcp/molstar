@@ -363,7 +363,7 @@ export function UnitsVisual<G extends Geometry, P extends StructureParams & Geom
                 cb(location, isSecondary);
             }
         },
-        mark(loci: Loci, action: MarkerAction) {
+        mark(loci: Loci, action: MarkerAction): boolean {
             let hasInvariantId = true;
             if (StructureElement.Loci.is(loci)) {
                 hasInvariantId = false;

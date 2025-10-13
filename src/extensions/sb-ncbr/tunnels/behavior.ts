@@ -52,7 +52,7 @@ export const TunnelsPreset = StructureRepresentationPresetProvider({
         name: 'Tunnels', group: 'Annotation',
         description: 'Shows Tunnels from ChannelsDB contained in the structure.'
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return isApplicable(a.data);
     },
     params: (a, plugin) => {

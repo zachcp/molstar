@@ -64,7 +64,7 @@ export class WboitPass {
         return this.textureA.getByteCount() + this.textureB.getByteCount() + this.depthRenderbuffer.getByteCount();
     }
 
-    bind() {
+    bind(): void {
         const { state, gl } = this.webgl;
 
         this.framebuffer.bind();

@@ -128,7 +128,7 @@ export class HandleHelper {
         return changed;
     };
 
-    mark(loci: Loci, action: MarkerAction) {
+    mark(loci: Loci, action: MarkerAction): boolean {
         if (!MarkerActions.is(MarkerActions.Highlighting, action)) return false;
         if (!isEveryLoci(loci)) {
             if (!isHandleLoci(loci)) return false;

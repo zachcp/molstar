@@ -600,7 +600,7 @@ export const ViewerAutoPreset = StructureRepresentationPresetProvider({
         name: 'Automatic (w/ Annotation)', group: 'Annotation',
         description: 'Show standard automatic representation but colored by quality assessment (if available in the model).'
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return (
             !!a.data.models.some(m => QualityAssessment.isApplicable(m, 'pLDDT')) ||
             !!a.data.models.some(m => QualityAssessment.isApplicable(m, 'qmean'))

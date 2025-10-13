@@ -992,7 +992,7 @@ namespace Structure {
         return true;
     }
 
-    export function areHierarchiesEqual(a: Structure, b: Structure) {
+    export function areHierarchiesEqual(a: Structure, b: Structure): boolean {
         if (a.hashCode !== b.hashCode) return false;
 
         const len = a.models.length;

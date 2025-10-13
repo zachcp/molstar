@@ -20,7 +20,7 @@ export const ConfalPyramidsPreset = StructureRepresentationPresetProvider({
         name: 'Confal Pyramids', group: 'Annotation',
         description: 'Schematic depiction of conformer class and confal value.',
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return a.data.models.length >= 1 && a.data.models.some(m => Dnatco.isApplicable(m));
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,

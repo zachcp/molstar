@@ -27,7 +27,7 @@ class FormatRegistry<T> {
         return this.map.get(kind);
     }
 
-    isApplicable(model: Model) {
+    isApplicable(model: Model): boolean {
         if (!this.map.has(model.sourceData.kind)) return false;
         const isApplicable = this.applicable.get(model.sourceData.kind);
         return isApplicable ? isApplicable(model) : true;
@@ -53,7 +53,7 @@ namespace FormatPropertyProvider {
         return {
             descriptor,
             formatRegistry,
-            isApplicable(model: Model) {
+            isApplicable(model: Model): boolean {
                 return formatRegistry.isApplicable(model);
             },
             get(model: Model): T | undefined {

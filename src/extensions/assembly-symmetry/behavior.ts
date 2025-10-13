@@ -147,7 +147,7 @@ const AssemblySymmetry3D = PluginStateTransform.BuiltIn({
             return StateTransformer.UpdateResult.Updated;
         });
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return AssemblySymmetryData.isApplicable(a.data);
     }
 });
@@ -160,7 +160,7 @@ export const AssemblySymmetryPreset = StructureRepresentationPresetProvider({
         name: 'Assembly Symmetry', group: 'Annotation',
         description: 'Shows Assembly Symmetry axes and cage; colors structure according to assembly symmetry cluster membership. Data provided by RCSB PDB (calculated with BioJava) or by PDBe.'
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return AssemblySymmetryData.isApplicable(a.data);
     },
     params: (a, plugin) => {

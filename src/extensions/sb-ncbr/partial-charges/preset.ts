@@ -13,7 +13,7 @@ export const SbNcbrPartialChargesPreset = StructureRepresentationPresetProvider(
         group: 'Annotation',
         description: 'Color atoms and residues based on their partial charge.',
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return !!a.data.models.some((m) => SbNcbrPartialChargesPropertyProvider.isApplicable(m));
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,

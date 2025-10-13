@@ -15,7 +15,7 @@ import { clamp } from '../../interpolate.ts';
 
 interface Euler extends Array<number> { [d: number]: number, '@type': 'euler', length: 3 }
 
-function Euler() {
+function Euler(): Euler {
     return Euler.zero();
 }
 

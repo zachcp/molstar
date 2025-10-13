@@ -20,7 +20,7 @@ export const NtCTubePreset = StructureRepresentationPresetProvider({
         name: 'NtC Tube', group: 'Annotation',
         description: 'NtC Tube',
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return a.data.models.length >= 1 && a.data.models.some(m => Dnatco.isApplicable(m));
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,

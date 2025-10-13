@@ -28,7 +28,7 @@ import type { Euler } from './euler.ts';
 interface Mat4 extends Array<number> { [d: number]: number, '@type': 'mat4', length: 16 }
 interface ReadonlyMat4 extends Array<number> { readonly [d: number]: number, '@type': 'mat4', length: 16 }
 
-function Mat4() {
+function Mat4(): Mat4 {
     return Mat4.zero();
 }
 

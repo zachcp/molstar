@@ -244,7 +244,7 @@ export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Pa
                 cb(location, isSecondary);
             }
         },
-        mark(loci: Loci, action: MarkerAction) {
+        mark(loci: Loci, action: MarkerAction): boolean {
             if (!MarkerActions.is(_state.markerActions, action)) return false;
             if (ShapeGroup.isLoci(loci) || Shape.isLoci(loci)) {
                 if (loci.shape !== _shape) return false;

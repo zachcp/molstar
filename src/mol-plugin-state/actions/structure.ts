@@ -282,7 +282,7 @@ export const EnableModelCustomProps = StateAction.build({
     params(a, ctx: PluginContext) {
         return ctx.customModelProperties.getParams(a?.data);
     },
-    isApplicable(a, t, ctx: PluginContext) {
+    isApplicable(a, t, ctx: PluginContext): boolean {
         return t.transformer !== CustomModelProperties;
     }
 })(({ ref, params }, ctx: PluginContext) => ctx.builders.structure.insertModelProperties(ref, params));
@@ -293,7 +293,7 @@ export const EnableStructureCustomProps = StateAction.build({
     params(a, ctx: PluginContext) {
         return ctx.customStructureProperties.getParams(a?.data);
     },
-    isApplicable(a, t, ctx: PluginContext) {
+    isApplicable(a, t, ctx: PluginContext): boolean {
         return t.transformer !== CustomStructureProperties;
     }
 })(({ ref, params }, ctx: PluginContext) => ctx.builders.structure.insertStructureProperties(ref, params));

@@ -303,7 +303,7 @@ export const ValidationReportGeometryQualityPreset = StructureRepresentationPres
         name: 'Validation Report (Geometry Quality)', group: 'Annotation',
         description: 'Color structure based on geometry quality; show geometry clashes. Data from wwPDB Validation Report, obtained via RCSB PDB.'
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return a.data.models.length === 1 && ValidationReport.isApplicable(a.data.models[0]);
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,
@@ -340,7 +340,7 @@ export const ValidationReportDensityFitPreset = StructureRepresentationPresetPro
         name: 'Validation Report (Density Fit)', group: 'Annotation',
         description: 'Color structure based on density fit. Data from wwPDB Validation Report, obtained via RCSB PDB.'
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return a.data.models.length === 1 && ValidationReport.isApplicable(a.data.models[0]) && Model.isFromXray(a.data.models[0]) && Model.probablyHasDensityMap(a.data.models[0]);
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,
@@ -364,7 +364,7 @@ export const ValidationReportRandomCoilIndexPreset = StructureRepresentationPres
         name: 'Validation Report (Random Coil Index)', group: 'Annotation',
         description: 'Color structure based on Random Coil Index. Data from wwPDB Validation Report, obtained via RCSB PDB.'
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return a.data.models.length === 1 && ValidationReport.isApplicable(a.data.models[0]) && Model.isFromNmr(a.data.models[0]);
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,

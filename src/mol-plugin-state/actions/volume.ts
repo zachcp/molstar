@@ -139,7 +139,7 @@ const DownloadDensity = StateAction.build({
 export const AssignColorVolume = StateAction.build({
     display: { name: 'Assign Volume Colors', description: 'Assigns another volume to be available for coloring.' },
     from: PluginStateObject.Volume.Data,
-    isApplicable(a) { return !a.data.colorVolume; },
+    isApplicable(a): boolean { return !a.data.colorVolume; },
     params(a, plugin: PluginContext) {
         const cells = plugin.state.data.select(StateSelection.Generators.root.subtree().ofType(PluginStateObject.Volume.Data).filter(cell => !!cell.obj && !cell.obj?.data.colorVolume && cell.obj !== a));
         if (cells.length === 0) return { ref: PD.Text('', { isHidden: true, label: 'Volume' }) };

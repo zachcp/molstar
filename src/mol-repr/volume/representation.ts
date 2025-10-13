@@ -305,7 +305,7 @@ export function VolumeVisual<G extends Geometry, P extends VolumeParams & Geomet
                 cb(location, isSecondary);
             }
         },
-        mark(loci: Loci, action: MarkerAction) {
+        mark(loci: Loci, action: MarkerAction): boolean {
             return Visual.mark(renderObject, loci, action, lociApply);
         },
         setVisibility(visible: boolean) {

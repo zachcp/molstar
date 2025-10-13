@@ -88,7 +88,7 @@ class InterUnitGraph<UnitId extends number, VertexIndex extends number, EdgeProp
 
 namespace InterUnitGraph {
     export class UnitPairEdges<UnitId extends number, VertexIndex extends number, EdgeProps extends EdgePropsBase = {}> {
-        hasEdges(indexA: VertexIndex) {
+        hasEdges(indexA: VertexIndex): boolean {
             return this.edgeMap.has(indexA);
         }
 

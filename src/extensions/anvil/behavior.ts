@@ -133,7 +133,7 @@ const MembraneOrientation3D = PluginStateTransform.BuiltIn({
             return StateTransformer.UpdateResult.Updated;
         });
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return MembraneOrientationProvider.isApplicable(a.data);
     }
 });
@@ -144,7 +144,7 @@ export const MembraneOrientationPreset = StructureRepresentationPresetProvider({
         name: 'Membrane Orientation', group: 'Annotation',
         description: 'Shows orientation of membrane layers. Data calculated with ANVIL algorithm.' // TODO add ' or obtained via RCSB PDB'
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return MembraneOrientationProvider.isApplicable(a.data);
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,

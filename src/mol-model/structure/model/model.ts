@@ -238,7 +238,7 @@ export namespace Model {
         return model.parent || model;
     }
 
-    export function areHierarchiesEqual(a: Model, b: Model) {
+    export function areHierarchiesEqual(a: Model, b: Model): boolean {
         return a.atomicHierarchy === b.atomicHierarchy && a.coarseHierarchy === b.coarseHierarchy;
     }
 

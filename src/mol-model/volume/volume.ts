@@ -61,7 +61,7 @@ export namespace Volume {
         export type Relative = Readonly<{ kind: 'relative', relativeValue: number }>
         export type Absolute = Readonly<{ kind: 'absolute', absoluteValue: number }>
 
-        export function areSame(a: IsoValue, b: IsoValue, stats: Grid['stats']) {
+        export function areSame(a: IsoValue, b: IsoValue, stats: Grid['stats']): boolean {
             return equalEps(toAbsolute(a, stats).absoluteValue, toAbsolute(b, stats).absoluteValue, stats.sigma / 100);
         }
 
@@ -261,7 +261,7 @@ export namespace Volume {
             }
             return true;
         }
-        export function getLociSize(loci: Loci) {
+        export function getLociSize(loci: Loci): number {
             let size = 0;
             for (const { indices, instances } of loci.elements) {
                 size += OrderedSet.size(indices) * OrderedSet.size(instances);
@@ -359,7 +359,7 @@ export namespace Volume {
             }
             return true;
         }
-        export function getLociSize(loci: Loci) {
+        export function getLociSize(loci: Loci): number {
             let size = 0;
             for (const { segments, instances } of loci.elements) {
                 size += OrderedSet.size(segments) * OrderedSet.size(instances);

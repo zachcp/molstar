@@ -287,7 +287,7 @@ export function ComplexVisual<G extends Geometry, P extends StructureParams & Ge
                 cb(location, isSecondary);
             }
         },
-        mark(loci: Loci, action: MarkerAction) {
+        mark(loci: Loci, action: MarkerAction): boolean {
             return Visual.mark(renderObject, loci, action, lociApply, previousMark);
         },
         setVisibility(visible: boolean) {

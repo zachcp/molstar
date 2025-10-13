@@ -205,7 +205,7 @@ export const QualityAssessmentPLDDTPreset = StructureRepresentationPresetProvide
         name: 'Quality Assessment (pLDDT)', group: 'Annotation',
         description: 'Color structure based on pLDDT Confidence.'
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return !!a.data.models.some(m => QualityAssessment.isApplicable(m, 'pLDDT'));
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,
@@ -225,7 +225,7 @@ export const QualityAssessmentQmeanPreset = StructureRepresentationPresetProvide
         name: 'Quality Assessment (QMEAN)', group: 'Annotation',
         description: 'Color structure based on QMEAN Score.'
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return !!a.data.models.some(m => QualityAssessment.isApplicable(m, 'qmean'));
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,

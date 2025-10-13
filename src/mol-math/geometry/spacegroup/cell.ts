@@ -13,7 +13,7 @@ interface Cell {
     readonly anglesInRadians: Vec3
 }
 
-function Cell() {
+function Cell(): Cell {
     return Cell.empty();
 }
 
