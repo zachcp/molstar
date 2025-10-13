@@ -55,7 +55,7 @@ export namespace ArrayEncoder {
         return new ArrayEncoderImpl([f]);
     }
 
-    export function fromEncoding(encoding: Encoding[]) {
+    export function fromEncoding(encoding: Encoding[]): ArrayEncoder {
         let e = by(getProvider(encoding[0]));
         for (let i = 1; i < encoding.length; i++) {
             if (encoding[i - 1].kind === 'IntegerPacking') break;

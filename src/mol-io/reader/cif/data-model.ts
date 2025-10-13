@@ -79,7 +79,7 @@ export namespace CifCategory {
         };
     }
 
-    export function ofTable(name: string, table: Table<any>) {
+    export function ofTable(name: string, table: Table<any>): CifCategory {
         const fields: { [name: string]: CifField | undefined } = {};
         for (const name of table._columns) {
             fields[name] = CifField.ofColumn(table[name]);
@@ -113,7 +113,7 @@ export interface CifField {
 }
 
 export namespace CifField {
-    export function ofString(value: string) {
+    export function ofString(value: string): CifField {
         return ofStrings([value]);
     }
 

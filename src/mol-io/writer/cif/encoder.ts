@@ -113,7 +113,7 @@ export namespace Field {
     };
   }
 
-  export function index(name: string) {
+  export function index<K = number, D = any>(name: string): Field<K, D> {
     return int(name, (e, d, i) => i + 1, {
       typedArray: Int32Array,
       encoder: ArrayEncoding.by(ArrayEncoding.delta)

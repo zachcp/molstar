@@ -30,7 +30,7 @@ export const PlyTypeByteLength = {
 };
 export type PlyType = keyof typeof PlyTypeByteLength
 export const PlyTypes = new Set(Object.keys(PlyTypeByteLength));
-export function PlyType(str: string) {
+export function PlyType(str: string): PlyType {
     if (!PlyTypes.has(str)) throw new Error(`unknown ply type '${str}'`);
     return str as PlyType;
 }
