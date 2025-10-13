@@ -24,7 +24,7 @@ export interface BinaryEncodingProvider {
 export class BinaryEncoder implements Encoder<Uint8Array<ArrayBuffer>> {
     private data: EncodedFile;
     private dataBlocks: EncodedDataBlock[] = [];
-    private encodedData: Uint8Array<ArrayBuffer>;
+    private encodedData!: Uint8Array<ArrayBuffer>;
     private filter: Category.Filter = Category.DefaultFilter;
     private formatter: Category.Formatter = Category.DefaultFormatter;
 

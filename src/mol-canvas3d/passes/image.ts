@@ -45,7 +45,7 @@ export class ImagePass {
 
     readonly props: ImageProps;
 
-    private _colorTarget: RenderTarget;
+    private _colorTarget!: RenderTarget;
     get colorTarget() { return this._colorTarget; }
 
     private readonly drawPass: DrawPass;

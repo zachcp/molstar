@@ -20,7 +20,7 @@ class PluginAnimationManager extends StatefulPluginComponent<PluginAnimationMana
     private _animations: PluginStateAnimation[] = [];
     private currentTime: number = 0;
 
-    private _current: PluginAnimationManager.Current;
+    private _current!: PluginAnimationManager.Current;
     private _params?: PD.For<PluginAnimationManager.State['params']> = void 0;
 
     readonly events = {

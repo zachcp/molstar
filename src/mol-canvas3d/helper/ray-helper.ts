@@ -20,8 +20,8 @@ import { Sphere3D } from '../../mol-math/geometry/primitives/sphere3d.ts';
 
 export class RayHelper {
     private viewport = Viewport();
-    private size: number;
-    private spiral: [number, number][];
+    private size!: number;
+    private spiral!: [number, number][];
 
     private pickPadding: number;
     private camera: Camera;

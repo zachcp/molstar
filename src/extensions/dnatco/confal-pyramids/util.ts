@@ -40,7 +40,7 @@ export class ConfalPyramidsIterator {
     private chainIt: Segmentation.SegmentIterator<ChainIndex>;
     private residueIt: Segmentation.SegmentIterator<ResidueIndex>;
     private residueOne?: DnatcoUtil.Residue;
-    private residueTwo: DnatcoUtil.Residue;
+    private residueTwo!: DnatcoUtil.Residue;
     private data?: DnatcoTypes.Steps;
     private loc: StructureElement.Location;
 

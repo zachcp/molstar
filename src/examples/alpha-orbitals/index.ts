@@ -53,7 +53,7 @@ type Selectors = {
 }
 
 export class AlphaOrbitalsExample {
-    plugin: PluginUIContext;
+    plugin!: PluginUIContext;
 
     async init(target: string | HTMLElement) {
         const defaultSpec = DefaultPluginUISpec();

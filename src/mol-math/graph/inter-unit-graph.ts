@@ -144,13 +144,13 @@ namespace InterUnitGraph {
 
 
     export class Builder<UnitId extends number, VertexIndex extends number, EdgeProps extends InterUnitGraph.EdgePropsBase = {}> {
-        private uA: UnitId;
-        private uB: UnitId;
-        private mapAB: Map<number, EdgeInfo<VertexIndex, EdgeProps>[]>;
-        private mapBA: Map<number, EdgeInfo<VertexIndex, EdgeProps>[]>;
-        private linkedA: UniqueArray<VertexIndex, VertexIndex>;
-        private linkedB: UniqueArray<VertexIndex, VertexIndex>;
-        private linkCount: number;
+        private uA!: UnitId;
+        private uB!: UnitId;
+        private mapAB!: Map<number, EdgeInfo<VertexIndex, EdgeProps>[]>;
+        private mapBA!: Map<number, EdgeInfo<VertexIndex, EdgeProps>[]>;
+        private linkedA!: UniqueArray<VertexIndex, VertexIndex>;
+        private linkedB!: UniqueArray<VertexIndex, VertexIndex>;
+        private linkCount!: number;
 
         private map = new Map<number, UnitPairEdges<UnitId, VertexIndex, EdgeProps>[]>();
 

@@ -22,11 +22,11 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
     private height: number;
     private width: number;
     private padding: number;
-    private updatedX: number;
-    private updatedY: number;
+    private updatedX!: number;
+    private updatedY!: number;
     private selected?: number[];
     private ghostPoints: SVGElement[];
-    private gElement: SVGElement;
+    private gElement!: SVGElement;
     private namespace: string;
 
     constructor(props: any) {

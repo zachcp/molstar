@@ -14,8 +14,8 @@ import './index.html';
 import '../../mol-plugin-ui/skin/light.scss';
 
 export class AlphaFoldPAEExample {
-    viewer: Viewer;
-    plotContainerId: string;
+    viewer!: Viewer;
+    plotContainerId!: string;
 
 
     async init(options: { pluginContainerId: string, plotContainerId: string }) {

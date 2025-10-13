@@ -109,7 +109,7 @@ const Canvas3DPresets = {
 type Canvas3DPreset = keyof typeof Canvas3DPresets
 
 class LightingDemo {
-    plugin: PluginUIContext;
+    plugin!: PluginUIContext;
 
     private radius = 5;
     private bias = 1.1;

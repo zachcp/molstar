@@ -89,16 +89,16 @@ export class AtomicPolymerTraceIterator implements Iterator<PolymerTraceElement>
     private value: PolymerTraceElement;
     private polymerIt: SortedRanges.Iterator<ElementIndex, number>;
     private residueIt: Segmentation.SegmentIterator<ResidueIndex>;
-    private polymerSegment: Segmentation.Segment<number>;
+    private polymerSegment!: Segmentation.Segment<number>;
     private cyclicPolymerMap: Map<ResidueIndex, ResidueIndex>;
-    private residueSegmentMin: ResidueIndex;
-    private residueSegmentMax: ResidueIndex;
-    private prevSecStrucType: SecondaryStructureType;
-    private currSecStrucType: SecondaryStructureType;
-    private nextSecStrucType: SecondaryStructureType;
-    private prevCoarseBackbone: boolean;
-    private currCoarseBackbone: boolean;
-    private nextCoarseBackbone: boolean;
+    private residueSegmentMin!: ResidueIndex;
+    private residueSegmentMax!: ResidueIndex;
+    private prevSecStrucType!: SecondaryStructureType;
+    private currSecStrucType!: SecondaryStructureType;
+    private nextSecStrucType!: SecondaryStructureType;
+    private prevCoarseBackbone!: boolean;
+    private currCoarseBackbone!: boolean;
+    private nextCoarseBackbone!: boolean;
     private state: AtomicPolymerTraceIteratorState = AtomicPolymerTraceIteratorState.nextPolymer;
     private polymerRanges: SortedArray<ElementIndex>;
     private residueAtomSegments: Segmentation<ElementIndex, ResidueIndex>;
@@ -435,10 +435,10 @@ const enum CoarsePolymerTraceIteratorState { nextPolymer, nextElement }
 export class CoarsePolymerTraceIterator implements Iterator<PolymerTraceElement> {
     private value: PolymerTraceElement;
     private polymerIt: SortedRanges.Iterator<ElementIndex, ResidueIndex>;
-    private polymerSegment: Segmentation.Segment<ResidueIndex>;
+    private polymerSegment!: Segmentation.Segment<ResidueIndex>;
     private state: CoarsePolymerTraceIteratorState = CoarsePolymerTraceIteratorState.nextPolymer;
     private conformation: CoarseSphereConformation | CoarseGaussianConformation;
-    private elementIndex: number;
+    private elementIndex!: number;
     hasNext: boolean = false;
 
     private getElementIndex(elementIndex: number) {

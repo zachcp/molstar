@@ -37,24 +37,24 @@ export type PickOptions = typeof DefaultPickOptions
 //
 
 export class PickPass {
-    private readonly objectPickTarget: RenderTarget;
-    private readonly instancePickTarget: RenderTarget;
-    private readonly groupPickTarget: RenderTarget;
-    private readonly depthPickTarget: RenderTarget;
+    private readonly objectPickTarget!: RenderTarget;
+    private readonly instancePickTarget!: RenderTarget;
+    private readonly groupPickTarget!: RenderTarget;
+    private readonly depthPickTarget!: RenderTarget;
 
-    private readonly framebuffer: Framebuffer;
+    private readonly framebuffer!: Framebuffer;
 
-    private readonly objectPickTexture: Texture;
-    private readonly instancePickTexture: Texture;
-    private readonly groupPickTexture: Texture;
-    private readonly depthPickTexture: Texture;
+    private readonly objectPickTexture!: Texture;
+    private readonly instancePickTexture!: Texture;
+    private readonly groupPickTexture!: Texture;
+    private readonly depthPickTexture!: Texture;
 
-    private readonly objectPickFramebuffer: Framebuffer;
-    private readonly instancePickFramebuffer: Framebuffer;
-    private readonly groupPickFramebuffer: Framebuffer;
-    private readonly depthPickFramebuffer: Framebuffer;
+    private readonly objectPickFramebuffer!: Framebuffer;
+    private readonly instancePickFramebuffer!: Framebuffer;
+    private readonly groupPickFramebuffer!: Framebuffer;
+    private readonly depthPickFramebuffer!: Framebuffer;
 
-    private readonly depthRenderbuffer: Renderbuffer;
+    private readonly depthRenderbuffer!: Renderbuffer;
 
     private pickWidth: number;
     private pickHeight: number;
@@ -313,15 +313,15 @@ export function checkAsyncPickingSupport(webgl: WebGLContext): boolean {
 export enum AsyncPickStatus { Pending, Resolved, Failed };
 
 export class PickBuffers {
-    private object: Uint8Array;
-    private instance: Uint8Array;
-    private group: Uint8Array;
-    private depth: Uint8Array;
+    private object!: Uint8Array;
+    private instance!: Uint8Array;
+    private group!: Uint8Array;
+    private depth!: Uint8Array;
 
-    private objectBuffer: PixelPackBuffer;
-    private instanceBuffer: PixelPackBuffer;
-    private groupBuffer: PixelPackBuffer;
-    private depthBuffer: PixelPackBuffer;
+    private objectBuffer!: PixelPackBuffer;
+    private instanceBuffer!: PixelPackBuffer;
+    private groupBuffer!: PixelPackBuffer;
+    private depthBuffer!: PixelPackBuffer;
 
     private viewport = Viewport.create(0, 0, 0, 0);
 

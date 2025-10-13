@@ -42,7 +42,7 @@ class MolStarProteopediaWrapper {
         modelInfo: this._ev<ModelInfo>()
     };
 
-    plugin: PluginUIContext;
+    plugin!: PluginUIContext;
 
     async init(target: string | HTMLElement, options?: {
         customColorList?: number[]

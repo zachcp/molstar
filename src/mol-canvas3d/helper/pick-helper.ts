@@ -23,14 +23,14 @@ export class PickHelper {
     private buffers = new PickBuffers(this.webgl, this.pickPass);
     private viewport = Viewport();
 
-    private pickRatio: number;
-    private pickX: number;
-    private pickY: number;
-    private pickWidth: number;
-    private pickHeight: number;
-    private halfPickWidth: number;
+    private pickRatio!: number;
+    private pickX!: number;
+    private pickY!: number;
+    private pickWidth!: number;
+    private pickHeight!: number;
+    private halfPickWidth!: number;
 
-    private spiral: [number, number][];
+    private spiral!: [number, number][];
 
     setViewport(x: number, y: number, width: number, height: number) {
         Viewport.set(this.viewport, x, y, width, height);

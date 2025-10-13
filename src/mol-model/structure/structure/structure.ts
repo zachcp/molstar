@@ -1024,7 +1024,7 @@ namespace Structure {
     export class ElementLocationIterator implements Iterator<StructureElement.Location> {
         private current: StructureElement.Location;
         private unitIndex = 0;
-        private elements: StructureElement.Set;
+        private elements!: StructureElement.Set;
         private maxIdx = 0;
         private idx = -1;
 

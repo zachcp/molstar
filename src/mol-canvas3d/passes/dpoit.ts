@@ -71,18 +71,18 @@ export class DpoitPass {
     private readonly MIN_DEPTH = 0.0;
 
     private passCount = 0;
-    private writeId: number;
-    private readId: number;
+    private writeId!: number;
+    private readId!: number;
 
-    private readonly blendBackRenderable: BlendBackDpoitRenderable;
-    private readonly renderable: EvaluateDpoitRenderable;
+    private readonly blendBackRenderable!: BlendBackDpoitRenderable;
+    private readonly renderable!: EvaluateDpoitRenderable;
 
-    private readonly depthFramebuffers: Framebuffer[];
-    private readonly colorFramebuffers: Framebuffer[];
+    private readonly depthFramebuffers!: Framebuffer[];
+    private readonly colorFramebuffers!: Framebuffer[];
 
-    private readonly depthTextures: Texture[];
-    private readonly colorFrontTextures: Texture[];
-    private readonly colorBackTextures: Texture[];
+    private readonly depthTextures!: Texture[];
+    private readonly colorFrontTextures!: Texture[];
+    private readonly colorBackTextures!: Texture[];
 
     private _supported = false;
     get supported() {

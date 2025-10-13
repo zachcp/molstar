@@ -27,7 +27,7 @@ import '../../mol-plugin-ui/skin/light.scss';
 type LoadParams = { url: string, format?: BuiltInTrajectoryFormat, isBinary?: boolean, assemblyId?: string }
 
 class BasicWrapper {
-    plugin: PluginUIContext;
+    plugin!: PluginUIContext;
 
     async init(target: string | HTMLElement) {
         this.plugin = await createPluginUI({

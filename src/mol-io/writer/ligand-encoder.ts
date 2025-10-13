@@ -27,8 +27,8 @@ function Atom(partial: any): Atom {
 export abstract class LigandEncoder implements Encoder<string> {
     protected builder: StringBuilder;
     protected meta: StringBuilder;
-    protected componentAtomData: ComponentAtom;
-    protected componentBondData: ComponentBond;
+    protected componentAtomData!: ComponentAtom;
+    protected componentBondData!: ComponentBond;
     protected error = false;
     protected encoded = false;
     readonly isBinary = false;

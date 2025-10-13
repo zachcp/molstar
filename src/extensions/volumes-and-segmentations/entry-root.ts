@@ -104,8 +104,8 @@ export class VolsegEntryData extends PluginBehavior.WithSubscribers<VolsegEntryP
     entryNumber: string;
     /** Full entry ID; e.g. 'emd-1832' */
     entryId: string;
-    metadata: MetadataWrapper;
-    pdbs: string[];
+    metadata!: MetadataWrapper;
+    pdbs!: string[];
 
     public readonly volumeData = new VolsegVolumeData(this);
     private readonly latticeSegmentationData = new VolsegLatticeSegmentationData(this);

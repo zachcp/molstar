@@ -84,25 +84,25 @@ export const IlluminationParams = {
 export type IlluminationProps = PD.Values<typeof IlluminationParams>
 
 export class IlluminationPass {
-    private readonly tracing: TracingPass;
+    private readonly tracing!: TracingPass;
 
-    private readonly transparentTarget: RenderTarget;
-    private readonly outputTarget: RenderTarget;
+    private readonly transparentTarget!: RenderTarget;
+    private readonly outputTarget!: RenderTarget;
 
-    readonly packedDepth: boolean;
+    readonly packedDepth!: boolean;
 
-    private readonly copyRenderable: CopyRenderable;
-    private readonly composeRenderable: ComposeRenderable;
+    private readonly copyRenderable!: CopyRenderable;
+    private readonly composeRenderable!: ComposeRenderable;
 
-    private multiSampleComposeTarget: RenderTarget;
-    private multiSampleHoldTarget: RenderTarget;
-    private multiSampleAccumulateTarget: RenderTarget;
-    private multiSampleCompose: MultiSampleComposeRenderable;
+    private multiSampleComposeTarget!: RenderTarget;
+    private multiSampleHoldTarget!: RenderTarget;
+    private multiSampleAccumulateTarget!: RenderTarget;
+    private multiSampleCompose!: MultiSampleComposeRenderable;
 
     private _iteration = 0;
     get iteration() { return this._iteration; }
 
-    private _colorTarget: RenderTarget;
+    private _colorTarget!: RenderTarget;
     get colorTarget() { return this._colorTarget; }
 
     private _supported = false;

@@ -186,12 +186,12 @@ export class ViewportScreenshotHelper extends PluginComponent {
         });
     }
 
-    private _previewPass: ImagePass;
+    private _previewPass!: ImagePass;
     private get previewPass() {
         return this._previewPass || (this._previewPass = this.createPass(true));
     }
 
-    private _imagePass: ImagePass;
+    private _imagePass!: ImagePass;
     get imagePass() {
         if (this._imagePass) {
             const c = this.plugin.canvas3d!;

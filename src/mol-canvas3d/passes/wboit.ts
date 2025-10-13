@@ -47,12 +47,12 @@ function getEvaluateWboitRenderable(ctx: WebGLContext, wboitATexture: Texture, w
 //
 
 export class WboitPass {
-    private readonly renderable: EvaluateWboitRenderable;
+    private readonly renderable!: EvaluateWboitRenderable;
 
-    private readonly framebuffer: Framebuffer;
-    private readonly textureA: Texture;
-    private readonly textureB: Texture;
-    private readonly depthRenderbuffer: Renderbuffer;
+    private readonly framebuffer!: Framebuffer;
+    private readonly textureA!: Texture;
+    private readonly textureB!: Texture;
+    private readonly depthRenderbuffer!: Renderbuffer;
 
     private _supported = false;
     get supported() {

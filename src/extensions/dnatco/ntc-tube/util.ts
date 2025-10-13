@@ -101,7 +101,7 @@ export class NtCTubeSegmentsIterator {
     /* First residue of the current step */
     private residueOne?: DnatcoUtil.Residue;
     /* Second residue of the current step */
-    private residueTwo: DnatcoUtil.Residue;
+    private residueTwo!: DnatcoUtil.Residue;
     /* First residue of the next step, may be undefined
      * if we are at the end of a chain.
      * Undefined value indicates that the iterator has reached the end.*/

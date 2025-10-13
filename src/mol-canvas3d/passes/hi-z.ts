@@ -127,10 +127,10 @@ export class HiZPass {
     private readonly vp = Vec3();
 
     private readonly levelData: LevelData = [];
-    private readonly fb: Framebuffer;
-    private readonly buf: PixelPackBuffer;
-    private readonly tex: Texture;
-    private readonly renderable: HiZRenderable;
+    private readonly fb!: Framebuffer;
+    private readonly buf!: PixelPackBuffer;
+    private readonly tex!: Texture;
+    private readonly renderable!: HiZRenderable;
     private readonly supported: boolean;
 
     private sync: WebGLSync | null = null;

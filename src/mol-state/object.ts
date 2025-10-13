@@ -117,7 +117,7 @@ namespace StateObjectCell {
 
 // TODO: improve the API?
 export class StateObjectTracker<T extends StateObject> {
-    private query: StateSelection.Query;
+    private query!: StateSelection.Query;
     private version: string = '';
     cell: StateObjectCell | undefined;
     data: T['data'] | undefined;

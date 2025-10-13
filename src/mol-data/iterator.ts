@@ -77,7 +77,7 @@ class MapIteratorImpl<T, R> implements Iterator<R> {
 }
 
 class FilterIteratorImpl<T> implements Iterator<T> {
-    private next: T;
+    private next!: T;
     hasNext: boolean;
 
     move() {

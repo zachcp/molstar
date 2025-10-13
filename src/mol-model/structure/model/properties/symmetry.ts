@@ -26,7 +26,7 @@ export class Assembly {
     readonly id: string;
     readonly details: string;
 
-    private _operators: OperatorGroups;
+    private _operators!: OperatorGroups;
     get operatorGroups(): OperatorGroups {
         if (this._operators) return this._operators;
         this._operators = this.operatorsProvider();
