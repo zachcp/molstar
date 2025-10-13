@@ -110,7 +110,7 @@ namespace Mat4 {
         return areEqual(m, _id, typeof eps === 'undefined' ? EPSILON : eps);
     }
 
-    export function hasNaN(m: Mat4) {
+    export function hasNaN(m: Mat4): boolean {
         for (let i = 0; i < 16; i++) if (isNaN(m[i])) return true;
         return false;
     }
@@ -122,7 +122,7 @@ namespace Mat4 {
         return true;
     }
 
-    export function setValue(a: Mat4, i: number, j: number, value: number) {
+    export function setValue(a: Mat4, i: number, j: number, value: number): Mat4 {
         a[4 * j + i] = value;
     }
 
@@ -130,7 +130,7 @@ namespace Mat4 {
         return a[4 * j + i];
     }
 
-    export function toArray<T extends NumberArray>(a: Mat4, out: T, offset: number) {
+    export function toArray<T extends NumberArray>(a: Mat4, out: T, offset: number): T {
         out[offset + 0] = a[0];
         out[offset + 1] = a[1];
         out[offset + 2] = a[2];
@@ -150,7 +150,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function fromArray(a: Mat4, array: NumberArray, offset: number) {
+    export function fromArray(a: Mat4, array: NumberArray, offset: number): Mat4 {
         a[0] = array[offset + 0];
         a[1] = array[offset + 1];
         a[2] = array[offset + 2];
@@ -185,7 +185,7 @@ namespace Mat4 {
         return a;
     }
 
-    export function copy(out: Mat4, a: Mat4) {
+    export function copy(out: Mat4, a: Mat4): Mat4 {
         out[0] = a[0];
         out[1] = a[1];
         out[2] = a[2];
@@ -205,7 +205,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function clone(a: Mat4) {
+    export function clone(a: Mat4): Mat4 {
         return copy(zero(), a);
     }
 
@@ -516,7 +516,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function setTranslation(out: Mat4, v: Vec3) {
+    export function setTranslation(out: Mat4, v: Vec3): Mat4 {
         out[12] = v[0];
         out[13] = v[1];
         out[14] = v[2];
@@ -528,7 +528,7 @@ namespace Mat4 {
      * axes. Each axis is a vec3 and is expected to be unit length and
      * perpendicular to all other specified axes.
      */
-    export function setAxes(out: Mat4, view: Vec3, right: Vec3, up: Vec3) {
+    export function setAxes(out: Mat4, view: Vec3, right: Vec3, up: Vec3): Mat4 {
         out[0] = right[0];
         out[4] = right[1];
         out[8] = right[2];
@@ -625,7 +625,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function scale(out: Mat4, a: Mat4, v: Vec3) {
+    export function scale(out: Mat4, a: Mat4, v: Vec3): Mat4 {
         const x = v[0], y = v[1], z = v[2];
 
         out[0] = a[0] * x;
@@ -647,7 +647,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function scaleUniformly(out: Mat4, a: Mat4, scale: number) {
+    export function scaleUniformly(out: Mat4, a: Mat4, scale: number): Mat4 {
         out[0] = a[0] * scale;
         out[1] = a[1] * scale;
         out[2] = a[2] * scale;

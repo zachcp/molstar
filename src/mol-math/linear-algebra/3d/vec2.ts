@@ -32,49 +32,49 @@ namespace Vec2 {
         return ret as any;
     }
 
-    export function clone(a: Vec2) {
+    export function clone(a: Vec2): Vec2 {
         const out = zero();
         out[0] = a[0];
         out[1] = a[1];
         return out;
     }
 
-    export function create(x: number, y: number) {
+    export function create(x: number, y: number): Vec2 {
         const out = zero();
         out[0] = x;
         out[1] = y;
         return out;
     }
 
-    export function hasNaN(a: Vec2) {
+    export function hasNaN(a: Vec2): boolean {
         return isNaN(a[0]) || isNaN(a[1]);
     }
 
-    export function toArray<T extends NumberArray>(a: Vec2, out: T, offset: number) {
+    export function toArray<T extends NumberArray>(a: Vec2, out: T, offset: number): T {
         out[offset + 0] = a[0];
         out[offset + 1] = a[1];
         return out;
     }
 
-    export function fromArray(a: Vec2, array: NumberArray, offset: number) {
+    export function fromArray(a: Vec2, array: NumberArray, offset: number): Vec2 {
         a[0] = array[offset + 0];
         a[1] = array[offset + 1];
         return a;
     }
 
-    export function copy(out: Vec2, a: Vec2) {
+    export function copy(out: Vec2, a: Vec2): Vec2 {
         out[0] = a[0];
         out[1] = a[1];
         return out;
     }
 
-    export function set(out: Vec2, x: number, y: number) {
+    export function set(out: Vec2, x: number, y: number): Vec2 {
         out[0] = x;
         out[1] = y;
         return out;
     }
 
-    export function add(out: Vec2, a: Vec2, b: Vec2) {
+    export function add(out: Vec2, a: Vec2, b: Vec2): Vec2 {
         out[0] = a[0] + b[0];
         out[1] = a[1] + b[1];
         return out;
@@ -98,7 +98,7 @@ namespace Vec2 {
         return out;
     }
 
-    export function scale(out: Vec2, a: Vec2, b: number) {
+    export function scale(out: Vec2, a: Vec2, b: number): Vec2 {
         out[0] = a[0] * b;
         out[1] = a[1] * b;
         return out;
@@ -107,7 +107,7 @@ namespace Vec2 {
     /**
      * Math.round the components of a Vec2
      */
-    export function round(out: Vec2, a: Vec2) {
+    export function round(out: Vec2, a: Vec2): Vec2 {
         out[0] = Math.round(a[0]);
         out[1] = Math.round(a[1]);
         return out;
@@ -116,7 +116,7 @@ namespace Vec2 {
     /**
      * Math.ceil the components of a Vec2
      */
-    export function ceil(out: Vec2, a: Vec2) {
+    export function ceil(out: Vec2, a: Vec2): Vec2 {
         out[0] = Math.ceil(a[0]);
         out[1] = Math.ceil(a[1]);
         return out;
@@ -125,19 +125,19 @@ namespace Vec2 {
     /**
      * Math.floor the components of a Vec2
      */
-    export function floor(out: Vec2, a: Vec2) {
+    export function floor(out: Vec2, a: Vec2): Vec2 {
         out[0] = Math.floor(a[0]);
         out[1] = Math.floor(a[1]);
         return out;
     }
 
-    export function distance(a: Vec2, b: Vec2) {
+    export function distance(a: Vec2, b: Vec2): number {
         const x = b[0] - a[0],
             y = b[1] - a[1];
         return Math.sqrt(x * x + y * y);
     }
 
-    export function squaredDistance(a: Vec2, b: Vec2) {
+    export function squaredDistance(a: Vec2, b: Vec2): number {
         const x = b[0] - a[0],
             y = b[1] - a[1];
         return x * x + y * y;
@@ -155,7 +155,7 @@ namespace Vec2 {
         return x * x + y * y;
     }
 
-    export function setMagnitude(out: Vec2, a: Vec2, l: number) {
+    export function setMagnitude(out: Vec2, a: Vec2, l: number): Vec2 {
         return scale(out, normalize(out, a), l);
     }
 
@@ -168,7 +168,7 @@ namespace Vec2 {
         return out;
     }
 
-    export function normalize(out: Vec2, a: Vec2) {
+    export function normalize(out: Vec2, a: Vec2): Vec2 {
         const x = a[0],
             y = a[1];
         let len = x * x + y * y;
@@ -184,7 +184,7 @@ namespace Vec2 {
         return a[0] === b[0] && a[1] === b[1];
     }
 
-    export function toString(a: Vec2, precision?: number) {
+    export function toString(a: Vec2, precision?: number): string {
         return `[${a[0].toPrecision(precision)} ${a[1].toPrecision(precision)}}]`;
     }
 }

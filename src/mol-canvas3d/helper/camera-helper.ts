@@ -152,7 +152,7 @@ export class CameraHelper {
         return changed;
     };
 
-    mark(loci: Loci, action: MarkerAction) {
+    mark(loci: Loci, action: MarkerAction): boolean {
         if (!MarkerActions.is(MarkerActions.Highlighting, action)) return false;
         if (!isEveryLoci(loci)) {
             if (!isCameraAxesLoci(loci)) return false;

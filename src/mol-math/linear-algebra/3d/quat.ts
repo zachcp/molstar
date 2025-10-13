@@ -51,18 +51,18 @@ namespace Quat {
         return out;
     }
 
-    export function setIdentity(out: Quat) {
+    export function setIdentity(out: Quat): Quat {
         out[0] = 0;
         out[1] = 0;
         out[2] = 0;
         out[3] = 1;
     }
 
-    export function hasNaN(q: Quat) {
+    export function hasNaN(q: Quat): boolean {
         return isNaN(q[0]) || isNaN(q[1]) || isNaN(q[2]) || isNaN(q[3]);
     }
 
-    export function create(x: number, y: number, z: number, w: number) {
+    export function create(x: number, y: number, z: number, w: number): Quat {
         const out = identity();
         out[0] = x;
         out[1] = y;
@@ -71,7 +71,7 @@ namespace Quat {
         return out;
     }
 
-    export function setAxisAngle(out: Quat, axis: Vec3, rad: number) {
+    export function setAxisAngle(out: Quat, axis: Vec3, rad: number): Quat {
         rad = rad * 0.5;
         const s = Math.sin(rad);
         out[0] = s * axis[0];
@@ -107,7 +107,7 @@ namespace Quat {
         return rad;
     }
 
-    export function multiply(out: Quat, a: Quat, b: Quat) {
+    export function multiply(out: Quat, a: Quat, b: Quat): Quat {
         const ax = a[0], ay = a[1], az = a[2], aw = a[3];
         const bx = b[0], by = b[1], bz = b[2], bw = b[3];
 
@@ -175,7 +175,7 @@ namespace Quat {
     /**
      * Performs a spherical linear interpolation between two quat
      */
-    export function slerp(out: Quat, a: Quat, b: Quat, t: number) {
+    export function slerp(out: Quat, a: Quat, b: Quat, t: number): Quat {
         // benchmarks:
         //    http://jsperf.com/quaternion-slerp-implementations
         const ax = a[0], ay = a[1], az = a[2], aw = a[3];
@@ -241,7 +241,7 @@ namespace Quat {
         return out;
     }
 
-    export function dot(a: Quat, b: Quat) {
+    export function dot(a: Quat, b: Quat): number {
         return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
     }
 
@@ -381,7 +381,7 @@ namespace Quat {
         return fromMat4(out, m4tmp);
     }
 
-    export function clone(a: Quat) {
+    export function clone(a: Quat): Quat {
         const out = zero();
         out[0] = a[0];
         out[1] = a[1];
@@ -394,11 +394,11 @@ namespace Quat {
         return create(a.x, a.y, a.z, a.w);
     }
 
-    export function toObj(a: Quat) {
+    export function toObj(a: Quat): { x: number; y: number; z: number } {
         return { x: a[0], y: a[1], z: a[2], w: a[3] };
     }
 
-    export function toArray<T extends NumberArray>(a: Quat, out: T, offset: number) {
+    export function toArray<T extends NumberArray>(a: Quat, out: T, offset: number): T {
         out[offset + 0] = a[0];
         out[offset + 1] = a[1];
         out[offset + 2] = a[2];
@@ -406,7 +406,7 @@ namespace Quat {
         return out;
     }
 
-    export function fromArray(a: Quat, array: NumberArray, offset: number) {
+    export function fromArray(a: Quat, array: NumberArray, offset: number): Quat {
         a[0] = array[offset + 0];
         a[1] = array[offset + 1];
         a[2] = array[offset + 2];
@@ -414,7 +414,7 @@ namespace Quat {
         return a;
     }
 
-    export function copy(out: Quat, a: Quat) {
+    export function copy(out: Quat, a: Quat): Quat {
         out[0] = a[0];
         out[1] = a[1];
         out[2] = a[2];
@@ -422,7 +422,7 @@ namespace Quat {
         return out;
     }
 
-    export function set(out: Quat, x: number, y: number, z: number, w: number) {
+    export function set(out: Quat, x: number, y: number, z: number, w: number): Quat {
         out[0] = x;
         out[1] = y;
         out[2] = z;
@@ -433,14 +433,14 @@ namespace Quat {
     /**
      * Returns whether or not the quaternions have exactly the same elements in the same position (when compared with ===)
      */
-    export function exactEquals(a: Quat, b: Quat) {
+    export function exactEquals(a: Quat, b: Quat): boolean {
         return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
     }
 
     /**
      * Returns whether or not the quaternions have approximately the same elements in the same position.
      */
-    export function equals(a: Quat, b: Quat) {
+    export function equals(a: Quat, b: Quat): boolean {
         const a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3];
         const b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
         return (Math.abs(a0 - b0) <= EPSILON * Math.max(1.0, Math.abs(a0), Math.abs(b0)) &&
@@ -449,7 +449,7 @@ namespace Quat {
                 Math.abs(a3 - b3) <= EPSILON * Math.max(1.0, Math.abs(a3), Math.abs(b3)));
     }
 
-    export function add(out: Quat, a: Quat, b: Quat) {
+    export function add(out: Quat, a: Quat, b: Quat): Quat {
         out[0] = a[0] + b[0];
         out[1] = a[1] + b[1];
         out[2] = a[2] + b[2];
@@ -471,7 +471,7 @@ namespace Quat {
         return 2 * Math.acos(Math.abs(clamp(dot(a, b), -1, 1)));
     }
 
-    export function normalize(out: Quat, a: Quat) {
+    export function normalize(out: Quat, a: Quat): Quat {
         const x = a[0];
         const y = a[1];
         const z = a[2];
@@ -539,7 +539,7 @@ namespace Quat {
      * perpendicular to all other specified axes.
      */
     const axesTmpMat = [0, 0, 0, 0, 0, 0, 0, 0, 0] as unknown as Mat3;
-    export function setAxes(out: Quat, view: Vec3, right: Vec3, up: Vec3) {
+    export function setAxes(out: Quat, view: Vec3, right: Vec3, up: Vec3): Quat {
         axesTmpMat[0] = right[0];
         axesTmpMat[3] = right[1];
         axesTmpMat[6] = right[2];
@@ -555,7 +555,7 @@ namespace Quat {
         return normalize(out, fromMat3(out, axesTmpMat));
     }
 
-    export function toString(a: Quat, precision?: number) {
+    export function toString(a: Quat, precision?: number): string {
         return `[${a[0].toPrecision(precision)} ${a[1].toPrecision(precision)} ${a[2].toPrecision(precision)}  ${a[3].toPrecision(precision)}]`;
     }
 

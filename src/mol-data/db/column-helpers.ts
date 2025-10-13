@@ -6,13 +6,13 @@
 
 import type { Column } from './column.ts';
 
-export function getArrayBounds(rowCount: number, params?: Column.ToArrayParams<any>) {
+export function getArrayBounds(rowCount: number, params?: Column.ToArrayParams<any>): object {
     const start = params && typeof params.start !== 'undefined' ? Math.max(Math.min(params.start, rowCount - 1), 0) : 0;
     const end = params && typeof params.end !== 'undefined' ? Math.min(params.end, rowCount) : rowCount;
     return { start, end };
 }
 
-export function createArray(rowCount: number, params?: Column.ToArrayParams<any>) {
+export function createArray(rowCount: number, params?: Column.ToArrayParams<any>): object {
     const c = params && typeof params.array !== 'undefined' ? params.array : Array;
     const { start, end } = getArrayBounds(rowCount, params);
     return { array: new c(end - start) as any[], start, end };

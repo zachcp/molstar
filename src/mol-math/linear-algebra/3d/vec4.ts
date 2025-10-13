@@ -36,7 +36,7 @@ namespace Vec4 {
         return ret as any;
     }
 
-    export function clone(a: Vec4) {
+    export function clone(a: Vec4): Vec4 {
         const out = zero();
         out[0] = a[0];
         out[1] = a[1];
@@ -45,7 +45,7 @@ namespace Vec4 {
         return out;
     }
 
-    export function create(x: number, y: number, z: number, w: number) {
+    export function create(x: number, y: number, z: number, w: number): Vec4 {
         const out = zero();
         out[0] = x;
         out[1] = y;
@@ -66,11 +66,11 @@ namespace Vec4 {
         return fromSphere(zero(), sphere);
     }
 
-    export function hasNaN(a: Vec4) {
+    export function hasNaN(a: Vec4): boolean {
         return isNaN(a[0]) || isNaN(a[1]) || isNaN(a[2]) || isNaN(a[3]);
     }
 
-    export function toArray<T extends NumberArray>(a: Vec4, out: T, offset: number) {
+    export function toArray<T extends NumberArray>(a: Vec4, out: T, offset: number): T {
         out[offset + 0] = a[0];
         out[offset + 1] = a[1];
         out[offset + 2] = a[2];
@@ -78,7 +78,7 @@ namespace Vec4 {
         return out;
     }
 
-    export function fromArray(a: Vec4, array: NumberArray, offset: number) {
+    export function fromArray(a: Vec4, array: NumberArray, offset: number): Vec4 {
         a[0] = array[offset + 0];
         a[1] = array[offset + 1];
         a[2] = array[offset + 2];
@@ -100,7 +100,7 @@ namespace Vec4 {
         return a;
     }
 
-    export function copy(out: Vec4, a: Vec4) {
+    export function copy(out: Vec4, a: Vec4): Vec4 {
         out[0] = a[0];
         out[1] = a[1];
         out[2] = a[2];
@@ -108,7 +108,7 @@ namespace Vec4 {
         return out;
     }
 
-    export function set(out: Vec4, x: number, y: number, z: number, w: number) {
+    export function set(out: Vec4, x: number, y: number, z: number, w: number): Vec4 {
         out[0] = x;
         out[1] = y;
         out[2] = z;
@@ -116,7 +116,7 @@ namespace Vec4 {
         return out;
     }
 
-    export function add(out: Vec4, a: Vec4, b: Vec4) {
+    export function add(out: Vec4, a: Vec4, b: Vec4): Vec4 {
         out[0] = a[0] + b[0];
         out[1] = a[1] + b[1];
         out[2] = a[2] + b[2];
@@ -124,7 +124,7 @@ namespace Vec4 {
         return out;
     }
 
-    export function distance(a: Vec4, b: Vec4) {
+    export function distance(a: Vec4, b: Vec4): number {
         const x = b[0] - a[0],
             y = b[1] - a[1],
             z = b[2] - a[2],
@@ -132,7 +132,7 @@ namespace Vec4 {
         return Math.sqrt(x * x + y * y + z * z + w * w);
     }
 
-    export function scale(out: Vec4, a: Vec4, b: number) {
+    export function scale(out: Vec4, a: Vec4, b: number): Vec4 {
         out[0] = a[0] * b;
         out[1] = a[1] * b;
         out[2] = a[2] * b;
@@ -143,7 +143,7 @@ namespace Vec4 {
     /**
      * Math.round the components of a Vec4
      */
-    export function round(out: Vec4, a: Vec4) {
+    export function round(out: Vec4, a: Vec4): Vec4 {
         out[0] = Math.round(a[0]);
         out[1] = Math.round(a[1]);
         out[2] = Math.round(a[2]);
@@ -154,7 +154,7 @@ namespace Vec4 {
     /**
      * Math.ceil the components of a Vec4
      */
-    export function ceil(out: Vec4, a: Vec4) {
+    export function ceil(out: Vec4, a: Vec4): Vec4 {
         out[0] = Math.ceil(a[0]);
         out[1] = Math.ceil(a[1]);
         out[2] = Math.ceil(a[2]);
@@ -165,7 +165,7 @@ namespace Vec4 {
     /**
      * Math.floor the components of a Vec3
      */
-    export function floor(out: Vec4, a: Vec4) {
+    export function floor(out: Vec4, a: Vec4): Vec4 {
         out[0] = Math.floor(a[0]);
         out[1] = Math.floor(a[1]);
         out[2] = Math.floor(a[2]);
@@ -173,7 +173,7 @@ namespace Vec4 {
         return out;
     }
 
-    export function squaredDistance(a: Vec4, b: Vec4) {
+    export function squaredDistance(a: Vec4, b: Vec4): number {
         const x = b[0] - a[0],
             y = b[1] - a[1],
             z = b[2] - a[2],
@@ -206,7 +206,7 @@ namespace Vec4 {
         return out;
     }
 
-    export function dot(a: Vec4, b: Vec4) {
+    export function dot(a: Vec4, b: Vec4): number {
         return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
     }
 
@@ -224,14 +224,14 @@ namespace Vec4 {
     /**
      * Returns whether or not the vectors have exactly the same elements in the same position (when compared with ===)
      */
-    export function exactEquals(a: Vec4, b: Vec4) {
+    export function exactEquals(a: Vec4, b: Vec4): boolean {
         return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
     }
 
     /**
      * Returns whether or not the vectors have approximately the same elements in the same position.
      */
-    export function equals(a: Vec4, b: Vec4) {
+    export function equals(a: Vec4, b: Vec4): boolean {
         const a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3];
         const b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
         return (Math.abs(a0 - b0) <= EPSILON * Math.max(1.0, Math.abs(a0), Math.abs(b0)) &&
@@ -240,7 +240,7 @@ namespace Vec4 {
                 Math.abs(a3 - b3) <= EPSILON * Math.max(1.0, Math.abs(a3), Math.abs(b3)));
     }
 
-    export function toString(a: Vec4, precision?: number) {
+    export function toString(a: Vec4, precision?: number): string {
         return `[${a[0].toPrecision(precision)} ${a[1].toPrecision(precision)} ${a[2].toPrecision(precision)}  ${a[3].toPrecision(precision)}]`;
     }
 }

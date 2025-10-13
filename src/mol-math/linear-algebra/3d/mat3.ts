@@ -65,7 +65,7 @@ namespace Mat3 {
         return mat;
     }
 
-    export function toArray<T extends NumberArray>(a: Mat3, out: T, offset: number) {
+    export function toArray<T extends NumberArray>(a: Mat3, out: T, offset: number): T {
         out[offset + 0] = a[0];
         out[offset + 1] = a[1];
         out[offset + 2] = a[2];
@@ -78,7 +78,7 @@ namespace Mat3 {
         return out;
     }
 
-    export function fromArray(a: Mat3, array: NumberArray, offset: number) {
+    export function fromArray(a: Mat3, array: NumberArray, offset: number): Mat3 {
         a[0] = array[offset + 0];
         a[1] = array[offset + 1];
         a[2] = array[offset + 2];
@@ -150,7 +150,7 @@ namespace Mat3 {
         return areEqual(m, _id, typeof eps === 'undefined' ? EPSILON : eps);
     }
 
-    export function hasNaN(m: Mat3) {
+    export function hasNaN(m: Mat3): boolean {
         for (let i = 0; i < 9; i++) if (isNaN(m[i])) return true;
         return false;
     }
@@ -158,7 +158,7 @@ namespace Mat3 {
     /**
      * Creates a new Mat3 initialized with values from an existing matrix
      */
-    export function clone(a: Mat3) {
+    export function clone(a: Mat3): Mat3 {
         return copy(zero(), a);
     }
 
@@ -169,7 +169,7 @@ namespace Mat3 {
         return true;
     }
 
-    export function setValue(a: Mat3, i: number, j: number, value: number) {
+    export function setValue(a: Mat3, i: number, j: number, value: number): Mat3 {
         a[3 * j + i] = value;
     }
 
@@ -180,7 +180,7 @@ namespace Mat3 {
     /**
      * Copy the values from one Mat3 to another
      */
-    export function copy(out: Mat3, a: Mat3) {
+    export function copy(out: Mat3, a: Mat3): Mat3 {
         out[0] = a[0];
         out[1] = a[1];
         out[2] = a[2];
@@ -321,7 +321,7 @@ namespace Mat3 {
         return out;
     }
 
-    export function add(out: Mat3, a: Mat3, b: Mat3) {
+    export function add(out: Mat3, a: Mat3, b: Mat3): Mat3 {
         out[0] = a[0] + b[0];
         out[1] = a[1] + b[1];
         out[2] = a[2] + b[2];
@@ -370,7 +370,7 @@ namespace Mat3 {
         return out;
     }
 
-    export function addScalar(out: Mat3, a: Mat3, s: number) {
+    export function addScalar(out: Mat3, a: Mat3, s: number): Mat3 {
         out[0] = a[0] + s;
         out[1] = a[1] + s;
         out[2] = a[2] + s;

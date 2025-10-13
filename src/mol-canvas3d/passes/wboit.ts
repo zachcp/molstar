@@ -59,7 +59,7 @@ export class WboitPass {
         return this._supported;
     }
 
-    getByteCount() {
+    getByteCount(): number {
         if (!this._supported) return 0;
         return this.textureA.getByteCount() + this.textureB.getByteCount() + this.depthRenderbuffer.getByteCount();
     }

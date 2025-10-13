@@ -46,7 +46,7 @@ export class ImagePass {
     readonly props: ImageProps;
 
     private _colorTarget!: RenderTarget;
-    get colorTarget() { return this._colorTarget; }
+    get colorTarget(): RenderTarget { return this._colorTarget; }
 
     private readonly drawPass: DrawPass;
     private readonly illuminationPass: IlluminationPass;
@@ -149,7 +149,7 @@ export class ImagePass {
         }
     }
 
-    async getImageData(runtime: RuntimeContext, width: number, height: number, viewport?: Viewport) {
+    async getImageData(runtime: RuntimeContext, width: number, height: number, viewport?: Viewport): void {
         this.setSize(width, height);
         await this.render(runtime);
         this.colorTarget.bind();

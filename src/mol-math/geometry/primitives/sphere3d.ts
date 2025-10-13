@@ -37,13 +37,13 @@ namespace Sphere3D {
         return out;
     }
 
-    export function set(out: Sphere3D, center: Vec3, radius: number) {
+    export function set(out: Sphere3D, center: Vec3, radius: number): Sphere3d {
         Vec3.copy(out.center, center);
         out.radius = radius;
         return out;
     }
 
-    export function copy(out: Sphere3D, a: Sphere3D) {
+    export function copy(out: Sphere3D, a: Sphere3D): Sphere3d {
         Vec3.copy(out.center, a.center);
         out.radius = a.radius;
         if (hasExtrema(a)) setExtrema(out, a.extrema.map(e => Vec3.clone(e)));
@@ -110,7 +110,7 @@ namespace Sphere3D {
     }
 
     /** Scale sphere by a number */
-    export function scale(out: Sphere3D, sphere: Sphere3D, s: number) {
+    export function scale(out: Sphere3D, sphere: Sphere3D, s: number): Sphere3d {
         Vec3.scale(out.center, sphere.center, s);
         out.radius = sphere.radius * s;
         if (hasExtrema(sphere)) {
@@ -120,19 +120,19 @@ namespace Sphere3D {
     }
 
     /** Scale sphere by a number but without extrema */
-    export function scaleNX(out: Sphere3D, sphere: Sphere3D, s: number) {
+    export function scaleNX(out: Sphere3D, sphere: Sphere3D, s: number): Sphere3d {
         Vec3.scale(out.center, sphere.center, s);
         out.radius = sphere.radius * s;
         return out;
     }
 
-    export function toArray<T extends NumberArray>(s: Sphere3D, out: T, offset: number) {
+    export function toArray<T extends NumberArray>(s: Sphere3D, out: T, offset: number): T {
         Vec3.toArray(s.center, out, offset);
         out[offset + 3] = s.radius;
         return out;
     }
 
-    export function fromArray(out: Sphere3D, array: NumberArray, offset: number) {
+    export function fromArray(out: Sphere3D, array: NumberArray, offset: number): Sphere3d {
         Vec3.fromArray(out.center, array, offset);
         out.radius = array[offset + 3];
         return out;
@@ -187,7 +187,7 @@ namespace Sphere3D {
     }
 
     const tmpAddVec3 = Vec3();
-    export function addVec3(out: Sphere3D, s: Sphere3D, v: Vec3) {
+    export function addVec3(out: Sphere3D, s: Sphere3D, v: Vec3): Sphere3d {
         const d = Vec3.distance(s.center, v);
         if (d < s.radius) return Sphere3D.copy(out, s);
         Vec3.sub(tmpAddVec3, s.center, v);
@@ -258,14 +258,14 @@ namespace Sphere3D {
     /**
      * Returns whether or not the spheres have exactly the same center and radius (when compared with ===)
      */
-    export function exactEquals(a: Sphere3D, b: Sphere3D) {
+    export function exactEquals(a: Sphere3D, b: Sphere3D): boolean {
         return a.radius === b.radius && Vec3.exactEquals(a.center, b.center);
     }
 
     /**
      * Returns whether or not the spheres have approximately the same center and radius.
      */
-    export function equals(a: Sphere3D, b: Sphere3D) {
+    export function equals(a: Sphere3D, b: Sphere3D): boolean {
         const ar = a.radius;
         const br = b.radius;
         return (Math.abs(ar - br) <= EPSILON * Math.max(1.0, Math.abs(ar), Math.abs(br)) &&
@@ -292,7 +292,7 @@ namespace Sphere3D {
     }
 
     /** Get the signed distance of `a` and `b` */
-    export function distance(a: Sphere3D, b: Sphere3D) {
+    export function distance(a: Sphere3D, b: Sphere3D): number {
         return Vec3.distance(a.center, b.center) - a.radius + b.radius;
     }
 

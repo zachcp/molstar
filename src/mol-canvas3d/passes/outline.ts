@@ -59,7 +59,7 @@ export class OutlinePass {
         }
     }
 
-    update(camera: ICamera, props: OutlineProps, depthTextureTransparent: Texture, depthTextureOpaque: Texture) {
+    update(camera: ICamera, props: OutlineProps, depthTextureTransparent: Texture, depthTextureOpaque: Texture): void {
         let needsUpdate = false;
 
         const orthographic = camera.state.mode === 'orthographic' ? 1 : 0;

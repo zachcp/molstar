@@ -103,14 +103,14 @@ export class IlluminationPass {
     get iteration() { return this._iteration; }
 
     private _colorTarget!: RenderTarget;
-    get colorTarget() { return this._colorTarget; }
+    get colorTarget(): RenderTarget { return this._colorTarget; }
 
     private _supported = false;
     get supported() {
         return this._supported;
     }
 
-    getByteCount() {
+    getByteCount(): number {
         if (!this._supported) return 0;
         return (
             this.tracing.getByteCount() +
