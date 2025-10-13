@@ -66,11 +66,11 @@ namespace Location {
         return l.unit.conformation.position(l.element, out);
     }
 
-    export function residueIndex(l: Location) {
+    export function residueIndex(l: Location): ResidueIndex {
         return l.unit.model.atomicHierarchy.residueAtomSegments.index[l.element];
     }
 
-    export function chainIndex(l: Location) {
+    export function chainIndex(l: Location): ChainIndex {
         return l.unit.model.atomicHierarchy.chainAtomSegments.index[l.element];
     }
 }

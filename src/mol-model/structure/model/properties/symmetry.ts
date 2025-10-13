@@ -70,7 +70,7 @@ namespace Symmetry {
         return symmetry ? arrayFind(symmetry.assemblies, a => a.id.toLowerCase() === _id) : undefined;
     }
 
-    export function getUnitcellLabel(symmetry: Symmetry) {
+    export function getUnitcellLabel(symmetry: Symmetry): string {
         const { cell, name, num } = symmetry.spacegroup;
         const { size, anglesInRadians } = cell;
         const a = size[0].toFixed(2);
