@@ -29,7 +29,7 @@ namespace SizeTheme {
     export const EmptyFactory = () => Empty;
     export const Empty: SizeTheme<{}> = { factory: EmptyFactory, granularity: 'uniform', size: () => 1, props: {} };
 
-    export function areEqual(themeA: SizeTheme<any>, themeB: SizeTheme<any>) {
+    export function areEqual(themeA: SizeTheme<any>, themeB: SizeTheme<any>): boolean {
         return themeA.contextHash === themeB.contextHash && themeA.factory === themeB.factory && deepEqual(themeA.props, themeB.props);
     }
 

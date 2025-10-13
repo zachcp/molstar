@@ -165,7 +165,7 @@ namespace ColorTheme {
         props: {}
     };
 
-    export function areEqual(themeA: ColorTheme<any, any>, themeB: ColorTheme<any, any>) {
+    export function areEqual(themeA: ColorTheme<any, any>, themeB: ColorTheme<any, any>): boolean {
         return themeA.contextHash === themeB.contextHash && themeA.factory === themeB.factory && deepEqual(themeA.props, themeB.props);
     }
 

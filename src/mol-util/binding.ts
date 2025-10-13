@@ -29,7 +29,7 @@ namespace Binding {
     }
 
     export const Empty: Binding = { triggers: [], action: '', description: '' };
-    export function isEmpty(binding: Binding) {
+    export function isEmpty(binding: Binding): boolean {
         return binding.triggers.length === 0 ||
             binding.triggers.every(t => t.buttons === undefined && t.modifiers === undefined && !t.code);
     }

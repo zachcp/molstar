@@ -34,7 +34,7 @@ namespace Script {
         return !!x && typeof (x as Script).expression === 'string' && !!(x as Script).language;
     }
 
-    export function areEqual(a: Script, b: Script) {
+    export function areEqual(a: Script, b: Script): boolean {
         return a.language === b.language && a.expression === b.expression;
     }
 

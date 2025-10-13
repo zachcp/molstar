@@ -51,7 +51,7 @@ namespace Grid {
         return gridA === gridB;
     }
 
-    export function isEmpty(grid: Grid) {
+    export function isEmpty(grid: Grid): boolean {
         return grid.cells.data.length === 0;
     }
 

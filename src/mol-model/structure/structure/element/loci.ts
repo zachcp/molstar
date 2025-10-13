@@ -58,7 +58,7 @@ export namespace Loci {
         return !!x && x.kind === 'element-loci';
     }
 
-    export function areEqual(a: Loci, b: Loci) {
+    export function areEqual(a: Loci, b: Loci): boolean {
         if (a.structure !== b.structure) return false;
         if (a.elements.length !== b.elements.length) return false;
         for (let i = 0, il = a.elements.length; i < il; ++i) {
@@ -70,7 +70,7 @@ export namespace Loci {
         return true;
     }
 
-    export function isEmpty(loci: Loci) {
+    export function isEmpty(loci: Loci): boolean {
         for (const u of loci.elements) {
             if (OrderedSet.size(u.indices) > 0) return false;
         }

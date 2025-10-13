@@ -86,7 +86,7 @@ namespace Clipping {
         }
     }
 
-    export function areEqual(cA: Clipping, cB: Clipping) {
+    export function areEqual(cA: Clipping, cB: Clipping): boolean {
         if (cA.layers.length !== cB.layers.length) return false;
         for (let i = 0, il = cA.layers.length; i < il; ++i) {
             if (cA.layers[i].groups !== cB.layers[i].groups) return false;
@@ -96,7 +96,7 @@ namespace Clipping {
     }
 
     /** Check if layers empty */
-    export function isEmpty(clipping: Clipping) {
+    export function isEmpty(clipping: Clipping): boolean {
         return clipping.layers.length === 0;
     }
 

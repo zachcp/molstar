@@ -96,7 +96,7 @@ export namespace Clip {
         };
     }
 
-    export function areEqual(cA: Clip, cB: Clip) {
+    export function areEqual(cA: Clip, cB: Clip): boolean {
         if (cA.variant !== cB.variant) return false;
         if (cA.objects.count !== cB.objects.count) return false;
 

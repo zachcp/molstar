@@ -170,7 +170,7 @@ export namespace Volume {
         return true;
     }
 
-    export function isEmpty(vol: Volume) {
+    export function isEmpty(vol: Volume): boolean {
         return Grid.isEmpty(vol.grid) || vol.instances.length === 0;
     }
 
@@ -182,8 +182,8 @@ export namespace Volume {
     export interface Loci { readonly kind: 'volume-loci', readonly volume: Volume, readonly instances: OrderedSet<InstanceIndex> }
     export function Loci(volume: Volume, instances: OrderedSet<InstanceIndex>): Loci { return { kind: 'volume-loci', volume, instances }; }
     export function isLoci(x: any): x is Loci { return !!x && x.kind === 'volume-loci'; }
-    export function areLociEqual(a: Loci, b: Loci) { return a.volume === b.volume && OrderedSet.areEqual(a.instances, b.instances); }
-    export function isLociEmpty(loci: Loci) { return isEmpty(loci.volume) || OrderedSet.isEmpty(loci.instances); }
+    export function areLociEqual(a: Loci, b: Loci): boolean { return a.volume === b.volume && OrderedSet.areEqual(a.instances, b.instances); }
+    export function isLociEmpty(loci: Loci): boolean { return isEmpty(loci.volume) || OrderedSet.isEmpty(loci.instances); }
 
     export function getBoundingSphere(volume: Volume, boundingSphere?: Sphere3D) {
         return Grid.getBoundingSphere(volume.grid, boundingSphere);
@@ -193,8 +193,8 @@ export namespace Volume {
         export interface Loci { readonly kind: 'isosurface-loci', readonly volume: Volume, readonly isoValue: Volume.IsoValue, readonly instances: OrderedSet<InstanceIndex> }
         export function Loci(volume: Volume, isoValue: Volume.IsoValue, instances: OrderedSet<InstanceIndex>): Loci { return { kind: 'isosurface-loci', volume, isoValue, instances }; }
         export function isLoci(x: any): x is Loci { return !!x && x.kind === 'isosurface-loci'; }
-        export function areLociEqual(a: Loci, b: Loci) { return a.volume === b.volume && Volume.IsoValue.areSame(a.isoValue, b.isoValue, a.volume.grid.stats) && OrderedSet.areEqual(a.instances, b.instances); }
-        export function isLociEmpty(loci: Loci) { return isEmpty(loci.volume) || OrderedSet.isEmpty(loci.instances); }
+        export function areLociEqual(a: Loci, b: Loci): boolean { return a.volume === b.volume && Volume.IsoValue.areSame(a.isoValue, b.isoValue, a.volume.grid.stats) && OrderedSet.areEqual(a.instances, b.instances); }
+        export function isLociEmpty(loci: Loci): boolean { return isEmpty(loci.volume) || OrderedSet.isEmpty(loci.instances); }
 
         const bbox = Box3D();
         export function getBoundingSphere(volume: Volume, isoValue: Volume.IsoValue, boundingSphere?: Sphere3D) {
@@ -243,7 +243,7 @@ export namespace Volume {
         export function isLoci(x: any): x is Loci {
             return !!x && x.kind === 'cell-loci';
         }
-        export function areLociEqual(a: Loci, b: Loci) {
+        export function areLociEqual(a: Loci, b: Loci): boolean {
             if (a.volume !== b.volume || a.elements.length !== b.elements.length) return false;
 
             for (let i = 0, il = a.elements.length; i < il; ++i) {
@@ -255,7 +255,7 @@ export namespace Volume {
             }
             return true;
         }
-        export function isLociEmpty(loci: Loci) {
+        export function isLociEmpty(loci: Loci): boolean {
             for (const { indices, instances } of loci.elements) {
                 if (!OrderedSet.isEmpty(instances) || !OrderedSet.isEmpty(indices)) return false;
             }
@@ -341,7 +341,7 @@ export namespace Volume {
         export function isLoci(x: any): x is Loci {
             return !!x && x.kind === 'segment-loci';
         }
-        export function areLociEqual(a: Loci, b: Loci) {
+        export function areLociEqual(a: Loci, b: Loci): boolean {
             if (a.volume !== b.volume || a.elements.length !== b.elements.length) return false;
 
             for (let i = 0, il = a.elements.length; i < il; ++i) {
@@ -353,7 +353,7 @@ export namespace Volume {
             }
             return true;
         }
-        export function isLociEmpty(loci: Loci) {
+        export function isLociEmpty(loci: Loci): boolean {
             for (const { segments, instances } of loci.elements) {
                 if (!OrderedSet.isEmpty(instances) || !OrderedSet.isEmpty(segments)) return false;
             }

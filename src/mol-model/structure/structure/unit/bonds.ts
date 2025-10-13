@@ -70,7 +70,7 @@ namespace Bond {
         return !!x && x.kind === 'bond-loci';
     }
 
-    export function areLociEqual(a: Loci, b: Loci) {
+    export function areLociEqual(a: Loci, b: Loci): boolean {
         if (a.structure !== b.structure) return false;
         if (a.bonds.length !== b.bonds.length) return false;
         for (let i = 0, il = a.bonds.length; i < il; ++i) {
@@ -79,7 +79,7 @@ namespace Bond {
         return true;
     }
 
-    export function isLociEmpty(loci: Loci) {
+    export function isLociEmpty(loci: Loci): boolean {
         return loci.bonds.length === 0 ? true : false;
     }
 

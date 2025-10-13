@@ -59,7 +59,7 @@ export function has(xs: Nums, v: number) { return indexOf(xs, v) >= 0; }
 
 export function getAt(xs: Nums, i: number) { return xs[i]; }
 
-export function areEqual(a: Nums, b: Nums) {
+export function areEqual(a: Nums, b: Nums): boolean {
     if (a === b) return true;
     let aSize = a.length;
     if (aSize !== b.length || a[0] !== b[0] || a[aSize - 1] !== b[aSize - 1]) return false;

@@ -22,7 +22,7 @@ namespace StructureSelection {
     export function Empty(source: Structure): StructureSelection { return Singletons(source, Structure.Empty); };
 
     export function isSingleton(s: StructureSelection): s is Singletons { return s.kind === 'singletons'; }
-    export function isEmpty(s: StructureSelection) { return isSingleton(s) ? s.structure.units.length === 0 : s.structures.length === 0; }
+    export function isEmpty(s: StructureSelection): boolean { return isSingleton(s) ? s.structure.units.length === 0 : s.structures.length === 0; }
 
     export function structureCount(sel: StructureSelection) {
         if (isSingleton(sel)) return sel.structure.elementCount;

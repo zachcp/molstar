@@ -101,8 +101,8 @@ export namespace Shape {
     export interface Loci { readonly kind: 'shape-loci', readonly shape: Shape }
     export function Loci(shape: Shape): Loci { return { kind: 'shape-loci', shape }; }
     export function isLoci(x: any): x is Loci { return !!x && x.kind === 'shape-loci'; }
-    export function areLociEqual(a: Loci, b: Loci) { return a.shape === b.shape; }
-    export function isLociEmpty(loci: Loci) { return loci.shape.groupCount === 0; }
+    export function areLociEqual(a: Loci, b: Loci): boolean { return a.shape === b.shape; }
+    export function isLociEmpty(loci: Loci): boolean { return loci.shape.groupCount === 0; }
 }
 
 export namespace ShapeGroup {
@@ -138,7 +138,7 @@ export namespace ShapeGroup {
         return !!x && x.kind === 'group-loci';
     }
 
-    export function areLociEqual(a: Loci, b: Loci) {
+    export function areLociEqual(a: Loci, b: Loci): boolean {
         if (a.shape !== b.shape) return false;
         if (a.groups.length !== b.groups.length) return false;
         for (let i = 0, il = a.groups.length; i < il; ++i) {
@@ -150,7 +150,7 @@ export namespace ShapeGroup {
         return true;
     }
 
-    export function isLociEmpty(loci: Loci) {
+    export function isLociEmpty(loci: Loci): boolean {
         return size(loci) === 0 ? true : false;
     }
 

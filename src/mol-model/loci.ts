@@ -80,7 +80,7 @@ namespace Loci {
         return boundaryHelper.getSphere();
     }
 
-    export function areEqual(lociA: Loci, lociB: Loci) {
+    export function areEqual(lociA: Loci, lociB: Loci): boolean {
         if (isEveryLoci(lociA) && isEveryLoci(lociB)) return true;
         if (isEmptyLoci(lociA) && isEmptyLoci(lociB)) return true;
         if (isDataLoci(lociA) && isDataLoci(lociB)) {
@@ -120,7 +120,7 @@ namespace Loci {
         return !!loci && loci.kind === 'every-loci';
     }
 
-    export function isEmpty(loci: Loci) {
+    export function isEmpty(loci: Loci): boolean {
         if (isEveryLoci(loci)) return false;
         if (isEmptyLoci(loci)) return true;
         if (isDataLoci(loci)) return isDataLociEmpty(loci);

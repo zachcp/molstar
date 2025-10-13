@@ -25,7 +25,7 @@ namespace Substance {
     export type Layer<T extends Loci = Loci> = { readonly loci: T, readonly material: Material, readonly clear: boolean }
     export const Empty: Substance = { kind: 'empty-loci', layers: [] };
 
-    export function areEqual(sA: Substance, sB: Substance) {
+    export function areEqual(sA: Substance, sB: Substance): boolean {
         if (sA.layers.length === 0 && sB.layers.length === 0) return true;
         if (sA.layers.length !== sB.layers.length) return false;
         for (let i = 0, il = sA.layers.length; i < il; ++i) {
@@ -36,7 +36,7 @@ namespace Substance {
         return true;
     }
 
-    export function isEmpty(substance: Substance) {
+    export function isEmpty(substance: Substance): boolean {
         return substance.layers.length === 0;
     }
 

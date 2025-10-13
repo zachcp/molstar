@@ -33,14 +33,14 @@ export function min(set: OrderedSetImpl) { return I.is(set) ? I.min(set) : S.min
 export function max(set: OrderedSetImpl) { return I.is(set) ? I.max(set) : S.max(set); }
 export function start(set: OrderedSetImpl) { return I.is(set) ? I.start(set) : S.start(set); }
 export function end(set: OrderedSetImpl) { return I.is(set) ? I.end(set) : S.end(set); }
-export function isEmpty(set: OrderedSetImpl) { return size(set) === 0; }
+export function isEmpty(set: OrderedSetImpl): boolean { return size(set) === 0; }
 
 export function hashCode(set: OrderedSetImpl) { return I.is(set) ? I.hashCode(set) : S.hashCode(set); }
 // TODO: possibly add more hash functions to allow for multilevel hashing.
 
 export function toString(set: OrderedSetImpl) { return I.is(set) ? I.toString(set) : S.toString(set); }
 
-export function areEqual(a: OrderedSetImpl, b: OrderedSetImpl) {
+export function areEqual(a: OrderedSetImpl, b: OrderedSetImpl): boolean {
     if (I.is(a)) {
         if (I.is(b)) return I.areEqual(a, b);
         return areEqualIS(a, b);

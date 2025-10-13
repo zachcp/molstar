@@ -174,11 +174,11 @@ namespace Representation {
     export interface Loci<T extends ModelLoci = ModelLoci> { loci: T, repr?: Representation.Any }
 
     export namespace Loci {
-        export function areEqual(a: Loci, b: Loci) {
+        export function areEqual(a: Loci, b: Loci): boolean {
             return a.repr === b.repr && ModelLoci.areEqual(a.loci, b.loci);
         }
 
-        export function isEmpty(a: Loci) {
+        export function isEmpty(a: Loci): boolean {
             return ModelLoci.isEmpty(a.loci);
         }
 

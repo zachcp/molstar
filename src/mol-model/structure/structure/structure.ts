@@ -655,11 +655,11 @@ namespace Structure {
         return !!x && x.kind === 'structure-loci';
     }
 
-    export function areLociEqual(a: Loci, b: Loci) {
+    export function areLociEqual(a: Loci, b: Loci): boolean {
         return a.structure === b.structure;
     }
 
-    export function isLociEmpty(loci: Loci) {
+    export function isLociEmpty(loci: Loci): boolean {
         return loci.structure.isEmpty;
     }
 

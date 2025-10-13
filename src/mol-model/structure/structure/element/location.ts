@@ -51,7 +51,7 @@ namespace Location {
         return !!x && x.kind === 'element-location';
     }
 
-    export function areEqual(a: Location, b: Location) {
+    export function areEqual(a: Location, b: Location): boolean {
         return a.unit === b.unit && a.element === b.element;
     }
 

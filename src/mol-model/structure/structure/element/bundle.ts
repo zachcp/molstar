@@ -248,7 +248,7 @@ export namespace Bundle {
         });
     }
 
-    export function areEqual(a: Bundle, b: Bundle) {
+    export function areEqual(a: Bundle, b: Bundle): boolean {
         if (a.elements.length !== b.elements.length) return false;
         for (let i = 0, il = a.elements.length; i < il; ++i) {
             const elementA = a.elements[i], elementB = b.elements[i];

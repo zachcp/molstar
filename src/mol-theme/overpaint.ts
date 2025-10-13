@@ -24,7 +24,7 @@ namespace Overpaint {
     export type Layer<T extends Loci = Loci> = { readonly loci: T, readonly color: Color, readonly clear: boolean }
     export const Empty: Overpaint = { kind: 'empty-loci', layers: [] };
 
-    export function areEqual(oA: Overpaint, oB: Overpaint) {
+    export function areEqual(oA: Overpaint, oB: Overpaint): boolean {
         if (oA.layers.length === 0 && oB.layers.length === 0) return true;
         if (oA.layers.length !== oB.layers.length) return false;
         for (let i = 0, il = oA.layers.length; i < il; ++i) {
@@ -35,7 +35,7 @@ namespace Overpaint {
         return true;
     }
 
-    export function isEmpty(overpaint: Overpaint) {
+    export function isEmpty(overpaint: Overpaint): boolean {
         return overpaint.layers.length === 0;
     }
 
