@@ -412,7 +412,7 @@ namespace Unit {
         readonly props: CoarseProperties;
 
         private _transientCache: Map<any, any> | undefined = undefined;
-        get transientCache() {
+        get transientCache(): Map<any, any> {
             if (this._transientCache === void 0) this._transientCache = new Map<any, any>();
             return this._transientCache;
         }
@@ -454,7 +454,7 @@ namespace Unit {
             return new Coarse(this.id, this.invariantId, this.chainGroupId, this.traits, model, this.kind, this.elements, conformation, props) as Unit.Spheres | Unit.Gaussians; // TODO get rid of casting
         }
 
-        get boundary() {
+        get boundary(): Boundary {
             if (this.props.boundary) return this.props.boundary;
             // TODO: support sphere radius?
             const { x, y, z } = this.getCoarseConformation();
@@ -464,7 +464,7 @@ namespace Unit {
             return this.props.boundary;
         }
 
-        get lookup3d() {
+        get lookup3d(): Lookup3D<StructureElement.UnitIndex> {
             if (this.props.lookup3d) return this.props.lookup3d;
             // TODO: support sphere radius?
             const { x, y, z } = this.getCoarseConformation();
@@ -472,19 +472,19 @@ namespace Unit {
             return this.props.lookup3d;
         }
 
-        get principalAxes() {
+        get principalAxes(): PrincipalAxes {
             if (this.props.principalAxes) return this.props.principalAxes;
             this.props.principalAxes = getPrincipalAxes(this as Unit.Spheres | Unit.Gaussians); // TODO get rid of casting
             return this.props.principalAxes;
         }
 
-        get polymerElements() {
+        get polymerElements(): SortedArray<ElementIndex> {
             if (this.props.polymerElements) return this.props.polymerElements;
             this.props.polymerElements = getCoarsePolymerElements(this as Unit.Spheres | Unit.Gaussians); // TODO get rid of casting
             return this.props.polymerElements;
         }
 
-        get gapElements() {
+        get gapElements(): SortedArray<ElementIndex> {
             if (this.props.gapElements) return this.props.gapElements;
             this.props.gapElements = getCoarseGapElements(this as Unit.Spheres | Unit.Gaussians); // TODO get rid of casting
             return this.props.gapElements;
