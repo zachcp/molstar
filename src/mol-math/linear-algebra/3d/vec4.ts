@@ -54,7 +54,7 @@ namespace Vec4 {
         return out;
     }
 
-    export function fromSphere(out: Vec4, sphere: Sphere3D) {
+    export function fromSphere(out: Vec4, sphere: Sphere3D): Vec4 {
         out[0] = sphere.center[0];
         out[1] = sphere.center[1];
         out[2] = sphere.center[2];
@@ -86,13 +86,13 @@ namespace Vec4 {
         return a;
     }
 
-    export function toVec3Array(a: Vec4, out: NumberArray, offset: number) {
+    export function toVec3Array(a: Vec4, out: NumberArray, offset: number): void {
         out[offset + 0] = a[0];
         out[offset + 1] = a[1];
         out[offset + 2] = a[2];
     }
 
-    export function fromVec3Array(a: Vec4, array: NumberArray, offset: number) {
+    export function fromVec3Array(a: Vec4, array: NumberArray, offset: number): Vec4 {
         a[0] = array[offset + 0];
         a[1] = array[offset + 1];
         a[2] = array[offset + 2];
@@ -181,7 +181,7 @@ namespace Vec4 {
         return x * x + y * y + z * z + w * w;
     }
 
-    export function norm(a: Vec4) {
+    export function norm(a: Vec4): number {
         const x = a[0],
             y = a[1],
             z = a[2],
@@ -197,7 +197,7 @@ namespace Vec4 {
         return x * x + y * y + z * z + w * w;
     }
 
-    export function transformMat4(out: Vec4, a: Vec4, m: Mat4) {
+    export function transformMat4(out: Vec4, a: Vec4, m: Mat4): Vec4 {
         const x = a[0], y = a[1], z = a[2], w = a[3];
         out[0] = m[0] * x + m[4] * y + m[8] * z + m[12] * w;
         out[1] = m[1] * x + m[5] * y + m[9] * z + m[13] * w;
@@ -213,7 +213,7 @@ namespace Vec4 {
     /**
      * Returns the inverse of the components of a Vec4
      */
-    export function inverse(out: Vec4, a: Vec4) {
+    export function inverse(out: Vec4, a: Vec4): Vec4 {
         out[0] = 1.0 / a[0];
         out[1] = 1.0 / a[1];
         out[2] = 1.0 / a[2];

@@ -93,7 +93,7 @@ export namespace Vec3 {
         return out;
     }
 
-    export function ofArray(array: ArrayLike<number>) {
+    export function ofArray(array: ArrayLike<number>): Vec3 {
         const out = zero();
         out[0] = array[0];
         out[1] = array[1];
@@ -122,21 +122,21 @@ export namespace Vec3 {
         return out;
     }
 
-    export function sub(out: Vec3, a: Vec3, b: Vec3) {
+    export function sub(out: Vec3, a: Vec3, b: Vec3): Vec3 {
         out[0] = a[0] - b[0];
         out[1] = a[1] - b[1];
         out[2] = a[2] - b[2];
         return out;
     }
 
-    export function mul(out: Vec3, a: Vec3, b: Vec3) {
+    export function mul(out: Vec3, a: Vec3, b: Vec3): Vec3 {
         out[0] = a[0] * b[0];
         out[1] = a[1] * b[1];
         out[2] = a[2] * b[2];
         return out;
     }
 
-    export function div(out: Vec3, a: Vec3, b: Vec3) {
+    export function div(out: Vec3, a: Vec3, b: Vec3): Vec3 {
         out[0] = a[0] / b[0];
         out[1] = a[1] / b[1];
         out[2] = a[2] / b[2];
@@ -173,7 +173,7 @@ export namespace Vec3 {
         return out;
     }
 
-    export function subScalar(out: Vec3, a: Vec3, b: number) {
+    export function subScalar(out: Vec3, a: Vec3, b: number): Vec3 {
         out[0] = a[0] - b;
         out[1] = a[1] - b;
         out[2] = a[2] - b;
@@ -213,7 +213,7 @@ export namespace Vec3 {
     /**
      * Math.trunc the components of a Vec3
      */
-    export function trunc(out: Vec3, a: Vec3) {
+    export function trunc(out: Vec3, a: Vec3): Vec3 {
         out[0] = Math.trunc(a[0]);
         out[1] = Math.trunc(a[1]);
         out[2] = Math.trunc(a[2]);
@@ -253,7 +253,7 @@ export namespace Vec3 {
     /**
      * Assumes min < max, componentwise
      */
-    export function clamp(out: Vec3, a: Vec3, min: Vec3, max: Vec3) {
+    export function clamp(out: Vec3, a: Vec3, min: Vec3, max: Vec3): Vec3 {
         out[0] = Math.max(min[0], Math.min(max[0], a[0]));
         out[1] = Math.max(min[1], Math.min(max[1], a[1]));
         out[2] = Math.max(min[2], Math.min(max[2], a[2]));
@@ -274,7 +274,7 @@ export namespace Vec3 {
         return x * x + y * y + z * z;
     }
 
-    export function magnitude(a: Vec3) {
+    export function magnitude(a: Vec3): number {
         const x = a[0],
             y = a[1],
             z = a[2];
@@ -305,7 +305,7 @@ export namespace Vec3 {
     /**
      * Returns the inverse of the components of a Vec3
      */
-    export function inverse(out: Vec3, a: Vec3) {
+    export function inverse(out: Vec3, a: Vec3): Vec3 {
         out[0] = 1.0 / a[0];
         out[1] = 1.0 / a[1];
         out[2] = 1.0 / a[2];
@@ -365,7 +365,7 @@ export namespace Vec3 {
     /**
      * Performs a hermite interpolation with two control points
      */
-    export function hermite(out: Vec3, a: Vec3, b: Vec3, c: Vec3, d: Vec3, t: number) {
+    export function hermite(out: Vec3, a: Vec3, b: Vec3, c: Vec3, d: Vec3, t: number): Vec3 {
         const factorTimes2 = t * t;
         const factor1 = factorTimes2 * (2 * t - 3) + 1;
         const factor2 = factorTimes2 * (t - 2) + t;
@@ -382,7 +382,7 @@ export namespace Vec3 {
     /**
      * Performs a bezier interpolation with two control points
      */
-    export function bezier(out: Vec3, a: Vec3, b: Vec3, c: Vec3, d: Vec3, t: number) {
+    export function bezier(out: Vec3, a: Vec3, b: Vec3, c: Vec3, d: Vec3, t: number): Vec3 {
         const inverseFactor = 1 - t;
         const inverseFactorTimesTwo = inverseFactor * inverseFactor;
         const factorTimes2 = t * t;
@@ -398,7 +398,7 @@ export namespace Vec3 {
         return out;
     }
 
-    export function quadraticBezier(out: Vec3, a: Vec3, b: Vec3, c: Vec3, t: number) {
+    export function quadraticBezier(out: Vec3, a: Vec3, b: Vec3, c: Vec3, t: number): Vec3 {
         out[0] = _quadraticBezier(a[0], b[0], c[0], t);
         out[1] = _quadraticBezier(a[1], b[1], c[1], t);
         out[2] = _quadraticBezier(a[2], b[2], c[2], t);
@@ -409,7 +409,7 @@ export namespace Vec3 {
     /**
      * Performs a spline interpolation with two control points and a tension parameter
      */
-    export function spline(out: Vec3, a: Vec3, b: Vec3, c: Vec3, d: Vec3, t: number, tension: number) {
+    export function spline(out: Vec3, a: Vec3, b: Vec3, c: Vec3, d: Vec3, t: number, tension: number): Vec3 {
         out[0] = _spline(a[0], b[0], c[0], d[0], t, tension);
         out[1] = _spline(a[1], b[1], c[1], d[1], t, tension);
         out[2] = _spline(a[2], b[2], c[2], d[2], t, tension);
@@ -420,7 +420,7 @@ export namespace Vec3 {
     /**
      * Generates a random vector with the given scale
      */
-    export function random(out: Vec3, scale: number) {
+    export function random(out: Vec3, scale: number): Vec3 {
         const r = Math.random() * 2.0 * Math.PI;
         const z = (Math.random() * 2.0) - 1.0;
         const zScale = Math.sqrt(1.0 - z * z) * scale;
@@ -434,7 +434,7 @@ export namespace Vec3 {
     /**
      * Transforms the Vec3 with a Mat4. 4th vector component is implicitly '1'
      */
-    export function transformMat4(out: Vec3, a: Vec3, m: Mat4) {
+    export function transformMat4(out: Vec3, a: Vec3, m: Mat4): Vec3 {
         const x = a[0], y = a[1], z = a[2],
             w = 1 / ((m[3] * x + m[7] * y + m[11] * z + m[15]) || 1.0);
         out[0] = (m[0] * x + m[4] * y + m[8] * z + m[12]) * w;
@@ -454,7 +454,7 @@ export namespace Vec3 {
     /**
      * Like `transformMat4` but with offsets into arrays
      */
-    export function transformMat4Offset(out: NumberArray, a: NumberArray, m: NumberArray, outO: number, aO: number, oM: number) {
+    export function transformMat4Offset(out: NumberArray, a: NumberArray, m: NumberArray, outO: number, aO: number, oM: number): NumberArray {
         const x = a[0 + aO], y = a[1 + aO], z = a[2 + aO],
             w = 1 / ((m[3 + oM] * x + m[7 + oM] * y + m[11 + oM] * z + m[15 + oM]) || 1.0);
         out[0 + outO] = (m[0 + oM] * x + m[4 + oM] * y + m[8 + oM] * z + m[12 + oM]) * w;
@@ -468,7 +468,7 @@ export namespace Vec3 {
      * This means the translation components of the matrix are ignored.
      * Assumes that m is already the transpose of the inverse matrix suitable for normal transformation.
      */
-    export function transformDirectionOffset(out: NumberArray, a: NumberArray, m: NumberArray, outO: number, aO: number, oM: number) {
+    export function transformDirectionOffset(out: NumberArray, a: NumberArray, m: NumberArray, outO: number, aO: number, oM: number): NumberArray {
         const x = a[0 + aO], y = a[1 + aO], z = a[2 + aO];
         out[0 + outO] = m[0 + oM] * x + m[4 + oM] * y + m[8 + oM] * z;
         out[1 + outO] = m[1 + oM] * x + m[5 + oM] * y + m[9 + oM] * z;
@@ -486,7 +486,7 @@ export namespace Vec3 {
     /**
      * Transforms the Vec3 with a Mat3.
      */
-    export function transformMat3(out: Vec3, a: Vec3, m: Mat3) {
+    export function transformMat3(out: Vec3, a: Vec3, m: Mat3): Vec3 {
         const x = a[0], y = a[1], z = a[2];
         out[0] = x * m[0] + y * m[3] + z * m[6];
         out[1] = x * m[1] + y * m[4] + z * m[7];
@@ -495,7 +495,7 @@ export namespace Vec3 {
     }
 
     /** Transforms the Vec3 with a quat */
-    export function transformQuat(out: Vec3, a: Vec3, q: Quat) {
+    export function transformQuat(out: Vec3, a: Vec3, q: Quat): Vec3 {
         // benchmarks: http://jsperf.com/quaternion-transform-vec3-implementations
 
         const x = a[0], y = a[1], z = a[2];
@@ -589,7 +589,7 @@ export namespace Vec3 {
         return Mat4.fromRotation(mat, by, axis);
     }
 
-    export function isZero(v: Vec3) {
+    export function isZero(v: Vec3): boolean {
         return v[0] === 0 && v[1] === 0 && v[2] === 0;
     }
 
@@ -628,7 +628,7 @@ export namespace Vec3 {
      * Get a vector like `a` that point into the same general direction as `b`,
      * i.e. where the dot product is > 0
      */
-    export function matchDirection(out: Vec3, a: Vec3, b: Vec3) {
+    export function matchDirection(out: Vec3, a: Vec3, b: Vec3): Vec3 {
         if (dot(a, b) > 0) copy(out, a);
         else negate(out, copy(out, a));
         return out;

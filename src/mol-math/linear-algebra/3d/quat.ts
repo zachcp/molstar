@@ -119,7 +119,7 @@ namespace Quat {
         return out;
     }
 
-    export function rotateX(out: Quat, a: Quat, rad: number) {
+    export function rotateX(out: Quat, a: Quat, rad: number): Quat {
         rad *= 0.5;
 
         const ax = a[0], ay = a[1], az = a[2], aw = a[3];
@@ -132,7 +132,7 @@ namespace Quat {
         return out;
     }
 
-    export function rotateY(out: Quat, a: Quat, rad: number) {
+    export function rotateY(out: Quat, a: Quat, rad: number): Quat {
         rad *= 0.5;
 
         const ax = a[0], ay = a[1], az = a[2], aw = a[3];
@@ -145,7 +145,7 @@ namespace Quat {
         return out;
     }
 
-    export function rotateZ(out: Quat, a: Quat, rad: number) {
+    export function rotateZ(out: Quat, a: Quat, rad: number): Quat {
         rad *= 0.5;
 
         const ax = a[0], ay = a[1], az = a[2], aw = a[3];
@@ -163,7 +163,7 @@ namespace Quat {
      * Assumes that quaternion is 1 unit in length.
      * Any existing W component will be ignored.
      */
-    export function calculateW(out: Quat, a: Quat) {
+    export function calculateW(out: Quat, a: Quat): Quat {
         const x = a[0], y = a[1], z = a[2];
 
         out[0] = x;
@@ -216,7 +216,7 @@ namespace Quat {
         return out;
     }
 
-    export function invert(out: Quat, a: Quat) {
+    export function invert(out: Quat, a: Quat): Quat {
         const a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3];
         const dot = a0 * a0 + a1 * a1 + a2 * a2 + a3 * a3;
         const invDot = dot ? 1.0 / dot : 0;
@@ -234,7 +234,7 @@ namespace Quat {
      * Calculates the conjugate of a quat
      * If the quaternion is normalized, this function is faster than quat.inverse and produces the same result.
      */
-    export function conjugate(out: Quat, a: Quat) {
+    export function conjugate(out: Quat, a: Quat): Quat {
         out[0] = -a[0];
         out[1] = -a[1];
         out[2] = -a[2];
@@ -252,7 +252,7 @@ namespace Quat {
      * NOTE: The resultant quaternion is not normalized, so you should be sure
      * to renormalize the quaternion yourself where necessary.
      */
-    export function fromMat3(out: Quat, m: Mat3) {
+    export function fromMat3(out: Quat, m: Mat3): Quat {
         // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
         // article "Quaternion Calculus and Fast Animation".
         const fTrace = m[0] + m[4] + m[8];
@@ -291,7 +291,7 @@ namespace Quat {
         return fromMat3(out, m3tmp);
     }
 
-    export function fromEuler(out: Quat, euler: Euler, order: Euler.Order) {
+    export function fromEuler(out: Quat, euler: Euler, order: Euler.Order): Quat {
         const [x, y, z] = euler;
 
         // http://www.mathworks.com/matlabcentral/fileexchange/20696-function-to-convert-between-dcm-euler-angles-quaternions-and-euler-vectors/content/SpinCalc.m
@@ -350,7 +350,7 @@ namespace Quat {
 
     const fromUnitVec3Temp = [0, 0, 0] as unknown as Vec3;
     /** Quaternion from two normalized unit vectors. */
-    export function fromUnitVec3(out: Quat, a: Vec3, b: Vec3) {
+    export function fromUnitVec3(out: Quat, a: Vec3, b: Vec3): Quat {
         // assumes a and b are normalized
         let r = Vec3.dot(a, b) + 1;
         if (r < EPSILON) {
@@ -497,7 +497,7 @@ namespace Quat {
     const rotTmpVec3 = [0, 0, 0] as unknown as Vec3;
     const rotTmpVec3UnitX = [1, 0, 0] as unknown as Vec3;
     const rotTmpVec3UnitY = [0, 1, 0] as unknown as Vec3;
-    export function rotationTo(out: Quat, a: Vec3, b: Vec3) {
+    export function rotationTo(out: Quat, a: Vec3, b: Vec3): Quat {
         const dot = Vec3.dot(a, b);
         if (dot < -0.999999) {
             Vec3.cross(rotTmpVec3, rotTmpVec3UnitX, a);
@@ -527,7 +527,7 @@ namespace Quat {
      */
     const sqlerpTemp1 = zero();
     const sqlerpTemp2 = zero();
-    export function sqlerp(out: Quat, a: Quat, b: Quat, c: Quat, d: Quat, t: number) {
+    export function sqlerp(out: Quat, a: Quat, b: Quat, c: Quat, d: Quat, t: number): Quat {
         slerp(sqlerpTemp1, a, d, t);
         slerp(sqlerpTemp2, b, c, t);
         slerp(out, sqlerpTemp1, sqlerpTemp2, 2 * t * (1 - t));

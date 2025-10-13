@@ -80,19 +80,19 @@ namespace Vec2 {
         return out;
     }
 
-    export function sub(out: Vec2, a: Vec2, b: Vec2) {
+    export function sub(out: Vec2, a: Vec2, b: Vec2): Vec2 {
         out[0] = a[0] - b[0];
         out[1] = a[1] - b[1];
         return out;
     }
 
-    export function mul(out: Vec2, a: Vec2, b: Vec2) {
+    export function mul(out: Vec2, a: Vec2, b: Vec2): Vec2 {
         out[0] = a[0] * b[0];
         out[1] = a[1] * b[1];
         return out;
     }
 
-    export function div(out: Vec2, a: Vec2, b: Vec2) {
+    export function div(out: Vec2, a: Vec2, b: Vec2): Vec2 {
         out[0] = a[0] / b[0];
         out[1] = a[1] / b[1];
         return out;
@@ -143,7 +143,7 @@ namespace Vec2 {
         return x * x + y * y;
     }
 
-    export function magnitude(a: Vec2) {
+    export function magnitude(a: Vec2): number {
         const x = a[0],
             y = a[1];
         return Math.sqrt(x * x + y * y);
@@ -162,7 +162,7 @@ namespace Vec2 {
     /**
      * Returns the inverse of the components of a Vec2
      */
-    export function inverse(out: Vec2, a: Vec2) {
+    export function inverse(out: Vec2, a: Vec2): Vec2 {
         out[0] = 1.0 / a[0];
         out[1] = 1.0 / a[1];
         return out;
@@ -180,7 +180,7 @@ namespace Vec2 {
         return out;
     }
 
-    export function areEqual(a: Vec2, b: Vec2) {
+    export function areEqual(a: Vec2, b: Vec2): boolean {
         return a[0] === b[0] && a[1] === b[1];
     }
 
