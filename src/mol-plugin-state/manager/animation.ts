@@ -29,9 +29,9 @@ class PluginAnimationManager extends StatefulPluginComponent<PluginAnimationMana
     };
 
     get isEmpty(): boolean { return this._animations.length === 0; }
-    get current() { return this._current!; }
+    get current(): PluginAnimationManager.Current { return this._current!; }
 
-    get animations() { return this._animations; }
+    get animations(): PluginStateAnimation[] { return this._animations; }
 
     get isAnimatingStateTransition(): boolean {
         return this._current.anim.name === 'built-in.animate-state-snapshot-transition';

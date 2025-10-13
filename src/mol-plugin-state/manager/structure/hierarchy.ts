@@ -44,14 +44,14 @@ export class StructureHierarchyManager extends PluginComponent {
 
     private _currentComponentGroups: ReturnType<typeof StructureHierarchyManager['getComponentGroups']> | undefined = void 0;
 
-    get currentComponentGroups() {
+    get currentComponentGroups(): ReturnType<typeof StructureHierarchyManager['getComponentGroups']> {
         if (this._currentComponentGroups) return this._currentComponentGroups;
         this._currentComponentGroups = StructureHierarchyManager.getComponentGroups(this.selection.structures);
         return this._currentComponentGroups;
     }
 
     private _currentSelectionSet: Set<StateTransform.Ref> | undefined = void 0;
-    get seletionSet() {
+    get seletionSet(): Set<StateTransform.Ref> {
         if (this._currentSelectionSet) return this._currentSelectionSet;
         this._currentSelectionSet = new Set();
         for (const r of this.selection.trajectories) this._currentSelectionSet.add(r.cell.transform.ref);
@@ -60,12 +60,12 @@ export class StructureHierarchyManager extends PluginComponent {
         return this._currentSelectionSet;
     }
 
-    get current() {
+    get current(): StructureHierarchy {
         this.sync(false);
         return this.state.hierarchy;
     }
 
-    get selection() {
+    get selection(): { trajectories: ReadonlyArray<TrajectoryRef>, models: ReadonlyArray<ModelRef>, structures: ReadonlyArray<StructureRef> } {
         this.sync(false);
         return this.state.selection;
     }

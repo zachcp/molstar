@@ -49,8 +49,8 @@ export class StructureFocusManager extends StatefulPluginComponent<StructureFocu
         current: this.ev.behavior<FocusEntry | undefined>(void 0)
     };
 
-    get current() { return this.state.current; }
-    get history() { return this.state.history; }
+    get current(): FocusEntry | undefined { return this.state.current; }
+    get history(): FocusEntry[] { return this.state.history; }
 
     /** Last added or removed loci */
     private referenceLoci: StructureElement.Loci | undefined;
