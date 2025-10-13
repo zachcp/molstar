@@ -238,7 +238,7 @@ function getAxisLabel(axis: number, cameraHelper: CameraHelper) {
     }
 }
 
-function CameraAxesLoci(cameraHelper: CameraHelper, groupId: number, instanceId: number) {
+function CameraAxesLoci(cameraHelper: CameraHelper, groupId: number, instanceId: number): DataLoci<CameraHelper, { groupId: number, instanceId: number }> {
     return DataLoci('camera-axes', cameraHelper, [{ groupId, instanceId }],
         void 0 /** bounding sphere */,
         () => getAxisLabel(groupId, cameraHelper));

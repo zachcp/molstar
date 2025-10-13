@@ -189,7 +189,7 @@ export const HandleGroup = {
     // RotateObjectZ: 12,
 } as const;
 
-function HandleLoci(handleHelper: HandleHelper, groupId: number, instanceId: number) {
+function HandleLoci(handleHelper: HandleHelper, groupId: number, instanceId: number): DataLoci<HandleHelper, { groupId: number, instanceId: number }> {
     return DataLoci('handle', handleHelper, [{ groupId, instanceId }],
         (boundingSphere: Sphere3D) => handleHelper.getBoundingSphere(boundingSphere, instanceId),
         () => `Handle Helper | Group Id ${groupId} | Instance Id ${instanceId}`);
