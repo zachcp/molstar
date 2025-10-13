@@ -151,7 +151,7 @@ export namespace Mesh {
         ValueCell.update(mesh.normalBuffer, normals);
     }
 
-    export function checkForDuplicateVertices(mesh: Mesh, fractionDigits = 3) {
+    export function checkForDuplicateVertices(mesh: Mesh, fractionDigits = 3): number {
         const v = mesh.vertexBuffer.ref.value;
 
         const map = new Map<string, number>();
@@ -191,7 +191,7 @@ export namespace Mesh {
     }
 
     /** Meshes may contain some original data in case any processing was done. */
-    export function getOriginalData(x: Mesh | MeshValues) {
+    export function getOriginalData(x: Mesh | MeshValues): OriginalData | undefined {
         const { originalData } = 'kind' in x ? x.meta : x.meta.ref.value as Mesh['meta'];
         return originalData as OriginalData | undefined;
     }
@@ -200,7 +200,7 @@ export namespace Mesh {
      * Ensure that each vertices of each triangle have the same group id.
      * Note that normals are copied over and can't be re-created from the new mesh.
      */
-    export function uniformTriangleGroup(mesh: Mesh, splitTriangles = true) {
+    export function uniformTriangleGroup(mesh: Mesh, splitTriangles = true): Mesh {
         const { indexBuffer, vertexBuffer, groupBuffer, normalBuffer, triangleCount, vertexCount } = mesh;
         const ib = indexBuffer.ref.value;
         const vb = vertexBuffer.ref.value;
@@ -599,7 +599,7 @@ export namespace Mesh {
         }
     }
 
-    export function smoothEdges(mesh: Mesh, options: { iterations: number, maxNewEdgeLength: number }) {
+    export function smoothEdges(mesh: Mesh, options: { iterations: number, maxNewEdgeLength: number }): Mesh {
         trimEdges(mesh, getNeighboursMap(mesh));
 
         for (let k = 0; k < 10; ++k) {

@@ -71,7 +71,7 @@ export namespace Lines {
         return create(mb, ib, gb, sb, eb, 0, lines);
     }
 
-    export function fromMesh(mesh: Mesh, lines?: Lines) {
+    export function fromMesh(mesh: Mesh, lines?: Lines): Lines {
         const vb = mesh.vertexBuffer.ref.value;
         const ib = mesh.indexBuffer.ref.value;
         const gb = mesh.groupBuffer.ref.value;
