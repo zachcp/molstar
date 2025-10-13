@@ -324,7 +324,7 @@ const ParseCif: StateTransformer<SO.Data.String | SO.Data.Binary, SO.Format.Cif>
 });
 
 type ParseCube = typeof ParseCube
-const ParseCube: StateTransformer<SO.Format.Cube, SO.Volume.Data> = PluginStateTransform.BuiltIn({
+const ParseCube: StateTransformer<SO.Data.String, SO.Format.Cube> = PluginStateTransform.BuiltIn({
     name: 'parse-cube',
     display: { name: 'Parse Cube', description: 'Parse Cube from String data' },
     from: SO.Data.String,
