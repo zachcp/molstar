@@ -371,7 +371,7 @@ export namespace Volume {
         const bbox2 = Box3D();
         const bbox3 = Box3D();
         export function getBoundingSphere(volume: Volume, elements: Loci['elements'], boundingSphere?: Sphere3D): Sphere3D {
-            const segmentation = Volume.Segmentation.get(volume);
+            const segmentation: Segmentation | undefined = Volume.Segmentation.get(volume);
             if (segmentation) {
                 Box3D.setEmpty(bbox);
                 const transform = Grid.getGridToCartesianTransform(volume.grid);

@@ -50,13 +50,13 @@ namespace Asset {
         };
     }
 
-    export function getUrl(url: string | Url) {
+    export function getUrl(url: string | Url): string {
         return typeof url === 'string' ? url : url.url;
     }
 
     export function getUrlAsset(manager: AssetManager, url: string | Url, body?: string) {
         if (typeof url === 'string') {
-            const asset = manager.tryFindUrl(url, body);
+            const asset: Url | undefined = manager.tryFindUrl(url, body);
             return asset || Url(url, { body });
         }
         return url;
@@ -100,7 +100,7 @@ class AssetManager {
         return this._assets.get(asset.id);
     }
 
-    delete(asset: Asset) {
+    delete(asset: Asset): boolean {
         return this._assets.delete(asset.id);
     }
 
@@ -144,15 +144,15 @@ class AssetManager {
         }
     }
 
-    release(asset: Asset) {
+    release(asset: Asset): void {
         const entry = this._assets.get(asset.id);
         if (!entry) return;
         entry.refCount--;
         if (entry.refCount <= 0 && !entry.isStatic) this._assets.delete(asset.id);
     }
 
-    clearTag(tag: string) {
-        const keys = Array.from(this._assets.keys());
+    clearTag(tag: string): void {
+        const keys: string[] = Array.from(this._assets.keys());
         for (const key of keys) {
             const entry = this._assets.get(key);
             if (entry && entry.tag === tag) {

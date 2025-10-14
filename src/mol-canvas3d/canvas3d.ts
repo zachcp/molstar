@@ -40,6 +40,7 @@ import {
   type WebGLContext,
   getGLContext,
 } from "../mol-gl/webgl/context.ts";
+import { type GLRenderingContext } from "../mol-gl/webgl/compat.ts";
 import { Representation } from "../mol-repr/representation.ts";
 import { Scene } from "../mol-gl/scene.ts";
 import type { PickingId } from "../mol-geo/geometry/picking.ts";
@@ -295,7 +296,7 @@ namespace Canvas3DContext {
       preserveDrawingBuffer,
       preferWebGl1,
     } = a;
-    const gl = getGLContext(canvas, {
+    const gl: GLRenderingContext | null = getGLContext(canvas, {
       powerPreference,
       failIfMajorPerformanceCaveat,
       antialias,
@@ -788,7 +789,7 @@ namespace Canvas3D {
 
     let xrPassthrough = false;
 
-    const xrSubs = [
+    const xrSubs: Subscription[] = [
       xrManager.isSupported.subscribe((e) => xr.isSupported.next(e)),
       xrManager.togglePassthrough.subscribe(() => {
         if (xrManager.session?.environmentBlendMode === "alpha-blend") {
@@ -813,7 +814,7 @@ namespace Canvas3D {
 
     //
 
-    let notifyDidDraw = true;
+    let notifyDidDraw: boolean = true;
 
     function getLoci(pickingId: PickingId | undefined) {
       let loci: Loci = EmptyLoci;
@@ -849,7 +850,7 @@ namespace Canvas3D {
       markBuffer.push([reprLoci, action]);
     }
 
-    function resolveMarking() {
+    function resolveMarking(): boolean {
       let changed = false;
       for (const [r, l] of markBuffer) {
         changed = applyMark(r, l) || changed;
@@ -868,7 +869,10 @@ namespace Canvas3D {
       return changed;
     }
 
-    function applyMark(reprLoci: Representation.Loci, action: MarkerAction) {
+    function applyMark(
+      reprLoci: Representation.Loci,
+      action: MarkerAction,
+    ): boolean {
       const { repr, loci } = reprLoci;
       let changed = false;
       if (repr) {
@@ -885,7 +889,7 @@ namespace Canvas3D {
 
     let fenceSync: WebGLSync | null = null;
 
-    function render(force: boolean, xrFrame?: XRFrame) {
+    function render(force: boolean, xrFrame?: XRFrame): boolean {
       if (webgl.isContextLost) return false;
       if (webgl.xr.session && !xrFrame) return false;
 
@@ -1075,23 +1079,23 @@ namespace Canvas3D {
         : cancelAnimationFrame(handle);
     }
 
-    function _animate(_timestamp: number, xrFrame?: XRFrame) {
+    function _animate(_timestamp: number, xrFrame?: XRFrame): void {
       tick(now(), { xrFrame });
       animationFrameHandle = _requestAnimationFrame(_animate);
     }
 
-    function resetTime(t: now.Timestamp) {
+    function resetTime(t: now.Timestamp): void {
       startTime = t;
       controls.start(t);
     }
 
-    function animate() {
+    function animate(): void {
       drawPaused = false;
       controls.start(now());
       if (animationFrameHandle === 0) _animate(0);
     }
 
-    function pause(noDraw = false) {
+    function pause(noDraw = false): void {
       drawPaused = noDraw;
       if (animationFrameHandle !== 0) {
         _cancelAnimationFrame(animationFrameHandle);
@@ -1123,7 +1127,8 @@ namespace Canvas3D {
       if ("origin" in target) {
         return rayHelper.asyncIdentify(target, camera);
       } else {
-        const cam = p.camera.stereo.name === "on" ? stereoCamera : camera;
+        const cam: StereoCamera | Camera =
+          p.camera.stereo.name === "on" ? stereoCamera : camera;
         return pickHelper.asyncIdentify(target[0], target[1], cam);
       }
     }
@@ -1143,7 +1148,7 @@ namespace Canvas3D {
       }
     }
 
-    function resolveCameraReset() {
+    function resolveCameraReset(): void {
       if (!cameraResetRequested) return;
 
       if (!xr.isPresenting.value) {
@@ -1187,7 +1192,7 @@ namespace Canvas3D {
     const oldBoundingSphereVisible = Sphere3D();
     const cameraSphere = Sphere3D();
 
-    function shouldResetCamera() {
+    function shouldResetCamera(): boolean {
       if (camera.state.radiusMax === 0) return true;
 
       if (camera.transition.inTransition || nextCameraResetSnapshot)
@@ -1224,7 +1229,7 @@ namespace Canvas3D {
     }
 
     const sceneCommitTimeoutMs = 250;
-    function commitScene(isSynchronous: boolean) {
+    function commitScene(isSynchronous: boolean): boolean {
       if (!scene.needsCommit) return true;
 
       // snapshot the current bounding sphere of visible objects
@@ -1256,7 +1261,7 @@ namespace Canvas3D {
       return true;
     }
 
-    function consoleStats() {
+    function consoleStats(): void {
       const items = scene.renderables.map((r) => ({
         drawCount: r.values.drawCount.ref.value,
         instanceCount: r.values.instanceCount.ref.value,
@@ -1359,7 +1364,7 @@ namespace Canvas3D {
       }
     }
 
-    function registerAutoUpdate(repr: Representation.Any) {
+    function registerAutoUpdate(repr: Representation.Any): void {
       if (reprUpdatedSubscriptions.has(repr)) return;
 
       reprUpdatedSubscriptions.set(
@@ -1370,7 +1375,7 @@ namespace Canvas3D {
       );
     }
 
-    function unregisterAutoUpdate(repr: Representation.Any) {
+    function unregisterAutoUpdate(repr: Representation.Any): void {
       const updatedSubscription = reprUpdatedSubscriptions.get(repr);
       if (updatedSubscription) {
         updatedSubscription.unsubscribe();
@@ -1427,13 +1432,15 @@ namespace Canvas3D {
       };
     }
 
-    const contextLostSub = contextLost?.subscribe(() => {
-      isContextLost = true;
-      fenceSync = null;
-      pickHelper.dirty = true;
-    });
+    const contextLostSub: Subscription | undefined = contextLost?.subscribe(
+      () => {
+        isContextLost = true;
+        fenceSync = null;
+        pickHelper.dirty = true;
+      },
+    );
 
-    const contextRestoredSub = contextRestored.subscribe(() => {
+    const contextRestoredSub: Subscription = contextRestored.subscribe(() => {
       pickHelper.reset();
       rayHelper.reset();
       hiZ.reset();
@@ -1456,7 +1463,7 @@ namespace Canvas3D {
 
     const resized = new BehaviorSubject<any>(0);
 
-    function handleResize(draw = true) {
+    function handleResize(draw = true): void {
       passes.updateSize();
       updateViewport();
       syncViewport();
@@ -1466,10 +1473,12 @@ namespace Canvas3D {
 
     addConsoleStatsProvider(consoleStats);
 
-    const ctxChangedSub = ctx.changed?.subscribe(() => {
-      scene.setTransparency(passes.draw.transparency);
-      requestDraw();
-    });
+    const ctxChangedSub: Subscription | undefined = ctx.changed?.subscribe(
+      () => {
+        scene.setTransparency(passes.draw.transparency);
+        requestDraw();
+      },
+    );
 
     // Monitor user interactions
     let isDragging = false;
@@ -1754,7 +1763,7 @@ namespace Canvas3D {
           requestDraw();
         }
       },
-      getImagePass: (props: Partial<ImageProps> = {}) => {
+      getImagePass: (props: Partial<ImageProps> = {}): ImagePass => {
         return new ImagePass(
           webgl,
           assetManager,
@@ -1833,7 +1842,7 @@ namespace Canvas3D {
       },
     };
 
-    function updateViewport() {
+    function updateViewport(): void {
       const oldX = x,
         oldY = y,
         oldWidth = width,
@@ -1867,7 +1876,7 @@ namespace Canvas3D {
       }
     }
 
-    function syncViewport() {
+    function syncViewport(): void {
       pickHelper.setViewport(x, y, width, height);
       renderer.setViewport(x, y, width, height);
       Viewport.set(camera.viewport, x, y, width, height);

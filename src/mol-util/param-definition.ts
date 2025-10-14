@@ -255,7 +255,7 @@ export namespace ParamDefinition {
         if (info?.pivot) ret.pivot = info.pivot as any;
         return ret;
     }
-    export function EmptyGroup(info?: Info) {
+    export function EmptyGroup(info?: Info): Group<Normalize<unknown>> {
         return Group({}, info);
     }
 
@@ -386,7 +386,7 @@ export namespace ParamDefinition {
         return () => resolve(ref, getData);
     }
 
-    function resolveRefValue(p: Any, value: any, getData: (ref: string) => any) {
+    function resolveRefValue(p: Any, value: any, getData: (ref: string) => any): void {
         if (!value) return;
 
         if (p.type === 'value-ref') {
@@ -411,7 +411,7 @@ export namespace ParamDefinition {
         }
     }
 
-    function hasParamValueRef(p: Any) {
+    function hasParamValueRef(p: Any): boolean {
         if (p.type === 'value-ref' || p.type === 'data-ref') {
             return true;
         } else if (p.type === 'group') {
@@ -426,20 +426,20 @@ export namespace ParamDefinition {
         return false;
     }
 
-    function hasValueRef(params: Params) {
+    function hasValueRef(params: Params): boolean {
         for (const n of Object.keys(params)) {
             if (hasParamValueRef(params[n])) return true;
         }
         return false;
     }
 
-    export function resolveRefs(params: Params, values: any, getData: (ref: string) => any) {
+    export function resolveRefs(params: Params, values: any, getData: (ref: string) => any): void {
         for (const n of Object.keys(params)) {
             resolveRefValue(params[n], values?.[n], getData);
         }
     }
 
-    export function setDefaultValues<T extends Params>(params: T, defaultValues: Values<T>) {
+    export function setDefaultValues<T extends Params>(params: T, defaultValues: Values<T>): void {
         for (const k of Object.keys(params)) {
             if (params[k].isOptional) continue;
             params[k].defaultValue = defaultValues[k];
@@ -567,7 +567,7 @@ export namespace ParamDefinition {
         }
     }
 
-    function selectHasOption(p: Select<any> | MultiSelect<any>, v: any) {
+    function selectHasOption(p: Select<any> | MultiSelect<any>, v: any): boolean {
         for (const o of p.options) {
             if (o[0] === v) return true;
         }
@@ -684,7 +684,7 @@ export namespace ParamDefinition {
         return ret;
     }
 
-    export function optionLabel<T>(param: Select<T>, value: T) {
+    export function optionLabel<T>(param: Select<T>, value: T): string {
         for (const o of param.options) {
             if (o[0] === value) return o[1];
         }

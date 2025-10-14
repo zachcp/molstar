@@ -49,7 +49,7 @@ function gpuSupport(webgl: WebGLContext) {
 
 const Padding = 1;
 
-function suitableForGpu(volume: Volume, webgl: WebGLContext) {
+function suitableForGpu(volume: Volume, webgl: WebGLContext): boolean {
     // small volumes are about as fast or faster on CPU vs integrated GPU
     if (volume.grid.cells.data.length < Math.pow(10, 3)) return false;
     // the GPU is much more memory contraint, especially true for integrated GPUs,

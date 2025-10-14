@@ -78,7 +78,7 @@ export const PluginConfig = {
 };
 
 export class PluginConfigManager {
-    private _config = new Map<PluginConfigItem<any>, unknown>();
+    private _config: Map<PluginConfigItem<any>, unknown> = new Map<PluginConfigItem<any>, unknown>();
 
     get<T>(key: PluginConfigItem<T>) {
         if (!this._config.has(key)) return key.defaultValue;

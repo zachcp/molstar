@@ -75,7 +75,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
     return this.state.stats;
   }
 
-  private getEntry(s: Structure) {
+  private getEntry(s: Structure): SelectionEntry | undefined {
     // ignore decorators to get stable ref
     const cell = this.plugin.helpers.substructureParent.get(s, true);
     if (!cell) return;
@@ -90,11 +90,11 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
   }
 
   private calcStats(): SelectionStats {
-    let structureCount = 0;
-    let elementCount = 0;
+    let structureCount: number = 0;
+    let elementCount: number = 0;
     const stats = StructureElement.Stats.create();
 
-    this.entries.forEach((v) => {
+    this.entries.forEach((v): void => {
       const { elements } = v.selection;
       if (elements.length) {
         structureCount += 1;
@@ -109,7 +109,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
       }
     });
 
-    const label = structureElementStatsLabel(stats, { countsOnly: true });
+    const label: string = structureElementStatsLabel(stats, { countsOnly: true });
 
     return { structureCount, elementCount, label };
   }
@@ -117,7 +117,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
   private add(loci: Loci): boolean {
     if (!StructureElement.Loci.is(loci)) return false;
 
-    const entry = this.getEntry(loci.structure);
+    const entry: SelectionEntry | undefined = this.getEntry(loci.structure);
     if (!entry) return false;
 
     const sel = entry.selection;
@@ -128,10 +128,10 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
     return !StructureElement.Loci.areEqual(sel, entry.selection);
   }
 
-  private remove(loci: Loci) {
+  private remove(loci: Loci): boolean {
     if (!StructureElement.Loci.is(loci)) return false;
 
-    const entry = this.getEntry(loci.structure);
+    const entry: SelectionEntry | undefined = this.getEntry(loci.structure);
     if (!entry) return false;
 
     const sel = entry.selection;
@@ -145,7 +145,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
   private intersect(loci: Loci): boolean {
     if (!StructureElement.Loci.is(loci)) return false;
 
-    const entry = this.getEntry(loci.structure);
+    const entry: SelectionEntry | undefined = this.getEntry(loci.structure);
     if (!entry) return false;
 
     const sel = entry.selection;
@@ -155,10 +155,10 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
     return !StructureElement.Loci.areEqual(sel, entry.selection);
   }
 
-  private set(loci: Loci) {
+  private set(loci: Loci): boolean {
     if (!StructureElement.Loci.is(loci)) return false;
 
-    const entry = this.getEntry(loci.structure);
+    const entry: SelectionEntry | undefined = this.getEntry(loci.structure);
     if (!entry) return false;
 
     const sel = entry.selection;
@@ -174,7 +174,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
     modulus?: number,
     groupByStructure = false,
   ) {
-    const history = this.additionsHistory;
+    const history: StructureSelectionHistoryEntry[] = this.additionsHistory;
     const idx = history.indexOf(entry);
     if (idx < 0) return;
 
@@ -202,7 +202,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
           !groupByStructure ||
           history[idx].loci.structure === history[swapWith].loci.structure
         ) {
-          const t = history[idx];
+          const t: StructureSelectionHistoryEntry = history[idx];
           history[idx] = history[swapWith];
           history[swapWith] = t;
           break;
@@ -237,7 +237,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
     }
 
     const stats = StructureElement.Stats.ofLoci(loci);
-    const label = structureElementStatsLabel(stats, { reverse: true });
+    const label: string = structureElementStatsLabel(stats, { reverse: true });
 
     this.additionsHistory.unshift({ id: UUID.create22(), loci, label });
     if (this.additionsHistory.length > HISTORY_CAPACITY)
@@ -246,14 +246,14 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
     this.events.additionsHistoryUpdated.next(void 0);
   }
 
-  private clearHistory() {
+  private clearHistory(): void {
     if (this.state.additionsHistory.length !== 0) {
       this.state.additionsHistory = [];
       this.events.additionsHistoryUpdated.next(void 0);
     }
   }
 
-  private clearHistoryForStructure(structure: Structure) {
+  private clearHistoryForStructure(structure: Structure): void {
     const historyEntryToRemove: StructureSelectionHistoryEntry[] = [];
     for (const e of this.state.additionsHistory) {
       if (e.loci.structure.root === structure.root) {
@@ -300,7 +300,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
     if (!this.entries.has(ref)) return;
 
     // use structure from last decorator as reference
-    const structure = this.plugin.helpers.substructureParent.get(obj.data)?.obj
+    const structure: Structure | undefined = this.plugin.helpers.substructureParent.get(obj.data)?.obj
       ?.data;
     if (!structure) return;
 
@@ -323,7 +323,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
       }
 
       // remap history locis if needed and possible
-      let changedHistory = false;
+      let changedHistory: boolean = false;
       for (const e of this.state.additionsHistory) {
         if (e.loci.structure.root === structure.root) {
           e.loci = StructureElement.Loci.remap(e.loci, structure);
@@ -351,12 +351,12 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
 
   /** Removes all selections and returns them */
   clear(): StructureElement.Loci[] {
-    const keys = this.entries.keys();
+    const keys: MapIterator<string> = this.entries.keys();
     const selections: StructureElement.Loci[] = [];
     while (true) {
-      const k = keys.next();
+      const k: IteratorResult<string, undefined> = keys.next();
       if (k.done) break;
-      const s = this.entries.get(k.value)!;
+      const s: SelectionEntry = this.entries.get(k.value)!;
       if (!StructureElement.Loci.isEmpty(s.selection))
         selections.push(s.selection);
       s.selection = StructureElement.Loci(s.selection.structure, []);
@@ -370,18 +370,18 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
   }
 
   getLoci(structure: Structure) {
-    const entry = this.getEntry(structure);
+    const entry: SelectionEntry | undefined = this.getEntry(structure);
     if (!entry) return EmptyLoci;
     return entry.selection;
   }
 
-  getStructure(structure: Structure) {
+  getStructure(structure: Structure): Structure | undefined {
     const entry = this.getEntry(structure);
     if (!entry) return;
     return entry.structure;
   }
 
-  structureHasSelection(structure: StructureRef) {
+  structureHasSelection(structure: StructureRef): boolean {
     const s = structure.cell?.obj?.data;
     if (!s) return false;
     const entry = this.getEntry(s);
@@ -390,7 +390,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
 
   has(loci: Loci): boolean {
     if (StructureElement.Loci.is(loci)) {
-      const entry = this.getEntry(loci.structure);
+      const entry: SelectionEntry | undefined = this.getEntry(loci.structure);
       if (entry) {
         return StructureElement.Loci.isSubset(entry.selection, loci);
       }
@@ -406,7 +406,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
   }
 
   /** Count of all selected elements */
-  elementCount() {
+  elementCount(): number {
     let count = 0;
     this.entries.forEach((v) => {
       count += StructureElement.Loci.size(v.selection);
@@ -452,7 +452,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
   }
 
   getPrincipalAxes(): PrincipalAxes {
-    const values = iterableToArray(this.entries.values());
+    const values: SelectionEntry[] = iterableToArray(this.entries.values());
     return StructureElement.Loci.getPrincipalAxesMany(
       values.map((v) => v.selection),
     );
@@ -524,7 +524,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
     modifier: StructureSelectionModifier,
     loci: Loci,
     applyGranularity = true,
-  ) {
+  ): void {
     this.triggerInteraction(modifier, loci, applyGranularity);
   }
 
@@ -534,7 +534,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
     applyGranularity = true,
   ) {
     for (const s of this.applicableStructures) {
-      const loci = query(new QueryContext(s));
+      const loci: StructureSelection = query(new QueryContext(s));
       this.triggerInteraction(
         modifier,
         StructureSelection.toLociWithSourceUnits(loci),
@@ -549,9 +549,9 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
     applyGranularity = true,
   ) {
     this.plugin.runTask(
-      Task.create("Structure Selection", async (runtime) => {
+      Task.create("Structure Selection", async (runtime): Promise<void> => {
         for (const s of this.applicableStructures) {
-          const loci = await query.getSelection(this.plugin, runtime, s);
+          const loci: StructureSelection = await query.getSelection(this.plugin, runtime, s);
           this.triggerInteraction(
             modifier,
             StructureSelection.toLociWithSourceUnits(loci),

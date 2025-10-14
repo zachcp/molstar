@@ -56,12 +56,12 @@ namespace Theme {
         return { color: ColorTheme.Empty, size: SizeTheme.Empty };
     }
 
-    export async function ensureDependencies(ctx: CustomProperty.Context, theme: ThemeRegistryContext, data: ThemeDataContext, props: Props) {
+    export async function ensureDependencies(ctx: CustomProperty.Context, theme: ThemeRegistryContext, data: ThemeDataContext, props: Props): Promise<void> {
         await theme.colorThemeRegistry.get(props.colorTheme.name).ensureCustomProperties?.attach(ctx, data);
         await theme.sizeThemeRegistry.get(props.sizeTheme.name).ensureCustomProperties?.attach(ctx, data);
     }
 
-    export function releaseDependencies(theme: ThemeRegistryContext, data: ThemeDataContext, props: Props) {
+    export function releaseDependencies(theme: ThemeRegistryContext, data: ThemeDataContext, props: Props): void {
         theme.colorThemeRegistry.get(props.colorTheme.name).ensureCustomProperties?.detach(data);
         theme.sizeThemeRegistry.get(props.sizeTheme.name).ensureCustomProperties?.detach(data);
     }
@@ -83,7 +83,7 @@ export interface ThemeProvider<T extends ColorTheme<P, G> | SizeTheme<P>, P exte
     }
 }
 
-function getTypes(list: { name: string, provider: ThemeProvider<any, any> }[]) {
+function getTypes(list: { name: string, provider: ThemeProvider<any, any> }[]): [string, string, string][] {
     return list.map(e => [e.name, e.provider.label, e.provider.category] as [string, string, string]);
 }
 
@@ -103,7 +103,7 @@ export class ThemeRegistry<T extends ColorTheme<any, any> | SizeTheme<any>> {
         });
     }
 
-    private sort() {
+    private sort(): void {
         this._list.sort((a, b) => {
             if (a.provider.category === b.provider.category) {
                 return a.provider.label < b.provider.label ? -1 : a.provider.label > b.provider.label ? 1 : 0;
@@ -112,7 +112,7 @@ export class ThemeRegistry<T extends ColorTheme<any, any> | SizeTheme<any>> {
         });
     }
 
-    add<P extends PD.Params>(provider: ThemeProvider<T, P>) {
+    add<P extends PD.Params>(provider: ThemeProvider<T, P>): void {
         if (this._map.has(provider.name)) {
             throw new Error(`${provider.name} already registered.`);
         }
@@ -124,7 +124,7 @@ export class ThemeRegistry<T extends ColorTheme<any, any> | SizeTheme<any>> {
         this.sort();
     }
 
-    remove(provider: ThemeProvider<T, any>) {
+    remove(provider: ThemeProvider<T, any>): void {
         this._list.splice(this._list.findIndex(e => e.name === provider.name), 1);
         const p = this._map.get(provider.name);
         if (p) {
@@ -156,7 +156,7 @@ export class ThemeRegistry<T extends ColorTheme<any, any> | SizeTheme<any>> {
         return this._list.filter(e => e.provider.isApplicable(ctx));
     }
 
-    getApplicableTypes(ctx: ThemeDataContext) {
+    getApplicableTypes(ctx: ThemeDataContext): [string, string, string][] {
         return getTypes(this.getApplicableList(ctx));
     }
 

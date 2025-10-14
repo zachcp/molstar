@@ -34,7 +34,7 @@ namespace Type {
     export const Str = Value<string>('', 'String');
     export const Bool = OneOf<boolean>('', 'Bool', Str as any, ['true', 'false']);
 
-    export function oneOfValues({ values }: OneOf<any>) { return Object.keys(values).sort(); }
+    export function oneOfValues({ values }: OneOf<any>): string[] { return Object.keys(values).sort(); }
 }
 
 export { Type };

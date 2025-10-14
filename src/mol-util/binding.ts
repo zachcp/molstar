@@ -34,15 +34,15 @@ namespace Binding {
             binding.triggers.every(t => t.buttons === undefined && t.modifiers === undefined && !t.code);
     }
 
-    export function match(binding: Binding, buttons: ButtonsType, modifiers: ModifiersKeys) {
+    export function match(binding: Binding, buttons: ButtonsType, modifiers: ModifiersKeys): boolean {
         return binding.triggers.some(t => Trigger.match(t, buttons, modifiers));
     }
 
-    export function matchKey(binding: Binding, code: KeyCode, modifiers: ModifiersKeys, key: string) {
+    export function matchKey(binding: Binding, code: KeyCode, modifiers: ModifiersKeys, key: string): boolean {
         return binding.triggers.some(t => Trigger.matchKey(t, code, modifiers, key));
     }
 
-    export function formatTriggers(binding: Binding) {
+    export function formatTriggers(binding: Binding): string {
         return binding.triggers.map(Trigger.format).join(' or ');
     }
 
@@ -106,7 +106,7 @@ namespace Binding {
 
 const B = ButtonsType;
 
-function formatButtons(buttons?: ButtonsType, code?: KeyCode) {
+function formatButtons(buttons?: ButtonsType, code?: KeyCode): string {
     const s: string[] = [];
     if (buttons === undefined && !code) {
         s.push('any mouse button');
@@ -121,7 +121,7 @@ function formatButtons(buttons?: ButtonsType, code?: KeyCode) {
     return s.join(' + ');
 }
 
-function formatModifiers(modifiers?: ModifiersKeys, verbose?: boolean) {
+function formatModifiers(modifiers?: ModifiersKeys, verbose?: boolean): string {
     const s: string[] = [];
     if (modifiers) {
         if (modifiers.alt) s.push('alt key');
@@ -136,7 +136,7 @@ function formatModifiers(modifiers?: ModifiersKeys, verbose?: boolean) {
     return s.join(' + ');
 }
 
-function formatCode(code?: KeyCode) {
+function formatCode(code?: KeyCode): string | undefined {
     if (code?.startsWith('Key')) code = code.substring(3);
     return code && camelCaseToWords(code).toLowerCase();
 }

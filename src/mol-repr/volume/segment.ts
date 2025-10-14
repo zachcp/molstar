@@ -45,7 +45,7 @@ function gpuSupport(webgl: WebGLContext) {
 
 const Padding = 1;
 
-function suitableForGpu(volume: Volume, webgl: WebGLContext) {
+function suitableForGpu(volume: Volume, webgl: WebGLContext): boolean {
     // small volumes are about as fast or faster on CPU vs integrated GPU
     if (volume.grid.cells.data.length < Math.pow(10, 3)) return false;
     // the GPU is much more memory contraint, especially true for integrated GPUs,
@@ -94,7 +94,7 @@ function getSegmentLoci(pickingId: PickingId, volume: Volume, key: number, props
     return EmptyLoci;
 }
 
-export function eachSegment(loci: Loci, volume: Volume, key: number, props: VolumeSegmentProps, apply: (interval: Interval) => boolean) {
+export function eachSegment(loci: Loci, volume: Volume, key: number, props: VolumeSegmentProps, apply: (interval: Interval) => boolean): boolean {
     const segments = SortedArray.ofSingleton(key);
     return eachVolumeLoci(loci, volume, { segments }, apply);
 }
@@ -140,7 +140,7 @@ function getSegmentCells(set: number[], bbox: Box3D, cells: Tensor): Tensor {
     return segmentCells;
 }
 
-export async function createVolumeSegmentMesh(ctx: VisualContext, volume: Volume, key: Volume.SegmentIndex, theme: Theme, props: VolumeSegmentProps, mesh?: Mesh) {
+export async function createVolumeSegmentMesh(ctx: VisualContext, volume: Volume, key: Volume.SegmentIndex, theme: Theme, props: VolumeSegmentProps, mesh?: Mesh): Promise<Mesh> {
     const segmentation = Volume.Segmentation.get(volume);
     if (!segmentation) throw new Error('missing volume segmentation');
 
@@ -251,7 +251,7 @@ function getSegmentTexture(volume: Volume, segment: Volume.SegmentIndex, webgl: 
     };
 }
 
-async function createVolumeSegmentTextureMesh(ctx: VisualContext, volume: Volume, segment: Volume.SegmentIndex, theme: Theme, props: VolumeSegmentProps, textureMesh?: TextureMesh) {
+async function createVolumeSegmentTextureMesh(ctx: VisualContext, volume: Volume, segment: Volume.SegmentIndex, theme: Theme, props: VolumeSegmentProps, textureMesh?: TextureMesh): Promise<TextureMesh> {
     if (!ctx.webgl) throw new Error('webgl context required to create volume segment texture-mesh');
 
     if (volume.grid.cells.data.length <= 1) {

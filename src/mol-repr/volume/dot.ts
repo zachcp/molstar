@@ -68,7 +68,7 @@ export function VolumeSphereImpostorVisual(materialId: number): VolumeVisual<Vol
             );
         },
         geometryUtils: Spheres.Utils,
-        mustRecreate: (volumekey: VolumeKey, props: PD.Values<VolumeSphereParams>, webgl?: WebGLContext) => {
+        mustRecreate: (volumekey: VolumeKey, props: PD.Values<VolumeSphereParams>, webgl?: WebGLContext): boolean => {
             return !props.tryUseImpostor || !webgl;
         }
     }, materialId);
@@ -302,7 +302,7 @@ function getDotLoci(pickingId: PickingId, volume: Volume, key: number, props: Vo
     return EmptyLoci;
 }
 
-function eachDot(loci: Loci, volume: Volume, key: number, props: VolumeDotProps, apply: (interval: Interval) => boolean) {
+function eachDot(loci: Loci, volume: Volume, key: number, props: VolumeDotProps, apply: (interval: Interval) => boolean): boolean {
     return eachVolumeLoci(loci, volume, { isoValue: props.isoValue }, apply);
 }
 
