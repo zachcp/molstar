@@ -11,7 +11,7 @@ import type { PluginUIContext } from './context.ts';
 import { Button, type ColorAccent } from './controls/common.tsx';
 import { Icon, ArrowRightSvg, ArrowDropDownSvg } from './controls/icons.tsx';
 
-export const PluginReactContext = React.createContext(void 0 as any as PluginUIContext);
+export const PluginReactContext    = React.createContext(void 0 as any as PluginUIContext);
 
 export abstract class PluginUIComponent<P extends {} = {}, S = {}, SS = {}> extends React.Component<P & { children?: any }, S, SS> {
     static override contextType = PluginReactContext;    readonly plugin: PluginUIContext;

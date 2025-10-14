@@ -11,26 +11,26 @@ import { Arguments, Argument } from '../symbol.ts';
 import { symbol } from '../helpers.ts';
 
 export namespace Types {
-    export const ElementSymbol = Type.Value('Structure', 'ElementSymbol');
-    export const AtomName = Type.Value('Structure', 'AtomName');
+    export const ElementSymbol: Type.Value<unknown> = Type.Value('Structure', 'ElementSymbol');
+    export const AtomName: Type.Value<unknown> = Type.Value('Structure', 'AtomName');
 
-    export const BondFlag = Type.OneOf('Structure', 'BondFlag', Type.Str, ['covalent', 'metallic', 'ion', 'hydrogen', 'sulfide', 'computed', 'aromatic']);
-    export const BondFlags = Core.Types.Flags(BondFlag, 'BondFlags');
+    export const BondFlag: Type.OneOf<string> = Type.OneOf('Structure', 'BondFlag', Type.Str, ['covalent', 'metallic', 'ion', 'hydrogen', 'sulfide', 'computed', 'aromatic']);
+    export const BondFlags: Type.Container<number> = Core.Types.Flags(BondFlag, 'BondFlags');
 
-    export const SecondaryStructureFlag = Type.OneOf('Structure', 'SecondaryStructureFlag', Type.Str, ['alpha', 'beta', '3-10', 'pi', 'sheet', 'strand', 'helix', 'turn', 'none']);
-    export const SecondaryStructureFlags = Core.Types.Flags(SecondaryStructureFlag, 'SecondaryStructureFlag');
+    export const SecondaryStructureFlag: Type.OneOf<string> = Type.OneOf('Structure', 'SecondaryStructureFlag', Type.Str, ['alpha', 'beta', '3-10', 'pi', 'sheet', 'strand', 'helix', 'turn', 'none']);
+    export const SecondaryStructureFlags: Type.Container<number> = Core.Types.Flags(SecondaryStructureFlag, 'SecondaryStructureFlag');
 
-    export const RingFingerprint = Type.Value('Structure', 'RingFingerprint');
-    export const EntityType = Type.OneOf('Structure', 'EntityType', Type.Str, ['polymer', 'non-polymer', 'water', 'branched']);
-    export const EntitySubtype = Type.OneOf('Structure', 'EntitySubtype', Type.Str, ['other', 'polypeptide(D)', 'polypeptide(L)', 'polydeoxyribonucleotide', 'polyribonucleotide', 'polydeoxyribonucleotide/polyribonucleotide hybrid', 'cyclic-pseudo-peptide', 'peptide nucleic acid', 'oligosaccharide']);
-    export const ObjectPrimitive = Type.OneOf('Structure', 'ObjectPrimitive', Type.Str, ['atomistic', 'sphere', 'gaussian', 'other']);
-    export const ResidueId = Type.Value('Structure', 'ResidueId');
+    export const RingFingerprint: Type.Value<unknown> = Type.Value('Structure', 'RingFingerprint');
+    export const EntityType: Type.OneOf<string> = Type.OneOf('Structure', 'EntityType', Type.Str, ['polymer', 'non-polymer', 'water', 'branched']);
+    export const EntitySubtype: Type.OneOf<string> = Type.OneOf('Structure', 'EntitySubtype', Type.Str, ['other', 'polypeptide(D)', 'polypeptide(L)', 'polydeoxyribonucleotide', 'polyribonucleotide', 'polydeoxyribonucleotide/polyribonucleotide hybrid', 'cyclic-pseudo-peptide', 'peptide nucleic acid', 'oligosaccharide']);
+    export const ObjectPrimitive: Type.OneOf<string> = Type.OneOf('Structure', 'ObjectPrimitive', Type.Str, ['atomistic', 'sphere', 'gaussian', 'other']);
+    export const ResidueId: Type.Value<unknown> = Type.Value('Structure', 'ResidueId');
 
-    export const ElementSet = Type.Value('Structure', 'ElementSet');
-    export const ElementSelection = Type.Value('Structure', 'ElementSelection');
-    export const ElementReference = Type.Value('Structure', 'ElementReference');
+    export const ElementSet: Type.Value<unknown> = Type.Value('Structure', 'ElementSet');
+    export const ElementSelection: Type.Value<unknown> = Type.Value('Structure', 'ElementSelection');
+    export const ElementReference: Type.Value<unknown> = Type.Value('Structure', 'ElementReference');
 
-    export const ElementSelectionQuery = Core.Types.Fn(ElementSelection, 'ElementSelectionQuery');
+    export const ElementSelectionQuery: Type.Container<(env: any) => unknown> = Core.Types.Fn(ElementSelection, 'ElementSelectionQuery');
 }
 
 const type = {

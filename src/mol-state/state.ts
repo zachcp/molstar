@@ -29,7 +29,7 @@ export { State };
 class State {
     private _tree: TransientTree;
 
-    protected errorFree = true;
+    protected errorFree: boolean = true;
 
     private ev = RxEventHelper.create();
 
@@ -55,7 +55,7 @@ class State {
         isUpdating: this.ev.behavior<boolean>(false),
     };
 
-    readonly actions = new StateActionManager();
+    readonly actions: StateActionManager = new StateActionManager();
 
     readonly runTask: <T>(task: Task<T>) => Promise<T>;
 
@@ -64,10 +64,10 @@ class State {
     get current(): StateTransform.Ref { return this.behaviors.currentObject.value.ref; }
     get root(): StateObjectCell { return this.cells.get((this._tree as StateTree).root.ref)!; }
 
-    build() { return new StateBuilder.Root(this.tree, this); }
+    build(): StateBuilder.Root { return new StateBuilder.Root(this.tree, this); }
 
     readonly cells: State.Cells = new Map();
-    private spine = new StateTreeSpine.Impl(this.cells);
+    private spine: StateTreeSpine.Impl = new StateTreeSpine.Impl(this.cells);
 
     tryGetCellData = <T extends StateObject>(ref: StateTransform.Ref) => {
         const ret = this.cells.get(ref)?.obj?.data;
@@ -75,7 +75,7 @@ class State {
         return ret as T extends StateObject<infer D> ? D : never;
     };
 
-    private historyCapacity = 5;
+    private historyCapacity: number = 5;
     private history: [StateTree, string][] = [];
 
     private addHistory(tree: StateTree, label?: string) {
@@ -87,7 +87,7 @@ class State {
         this.events.historyUpdated.next({ state: this });
     }
 
-    private clearHistory() {
+    private clearHistory(): void {
         if (this.history.length === 0) return;
         this.history = [];
         this.events.historyUpdated.next({ state: this });
@@ -101,11 +101,11 @@ class State {
         return this.history.length > 0;
     }
 
-    private undoingHistory = false;
+    private undoingHistory: boolean = false;
 
     undo() {
         return Task.create('Undo', async ctx => {
-            const e = this.history.shift();
+            const e: [StateTree, string] | undefined = this.history.shift();
             if (!e) return;
             this.events.historyUpdated.next({ state: this });
             this.undoingHistory = true;
@@ -126,7 +126,7 @@ class State {
         return this.updateTree(tree);
     }
 
-    setCurrent(ref: StateTransform.Ref) {
+    setCurrent(ref: StateTransform.Ref): void {
         this.behaviors.currentObject.next({ state: this, ref });
     }
 
@@ -142,7 +142,7 @@ class State {
         }
     }
 
-    dispose() {
+    dispose(): void {
         this.ev.dispose();
         this.actions.dispose();
     }
@@ -327,8 +327,8 @@ class State {
     }
 
     private updateTreeAndCreateCtx(tree: StateTree | StateBuilder, taskCtx: RuntimeContext, options: Partial<State.UpdateOptions> | undefined) {
-        const _tree = (StateBuilder.is(tree) ? tree.getTree() : tree).asTransient();
-        const oldTree = this._tree;
+        const _tree: TransientTree = (StateBuilder.is(tree) ? tree.getTree() : tree).asTransient();
+        const oldTree: TransientTree = this._tree;
         this._tree = _tree;
 
         const cells = this.cells;
@@ -363,7 +363,7 @@ class State {
 
     constructor(rootObject: StateObject, params: State.Params) {
         this._tree = StateTree.createEmpty(StateTransform.createRoot(params && params.rootState)).asTransient();
-        const tree = this._tree;
+        const tree: TransientTree = this._tree;
         const root = tree.root;
         this.runTask = params.runTask;
 
@@ -479,8 +479,8 @@ async function update(ctx: UpdateContext) {
         // this is done in "post order", meaning that leaves will be deleted first.
         deletes = findDeletes(ctx);
 
-        const current = ctx.parent.current;
-        let hasCurrent = false;
+        const current: string = ctx.parent.current;
+        let hasCurrent: boolean = false;
         for (const d of deletes) {
             if (d === current) {
                 hasCurrent = true;
@@ -489,7 +489,7 @@ async function update(ctx: UpdateContext) {
         }
 
         if (hasCurrent) {
-            const newCurrent = findNewCurrent(ctx.oldTree, current, deletes, ctx.cells);
+            const newCurrent: string = findNewCurrent(ctx.oldTree, current, deletes, ctx.cells);
             ctx.parent.setCurrent(newCurrent);
         }
 
@@ -735,7 +735,7 @@ function _findNewCurrent(tree: StateTree, ref: Ref, deletes: Set<Ref>, cells: Ma
     let prevCandidate: Ref | undefined = void 0, seenRef = false;
 
     while (true) {
-        const s = siblings.next();
+        const s: IteratorResult<string, any> = siblings.next();
         if (s.done) break;
 
         if (deletes.has(s.value)) continue;
@@ -787,9 +787,9 @@ function doError(ctx: UpdateContext, ref: Ref, errorObject: any | undefined, sil
     }
 
     // remove the objects in the child nodes if they exist
-    const children = ctx.tree.children.get(ref).values();
+    const children: IterableIterator<string> = ctx.tree.children.get(ref).values();
     while (true) {
-        const next = children.next();
+        const next: IteratorResult<string, any> = children.next();
         if (next.done) return;
         doError(ctx, next.value, void 0, silent);
     }
@@ -803,14 +803,14 @@ type UpdateNodeResult =
 
 const ParentNullErrorText = 'Parent is null';
 
-async function updateSubtree(ctx: UpdateContext, root: Ref) {
+async function updateSubtree(ctx: UpdateContext, root: Ref): Promise<void> {
     setCellStatus(ctx, root, 'processing');
 
-    let isNull = false;
+    let isNull: boolean = false;
     try {
-        const start = now();
-        const update = await updateNode(ctx, root);
-        const time = now() - start;
+        const start: now.Timestamp = now();
+        const update: UpdateNodeResult = await updateNode(ctx, root);
+        const time: number = now() - start;
 
         if (update.action !== 'none') ctx.changed = true;
 
@@ -834,7 +834,7 @@ async function updateSubtree(ctx: UpdateContext, root: Ref) {
         return;
     }
 
-    const children = ctx.tree.children.get(root).values();
+    const children: IterableIterator<string> = ctx.tree.children.get(root).values();
     while (true) {
         const next = children.next();
         if (next.done) return;
@@ -922,7 +922,7 @@ async function updateNode(ctx: UpdateContext, currentRef: Ref): Promise<UpdateNo
         const newParams = params.values;
         current.params = params;
 
-        const updateKind = !!current.obj && current.obj !== StateObject.Null
+        const updateKind: StateTransformer.UpdateResult = !!current.obj && current.obj !== StateObject.Null
             ? await updateObject(ctx, current, transform.transformer, parent, current.obj!, oldParams, newParams)
             : StateTransformer.UpdateResult.Recreate;
 

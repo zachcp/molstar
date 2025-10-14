@@ -18,19 +18,19 @@ export namespace Types {
 
     export const Regex = Type.Value<RegExp>('Core', 'Regex');
 
-    export const Set = <T extends Type>(t?: T) => Type.Container<Set<T['@type']>>('Core', 'Set', t || AnyValueVar);
-    export const List = <T extends Type>(t?: T) => Type.Container<List<T['@type']>>('Core', 'List', t || AnyVar);
-    export const Fn = <T extends Type>(t?: T, alias?: string) => Type.Container<(env: any) => T['@type']>('Core', 'Fn', t || AnyVar, alias);
-    export const Flags = <T extends Type>(t: T, alias?: string) => Type.Container<number>('Core', 'Flags', t, alias);
+    export const Set: <T extends Type>(t?: T) => Type.Container<Set<T["@type"]>> = <T extends Type>(t?: T) => Type.Container<Set<T['@type']>>('Core', 'Set', t || AnyValueVar);
+    export const List: <T extends Type>(t?: T) => Type.Container<List<T["@type"]>> = <T extends Type>(t?: T) => Type.Container<List<T['@type']>>('Core', 'List', t || AnyVar);
+    export const Fn: <T extends Type>(t?: T, alias?: string) => Type.Container<(env: any) => T["@type"]> = <T extends Type>(t?: T, alias?: string) => Type.Container<(env: any) => T['@type']>('Core', 'Fn', t || AnyVar, alias);
+    export const Flags: <T extends Type>(t: T, alias?: string) => Type.Container<number> = <T extends Type>(t: T, alias?: string) => Type.Container<number>('Core', 'Flags', t, alias);
 
-    export const BitFlags = Flags(Type.Num, 'BitFlags');
+    export const BitFlags: Type.Container<number> = Flags(Type.Num, 'BitFlags');
 }
 
-function unaryOp<T extends Type>(type: T, description?: string) {
+function unaryOp<T extends Type>(type: T, description?: string): MSymbol<Arguments<Arguments.PropTypes<{ 0: Argument<T>; }>>, T> {
     return symbol(Arguments.Dictionary({ 0: Argument(type) }), type, description);
 }
 
-function binOp<T extends Type>(type: T, description?: string) {
+function binOp<T extends Type>(type: T, description?: string): MSymbol<Arguments<{ [key: string]: T["@type"]; }>, T> {
     return symbol(Arguments.List(type, { nonEmpty: true }), type, description);
 }
 
@@ -184,7 +184,7 @@ export const core = {
 
 normalizeTable(core);
 
-export const SymbolList = symbolList(core);
+export const SymbolList: MSymbol<Arguments<{}>, Type>[] = symbolList(core);
 
 export const SymbolMap = (function () {
     const map: { [id: string]: MSymbol | undefined } = Object.create(null);

@@ -28,6 +28,7 @@ import type {
 } from "../../../mol-state/index.ts";
 import { Task } from "../../../mol-task/index.ts";
 import type { ColorTheme } from "../../../mol-theme/color.ts";
+import { StructureSelectionManager } from "./selection.ts";
 import type { SizeTheme } from "../../../mol-theme/size.ts";
 import { shallowEqual, UUID } from "../../../mol-util/index.ts";
 import { ColorNames } from "../../../mol-util/color/names.ts";
@@ -100,7 +101,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
       }
     }
 
-    return this.plugin.dataTransaction(async () => {
+    return this.plugin.dataTransaction(async (): Promise<void> => {
       await update.commit();
       await this.plugin.state.updateBehavior(
         StructureFocusRepresentation,
@@ -128,8 +129,8 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
       materialStyle: material,
       clipObjects: clip,
     } = this.state.options;
-    const ignoreHydrogens = hydrogens !== "all";
-    const ignoreHydrogensVariant =
+    const ignoreHydrogens: boolean = hydrogens !== "all";
+    const ignoreHydrogensVariant: "all" | "non-polar" =
       hydrogens === "only-polar" ? "non-polar" : "all";
     for (const r of component.representations) {
       if (r.cell.transform.transformer !== StructureRepresentation3D) continue;
@@ -156,7 +157,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
     }
   }
 
-  private async updateInterationProps() {
+  private async updateInterationProps(): Promise<void> {
     for (const s of this.currentStructures) {
       const interactionParams = InteractionsProvider.getParams(
         s.cell.obj?.data!,
@@ -185,10 +186,10 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
           })
           .commit();
       } else {
-        const pd = this.plugin.customStructureProperties.getParams(
+        const pd: PD.Params = this.plugin.customStructureProperties.getParams(
           s.cell.obj?.data,
         );
-        const params = PD.getDefaultValues(pd);
+        const params: PD.Values<PD.Params> = PD.getDefaultValues(pd);
         if (
           PD.areEqual(
             interactionParams,
@@ -247,8 +248,8 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
 
     if (keptRefs.size === 0) return this.clearComponents([root]);
 
-    let changed = false;
-    const update = this.dataState.build();
+    let changed: boolean = false;
+    const update: StateBuilder.Root = this.dataState.build();
 
     const sync = (r: StructureHierarchyRef) => {
       if (!keptRefs.has(r.cell.transform.ref)) {
@@ -278,8 +279,9 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
     return this.clearComponents(structures);
   }
 
-  selectThis(components: ReadonlyArray<StructureComponentRef>) {
-    const mng = this.plugin.managers.structure.selection;
+  selectThis(components: ReadonlyArray<StructureComponentRef>): void {
+    const mng: StructureSelectionManager =
+      this.plugin.managers.structure.selection;
     mng.clear();
     for (const c of components) {
       const loci = Structure.toSubStructureElementLoci(
@@ -290,21 +292,21 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
     }
   }
 
-  canBeModified(ref: StructureHierarchyRef) {
+  canBeModified(ref: StructureHierarchyRef): boolean {
     return this.plugin.builders.structure.isComponentTransform(ref.cell);
   }
 
   modifyByCurrentSelection(
     components: ReadonlyArray<StructureComponentRef>,
     action: StructureComponentManager.ModifyAction,
-  ) {
+  ): Promise<void> {
     return this.plugin.runTask(
-      Task.create("Modify Component", async (taskCtx) => {
-        const b = this.dataState.build();
+      Task.create("Modify Component", async (taskCtx): Promise<void> => {
+        const b: StateBuilder.Root = this.dataState.build();
         for (const c of components) {
           if (!this.canBeModified(c)) continue;
 
-          const selection =
+          const selection: Structure | undefined =
             this.plugin.managers.structure.selection.getStructure(
               c.structure.cell.obj!.data,
             );
@@ -321,21 +323,21 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
   toggleVisibility(
     components: ReadonlyArray<StructureComponentRef>,
     reprPivot?: StructureRepresentationRef,
-  ) {
+  ): void {
     if (components.length === 0) return;
 
     if (!reprPivot) {
-      const isHidden = !components[0].cell.state.isHidden;
+      const isHidden: boolean = !components[0].cell.state.isHidden;
       for (const c of components) {
         setSubtreeVisibility(this.dataState, c.cell.transform.ref, isHidden);
       }
     } else {
-      const index = components[0].representations.indexOf(reprPivot);
-      const isHidden = !reprPivot.cell.state.isHidden;
+      const index: number = components[0].representations.indexOf(reprPivot);
+      const isHidden: boolean = !reprPivot.cell.state.isHidden;
 
       for (const c of components) {
         // TODO: is it ok to use just the index here? Could possible lead to ugly edge cases, but perhaps not worth the trouble to "fix".
-        const repr = c.representations[index];
+        const repr: StructureRepresentationRef = c.representations[index];
         if (!repr) continue;
         setSubtreeVisibility(this.dataState, repr.cell.transform.ref, isHidden);
       }
@@ -350,7 +352,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
 
     const toRemove: StructureHierarchyRef[] = [];
     if (pivot) {
-      const index = components[0].representations.indexOf(pivot);
+      const index: number = components[0].representations.indexOf(pivot);
       if (index < 0) return;
 
       for (const c of components) {
@@ -374,14 +376,14 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
   ) {
     if (components.length === 0) return Promise.resolve();
 
-    const index = components[0].representations.indexOf(pivot);
+    const index: number = components[0].representations.indexOf(pivot);
     if (index < 0) return Promise.resolve();
 
     const update = this.dataState.build();
 
     for (const c of components) {
       // TODO: is it ok to use just the index here? Could possible lead to ugly edge cases, but perhaps not worth the trouble to "fix".
-      const repr = c.representations[index];
+      const repr: StructureRepresentationRef = c.representations[index];
       if (!repr) continue;
       if (repr.cell.transform.transformer !== pivot.cell.transform.transformer)
         continue;
@@ -426,7 +428,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
   ) {
     if (components.length === 0) return;
 
-    const update = this.dataState.build();
+    const update: StateBuilder.Root = this.dataState.build();
 
     for (const c of components) {
       for (const repr of c.representations) {
@@ -494,8 +496,8 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
       materialStyle: material,
       clipObjects: clip,
     } = this.state.options;
-    const ignoreHydrogens = hydrogens !== "all";
-    const ignoreHydrogensVariant =
+    const ignoreHydrogens: boolean = hydrogens !== "all";
+    const ignoreHydrogensVariant: "all" | "non-polar" =
       hydrogens === "only-polar" ? "non-polar" : "all";
     const typeParams = {
       ignoreHydrogens,
@@ -507,7 +509,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
     };
 
     return this.plugin.dataTransaction(
-      async () => {
+      async (): Promise<void> => {
         for (const component of components) {
           await this.plugin.builders.structure.representation.addRepresentation(
             component.cell,
@@ -530,14 +532,14 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
 
     return this.plugin.runTask(
       Task.create("Find Component", async (taskCtx) => {
-        const data = structure.cell.obj?.data;
+        const data: Structure | undefined = structure.cell.obj?.data;
         if (!data) return;
         const sel = StructureSelection.unionStructure(
           await selection.getSelection(this.plugin, taskCtx, data),
         );
 
         for (const c of structure.components) {
-          const comp = c.cell.obj?.data;
+          const comp: Structure | undefined = c.cell.obj?.data;
           if (!comp || !c.cell.parent) continue;
 
           if (structureAreEqual(sel, comp)) return c.cell;
@@ -549,10 +551,11 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
   async add(
     params: StructureComponentManager.AddParams,
     structures?: ReadonlyArray<StructureRef>,
-  ) {
+  ): Promise<void> {
     return this.plugin.dataTransaction(
-      async () => {
-        const xs = structures || this.currentStructures;
+      async (): Promise<void> => {
+        const xs: readonly StructureRef[] =
+          structures || this.currentStructures;
         if (xs.length === 0) return;
 
         const {
@@ -562,8 +565,8 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
           materialStyle: material,
           clipObjects: clip,
         } = this.state.options;
-        const ignoreHydrogens = hydrogens !== "all";
-        const ignoreHydrogensVariant =
+        const ignoreHydrogens: boolean = hydrogens !== "all";
+        const ignoreHydrogensVariant: "all" | "non-polar" =
           hydrogens === "only-polar" ? "non-polar" : "all";
         const typeParams = {
           ignoreHydrogens,
@@ -574,7 +577,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
           clip,
         };
 
-        const componentKey = UUID.create22();
+        const componentKey: UUID = UUID.create22();
         for (const s of xs) {
           let component: StateObjectRef | undefined = void 0;
 
@@ -617,10 +620,11 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
   async applyTheme(
     params: StructureComponentManager.ThemeParams,
     structures?: ReadonlyArray<StructureRef>,
-  ) {
+  ): Promise<void> {
     return this.plugin.dataTransaction(
-      async (ctx) => {
-        const xs = structures || this.currentStructures;
+      async (ctx): Promise<void> => {
+        const xs: readonly StructureRef[] =
+          structures || this.currentStructures;
         if (xs.length === 0) return;
 
         const getLoci = async (s: Structure) =>
@@ -702,7 +706,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
     by: Structure,
     action: StructureComponentManager.ModifyAction,
   ) {
-    const structure = component.cell.obj?.data;
+    const structure: Structure | undefined = component.cell.obj?.data;
     if (!structure) return;
     if (
       (action === "subtract" || action === "intersect") &&
@@ -745,7 +749,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
   }
 
   private clearComponents(structures: ReadonlyArray<StructureRef>) {
-    const deletes = this.dataState.build();
+    const deletes: StateBuilder.Root = this.dataState.build();
     for (const s of structures) {
       for (const c of s.components) {
         deletes.delete(c.cell.transform.ref);
@@ -885,7 +889,7 @@ namespace StructureComponentManager {
   export function getRepresentationTypes(
     plugin: PluginContext,
     pivot: StructureRef | StructureComponentRef | undefined,
-  ) {
+  ): [string, string][] {
     return pivot?.cell.obj?.data
       ? plugin.representation.structure.registry.getApplicableTypes(
           pivot.cell.obj?.data!,
@@ -898,7 +902,7 @@ namespace StructureComponentManager {
     pivot: StructureRef | undefined,
     custom: [string, string][],
     label?: string,
-  ) {
+  ): PD.Select<string> {
     const types = [...custom, ...getRepresentationTypes(plugin, pivot)] as [
       string,
       string,

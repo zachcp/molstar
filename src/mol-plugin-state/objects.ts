@@ -55,7 +55,8 @@ export namespace PluginStateObject {
     typeClass: TypeClass;
   }
 
-  export const Create = StateObject.factory<TypeInfo>();
+  export const Create  = StateObject.factory<TypeInfo>();
+  
 
   export function isRepresentation3D(
     o?: Any,

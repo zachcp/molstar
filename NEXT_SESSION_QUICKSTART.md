@@ -1,489 +1,264 @@
 # Next Session Quick-Start Guide
 
 **Status:** 697 errors remaining (664 fixable)
-**Current State:** 66 errors fixed from starting point of 730 fixable
-**Progress:** 9.0% complete
+**Progress:** 9.0% complete (66/730 errors fixed)
 
 ---
 
-## 🎯 Reality Check
+## 🎯 Current State
 
-We currently have **697 Deno slow-type errors**:
-- `missing-explicit-return-type`: ~255 errors (down from 314)
-- `missing-explicit-type`: ~43 errors (parameter types)
-- `unsupported-super-class-expr`: **33 errors** (unfixable by design)
+- `missing-explicit-type`: 414 errors
+- `missing-explicit-return-type`: 249 errors
+- `unsupported-super-class-expr`: 33 errors (unfixable)
 
-**Fixable errors: 664** (down from 730)
-
----
-
-## 📊 What We've Fixed So Far (66 errors)
-
-### Files Modified:
-1. ✅ **src/mol-model-formats/structure/property/anisotropic.ts** (2 errors)
-   - Added `Int32Array` return types to export functions
-
-2. ✅ **src/mol-model-props/common/custom-model-property.ts** (1 error)
-   - Added `CustomProperty.Provider<Model, any, any>` to `createSimple()`
-
-3. ✅ **src/mol-model-props/common/custom-structure-property.ts** (1 error)
-   - Added `CustomProperty.Provider<Structure, any, any>` to `createSimple()`
-
-4. ✅ **src/mol-model-props/computed/interactions/common.ts** (1 error)
-   - Added `ElementsIndex` return type to `createElementsIndex()`
-
-5. ✅ **src/mol-model-props/computed/interactions/interactions.ts** (1 error)
-   - Added `string` return type to `getLabel()`
-
-6. ✅ **src/mol-model/custom-property.ts** (1 error)
-   - Added `boolean` return type to `hasReference()`
-
-7. ✅ **src/mol-model/structure/query/context.ts** (1 error)
-   - Added `QueryContextBondInfo<Unit.Atomic>` to `pushCurrentBond()`
-
-8. ✅ **src/mol-plugin-state/formats/registry.ts** (1 error)
-   - Added `DataFormatProvider | undefined` to `auto()`
-
-9. ✅ **src/mol-plugin-state/objects.ts** (2 errors)
-   - Added return types to factory functions: `CreateRepresentation3D()` and `CreateBehavior()`
-   - Pattern: `ReturnType<typeof Create<T>>`
-
-10. ✅ **src/mol-model/structure/model/types.ts** (2 errors)
-    - Added `boolean` return types to `isCovalent()` and `isAll()` in BondType namespace
-
-11. ✅ **src/mol-model/structure/structure/element/loci.ts** (1 error)
-    - Added `boolean` return type to `isWholeStructure()`
-
-12. ✅ **src/mol-model/structure/model/model.ts** (3 errors)
-    - Added `AtomicConformation` return type to `getAtomicConformationFromFrame()`
-    - Added `Model` return type to `getRoot()`
-    - Added `boolean` return type to `areHierarchiesEqual()`
-
-13. ✅ **src/mol-model/structure/query/query.ts** (2 errors)
-    - Added `StructureSelection` return type to `run()`
-    - Added `StructureElement.Loci` return type to `loci()`
-
-14. ✅ **src/mol-model/structure/query/selection.ts** (1 error)
-    - Added `number` return type to `structureCount()`
-
-15. ✅ **src/mol-model/structure/structure/element/bundle.ts** (2 errors)
-    - Added `Bundle` return types to `fromSubStructure()` and `fromSelection()`
-
-16. ✅ **src/mol-model/shape/shape.ts** (2 errors)
-    - Added `TransformData` return type to `Shape.createTransform()`
-    - Added `GraphicsRenderObject` return type to `Shape.createRenderObject()`
-
-17. ✅ **src/mol-model/structure/structure/structure.ts** (14 errors)
-    - Added `boolean` return type to `hasElement()`
-    - Added `number` return type to `getModelIndex()`
-    - Added `Loci` return type to `remapLoci()`
-    - Added `Structure` return types to `transform()` and `instances()`
-    - Added return types to namespace functions: `conformationHash()`, `areUnitIdsEqual()`, `areUnitIdsAndIndicesEqual()`, `areRootsEquivalent()`, `areRootsEqual()`, `minDistanceToPoint()`, `elementDescription()`, `validUnitPair()`
-    - Added `StructureSubsetBuilder` return type to `subsetBuilder()`
-
-18. ✅ **src/mol-model/structure/structure/unit.ts** (9 errors)
-    - Added `SymmetryGroup` return type to `SymmetryGroup()` factory function
-    - Added `boolean` return type to `SymmetryGroup.areInvariantElementsEqual()`
-    - Added `UUID` return type to `conformationId()`
-    - Added `number` return type to `hashUnit()`
-    - Added return types to comparison functions: `areSameChainOperatorGroup()`, `areOperatorsEqual()`, `areConformationsEqual()`, `isSameConformation()`
-    - Added union return types to `getModelConformationOfKind()`, `getConformation()`, `getModelHierarchyOfKind()`, `getHierarchy()`
-    - Added `number` return type to `getResidueIndex()`
-
-19. ✅ **src/mol-model/structure/query/context.ts** (2 errors)
-    - Added `StructureSelection` return type to `tryGetCurrentSelection()`
-    - Added `boolean` return type to `test()`
-
-20. ✅ **src/mol-model/structure/structure/unit/bonds/data.ts** (2 errors)
-    - Added return types to `getBondFromLocation()` and `getBondIndexFromLocation()`
-
-21. ✅ **src/mol-model/structure/structure/unit/rings.ts** (3 errors)
-    - Added `Fingerprint` return type to `elementFingerprint()`
-    - Added `string` return type to `getAltId()`
-    - Added `Map<ResidueIndex, Index[]>` return type to `byFingerprintAndResidue()`
-
-22. ✅ **src/mol-model-props/common/custom-property.ts** (1 error)
-    - Added `PD.Params` return type to `getParams()`
-
-23. ✅ **src/mol-model/structure/structure/util/subset-builder.ts** (2 errors)
-    - Added `Structure` return types to `getStructure()` and `getStructureDeduplicate()`
-
-24. ✅ **src/mol-model/structure/structure/util/unit-transforms.ts** (1 error)
-    - Added `Mat4` return type to `getTransform()`
-
-25. ✅ **src/mol-model/volume/grid.ts** (3 errors)
-    - Added `Mat4` return type to `getGridToCartesianTransform()`
-    - Added `Histogram` return type to `getHistogram()`
+**Recent Session:** Fixed 34 errors via individual fixes
 
 ---
 
-## 📈 Top Directories by Error Count (Updated)
+## 🆕 BATCH FIX OPPORTUNITIES FOUND! 🎉
+
+**New Discovery:** Found **43 high-confidence batch fixes** with similar patterns!
+
+See `BATCH_FIX_OPPORTUNITIES.md` for detailed analysis.
+
+### Quick Summary:
+- ✅ **16 files** with `readonly events = { ... }` pattern
+- ✅ **7 files** with `readonly behaviors = { ... }` pattern  
+- ✅ **20+ files** with simple export function return types
+- 🎯 **Total Impact:** ~43 errors (6.5% of remaining)
+- ⏱️ **Time Estimate:** ~2 hours
+- 🎯 **Goal:** Get below 650 errors (10% milestone!)
+
+### Helper Script:
+```bash
+./scripts/batch-fix-helper.sh
+```
+
+---
+
+## 📊 Top Error Directories
 
 1. **src/mol-plugin-state** - 67 errors
 2. **src/mol-state** - 63 errors
 3. **src/mol-util** - 38 errors
-4. **src/mol-plugin** - 34 errors
-5. **src/mol-canvas3d** - 33 errors
+4. **src/mol-canvas3d** - 33 errors
+5. **src/mol-plugin** - 34 errors
 6. **src/mol-script** - 27 errors
-7. **src/mol-model** - 9 errors (down from ~50!)
-8. **src/mol-geo** - 9 errors
-9. **src/mol-theme** - 7 errors
-10. **src/mol-repr** - 5 errors
+7. **src/mol-model** - 9 errors (cleaned up!)
 
 ---
 
-## 🔍 Key Learnings
+## 🚀 Quick Start Commands
 
-### ✅ Namespaces Work with JSR!
-The issue isn't namespaces—it's **missing return types on functions inside namespaces**.
+```bash
+# Get fresh error count
+deno publish --dry-run 2>&1 | tee /tmp/deno_errors.txt
+python3 scripts/analyze-deno-errors.py
 
-Example:
+# Track progress
+START_COUNT=664
+# ... make fixes ...
+END_COUNT=$(deno publish --dry-run 2>&1 | grep "error\[" | grep -v "unsupported-super-class-expr" | wc -l | tr -d ' ')
+echo "Fixed: $((START_COUNT - END_COUNT)) errors ($START_COUNT → $END_COUNT)"
+
+# Commit frequently
+git add -A && git commit -m "Fix X errors: description"
+```
+
+---
+
+## 💡 Common Patterns
+
+### Export Functions (123 remaining) - EASIEST
 ```typescript
-export namespace PluginStateObject {
-    // ❌ Missing return type
-    export function CreateBehavior<T>(type: { name: string }) {
-        return Create<T>({ ...type, typeClass: 'Behavior' });
-    }
-    
-    // ✅ With return type
-    export function CreateBehavior<T>(type: { name: string }): ReturnType<typeof Create<T>> {
-        return Create<T>({ ...type, typeClass: 'Behavior' });
-    }
+// ❌ Before
+export function conformationHash(s: Structure) {
+    return hashString(...);
+}
+
+// ✅ After
+export function conformationHash(s: Structure): number {
+    return hashString(...);
 }
 ```
 
-### Common Return Type Patterns
-
-1. **Type Guards** (use `is` predicates):
-   ```typescript
-   export function isType(o?: Any): o is StateObject<Type, TypeInfo> {
-       return !!o && o.type.typeClass === 'Type';
-   }
-   ```
-
-2. **Factory Functions** (use `ReturnType<typeof>`):
-   ```typescript
-   export function createThing<T>(config: Config): ReturnType<typeof Factory<T>> {
-       return Factory<T>(config);
-   }
-   ```
-
-3. **Simple Methods**:
-   ```typescript
-   has(key: string): boolean { return this.map.has(key); }
-   get(key: string): Type | undefined { return this.map.get(key); }
-   dispose(): void { this.cleanup(); }
-   ```
-
-4. **Builder/Selector Functions**:
-   ```typescript
-   export function filter(b: Selector, p: Predicate): Builder {
-       return flatMap(b, n => p(n) ? [n] : []);
-   }
-   ```
-
----
-
-## 🚀 Recommended Strategy Going Forward
-
-### Phase 1: Continue Export Functions (~171 remaining)
-Focus on explicit function exports with clear return types.
-
-**Good candidates:**
-- Simple utility functions returning primitives
-- Factory functions with clear patterns
-- Type guard functions
-
-### Phase 2: Method Return Types (~158 remaining)
-Focus on class methods, especially:
-- Registry `has()` → `boolean`
-- Registry `get()` → `Type | undefined`
-- Dispose methods → `void`
-
-### Phase 3: Parameter Types (~414 remaining) - HARDER
-These require adding types to function parameters:
-- Arrow functions in object literals
-- Callback function parameters
-- Generic function constraints
-
-### Phase 4: Export Consts (~290 remaining) - VERY CAREFUL!
-**⚠️ WARNING:** Many are `Params` definitions that break if you add types wrong.
-- Test each one immediately
-- DON'T add `: PD.Params` to Params definitions
-- These often need parameter types, not return types
-
----
-
-## 🛠 Available Tools
-
-### 1. Manual Fixing (Most Reliable) ✅
-What we've been doing. Works well for batching similar patterns.
-
-### 2. VS Code Quick Fix (Recommended to Try)
-**Setup:**
-```bash
-code /Users/zcpowers/Documents/Projects/molstar
-```
-
-**Enable Inlay Hints:**
-- Settings (Cmd+,) → Search "inlay hints"
-- Enable "TypeScript › Inlay Hints: Function Like Return Types"
-
-**Quick Fix Workflow:**
-1. Put cursor on function name
-2. Press **`Cmd+.`** (or Ctrl+.)
-3. Select "Infer function return type"
-4. VS Code adds it automatically!
-
-**Alternative - Hover to See Type:**
-1. Hover over function name
-2. See inferred type in tooltip
-3. Manually add `: <type>` after closing parenthesis
-
-### 3. Custom TypeScript Script (Experimental)
-We created `scripts/add-return-types.ts` but it's limited:
-- Only catches some patterns
-- Needs more work to be comprehensive
-- Better for learning than production use
-
-### 4. ESLint (Doesn't Work for Deno)
-We tried but hit issues:
-- Deno projects don't use tsconfig.json
-- ESLint v9 config is complex
-- Deno's slow-type checks are unique, not standard TS errors
-
----
-
-## 📝 Session Template
-
-```bash
-# Start of session
-deno publish --dry-run 2>&1 | tee /tmp/deno_errors.txt
-python3 scripts/analyze-deno-errors.py
-START_COUNT=$(deno publish --dry-run 2>&1 | grep "error\[" | grep -v "unsupported-super-class-expr" | wc -l)
-echo "Starting with: $START_COUNT fixable errors"
-
-# Current starting point: 719 fixable errors
-
-# Pick a target directory or pattern
-grep "src/TARGET_DIR" /tmp/deno_errors.txt | head -20
-
-# Make fixes...
-# Test each fix immediately!
-
-# End of session
-END_COUNT=$(deno publish --dry-run 2>&1 | grep "error\[" | grep -v "unsupported-super-class-expr" | wc -l)
-FIXED=$((START_COUNT - END_COUNT))
-echo "Fixed: $FIXED errors ($START_COUNT → $END_COUNT)"
-
-# Commit
-git add -A
-git commit -m "Fix X errors in Y ($START_COUNT → $END_COUNT)"
-```
-
----
-
-## ⚡ Quick Win Opportunities
-
-### Pattern 1: All `dispose()` methods
-Many classes have `dispose(): void` methods. These are easy to batch.
-
-```bash
-# Find them
-grep -n "dispose()" src/**/*.ts | grep -v ": void"
-
-# Add `: void` to each
-```
-
-### Pattern 2: Boolean-returning methods
-`has()`, `is*()`, `can*()` methods typically return `boolean`.
-
-### Pattern 3: Registry `get()` methods
-Almost always `Type | undefined` pattern.
-
-### Pattern 4: Simple utility functions
-Functions with clear, single-line returns:
+### Methods (101 remaining)
 ```typescript
-export function sum(a: number, b: number) { return a + b; }
-// Obviously returns: number
+// Boolean returns
+areEqual(a, b): boolean { return a === b; }
+
+// Getters
+getStructure(): Structure { return this._getStructure(); }
+
+// Void methods
+dispose(): void { this.cleanup(); }
+```
+
+### Type Guards (use `is` predicates)
+```typescript
+export function isAtomic(u: Unit): u is Atomic {
+    return u.kind === Kind.Atomic;
+}
+```
+
+### Union Return Types
+```typescript
+export function getConformation(u: Unit): 
+    | AtomicConformation 
+    | CoarseSphereConformation 
+    | CoarseGaussianConformation {
+    return getModelConformationOfKind(u.kind, u.model);
+}
 ```
 
 ---
 
-## 🎯 Realistic Goals
-
-### Short Session (1-2 hours):
-- **Target:** Fix 20-30 errors
-- **Focus:** Single file or single pattern
-- **Example:** All export functions in `mol-state/state/selection.ts`
-
-### Medium Session (2-4 hours):
-- **Target:** Fix 50-75 errors  
-- **Focus:** Multiple files with same pattern
-- **Example:** All `has()` and `get()` methods across project
-
-### Long Session (4+ hours):
-- **Target:** Fix 100+ errors
-- **Focus:** Complete a category (all export functions, all methods, etc.)
-- **Risk:** Mental fatigue leads to mistakes
-
----
-
-## ⚠️ Critical Rules (Never Break These)
+## ⚠️ Critical Rules
 
 ### DO:
-1. ✅ Test IMMEDIATELY after each change
-2. ✅ Check actual return types (don't guess)
-3. ✅ Commit every 10-20 fixes
-4. ✅ Revert if you introduce errors
-5. ✅ Use grep to find similar patterns
-6. ✅ Read the code to understand what it returns
+- Test immediately: `deno publish --dry-run 2>&1 | tail -30`
+- Commit every 10-20 fixes
+- Read the code to understand return types
+- Use hover in VS Code to see inferred types
 
 ### DON'T:
-1. ❌ Add `: PD.Params` to export const Params definitions
-2. ❌ Assume builder methods return `void` (they often don't!)
-3. ❌ Make batch changes without testing samples first
-4. ❌ Keep code that introduces new TypeScript errors
-5. ❌ Skip verification steps
-6. ❌ Work when tired (type errors are mentally taxing)
+- ❌ Add `: PD.Params` to `export const Params = { ... }` definitions
+- ❌ Make batch changes without testing
+- ❌ Guess return types - verify them!
+- ❌ Keep code that introduces TypeScript errors
 
 ---
 
-## 🔧 Debugging When Things Go Wrong
+## 🎯 Recommended Targets This Session
 
-### If error count increases:
+### ⭐ Option A: BATCH FIX - Events/Behaviors (RECOMMENDED!)
+**Impact:** 23 errors in ~1.5 hours  
+**Difficulty:** MEDIUM  
+**Files:** All have same pattern - add `Subject<T>` or `BehaviorSubject<T>` types
+
 ```bash
-# See what you changed
+# See the detailed plan
+cat BATCH_FIX_OPPORTUNITIES.md
+
+# Use helper script
+./scripts/batch-fix-helper.sh
+```
+
+**Phase 1 - Simple Events (4 files, 30 min):**
+- src/mol-plugin/util/toast.ts:33 (1 property - EASIEST)
+- src/mol-plugin-state/manager/animation.ts:26 (2 properties)
+- src/mol-state/action/manager.ts:21 (2 properties)
+- src/mol-plugin/util/substructure-parent-helper.ts:18
+
+**Example Fix:**
+```typescript
+// BEFORE
+readonly events = {
+    changed: this.ev()
+};
+
+// AFTER (add type annotation)
+readonly events: { changed: Subject<void> } = {
+    changed: this.ev()
+};
+```
+
+### Option B: mol-state (69 errors)
+Clean, focused files with similar patterns
+```bash
+grep "src/mol-state" /tmp/deno_errors.txt | head -20
+```
+
+### Option C: mol-util (43 errors)
+Utility functions - usually straightforward return types
+```bash
+grep "src/mol-util" /tmp/deno_errors.txt | head -20
+```
+
+### Option D: mol-canvas3d (33 errors)
+Graphics-related, good for learning the codebase
+```bash
+grep "src/mol-canvas3d" /tmp/deno_errors.txt | head -20
+```
+
+---
+
+## 📈 Progress Milestones
+
+```
+Starting point: 730 fixable errors
+Current: 664 fixable errors
+
+- ✅ < 700 errors - ACHIEVED!
+- 🎯 < 650 errors (10%) - 14 more to go
+- 🎯 < 500 errors (30%)
+- 🎯 < 250 errors (65%)
+- 🎯 < 100 errors (85%)
+- 🏁 0 errors (100%)
+
+Pace: ~34 errors/session = ~20 sessions remaining
+```
+
+---
+
+## 🔧 If Something Goes Wrong
+
+```bash
+# See what changed
 git diff
 
 # Check new TypeScript errors (not just slow-type)
 deno publish --dry-run 2>&1 | grep "TS[0-9]" | head -20
 
-# Revert the problematic file
+# Revert problematic file
 git checkout path/to/file.ts
 
-# Or revert everything
+# Nuclear option
 git reset --hard HEAD
 ```
 
-### If error count doesn't decrease:
-```bash
-# Clear any caches
-rm /tmp/deno_errors.txt
-
-# Run fresh
-deno publish --dry-run 2>&1 | tee /tmp/deno_errors.txt
-python3 scripts/analyze-deno-errors.py
-
-# Verify your fix is actually there
-git diff path/to/file.ts
-
-# Check if you fixed the right thing
-grep "path/to/file.ts" /tmp/deno_errors.txt
-```
-
 ---
 
-## 📚 Useful Commands Reference
+## 🎬 Start Here
 
-### Count errors:
-```bash
-# Total errors
-deno publish --dry-run 2>&1 | grep "Found" | tail -1
+### RECOMMENDED: Start with Batch Fixes!
 
-# Fixable errors only
-deno publish --dry-run 2>&1 | grep "error\[" | grep -v "unsupported-super-class-expr" | wc -l
-```
-
-### Find specific patterns:
-```bash
-# All errors in a specific file
-grep "path/to/file.ts" /tmp/deno_errors.txt
-
-# All errors in a directory
-grep "src/mol-plugin-state" /tmp/deno_errors.txt | wc -l
-
-# Files with most errors
-grep -oE "src/[^:]+\.ts" /tmp/deno_errors.txt | sort | uniq -c | sort -rn | head -20
-```
-
-### Quick type lookup:
-```bash
-# Find where a type is defined
-grep -r "^export type TypeName" src/
-
-# Find function signature
-grep -A 5 "export function name" src/path/file.ts
-```
-
----
-
-## 💡 Pro Tips for Success
-
-1. **Start with confidence** - Pick files you understand
-2. **Test constantly** - After every 1-2 changes
-3. **Use VS Code** - Hover to see inferred types
-4. **Take breaks** - Type errors cause mental fatigue
-5. **Celebrate wins** - Every error fixed is progress!
-6. **Keep notes** - Document patterns you discover
-7. **Don't rush** - Quality > speed
-8. **Ask for help** - If stuck, move to easier targets
-
----
-
-## 📈 Progress Tracking
-
-```
-Starting point: 730 fixable errors
-Current: 664 fixable errors (66 fixed, 9.0%)
-
-Milestone targets:
-- ✅ < 700 errors - ACHIEVED!
-- 🎯 < 650 errors (10% complete) - 14 more to go!
-- 🎯 < 500 errors (30% complete)
-- 🎯 < 250 errors (65% complete)
-- 🎯 < 100 errors (85% complete)
-- 🎯 < 50 errors (93% complete)
-- 🏁 0 errors (100% complete!)
-
-At current pace: ~7.3 errors per 1% completed
-Estimated: ~664 more errors to reach 100%
-This is a marathon, not a sprint!
-
-Recent session (latest): 34 errors fixed (697 → 664)
-- Heavy focus on mol-model/structure files
-- Many boolean/number return types
-- Complex union types for conformation/hierarchy getters
-```
-
----
-
-## 🎬 Start Here Next Session
-
-**Recommended approach:**
-
-1. **Run fresh error check:**
+1. **Read the batch opportunities:**
    ```bash
-   deno publish --dry-run 2>&1 | tee /tmp/deno_errors.txt
-   python3 scripts/analyze-deno-errors.py
+   cat BATCH_FIX_OPPORTUNITIES.md
    ```
 
-2. **Pick your target:**
-   - **Easy:** Export functions with obvious return types (123 remaining)
-   - **Medium:** Methods in classes (101 remaining) 
-   - **Hard:** Export const params (37 remaining)
-   - **Very Hard:** Parameter types (43 remaining)
+2. **Run the helper script:**
+   ```bash
+   ./scripts/batch-fix-helper.sh
+   ```
 
-3. **Current best targets:**
-   - mol-state files (63 errors) - selection.ts, tree.ts
-   - mol-plugin-state files (67 errors) - many small files
-   - mol-util files (38 errors) - utility functions
-   - mol-canvas3d files (33 errors)
+3. **Start with Phase 1 (Simple Events):**
+   - Pick `src/mol-plugin/util/toast.ts:33` (easiest)
+   - Read the file to see the structure
+   - Add type annotation: `readonly events: { changed: Subject<void> } = { ... }`
+   - Test: `deno publish --dry-run 2>&1 | grep toast`
+   - Commit if successful
 
-4. **Continue the momentum:** Focus on one directory at a time for consistent patterns
+4. **Continue with remaining Phase 1 files**
+   - Fix 2-3 more simple events
+   - Test after each
+   - Commit every 2-3 fixes
+
+5. **Move to Phase 2-3** if time permits
+
+### ALTERNATIVE: Pick Individual Fixes
+
+1. Run fresh error check
+2. Pick ONE directory to focus on
+3. Fix 20-30 errors (1-2 hour session)
+4. Test and commit
+5. Update this file with new count
 
 ---
 
-**Good luck! You're making great progress. Slow and steady wins the race!** 🚀
+**Target for next session:** Get below 650 errors (10% milestone!)
 
-Remember: Test every change, revert mistakes, commit often.
+**Batch fix path:** Fix 23 events/behaviors + 20 export functions = 43 errors → ~654 remaining 🎯
+
+Good luck! 🚀

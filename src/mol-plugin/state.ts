@@ -26,6 +26,7 @@ import {
   State,
   type StateTransform,
   type StateTransformer,
+  StateBuilder,
 } from "../mol-state/index.ts";
 import { UUID } from "../mol-util/index.ts";
 import { ParamDefinition as PD } from "../mol-util/param-definition.ts";
@@ -127,7 +128,7 @@ class PluginState extends PluginComponent {
     };
   }
 
-  async setSnapshot(snapshot: PluginState.Snapshot) {
+  async setSnapshot(snapshot: PluginState.Snapshot): Promise<void> {
     await this.animation.stop();
 
     // this needs to go 1st since these changes are already baked into the behavior and data state
@@ -214,12 +215,15 @@ class PluginState extends PluginComponent {
   async setAnimationSnapshot(
     snapshot: PluginState.Snapshot,
     frameIndex: number,
-  ) {
+  ): Promise<void> {
     await this.animation.stopStateTransitionAnimation();
 
     const { transition } = snapshot;
     if (!transition) return;
-    const finalIndex = Math.min(frameIndex, transition.frames.length - 1);
+    const finalIndex: number = Math.min(
+      frameIndex,
+      transition.frames.length - 1,
+    );
     const frame = transition.frames[finalIndex] ?? snapshot.data;
     if (frame.data)
       await this.plugin.runTask(this.data.setSnapshot(frame.data));
@@ -258,8 +262,8 @@ class PluginState extends PluginComponent {
     a: StateTransform.Ref,
     params: any,
     canUndo?: string | boolean,
-  ) {
-    const tree = state.build().to(a).update(params);
+  ): Promise<void> {
+    const tree: StateBuilder.Root = state.build().to(a).update(params);
     return PluginCommands.State.Update(this.plugin, {
       state,
       tree,
@@ -267,7 +271,7 @@ class PluginState extends PluginComponent {
     });
   }
 
-  hasBehavior(behavior: StateTransformer) {
+  hasBehavior(behavior: StateTransformer): boolean {
     return this.behaviors.tree.transforms.has(behavior.id);
   }
 
@@ -277,7 +281,7 @@ class PluginState extends PluginComponent {
       old: StateTransformer.Params<T>,
     ) => void | StateTransformer.Params<T>,
   ) {
-    const tree = this.behaviors.build();
+    const tree: StateBuilder.Root = this.behaviors.build();
     if (!this.behaviors.tree.transforms.has(behavior.id)) {
       const defaultParams = behavior.createDefaultParams(
         void 0 as any,
@@ -415,7 +419,7 @@ namespace PluginState {
       const { transition } = snapshot;
       if (!transition) return 1000 / 60;
 
-      let minDuration = Infinity;
+      let minDuration: number = Infinity;
       for (const frame of transition.frames) {
         if (frame.durationInMs > 0 && frame.durationInMs < minDuration) {
           minDuration = frame.durationInMs;
@@ -431,7 +435,7 @@ namespace PluginState {
       if (!snapshot) return undefined;
       const { transition } = snapshot;
       if (!transition) return undefined;
-      let totalDuration = 0;
+      let totalDuration: number = 0;
       for (let i = 0; i < transition.frames.length; i++) {
         const frame = transition.frames[i];
         totalDuration += frame.durationInMs;
@@ -448,8 +452,8 @@ namespace PluginState {
       if (!snapshot || frameIndex === undefined) return 0;
       const { transition } = snapshot;
       if (!transition) return 0;
-      let currentDuration = 0;
-      for (let i = 0; i < frameIndex; i++) {
+      let currentDuration: number = 0;
+      for (let i: number = 0; i < frameIndex; i++) {
         if (transition.frames.length <= i) break;
         const frame = transition.frames[i];
         currentDuration += frame.durationInMs;
@@ -465,7 +469,7 @@ namespace PluginState {
     const { transition } = snapshot;
     if (!transition) return undefined;
 
-    let t = timestamp;
+    let t: number = timestamp;
     if (transition.loop) {
       t %= getStateTransitionDuration(snapshot) ?? 1;
     }

@@ -13,6 +13,8 @@ import {
   Canvas3D,
   Canvas3DContext,
   DefaultCanvas3DParams,
+  type Canvas3DProps,
+  type PartialCanvas3DProps,
 } from "../mol-canvas3d/canvas3d.ts";
 import { resizeCanvas } from "../mol-canvas3d/util.ts";
 import { Vec2 } from "../mol-math/linear-algebra.ts";
@@ -42,7 +44,7 @@ import { type LeftPanelTabName, PluginLayout } from "./layout.ts";
 import { Representation } from "../mol-repr/representation.ts";
 import { StructureRepresentationRegistry } from "../mol-repr/structure/registry.ts";
 import { VolumeRepresentationRegistry } from "../mol-repr/volume/registry.ts";
-import { StateTransform } from "../mol-state/index.ts";
+import { StateTransform, StateBuilder } from "../mol-state/index.ts";
 import { type RuntimeContext, Scheduler, Task } from "../mol-task/index.ts";
 import { ColorTheme } from "../mol-theme/color.ts";
 import { SizeTheme } from "../mol-theme/size.ts";
@@ -102,13 +104,13 @@ export class PluginContext {
     rej: (err: any) => void,
   ] = [() => {}, () => {}];
 
-  private disposed = false;
+  private disposed: boolean = false;
   private container: PluginContainer | undefined = void 0;
   private ev = RxEventHelper.create();
 
   readonly config!: PluginConfigManager; // needed to init state
-  readonly state = new PluginState(this);
-  readonly commands = new PluginCommandManager();
+  readonly state: PluginState = new PluginState(this);
+  readonly commands: PluginCommandManager = new PluginCommandManager();
 
   private canvas3dInit = this.ev.behavior<boolean>(false);
   readonly behaviors = {
@@ -162,11 +164,13 @@ export class PluginContext {
     },
   } as const;
 
-  readonly canvas3dInitialized = new Promise<void>((res, rej) => {
-    this.initCanvas3dPromiseCallbacks = [res, rej];
-  });
+  readonly canvas3dInitialized: Promise<void> = new Promise<void>(
+    (res, rej) => {
+      this.initCanvas3dPromiseCallbacks = [res, rej];
+    },
+  );
 
-  readonly initialized = new Promise<void>((res, rej) => {
+  readonly initialized: Promise<void> = new Promise<void>((res, rej) => {
     this.initializedPromiseCallbacks = [res, rej];
   });
 
@@ -176,8 +180,8 @@ export class PluginContext {
 
   readonly canvas3dContext: Canvas3DContext | undefined;
   readonly canvas3d: Canvas3D | undefined;
-  readonly layout = new PluginLayout(this);
-  readonly animationLoop = new PluginAnimationLoop(this);
+  readonly layout: PluginLayout = new PluginLayout(this);
+  readonly animationLoop: PluginAnimationLoop = new PluginAnimationLoop(this);
 
   readonly representation = {
     structure: {
@@ -202,7 +206,7 @@ export class PluginContext {
     },
   } as const;
 
-  readonly dataFormats = new DataFormatRegistry();
+  readonly dataFormats: DataFormatRegistry = new DataFormatRegistry();
 
   readonly builders = {
     data: new DataBuilder(this),
@@ -252,19 +256,24 @@ export class PluginContext {
   readonly customModelProperties = new CustomProperty.Registry<Model>();
   readonly customStructureProperties = new CustomProperty.Registry<Structure>();
 
-  readonly customStructureControls = new Map<
+  readonly customStructureControls: Map<string, new () => any> = new Map<
     string,
     {
       new (): any /* constructible react components with <action.customControl /> */;
     }
   >();
-  readonly customImportControls = new Map<
+  readonly customImportControls: Map<string, new () => any> = new Map<
     string,
     {
       new (): any /* constructible react components with <action.customControl /> */;
     }
   >();
-  readonly genericRepresentationControls = new Map<
+  readonly genericRepresentationControls: Map<
+    string,
+    (
+      selection: StructureHierarchyManager["selection"],
+    ) => [StructureHierarchyRef[], string]
+  > = new Map<
     string,
     (
       selection: StructureHierarchyManager["selection"],
@@ -290,14 +299,14 @@ export class PluginContext {
     canvas: HTMLCanvasElement,
     container: HTMLDivElement,
     canvas3dContext?: Canvas3DContext,
-  ) {
+  ): Promise<boolean> {
     return this._initViewer(canvas, container, canvas3dContext);
   }
 
   async initContainerAsync(options?: {
     canvas3dContext?: Canvas3DContext;
     checkeredCanvasBackground?: boolean;
-  }) {
+  }): Promise<boolean> {
     return this._initContainer(options);
   }
 
@@ -307,14 +316,14 @@ export class PluginContext {
       canvas3dContext?: Canvas3DContext;
       checkeredCanvasBackground?: boolean;
     },
-  ) {
+  ): Promise<boolean> {
     return this._mount(target, initOptions);
   }
 
   private _initContainer(options?: {
     canvas3dContext?: Canvas3DContext;
     checkeredCanvasBackground?: boolean;
-  }) {
+  }): boolean {
     if (this.container) return true;
     const container = new PluginContainer({
       checkeredCanvasBackground: options?.checkeredCanvasBackground,
@@ -343,7 +352,7 @@ export class PluginContext {
       canvas3dContext?: Canvas3DContext;
       checkeredCanvasBackground?: boolean;
     },
-  ) {
+  ): boolean {
     if (this.disposed) throw new Error("Cannot mount a disposed context");
 
     if (!this._initContainer(initOptions)) return false;
@@ -352,7 +361,7 @@ export class PluginContext {
     return true;
   }
 
-  unmount() {
+  unmount(): void {
     this.container?.unmount();
   }
 
@@ -360,7 +369,7 @@ export class PluginContext {
     canvas: HTMLCanvasElement,
     container: HTMLDivElement,
     canvas3dContext?: Canvas3DContext,
-  ) {
+  ): boolean {
     try {
       this.layout.setRoot(container);
       if (this.spec.layout && this.spec.layout.initial)
@@ -404,9 +413,9 @@ export class PluginContext {
       (this.canvas3dContext as Canvas3DContext) = canvas3dContext;
       (this.canvas3d as Canvas3D) = Canvas3D.create(this.canvas3dContext!);
       this.canvas3dInit.next(true);
-      let props = this.spec.canvas3d;
+      let props: PartialCanvas3DProps | undefined = this.spec.canvas3d;
 
-      const backgroundColor = Color(0xfcfbf9);
+      const backgroundColor: Color = Color(0xfcfbf9);
       if (!props) {
         this.canvas3d?.setProps({ renderer: { backgroundColor } });
       } else {
@@ -481,12 +490,12 @@ export class PluginContext {
     }
   }
 
-  handleResize = () => {
-    const canvas = this.canvas3dContext?.canvas;
-    const container = this.layout.root;
+  handleResize: () => void = () => {
+    const canvas: HTMLCanvasElement | undefined = this.canvas3dContext?.canvas;
+    const container: HTMLElement | undefined = this.layout.root;
     if (container && canvas) {
-      resizeCanvas(canvas, container, this.canvas3dContext.pixelScale);
-      this.canvas3dContext.syncPixelScale();
+      resizeCanvas(canvas, container, this.canvas3dContext!.pixelScale);
+      this.canvas3dContext!.syncPixelScale();
       this.canvas3d?.requestResize();
     }
   };
@@ -525,7 +534,7 @@ export class PluginContext {
   dataTransaction(
     f: (ctx: RuntimeContext) => Promise<void> | void,
     options?: { canUndo?: string | boolean; rethrowErrors?: boolean },
-  ) {
+  ): Promise<void> {
     return this.runTask(this.state.data.transaction(f, options));
   }
 
@@ -570,7 +579,7 @@ export class PluginContext {
     this.disposed = true;
   }
 
-  private initBehaviorEvents() {
+  private initBehaviorEvents(): void {
     this.subs.push(
       merge(
         this.state.data.behaviors.isUpdating,
@@ -581,7 +590,7 @@ export class PluginContext {
       }),
     );
 
-    const timeoutMs =
+    const timeoutMs: number =
       this.config.get(PluginConfig.General.IsBusyTimeoutMs) || 750;
     const isBusy = this.behaviors.state.isBusy;
 
@@ -589,7 +598,7 @@ export class PluginContext {
     const setBusy = () => {
       if (!isBusy.value) isBusy.next(true);
     };
-    const reset = () => {
+    const reset: () => void = () => {
       if (timeout !== void 0) clearTimeout(timeout);
       timeout = void 0;
     };
@@ -615,7 +624,7 @@ export class PluginContext {
     );
 
     this.subs.push(
-      this.behaviors.interaction.selectionMode.subscribe((v) => {
+      this.behaviors.interaction.selectionMode.subscribe((v): void => {
         if (!v) {
           this.managers.interactivity?.lociSelects.deselectAll();
         }
@@ -623,7 +632,7 @@ export class PluginContext {
     );
   }
 
-  private initBuiltInBehavior() {
+  private initBuiltInBehavior(): void {
     BuiltInPluginBehaviors.State.registerDefault(this);
     BuiltInPluginBehaviors.Representation.registerDefault(this);
     BuiltInPluginBehaviors.Camera.registerDefault(this);
@@ -633,12 +642,14 @@ export class PluginContext {
       merge(
         this.state.data.events.log,
         this.state.behaviors.events.log,
-      ).subscribe((e) => this.events.log.next(e)),
+      ).subscribe((e) => {
+        return this.events.log.next(e);
+      }),
     );
   }
 
-  private async initBehaviors() {
-    let tree = this.state.behaviors.build();
+  private async initBehaviors(): Promise<void> {
+    let tree: StateBuilder.Root = this.state.behaviors.build();
 
     for (const cat of Object.keys(PluginBehavior.Categories)) {
       tree
@@ -652,7 +663,12 @@ export class PluginContext {
 
     // Init custom properties 1st
     for (const b of this.spec.behaviors) {
-      const cat = PluginBehavior.getCategoryId(b.transformer);
+      const cat:
+        | "common"
+        | "representation"
+        | "interaction"
+        | "custom-props"
+        | "misc" = PluginBehavior.getCategoryId(b.transformer);
       if (cat !== "custom-props") continue;
 
       tree
@@ -668,7 +684,12 @@ export class PluginContext {
 
     tree = this.state.behaviors.build();
     for (const b of this.spec.behaviors) {
-      const cat = PluginBehavior.getCategoryId(b.transformer);
+      const cat:
+        | "common"
+        | "representation"
+        | "interaction"
+        | "custom-props"
+        | "misc" = PluginBehavior.getCategoryId(b.transformer);
       if (cat === "custom-props") continue;
 
       tree
@@ -705,7 +726,7 @@ export class PluginContext {
     }
   }
 
-  async init() {
+  async init(): Promise<void> {
     try {
       this.subs.push(
         this.events.log.subscribe(

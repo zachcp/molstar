@@ -18,7 +18,7 @@ import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 const B = ButtonsType;
 const M = ModifiersKeys;
 const Trigger = Binding.Trigger;
-const Key = Binding.TriggerKey;
+const Key: (code?: string | undefined, modifiers?: ModifiersKeys | undefined) => Binding.Trigger = Binding.TriggerKey;
 
 export const DefaultClickResetCameraOnEmpty = Binding([
     Trigger(B.Flag.Primary, M.create()),

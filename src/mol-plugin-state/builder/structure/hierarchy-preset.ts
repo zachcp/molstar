@@ -21,6 +21,7 @@ import { Model } from "../../../mol-model/structure.ts";
 import { getStructureQuality } from "../../../mol-repr/util.ts";
 import { OperatorNameColorThemeProvider } from "../../../mol-theme/color/operator-name.ts";
 import { PluginConfig } from "../../../mol-plugin/config.ts";
+import { StructureBuilder } from "../structure.ts";
 
 export interface TrajectoryHierarchyPresetProvider<P = any, S = {}>
   extends PresetProvider<PluginStateObject.Molecule.Trajectory, P, S> {}
@@ -101,7 +102,7 @@ const defaultPreset = TrajectoryHierarchyPresetProvider({
   },
   params: DefaultParams,
   async apply(trajectory, params, plugin) {
-    const builder = plugin.builders.structure;
+    const builder: StructureBuilder = plugin.builders.structure;
 
     const model = await builder.createModel(trajectory, params.model);
     const modelProperties = await builder.insertModelProperties(
@@ -124,7 +125,7 @@ const defaultPreset = TrajectoryHierarchyPresetProvider({
             isHidden: true,
           })
         : void 0;
-    const representationPreset =
+    const representationPreset: string =
       params.representationPreset ||
       plugin.config.get(PluginConfig.Structure.DefaultRepresentationPreset) ||
       PresetStructureRepresentations.auto.id;
@@ -164,20 +165,20 @@ const allModels = TrajectoryHierarchyPresetProvider({
     group: "Preset",
     description: "Shows all models; colored by trajectory-index.",
   },
-  isApplicable: (o) => {
+  isApplicable: (o): boolean => {
     return o.data.frameCount > 1;
   },
   params: AllModelsParams,
   async apply(trajectory, params, plugin) {
-    const tr = StateObjectRef.resolveAndCheck(plugin.state.data, trajectory)
-      ?.obj?.data;
+    const tr: PluginStateObject.Molecule.Trajectory["data"] | undefined =
+      StateObjectRef.resolveAndCheck(plugin.state.data, trajectory)?.obj?.data;
     if (!tr) return {};
 
     if (tr.frameCount === 1 && params.useDefaultIfSingleModel) {
       return defaultPreset.apply(trajectory, params as any, plugin);
     }
 
-    const builder = plugin.builders.structure;
+    const builder: StructureBuilder = plugin.builders.structure;
 
     const models = [],
       structures = [];
@@ -201,7 +202,16 @@ const allModels = TrajectoryHierarchyPresetProvider({
       models.push(model);
       structures.push(structure);
 
-      const quality = structure.obj
+      const quality:
+        | "custom"
+        | "auto"
+        | "highest"
+        | "higher"
+        | "high"
+        | "medium"
+        | "low"
+        | "lower"
+        | "lowest" = structure.obj
         ? getStructureQuality(structure.obj.data, {
             elementCountFactor: tr.frameCount,
           })
@@ -263,7 +273,7 @@ async function applyCrystalSymmetry(
   const unitcell = await builder.tryCreateUnitcell(modelProperties, undefined, {
     isHidden: false,
   });
-  const representationPreset =
+  const representationPreset: string =
     params.representationPreset ||
     plugin.config.get(PluginConfig.Structure.DefaultRepresentationPreset) ||
     PresetStructureRepresentations.auto.id;
@@ -313,7 +323,7 @@ const supercell = TrajectoryHierarchyPresetProvider({
     description:
       "Shows the super cell, i.e. the central unit cell and all adjacent unit cells.",
   },
-  isApplicable: (o) => {
+  isApplicable: (o): boolean => {
     return Model.hasCrystalSymmetry(o.data.representative);
   },
   params: CrystalSymmetryParams,
@@ -355,12 +365,12 @@ const crystalContacts = TrajectoryHierarchyPresetProvider({
     description:
       "Showsasymetric unit and chains from neighbours within 5 \u212B, i.e., symmetry mates.",
   },
-  isApplicable: (o) => {
+  isApplicable: (o): boolean => {
     return Model.hasCrystalSymmetry(o.data.representative);
   },
   params: CrystalContactsParams,
   async apply(trajectory, params, plugin) {
-    const builder = plugin.builders.structure;
+    const builder: StructureBuilder = plugin.builders.structure;
 
     const model = await builder.createModel(trajectory, params.model);
     const modelProperties = await builder.insertModelProperties(
@@ -382,7 +392,7 @@ const crystalContacts = TrajectoryHierarchyPresetProvider({
       undefined,
       { isHidden: true },
     );
-    const representationPreset =
+    const representationPreset: string =
       params.representationPreset ||
       plugin.config.get(PluginConfig.Structure.DefaultRepresentationPreset) ||
       PresetStructureRepresentations.auto.id;
