@@ -13,7 +13,7 @@ export interface Grouping<V, K> {
 }
 
 class GroupingImpl<K, V> {
-  readonly map = new Map<K, V[]>();
+  readonly map: Map<K, V[]> = new Map<K, V[]>();
   readonly keys: K[] = [];
   readonly groups: V[][] = [];
 

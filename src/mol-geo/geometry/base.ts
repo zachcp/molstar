@@ -34,7 +34,7 @@ export const VisualQualityInfo = {
 };
 export type VisualQuality = keyof typeof VisualQualityInfo
 export const VisualQualityNames = Object.keys(VisualQualityInfo) as VisualQuality[];
-export const VisualQualityOptions = PD.arrayToOptions(VisualQualityNames);
+export const VisualQualityOptions: ["auto" | "custom" | "highest" | "higher" | "high" | "medium" | "low" | "lower" | "lowest", string][] = PD.arrayToOptions(VisualQualityNames);
 
 //
 
