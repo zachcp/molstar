@@ -5,6 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
+import { Subject } from "rxjs";
 import { VisualQualityOptions } from "../../../mol-geo/geometry/base.ts";
 import { InteractionsProvider } from "../../../mol-model-props/computed/interactions.ts";
 import {
@@ -69,7 +70,9 @@ interface StructureComponentManagerState {
 }
 
 class StructureComponentManager extends StatefulPluginComponent<StructureComponentManagerState> {
-  readonly events = {
+  readonly events: {
+    optionsUpdated: Subject<undefined>;
+  } = {
     optionsUpdated: this.ev<undefined>(),
   };
 

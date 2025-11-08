@@ -6,6 +6,7 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
+import { Subject } from "rxjs";
 import { OrderedSet } from "../../../mol-data/int.ts";
 import { BoundaryHelper } from "../../../mol-math/geometry/boundary-helper.ts";
 import { Vec3 } from "../../../mol-math/linear-algebra.ts";
@@ -50,7 +51,15 @@ export type StructureSelectionSnapshot = {
 };
 
 export class StructureSelectionManager extends StatefulPluginComponent<StructureSelectionManagerState> {
-  readonly events = {
+  readonly events: {
+    changed: Subject<undefined>;
+    additionsHistoryUpdated: Subject<undefined>;
+    loci: {
+      add: Subject<StructureElement.Loci>;
+      remove: Subject<StructureElement.Loci>;
+      clear: Subject<undefined>;
+    };
+  } = {
     changed: this.ev<undefined>(),
     additionsHistoryUpdated: this.ev<undefined>(),
 
@@ -109,7 +118,9 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
       }
     });
 
-    const label: string = structureElementStatsLabel(stats, { countsOnly: true });
+    const label: string = structureElementStatsLabel(stats, {
+      countsOnly: true,
+    });
 
     return { structureCount, elementCount, label };
   }
@@ -300,8 +311,8 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
     if (!this.entries.has(ref)) return;
 
     // use structure from last decorator as reference
-    const structure: Structure | undefined = this.plugin.helpers.substructureParent.get(obj.data)?.obj
-      ?.data;
+    const structure: Structure | undefined =
+      this.plugin.helpers.substructureParent.get(obj.data)?.obj?.data;
     if (!structure) return;
 
     // oldObj is not defined for inserts (e.g. TransformStructureConformation)
@@ -551,7 +562,11 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
     this.plugin.runTask(
       Task.create("Structure Selection", async (runtime): Promise<void> => {
         for (const s of this.applicableStructures) {
-          const loci: StructureSelection = await query.getSelection(this.plugin, runtime, s);
+          const loci: StructureSelection = await query.getSelection(
+            this.plugin,
+            runtime,
+            s,
+          );
           this.triggerInteraction(
             modifier,
             StructureSelection.toLociWithSourceUnits(loci),
