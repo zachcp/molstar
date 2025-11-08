@@ -1,17 +1,16 @@
 # Next Session Quick-Start Guide
 
-**Status:** 697 errors remaining (664 fixable)
-**Progress:** 9.0% complete (66/730 errors fixed)
+**Status:** 585 errors remaining
+**Progress:** 19.9% complete (145 errors fixed)
 
 ---
 
 ## 🎯 Current State
 
-- `missing-explicit-type`: 414 errors
-- `missing-explicit-return-type`: 249 errors
+- `missing-explicit-return-type`: ~585 errors
 - `unsupported-super-class-expr`: 33 errors (unfixable)
 
-**Recent Session:** Fixed 34 errors via individual fixes
+**Recent Session:** Fixed 9 errors (6 events/behaviors + 3 return types)
 
 ---
 
@@ -187,16 +186,17 @@ grep "src/mol-canvas3d" /tmp/deno_errors.txt | head -20
 
 ```
 Starting point: 730 fixable errors
-Current: 664 fixable errors
+Current: 585 errors
 
 - ✅ < 700 errors - ACHIEVED!
-- 🎯 < 650 errors (10%) - 14 more to go
+- ✅ < 650 errors (10%) - ACHIEVED!
+- 🎯 < 500 errors (30%) - 85 more to go
 - 🎯 < 500 errors (30%)
 - 🎯 < 250 errors (65%)
 - 🎯 < 100 errors (85%)
 - 🏁 0 errors (100%)
 
-Pace: ~34 errors/session = ~20 sessions remaining
+Pace: ~48 errors/session = ~12 sessions remaining
 ```
 
 ---
@@ -257,8 +257,10 @@ git reset --hard HEAD
 
 ---
 
-**Target for next session:** Get below 650 errors (10% milestone!)
+**Target for next session:** Get below 500 errors (30% milestone!)
 
-**Batch fix path:** Fix 23 events/behaviors + 20 export functions = 43 errors → ~654 remaining 🎯
+**Recent fixes:**
+- ✅ Fixed 6 readonly events/behaviors type annotations
+- ✅ Fixed 3 simple return types (boolean, void, Promise<void>)
 
 Good luck! 🚀
