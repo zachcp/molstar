@@ -187,7 +187,7 @@ class PluginAnimationManager extends StatefulPluginComponent<PluginAnimationMana
     }
   }
 
-  stopStateTransitionAnimation() {
+  stopStateTransitionAnimation(): Promise<void> | undefined {
     if (!this.isAnimatingStateTransition) return;
     return this.stop();
   }

@@ -213,7 +213,7 @@ namespace InteractivityManager {
       this.prev.push(loci);
     }
 
-    clearHighlights = (noRender = false) => {
+    clearHighlights = (noRender = false): void => {
       for (const p of this.prev) {
         this.mark(p, MarkerAction.RemoveHighlight, noRender);
       }
