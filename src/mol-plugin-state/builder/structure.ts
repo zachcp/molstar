@@ -193,7 +193,7 @@ export class StructureBuilder {
     return props.commit({ revertOnError: true });
   }
 
-  isComponentTransform(cell: StateObjectCell) {
+  isComponentTransform(cell: StateObjectCell): boolean {
     return (
       cell.transform.transformer === StateTransforms.Model.StructureComponent
     );
