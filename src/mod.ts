@@ -19,6 +19,8 @@ export * from "./mol-plugin-state/index.ts";
 // Canvas
 export * from "./mol-canvas3d/index.ts";
 
-// Extensions that have index.ts files and pass type checking
-// Note: Some extensions import assets (images, etc.) or have type errors
-// and cannot be exported from the main entry point
+// Note: Extensions cannot be exported from main entry point
+// - Many have TypeScript compilation errors
+// - Some import assets (images, fonts) that Deno doesn't support
+// - Users should build their own applications using the core APIs
+// - See src/apps/viewer/app.ts for an example of how to use extensions
