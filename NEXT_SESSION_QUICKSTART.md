@@ -1,7 +1,7 @@
 # Next Session Quick-Start Guide
 
-**Status:** 137 errors remaining  
-**Progress:** ~81% complete (593 errors fixed from 730)
+**Status:** 126 errors remaining  
+**Progress:** ~83% complete (604 errors fixed from 730)
 
 ---
 
@@ -16,6 +16,11 @@
 ## ⚠️ CRITICAL LEARNINGS
 
 ### What Causes TypeScript Errors
+**Session Progress:** Fixed 11 errors (137 → 126)
+- mol-state/tree/transient.ts: 6 errors fixed
+- mol-state/state.ts: 2 errors fixed
+- mol-state/object.ts: 3 errors fixed
+
 These patterns consistently introduce TypeScript errors when given explicit return types:
 
 1. **Parameter definition functions** (const *Params = ...)
@@ -45,10 +50,10 @@ Top files with errors:
 14 src/mol-plugin/context.ts
 13 src/mol-plugin-state/builder/structure/representation-preset.ts
 11 src/mol-script/language/symbol-table/structure-query.ts
-10 src/mol-state/state.ts
 10 src/mol-plugin/behavior/dynamic/representation.ts
 10 src/mol-plugin-state/builder/structure/hierarchy-preset.ts
 10 src/mol-gl/renderable/schema.ts
+9 src/mol-plugin/state.ts
 ```
 
 ---
@@ -127,10 +132,17 @@ export function dispose(): void {
 
 ### mol-plugin-state/objects.ts (32 errors)
 - Contains many `StateObject.factory()` calls
-- Might be complex - needs investigation
+- Complex factory functions - SKIP
 
-### mol-model/volume/volume.ts
-- Line 156: `createIsoValueParam` - returns PD.Conditioned (SKIP)
+### mol-state/tree/transient.ts ✅ DONE
+- Fixed: asTransient, setParams, setTags, setDependsOn, assignState, asImmutable
+
+### mol-state/state.ts ✅ PARTIALLY DONE
+- Fixed: State.create, ObjectEvent.isCell
+- Remaining 8 errors are complex (factory functions, generics)
+
+### mol-state/object.ts ✅ DONE
+- Fixed: resolve, update, checkValid
 
 ### mol-plugin-state/builder/structure/hierarchy-preset.ts (10 errors)
 - ALL are *Params arrow functions
@@ -178,14 +190,14 @@ find . -name "*.bak" -type f -delete
 
 ```
 Starting: 730 fixable errors
-Fixed:    593 errors (81%)
-Current:  137 errors
+Fixed:    604 errors (83%)
+Current:  126 errors
 Target:   0 errors
 
-Session targets:
-- Fix 20-30 safe errors
-- Avoid ALL parameter-related functions
-- Zero TypeScript errors at all times
+Session Progress:
+- Fixed 11 errors so far
+- Zero TypeScript errors maintained
+- Completed: transient.ts, most of object.ts
 ```
 
 ---
