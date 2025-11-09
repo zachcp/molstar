@@ -341,36 +341,32 @@ Continue with `missing-explicit-type` errors, but be VERY selective about patter
    - Issue: Generic `PD.Params` type breaks specific param type constraints
    - FIX: Skip these files entirely!
 
-2. **ColorMap objects** - causes `TS2538` errors  
-   - Pattern: `export const *Colors = ColorMap({ ... })`
-   - Issue: Type annotation `ColorMap<any>` conflicts with specific key types
-   - FIX: Skip all color theme files!
-
-3. **Complex nested objects (IIFEs, factory results)**
-   - Pattern: `const immediateActions = (function() { ... }());`
-   - Issue: Return type inference is complex
-   - FIX: Skip these
-
-**Safe patterns that still work:**
-- ✅ Simple `Binding` constants
-- ✅ `Transformer<T1, T2, P>` factory results  
-- ✅ Simple type constants like `Type.Value<T>`, `Color`
-- ✅ Interface implementations
+**Files to AVOID (known dangerous):**
+- `mol-canvas3d/canvas3d.ts` - complex nested PD.Group
+- `mol-canvas3d/helper/camera-helper.ts` - TS2345 error
+- `mol-canvas3d/helper/xr-manager.ts` - missing InputBinding type
+- `mol-canvas3d/helper/pointer-helper.ts` - uses spread operators
+- `mol-canvas3d/helper/handle-helper.ts` - likely has spread operators
+- `mol-repr/volume/*.ts` - all use typeof patterns
+- `mol-plugin-state/builder/structure/*.ts` - param function patterns
 
 **Strategy:**
 1. **ONLY pick files where you understand the exact type needed**
 2. Check return types BEFORE editing
 3. Test immediately after each file
-4. When in doubt, SKIP it
-5. Revert immediately if ANY TypeScript errors appear
+4. Skip and move on if TypeScript errors appear
 
-**Progress on Fixed Patterns:**
-- ✅ `Binding` objects: Works great
-- ✅ Simple type constants: Works great
-- ✅ Transformer factory returns: Works great
-- ❌ `PD.Params` annotations: DO NOT USE
-- ❌ `ColorMap<T>` annotations: DO NOT USE
-- ❌ Complex nested objects: Skip
+**Commands:**
+```bash
+# See specific examples from a file
+deno publish --dry-run 2>&1 | grep "missing-explicit-type" -A 3 | grep -A 3 "FILENAME"
+
+# Quick test after edit
+deno publish --dry-run 2>&1 | grep "TS[0-9]" | wc -l
+
+# Count progress
+deno publish --dry-run 2>&1 | grep -c "error\[missing-explicit-type\]"
+```
 
 ### Critical Reminders
 - **ALWAYS test:** `deno publish --dry-run 2>&1 | grep "TS[0-9]" | wc -l` (must be 0)
