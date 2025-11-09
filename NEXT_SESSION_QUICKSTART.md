@@ -1,8 +1,8 @@
 # Next Session Quick-Start Guide
 
-**Status:** 494 total errors (42% complete)
+**Status:** 493 total errors (42% complete)
 - 126 `missing-explicit-return-type` (functions) - 83% done
-- 334 `missing-explicit-type` (variables/constants) - 10% done (37/371 fixed)
+- 333 `missing-explicit-type` (variables/constants) - 10% done (38/371 fixed)
 - 34 `unsupported-super-class-expr` (unfixable)
 
 **TypeScript Errors:** 0 ✅
@@ -44,7 +44,8 @@ export const SimpleParams: PD.Params = {
 export type SimpleParams = typeof SimpleParams;
 ```
 
-**Completed Files (37 errors fixed):**
+**Completed Files (38 errors fixed):**
+- ✅ `mol-canvas3d/passes/multi-sample.ts` - multi-sample params
 - ✅ `mol-theme/size/*.ts` (4 files) - size theme params
 - ✅ `mol-model-props/computed/interactions/*.ts` (7 files) - interaction params
 - ✅ Earlier: camera, type, mask, state, transformer, color themes (26 files)
@@ -75,9 +76,12 @@ export type Params = typeof Params;  // Don't add type!
 **Files to AVOID:**
 - Any file with `PD.Group()`, `PD.MappedStatic()`, `PD.Optional()` in params
 - Any file with spread operators (`...`) in param definitions
-- `mol-canvas3d/canvas3d.ts`, `mol-repr/volume/*.ts`
+- Any file with `PD.Interval()` that gets accessed like `props.rendersPerFrame[0]`
+- `mol-canvas3d/canvas3d.ts`, `mol-canvas3d/passes/tracing.ts`
+- `mol-repr/volume/*.ts`, `mol-geo/geometry/*/` (all use spread)
 - `mol-plugin-state/builder/structure/*.ts` (param functions)
 - Any color theme with `...getPaletteParams()`
+- Schema objects (Column.Schema, renderableSchema) - not PD.Params
 
 ---
 
@@ -88,7 +92,8 @@ export type Params = typeof Params;  // Don't add type!
 **Look for:**
 1. Files with 1-3 errors (easier to verify)
 2. Simple params with only `PD.Numeric`, `PD.Boolean`, `PD.Select`
-3. No spread operators, no `PD.Group`, no typeof patterns
+3. No spread operators, no `PD.Group`, no `PD.Interval`, no typeof patterns
+4. ⚠️ **CRITICAL**: Test immediately after each fix - some params break inference
 
 **Workflow:**
 ```bash
@@ -111,7 +116,7 @@ git checkout src/path/to/file.ts
 
 ## 📊 Top Files Remaining
 
-### Variable Type Errors (334 total)
+### Variable Type Errors (333 total)
 ```
 13 src/mol-script/language/symbol-table/core.ts
 11 src/mol-plugin/context.ts
@@ -141,20 +146,28 @@ git checkout src/path/to/file.ts
 ## 🚨 Safety Rules
 
 1. **Test after EVERY file:** `deno publish --dry-run 2>&1 | grep "TS[0-9]" | wc -l` must be 0
-2. **Revert immediately** on any TypeScript error
+2. **Revert immediately** on any TypeScript error - use `git checkout src/path/to/file.ts`
 3. **Read the file first** - verify it's a simple pattern
 4. **When in doubt, skip it** - better to skip 100 files than break 1
 5. **Commit frequently** - after 2-3 successful fixes
 6. **Document new dangerous patterns** in this file
+7. **⚠️ NEWLY DANGEROUS**: `PD.Interval()` params can break if accessed as arrays
 
 ---
 
 ## 📈 Progress Summary
 
-**Session Progress:** 505 → 494 errors (11 errors fixed)
-- Variable types: 345 → 334 (primarily simple param objects)
+**Session Progress:** 494 → 493 errors (1 error fixed this session)
+- Variable types: 334 → 333 (multi-sample params)
 - Zero TypeScript errors maintained throughout
+- Learned: PD.Interval() params are dangerous even without spread/Group
 
-**Overall Progress:** ~42% complete (641/857 fixable errors done)
+**Overall Progress:** ~42% complete (642/857 fixable errors done)
 
-**Next milestone:** Focus on simple param files, aim for <320 variable-type errors
+**Next milestone:** Focus on simple param files, aim for <330 variable-type errors
+
+**Session Notes:**
+- Successfully fixed: `mol-canvas3d/passes/multi-sample.ts` (simple PD types only)
+- Failed/Reverted: `mol-canvas3d/passes/tracing.ts` (PD.Interval breaks inference)
+- Most geometry/* files use `...BaseGeometry.Params` spread - all dangerous
+- Schema objects (Column.Schema, renderable schemas) are not PD.Params
