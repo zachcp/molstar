@@ -11,7 +11,9 @@ import type { PluginToastManager } from '../mol-plugin/util/toast.ts';
 import { IconButton } from './controls/common.tsx';
 import { CancelSvg } from './controls/icons.tsx';
 
-class ToastEntry extends PluginUIComponent<{ entry: PluginToastManager.Entry }> {
+class ToastEntry extends PluginUIComponent<{
+    entry: PluginToastManager.Entry;
+}> {
     private hide = () => {
         const entry = this.props.entry;
         (entry.hide || function () {}).call(null);
@@ -21,7 +23,6 @@ class ToastEntry extends PluginUIComponent<{ entry: PluginToastManager.Entry }> 
         const entry = this.props.entry;
         const message = typeof entry.message === 'string'
             ? <div dangerouslySetInnerHTML={{ __html: entry.message }} />
-            // @ts-ignore // TODO: handle type better
             : (
                 <div>
                     <entry.message />
@@ -33,12 +34,15 @@ class ToastEntry extends PluginUIComponent<{ entry: PluginToastManager.Entry }> 
                 <div className='msp-toast-title' onClick={() => this.hide()}>
                     {entry.title}
                 </div>
-                <div className='msp-toast-message'>
-                    {message}
-                </div>
+                <div className='msp-toast-message'>{message}</div>
                 <div className='msp-toast-clear'></div>
                 <div className='msp-toast-hide'>
-                    <IconButton svg={CancelSvg} onClick={this.hide} title='Hide' className='msp-no-hover-outline' />
+                    <IconButton
+                        svg={CancelSvg}
+                        onClick={this.hide}
+                        title='Hide'
+                        className='msp-no-hover-outline'
+                    />
                 </div>
             </div>
         );

@@ -11,13 +11,14 @@ import { OrderedMap } from 'immutable';
 import type { PluginContext } from '../context.ts';
 import { PluginCommands } from '../commands.ts';
 import type { Subject } from 'rxjs';
+import type * as React from 'react';
 
 export interface PluginToast {
     title: string;
     /**
      * The message can be either a string, html string, or an arbitrary React (Function) component.
      */
-    message: string | Function;
+    message: string | React.ComponentType;
     /**
      * Only one message with a given key can be shown.
      */
@@ -108,7 +109,7 @@ export namespace PluginToastManager {
         serialNumber: number;
         key?: string;
         title: string;
-        message: string | Function;
+        message: string | React.ComponentType;
         hide: () => void;
         timeout?: number;
     }
