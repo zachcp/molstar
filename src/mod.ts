@@ -43,23 +43,25 @@ export {
 // Version
 export { PLUGIN_VERSION as version } from "./mol-plugin/version.ts";
 
-// Extensions - Type-clean viewer extensions (11/15)
+// Extensions - Type-clean viewer extensions (12/15)
 // See EXTENSION_TYPE_FIXES.md for details on fixes applied
 export * from "./extensions/assembly-symmetry/index.ts";
 export * from "./extensions/anvil/behavior.ts";
+export * from "./extensions/dnatco/index.ts";
 export * from "./extensions/g3d/format.ts";
 export * from "./extensions/geo-export/index.ts";
 export * from "./extensions/model-archive/quality-assessment/behavior.ts";
+export { QualityAssessment } from "./extensions/model-archive/quality-assessment/prop.ts";
 export * from "./extensions/model-export/index.ts";
 export * from "./extensions/mp4-export/index.ts";
 export * from "./extensions/pdbe/index.ts";
 export * from "./extensions/rcsb/index.ts";
 export * from "./extensions/sb-ncbr/index.ts";
 export * from "./extensions/wwpdb/ccd/behavior.ts";
+export { wwPDBStructConnExtensionFunctions } from "./extensions/wwpdb/struct-conn/index.ts";
 export * from "./extensions/zenodo/index.ts";
 
 // Note: Some extensions cannot be exported:
 // - backgrounds: imports image assets (JPG files) incompatible with Deno
-// - dnatco: has type errors with symbol indexing (fixable)
 // - mvs: has import errors and API mismatches (fixable)
 // See EXTENSION_TYPE_FIXES.md for complete details and workarounds
