@@ -12,10 +12,10 @@ import { TableLegend } from '../../mol-util/legend.ts';
 import { defaults } from '../../mol-util/index.ts';
 import { ColorThemeCategory } from './categories.ts';
 
-const DefaultColor = Color(0xCCCCCC);
+const DefaultColor: Color = Color(0xCCCCCC);
 const Description = 'Gives everything the same, uniform color.';
 
-export const UniformColorThemeParams = {
+export const UniformColorThemeParams: PD.Params = {
     value: PD.Color(DefaultColor),
     saturation: PD.Numeric(0, { min: -6, max: 6, step: 0.1 }),
     lightness: PD.Numeric(0, { min: -6, max: 6, step: 0.1 }),
