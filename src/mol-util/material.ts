@@ -16,7 +16,7 @@ export interface Material {
     bumpiness: number
 }
 
-export function Material(values?: Partial<Material>) {
+export function Material(values?: Partial<Material>): Material {
     return { ...Material.Zero, ...values };
 }
 

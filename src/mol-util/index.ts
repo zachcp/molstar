@@ -201,7 +201,7 @@ export const merge: <T>(source: T, ...rest: Partial<T>[]) => T = _shallowMerge;
 function padTime(n: number): string {
   return (n < 10 ? "0" : "") + n;
 }
-export function formatTime(d: Date) {
+export function formatTime(d: Date): string {
   const h = d.getHours(),
     m = d.getMinutes(),
     s: number = d.getSeconds();
