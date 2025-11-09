@@ -31,7 +31,7 @@ const tmpPosA = Vec3();
 const tmpPos = Vec3();
 const tmpNorm = Vec3();
 
-export const Canvas3dInteractionHelperParams = {
+export const Canvas3dInteractionHelperParams: PD.Params = {
   maxFps: PD.Numeric(30, { min: 10, max: 60, step: 10 }),
   preferAtomPixelPadding: PD.Numeric(
     3,

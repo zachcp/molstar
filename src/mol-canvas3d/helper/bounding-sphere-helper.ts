@@ -23,7 +23,7 @@ import { sphereVertexCount } from "../../mol-geo/primitive/sphere.ts";
 import { ValueCell } from "../../mol-util/index.ts";
 import { Geometry } from "../../mol-geo/geometry/geometry.ts";
 
-export const DebugHelperParams = {
+export const DebugHelperParams: PD.Params = {
   sceneBoundingSpheres: PD.Boolean(false, {
     description: "Show full scene bounding spheres.",
   }),
