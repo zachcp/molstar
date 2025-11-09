@@ -12,7 +12,7 @@ import { ParamDefinition as PD } from "../../mol-util/param-definition.ts";
 import { Camera, type ICamera } from "../camera.ts";
 import { Viewport } from "./util.ts";
 
-export const StereoCameraParams = {
+export const StereoCameraParams: PD.Params = {
   eyeSeparation: PD.Numeric(
     0.062,
     { min: 0.02, max: 0.1, step: 0.001 },
@@ -24,7 +24,8 @@ export const StereoCameraParams = {
     { description: "Apparent object distance." },
   ),
 };
-export const DefaultStereoCameraProps = PD.getDefaultValues(StereoCameraParams);
+export const DefaultStereoCameraProps: StereoCameraProps =
+  PD.getDefaultValues(StereoCameraParams);
 export type StereoCameraProps = PD.Values<typeof StereoCameraParams>;
 
 export { StereoCamera };

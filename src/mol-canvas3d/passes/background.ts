@@ -45,13 +45,13 @@ import { Mat3 } from "../../mol-math/linear-algebra/3d/mat3.ts";
 import { Euler } from "../../mol-math/linear-algebra/3d/euler.ts";
 import type { PostprocessingProps } from "./postprocessing.ts";
 
-const SharedParams = {
+const SharedParams: PD.Params = {
   opacity: PD.Numeric(1, { min: 0.0, max: 1.0, step: 0.01 }),
   saturation: PD.Numeric(0, { min: -1, max: 1, step: 0.01 }),
   lightness: PD.Numeric(0, { min: -1, max: 1, step: 0.01 }),
 };
 
-const SkyboxParams = {
+const SkyboxParams: PD.Params = {
   faces: PD.MappedStatic("urls", {
     urls: PD.Group(
       {
@@ -93,7 +93,7 @@ const SkyboxParams = {
 };
 type SkyboxProps = PD.Values<typeof SkyboxParams>;
 
-const ImageParams = {
+const ImageParams: PD.Params = {
   source: PD.MappedStatic("url", {
     url: PD.Text(""),
     file: PD.File({ accept: "image/*" }),
@@ -111,21 +111,21 @@ const ImageParams = {
 };
 type ImageProps = PD.Values<typeof ImageParams>;
 
-const HorizontalGradientParams = {
+const HorizontalGradientParams: PD.Params = {
   topColor: PD.Color(Color(0xdddddd)),
   bottomColor: PD.Color(Color(0xeeeeee)),
   ratio: PD.Numeric(0.5, { min: 0.0, max: 1.0, step: 0.01 }),
   coverage: PD.Select("viewport", PD.arrayToOptions(["viewport", "canvas"])),
 };
 
-const RadialGradientParams = {
+const RadialGradientParams: PD.Params = {
   centerColor: PD.Color(Color(0xdddddd)),
   edgeColor: PD.Color(Color(0xeeeeee)),
   ratio: PD.Numeric(0.5, { min: 0.0, max: 1.0, step: 0.01 }),
   coverage: PD.Select("viewport", PD.arrayToOptions(["viewport", "canvas"])),
 };
 
-export const BackgroundParams = {
+export const BackgroundParams: PD.Params = {
   variant: PD.MappedStatic(
     "off",
     {
