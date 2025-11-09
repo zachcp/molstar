@@ -7,9 +7,11 @@
 
 import { deepClone, pickObjectKeys } from '../../../../mol-util/object.ts';
 import { GlobalMetadata, type MVSData_State, type Snapshot, type SnapshotMetadata } from '../../mvs-data.ts';
-import type { CustomProps } from '../generic/tree-schema.ts';
 import type { MVSAnimationNodeParams, MVSAnimationSubtree } from '../animation/animation-tree.ts';
+import type { CustomProps } from '../generic/tree-schema.ts';
 import type { MVSKind, MVSNode, MVSNodeParams, MVSSubtree } from './mvs-tree.ts';
+import type { ColorT, PrimitivePositionT } from './param-types.ts';
+
 
 /** Create a new MolViewSpec builder containing only a root node. Example of MVS builder usage:
  *
@@ -25,17 +27,15 @@ export function createMVSBuilder(params: CustomAndRef = {}) {
     return new Root(params);
 }
 
+
 /** Base class for MVS builder pointing to anything */
 class _Base<TKind extends MVSKind> {
     constructor(
         protected readonly _root: Root,
         protected readonly _node: MVSSubtree<TKind>,
-    ) {}
+    ) { }
     /** Create a new node, append as child to current _node, and return the new node */
-    protected addChild<TChildKind extends MVSKind>(
-        kind: TChildKind,
-        params_: MVSNodeParams<TChildKind> & CustomAndRef,
-    ) {
+    protected addChild<TChildKind extends MVSKind>(kind: TChildKind, params_: MVSNodeParams<TChildKind> & CustomAndRef) {
         const { params, custom, ref } = splitParams<MVSNodeParams<TChildKind>>(params_);
         const node = {
             kind,
@@ -48,6 +48,7 @@ class _Base<TKind extends MVSKind> {
         return node;
     }
 }
+
 
 /** MVS builder pointing to the 'root' node */
 export class Root extends _Base<'root'> implements FocusMixin, PrimitivesMixin {
@@ -92,7 +93,7 @@ export class Root extends _Base<'root'> implements FocusMixin, PrimitivesMixin {
     }
     focus = bindMethod(this, FocusMixinImpl, 'focus');
     primitives = bindMethod(this, PrimitivesMixinImpl, 'primitives');
-    primitives_from_uri = bindMethod(this, PrimitivesMixinImpl, 'primitives_from_uri');
+    primitivesFromUri = bindMethod(this, PrimitivesMixinImpl, 'primitivesFromUri');
 
     animation(params: MVSAnimationNodeParams<'animation'> & CustomAndRef = {}): Animation {
         this._animation ??= new Animation(params);
@@ -109,7 +110,7 @@ export class Root extends _Base<'root'> implements FocusMixin, PrimitivesMixin {
 export class Animation {
     private _node: MVSAnimationSubtree<'animation'>;
     constructor(
-        parameters: MVSAnimationNodeParams<'animation'> & CustomAndRef,
+        parameters: MVSAnimationNodeParams<'animation'> & CustomAndRef
     ) {
         this._node = {
             kind: 'animation',
@@ -125,12 +126,13 @@ export class Animation {
     interpolate(params: MVSAnimationNodeParams<'interpolate'> & CustomAndRef): Animation {
         const node = {
             kind: 'interpolate',
-            ...splitParams<MVSAnimationNodeParams<'interpolate'>>(params),
+            ...splitParams<MVSAnimationNodeParams<'interpolate'>>(params)
         } as MVSAnimationSubtree<'interpolate'>;
         this._node.children!.push(node);
         return this;
     }
 }
+
 
 /** MVS builder pointing to a 'download' node */
 export class Download extends _Base<'download'> {
@@ -140,6 +142,7 @@ export class Download extends _Base<'download'> {
     }
 }
 
+
 /** Subsets of 'structure' node params which will be passed to individual builder functions. */
 const StructureParamsSubsets = {
     model: ['block_header', 'block_index', 'model_index', 'coordinates_ref'],
@@ -148,69 +151,48 @@ const StructureParamsSubsets = {
     symmetry_mates: ['block_header', 'block_index', 'model_index', 'radius', 'coordinates_ref'],
 } satisfies { [kind in MVSNodeParams<'structure'>['type']]: (keyof MVSNodeParams<'structure'>)[] };
 
+
 /** MVS builder pointing to a 'parse' node */
 export class Parse extends _Base<'parse'> {
     /** Add a 'structure' node representing a "model structure", i.e. includes all coordinates from the original model without applying any transformations.
      * Return builder pointing to the new node. */
-    modelStructure(
-        params: Pick<MVSNodeParams<'structure'>, typeof StructureParamsSubsets['model'][number]> & CustomAndRef = {},
-    ): Structure {
-        return new Structure(
-            this._root,
-            this.addChild('structure', {
-                type: 'model',
-                ...pickObjectKeys(params, [...StructureParamsSubsets.model]),
-                custom: params.custom,
-                ref: params.ref,
-            }),
-        );
+    modelStructure(params: Pick<MVSNodeParams<'structure'>, typeof StructureParamsSubsets['model'][number]> & CustomAndRef = {}): Structure {
+        return new Structure(this._root, this.addChild('structure', {
+            type: 'model',
+            ...pickObjectKeys(params, [...StructureParamsSubsets.model]),
+            custom: params.custom,
+            ref: params.ref,
+        }));
     }
     /** Add a 'structure' node representing an "assembly structure", i.e. may apply filters and symmetry operators to the original model coordinates.
      * Return builder pointing to the new node. */
-    assemblyStructure(
-        params: Pick<MVSNodeParams<'structure'>, typeof StructureParamsSubsets['assembly'][number]> & CustomAndRef = {},
-    ): Structure {
-        return new Structure(
-            this._root,
-            this.addChild('structure', {
-                type: 'assembly',
-                ...pickObjectKeys(params, StructureParamsSubsets.assembly),
-                custom: params.custom,
-                ref: params.ref,
-            }),
-        );
+    assemblyStructure(params: Pick<MVSNodeParams<'structure'>, typeof StructureParamsSubsets['assembly'][number]> & CustomAndRef = {}): Structure {
+        return new Structure(this._root, this.addChild('structure', {
+            type: 'assembly',
+            ...pickObjectKeys(params, StructureParamsSubsets.assembly),
+            custom: params.custom,
+            ref: params.ref,
+        }));
     }
     /** Add a 'structure' node representing a "symmetry structure", i.e. applies symmetry operators to build crystal unit cells within given Miller indices.
      * Return builder pointing to the new node. */
-    symmetryStructure(
-        params: Pick<MVSNodeParams<'structure'>, typeof StructureParamsSubsets['symmetry'][number]> & CustomAndRef = {},
-    ): Structure {
-        return new Structure(
-            this._root,
-            this.addChild('structure', {
-                type: 'symmetry',
-                ...pickObjectKeys(params, StructureParamsSubsets.symmetry),
-                custom: params.custom,
-                ref: params.ref,
-            }),
-        );
+    symmetryStructure(params: Pick<MVSNodeParams<'structure'>, typeof StructureParamsSubsets['symmetry'][number]> & CustomAndRef = {}): Structure {
+        return new Structure(this._root, this.addChild('structure', {
+            type: 'symmetry',
+            ...pickObjectKeys(params, StructureParamsSubsets.symmetry),
+            custom: params.custom,
+            ref: params.ref,
+        }));
     }
     /** Add a 'structure' node representing a "symmetry mates structure", i.e. applies symmetry operators to build asymmetric units within a radius from the original model.
      * Return builder pointing to the new node. */
-    symmetryMatesStructure(
-        params:
-            & Pick<MVSNodeParams<'structure'>, typeof StructureParamsSubsets['symmetry_mates'][number]>
-            & CustomAndRef = {},
-    ): Structure {
-        return new Structure(
-            this._root,
-            this.addChild('structure', {
-                type: 'symmetry_mates',
-                ...pickObjectKeys(params, StructureParamsSubsets.symmetry_mates),
-                custom: params.custom,
-                ref: params.ref,
-            }),
-        );
+    symmetryMatesStructure(params: Pick<MVSNodeParams<'structure'>, typeof StructureParamsSubsets['symmetry_mates'][number]> & CustomAndRef = {}): Structure {
+        return new Structure(this._root, this.addChild('structure', {
+            type: 'symmetry_mates',
+            ...pickObjectKeys(params, StructureParamsSubsets.symmetry_mates),
+            custom: params.custom,
+            ref: params.ref,
+        }));
     }
     /** Add a 'volume' node representing raw volume data */
     volume(params: MVSNodeParams<'volume'> & CustomAndRef = {}): Volume {
@@ -222,6 +204,7 @@ export class Parse extends _Base<'parse'> {
         return this;
     }
 }
+
 
 /** MVS builder pointing to a 'structure' node */
 export class Structure extends _Base<'structure'> implements PrimitivesMixin, TransformMixin {
@@ -261,12 +244,12 @@ export class Structure extends _Base<'structure'> implements PrimitivesMixin, Tr
     transform = bindMethod(this, TransformMixinImpl, 'transform');
     instance = bindMethod(this, TransformMixinImpl, 'instance');
     primitives = bindMethod(this, PrimitivesMixinImpl, 'primitives');
-    primitives_from_uri = bindMethod(this, PrimitivesMixinImpl, 'primitives_from_uri');
+    primitivesFromUri = bindMethod(this, PrimitivesMixinImpl, 'primitivesFromUri');
 }
 
+
 /** MVS builder pointing to a 'component' or 'component_from_uri' or 'component_from_source' node */
-export class Component extends _Base<'component' | 'component_from_uri' | 'component_from_source'>
-    implements FocusMixin, TransformMixin {
+export class Component extends _Base<'component' | 'component_from_uri' | 'component_from_source'> implements FocusMixin, TransformMixin {
     /** Add a 'representation' node and return builder pointing to it. 'representation' node instructs to create a visual representation of a component. */
     representation(params: Partial<MVSNodeParams<'representation'>> & CustomAndRef = {}): Representation {
         const fullParams: MVSNodeParams<'representation'> = { ...params, type: params.type ?? 'cartoon' };
@@ -286,6 +269,7 @@ export class Component extends _Base<'component' | 'component_from_uri' | 'compo
     transform = bindMethod(this, TransformMixinImpl, 'transform');
     instance = bindMethod(this, TransformMixinImpl, 'instance');
 }
+
 
 /** MVS builder pointing to a 'representation' node */
 export class Representation extends _Base<'representation'> {
@@ -316,6 +300,7 @@ export class Representation extends _Base<'representation'> {
     }
 }
 
+
 /** MVS builder pointing to a 'component' or 'component_from_uri' or 'component_from_source' node */
 export class Volume extends _Base<'volume'> implements FocusMixin, TransformMixin {
     /** Add a 'representation' node and return builder pointing to it. 'representation' node instructs to create a visual representation of a component. */
@@ -329,6 +314,7 @@ export class Volume extends _Base<'volume'> implements FocusMixin, TransformMixi
     transform = bindMethod(this, TransformMixinImpl, 'transform');
     instance = bindMethod(this, TransformMixinImpl, 'instance');
 }
+
 
 /** MVS builder pointing to a 'volume_representation' node */
 export class VolumeRepresentation extends _Base<'volume_representation'> implements FocusMixin {
@@ -350,10 +336,8 @@ export class VolumeRepresentation extends _Base<'volume_representation'> impleme
     }
 }
 
-type MVSPrimitiveSubparams<TKind extends MVSNodeParams<'primitive'>['kind']> = Omit<
-    Extract<MVSNodeParams<'primitive'>, { kind: TKind }>,
-    'kind'
->;
+
+type MVSPrimitiveSubparams<TKind extends MVSNodeParams<'primitive'>['kind']> = Omit<Extract<MVSNodeParams<'primitive'>, { kind: TKind }>, 'kind'>;
 
 /** MVS builder pointing to a 'primitives' node */
 export class Primitives extends _Base<'primitives'> implements FocusMixin {
@@ -382,6 +366,11 @@ export class Primitives extends _Base<'primitives'> implements FocusMixin {
         this.addChild('primitive', { kind: 'distance_measurement', ...params });
         return this;
     }
+    /** Defines an angle between vectors (b - a) and (c - b). */
+    angle(params: MVSPrimitiveSubparams<'angle_measurement'> & CustomAndRef): Primitives {
+        this.addChild('primitive', { kind: 'angle_measurement', ...params });
+        return this;
+    }
     /** Defines a label. */
     label(params: MVSPrimitiveSubparams<'label'> & CustomAndRef): Primitives {
         this.addChild('primitive', { kind: 'label', ...params });
@@ -392,8 +381,19 @@ export class Primitives extends _Base<'primitives'> implements FocusMixin {
         this.addChild('primitive', { kind: 'ellipse', ...params });
         return this;
     }
-    /** Defines an ellipsoid */
+    /** Defines an ellipsoid. */
     ellipsoid(params: MVSPrimitiveSubparams<'ellipsoid'> & CustomAndRef): Primitives {
+        this.addChild('primitive', { kind: 'ellipsoid', ...params });
+        return this;
+    }
+    /** Defines a sphere (a special case of ellipsoid). */
+    sphere(params: {
+        center: PrimitivePositionT,
+        radius?: number | null,
+        radius_extent?: number | null,
+        color?: ColorT | null,
+        tooltip?: string | null,
+    } & CustomAndRef): Primitives {
         this.addChild('primitive', { kind: 'ellipsoid', ...params });
         return this;
     }
@@ -403,30 +403,37 @@ export class Primitives extends _Base<'primitives'> implements FocusMixin {
         return this;
     }
     focus = bindMethod(this, FocusMixinImpl, 'focus');
+
+    /** Add a 'clip' node and return builder pointing back to the representation node. 'clip' node instructs to apply clipping to a visual representation. */
+    clip(params: MVSNodeParams<'clip'> & CustomAndRef): Primitives {
+        this.addChild('clip', params);
+        return this;
+    }
 }
+
 
 /** MVS builder pointing to a 'primitives_from_uri' node */
 class PrimitivesFromUri extends _Base<'primitives_from_uri'> implements FocusMixin {
     focus = bindMethod(this, FocusMixinImpl, 'focus');
+
+    /** Add a 'clip' node and return builder pointing back to the representation node. 'clip' node instructs to apply clipping to a visual representation. */
+    clip(params: MVSNodeParams<'clip'> & CustomAndRef): PrimitivesFromUri {
+        this.addChild('clip', params);
+        return this;
+    }
 }
+
 
 // MIXINS
 
 type Constructor<T> = new (...args: any[]) => T;
 
 /** Fake interface for typing tweaks */
-interface Self {
-    '@type': 'self';
-}
+interface Self { '@type': 'self' }
 
-type ReplaceSelf<TFunction, TSelf> = TFunction extends (...args: infer TArgs) => Self ? (...args: TArgs) => TSelf
-    : TFunction;
+type ReplaceSelf<TFunction, TSelf> = TFunction extends (...args: infer TArgs) => Self ? (...args: TArgs) => TSelf : TFunction;
 
-function bindMethod<O extends _Base<any>, C extends Constructor<_Base<any>>, M extends keyof InstanceType<C>>(
-    thisObj: O,
-    mixin: C,
-    methodName: M,
-): ReplaceSelf<InstanceType<C>[M], O> {
+function bindMethod<O extends _Base<any>, C extends Constructor<_Base<any>>, M extends keyof InstanceType<C>>(thisObj: O, mixin: C, methodName: M): ReplaceSelf<InstanceType<C>[M], O> {
     return mixin.prototype[methodName].bind(thisObj);
 }
 
@@ -434,36 +441,36 @@ function bindMethod<O extends _Base<any>, C extends Constructor<_Base<any>>, M e
 
 interface FocusMixin {
     /** Add a 'focus' node and return builder pointing back to the original node. 'focus' node instructs to set the camera focus to a component (zoom in). */
-    focus(params: MVSNodeParams<'focus'> & CustomAndRef): any;
+    focus(params: MVSNodeParams<'focus'> & CustomAndRef): any,
 }
 class FocusMixinImpl extends _Base<MVSKind> implements FocusMixin {
     focus(params: MVSNodeParams<'focus'> & CustomAndRef = {}): Self {
         this.addChild('focus', params);
         return this as unknown as Self;
     }
-}
+};
 
 interface PrimitivesMixin {
     /** Allows the definition of a (group of) geometric primitives. You can add any number of primitives and then assign shared options (color, opacity etc.). */
-    primitives(params: MVSNodeParams<'primitives'> & CustomAndRef): Primitives;
+    primitives(params: MVSNodeParams<'primitives'> & CustomAndRef): Primitives,
     /** Allows the definition of a (group of) geometric primitives provided dynamically. */
-    primitives_from_uri(params: MVSNodeParams<'primitives_from_uri'> & CustomAndRef): PrimitivesFromUri;
-}
+    primitivesFromUri(params: MVSNodeParams<'primitives_from_uri'> & CustomAndRef): PrimitivesFromUri,
+};
 class PrimitivesMixinImpl extends _Base<MVSKind> implements PrimitivesMixin {
     primitives(params: MVSNodeParams<'primitives'> & CustomAndRef = {}): Primitives {
         return new Primitives(this._root, this.addChild('primitives', params));
     }
-    primitives_from_uri(params: MVSNodeParams<'primitives_from_uri'> & CustomAndRef): PrimitivesFromUri {
+    primitivesFromUri(params: MVSNodeParams<'primitives_from_uri'> & CustomAndRef): PrimitivesFromUri {
         return new PrimitivesFromUri(this._root, this.addChild('primitives_from_uri', params));
     }
-}
+};
 
 interface TransformMixin {
     /** Add a 'transform' node and return builder pointing back to this node. 'transform' node instructs to rotate and/or translate coordinates. */
-    transform(params: MVSNodeParams<'transform'> & CustomAndRef): this;
+    transform(params: MVSNodeParams<'transform'> & CustomAndRef): this
     /** Add an 'instance' node and return builder pointing back to this node. 'instance' node instructs to create a new instance of the object. */
-    instance(params: MVSNodeParams<'instance'> & CustomAndRef): this;
-}
+    instance(params: MVSNodeParams<'instance'> & CustomAndRef): this
+};
 class TransformMixinImpl extends _Base<MVSKind> implements TransformMixin {
     transform(params: MVSNodeParams<'transform'> & CustomAndRef = {}): any {
         validateTransformParams(params);
@@ -476,7 +483,7 @@ class TransformMixinImpl extends _Base<MVSKind> implements TransformMixin {
         this.addChild('instance', params);
         return this;
     }
-}
+};
 
 function validateTransformParams(params: MVSNodeParams<'transform' | 'instance'> & CustomAndRef) {
     if (params.rotation && params.rotation.length !== 9) {
@@ -486,9 +493,7 @@ function validateTransformParams(params: MVSNodeParams<'transform' | 'instance'>
         throw new Error('ValueError: `matrix` parameter must be an array of 16 numbers');
     }
     if (params.matrix && (params.translation || params.rotation)) {
-        throw new Error(
-            'ValueError: `matrix` parameter cannot be used together with `translation` or `rotation` parameters',
-        );
+        throw new Error('ValueError: `matrix` parameter cannot be used together with `translation` or `rotation` parameters');
     }
 }
 
@@ -496,53 +501,34 @@ function validateTransformParams(params: MVSNodeParams<'transform' | 'instance'>
 export function builderDemo() {
     const builder = createMVSBuilder();
     builder.canvas({ background_color: 'white' });
-    const struct = builder.download({ url: 'https://www.ebi.ac.uk/pdbe/entry-files/download/1og2_updated.cif' }).parse({
-        format: 'mmcif',
-    }).modelStructure();
+    const struct = builder.download({ url: 'https://www.ebi.ac.uk/pdbe/entry-files/download/1og2_updated.cif' }).parse({ format: 'mmcif' }).modelStructure();
     struct.component().representation().color({ color: 'white' });
-    struct.component({ selector: 'ligand' }).representation({
-        type: 'ball_and_stick',
-        custom: { repr_quality: 'high' },
-        ref: 'Ligand',
-    })
+    struct.component({ selector: 'ligand' }).representation({ type: 'ball_and_stick', custom: { repr_quality: 'high' }, ref: 'Ligand' })
         .color({ color: '#555555' })
         .color({ selector: { type_symbol: 'N' }, color: '#3050F8' })
         .color({ selector: { type_symbol: 'O' }, color: '#FF0D0D' })
         .color({ selector: { type_symbol: 'S' }, color: '#FFFF30' })
         .color({ selector: { type_symbol: 'FE' }, color: '#E06633' });
-    builder.download({ url: 'https://www.ebi.ac.uk/pdbe/entry-files/download/1og5_updated.cif' }).parse({
-        format: 'mmcif',
-    }).assemblyStructure({ assembly_id: '1' }).component().representation().color({ color: 'cyan' });
-    builder.download({ url: 'https://www.ebi.ac.uk/pdbe/entry-files/download/1og5_updated.cif' }).parse({
-        format: 'mmcif',
-    }).assemblyStructure({ assembly_id: '2' }).component().representation().color({ color: 'blue' });
-    const cif = builder.download({ url: 'https://www.ebi.ac.uk/pdbe/entry-files/download/1wrf_updated.cif' }).parse({
-        format: 'mmcif',
-    });
+    builder.download({ url: 'https://www.ebi.ac.uk/pdbe/entry-files/download/1og5_updated.cif' }).parse({ format: 'mmcif' }).assemblyStructure({ assembly_id: '1' }).component().representation().color({ color: 'cyan' });
+    builder.download({ url: 'https://www.ebi.ac.uk/pdbe/entry-files/download/1og5_updated.cif' }).parse({ format: 'mmcif' }).assemblyStructure({ assembly_id: '2' }).component().representation().color({ color: 'blue' });
+    const cif = builder.download({ url: 'https://www.ebi.ac.uk/pdbe/entry-files/download/1wrf_updated.cif' }).parse({ format: 'mmcif' });
 
     cif.modelStructure({ model_index: 0 }).component().representation().color({ color: '#CC0000' });
     cif.modelStructure({ model_index: 1 }).component().representation().color({ color: '#EE7700' });
     cif.modelStructure({ model_index: 2 }).component().representation().color({ color: '#FFFF00' });
 
-    cif.modelStructure({ model_index: 0 }).transform({ translation: [30, 0, 0] }).component().representation().color({
-        color: '#ff88bb',
-    });
-    cif.modelStructure({ model_index: 0 as any }).transform({
-        translation: [60, 0, 0],
-        rotation: [0, 1, 0, -1, 0, 0, 0, 0, 1],
-    }).component().representation().color({ color: '#aa0077' });
+    cif.modelStructure({ model_index: 0 }).transform({ translation: [30, 0, 0] }).component().representation().color({ color: '#ff88bb' });
+    cif.modelStructure({ model_index: 0 as any }).transform({ translation: [60, 0, 0], rotation: [0, 1, 0, -1, 0, 0, 0, 0, 1] }).component().representation().color({ color: '#aa0077' });
 
     return builder.getState();
 }
 
 export interface CustomAndRef {
-    custom?: CustomProps;
-    ref?: string;
-}
+    custom?: CustomProps,
+    ref?: string,
+};
 
-function splitParams<TParams extends {}>(
-    params_custom_ref: TParams & CustomAndRef,
-): { params: TParams; custom?: CustomProps; ref?: string } {
+function splitParams<TParams extends {}>(params_custom_ref: TParams & CustomAndRef): { params: TParams, custom?: CustomProps, ref?: string } {
     const { custom, ref, ...params } = params_custom_ref;
     return { params: params as TParams, custom, ref };
 }

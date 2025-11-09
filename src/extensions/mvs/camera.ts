@@ -6,12 +6,7 @@
  */
 
 import type { Camera } from '../../mol-canvas3d/camera.ts';
-import {
-    CameraFogParams,
-    Canvas3DParams,
-    type Canvas3DProps,
-    DefaultCanvas3DParams,
-} from '../../mol-canvas3d/canvas3d.ts';
+import { CameraFogParams, Canvas3DParams, type Canvas3DProps, DefaultCanvas3DParams } from '../../mol-canvas3d/canvas3d.ts';
 import { TrackballControlsParams } from '../../mol-canvas3d/controls/trackball.ts';
 import { BackgroundParams } from '../../mol-canvas3d/passes/background.ts';
 import { BloomParams } from '../../mol-canvas3d/passes/bloom.ts';
@@ -36,11 +31,13 @@ import type { MVSAnimationNode } from './tree/animation/animation-tree.ts';
 import type { MolstarNode, MolstarNodeParams } from './tree/molstar/molstar-tree.ts';
 import { MVSTreeSchema } from './tree/mvs/mvs-tree.ts';
 
+
 const DefaultFocusOptions = {
     minRadius: 5,
     extraRadius: 0,
 };
 const DefaultCanvasBackgroundColor = ColorNames.white;
+
 
 const _tmpVec = Vec3();
 
@@ -58,21 +55,11 @@ export async function setCamera(plugin: PluginContext, params: MolstarNodeParams
     await PluginCommands.Camera.SetSnapshot(plugin, { snapshot });
 }
 
-export function cameraParamsToCameraSnapshot(
-    plugin: PluginContext,
-    params: MolstarNodeParams<'camera'>,
-): Partial<Camera.Snapshot> {
+export function cameraParamsToCameraSnapshot(plugin: PluginContext, params: MolstarNodeParams<'camera'>): Partial<Camera.Snapshot> {
     const target = Vec3.create(...params.target);
     let position = Vec3.create(...params.position);
     const radius = Vec3.distance(target, position) / 2;
-    if (plugin.canvas3d) {
-        position = fovAdjustedPosition(
-            target,
-            position,
-            plugin.canvas3d.camera.state.mode,
-            plugin.canvas3d.camera.state.fov,
-        );
-    }
+    if (plugin.canvas3d) position = fovAdjustedPosition(target, position, plugin.canvas3d.camera.state.mode, plugin.canvas3d.camera.state.fov);
     const up = Vec3.create(...params.up);
     Vec3.orthogonalize(up, Vec3.sub(_tmpVec, target, position), up);
 
@@ -88,11 +75,8 @@ export function cameraParamsToCameraSnapshot(
 }
 
 /** Focus the camera on the bounding sphere of a (sub)structure (or on the whole scene if `structureNodeSelector` is undefined).
- * Orient the camera based on a focus node params. **/
-export async function setFocus(
-    plugin: PluginContext,
-    focuses: { target: StateObjectSelector; params: MolstarNodeParams<'focus'> }[],
-) {
+  * Orient the camera based on a focus node params. **/
+export async function setFocus(plugin: PluginContext, focuses: { target: StateObjectSelector, params: MolstarNodeParams<'focus'> }[]) {
     const snapshot = getFocusSnapshot(plugin, {
         ...snapshotFocusInfoFromMvsFocuses(focuses),
         minRadius: DefaultFocusOptions.minRadius,
@@ -102,14 +86,12 @@ export async function setFocus(
     await PluginCommands.Camera.SetSnapshot(plugin, { snapshot });
 }
 
-function snapshotFocusInfoFromMvsFocuses(
-    focuses: { target: StateObjectSelector; params: MolstarNodeParams<'focus'> }[],
-): PluginState.SnapshotFocusInfo {
+function snapshotFocusInfoFromMvsFocuses(focuses: { target: StateObjectSelector, params: MolstarNodeParams<'focus'> }[]): PluginState.SnapshotFocusInfo {
     const lastFocus = (focuses.length > 0) ? focuses[focuses.length - 1] : undefined;
     const direction = lastFocus?.params.direction ?? MVSTreeSchema.nodes.focus.params.fields.direction.default;
     const up = lastFocus?.params.up ?? MVSTreeSchema.nodes.focus.params.fields.up.default;
     return {
-        targets: focuses.map<PluginState.SnapshotFocusTargetInfo>((f) => ({
+        targets: focuses.map<PluginState.SnapshotFocusTargetInfo>(f => ({
             targetRef: f.target.ref === '-=root=-' ? undefined : f.target.ref, // need to treat root separately so it does not include invisible structure parts etc.
             radius: f.params.radius ?? undefined,
             radiusFactor: f.params.radius_factor,
@@ -125,9 +107,7 @@ function adjustSceneRadiusFactor(plugin: PluginContext, cameraTarget: Vec3 | und
     if (!cameraTarget) return;
     const boundingSphere = getPluginBoundingSphere(plugin);
     const offset = Vec3.distance(cameraTarget, boundingSphere.center);
-    const sceneRadiusFactor = boundingSphere.radius > 0
-        ? ((boundingSphere.radius + offset) / boundingSphere.radius)
-        : 1;
+    const sceneRadiusFactor = boundingSphere.radius > 0 ? ((boundingSphere.radius + offset) / boundingSphere.radius) : 1;
     plugin.canvas3d?.setProps({ sceneRadiusFactor });
 }
 
@@ -138,11 +118,7 @@ function resetSceneRadiusFactor(plugin: PluginContext) {
 }
 
 /** Create object for PluginState.Snapshot.camera based on tree loading context and MVS snapshot metadata */
-export function createPluginStateSnapshotCamera(
-    plugin: PluginContext,
-    context: MolstarLoadingContext,
-    metadata: SnapshotMetadata & { previousTransitionDurationMs?: number },
-): PluginState.Snapshot['camera'] {
+export function createPluginStateSnapshotCamera(plugin: PluginContext, context: MolstarLoadingContext, metadata: SnapshotMetadata & { previousTransitionDurationMs?: number }): PluginState.Snapshot['camera'] {
     const camera: PluginState.Snapshot['camera'] = {
         transitionStyle: 'animate',
         transitionDurationInMs: metadata.previousTransitionDurationMs ?? 0,
@@ -172,11 +148,7 @@ function normalizeBackground(variant: any, prev: any): any {
 }
 
 /** Create a deep copy of `oldCanvasProps` with values modified according to a canvas node params. */
-export function modifyCanvasProps(
-    oldCanvasProps: Canvas3DProps,
-    canvasNode: MolstarNode<'canvas'> | undefined,
-    animationNode: MVSAnimationNode<'animation'> | undefined,
-): Canvas3DProps {
+export function modifyCanvasProps(oldCanvasProps: Canvas3DProps, canvasNode: MolstarNode<'canvas'> | undefined, animationNode: MVSAnimationNode<'animation'> | undefined): Canvas3DProps {
     const params = canvasNode?.params;
     const backgroundColor = decodeColor(params?.background_color) ?? DefaultCanvasBackgroundColor;
 
@@ -230,12 +202,13 @@ export function modifyCanvasProps(
                         name: trackballAnimationName,
                         params: {
                             ...TrackballControlsParams.animate.map(trackballAnimationName)?.defaultValue,
-                            ...trackballAnimationParams,
-                        },
-                    },
+                            ...trackballAnimationParams
+                        }
+                    }
                 }
-                : {}),
-        },
+                : {}
+            ),
+        }
     };
 }
 
@@ -256,6 +229,6 @@ export function resetCanvasProps(plugin: PluginContext) {
         trackball: {
             ...old?.trackball,
             animate: { name: 'off', params: {} },
-        },
+        }
     });
 }

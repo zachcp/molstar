@@ -43,7 +43,7 @@ export {
 // Version
 export { PLUGIN_VERSION as version } from "./mol-plugin/version.ts";
 
-// Extensions - Type-clean viewer extensions (12/15)
+// Extensions - Type-clean viewer extensions (13/15)
 // See EXTENSION_TYPE_FIXES.md for details on fixes applied
 export * from "./extensions/assembly-symmetry/index.ts";
 export * from "./extensions/anvil/behavior.ts";
@@ -54,6 +54,7 @@ export * from "./extensions/model-archive/quality-assessment/behavior.ts";
 export { QualityAssessment } from "./extensions/model-archive/quality-assessment/prop.ts";
 export * from "./extensions/model-export/index.ts";
 export * from "./extensions/mp4-export/index.ts";
+export * from "./extensions/mvs/index.ts";
 export * from "./extensions/pdbe/index.ts";
 export * from "./extensions/rcsb/index.ts";
 export * from "./extensions/sb-ncbr/index.ts";
@@ -63,5 +64,4 @@ export * from "./extensions/zenodo/index.ts";
 
 // Note: Some extensions cannot be exported:
 // - backgrounds: imports image assets (JPG files) incompatible with Deno
-// - mvs: has import errors and API mismatches (fixable)
 // See EXTENSION_TYPE_FIXES.md for complete details and workarounds

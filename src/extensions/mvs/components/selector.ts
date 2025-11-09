@@ -6,10 +6,7 @@
 
 import { SortedArray } from '../../../mol-data/int.ts';
 import { type ElementIndex, Structure, StructureElement } from '../../../mol-model/structure.ts';
-import {
-    createStructureComponent,
-    StaticStructureComponentTypes,
-} from '../../../mol-plugin-state/helpers/structure-component.ts';
+import { StaticStructureComponentTypes, createStructureComponent } from '../../../mol-plugin-state/helpers/structure-component.ts';
 import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
 import { MolScriptBuilder } from '../../../mol-script/language/builder.ts';
 import type { Expression } from '../../../mol-script/language/expression.ts';
@@ -17,17 +14,13 @@ import { mapArrayToObject, pickObjectKeys } from '../../../mol-util/object.ts';
 import { Choice } from '../../../mol-util/param-choice.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { capitalize } from '../../../mol-util/string.ts';
-import {
-    createMVSAnnotationStructureComponent,
-    MVSAnnotationStructureComponentParams,
-} from './annotation-structure-component.ts';
+import { MVSAnnotationStructureComponentParams, createMVSAnnotationStructureComponent } from './annotation-structure-component.ts';
+
 
 /** Allowed values for a static selector */
-export const StaticSelectorChoice = new Choice(
-    mapArrayToObject(StaticStructureComponentTypes, (t) => capitalize(t)),
-    'all',
-);
-export type StaticSelectorChoice = Choice.Values<typeof StaticSelectorChoice>;
+export const StaticSelectorChoice = new Choice(mapArrayToObject(StaticStructureComponentTypes, t => capitalize(t)), 'all');
+export type StaticSelectorChoice = Choice.Values<typeof StaticSelectorChoice>
+
 
 /** Parameter definition for specifying a part of structure (kinda extension of `StructureComponentParams` from mol-plugin-state/helpers/structure-component) */
 export const SelectorParams = PD.MappedStatic('static', {
@@ -35,16 +28,12 @@ export const SelectorParams = PD.MappedStatic('static', {
     expression: PD.Value<Expression>(MolScriptBuilder.struct.generator.all),
     bundle: PD.Value<StructureElement.Bundle>(StructureElement.Bundle.Empty),
     script: PD.Script({ language: 'mol-script', expression: '(sel.atom.all)' }),
-    annotation: PD.Group(
-        pickObjectKeys(MVSAnnotationStructureComponentParams, ['annotationId', 'fieldName', 'fieldValues']),
-    ),
-}, {
-    description:
-        'Define a part of the structure where this layer applies (use Static:all to apply to the whole structure)',
-});
+    annotation: PD.Group(pickObjectKeys(MVSAnnotationStructureComponentParams, ['annotationId', 'fieldName', 'fieldValues'])),
+}, { description: 'Define a part of the structure where this layer applies (use Static:all to apply to the whole structure)' }
+);
 
 /** Parameter values for specifying a part of structure */
-export type Selector = PD.Values<{ selector: typeof SelectorParams }>['selector'];
+export type Selector = PD.Values<{ selector: typeof SelectorParams }>['selector']
 
 /** `Selector` for selecting the whole structure */
 export const SelectorAll = { name: 'static', params: 'all' } satisfies Selector;
@@ -54,8 +43,9 @@ export function isSelectorAll(props: Selector): props is typeof SelectorAll {
     return props.name === 'static' && props.params === 'all';
 }
 
+
 /** Data structure for fast lookup of a structure element location in a substructure */
-export type ElementSet = { [unitId: number]: SortedArray<ElementIndex> };
+export type ElementSet = { [unitId: number]: SortedArray<ElementIndex> }
 
 export const ElementSet = {
     /** Create an `ElementSet` from a structure */
@@ -82,8 +72,8 @@ export const ElementSet = {
 
 /** Return a substructure of `structure` defined by `selector` */
 export function substructureFromSelector(structure: Structure, selector: Selector): Structure {
-    const pso = (selector.name === 'annotation')
-        ? createMVSAnnotationStructureComponent(structure, { ...selector.params, label: '', nullIfEmpty: false })
+    const pso = (selector.name === 'annotation') ?
+        createMVSAnnotationStructureComponent(structure, { ...selector.params, label: '', nullIfEmpty: false })
         : createStructureComponent(structure, { type: selector, label: '', nullIfEmpty: false }, { source: structure });
     return PluginStateObject.Molecule.Structure.is(pso) ? pso.data : Structure.Empty;
 }

@@ -7,11 +7,12 @@
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { StateObjectSelector, StateTree } from '../../mol-state/index.ts';
 
+
 /**
  * Queries all MolViewSpec references in the current state of the plugin.
  */
 export function queryMVSRef(plugin: PluginContext, ref: string) {
-    return plugin.state.data.selectQ((q) => q.root.subtree().withTag(`mvs-ref:${ref}`));
+    return plugin.state.data.selectQ(q => q.root.subtree().withTag(`mvs-ref:${ref}`));
 }
 
 /**

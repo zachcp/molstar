@@ -9,11 +9,7 @@ import { TextBuilder } from '../../../../mol-geo/geometry/text/text-builder.ts';
 import type { Structure } from '../../../../mol-model/structure.ts';
 import { ComplexTextVisual, type ComplexVisual } from '../../../../mol-repr/structure/complex-visual.ts';
 import * as Original from '../../../../mol-repr/structure/visual/label-text.ts';
-import {
-    eachSerialElement,
-    ElementIterator,
-    getSerialElementLoci,
-} from '../../../../mol-repr/structure/visual/util/element.ts';
+import { ElementIterator, eachSerialElement, getSerialElementLoci } from '../../../../mol-repr/structure/visual/util/element.ts';
 import type { VisualUpdateState } from '../../../../mol-repr/util.ts';
 import type { VisualContext } from '../../../../mol-repr/visual.ts';
 import type { Theme } from '../../../../mol-theme/theme.ts';
@@ -24,20 +20,18 @@ import { textPropsForSelection } from '../../helpers/label-text.ts';
 import { groupRows } from '../../helpers/selections.ts';
 import { getMVSAnnotationForStructure } from '../annotation-prop.ts';
 
+
 /** Parameter definition for "label-text" visual in "MVS Annotation Label" representation */
-export type MVSAnnotationLabelTextParams = typeof MVSAnnotationLabelTextParams;
+export type MVSAnnotationLabelTextParams = typeof MVSAnnotationLabelTextParams
 export const MVSAnnotationLabelTextParams = {
     annotationId: PD.Text('', { description: 'Reference to "Annotation" custom model property', isEssential: true }),
-    fieldName: PD.Text('label', {
-        description: 'Annotation field (column) from which to take label contents',
-        isEssential: true,
-    }),
+    fieldName: PD.Text('label', { description: 'Annotation field (column) from which to take label contents', isEssential: true }),
     ...omitObjectKeys(Original.LabelTextParams, ['level', 'chainScale', 'residueScale', 'elementScale']),
     borderColor: { ...Original.LabelTextParams.borderColor, defaultValue: ColorNames.black },
 };
 
 /** Parameter values for "label-text" visual in "MVS Annotation Label" representation */
-export type MVSAnnotationLabelTextProps = PD.Values<MVSAnnotationLabelTextParams>;
+export type MVSAnnotationLabelTextProps = PD.Values<MVSAnnotationLabelTextParams>
 
 /** Create "label-text" visual for "MVS Annotation Label" representation */
 export function MVSAnnotationLabelTextVisual(materialId: number): ComplexVisual<MVSAnnotationLabelTextParams> {
@@ -47,24 +41,13 @@ export function MVSAnnotationLabelTextVisual(materialId: number): ComplexVisual<
         createLocationIterator: ElementIterator.fromStructure,
         getLoci: getSerialElementLoci,
         eachLocation: eachSerialElement,
-        setUpdateState: (
-            state: VisualUpdateState,
-            newProps: PD.Values<MVSAnnotationLabelTextParams>,
-            currentProps: PD.Values<MVSAnnotationLabelTextParams>,
-        ) => {
-            state.createGeometry = newProps.annotationId !== currentProps.annotationId ||
-                newProps.fieldName !== currentProps.fieldName;
-        },
+        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<MVSAnnotationLabelTextParams>, currentProps: PD.Values<MVSAnnotationLabelTextParams>) => {
+            state.createGeometry = newProps.annotationId !== currentProps.annotationId || newProps.fieldName !== currentProps.fieldName;
+        }
     }, materialId);
 }
 
-function createLabelText(
-    ctx: VisualContext,
-    structure: Structure,
-    theme: Theme,
-    props: MVSAnnotationLabelTextProps,
-    text?: Text,
-): Text {
+function createLabelText(ctx: VisualContext, structure: Structure, theme: Theme, props: MVSAnnotationLabelTextProps, text?: Text): Text {
     const { annotation, model } = getMVSAnnotationForStructure(structure, props.annotationId);
     const rows = annotation?.getRows() ?? [];
     const { count, offsets, grouped } = groupRows(rows);
@@ -73,7 +56,7 @@ function createLabelText(
         const iFirstRowInGroup = grouped[offsets[iGroup]];
         const labelText = annotation!.getValueForRow(iFirstRowInGroup, props.fieldName);
         if (!labelText) continue;
-        const rowsInGroup = grouped.slice(offsets[iGroup], offsets[iGroup + 1]).map((j) => rows[j]);
+        const rowsInGroup = grouped.slice(offsets[iGroup], offsets[iGroup + 1]).map(j => rows[j]);
         const p = textPropsForSelection(structure, rowsInGroup, model);
         if (!p) continue;
         builder.add(labelText, p.center[0], p.center[1], p.center[2], p.depth, p.scale, p.group);

@@ -12,32 +12,27 @@ import { CustomModelProperty } from '../../../mol-model-props/common/custom-mode
 import type { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
 import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
 import type { Model } from '../../../mol-model/structure.ts';
-import type { Structure, StructureElement } from '../../../mol-model/structure/structure.ts';
+import { type Structure, type StructureElement, Unit } from '../../../mol-model/structure/structure.ts';
 import { Asset } from '../../../mol-util/assets.ts';
-import { canonicalJsonString, type Jsonable } from '../../../mol-util/json.ts';
-import {
-    objectOfArraysToArrayOfObjects,
-    pickObjectKeysWithRemapping,
-    promiseAllObj,
-} from '../../../mol-util/object.ts';
+import { type Jsonable, canonicalJsonString } from '../../../mol-util/json.ts';
+import { objectOfArraysToArrayOfObjects, pickObjectKeysWithRemapping, promiseAllObj } from '../../../mol-util/object.ts';
 import { Choice } from '../../../mol-util/param-choice.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { AtomRanges } from '../helpers/atom-ranges.ts';
+import { ElementRanges } from '../helpers/element-ranges.ts';
 import { IndicesAndSortings } from '../helpers/indexing.ts';
 import { MaybeStringParamDefinition } from '../helpers/param-definition.ts';
-import { getCifAnnotationSchema, type MVSAnnotationRow, MVSAnnotationSchema } from '../helpers/schemas.ts';
-import { getAtomRangesForRow } from '../helpers/selections.ts';
-import { isDefined, type Maybe, safePromise } from '../helpers/utils.ts';
+import { type MVSAnnotationRow, MVSAnnotationSchema, getCifAnnotationSchema } from '../helpers/schemas.ts';
+import { getAtomRangesForRow, getGaussianRangesForRow, getSphereRangesForRow } from '../helpers/selections.ts';
+import { type Maybe, isDefined, safePromise } from '../helpers/utils.ts';
+
 
 /** Allowed values for the annotation format parameter */
 const MVSAnnotationFormat = new Choice({ json: 'json', cif: 'cif', bcif: 'bcif' }, 'json');
-type MVSAnnotationFormat = Choice.Values<typeof MVSAnnotationFormat>;
-const MVSAnnotationFormatTypes = { json: 'string', cif: 'string', bcif: 'binary' } as const satisfies {
-    [format in MVSAnnotationFormat]: 'string' | 'binary';
-};
+type MVSAnnotationFormat = Choice.Values<typeof MVSAnnotationFormat>
+const MVSAnnotationFormatTypes = { json: 'string', cif: 'string', bcif: 'binary' } as const satisfies { [format in MVSAnnotationFormat]: 'string' | 'binary' };
 
 /** Parameter definition for custom model property "MVS Annotations" */
-export type MVSAnnotationsParams = typeof MVSAnnotationsParams;
+export type MVSAnnotationsParams = typeof MVSAnnotationsParams
 export const MVSAnnotationsParams = {
     annotations: PD.ObjectList(
         {
@@ -50,85 +45,59 @@ export const MVSAnnotationsParams = {
             }),
             schema: MVSAnnotationSchema.PDSelect(),
             cifBlock: PD.MappedStatic('index', {
-                index: PD.Group({
-                    index: PD.Numeric(0, { min: 0, step: 1 }, { description: '0-based index of the block' }),
-                }),
+                index: PD.Group({ index: PD.Numeric(0, { min: 0, step: 1 }, { description: '0-based index of the block' }) }),
                 header: PD.Group({ header: PD.Text(undefined, { description: 'Block header' }) }),
-            }, {
-                description:
-                    'Specify which CIF block contains annotation data (only relevant when format=cif or format=bcif)',
-            }),
-            cifCategory: MaybeStringParamDefinition({
-                placeholder: 'Take first category',
-                description:
-                    'Specify which CIF category contains annotation data (only relevant when format=cif or format=bcif)',
-            }),
-            fieldRemapping: PD.ObjectList(
-                {
-                    standardName: PD.Text('', {
-                        placeholder: ' ',
-                        description: 'Standard name of the selector field (e.g. label_asym_id)',
-                    }),
-                    actualName: MaybeStringParamDefinition({
-                        placeholder: 'Ignore field',
-                        description:
-                            'Actual name of the field in the annotation data (e.g. spam_chain_id), null to ignore the field with standard name',
-                    }),
-                },
-                (e) => `"${e.standardName}": ${e.actualName === null ? 'null' : `"${e.actualName}"`}`,
-                {
-                    description:
-                        'Optional remapping of annotation field names { standardName1: actualName1, ... }. Use { "label_asym_id": "X" } to load actual field "X" as "label_asym_id". Use { "label_asym_id": null } to ignore actual field "label_asym_id". Fields not mentioned here are mapped implicitely (i.e. actual name = standard name).',
-                },
-            ),
+            }, { description: 'Specify which CIF block contains annotation data (only relevant when format=cif or format=bcif)' }),
+            cifCategory: MaybeStringParamDefinition({ placeholder: 'Take first category', description: 'Specify which CIF category contains annotation data (only relevant when format=cif or format=bcif)' }),
+            fieldRemapping: PD.ObjectList({
+                standardName: PD.Text('', { placeholder: ' ', description: 'Standard name of the selector field (e.g. label_asym_id)' }),
+                actualName: MaybeStringParamDefinition({ placeholder: 'Ignore field', description: 'Actual name of the field in the annotation data (e.g. spam_chain_id), null to ignore the field with standard name' }),
+            }, e => `"${e.standardName}": ${e.actualName === null ? 'null' : `"${e.actualName}"`}`, { description: 'Optional remapping of annotation field names { standardName1: actualName1, ... }. Use { "label_asym_id": "X" } to load actual field "X" as "label_asym_id". Use { "label_asym_id": null } to ignore actual field "label_asym_id". Fields not mentioned here are mapped implicitely (i.e. actual name = standard name).' }),
             id: PD.Text('', { description: 'Arbitrary identifier that can be referenced by MVSAnnotationColorTheme' }),
         },
-        (obj) => obj.id,
+        obj => obj.id
     ),
 };
 
 /** Parameter values for custom model property "MVS Annotations" */
-export type MVSAnnotationsProps = PD.Values<MVSAnnotationsParams>;
+export type MVSAnnotationsProps = PD.Values<MVSAnnotationsParams>
 
 /** Parameter values for a single annotation within custom model property "MVS Annotations" */
-export type MVSAnnotationSpec = MVSAnnotationsProps['annotations'][number];
+export type MVSAnnotationSpec = MVSAnnotationsProps['annotations'][number]
 
 /** Describes the source of an annotation file */
-type MVSAnnotationSource = { kind: 'url'; url: string; format: MVSAnnotationFormat } | { kind: 'source-cif' };
+type MVSAnnotationSource = { kind: 'url', url: string, format: MVSAnnotationFormat } | { kind: 'source-cif' }
 
 /** Data file with one or more (in case of CIF) annotations */
-type MVSAnnotationFile = { format: 'json'; data: Jsonable } | { format: 'cif'; data: CifFile };
+type MVSAnnotationFile = { format: 'json', data: Jsonable } | { format: 'cif', data: CifFile }
 
 /** Data for a single annotation */
-type MVSAnnotationData = { format: 'json'; data: Jsonable } | { format: 'cif'; data: CifCategory };
+type MVSAnnotationData = { format: 'json', data: Jsonable } | { format: 'cif', data: CifCategory }
+
 
 /** Provider for custom model property "Annotations" */
-export const MVSAnnotationsProvider: CustomModelProperty.Provider<MVSAnnotationsParams, MVSAnnotations> =
-    CustomModelProperty.createProvider({
-        label: 'MVS Annotations',
-        descriptor: CustomPropertyDescriptor({
-            name: 'mvs-annotations',
-        }),
-        type: 'static',
-        defaultParams: MVSAnnotationsParams,
-        getParams: (data: Model) => MVSAnnotationsParams,
-        isApplicable: (data: Model) => true,
-        obtain: async (ctx: CustomProperty.Context, data: Model, props: Partial<MVSAnnotationsProps>) => {
-            props = { ...PD.getDefaultValues(MVSAnnotationsParams), ...props };
-            const specs: MVSAnnotationSpec[] = props.annotations ?? [];
-            const annots = await MVSAnnotations.fromSpecs(ctx, specs, data);
-            return { value: annots } satisfies CustomProperty.Data<MVSAnnotations>;
-        },
-    });
+export const MVSAnnotationsProvider: CustomModelProperty.Provider<MVSAnnotationsParams, MVSAnnotations> = CustomModelProperty.createProvider({
+    label: 'MVS Annotations',
+    descriptor: CustomPropertyDescriptor({
+        name: 'mvs-annotations',
+    }),
+    type: 'static',
+    defaultParams: MVSAnnotationsParams,
+    getParams: (data: Model) => MVSAnnotationsParams,
+    isApplicable: (data: Model) => true,
+    obtain: async (ctx: CustomProperty.Context, data: Model, props: Partial<MVSAnnotationsProps>) => {
+        props = { ...PD.getDefaultValues(MVSAnnotationsParams), ...props };
+        const specs: MVSAnnotationSpec[] = props.annotations ?? [];
+        const annots = await MVSAnnotations.fromSpecs(ctx, specs, data);
+        return { value: annots } satisfies CustomProperty.Data<MVSAnnotations>;
+    }
+});
+
 
 /** Represents multiple annotations retrievable by their ID */
 export class MVSAnnotations {
-    private constructor(private dict: { [id: string]: MVSAnnotation }) {}
-    static async fromSpecs(
-        ctx: CustomProperty.Context,
-        specs: MVSAnnotationSpec[],
-        model?: Model,
-    ): Promise<MVSAnnotations> {
+    private constructor(private dict: { [id: string]: MVSAnnotation }) { }
+    static async fromSpecs(ctx: CustomProperty.Context, specs: MVSAnnotationSpec[], model?: Model): Promise<MVSAnnotations> {
         const sources: MVSAnnotationSource[] = specs.map(annotationSourceFromSpec);
         const files = await getFilesFromSources(ctx, sources, model);
         const annots: { [id: string]: MVSAnnotation } = {};
@@ -139,12 +108,7 @@ export class MVSAnnotations {
                 if (!file.ok) throw file.error;
                 annots[spec.id] = await MVSAnnotation.fromSpec(ctx, spec, file.value);
             } catch (err) {
-                ctx.errorContext?.add(
-                    'mvs',
-                    `Failed to obtain annotation (${err}).\nAnnotation specification source params: ${
-                        JSON.stringify(spec.source.params)
-                    }`,
-                );
+                ctx.errorContext?.add('mvs', `Failed to obtain annotation (${err}).\nAnnotation specification source params: ${JSON.stringify(spec.source.params)}`);
                 console.error(`Failed to obtain annotation (${err}).\nAnnotation specification:`, spec);
                 annots[spec.id] = MVSAnnotation.createEmpty(spec.schema);
             }
@@ -159,11 +123,9 @@ export class MVSAnnotations {
     }
 }
 
+
 /** Retrieve annotation with given `annotationId` from custom model property "MVS Annotations" and the model from which it comes */
-export function getMVSAnnotationForStructure(
-    structure: Structure,
-    annotationId: string,
-): { annotation: MVSAnnotation; model: Model } | { annotation: undefined; model: undefined } {
+export function getMVSAnnotationForStructure(structure: Structure, annotationId: string): { annotation: MVSAnnotation, model: Model } | { annotation: undefined, model: undefined } {
     const models = structure.isEmpty ? [] : structure.models;
     for (const model of models) {
         if (model.customProperties.has(MVSAnnotationsProvider.descriptor)) {
@@ -179,13 +141,29 @@ export function getMVSAnnotationForStructure(
 
 type FieldRemapping = Record<string, string | null>;
 
-/** Mapping `ElementIndex` -> annotation row index for all elements in a `Model`.
+/** Mapping `ElementIndex` -> annotation row index for all elements of one kind (atoms, spheres, gaussians) in a `Model`.
  * `-1` means no row applies to the element.
  * `null` means no row applies to any element. */
-type IndexedModel = number[] | null;
+type IndexedElements = number[] | null;
+
+/** Mapping `ElementIndex` -> annotation row index for atoms, spheres, and gaussians in a `Model`. */
+type IndexedModel = {
+    atoms: IndexedElements,
+    spheres: IndexedElements,
+    gaussians: IndexedElements,
+};
+
+function getIndexedElementsForUnitKind(indexedModel: IndexedModel, unitKind: Unit.Kind): IndexedElements {
+    if (unitKind === Unit.Kind.Atomic) return indexedModel.atoms;
+    if (unitKind === Unit.Kind.Spheres) return indexedModel.spheres;
+    if (unitKind === Unit.Kind.Gaussians) return indexedModel.gaussians;
+    console.warn(`Unknown Unit.Kind value: ${unitKind}`);
+    return null;
+}
 
 /** Main class for processing MVS annotation */
 export class MVSAnnotation {
+
     /** Number of annotation rows. */
     public nRows: number;
 
@@ -199,11 +177,7 @@ export class MVSAnnotation {
 
     /** Create a new `MVSAnnotation` based on specification `spec`. Use `file` if provided, otherwise download the file.
      * Throw error if download fails or problem with data. */
-    static async fromSpec(
-        ctx: CustomProperty.Context,
-        spec: MVSAnnotationSpec,
-        file?: MVSAnnotationFile,
-    ): Promise<MVSAnnotation> {
+    static async fromSpec(ctx: CustomProperty.Context, spec: MVSAnnotationSpec, file?: MVSAnnotationFile): Promise<MVSAnnotation> {
         file ??= await getFileFromSource(ctx, annotationSourceFromSpec(spec));
 
         let data: MVSAnnotationData;
@@ -217,10 +191,8 @@ export class MVSAnnotation {
                 let block: CifBlock;
                 switch (blockSpec.name) {
                     case 'header':
-                        const foundBlock = file.data.blocks.find((b) => b.header === blockSpec.params.header);
-                        if (!foundBlock) {
-                            throw new Error(`CIF block with header "${blockSpec.params.header}" not found`);
-                        }
+                        const foundBlock = file.data.blocks.find(b => b.header === blockSpec.params.header);
+                        if (!foundBlock) throw new Error(`CIF block with header "${blockSpec.params.header}" not found`);
                         block = foundBlock;
                         break;
                     case 'index':
@@ -235,11 +207,7 @@ export class MVSAnnotation {
                 data = { format: 'cif', data: category };
                 break;
         }
-        return new MVSAnnotation(
-            data,
-            spec.schema,
-            Object.fromEntries(spec.fieldRemapping.map((e) => [e.standardName, e.actualName])),
-        );
+        return new MVSAnnotation(data, spec.schema, Object.fromEntries(spec.fieldRemapping.map(e => [e.standardName, e.actualName])));
     }
 
     static createEmpty(schema: MVSAnnotationSchema): MVSAnnotation {
@@ -249,7 +217,8 @@ export class MVSAnnotation {
     /** Return value of field `fieldName` assigned to location `loc`, if any */
     getValueForLocation(loc: StructureElement.Location, fieldName: string): string | undefined {
         const indexedModel = this.getIndexedModel(loc.unit.model, loc.unit.conformation.operator.instanceId);
-        const iRow = (indexedModel !== null) ? indexedModel[loc.element] : -1;
+        const indexedElements = getIndexedElementsForUnitKind(indexedModel, loc.unit.kind);
+        const iRow = indexedElements ? indexedElements[loc.element] : -1;
         return this.getValueForRow(iRow, fieldName);
     }
     /** Return value of field `fieldName` assigned to `i`-th annotation row, if any */
@@ -282,16 +251,22 @@ export class MVSAnnotation {
     private getRowForEachAtom(model: Model, instanceId: string): IndexedModel {
         const indices = IndicesAndSortings.get(model);
         const nAtoms = model.atomicHierarchy.atoms._rowCount;
-        let result: IndexedModel = null;
+        const nSpheres = model.coarseHierarchy.spheres.count;
+        const nGaussians = model.coarseHierarchy.gaussians.count;
+        let indexedAtoms: IndexedElements = null;
+        let indexedSpheres: IndexedElements = null;
+        let indexedGaussians: IndexedElements = null;
         const rows = this.getRows();
-        for (let i = 0, nRows = rows.length; i < nRows; i++) {
-            const row = rows[i];
+        for (let iRow = 0, nRows = rows.length; iRow < nRows; iRow++) {
+            const row = rows[iRow];
             const atomRanges = getAtomRangesForRow(row, model, instanceId, indices);
-            if (AtomRanges.count(atomRanges) === 0) continue;
-            result ??= Array(nAtoms).fill(-1);
-            AtomRanges.foreach(atomRanges, (from, to) => result!.fill(i, from, to));
+            indexedAtoms = fillValueOnRanges(indexedAtoms, nAtoms, atomRanges, iRow);
+            const sphereRanges = getSphereRangesForRow(row, model, instanceId, indices);
+            indexedSpheres = fillValueOnRanges(indexedSpheres, nSpheres, sphereRanges, iRow);
+            const gaussianRanges = getGaussianRangesForRow(row, model, instanceId, indices);
+            indexedGaussians = fillValueOnRanges(indexedGaussians, nGaussians, gaussianRanges, iRow);
         }
-        return result;
+        return { atoms: indexedAtoms, spheres: indexedSpheres, gaussians: indexedGaussians };
     }
 
     /** Parse and return all annotation rows in this annotation, or return cached result if available */
@@ -312,7 +287,7 @@ export class MVSAnnotation {
 
     /** Return `true` if some rows in the annotation contain `instance_id` field. */
     private hasInstanceIds(): boolean {
-        return this._hasInstanceIds ??= this.getRows().some((row) => isDefined(row.instance_id));
+        return this._hasInstanceIds ??= this.getRows().some(row => isDefined(row.instance_id));
     }
     private _hasInstanceIds?: boolean = undefined;
 
@@ -377,17 +352,13 @@ function getRowCountFromCif(data: CifCategory): number {
     return data.rowCount;
 }
 
-function getRowsFromJson(
-    data: Jsonable,
-    schema: MVSAnnotationSchema,
-    fieldRemapping: FieldRemapping,
-): MVSAnnotationRow[] {
+function getRowsFromJson(data: Jsonable, schema: MVSAnnotationSchema, fieldRemapping: FieldRemapping): MVSAnnotationRow[] {
     const js = data as any;
     const cifSchema = getCifAnnotationSchema(schema);
     const cifSchemaKeys = Object.keys(cifSchema);
     if (Array.isArray(js)) {
         // array of objects
-        return js.map((row) => pickObjectKeysWithRemapping(row, cifSchemaKeys, fieldRemapping));
+        return js.map(row => pickObjectKeysWithRemapping(row, cifSchemaKeys, fieldRemapping));
     } else {
         // object of arrays
         const selectedFields: Record<string, any[]> = pickObjectKeysWithRemapping(js, cifSchemaKeys, fieldRemapping);
@@ -395,11 +366,7 @@ function getRowsFromJson(
     }
 }
 
-function getRowsFromCif(
-    data: CifCategory,
-    schema: MVSAnnotationSchema,
-    fieldRemapping: FieldRemapping,
-): MVSAnnotationRow[] {
+function getRowsFromCif(data: CifCategory, schema: MVSAnnotationSchema, fieldRemapping: FieldRemapping): MVSAnnotationRow[] {
     const cifSchema = getCifAnnotationSchema(schema);
     const cifSchemaKeys = Object.keys(cifSchema) as (keyof typeof cifSchema)[];
     const columns: Partial<Record<keyof typeof cifSchema, any[]>> = {};
@@ -410,15 +377,12 @@ function getRowsFromCif(
         const columnArray = getArrayFromCifCategory(data, srcKey, cifSchema[key]); // Avoiding `column.toArray` as it replaces . and ? fields by 0 or ''
         if (columnArray) columns[key] = columnArray;
     }
+    if (Object.keys(columns).length === 0) return new Array(data.rowCount).fill({});
     return objectOfArraysToArrayOfObjects(columns);
 }
 
 /** Load data from a specific column in a CIF category into an array. Load `.` and `?` as undefined. */
-function getArrayFromCifCategory<T>(
-    data: CifCategory,
-    columnName: string,
-    columnSchema: Column.Schema,
-): (T | undefined)[] | undefined {
+function getArrayFromCifCategory<T>(data: CifCategory, columnName: string, columnSchema: Column.Schema): (T | undefined)[] | undefined {
     if (data.getField(columnName) === undefined) return undefined;
 
     const table = toTable({ [columnName]: columnSchema }, data); // a bit dumb, I don't know how to make column directly
@@ -437,11 +401,7 @@ function getArrayFromCifColumn<T>(column: Column<T>): (T | undefined)[] {
     return out;
 }
 
-async function getFileFromSource(
-    ctx: CustomProperty.Context,
-    source: MVSAnnotationSource,
-    model?: Model,
-): Promise<MVSAnnotationFile> {
+async function getFileFromSource(ctx: CustomProperty.Context, source: MVSAnnotationSource, model?: Model): Promise<MVSAnnotationFile> {
     switch (source.kind) {
         case 'source-cif':
             return { format: 'cif', data: getSourceFileFromModel(model) };
@@ -466,18 +426,14 @@ async function getFileFromSource(
 
 /** Like `sources.map(s => safePromise(getFileFromSource(ctx, s)))`
  * but downloads a repeating source only once. */
-async function getFilesFromSources(
-    ctx: CustomProperty.Context,
-    sources: MVSAnnotationSource[],
-    model?: Model,
-): Promise<Maybe<MVSAnnotationFile>[]> {
+async function getFilesFromSources(ctx: CustomProperty.Context, sources: MVSAnnotationSource[], model?: Model): Promise<Maybe<MVSAnnotationFile>[]> {
     const promises: { [key: string]: Promise<Maybe<MVSAnnotationFile>> } = {};
     for (const src of sources) {
         const key = canonicalJsonString(src);
         promises[key] ??= safePromise(getFileFromSource(ctx, src, model));
     }
     const files = await promiseAllObj(promises);
-    return sources.map((src) => files[canonicalJsonString(src)]);
+    return sources.map(src => files[canonicalJsonString(src)]);
 }
 
 function getSourceFileFromModel(model?: Model): CifFile {
@@ -503,4 +459,12 @@ function annotationSourceFromSpec(s: MVSAnnotationSpec): MVSAnnotationSource {
         case 'source-cif':
             return { kind: 'source-cif' };
     }
+}
+
+/** In `array`, set value `fillValue` to all positions described by `fillRanges`. In case `array` is `null`, initialize it with length `n` prefilled with -1. */
+function fillValueOnRanges(array: IndexedElements, n: number, fillRanges: ElementRanges | undefined, fillValue: number): IndexedElements {
+    if (!fillRanges || ElementRanges.count(fillRanges) === 0) return array;
+    const out = array ?? Array(n).fill(-1);
+    ElementRanges.foreach(fillRanges, (from, to) => out.fill(fillValue, from, to));
+    return out;
 }

@@ -8,12 +8,13 @@ import { SortedArray } from '../../../mol-data/int.ts';
 import type { ElementIndex } from '../../../mol-model/structure.ts';
 import { arrayExtend, range } from '../../../mol-util/array.ts';
 
+
 /** Represents a collection of disjoint elements ranges in a model (atoms, spheres, or gaussians).
  * The number of ranges is `ElementRanges.count(ranges)`,
  * the i-th range covers elements `[ranges.from[i], ranges.to[i])`. */
 export interface ElementRanges {
-    from: ElementIndex[];
-    to: ElementIndex[];
+    from: ElementIndex[],
+    to: ElementIndex[],
 }
 
 export const ElementRanges = {
@@ -98,12 +99,7 @@ export const ElementRanges = {
     /** Return a sorted subset of `elements` which lie in any of `ranges` (i.e. set intersection of `elements` and `ranges`).
      * If `out` is provided, use it to store the result (clear any old contents).
      * If `outFirstElementIndex` is provided, fill `outFirstElementIndex.value` with the index of the first selected element (if any). */
-    selectElementsInRanges(
-        elements: SortedArray<ElementIndex>,
-        ranges: ElementRanges,
-        out?: ElementIndex[],
-        outFirstElementIndex: { value?: number } = {},
-    ): ElementIndex[] {
+    selectElementsInRanges(elements: SortedArray<ElementIndex>, ranges: ElementRanges, out?: ElementIndex[], outFirstElementIndex: { value?: number } = {}): ElementIndex[] {
         out ??= [];
         out.length = 0;
         outFirstElementIndex.value = undefined;

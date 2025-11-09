@@ -13,7 +13,7 @@ import type { Location } from "../../../mol-model/location.ts";
 import type { CustomProperty } from "../../../mol-model-props/common/custom-property.ts";
 import type { ColorTheme } from "../../../mol-theme/color.ts";
 import type { ThemeDataContext } from "../../../mol-theme/theme.ts";
-import { Color, ColorMap } from "../../../mol-util/color/index.ts";
+import { type Color, ColorMap } from "../../../mol-util/color/index.ts";
 import { getColorMapParams } from "../../../mol-util/color/params.ts";
 import { ParamDefinition as PD } from "../../../mol-util/param-definition.ts";
 import { TableLegend } from "../../../mol-util/legend.ts";

@@ -6,9 +6,10 @@
 
 import { StructureElement } from '../../../mol-model/structure.ts';
 import { createStructureComponent } from '../../../mol-plugin-state/helpers/structure-component.ts';
-import { PluginStateObject as SO, PluginStateTransform } from '../../../mol-plugin-state/objects.ts';
+import { PluginStateTransform, PluginStateObject as SO } from '../../../mol-plugin-state/objects.ts';
 import { MolScriptBuilder } from '../../../mol-script/language/builder.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+
 
 export const StructureSurroundingsParams = {
     radius: PD.Numeric(5, { min: 0 }, { description: 'Surroundings radius in Angstroms' }),
@@ -18,6 +19,7 @@ export const StructureSurroundingsParams = {
 };
 export type StructureSurroundingsParams = typeof StructureSurroundingsParams;
 export type StructureSurroundingsProps = PD.ValuesFor<StructureSurroundingsParams>;
+
 
 export type StructureSurroundings = typeof StructureSurroundings;
 export const StructureSurroundings = PluginStateTransform.BuiltIn({
@@ -43,13 +45,9 @@ export const StructureSurroundings = PluginStateTransform.BuiltIn({
                 by: targetExpr,
             });
         }
-        return createStructureComponent(rootStruct, {
-            label: `Surroundings (${params.radius} Å)`,
-            type: { name: 'expression', params: surroundingsExpr },
-            nullIfEmpty: params.nullIfEmpty,
-        }, cache as any);
+        return createStructureComponent(rootStruct, { label: `Surroundings (${params.radius} Å)`, type: { name: 'expression', params: surroundingsExpr }, nullIfEmpty: params.nullIfEmpty }, cache as any);
     },
     dispose({ b }) {
         b?.data.customPropertyDescriptors.dispose();
-    },
+    }
 });

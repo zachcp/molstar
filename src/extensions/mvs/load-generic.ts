@@ -8,58 +8,41 @@
 import { StructureRepresentation3D } from '../../mol-plugin-state/transforms/representation.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import type { PluginState } from '../../mol-plugin/state.ts';
-import {
-    type State,
-    type StateBuilder,
-    type StateObject,
-    type StateObjectSelector,
-    type StateTransform,
-    type StateTransformer,
-    StateTree,
-} from '../../mol-state/index.ts';
+import { type State, type StateBuilder, type StateObject, type StateObjectSelector, type StateTransform, type StateTransformer, StateTree } from '../../mol-state/index.ts';
 import { UUID } from '../../mol-util/index.ts';
 import { stringHash } from './helpers/utils.ts';
 import type { Kind, Subtree, SubtreeOfKind, Tree } from './tree/generic/tree-schema.ts';
 import { dfs } from './tree/generic/tree-utils.ts';
 
+
 /** Function responsible for loading a tree node `node` into Mol*.
  * Should apply changes within `updateParent.update` but not commit them.
  * Should modify `context` accordingly, if it is needed for loading other nodes later.
  * `updateParent.selector` is the result of loading the node's parent into Mol* state hierarchy (or the hierarchy root in case of root node). */
-export type LoadingAction<TNode extends Tree, TContext> = (
-    updateParent: UpdateTarget,
-    node: TNode,
-    context: TContext,
-) => UpdateTarget | undefined;
+export type LoadingAction<TNode extends Tree, TContext> = (updateParent: UpdateTarget, node: TNode, context: TContext) => UpdateTarget | undefined
 
 /** Loading actions for loading a tree into Mol*, per node kind. */
-export type LoadingActions<TTree extends Tree, TContext> = {
-    [kind in Kind<Subtree<TTree>>]?: LoadingAction<SubtreeOfKind<TTree, kind>, TContext>;
-};
+export type LoadingActions<TTree extends Tree, TContext> = { [kind in Kind<Subtree<TTree>>]?: LoadingAction<SubtreeOfKind<TTree, kind>, TContext> }
 
 /** Type for defining custom behavior when loading trees, usually based on node custom properties. */
 export interface LoadingExtension<TTree extends Tree, TContext, TExtensionContext> {
-    id: string;
-    description: string;
+    id: string,
+    description: string,
     /** Runs before the tree is loaded */
-    createExtensionContext: (tree: TTree, context: TContext) => TExtensionContext;
+    createExtensionContext: (tree: TTree, context: TContext) => TExtensionContext,
     /** Runs after the tree is loaded */
-    disposeExtensionContext?: (extensionContext: TExtensionContext, tree: TTree, context: TContext) => void;
+    disposeExtensionContext?: (extensionContext: TExtensionContext, tree: TTree, context: TContext) => void,
     /** Runs on every node of the tree */
-    action: (
-        updateTarget: UpdateTarget,
-        node: Subtree<TTree>,
-        context: TContext,
-        extensionContext: TExtensionContext,
-    ) => void;
+    action: (updateTarget: UpdateTarget, node: Subtree<TTree>, context: TContext, extensionContext: TExtensionContext) => void,
 }
+
 
 export function loadTreeVirtual<TTree extends Tree, TContext>(
     plugin: PluginContext,
     tree: TTree,
     loadingActions: LoadingActions<TTree, TContext>,
     context: TContext,
-    options?: { replaceExisting?: boolean; extensions?: LoadingExtension<TTree, TContext, any>[] },
+    options?: { replaceExisting?: boolean, extensions?: LoadingExtension<TTree, TContext, any>[] }
 ) {
     const updateRoot: UpdateTarget = UpdateTarget.create(plugin, options?.replaceExisting ?? false);
     loadTreeInUpdate(updateRoot, tree, loadingActions, context, options);
@@ -69,21 +52,18 @@ export function loadTreeVirtual<TTree extends Tree, TContext>(
     return pluginStateSnapshot;
 }
 
-function loadTreeInUpdate<TTree extends Tree, TContext>(
-    updateRoot: UpdateTarget,
+
+function loadTreeInUpdate<TTree extends Tree, TContext>(updateRoot: UpdateTarget,
     tree: TTree,
     loadingActions: LoadingActions<TTree, TContext>,
     context: TContext,
-    options?: { replaceExisting?: boolean; extensions?: LoadingExtension<TTree, TContext, any>[] },
+    options?: { replaceExisting?: boolean, extensions?: LoadingExtension<TTree, TContext, any>[] }
 ) {
     const mapping = new Map<Subtree<TTree>, UpdateTarget | undefined>();
     if (options?.replaceExisting) {
         UpdateTarget.deleteChildren(updateRoot);
     }
-    const extensionContexts = (options?.extensions ?? []).map((ext) => ({
-        ext,
-        extCtx: ext.createExtensionContext(tree, context),
-    }));
+    const extensionContexts = (options?.extensions ?? []).map(ext => ({ ext, extCtx: ext.createExtensionContext(tree, context) }));
     const mvsRefMap = new Map<string, string>();
     dfs<TTree>(tree, (node, parent) => {
         const kind: Kind<typeof node> = node.kind;
@@ -114,8 +94,9 @@ function loadTreeInUpdate<TTree extends Tree, TContext>(
         UpdateTarget.dependsOn(target, mvsRefMap);
     }
 
-    extensionContexts.forEach((e) => e.ext.disposeExtensionContext?.(e.extCtx, tree, context));
+    extensionContexts.forEach(e => e.ext.disposeExtensionContext?.(e.extCtx, tree, context));
 }
+
 
 /** A wrapper for updating Mol* state, while using deterministic transform refs.
  * ```
@@ -125,33 +106,23 @@ function loadTreeInUpdate<TTree extends Tree, TContext>(
  * ```
  */
 export interface UpdateTarget {
-    readonly update: StateBuilder.Root;
-    readonly selector: StateObjectSelector;
-    readonly targetManager: TargetManager;
-    readonly mvsDependencyRefs: Set<string>;
+    readonly update: StateBuilder.Root,
+    readonly selector: StateObjectSelector,
+    readonly targetManager: TargetManager,
+    readonly mvsDependencyRefs: Set<string>,
 
-    readonly transformer?: StateTransformer;
-    readonly transformParams?: any;
+    readonly transformer?: StateTransformer,
+    readonly transformParams?: any,
 }
 export const UpdateTarget = {
     /** Create a new update, with `selector` pointing to the root. */
     create(plugin: PluginContext, replaceExisting: boolean): UpdateTarget {
         const update = plugin.build();
         const msTarget = update.toRoot();
-        return {
-            update,
-            selector: msTarget.selector,
-            targetManager: new TargetManager(plugin, replaceExisting),
-            mvsDependencyRefs: new Set(),
-        };
+        return { update, selector: msTarget.selector, targetManager: new TargetManager(plugin, replaceExisting), mvsDependencyRefs: new Set() };
     },
     /** Add a child node to `target.selector`, return a new `UpdateTarget` pointing to the new child. */
-    apply<A extends StateObject, B extends StateObject, P extends {}>(
-        target: UpdateTarget,
-        transformer: StateTransformer<A, B, P>,
-        params?: Partial<P>,
-        options?: Partial<StateTransform.Options>,
-    ): UpdateTarget {
+    apply<A extends StateObject, B extends StateObject, P extends {}>(target: UpdateTarget, transformer: StateTransformer<A, B, P>, params?: Partial<P>, options?: Partial<StateTransform.Options>): UpdateTarget {
         let refSuffix: string = transformer.id;
         if (transformer.id === StructureRepresentation3D.id) {
             const reprType = (params as any)?.type?.name ?? '';
@@ -159,23 +130,17 @@ export const UpdateTarget = {
         }
         const ref = target.targetManager.getChildRef(target.selector, refSuffix);
         const apply = target.update.to(target.selector).apply(transformer, params, { ...options, ref });
-        const result: UpdateTarget = {
-            ...target,
-            selector: apply.selector,
-            mvsDependencyRefs: new Set(),
-            transformer,
-            transformParams: params,
-        };
+        const result: UpdateTarget = { ...target, selector: apply.selector, mvsDependencyRefs: new Set(), transformer, transformParams: params };
         target.targetManager.allTargets.push(result);
         return result;
     },
     setMvsDependencies(target: UpdateTarget, refs: string[] | Set<string>): UpdateTarget {
-        refs.forEach((ref) => target.mvsDependencyRefs.add(ref));
+        refs.forEach(ref => target.mvsDependencyRefs.add(ref));
         return target;
     },
     dependsOn(target: UpdateTarget, mapping: Map<string, string>): UpdateTarget {
         if (!target.mvsDependencyRefs.size) return target;
-        const dependsOn = Array.from(target.mvsDependencyRefs).map((d) => mapping.get(d)!).filter((d) => d);
+        const dependsOn = Array.from(target.mvsDependencyRefs).map(d => mapping.get(d)!).filter(d => d);
         if (!dependsOn.length) return target;
         target.update.to(target.selector).dependsOn(dependsOn);
         return target;
@@ -190,7 +155,7 @@ export const UpdateTarget = {
     /** Delete all children of `target.selector`. */
     deleteChildren(target: UpdateTarget): UpdateTarget {
         const children = target.update.currentTree.children.get(target.selector.ref);
-        children.forEach((child) => target.update.delete(child));
+        children.forEach(child => target.update.delete(child));
         return target;
     },
     /** Commit all changes done in the current update. */
@@ -205,7 +170,7 @@ class TargetManager {
     private _counter: Record<string, number> = {};
     constructor(plugin: PluginContext, replaceExisting: boolean) {
         if (!replaceExisting) {
-            plugin.state.data.cells.forEach((cell) => {
+            plugin.state.data.cells.forEach(cell => {
                 const ref = cell.transform.ref;
                 if (ref.startsWith('!mvs:')) {
                     const [_, hash, idNumber] = ref.split(':');

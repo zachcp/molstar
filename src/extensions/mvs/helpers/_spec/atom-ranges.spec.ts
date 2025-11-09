@@ -6,6 +6,7 @@
 
 import { ElementRanges } from '../element-ranges';
 
+
 describe('union', () => {
     it('union non-overlapping', async () => {
         const a = {
@@ -46,3 +47,4 @@ describe('union', () => {
         expect(ElementRanges.union([a, b, c])).toEqual(result);
     });
 });
+

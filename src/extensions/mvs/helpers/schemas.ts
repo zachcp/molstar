@@ -11,8 +11,9 @@ import { Choice } from '../../../mol-util/param-choice.ts';
 
 const { str, int } = Column.Schema;
 
+
 /** Names of allowed MVS annotation schemas (values for the annotation schema parameter) */
-export type MVSAnnotationSchema = Choice.Values<typeof MVSAnnotationSchema>;
+export type MVSAnnotationSchema = Choice.Values<typeof MVSAnnotationSchema>
 export const MVSAnnotationSchema = new Choice(
     {
         whole_structure: 'Whole Structure',
@@ -32,14 +33,14 @@ export const MVSAnnotationSchema = new Choice(
 
 /** Represents a set of criteria for selection of atoms in a model (in `all_atomic` schema).
  * Missing/undefined values mean that we do not care about that specific atom property. */
-export type MVSAnnotationRow = Partial<Table.Row<typeof AllAtomicCifAnnotationSchema>>;
+export type MVSAnnotationRow = Partial<Table.Row<typeof AllAtomicCifAnnotationSchema>>
+
 
 /** Get CIF schema definition for given annotation schema name */
-export function getCifAnnotationSchema<K extends MVSAnnotationSchema>(
-    schemaName: K,
-): Pick<typeof AllAtomicCifAnnotationSchema, (typeof FieldsForSchemas)[K][number]> {
+export function getCifAnnotationSchema<K extends MVSAnnotationSchema>(schemaName: K): Pick<typeof AllAtomicCifAnnotationSchema, (typeof FieldsForSchemas)[K][number]> {
     return pickObjectKeys(AllAtomicCifAnnotationSchema, FieldsForSchemas[schemaName]);
 }
+
 
 /** Definition of `all_atomic` schema for CIF (other atomic schemas are subschemas of this one) */
 const AllAtomicCifAnnotationSchema = {
@@ -93,27 +94,7 @@ const FieldsForSchemas = {
     auth_residue: ['group_id', 'auth_asym_id', 'auth_seq_id', 'pdbx_PDB_ins_code', 'residue_index'],
     residue_range: ['group_id', 'label_entity_id', 'label_asym_id', 'beg_label_seq_id', 'end_label_seq_id'],
     auth_residue_range: ['group_id', 'auth_asym_id', 'beg_auth_seq_id', 'end_auth_seq_id'],
-    atom: [
-        'group_id',
-        'label_entity_id',
-        'label_asym_id',
-        'label_seq_id',
-        'residue_index',
-        'label_atom_id',
-        'type_symbol',
-        'atom_id',
-        'atom_index',
-    ],
-    auth_atom: [
-        'group_id',
-        'auth_asym_id',
-        'auth_seq_id',
-        'pdbx_PDB_ins_code',
-        'residue_index',
-        'auth_atom_id',
-        'type_symbol',
-        'atom_id',
-        'atom_index',
-    ],
+    atom: ['group_id', 'label_entity_id', 'label_asym_id', 'label_seq_id', 'residue_index', 'label_atom_id', 'type_symbol', 'atom_id', 'atom_index'],
+    auth_atom: ['group_id', 'auth_asym_id', 'auth_seq_id', 'pdbx_PDB_ins_code', 'residue_index', 'auth_atom_id', 'type_symbol', 'atom_id', 'atom_index'],
     all_atomic: Object.keys(AllAtomicCifAnnotationSchema) as (keyof typeof AllAtomicCifAnnotationSchema)[],
 } satisfies { [schema in MVSAnnotationSchema]: (keyof typeof AllAtomicCifAnnotationSchema)[] };

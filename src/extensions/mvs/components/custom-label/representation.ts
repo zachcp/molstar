@@ -5,53 +5,33 @@
  */
 
 import type { Structure } from '../../../../mol-model/structure.ts';
-import {
-    Representation,
-    type RepresentationContext,
-    type RepresentationParamsGetter,
-} from '../../../../mol-repr/representation.ts';
-import {
-    ComplexRepresentation,
-    type StructureRepresentation,
-    StructureRepresentationProvider,
-    StructureRepresentationStateBuilder,
-} from '../../../../mol-repr/structure/representation.ts';
+import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../../../../mol-repr/representation.ts';
+import { ComplexRepresentation, type StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder } from '../../../../mol-repr/structure/representation.ts';
 import { MarkerAction } from '../../../../mol-util/marker-action.ts';
 import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
 import { isMVSStructure } from '../is-mvs-model-prop.ts';
 import { CustomLabelTextParams, CustomLabelTextVisual } from './visual.ts';
 
+
 /** Components of "Custom Label" representation */
 const CustomLabelVisuals = {
-    'label-text': (
-        ctx: RepresentationContext,
-        getParams: RepresentationParamsGetter<Structure, CustomLabelTextParams>,
-    ) => ComplexRepresentation('Label text', ctx, getParams, CustomLabelTextVisual),
+    'label-text': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, CustomLabelTextParams>) => ComplexRepresentation('Label text', ctx, getParams, CustomLabelTextVisual),
 };
 
 /** Parameter definition for representation type "Custom Label" */
-export type CustomLabelParams = typeof CustomLabelParams;
+export type CustomLabelParams = typeof CustomLabelParams
 export const CustomLabelParams = {
     ...CustomLabelTextParams,
     visuals: PD.MultiSelect(['label-text'], PD.objectToOptions(CustomLabelVisuals)),
 };
 
 /** Parameter values for representation type "Custom Label" */
-export type CustomLabelProps = PD.ValuesFor<CustomLabelParams>;
+export type CustomLabelProps = PD.ValuesFor<CustomLabelParams>
 
 /** Structure representation type "Custom Label", allowing user-defined labels at at user-defined positions */
-export type CustomLabelRepresentation = StructureRepresentation<CustomLabelParams>;
-export function CustomLabelRepresentation(
-    ctx: RepresentationContext,
-    getParams: RepresentationParamsGetter<Structure, CustomLabelParams>,
-): CustomLabelRepresentation {
-    const repr = Representation.createMulti(
-        'Label',
-        ctx,
-        getParams,
-        StructureRepresentationStateBuilder,
-        CustomLabelVisuals as unknown as Representation.Def<Structure, CustomLabelParams>,
-    );
+export type CustomLabelRepresentation = StructureRepresentation<CustomLabelParams>
+export function CustomLabelRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, CustomLabelParams>): CustomLabelRepresentation {
+    const repr = Representation.createMulti('Label', ctx, getParams, StructureRepresentationStateBuilder, CustomLabelVisuals as unknown as Representation.Def<Structure, CustomLabelParams>);
     repr.setState({ pickable: false, markerActions: MarkerAction.None });
     return repr;
 }

@@ -4,7 +4,8 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { fieldValidationIssues, float, int, literal, nullable, RequiredField, str, union } from '../field-schema';
+import { RequiredField, fieldValidationIssues, float, int, literal, nullable, str, union } from '../field-schema';
+
 
 describe('fieldValidationIssues', () => {
     it('fieldValidationIssues string', async () => {
@@ -16,10 +17,7 @@ describe('fieldValidationIssues', () => {
         expect(fieldValidationIssues(stringField, undefined)).toBeTruthy();
     });
     it('fieldValidationIssues string choice', async () => {
-        const colorParam = RequiredField(
-            literal('red', 'green', 'blue', 'yellow'),
-            'Testing required field colorParam',
-        );
+        const colorParam = RequiredField(literal('red', 'green', 'blue', 'yellow'), 'Testing required field colorParam');
         expect(fieldValidationIssues(colorParam, 'red')).toBeUndefined();
         expect(fieldValidationIssues(colorParam, 'green')).toBeUndefined();
         expect(fieldValidationIssues(colorParam, 'blue')).toBeUndefined();
