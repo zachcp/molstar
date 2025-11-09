@@ -120,7 +120,7 @@ namespace Grid {
   export function makeGetTrilinearlyInterpolated(
     grid: Grid,
     transform: "none" | "relative",
-  ) {
+  ): (position: Vec3) => number {
     const cartnToGrid = Grid.getGridToCartesianTransform(grid);
     Mat4.invert(cartnToGrid, cartnToGrid);
     const gridCoords = Vec3();
