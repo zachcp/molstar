@@ -1,9 +1,9 @@
 # Next Session Quick-Start Guide
 
-**Status:** 531 total errors remaining  
+**Status:** 521 total errors remaining  
 **Breakdown:**
 - 126 `missing-explicit-return-type` (functions) - 83% complete (604/730 fixed)
-- 371 `missing-explicit-type` (variables/constants) - **NOT YET ADDRESSED**
+- 361 `missing-explicit-type` (variables/constants) - **3% complete (10/371 fixed)**
 - 34 `unsupported-super-class-expr` (unfixable class inheritance)
 
 ---
@@ -11,24 +11,68 @@
 ## 🎯 Current State
 
 **Return Type Errors:** 126 `missing-explicit-return-type`  
-**Variable Type Errors:** 371 `missing-explicit-type` (NEW - not yet addressed)  
+**Variable Type Errors:** 361 `missing-explicit-type` (10 fixed this session!)  
 **Unfixable:** 34 `unsupported-super-class-expr`  
 **TypeScript Errors:** 0 ✅
 
-**Total JSR Problems:** 531
+**Total JSR Problems:** 521
 
 ---
 
 ## ⚠️ CRITICAL LEARNINGS
 
-**This Session Progress:** Fixed 11 `missing-explicit-return-type` errors (137 → 126)
-- ✅ mol-state/tree/transient.ts: 6 errors fixed
-- ✅ mol-state/state.ts: 2 errors fixed  
-- ✅ mol-state/object.ts: 3 errors fixed
+**This Session Progress:** Fixed 10 `missing-explicit-type` errors (371 → 361)
+- ✅ mol-canvas3d/camera/stereo.ts: 2 errors fixed (param definitions)
+- ✅ mol-canvas3d/passes/background.ts: 6 errors fixed (param definitions)
+- ✅ mol-canvas3d/helper/helper.ts: 1 error fixed
+- ✅ mol-canvas3d/helper/interaction-events.ts: 1 error fixed
+- ✅ mol-canvas3d/helper/bounding-sphere-helper.ts: 1 error fixed
 
 **IMPORTANT DISCOVERY:** There are TWO types of errors to fix:
 1. `missing-explicit-return-type` (126 remaining) - functions without return types
-2. `missing-explicit-type` (371 remaining) - variables/constants without types
+2. `missing-explicit-type` (361 remaining) - variables/constants without types
+
+### Variable Type Error Patterns
+
+**SAFE patterns for `missing-explicit-type`:**
+```typescript
+// ✅ Simple param definitions (no spread operators)
+export const SimpleParams: PD.Params = {
+  enabled: PD.Boolean(false),
+  alpha: PD.Numeric(1, { min: 0, max: 1 }),
+};
+
+// ✅ Default values AFTER type is defined
+export type SimpleProps = PD.Values<typeof SimpleParams>;
+export const DefaultSimpleProps: SimpleProps = PD.getDefaultValues(SimpleParams);
+```
+
+**DANGEROUS patterns (cause TypeScript errors):**
+```typescript
+// ❌ Complex param definitions with PD.Group, PD.MappedStatic, etc.
+export const ComplexParams: PD.Params = {
+  variant: PD.MappedStatic('off', {
+    on: PD.Group(SubParams),
+    off: PD.Group({})
+  })
+};
+
+// ❌ Param definitions with spread operators
+export const ExtendedParams: PD.Params = {
+  ...BaseParams,  // Spread causes type inference issues
+  newProp: PD.Boolean(true)
+};
+
+// ❌ Using type before it's defined
+export const DefaultProps: Props = PD.getDefaultValues(Params);
+export type Props = PD.Values<typeof Params>;  // Type comes AFTER!
+
+// ❌ Objects with typeof patterns (inference needed)
+export const Params = { ...spread };
+export type Params = typeof Params;  // Don't add explicit type here!
+```
+
+### Return Type Error Patterns
 
 These patterns consistently introduce TypeScript errors when given explicit return types:
 
@@ -66,7 +110,21 @@ Top files with return-type errors:
 9 src/mol-plugin/state.ts
 ```
 
-### Variable Type Errors (371 total) - **TO BE ADDRESSED IN NEXT SESSION**
+### Variable Type Errors (361 remaining)
+```
+Top files with variable-type errors:
+13 src/mol-script/language/symbol-table/core.ts
+11 src/mol-plugin/context.ts
+11 src/mol-plugin-state/builder/structure/representation-preset.ts
+10 src/mol-plugin/behavior/dynamic/representation.ts
+10 src/mol-gl/renderable/schema.ts
+9 src/mol-script/language/symbol-table/structure-query.ts
+8 src/mol-plugin/behavior/dynamic/camera.ts
+7 src/mol-plugin/state.ts
+7 src/mol-plugin-state/actions/structure.ts
+7 src/mol-model/structure/model/model.ts
+```
+
 Run to see distribution:
 ```bash
 deno publish --dry-run 2>&1 | grep "missing-explicit-type" | grep "\-\->" | sed 's/.*src/src/' | cut -d':' -f1 | sort | uniq -c | sort -rn | head -10
@@ -244,53 +302,68 @@ This Session:
 
 ### Variable Type Errors (`missing-explicit-type`)
 ```
-Current:   371 errors
-Fixed:     0 errors (0%)
-Status:    NOT YET ADDRESSED
+Starting:  371 errors
+Fixed:     10 errors (3%)
+Current:   361 errors (97%)
+Target:    0 errors
 
-Next session should focus on these!
+This Session:
+- Fixed 10 errors (371 → 361)
+- Zero TypeScript errors maintained
+- Completed: stereo.ts, background.ts, helper.ts, interaction-events.ts, bounding-sphere-helper.ts
+- AVOIDED: canvas3d.ts, camera-helper.ts, xr-manager.ts (complex patterns)
 ```
 
 ### Total JSR Slow-Type Problems
 ```
-Total:     531 problems
-Breakdown: 126 return-type + 371 variable-type + 34 unfixable
-Progress:  ~27% complete (604 fixed out of ~800 total fixable)
+Total:     521 problems
+Breakdown: 126 return-type + 361 variable-type + 34 unfixable
+Progress:  ~29% complete (614 fixed out of ~857 total fixable)
 ```
 
 ---
 
 ## 🎬 Next Session Strategy
 
-### Option 1: Finish Return Type Errors (126 remaining)
-Continue working on `missing-explicit-return-type` errors, but be aware:
-- Most remaining are COMPLEX (factories, builders, parameter functions)
-- High risk of introducing TypeScript errors
-- May need to accept some as unfixable
+### Continue Variable Type Errors (361 remaining) ⭐ RECOMMENDED
+Continue with `missing-explicit-type` errors, focusing on SAFE patterns:
+
+**Safe Files to Target:**
+- Look for simple `*Params` objects without spread operators
+- Avoid files with complex `PD.MappedStatic`, `PD.Group` nesting
+- Skip any file with `typeof` type aliases
+- Focus on helper files, simple configuration objects
+
+**Files to AVOID (known dangerous):**
+- `mol-canvas3d/canvas3d.ts` - complex nested PD.Group
+- `mol-canvas3d/helper/camera-helper.ts` - TS2345 error
+- `mol-canvas3d/helper/xr-manager.ts` - missing InputBinding type
+- `mol-canvas3d/helper/pointer-helper.ts` - uses spread operators
+- `mol-canvas3d/helper/handle-helper.ts` - likely has spread operators
+- `mol-repr/volume/*.ts` - all use typeof patterns
+- `mol-plugin-state/builder/structure/*.ts` - param function patterns
+
+**Strategy:**
+1. Pick files with few errors (1-3 errors each)
+2. Check for dangerous patterns before editing
+3. Test immediately after each file
+4. Skip and move on if TypeScript errors appear
 
 **Commands:**
 ```bash
-# See return-type error distribution
-deno publish --dry-run 2>&1 | grep "missing-explicit-return-type" -A 1 | grep "\-\->" | sed 's/.*src/src/' | cut -d':' -f1 | sort | uniq -c | sort -rn | head -10
+# See specific examples from a file
+deno publish --dry-run 2>&1 | grep "missing-explicit-type" -A 3 | grep -A 3 "FILENAME"
+
+# Quick test after edit
+deno publish --dry-run 2>&1 | grep "TS[0-9]" | wc -l
+
+# Count progress
+deno publish --dry-run 2>&1 | grep -c "error\[missing-explicit-type\]"
 ```
 
-### Option 2: Start on Variable Type Errors (371 NEW errors) ⭐ RECOMMENDED
-Focus on the 371 `missing-explicit-type` errors - variables/constants without types:
-- These are DIFFERENT from return-type errors
-- Likely easier to fix (add `: Type` to variable declarations)
-- Fresh set of problems to tackle
-
-**Commands:**
-```bash
-# See variable-type error distribution
-deno publish --dry-run 2>&1 | grep "missing-explicit-type" -A 1 | grep "\-\->" | sed 's/.*src/src/' | cut -d':' -f1 | sort | uniq -c | sort -rn | head -10
-
-# See specific examples
-deno publish --dry-run 2>&1 | grep "missing-explicit-type" -A 3 | head -40
-```
-
-### Critical Reminder
-- **Always test after every change:** `deno publish --dry-run 2>&1 | grep "TS[0-9]" | wc -l` (must be 0)
-- **Skip dangerous patterns** (parameter definitions, complex factories)
-- **Commit frequently** with descriptive messages
-- **It's better to skip than break!**
+### Critical Reminders
+- **Always test after EVERY file:** `deno publish --dry-run 2>&1 | grep "TS[0-9]" | wc -l` (must be 0)
+- **Revert immediately if errors:** `git checkout src/path/to/file.ts`
+- **Commit after every 2-3 successful fixes**
+- **If a pattern causes errors, DOCUMENT IT above and skip similar files**
+- **It's better to skip 100 files than break 1!**
