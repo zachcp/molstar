@@ -5,6 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
+// Polyfills for browser compatibility
+import "./mol-util/polyfill.ts";
+
 // Core modules
 export * from "./mol-data/index.ts";
 export * from "./mol-state/index.ts";
