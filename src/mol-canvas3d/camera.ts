@@ -34,6 +34,8 @@ interface ICamera {
   readonly forceFull: boolean;
   readonly scale: number;
   readonly minTargetDistance: number;
+
+  readonly disabled: boolean;
 }
 
 const tmpClip = Vec4();
@@ -64,9 +66,10 @@ export class Camera implements ICamera {
   readonly transition: CameraTransitionManager = new CameraTransitionManager(
     this,
   );
-  readonly stateChanged: BehaviorSubject<Partial<Camera.Snapshot>> = new BehaviorSubject<Partial<Camera.Snapshot>>(
-    this.state,
-  );
+  readonly stateChanged: BehaviorSubject<Partial<Camera.Snapshot>> =
+    new BehaviorSubject<Partial<Camera.Snapshot>>(this.state);
+
+  readonly disabled = false as const;
 
   get position(): Vec3 {
     return this.state.position;

@@ -97,6 +97,7 @@ class EyeCamera implements ICamera {
   near: number = 0;
   fogFar: number = 0;
   fogNear: number = 0;
+  disabled = false as const;
 
   forceFull: boolean = false;
   scale: number = 0;
