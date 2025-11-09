@@ -1,6 +1,6 @@
 {
   "name": "@zachcp/molstar",
-  "version": "5.0.0",
+  "version": "5.3.0",
   "exports": {
     ".": "./src/mod.ts",
     "./plugin-ui": "./src/mol-plugin-ui/index.ts",
