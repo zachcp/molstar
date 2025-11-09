@@ -163,7 +163,7 @@ namespace InteractivityManager {
       reprLoci: Representation.Loci,
       applyGranularity: boolean,
       alwaysConvertBonds = false,
-    ) {
+    ): Representation.Loci {
       const { loci, repr } = reprLoci;
       const granularity = applyGranularity ? this.props.granularity : undefined;
       return {

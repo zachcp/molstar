@@ -90,7 +90,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
     this.events.optionsUpdated.next(void 0);
   }
 
-  async setOptions(options: StructureComponentManager.Options) {
+  async setOptions(options: StructureComponentManager.Options): Promise<void> {
     const interactionChanged =
       options.interactions !== this.state.options.interactions;
     this.updateState({ options });
@@ -350,7 +350,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
   removeRepresentations(
     components: ReadonlyArray<StructureComponentRef>,
     pivot?: StructureRepresentationRef,
-  ) {
+  ): Promise<void> | undefined {
     if (components.length === 0) return;
 
     const toRemove: StructureHierarchyRef[] = [];
@@ -376,7 +376,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
     components: ReadonlyArray<StructureComponentRef>,
     pivot: StructureRepresentationRef,
     params: StateTransformer.Params<StructureRepresentation3D>,
-  ) {
+  ): Promise<void> {
     if (components.length === 0) return Promise.resolve();
 
     const index: number = components[0].representations.indexOf(pivot);
@@ -489,7 +489,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
   addRepresentation(
     components: ReadonlyArray<StructureComponentRef>,
     type: string,
-  ) {
+  ): Promise<void> | undefined {
     if (components.length === 0) return;
 
     const {
