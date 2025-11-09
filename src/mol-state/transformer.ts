@@ -243,7 +243,7 @@ namespace Transformer {
         return Builder.build(namespace);
     }
 
-    export const ROOT = create<any, any, {}>('build-in', {
+    export const ROOT: Transformer<any, any, {}> = create<any, any, {}>('build-in', {
         name: 'root',
         from: [],
         to: [],
