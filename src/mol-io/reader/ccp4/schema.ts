@@ -7,11 +7,11 @@
 
 export interface Ccp4Header {
     /** number of columns (fastest changing) */
-    NC: number
+    NC: number;
     /** number of rows */
-    NR: number
+    NR: number;
     /** number of sections (slowest changing) */
-    NS: number
+    NS: number;
     /**
      * 0 image : signed 8-bit bytes range -128 to 127
      * 1 image : 16-bit halfwords
@@ -24,54 +24,54 @@ export interface Ccp4Header {
      * Note: Mode 2 is the normal mode used in the CCP4 programs.
      * This parser only supports modes 0 and 2
      */
-    MODE: number
+    MODE: number;
     /** first column */
-    NCSTART: number
+    NCSTART: number;
     /** first row */
-    NRSTART: number
+    NRSTART: number;
     /** first section */
-    NSSTART: number
+    NSSTART: number;
     /** intervals along x */
-    NX: number
+    NX: number;
     /** intervals along y */
-    NY: number
+    NY: number;
     /** intervals along z */
-    NZ: number
+    NZ: number;
     /** x axis cell length (Angstroms in CCP4) */
-    xLength: number
+    xLength: number;
     /** y axis cell length (Angstroms in CCP4) */
-    yLength: number
+    yLength: number;
     /** z axis cell length (Angstroms in CCP4) */
-    zLength: number
+    zLength: number;
     /** alpha cell angle (Degrees) */
-    alpha: number
+    alpha: number;
     /** beta cell angle (Degrees) */
-    beta: number
+    beta: number;
     /** gamma cell angle (Degrees) */
-    gamma: number
+    gamma: number;
     /** axis corresponds to columns (1,2,3 for X,Y,Z) */
-    MAPC: number
+    MAPC: number;
     /** axis corresponds to rows (1,2,3 for X,Y,Z) */
-    MAPR: number
+    MAPR: number;
     /** axis corresponds to sections (1,2,3 for X,Y,Z) */
-    MAPS: number
+    MAPS: number;
     /** minimum density value */
-    AMIN: number
+    AMIN: number;
     /** maximum density value */
-    AMAX: number
+    AMAX: number;
     /** mean/average density value */
-    AMEAN: number
+    AMEAN: number;
     /** space group number */
-    ISPG: number
+    ISPG: number;
     /** number of bytes used for storing symmetry operators */
-    NSYMBT: number
+    NSYMBT: number;
     /** flag for skew transformation, =0 none, =1 if foll */
-    LSKFLG: number
+    LSKFLG: number;
     /**
      * Skew matrix S (in order S11, S12, S13, S21 etc) if LSKFLG .ne. 0
      * May be used in CCP4 but not in MRC
      */
-    SKWMAT: number[]
+    SKWMAT: number[];
     /**
      * Skew translation t if LSKFLG != 0
      * Skew transformation is from standard orthogonal
@@ -80,25 +80,25 @@ export interface Ccp4Header {
      *
      * May be used in CCP4 but not in MRC
      */
-    SKWTRN: number[]
+    SKWTRN: number[];
     /** see https://github.com/uglymol/uglymol/blob/master/tools/mapmode2to0#L69 */
-    userFlag1: number,
-    userFlag2: number,
+    userFlag1: number;
+    userFlag2: number;
     /** x axis origin transformation (not used in CCP4) */
-    originX: number
+    originX: number;
     /** y axis origin transformation (not used in CCP4) */
-    originY: number
+    originY: number;
     /** z axis origin transformation (not used in CCP4) */
-    originZ: number
+    originZ: number;
     /** Character string 'MAP ' to identify file type */
-    MAP: string
+    MAP: string;
     /**
      * Machine stamp indicating machine type which wrote file,
      * 17 and 17 for big-endian or 68 and 65 for little-endian.
      */
-    MACHST: number[]
+    MACHST: number[];
     /** rms deviation of map from mean density */
-    ARMS: number
+    ARMS: number;
 }
 
 /**
@@ -114,7 +114,7 @@ export interface Ccp4Header {
  * CCP4 format does not use the ORIGIN header records (words 50-52)
  */
 export interface Ccp4File {
-    name: string
-    header: Ccp4Header
-    values: Float32Array | Int16Array | Int8Array | Uint16Array
+    name: string;
+    header: Ccp4Header;
+    values: Float32Array | Int16Array | Int8Array | Uint16Array;
 }

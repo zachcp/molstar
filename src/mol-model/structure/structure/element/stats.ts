@@ -13,19 +13,19 @@ import type { ChainIndex } from '../../model/indexing.ts';
 import type { Structure } from '../structure.ts';
 
 export interface Stats {
-    elementCount: number
-    conformationCount: number
-    residueCount: number
-    chainCount: number
-    unitCount: number
-    structureCount: number
+    elementCount: number;
+    conformationCount: number;
+    residueCount: number;
+    chainCount: number;
+    unitCount: number;
+    structureCount: number;
 
-    firstElementLoc: Location
-    firstConformationLoc: Location
-    firstResidueLoc: Location
-    firstChainLoc: Location
-    firstUnitLoc: Location
-    firstStructureLoc: Location
+    firstElementLoc: Location;
+    firstConformationLoc: Location;
+    firstResidueLoc: Location;
+    firstChainLoc: Location;
+    firstUnitLoc: Location;
+    firstStructureLoc: Location;
 }
 
 export namespace Stats {
@@ -163,10 +163,10 @@ export namespace Stats {
         const segments = Unit.isAtomic(unit)
             ? unit.model.atomicHierarchy.chainAtomSegments
             : Unit.isSpheres(unit)
-                ? unit.model.coarseHierarchy.spheres.chainElementSegments
-                : Unit.isGaussians(unit)
-                    ? unit.model.coarseHierarchy.gaussians.chainElementSegments
-                    : void 0;
+            ? unit.model.coarseHierarchy.spheres.chainElementSegments
+            : Unit.isGaussians(unit)
+            ? unit.model.coarseHierarchy.gaussians.chainElementSegments
+            : void 0;
 
         if (!segments) {
             console.warn('StructureElement loci stats: unknown unit type');
@@ -204,17 +204,23 @@ export namespace Stats {
         }
     }
 
-    function handleUnitChainsPartitioned(stats: Stats, structure: Structure, lociElements: Loci['elements'], start: number, end: number) {
+    function handleUnitChainsPartitioned(
+        stats: Stats,
+        structure: Structure,
+        lociElements: Loci['elements'],
+        start: number,
+        end: number,
+    ) {
         let element = lociElements[start];
 
         // all the elements have the same model since they are part of the same group so this is ok.
         const segments = Unit.isAtomic(element.unit)
             ? element.unit.model.atomicHierarchy.chainAtomSegments
             : Unit.isSpheres(element.unit)
-                ? element.unit.model.coarseHierarchy.spheres.chainElementSegments
-                : Unit.isGaussians(element.unit)
-                    ? element.unit.model.coarseHierarchy.gaussians.chainElementSegments
-                    : void 0;
+            ? element.unit.model.coarseHierarchy.spheres.chainElementSegments
+            : Unit.isGaussians(element.unit)
+            ? element.unit.model.coarseHierarchy.gaussians.chainElementSegments
+            : void 0;
 
         if (!segments) {
             console.warn('StructureElement loci stats: unknown unit type');

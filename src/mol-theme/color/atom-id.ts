@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StructureProperties, StructureElement, Bond, type Structure } from '../../mol-model/structure.ts';
+import { Bond, type Structure, StructureElement, StructureProperties } from '../../mol-model/structure.ts';
 import { Color } from '../../mol-util/color/index.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ColorTheme, LocationColor } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../../mol-theme/theme.ts';
-import { getPaletteParams, getPalette } from '../../mol-util/color/palette.ts';
-import type { TableLegend, ScaleLegend } from '../../mol-util/legend.ts';
+import { getPalette, getPaletteParams } from '../../mol-util/color/palette.ts';
+import type { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
 import { ColorThemeCategory } from './categories.ts';
 
 const DefaultList = 'many-distinct';
@@ -21,7 +21,7 @@ const Description = 'Gives every atom a color based on its `label_atom_id` value
 export const AtomIdColorThemeParams = {
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
 };
-export type AtomIdColorThemeParams = typeof AtomIdColorThemeParams
+export type AtomIdColorThemeParams = typeof AtomIdColorThemeParams;
 export function getAtomIdColorThemeParams(ctx: ThemeDataContext) {
     const params = PD.clone(AtomIdColorThemeParams);
     return params;
@@ -39,7 +39,10 @@ function getAtomIdSerialMap(structure: Structure) {
     return map;
 }
 
-export function AtomIdColorTheme(ctx: ThemeDataContext, props: PD.Values<AtomIdColorThemeParams>): ColorTheme<AtomIdColorThemeParams> {
+export function AtomIdColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<AtomIdColorThemeParams>,
+): ColorTheme<AtomIdColorThemeParams> {
     let color: LocationColor;
     let legend: ScaleLegend | TableLegend | undefined;
 
@@ -77,7 +80,7 @@ export function AtomIdColorTheme(ctx: ThemeDataContext, props: PD.Values<AtomIdC
         color,
         props,
         description: Description,
-        legend
+        legend,
     };
 }
 
@@ -88,5 +91,5 @@ export const AtomIdColorThemeProvider: ColorTheme.Provider<AtomIdColorThemeParam
     factory: AtomIdColorTheme,
     getParams: getAtomIdColorThemeParams,
     defaultValues: PD.getDefaultValues(AtomIdColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
 };

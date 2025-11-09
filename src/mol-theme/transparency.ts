@@ -5,22 +5,22 @@
  */
 
 import { Loci } from '../mol-model/loci.ts';
-import { StructureElement, type Structure } from '../mol-model/structure.ts';
+import { type Structure, StructureElement } from '../mol-model/structure.ts';
 import { Script } from '../mol-script/script.ts';
 
 export { Transparency };
 
 type Transparency<T extends Loci = Loci> = {
-    readonly kind: T['kind']
-    readonly layers: ReadonlyArray<Transparency.Layer<T>>
-}
+    readonly kind: T['kind'];
+    readonly layers: ReadonlyArray<Transparency.Layer<T>>;
+};
 
 function Transparency<T extends Loci>(kind: T['kind'], layers: ReadonlyArray<Transparency.Layer<T>>): Transparency<T> {
     return { kind, layers };
 }
 
 namespace Transparency {
-    export type Layer<T extends Loci = Loci> = { readonly loci: T, readonly value: number }
+    export type Layer<T extends Loci = Loci> = { readonly loci: T; readonly value: number };
     export const Empty: Transparency = { kind: 'empty-loci', layers: [] };
 
     export function areEqual(tA: Transparency, tB: Transparency): boolean {
@@ -100,7 +100,7 @@ namespace Transparency {
         }
     }
 
-    export type ScriptLayer = { script: Script, value: number }
+    export type ScriptLayer = { script: Script; value: number };
     export function ofScript(scriptLayers: ScriptLayer[], structure: Structure): Transparency<StructureElement.Loci> {
         const layers: Transparency.Layer<StructureElement.Loci>[] = [];
         for (let i = 0, il = scriptLayers.length; i < il; ++i) {
@@ -113,7 +113,7 @@ namespace Transparency {
         return { kind: 'element-loci', layers };
     }
 
-    export type BundleLayer = { bundle: StructureElement.Bundle, value: number }
+    export type BundleLayer = { bundle: StructureElement.Bundle; value: number };
     export function ofBundle(bundleLayers: BundleLayer[], structure: Structure): Transparency<StructureElement.Loci> {
         const layers: Transparency.Layer<StructureElement.Loci>[] = [];
         for (let i = 0, il = bundleLayers.length; i < il; ++i) {
@@ -124,7 +124,9 @@ namespace Transparency {
         return { kind: 'element-loci', layers };
     }
 
-    export function toBundle(transparency: Transparency<StructureElement.Loci>): { kind: 'element-loci', layers: BundleLayer[] } {
+    export function toBundle(
+        transparency: Transparency<StructureElement.Loci>,
+    ): { kind: 'element-loci'; layers: BundleLayer[] } {
         const layers: BundleLayer[] = [];
         for (let i = 0, il = transparency.layers.length; i < il; ++i) {
             const { loci, value } = transparency.layers[i];

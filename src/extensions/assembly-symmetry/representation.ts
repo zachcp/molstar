@@ -5,9 +5,9 @@
  */
 
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { type AssemblySymmetryValue, AssemblySymmetryProvider, AssemblySymmetryData } from './prop.ts';
+import { AssemblySymmetryData, AssemblySymmetryProvider, type AssemblySymmetryValue } from './prop.ts';
 import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
-import { Vec3, Mat4, Mat3 } from '../../mol-math/linear-algebra.ts';
+import { Mat3, Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { addCylinder } from '../../mol-geo/geometry/mesh/builder/cylinder.ts';
 import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
 import type { RuntimeContext } from '../../mol-task/index.ts';
@@ -20,10 +20,14 @@ import { Wedge, WedgeCage } from '../../mol-geo/primitive/wedge.ts';
 import { type Primitive, transformPrimitive } from '../../mol-geo/primitive/primitive.ts';
 import { memoize1 } from '../../mol-util/memoize.ts';
 import { polygon } from '../../mol-geo/primitive/polygon.ts';
-import { ColorMap, type Color } from '../../mol-util/color/index.ts';
+import { type Color, ColorMap } from '../../mol-util/color/index.ts';
 import { TableLegend } from '../../mol-util/legend.ts';
-import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../../mol-repr/representation.ts';
-import { type Cage, transformCage, cloneCage } from '../../mol-geo/primitive/cage.ts';
+import {
+    Representation,
+    type RepresentationContext,
+    type RepresentationParamsGetter,
+} from '../../mol-repr/representation.ts';
+import { type Cage, cloneCage, transformCage } from '../../mol-geo/primitive/cage.ts';
 import { OctahedronCage } from '../../mol-geo/primitive/octahedron.ts';
 import { TetrahedronCage } from '../../mol-geo/primitive/tetrahedron.ts';
 import { IcosahedronCage } from '../../mol-geo/primitive/icosahedron.ts';
@@ -39,14 +43,14 @@ const OrderColors = ColorMap({
     '3': ColorNames.lime,
     'N': ColorNames.red,
 });
-const OrderColorsLegend = TableLegend(Object.keys(OrderColors).map(name => {
-    return [name, (OrderColors as any)[name] as Color] as [string, Color];
-}));
+const OrderColorsLegend = TableLegend(
+    Object.keys(OrderColors).map((name) => {
+        return [name, (OrderColors as any)[name] as Color] as [string, Color];
+    }),
+);
 
-function axesColorHelp(value: { name: string, params: {} }) {
-    return value.name === 'byOrder'
-        ? { description: 'Color axes by their order', legend: OrderColorsLegend }
-        : {};
+function axesColorHelp(value: { name: string; params: {} }) {
+    return value.name === 'byOrder' ? { description: 'Color axes by their order', legend: OrderColorsLegend } : {};
 }
 
 const SharedParams = {
@@ -60,21 +64,27 @@ const AxesParams = {
         byOrder: PD.EmptyGroup(),
         uniform: PD.Group({
             colorValue: PD.Color(ColorNames.orange),
-        }, { isFlat: true })
+        }, { isFlat: true }),
     }, { help: axesColorHelp }),
 };
-type AxesParams = typeof AxesParams
+type AxesParams = typeof AxesParams;
 
 const CageParams = {
     ...SharedParams,
     cageColor: PD.Color(ColorNames.orange),
 };
-type CageParams = typeof CageParams
+type CageParams = typeof CageParams;
 
 const AssemblySymmetryVisuals = {
     // cage should come before 'axes' so that the representative loci uses the cage shape
-    'cage': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, CageParams>) => ShapeRepresentation(getCageShape, Mesh.Utils, { modifyState: s => ({ ...s, markerActions: MarkerActions.Highlighting }) }),
-    'axes': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, AxesParams>) => ShapeRepresentation(getAxesShape, Mesh.Utils, { modifyState: s => ({ ...s, markerActions: MarkerActions.Highlighting }) }),
+    'cage': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, CageParams>) =>
+        ShapeRepresentation(getCageShape, Mesh.Utils, {
+            modifyState: (s) => ({ ...s, markerActions: MarkerActions.Highlighting }),
+        }),
+    'axes': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, AxesParams>) =>
+        ShapeRepresentation(getAxesShape, Mesh.Utils, {
+            modifyState: (s) => ({ ...s, markerActions: MarkerActions.Highlighting }),
+        }),
 };
 
 export const AssemblySymmetryParams = {
@@ -82,8 +92,8 @@ export const AssemblySymmetryParams = {
     ...CageParams,
     visuals: PD.MultiSelect(['axes', 'cage'], PD.objectToOptions(AssemblySymmetryVisuals)),
 };
-export type AssemblySymmetryParams = typeof AssemblySymmetryParams
-export type AssemblySymmetryProps = PD.Values<AssemblySymmetryParams>
+export type AssemblySymmetryParams = typeof AssemblySymmetryParams;
+export type AssemblySymmetryProps = PD.Values<AssemblySymmetryParams>;
 
 //
 
@@ -154,7 +164,12 @@ function getAxesMesh(data: AssemblySymmetryValue, props: PD.Values<AxesParams>, 
     return MeshBuilder.getMesh(builderState);
 }
 
-function getAxesShape(ctx: RuntimeContext, data: Structure, props: AssemblySymmetryProps, shape?: Shape<Mesh>): Shape<Mesh> {
+function getAxesShape(
+    ctx: RuntimeContext,
+    data: Structure,
+    props: AssemblySymmetryProps,
+    shape?: Shape<Mesh>,
+): Shape<Mesh> {
     const assemblySymmetry = AssemblySymmetryProvider.get(data).value!;
     const geo = getAxesMesh(assemblySymmetry, props, shape && shape.geometry);
     const getColor = (groupId: number) => {
@@ -174,7 +189,7 @@ function getAxesShape(ctx: RuntimeContext, data: Structure, props: AssemblySymme
         return [
             `<small>${data.model.entryId}</small>`,
             `<small>${getAssemblyName(data)}</small>`,
-            `Axis ${groupId + 1} with Order ${order} of ${type} ${kind} (${symbol})`
+            `Axis ${groupId + 1} with Order ${order} of ${type} ${kind} (${symbol})`,
         ].join(' | ');
     };
     return Shape.create('Axes', data, geo, getColor, () => 1, getLabel);
@@ -232,7 +247,13 @@ function getSymbolScale(symbol: string) {
     return 1;
 }
 
-function setSymbolTransform(t: Mat4, symbol: string, axes: AssemblySymmetryData.RotationAxes, size: number, structure: Structure) {
+function setSymbolTransform(
+    t: Mat4,
+    symbol: string,
+    axes: AssemblySymmetryData.RotationAxes,
+    size: number,
+    structure: Structure,
+) {
     const eye = Vec3();
     const target = Vec3();
     const dir = Vec3();
@@ -244,19 +265,19 @@ function setSymbolTransform(t: Mat4, symbol: string, axes: AssemblySymmetryData.
     } else if (symbol.startsWith('D')) {
         const fold = parseInt(symbol.substr(1));
         if (fold === 2) {
-            pair = axes.filter(a => a.order === 2);
+            pair = axes.filter((a) => a.order === 2);
         } else if (fold >= 3) {
-            const aN = axes.filter(a => a.order === fold)[0];
-            const a2 = axes.filter(a => a.order === 2)[1];
+            const aN = axes.filter((a) => a.order === fold)[0];
+            const a2 = axes.filter((a) => a.order === 2)[1];
             pair = [aN, a2];
         }
     } else if (symbol === 'O') {
-        pair = axes.filter(a => a.order === 4);
+        pair = axes.filter((a) => a.order === 4);
     } else if (symbol === 'I') {
-        const a5 = axes.filter(a => a.order === 5)[0];
+        const a5 = axes.filter((a) => a.order === 5)[0];
         const a5dir = Vec3.sub(Vec3(), a5.end, a5.start);
         pair = [a5];
-        for (const a of axes.filter(a => a.order === 3)) {
+        for (const a of axes.filter((a) => a.order === 3)) {
             const d = radToDeg(Vec3.angle(Vec3.sub(up, a.end, a.start), a5dir));
             if (!pair[1] && (equalEps(d, 100.81, 0.1) || equalEps(d, 79.19, 0.1))) {
                 pair[1] = a;
@@ -264,7 +285,7 @@ function setSymbolTransform(t: Mat4, symbol: string, axes: AssemblySymmetryData.
             }
         }
     } else if (symbol === 'T') {
-        pair = axes.filter(a => a.order === 2);
+        pair = axes.filter((a) => a.order === 2);
     }
 
     Mat4.setIdentity(t);
@@ -283,7 +304,7 @@ function setSymbolTransform(t: Mat4, symbol: string, axes: AssemblySymmetryData.
                 let sizeXY = (sphere.radius * 2) * 0.8; // fallback for missing extrema
                 if (Sphere3D.hasExtrema(sphere)) {
                     const n = Mat3.directionTransform(Mat3(), t);
-                    const dirs = unitCircleDirections.map(d => Vec3.transformMat3(Vec3(), d, n));
+                    const dirs = unitCircleDirections.map((d) => Vec3.transformMat3(Vec3(), d, n));
                     sizeXY = getMaxProjectedDistance(sphere.extrema, dirs, sphere.center) * 1.6;
                 }
                 Mat4.scale(t, t, Vec3.create(sizeXY, sizeXY, Vec3.distance(aA.start, aA.end) * 0.9));
@@ -302,7 +323,7 @@ function setSymbolTransform(t: Mat4, symbol: string, axes: AssemblySymmetryData.
             let sizeXY = (sphere.radius * 2) * 0.8; // fallback for missing extrema
             if (Sphere3D.hasExtrema(sphere)) {
                 const n = Mat3.directionTransform(Mat3(), t);
-                const dirs = unitCircleDirections.map(d => Vec3.transformMat3(Vec3(), d, n));
+                const dirs = unitCircleDirections.map((d) => Vec3.transformMat3(Vec3(), d, n));
                 sizeXY = getMaxProjectedDistance(sphere.extrema, dirs, sphere.center);
             }
             Mat4.scale(t, t, Vec3.create(sizeXY, sizeXY, size * 0.9));
@@ -370,7 +391,7 @@ function getCageShape(ctx: RuntimeContext, data: Structure, props: AssemblySymme
         return [
             `<small>${data.model.entryId}</small>`,
             `<small>${getAssemblyName(data)}</small>`,
-            `Cage of ${type} ${kind} (${symbol})`
+            `Cage of ${type} ${kind} (${symbol})`,
         ].join(' | ');
     };
     return Shape.create('Cage', data, geo, getColor, () => 1, getLabel);
@@ -378,7 +399,16 @@ function getCageShape(ctx: RuntimeContext, data: Structure, props: AssemblySymme
 
 //
 
-export type AssemblySymmetryRepresentation = Representation<Structure, AssemblySymmetryParams>
-export function AssemblySymmetryRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, AssemblySymmetryParams>): AssemblySymmetryRepresentation {
-    return Representation.createMulti('Assembly Symmetry', ctx, getParams, Representation.StateBuilder, AssemblySymmetryVisuals as unknown as Representation.Def<Structure, AssemblySymmetryParams>);
+export type AssemblySymmetryRepresentation = Representation<Structure, AssemblySymmetryParams>;
+export function AssemblySymmetryRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, AssemblySymmetryParams>,
+): AssemblySymmetryRepresentation {
+    return Representation.createMulti(
+        'Assembly Symmetry',
+        ctx,
+        getParams,
+        Representation.StateBuilder,
+        AssemblySymmetryVisuals as unknown as Representation.Def<Structure, AssemblySymmetryParams>,
+    );
 }

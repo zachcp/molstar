@@ -5,12 +5,12 @@
  */
 
 import { Color } from '../../mol-util/color/index.ts';
-import { StructureElement, Bond, type Structure } from '../../mol-model/structure.ts';
+import { Bond, type Structure, StructureElement } from '../../mol-model/structure.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ColorTheme, LocationColor } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../theme.ts';
-import { getPaletteParams, getPalette } from '../../mol-util/color/palette.ts';
+import { getPalette, getPaletteParams } from '../../mol-util/color/palette.ts';
 import type { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
 import { ColorThemeCategory } from './categories.ts';
 
@@ -21,7 +21,7 @@ const Description = `Assigns a color based on the operator name of a transformed
 export const OperatorNameColorThemeParams = {
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
 };
-export type OperatorNameColorThemeParams = typeof OperatorNameColorThemeParams
+export type OperatorNameColorThemeParams = typeof OperatorNameColorThemeParams;
 export function getOperatorNameColorThemeParams(ctx: ThemeDataContext) {
     const params = PD.clone(OperatorNameColorThemeParams);
     return params;
@@ -36,7 +36,10 @@ function getOperatorNameSerialMap(structure: Structure) {
     return map;
 }
 
-export function OperatorNameColorTheme(ctx: ThemeDataContext, props: PD.Values<OperatorNameColorThemeParams>): ColorTheme<OperatorNameColorThemeParams> {
+export function OperatorNameColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<OperatorNameColorThemeParams>,
+): ColorTheme<OperatorNameColorThemeParams> {
     let color: LocationColor;
     let legend: ScaleLegend | TableLegend | undefined;
 
@@ -70,7 +73,7 @@ export function OperatorNameColorTheme(ctx: ThemeDataContext, props: PD.Values<O
         color,
         props,
         description: Description,
-        legend
+        legend,
     };
 }
 
@@ -81,5 +84,5 @@ export const OperatorNameColorThemeProvider: ColorTheme.Provider<OperatorNameCol
     factory: OperatorNameColorTheme,
     getParams: getOperatorNameColorThemeParams,
     defaultValues: PD.getDefaultValues(OperatorNameColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
 };

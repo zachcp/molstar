@@ -37,26 +37,37 @@ type RenderContext = {
     camera: Camera;
     scene: Scene;
     helper: Helper;
-}
+};
 
 export const TracingParams = {
-    rendersPerFrame: PD.Interval([1, 16], { min: 1, max: 64, step: 1 }, { description: 'Number of rays per pixel each frame. May be adjusted to reach targetFps but will stay within given interval.' }),
-    targetFps: PD.Numeric(30, { min: 0, max: 120, step: 0.1 }, { description: 'Target FPS per frame. If observed FPS is lower or higher, some parameters may get adjusted.' }),
+    rendersPerFrame: PD.Interval([1, 16], { min: 1, max: 64, step: 1 }, {
+        description:
+            'Number of rays per pixel each frame. May be adjusted to reach targetFps but will stay within given interval.',
+    }),
+    targetFps: PD.Numeric(30, { min: 0, max: 120, step: 0.1 }, {
+        description: 'Target FPS per frame. If observed FPS is lower or higher, some parameters may get adjusted.',
+    }),
     steps: PD.Numeric(32, { min: 1, max: 1024, step: 1 }),
     firstStepSize: PD.Numeric(0.01, { min: 0.001, max: 1, step: 0.001 }),
-    refineSteps: PD.Numeric(4, { min: 0, max: 8, step: 1 }, { description: 'Number of refine steps per ray hit. May be lower to reach targetFps.' }),
-    rayDistance: PD.Numeric(256, { min: 1, max: 8192, step: 1 }, { description: 'Maximum distance a ray can travel (in world units).' }),
+    refineSteps: PD.Numeric(4, { min: 0, max: 8, step: 1 }, {
+        description: 'Number of refine steps per ray hit. May be lower to reach targetFps.',
+    }),
+    rayDistance: PD.Numeric(256, { min: 1, max: 8192, step: 1 }, {
+        description: 'Maximum distance a ray can travel (in world units).',
+    }),
     thicknessMode: PD.Select('auto', PD.arrayToOptions(['auto', 'fixed'] as const)),
-    minThickness: PD.Numeric(0.5, { min: 0.1, max: 16, step: 0.1 }, { hideIf: p => p.thicknessMode === 'fixed' }),
-    thicknessFactor: PD.Numeric(1, { min: 0.1, max: 2, step: 0.05 }, { hideIf: p => p.thicknessMode === 'fixed' }),
-    thickness: PD.Numeric(4, { min: 0.1, max: 512, step: 0.1 }, { hideIf: p => p.thicknessMode === 'auto' }),
+    minThickness: PD.Numeric(0.5, { min: 0.1, max: 16, step: 0.1 }, { hideIf: (p) => p.thicknessMode === 'fixed' }),
+    thicknessFactor: PD.Numeric(1, { min: 0.1, max: 2, step: 0.05 }, { hideIf: (p) => p.thicknessMode === 'fixed' }),
+    thickness: PD.Numeric(4, { min: 0.1, max: 512, step: 0.1 }, { hideIf: (p) => p.thicknessMode === 'auto' }),
     bounces: PD.Numeric(4, { min: 1, max: 32, step: 1 }, { description: 'Number of bounces for each ray.' }),
-    glow: PD.Boolean(true, { description: 'Bounced rays always get the full light. This produces a slight glowing effect.' }),
+    glow: PD.Boolean(true, {
+        description: 'Bounced rays always get the full light. This produces a slight glowing effect.',
+    }),
     shadowEnable: PD.Boolean(false),
     shadowSoftness: PD.Numeric(0.1, { min: 0.01, max: 1.0, step: 0.01 }),
     shadowThickness: PD.Numeric(0.5, { min: 0.1, max: 32, step: 0.1 }),
 };
-export type TracingProps = PD.Values<typeof TracingParams>
+export type TracingProps = PD.Values<typeof TracingParams>;
 
 export class TracingPass {
     private readonly framebuffer: Framebuffer;
@@ -122,7 +133,15 @@ export class TracingPass {
         this.accumulateTarget = webgl.createRenderTarget(width, height, false, 'float32');
         this.composeTarget = webgl.createRenderTarget(width, height, false, 'uint8', 'linear');
 
-        this.traceRenderable = getTraceRenderable(webgl, this.colorTextureOpaque, this.normalTextureOpaque, this.shadedTextureOpaque, this.thicknessTarget.texture, this.accumulateTarget.texture, this.drawPass.depthTextureOpaque);
+        this.traceRenderable = getTraceRenderable(
+            webgl,
+            this.colorTextureOpaque,
+            this.normalTextureOpaque,
+            this.shadedTextureOpaque,
+            this.thicknessTarget.texture,
+            this.accumulateTarget.texture,
+            this.drawPass.depthTextureOpaque,
+        );
         this.accumulateRenderable = getAccumulateRenderable(webgl, this.holdTarget.texture);
     }
 
@@ -172,8 +191,14 @@ export class TracingPass {
             this.normalTextureOpaque.define(width, height);
             this.shadedTextureOpaque.define(width, height);
 
-            ValueCell.update(this.traceRenderable.values.uTexSize, Vec2.set(this.traceRenderable.values.uTexSize.ref.value, width, height));
-            ValueCell.update(this.accumulateRenderable.values.uTexSize, Vec2.set(this.accumulateRenderable.values.uTexSize.ref.value, width, height));
+            ValueCell.update(
+                this.traceRenderable.values.uTexSize,
+                Vec2.set(this.traceRenderable.values.uTexSize.ref.value, width, height),
+            );
+            ValueCell.update(
+                this.accumulateRenderable.values.uTexSize,
+                Vec2.set(this.accumulateRenderable.values.uTexSize.ref.value, width, height),
+            );
         }
     }
 
@@ -281,12 +306,18 @@ export class TracingPass {
         };
     }
 
-    render(ctx: RenderContext, transparentBackground: boolean, props: TracingProps, iteration: number, forceRenderInput: boolean) {
+    render(
+        ctx: RenderContext,
+        transparentBackground: boolean,
+        props: TracingProps,
+        iteration: number,
+        forceRenderInput: boolean,
+    ) {
         const { rendersPerFrame, refineSteps, steps } = this.getAdjustedProps(props, iteration);
 
         if (isTimingMode) {
             this.webgl.timer.mark('TracePass.render', {
-                note: `${rendersPerFrame} rendersPerFrame, ${refineSteps} refineSteps, ${steps} steps`
+                note: `${rendersPerFrame} rendersPerFrame, ${refineSteps} refineSteps, ${steps} steps`,
             });
         }
 
@@ -318,7 +349,11 @@ export class TracingPass {
         const v = camera.viewport;
 
         const ambientColor = Vec3();
-        Vec3.scale(ambientColor, Color.toArrayNormalized(renderer.props.ambientColor, ambientColor, 0), renderer.props.ambientIntensity);
+        Vec3.scale(
+            ambientColor,
+            Color.toArrayNormalized(renderer.props.ambientColor, ambientColor, 0),
+            renderer.props.ambientIntensity,
+        );
         const lightStrength = Vec3.clone(ambientColor);
         for (let i = 0, il = renderer.light.count; i < il; ++i) {
             const light = Vec3.fromArray(Vec3(), renderer.light.color, i * 3);
@@ -335,18 +370,22 @@ export class TracingPass {
         }
         ValueCell.update(this.traceRenderable.values.uProjection, camera.projection);
         ValueCell.update(this.traceRenderable.values.uInvProjection, invProjection);
-        Vec4.set(this.traceRenderable.values.uBounds.ref.value,
+        Vec4.set(
+            this.traceRenderable.values.uBounds.ref.value,
             v.x / w,
             v.y / h,
             (v.x + v.width) / w,
-            (v.y + v.height) / h
+            (v.y + v.height) / h,
         );
         ValueCell.update(this.traceRenderable.values.uBounds, this.traceRenderable.values.uBounds.ref.value);
         ValueCell.updateIfChanged(this.traceRenderable.values.uNear, camera.near);
         ValueCell.updateIfChanged(this.traceRenderable.values.uFar, camera.far);
         ValueCell.updateIfChanged(this.traceRenderable.values.uFogFar, camera.fogFar);
         ValueCell.updateIfChanged(this.traceRenderable.values.uFogNear, camera.fogNear);
-        ValueCell.update(this.traceRenderable.values.uFogColor, Color.toVec3Normalized(this.traceRenderable.values.uFogColor.ref.value, renderer.props.backgroundColor));
+        ValueCell.update(
+            this.traceRenderable.values.uFogColor,
+            Color.toVec3Normalized(this.traceRenderable.values.uFogColor.ref.value, renderer.props.backgroundColor),
+        );
         if (this.traceRenderable.values.dOrthographic.ref.value !== orthographic) {
             ValueCell.update(this.traceRenderable.values.dOrthographic, orthographic);
             needsUpdateTrace = true;
@@ -454,9 +493,17 @@ const TraceSchema = {
     uShadowThickness: UniformSpec('f'),
 };
 const TraceShaderCode = ShaderCode('trace', quad_vert, trace_frag);
-type TraceRenderable = ComputeRenderable<Values<typeof TraceSchema>>
+type TraceRenderable = ComputeRenderable<Values<typeof TraceSchema>>;
 
-function getTraceRenderable(ctx: WebGLContext, colorTexture: Texture, normalTexture: Texture, shadedTexture: Texture, thicknessTexture: Texture, accumulateTexture: Texture, depthTexture: Texture): TraceRenderable {
+function getTraceRenderable(
+    ctx: WebGLContext,
+    colorTexture: Texture,
+    normalTexture: Texture,
+    shadedTexture: Texture,
+    thicknessTexture: Texture,
+    accumulateTexture: Texture,
+    depthTexture: Texture,
+): TraceRenderable {
     const values: Values<typeof TraceSchema> = {
         ...QuadValues,
         tColor: ValueCell.create(colorTexture),
@@ -519,7 +566,7 @@ const AccumulateSchema = {
     uWeight: UniformSpec('f'),
 };
 const AccumulateShaderCode = ShaderCode('accumulate', quad_vert, accumulate_frag);
-type AccumulateRenderable = ComputeRenderable<Values<typeof AccumulateSchema>>
+type AccumulateRenderable = ComputeRenderable<Values<typeof AccumulateSchema>>;
 
 function getAccumulateRenderable(ctx: WebGLContext, colorTexture: Texture): AccumulateRenderable {
     const values: Values<typeof AccumulateSchema> = {

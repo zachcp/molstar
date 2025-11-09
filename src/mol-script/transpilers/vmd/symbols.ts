@@ -20,7 +20,7 @@ for (const name in properties) {
 }
 
 export const Operators: string[] = [];
-operators.forEach(o => {
+operators.forEach((o) => {
     if (o.isUnsupported) return;
     Operators.push(o.name);
     if (o.abbr) Operators.push(...o.abbr);

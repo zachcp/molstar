@@ -36,7 +36,7 @@ export class JSONCifEncoder implements Encoder<string> {
         this.dataBlocks.push({
             header: (header || '').replace(/[ \n\t]/g, '').toUpperCase(),
             categoryNames: [],
-            categories: {}
+            categories: {},
         });
     }
 
@@ -58,7 +58,7 @@ export class JSONCifEncoder implements Encoder<string> {
         if (!fields.length) return;
 
         const rows: Record<string, any>[] = [];
-        const cat: JSONCifCategory = { name: category.name, fieldNames: fields.map(f => f.name), rows };
+        const cat: JSONCifCategory = { name: category.name, fieldNames: fields.map((f) => f.name), rows };
 
         for (const src of source) {
             const d = src.data;
@@ -108,7 +108,7 @@ export class JSONCifEncoder implements Encoder<string> {
         this.data = {
             encoder,
             version: JSONCifVERSION,
-            dataBlocks: this.dataBlocks
+            dataBlocks: this.dataBlocks,
         };
     }
 }

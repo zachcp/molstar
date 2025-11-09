@@ -7,8 +7,7 @@
 import { StateTransforms } from '../../../mol-plugin-state/transforms.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
 import type { ChannelsDBdata, Tunnel, TunnelDB } from './data-model.ts';
-import { TunnelsFromRawData, SelectTunnel, TunnelShapeProvider, TunnelFromRawData } from './representation.ts';
-
+import { SelectTunnel, TunnelFromRawData, TunnelsFromRawData, TunnelShapeProvider } from './representation.ts';
 
 export const DB_URL = 'https://channelsdb2.biodata.ceitec.cz/api/channels/';
 export const SUB_DB = 'pdb';

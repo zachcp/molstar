@@ -9,8 +9,8 @@ import type { Location } from '../../mol-model/location.ts';
 import type { ColorTheme, LocationColor } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../../mol-theme/theme.ts';
-import { getPaletteParams, getPalette } from '../../mol-util/color/palette.ts';
-import type { TableLegend, ScaleLegend } from '../../mol-util/legend.ts';
+import { getPalette, getPaletteParams } from '../../mol-util/color/palette.ts';
+import type { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
 import { Volume } from '../../mol-model/volume/volume.ts';
 import { ColorThemeCategory } from './categories.ts';
 
@@ -20,12 +20,15 @@ const Description = 'Gives every volume segment a unique color.';
 export const VolumeSegmentColorThemeParams = {
     ...getPaletteParams({ type: 'colors', colorList: 'many-distinct' }),
 };
-export type VolumeSegmentColorThemeParams = typeof VolumeSegmentColorThemeParams
+export type VolumeSegmentColorThemeParams = typeof VolumeSegmentColorThemeParams;
 export function getVolumeSegmentColorThemeParams(ctx: ThemeDataContext) {
     return PD.clone(VolumeSegmentColorThemeParams);
 }
 
-export function VolumeSegmentColorTheme(ctx: ThemeDataContext, props: PD.Values<VolumeSegmentColorThemeParams>): ColorTheme<VolumeSegmentColorThemeParams> {
+export function VolumeSegmentColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<VolumeSegmentColorThemeParams>,
+): ColorTheme<VolumeSegmentColorThemeParams> {
     let color: LocationColor;
     let legend: ScaleLegend | TableLegend | undefined;
 
@@ -54,7 +57,7 @@ export function VolumeSegmentColorTheme(ctx: ThemeDataContext, props: PD.Values<
         color,
         props,
         description: Description,
-        legend
+        legend,
     };
 }
 
@@ -65,5 +68,5 @@ export const VolumeSegmentColorThemeProvider: ColorTheme.Provider<VolumeSegmentC
     factory: VolumeSegmentColorTheme,
     getParams: getVolumeSegmentColorThemeParams,
     defaultValues: PD.getDefaultValues(VolumeSegmentColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.volume && !!Volume.Segmentation.get(ctx.volume)
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.volume && !!Volume.Segmentation.get(ctx.volume),
 };

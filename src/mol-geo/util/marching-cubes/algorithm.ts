@@ -5,35 +5,35 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, type RuntimeContext } from '../../../mol-task/index.ts';
+import { type RuntimeContext, Task } from '../../../mol-task/index.ts';
 import type { Tensor } from '../../../mol-math/linear-algebra.ts';
 import type { Mesh } from '../../geometry/mesh/mesh.ts';
-import { type Index, EdgeIdInfo, CubeEdges, EdgeTable, TriTable } from './tables.ts';
+import { CubeEdges, EdgeIdInfo, EdgeTable, type Index, TriTable } from './tables.ts';
 import { defaults } from '../../../mol-util/index.ts';
-import { type MarchingCubesBuilder, MarchingCubesMeshBuilder, MarchingCubesLinesBuilder } from './builder.ts';
+import { type MarchingCubesBuilder, MarchingCubesLinesBuilder, MarchingCubesMeshBuilder } from './builder.ts';
 import type { Lines } from '../../geometry/lines/lines.ts';
 
 /**
  * The parameters required by the algorithm.
  */
 export interface MarchingCubesParams {
-    isoLevel: number,
-    scalarField: Tensor,
-    bottomLeft?: ReadonlyArray<number>,
-    topRight?: ReadonlyArray<number>,
-    idField?: Tensor,
+    isoLevel: number;
+    scalarField: Tensor;
+    bottomLeft?: ReadonlyArray<number>;
+    topRight?: ReadonlyArray<number>;
+    idField?: Tensor;
 }
 
 interface MarchingCubesInputParams extends MarchingCubesParams {
-    bottomLeft: ReadonlyArray<number>,
-    topRight: ReadonlyArray<number>,
+    bottomLeft: ReadonlyArray<number>;
+    topRight: ReadonlyArray<number>;
 }
 
 function getInputParams(params: MarchingCubesParams): MarchingCubesInputParams {
     return {
         ...params,
         bottomLeft: defaults(params.bottomLeft, [0, 0, 0] as ReadonlyArray<number>),
-        topRight: defaults(params.topRight, params.scalarField.space.dimensions)
+        topRight: defaults(params.topRight, params.scalarField.space.dimensions),
     };
 }
 
@@ -41,12 +41,12 @@ function getExtent(inputParams: MarchingCubesInputParams) {
     return {
         dX: inputParams.topRight[0] - inputParams.bottomLeft[0],
         dY: inputParams.topRight[1] - inputParams.bottomLeft[1],
-        dZ: inputParams.topRight[2] - inputParams.bottomLeft[2]
+        dZ: inputParams.topRight[2] - inputParams.bottomLeft[2],
     };
 }
 
 export function computeMarchingCubesMesh(params: MarchingCubesParams, mesh?: Mesh) {
-    return Task.create('Marching Cubes Mesh', async ctx => {
+    return Task.create('Marching Cubes Mesh', async (ctx) => {
         const inputParams = getInputParams(params);
         const { dX, dY, dZ } = getExtent(inputParams);
         // TODO should it be configurable? Scalar fields can produce meshes with vastly different densities.
@@ -58,7 +58,7 @@ export function computeMarchingCubesMesh(params: MarchingCubesParams, mesh?: Mes
 }
 
 export function computeMarchingCubesLines(params: MarchingCubesParams, lines?: Lines) {
-    return Task.create('Marching Cubes Lines', async ctx => {
+    return Task.create('Marching Cubes Lines', async (ctx) => {
         const inputParams = getInputParams(params);
         const { dX, dY, dZ } = getExtent(inputParams);
         // TODO should it be configurable? Scalar fields can produce meshes with vastly different densities.
@@ -74,8 +74,12 @@ class MarchingCubesComputation {
     private sliceSize: number;
     private edgeFilter!: number;
 
-    private minX = 0; private minY = 0; private minZ = 0;
-    private maxX = 0; private maxY = 0; private maxZ = 0;
+    private minX = 0;
+    private minY = 0;
+    private minZ = 0;
+    private maxX = 0;
+    private maxY = 0;
+    private maxZ = 0;
     private state: MarchingCubesState;
 
     private async doSlices() {
@@ -122,7 +126,9 @@ class MarchingCubesComputation {
 }
 
 class MarchingCubesState {
-    nX: number; nY: number; nZ: number;
+    nX: number;
+    nY: number;
+    nZ: number;
     isoLevel: number;
     scalarFieldGet: Tensor.Space['get'];
     scalarField: Tensor.Data;
@@ -132,7 +138,9 @@ class MarchingCubesState {
     // two layers of vertex indices. Each vertex has 3 edges associated.
     verticesOnEdges: Int32Array;
     vertList: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    i: number = 0; j: number = 0; k: number = 0;
+    i: number = 0;
+    j: number = 0;
+    k: number = 0;
 
     private get3dOffsetFromEdgeInfo(index: Index) {
         return (this.nX * (((this.k + index.k) % 2) * this.nY + this.j + index.j) + this.i + index.i);
@@ -182,7 +190,7 @@ class MarchingCubesState {
         const id = this.builder.addVertex(
             li + t * (li - hi),
             lj + t * (lj - hj),
-            lk + t * (lk - hk)
+            lk + t * (lk - hk),
         );
         this.verticesOnEdges[edgeId] = id + 1;
 
@@ -212,7 +220,9 @@ class MarchingCubesState {
 
     constructor(private builder: MarchingCubesBuilder<any>, params: MarchingCubesInputParams) {
         const dims = params.scalarField.space.dimensions;
-        this.nX = dims[0]; this.nY = dims[1]; this.nZ = dims[2];
+        this.nX = dims[0];
+        this.nY = dims[1];
+        this.nZ = dims[2];
         this.isoLevel = params.isoLevel;
         this.scalarFieldGet = params.scalarField.space.get;
         this.scalarField = params.scalarField.data;
@@ -243,7 +253,9 @@ class MarchingCubesState {
 
         if (tableIndex === 0 || tableIndex === 255) return;
 
-        this.i = i; this.j = j; this.k = k;
+        this.i = i;
+        this.j = j;
+        this.k = k;
         const edgeInfo = EdgeTable[tableIndex];
         if ((edgeInfo & 1) > 0) this.vertList[0] = this.interpolate(0); // 0 1
         if ((edgeInfo & 2) > 0) this.vertList[1] = this.interpolate(1); // 1 2

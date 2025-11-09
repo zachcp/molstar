@@ -4,7 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import type { JSONCifLigandGraph, JSONCifLigandGraphAtom, JSONCifLigandGraphBondProps } from '../../extensions/json-cif/ligand-graph.ts';
+import type {
+    JSONCifLigandGraph,
+    JSONCifLigandGraphAtom,
+    JSONCifLigandGraphBondProps,
+} from '../../extensions/json-cif/ligand-graph.ts';
 import { Quat, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { VdwRadius } from '../../mol-model/structure/model/properties/atomic.ts';
 import { ElementSymbol } from '../../mol-model/structure/model/types.ts';
@@ -33,7 +37,7 @@ export const TopologyEdits = {
             type_symbol,
             Cartn_x: c[0] + dir[0] * r,
             Cartn_y: c[1] + dir[1] * r,
-            Cartn_z: c[2] + dir[2] * r
+            Cartn_z: c[2] + dir[2] * r,
         });
         graph.addOrUpdateBond(p, newAtom, { value_order: 'sing', type_id: 'covale' });
         return newAtom;
@@ -62,7 +66,7 @@ export const TopologyEdits = {
     },
     attachRgroup: async (graph: JSONCifLigandGraph, atomId: number, name: RGroupName) => {
         await attachRGroup(graph, name, atomId);
-    }
+    },
 };
 
 export type GeometryEditFn = (param: number) => JSONCifLigandGraph;
@@ -83,7 +87,7 @@ export const GeometryEdits = {
         const axis = Vec3.sub(Vec3(), pivot, graph.getAtomCoords(b));
         Vec3.normalize(axis, axis);
 
-        const basePositions = active.map(a => graph.getAtomCoords(a));
+        const basePositions = active.map((a) => graph.getAtomCoords(a));
         const xform = Quat();
         const p = Vec3();
 
@@ -97,7 +101,7 @@ export const GeometryEdits = {
                 graph.modifyAtom(active[i], {
                     Cartn_x: p[0],
                     Cartn_y: p[1],
-                    Cartn_z: p[2]
+                    Cartn_z: p[2],
                 });
             }
             return graph;
@@ -115,8 +119,8 @@ export const GeometryEdits = {
         const center = Vec3.add(Vec3(), b, a);
         Vec3.scale(center, center, 0.5);
         const baseDelta = Vec3.sub(Vec3(), a, center);
-        const baseLeft = left.map(a => graph.getAtomCoords(a));
-        const baseRight = right.map(a => graph.getAtomCoords(a));
+        const baseLeft = left.map((a) => graph.getAtomCoords(a));
+        const baseRight = right.map((a) => graph.getAtomCoords(a));
 
         const p = Vec3();
         const delta = Vec3();
@@ -129,7 +133,7 @@ export const GeometryEdits = {
                 graph.modifyAtom(left[i], {
                     Cartn_x: p[0],
                     Cartn_y: p[1],
-                    Cartn_z: p[2]
+                    Cartn_z: p[2],
                 });
             }
             for (let i = 0; i < right.length; ++i) {
@@ -138,7 +142,7 @@ export const GeometryEdits = {
                 graph.modifyAtom(right[i], {
                     Cartn_x: p[0],
                     Cartn_y: p[1],
-                    Cartn_z: p[2]
+                    Cartn_z: p[2],
                 });
             }
             return graph;

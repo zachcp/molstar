@@ -36,7 +36,6 @@ export function checkSorted(arr: ArrayLike<number>) {
     return true;
 }
 
-
 export function runTest(size: number) {
     const _data = createTestData(size);
 
@@ -58,10 +57,13 @@ export function runTest(size: number) {
 
     const suite = new B.Suite();
 
+    function le(x: number, y: number) {
+        return x - y;
+    }
 
-    function le(x: number, y: number) { return x - y; }
-
-    function name(n: string) { return `${n} (${size} elems)`; }
+    function name(n: string) {
+        return `${n} (${size} elems)`;
+    }
 
     // TODO: the data copying skewes the benchmark -- write a simple benchmark util that allows for a preparation step.
     suite

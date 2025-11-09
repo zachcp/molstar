@@ -5,9 +5,9 @@
  */
 
 export interface PickingId {
-    objectId: number
-    instanceId: number
-    groupId: number
+    objectId: number;
+    instanceId: number;
+    groupId: number;
 }
 
 export namespace PickingId {

@@ -22,17 +22,17 @@ import type { ICamera } from '../camera.ts';
 import { Viewport } from '../camera/util.ts';
 import type { Helper } from '../helper/helper.ts';
 
-export type PickData = { id: PickingId, position: Vec3 }
+export type PickData = { id: PickingId; position: Vec3 };
 
 export type AsyncPickData = {
-    tryGet: () => 'pending' | PickData | undefined,
-}
+    tryGet: () => 'pending' | PickData | undefined;
+};
 
 export const DefaultPickOptions = {
     pickPadding: 1,
     maxAsyncReadLag: 5,
 };
-export type PickOptions = typeof DefaultPickOptions
+export type PickOptions = typeof DefaultPickOptions;
 
 //
 
@@ -258,7 +258,14 @@ export class PickPass {
         }
     }
 
-    private renderVariant(renderer: Renderer, camera: ICamera, scene: Scene, helper: Helper, variant: 'pick' | 'depth', pickType: number) {
+    private renderVariant(
+        renderer: Renderer,
+        camera: ICamera,
+        scene: Scene,
+        helper: Helper,
+        variant: 'pick' | 'depth',
+        pickType: number,
+    ) {
         renderer.clear(false);
         renderer.update(camera, scene);
         renderer.renderPick(scene.primitives, camera, variant, pickType);
@@ -310,7 +317,11 @@ export function checkAsyncPickingSupport(webgl: WebGLContext): boolean {
     return false;
 }
 
-export enum AsyncPickStatus { Pending, Resolved, Failed };
+export enum AsyncPickStatus {
+    Pending,
+    Resolved,
+    Failed,
+}
 
 export class PickBuffers {
     private object!: Uint8Array;

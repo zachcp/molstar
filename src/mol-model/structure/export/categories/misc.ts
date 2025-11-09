@@ -8,7 +8,7 @@ import { Column } from '../../../../mol-data/db.ts';
 import { CifWriter } from '../../../../mol-io/writer/cif.ts';
 import type { CifExportContext } from '../mmcif.ts';
 import { getModelMmCifCategory, getUniqueResidueNamesFromStructures } from './utils.ts';
-import CifCategory = CifWriter.Category
+import CifCategory = CifWriter.Category;
 
 export const _chem_comp: CifCategory<CifExportContext> = {
     name: 'chem_comp',
@@ -16,10 +16,11 @@ export const _chem_comp: CifCategory<CifExportContext> = {
         const chem_comp = getModelMmCifCategory(structures[0].model, 'chem_comp');
         if (!chem_comp) return CifCategory.Empty;
         const { id } = chem_comp;
-        const names = cache.uniqueResidueNames || (cache.uniqueResidueNames = getUniqueResidueNamesFromStructures(structures));
-        const indices = Column.indicesOf(id, id => names.has(id));
+        const names = cache.uniqueResidueNames ||
+            (cache.uniqueResidueNames = getUniqueResidueNamesFromStructures(structures));
+        const indices = Column.indicesOf(id, (id) => names.has(id));
         return CifCategory.ofTable(chem_comp, indices);
-    }
+    },
 };
 
 export const _chem_comp_bond: CifCategory<CifExportContext> = {
@@ -28,10 +29,11 @@ export const _chem_comp_bond: CifCategory<CifExportContext> = {
         const chem_comp_bond = getModelMmCifCategory(structures[0].model, 'chem_comp_bond');
         if (!chem_comp_bond) return CifCategory.Empty;
         const { comp_id } = chem_comp_bond;
-        const names = cache.uniqueResidueNames || (cache.uniqueResidueNames = getUniqueResidueNamesFromStructures(structures));
-        const indices = Column.indicesOf(comp_id, id => names.has(id));
+        const names = cache.uniqueResidueNames ||
+            (cache.uniqueResidueNames = getUniqueResidueNamesFromStructures(structures));
+        const indices = Column.indicesOf(comp_id, (id) => names.has(id));
         return CifCategory.ofTable(chem_comp_bond, indices);
-    }
+    },
 };
 
 export const _pdbx_chem_comp_identifier: CifCategory<CifExportContext> = {
@@ -40,10 +42,11 @@ export const _pdbx_chem_comp_identifier: CifCategory<CifExportContext> = {
         const pdbx_chem_comp_identifier = getModelMmCifCategory(firstModel, 'pdbx_chem_comp_identifier');
         if (!pdbx_chem_comp_identifier) return CifCategory.Empty;
         const { comp_id } = pdbx_chem_comp_identifier;
-        const names = cache.uniqueResidueNames || (cache.uniqueResidueNames = getUniqueResidueNamesFromStructures(structures));
-        const indices = Column.indicesOf(comp_id, id => names.has(id));
+        const names = cache.uniqueResidueNames ||
+            (cache.uniqueResidueNames = getUniqueResidueNamesFromStructures(structures));
+        const indices = Column.indicesOf(comp_id, (id) => names.has(id));
         return CifCategory.ofTable(pdbx_chem_comp_identifier, indices);
-    }
+    },
 };
 
 export const _pdbx_nonpoly_scheme: CifCategory<CifExportContext> = {
@@ -53,5 +56,5 @@ export const _pdbx_nonpoly_scheme: CifCategory<CifExportContext> = {
         if (!pdbx_nonpoly_scheme) return CifCategory.Empty;
         // TODO: filter?
         return CifCategory.ofTable(pdbx_nonpoly_scheme);
-    }
+    },
 };

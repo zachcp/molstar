@@ -21,11 +21,13 @@ export const AnimateCameraSpin = PluginStateAnimation.create({
     isExportable: true,
     params: () => ({
         durationInMs: PD.Numeric(4000, { min: 100, max: 20000, step: 100 }),
-        speed: PD.Numeric(1, { min: 1, max: 10, step: 1 }, { description: 'How many times to spin in the specified duration.' }),
-        direction: PD.Select<'cw' | 'ccw'>('cw', [['cw', 'Clockwise'], ['ccw', 'Counter Clockwise']], { cycle: true })
+        speed: PD.Numeric(1, { min: 1, max: 10, step: 1 }, {
+            description: 'How many times to spin in the specified duration.',
+        }),
+        direction: PD.Select<'cw' | 'ccw'>('cw', [['cw', 'Clockwise'], ['ccw', 'Counter Clockwise']], { cycle: true }),
     }),
     initialState: (_, ctx) => ({ snapshot: ctx.canvas3d?.camera.getSnapshot()! }) as State,
-    getDuration: p => ({ kind: 'fixed', durationMs: p.durationInMs }),
+    getDuration: (p) => ({ kind: 'fixed', durationMs: p.durationInMs }),
     teardown: (_, state: State, ctx) => {
         ctx.canvas3d?.requestCameraReset({ snapshot: state.snapshot, durationMs: 0 });
     },
@@ -56,5 +58,5 @@ export const AnimateCameraSpin = PluginStateAnimation.create({
         }
 
         return { kind: 'next', state: animState };
-    }
+    },
 });

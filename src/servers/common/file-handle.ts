@@ -13,8 +13,7 @@ import { SimpleBuffer } from '../../mol-io/common/simple-buffer.ts';
 import { defaults, noop } from '../../mol-util/index.ts';
 import { openRead } from '../volume/common/file.ts';
 import { downloadGs } from './google-cloud-storage.ts';
-import type { Buffer } from "node:buffer";
-
+import type { Buffer } from 'node:buffer';
 
 /** Create a file handle from either a file path or a URL (supports file://, http(s)://, gs:// protocols).  */
 export async function fileHandleFromPathOrUrl(pathOrUrl: string, name: string): Promise<FileHandle> {
@@ -74,9 +73,8 @@ export function fileHandleFromDescriptor(file: number, name: string): FileHandle
             try {
                 if (file !== void 0) fs.close(file, noop);
             } catch (e) {
-
             }
-        }
+        },
     };
 }
 
@@ -84,7 +82,12 @@ export function fileHandleFromDescriptor(file: number, name: string): FileHandle
 export function fileHandleFromGS(url: string, name: string): FileHandle {
     return {
         name,
-        readBuffer: async (position: number, sizeOrBuffer: SimpleBuffer | number, length?: number, byteOffset?: number) => {
+        readBuffer: async (
+            position: number,
+            sizeOrBuffer: SimpleBuffer | number,
+            length?: number,
+            byteOffset?: number,
+        ) => {
             let outBuffer: SimpleBuffer;
             if (typeof sizeOrBuffer === 'number') {
                 length = defaults(length, sizeOrBuffer);
@@ -112,7 +115,7 @@ export function fileHandleFromGS(url: string, name: string): FileHandle {
         writeBufferSync: () => {
             throw new Error('Writing to Google Cloud Storage file handle not supported');
         },
-        close: () => { },
+        close: () => {},
     };
 }
 
@@ -122,7 +125,12 @@ export function fileHandleFromHTTP(url: string, name: string): FileHandle {
 
     return {
         name,
-        readBuffer: async (position: number, sizeOrBuffer: SimpleBuffer | number, length?: number, byteOffset?: number) => {
+        readBuffer: async (
+            position: number,
+            sizeOrBuffer: SimpleBuffer | number,
+            length?: number,
+            byteOffset?: number,
+        ) => {
             if (!innerHandle) {
                 const response = await fetch(url);
                 if (response.ok) {
@@ -142,6 +150,6 @@ export function fileHandleFromHTTP(url: string, name: string): FileHandle {
         writeBufferSync: () => {
             throw new Error('Writing to HTTP(S) file handle not supported');
         },
-        close: () => { },
+        close: () => {},
     };
 }

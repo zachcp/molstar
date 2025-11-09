@@ -84,7 +84,8 @@ describe('ordered set', () => {
         expect(OrderedSet.isSubset(arr136, arr136)).toBe(true);
         expect(OrderedSet.isSubset(arr136, OrderedSet.ofSortedArray([1, 3]))).toBe(true);
         expect(OrderedSet.isSubset(arr136, OrderedSet.ofSortedArray([1, 3, 7]))).toBe(false);
-        expect(OrderedSet.isSubset(OrderedSet.ofSortedArray([0, 1, 2, 3, 7, 10]), OrderedSet.ofSortedArray([1, 3, 7]))).toBe(true);
+        expect(OrderedSet.isSubset(OrderedSet.ofSortedArray([0, 1, 2, 3, 7, 10]), OrderedSet.ofSortedArray([1, 3, 7])))
+            .toBe(true);
         expect(OrderedSet.isSubset(arr136, OrderedSet.ofSortedArray([1, 3, 10, 45]))).toBe(false);
         expect(OrderedSet.isSubset(arr136, OrderedSet.ofSortedArray([12, 13, 16]))).toBe(false);
     });
@@ -92,7 +93,22 @@ describe('ordered set', () => {
     it('isSubsetIS', () => {
         expect(OrderedSet.isSubset(
             Interval.ofRange(1271, 1295),
-            OrderedSet.ofSortedArray([1271, 1272, 1274, 1275, 1276, 1278, 1280, 1282, 1284, 1286, 1288, 1290, 1292, 1294])
+            OrderedSet.ofSortedArray([
+                1271,
+                1272,
+                1274,
+                1275,
+                1276,
+                1278,
+                1280,
+                1282,
+                1284,
+                1286,
+                1288,
+                1290,
+                1292,
+                1294,
+            ]),
         )).toBe(true);
     });
 
@@ -152,11 +168,38 @@ describe('ordered set', () => {
     testEq('union AA', OrderedSet.union(arr136, OrderedSet.ofSortedArray([2, 4, 6, 7])), [1, 2, 3, 4, 6, 7]);
     testEq('union AA1', OrderedSet.union(arr136, OrderedSet.ofSortedArray([2, 3, 4, 6, 7])), [1, 2, 3, 4, 6, 7]);
     testEq('union AA2', OrderedSet.union(arr136, OrderedSet.ofSortedArray([2, 4, 5, 6, 7])), [1, 2, 3, 4, 5, 6, 7]);
-    testEq('union AA3', OrderedSet.union(OrderedSet.ofSortedArray([1, 3]), OrderedSet.ofSortedArray([2, 4])), [1, 2, 3, 4]);
-    testEq('union AA4', OrderedSet.union(OrderedSet.ofSortedArray([1, 3]), OrderedSet.ofSortedArray([1, 3, 4])), [1, 3, 4]);
-    testEq('union AA5', OrderedSet.union(OrderedSet.ofSortedArray([1, 3, 4]), OrderedSet.ofSortedArray([1, 3])), [1, 3, 4]);
-    testEq('union AR', OrderedSet.union(OrderedSet.ofSortedArray([1, 2, 5, 6]), OrderedSet.ofRange(3, 4)), [1, 2, 3, 4, 5, 6]);
-    testEq('union AR1', OrderedSet.union(OrderedSet.ofSortedArray([1, 2, 6, 7]), OrderedSet.ofRange(3, 4)), [1, 2, 3, 4, 6, 7]);
+    testEq('union AA3', OrderedSet.union(OrderedSet.ofSortedArray([1, 3]), OrderedSet.ofSortedArray([2, 4])), [
+        1,
+        2,
+        3,
+        4,
+    ]);
+    testEq('union AA4', OrderedSet.union(OrderedSet.ofSortedArray([1, 3]), OrderedSet.ofSortedArray([1, 3, 4])), [
+        1,
+        3,
+        4,
+    ]);
+    testEq('union AA5', OrderedSet.union(OrderedSet.ofSortedArray([1, 3, 4]), OrderedSet.ofSortedArray([1, 3])), [
+        1,
+        3,
+        4,
+    ]);
+    testEq('union AR', OrderedSet.union(OrderedSet.ofSortedArray([1, 2, 5, 6]), OrderedSet.ofRange(3, 4)), [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+    ]);
+    testEq('union AR1', OrderedSet.union(OrderedSet.ofSortedArray([1, 2, 6, 7]), OrderedSet.ofRange(3, 4)), [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+    ]);
     it('union AA6', () => expect(OrderedSet.union(arr136, OrderedSet.ofSortedArray([1, 3, 6]))).toBe(arr136));
 
     testEq('intersect ES', OrderedSet.intersect(empty, singleton10), []);
@@ -171,14 +214,24 @@ describe('ordered set', () => {
     testEq('intersect AA', OrderedSet.intersect(arr136, OrderedSet.ofSortedArray([2, 3, 4, 6, 7])), [3, 6]);
     it('intersect AA1', () => expect(OrderedSet.union(arr136, OrderedSet.ofSortedArray([1, 3, 6]))).toBe(arr136));
 
-    testEq('idxIntersect 1', OrderedSet.indexedIntersect(
-        OrderedSet.ofSortedArray([1, 2, 4]),
-        SortedArray.ofSortedArray([1, 2, 3, 4, 5, 6]),
-        SortedArray.ofSortedArray([2, 4, 5, 8])), [0, 2]);
-    testEq('idxIntersect 2', OrderedSet.indexedIntersect(
-        OrderedSet.ofSortedArray([0, 1]),
-        SortedArray.ofSortedArray([1, 2]),
-        SortedArray.ofSortedArray([1, 2])), [0, 1]);
+    testEq(
+        'idxIntersect 1',
+        OrderedSet.indexedIntersect(
+            OrderedSet.ofSortedArray([1, 2, 4]),
+            SortedArray.ofSortedArray([1, 2, 3, 4, 5, 6]),
+            SortedArray.ofSortedArray([2, 4, 5, 8]),
+        ),
+        [0, 2],
+    );
+    testEq(
+        'idxIntersect 2',
+        OrderedSet.indexedIntersect(
+            OrderedSet.ofSortedArray([0, 1]),
+            SortedArray.ofSortedArray([1, 2]),
+            SortedArray.ofSortedArray([1, 2]),
+        ),
+        [0, 1],
+    );
 
     testEq('subtract ES', OrderedSet.subtract(empty, singleton10), []);
     testEq('subtract ER', OrderedSet.subtract(empty, range1_4), []);

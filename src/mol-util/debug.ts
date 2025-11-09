@@ -9,7 +9,7 @@
  * by the DefinePlugin to the webpack `mode` value
  */
 
-import process from "node:process";
+import process from 'node:process';
 let isProductionMode = function () {
     try {
         return process.env.NODE_ENV === 'production';
@@ -36,7 +36,7 @@ let isDebugMode = function getIsDebug() {
  */
 let isTimingMode = false;
 
-export { isProductionMode, isDebugMode, isTimingMode };
+export { isDebugMode, isProductionMode, isTimingMode };
 
 export function setProductionMode(value?: boolean) {
     if (typeof value !== 'undefined') isProductionMode = value;
@@ -52,7 +52,7 @@ export function setTimingMode(value?: boolean) {
 
 //
 
-type ConsoleStatsProvider = () => void
+type ConsoleStatsProvider = () => void;
 const consoleStatsProviders: ConsoleStatsProvider[] = [];
 
 export function addConsoleStatsProvider(p: ConsoleStatsProvider) {

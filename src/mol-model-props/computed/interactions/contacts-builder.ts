@@ -6,7 +6,12 @@
 
 import type { Features } from './features.ts';
 import { IntAdjacencyGraph } from '../../../mol-math/graph.ts';
-import { type InteractionType, InteractionsIntraContacts, InteractionsInterContacts, InteractionFlag } from './common.ts';
+import {
+    InteractionFlag,
+    InteractionsInterContacts,
+    InteractionsIntraContacts,
+    type InteractionType,
+} from './common.ts';
 import type { Unit } from '../../../mol-model/structure/structure.ts';
 import type { NumberArray } from '../../../mol-util/type-helpers.ts';
 import type { IntMap } from '../../../mol-data/int.ts';
@@ -15,8 +20,8 @@ import { InterUnitGraph } from '../../../mol-math/graph/inter-unit-graph.ts';
 export { IntraContactsBuilder };
 
 interface IntraContactsBuilder {
-    add: (indexA: Features.FeatureIndex, indexB: Features.FeatureIndex, type: InteractionType) => void
-    getContacts: () => InteractionsIntraContacts
+    add: (indexA: Features.FeatureIndex, indexB: Features.FeatureIndex, type: InteractionType) => void;
+    getContacts: () => InteractionsIntraContacts;
 }
 
 namespace IntraContactsBuilder {
@@ -44,11 +49,16 @@ namespace IntraContactsBuilder {
                 let elementsIndex: InteractionsIntraContacts.ElementsIndex;
                 const contacts: InteractionsIntraContacts = Object.defineProperty(graph, 'elementsIndex', {
                     get: () => {
-                        return elementsIndex || (elementsIndex = InteractionsIntraContacts.createElementsIndex(graph, features, elementsCount));
-                    }
+                        return elementsIndex ||
+                            (elementsIndex = InteractionsIntraContacts.createElementsIndex(
+                                graph,
+                                features,
+                                elementsCount,
+                            ));
+                    },
                 }) as any;
                 return contacts;
-            }
+            },
         };
     }
 }
@@ -56,10 +66,10 @@ namespace IntraContactsBuilder {
 export { InterContactsBuilder };
 
 interface InterContactsBuilder {
-    startUnitPair: (unitA: Unit, unitB: Unit) => void
-    finishUnitPair: () => void
-    add: (indexA: Features.FeatureIndex, indexB: Features.FeatureIndex, type: InteractionType) => void
-    getContacts: (unitsFeatures: IntMap<Features>) => InteractionsInterContacts
+    startUnitPair: (unitA: Unit, unitB: Unit) => void;
+    finishUnitPair: () => void;
+    add: (indexA: Features.FeatureIndex, indexB: Features.FeatureIndex, type: InteractionType) => void;
+    getContacts: (unitsFeatures: IntMap<Features>) => InteractionsInterContacts;
 }
 
 namespace InterContactsBuilder {
@@ -78,7 +88,7 @@ namespace InterContactsBuilder {
             },
             getContacts(unitsFeatures: IntMap<Features>) {
                 return new InteractionsInterContacts(builder.getMap(), unitsFeatures);
-            }
+            },
         };
     }
 }

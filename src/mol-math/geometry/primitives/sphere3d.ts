@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4, EPSILON } from '../../linear-algebra.ts';
+import { EPSILON, Mat4, Vec3 } from '../../linear-algebra.ts';
 import type { PositionData } from '../common.ts';
 import { OrderedSet } from '../../../mol-data/int.ts';
 import type { NumberArray, PickRequired } from '../../../mol-util/type-helpers.ts';
@@ -14,9 +14,9 @@ import { Axes3D } from './axes3d.ts';
 import { PrincipalAxes } from '../../linear-algebra/matrix/principal-axes.ts';
 
 interface Sphere3D {
-    center: Vec3,
-    radius: number,
-    extrema?: Vec3[]
+    center: Vec3;
+    radius: number;
+    extrema?: Vec3[];
 }
 
 function Sphere3D(): Sphere3D {
@@ -28,12 +28,16 @@ namespace Sphere3D {
         return sphere.extrema !== undefined;
     }
 
-    export function create(center: Vec3, radius: number): Sphere3D { return { center, radius }; }
-    export function zero(): Sphere3D { return { center: Vec3(), radius: 0 }; }
+    export function create(center: Vec3, radius: number): Sphere3D {
+        return { center, radius };
+    }
+    export function zero(): Sphere3D {
+        return { center: Vec3(), radius: 0 };
+    }
 
     export function clone(a: Sphere3D): Sphere3D {
         const out = create(Vec3.clone(a.center), a.radius);
-        if (hasExtrema(a)) out.extrema = a.extrema.map(e => Vec3.clone(e));
+        if (hasExtrema(a)) out.extrema = a.extrema.map((e) => Vec3.clone(e));
         return out;
     }
 
@@ -46,7 +50,7 @@ namespace Sphere3D {
     export function copy(out: Sphere3D, a: Sphere3D): Sphere3D {
         Vec3.copy(out.center, a.center);
         out.radius = a.radius;
-        if (hasExtrema(a)) setExtrema(out, a.extrema.map(e => Vec3.clone(e)));
+        if (hasExtrema(a)) setExtrema(out, a.extrema.map((e) => Vec3.clone(e)));
         return out;
     }
 
@@ -95,7 +99,7 @@ namespace Sphere3D {
         Vec3.transformMat4(out.center, sphere.center, m);
         out.radius = sphere.radius * Mat4.getMaxScaleOnAxis(m);
         if (hasExtrema(sphere)) {
-            setExtrema(out, sphere.extrema.map(e => Vec3.transformMat4(Vec3(), e, m)));
+            setExtrema(out, sphere.extrema.map((e) => Vec3.transformMat4(Vec3(), e, m)));
         }
         return out;
     }
@@ -104,7 +108,7 @@ namespace Sphere3D {
     export function translate(out: Sphere3D, sphere: Sphere3D, v: Vec3): Sphere3D {
         Vec3.add(out.center, sphere.center, v);
         if (hasExtrema(sphere)) {
-            setExtrema(out, sphere.extrema.map(e => Vec3.add(Vec3(), e, v)));
+            setExtrema(out, sphere.extrema.map((e) => Vec3.add(Vec3(), e, v)));
         }
         return out;
     }
@@ -114,7 +118,7 @@ namespace Sphere3D {
         Vec3.scale(out.center, sphere.center, s);
         out.radius = sphere.radius * s;
         if (hasExtrema(sphere)) {
-            setExtrema(out, sphere.extrema.map(e => Vec3.scale(Vec3(), e, s)));
+            setExtrema(out, sphere.extrema.map((e) => Vec3.scale(Vec3(), e, s)));
         }
         return out;
     }
@@ -167,15 +171,23 @@ namespace Sphere3D {
     export function fromDimensionsAndTransform(out: Sphere3D, dimensions: Vec3, transform: Mat4): Sphere3D {
         const [x, y, z] = dimensions;
 
-        const cpA = Vec3.create(0, 0, 0); Vec3.transformMat4(cpA, cpA, transform);
-        const cpB = Vec3.create(x, y, z); Vec3.transformMat4(cpB, cpB, transform);
-        const cpC = Vec3.create(x, 0, 0); Vec3.transformMat4(cpC, cpC, transform);
-        const cpD = Vec3.create(0, y, z); Vec3.transformMat4(cpD, cpD, transform);
+        const cpA = Vec3.create(0, 0, 0);
+        Vec3.transformMat4(cpA, cpA, transform);
+        const cpB = Vec3.create(x, y, z);
+        Vec3.transformMat4(cpB, cpB, transform);
+        const cpC = Vec3.create(x, 0, 0);
+        Vec3.transformMat4(cpC, cpC, transform);
+        const cpD = Vec3.create(0, y, z);
+        Vec3.transformMat4(cpD, cpD, transform);
 
-        const cpE = Vec3.create(0, 0, z); Vec3.transformMat4(cpE, cpE, transform);
-        const cpF = Vec3.create(x, 0, z); Vec3.transformMat4(cpF, cpF, transform);
-        const cpG = Vec3.create(x, y, 0); Vec3.transformMat4(cpG, cpG, transform);
-        const cpH = Vec3.create(0, y, 0); Vec3.transformMat4(cpH, cpH, transform);
+        const cpE = Vec3.create(0, 0, z);
+        Vec3.transformMat4(cpE, cpE, transform);
+        const cpF = Vec3.create(x, 0, z);
+        Vec3.transformMat4(cpF, cpF, transform);
+        const cpG = Vec3.create(x, y, 0);
+        Vec3.transformMat4(cpG, cpG, transform);
+        const cpH = Vec3.create(0, y, 0);
+        Vec3.transformMat4(cpH, cpH, transform);
 
         Vec3.add(tmpCenter, cpA, cpB);
         Vec3.scale(tmpCenter, tmpCenter, 0.5);
@@ -204,8 +216,8 @@ namespace Sphere3D {
         out.radius = Math.max(sphere.radius, Vec3.distance(sphere.center, by.center) + by.radius);
         if (hasExtrema(sphere) && hasExtrema(by)) {
             setExtrema(out, [
-                ...sphere.extrema.map(e => Vec3.clone(e)),
-                ...by.extrema.map(e => Vec3.clone(e))
+                ...sphere.extrema.map((e) => Vec3.clone(e)),
+                ...by.extrema.map((e) => Vec3.clone(e)),
             ]);
         }
         return out;
@@ -229,28 +241,31 @@ namespace Sphere3D {
             const axes = PrincipalAxes.calculateMomentsAxes(positions);
             Axes3D.scale(axes, Axes3D.normalize(axes, axes), delta);
 
-            setExtrema(out, sphere.extrema.map(e => {
-                Vec3.normalize(tmpDir, Vec3.sub(tmpDir, e, sphere.center));
-                const o = Vec3.clone(e);
+            setExtrema(
+                out,
+                sphere.extrema.map((e) => {
+                    Vec3.normalize(tmpDir, Vec3.sub(tmpDir, e, sphere.center));
+                    const o = Vec3.clone(e);
 
-                const sA = Vec3.dot(tmpDir, axes.dirA) < 0 ? -1 : 1;
-                Vec3.scaleAndAdd(o, o, axes.dirA, sA);
+                    const sA = Vec3.dot(tmpDir, axes.dirA) < 0 ? -1 : 1;
+                    Vec3.scaleAndAdd(o, o, axes.dirA, sA);
 
-                const sB = Vec3.dot(tmpDir, axes.dirB) < 0 ? -1 : 1;
-                Vec3.scaleAndAdd(o, o, axes.dirB, sB);
+                    const sB = Vec3.dot(tmpDir, axes.dirB) < 0 ? -1 : 1;
+                    Vec3.scaleAndAdd(o, o, axes.dirB, sB);
 
-                const sC = Vec3.dot(tmpDir, axes.dirC) < 0 ? -1 : 1;
-                Vec3.scaleAndAdd(o, o, axes.dirC, sC);
+                    const sC = Vec3.dot(tmpDir, axes.dirC) < 0 ? -1 : 1;
+                    Vec3.scaleAndAdd(o, o, axes.dirC, sC);
 
-                if (Vec3.distance(out.center, o) > out.radius) {
-                    if (sphere.extrema.length >= 14) { // 14 extrema with coarse boundary helper
-                        Vec3.normalize(tmpDir, Vec3.sub(tmpDir, o, sphere.center));
+                    if (Vec3.distance(out.center, o) > out.radius) {
+                        if (sphere.extrema.length >= 14) { // 14 extrema with coarse boundary helper
+                            Vec3.normalize(tmpDir, Vec3.sub(tmpDir, o, sphere.center));
+                        }
+                        Vec3.scaleAndAdd(o, out.center, tmpDir, out.radius);
                     }
-                    Vec3.scaleAndAdd(o, out.center, tmpDir, out.radius);
-                }
 
-                return o;
-            }));
+                    return o;
+                }),
+            );
         }
         return out;
     }
@@ -269,7 +284,7 @@ namespace Sphere3D {
         const ar = a.radius;
         const br = b.radius;
         return (Math.abs(ar - br) <= EPSILON * Math.max(1.0, Math.abs(ar), Math.abs(br)) &&
-                Vec3.equals(a.center, b.center));
+            Vec3.equals(a.center, b.center));
     }
 
     /**

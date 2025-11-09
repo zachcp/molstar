@@ -13,13 +13,13 @@ import { AssetManager } from '../../mol-util/assets.ts';
 import { type InteractionInfo, InteractionTypeToKind, type StructureInteractions } from './model.ts';
 
 export interface ComputeInteractionsOptions {
-    interactions?: InteractionsProps
+    interactions?: InteractionsProps;
 }
 
 export async function computeContacts(
     ctx: RuntimeContext,
-    selection: readonly { structureRef: string, loci: StructureElement.Loci }[],
-    options?: ComputeInteractionsOptions
+    selection: readonly { structureRef: string; loci: StructureElement.Loci }[],
+    options?: ComputeInteractionsOptions,
 ): Promise<StructureInteractions> {
     const unitIdToStructureRef = new Map<number, string>();
     const unitIdToContactGroupId = new Map<number, number>();
@@ -46,8 +46,8 @@ export async function computeContacts(
         options?.interactions ?? {},
         {
             skipIntraContacts: true,
-            unitPairTest: (a, b) => unitIdToContactGroupId.get(a.id) !== unitIdToContactGroupId.get(b.id)
-        }
+            unitPairTest: (a, b) => unitIdToContactGroupId.get(a.id) !== unitIdToContactGroupId.get(b.id),
+        },
     );
 
     const { edges } = interactions.contacts;

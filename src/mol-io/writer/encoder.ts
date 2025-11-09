@@ -7,7 +7,7 @@
 import type { Writer } from './writer.ts';
 
 export interface Encoder {
-    encode(): void,
-    writeTo(writer: Writer): void,
-    getSize(): number
+    encode(): void;
+    writeTo(writer: Writer): void;
+    getSize(): number;
 }

@@ -4,10 +4,23 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { type Renderable, type RenderableState, createRenderable } from '../renderable.ts';
+import { createRenderable, type Renderable, type RenderableState } from '../renderable.ts';
 import type { WebGLContext } from '../webgl/context.ts';
 import { createGraphicsRenderItem, type Transparency } from '../webgl/render-item.ts';
-import { GlobalUniformSchema, BaseSchema, AttributeSpec, DefineSpec, type Values, InternalSchema, SizeSchema, type InternalValues, GlobalTextureSchema, type GlobalDefineValues, type GlobalDefines, GlobalDefineSchema } from './schema.ts';
+import {
+    AttributeSpec,
+    BaseSchema,
+    DefineSpec,
+    type GlobalDefines,
+    GlobalDefineSchema,
+    type GlobalDefineValues,
+    GlobalTextureSchema,
+    GlobalUniformSchema,
+    InternalSchema,
+    type InternalValues,
+    SizeSchema,
+    type Values,
+} from './schema.ts';
 import { PointsShaderCode } from '../shader-code.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 
@@ -19,11 +32,25 @@ export const PointsSchema = {
     dPointSizeAttenuation: DefineSpec('boolean'),
     dPointStyle: DefineSpec('string', ['square', 'circle', 'fuzzy']),
 };
-export type PointsSchema = typeof PointsSchema
-export type PointsValues = Values<PointsSchema>
+export type PointsSchema = typeof PointsSchema;
+export type PointsValues = Values<PointsSchema>;
 
-export function PointsRenderable(ctx: WebGLContext, id: number, values: PointsValues, state: RenderableState, materialId: number, transparency: Transparency, globals: GlobalDefines): Renderable<PointsValues> {
-    const schema = { ...GlobalUniformSchema, ...GlobalTextureSchema, ...GlobalDefineSchema, ...InternalSchema, ...PointsSchema };
+export function PointsRenderable(
+    ctx: WebGLContext,
+    id: number,
+    values: PointsValues,
+    state: RenderableState,
+    materialId: number,
+    transparency: Transparency,
+    globals: GlobalDefines,
+): Renderable<PointsValues> {
+    const schema = {
+        ...GlobalUniformSchema,
+        ...GlobalTextureSchema,
+        ...GlobalDefineSchema,
+        ...InternalSchema,
+        ...PointsSchema,
+    };
     const renderValues: PointsValues & InternalValues & GlobalDefineValues = {
         ...values,
         uObjectId: ValueCell.create(id),
@@ -31,6 +58,14 @@ export function PointsRenderable(ctx: WebGLContext, id: number, values: PointsVa
         dColorMarker: ValueCell.create(globals.dColorMarker),
     };
     const shaderCode = PointsShaderCode;
-    const renderItem = createGraphicsRenderItem(ctx, 'points', shaderCode, schema, renderValues, materialId, transparency);
+    const renderItem = createGraphicsRenderItem(
+        ctx,
+        'points',
+        shaderCode,
+        schema,
+        renderValues,
+        materialId,
+        transparency,
+    );
     return createRenderable(renderItem, renderValues, state);
 }

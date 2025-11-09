@@ -27,18 +27,20 @@ import { HeadlessPluginContext } from '../../mol-plugin/headless-plugin-context.
 import { DefaultPluginSpec } from '../../mol-plugin/spec.ts';
 import type { ExternalModules } from '../../mol-plugin/util/headless-screenshot.ts';
 import { setFSModule } from '../../mol-util/data-source.ts';
-import { Buffer } from "node:buffer";
+import { Buffer } from 'node:buffer';
 
 setFSModule(fs);
 
 // cid `2519` for Caffeine
 interface Args {
-    cid: string,
-    outDirectory: string
+    cid: string;
+    outDirectory: string;
 }
 
 function parseArguments(): Args {
-    const parser = new ArgumentParser({ description: 'Example command-line application exporting .glb file of SDF structures from PubChem' });
+    const parser = new ArgumentParser({
+        description: 'Example command-line application exporting .glb file of SDF structures from PubChem',
+    });
     parser.add_argument('cid', { help: 'PubChem identifier' });
     parser.add_argument('outDirectory', { help: 'Directory for outputs' });
     const args = parser.parse_args();
@@ -73,14 +75,16 @@ async function main() {
         })
         .commit();
 
-    const meshes = structure.data!.repr.renderObjects.filter(obj => obj.type === 'mesh') as GraphicsRenderObject<'mesh'>[];
+    const meshes = structure.data!.repr.renderObjects.filter((obj) => obj.type === 'mesh') as GraphicsRenderObject<
+        'mesh'
+    >[];
 
     const boundingSphere = plugin.canvas3d?.boundingSphereVisible!;
     const boundingBox = Box3D.fromSphere3D(Box3D(), boundingSphere);
 
     const renderObjectExporter = new GlbExporter(boundingBox);
 
-    await plugin.runTask(Task.create('Export Geometry', async ctx => {
+    await plugin.runTask(Task.create('Export Geometry', async (ctx) => {
         for (let i = 0, il = meshes.length; i < il; ++i) {
             await renderObjectExporter.add(meshes[i], plugin.canvas3d?.webgl!, ctx);
         }

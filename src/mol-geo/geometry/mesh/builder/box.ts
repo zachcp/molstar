@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra.ts';
-import { type Box3D, Axes3D } from '../../../../mol-math/geometry.ts';
+import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { Axes3D, type Box3D } from '../../../../mol-math/geometry.ts';
 import { MeshBuilder } from '../mesh-builder.ts';
 import type { CylinderProps } from '../../../primitive/cylinder.ts';
 import { addCylinder } from './cylinder.ts';
@@ -16,7 +16,13 @@ const tmpStart = Vec3.zero();
 const tmpEnd = Vec3.zero();
 const cylinderProps: CylinderProps = {};
 
-export function addBoundingBox(state: MeshBuilder.State, box: Box3D, radius: number, detail: number, radialSegments: number) {
+export function addBoundingBox(
+    state: MeshBuilder.State,
+    box: Box3D,
+    radius: number,
+    detail: number,
+    radialSegments: number,
+) {
     const { min, max } = box;
 
     cylinderProps.radiusTop = radius;
@@ -75,11 +81,39 @@ const tmpMatrix = Mat4.identity();
 
 const tmpVertices = new Float32Array(8 * 3);
 const tmpEdges = new Uint8Array([
-    0, 1, 0, 3, 0, 6, 1, 2, 1, 7, 2, 3,
-    2, 4, 3, 5, 4, 5, 4, 7, 5, 6, 6, 7
+    0,
+    1,
+    0,
+    3,
+    0,
+    6,
+    1,
+    2,
+    1,
+    7,
+    2,
+    3,
+    2,
+    4,
+    3,
+    5,
+    4,
+    5,
+    4,
+    7,
+    5,
+    6,
+    6,
+    7,
 ]);
 
-export function addOrientedBox(state: MeshBuilder.State, axes: Axes3D, radiusScale: number, detail: number, radialSegments: number) {
+export function addOrientedBox(
+    state: MeshBuilder.State,
+    axes: Axes3D,
+    radiusScale: number,
+    detail: number,
+    radialSegments: number,
+) {
     const { origin, dirA, dirB, dirC } = axes;
     const negDirA = Vec3.negate(tmpBoxVecA, dirA);
     const negDirB = Vec3.negate(tmpBoxVecB, dirB);

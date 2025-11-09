@@ -7,8 +7,8 @@
 
 import { Column, ColumnHelpers } from '../../../../mol-data/db.ts';
 import type * as Data from '../data-model.ts';
-import { type EncodedColumn, decode } from '../../../common/binary-cif.ts';
-import { parseInt as fastParseInt, parseFloat as fastParseFloat } from '../../common/text/number-parser.ts';
+import { decode, type EncodedColumn } from '../../../common/binary-cif.ts';
+import { parseFloat as fastParseFloat, parseInt as fastParseInt } from '../../common/text/number-parser.ts';
 
 export function Field(column: EncodedColumn): Data.CifField {
     const mask = column.mask ? decode(column.mask) as number[] : void 0;
@@ -16,24 +16,24 @@ export function Field(column: EncodedColumn): Data.CifField {
     const isNumeric = ColumnHelpers.isTypedArray(data);
 
     const str: Data.CifField['str'] = isNumeric
-        ? mask
-            ? row => mask[row] === Column.ValueKinds.Present ? '' + data[row] : ''
-            : row => '' + data[row]
+        ? mask ? (row) => mask[row] === Column.ValueKinds.Present ? '' + data[row] : '' : (row) => '' + data[row]
         : mask
-            ? row => mask[row] === Column.ValueKinds.Present ? data[row] : ''
-            : row => data[row];
+        ? (row) => mask[row] === Column.ValueKinds.Present ? data[row] : ''
+        : (row) => data[row];
 
-    const int: Data.CifField['int'] = isNumeric
-        ? row => data[row]
-        : row => { const v = data[row]; return fastParseInt(v, 0, v.length); };
+    const int: Data.CifField['int'] = isNumeric ? (row) => data[row] : (row) => {
+        const v = data[row];
+        return fastParseInt(v, 0, v.length);
+    };
 
-    const float: Data.CifField['float'] = isNumeric
-        ? row => data[row]
-        : row => { const v = data[row]; return fastParseFloat(v, 0, v.length); };
+    const float: Data.CifField['float'] = isNumeric ? (row) => data[row] : (row) => {
+        const v = data[row];
+        return fastParseFloat(v, 0, v.length);
+    };
 
     const valueKind: Data.CifField['valueKind'] = mask
-        ? row => mask[row] as Column.ValueKind
-        : row => Column.ValueKinds.Present;
+        ? (row) => mask[row] as Column.ValueKind
+        : (row) => Column.ValueKinds.Present;
 
     const rowCount = data.length;
 
@@ -47,12 +47,12 @@ export function Field(column: EncodedColumn): Data.CifField {
         float,
         valueKind,
         areValuesEqual: (rowA, rowB) => data[rowA] === data[rowB],
-        toStringArray: params => ColumnHelpers.createAndFillArray(rowCount, str, params),
+        toStringArray: (params) => ColumnHelpers.createAndFillArray(rowCount, str, params),
         toIntArray: isNumeric
-            ? params => ColumnHelpers.typedArrayWindow(data, params)
-            : params => ColumnHelpers.createAndFillArray(rowCount, int, params),
+            ? (params) => ColumnHelpers.typedArrayWindow(data, params)
+            : (params) => ColumnHelpers.createAndFillArray(rowCount, int, params),
         toFloatArray: isNumeric
-            ? params => ColumnHelpers.typedArrayWindow(data, params)
-            : params => ColumnHelpers.createAndFillArray(rowCount, float, params)
+            ? (params) => ColumnHelpers.typedArrayWindow(data, params)
+            : (params) => ColumnHelpers.createAndFillArray(rowCount, float, params),
     };
 }

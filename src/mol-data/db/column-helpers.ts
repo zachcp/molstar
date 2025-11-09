@@ -4,69 +4,62 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import type { Column } from "./column.ts";
+import type { Column } from './column.ts';
 
 export function getArrayBounds(
-  rowCount: number,
-  params?: Column.ToArrayParams<any>,
+    rowCount: number,
+    params?: Column.ToArrayParams<any>,
 ): { start: number; end: number } {
-  const start =
-    params && typeof params.start !== "undefined"
-      ? Math.max(Math.min(params.start, rowCount - 1), 0)
-      : 0;
-  const end =
-    params && typeof params.end !== "undefined"
-      ? Math.min(params.end, rowCount)
-      : rowCount;
-  return { start, end };
+    const start = params && typeof params.start !== 'undefined' ? Math.max(Math.min(params.start, rowCount - 1), 0) : 0;
+    const end = params && typeof params.end !== 'undefined' ? Math.min(params.end, rowCount) : rowCount;
+    return { start, end };
 }
 
 export function createArray(
-  rowCount: number,
-  params?: Column.ToArrayParams<any>,
+    rowCount: number,
+    params?: Column.ToArrayParams<any>,
 ): { array: any[]; start: number; end: number } {
-  const c =
-    params && typeof params.array !== "undefined" ? params.array : Array;
-  const { start, end } = getArrayBounds(rowCount, params);
-  return { array: new c(end - start) as any[], start, end };
+    const c = params && typeof params.array !== 'undefined' ? params.array : Array;
+    const { start, end } = getArrayBounds(rowCount, params);
+    return { array: new c(end - start) as any[], start, end };
 }
 
 export function fillArrayValues(
-  value: (row: number) => any,
-  target: any[],
-  start: number,
+    value: (row: number) => any,
+    target: any[],
+    start: number,
 ): any[] {
-  for (let i = 0, _e = target.length; i < _e; i++) target[i] = value(start + i);
-  return target;
+    for (let i = 0, _e = target.length; i < _e; i++) target[i] = value(start + i);
+    return target;
 }
 
 export function createAndFillArray(
-  rowCount: number,
-  value: (row: number) => any,
-  params?: Column.ToArrayParams<any>,
+    rowCount: number,
+    value: (row: number) => any,
+    params?: Column.ToArrayParams<any>,
 ): any[] {
-  const { array, start } = createArray(rowCount, params);
-  return fillArrayValues(value, array, start);
+    const { array, start } = createArray(rowCount, params);
+    return fillArrayValues(value, array, start);
 }
 
 export function isTypedArray(data: any): boolean {
-  return (
-    !!data.buffer &&
-    typeof data.byteLength === "number" &&
-    typeof data.BYTES_PER_ELEMENT === "number"
-  );
+    return (
+        !!data.buffer &&
+        typeof data.byteLength === 'number' &&
+        typeof data.BYTES_PER_ELEMENT === 'number'
+    );
 }
 
 export function typedArrayWindow(
-  data: any,
-  params?: Column.ToArrayParams<any>,
+    data: any,
+    params?: Column.ToArrayParams<any>,
 ): ReadonlyArray<number> {
-  const { constructor, buffer, length, byteOffset, BYTES_PER_ELEMENT } = data;
-  const { start, end } = getArrayBounds(length, params);
-  if (start === 0 && end === length) return data;
-  return new constructor(
-    buffer,
-    byteOffset + BYTES_PER_ELEMENT * start,
-    Math.min(length, end - start),
-  );
+    const { constructor, buffer, length, byteOffset, BYTES_PER_ELEMENT } = data;
+    const { start, end } = getArrayBounds(length, params);
+    if (start === 0 && end === length) return data;
+    return new constructor(
+        buffer,
+        byteOffset + BYTES_PER_ELEMENT * start,
+        Math.min(length, end - start),
+    );
 }

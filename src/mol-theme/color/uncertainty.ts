@@ -6,7 +6,7 @@
  */
 
 import { Color, ColorScale } from '../../mol-util/color/index.ts';
-import { StructureElement, Unit, Bond, type ElementIndex } from '../../mol-model/structure.ts';
+import { Bond, type ElementIndex, StructureElement, Unit } from '../../mol-model/structure.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ColorTheme } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
@@ -14,13 +14,14 @@ import type { ThemeDataContext } from '../theme.ts';
 import { ColorThemeCategory } from './categories.ts';
 
 const DefaultUncertaintyColor = Color(0xffff99);
-const Description = `Assigns a color based on the uncertainty or disorder of an element's position, e.g. B-factor or RMSF, depending on the data availability and experimental technique.`;
+const Description =
+    `Assigns a color based on the uncertainty or disorder of an element's position, e.g. B-factor or RMSF, depending on the data availability and experimental technique.`;
 
 export const UncertaintyColorThemeParams = {
     domain: PD.Interval([0, 100]),
     list: PD.ColorList('red-white-blue', { presetKind: 'scale' }),
 };
-export type UncertaintyColorThemeParams = typeof UncertaintyColorThemeParams
+export type UncertaintyColorThemeParams = typeof UncertaintyColorThemeParams;
 export function getUncertaintyColorThemeParams(ctx: ThemeDataContext) {
     return UncertaintyColorThemeParams; // TODO return copy
 }
@@ -35,20 +36,23 @@ export function getUncertainty(unit: Unit, element: ElementIndex): number {
     }
 }
 
-export function UncertaintyColorTheme(ctx: ThemeDataContext, props: PD.Values<UncertaintyColorThemeParams>): ColorTheme<UncertaintyColorThemeParams> {
+export function UncertaintyColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<UncertaintyColorThemeParams>,
+): ColorTheme<UncertaintyColorThemeParams> {
     let scale: ColorScale;
 
     if (props.list.kind === 'set') {
         scale = ColorScale.createDiscrete({
             reverse: true,
             domain: props.domain,
-            listOrName: props.list.colors
+            listOrName: props.list.colors,
         });
     } else {
         scale = ColorScale.create({
             reverse: true,
             domain: props.domain,
-            listOrName: props.list.colors
+            listOrName: props.list.colors,
         });
     }
 
@@ -70,7 +74,7 @@ export function UncertaintyColorTheme(ctx: ThemeDataContext, props: PD.Values<Un
         color,
         props,
         description: Description,
-        legend: scale ? scale.legend : undefined
+        legend: scale ? scale.legend : undefined,
     };
 }
 
@@ -81,5 +85,7 @@ export const UncertaintyColorThemeProvider: ColorTheme.Provider<UncertaintyColor
     factory: UncertaintyColorTheme,
     getParams: getUncertaintyColorThemeParams,
     defaultValues: PD.getDefaultValues(UncertaintyColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure && ctx.structure.models.some(m => m.atomicConformation.B_iso_or_equiv.isDefined || m.coarseHierarchy.isDefined)
+    isApplicable: (ctx: ThemeDataContext) =>
+        !!ctx.structure &&
+        ctx.structure.models.some((m) => m.atomicConformation.B_iso_or_equiv.isDefined || m.coarseHierarchy.isDefined),
 };

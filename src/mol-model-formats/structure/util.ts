@@ -7,7 +7,6 @@
 import type { StringLike } from '../../mol-io/common/string-like.ts';
 import { TokenBuilder, type Tokens } from '../../mol-io/reader/common/text/tokenizer.ts';
 
-
 export function guessElementSymbolTokens(tokens: Tokens, str: StringLike, start: number, end: number) {
     let s = start, e = end - 1;
 
@@ -74,4 +73,3 @@ export function guessElementSymbolString(atomId: string, compId: string) {
 
     return ''; // no reasonable guess, return empty string
 }
-

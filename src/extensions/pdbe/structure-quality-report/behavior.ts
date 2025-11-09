@@ -12,15 +12,14 @@ import { StructureElement } from '../../../mol-model/structure.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { PluginBehavior } from '../../../mol-plugin/behavior/behavior.ts';
 
-export const PDBeStructureQualityReport = PluginBehavior.create<{ autoAttach: boolean, showTooltip: boolean }>({
+export const PDBeStructureQualityReport = PluginBehavior.create<{ autoAttach: boolean; showTooltip: boolean }>({
     name: 'pdbe-structure-quality-report-prop',
     category: 'custom-props',
     display: {
         name: 'Structure Quality Report',
-        description: 'Data from wwPDB Validation Report, obtained via PDBe.'
+        description: 'Data from wwPDB Validation Report, obtained via PDBe.',
     },
-    ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean, showTooltip: boolean }> {
-
+    ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean; showTooltip: boolean }> {
         private provider = StructureQualityReportProvider;
 
         private labelPDBeValidation = {
@@ -32,16 +31,23 @@ export const PDBeStructureQualityReport = PluginBehavior.create<{ autoAttach: bo
                         if (loci.elements.length === 0) return void 0;
                         const e = loci.elements[0];
                         const u = e.unit;
-                        if (!u.model.customProperties.hasReference(StructureQualityReportProvider.descriptor)) return void 0;
+                        if (!u.model.customProperties.hasReference(StructureQualityReportProvider.descriptor)) {
+                            return void 0;
+                        }
 
-                        const se = StructureElement.Location.create(loci.structure, u, u.elements[OrderedSet.getAt(e.indices, 0)]);
+                        const se = StructureElement.Location.create(
+                            loci.structure,
+                            u,
+                            u.elements[OrderedSet.getAt(e.indices, 0)],
+                        );
                         const issues = StructureQualityReport.getIssues(se);
                         if (issues.length === 0) return 'Validation: No Issues';
                         return `Validation: ${issues.join(', ')}`;
 
-                    default: return void 0;
+                    default:
+                        return void 0;
                 }
-            }
+            },
         };
 
         register(): void {
@@ -51,7 +57,7 @@ export const PDBeStructureQualityReport = PluginBehavior.create<{ autoAttach: bo
             this.ctx.representation.structure.themes.colorThemeRegistry.add(StructureQualityReportColorThemeProvider);
         }
 
-        update(p: { autoAttach: boolean, showTooltip: boolean }) {
+        update(p: { autoAttach: boolean; showTooltip: boolean }) {
             const updated = this.params.autoAttach !== p.autoAttach;
             this.params.autoAttach = p.autoAttach;
             this.params.showTooltip = p.showTooltip;
@@ -62,11 +68,13 @@ export const PDBeStructureQualityReport = PluginBehavior.create<{ autoAttach: bo
         unregister() {
             this.ctx.customModelProperties.unregister(StructureQualityReportProvider.descriptor.name);
             this.ctx.managers.lociLabels.removeProvider(this.labelPDBeValidation);
-            this.ctx.representation.structure.themes.colorThemeRegistry.remove(StructureQualityReportColorThemeProvider);
+            this.ctx.representation.structure.themes.colorThemeRegistry.remove(
+                StructureQualityReportColorThemeProvider,
+            );
         }
     },
     params: () => ({
         autoAttach: PD.Boolean(false),
-        showTooltip: PD.Boolean(true)
-    })
+        showTooltip: PD.Boolean(true),
+    }),
 });

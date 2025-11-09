@@ -12,7 +12,7 @@ import * as fs from 'node:fs';
 require('util.promisify').shim();
 const writeFile = util.promisify(fs.writeFile);
 
-import { Database, Table, type DatabaseCollection } from '../../mol-data/db.ts';
+import { Database, type DatabaseCollection, Table } from '../../mol-data/db.ts';
 import type { CCD_Schema } from '../../mol-io/reader/cif/schema/ccd.ts';
 import { SetUtils } from '../../mol-util/set.ts';
 import { DefaultMap } from '../../mol-util/map.ts';
@@ -20,8 +20,8 @@ import { mmCIF_chemCompBond_schema } from '../../mol-io/reader/cif/schema/mmcif-
 import { ccd_chemCompAtom_schema } from '../../mol-io/reader/cif/schema/ccd-extras.ts';
 import { DefaultDataOptions, ensureDataAvailable, getEncodedCif, readCCD, readPVCD } from './util.ts';
 
-type CCB = Table<CCD_Schema['chem_comp_bond']>
-type CCA = Table<CCD_Schema['chem_comp_atom']>
+type CCB = Table<CCD_Schema['chem_comp_bond']>;
+type CCA = Table<CCD_Schema['chem_comp_atom']>;
 
 function ccbKey(compId: string, atomId1: string, atomId2: string) {
     return atomId1 < atomId2 ? `${compId}:${atomId1}-${atomId2}` : `${compId}:${atomId2}-${atomId1}`;
@@ -74,7 +74,7 @@ function checkAddingBondsFromPVCD(pvcd: DatabaseCollection<CCD_Schema>) {
                     const entryBonds = addChemCompBondToSet(new Set<string>(), chem_comp_bond);
                     const entryAtoms = addChemCompAtomToSet(new Set<string>(), chem_comp_atom);
                     const extraBonds = SetUtils.difference(ccbSetByParent.get(parentIds[i])!, entryBonds);
-                    extraBonds.forEach(bk => {
+                    extraBonds.forEach((bk) => {
                         const [a1, a2] = bk.split('|');
                         if (entryAtoms.has(a1) && entryAtoms.has(a2)) {
                             console.error(`Adding all PVCD bonds would wrongly add bond ${bk} for ${k}`);
@@ -110,7 +110,7 @@ function checkAddingAtomsFromPVCD(pvcd: DatabaseCollection<CCD_Schema>) {
 async function createBonds(
     ccd: DatabaseCollection<CCD_Schema>,
     pvcd: DatabaseCollection<CCD_Schema>,
-    atomsRequested: boolean
+    atomsRequested: boolean,
 ) {
     const ccbSet = new Set<string>();
 
@@ -167,14 +167,19 @@ async function createBonds(
     }
 
     const bondTable = Table.ofArrays(mmCIF_chemCompBond_schema, {
-        comp_id, atom_id_1, atom_id_2, value_order,
-        pdbx_aromatic_flag, pdbx_stereo_config, molstar_protonation_variant
+        comp_id,
+        atom_id_1,
+        atom_id_2,
+        value_order,
+        pdbx_aromatic_flag,
+        pdbx_stereo_config,
+        molstar_protonation_variant,
     });
 
     const bondDatabase = Database.ofTables(
         CCB_TABLE_NAME,
         { chem_comp_bond: mmCIF_chemCompBond_schema },
-        { chem_comp_bond: bondTable }
+        { chem_comp_bond: bondTable },
     );
 
     return { bonds: bondDatabase, atoms: atomsRequested ? createAtoms(ccd, pvcd) : void 0 };
@@ -229,13 +234,16 @@ function createAtoms(ccd: DatabaseCollection<CCD_Schema>, pvcd: DatabaseCollecti
     }
 
     const atomTable = Table.ofArrays(ccd_chemCompAtom_schema, {
-        comp_id, atom_id, charge, pdbx_stereo_config
+        comp_id,
+        atom_id,
+        charge,
+        pdbx_stereo_config,
     });
 
     return Database.ofTables(
         CCA_TABLE_NAME,
         { chem_comp_atom: ccd_chemCompAtom_schema },
-        { chem_comp_atom: atomTable }
+        { chem_comp_atom: atomTable },
     );
 }
 
@@ -266,39 +274,44 @@ const CCA_TABLE_NAME = 'CHEM_COMP_ATOMS';
 
 const parser = new argparse.ArgumentParser({
     add_help: true,
-    description: 'Create a cif file with one big table of all chem_comp_bond entries from the CCD and PVCD.'
+    description: 'Create a cif file with one big table of all chem_comp_bond entries from the CCD and PVCD.',
 });
 parser.add_argument('out', {
-    help: 'Generated file output path.'
+    help: 'Generated file output path.',
 });
 parser.add_argument('--forceDownload', '-f', {
     action: 'store_true',
-    help: 'Force download of CCD and PVCD.'
+    help: 'Force download of CCD and PVCD.',
 });
 parser.add_argument('--binary', '-b', {
     action: 'store_true',
-    help: 'Output as BinaryCIF.'
+    help: 'Output as BinaryCIF.',
 });
 parser.add_argument('--ccaOut', '-a', {
     help: 'Optional generated file output path for chem_comp_atom data.',
-    required: false
+    required: false,
 });
 parser.add_argument('--ccdUrl', '-c', {
     help: 'Fetch the CCD from a custom URL. This forces download of the CCD.',
-    required: false
+    required: false,
 });
 parser.add_argument('--pvcdUrl', '-p', {
     help: 'Fetch the PVCD from a custom URL. This forces download of the PVCD.',
-    required: false
+    required: false,
 });
 interface Args {
-    out: string,
-    forceDownload?: boolean,
-    binary?: boolean,
-    ccaOut?: string,
-    ccdUrl?: string,
-    pvcdUrl?: string
+    out: string;
+    forceDownload?: boolean;
+    binary?: boolean;
+    ccaOut?: string;
+    ccdUrl?: string;
+    pvcdUrl?: string;
 }
 const args: Args = parser.parse_args();
 
-run(args.out, args.binary, { forceDownload: args.forceDownload, ccdUrl: args.ccdUrl, pvcdUrl: args.pvcdUrl }, args.ccaOut);
+run(
+    args.out,
+    args.binary,
+    { forceDownload: args.forceDownload, ccdUrl: args.ccdUrl, pvcdUrl: args.pvcdUrl },
+    args.ccaOut,
+);

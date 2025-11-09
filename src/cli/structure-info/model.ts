@@ -10,17 +10,24 @@ import * as argparse from 'argparse';
 require('util.promisify').shim();
 
 import type { CifFrame } from '../../mol-io/reader/cif.ts';
-import { type Model, Structure, StructureElement, Unit, StructureProperties, UnitRing, type Trajectory } from '../../mol-model/structure.ts';
+import {
+    type Model,
+    Structure,
+    StructureElement,
+    StructureProperties,
+    type Trajectory,
+    Unit,
+    UnitRing,
+} from '../../mol-model/structure.ts';
 // import { Run, Progress } from '../../mol-task/index.ts'
 import { OrderedSet } from '../../mol-data/int.ts';
-import { openCif, downloadCif } from './helpers.ts';
+import { downloadCif, openCif } from './helpers.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
 import { trajectoryFromMmCIF } from '../../mol-model-formats/structure/mmcif.ts';
 import { Sequence } from '../../mol-model/sequence.ts';
 import { ModelSecondaryStructure } from '../../mol-model-formats/structure/property/secondary-structure.ts';
 import { ModelSymmetry } from '../../mol-model-formats/structure/property/symmetry.ts';
 import { Task } from '../../mol-task/index.ts';
-
 
 async function downloadFromPdb(pdb: string) {
     // `https://files.rcsb.org/download/${pdb}.cif`
@@ -109,7 +116,11 @@ export function printBonds(structure: Structure, showIntra: boolean, showInter: 
 
                 for (const aI of pairBonds.connectedIndices) {
                     for (const bond of pairBonds.getEdges(aI)) {
-                        console.log(`${atomLabel(uA.model, uA.elements[aI])} -- ${atomLabel(uB.model, uB.elements[bond.indexB])}`);
+                        console.log(
+                            `${atomLabel(uA.model, uA.elements[aI])} -- ${
+                                atomLabel(uB.model, uB.elements[bond.indexB])
+                            }`,
+                        );
                     }
                 }
             }
@@ -123,7 +134,11 @@ export function printSequence(model: Model) {
     for (const key of Object.keys(byEntityKey)) {
         const { sequence, entityId } = byEntityKey[+key];
         const { seqId, compId } = sequence;
-        console.log(`${entityId} (${sequence.kind} ${seqId.value(0)}, ${seqId.value(seqId.rowCount - 1)}) (${compId.value(0)}, ${compId.value(compId.rowCount - 1)})`);
+        console.log(
+            `${entityId} (${sequence.kind} ${seqId.value(0)}, ${seqId.value(seqId.rowCount - 1)}) (${
+                compId.value(0)
+            }, ${compId.value(compId.rowCount - 1)})`,
+        );
         console.log(`${Sequence.getSequenceString(sequence)}`);
     }
     console.log();
@@ -139,7 +154,11 @@ export function printRings(structure: Structure) {
             fps[fps.length] = UnitRing.fingerprint(unit, all[i]);
         }
         if (all.length > 5) fps.push('...');
-        console.log(`Unit ${unit.id}, ${all.length} ring(s), ${byFingerprint.size} different fingerprint(s).\n  ${fps.join(', ')}`);
+        console.log(
+            `Unit ${unit.id}, ${all.length} ring(s), ${byFingerprint.size} different fingerprint(s).\n  ${
+                fps.join(', ')
+            }`,
+        );
     }
     console.log();
 }
@@ -156,7 +175,11 @@ export function printUnits(structure: Structure) {
         if (Unit.isAtomic(l.unit)) {
             console.log(`Atomic unit ${unit.id} ${unit.conformation.operator.name}: ${size} elements`);
         } else if (Unit.isCoarse(l.unit)) {
-            console.log(`Coarse unit ${unit.id} ${unit.conformation.operator.name} (${Unit.isSpheres(l.unit) ? 'spheres' : 'gaussians'}): ${size} elements.`);
+            console.log(
+                `Coarse unit ${unit.id} ${unit.conformation.operator.name} (${
+                    Unit.isSpheres(l.unit) ? 'spheres' : 'gaussians'
+                }): ${size} elements.`,
+            );
 
             const props = StructureProperties.coarse;
             const modelSeq = l.unit.model.sequence;
@@ -168,7 +191,11 @@ export function printUnits(structure: Structure) {
                 const start = props.seq_id_begin(l), end = props.seq_id_end(l);
                 const compId = modelSeq.byEntityKey[props.entityKey(l)].sequence.compId.value;
                 for (let e = start; e <= end; e++) residues.push(compId(e));
-                console.log(`${props.asym_id(l)}:${start}-${end} (${residues.join('-')}) ${props.asym_id(l)} [${props.x(l).toFixed(2)}, ${props.y(l).toFixed(2)}, ${props.z(l).toFixed(2)}]`);
+                console.log(
+                    `${props.asym_id(l)}:${start}-${end} (${residues.join('-')}) ${props.asym_id(l)} [${
+                        props.x(l).toFixed(2)
+                    }, ${props.y(l).toFixed(2)}, ${props.z(l).toFixed(2)}]`,
+                );
             }
             if (size > 3) console.log(`...`);
         }
@@ -180,10 +207,14 @@ export function printSymmetryInfo(model: Model) {
     const symmetry = ModelSymmetry.Provider.get(model);
     if (!symmetry) return;
     const { size, anglesInRadians } = symmetry.spacegroup.cell;
-    console.log(`Spacegroup: ${symmetry.spacegroup.name} size: ${Vec3.toString(size)} angles: ${Vec3.toString(anglesInRadians)}`);
-    console.log(`Assembly names: ${symmetry.assemblies.map(a => a.id).join(', ')}`);
+    console.log(
+        `Spacegroup: ${symmetry.spacegroup.name} size: ${Vec3.toString(size)} angles: ${
+            Vec3.toString(anglesInRadians)
+        }`,
+    );
+    console.log(`Assembly names: ${symmetry.assemblies.map((a) => a.id).join(', ')}`);
     // NCS example: 1auy
-    console.log(`NCS operators: ${symmetry.ncsOperators && symmetry.ncsOperators.map(a => a.name).join(', ')}`);
+    console.log(`NCS operators: ${symmetry.ncsOperators && symmetry.ncsOperators.map((a) => a.name).join(', ')}`);
 }
 
 export async function printModelStats(models: Trajectory) {
@@ -192,7 +223,9 @@ export async function printModelStats(models: Trajectory) {
     for (let i = 0; i < models.frameCount; i++) {
         const m = await Task.resolveInContext(models.getFrameAtIndex(i));
         if (m.coarseHierarchy.isDefined) {
-            console.log(`${m.label} ${m.modelNum}: ${m.atomicHierarchy.atoms._rowCount} atom(s), ${m.coarseHierarchy.spheres.count} sphere(s), ${m.coarseHierarchy.gaussians.count} gaussian(s)`);
+            console.log(
+                `${m.label} ${m.modelNum}: ${m.atomicHierarchy.atoms._rowCount} atom(s), ${m.coarseHierarchy.spheres.count} sphere(s), ${m.coarseHierarchy.gaussians.count} gaussian(s)`,
+            );
         } else {
             console.log(`${m.label} ${m.modelNum}: ${m.atomicHierarchy.atoms._rowCount} atom(s)`);
         }
@@ -231,7 +264,7 @@ async function runFile(filename: string, args: Args) {
 
 const parser = new argparse.ArgumentParser({
     add_help: true,
-    description: 'Print info about a structure, mainly to test and showcase the mol-model module'
+    description: 'Print info about a structure, mainly to test and showcase the mol-model module',
 });
 parser.add_argument('--download', '-d', { help: 'Pdb entry id' });
 parser.add_argument('--file', '-f', { help: 'filename' });
@@ -246,19 +279,19 @@ parser.add_argument('--interBonds', { help: 'print inter unit bonds', action: 's
 parser.add_argument('--mod', { help: 'print modified residues', action: 'store_true' });
 parser.add_argument('--sec', { help: 'print secoundary structure', action: 'store_true' });
 interface Args {
-    download?: string,
-    file?: string,
+    download?: string;
+    file?: string;
 
-    models?: boolean,
-    seq?: boolean,
-    ihm?: boolean,
-    units?: boolean,
-    sym?: boolean,
-    rings?: boolean,
-    intraBonds?: boolean,
-    interBonds?: boolean,
-    mod?: boolean,
-    sec?: boolean,
+    models?: boolean;
+    seq?: boolean;
+    ihm?: boolean;
+    units?: boolean;
+    sym?: boolean;
+    rings?: boolean;
+    intraBonds?: boolean;
+    interBonds?: boolean;
+    mod?: boolean;
+    sec?: boolean;
 }
 const args: Args = parser.parse_args();
 

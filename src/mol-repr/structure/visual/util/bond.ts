@@ -7,7 +7,7 @@
  */
 
 import { BondType } from '../../../../mol-model/structure/model/types.ts';
-import { Unit, StructureElement, Structure, Bond } from '../../../../mol-model/structure.ts';
+import { Bond, Structure, StructureElement, Unit } from '../../../../mol-model/structure.ts';
 import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
 import { LocationIterator } from '../../../../mol-geo/util/location-iterator.ts';
 import { LinkCylinderParams, LinkLineParams } from './link.ts';
@@ -26,28 +26,35 @@ export const BondParams = {
     multipleBonds: PD.Select('symmetric', PD.arrayToOptions(['off', 'symmetric', 'offset'] as const)),
 };
 export const DefaultBondProps = PD.getDefaultValues(BondParams);
-export type BondProps = typeof DefaultBondProps
+export type BondProps = typeof DefaultBondProps;
 
 export const BondCylinderParams = {
     ...LinkCylinderParams,
     ...BondParams,
-    adjustCylinderLength: PD.Boolean(false, { description: 'Shorten cylinders to reduce overlap with spheres. Useful for for transparent bonds. Not working well with aromatic bonds.' })
+    adjustCylinderLength: PD.Boolean(false, {
+        description:
+            'Shorten cylinders to reduce overlap with spheres. Useful for for transparent bonds. Not working well with aromatic bonds.',
+    }),
 };
 export const DefaultBondCylinderProps = PD.getDefaultValues(BondCylinderParams);
-export type BondCylinderProps = typeof DefaultBondCylinderProps
+export type BondCylinderProps = typeof DefaultBondCylinderProps;
 
 export const BondLineParams = {
     ...LinkLineParams,
-    ...BondParams
+    ...BondParams,
 };
 export const DefaultBondLineProps = PD.getDefaultValues(BondLineParams);
-export type BondLineProps = typeof DefaultBondLineProps
+export type BondLineProps = typeof DefaultBondLineProps;
 
 export function ignoreBondType(include: BondType.Flag, exclude: BondType.Flag, f: BondType.Flag) {
     return !BondType.is(include, f) || BondType.is(exclude, f);
 }
 
-export function makeIntraBondIgnoreTest(structure: Structure, unit: Unit.Atomic, props: BondProps): undefined | ((edgeIndex: number) => boolean) {
+export function makeIntraBondIgnoreTest(
+    structure: Structure,
+    unit: Unit.Atomic,
+    props: BondProps,
+): undefined | ((edgeIndex: number) => boolean) {
     const elements = unit.elements;
     const bonds = unit.bonds;
     const { a, b, edgeProps } = bonds;
@@ -79,13 +86,19 @@ export function makeIntraBondIgnoreTest(structure: Structure, unit: Unit.Atomic,
 
         if (!ignoreHydrogens) return false;
 
-        if (isHydrogen(structure, unit, elements[aI], ignoreHydrogensVariant) || isHydrogen(structure, unit, elements[bI], ignoreHydrogensVariant)) return true;
+        if (
+            isHydrogen(structure, unit, elements[aI], ignoreHydrogensVariant) ||
+            isHydrogen(structure, unit, elements[bI], ignoreHydrogensVariant)
+        ) return true;
 
         return false;
     };
 }
 
-export function makeInterBondIgnoreTest(structure: Structure, props: BondProps): undefined | ((edgeIndex: number) => boolean) {
+export function makeInterBondIgnoreTest(
+    structure: Structure,
+    props: BondProps,
+): undefined | ((edgeIndex: number) => boolean) {
     const bonds = structure.interUnitBonds;
     const { edges } = bonds;
 
@@ -114,7 +127,10 @@ export function makeInterBondIgnoreTest(structure: Structure, props: BondProps):
             const b = edges[edgeIndex];
             const uA = structure.unitMap.get(b.unitA);
             const uB = structure.unitMap.get(b.unitB);
-            if (isHydrogen(structure, uA, uA.elements[b.indexA], ignoreHydrogensVariant) || isHydrogen(structure, uB, uB.elements[b.indexB], ignoreHydrogensVariant)) return true;
+            if (
+                isHydrogen(structure, uA, uA.elements[b.indexA], ignoreHydrogensVariant) ||
+                isHydrogen(structure, uB, uB.elements[b.indexB], ignoreHydrogensVariant)
+            ) return true;
         }
 
         if (!allBondTypes) {
@@ -125,14 +141,20 @@ export function makeInterBondIgnoreTest(structure: Structure, props: BondProps):
     };
 }
 
-export function hasUnitVisibleBonds(unit: Unit.Atomic, props: { ignoreHydrogens: boolean, ignoreHydrogensVariant: 'all' | 'non-polar' | 'polar' }) {
+export function hasUnitVisibleBonds(
+    unit: Unit.Atomic,
+    props: { ignoreHydrogens: boolean; ignoreHydrogensVariant: 'all' | 'non-polar' | 'polar' },
+) {
     if (Unit.Traits.is(unit.traits, Unit.Trait.Water)) {
         return !props.ignoreHydrogens || props.ignoreHydrogensVariant === 'non-polar';
     }
     return true;
 }
 
-export function hasStructureVisibleBonds(structure: Structure, props: { ignoreHydrogens: boolean, ignoreHydrogensVariant: 'all' | 'non-polar' | 'polar' }) {
+export function hasStructureVisibleBonds(
+    structure: Structure,
+    props: { ignoreHydrogens: boolean; ignoreHydrogensVariant: 'all' | 'non-polar' | 'polar' },
+) {
     for (const { units } of structure.unitSymmetryGroups) {
         if (Unit.isAtomic(units[0]) && hasUnitVisibleBonds(units[0], props)) return true;
     }
@@ -140,7 +162,10 @@ export function hasStructureVisibleBonds(structure: Structure, props: { ignoreHy
 }
 
 export namespace BondIterator {
-    export function fromGroup(structureGroup: StructureGroup, props?: { includeLocation2?: boolean }): LocationIterator {
+    export function fromGroup(
+        structureGroup: StructureGroup,
+        props?: { includeLocation2?: boolean },
+    ): LocationIterator {
         const { group, structure } = structureGroup;
         const unit = group.units[0] as Unit.Atomic;
         const groupCount = Unit.isAtomic(unit) ? unit.bonds.edgeCount * 2 : 0;
@@ -192,11 +217,14 @@ export namespace BondIterator {
                 return location2;
             };
             return LocationIterator(groupCount, instanceCount, 1, getLocation, true, () => false, getLocation2);
-        };
+        }
         return LocationIterator(groupCount, instanceCount, 1, getLocation, true);
     }
 
-    export function fromStructureGroups(structure: Structure, props?: { includeLocation2?: boolean }): LocationIterator {
+    export function fromStructureGroups(
+        structure: Structure,
+        props?: { includeLocation2?: boolean },
+    ): LocationIterator {
         const { bondCount, unitIndex, unitGroupIndex, unitEdgeIndex } = structure.intraUnitBondMapping;
         const groupCount = bondCount;
         const instanceCount = 1;
@@ -224,7 +252,7 @@ export namespace BondIterator {
                 return location2;
             };
             return LocationIterator(groupCount, instanceCount, 1, getLocation, true, () => false, getLocation2);
-        };
+        }
         return LocationIterator(groupCount, instanceCount, 1, getLocation, true);
     }
 }
@@ -246,7 +274,7 @@ export function getIntraBondLoci(pickingId: PickingId, structureGroup: Structure
                 const iB = unit.bonds.b[groupId];
                 return Bond.Loci(target, [
                     Bond.Location(target, unit, iA, target, unit, iB),
-                    Bond.Location(target, unit, iB, target, unit, iA)
+                    Bond.Location(target, unit, iB, target, unit, iA),
                 ]);
             }
         }
@@ -254,7 +282,12 @@ export function getIntraBondLoci(pickingId: PickingId, structureGroup: Structure
     return EmptyLoci;
 }
 
-export function eachIntraBond(loci: Loci, structureGroup: StructureGroup, apply: (interval: Interval) => boolean, isMarking: boolean) {
+export function eachIntraBond(
+    loci: Loci,
+    structureGroup: StructureGroup,
+    apply: (interval: Interval) => boolean,
+    isMarking: boolean,
+) {
     let changed = false;
     if (Bond.isLoci(loci)) {
         const { structure, group } = structureGroup;
@@ -282,7 +315,7 @@ export function eachIntraBond(loci: Loci, structureGroup: StructureGroup, apply:
             const unitIdx = group.unitIndexMap.get(e.unit.id);
             if (unitIdx !== undefined) {
                 const { offset, b } = unit.bonds;
-                OrderedSet.forEach(e.indices, v => {
+                OrderedSet.forEach(e.indices, (v) => {
                     for (let t = offset[v], _t = offset[v + 1]; t < _t; t++) {
                         if (!isMarking || OrderedSet.has(e.indices, b[t])) {
                             if (apply(Interval.ofSingleton(unitIdx * groupCount + t))) changed = true;
@@ -309,7 +342,7 @@ export function getInterBondLoci(pickingId: PickingId, structure: Structure, id:
             const uB = structure.unitMap.get(b.unitB);
             return Bond.Loci(target, [
                 Bond.Location(target, uA, b.indexA, target, uB, b.indexB),
-                Bond.Location(target, uB, b.indexB, target, uA, b.indexA)
+                Bond.Location(target, uB, b.indexB, target, uA, b.indexA),
             ]);
         }
     }
@@ -318,7 +351,12 @@ export function getInterBondLoci(pickingId: PickingId, structure: Structure, id:
 
 const __unitMap = new Map<number, OrderedSet<StructureElement.UnitIndex>>();
 
-export function eachInterBond(loci: Loci, structure: Structure, apply: (interval: Interval) => boolean, isMarking: boolean) {
+export function eachInterBond(
+    loci: Loci,
+    structure: Structure,
+    apply: (interval: Interval) => boolean,
+    isMarking: boolean,
+) {
     let changed = false;
     if (Bond.isLoci(loci)) {
         if (!Structure.areEquivalent(loci.structure, structure)) return false;
@@ -340,7 +378,7 @@ export function eachInterBond(loci: Loci, structure: Structure, apply: (interval
             for (const b of structure.interUnitBonds.getConnectedUnits(unit.id)) {
                 const otherLociIndices = __unitMap.get(b.unitB);
                 if (!isMarking || otherLociIndices) {
-                    OrderedSet.forEach(e.indices, v => {
+                    OrderedSet.forEach(e.indices, (v) => {
                         if (!b.connectedIndices.includes(v)) return;
                         for (const bi of b.getEdges(v)) {
                             if (!isMarking || (otherLociIndices && OrderedSet.has(otherLociIndices, bi.indexB))) {
@@ -367,16 +405,21 @@ export function getStructureGroupsBondLoci(pickingId: PickingId, structure: Stru
         return getIntraBondLoci({
             objectId,
             instanceId: mapping.unitGroupIndex[groupId],
-            groupId: mapping.unitEdgeIndex[groupId]
+            groupId: mapping.unitEdgeIndex[groupId],
         }, {
             structure,
-            group: structure.unitSymmetryGroups[mapping.unitIndex[groupId]]
+            group: structure.unitSymmetryGroups[mapping.unitIndex[groupId]],
         }, id);
     }
     return EmptyLoci;
 }
 
-export function eachStructureGroupsBond(loci: Loci, structure: Structure, apply: (interval: Interval) => boolean, isMarking: boolean) {
+export function eachStructureGroupsBond(
+    loci: Loci,
+    structure: Structure,
+    apply: (interval: Interval) => boolean,
+    isMarking: boolean,
+) {
     const { unitGroupOffset } = structure.intraUnitBondMapping;
 
     let changed = false;
@@ -410,7 +453,7 @@ export function eachStructureGroupsBond(loci: Loci, structure: Structure, apply:
             const unitIdx = group.unitIndexMap.get(e.unit.id);
             if (unitIdx !== undefined) {
                 const { offset, b } = unit.bonds;
-                OrderedSet.forEach(e.indices, v => {
+                OrderedSet.forEach(e.indices, (v) => {
                     for (let t = offset[v], _t = offset[v + 1]; t < _t; t++) {
                         if (!isMarking || OrderedSet.has(e.indices, b[t])) {
                             if (apply(Interval.ofSingleton(unitIdx * groupCount + t + o))) changed = true;

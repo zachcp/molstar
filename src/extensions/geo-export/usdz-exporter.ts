@@ -7,13 +7,13 @@
 
 import { asciiWrite } from '../../mol-io/common/ascii.ts';
 import type { Box3D } from '../../mol-math/geometry.ts';
-import { Vec3, Mat3, Mat4 } from '../../mol-math/linear-algebra.ts';
+import { Mat3, Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { PLUGIN_VERSION } from '../../mol-plugin/version.ts';
 import type { RuntimeContext } from '../../mol-task/index.ts';
 import { StringBuilder } from '../../mol-util/index.ts';
 import { Color } from '../../mol-util/color/color.ts';
 import { zip } from '../../mol-util/zip/zip.ts';
-import { MeshExporter, type AddMeshInput } from './mesh-exporter.ts';
+import { type AddMeshInput, MeshExporter } from './mesh-exporter.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3fromArray = Vec3.fromArray;
@@ -24,8 +24,8 @@ const mat3directionTransform = Mat3.directionTransform;
 // https://graphics.pixar.com/usd/docs/index.html
 
 export type UsdzData = {
-    usdz: ArrayBuffer
-}
+    usdz: ArrayBuffer;
+};
 
 export class UsdzExporter extends MeshExporter<UsdzData> {
     readonly fileExtension = 'usdz';
@@ -41,7 +41,7 @@ export class UsdzExporter extends MeshExporter<UsdzData> {
         const materialKey = this.materialMap.size;
         this.materialMap.set(hash, materialKey);
 
-        const [r, g, b] = Color.toRgbNormalized(color).map(v => Math.round(v * 1000) / 1000);
+        const [r, g, b] = Color.toRgbNormalized(color).map((v) => Math.round(v * 1000) / 1000);
         this.materials.push(`
 def Material "material${materialKey}"
 {
@@ -80,19 +80,37 @@ def Material "material${materialKey}"
 
         let interpolatedColors: Uint8Array | undefined;
         if (webgl && mesh && (colorType === 'volume' || colorType === 'volumeInstance')) {
-            interpolatedColors = UsdzExporter.getInterpolatedColors(webgl, { vertices: mesh.vertices, vertexCount: mesh.vertexCount, values, stride, colorType });
+            interpolatedColors = UsdzExporter.getInterpolatedColors(webgl, {
+                vertices: mesh.vertices,
+                vertexCount: mesh.vertexCount,
+                values,
+                stride,
+                colorType,
+            });
         }
 
         let interpolatedOverpaint: Uint8Array | undefined;
         if (webgl && mesh && overpaintType === 'volumeInstance') {
             const stride = isGeoTexture ? 4 : 3;
-            interpolatedOverpaint = UsdzExporter.getInterpolatedOverpaint(webgl, { vertices: mesh.vertices, vertexCount: mesh.vertexCount, values, stride, colorType: overpaintType });
+            interpolatedOverpaint = UsdzExporter.getInterpolatedOverpaint(webgl, {
+                vertices: mesh.vertices,
+                vertexCount: mesh.vertexCount,
+                values,
+                stride,
+                colorType: overpaintType,
+            });
         }
 
         let interpolatedTransparency: Uint8Array | undefined;
         if (webgl && mesh && transparencyType === 'volumeInstance') {
             const stride = isGeoTexture ? 4 : 3;
-            interpolatedTransparency = UsdzExporter.getInterpolatedTransparency(webgl, { vertices: mesh.vertices, vertexCount: mesh.vertexCount, values, stride, colorType: transparencyType });
+            interpolatedTransparency = UsdzExporter.getInterpolatedTransparency(webgl, {
+                vertices: mesh.vertices,
+                vertexCount: mesh.vertexCount,
+                values,
+                stride,
+                colorType: transparencyType,
+            });
         }
 
         await ctx.update({ isIndeterminate: false, current: 0, max: instanceCount });
@@ -100,7 +118,10 @@ def Material "material${materialKey}"
         for (let instanceIndex = 0; instanceIndex < instanceCount; ++instanceIndex) {
             if (ctx.shouldUpdate) await ctx.update({ current: instanceIndex + 1 });
 
-            const { vertices, normals, indices, groups, vertexCount, drawCount } = UsdzExporter.getInstance(input, instanceIndex);
+            const { vertices, normals, indices, groups, vertexCount, drawCount } = UsdzExporter.getInstance(
+                input,
+                instanceIndex,
+            );
 
             Mat4.fromArray(t, aTransform, instanceIndex * 16);
             Mat4.mul(t, this.centerTransform, t);
@@ -220,10 +241,10 @@ def Mesh "mesh${this.meshes.length}"
         const usdaData = new Uint8Array(usda.length);
         asciiWrite(usdaData, usda);
         const zipDataObj = {
-            ['model.usda']: usdaData
+            ['model.usda']: usdaData,
         };
         return {
-            usdz: await zip(ctx, zipDataObj, true)
+            usdz: await zip(ctx, zipDataObj, true),
         };
     }
 
@@ -238,11 +259,15 @@ def Mesh "mesh${this.meshes.length}"
         // scale the model so that it fits within 1 meter
         Mat4.fromUniformScaling(t, Math.min(1 / (radius * 2), 1));
         // translate the model so that it sits on the ground plane (y = 0)
-        Mat4.translate(t, t, Vec3.create(
-            -(boundingBox.min[0] + boundingBox.max[0]) / 2,
-            -boundingBox.min[1],
-            -(boundingBox.min[2] + boundingBox.max[2]) / 2
-        ));
+        Mat4.translate(
+            t,
+            t,
+            Vec3.create(
+                -(boundingBox.min[0] + boundingBox.max[0]) / 2,
+                -boundingBox.min[1],
+                -(boundingBox.min[2] + boundingBox.max[2]) / 2,
+            ),
+        );
         this.centerTransform = t;
     }
 }

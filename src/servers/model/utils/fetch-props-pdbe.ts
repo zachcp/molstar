@@ -14,15 +14,15 @@ import { PerformanceMonitor } from '../../../mol-util/performance-monitor.ts';
 
 const cmdParser = new argparse.ArgumentParser({
     add_help: true,
-    description: 'Download JSON data from PDBe API'
+    description: 'Download JSON data from PDBe API',
 });
 
 cmdParser.add_argument('--in', { help: 'Input folder', required: true });
 cmdParser.add_argument('--out', { help: 'Output folder', required: true });
 
 interface CmdArgs {
-    in: string,
-    out: string
+    in: string;
+    out: string;
 }
 
 const cmdArgs = cmdParser.parse_args() as CmdArgs;
@@ -51,7 +51,7 @@ function findEntries() {
         }
     }
 
-    const ret: { key: string, entries: string[] }[] = [];
+    const ret: { key: string; entries: string[] }[] = [];
     for (const key of keys) {
         ret.push({ key, entries: groups.get(key)! });
     }
@@ -71,9 +71,11 @@ async function process() {
         const data = Object.create(null);
 
         for (const ee of e.entries) {
-            const query = await fetch(`https://www.ebi.ac.uk/pdbe/api/validation/residuewise_outlier_summary/entry/${ee}`);
+            const query = await fetch(
+                `https://www.ebi.ac.uk/pdbe/api/validation/residuewise_outlier_summary/entry/${ee}`,
+            );
             try {
-                if (query.status === 200) data[ee] = ((await query.json()) as any)[ee] || { };
+                if (query.status === 200) data[ee] = ((await query.json()) as any)[ee] || {};
                 else console.error(ee, query.status);
             } catch (e) {
                 console.error(ee, '' + e);
@@ -84,7 +86,11 @@ async function process() {
         // const data = await query.text();
         fs.writeFileSync(path.join(cmdArgs.out, e.key + '.json'), JSON.stringify(data));
         const time = now() - started;
-        console.log(`${++prog}/${entries.length} in ${PerformanceMonitor.format(time)} (last ${PerformanceMonitor.format(now() - ts)}, avg ${PerformanceMonitor.format(time / prog)})`);
+        console.log(
+            `${++prog}/${entries.length} in ${PerformanceMonitor.format(time)} (last ${
+                PerformanceMonitor.format(now() - ts)
+            }, avg ${PerformanceMonitor.format(time / prog)})`,
+        );
     }
 }
 

@@ -9,19 +9,22 @@ export namespace TunnelsData {
 
 export const TunnelsDataParams = {
     serverType: PD.Select('pdb', [['pdb', 'pdb']] as const),
-    serverUrl: PD.Text(TunnelsData.DefaultServerUrl)
+    serverUrl: PD.Text(TunnelsData.DefaultServerUrl),
 };
-export type TunnelsDataParams = typeof TunnelsDataParams
+export type TunnelsDataParams = typeof TunnelsDataParams;
 
 export const TunnelsServerConfig = {
     DefaultServerUrl: new PluginConfigItem('channelsdb-server', 'https://channelsdb2.biodata.ceitec.cz/api'),
-    DefaultServerType: new PluginConfigItem<'pdb'>('serverType', 'pdb')
+    DefaultServerType: new PluginConfigItem<'pdb'>('serverType', 'pdb'),
 };
 
-export function getTunnelsConfig(plugin: PluginContext): { [key in keyof typeof TunnelsServerConfig]: NonNullable<typeof TunnelsServerConfig[key]['defaultValue']> } {
+export function getTunnelsConfig(
+    plugin: PluginContext,
+): { [key in keyof typeof TunnelsServerConfig]: NonNullable<typeof TunnelsServerConfig[key]['defaultValue']> } {
     return {
-        DefaultServerUrl: plugin.config.get(TunnelsServerConfig.DefaultServerUrl) ?? TunnelsServerConfig.DefaultServerUrl.defaultValue ?? TunnelsData.DefaultServerUrl,
-        DefaultServerType: plugin.config.get(TunnelsServerConfig.DefaultServerType) ?? TunnelsServerConfig.DefaultServerType.defaultValue ?? TunnelsData.DefaultServerType,
+        DefaultServerUrl: plugin.config.get(TunnelsServerConfig.DefaultServerUrl) ??
+            TunnelsServerConfig.DefaultServerUrl.defaultValue ?? TunnelsData.DefaultServerUrl,
+        DefaultServerType: plugin.config.get(TunnelsServerConfig.DefaultServerType) ??
+            TunnelsServerConfig.DefaultServerType.defaultValue ?? TunnelsData.DefaultServerType,
     };
 }
-

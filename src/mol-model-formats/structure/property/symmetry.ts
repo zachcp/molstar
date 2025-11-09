@@ -7,7 +7,7 @@
 
 import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
 import { Spacegroup, SpacegroupCell, SymmetryOperator } from '../../../mol-math/geometry.ts';
-import { Tensor, Vec3, Mat3 } from '../../../mol-math/linear-algebra.ts';
+import { Mat3, Tensor, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import type { Symmetry } from '../../../mol-model/structure/model/properties/symmetry.ts';
 import { createAssemblies } from './assembly.ts';
 import type { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
@@ -24,20 +24,29 @@ namespace ModelSymmetry {
     export const Provider = FormatPropertyProvider.create<Symmetry>(Descriptor);
 
     type Data = {
-        symmetry: Table<mmCIF_Schema['symmetry']>
-        cell: Table<mmCIF_Schema['cell']>
-        struct_ncs_oper: Table<mmCIF_Schema['struct_ncs_oper']>
-        atom_sites: Table<mmCIF_Schema['atom_sites']>
-        pdbx_struct_assembly: Table<mmCIF_Schema['pdbx_struct_assembly']>
-        pdbx_struct_assembly_gen: Table<mmCIF_Schema['pdbx_struct_assembly_gen']>
-        pdbx_struct_oper_list: Table<mmCIF_Schema['pdbx_struct_oper_list']>
-    }
+        symmetry: Table<mmCIF_Schema['symmetry']>;
+        cell: Table<mmCIF_Schema['cell']>;
+        struct_ncs_oper: Table<mmCIF_Schema['struct_ncs_oper']>;
+        atom_sites: Table<mmCIF_Schema['atom_sites']>;
+        pdbx_struct_assembly: Table<mmCIF_Schema['pdbx_struct_assembly']>;
+        pdbx_struct_assembly_gen: Table<mmCIF_Schema['pdbx_struct_assembly_gen']>;
+        pdbx_struct_oper_list: Table<mmCIF_Schema['pdbx_struct_oper_list']>;
+    };
 
     export function fromData(data: Data): Symmetry {
-        const assemblies = createAssemblies(data.pdbx_struct_assembly, data.pdbx_struct_assembly_gen, data.pdbx_struct_oper_list);
+        const assemblies = createAssemblies(
+            data.pdbx_struct_assembly,
+            data.pdbx_struct_assembly_gen,
+            data.pdbx_struct_oper_list,
+        );
         const spacegroup = getSpacegroup(data.symmetry, data.cell);
         const isNonStandardCrystalFrame = checkNonStandardCrystalFrame(data.atom_sites, spacegroup);
-        return { assemblies, spacegroup, isNonStandardCrystalFrame, ncsOperators: getNcsOperators(data.struct_ncs_oper) };
+        return {
+            assemblies,
+            spacegroup,
+            isNonStandardCrystalFrame,
+            ncsOperators: getNcsOperators(data.struct_ncs_oper),
+        };
     }
 
     export function fromCell(size: Vec3, anglesInRadians: Vec3): Symmetry {
@@ -75,9 +84,11 @@ function getSpacegroup(symmetry: Table<mmCIF_Schema['symmetry']>, cell: Table<mm
     if (alpha === 0 || beta === 0 || gamma === 0) return Spacegroup.ZeroP1;
 
     const nameOrNumber = getSpacegroupNameOrNumber(symmetry);
-    const spaceCell = SpacegroupCell.create(nameOrNumber,
+    const spaceCell = SpacegroupCell.create(
+        nameOrNumber,
         Vec3.create(a, b, c),
-        Vec3.scale(Vec3(), Vec3.create(alpha, beta, gamma), Math.PI / 180));
+        Vec3.scale(Vec3(), Vec3.create(alpha, beta, gamma), Math.PI / 180),
+    );
 
     return Spacegroup.create(spaceCell);
 }
@@ -86,7 +97,8 @@ function getNcsOperators(struct_ncs_oper: Table<mmCIF_Schema['struct_ncs_oper']>
     if (struct_ncs_oper._rowCount === 0) return void 0;
     const { id, matrix, vector } = struct_ncs_oper;
 
-    const matrixSpace = mmCIF_Schema.struct_ncs_oper.matrix.space, vectorSpace = mmCIF_Schema.struct_ncs_oper.vector.space;
+    const matrixSpace = mmCIF_Schema.struct_ncs_oper.matrix.space,
+        vectorSpace = mmCIF_Schema.struct_ncs_oper.vector.space;
 
     const opers: SymmetryOperator[] = [];
     for (let i = 0; i < struct_ncs_oper._rowCount; i++) {

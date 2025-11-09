@@ -10,15 +10,13 @@ import type { MVSData } from './mvs-data.ts';
 /**
  * Creates an MVSX zip file with from the provided data and assets
  */
-export async function createMVSX(data: MVSData, assets: { name: string, content: string | Uint8Array<ArrayBuffer> }[]) {
+export async function createMVSX(data: MVSData, assets: { name: string; content: string | Uint8Array<ArrayBuffer> }[]) {
     const encoder = new TextEncoder();
     const files: Record<string, Uint8Array<ArrayBuffer>> = {
         'index.mvsj': encoder.encode(JSON.stringify(data)),
     };
     for (const asset of assets) {
-        files[asset.name] = typeof asset.content === 'string'
-            ? encoder.encode(asset.content)
-            : asset.content;
+        files[asset.name] = typeof asset.content === 'string' ? encoder.encode(asset.content) : asset.content;
     }
 
     const zip = await Zip(files).run();

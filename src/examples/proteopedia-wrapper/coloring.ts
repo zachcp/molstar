@@ -5,8 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-
-import { Unit, StructureProperties, StructureElement, Bond } from '../../mol-model/structure.ts';
+import { Bond, StructureElement, StructureProperties, Unit } from '../../mol-model/structure.ts';
 
 import { Color } from '../../mol-util/color/index.ts';
 import type { Location } from '../../mol-model/location.ts';
@@ -19,10 +18,11 @@ const Description = 'Gives every chain a color from a list based on its `asym_id
 
 export function createProteopediaCustomTheme(colors: number[]) {
     const ProteopediaCustomColorThemeParams = {
-        colors: PD.ObjectList({ color: PD.Color(Color(0xffffff)) }, ({ color }) => Color.toHexString(color),
-            { defaultValue: colors.map(c => ({ color: Color(c) })) })
+        colors: PD.ObjectList({ color: PD.Color(Color(0xffffff)) }, ({ color }) => Color.toHexString(color), {
+            defaultValue: colors.map((c) => ({ color: Color(c) })),
+        }),
     };
-    type ProteopediaCustomColorThemeParams = typeof ProteopediaCustomColorThemeParams
+    type ProteopediaCustomColorThemeParams = typeof ProteopediaCustomColorThemeParams;
     function getChainIdColorThemeParams(ctx: ThemeDataContext) {
         return ProteopediaCustomColorThemeParams; // TODO return copy
     }
@@ -48,7 +48,10 @@ export function createProteopediaCustomTheme(colors: number[]) {
         }
     }
 
-    function ProteopediaCustomColorTheme(ctx: ThemeDataContext, props: PD.Values<ProteopediaCustomColorThemeParams>): ColorTheme<ProteopediaCustomColorThemeParams> {
+    function ProteopediaCustomColorTheme(
+        ctx: ThemeDataContext,
+        props: PD.Values<ProteopediaCustomColorThemeParams>,
+    ): ColorTheme<ProteopediaCustomColorThemeParams> {
         let color: LocationColor;
 
         const colors = props.colors, colorCount = colors.length, defaultColor = colors[0].color;
@@ -90,7 +93,7 @@ export function createProteopediaCustomTheme(colors: number[]) {
             color,
             props,
             description: Description,
-            legend: undefined
+            legend: undefined,
         };
     }
 
@@ -101,6 +104,6 @@ export function createProteopediaCustomTheme(colors: number[]) {
         factory: ProteopediaCustomColorTheme,
         getParams: getChainIdColorThemeParams,
         defaultValues: PD.getDefaultValues(ProteopediaCustomColorThemeParams),
-        isApplicable: (ctx: ThemeDataContext) => !!ctx.structure
+        isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
     };
 }

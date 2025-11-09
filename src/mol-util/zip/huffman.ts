@@ -10,12 +10,12 @@
 import type { NumberArray } from '../type-helpers.ts';
 
 export type HufTree = {
-    lit: number,
-    f: number,
-    l?: HufTree,
-    r?: HufTree,
-    d: number
-}
+    lit: number;
+    f: number;
+    l?: HufTree;
+    r?: HufTree;
+    d: number;
+};
 export function _hufTree(hst: NumberArray, tree: number[], MAXL: number) {
     const list: HufTree[] = [];
     const hl = hst.length, tl = tree.length;
@@ -32,14 +32,16 @@ export function _hufTree(hst: NumberArray, tree: number[], MAXL: number) {
         tree[(l2 << 1) + 1] = 1;
         return 1;
     }
-    list.sort(function (a, b) { return a.f - b.f; });
+    list.sort(function (a, b) {
+        return a.f - b.f;
+    });
     let a = list[0], b = list[1], i0 = 0, i1 = 1, i2 = 2;
     list[0] = {
         lit: -1,
         f: a.f + b.f,
         l: a,
         r: b,
-        d: 0
+        d: 0,
     };
     while (i1 !== end - 1) {
         if (i0 !== i1 && (i2 === end || list[i0].f < list[i2].f)) {
@@ -57,7 +59,7 @@ export function _hufTree(hst: NumberArray, tree: number[], MAXL: number) {
             f: a.f + b.f,
             l: a,
             r: b,
-            d: undefined as any
+            d: undefined as any,
         };
     }
     let maxl = setDepth(list[i1 - 1], 0);
@@ -80,7 +82,9 @@ function setDepth(t: HufTree, d: number): number {
 function restrictDepth(dps: HufTree[], MD: number, maxl: number) {
     let i = 0, dbt = 0;
     const bCost = 1 << (maxl - MD);
-    dps.sort(function (a: HufTree, b: HufTree) { return b.d === a.d ? a.f - b.f : b.d - a.d; });
+    dps.sort(function (a: HufTree, b: HufTree) {
+        return b.d === a.d ? a.f - b.f : b.d - a.d;
+    });
 
     for (i = 0; i < dps.length; i++) {
         if (dps[i].d > MD) {
@@ -96,7 +100,7 @@ function restrictDepth(dps: HufTree[], MD: number, maxl: number) {
         const od = dps[i].d;
         if (od < MD) {
             dps[i].d++;
-            dbt -= (1 << (MD - od - 1));
+            dbt -= 1 << (MD - od - 1);
         } else {
             i++;
         }

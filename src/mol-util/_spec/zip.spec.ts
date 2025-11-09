@@ -17,7 +17,7 @@ describe('zip', () => {
 
     it('roundtrip zip/unzip', async () => {
         const data = {
-            'test.foo': new Uint8Array([1, 2, 3, 4, 5, 6, 7])
+            'test.foo': new Uint8Array([1, 2, 3, 4, 5, 6, 7]),
         };
         const zipped = await zip(SyncRuntimeContext, data);
         const unzipped = await unzip(SyncRuntimeContext, zipped);

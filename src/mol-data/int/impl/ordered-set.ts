@@ -8,8 +8,8 @@
 import { SortedArray as S } from '../sorted-array.ts';
 import { Interval as I } from '../interval.ts';
 
-type OrderedSetImpl = I | S
-type Nums = ArrayLike<number>
+type OrderedSetImpl = I | S;
+type Nums = ArrayLike<number>;
 
 export const Empty: OrderedSetImpl = I.Empty;
 
@@ -24,21 +24,43 @@ export function ofSortedArray(xs: Nums): OrderedSetImpl {
     return xs as any;
 }
 
-export function size(set: OrderedSetImpl): number { return I.is(set) ? I.size(set) : S.size(set); }
-export function has(set: OrderedSetImpl, x: number): boolean { return I.is(set) ? I.has(set, x) : S.has(set, x); }
+export function size(set: OrderedSetImpl): number {
+    return I.is(set) ? I.size(set) : S.size(set);
+}
+export function has(set: OrderedSetImpl, x: number): boolean {
+    return I.is(set) ? I.has(set, x) : S.has(set, x);
+}
 /** Returns the index of `x` in `set` or -1 if not found. */
-export function indexOf(set: OrderedSetImpl, x: number) { return I.is(set) ? I.indexOf(set, x) : S.indexOf(set, x); }
-export function getAt(set: OrderedSetImpl, i: number) { return I.is(set) ? I.getAt(set, i) : set[i]; }
-export function min(set: OrderedSetImpl) { return I.is(set) ? I.min(set) : S.min(set); }
-export function max(set: OrderedSetImpl) { return I.is(set) ? I.max(set) : S.max(set); }
-export function start(set: OrderedSetImpl) { return I.is(set) ? I.start(set) : S.start(set); }
-export function end(set: OrderedSetImpl) { return I.is(set) ? I.end(set) : S.end(set); }
-export function isEmpty(set: OrderedSetImpl): boolean { return size(set) === 0; }
+export function indexOf(set: OrderedSetImpl, x: number) {
+    return I.is(set) ? I.indexOf(set, x) : S.indexOf(set, x);
+}
+export function getAt(set: OrderedSetImpl, i: number) {
+    return I.is(set) ? I.getAt(set, i) : set[i];
+}
+export function min(set: OrderedSetImpl) {
+    return I.is(set) ? I.min(set) : S.min(set);
+}
+export function max(set: OrderedSetImpl) {
+    return I.is(set) ? I.max(set) : S.max(set);
+}
+export function start(set: OrderedSetImpl) {
+    return I.is(set) ? I.start(set) : S.start(set);
+}
+export function end(set: OrderedSetImpl) {
+    return I.is(set) ? I.end(set) : S.end(set);
+}
+export function isEmpty(set: OrderedSetImpl): boolean {
+    return size(set) === 0;
+}
 
-export function hashCode(set: OrderedSetImpl) { return I.is(set) ? I.hashCode(set) : S.hashCode(set); }
+export function hashCode(set: OrderedSetImpl) {
+    return I.is(set) ? I.hashCode(set) : S.hashCode(set);
+}
 // TODO: possibly add more hash functions to allow for multilevel hashing.
 
-export function toString(set: OrderedSetImpl): string { return I.is(set) ? I.toString(set) : S.toString(set); }
+export function toString(set: OrderedSetImpl): string {
+    return I.is(set) ? I.toString(set) : S.toString(set);
+}
 
 export function areEqual(a: OrderedSetImpl, b: OrderedSetImpl): boolean {
     if (I.is(a)) {
@@ -70,7 +92,9 @@ export function findPredecessorIndex(set: OrderedSetImpl, x: number) {
 }
 
 export function findPredecessorIndexInInterval(set: OrderedSetImpl, x: number, bounds: I) {
-    return I.is(set) ? I.findPredecessorIndexInInterval(set, x, bounds) : S.findPredecessorIndexInInterval(set, x, bounds);
+    return I.is(set)
+        ? I.findPredecessorIndexInInterval(set, x, bounds)
+        : S.findPredecessorIndexInInterval(set, x, bounds);
 }
 
 export function findRange(set: OrderedSetImpl, min: number, max: number) {
@@ -109,7 +133,9 @@ export function subtract(a: OrderedSetImpl, b: OrderedSetImpl) {
     return ofSortedArray(S.subtract(a, b));
 }
 
-function areEqualIS(a: I, b: S) { return I.size(a) === S.size(b) && I.start(a) === S.start(b) && I.end(a) === S.end(b); }
+function areEqualIS(a: I, b: S) {
+    return I.size(a) === S.size(b) && I.start(a) === S.start(b) && I.end(a) === S.end(b);
+}
 
 function areIntersectingSI(a: S, b: I) {
     return a.length !== 0 && I.size(S.findRange(a, I.min(b), I.max(b))) !== 0;
@@ -153,9 +179,15 @@ function unionII(a: I, b: I) {
     if (areRangesIntersecting(a, b)) return I.ofRange(Math.min(minA, minB), Math.max(I.max(a), I.max(b)));
     let lSize, lMin, rSize, rMin;
     if (minA < minB) {
-        lSize = sizeA; lMin = minA; rSize = sizeB; rMin = minB;
+        lSize = sizeA;
+        lMin = minA;
+        rSize = sizeB;
+        rMin = minB;
     } else {
-        lSize = sizeB; lMin = minB; rSize = sizeA; rMin = minA;
+        lSize = sizeB;
+        lMin = minB;
+        rSize = sizeA;
+        rMin = minA;
     }
     const arr = new Int32Array(sizeA + sizeB);
     for (let i = 0; i < lSize; i++) arr[i] = i + lMin;
@@ -293,7 +325,12 @@ export function forEach(set: OrderedSetImpl, f: (value: number, i: number, ctx: 
     return ctx;
 }
 
-export function forEachSegment(set: OrderedSetImpl, segment: (v: number) => number, f: (value: number, segIndex: number, ctx: any) => void, ctx: any) {
+export function forEachSegment(
+    set: OrderedSetImpl,
+    segment: (v: number) => number,
+    f: (value: number, segIndex: number, ctx: any) => void,
+    ctx: any,
+) {
     if (I.is(set)) {
         let sI = 0;
         for (let i = I.min(set), _i = I.max(set); i <= _i; i++) {
@@ -338,7 +375,9 @@ export function indexedIntersect(idxA: OrderedSetImpl, a: S, b: S): OrderedSetIm
         } else if (x > y) {
             j++;
         } else {
-            commonCount++; O++; j++;
+            commonCount++;
+            O++;
+            j++;
         }
     }
 
@@ -359,7 +398,9 @@ export function indexedIntersect(idxA: OrderedSetImpl, a: S, b: S): OrderedSetIm
         } else if (x > y) {
             j++;
         } else {
-            indices[offset++] = j; O++; j++;
+            indices[offset++] = j;
+            O++;
+            j++;
         }
     }
 

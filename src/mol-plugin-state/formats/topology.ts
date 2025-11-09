@@ -25,7 +25,7 @@ const PsfProvider = DataFormatProvider({
         await format.commit();
 
         return { format: format.selector, topology: topology.selector };
-    }
+    },
 });
 type PsfProvider = typeof PsfProvider;
 
@@ -44,7 +44,7 @@ const PrmtopProvider = DataFormatProvider({
         await format.commit();
 
         return { format: format.selector, topology: topology.selector };
-    }
+    },
 });
 type PrmtopProvider = typeof PrmtopProvider;
 
@@ -63,7 +63,7 @@ const TopProvider = DataFormatProvider({
         await format.commit();
 
         return { format: format.selector, topology: topology.selector };
-    }
+    },
 });
 type TopProvider = typeof TopProvider;
 
@@ -75,4 +75,4 @@ export const BuiltInTopologyFormats = [
     ['top', TopProvider] as const,
 ] as const;
 
-export type BuiltInTopologyFormat = (typeof BuiltInTopologyFormats)[number][0]
+export type BuiltInTopologyFormat = (typeof BuiltInTopologyFormats)[number][0];

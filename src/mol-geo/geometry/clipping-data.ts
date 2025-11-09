@@ -6,17 +6,17 @@
 
 import { ValueCell } from '../../mol-util/value-cell.ts';
 import { Vec2 } from '../../mol-math/linear-algebra.ts';
-import { type TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
+import { createTextureImage, type TextureImage } from '../../mol-gl/renderable/util.ts';
 import type { Clipping } from '../../mol-theme/clipping.ts';
 
 export type ClippingType = 'instance' | 'groupInstance';
 
 export type ClippingData = {
-    tClipping: ValueCell<TextureImage<Uint8Array>>
-    uClippingTexDim: ValueCell<Vec2>
-    dClipping: ValueCell<boolean>
-    dClippingType: ValueCell<string>
-}
+    tClipping: ValueCell<TextureImage<Uint8Array>>;
+    uClippingTexDim: ValueCell<Vec2>;
+    dClipping: ValueCell<boolean>;
+    dClippingType: ValueCell<string>;
+};
 
 export function applyClippingGroups(array: Uint8Array, start: number, end: number, groups: Clipping.Groups) {
     array.fill(groups, start, end);
@@ -28,7 +28,12 @@ export function clearClipping(array: Uint8Array, start: number, end: number) {
 }
 
 export function createClipping(count: number, type: ClippingType, clippingData?: ClippingData): ClippingData {
-    const clipping = createTextureImage(Math.max(1, count), 1, Uint8Array, clippingData && clippingData.tClipping.ref.value.array);
+    const clipping = createTextureImage(
+        Math.max(1, count),
+        1,
+        Uint8Array,
+        clippingData && clippingData.tClipping.ref.value.array,
+    );
     if (clippingData) {
         ValueCell.update(clippingData.tClipping, clipping);
         ValueCell.update(clippingData.uClippingTexDim, Vec2.create(clipping.width, clipping.height));

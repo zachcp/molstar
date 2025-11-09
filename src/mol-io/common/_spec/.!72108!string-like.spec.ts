@@ -1,6 +1,5 @@
 import type { ChunkedBigString } from '../string-like';
-import type { Buffer } from "node:buffer";
-
+import type { Buffer } from 'node:buffer';
 
 const SAMPLE_ASCII = `Basketball is a team sport in which two teams, most commonly 
 of five players each, opposing one another on a rectangular court, compete with 
@@ -31,4 +30,3 @@ zeleniny. Na počátku 21. století se však objevily snahy o opětovné zaháje
 provozu. Vaří se zde pivo značky Albrecht. Slavnostní otevření pivovaru spolu 
 s jeho požehnáním proběhlo v červenci 2014.
 `;
-

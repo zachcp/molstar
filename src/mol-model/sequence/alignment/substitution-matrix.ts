@@ -29,7 +29,7 @@ const blosum62x = [
     [0, -1, -1, -1, -2, -2, -2, -1, -1, -1, -1, 0, -1, -1, -1, 1, 5, 0, -2, -2], // T
     [0, -1, -3, -2, -1, -3, -3, 3, -2, 1, 1, -3, -2, -2, -3, -2, 0, 4, -3, -1], // V
     [-3, -2, -4, -3, 1, -2, -2, -3, -3, -2, -1, -4, -4, -2, -3, -3, -2, -3, 11, 2], // W
-    [-2, -2, -3, -2, 3, -3, 2, -1, -2, -1, -1, -2, -3, -1, -2, -2, -2, -1, 2, 7] // Y
+    [-2, -2, -3, -2, 3, -3, 2, -1, -2, -1, -1, -2, -3, -1, -2, -2, -2, -1, 2, 7], // Y
 ];
 
 const blosum62 = [
@@ -56,7 +56,7 @@ const blosum62 = [
     [0, -3, -3, -3, -1, -2, -2, -3, -3, 3, 1, -2, 1, -1, -2, -2, 0, -3, -1, 4, -3, -2, -1], // V
     [-2, -1, 3, 4, -3, 0, 1, -1, 0, -3, -4, 0, -3, -3, -2, 0, -1, -4, -3, -3, 4, 1, -1], // B
     [-1, 0, 0, 1, -3, 3, 4, -2, 0, -3, -3, 1, -1, -3, -1, 0, -1, -3, -2, -2, 1, 4, -1], // Z
-    [0, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, 0, 0, -2, -1, -1, -1, -1, -1] // X
+    [0, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, 0, 0, -2, -1, -1, -1, -1, -1], // X
 ];
 
 export type SubstitutionMatrixData = Readonly<{ [k: string]: Readonly<{ [k: string]: number }> }>;
@@ -65,10 +65,10 @@ function prepareMatrix(cellNames: string, mat: number[][]): SubstitutionMatrixDa
     let j: number;
     let i = 0;
     const matDict: Mutable<SubstitutionMatrixData> = {};
-    mat.forEach(row => {
+    mat.forEach((row) => {
         j = 0;
         const rowDict: { [k: string]: number } = {};
-        row.forEach(elm => rowDict[cellNames[j++]] = elm);
+        row.forEach((elm) => rowDict[cellNames[j++]] = elm);
         matDict[cellNames[i++]] = rowDict;
     });
     return matDict;
@@ -76,6 +76,6 @@ function prepareMatrix(cellNames: string, mat: number[][]): SubstitutionMatrixDa
 
 export const SubstitutionMatrices = (() => ({
     blosum62: prepareMatrix(aminoacids, blosum62),
-    blosum62x: prepareMatrix(aminoacidsX, blosum62x)
+    blosum62x: prepareMatrix(aminoacidsX, blosum62x),
 }))();
 export type SubstitutionMatrix = keyof typeof SubstitutionMatrices;

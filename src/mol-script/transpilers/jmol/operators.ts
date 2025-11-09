@@ -19,7 +19,10 @@ export const operators: OperatorList = [
         '@examples': ['not ARG'],
         name: 'not',
         type: h.prefix,
-        rule: P.MonadicParser.alt(P.MonadicParser.regex(/NOT/i).skip(P.MonadicParser.whitespace), P.MonadicParser.string('!').skip(P.MonadicParser.optWhitespace)),
+        rule: P.MonadicParser.alt(
+            P.MonadicParser.regex(/NOT/i).skip(P.MonadicParser.whitespace),
+            P.MonadicParser.string('!').skip(P.MonadicParser.optWhitespace),
+        ),
         map: (op, selection) => h.invertExpr(selection),
     },
     {
@@ -28,7 +31,7 @@ export const operators: OperatorList = [
         name: 'and',
         type: h.binaryLeft,
         rule: h.infixOp(/AND|&/i),
-        map: (op, selection, by) => B.struct.modifier.intersectBy({ 0: selection, by })
+        map: (op, selection, by) => B.struct.modifier.intersectBy({ 0: selection, by }),
     },
     {
         '@desc': 'Selects atoms included in either s1 or s2.',
@@ -36,7 +39,6 @@ export const operators: OperatorList = [
         name: 'or',
         type: h.binaryLeft,
         rule: h.infixOp(/OR|\||,/i),
-        map: (op, s1, s2) => B.struct.combinator.merge([s1, s2])
-    }
+        map: (op, s1, s2) => B.struct.combinator.merge([s1, s2]),
+    },
 ];
-

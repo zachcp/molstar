@@ -34,14 +34,22 @@
     <body>
         <div id="viewer"></div>
         <div id="links">
-            <a href="#" id="mvs-data" filename="ihm-restraints.mvsj">Download MVS State</a> | <a href="https://github.com/molstar/molstar/tree/master/src/examples/ihm-restraints" id="mvs-data" target="_blank" rel="noopener noreferrer">Source Code</a>
-        </div> 
+            <a href="#" id="mvs-data" filename="ihm-restraints.mvsj">Download MVS State</a> | <a
+                href="https://github.com/molstar/molstar/tree/master/src/examples/ihm-restraints"
+                id="mvs-data"
+                target="_blank"
+                rel="noopener noreferrer"
+            >Source Code</a>
+        </div>
         <script>
-            loadIHMRestraints(document.getElementById('viewer')).then(state => {
+            loadIHMRestraints(document.getElementById('viewer')).then((state) => {
                 document.getElementById('mvs-data').addEventListener('click', (e) => {
                     e.preventDefault();
                     const data = JSON.stringify(state, null, 2);
-                    molStarDownload(new Blob([data], { type: 'application/json' }), 'ihm-restraints.mvsj');
+                    molStarDownload(
+                        new Blob([data], { type: 'application/json' }),
+                        'ihm-restraints.mvsj',
+                    );
                 });
             });
         </script>

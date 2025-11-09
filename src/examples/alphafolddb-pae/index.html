@@ -39,19 +39,23 @@
         <script type="text/javascript" src="./index.js"></script>
     </head>
     <body>
-        <div id='controls'>
-            <input type='text' id='af-id' value='Q8W3K0' />
-            <button id='af-load'>Load</button>
+        <div id="controls">
+            <input type="text" id="af-id" value="Q8W3K0" />
+            <button id="af-load">Load</button>
         </div>
-        <div id='app'></div>
-        <div id='plot'></div>
+        <div id="app"></div>
+        <div id="plot"></div>
         <script>
-            AlphaFoldPAEExample.init({ pluginContainerId: 'app', plotContainerId: 'plot' }).then(example => {
-                example.load('Q8W3K0')
-            });
+            AlphaFoldPAEExample.init({ pluginContainerId: 'app', plotContainerId: 'plot' }).then(
+                (example) => {
+                    example.load('Q8W3K0');
+                },
+            );
 
-            function $(id) { return document.getElementById(id); }
-            $('af-load').onclick = () => AlphaFoldPAEExample.load($('af-id').value)
+            function $(id) {
+                return document.getElementById(id);
+            }
+            $('af-load').onclick = () => AlphaFoldPAEExample.load($('af-id').value);
         </script>
         <!-- __MOLSTAR_ANALYTICS__ -->
     </body>

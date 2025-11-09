@@ -32,7 +32,7 @@ function generateTables() {
         } else if (e < -14) { // small number (denorm)
             baseTable[i] = 0x0400 >> (-e - 14);
             baseTable[i | 0x100] = (0x0400 >> (-e - 14)) | 0x8000;
-            shiftTable[i] = - e - 1;
+            shiftTable[i] = -e - 1;
             shiftTable[i | 0x100] = -e - 1;
         } else if (e <= 15) { // normal number
             baseTable[i] = (e + 15) << 10;
@@ -67,7 +67,7 @@ function generateTables() {
             e -= 0x00800000; // decrement exponent
         }
 
-        m &= ~ 0x00800000; // clear leading 1 bit
+        m &= ~0x00800000; // clear leading 1 bit
         e += 0x38800000; // adjust bias
 
         mantissaTable[i] = m | e;
@@ -103,7 +103,7 @@ function generateTables() {
         shiftTable,
         mantissaTable,
         exponentTable,
-        offsetTable
+        offsetTable,
     };
 }
 

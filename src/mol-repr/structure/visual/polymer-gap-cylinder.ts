@@ -7,15 +7,20 @@
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import type { VisualContext } from '../../visual.ts';
-import type { Unit, Structure } from '../../../mol-model/structure.ts';
+import type { Structure, Unit } from '../../../mol-model/structure.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import type { CylinderProps } from '../../../mol-geo/primitive/cylinder.ts';
-import { PolymerGapIterator, PolymerGapLocationIterator, getPolymerGapElementLoci, eachPolymerGapElement } from './util/polymer.ts';
+import {
+    eachPolymerGapElement,
+    getPolymerGapElementLoci,
+    PolymerGapIterator,
+    PolymerGapLocationIterator,
+} from './util/polymer.ts';
 import { addFixedCountDashedCylinder } from '../../../mol-geo/geometry/mesh/builder/cylinder.ts';
-import { UnitsMeshParams, type UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
+import { UnitsMeshParams, UnitsMeshVisual, type UnitsVisual } from '../units-visual.ts';
 import type { VisualUpdateState } from '../../util.ts';
 import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
@@ -29,13 +34,20 @@ export const PolymerGapCylinderParams = {
     radialSegments: PD.Numeric(16, { min: 2, max: 56, step: 2 }, BaseGeometry.CustomQualityParamInfo),
 };
 export const DefaultPolymerGapCylinderProps = PD.getDefaultValues(PolymerGapCylinderParams);
-export type PolymerGapCylinderProps = typeof DefaultPolymerGapCylinderProps
+export type PolymerGapCylinderProps = typeof DefaultPolymerGapCylinderProps;
 
 // const triangularPyramid = TriangularPyramid()
 // const t = Mat4.identity()
 // const pd = Vec3.zero()
 
-function createPolymerGapCylinderMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PolymerGapCylinderProps, mesh?: Mesh) {
+function createPolymerGapCylinderMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PolymerGapCylinderProps,
+    mesh?: Mesh,
+) {
     const polymerGapCount = unit.gapElements.length;
     if (!polymerGapCount) return Mesh.createEmpty(mesh);
 
@@ -47,7 +59,11 @@ function createPolymerGapCylinderMesh(ctx: VisualContext, unit: Unit, structure:
     const pA = Vec3();
     const pB = Vec3();
     const cylinderProps: CylinderProps = {
-        radiusTop: 1, radiusBottom: 1, topCap: true, bottomCap: true, radialSegments
+        radiusTop: 1,
+        radiusBottom: 1,
+        topCap: true,
+        bottomCap: true,
+        radialSegments,
     };
 
     let i = 0;
@@ -89,22 +105,25 @@ function createPolymerGapCylinderMesh(ctx: VisualContext, unit: Unit, structure:
 
 export const PolymerGapParams = {
     ...UnitsMeshParams,
-    ...PolymerGapCylinderParams
+    ...PolymerGapCylinderParams,
 };
-export type PolymerGapParams = typeof PolymerGapParams
+export type PolymerGapParams = typeof PolymerGapParams;
 
 export function PolymerGapVisual(materialId: number): UnitsVisual<PolymerGapParams> {
     return UnitsMeshVisual<PolymerGapParams>({
         defaultProps: PD.getDefaultValues(PolymerGapParams),
         createGeometry: createPolymerGapCylinderMesh,
-        createLocationIterator: (structureGroup: StructureGroup) => PolymerGapLocationIterator.fromGroup(structureGroup, { asSecondary: true }),
+        createLocationIterator: (structureGroup: StructureGroup) =>
+            PolymerGapLocationIterator.fromGroup(structureGroup, { asSecondary: true }),
         getLoci: getPolymerGapElementLoci,
         eachLocation: eachPolymerGapElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<PolymerGapParams>, currentProps: PD.Values<PolymerGapParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
-                newProps.radialSegments !== currentProps.radialSegments
-            );
-        }
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<PolymerGapParams>,
+            currentProps: PD.Values<PolymerGapParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
+                newProps.radialSegments !== currentProps.radialSegments;
+        },
     }, materialId);
 }

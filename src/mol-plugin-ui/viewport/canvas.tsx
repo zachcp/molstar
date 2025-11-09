@@ -9,29 +9,27 @@ import * as React from 'react';
 import { PluginUIComponent } from '../base.tsx';
 
 interface ViewportCanvasState {
-    noWebGl: boolean
-    showLogo: boolean
+    noWebGl: boolean;
+    showLogo: boolean;
 }
 
 export interface ViewportCanvasParams {
-    logo?: React.FC,
-    noWebGl?: React.FC,
+    logo?: React.FC;
+    noWebGl?: React.FC;
 
-    parentClassName?: string,
-    parentStyle?: React.CSSProperties,
+    parentClassName?: string;
+    parentStyle?: React.CSSProperties;
     // NOTE: hostClassName/hostStyle no longer in use
     // TODO: remove in 4.0
-    hostClassName?: string,
-    hostStyle?: React.CSSProperties,
+    hostClassName?: string;
+    hostStyle?: React.CSSProperties;
 }
 
 export class ViewportCanvas extends PluginUIComponent<ViewportCanvasParams, ViewportCanvasState> {
     private container = React.createRef<HTMLDivElement>();
     private mounted = false;
 
-    override state: ViewportCanvasState = {        noWebGl: false,
-        showLogo: true
-    };
+    override state: ViewportCanvasState = { noWebGl: false, showLogo: true };
 
     private handleLogo = () => {
         this.setState({ showLogo: !this.plugin.canvas3d?.reprCount.value });
@@ -51,7 +49,8 @@ export class ViewportCanvas extends PluginUIComponent<ViewportCanvasParams, View
         }
     }
 
-    override componentDidMount() {        this.mounted = true;
+    override componentDidMount() {
+        this.mounted = true;
 
         if (!this.container.current) {
             this.setState({ noWebGl: true });
@@ -61,7 +60,8 @@ export class ViewportCanvas extends PluginUIComponent<ViewportCanvasParams, View
         this.applyMount();
     }
 
-    override componentWillUnmount() {        this.mounted = false;
+    override componentWillUnmount() {
+        this.mounted = false;
 
         super.componentWillUnmount();
         this.plugin.unmount();
@@ -73,21 +73,39 @@ export class ViewportCanvas extends PluginUIComponent<ViewportCanvasParams, View
             return <C />;
         }
 
-        return <div className='msp-no-webgl'>
-            <div>
-                <p><b>WebGL does not seem to be available.</b></p>
-                <p>This can be caused by an outdated browser, graphics card driver issue, or bad weather. Sometimes, just restarting the browser helps. Also, make sure hardware acceleration is enabled in your browser.</p>
-                <p>For a list of supported browsers, refer to <a href='http://caniuse.com/#feat=webgl' target='_blank'>http://caniuse.com/#feat=webgl</a>.</p>
+        return (
+            <div className='msp-no-webgl'>
+                <div>
+                    <p>
+                        <b>WebGL does not seem to be available.</b>
+                    </p>
+                    <p>
+                        This can be caused by an outdated browser, graphics card driver issue, or bad weather.
+                        Sometimes, just restarting the browser helps. Also, make sure hardware acceleration is enabled
+                        in your browser.
+                    </p>
+                    <p>
+                        For a list of supported browsers, refer to{' '}
+                        <a href='http://caniuse.com/#feat=webgl' target='_blank'>http://caniuse.com/#feat=webgl</a>.
+                    </p>
+                </div>
             </div>
-        </div>;
+        );
     }
 
-    override render() {        if (this.state.noWebGl) return this.renderMissing();
+    override render() {
+        if (this.state.noWebGl) return this.renderMissing();
 
         const Logo = this.props.logo;
 
-        return <div className={this.props.parentClassName || 'msp-viewport'} style={this.props.parentStyle} ref={this.container}>
-            {(this.state.showLogo && Logo) && <Logo />}
-        </div>;
+        return (
+            <div
+                className={this.props.parentClassName || 'msp-viewport'}
+                style={this.props.parentStyle}
+                ref={this.container}
+            >
+                {(this.state.showLogo && Logo) && <Logo />}
+            </div>
+        );
     }
 }

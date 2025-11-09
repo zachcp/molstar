@@ -14,7 +14,7 @@ export const SbNcbrPartialCharges = PluginBehavior.create<{ autoAttach: boolean;
     },
     ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean; showToolTip: boolean }> {
         private SbNcbrPartialChargesLociLabelProvider: LociLabelProvider = SbNcbrPartialChargesLociLabelProvider(
-            this.ctx
+            this.ctx,
         );
 
         register(): void {

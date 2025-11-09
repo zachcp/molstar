@@ -4,10 +4,21 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { type CollapsableState, CollapsableControls } from '../../mol-plugin-ui/base.tsx';
+import { CollapsableControls, type CollapsableState } from '../../mol-plugin-ui/base.tsx';
 import { ApplyActionControl } from '../../mol-plugin-ui/state/apply-action.tsx';
-import { InitAssemblySymmetry3D, AssemblySymmetry3D, AssemblySymmetryPreset, tryCreateAssemblySymmetry, getAssemblySymmetryConfig } from './behavior.ts';
-import { AssemblySymmetryProvider, type AssemblySymmetryProps, AssemblySymmetryDataProvider, AssemblySymmetryData } from './prop.ts';
+import {
+    AssemblySymmetry3D,
+    AssemblySymmetryPreset,
+    getAssemblySymmetryConfig,
+    InitAssemblySymmetry3D,
+    tryCreateAssemblySymmetry,
+} from './behavior.ts';
+import {
+    AssemblySymmetryData,
+    AssemblySymmetryDataProvider,
+    type AssemblySymmetryProps,
+    AssemblySymmetryProvider,
+} from './prop.ts';
 import { ParameterControls } from '../../mol-plugin-ui/controls/parameters.tsx';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { StructureHierarchyManager } from '../../mol-plugin-state/manager/structure/hierarchy.ts';
@@ -15,10 +26,10 @@ import { StateAction, StateSelection } from '../../mol-state/index.ts';
 import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { Task } from '../../mol-task/index.ts';
-import { ExtensionSvg, CheckSvg } from '../../mol-plugin-ui/controls/icons.tsx';
+import { CheckSvg, ExtensionSvg } from '../../mol-plugin-ui/controls/icons.tsx';
 
 interface AssemblySymmetryControlState extends CollapsableState {
-    isBusy: boolean
+    isBusy: boolean;
 }
 
 export class AssemblySymmetryControls extends CollapsableControls<{}, AssemblySymmetryControlState> {
@@ -28,7 +39,7 @@ export class AssemblySymmetryControls extends CollapsableControls<{}, AssemblySy
             isCollapsed: false,
             isBusy: false,
             isHidden: true,
-            brand: { accent: 'cyan', svg: ExtensionSvg }
+            brand: { accent: 'cyan', svg: ExtensionSvg },
         };
     }
 
@@ -36,13 +47,13 @@ export class AssemblySymmetryControls extends CollapsableControls<{}, AssemblySy
         this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, () => {
             this.setState({
                 isHidden: !this.canEnable(),
-                description: StructureHierarchyManager.getSelectedStructuresDescription(this.plugin)
+                description: StructureHierarchyManager.getSelectedStructuresDescription(this.plugin),
             });
         });
-        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
+        this.subscribe(this.plugin.state.events.cell.stateUpdated, (e) => {
             if (e.cell.transform.transformer === AssemblySymmetry3D) this.forceUpdate();
         });
-        this.subscribe(this.plugin.behaviors.state.isBusy, v => this.setState({ isBusy: v }));
+        this.subscribe(this.plugin.behaviors.state.isBusy, (v) => this.setState({ isBusy: v }));
     }
 
     get pivot() {
@@ -60,18 +71,30 @@ export class AssemblySymmetryControls extends CollapsableControls<{}, AssemblySy
     renderEnable() {
         const pivot = this.pivot;
         if (!pivot.cell.parent) return null;
-        return <ApplyActionControl state={pivot.cell.parent} action={EnableAssemblySymmetry3D} initiallyCollapsed nodeRef={pivot.cell.transform.ref} simpleApply={{ header: 'Enable', icon: CheckSvg }} />;
+        return (
+            <ApplyActionControl
+                state={pivot.cell.parent}
+                action={EnableAssemblySymmetry3D}
+                initiallyCollapsed
+                nodeRef={pivot.cell.transform.ref}
+                simpleApply={{ header: 'Enable', icon: CheckSvg }}
+            />
+        );
     }
 
     renderNoSymmetries() {
-        return <div className='msp-row-text'>
-            <div>No Symmetries for Assembly</div>
-        </div>;
+        return (
+            <div className='msp-row-text'>
+                <div>No Symmetries for Assembly</div>
+            </div>
+        );
     }
 
     get params() {
         const structure = this.pivot.cell.obj?.data;
-        const params = PD.clone(structure ? AssemblySymmetryProvider.getParams(structure) : AssemblySymmetryProvider.defaultParams);
+        const params = PD.clone(
+            structure ? AssemblySymmetryProvider.getParams(structure) : AssemblySymmetryProvider.defaultParams,
+        );
         params.serverType.isHidden = true;
         params.serverUrl.isHidden = true;
         return params;
@@ -93,7 +116,7 @@ export class AssemblySymmetryControls extends CollapsableControls<{}, AssemblySy
 
         if (s.properties) {
             const b = this.plugin.state.data.build();
-            b.to(s.properties.cell).update(old => {
+            b.to(s.properties.cell).update((old) => {
                 old.properties[AssemblySymmetryProvider.descriptor.name] = values;
             });
             await b.commit();
@@ -108,12 +131,16 @@ export class AssemblySymmetryControls extends CollapsableControls<{}, AssemblySy
             if (values.symmetryIndex === -1) {
                 const name = components[0]?.representations[0]?.cell.transform.params?.colorTheme.name;
                 if (name === AssemblySymmetryData.Tag.Cluster) {
-                    await this.plugin.managers.structure.component.updateRepresentationsTheme(components, { color: 'default' });
+                    await this.plugin.managers.structure.component.updateRepresentationsTheme(components, {
+                        color: 'default',
+                    });
                 }
             } else {
                 tryCreateAssemblySymmetry(this.plugin, s.cell);
                 if (getAssemblySymmetryConfig(this.plugin).ApplyColors) {
-                    await this.plugin.managers.structure.component.updateRepresentationsTheme(components, { color: AssemblySymmetryData.Tag.Cluster as any });
+                    await this.plugin.managers.structure.component.updateRepresentationsTheme(components, {
+                        color: AssemblySymmetryData.Tag.Cluster as any,
+                    });
                 }
             }
         }
@@ -124,7 +151,12 @@ export class AssemblySymmetryControls extends CollapsableControls<{}, AssemblySy
     };
 
     get hasAssemblySymmetry3D() {
-        return !this.pivot.cell.parent || !!StateSelection.findTagInSubtree(this.pivot.cell.parent.tree, this.pivot.cell.transform.ref, AssemblySymmetryData.Tag.Representation);
+        return !this.pivot.cell.parent ||
+            !!StateSelection.findTagInSubtree(
+                this.pivot.cell.parent.tree,
+                this.pivot.cell.transform.ref,
+                AssemblySymmetryData.Tag.Representation,
+            );
     }
 
     get enable() {
@@ -134,13 +166,15 @@ export class AssemblySymmetryControls extends CollapsableControls<{}, AssemblySy
     get noSymmetries() {
         const structure = this.pivot.cell.obj?.data;
         const data = structure && AssemblySymmetryDataProvider.get(structure).value;
-        return data && data.filter(sym => sym.symbol !== 'C1').length === 0;
+        return data && data.filter((sym) => sym.symbol !== 'C1').length === 0;
     }
 
     renderParams() {
-        return <>
-            <ParameterControls params={this.params} values={this.values} onChangeValues={this.paramsOnChange} />
-        </>;
+        return (
+            <>
+                <ParameterControls params={this.params} values={this.values} onChangeValues={this.paramsOnChange} />
+            </>
+        );
     }
 
     renderControls() {
@@ -153,8 +187,10 @@ export class AssemblySymmetryControls extends CollapsableControls<{}, AssemblySy
 
 const EnableAssemblySymmetry3D = StateAction.build({
     from: PluginStateObject.Molecule.Structure,
-})(({ a, ref, state }, plugin: PluginContext) => Task.create('Enable Assembly Symmetry', async ctx => {
-    const presetParams = AssemblySymmetryPreset.params?.(a, plugin) as PD.Params | undefined;
-    const presetProps = presetParams ? PD.getDefaultValues(presetParams) : Object.create(null);
-    await AssemblySymmetryPreset.apply(ref, presetProps, plugin);
-}));
+})(({ a, ref, state }, plugin: PluginContext) =>
+    Task.create('Enable Assembly Symmetry', async (ctx) => {
+        const presetParams = AssemblySymmetryPreset.params?.(a, plugin) as PD.Params | undefined;
+        const presetProps = presetParams ? PD.getDefaultValues(presetParams) : Object.create(null);
+        await AssemblySymmetryPreset.apply(ref, presetProps, plugin);
+    })
+);

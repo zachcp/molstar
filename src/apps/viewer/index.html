@@ -62,11 +62,13 @@
             var pickPadding = getParam('pick-padding', '[^&]+').trim();
             var transparency = getParam('transparency', '[^&]+').trim().toLowerCase();
             var preferWebgl1 = getParam('prefer-webgl1', '[^&]+').trim() === '1' || void 0;
-            var allowMajorPerformanceCaveat = getParam('allow-major-performance-caveat', '[^&]+').trim() === '1';
+            var allowMajorPerformanceCaveat =
+                getParam('allow-major-performance-caveat', '[^&]+').trim() === '1';
             var powerPreference = getParam('power-preference', '[^&]+').trim().toLowerCase();
             var illumination = getParam('illumination', '[^&]+').trim() === '1';
             var resolutionMode = getParam('resolution-mode', '[^&]+').trim().toLowerCase();
-            var viewportShowToggleFullscreen = getParam('show-toggle-fullscreen', '[^&]+').trim() === '1';
+            var viewportShowToggleFullscreen =
+                getParam('show-toggle-fullscreen', '[^&]+').trim() === '1';
 
             // console.log('Available extensions: ', Object.keys(molstar.ExtensionMap));
 
@@ -90,26 +92,34 @@
                 powerPreference: powerPreference || 'high-performance',
                 illumination: illumination,
                 resolutionMode: resolutionMode || 'auto',
-            }).then(viewer => {
+            }).then((viewer) => {
                 var snapshotId = getParam('snapshot-id', '[^&]+').trim();
                 if (snapshotId) viewer.setRemoteSnapshot(snapshotId);
 
                 var snapshotUrl = getParam('snapshot-url', '[^&]+').trim();
-                var snapshotUrlType = getParam('snapshot-url-type', '[^&]+').toLowerCase().trim() || 'molj';
-                if (snapshotUrl && snapshotUrlType) viewer.loadSnapshotFromUrl(snapshotUrl, snapshotUrlType);
+                var snapshotUrlType = getParam('snapshot-url-type', '[^&]+').toLowerCase().trim() ||
+                    'molj';
+                if (snapshotUrl && snapshotUrlType) {
+                    viewer.loadSnapshotFromUrl(snapshotUrl, snapshotUrlType);
+                }
 
                 var structureUrl = getParam('structure-url', '[^&]+').trim();
-                var structureUrlFormat = getParam('structure-url-format', '[a-z]+').toLowerCase().trim();
+                var structureUrlFormat = getParam('structure-url-format', '[a-z]+').toLowerCase()
+                    .trim();
                 var structureUrlIsBinary = getParam('structure-url-is-binary', '[^&]+').trim() === '1';
-                if (structureUrl) viewer.loadStructureFromUrl(structureUrl, structureUrlFormat, structureUrlIsBinary);
+                if (structureUrl) {
+                    viewer.loadStructureFromUrl(structureUrl, structureUrlFormat, structureUrlIsBinary);
+                }
 
                 var mvsUrl = getParam('mvs-url', '[^&]+').trim();
                 var mvsData = getParam('mvs-data', '[^&]+').trim();
                 var mvsFormat = getParam('mvs-format', '[^&]+').trim() || 'mvsj';
-                if (mvsUrl && mvsData) console.error('Cannot specify mvs-url and mvs-data URL parameters at the same time. Ignoring both.');
-                else if (mvsUrl) viewer.loadMvsFromUrl(mvsUrl, mvsFormat);
+                if (mvsUrl && mvsData) {
+                    console.error(
+                        'Cannot specify mvs-url and mvs-data URL parameters at the same time. Ignoring both.',
+                    );
+                } else if (mvsUrl) viewer.loadMvsFromUrl(mvsUrl, mvsFormat);
                 else if (mvsData) viewer.loadMvsData(mvsData, mvsFormat);
-
 
                 var pdb = getParam('pdb', '[^&]+').trim();
                 if (pdb) viewer.loadPdb(pdb);
@@ -134,7 +144,7 @@
                     viewer.dispose();
                 });
 
-                const event = new CustomEvent("molstarViewerCreated", { detail: { viewer } });
+                const event = new CustomEvent('molstarViewerCreated', { detail: { viewer } });
                 window.dispatchEvent(event);
             });
         </script>

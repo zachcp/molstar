@@ -8,7 +8,7 @@
 import type { Tokens } from '../common/text/tokenizer.ts';
 
 export interface PdbFile {
-    lines: Tokens
-    id?: string,
-    isPdbqt?: boolean
+    lines: Tokens;
+    id?: string;
+    isPdbqt?: boolean;
 }

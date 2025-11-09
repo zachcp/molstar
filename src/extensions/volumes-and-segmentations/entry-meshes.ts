@@ -18,9 +18,7 @@ import { createMeshFromUrl } from '../meshes/mesh-extension.ts';
 import type { Segment } from './volseg-api/data.ts';
 import type { VolsegEntryData } from './entry-root.ts';
 
-
 const DEFAULT_MESH_DETAIL: number | null = 5; // null means worst
-
 
 export class VolsegMeshSegmentationData {
     private entryData: VolsegEntryData;
@@ -40,7 +38,9 @@ export class VolsegMeshSegmentationData {
         const visuals = this.entryData.findNodesByTags('mesh-segment-visual');
         const update = this.entryData.newUpdate();
         for (const visual of visuals) {
-            update.to(visual).update(ShapeRepresentation3D, p => { (p as any).alpha = opacity; });
+            update.to(visual).update(ShapeRepresentation3D, (p) => {
+                (p as any).alpha = opacity;
+            });
         }
         return update.commit();
     }
@@ -48,7 +48,10 @@ export class VolsegMeshSegmentationData {
     async highlightSegment(segment: Segment) {
         const visuals = this.entryData.findNodesByTags('mesh-segment-visual', `segment-${segment.id}`);
         for (const visual of visuals) {
-            await PluginCommands.Interactivity.Object.Highlight(this.entryData.plugin, { state: this.entryData.plugin.state.data, ref: visual.transform.ref });
+            await PluginCommands.Interactivity.Object.Highlight(this.entryData.plugin, {
+                state: this.entryData.plugin.state.data,
+                ref: visual.transform.ref,
+            });
         }
     }
 
@@ -59,7 +62,10 @@ export class VolsegMeshSegmentationData {
         if (!reprNode) return;
         const loci = reprNode.data.repr.getAllLoci()[0];
         if (!loci) return;
-        this.entryData.plugin.managers.interactivity.lociSelects.select({ loci: loci, repr: reprNode.data.repr }, false);
+        this.entryData.plugin.managers.interactivity.lociSelects.select(
+            { loci: loci, repr: reprNode.data.repr },
+            false,
+        );
     }
 
     /** Make visible the specified set of mesh segments */
@@ -68,7 +74,7 @@ export class VolsegMeshSegmentationData {
 
         const visuals = this.entryData.findNodesByTags('mesh-segment-visual');
         for (const visual of visuals) {
-            const theTag = visual.obj?.tags?.find(tag => tag.startsWith('segment-'));
+            const theTag = visual.obj?.tags?.find((tag) => tag.startsWith('segment-'));
             if (!theTag) continue;
             const id = parseInt(theTag.split('-')[1]);
             const visibility = segmentsToShow.has(id);
@@ -76,12 +82,15 @@ export class VolsegMeshSegmentationData {
             segmentsToShow.delete(id);
         }
 
-        const segmentsToCreate = this.entryData.metadata.meshSegmentIds.filter(seg => segmentsToShow.has(seg));
+        const segmentsToCreate = this.entryData.metadata.meshSegmentIds.filter((seg) => segmentsToShow.has(seg));
         if (segmentsToCreate.length === 0) return;
 
         let group = this.entryData.findNodesByTags('mesh-segmentation-group')[0]?.transform.ref;
         if (!group) {
-            const newGroupNode = await this.entryData.newUpdate().apply(CreateGroup, { label: 'Segmentation', description: 'Mesh' }, { tags: ['mesh-segmentation-group'], state: { isCollapsed: true } }).commit();
+            const newGroupNode = await this.entryData.newUpdate().apply(CreateGroup, {
+                label: 'Segmentation',
+                description: 'Mesh',
+            }, { tags: ['mesh-segmentation-group'], state: { isCollapsed: true } }).commit();
             group = newGroupNode.ref;
         }
         const totalVolume = this.entryData.metadata.gridTotalVolume;
@@ -94,8 +103,18 @@ export class VolsegMeshSegmentationData {
             const color = segment.colour.length >= 3 ? Color.fromNormalizedArray(segment.colour, 0) : ColorNames.gray;
             const url = this.entryData.api.meshUrl_Bcif(this.entryData.source, this.entryData.entryId, seg, detail);
             const label = segment.biological_annotation.name ?? `Segment ${seg}`;
-            const meshPromise = createMeshFromUrl(this.entryData.plugin, url, seg, detail, true, color, group,
-                BACKGROUND_SEGMENT_VOLUME_THRESHOLD * totalVolume, `<b>${label}</b>`, this.entryData.ref);
+            const meshPromise = createMeshFromUrl(
+                this.entryData.plugin,
+                url,
+                seg,
+                detail,
+                true,
+                color,
+                group,
+                BACKGROUND_SEGMENT_VOLUME_THRESHOLD * totalVolume,
+                `<b>${label}</b>`,
+                this.entryData.ref,
+            );
             awaiting.push(meshPromise);
         }
         for (const promise of awaiting) await promise;

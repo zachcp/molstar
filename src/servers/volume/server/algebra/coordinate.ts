@@ -8,13 +8,13 @@ import type { SpacegroupCell } from '../../../../mol-math/geometry.ts';
 /** Information about a region sampled in fractional coordinates */
 export interface GridInfo {
     /** Origin in fractional coords. */
-    origin: Fractional,
+    origin: Fractional;
     /** Box dimensions in fractional coords. */
-    dimensions: Fractional,
+    dimensions: Fractional;
     /** Grid delta in fractional coordinates along each axis (in axis order) */
-    delta: Fractional,
+    delta: Fractional;
     /** Sample count of the grid box */
-    sampleCount: number[]
+    sampleCount: number[];
 }
 
 /**
@@ -23,13 +23,28 @@ export interface GridInfo {
  * can distinguish between different types of grids,
  * e.g. GridDomain<'Data'>, GridDomain<'Query'>, GridDomain<'Block'>, etc.
  */
-export interface GridDomain<K> extends GridInfo { kind: K, sampleVolume: number }
+export interface GridDomain<K> extends GridInfo {
+    kind: K;
+    sampleVolume: number;
+}
 
-export const enum Space { Cartesian, Fractional, Grid }
-export interface Coord<S extends Space> { kind: S, '0': number, '1': number, '2': number, [index: number]: number }
-export interface Cartesian extends Coord<Space.Cartesian> { }
-export interface Fractional extends Coord<Space.Fractional> { }
-export interface Grid<K> extends Coord<Space.Grid> { domain: GridDomain<K> }
+export const enum Space {
+    Cartesian,
+    Fractional,
+    Grid,
+}
+export interface Coord<S extends Space> {
+    kind: S;
+    '0': number;
+    '1': number;
+    '2': number;
+    [index: number]: number;
+}
+export interface Cartesian extends Coord<Space.Cartesian> {}
+export interface Fractional extends Coord<Space.Fractional> {}
+export interface Grid<K> extends Coord<Space.Grid> {
+    domain: GridDomain<K>;
+}
 
 // CONSTRUCTORS
 
@@ -41,7 +56,7 @@ export function domain<K>(kind: K, info: GridInfo): GridDomain<K> {
         dimensions: info.dimensions,
         origin: info.origin,
         sampleCount: info.sampleCount,
-        sampleVolume: sc[0] * sc[1] * sc[2]
+        sampleVolume: sc[0] * sc[1] * sc[2],
     };
 }
 
@@ -59,9 +74,12 @@ export function grid<K>(domain: GridDomain<K>, x: number, y: number, z: number):
 
 export function withCoord<C extends (Coord<Space> | Grid<any>)>(a: C, x: number, y: number, z: number): C {
     switch (a.kind) {
-        case Space.Cartesian: return cartesian(x, y, z) as C;
-        case Space.Fractional: return fractional(x, y, z) as C;
-        case Space.Grid: return grid((a as Grid<any>).domain, x, y, z) as C;
+        case Space.Cartesian:
+            return cartesian(x, y, z) as C;
+        case Space.Fractional:
+            return fractional(x, y, z) as C;
+        case Space.Grid:
+            return grid((a as Grid<any>).domain, x, y, z) as C;
     }
 }
 
@@ -129,7 +147,7 @@ export function gridMetrics(dimensions: { [i: number]: number }) {
     return {
         sizeX: dimensions[0],
         sizeXY: dimensions[0] * dimensions[1],
-        sizeXYZ: dimensions[0] * dimensions[1] * dimensions[2]
+        sizeXYZ: dimensions[0] * dimensions[1] * dimensions[2],
     };
 }
 
@@ -137,7 +155,7 @@ export function sampleCounts(dimensions: Fractional, delta: Fractional) {
     return [
         Helpers.snap(dimensions[0] / delta[0], 'top'),
         Helpers.snap(dimensions[1] / delta[1], 'top'),
-        Helpers.snap(dimensions[2] / delta[2], 'top')
+        Helpers.snap(dimensions[2] / delta[2], 'top'),
     ];
 }
 
@@ -153,8 +171,10 @@ namespace Helpers {
 
     export function snap(v: number, to: 'bottom' | 'top') {
         switch (to) {
-            case 'bottom': return Math.floor(round(v)) | 0;
-            case 'top': return Math.ceil(round(v)) | 0;
+            case 'bottom':
+                return Math.floor(round(v)) | 0;
+            case 'top':
+                return Math.ceil(round(v)) | 0;
         }
     }
 }

@@ -5,17 +5,16 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { StructureProperties, StructureElement, Bond, type Structure, Unit } from '../../mol-model/structure.ts';
+import { Bond, type Structure, StructureElement, StructureProperties, Unit } from '../../mol-model/structure.ts';
 import { Color } from '../../mol-util/color/index.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ColorTheme, LocationColor } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../../mol-theme/theme.ts';
-import { getPaletteParams, getPalette } from '../../mol-util/color/palette.ts';
-import type { TableLegend, ScaleLegend } from '../../mol-util/legend.ts';
+import { getPalette, getPaletteParams } from '../../mol-util/color/palette.ts';
+import type { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
 import { ColorThemeCategory } from './categories.ts';
 import type { ModelFormat } from '../../mol-model-formats/format.ts';
-
 
 const DefaultList = 'many-distinct';
 const DefaultColor = Color(0xFAFAFA);
@@ -25,9 +24,12 @@ const Description = 'Gives every chain a color based on its `label_entity_id` va
 export const EntityIdColorThemeParams = {
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
     overrideWater: PD.Boolean(false, { description: 'Override the color for water molecules.' }),
-    waterColor: PD.Color(DefaultWaterColor, { hideIf: p => !p.overrideWater, description: 'Color for water molecules (if overrideWater is true).' }),
+    waterColor: PD.Color(DefaultWaterColor, {
+        hideIf: (p) => !p.overrideWater,
+        description: 'Color for water molecules (if overrideWater is true).',
+    }),
 };
-export type EntityIdColorThemeParams = typeof EntityIdColorThemeParams
+export type EntityIdColorThemeParams = typeof EntityIdColorThemeParams;
 export function getEntityIdColorThemeParams(ctx: ThemeDataContext) {
     const params = PD.clone(EntityIdColorThemeParams);
     return params;
@@ -83,7 +85,10 @@ function getEntityId(location: StructureElement.Location): string {
     }
 }
 
-export function EntityIdColorTheme(ctx: ThemeDataContext, props: PD.Values<EntityIdColorThemeParams>): ColorTheme<EntityIdColorThemeParams> {
+export function EntityIdColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<EntityIdColorThemeParams>,
+): ColorTheme<EntityIdColorThemeParams> {
     let color: LocationColor;
     let legend: ScaleLegend | TableLegend | undefined;
 
@@ -130,7 +135,7 @@ export function EntityIdColorTheme(ctx: ThemeDataContext, props: PD.Values<Entit
         color,
         props,
         description: Description,
-        legend
+        legend,
     };
 }
 
@@ -141,5 +146,5 @@ export const EntityIdColorThemeProvider: ColorTheme.Provider<EntityIdColorThemeP
     factory: EntityIdColorTheme,
     getParams: getEntityIdColorThemeParams,
     defaultValues: PD.getDefaultValues(EntityIdColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
 };

@@ -40,16 +40,16 @@ export class MVSStoriesViewerModel extends PluginComponent {
                     remoteState: 'none',
                     viewport: {
                         snapshotDescription: EmptyDescription,
-                    }
+                    },
                 },
                 behaviors: [
                     ...spec.behaviors,
-                    PluginSpec.Behavior(MolViewSpec)
+                    PluginSpec.Behavior(MolViewSpec),
                 ],
                 config: [
                     [PluginConfig.Viewport.ShowAnimation, false],
-                ]
-            }
+                ],
+            },
         });
 
         this.subscribe(this.context.commands, async (cmd) => {
@@ -60,7 +60,9 @@ export class MVSStoriesViewerModel extends PluginComponent {
                 if (cmd.kind === 'load-mvs') {
                     let loadedData: MVSData | StringLike | Uint8Array | undefined;
                     if (cmd.url) {
-                        const data = await this.plugin.runTask(this.plugin.fetch({ url: cmd.url, type: cmd.format === 'mvsx' ? 'binary' : 'string' }));
+                        const data = await this.plugin.runTask(
+                            this.plugin.fetch({ url: cmd.url, type: cmd.format === 'mvsx' ? 'binary' : 'string' }),
+                        );
                         loadedData = await loadMVSData(this.plugin, data, cmd.format ?? 'mvsj', { sourceUrl: cmd.url });
                     } else if (cmd.data) {
                         loadedData = await loadMVSData(this.plugin, cmd.data, cmd.format ?? 'mvsj');
@@ -75,7 +77,12 @@ export class MVSStoriesViewerModel extends PluginComponent {
                 console.error(e);
                 PluginCommands.Toast.Show(
                     this.plugin,
-                    { key: '<mvsload>', title: 'Error', message: e?.message ? `${e?.message}` : `${e}`, timeoutMs: 10000 }
+                    {
+                        key: '<mvsload>',
+                        title: 'Error',
+                        message: e?.message ? `${e?.message}` : `${e}`,
+                        timeoutMs: 10000,
+                    },
                 );
             } finally {
                 this.context.state.isLoading.next(false);
@@ -87,13 +94,13 @@ export class MVSStoriesViewerModel extends PluginComponent {
         this.context.state.viewers.next(next);
     }
 
-    constructor(private options?: { context?: { name?: string, container?: object }, name?: string }) {
+    constructor(private options?: { context?: { name?: string; container?: object }; name?: string }) {
         super();
 
         this.context = getMVSStoriesContext(options?.context);
 
         const viewers = this.context.state.viewers.value;
-        const index = viewers.findIndex(v => v.name === options?.name);
+        const index = viewers.findIndex((v) => v.name === options?.name);
         if (index >= 0) {
             const next = [...viewers];
             next[index].model.dispose();

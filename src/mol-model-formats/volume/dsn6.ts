@@ -6,16 +6,19 @@
 
 import type { Volume } from '../../mol-model/volume.ts';
 import { Task } from '../../mol-task/index.ts';
-import { SpacegroupCell, Box3D } from '../../mol-math/geometry.ts';
+import { Box3D, SpacegroupCell } from '../../mol-math/geometry.ts';
 import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { degToRad } from '../../mol-math/misc.ts';
 import type { Dsn6File } from '../../mol-io/reader/dsn6/schema.ts';
-import { arrayMin, arrayMax, arrayMean, arrayRms } from '../../mol-util/array.ts';
+import { arrayMax, arrayMean, arrayMin, arrayRms } from '../../mol-util/array.ts';
 import type { ModelFormat } from '../format.ts';
 import { CustomProperties } from '../../mol-model/custom-property.ts';
 
-export function volumeFromDsn6(source: Dsn6File, params?: { voxelSize?: Vec3, label?: string, entryId?: string }): Task<Volume> {
-    return Task.create<Volume>('Create Volume', async ctx => {
+export function volumeFromDsn6(
+    source: Dsn6File,
+    params?: { voxelSize?: Vec3; label?: string; entryId?: string },
+): Task<Volume> {
+    return Task.create<Volume>('Create Volume', async (ctx) => {
         const { header, values } = source;
         const size = Vec3.create(header.xlen, header.ylen, header.zlen);
         if (params && params.voxelSize) Vec3.mul(size, size, params.voxelSize);
@@ -37,13 +40,17 @@ export function volumeFromDsn6(source: Dsn6File, params?: { voxelSize?: Vec3, la
             label: params?.label,
             entryId: params?.entryId,
             grid: {
-                transform: { kind: 'spacegroup', cell, fractionalBox: Box3D.create(origin_frac, Vec3.add(Vec3.zero(), origin_frac, dimensions_frac)) },
+                transform: {
+                    kind: 'spacegroup',
+                    cell,
+                    fractionalBox: Box3D.create(origin_frac, Vec3.add(Vec3.zero(), origin_frac, dimensions_frac)),
+                },
                 cells: data,
                 stats: {
                     min: arrayMin(values),
                     max: arrayMax(values),
                     mean: arrayMean(values),
-                    sigma: header.sigma !== undefined ? header.sigma : arrayRms(values)
+                    sigma: header.sigma !== undefined ? header.sigma : arrayRms(values),
                 },
             },
             instances: [{ transform: Mat4.identity() }],
@@ -58,7 +65,7 @@ export function volumeFromDsn6(source: Dsn6File, params?: { voxelSize?: Vec3, la
 
 export { Dsn6Format };
 
-type Dsn6Format = ModelFormat<Dsn6File>
+type Dsn6Format = ModelFormat<Dsn6File>;
 
 namespace Dsn6Format {
     export function is(x?: ModelFormat): x is Dsn6Format {

@@ -7,18 +7,21 @@
 import type { DensityServer_Data_Database } from '../../mol-io/reader/cif/schema/density-server.ts';
 import type { Volume } from '../../mol-model/volume.ts';
 import { Task } from '../../mol-task/index.ts';
-import { SpacegroupCell, Box3D } from '../../mol-math/geometry.ts';
+import { Box3D, SpacegroupCell } from '../../mol-math/geometry.ts';
 import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra.ts';
 import type { ModelFormat } from '../format.ts';
 import { CustomProperties } from '../../mol-model/custom-property.ts';
 
-export function volumeFromDensityServerData(source: DensityServer_Data_Database, params?: Partial<{ label: string, entryId: string }>): Task<Volume> {
-    return Task.create<Volume>('Create Volume', async ctx => {
+export function volumeFromDensityServerData(
+    source: DensityServer_Data_Database,
+    params?: Partial<{ label: string; entryId: string }>,
+): Task<Volume> {
+    return Task.create<Volume>('Create Volume', async (ctx) => {
         const { volume_data_3d_info: info, volume_data_3d: values } = source;
         const cell = SpacegroupCell.create(
             info.spacegroup_number.value(0) || 'P 1',
             Vec3.ofArray(info.spacegroup_cell_size.value(0)),
-            Vec3.scale(Vec3.zero(), Vec3.ofArray(info.spacegroup_cell_angles.value(0)), Math.PI / 180)
+            Vec3.scale(Vec3.zero(), Vec3.ofArray(info.spacegroup_cell_angles.value(0)), Math.PI / 180),
         );
 
         const axis_order_fast_to_slow = info.axis_order.value(0);
@@ -39,13 +42,17 @@ export function volumeFromDensityServerData(source: DensityServer_Data_Database,
             label: params?.label,
             entryId: params?.entryId,
             grid: {
-                transform: { kind: 'spacegroup', cell, fractionalBox: Box3D.create(origin, Vec3.add(Vec3.zero(), origin, dimensions)) },
+                transform: {
+                    kind: 'spacegroup',
+                    cell,
+                    fractionalBox: Box3D.create(origin, Vec3.add(Vec3.zero(), origin, dimensions)),
+                },
                 cells: data,
                 stats: {
                     min: info.min_sampled.value(0),
                     max: info.max_sampled.value(0),
                     mean: info.mean_sampled.value(0),
-                    sigma: info.sigma_sampled.value(0)
+                    sigma: info.sigma_sampled.value(0),
                 },
             },
             instances: [{ transform: Mat4.identity() }],
@@ -60,7 +67,7 @@ export function volumeFromDensityServerData(source: DensityServer_Data_Database,
 
 export { DscifFormat };
 
-type DscifFormat = ModelFormat<DensityServer_Data_Database>
+type DscifFormat = ModelFormat<DensityServer_Data_Database>;
 
 namespace DscifFormat {
     export function is(x?: ModelFormat): x is DscifFormat {

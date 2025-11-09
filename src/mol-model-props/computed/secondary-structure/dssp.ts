@@ -10,7 +10,7 @@ import { SecondaryStructureType } from '../../../mol-model/structure/model/types
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { assignBends } from './dssp/bends.ts';
 import { calcUnitBackboneHbonds } from './dssp/backbone-hbonds.ts';
-import { type Ladder, type Bridge, type DSSPContext, DSSPType } from './dssp/common.ts';
+import { type Bridge, type DSSPContext, DSSPType, type Ladder } from './dssp/common.ts';
 import { assignTurns } from './dssp/turns.ts';
 import { assignHelices } from './dssp/helices.ts';
 import { assignLadders } from './dssp/ladders.ts';
@@ -32,11 +32,14 @@ import { SortedArray } from '../../../mol-data/int.ts';
  */
 
 export const DSSPComputationParams = {
-    oldDefinition: PD.Boolean(true, { description: 'Whether to use the old DSSP convention for the annotation of turns and helices, causes them to be two residues shorter' }),
-    oldOrdering: PD.Boolean(true, { description: 'Alpha-helices are preferred over 3-10 helices' })
+    oldDefinition: PD.Boolean(true, {
+        description:
+            'Whether to use the old DSSP convention for the annotation of turns and helices, causes them to be two residues shorter',
+    }),
+    oldOrdering: PD.Boolean(true, { description: 'Alpha-helices are preferred over 3-10 helices' }),
 };
-export type DSSPComputationParams = typeof DSSPComputationParams
-export type DSSPComputationProps = PD.Values<DSSPComputationParams>
+export type DSSPComputationParams = typeof DSSPComputationParams;
+export type DSSPComputationProps = PD.Values<DSSPComputationParams>;
 export const DefaultDSSPComputationProps = PD.getDefaultValues(DSSPComputationParams);
 
 export async function computeUnitDSSP(unit: Unit.Atomic, params: DSSPComputationProps): Promise<SecondaryStructure> {
@@ -71,7 +74,7 @@ export async function computeUnitDSSP(unit: Unit.Atomic, params: DSSPComputation
 
         torsionAngles,
         ladders,
-        bridges
+        bridges,
     };
 
     assignTurns(ctx);
@@ -93,7 +96,14 @@ export async function computeUnitDSSP(unit: Unit.Atomic, params: DSSPComputation
         const flag = getResidueFlag(flags[i]);
         // console.log(i, SortedArray.indexOf(residueIndices, i), getFlagName(flags[i]))
         // TODO is this expected behavior? elements will be strictly split depending on 'winning' flag
-        if (elements.length === 0 /* would fail at very start */ || flag !== (elements[elements.length - 1] as SecondaryStructure.Helix | SecondaryStructure.Sheet | SecondaryStructure.Turn).flags /* flag changed */) {
+        if (
+            elements.length === 0 /* would fail at very start */ ||
+            flag !==
+                (elements[elements.length - 1] as
+                    | SecondaryStructure.Helix
+                    | SecondaryStructure.Sheet
+                    | SecondaryStructure.Turn).flags /* flag changed */
+        ) {
             elements[elements.length] = createElement(mapToKind(assign), flags[i], getResidueFlag);
         }
         keys[i] = elements.length - 1;
@@ -101,34 +111,45 @@ export async function computeUnitDSSP(unit: Unit.Atomic, params: DSSPComputation
     return SecondaryStructure(type, keys, elements, getIndex);
 }
 
-function createElement(kind: string, flag: DSSPType.Flag, getResidueFlag: (f: DSSPType) => SecondaryStructureType): SecondaryStructure.Element {
+function createElement(
+    kind: string,
+    flag: DSSPType.Flag,
+    getResidueFlag: (f: DSSPType) => SecondaryStructureType,
+): SecondaryStructure.Element {
     // TODO would be nice to add more detailed information
     if (kind === 'helix') {
         return {
             kind: 'helix',
-            flags: getResidueFlag(flag)
+            flags: getResidueFlag(flag),
         } as SecondaryStructure.Helix;
     } else if (kind === 'sheet') {
         return {
             kind: 'sheet',
-            flags: getResidueFlag(flag)
+            flags: getResidueFlag(flag),
         } as SecondaryStructure.Sheet;
     } else if (kind === 'turn' || kind === 'bend') {
         return {
             kind: 'turn',
-            flags: getResidueFlag(flag)
+            flags: getResidueFlag(flag),
         };
     } else {
         return {
-            kind: 'none'
+            kind: 'none',
         };
     }
 }
 
 function mapToKind(assignment: SecondaryStructureType.Flag) {
-    if (assignment === SecondaryStructureType.SecondaryStructureDssp.H || assignment === SecondaryStructureType.SecondaryStructureDssp.G || assignment === SecondaryStructureType.SecondaryStructureDssp.I) {
+    if (
+        assignment === SecondaryStructureType.SecondaryStructureDssp.H ||
+        assignment === SecondaryStructureType.SecondaryStructureDssp.G ||
+        assignment === SecondaryStructureType.SecondaryStructureDssp.I
+    ) {
         return 'helix';
-    } else if (assignment === SecondaryStructureType.SecondaryStructureDssp.B || assignment === SecondaryStructureType.SecondaryStructureDssp.E) {
+    } else if (
+        assignment === SecondaryStructureType.SecondaryStructureDssp.B ||
+        assignment === SecondaryStructureType.SecondaryStructureDssp.E
+    ) {
         return 'sheet';
     } else if (assignment === SecondaryStructureType.SecondaryStructureDssp.T) {
         return 'turn';

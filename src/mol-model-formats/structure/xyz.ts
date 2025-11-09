@@ -81,7 +81,7 @@ function getModels(mol: XyzFile, ctx: RuntimeContext) {
     const basic = createBasic({
         entity: entityBuilder.getEntityTable(),
         chem_comp: componentBuilder.getChemCompTable(),
-        atom_site
+        atom_site,
     });
 
     return createModels(basic, XyzFormat.create(mol), ctx);
@@ -91,7 +91,7 @@ function getModels(mol: XyzFile, ctx: RuntimeContext) {
 
 export { XyzFormat };
 
-type XyzFormat = ModelFormat<XyzFile>
+type XyzFormat = ModelFormat<XyzFile>;
 
 namespace XyzFormat {
     export function is(x?: ModelFormat): x is XyzFormat {
@@ -104,5 +104,5 @@ namespace XyzFormat {
 }
 
 export function trajectoryFromXyz(mol: XyzFile): Task<Trajectory> {
-    return Task.create('Parse XYZ', ctx => getModels(mol, ctx));
+    return Task.create('Parse XYZ', (ctx) => getModels(mol, ctx));
 }

@@ -11,4 +11,4 @@ import { Scheduler } from './util/scheduler.ts';
 import { MultistepTask } from './util/multistep.ts';
 import { chunkedSubtask } from './util/chunked.ts';
 
-export { Task, RuntimeContext, Progress, Scheduler, MultistepTask, chunkedSubtask };
+export { chunkedSubtask, MultistepTask, Progress, RuntimeContext, Scheduler, Task };

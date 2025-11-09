@@ -10,7 +10,7 @@ import { ObjectKeys } from '../../mol-util/type-helpers.ts';
 import { VERSION } from './version.ts';
 import * as fs from 'node:fs';
 import type { ModelPropertyProviderConfig } from './property-provider.ts';
-import process from "node:process";
+import process from 'node:process';
 
 const DefaultModelServerConfig = {
     // 0 for off
@@ -60,7 +60,7 @@ const DefaultModelServerConfig = {
      * Provide a property config or a path a JSON file with the config.
      */
     // TODO: finish customProperty support
-    customProperties: <ModelPropertyProviderConfig | string>{
+    customProperties: <ModelPropertyProviderConfig | string> {
         sources: [
             // 'pdbe',
             // 'rcsb',
@@ -87,9 +87,8 @@ const DefaultModelServerConfig = {
             //     chemCompBondTablePath: '',
             //     chemCompAtomTablePath: ''
             // }
-        }
+        },
     },
-
 
     /**
      * Default source for fileMapping.
@@ -122,7 +121,7 @@ const DefaultModelServerConfig = {
 };
 
 export const ModelServerFetchFormats = ['cif', 'bcif', 'cif.gz', 'bcif.gz'] as const;
-export type ModelServerFetchFormats = (typeof ModelServerFetchFormats)[number]
+export type ModelServerFetchFormats = (typeof ModelServerFetchFormats)[number];
 
 export let mapSourceAndIdToFilename: (source: string, id: string) => [string, ModelServerFetchFormats] = () => {
     throw new Error('call setupConfig & validateConfigAndSetupSourceMap to initialize this function');
@@ -132,60 +131,62 @@ function addServerArgs(parser: argparse.ArgumentParser) {
     parser.add_argument('--apiPrefix', {
         default: DefaultModelServerConfig.apiPrefix,
         metavar: 'PREFIX',
-        help: `Specify the prefix of the API, i.e. <host>/<apiPrefix>/<API queries>`
+        help: `Specify the prefix of the API, i.e. <host>/<apiPrefix>/<API queries>`,
     });
     parser.add_argument('--defaultPort', {
         default: DefaultModelServerConfig.defaultPort,
         metavar: 'PORT',
         type: 'int',
-        help: `Specify the port the server is running on`
+        help: `Specify the port the server is running on`,
     });
     parser.add_argument('--cacheMaxSizeInBytes', {
         default: DefaultModelServerConfig.cacheMaxSizeInBytes,
         metavar: 'CACHE_SIZE',
         type: 'int',
-        help: `0 for off.`
+        help: `0 for off.`,
     });
     parser.add_argument('--cacheEntryTimeoutMs', {
         default: DefaultModelServerConfig.cacheEntryTimeoutMs,
         metavar: 'CACHE_TIMEOUT',
         type: 'int',
-        help: `Specify in ms how long to keep entries in cache.`
+        help: `Specify in ms how long to keep entries in cache.`,
     });
     parser.add_argument('--requestTimeoutMs', {
         default: DefaultModelServerConfig.requestTimeoutMs,
         metavar: 'REQUEST_TIMEOUT',
         type: 'int',
-        help: `The maximum number of ms the server spends on a request.`
+        help: `The maximum number of ms the server spends on a request.`,
     });
     parser.add_argument('--queryTimeoutMs', {
         default: DefaultModelServerConfig.queryTimeoutMs,
         metavar: 'QUERY_TIMEOUT',
         type: 'int',
-        help: `The maximum time the server dedicates to executing a query in ms.\nDoes not include the time it takes to read and export the data.`
+        help:
+            `The maximum time the server dedicates to executing a query in ms.\nDoes not include the time it takes to read and export the data.`,
     });
     parser.add_argument('--shutdownTimeoutMinutes', {
         default: DefaultModelServerConfig.shutdownTimeoutMinutes,
         metavar: 'TIME',
         type: 'int',
-        help: `0 for off, server will shut down after this amount of minutes.`
+        help: `0 for off, server will shut down after this amount of minutes.`,
     });
     parser.add_argument('--shutdownTimeoutVarianceMinutes', {
         default: DefaultModelServerConfig.shutdownTimeoutVarianceMinutes,
         metavar: 'VARIANCE',
         type: 'int',
-        help: `modifies the shutdown timer by +/- timeoutVarianceMinutes (to avoid multiple instances shutting at the same time)`
+        help:
+            `modifies the shutdown timer by +/- timeoutVarianceMinutes (to avoid multiple instances shutting at the same time)`,
     });
     parser.add_argument('--maxQueryManyQueries', {
         default: DefaultModelServerConfig.maxQueryManyQueries,
         metavar: 'QUERY_MANY_LIMIT',
         type: 'int',
-        help: `maximum number of queries allowed by the query-many at a time`
+        help: `maximum number of queries allowed by the query-many at a time`,
     });
     parser.add_argument('--defaultSource', {
         default: DefaultModelServerConfig.defaultSource,
         metavar: 'DEFAULT_SOURCE',
-        help: `modifies which 'sourceMap' source to use by default`
+        help: `modifies which 'sourceMap' source to use by default`,
     });
     parser.add_argument('--sourceMap', {
         nargs: 2,
@@ -193,11 +194,11 @@ function addServerArgs(parser: argparse.ArgumentParser) {
         metavar: ['SOURCE', 'PATH'] as any,
         help: [
             'Map `id`s for a `source` to a file path.',
-            'Example: pdb-bcif \'../../data/bcif/${id}.bcif\' ',
-            'JS expressions can be used inside ${}, e.g. \'${id.substr(1, 2)}/${id}.mdb\'',
+            "Example: pdb-bcif '../../data/bcif/${id}.bcif' ",
+            "JS expressions can be used inside ${}, e.g. '${id.substr(1, 2)}/${id}.mdb'",
             'Can be specified multiple times.',
             'The `SOURCE` variable (e.g. `pdb-bcif`) is arbitrary and depends on how you plan to use the server.',
-            `Supported formats: ${ModelServerFetchFormats.join(', ')}`
+            `Supported formats: ${ModelServerFetchFormats.join(', ')}`,
         ].join('\n'),
     });
     parser.add_argument('--sourceMapUrl', {
@@ -205,20 +206,21 @@ function addServerArgs(parser: argparse.ArgumentParser) {
         action: 'append',
         metavar: ['SOURCE', 'PATH', 'SOURCE_MAP_FORMAT'] as any,
         help: [
-            'Same as --sourceMap but for URL. \'--sourceMapUrl src url format\'',
+            "Same as --sourceMap but for URL. '--sourceMapUrl src url format'",
             'Example: "pdb-cif \'https://www.ebi.ac.uk/pdbe/entry-files/download/${id}_updated.cif\' cif"',
-            `Supported formats: ${ModelServerFetchFormats.join(', ')}. Supported protocols: http://, https://, gs://`
+            `Supported formats: ${ModelServerFetchFormats.join(', ')}. Supported protocols: http://, https://, gs://`,
         ].join('\n'),
     });
     parser.add_argument('--healthCheckPath', {
         default: DefaultModelServerConfig.healthCheckPath,
         action: 'append',
         metavar: 'PATH',
-        help: `File path(s) to use for health-checks. Will test if all files are accessible and report a failed health-check if that's not the case.`,
+        help:
+            `File path(s) to use for health-checks. Will test if all files are accessible and report a failed health-check if that's not the case.`,
     });
 }
 
-export type ModelServerConfig = typeof DefaultModelServerConfig
+export type ModelServerConfig = typeof DefaultModelServerConfig;
 export const ModelServerConfig = { ...DefaultModelServerConfig };
 
 export const ModelServerConfigTemplate: ModelServerConfig = {
@@ -227,8 +229,8 @@ export const ModelServerConfigTemplate: ModelServerConfig = {
     sourceMap: [
         ['pdb-bcif', './path-to-binary-cif/${id.substr(1, 2)}/${id}.bcif'],
         ['pdb-cif', './path-to-text-cif/${id.substr(1, 2)}/${id}.cif'],
-        ['pdb-updated', 'https://www.ebi.ac.uk/pdbe/entry-files/download/${id}_updated.cif', 'cif']
-    ] as [string, string][]
+        ['pdb-updated', 'https://www.ebi.ac.uk/pdbe/entry-files/download/${id}_updated.cif', 'cif'],
+    ] as [string, string][],
 };
 
 // TODO: include once properly supported
@@ -236,21 +238,29 @@ export const ModelServerConfigTemplate: ModelServerConfig = {
 delete (ModelServerConfigTemplate as any).customProperties;
 
 interface ServerJsonConfig {
-    cfg?: string,
-    printCfg?: any,
-    cfgTemplate?: any
+    cfg?: string;
+    printCfg?: any;
+    cfgTemplate?: any;
 }
 
 function addJsonConfigArgs(parser: argparse.ArgumentParser) {
     parser.add_argument('--cfg', {
         help: [
             'JSON config file path',
-            'If a property is not specified, cmd line param/OS variable/default value are used.'
+            'If a property is not specified, cmd line param/OS variable/default value are used.',
         ].join('\n'),
         required: false,
     });
-    parser.add_argument('--printCfg', { help: 'Print current config for validation and exit.', required: false, action: 'store_true' });
-    parser.add_argument('--cfgTemplate', { help: 'Prints default JSON config template to be modified and exits.', required: false, action: 'store_true' });
+    parser.add_argument('--printCfg', {
+        help: 'Print current config for validation and exit.',
+        required: false,
+        action: 'store_true',
+    });
+    parser.add_argument('--cfgTemplate', {
+        help: 'Prints default JSON config template to be modified and exits.',
+        required: false,
+        action: 'store_true',
+    });
 }
 
 function setConfig(config: ModelServerConfig) {
@@ -269,17 +279,23 @@ function validateConfigAndSetupSourceMap() {
         throw new Error(`Please provide 'sourceMap' configuration. See [-h] for available options.`);
     }
 
-    mapSourceAndIdToFilename = new Function('source', 'id', [
-        'switch (source.toLowerCase()) {',
-        ...ModelServerConfig.sourceMap.map(([source, path, format]) => `case '${source.toLowerCase()}': return [\`${path}\`, '${format}'];`),
-        '}',
-    ].join('\n')) as any;
+    mapSourceAndIdToFilename = new Function(
+        'source',
+        'id',
+        [
+            'switch (source.toLowerCase()) {',
+            ...ModelServerConfig.sourceMap.map(([source, path, format]) =>
+                `case '${source.toLowerCase()}': return [\`${path}\`, '${format}'];`
+            ),
+            '}',
+        ].join('\n'),
+    ) as any;
 }
 
 function parseConfigArguments() {
     const parser = new argparse.ArgumentParser({
         add_help: true,
-        description: `ModelServer ${VERSION}, (c) 2018-2020, Mol* contributors`
+        description: `ModelServer ${VERSION}, (c) 2018-2020, Mol* contributors`,
     });
     addJsonConfigArgs(parser);
     addServerArgs(parser);

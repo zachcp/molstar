@@ -18,10 +18,10 @@ export namespace GlobalModelTransformInfo {
     const CategoryName = 'molstar_global_model_transform_info' as const;
     export const Schema = {
         [CategoryName]: {
-            matrix: Column.Schema.Matrix(4, 4, Column.Schema.float)
-        }
+            matrix: Column.Schema.Matrix(4, 4, Column.Schema.float),
+        },
     };
-    export type Schema = typeof Schema
+    export type Schema = typeof Schema;
 
     export const Descriptor = CustomPropertyDescriptor({
         name: CategoryName,
@@ -31,12 +31,14 @@ export namespace GlobalModelTransformInfo {
                 instance(ctx: CifExportContext) {
                     const mat = get(ctx.firstModel);
                     if (!mat) return CifWriter.Category.Empty;
-                    const table = Table.ofRows(Schema.molstar_global_model_transform_info, [{ matrix: mat as unknown as Tensor.Data }]);
+                    const table = Table.ofRows(Schema.molstar_global_model_transform_info, [{
+                        matrix: mat as unknown as Tensor.Data,
+                    }]);
                     return CifWriter.Category.ofTable(table);
-                }
+                },
             }],
-            prefix: 'molstar'
-        }
+            prefix: 'molstar',
+        },
     });
 
     export const Provider = FormatPropertyProvider.create<Mat4>(Descriptor);
@@ -72,9 +74,11 @@ export namespace GlobalModelTransformInfo {
         encoder.writeCategory({
             name: CategoryName,
             instance() {
-                const table = Table.ofRows(Schema.molstar_global_model_transform_info, [{ matrix: matrix as unknown as Tensor.Data }]);
+                const table = Table.ofRows(Schema.molstar_global_model_transform_info, [{
+                    matrix: matrix as unknown as Tensor.Data,
+                }]);
                 return CifWriter.Category.ofTable(table);
-            }
+            },
         });
     }
 }

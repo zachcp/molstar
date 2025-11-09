@@ -9,11 +9,19 @@ import type { PluginStateObject } from '../../../../mol-plugin-state/objects.ts'
 import { StructureRepresentation3D } from '../../../../mol-plugin-state/transforms/representation.ts';
 import type { PluginContext } from '../../../../mol-plugin/context.ts';
 import { SpacefillRepresentationProvider } from '../../../../mol-repr/structure/representation/spacefill.ts';
-import type { StateObjectRef, StateObjectSelector, StateBuilder } from '../../../../mol-state/index.ts';
+import type { StateBuilder, StateObjectRef, StateObjectSelector } from '../../../../mol-state/index.ts';
 import type { Clip } from '../../../../mol-util/clip.ts';
 import type { Color } from '../../../../mol-util/color/index.ts';
 import { ColorNames } from '../../../../mol-util/color/names.ts';
-import { type GraphicsMode, MesoscaleGroup, MesoscaleState, getDistinctBaseColors, getDistinctGroupColors, getGraphicsModeProps, getMesoscaleGroupParams } from '../state.ts';
+import {
+    getDistinctBaseColors,
+    getDistinctGroupColors,
+    getGraphicsModeProps,
+    getMesoscaleGroupParams,
+    type GraphicsMode,
+    MesoscaleGroup,
+    MesoscaleState,
+} from '../state.ts';
 import { MmcifAssembly, MmcifStructure } from './model.ts';
 
 function getSpacefillParams(color: Color, scaleFactor: number, graphics: GraphicsMode, clipVariant: Clip.Variant) {
@@ -26,10 +34,10 @@ function getSpacefillParams(color: Color, scaleFactor: number, graphics: Graphic
                 ignoreHydrogens: false,
                 instanceGranularity: false,
                 ignoreLight: true,
-                lodLevels: gmp.lodLevels.map(l => {
+                lodLevels: gmp.lodLevels.map((l) => {
                     return {
                         ...l,
-                        stride: Math.max(1, Math.round(l.stride / Math.pow(scaleFactor, l.scaleBias)))
+                        stride: Math.max(1, Math.round(l.stride / Math.pow(scaleFactor, l.scaleBias))),
                     };
                 }),
                 quality: 'lowest', // avoid 'auto', triggers boundary calc
@@ -48,18 +56,21 @@ function getSpacefillParams(color: Color, scaleFactor: number, graphics: Graphic
                 value: color,
                 saturation: 0,
                 lightness: 0,
-            }
+            },
         },
         sizeTheme: {
             name: 'physical',
             params: {
                 value: 1,
-            }
+            },
         },
     };
 }
 
-export async function createMmcifHierarchy(plugin: PluginContext, trajectory: StateObjectRef<PluginStateObject.Molecule.Trajectory>) {
+export async function createMmcifHierarchy(
+    plugin: PluginContext,
+    trajectory: StateObjectRef<PluginStateObject.Molecule.Trajectory>,
+) {
     const builder = plugin.builders.structure;
     const state = plugin.state.data;
 
@@ -71,7 +82,7 @@ export async function createMmcifHierarchy(plugin: PluginContext, trajectory: St
         const pdbId = sd.data.db.struct.entry_id.value(0);
         MesoscaleState.set(plugin, {
             description: sd.data.db.struct.title.value(0),
-            link: pdbId ? `https://www.rcsb.org/structure/${pdbId}` : ''
+            link: pdbId ? `https://www.rcsb.org/structure/${pdbId}` : '',
         });
     }
 
@@ -97,7 +108,7 @@ export async function createMmcifHierarchy(plugin: PluginContext, trajectory: St
     }
 
     const entGroups = new Map<string, StateObjectSelector>();
-    const entIds = new Map<string, { idx: number, members: Map<number, number> }>();
+    const entIds = new Map<string, { idx: number; members: Map<number, number> }>();
     const entColors = new Map<string, Color[]>();
 
     const graphicsMode = MesoscaleState.get(plugin).graphics;
@@ -109,12 +120,28 @@ export async function createMmcifHierarchy(plugin: PluginContext, trajectory: St
         .commit();
 
     const units = base.data!.units;
-    const willBeMerged = units.length > 1 && units.every(u => u.conformation.operator.isIdentity);
+    const willBeMerged = units.length > 1 && units.every((u) => u.conformation.operator.isIdentity);
     const clipVariant = willBeMerged ? 'pixel' : 'instance';
 
     const entRoot = await state.build()
         .toRoot()
-        .apply(MesoscaleGroup, { ...groupParams, root: true, index: -1, tag: 'ent:', label: 'entity', color: { type: 'custom', illustrative: false, value: ColorNames.white, variability: 20, shift: 0, lightness: 0, alpha: 1, emissive: 0 } }, { tags: 'group:ent:', state: { isCollapsed: false, isHidden: groupParams.hidden } })
+        .apply(MesoscaleGroup, {
+            ...groupParams,
+            root: true,
+            index: -1,
+            tag: 'ent:',
+            label: 'entity',
+            color: {
+                type: 'custom',
+                illustrative: false,
+                value: ColorNames.white,
+                variability: 20,
+                shift: 0,
+                lightness: 0,
+                alpha: 1,
+                emissive: 0,
+            },
+        }, { tags: 'group:ent:', state: { isCollapsed: false, isHidden: groupParams.hidden } })
         .commit();
 
     const getEntityType = (i: number) => {
@@ -148,7 +175,22 @@ export async function createMmcifHierarchy(plugin: PluginContext, trajectory: St
             const color = colorIdx !== undefined ? baseEntColors[colorIdx] : ColorNames.white;
             const group = await state.build()
                 .to(entRoot)
-                .applyOrUpdateTagged(`group:ent:${t}`, MesoscaleGroup, { ...groupParams, index: colorIdx, tag: `ent:${t}`, label: t, color: { type: 'generate', illustrative: false, value: color, variability: 20, shift: 0, lightness: 0, alpha: 1, emissive: 0 } }, { tags: `ent:`, state: { isCollapsed: true, isHidden: groupParams.hidden } })
+                .applyOrUpdateTagged(`group:ent:${t}`, MesoscaleGroup, {
+                    ...groupParams,
+                    index: colorIdx,
+                    tag: `ent:${t}`,
+                    label: t,
+                    color: {
+                        type: 'generate',
+                        illustrative: false,
+                        value: color,
+                        variability: 20,
+                        shift: 0,
+                        lightness: 0,
+                        alpha: 1,
+                        emissive: 0,
+                    },
+                }, { tags: `ent:`, state: { isCollapsed: true, isHidden: groupParams.hidden } })
                 .commit({ revertOnError: true });
             entGroups.set(t, group);
         }
@@ -169,7 +211,11 @@ export async function createMmcifHierarchy(plugin: PluginContext, trajectory: St
                 build = build
                     .toRoot()
                     .apply(MmcifStructure, { structureRef: base.ref, entityId: entities.id.value(i) }, { dependsOn })
-                    .apply(StructureRepresentation3D, getSpacefillParams(color, scaleFactor, graphicsMode, clipVariant), { tags: [`ent:${t}`] });
+                    .apply(
+                        StructureRepresentation3D,
+                        getSpacefillParams(color, scaleFactor, graphicsMode, clipVariant),
+                        { tags: [`ent:${t}`] },
+                    );
             }
             await build.commit();
         } catch (e) {

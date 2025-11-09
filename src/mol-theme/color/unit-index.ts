@@ -6,23 +6,24 @@
 
 import { Color } from '../../mol-util/color/index.ts';
 import type { Location } from '../../mol-model/location.ts';
-import { StructureElement, Bond } from '../../mol-model/structure.ts';
+import { Bond, StructureElement } from '../../mol-model/structure.ts';
 import type { ColorTheme, LocationColor } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../../mol-theme/theme.ts';
-import { getPaletteParams, getPalette } from '../../mol-util/color/palette.ts';
-import type { TableLegend, ScaleLegend } from '../../mol-util/legend.ts';
+import { getPalette, getPaletteParams } from '../../mol-util/color/palette.ts';
+import type { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
 import { ColorLists, getColorListFromName } from '../../mol-util/color/lists.ts';
 import { ColorThemeCategory } from './categories.ts';
 
 const DefaultList = 'dark-2';
 const DefaultColor = Color(0xCCCCCC);
-const Description = 'Gives every chain instance (single chain or collection of single elements) a unique color based on the position (index) of the chain in the list of chains in the structure.';
+const Description =
+    'Gives every chain instance (single chain or collection of single elements) a unique color based on the position (index) of the chain in the list of chains in the structure.';
 
 export const UnitIndexColorThemeParams = {
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
 };
-export type UnitIndexColorThemeParams = typeof UnitIndexColorThemeParams
+export type UnitIndexColorThemeParams = typeof UnitIndexColorThemeParams;
 export function getUnitIndexColorThemeParams(ctx: ThemeDataContext) {
     const params = PD.clone(UnitIndexColorThemeParams);
     if (ctx.structure) {
@@ -30,14 +31,17 @@ export function getUnitIndexColorThemeParams(ctx: ThemeDataContext) {
             params.palette.defaultValue.name = 'colors';
             params.palette.defaultValue.params = {
                 ...params.palette.defaultValue.params,
-                list: { kind: 'interpolate', colors: getColorListFromName(DefaultList).list }
+                list: { kind: 'interpolate', colors: getColorListFromName(DefaultList).list },
             };
         }
     }
     return params;
 }
 
-export function UnitIndexColorTheme(ctx: ThemeDataContext, props: PD.Values<UnitIndexColorThemeParams>): ColorTheme<UnitIndexColorThemeParams> {
+export function UnitIndexColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<UnitIndexColorThemeParams>,
+): ColorTheme<UnitIndexColorThemeParams> {
     let color: LocationColor;
     let legend: ScaleLegend | TableLegend | undefined;
 
@@ -68,7 +72,7 @@ export function UnitIndexColorTheme(ctx: ThemeDataContext, props: PD.Values<Unit
         color,
         props,
         description: Description,
-        legend
+        legend,
     };
 }
 
@@ -79,5 +83,5 @@ export const UnitIndexColorThemeProvider: ColorTheme.Provider<UnitIndexColorThem
     factory: UnitIndexColorTheme,
     getParams: getUnitIndexColorThemeParams,
     defaultValues: PD.getDefaultValues(UnitIndexColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
 };

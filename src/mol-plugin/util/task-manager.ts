@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Task, type Progress, type RuntimeContext } from '../../mol-task/index.ts';
+import { type Progress, type RuntimeContext, Task } from '../../mol-task/index.ts';
 import { RxEventHelper } from '../../mol-util/rx-event-helper.ts';
 import { now } from '../../mol-util/now.ts';
 import { CreateObservableCtx, ExecuteInContext } from '../../mol-task/execution/observable.ts';
@@ -18,11 +18,11 @@ class TaskManager {
     private runningTasks = new Set<number>();
     private abortRequests = new Map<number, string | undefined>();
     private options = new Map<number, { useOverlay: boolean }>();
-    private currentContext: { ctx: RuntimeContext, refCount: number }[] = [];
+    private currentContext: { ctx: RuntimeContext; refCount: number }[] = [];
 
     readonly events = {
         progress: this.ev<TaskManager.ProgressEvent>(),
-        finished: this.ev<{ id: number }>()
+        finished: this.ev<{ id: number }>(),
     };
 
     private tryGetAbortTaskId(node: Progress.Node): number | undefined {
@@ -45,12 +45,12 @@ class TaskManager {
                 id: internalId,
                 useOverlay: this.options.get(taskId)?.useOverlay,
                 level: elapsed < 250 ? 'none' : 'background',
-                progress
+                progress,
             });
         };
     }
 
-    async run<T>(task: Task<T>, params?: { createNewContext?: boolean, useOverlay?: boolean }): Promise<T> {
+    async run<T>(task: Task<T>, params?: { createNewContext?: boolean; useOverlay?: boolean }): Promise<T> {
         const id = this.id++;
 
         let ctx: TaskManager['currentContext'][0];
@@ -78,13 +78,11 @@ class TaskManager {
     }
 
     requestAbortAll(reason?: string) {
-        this.runningTasks.forEach(id => this.abortRequests.set(id, reason));
+        this.runningTasks.forEach((id) => this.abortRequests.set(id, reason));
     }
 
     requestAbort(taskIdOrProgress: number | Progress, reason?: string) {
-        const id = typeof taskIdOrProgress === 'number'
-            ? taskIdOrProgress
-            : taskIdOrProgress.root.progress.taskId;
+        const id = typeof taskIdOrProgress === 'number' ? taskIdOrProgress : taskIdOrProgress.root.progress.taskId;
         this.abortRequests.set(id, reason);
     }
 
@@ -94,20 +92,20 @@ class TaskManager {
 }
 
 namespace TaskManager {
-    export type ReportLevel = 'none' | 'background'
+    export type ReportLevel = 'none' | 'background';
 
     export interface ProgressEvent {
-        id: number,
-        useOverlay?: boolean,
-        level: ReportLevel,
-        progress: Progress
+        id: number;
+        useOverlay?: boolean;
+        level: ReportLevel;
+        progress: Progress;
     }
 
     function delay(time: number): Promise<void> {
-        return new Promise(res => setTimeout(res, time));
+        return new Promise((res) => setTimeout(res, time));
     }
     export function testTask(N: number) {
-        return Task.create('Test', async ctx => {
+        return Task.create('Test', async (ctx) => {
             let i = 0;
             while (i < N) {
                 await delay(100 + Math.random() * 200);

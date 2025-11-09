@@ -18,7 +18,7 @@ async function run() {
     const data = await req.arrayBuffer();
     console.log(data.byteLength);
     console.time('parse');
-    const ret = await parseXtc(new Uint8Array(data)).run(o => {
+    const ret = await parseXtc(new Uint8Array(data)).run((o) => {
         console.log(o.root.progress.current, o.root.progress.max);
     }, 1000);
     console.timeEnd('parse');

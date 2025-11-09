@@ -6,15 +6,22 @@
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import type { VisualContext } from '../../visual.ts';
-import { type Structure, StructureElement, Bond, type Unit } from '../../../mol-model/structure.ts';
+import { Bond, type Structure, StructureElement, type Unit } from '../../../mol-model/structure.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
-import { BitFlags, arrayEqual } from '../../../mol-util/index.ts';
-import { LinkStyle, createLinkLines, type LinkBuilderProps } from './util/link.ts';
-import { type ComplexVisual, ComplexLinesVisual, ComplexLinesParams } from '../complex-visual.ts';
+import { arrayEqual, BitFlags } from '../../../mol-util/index.ts';
+import { createLinkLines, type LinkBuilderProps, LinkStyle } from './util/link.ts';
+import { ComplexLinesParams, ComplexLinesVisual, type ComplexVisual } from '../complex-visual.ts';
 import type { VisualUpdateState } from '../../util.ts';
 import { BondType } from '../../../mol-model/structure/model/types.ts';
-import { BondIterator, getInterBondLoci, eachInterBond, BondLineParams, makeInterBondIgnoreTest, hasStructureVisibleBonds } from './util/bond.ts';
+import {
+    BondIterator,
+    BondLineParams,
+    eachInterBond,
+    getInterBondLoci,
+    hasStructureVisibleBonds,
+    makeInterBondIgnoreTest,
+} from './util/bond.ts';
 import { Lines } from '../../../mol-geo/geometry/lines/lines.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { EmptyLocationIterator } from '../../../mol-geo/util/location-iterator.ts';
@@ -30,7 +37,11 @@ function setRefPosition(pos: Vec3, structure: Structure, unit: Unit.Atomic, inde
     return null;
 }
 
-export function getInterUnitBondLineBuilderProps(structure: Structure, theme: Theme, props: PD.Values<InterUnitBondLineParams>): LinkBuilderProps {
+export function getInterUnitBondLineBuilderProps(
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<InterUnitBondLineParams>,
+): LinkBuilderProps {
     const bonds = structure.interUnitBonds;
     const { edgeCount, edges } = bonds;
 
@@ -77,16 +88,12 @@ export function getInterUnitBondLineBuilderProps(structure: Structure, theme: Th
                 // show metallic coordinations and hydrogen bonds with dashed cylinders
                 return LinkStyle.Dashed;
             } else if (o === 3) {
-                return mbOff ? LinkStyle.Solid :
-                    mbSymmetric ? LinkStyle.Triple :
-                        LinkStyle.OffsetTriple;
+                return mbOff ? LinkStyle.Solid : mbSymmetric ? LinkStyle.Triple : LinkStyle.OffsetTriple;
             } else if (aromaticBonds && BondType.is(f, BondType.Flag.Aromatic)) {
                 return LinkStyle.Aromatic;
             }
 
-            return (o !== 2 || mbOff) ? LinkStyle.Solid :
-                mbSymmetric ? LinkStyle.Double :
-                    LinkStyle.OffsetDouble;
+            return (o !== 2 || mbOff) ? LinkStyle.Solid : mbSymmetric ? LinkStyle.Double : LinkStyle.OffsetDouble;
         },
         radius: (edgeIndex: number) => {
             const b = edges[edgeIndex];
@@ -99,11 +106,17 @@ export function getInterUnitBondLineBuilderProps(structure: Structure, theme: Th
             const sizeB = theme.size.size(loc);
             return Math.min(sizeA, sizeB) * sizeFactor;
         },
-        ignore: makeInterBondIgnoreTest(structure, props)
+        ignore: makeInterBondIgnoreTest(structure, props),
     };
 }
 
-function createInterUnitBondLines(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<InterUnitBondLineParams>, lines?: Lines) {
+function createInterUnitBondLines(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<InterUnitBondLineParams>,
+    lines?: Lines,
+) {
     if (!hasStructureVisibleBonds(structure, props)) return Lines.createEmpty(lines);
     if (!structure.interUnitBonds.edgeCount) return Lines.createEmpty(lines);
 
@@ -127,7 +140,7 @@ export const InterUnitBondLineParams = {
     ...BondLineParams,
     includeParent: PD.Boolean(false),
 };
-export type InterUnitBondLineParams = typeof InterUnitBondLineParams
+export type InterUnitBondLineParams = typeof InterUnitBondLineParams;
 
 export function InterUnitBondLineVisual(materialId: number): ComplexVisual<InterUnitBondLineParams> {
     return ComplexLinesVisual<InterUnitBondLineParams>({
@@ -140,9 +153,16 @@ export function InterUnitBondLineVisual(materialId: number): ComplexVisual<Inter
         },
         getLoci: getInterBondLoci,
         eachLocation: eachInterBond,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<InterUnitBondLineParams>, currentProps: PD.Values<InterUnitBondLineParams>, newTheme: Theme, currentTheme: Theme, newStructure: Structure, currentStructure: Structure) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<InterUnitBondLineParams>,
+            currentProps: PD.Values<InterUnitBondLineParams>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructure: Structure,
+            currentStructure: Structure,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.linkScale !== currentProps.linkScale ||
                 newProps.linkSpacing !== currentProps.linkSpacing ||
                 newProps.aromaticDashCount !== currentProps.aromaticDashCount ||
@@ -151,15 +171,17 @@ export function InterUnitBondLineVisual(materialId: number): ComplexVisual<Inter
                 newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant ||
                 !arrayEqual(newProps.includeTypes, currentProps.includeTypes) ||
                 !arrayEqual(newProps.excludeTypes, currentProps.excludeTypes) ||
-                newProps.multipleBonds !== currentProps.multipleBonds
-            );
+                newProps.multipleBonds !== currentProps.multipleBonds;
 
-            if (hasStructureVisibleBonds(newStructure, newProps) && newStructure.interUnitBonds !== currentStructure.interUnitBonds) {
+            if (
+                hasStructureVisibleBonds(newStructure, newProps) &&
+                newStructure.interUnitBonds !== currentStructure.interUnitBonds
+            ) {
                 state.createGeometry = true;
                 state.updateTransform = true;
                 state.updateColor = true;
                 state.updateSize = true;
             }
-        }
+        },
     }, materialId);
 }

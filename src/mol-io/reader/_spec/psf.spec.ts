@@ -84,7 +84,7 @@ describe('psf reader', () => {
         expect(id).toBe('PSF CMAP CHEQ');
         expect(title).toEqual([
             'BETA HARPIN IN IMPLICIT SOLVENT',
-            'DATE:    11/22/10     16:54: 9      CREATED BY USER: aokur'
+            'DATE:    11/22/10     16:54: 9      CREATED BY USER: aokur',
         ]);
 
         expect(atoms.atomId.value(0)).toBe(1);

@@ -8,21 +8,21 @@
 import { treeValidationIssues } from './tree/generic/tree-validation.ts';
 import { treeToString } from './tree/generic/tree-utils.ts';
 import { MVSAnimationSchema, type MVSAnimationTree } from './tree/animation/animation-tree.ts';
-import { type Root, createMVSBuilder } from './tree/mvs/mvs-builder.ts';
+import { createMVSBuilder, type Root } from './tree/mvs/mvs-builder.ts';
 import { type MVSTree, MVSTreeSchema } from './tree/mvs/mvs-tree.ts';
 
 /** Top-level metadata for a MVS file (single-state or multi-state). */
 export interface GlobalMetadata {
     /** Name of this MVSData */
-    title?: string,
+    title?: string;
     /** Detailed description of this view */
-    description?: string,
+    description?: string;
     /** Format of `description`. Default is 'markdown'. */
-    description_format?: 'markdown' | 'plaintext',
+    description_format?: 'markdown' | 'plaintext';
     /** Timestamp when this view was exported. */
-    timestamp: string,
+    timestamp: string;
     /** Version of MolViewSpec used to write this file. */
-    version: string,
+    version: string;
 }
 export const GlobalMetadata = {
     create(metadata?: Pick<GlobalMetadata, 'title' | 'description' | 'description_format'>): GlobalMetadata {
@@ -37,49 +37,48 @@ export const GlobalMetadata = {
 /** Metadata for an individual snapshot. */
 export interface SnapshotMetadata {
     /** Name of this snapshot. */
-    title?: string,
+    title?: string;
     /** Detailed description of this snapshot. */
-    description?: string,
+    description?: string;
     /** Format of `description`. Default is 'markdown'. */
-    description_format?: 'markdown' | 'plaintext',
+    description_format?: 'markdown' | 'plaintext';
     /** Unique identifier of this state, useful when working with collections of states. */
-    key?: string,
+    key?: string;
     /** Timespan for snapshot. */
-    linger_duration_ms: number,
+    linger_duration_ms: number;
     /** Timespan for the animation to the next snapshot. Leave empty to skip animations. */
-    transition_duration_ms?: number,
+    transition_duration_ms?: number;
 }
 
 export interface Snapshot {
     /** Root of the node tree */
-    root: MVSTree,
+    root: MVSTree;
     /** Associated metadata */
-    metadata: SnapshotMetadata,
+    metadata: SnapshotMetadata;
     /** Optional animation */
-    animation?: MVSAnimationTree,
+    animation?: MVSAnimationTree;
 }
 
 /** MVSData with a single state */
 export interface MVSData_State {
-    kind?: 'single',
+    kind?: 'single';
     /** Root of the node tree */
-    root: MVSTree,
+    root: MVSTree;
     /** Associated metadata */
-    metadata: GlobalMetadata,
+    metadata: GlobalMetadata;
 }
 
 /** MVSData with multiple states (snapshots) */
 export interface MVSData_States {
-    kind: 'multiple',
+    kind: 'multiple';
     /** Ordered collection of individual states */
-    snapshots: Snapshot[],
+    snapshots: Snapshot[];
     /** Associated metadata */
-    metadata: GlobalMetadata,
+    metadata: GlobalMetadata;
 }
 
 /** Top level of the MolViewSpec (MVS) data format. */
-export type MVSData = MVSData_State | MVSData_States
-
+export type MVSData = MVSData_State | MVSData_States;
 
 export const MVSData = {
     /** Currently supported major version of MolViewSpec format (e.g. 1 for version '1.0.8') */
@@ -92,7 +91,9 @@ export const MVSData = {
         if (major === undefined) {
             console.error('Loaded MVS does not contain valid version info.');
         } else if (major > (majorVersion(MVSData.SupportedVersion) ?? 0)) {
-            console.warn(`Loaded MVS is of higher version (${result.metadata.version}) than currently supported version (${MVSData.SupportedVersion}). Some features may not work as expected.`);
+            console.warn(
+                `Loaded MVS is of higher version (${result.metadata.version}) than currently supported version (${MVSData.SupportedVersion}). Some features may not work as expected.`,
+            );
         }
         return result;
     },
@@ -112,7 +113,9 @@ export const MVSData = {
      * If `options.noExtra` is true, presence of any extra node parameters is treated as an issue. */
     validationIssues(mvsData: MVSData, options: { noExtra?: boolean } = {}): string[] | undefined {
         const version = mvsData?.metadata?.version;
-        if (typeof version !== 'string') return [`MVSData.metadata.version must be a string, not ${typeof version}: ${version}`];
+        if (typeof version !== 'string') {
+            return [`MVSData.metadata.version must be a string, not ${typeof version}: ${version}`];
+        }
         if (mvsData.kind === 'single' || mvsData.kind === undefined) {
             return snapshotValidationIssues(mvsData, options);
         } else if (mvsData.kind === 'multiple') {
@@ -133,8 +136,8 @@ export const MVSData = {
     toPrettyString(mvsData: MVSData): string {
         const type = mvsData.kind === 'multiple' ? 'multiple states' : 'single state';
         const title = mvsData.metadata.title !== undefined ? ` "${mvsData.metadata.title}"` : '';
-        const trees = mvsData.kind === 'multiple' ?
-            mvsData.snapshots.map((s, i) => `[Snapshot #${i}]\n${treeToString(s.root)}`).join('\n')
+        const trees = mvsData.kind === 'multiple'
+            ? mvsData.snapshots.map((s, i) => `[Snapshot #${i}]\n${treeToString(s.root)}`).join('\n')
             : treeToString(mvsData.root);
         return `MolViewSpec ${type}${title} (version ${mvsData.metadata.version}, created ${mvsData.metadata.timestamp}):\n${trees}`;
     },
@@ -154,7 +157,10 @@ export const MVSData = {
     },
 
     /** Create a multi-state MVS data from a list of snapshots. */
-    createMultistate(snapshots: Snapshot[], metadata?: Pick<GlobalMetadata, 'title' | 'description' | 'description_format'>): MVSData_States {
+    createMultistate(
+        snapshots: Snapshot[],
+        metadata?: Pick<GlobalMetadata, 'title' | 'description' | 'description_format'>,
+    ): MVSData_States {
         return {
             kind: 'multiple',
             snapshots: [...snapshots],
@@ -182,7 +188,6 @@ export const MVSData = {
     },
 };
 
-
 /** Get the major version from a semantic version string, e.g. '1.0.8' -> 1 */
 function majorVersion(semanticVersion: string | number): number | undefined {
     if (typeof semanticVersion === 'string') return parseInt(semanticVersion.split('.')[0]);
@@ -191,7 +196,10 @@ function majorVersion(semanticVersion: string | number): number | undefined {
     return undefined;
 }
 
-function snapshotValidationIssues(snapshot: MVSData_State | Snapshot, options: { noExtra?: boolean } = {}): string[] | undefined {
+function snapshotValidationIssues(
+    snapshot: MVSData_State | Snapshot,
+    options: { noExtra?: boolean } = {},
+): string[] | undefined {
     if (snapshot.root === undefined) return [`"root" missing in snapshot`];
     const state = treeValidationIssues(MVSTreeSchema, snapshot.root, options);
     const animation = 'animation' in snapshot && snapshot.animation !== undefined

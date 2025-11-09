@@ -18,19 +18,22 @@ export type UnitResonance = {
      */
     readonly delocalizedTriplets: {
         /** Return 3rd element in triplet or undefined if `a` and `b` are not part of a triplet */
-        readonly getThirdElement: (a: StructureElement.UnitIndex, b: StructureElement.UnitIndex) => StructureElement.UnitIndex | undefined
+        readonly getThirdElement: (
+            a: StructureElement.UnitIndex,
+            b: StructureElement.UnitIndex,
+        ) => StructureElement.UnitIndex | undefined;
         /** Return index into `triplets` or undefined if `a` is not part of any triplet */
-        readonly getTripletIndices: (a: StructureElement.UnitIndex) => number[] | undefined
-        readonly triplets: SortedArray<StructureElement.UnitIndex>[]
-    }
-}
+        readonly getTripletIndices: (a: StructureElement.UnitIndex) => number[] | undefined;
+        readonly triplets: SortedArray<StructureElement.UnitIndex>[];
+    };
+};
 
 const EmptyUnitResonance: UnitResonance = {
     delocalizedTriplets: {
         getThirdElement: () => undefined,
         getTripletIndices: () => undefined,
-        triplets: []
-    }
+        triplets: [],
+    },
 };
 
 export function getResonance(unit: Unit.Atomic): UnitResonance {
@@ -38,7 +41,7 @@ export function getResonance(unit: Unit.Atomic): UnitResonance {
         return EmptyUnitResonance;
     }
     return {
-        delocalizedTriplets: getDelocalizedTriplets(unit)
+        delocalizedTriplets: getDelocalizedTriplets(unit),
     };
 }
 

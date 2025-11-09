@@ -20,9 +20,8 @@ import { loadMVS, type MVSLoadOptions } from '../load.ts';
 import { MVSData } from '../mvs-data.ts';
 import { MVSTransform } from './annotation-structure-component.ts';
 
-
 /** Plugin state object storing `MVSData` */
-export class Mvs extends SO.Create<{ mvsData: MVSData, sourceUrl?: string }>({ name: 'MVS Data', typeClass: 'Data' }) { }
+export class Mvs extends SO.Create<{ mvsData: MVSData; sourceUrl?: string }>({ name: 'MVS Data', typeClass: 'Data' }) {}
 
 /** Transformer for parsing data in MVSJ format */
 export const ParseMVSJ = MVSTransform({
@@ -49,19 +48,25 @@ export const ParseMVSX = MVSTransform({
     },
 })({
     apply({ a, params }, plugin: PluginContext) {
-        return Task.create('Parse MVSX file', async ctx => {
+        return Task.create('Parse MVSX file', async (ctx) => {
             const data = await loadMVSX(plugin, ctx, a.data, params.mainFilePath);
             return new Mvs(data);
         });
     },
 });
 
-
 /** Params for the `LoadMvsData` action */
 export const LoadMvsDataParams = {
-    appendSnapshots: PD.Boolean(false, { description: 'If true, add snapshots from MVS into current snapshot list; if false, replace the snapshot list.' }),
-    keepCamera: PD.Boolean(false, { description: 'If true, any camera positioning from the MVS state will be ignored and the current camera position will be kept.' }),
-    applyExtensions: PD.Boolean(true, { description: 'If true, apply builtin MVS-loading extensions (not a part of standard MVS specification).' }),
+    appendSnapshots: PD.Boolean(false, {
+        description: 'If true, add snapshots from MVS into current snapshot list; if false, replace the snapshot list.',
+    }),
+    keepCamera: PD.Boolean(false, {
+        description:
+            'If true, any camera positioning from the MVS state will be ignored and the current camera position will be kept.',
+    }),
+    applyExtensions: PD.Boolean(true, {
+        description: 'If true, apply builtin MVS-loading extensions (not a part of standard MVS specification).',
+    }),
 };
 
 /** State action which loads a MVS view into Mol* */
@@ -69,11 +74,17 @@ export const LoadMvsData = StateAction.build({
     display: { name: 'Load MVS Data' },
     from: Mvs,
     params: LoadMvsDataParams,
-})(({ a, params }, plugin: PluginContext) => Task.create('Load MVS Data', async () => {
-    const { mvsData, sourceUrl } = a.data;
-    await loadMVS(plugin, mvsData, { appendSnapshots: params.appendSnapshots, keepCamera: params.keepCamera, sourceUrl: sourceUrl, extensions: params.applyExtensions ? undefined : [] });
-}));
-
+})(({ a, params }, plugin: PluginContext) =>
+    Task.create('Load MVS Data', async () => {
+        const { mvsData, sourceUrl } = a.data;
+        await loadMVS(plugin, mvsData, {
+            appendSnapshots: params.appendSnapshots,
+            keepCamera: params.keepCamera,
+            sourceUrl: sourceUrl,
+            extensions: params.applyExtensions ? undefined : [],
+        });
+    })
+);
 
 /** Data format provider for MVSJ format.
  * If Visuals:On, it will load the parsed MVS view;
@@ -107,12 +118,16 @@ export const MVSXFormatProvider: DataFormatProvider<{}, StateObjectRef<Mvs>, any
     visuals: MVSJFormatProvider.visuals,
 });
 
-
 /** Parse binary data `data` as MVSX archive,
  * add all contained files to `plugin`'s asset manager,
  * and parse the main file in the archive as MVSJ.
  * Return parsed MVS data and `sourceUrl` for resolution of relative URIs.  */
-export async function loadMVSX(plugin: PluginContext, runtimeCtx: RuntimeContext, data: Uint8Array<ArrayBuffer>, mainFilePath: string = 'index.mvsj'): Promise<{ mvsData: MVSData, sourceUrl: string }> {
+export async function loadMVSX(
+    plugin: PluginContext,
+    runtimeCtx: RuntimeContext,
+    data: Uint8Array<ArrayBuffer>,
+    mainFilePath: string = 'index.mvsj',
+): Promise<{ mvsData: MVSData; sourceUrl: string }> {
     // Ensure at most one generation of MVSX file assets exists in the asset manager.
     // Hopefully, this is a reasonable compromise to ensure MVSX files work in multi-snapshot
     // states.
@@ -138,9 +153,14 @@ export async function loadMVSX(plugin: PluginContext, runtimeCtx: RuntimeContext
     return { mvsData, sourceUrl };
 }
 
-export async function loadMVSData(plugin: PluginContext, data: MVSData | StringLike | Uint8Array<ArrayBuffer>, format: 'mvsj' | 'mvsx', options?: MVSLoadOptions) {
+export async function loadMVSData(
+    plugin: PluginContext,
+    data: MVSData | StringLike | Uint8Array<ArrayBuffer>,
+    format: 'mvsj' | 'mvsx',
+    options?: MVSLoadOptions,
+) {
     if (typeof data === 'string' && data.startsWith('base64')) {
-        data = Uint8Array.from(atob(data.substring(7)), c => c.charCodeAt(0)); // Decode base64 string to Uint8Array
+        data = Uint8Array.from(atob(data.substring(7)), (c) => c.charCodeAt(0)); // Decode base64 string to Uint8Array
     }
 
     if (format === 'mvsj') {
@@ -157,9 +177,11 @@ export async function loadMVSData(plugin: PluginContext, data: MVSData | StringL
         await loadMVS(plugin, mvsData, { sanityChecks: true, sourceUrl: undefined, ...options });
     } else if (format === 'mvsx') {
         if (typeof data === 'string') {
-            throw new Error("loadMvsData: if `format` is 'mvsx', then `data` must be a Uint8Array or a base64-encoded string prefixed with 'base64,'.");
+            throw new Error(
+                "loadMvsData: if `format` is 'mvsx', then `data` must be a Uint8Array or a base64-encoded string prefixed with 'base64,'.",
+            );
         }
-        await plugin.runTask(Task.create('Load MVSX file', async ctx => {
+        await plugin.runTask(Task.create('Load MVSX file', async (ctx) => {
             const parsed = await loadMVSX(plugin, ctx, data as Uint8Array<ArrayBuffer>);
             await loadMVS(plugin, parsed.mvsData, { sanityChecks: true, ...options, sourceUrl: parsed.sourceUrl });
         }));
@@ -176,7 +198,7 @@ function clearMVSXFileAssets(plugin: PluginContext) {
 
 /** If the PluginStateObject `pso` comes from a Download transform, try to get its `url` parameter. */
 function tryGetDownloadUrl(pso: SO.Data.String, plugin: PluginContext): string | undefined {
-    const theCell = plugin.state.data.selectQ(q => q.ofTransformer(Download)).find(cell => cell.obj === pso);
+    const theCell = plugin.state.data.selectQ((q) => q.ofTransformer(Download)).find((cell) => cell.obj === pso);
     const urlParam = theCell?.transform.params?.url;
     return urlParam ? Asset.getUrl(urlParam) : undefined;
 }
@@ -190,13 +212,22 @@ function arcpUri(archiveId: string, path: string): string {
 
 /** Add a URL asset to asset manager.
  * Skip if an asset with the same URL already exists. */
-function ensureUrlAsset(manager: AssetManager, url: string, data: Uint8Array<ArrayBuffer>, options?: { isFile?: boolean }) {
+function ensureUrlAsset(
+    manager: AssetManager,
+    url: string,
+    data: Uint8Array<ArrayBuffer>,
+    options?: { isFile?: boolean },
+) {
     const asset = Asset.getUrlAsset(manager, url);
     if (!manager.has(asset)) {
         const filename = url.split('/').pop() ?? 'file';
         // We need to mark files as static resources to prevent deleting them
         // when changing state snapshots.
-        manager.set(asset, new File([data], filename), options?.isFile ? { isStatic: true, tag: 'mvsx-file' } : undefined);
+        manager.set(
+            asset,
+            new File([data], filename),
+            options?.isFile ? { isStatic: true, tag: 'mvsx-file' } : undefined,
+        );
     }
 }
 

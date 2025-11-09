@@ -13,14 +13,18 @@ import type { Quat } from './quat.ts';
 import type { Vec3 } from './vec3.ts';
 import { clamp } from '../../interpolate.ts';
 
-interface Euler extends Array<number> { [d: number]: number, '@type': 'euler', length: 3 }
+interface Euler extends Array<number> {
+    [d: number]: number;
+    '@type': 'euler';
+    length: 3;
+}
 
 function Euler(): Euler {
     return Euler.zero();
 }
 
 namespace Euler {
-    export type Order = 'XYZ' | 'YXZ' | 'ZXY' | 'ZYX' | 'YZX' | 'XZY'
+    export type Order = 'XYZ' | 'YXZ' | 'ZXY' | 'ZYX' | 'YZX' | 'XZY';
 
     export function zero(): Euler {
         // force double backing array by 0.1.

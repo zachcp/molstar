@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Structure, type Unit, type StructureElement } from '../../structure.ts';
+import { Structure, type StructureElement, type Unit } from '../../structure.ts';
 import { SortedArray } from '../../../../mol-data/int.ts';
 import type { StructureSubsetBuilder } from '../../structure/util/subset-builder.ts';
 
@@ -61,9 +61,11 @@ export function structureAreIntersecting(sA: Structure, sB: Structure): boolean 
 
     let a, b;
     if (sA.units.length < sB.units.length) {
-        a = sA; b = sB;
+        a = sA;
+        b = sB;
     } else {
-        a = sB; b = sA;
+        a = sB;
+        b = sA;
     }
 
     const aU = a.units, bU = b.unitMap;
@@ -84,9 +86,11 @@ export function structureIntersect(sA: Structure, sB: Structure): Structure {
 
     let a, b;
     if (sA.units.length < sB.units.length) {
-        a = sA; b = sB;
+        a = sA;
+        b = sB;
     } else {
-        a = sB; b = sA;
+        a = sB;
+        b = sA;
     }
 
     const aU = a.units, bU = b.unitMap;

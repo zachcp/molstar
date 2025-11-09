@@ -9,7 +9,15 @@ import { BondType } from '../../../model/types.ts';
 import { type IntraUnitBondProps, IntraUnitBonds } from './data.ts';
 import type { Unit } from '../../unit.ts';
 import { IntAdjacencyGraph } from '../../../../../mol-math/graph.ts';
-import { type BondComputationProps, getElementIdx, MetalsSet, getElementThreshold, isHydrogen, DefaultBondComputationProps, getPairingThreshold } from './common.ts';
+import {
+    type BondComputationProps,
+    DefaultBondComputationProps,
+    getElementIdx,
+    getElementThreshold,
+    getPairingThreshold,
+    isHydrogen,
+    MetalsSet,
+} from './common.ts';
 import { SortedArray } from '../../../../../mol-data/int.ts';
 import { getIntraBondOrderFromTable } from '../../../model/properties/atomic/bonds.ts';
 import type { StructureElement } from '../../element.ts';
@@ -29,7 +37,15 @@ const CoarseGrainedBondMaxRadius = 6;
 const CoarseGrainedIntraResidueBondMaxDistance = 5.5;
 const CoarseGrainedInterResidueBondMaxDistance = 3.9;
 
-function getGraph(atomA: StructureElement.UnitIndex[], atomB: StructureElement.UnitIndex[], _order: number[], _flags: number[], _key: number[], atomCount: number, props?: IntraUnitBondProps): IntraUnitBonds {
+function getGraph(
+    atomA: StructureElement.UnitIndex[],
+    atomB: StructureElement.UnitIndex[],
+    _order: number[],
+    _flags: number[],
+    _key: number[],
+    atomCount: number,
+    props?: IntraUnitBondProps,
+): IntraUnitBonds {
     const builder = new IntAdjacencyGraph.EdgeBuilder(atomCount, atomA, atomB);
     const flags = new Uint16Array(builder.slotCount);
     const order = new Int8Array(builder.slotCount);
@@ -103,7 +119,10 @@ function findIndexPairBonds(unit: Unit.Atomic) {
                 add = dist < maxDistance;
             } else {
                 const pairingThreshold = getPairingThreshold(
-                    aeI, beI, getElementThreshold(aeI), getElementThreshold(beI)
+                    aeI,
+                    beI,
+                    getElementThreshold(aeI),
+                    getElementThreshold(beI),
                 );
                 add = dist < pairingThreshold;
 
@@ -155,7 +174,7 @@ function findBonds(unit: Unit.Atomic, props: BondComputationProps): IntraUnitBon
     const key: number[] = [];
 
     let lastResidue = -1;
-    let componentMap: Map<string, Map<string, { flags: number, order: number, key: number }>> | undefined = void 0;
+    let componentMap: Map<string, Map<string, { flags: number; order: number; key: number }>> | undefined = void 0;
 
     let isWatery = true, isDictionaryBased = true, isSequenced = true;
 
@@ -274,7 +293,8 @@ function findBonds(unit: Unit.Atomic, props: BondComputationProps): IntraUnitBon
                     flag = dist <= CoarseGrainedIntraResidueBondMaxDistance;
                 } else {
                     // inter residue "backbone" bonds
-                    flag = dist <= CoarseGrainedInterResidueBondMaxDistance && traceElementIndex[raI] === aI && traceElementIndex[rbI] === bI;
+                    flag = dist <= CoarseGrainedInterResidueBondMaxDistance && traceElementIndex[raI] === aI &&
+                        traceElementIndex[rbI] === bI;
                 }
             } else {
                 const pairingThreshold = getPairingThreshold(aeI, beI, thresholdA, getElementThreshold(beI));
@@ -285,7 +305,8 @@ function findBonds(unit: Unit.Atomic, props: BondComputationProps): IntraUnitBon
                 atomA[atomA.length] = _aI;
                 atomB[atomB.length] = _bI;
                 order[order.length] = getIntraBondOrderFromTable(compId, atomIdA, label_atom_id.value(bI));
-                flags[flags.length] = (isMetal ? BondType.Flag.MetallicCoordination : BondType.Flag.Covalent) | BondType.Flag.Computed;
+                flags[flags.length] = (isMetal ? BondType.Flag.MetallicCoordination : BondType.Flag.Covalent) |
+                    BondType.Flag.Computed;
                 key[key.length] = -1;
 
                 const seqIdB = label_seq_id.value(rbI);

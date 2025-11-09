@@ -17,7 +17,11 @@ export class Passes {
     readonly multiSample: MultiSamplePass;
     readonly illumination: IlluminationPass;
 
-    constructor(private webgl: WebGLContext, assetManager: AssetManager, attribs: Partial<{ pickScale: number, transparency: 'wboit' | 'dpoit' | 'blended' }> = {}) {
+    constructor(
+        private webgl: WebGLContext,
+        assetManager: AssetManager,
+        attribs: Partial<{ pickScale: number; transparency: 'wboit' | 'dpoit' | 'blended' }> = {},
+    ) {
         const drs = this.webgl.getDrawingBufferSize();
         this.draw = new DrawPass(webgl, assetManager, drs.width, drs.height, attribs.transparency || 'blended');
         this.pick = new PickPass(webgl, drs.width, drs.height, attribs.pickScale || 0.25);
@@ -26,7 +30,8 @@ export class Passes {
     }
 
     getByteCount(): number {
-        return this.draw.getByteCount() + this.pick.getByteCount() + this.multiSample.getByteCount() + this.illumination.getByteCount();
+        return this.draw.getByteCount() + this.pick.getByteCount() + this.multiSample.getByteCount() +
+            this.illumination.getByteCount();
     }
 
     setPickScale(pickScale: number) {

@@ -12,7 +12,7 @@ import { configureServer, MembraneServerConfig } from './config.ts';
 import { ConsoleLogger } from '../../mol-util/console-logger.ts';
 import { PerformanceMonitor } from '../../mol-util/performance-monitor.ts';
 import { initWebApi } from './web-api.ts';
-import process from "node:process";
+import process from 'node:process';
 
 function setupShutdown() {
     if (MembraneServerConfig.shutdownTimeoutVarianceMinutes > MembraneServerConfig.shutdownTimeoutMinutes) {
@@ -42,12 +42,14 @@ configureServer();
 function startServer() {
     const app = express();
     app.use(compression({
-        level: 6, memLevel: 9, chunkSize: 16 * 16384,
+        level: 6,
+        memLevel: 9,
+        chunkSize: 16 * 16384,
         filter: (req, res) => {
             const ct = res.getHeader('Content-Type');
             if (typeof ct === 'string' && ct.indexOf('tar+gzip') > 0) return false;
             return true;
-        }
+        },
     }));
 
     initWebApi(app);

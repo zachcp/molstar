@@ -4,8 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { Model, ResidueIndex, ElementIndex } from './model.ts';
-import { MoleculeType, type AtomRole, PolymerTypeAtomRoleId, getMoleculeType, type PolymerType } from './model/types.ts';
+import type { ElementIndex, Model, ResidueIndex } from './model.ts';
+import {
+    type AtomRole,
+    getMoleculeType,
+    MoleculeType,
+    type PolymerType,
+    PolymerTypeAtomRoleId,
+} from './model/types.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
 import { Unit } from './structure.ts';
 import type { NumberArray } from '../../mol-util/type-helpers.ts';

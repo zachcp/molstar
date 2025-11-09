@@ -7,7 +7,6 @@
 import * as B from 'benchmark';
 import { arrayExtend, range, sortIfNeeded } from '../mol-util/array.ts';
 
-
 function randomFloats(n: number) {
     const SCALE = 1000;
     const data = new Array(n);
@@ -17,12 +16,14 @@ function randomFloats(n: number) {
     return data;
 }
 
-function le(x: number, y: number) { return x - y; }
+function le(x: number, y: number) {
+    return x - y;
+}
 
 interface Copies<T> {
-    init: () => T,
-    copies: T[],
-    offset: number,
+    init: () => T;
+    copies: T[];
+    offset: number;
 }
 const Copies = {
     create<T>(init: () => T, nCopies: number): Copies<T> {
@@ -37,7 +38,10 @@ export function runBenchmarks(arrayLength: number) {
     const _data = randomFloats(arrayLength);
     const _sortedData = arrayExtend([], _data).sort(le);
     const _worstData = arrayExtend([], _sortedData);
-    [_worstData[arrayLength - 1], _worstData[arrayLength - 2]] = [_worstData[arrayLength - 2], _worstData[arrayLength - 1]];
+    [_worstData[arrayLength - 1], _worstData[arrayLength - 2]] = [
+        _worstData[arrayLength - 2],
+        _worstData[arrayLength - 1],
+    ];
 
     const nCopies = 100;
     let randomData: Copies<number[]>, sortedData: Copies<number[]>, worstData: Copies<number[]>;
@@ -63,7 +67,9 @@ export function runBenchmarks(arrayLength: number) {
         })
         .run();
     console.log('---------------------');
-    console.log('`sortIfNeeded` should be faster than native `sort` on pre-sorted data, same speed on non-sorted data and worst case data (almost sorted array when only the two last elements are swapped)');
+    console.log(
+        '`sortIfNeeded` should be faster than native `sort` on pre-sorted data, same speed on non-sorted data and worst case data (almost sorted array when only the two last elements are swapped)',
+    );
 }
 
 runBenchmarks(10 ** 6);

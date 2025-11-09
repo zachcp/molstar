@@ -11,8 +11,8 @@ import { FormatPropertyProvider } from '../common/property.ts';
 export { AtomPartialCharge };
 
 interface AtomPartialCharge {
-    data: Column<number>
-    type?: string
+    data: Column<number>;
+    type?: string;
 }
 
 namespace AtomPartialCharge {

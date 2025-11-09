@@ -783,7 +783,7 @@ describe('mol2 reader', () => {
                 beta: 90.0,
                 gamma: 90.0,
                 spaceGroup: 29,
-                setting: 5
+                setting: 5,
             });
 
             // required substructure fields

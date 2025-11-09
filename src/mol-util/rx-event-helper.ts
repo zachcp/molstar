@@ -4,14 +4,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Subject, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 export { RxEventHelper };
 
 interface RxEventHelper {
-    <T>(): Subject<T>,
-    behavior<T>(v: T): BehaviorSubject<T>,
-    dispose(): void
+    <T>(): Subject<T>;
+    behavior<T>(v: T): BehaviorSubject<T>;
+    dispose(): void;
 }
 
 namespace RxEventHelper {

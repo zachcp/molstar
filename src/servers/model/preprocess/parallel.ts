@@ -10,14 +10,14 @@ import { now } from '../../../mol-util/now.ts';
 import { PerformanceMonitor } from '../../../mol-util/performance-monitor.ts';
 import { preprocessFile } from './preprocess.ts';
 import { createModelPropertiesProvider } from '../property-provider.ts';
-import process from "node:process";
+import process from 'node:process';
 
-type PreprocessConfig = import('./master').PreprocessConfig
+type PreprocessConfig = import('./master').PreprocessConfig;
 
 export interface PreprocessEntry {
-    source: string,
-    cif?: string,
-    bcif?: string
+    source: string;
+    cif?: string;
+    bcif?: string;
 }
 
 export function runMaster(config: PreprocessConfig, entries: PreprocessEntry[]) {
@@ -27,7 +27,11 @@ export function runMaster(config: PreprocessConfig, entries: PreprocessEntry[]) 
         if (msg.type === 'tick') {
             progress++;
             const elapsed = now() - started;
-            console.log(`[${progress}/${entries.length}] in ${PerformanceMonitor.format(elapsed)} (avg ${PerformanceMonitor.format(elapsed / progress)}).`);
+            console.log(
+                `[${progress}/${entries.length}] in ${PerformanceMonitor.format(elapsed)} (avg ${
+                    PerformanceMonitor.format(elapsed / progress)
+                }).`,
+            );
         } else if (msg.type === 'error') {
             console.error(`${msg.id}: ${msg.error}`);
         }
@@ -50,7 +54,7 @@ export function runMaster(config: PreprocessConfig, entries: PreprocessEntry[]) 
 }
 
 export function runChild() {
-    process.on('message', async ({ entries, config }: { entries: PreprocessEntry[], config: PreprocessConfig }) => {
+    process.on('message', async ({ entries, config }: { entries: PreprocessEntry[]; config: PreprocessConfig }) => {
         const props = createModelPropertiesProvider(config.customProperties);
         for (const entry of entries) {
             try {

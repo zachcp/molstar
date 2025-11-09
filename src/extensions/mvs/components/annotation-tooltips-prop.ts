@@ -14,7 +14,6 @@ import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { filterDefined } from '../helpers/utils.ts';
 import { MVSAnnotationsProvider } from './annotation-prop.ts';
 
-
 /** Parameter definition for custom structure property "MVSAnnotationTooltips" */
 export const MVSAnnotationTooltipsParams = {
     tooltips: PD.ObjectList(
@@ -22,17 +21,19 @@ export const MVSAnnotationTooltipsParams = {
             annotationId: PD.Text('', { description: 'Reference to "MVS Annotation" custom model property' }),
             fieldName: PD.Text('tooltip', { description: 'Annotation field (column) from which to take color values' }),
         },
-        obj => `${obj.annotationId}:${obj.fieldName}`
+        (obj) => `${obj.annotationId}:${obj.fieldName}`,
     ),
 };
-export type MVSAnnotationTooltipsParams = typeof MVSAnnotationTooltipsParams
+export type MVSAnnotationTooltipsParams = typeof MVSAnnotationTooltipsParams;
 
 /** Values of custom structure property "MVSAnnotationTooltips" (and for its params at the same type) */
-export type MVSAnnotationTooltipsProps = PD.Values<MVSAnnotationTooltipsParams>
-
+export type MVSAnnotationTooltipsProps = PD.Values<MVSAnnotationTooltipsParams>;
 
 /** Provider for custom structure property "MVSAnnotationTooltips" */
-export const MVSAnnotationTooltipsProvider: CustomStructureProperty.Provider<MVSAnnotationTooltipsParams, MVSAnnotationTooltipsProps> = CustomStructureProperty.createProvider({
+export const MVSAnnotationTooltipsProvider: CustomStructureProperty.Provider<
+    MVSAnnotationTooltipsParams,
+    MVSAnnotationTooltipsProps
+> = CustomStructureProperty.createProvider({
     label: 'MVS Annotation Tooltips',
     descriptor: CustomPropertyDescriptor<any, any>({
         name: 'mvs-annotation-tooltips',
@@ -47,22 +48,25 @@ export const MVSAnnotationTooltipsProvider: CustomStructureProperty.Provider<MVS
     },
 });
 
-
 /** Label provider based on data from "MVS Annotation" custom model property */
 export const MVSAnnotationTooltipsLabelProvider = {
     label: (loci: Loci): string | undefined => {
         switch (loci.kind) {
             case 'element-loci':
-                if (!loci.structure.customPropertyDescriptors.hasReference(MVSAnnotationTooltipsProvider.descriptor)) return undefined;
+                if (!loci.structure.customPropertyDescriptors.hasReference(MVSAnnotationTooltipsProvider.descriptor)) {
+                    return undefined;
+                }
                 const location = StructureElement.Loci.getFirstLocation(loci);
                 if (!location) return undefined;
                 const tooltipProps = MVSAnnotationTooltipsProvider.get(location.structure).value;
                 if (!tooltipProps || tooltipProps.tooltips.length === 0) return undefined;
                 const annotations = MVSAnnotationsProvider.get(location.unit.model).value;
-                const texts = tooltipProps.tooltips.map(p => annotations?.getAnnotation(p.annotationId)?.getValueForLocation(location, p.fieldName));
+                const texts = tooltipProps.tooltips.map((p) =>
+                    annotations?.getAnnotation(p.annotationId)?.getValueForLocation(location, p.fieldName)
+                );
                 return filterDefined(texts).join(' | ');
             default:
                 return undefined;
         }
-    }
+    },
 } satisfies LociLabelProvider;

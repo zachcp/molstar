@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) 2018 mol* contributors, licensed under MIT, See LICENSE file for more info.
  *
@@ -19,12 +18,10 @@ export function classifyFloatArray(xs: ArrayLike<number>) {
 
 namespace IntClassifier {
     function packSize(value: number, upperLimit: number) {
-        return value >= 0
-            ? Math.ceil((value + 1) / upperLimit)
-            : Math.ceil((value + 1) / (-upperLimit - 1));
+        return value >= 0 ? Math.ceil((value + 1) / upperLimit) : Math.ceil((value + 1) / (-upperLimit - 1));
     }
 
-    type IntColumnInfo = { signed: boolean, limit8: number, limit16: number };
+    type IntColumnInfo = { signed: boolean; limit8: number; limit16: number };
 
     function getInfo(data: number[]): IntColumnInfo {
         let signed = false;
@@ -37,8 +34,10 @@ namespace IntClassifier {
         return signed ? { signed, limit8: 0x7F, limit16: 0x7FFF } : { signed, limit8: 0xFF, limit16: 0xFFFF };
     }
 
-    type SizeInfo = { pack8: number, pack16: number, count: number }
-    function SizeInfo(): SizeInfo { return { pack8: 0, pack16: 0, count: 0 }; };
+    type SizeInfo = { pack8: number; pack16: number; count: number };
+    function SizeInfo(): SizeInfo {
+        return { pack8: 0, pack16: 0, count: 0 };
+    }
 
     function incSize({ limit8, limit16 }: IntColumnInfo, info: SizeInfo, value: number) {
         info.pack8 += packSize(value, limit8);
@@ -129,11 +128,16 @@ namespace IntClassifier {
         const size = sizes[0];
 
         switch (size.kind) {
-            case 'pack': return E.by(E.integerPacking);
-            case 'rle': return E.by(E.runLength).and(E.integerPacking);
-            case 'delta': return E.by(E.delta).and(E.integerPacking);
-            case 'delta-rle': return E.by(E.delta).and(E.runLength).and(E.integerPacking);
-            default: assertUnreachable(size);
+            case 'pack':
+                return E.by(E.integerPacking);
+            case 'rle':
+                return E.by(E.runLength).and(E.integerPacking);
+            case 'delta':
+                return E.by(E.delta).and(E.integerPacking);
+            case 'delta-rle':
+                return E.by(E.delta).and(E.runLength).and(E.integerPacking);
+            default:
+                assertUnreachable(size);
         }
     }
 }
@@ -165,11 +169,16 @@ namespace FloatClassifier {
 
         const fp = E.by(E.fixedPoint(multiplier));
         switch (size.kind) {
-            case 'pack': return fp.and(E.integerPacking);
-            case 'rle': return fp.and(E.runLength).and(E.integerPacking);
-            case 'delta': return fp.and(E.delta).and(E.integerPacking);
-            case 'delta-rle': return fp.and(E.delta).and(E.runLength).and(E.integerPacking);
-            default: assertUnreachable(size);
+            case 'pack':
+                return fp.and(E.integerPacking);
+            case 'rle':
+                return fp.and(E.runLength).and(E.integerPacking);
+            case 'delta':
+                return fp.and(E.delta).and(E.integerPacking);
+            case 'delta-rle':
+                return fp.and(E.delta).and(E.runLength).and(E.integerPacking);
+            default:
+                assertUnreachable(size);
         }
     }
 

@@ -49,7 +49,7 @@ function getData(model: Model): CustomProperty.Data<SBNcbrPartialChargeData | un
         const maxAbsoluteAtomChargeAll = getMaxAbsoluteAtomChargeAll(maxAbsoluteAtomCharges, maxAbsoluteResidueCharges);
 
         const options = Array.from(typeIdToMethod.entries()).map(
-            ([typeId, method]) => [typeId, method] as [number, string]
+            ([typeId, method]) => [typeId, method] as [number, string],
         );
         const params = {
             typeId: PD.Select<number>(1, options),
@@ -119,7 +119,7 @@ function getTypeIdToAtomIdToCharge(model: Model): SBNcbrPartialChargeData['typeI
 
 function getTypeIdToResidueIdToCharge(
     model: Model,
-    typeIdToAtomIdToCharge: SBNcbrPartialChargeData['typeIdToAtomIdToCharge']
+    typeIdToAtomIdToCharge: SBNcbrPartialChargeData['typeIdToAtomIdToCharge'],
 ) {
     const { offsets, count } = model.atomicHierarchy.residueAtomSegments;
     const { atomId: atomIds } = model.atomicConformation;
@@ -146,10 +146,10 @@ function getTypeIdToResidueIdToCharge(
 }
 
 function getMaxAbsoluteCharges(
-    typeIdToCharge: SBNcbrPartialChargeData['typeIdToAtomIdToCharge']
+    typeIdToCharge: SBNcbrPartialChargeData['typeIdToAtomIdToCharge'],
 ): SBNcbrPartialChargeData['maxAbsoluteAtomCharges'];
 function getMaxAbsoluteCharges(
-    typeIdToCharge: SBNcbrPartialChargeData['typeIdToResidueToCharge']
+    typeIdToCharge: SBNcbrPartialChargeData['typeIdToResidueToCharge'],
 ): SBNcbrPartialChargeData['maxAbsoluteResidueCharges'] {
     const maxAbsoluteCharges: Map<number, number> = new Map();
 
@@ -165,7 +165,7 @@ function getMaxAbsoluteCharges(
 
 function getMaxAbsoluteAtomChargeAll(
     maxAbsoluteAtomCharges: SBNcbrPartialChargeData['maxAbsoluteAtomCharges'],
-    maxAbsoluteResidueCharges: SBNcbrPartialChargeData['maxAbsoluteResidueCharges']
+    maxAbsoluteResidueCharges: SBNcbrPartialChargeData['maxAbsoluteResidueCharges'],
 ): number {
     let maxAbsoluteCharge = 0;
 
@@ -192,8 +192,8 @@ export function hasPartialChargesCategories(model: Model): boolean {
 }
 
 export const SbNcbrPartialChargesPropertyProvider: CustomModelProperty.Provider<
-PartialChargesPropertyParams,
-SBNcbrPartialChargeData | undefined
+    PartialChargesPropertyParams,
+    SBNcbrPartialChargeData | undefined
 > = CustomModelProperty.createProvider({
     label: 'SB NCBR Partial Charges Property Provider',
     descriptor: CustomPropertyDescriptor({

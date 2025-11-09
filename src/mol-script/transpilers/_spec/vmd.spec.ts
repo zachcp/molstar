@@ -36,17 +36,17 @@ const general = {
         'protein or foobar',
         '34 and protein',
         'name or protein',
-    ]
+    ],
 };
 
 describe('vmd general', () => {
-    general.supported.forEach(str => {
+    general.supported.forEach((str) => {
         it(str, () => {
             transpiler(str);
             // compile(expr);
         });
     });
-    general.unsupported.forEach(str => {
+    general.unsupported.forEach((str) => {
         it(str, () => {
             const transpileStr = () => transpiler(str);
             expect(transpileStr).toThrow();

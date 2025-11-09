@@ -7,7 +7,7 @@
 import { type ComputeRenderable, createComputeRenderable } from '../../renderable.ts';
 import type { WebGLContext } from '../../webgl/context.ts';
 import { createComputeRenderItem } from '../../webgl/render-item.ts';
-import { type Values, TextureSpec } from '../../renderable/schema.ts';
+import { TextureSpec, type Values } from '../../renderable/schema.ts';
 import type { Texture } from '../../../mol-gl/webgl/texture.ts';
 import { ShaderCode } from '../../../mol-gl/shader-code.ts';
 import { ValueCell } from '../../../mol-util/index.ts';
@@ -22,7 +22,7 @@ const HistopyramidSumSchema = {
     ...QuadSchema,
     tTexture: TextureSpec('texture', 'rgba', 'float', 'nearest'),
 };
-type HistopyramidSumValues = Values<typeof HistopyramidSumSchema>
+type HistopyramidSumValues = Values<typeof HistopyramidSumSchema>;
 
 const HistopyramidSumName = 'histopyramid-sum';
 
@@ -97,7 +97,5 @@ export function getHistopyramidSum(ctx: WebGLContext, pyramidTopTexture: Texture
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     if (isTimingMode) ctx.timer.markEnd('getHistopyramidSum');
 
-    return isWebGL2(gl)
-        ? sumInts[0]
-        : unpackRGBToInt(sumBytes[0], sumBytes[1], sumBytes[2]);
+    return isWebGL2(gl) ? sumInts[0] : unpackRGBToInt(sumBytes[0], sumBytes[1], sumBytes[2]);
 }

@@ -11,9 +11,9 @@ import type { StructureRepresentationRegistry } from '../../mol-repr/structure/r
 import type { ColorTheme } from '../../mol-theme/color.ts';
 
 export interface ModelInfo {
-    hetResidues: { name: string, indices: ResidueIndex[] }[],
-    assemblies: { id: string, details: string, isPreferred: boolean }[],
-    preferredAssemblyId: string | undefined
+    hetResidues: { name: string; indices: ResidueIndex[] }[];
+    assemblies: { id: string; details: string; isPreferred: boolean }[];
+    preferredAssemblyId: string | undefined;
 }
 
 export namespace ModelInfo {
@@ -21,7 +21,9 @@ export namespace ModelInfo {
         if (model.entryId.length <= 3) return void 0;
         try {
             const id = model.entryId.toLowerCase();
-            const src = await ctx.runTask(ctx.fetch({ url: `https://www.ebi.ac.uk/pdbe/api/pdb/entry/summary/${id}` })) as string;
+            const src = await ctx.runTask(
+                ctx.fetch({ url: `https://www.ebi.ac.uk/pdbe/api/pdb/entry/summary/${id}` }),
+            ) as string;
             const json = JSON.parse(src);
             const data = json && json[id];
 
@@ -45,9 +47,7 @@ export namespace ModelInfo {
         const chainIndex = model.atomicHierarchy.chainAtomSegments.index;
         // const resn = SP.residue.label_comp_id, entType = SP.entity.type;
 
-        const pref = checkPreferred
-            ? getPreferredAssembly(ctx, model)
-            : void 0;
+        const pref = checkPreferred ? getPreferredAssembly(ctx, model) : void 0;
 
         const hetResidues: ModelInfo['hetResidues'] = [];
         const hetMap = new Map<string, ModelInfo['hetResidues'][0]>();
@@ -74,30 +74,40 @@ export namespace ModelInfo {
 
         return {
             hetResidues: hetResidues,
-            assemblies: symmetry ? symmetry.assemblies.map(a => ({ id: a.id, details: a.details, isPreferred: a.id === preferredAssemblyId })) : [],
-            preferredAssemblyId
+            assemblies: symmetry
+                ? symmetry.assemblies.map((a) => ({
+                    id: a.id,
+                    details: a.details,
+                    isPreferred: a.id === preferredAssemblyId,
+                }))
+                : [],
+            preferredAssemblyId,
         };
     }
 }
 
-export type SupportedFormats = 'cif' | 'pdb'
+export type SupportedFormats = 'cif' | 'pdb';
 export interface LoadParams {
-    url: string,
-    format?: SupportedFormats,
-    isBinary?: boolean,
-    assemblyId?: string,
-    representationStyle?: RepresentationStyle
+    url: string;
+    format?: SupportedFormats;
+    isBinary?: boolean;
+    assemblyId?: string;
+    representationStyle?: RepresentationStyle;
 }
 
 export interface RepresentationStyle {
-    sequence?: RepresentationStyle.Entry,
-    hetGroups?: RepresentationStyle.Entry,
-    snfg3d?: { hide?: boolean },
-    water?: RepresentationStyle.Entry
+    sequence?: RepresentationStyle.Entry;
+    hetGroups?: RepresentationStyle.Entry;
+    snfg3d?: { hide?: boolean };
+    water?: RepresentationStyle.Entry;
 }
 
 export namespace RepresentationStyle {
-    export type Entry = { hide?: boolean, kind?: StructureRepresentationRegistry.BuiltIn, coloring?: ColorTheme.BuiltIn }
+    export type Entry = {
+        hide?: boolean;
+        kind?: StructureRepresentationRegistry.BuiltIn;
+        coloring?: ColorTheme.BuiltIn;
+    };
 }
 
 export enum StateElements {
@@ -116,5 +126,5 @@ export enum StateElements {
     WaterVisual = 'water-visual',
 
     HetGroupFocus = 'het-group-focus',
-    HetGroupFocusGroup = 'het-group-focus-group'
+    HetGroupFocusGroup = 'het-group-focus-group',
 }

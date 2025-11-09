@@ -13,10 +13,10 @@ import { MarkingPass, type MarkingProps } from '../passes/marking.ts';
 import { PostprocessingPass, type PostprocessingProps } from '../passes/postprocessing.ts';
 
 export type ShaderManagerProps = {
-    marking: MarkingProps
-    postprocessing: PostprocessingProps
-    illumination: IlluminationProps
-}
+    marking: MarkingProps;
+    postprocessing: PostprocessingProps;
+    illumination: IlluminationProps;
+};
 
 export class ShaderManager {
     static ensureRequired(webgl: WebGLContext, scene: Scene, p: ShaderManagerProps) {
@@ -27,7 +27,7 @@ export class ShaderManager {
 
     private readonly required: GraphicsRenderVariant[] = [];
 
-    constructor(private readonly webgl: WebGLContext, private readonly scene: Scene) { }
+    constructor(private readonly webgl: WebGLContext, private readonly scene: Scene) {}
 
     updateRequired(p: ShaderManagerProps) {
         this.required.length = 0;
@@ -41,7 +41,11 @@ export class ShaderManager {
         if (BloomPass.isEnabled(p.postprocessing) && this.scene.emissiveAverage > 0) {
             this.required.push('emissive');
         }
-        if (PostprocessingPass.isTransparentDepthRequired(this.scene, p.postprocessing) || !this.webgl.extensions.drawBuffers || !this.webgl.extensions.depthTexture || IlluminationPass.isEnabled(this.webgl, p.illumination)) {
+        if (
+            PostprocessingPass.isTransparentDepthRequired(this.scene, p.postprocessing) ||
+            !this.webgl.extensions.drawBuffers || !this.webgl.extensions.depthTexture ||
+            IlluminationPass.isEnabled(this.webgl, p.illumination)
+        ) {
             this.required.push('depth');
         }
         this.webgl.resources.linkPrograms(this.required);

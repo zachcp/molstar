@@ -12,7 +12,7 @@ import { arrayMax, arrayMean, arrayMin, arrayRms } from '../../mol-util/array.ts
 import type { ModelFormat } from '../format.ts';
 import { CustomProperties } from '../../mol-model/custom-property.ts';
 
-export function volumeFromDx(source: DxFile, params?: { label?: string, entryId?: string }): Task<Volume> {
+export function volumeFromDx(source: DxFile, params?: { label?: string; entryId?: string }): Task<Volume> {
     return Task.create<Volume>('Create Volume', async () => {
         const { header, values } = source;
         const space = Tensor.Space(header.dim, [0, 1, 2], Float64Array);
@@ -31,7 +31,7 @@ export function volumeFromDx(source: DxFile, params?: { label?: string, entryId?
                     min: arrayMin(values),
                     max: arrayMax(values),
                     mean: arrayMean(values),
-                    sigma: arrayRms(values)
+                    sigma: arrayRms(values),
                 },
             },
             instances: [{ transform: Mat4.identity() }],
@@ -46,7 +46,7 @@ export function volumeFromDx(source: DxFile, params?: { label?: string, entryId?
 
 export { DxFormat };
 
-type DxFormat = ModelFormat<DxFile>
+type DxFormat = ModelFormat<DxFile>;
 
 namespace DxFormat {
     export function is(x?: ModelFormat): x is DxFormat {

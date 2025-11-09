@@ -5,33 +5,42 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { CoarseHierarchy, type CoarseConformation, type CoarseElementData, type CoarseSphereConformation, type CoarseGaussianConformation } from '../../../mol-model/structure/model/properties/coarse.ts';
+import {
+    type CoarseConformation,
+    type CoarseElementData,
+    type CoarseGaussianConformation,
+    CoarseHierarchy,
+    type CoarseSphereConformation,
+} from '../../../mol-model/structure/model/properties/coarse.ts';
 import type { Entities } from '../../../mol-model/structure/model/properties/common.ts';
 import type { Column } from '../../../mol-data/db.ts';
 import { getCoarseKeys } from '../../../mol-model/structure/model/properties/utils/coarse-keys.ts';
 import { UUID } from '../../../mol-util/index.ts';
-import { Segmentation, Interval } from '../../../mol-data/int.ts';
+import { Interval, Segmentation } from '../../../mol-data/int.ts';
 import { Mat3, Tensor } from '../../../mol-math/linear-algebra.ts';
-import type { ElementIndex, ChainIndex } from '../../../mol-model/structure/model/indexing.ts';
+import type { ChainIndex, ElementIndex } from '../../../mol-model/structure/model/indexing.ts';
 import { getCoarseRanges } from '../../../mol-model/structure/model/properties/utils/coarse-ranges.ts';
-import { type IhmSphereObjSite, type IhmGaussianObjSite, type AtomSite, BasicSchema } from './schema.ts';
+import { type AtomSite, BasicSchema, type IhmGaussianObjSite, type IhmSphereObjSite } from './schema.ts';
 import type { Model } from '../../../mol-model/structure.ts';
 import { getCoarseIndex } from '../../../mol-model/structure/model/properties/utils/coarse-index.ts';
 
 export interface CoarseData {
-    model_id: number,
-    model_name: string,
-    model_group_name: string,
-    entities: Entities,
-    atom_site: AtomSite,
-    atom_site_sourceIndex: Column<number>,
-    ihm_sphere_obj_site: IhmSphereObjSite,
-    ihm_gaussian_obj_site: IhmGaussianObjSite
+    model_id: number;
+    model_name: string;
+    model_group_name: string;
+    entities: Entities;
+    atom_site: AtomSite;
+    atom_site_sourceIndex: Column<number>;
+    ihm_sphere_obj_site: IhmSphereObjSite;
+    ihm_gaussian_obj_site: IhmGaussianObjSite;
 }
 
 export const EmptyCoarse = { hierarchy: CoarseHierarchy.Empty, conformation: void 0 as any };
 
-export function getCoarse(data: CoarseData, chemicalComponentMap: Model['properties']['chemicalComponentMap']): { hierarchy: CoarseHierarchy, conformation: CoarseConformation } {
+export function getCoarse(
+    data: CoarseData,
+    chemicalComponentMap: Model['properties']['chemicalComponentMap'],
+): { hierarchy: CoarseHierarchy; conformation: CoarseConformation } {
     const { ihm_sphere_obj_site, ihm_gaussian_obj_site } = data;
 
     if (ihm_sphere_obj_site._rowCount === 0 && ihm_gaussian_obj_site._rowCount === 0) return EmptyCoarse;
@@ -51,13 +60,13 @@ export function getCoarse(data: CoarseData, chemicalComponentMap: Model['propert
             isDefined: true,
             spheres: { ...sphereData, ...sphereKeys, ...sphereRanges },
             gaussians: { ...gaussianData, ...gaussianKeys, ...gaussianRanges },
-            index: getCoarseIndex({ spheres: sphereData, gaussians: gaussianData })
+            index: getCoarseIndex({ spheres: sphereData, gaussians: gaussianData }),
         },
         conformation: {
             id: UUID.create22(),
             spheres: sphereConformation,
-            gaussians: gaussianConformation
-        }
+            gaussians: gaussianConformation,
+        },
     };
 }
 
@@ -67,7 +76,7 @@ function getSphereConformation(data: IhmSphereObjSite): CoarseSphereConformation
         y: data.Cartn_y.toArray({ array: Float32Array }),
         z: data.Cartn_z.toArray({ array: Float32Array }),
         radius: data.object_radius.toArray({ array: Float32Array }),
-        rmsf: data.rmsf.toArray({ array: Float32Array })
+        rmsf: data.rmsf.toArray({ array: Float32Array }),
     };
 }
 
@@ -85,7 +94,7 @@ function getGaussianConformation(data: IhmGaussianObjSite): CoarseGaussianConfor
         y: data.mean_Cartn_y.toArray({ array: Float32Array }),
         z: data.mean_Cartn_z.toArray({ array: Float32Array }),
         weight: data.weight.toArray({ array: Float32Array }),
-        covariance_matrix
+        covariance_matrix,
     };
 }
 
@@ -97,11 +106,21 @@ function getSegments(asym_id: Column<string>, seq_id_begin: Column<number>, seq_
     }
 
     return {
-        chainElementSegments: Segmentation.ofOffsets<ElementIndex, ChainIndex>(chainOffsets, Interval.ofBounds(0, asym_id.rowCount))
+        chainElementSegments: Segmentation.ofOffsets<ElementIndex, ChainIndex>(
+            chainOffsets,
+            Interval.ofBounds(0, asym_id.rowCount),
+        ),
     };
 }
 
 function getData(data: IhmSphereObjSite | IhmGaussianObjSite): CoarseElementData {
     const { entity_id, seq_id_begin, seq_id_end, asym_id } = data;
-    return { count: entity_id.rowCount, entity_id, asym_id, seq_id_begin, seq_id_end, ...getSegments(asym_id, seq_id_begin, seq_id_end) };
+    return {
+        count: entity_id.rowCount,
+        entity_id,
+        asym_id,
+        seq_id_begin,
+        seq_id_end,
+        ...getSegments(asym_id, seq_id_begin, seq_id_end),
+    };
 }

@@ -10,14 +10,19 @@ import { Vec3 } from '../../linear-algebra/3d/vec3.ts';
 import type { Box3D } from './box3d.ts';
 import type { Sphere3D } from './sphere3d.ts';
 
-interface Ray3D { origin: Vec3, direction: Vec3 }
+interface Ray3D {
+    origin: Vec3;
+    direction: Vec3;
+}
 
 function Ray3D(): Ray3D {
     return Ray3D.create(Vec3.create(0, 0, 0), Vec3.create(1, 0, 0));
 }
 
 namespace Ray3D {
-    export function create(origin: Vec3, direction: Vec3): Ray3D { return { origin, direction }; }
+    export function create(origin: Vec3, direction: Vec3): Ray3D {
+        return { origin, direction };
+    }
 
     export function copy(out: Ray3D, r: Ray3D): Ray3D {
         Vec3.copy(out.origin, r.origin);

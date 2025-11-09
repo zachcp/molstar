@@ -15,7 +15,7 @@ const _docs: string[] = [
     'PyMol',
     '============',
     '--------------------------------',
-    ''
+    '',
 ];
 
 _docs.push(`## Properties\n\n`);
@@ -34,7 +34,7 @@ for (const name in properties) {
 
 _docs.push(`## Operators\n\n`);
 _docs.push('--------------------------------\n');
-operators.forEach(o => {
+operators.forEach((o) => {
     if (o.isUnsupported) return;
 
     const names = [o.name];

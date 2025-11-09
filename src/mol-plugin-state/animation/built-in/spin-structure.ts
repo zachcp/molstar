@@ -16,23 +16,32 @@ export const AnimateStructureSpin = PluginStateAnimation.create({
     display: { name: 'Spin Structure' },
     isExportable: true,
     params: () => ({
-        durationInMs: PD.Numeric(3000, { min: 100, max: 10000, step: 100 })
+        durationInMs: PD.Numeric(3000, { min: 100, max: 10000, step: 100 }),
     }),
     initialState: () => ({ t: 0 }),
-    getDuration: p => ({ kind: 'fixed', durationMs: p.durationInMs }),
+    getDuration: (p) => ({ kind: 'fixed', durationMs: p.durationInMs }),
     async setup(_, __, plugin) {
         const state = plugin.state.data;
-        const reprs = state.select(StateSelection.Generators.ofType(PluginStateObject.Molecule.Structure.Representation3D));
+        const reprs = state.select(
+            StateSelection.Generators.ofType(PluginStateObject.Molecule.Structure.Representation3D),
+        );
 
         const update = state.build();
         let changed = false;
         for (const r of reprs) {
-            const spins = state.select(StateSelection.Generators.ofTransformer(StateTransforms.Representation.SpinStructureRepresentation3D, r.transform.ref));
+            const spins = state.select(
+                StateSelection.Generators.ofTransformer(
+                    StateTransforms.Representation.SpinStructureRepresentation3D,
+                    r.transform.ref,
+                ),
+            );
             if (spins.length > 0) continue;
 
             changed = true;
             update.to(r.transform.ref)
-                .apply(StateTransforms.Representation.SpinStructureRepresentation3D, { t: 0 }, { tags: 'animate-structure-spin' });
+                .apply(StateTransforms.Representation.SpinStructureRepresentation3D, { t: 0 }, {
+                    tags: 'animate-structure-spin',
+                });
         }
 
         if (!changed) return;
@@ -41,8 +50,10 @@ export const AnimateStructureSpin = PluginStateAnimation.create({
     },
     teardown(_, __, plugin) {
         const state = plugin.state.data;
-        const reprs = state.select(StateSelection.Generators.ofType(PluginStateObject.Molecule.Structure.Representation3DState)
-            .withTag('animate-structure-spin'));
+        const reprs = state.select(
+            StateSelection.Generators.ofType(PluginStateObject.Molecule.Structure.Representation3DState)
+                .withTag('animate-structure-spin'),
+        );
         if (reprs.length === 0) return;
 
         const update = state.build();
@@ -51,7 +62,9 @@ export const AnimateStructureSpin = PluginStateAnimation.create({
     },
     async apply(animState, t, ctx) {
         const state = ctx.plugin.state.data;
-        const anims = state.select(StateSelection.Generators.ofTransformer(StateTransforms.Representation.SpinStructureRepresentation3D));
+        const anims = state.select(
+            StateSelection.Generators.ofTransformer(StateTransforms.Representation.SpinStructureRepresentation3D),
+        );
 
         if (anims.length === 0) {
             return { kind: 'finished' };
@@ -69,5 +82,5 @@ export const AnimateStructureSpin = PluginStateAnimation.create({
         await PluginCommands.State.Update(ctx.plugin, { state, tree: update, options: { doNotLogTiming: true } });
 
         return { kind: 'next', state: { t: newTime } };
-    }
+    },
 });

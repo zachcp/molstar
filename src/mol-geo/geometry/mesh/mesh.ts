@@ -6,9 +6,15 @@
  */
 
 import { ValueCell } from '../../../mol-util/index.ts';
-import { Vec3, Mat4, Mat3, Vec4 } from '../../../mol-math/linear-algebra.ts';
+import { Mat3, Mat4, Vec3, Vec4 } from '../../../mol-math/linear-algebra.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
-import { transformPositionArray, transformDirectionArray, computeIndexedVertexNormals, type GroupMapping, createGroupMapping } from '../../util.ts';
+import {
+    computeIndexedVertexNormals,
+    createGroupMapping,
+    type GroupMapping,
+    transformDirectionArray,
+    transformPositionArray,
+} from '../../util.ts';
 import type { GeometryUtils } from '../geometry.ts';
 import { createMarkers } from '../marker-data.ts';
 import type { TransformData } from '../transform-data.ts';
@@ -31,39 +37,47 @@ import { createEmptySubstance } from '../substance-data.ts';
 import { createEmptyEmissive } from '../emissive-data.ts';
 
 export interface Mesh {
-    readonly kind: 'mesh',
+    readonly kind: 'mesh';
 
     /** Number of vertices in the mesh */
-    vertexCount: number,
+    vertexCount: number;
     /** Number of triangles in the mesh */
-    triangleCount: number,
+    triangleCount: number;
 
     /** Vertex buffer as array of xyz values wrapped in a value cell */
-    readonly vertexBuffer: ValueCell<Float32Array>,
+    readonly vertexBuffer: ValueCell<Float32Array>;
     /** Index buffer as array of vertex index triplets wrapped in a value cell */
-    readonly indexBuffer: ValueCell<Uint32Array>,
+    readonly indexBuffer: ValueCell<Uint32Array>;
     /** Normal buffer as array of xyz values for each vertex wrapped in a value cell */
-    readonly normalBuffer: ValueCell<Float32Array>,
+    readonly normalBuffer: ValueCell<Float32Array>;
     /** Group buffer as array of group ids for each vertex wrapped in a value cell */
-    readonly groupBuffer: ValueCell<Float32Array>,
+    readonly groupBuffer: ValueCell<Float32Array>;
     /** Indicates that group may vary within a triangle, wrapped in a value cell */
-    readonly varyingGroup: ValueCell<boolean>,
+    readonly varyingGroup: ValueCell<boolean>;
 
     /** Bounding sphere of the mesh */
-    readonly boundingSphere: Sphere3D
+    readonly boundingSphere: Sphere3D;
     /** Maps group ids to vertex indices */
-    readonly groupMapping: GroupMapping
+    readonly groupMapping: GroupMapping;
 
-    setBoundingSphere(boundingSphere: Sphere3D): void
+    setBoundingSphere(boundingSphere: Sphere3D): void;
 
-    readonly meta: { [k: string]: unknown }
+    readonly meta: { [k: string]: unknown };
 }
 
 export namespace Mesh {
-    export function create(vertices: Float32Array, indices: Uint32Array, normals: Float32Array, groups: Float32Array, vertexCount: number, triangleCount: number, mesh?: Mesh): Mesh {
-        return mesh ?
-            update(vertices, indices, normals, groups, vertexCount, triangleCount, mesh) :
-            fromArrays(vertices, indices, normals, groups, vertexCount, triangleCount);
+    export function create(
+        vertices: Float32Array,
+        indices: Uint32Array,
+        normals: Float32Array,
+        groups: Float32Array,
+        vertexCount: number,
+        triangleCount: number,
+        mesh?: Mesh,
+    ): Mesh {
+        return mesh
+            ? update(vertices, indices, normals, groups, vertexCount, triangleCount, mesh)
+            : fromArrays(vertices, indices, normals, groups, vertexCount, triangleCount);
     }
 
     export function createEmpty(mesh?: Mesh): Mesh {
@@ -76,14 +90,23 @@ export namespace Mesh {
 
     function hashCode(mesh: Mesh) {
         return hashFnv32a([
-            mesh.vertexCount, mesh.triangleCount,
-            mesh.vertexBuffer.ref.version, mesh.indexBuffer.ref.version,
-            mesh.normalBuffer.ref.version, mesh.groupBuffer.ref.version
+            mesh.vertexCount,
+            mesh.triangleCount,
+            mesh.vertexBuffer.ref.version,
+            mesh.indexBuffer.ref.version,
+            mesh.normalBuffer.ref.version,
+            mesh.groupBuffer.ref.version,
         ]);
     }
 
-    function fromArrays(vertices: Float32Array, indices: Uint32Array, normals: Float32Array, groups: Float32Array, vertexCount: number, triangleCount: number): Mesh {
-
+    function fromArrays(
+        vertices: Float32Array,
+        indices: Uint32Array,
+        normals: Float32Array,
+        groups: Float32Array,
+        vertexCount: number,
+        triangleCount: number,
+    ): Mesh {
         const boundingSphere = Sphere3D();
         let groupMapping: GroupMapping;
 
@@ -119,12 +142,20 @@ export namespace Mesh {
                 Sphere3D.copy(boundingSphere, sphere);
                 currentHash = hashCode(mesh);
             },
-            meta: {}
+            meta: {},
         };
         return mesh;
     }
 
-    function update(vertices: Float32Array, indices: Uint32Array, normals: Float32Array, groups: Float32Array, vertexCount: number, triangleCount: number, mesh: Mesh) {
+    function update(
+        vertices: Float32Array,
+        indices: Uint32Array,
+        normals: Float32Array,
+        groups: Float32Array,
+        vertexCount: number,
+        triangleCount: number,
+        mesh: Mesh,
+    ) {
         mesh.vertexCount = vertexCount;
         mesh.triangleCount = triangleCount;
         ValueCell.update(mesh.vertexBuffer, vertices);
@@ -185,10 +216,10 @@ export namespace Mesh {
     }
 
     export type OriginalData = {
-        indexBuffer: Uint32Array
-        vertexCount: number
-        triangleCount: number
-    }
+        indexBuffer: Uint32Array;
+        vertexCount: number;
+        triangleCount: number;
+    };
 
     /** Meshes may contain some original data in case any processing was done. */
     export function getOriginalData(x: Mesh | MeshValues): OriginalData | undefined {
@@ -261,13 +292,18 @@ export namespace Mesh {
 
         function split2(i0: number, i1: number, i2: number, g0: number, g1: number) {
             ++newTriangleCount;
-            add(i0); addMid(i0, i1); addMid(i0, i2);
+            add(i0);
+            addMid(i0, i1);
+            addMid(i0, i2);
             ChunkedArray.add3(index, newVertexCount, newVertexCount + 1, newVertexCount + 2);
             for (let j = 0; j < 3; ++j) ChunkedArray.add(group, g0);
             newVertexCount += 3;
 
             newTriangleCount += 2;
-            add(i1); add(i2); addMid(i0, i1); addMid(i0, i2);
+            add(i1);
+            add(i2);
+            addMid(i0, i1);
+            addMid(i0, i2);
             ChunkedArray.add3(index, newVertexCount, newVertexCount + 1, newVertexCount + 3);
             ChunkedArray.add3(index, newVertexCount, newVertexCount + 3, newVertexCount + 2);
             for (let j = 0; j < 4; ++j) ChunkedArray.add(group, g1);
@@ -292,21 +328,30 @@ export namespace Mesh {
                     split2(i0, i1, i2, g0, g1);
                 } else {
                     newTriangleCount += 2;
-                    add(i0); addMid(i0, i1); addMid(i0, i2); addCenter(i0, i1, i2);
+                    add(i0);
+                    addMid(i0, i1);
+                    addMid(i0, i2);
+                    addCenter(i0, i1, i2);
                     ChunkedArray.add3(index, newVertexCount, newVertexCount + 1, newVertexCount + 3);
                     ChunkedArray.add3(index, newVertexCount, newVertexCount + 3, newVertexCount + 2);
                     for (let j = 0; j < 4; ++j) ChunkedArray.add(group, g0);
                     newVertexCount += 4;
 
                     newTriangleCount += 2;
-                    add(i1); addMid(i1, i2); addMid(i1, i0); addCenter(i0, i1, i2);
+                    add(i1);
+                    addMid(i1, i2);
+                    addMid(i1, i0);
+                    addCenter(i0, i1, i2);
                     ChunkedArray.add3(index, newVertexCount, newVertexCount + 1, newVertexCount + 3);
                     ChunkedArray.add3(index, newVertexCount, newVertexCount + 3, newVertexCount + 2);
                     for (let j = 0; j < 4; ++j) ChunkedArray.add(group, g1);
                     newVertexCount += 4;
 
                     newTriangleCount += 2;
-                    add(i2); addMid(i2, i1); addMid(i2, i0); addCenter(i0, i1, i2);
+                    add(i2);
+                    addMid(i2, i1);
+                    addMid(i2, i0);
+                    addCenter(i0, i1, i2);
                     ChunkedArray.add3(index, newVertexCount + 3, newVertexCount + 1, newVertexCount);
                     ChunkedArray.add3(index, newVertexCount + 2, newVertexCount + 3, newVertexCount);
                     for (let j = 0; j < 4; ++j) ChunkedArray.add(group, g2);
@@ -319,7 +364,9 @@ export namespace Mesh {
                 const g0 = gb[i0], g1 = gb[i1], g2 = gb[i2];
                 if (g0 !== g1 || g0 !== g2) {
                     ++newTriangleCount;
-                    add(i0); add(i1); add(i2);
+                    add(i0);
+                    add(i1);
+                    add(i2);
                     ChunkedArray.add3(index, newVertexCount, newVertexCount + 1, newVertexCount + 2);
                     const g = g1 === g2 ? g1 : g0;
                     for (let j = 0; j < 3; ++j) ChunkedArray.add(group, g);
@@ -390,7 +437,9 @@ export namespace Mesh {
             const a = elements[i * 3];
             const b = elements[i * 3 + 1];
             const c = elements[i * 3 + 2];
-            add(a, b); add(a, c); add(b, c);
+            add(a, b);
+            add(a, c);
+            add(b, c);
         }
         return edgeCounts;
     }
@@ -409,14 +458,18 @@ export namespace Mesh {
         return borderVertices;
     }
 
-    function getBorderNeighboursMap(neighboursMap: number[][], borderVertices: Set<number>, edgeCounts: Map<number, number>) {
+    function getBorderNeighboursMap(
+        neighboursMap: number[][],
+        borderVertices: Set<number>,
+        edgeCounts: Map<number, number>,
+    ) {
         const borderNeighboursMap = new Map<number, number[]>();
         const add = (v: number, nb: number) => {
             if (borderNeighboursMap.has(v)) arraySetAdd(borderNeighboursMap.get(v)!, nb);
             else borderNeighboursMap.set(v, [nb]);
         };
 
-        borderVertices.forEach(v => {
+        borderVertices.forEach((v) => {
             const neighbours = neighboursMap[v];
             for (const nb of neighbours) {
                 if (borderVertices.has(nb) && edgeCounts.get(sortedCantorPairing(v, nb)) === 1) {
@@ -440,9 +493,11 @@ export namespace Mesh {
             const a = ib[i * 3];
             const b = ib[i * 3 + 1];
             const c = ib[i * 3 + 2];
-            if (neighboursMap[a].length === 2 ||
+            if (
+                neighboursMap[a].length === 2 ||
                 neighboursMap[b].length === 2 ||
-                neighboursMap[c].length === 2) continue;
+                neighboursMap[c].length === 2
+            ) continue;
 
             ChunkedArray.add3(index, a, b, c);
             newTriangleCount += 1;
@@ -455,7 +510,12 @@ export namespace Mesh {
         return mesh;
     }
 
-    function fillEdges(mesh: Mesh, neighboursMap: number[][], borderNeighboursMap: Map<number, number[]>, maxLengthSquared: number) {
+    function fillEdges(
+        mesh: Mesh,
+        neighboursMap: number[][],
+        borderNeighboursMap: Map<number, number[]>,
+        maxLengthSquared: number,
+    ) {
         const { vertexBuffer, indexBuffer, normalBuffer, triangleCount } = mesh;
         const vb = vertexBuffer.ref.value;
         const ib = indexBuffer.ref.value;
@@ -486,8 +546,8 @@ export namespace Mesh {
         const added = new Set<number>();
 
         const indices = Array.from(borderNeighboursMap.keys())
-            .filter(v => borderNeighboursMap.get(v)!.length < 2)
-            .map(v => {
+            .filter((v) => borderNeighboursMap.get(v)!.length < 2)
+            .map((v) => {
                 const bnd = borderNeighboursMap.get(v)!;
 
                 Vec3.fromArray(vA, vb, v * 3);
@@ -506,7 +566,8 @@ export namespace Mesh {
             if (added.has(v) || angle > AngleThreshold) continue;
 
             const nbs = borderNeighboursMap.get(v)!;
-            if (neighboursMap[nbs[0]].includes(nbs[1]) &&
+            if (
+                neighboursMap[nbs[0]].includes(nbs[1]) &&
                 !borderNeighboursMap.get(nbs[0])?.includes(nbs[1])
             ) continue;
 
@@ -539,7 +600,9 @@ export namespace Mesh {
             } else {
                 ChunkedArray.add3(index, nbs[1], nbs[0], v);
             }
-            added.add(v); added.add(nbs[0]); added.add(nbs[1]);
+            added.add(v);
+            added.add(nbs[0]);
+            added.add(nbs[1]);
             newTriangleCount += 1;
         }
 
@@ -550,7 +613,11 @@ export namespace Mesh {
         return mesh;
     }
 
-    function laplacianEdgeSmoothing(mesh: Mesh, borderNeighboursMap: Map<number, number[]>, options: { iterations: number, lambda: number }) {
+    function laplacianEdgeSmoothing(
+        mesh: Mesh,
+        borderNeighboursMap: Map<number, number[]>,
+        options: { iterations: number; lambda: number },
+    ) {
         const { iterations, lambda } = options;
 
         const a = Vec3();
@@ -599,7 +666,7 @@ export namespace Mesh {
         }
     }
 
-    export function smoothEdges(mesh: Mesh, options: { iterations: number, maxNewEdgeLength: number }): Mesh {
+    export function smoothEdges(mesh: Mesh, options: { iterations: number; maxNewEdgeLength: number }): Mesh {
         trimEdges(mesh, getNeighboursMap(mesh));
 
         for (let k = 0; k < 10; ++k) {
@@ -629,12 +696,20 @@ export namespace Mesh {
         flatShaded: PD.Boolean(false, BaseGeometry.ShadingCategory),
         ignoreLight: PD.Boolean(false, BaseGeometry.ShadingCategory),
         celShaded: PD.Boolean(false, BaseGeometry.ShadingCategory),
-        xrayShaded: PD.Select<boolean | 'inverted'>(false, [[false, 'Off'], [true, 'On'], ['inverted', 'Inverted']], BaseGeometry.ShadingCategory),
-        transparentBackfaces: PD.Select('off', PD.arrayToOptions(['off', 'on', 'opaque'] as const), BaseGeometry.ShadingCategory),
+        xrayShaded: PD.Select<boolean | 'inverted'>(
+            false,
+            [[false, 'Off'], [true, 'On'], ['inverted', 'Inverted']],
+            BaseGeometry.ShadingCategory,
+        ),
+        transparentBackfaces: PD.Select(
+            'off',
+            PD.arrayToOptions(['off', 'on', 'opaque'] as const),
+            BaseGeometry.ShadingCategory,
+        ),
         bumpFrequency: PD.Numeric(0, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
         bumpAmplitude: PD.Numeric(1, { min: 0, max: 5, step: 0.1 }, BaseGeometry.ShadingCategory),
     };
-    export type Params = typeof Params
+    export type Params = typeof Params;
 
     export const Utils: GeometryUtils<Mesh, Params> = {
         Params,
@@ -645,7 +720,7 @@ export namespace Mesh {
         updateBoundingSphere,
         createRenderableState,
         updateRenderableState,
-        createPositionIterator
+        createPositionIterator,
     };
 
     function createPositionIterator(mesh: Mesh, transform: TransformData): LocationIterator {
@@ -670,7 +745,13 @@ export namespace Mesh {
         return LocationIterator(groupCount, instanceCount, 1, getLocation);
     }
 
-    function createValues(mesh: Mesh, transform: TransformData, locationIt: LocationIterator, theme: Theme, props: PD.Values<Params>): MeshValues {
+    function createValues(
+        mesh: Mesh,
+        transform: TransformData,
+        locationIt: LocationIterator,
+        theme: Theme,
+        props: PD.Values<Params>,
+    ): MeshValues {
         const { instanceCount, groupCount } = locationIt;
         const positionIt = createPositionIterator(mesh, transform);
 
@@ -687,7 +768,12 @@ export namespace Mesh {
         const counts = { drawCount: mesh.triangleCount * 3, vertexCount: mesh.vertexCount, groupCount, instanceCount };
 
         const invariantBoundingSphere = Sphere3D.clone(mesh.boundingSphere);
-        const boundingSphere = calculateTransformBoundingSphere(invariantBoundingSphere, transform.aTransform.ref.value, instanceCount, 0);
+        const boundingSphere = calculateTransformBoundingSphere(
+            invariantBoundingSphere,
+            transform.aTransform.ref.value,
+            instanceCount,
+            0,
+        );
 
         return {
             dGeometryType: ValueCell.create('mesh'),
@@ -715,7 +801,9 @@ export namespace Mesh {
             dFlipSided: ValueCell.create(props.flipSided),
             dIgnoreLight: ValueCell.create(props.ignoreLight),
             dCelShaded: ValueCell.create(props.celShaded),
-            dXrayShaded: ValueCell.create(props.xrayShaded === 'inverted' ? 'inverted' : props.xrayShaded === true ? 'on' : 'off'),
+            dXrayShaded: ValueCell.create(
+                props.xrayShaded === 'inverted' ? 'inverted' : props.xrayShaded === true ? 'on' : 'off',
+            ),
             dTransparentBackfaces: ValueCell.create(props.transparentBackfaces),
             uBumpFrequency: ValueCell.create(props.bumpFrequency),
             uBumpAmplitude: ValueCell.create(props.bumpAmplitude),
@@ -724,7 +812,13 @@ export namespace Mesh {
         };
     }
 
-    function createValuesSimple(mesh: Mesh, props: Partial<PD.Values<Params>>, colorValue: Color, sizeValue: number, transform?: TransformData) {
+    function createValuesSimple(
+        mesh: Mesh,
+        props: Partial<PD.Values<Params>>,
+        colorValue: Color,
+        sizeValue: number,
+        transform?: TransformData,
+    ) {
         const s = BaseGeometry.createSimple(colorValue, sizeValue, transform);
         const p = { ...PD.getDefaultValues(Params), ...props };
         return createValues(mesh, s.transform, s.locationIterator, s.theme, p);
@@ -737,7 +831,10 @@ export namespace Mesh {
         ValueCell.updateIfChanged(values.dFlipSided, props.flipSided);
         ValueCell.updateIfChanged(values.dIgnoreLight, props.ignoreLight);
         ValueCell.updateIfChanged(values.dCelShaded, props.celShaded);
-        ValueCell.updateIfChanged(values.dXrayShaded, props.xrayShaded === 'inverted' ? 'inverted' : props.xrayShaded === true ? 'on' : 'off');
+        ValueCell.updateIfChanged(
+            values.dXrayShaded,
+            props.xrayShaded === 'inverted' ? 'inverted' : props.xrayShaded === true ? 'on' : 'off',
+        );
         ValueCell.updateIfChanged(values.dTransparentBackfaces, props.transparentBackfaces);
         ValueCell.updateIfChanged(values.uBumpFrequency, props.bumpFrequency);
         ValueCell.updateIfChanged(values.uBumpAmplitude, props.bumpAmplitude);
@@ -745,14 +842,22 @@ export namespace Mesh {
 
     function updateBoundingSphere(values: MeshValues, mesh: Mesh) {
         const invariantBoundingSphere = Sphere3D.clone(mesh.boundingSphere);
-        const boundingSphere = calculateTransformBoundingSphere(invariantBoundingSphere, values.aTransform.ref.value, values.instanceCount.ref.value, 0);
+        const boundingSphere = calculateTransformBoundingSphere(
+            invariantBoundingSphere,
+            values.aTransform.ref.value,
+            values.instanceCount.ref.value,
+            0,
+        );
 
         if (!Sphere3D.equals(boundingSphere, values.boundingSphere.ref.value)) {
             ValueCell.update(values.boundingSphere, boundingSphere);
         }
         if (!Sphere3D.equals(invariantBoundingSphere, values.invariantBoundingSphere.ref.value)) {
             ValueCell.update(values.invariantBoundingSphere, invariantBoundingSphere);
-            ValueCell.update(values.uInvariantBoundingSphere, Vec4.fromSphere(values.uInvariantBoundingSphere.ref.value, invariantBoundingSphere));
+            ValueCell.update(
+                values.uInvariantBoundingSphere,
+                Vec4.fromSphere(values.uInvariantBoundingSphere.ref.value, invariantBoundingSphere),
+            );
         }
     }
 

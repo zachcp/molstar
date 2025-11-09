@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { MoleculeType, isPolymer } from '../../../mol-model/structure/model/types.ts';
+import { isPolymer, MoleculeType } from '../../../mol-model/structure/model/types.ts';
 import { Column, Table } from '../../../mol-data/db.ts';
 import { BasicSchema } from '../basic/schema.ts';
 
-export type EntityCompound = { chains: string[], description: string }
+export type EntityCompound = { chains: string[]; description: string };
 
 // TODO add support for `branched`
-type EntityType = 'water' | 'polymer' | 'non-polymer'
+type EntityType = 'water' | 'polymer' | 'non-polymer';
 
 export class EntityBuilder {
     private count = 0;
@@ -32,7 +32,12 @@ export class EntityBuilder {
         this.descriptions.push([description]);
     }
 
-    getEntityId(compId: string, moleculeType: MoleculeType, chainId: string, options?: { customName?: string }): string {
+    getEntityId(
+        compId: string,
+        moleculeType: MoleculeType,
+        chainId: string,
+        options?: { customName?: string },
+    ): string {
         if (moleculeType === MoleculeType.Water) {
             if (this.waterId === undefined) {
                 this.set('water', options?.customName || 'Water');
@@ -77,6 +82,6 @@ export class EntityBuilder {
     }
 
     setNames(names: [string, string][]) {
-        names.forEach(n => this.namesMap.set(n[0], n[1]));
+        names.forEach((n) => this.namesMap.set(n[0], n[1]));
     }
 }

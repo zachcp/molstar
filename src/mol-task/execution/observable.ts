@@ -12,8 +12,8 @@ import { Scheduler } from '../util/scheduler.ts';
 import { UserTiming } from '../util/user-timing.ts';
 
 interface ExposedTask<T> extends Task<T> {
-    f: (ctx: RuntimeContext) => Promise<T>,
-    onAbort?: () => void
+    f: (ctx: RuntimeContext) => Promise<T>;
+    onAbort?: () => void;
 }
 
 export function ExecuteObservable<T>(task: Task<T>, observer: Progress.Observer, updateRateMs = 250) {
@@ -31,7 +31,11 @@ export function ExecuteInContext<T>(ctx: RuntimeContext, task: Task<T>) {
     return execute(task as ExposedTask<T>, ctx as ObservableRuntimeContext);
 }
 
-export function ExecuteObservableChild<T>(ctx: RuntimeContext, task: Task<T>, progress?: string | Partial<RuntimeContext.ProgressUpdate>) {
+export function ExecuteObservableChild<T>(
+    ctx: RuntimeContext,
+    task: Task<T>,
+    progress?: string | Partial<RuntimeContext.ProgressUpdate>,
+) {
     return (ctx as ObservableRuntimeContext).runChild(task as ExposedTask<T>, progress);
 }
 
@@ -44,16 +48,16 @@ function defaultProgress(task: Task<any>): Task.Progress {
         canAbort: true,
         isIndeterminate: true,
         current: 0,
-        max: 0
+        max: 0,
     };
 }
 
 interface ProgressInfo {
-    updateRateMs: number,
-    lastNotified: number,
-    observer: Progress.Observer,
+    updateRateMs: number;
+    lastNotified: number;
+    observer: Progress.Observer;
 
-    abortToken: { abortRequested: boolean, treeAborted: boolean, reason: string },
+    abortToken: { abortRequested: boolean; treeAborted: boolean; reason: string };
     taskId: number;
     root: Progress.Node;
     tryAbort: (reason?: string) => void;
@@ -69,7 +73,7 @@ function ProgressInfo(task: Task<any>, observer: Progress.Observer, updateRateMs
         abortToken,
         taskId: task.id,
         root: { progress: defaultProgress(task), children: [] },
-        tryAbort: createAbortFunction(abortToken)
+        tryAbort: createAbortFunction(abortToken),
     };
 }
 
@@ -109,7 +113,9 @@ async function execute<T>(task: ExposedTask<T>, ctx: ObservableRuntimeContext) {
 
             // wait for all child computations to go thru the abort phase.
             if (ctx.node.children.length > 0) {
-                await new Promise<void>(res => { ctx.onChildrenFinished = res; });
+                await new Promise<void>((res) => {
+                    ctx.onChildrenFinished = res;
+                });
             }
             if (task.onAbort) {
                 task.onAbort();

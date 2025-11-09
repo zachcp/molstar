@@ -18,13 +18,13 @@ export type MarkdownExtensionEvent = 'click' | 'mouse-enter' | 'mouse-leave';
 export interface MarkdownExtension {
     name: string;
     execute?: (options: {
-        event: MarkdownExtensionEvent,
-        args: Record<string, string>,
-        manager: MarkdownExtensionManager
+        event: MarkdownExtensionEvent;
+        args: Record<string, string>;
+        manager: MarkdownExtensionManager;
     }) => void;
     reactRenderFn?: (options: {
-        args: Record<string, string>,
-        manager: MarkdownExtensionManager
+        args: Record<string, string>;
+        manager: MarkdownExtensionManager;
     }) => any;
 }
 
@@ -36,7 +36,7 @@ export const BuiltInMarkdownExtension: MarkdownExtension[] = [
             if ('center-camera' in args) {
                 manager.plugin.managers.camera.reset();
             }
-        }
+        },
     },
     {
         name: 'apply-snapshot',
@@ -45,7 +45,7 @@ export const BuiltInMarkdownExtension: MarkdownExtension[] = [
             const key = args['apply-snapshot'];
             if (!key) return;
             manager.plugin.managers.snapshot.applyKey(key);
-        }
+        },
     },
     {
         name: 'next-snapshot',
@@ -56,7 +56,7 @@ export const BuiltInMarkdownExtension: MarkdownExtension[] = [
             if (dir < 0) dir = -1;
             else dir = 1;
             manager.plugin.managers.snapshot.applyNext(dir);
-        }
+        },
     },
     {
         name: 'focus-refs',
@@ -71,10 +71,10 @@ export const BuiltInMarkdownExtension: MarkdownExtension[] = [
             const reprs = findRepresentations(manager.plugin, cells);
             if (!reprs.length) return;
 
-            const spheres = reprs.map(c => getCellBoundingSphere(manager.plugin, c.transform.ref)).filter(s => !!s);
+            const spheres = reprs.map((c) => getCellBoundingSphere(manager.plugin, c.transform.ref)).filter((s) => !!s);
             if (!spheres.length) return;
-            manager.plugin.managers.camera.focusSpheres(spheres, s => s, { extraRadius: 3 });
-        }
+            manager.plugin.managers.camera.focusSpheres(spheres, (s) => s, { extraRadius: 3 });
+        },
     },
     {
         name: 'highlight-refs',
@@ -95,7 +95,7 @@ export const BuiltInMarkdownExtension: MarkdownExtension[] = [
                     }
                 }
             }
-        }
+        },
     },
     {
         name: 'query',
@@ -120,14 +120,16 @@ export const BuiltInMarkdownExtension: MarkdownExtension[] = [
             try {
                 query = Script.toQuery({
                     language: language as Script.Language,
-                    expression
+                    expression,
                 });
             } catch (e) {
                 console.warn(`Failed to parse query '${expression}' (${language})`, e);
                 return;
             }
 
-            const structures = manager.plugin.state.data.selectQ(q => q.rootsOfType(PluginStateObject.Molecule.Structure));
+            const structures = manager.plugin.state.data.selectQ((q) =>
+                q.rootsOfType(PluginStateObject.Molecule.Structure)
+            );
 
             if (event === 'mouse-enter') {
                 if (!action.includes('focus')) {
@@ -148,18 +150,23 @@ export const BuiltInMarkdownExtension: MarkdownExtension[] = [
                 if (!action.includes('focus')) {
                     return;
                 }
-                const decorated = structures.map(s => StateSelection.getDecorated<PluginStateObject.Molecule.Structure>(manager.plugin.state.data, s.transform.ref));
-                const spheres = decorated.map(s => {
+                const decorated = structures.map((s) =>
+                    StateSelection.getDecorated<PluginStateObject.Molecule.Structure>(
+                        manager.plugin.state.data,
+                        s.transform.ref,
+                    )
+                );
+                const spheres = decorated.map((s) => {
                     if (!s.obj?.data) return undefined;
                     const selection = query(new QueryContext(s.obj.data));
                     if (StructureSelection.isEmpty(selection)) return;
 
                     const loci = StructureSelection.toLociWithSourceUnits(selection);
                     return StructureElement.Loci.getBoundary(loci).sphere;
-                }).filter(s => !!s);
+                }).filter((s) => !!s);
 
                 if (spheres.length) {
-                    manager.plugin.managers.camera.focusSpheres(spheres, s => s, { extraRadius: focusRadius });
+                    manager.plugin.managers.camera.focusSpheres(spheres, (s) => s, { extraRadius: focusRadius });
                 }
             }
         },
@@ -172,7 +179,7 @@ export const BuiltInMarkdownExtension: MarkdownExtension[] = [
             const src = args['play-audio'];
             if (!src?.length) return;
             manager.audio.play(src);
-        }
+        },
     },
     {
         name: 'toggle-audio',
@@ -181,49 +188,49 @@ export const BuiltInMarkdownExtension: MarkdownExtension[] = [
 
             const src = args['toggle-audio'];
             manager.audio.play(src, { toggle: true });
-        }
+        },
     },
     {
         name: 'pause-audio',
         execute: ({ event, args, manager }) => {
             if (event !== 'click' || !('pause-audio' in args)) return;
             manager.audio.pause();
-        }
+        },
     },
     {
         name: 'stop-audio',
         execute: ({ event, args, manager }) => {
             if (event !== 'click' || !('stop-audio' in args)) return;
             manager.audio.stop();
-        }
+        },
     },
     {
         name: 'dispose-audio',
         execute: ({ event, args, manager }) => {
             if (event !== 'click' || !('dispose-audio' in args)) return;
             manager.audio.dispose();
-        }
+        },
     },
     {
         name: 'play-transition',
         execute: ({ event, args, manager }) => {
             if (event !== 'click' || !('play-transition' in args)) return;
             manager.plugin.managers.animation.play(AnimateStateSnapshotTransition, {});
-        }
+        },
     },
     {
         name: 'play-snapshots',
         execute: ({ event, args, manager }) => {
             if (event !== 'click' || !('play-snapshots' in args)) return;
             manager.plugin.managers.snapshot.play({ restart: true });
-        }
+        },
     },
     {
         name: 'stop-animation',
         execute: ({ event, args, manager }) => {
             if (event !== 'click' || !('stop-animation' in args)) return;
             manager.plugin.managers.snapshot.stop();
-        }
+        },
     },
 ];
 
@@ -234,12 +241,18 @@ export class MarkdownExtensionManager {
 
     private extension: MarkdownExtension[] = [];
     private refResolvers: Record<string, (plugin: PluginContext, refs: string[]) => StateObjectCell[]> = {
-        default: (plugin: PluginContext, refs: string[]) => refs
-            .map(ref => plugin.state.data.cells.get(ref))
-            .filter(c => !!c),
+        default: (plugin: PluginContext, refs: string[]) =>
+            refs
+                .map((ref) => plugin.state.data.cells.get(ref))
+                .filter((c) => !!c),
     };
-    private uriResolvers: Record<string, (plugin: PluginContext, uri: string) => Promise<string> | string | undefined> = {};
-    private argsParsers: [name: string, priority: number, parser: (input: string | undefined) => Record<string, string> | undefined][] = [
+    private uriResolvers: Record<string, (plugin: PluginContext, uri: string) => Promise<string> | string | undefined> =
+        {};
+    private argsParsers: [
+        name: string,
+        priority: number,
+        parser: (input: string | undefined) => Record<string, string> | undefined,
+    ][] = [
         ['default', 100, defaultParseMarkdownCommandArgs],
     ];
 
@@ -247,21 +260,25 @@ export class MarkdownExtensionManager {
      * Default parser has priority 100, parsers with higher priority
      * will be called first.
      */
-    registerArgsParser(name: string, priority: number, parser: (input: string | undefined) => Record<string, string> | undefined) {
+    registerArgsParser(
+        name: string,
+        priority: number,
+        parser: (input: string | undefined) => Record<string, string> | undefined,
+    ) {
         this.removeArgsParser(name);
         this.argsParsers.push([name, priority, parser]);
         this.argsParsers.sort((a, b) => b[1] - a[1]); // Sort by priority, higher first
     }
 
     removeArgsParser(name: string) {
-        const idx = this.argsParsers.findIndex(p => p[0] === name);
+        const idx = this.argsParsers.findIndex((p) => p[0] === name);
         if (idx >= 0) {
             this.argsParsers.splice(idx, 1);
         }
     }
 
     parseArgs(input: string | undefined): Record<string, string> | undefined {
-        for (const [,, parser] of this.argsParsers) {
+        for (const [, , parser] of this.argsParsers) {
             const ret = parser(input);
             if (ret) return ret;
         }
@@ -276,7 +293,10 @@ export class MarkdownExtensionManager {
         delete this.refResolvers[name];
     }
 
-    registerUriResolver(name: string, resolver: (plugin: PluginContext, uri: string) => Promise<string> | string | undefined) {
+    registerUriResolver(
+        name: string,
+        resolver: (plugin: PluginContext, uri: string) => Promise<string> | string | undefined,
+    ) {
         this.uriResolvers[name] = resolver;
     }
 
@@ -285,7 +305,7 @@ export class MarkdownExtensionManager {
     }
 
     registerExtension(command: MarkdownExtension) {
-        const existing = this.extension.findIndex(c => c.name === command.name);
+        const existing = this.extension.findIndex((c) => c.name === command.name);
         if (existing >= 0) {
             this.extension[existing] = command;
         } else {
@@ -294,13 +314,16 @@ export class MarkdownExtensionManager {
     }
 
     removeExtension(name: string) {
-        const idx = this.extension.findIndex(c => c.name === name);
+        const idx = this.extension.findIndex((c) => c.name === name);
         if (idx >= 0) {
             this.extension.splice(idx, 1);
         }
     }
 
-    private _tryRender(ext: MarkdownExtension, options: { args: Record<string, string>, manager: MarkdownExtensionManager }) {
+    private _tryRender(
+        ext: MarkdownExtension,
+        options: { args: Record<string, string>; manager: MarkdownExtensionManager },
+    ) {
         try {
             return ext.reactRenderFn?.(options);
         } catch (e) {
@@ -432,7 +455,7 @@ export class MarkdownExtensionManager {
                 this.audioPlayer.currentTime = 0;
                 this.state.audioPlayer.next(null);
             }
-        }
+        },
     };
 
     constructor(public plugin: PluginContext) {
@@ -443,13 +466,13 @@ export class MarkdownExtensionManager {
 }
 
 function parseArray(input?: string): string[] {
-    return input?.split(',').map(s => s.trim()).filter(s => s.length > 0) ?? [];
+    return input?.split(',').map((s) => s.trim()).filter((s) => s.length > 0) ?? [];
 }
 
 function findRepresentations(plugin: PluginContext, cells: StateObjectCell[]): StateObjectCell[] {
     if (!cells.length) return [];
-    return plugin.state.data.selectQ(q =>
-        q.byValue(...cells).subtree().filter(c => PluginStateObject.isRepresentation3D(c.obj))
+    return plugin.state.data.selectQ((q) =>
+        q.byValue(...cells).subtree().filter((c) => PluginStateObject.isRepresentation3D(c.obj))
     );
 }
 
@@ -457,9 +480,9 @@ export function defaultParseMarkdownCommandArgs(input: string | undefined): Reco
     if (!input?.startsWith('!')) return undefined;
     const entries = decodeURIComponent(input.substring(1))
         .split('&')
-        .map(p => p.trim())
-        .filter(p => p.length > 0)
-        .map(p => p.split('=', 2).map(s => s.trim()));
+        .map((p) => p.trim())
+        .filter((p) => p.length > 0)
+        .map((p) => p.split('=', 2).map((s) => s.trim()));
     if (entries.length === 0) return undefined;
     return Object.fromEntries(entries);
 }

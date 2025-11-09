@@ -16,30 +16,42 @@ import { StateTreeSpine } from '../../../mol-state/tree/spine.ts';
 import type { Representation } from '../../../mol-repr/representation.ts';
 import { MarkerAction } from '../../../mol-util/marker-action.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
-import { MesoscaleState, expandAllGroups, getCellDescription, getEveryEntity } from '../data/state.ts';
+import { expandAllGroups, getCellDescription, getEveryEntity, MesoscaleState } from '../data/state.ts';
 
 const B = ButtonsType;
 const M = ModifiersKeys;
 const Trigger = Binding.Trigger;
 
 const DefaultMesoSelectLociBindings = {
-    click: Binding([
-        Trigger(B.Flag.Primary, M.create()),
-        Trigger(B.Flag.Trigger),
-    ], 'Click', 'Click element using ${triggers}'),
-    clickToggleSelect: Binding([
-        Trigger(B.Flag.Primary, M.create({ shift: true })),
-        Trigger(B.Flag.Primary, M.create({ control: true })),
-    ], 'Toggle select', 'Click element using ${triggers}'),
-    hoverHighlightOnly: Binding([
-        Trigger(B.Flag.None, M.create({ shift: true })),
-        Trigger(B.Flag.None, M.create({ control: true })),
-    ], 'Highlight', 'Hover element using ${triggers}'),
+    click: Binding(
+        [
+            Trigger(B.Flag.Primary, M.create()),
+            Trigger(B.Flag.Trigger),
+        ],
+        'Click',
+        'Click element using ${triggers}',
+    ),
+    clickToggleSelect: Binding(
+        [
+            Trigger(B.Flag.Primary, M.create({ shift: true })),
+            Trigger(B.Flag.Primary, M.create({ control: true })),
+        ],
+        'Toggle select',
+        'Click element using ${triggers}',
+    ),
+    hoverHighlightOnly: Binding(
+        [
+            Trigger(B.Flag.None, M.create({ shift: true })),
+            Trigger(B.Flag.None, M.create({ control: true })),
+        ],
+        'Highlight',
+        'Hover element using ${triggers}',
+    ),
 };
 const MesoSelectLociParams = {
     bindings: PD.Value(DefaultMesoSelectLociBindings, { isHidden: true }),
 };
-type MesoSelectLociProps = PD.Values<typeof MesoSelectLociParams>
+type MesoSelectLociProps = PD.Values<typeof MesoSelectLociParams>;
 
 export const MesoSelectLoci = PluginBehavior.create<MesoSelectLociProps>({
     name: 'camera-meso-select-loci',
@@ -74,7 +86,10 @@ export const MesoSelectLoci = PluginBehavior.create<MesoSelectLociProps>({
                         this.ctx.managers.interactivity.lociSelects.deselectAll();
                         return;
                     }
-                    const loci = Loci.normalize(current.loci, modifiers.control ? 'entity' : this.ctx.managers.interactivity.props.granularity);
+                    const loci = Loci.normalize(
+                        current.loci,
+                        modifiers.control ? 'entity' : this.ctx.managers.interactivity.props.granularity,
+                    );
                     this.ctx.managers.interactivity.lociSelects.toggle({ loci }, false);
                     if (StructureElement.Loci.is(current.loci)) {
                         const cell = this.ctx.helpers.substructureParent.get(current.loci.structure);
@@ -115,10 +130,19 @@ export const MesoSelectLoci = PluginBehavior.create<MesoSelectLociProps>({
                     }
                     if (StructureElement.Loci.is(current.loci)) {
                         if (modifiers.control) {
-                            this.ctx.managers.interactivity.lociHighlights.highlightOnly({ repr: current.repr, loci: EveryLoci }, false);
+                            this.ctx.managers.interactivity.lociHighlights.highlightOnly({
+                                repr: current.repr,
+                                loci: EveryLoci,
+                            }, false);
                         } else {
-                            const loci = Loci.normalize(current.loci, this.ctx.managers.interactivity.props.granularity);
-                            this.ctx.managers.interactivity.lociHighlights.highlightOnly({ repr: current.repr, loci }, false);
+                            const loci = Loci.normalize(
+                                current.loci,
+                                this.ctx.managers.interactivity.props.granularity,
+                            );
+                            this.ctx.managers.interactivity.lociHighlights.highlightOnly(
+                                { repr: current.repr, loci },
+                                false,
+                            );
                         }
                     }
                 }
@@ -159,7 +183,9 @@ export const MesoSelectLoci = PluginBehavior.create<MesoSelectLociProps>({
             this.subscribeObservable(this.ctx.behaviors.interaction.keyReleased, ({ code, modifiers }) => {
                 if (!this.ctx.canvas3d) return;
 
-                if ((code.startsWith('Shift') && !modifiers.control) || (code.startsWith('Control') && !modifiers.shift)) {
+                if (
+                    (code.startsWith('Shift') && !modifiers.control) || (code.startsWith('Control') && !modifiers.shift)
+                ) {
                     if (dimDisabled) {
                         dimDisabled = false;
                         this.ctx.canvas3d?.setProps({ renderer: { dimStrength: 1 } }, true);
@@ -184,13 +210,20 @@ export const MesoSelectLoci = PluginBehavior.create<MesoSelectLociProps>({
                 const cell = this.ctx.state.data.cells.get(ref);
                 if (cell && SO.Molecule.Structure.is(cell.obj)) {
                     const structure: Structure = obj.data;
-                    const oldStructure: Structure | undefined = action === 'recreate' ? oldObj?.data :
-                        action === 'in-place' ? oldData : undefined;
-                    if (oldStructure &&
+                    const oldStructure: Structure | undefined = action === 'recreate'
+                        ? oldObj?.data
+                        : action === 'in-place'
+                        ? oldData
+                        : undefined;
+                    if (
+                        oldStructure &&
                         Structure.areEquivalent(structure, oldStructure) &&
-                        Structure.areHierarchiesEqual(structure, oldStructure)) return;
+                        Structure.areHierarchiesEqual(structure, oldStructure)
+                    ) return;
 
-                    const reprs = this.ctx.state.data.select(StateSelection.children(ref).ofType(SO.Molecule.Structure.Representation3D));
+                    const reprs = this.ctx.state.data.select(
+                        StateSelection.children(ref).ofType(SO.Molecule.Structure.Representation3D),
+                    );
                     for (const repr of reprs) this.applySelectMark(repr.transform.ref, true);
                 }
             });
@@ -205,5 +238,5 @@ export const MesoSelectLoci = PluginBehavior.create<MesoSelectLociProps>({
         }
     },
     params: () => MesoSelectLociParams,
-    display: { name: 'Camera Meso Select Loci on Canvas' }
+    display: { name: 'Camera Meso Select Loci on Canvas' },
 });

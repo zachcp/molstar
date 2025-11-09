@@ -8,8 +8,8 @@ import { type Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 import type { NumberArray } from '../../mol-util/type-helpers.ts';
 
 export interface Cage {
-    readonly vertices: ArrayLike<number>
-    readonly edges: ArrayLike<number>
+    readonly vertices: ArrayLike<number>;
+    readonly edges: ArrayLike<number>;
 }
 
 export function createCage(vertices: ArrayLike<number>, edges: ArrayLike<number>): Cage {
@@ -19,7 +19,7 @@ export function createCage(vertices: ArrayLike<number>, edges: ArrayLike<number>
 export function cloneCage(cage: Cage): Cage {
     return {
         vertices: new Float32Array(cage.vertices),
-        edges: new Uint32Array(cage.edges)
+        edges: new Uint32Array(cage.edges),
     };
 }
 

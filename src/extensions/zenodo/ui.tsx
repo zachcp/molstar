@@ -20,42 +20,42 @@ import { formatBytes } from '../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
 type ZenodoFile = {
-    bucket: string
-    checksum: string
-    key: string
+    bucket: string;
+    checksum: string;
+    key: string;
     links: {
-        [key: string]: string
-        self: string
-    }
-    size: number
-    type: string
-}
+        [key: string]: string;
+        self: string;
+    };
+    size: number;
+    type: string;
+};
 
 type ZenodoRecord = {
-    id: number
-    conceptdoi: string
-    conceptrecid: string
-    created: string
-    doi: string
-    files: ZenodoFile[]
-    revision: number
-    updated: string
+    id: number;
+    conceptdoi: string;
+    conceptrecid: string;
+    created: string;
+    doi: string;
+    files: ZenodoFile[];
+    revision: number;
+    updated: string;
     metadata: {
-        title: string
-    }
-}
+        title: string;
+    };
+};
 
 interface State {
-    busy?: boolean
-    recordValues: PD.Values<typeof ZenodoImportParams>
-    importValues?: PD.Values<ImportParams>
-    importParams?: ImportParams
-    record?: ZenodoRecord
-    files?: ZenodoFile[]
+    busy?: boolean;
+    recordValues: PD.Values<typeof ZenodoImportParams>;
+    importValues?: PD.Values<ImportParams>;
+    importParams?: ImportParams;
+    record?: ZenodoRecord;
+    files?: ZenodoFile[];
 }
 
 const ZenodoImportParams = {
-    record: PD.Text('', { description: 'Zenodo ID.' })
+    record: PD.Text('', { description: 'Zenodo ID.' }),
 };
 
 function createImportParams(files: ZenodoFile[], plugin: PluginContext) {
@@ -65,24 +65,40 @@ function createImportParams(files: ZenodoFile[], plugin: PluginContext) {
     const volumeOpts: [string, string][] = [];
     const compressedOpts: [string, string][] = [];
 
-    const structureExts = new Map<string, { format: string, isBinary: boolean }>();
-    const coordinatesExts = new Map<string, { format: string, isBinary: boolean }>();
-    const topologyExts = new Map<string, { format: string, isBinary: boolean }>();
-    const volumeExts = new Map<string, { format: string, isBinary: boolean }>();
+    const structureExts = new Map<string, { format: string; isBinary: boolean }>();
+    const coordinatesExts = new Map<string, { format: string; isBinary: boolean }>();
+    const topologyExts = new Map<string, { format: string; isBinary: boolean }>();
+    const volumeExts = new Map<string, { format: string; isBinary: boolean }>();
 
     for (const { provider: { category, binaryExtensions, stringExtensions }, name } of plugin.dataFormats.list) {
         if (category === TrajectoryFormatCategory) {
-            if (binaryExtensions) for (const e of binaryExtensions) structureExts.set(e, { format: name, isBinary: true });
-            if (stringExtensions) for (const e of stringExtensions) structureExts.set(e, { format: name, isBinary: false });
+            if (binaryExtensions) {
+                for (const e of binaryExtensions) structureExts.set(e, { format: name, isBinary: true });
+            }
+            if (stringExtensions) {
+                for (const e of stringExtensions) structureExts.set(e, { format: name, isBinary: false });
+            }
         } else if (category === VolumeFormatCategory) {
-            if (binaryExtensions) for (const e of binaryExtensions) volumeExts.set(e, { format: name, isBinary: true });
-            if (stringExtensions) for (const e of stringExtensions) volumeExts.set(e, { format: name, isBinary: false });
+            if (binaryExtensions) {
+                for (const e of binaryExtensions) volumeExts.set(e, { format: name, isBinary: true });
+            }
+            if (stringExtensions) {
+                for (const e of stringExtensions) volumeExts.set(e, { format: name, isBinary: false });
+            }
         } else if (category === CoordinatesFormatCategory) {
-            if (binaryExtensions) for (const e of binaryExtensions) coordinatesExts.set(e, { format: name, isBinary: true });
-            if (stringExtensions) for (const e of stringExtensions) coordinatesExts.set(e, { format: name, isBinary: false });
+            if (binaryExtensions) {
+                for (const e of binaryExtensions) coordinatesExts.set(e, { format: name, isBinary: true });
+            }
+            if (stringExtensions) {
+                for (const e of stringExtensions) coordinatesExts.set(e, { format: name, isBinary: false });
+            }
         } else if (category === TopologyFormatCategory) {
-            if (binaryExtensions) for (const e of binaryExtensions) topologyExts.set(e, { format: name, isBinary: true });
-            if (stringExtensions) for (const e of stringExtensions) topologyExts.set(e, { format: name, isBinary: false });
+            if (binaryExtensions) {
+                for (const e of binaryExtensions) topologyExts.set(e, { format: name, isBinary: true });
+            }
+            if (stringExtensions) {
+                for (const e of stringExtensions) topologyExts.set(e, { format: name, isBinary: false });
+            }
         }
     }
 
@@ -133,10 +149,10 @@ function createImportParams(files: ZenodoFile[], plugin: PluginContext) {
     }
 
     return {
-        type: PD.MappedStatic(defaultType, Object.keys(params).length ? params : { '': PD.EmptyGroup() })
+        type: PD.MappedStatic(defaultType, Object.keys(params).length ? params : { '': PD.EmptyGroup() }),
     };
 }
-type ImportParams = ReturnType<typeof createImportParams>
+type ImportParams = ReturnType<typeof createImportParams>;
 
 export class ZenodoImportUI extends CollapsableControls<{}, State> {
     protected defaultState(): State & CollapsableState {
@@ -163,14 +179,19 @@ export class ZenodoImportUI extends CollapsableControls<{}, State> {
     private loadRecord = async () => {
         try {
             this.setState({ busy: true });
-            const record: ZenodoRecord = await this.plugin.runTask(this.plugin.fetch({ url: `https://zenodo.org/api/records/${this.state.recordValues.record}`, type: 'json' }));
+            const record: ZenodoRecord = await this.plugin.runTask(
+                this.plugin.fetch({
+                    url: `https://zenodo.org/api/records/${this.state.recordValues.record}`,
+                    type: 'json',
+                }),
+            );
             const importParams = createImportParams(record.files, this.plugin);
             this.setState({
                 record,
                 files: record.files,
                 busy: false,
                 importValues: PD.getDefaultValues(importParams),
-                importParams
+                importParams,
             });
         } catch (e) {
             console.error(e);
@@ -185,7 +206,10 @@ export class ZenodoImportUI extends CollapsableControls<{}, State> {
 
             const t = values.type;
             if (t.name === 'structure') {
-                const defaultParams = DownloadStructure.createDefaultParams(this.plugin.state.data.root.obj!, this.plugin);
+                const defaultParams = DownloadStructure.createDefaultParams(
+                    this.plugin.state.data.root.obj!,
+                    this.plugin,
+                );
 
                 const [url, format, isBinary] = t.params.split('|');
 
@@ -197,8 +221,8 @@ export class ZenodoImportUI extends CollapsableControls<{}, State> {
                             format: format as any,
                             isBinary: isBinary === 'true',
                             options: defaultParams.source.params.options,
-                        }
-                    }
+                        },
+                    },
                 }));
             } else if (t.name === 'trajectory') {
                 const [topologyUrl, topologyFormat, topologyIsBinary] = t.params.topology.split('|');
@@ -217,8 +241,8 @@ export class ZenodoImportUI extends CollapsableControls<{}, State> {
                                 url: coordinatesUrl,
                                 format: coordinatesFormat as any,
                             },
-                        }
-                    }
+                        },
+                    },
                 }));
             } else if (t.name === 'volume') {
                 const [url, format, isBinary] = t.params.split('|');
@@ -230,8 +254,8 @@ export class ZenodoImportUI extends CollapsableControls<{}, State> {
                             url,
                             format: format as any,
                             isBinary: isBinary === 'true',
-                        }
-                    }
+                        },
+                    },
                 }));
             } else if (t.name === 'compressed') {
                 const [url, format, isBinary] = t.params.split('|');
@@ -240,7 +264,7 @@ export class ZenodoImportUI extends CollapsableControls<{}, State> {
                     url,
                     format: format as any,
                     isBinary: isBinary === 'true',
-                    visuals: true
+                    visuals: true,
                 }));
             }
         } catch (e) {
@@ -256,46 +280,76 @@ export class ZenodoImportUI extends CollapsableControls<{}, State> {
             importValues: undefined,
             importParams: undefined,
             record: undefined,
-            files: undefined
+            files: undefined,
         });
     };
 
     private renderLoadRecord() {
-        return <div style={{ marginBottom: 10 }}>
-            <ParameterControls params={ZenodoImportParams} values={this.state.recordValues} onChangeValues={this.recordParamsOnChange} isDisabled={this.state.busy} />
-            <Button onClick={this.loadRecord} style={{ marginTop: 1 }} disabled={this.state.busy || !this.state.recordValues.record}>
-                Load Record
-            </Button>
-        </div>;
+        return (
+            <div style={{ marginBottom: 10 }}>
+                <ParameterControls
+                    params={ZenodoImportParams}
+                    values={this.state.recordValues}
+                    onChangeValues={this.recordParamsOnChange}
+                    isDisabled={this.state.busy}
+                />
+                <Button
+                    onClick={this.loadRecord}
+                    style={{ marginTop: 1 }}
+                    disabled={this.state.busy || !this.state.recordValues.record}
+                >
+                    Load Record
+                </Button>
+            </div>
+        );
     }
 
     private renderRecordInfo(record: ZenodoRecord) {
-        return <div style={{ marginBottom: 10 }}>
-            <div className='msp-help-text'>
-                <div>Record {`${record.id}`}: <i>{`${record.metadata.title}`}</i></div>
+        return (
+            <div style={{ marginBottom: 10 }}>
+                <div className='msp-help-text'>
+                    <div>
+                        Record {`${record.id}`}: <i>{`${record.metadata.title}`}</i>
+                    </div>
+                </div>
+                <Button onClick={this.clearRecord} style={{ marginTop: 1 }} disabled={this.state.busy}>
+                    Clear
+                </Button>
             </div>
-            <Button onClick={this.clearRecord} style={{ marginTop: 1 }} disabled={this.state.busy}>
-                Clear
-            </Button>
-        </div>;
+        );
     }
 
     private renderImportFile(params: ImportParams, values: PD.Values<ImportParams>) {
-        return values.type.name ? <div style={{ marginBottom: 10 }}>
-            <ParameterControls params={params} values={this.state.importValues} onChangeValues={this.importParamsOnChange} isDisabled={this.state.busy} />
-            <Button onClick={() => this.loadFile(values)} style={{ marginTop: 1 }} disabled={this.state.busy}>
-                Import File
-            </Button>
-        </div> : <div className='msp-help-text' style={{ marginBottom: 10 }}>
-            <div>No supported files</div>
-        </div>;
+        return values.type.name
+            ? (
+                <div style={{ marginBottom: 10 }}>
+                    <ParameterControls
+                        params={params}
+                        values={this.state.importValues}
+                        onChangeValues={this.importParamsOnChange}
+                        isDisabled={this.state.busy}
+                    />
+                    <Button onClick={() => this.loadFile(values)} style={{ marginTop: 1 }} disabled={this.state.busy}>
+                        Import File
+                    </Button>
+                </div>
+            )
+            : (
+                <div className='msp-help-text' style={{ marginBottom: 10 }}>
+                    <div>No supported files</div>
+                </div>
+            );
     }
 
     protected renderControls(): JSX.Element | null {
-        return <>
-            {!this.state.record ? this.renderLoadRecord() : null}
-            {this.state.record ? this.renderRecordInfo(this.state.record) : null}
-            {this.state.importParams && this.state.importValues ? this.renderImportFile(this.state.importParams, this.state.importValues) : null}
-        </>;
+        return (
+            <>
+                {!this.state.record ? this.renderLoadRecord() : null}
+                {this.state.record ? this.renderRecordInfo(this.state.record) : null}
+                {this.state.importParams && this.state.importValues
+                    ? this.renderImportFile(this.state.importParams, this.state.importValues)
+                    : null}
+            </>
+        );
     }
 }

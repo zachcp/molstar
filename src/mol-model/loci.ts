@@ -21,28 +21,28 @@ import { Interval } from '../mol-data/int.ts';
 
 /** A Loci that includes every loci */
 export const EveryLoci = { kind: 'every-loci' as 'every-loci' };
-export type EveryLoci = typeof EveryLoci
+export type EveryLoci = typeof EveryLoci;
 export function isEveryLoci(x?: Loci): x is EveryLoci {
     return !!x && x.kind === 'every-loci';
 }
 
 /** A Loci that is empty */
 export const EmptyLoci = { kind: 'empty-loci' as 'empty-loci' };
-export type EmptyLoci = typeof EmptyLoci
+export type EmptyLoci = typeof EmptyLoci;
 export function isEmptyLoci(x?: Loci): x is EmptyLoci {
     return !!x && x.kind === 'empty-loci';
 }
 
 /** A generic data loci */
 export interface DataLoci<T = unknown, E = unknown> {
-    readonly kind: 'data-loci',
-    readonly tag: string
-    readonly data: T,
-    readonly elements: ReadonlyArray<E>,
+    readonly kind: 'data-loci';
+    readonly tag: string;
+    readonly data: T;
+    readonly elements: ReadonlyArray<E>;
 
     /** if undefined, won't zoom */
-    getBoundingSphere?(boundingSphere: Sphere3D): Sphere3D
-    getLabel(): string
+    getBoundingSphere?(boundingSphere: Sphere3D): Sphere3D;
+    getLabel(): string;
 }
 export function isDataLoci(x?: Loci): x is DataLoci {
     return !!x && x.kind === 'data-loci';
@@ -59,20 +59,40 @@ export function areDataLociEqual(a: DataLoci, b: DataLoci) {
 export function isDataLociEmpty(loci: DataLoci) {
     return loci.elements.length === 0 ? true : false;
 }
-export function DataLoci<T = unknown, E = unknown>(tag: string, data: T, elements: ReadonlyArray<E>, getBoundingSphere: DataLoci<T, E>['getBoundingSphere'], getLabel: DataLoci<T, E>['getLabel']): DataLoci<T, E> {
+export function DataLoci<T = unknown, E = unknown>(
+    tag: string,
+    data: T,
+    elements: ReadonlyArray<E>,
+    getBoundingSphere: DataLoci<T, E>['getBoundingSphere'],
+    getLabel: DataLoci<T, E>['getLabel'],
+): DataLoci<T, E> {
     return { kind: 'data-loci', tag, data, elements, getBoundingSphere, getLabel };
 }
 
 export { Loci };
 
-type Loci = StructureElement.Loci | Structure.Loci | Bond.Loci | EveryLoci | EmptyLoci | DataLoci | Shape.Loci | ShapeGroup.Loci | Volume.Loci | Volume.Isosurface.Loci | Volume.Cell.Loci | Volume.Segment.Loci
+type Loci =
+    | StructureElement.Loci
+    | Structure.Loci
+    | Bond.Loci
+    | EveryLoci
+    | EmptyLoci
+    | DataLoci
+    | Shape.Loci
+    | ShapeGroup.Loci
+    | Volume.Loci
+    | Volume.Isosurface.Loci
+    | Volume.Cell.Loci
+    | Volume.Segment.Loci;
 
 namespace Loci {
-    export interface Bundle<L extends number> { loci: FiniteArray<Loci, L> }
+    export interface Bundle<L extends number> {
+        loci: FiniteArray<Loci, L>;
+    }
 
     const boundaryHelper = new BoundaryHelper('98');
     export function getBundleBoundingSphere(bundle: Bundle<any>): Sphere3D {
-        const spheres = bundle.loci.map(l => getBoundingSphere(l)).filter(s => !!s) as Sphere3D[];
+        const spheres = bundle.loci.map((l) => getBoundingSphere(l)).filter((s) => !!s) as Sphere3D[];
         boundaryHelper.reset();
         for (const s of spheres) boundaryHelper.includePositionRadius(s.center, s.radius);
         boundaryHelper.finishedIncludeStep();
@@ -222,45 +242,33 @@ namespace Loci {
     const Granularity = {
         'element': (loci: Loci) => loci,
         'residue': (loci: Loci): Loci => {
-            return StructureElement.Loci.is(loci)
-                ? StructureElement.Loci.extendToWholeResidues(loci, true)
-                : loci;
+            return StructureElement.Loci.is(loci) ? StructureElement.Loci.extendToWholeResidues(loci, true) : loci;
         },
         'chain': (loci: Loci): Loci => {
-            return StructureElement.Loci.is(loci)
-                ? StructureElement.Loci.extendToWholeChains(loci)
-                : loci;
+            return StructureElement.Loci.is(loci) ? StructureElement.Loci.extendToWholeChains(loci) : loci;
         },
         'entity': (loci: Loci): Loci => {
-            return StructureElement.Loci.is(loci)
-                ? StructureElement.Loci.extendToWholeEntities(loci)
-                : loci;
+            return StructureElement.Loci.is(loci) ? StructureElement.Loci.extendToWholeEntities(loci) : loci;
         },
         'model': (loci: Loci): Loci => {
-            return StructureElement.Loci.is(loci)
-                ? StructureElement.Loci.extendToWholeModels(loci)
-                : loci;
+            return StructureElement.Loci.is(loci) ? StructureElement.Loci.extendToWholeModels(loci) : loci;
         },
         'operator': (loci: Loci): Loci => {
-            return StructureElement.Loci.is(loci)
-                ? StructureElement.Loci.extendToWholeOperators(loci)
-                : loci;
+            return StructureElement.Loci.is(loci) ? StructureElement.Loci.extendToWholeOperators(loci) : loci;
         },
         'structure': (loci: Loci): Loci => {
             return StructureElement.Loci.is(loci)
                 ? Structure.toStructureElementLoci(loci.structure)
                 : ShapeGroup.isLoci(loci)
-                    ? Shape.Loci(loci.shape)
-                    : Volume.Cell.isLoci(loci)
-                        ? Volume.Loci(loci.volume, Interval.ofLength(loci.volume.instances.length))
-                        : Volume.Isosurface.isLoci(loci)
-                            ? Volume.Loci(loci.volume, Interval.ofLength(loci.volume.instances.length))
-                            : loci;
+                ? Shape.Loci(loci.shape)
+                : Volume.Cell.isLoci(loci)
+                ? Volume.Loci(loci.volume, Interval.ofLength(loci.volume.instances.length))
+                : Volume.Isosurface.isLoci(loci)
+                ? Volume.Loci(loci.volume, Interval.ofLength(loci.volume.instances.length))
+                : loci;
         },
         'elementInstances': (loci: Loci): Loci => {
-            return StructureElement.Loci.is(loci)
-                ? StructureElement.Loci.extendToAllInstances(loci)
-                : loci;
+            return StructureElement.Loci.is(loci) ? StructureElement.Loci.extendToAllInstances(loci) : loci;
         },
         'residueInstances': (loci: Loci): Loci => {
             return StructureElement.Loci.is(loci)
@@ -273,14 +281,17 @@ namespace Loci {
                 : loci;
         },
     };
-    export type Granularity = keyof typeof Granularity
-    export const GranularityOptions = ParamDefinition.objectToOptions(Granularity, k => {
+    export type Granularity = keyof typeof Granularity;
+    export const GranularityOptions = ParamDefinition.objectToOptions(Granularity, (k) => {
         switch (k) {
-            case 'element': return 'Atom/Coarse Element';
-            case 'elementInstances': return ['Atom/Coarse Element Instances', 'With Symmetry'];
-            case 'structure': return 'Structure/Shape';
-            default: return k.indexOf('Instances')
-                ? [stringToWords(k), 'With Symmetry'] : stringToWords(k);
+            case 'element':
+                return 'Atom/Coarse Element';
+            case 'elementInstances':
+                return ['Atom/Coarse Element Instances', 'With Symmetry'];
+            case 'structure':
+                return 'Structure/Shape';
+            default:
+                return k.indexOf('Instances') ? [stringToWords(k), 'With Symmetry'] : stringToWords(k);
         }
     });
 

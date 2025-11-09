@@ -26,7 +26,7 @@ export const operators: OperatorList = [
         type: h.prefix,
         rule: P.MonadicParser.alt(
             P.MonadicParser.regexp(/NOT/i).skip(P.MonadicParser.whitespace),
-            P.MonadicParser.string('!').skip(P.MonadicParser.optWhitespace)
+            P.MonadicParser.string('!').skip(P.MonadicParser.optWhitespace),
         ),
         map: (op, selection) => h.invertExpr(selection),
     },
@@ -36,8 +36,7 @@ export const operators: OperatorList = [
         name: 'and',
         type: h.binaryLeft,
         rule: h.infixOp(/AND|&/i),
-        map: (op, selection, by) =>
-            B.struct.modifier.intersectBy({ 0: selection, by }),
+        map: (op, selection, by) => B.struct.modifier.intersectBy({ 0: selection, by }),
     },
     {
         '@desc': 'Selects atoms included in either s1 or s2.',
@@ -48,8 +47,7 @@ export const operators: OperatorList = [
         map: (op: string, s1: Expression, s2: Expression) => B.struct.combinator.merge([s1, s2]),
     },
     {
-        '@desc':
-            'Selects atoms in s1 whose identifiers name, resi, resn, chain and segi all match atoms in s2.',
+        '@desc': 'Selects atoms in s1 whose identifiers name, resi, resn, chain and segi all match atoms in s2.',
         '@examples': ['chain A IN chain B'],
         name: 'in',
         type: h.binaryLeft,
@@ -69,8 +67,7 @@ export const operators: OperatorList = [
         },
     },
     {
-        '@desc':
-            'Selects atoms in s1 whose identifiers name and resi match atoms in s2.',
+        '@desc': 'Selects atoms in s1 whose identifiers name and resi match atoms in s2.',
         '@examples': ['chain A LIKE chain B'],
         name: 'like',
         type: h.binaryLeft,
@@ -106,8 +103,7 @@ export const operators: OperatorList = [
         },
     },
     {
-        '@desc':
-            'Selects atoms with centers within X Angstroms of the center of any atom in s1.',
+        '@desc': 'Selects atoms with centers within X Angstroms of the center of any atom in s1.',
         '@examples': ['resname LIG AROUND 1'],
         name: 'around',
         abbr: ['a.'],
@@ -127,8 +123,7 @@ export const operators: OperatorList = [
         },
     },
     {
-        '@desc':
-            'Expands s1 by all atoms within X Angstroms of the center of any atom in s1.',
+        '@desc': 'Expands s1 by all atoms within X Angstroms of the center of any atom in s1.',
         '@examples': ['chain A EXPAND 3'],
         name: 'expand',
         abbr: ['x.'],
@@ -141,8 +136,7 @@ export const operators: OperatorList = [
         },
     },
     {
-        '@desc':
-            'Selects atoms in s1 that are within X Angstroms of any atom in s2.',
+        '@desc': 'Selects atoms in s1 that are within X Angstroms of any atom in s2.',
         '@examples': ['chain A WITHIN 3 OF chain B'],
         name: 'within',
         abbr: ['w.'],
@@ -157,8 +151,7 @@ export const operators: OperatorList = [
         },
     },
     {
-        '@desc':
-            'Same as within, but excludes s2 from the selection (and thus is identical to s1 and s2 around X).',
+        '@desc': 'Same as within, but excludes s2 from the selection (and thus is identical to s1 and s2 around X).',
         '@examples': ['chain A NEAR_TO 3 OF chain B'],
         name: 'near_to',
         abbr: ['nto.'],
@@ -206,13 +199,12 @@ export const operators: OperatorList = [
                 B.struct.modifier.expandProperty({
                     '0': B.struct.modifier.union({ 0: selection }),
                     property: B.ammp('residueKey'),
-                })
+                }),
             );
         },
     },
     {
-        '@desc':
-            'Completely selects all alpha carbons in all residues covered by a selection.',
+        '@desc': 'Completely selects all alpha carbons in all residues covered by a selection.',
         '@examples': ['BYCALPHA chain A'],
         name: 'bycalpha',
         abbr: ['bca.'],
@@ -246,7 +238,7 @@ export const operators: OperatorList = [
                 B.struct.modifier.expandProperty({
                     '0': B.struct.modifier.union({ 0: selection }),
                     property: B.atp('connectedComponentKey'),
-                })
+                }),
             );
         },
     },
@@ -272,7 +264,7 @@ export const operators: OperatorList = [
                 B.struct.modifier.expandProperty({
                     '0': B.struct.modifier.union({ 0: selection }),
                     property: B.ammp('chainKey'),
-                })
+                }),
             );
         },
     },
@@ -313,7 +305,7 @@ export const operators: OperatorList = [
                         ]),
                     }),
                     by: selection,
-                })
+                }),
             );
         },
     },
@@ -330,7 +322,7 @@ export const operators: OperatorList = [
                     B.struct.modifier.includeConnected({
                         '0': B.struct.modifier.union({ 0: selection }),
                         'bond-test': true,
-                    })
+                    }),
                 ),
                 by: selection,
             });
@@ -347,7 +339,7 @@ export const operators: OperatorList = [
             return h.asAtoms(
                 B.struct.modifier.includeConnected({
                     '0': B.struct.modifier.union({ 0: selection }),
-                })
+                }),
             );
         },
     },
@@ -364,7 +356,7 @@ export const operators: OperatorList = [
                     '0': B.struct.modifier.union({ 0: selection }),
                     'bond-test': true,
                     'layer-count': count,
-                })
+                }),
             );
         },
     },

@@ -9,20 +9,26 @@ import { spline } from '../../../mol-math/interpolate.ts';
 import { ValueCell } from '../../../mol-util/index.ts';
 import type { Vec2 } from '../../../mol-math/linear-algebra.ts';
 
-export interface ControlPoint { x: number, alpha: number }
+export interface ControlPoint {
+    x: number;
+    alpha: number;
+}
 
 export function getControlPointsFromString(s: string): ControlPoint[] {
-    return s.split(/\s*,\s*/).map(p => {
+    return s.split(/\s*,\s*/).map((p) => {
         const ps = p.split(/\s*:\s*/);
         return { x: parseFloat(ps[0]), alpha: parseFloat(ps[1]) };
     });
 }
 
 export function getControlPointsFromVec2Array(array: Vec2[]): ControlPoint[] {
-    return array.map(v => ({ x: v[0], alpha: v[1] }));
+    return array.map((v) => ({ x: v[0], alpha: v[1] }));
 }
 
-export function createTransferFunctionTexture(controlPoints: ControlPoint[], texture?: ValueCell<TextureImage<Uint8Array>>): ValueCell<TextureImage<Uint8Array>> {
+export function createTransferFunctionTexture(
+    controlPoints: ControlPoint[],
+    texture?: ValueCell<TextureImage<Uint8Array>>,
+): ValueCell<TextureImage<Uint8Array>> {
     const cp = [
         { x: 0, alpha: 0 },
         { x: 0, alpha: 0 },

@@ -4,48 +4,55 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { type ShaderCode, type DefineValues, addShaderDefines } from '../shader-code.ts';
+import { addShaderDefines, type DefineValues, type ShaderCode } from '../shader-code.ts';
 import type { WebGLState } from './state.ts';
 import type { WebGLExtensions } from './extensions.ts';
-import { getUniformSetters, type UniformsList, getUniformType, type UniformSetters, isArrayUniform, type UniformType } from './uniform.ts';
+import {
+    getUniformSetters,
+    getUniformType,
+    isArrayUniform,
+    type UniformSetters,
+    type UniformsList,
+    type UniformType,
+} from './uniform.ts';
 import { type AttributeBuffers, getAttribType } from './buffer.ts';
 import type { TextureId, Textures } from './texture.ts';
 import { idFactory } from '../../mol-util/id-factory.ts';
 import type { RenderableSchema } from '../renderable/schema.ts';
 import { isDebugMode } from '../../mol-util/debug.ts';
 import { type GLRenderingContext, isWebGL2 } from './compat.ts';
-import type { ShaderType, Shader } from './shader.ts';
+import type { Shader, ShaderType } from './shader.ts';
 import type { WebGLParameters } from './context.ts';
 import type { ProgramVariant } from './render-item.ts';
 
 const getNextProgramId = idFactory();
 
 export interface Program {
-    readonly id: number
-    readonly variant: ProgramVariant
+    readonly id: number;
+    readonly variant: ProgramVariant;
 
-    isReady(): boolean
-    link(): void
-    finalize(force?: boolean): boolean
+    isReady(): boolean;
+    link(): void;
+    finalize(force?: boolean): boolean;
 
-    use: () => void
-    setUniforms: (uniformValues: UniformsList) => void
-    uniform: (k: string, v: UniformType) => void
-    bindAttributes: (attribueBuffers: AttributeBuffers) => void
-    offsetAttributes: (attributeBuffers: AttributeBuffers, offset: number) => void
-    bindTextures: (textures: Textures, startingTargetUnit: number) => void
+    use: () => void;
+    setUniforms: (uniformValues: UniformsList) => void;
+    uniform: (k: string, v: UniformType) => void;
+    bindAttributes: (attribueBuffers: AttributeBuffers) => void;
+    offsetAttributes: (attributeBuffers: AttributeBuffers, offset: number) => void;
+    bindTextures: (textures: Textures, startingTargetUnit: number) => void;
 
-    reset: () => void
-    destroy: () => void
+    reset: () => void;
+    destroy: () => void;
 }
 
-export type Programs = { [k: string]: Program }
+export type Programs = { [k: string]: Program };
 
-type Locations = { [k: string]: number }
+type Locations = { [k: string]: number };
 
 function getLocations(gl: GLRenderingContext, program: WebGLProgram, schema: RenderableSchema) {
     const locations: Locations = {};
-    Object.keys(schema).forEach(k => {
+    Object.keys(schema).forEach((k) => {
         const spec = schema[k];
         if (spec.type === 'attribute') {
             const loc = gl.getAttribLocation(program, k);
@@ -154,9 +161,9 @@ function checkProgram(gl: GLRenderingContext, program: WebGLProgram) {
 }
 
 export interface ProgramProps {
-    defineValues: DefineValues,
-    shaderCode: ShaderCode,
-    schema: RenderableSchema
+    defineValues: DefineValues;
+    shaderCode: ShaderCode;
+    schema: RenderableSchema;
 }
 
 export function getProgram(gl: GLRenderingContext) {
@@ -167,7 +174,7 @@ export function getProgram(gl: GLRenderingContext) {
     return program;
 }
 
-type ShaderGetter = (type: ShaderType, source: string) => Shader
+type ShaderGetter = (type: ShaderType, source: string) => Shader;
 
 function normalizeVariant(variant: any): ProgramVariant {
     if (typeof variant !== 'string') throw new Error(`unknown program variant: ${variant}`);
@@ -176,7 +183,14 @@ function normalizeVariant(variant: any): ProgramVariant {
     return variant as ProgramVariant;
 }
 
-export function createProgram(gl: GLRenderingContext, state: WebGLState, extensions: WebGLExtensions, parameters: WebGLParameters, getShader: ShaderGetter, props: ProgramProps): Program {
+export function createProgram(
+    gl: GLRenderingContext,
+    state: WebGLState,
+    extensions: WebGLExtensions,
+    parameters: WebGLParameters,
+    getShader: ShaderGetter,
+    props: ProgramProps,
+): Program {
     const { defineValues, shaderCode: _shaderCode, schema } = props;
 
     let program = getProgram(gl);
@@ -227,7 +241,11 @@ export function createProgram(gl: GLRenderingContext, state: WebGLState, extensi
         },
         finalize(force?: boolean): boolean {
             if (!linked) link();
-            if (!finalized && (force || !extensions.parallelShaderCompile || gl.getProgramParameter(program, extensions.parallelShaderCompile.COMPLETION_STATUS))) {
+            if (
+                !finalized &&
+                (force || !extensions.parallelShaderCompile ||
+                    gl.getProgramParameter(program, extensions.parallelShaderCompile.COMPLETION_STATUS))
+            ) {
                 finalize();
             }
             return finalized;
@@ -290,6 +308,6 @@ export function createProgram(gl: GLRenderingContext, state: WebGLState, extensi
             fragShader.destroy();
             gl.deleteProgram(program);
             destroyed = true;
-        }
+        },
     };
 }

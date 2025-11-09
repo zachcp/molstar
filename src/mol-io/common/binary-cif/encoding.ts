@@ -5,7 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import type { TypedIntArray, TypedFloatArray } from '../../../mol-util/type-helpers.ts';
+import type { TypedFloatArray, TypedIntArray } from '../../../mol-util/type-helpers.ts';
 
 export const VERSION = '0.3.0';
 
@@ -19,25 +19,25 @@ export type Encoding =
     | Encoding.StringArray;
 
 export interface EncodedFile {
-    version: string,
-    encoder: string,
-    dataBlocks: EncodedDataBlock[]
+    version: string;
+    encoder: string;
+    dataBlocks: EncodedDataBlock[];
 }
 
 export interface EncodedDataBlock {
-    header: string,
-    categories: EncodedCategory[],
+    header: string;
+    categories: EncodedCategory[];
 }
 
 export interface EncodedCategory {
-    name: string,
-    rowCount: number,
-    columns: EncodedColumn[],
+    name: string;
+    rowCount: number;
+    columns: EncodedColumn[];
 }
 
 export interface EncodedColumn {
-    name: string,
-    data: EncodedData,
+    name: string;
+    data: EncodedData;
 
     /**
      * The mask represents the presence or absent of particular "CIF value".
@@ -47,16 +47,15 @@ export interface EncodedColumn {
      * 1 = . = value not specified
      * 2 = ? = value unknown
      */
-    mask?: EncodedData
+    mask?: EncodedData;
 }
 
 export interface EncodedData {
-    encoding: Encoding[],
-    data: Uint8Array
+    encoding: Encoding[];
+    data: Uint8Array;
 }
 
 export namespace Encoding {
-
     export enum IntDataType {
         Int8 = 1,
         Int16 = 2,
@@ -68,10 +67,10 @@ export namespace Encoding {
 
     export enum FloatDataType {
         Float32 = 32,
-        Float64 = 33
+        Float64 = 33,
     }
 
-    export type DataType = IntDataType | FloatDataType
+    export type DataType = IntDataType | FloatDataType;
 
     export function getDataType(data: TypedIntArray | TypedFloatArray): DataType {
         let srcType: DataType;
@@ -97,46 +96,46 @@ export namespace Encoding {
 
     // type[] -> Uint8[]
     export interface ByteArray {
-        kind: 'ByteArray',
-        type: DataType
+        kind: 'ByteArray';
+        type: DataType;
     }
 
     // (Float32 | Float64)[] -> Int32[]
     export interface FixedPoint {
-        kind: 'FixedPoint',
-        factor: number,
-        srcType: FloatDataType
+        kind: 'FixedPoint';
+        factor: number;
+        srcType: FloatDataType;
     }
 
     // (Float32|Float64)[] -> Int32
     export interface IntervalQuantization {
-        kind: 'IntervalQuantization',
-        min: number,
-        max: number,
-        numSteps: number,
-        srcType: FloatDataType
+        kind: 'IntervalQuantization';
+        min: number;
+        max: number;
+        numSteps: number;
+        srcType: FloatDataType;
     }
 
     // (Uint8 | Int8 | Int16 | Int32)[] -> Int32[]
     export interface RunLength {
-        kind: 'RunLength',
-        srcType: IntDataType,
-        srcSize: number
+        kind: 'RunLength';
+        srcType: IntDataType;
+        srcSize: number;
     }
 
     // T=(Int8Array | Int16Array | Int32Array)[] -> T[]
     export interface Delta {
-        kind: 'Delta',
-        origin: number,
-        srcType: IntDataType
+        kind: 'Delta';
+        origin: number;
+        srcType: IntDataType;
     }
 
     // Int32[] -> (Int8 | Int16 | Uint8 | Uint16)[]
     export interface IntegerPacking {
-        kind: 'IntegerPacking',
-        byteCount: number,
-        isUnsigned: boolean,
-        srcSize: number
+        kind: 'IntegerPacking';
+        byteCount: number;
+        isUnsigned: boolean;
+        srcSize: number;
     }
 
     // string[] -> Uint8[]
@@ -145,11 +144,10 @@ export namespace Encoding {
     // offsets = [0,2,5,6]
     // encodes ['12','345','6']
     export interface StringArray {
-        kind: 'StringArray',
-        dataEncoding: Encoding[],
-        stringData: string,
-        offsetEncoding: Encoding[],
-        offsets: Uint8Array
+        kind: 'StringArray';
+        dataEncoding: Encoding[];
+        stringData: string;
+        offsetEncoding: Encoding[];
+        offsets: Uint8Array;
     }
-
 }

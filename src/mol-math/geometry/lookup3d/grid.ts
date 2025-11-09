@@ -6,7 +6,7 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { Result, type Lookup3D } from './common.ts';
+import { type Lookup3D, Result } from './common.ts';
 import { Box3D } from '../primitives/box3d.ts';
 import type { Sphere3D } from '../primitives/sphere3d.ts';
 import type { PositionData } from '../common.ts';
@@ -18,10 +18,18 @@ import { memoize1 } from '../../../mol-util/memoize.ts';
 import { Ray3D } from '../primitives/ray3d.ts';
 
 interface GridLookup3D<T = number> extends Lookup3D<T> {
-    readonly buckets: { readonly offset: ArrayLike<number>, readonly count: ArrayLike<number>, readonly array: ArrayLike<number> }
+    readonly buckets: {
+        readonly offset: ArrayLike<number>;
+        readonly count: ArrayLike<number>;
+        readonly array: ArrayLike<number>;
+    };
 }
 
-function GridLookup3D<T extends number = number>(data: PositionData, boundary: Boundary, cellSizeOrCount?: Vec3 | number): GridLookup3D<T> {
+function GridLookup3D<T extends number = number>(
+    data: PositionData,
+    boundary: Boundary,
+    cellSizeOrCount?: Vec3 | number,
+): GridLookup3D<T> {
     return new GridLookup3DImpl<T>(data, boundary, cellSizeOrCount);
 }
 
@@ -90,40 +98,41 @@ class GridLookup3DImpl<T extends number = number> implements GridLookup3D<T> {
  */
 
 interface InputData {
-    x: ArrayLike<number>,
-    y: ArrayLike<number>,
-    z: ArrayLike<number>,
-    indices: OrderedSet,
-    radius?: ArrayLike<number>,
+    x: ArrayLike<number>;
+    y: ArrayLike<number>;
+    z: ArrayLike<number>;
+    indices: OrderedSet;
+    radius?: ArrayLike<number>;
 }
 
 interface Grid3D {
-    size: number[],
-    min: number[],
-    grid: Uint32Array,
-    delta: number[],
-    bucketOffset: Uint32Array,
-    bucketCounts: Int32Array,
-    bucketArray: Int32Array,
-    data: InputData,
-    maxRadius: number,
-    expandedBox: Box3D,
-    boundingBox: Box3D,
-    boundingSphere: Sphere3D
+    size: number[];
+    min: number[];
+    grid: Uint32Array;
+    delta: number[];
+    bucketOffset: Uint32Array;
+    bucketCounts: Int32Array;
+    bucketArray: Int32Array;
+    data: InputData;
+    maxRadius: number;
+    expandedBox: Box3D;
+    boundingBox: Box3D;
+    boundingSphere: Sphere3D;
 }
 
 interface BuildState {
-    size: number[],
-    delta: number[],
-    data: InputData,
-    expandedBox: Box3D,
-    boundingBox: Box3D,
-    boundingSphere: Sphere3D,
-    elementCount: number
+    size: number[];
+    delta: number[];
+    data: InputData;
+    expandedBox: Box3D;
+    boundingBox: Box3D;
+    boundingSphere: Sphere3D;
+    elementCount: number;
 }
 
 function _build(state: BuildState): Grid3D {
-    const { expandedBox, size: [sX, sY, sZ], data: { x: px, y: py, z: pz, radius, indices }, elementCount, delta } = state;
+    const { expandedBox, size: [sX, sY, sZ], data: { x: px, y: py, z: pz, radius, indices }, elementCount, delta } =
+        state;
     const n = sX * sY * sZ;
     const { min: [minX, minY, minZ] } = expandedBox;
 
@@ -189,7 +198,7 @@ function _build(state: BuildState): Grid3D {
         maxRadius,
         expandedBox: state.expandedBox,
         boundingBox: state.boundingBox,
-        boundingSphere: state.boundingSphere
+        boundingSphere: state.boundingSphere,
     };
 }
 
@@ -236,7 +245,7 @@ function build(data: PositionData, boundary: Boundary, cellSizeOrCount?: Vec3 | 
         y: data.y,
         z: data.z,
         indices,
-        radius: data.radius
+        radius: data.radius,
     };
 
     const state: BuildState = {
@@ -246,21 +255,21 @@ function build(data: PositionData, boundary: Boundary, cellSizeOrCount?: Vec3 | 
         boundingBox: boundary.box,
         boundingSphere: boundary.sphere,
         elementCount,
-        delta
+        delta,
     };
 
     return _build(state);
 }
 
 interface QueryContext {
-    grid: Grid3D,
-    x: number,
-    y: number,
-    z: number,
-    k: number,
-    stopIf?: Function,
-    radius: number,
-    isCheck: boolean
+    grid: Grid3D;
+    x: number;
+    y: number;
+    z: number;
+    k: number;
+    stopIf?: Function;
+    radius: number;
+    isCheck: boolean;
 }
 
 function createContext(grid: Grid3D): QueryContext {
@@ -268,7 +277,17 @@ function createContext(grid: Grid3D): QueryContext {
 }
 
 function query<T extends number = number>(ctx: QueryContext, result: Result<T>): boolean {
-    const { min, size: [sX, sY, sZ], bucketOffset, bucketCounts, bucketArray, grid, data: { x: px, y: py, z: pz, indices, radius }, delta, maxRadius } = ctx.grid;
+    const {
+        min,
+        size: [sX, sY, sZ],
+        bucketOffset,
+        bucketCounts,
+        bucketArray,
+        grid,
+        data: { x: px, y: py, z: pz, indices, radius },
+        delta,
+        maxRadius,
+    } = ctx.grid;
     const { radius: inputRadius, isCheck, x, y, z } = ctx;
 
     const r = inputRadius + maxRadius;
@@ -338,7 +357,16 @@ const insideOut = memoize1(_insideOut);
  * The maximum error is on the order of cell size + max radius (if the grid has radii).
  */
 function approxQueryNearest<T extends number = number>(ctx: QueryContext, result: Result<T>): boolean {
-    const { min, size: [sX, sY, sZ], bucketOffset, bucketCounts, bucketArray, grid, data: { x: px, y: py, z: pz, indices }, delta } = ctx.grid;
+    const {
+        min,
+        size: [sX, sY, sZ],
+        bucketOffset,
+        bucketCounts,
+        bucketArray,
+        grid,
+        data: { x: px, y: py, z: pz, indices },
+        delta,
+    } = ctx.grid;
     const { radius, x, y, z } = ctx;
 
     const rSq = radius * radius;
@@ -403,12 +431,36 @@ const tmpArrG2 = [0.1];
 const tmpArrG3 = [0.1];
 const tmpHeapG = new FibonacciHeap();
 function queryNearest<T extends number = number>(ctx: QueryContext, result: Result<T>): boolean {
-    const { min, expandedBox: box, boundingSphere: { center }, size: [sX, sY, sZ], bucketOffset, bucketCounts, bucketArray, grid, data: { x: px, y: py, z: pz, indices, radius }, delta, maxRadius } = ctx.grid;
+    const {
+        min,
+        expandedBox: box,
+        boundingSphere: { center },
+        size: [sX, sY, sZ],
+        bucketOffset,
+        bucketCounts,
+        bucketArray,
+        grid,
+        data: { x: px, y: py, z: pz, indices, radius },
+        delta,
+        maxRadius,
+    } = ctx.grid;
     const { x, y, z, k, stopIf } = ctx;
     const indicesCount = OrderedSet.size(indices);
     Result.reset(result);
     if (indicesCount === 0 || k <= 0) return false;
-    let gX, gY, gZ, stop = false, gCount = 1, expandGrid = true, nextGCount = 0, arrG = tmpArrG1, nextArrG = tmpArrG2, maxRange = 0, expandRange = true, gridId: number, gridPointsFinished = false;
+    let gX,
+        gY,
+        gZ,
+        stop = false,
+        gCount = 1,
+        expandGrid = true,
+        nextGCount = 0,
+        arrG = tmpArrG1,
+        nextArrG = tmpArrG2,
+        maxRange = 0,
+        expandRange = true,
+        gridId: number,
+        gridPointsFinished = false;
     const expandedArrG = tmpArrG3, sqMaxRadius = maxRadius * maxRadius;
     arrG.length = 0;
     expandedArrG.length = 0;
@@ -514,7 +566,10 @@ function queryNearest<T extends number = number>(ctx: QueryContext, result: Resu
                     return true;
                 }
             } else {
-                while (!tmpHeapG.isEmpty() && (gridPointsFinished || tmpHeapG.findMinimum()!.key as number <= maxRange) && result.count < k) {
+                while (
+                    !tmpHeapG.isEmpty() && (gridPointsFinished || tmpHeapG.findMinimum()!.key as number <= maxRange) &&
+                    result.count < k
+                ) {
                     const node = tmpHeapG.extractMinimum();
                     const squaredDistance = node!.key, index = node!.value;
                     Result.add(result, index as number, squaredDistance as number);

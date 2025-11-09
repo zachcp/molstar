@@ -6,7 +6,7 @@
 
 import { ValueCell } from '../../../mol-util/index.ts';
 import { type Mat4, Vec3, Vec4 } from '../../../mol-math/linear-algebra.ts';
-import { transformPositionArray, type GroupMapping, createGroupMapping } from '../../util.ts';
+import { createGroupMapping, type GroupMapping, transformPositionArray } from '../../util.ts';
 import type { GeometryUtils } from '../geometry.ts';
 import { createColors } from '../color-data.ts';
 import { createMarkers } from '../marker-data.ts';
@@ -30,29 +30,27 @@ import { createEmptyEmissive } from '../emissive-data.ts';
 
 /** Point cloud */
 export interface Points {
-    readonly kind: 'points',
+    readonly kind: 'points';
 
     /** Number of vertices in the point cloud */
-    pointCount: number,
+    pointCount: number;
 
     /** Center buffer as array of xyz values wrapped in a value cell */
-    readonly centerBuffer: ValueCell<Float32Array>,
+    readonly centerBuffer: ValueCell<Float32Array>;
     /** Group buffer as array of group ids for each vertex wrapped in a value cell */
-    readonly groupBuffer: ValueCell<Float32Array>,
+    readonly groupBuffer: ValueCell<Float32Array>;
 
     /** Bounding sphere of the points */
-    readonly boundingSphere: Sphere3D
+    readonly boundingSphere: Sphere3D;
     /** Maps group ids to point indices */
-    readonly groupMapping: GroupMapping
+    readonly groupMapping: GroupMapping;
 
-    setBoundingSphere(boundingSphere: Sphere3D): void
+    setBoundingSphere(boundingSphere: Sphere3D): void;
 }
 
 export namespace Points {
     export function create(centers: Float32Array, groups: Float32Array, pointCount: number, points?: Points): Points {
-        return points ?
-            update(centers, groups, pointCount, points) :
-            fromArrays(centers, groups, pointCount);
+        return points ? update(centers, groups, pointCount, points) : fromArrays(centers, groups, pointCount);
     }
 
     export function createEmpty(points?: Points): Points {
@@ -63,12 +61,13 @@ export namespace Points {
 
     function hashCode(points: Points) {
         return hashFnv32a([
-            points.pointCount, points.centerBuffer.ref.version, points.groupBuffer.ref.version,
+            points.pointCount,
+            points.centerBuffer.ref.version,
+            points.groupBuffer.ref.version,
         ]);
     }
 
     function fromArrays(centers: Float32Array, groups: Float32Array, pointCount: number): Points {
-
         const boundingSphere = Sphere3D();
         let groupMapping: GroupMapping;
 
@@ -99,7 +98,7 @@ export namespace Points {
             setBoundingSphere(sphere: Sphere3D) {
                 Sphere3D.copy(boundingSphere, sphere);
                 currentHash = hashCode(points);
-            }
+            },
         };
         return points;
     }
@@ -133,7 +132,7 @@ export namespace Points {
         pointSizeAttenuation: PD.Boolean(false),
         pointStyle: PD.Select('square', PD.objectToOptions(StyleTypes)),
     };
-    export type Params = typeof Params
+    export type Params = typeof Params;
 
     export const Utils: GeometryUtils<Points, Params> = {
         Params,
@@ -144,7 +143,7 @@ export namespace Points {
         updateBoundingSphere,
         createRenderableState,
         updateRenderableState,
-        createPositionIterator
+        createPositionIterator,
     };
 
     function createPositionIterator(points: Points, transform: TransformData): LocationIterator {
@@ -165,7 +164,13 @@ export namespace Points {
         return LocationIterator(groupCount, instanceCount, 1, getLocation);
     }
 
-    function createValues(points: Points, transform: TransformData, locationIt: LocationIterator, theme: Theme, props: PD.Values<Params>): PointsValues {
+    function createValues(
+        points: Points,
+        transform: TransformData,
+        locationIt: LocationIterator,
+        theme: Theme,
+        props: PD.Values<Params>,
+    ): PointsValues {
         const { instanceCount, groupCount } = locationIt;
         const positionIt = createPositionIterator(points, transform);
 
@@ -183,7 +188,12 @@ export namespace Points {
         const counts = { drawCount: points.pointCount, vertexCount: points.pointCount, groupCount, instanceCount };
 
         const invariantBoundingSphere = Sphere3D.clone(points.boundingSphere);
-        const boundingSphere = calculateTransformBoundingSphere(invariantBoundingSphere, transform.aTransform.ref.value, instanceCount, 0);
+        const boundingSphere = calculateTransformBoundingSphere(
+            invariantBoundingSphere,
+            transform.aTransform.ref.value,
+            instanceCount,
+            0,
+        );
 
         return {
             dGeometryType: ValueCell.create('points'),
@@ -210,7 +220,13 @@ export namespace Points {
         };
     }
 
-    function createValuesSimple(points: Points, props: Partial<PD.Values<Params>>, colorValue: Color, sizeValue: number, transform?: TransformData) {
+    function createValuesSimple(
+        points: Points,
+        props: Partial<PD.Values<Params>>,
+        colorValue: Color,
+        sizeValue: number,
+        transform?: TransformData,
+    ) {
         const s = BaseGeometry.createSimple(colorValue, sizeValue, transform);
         const p = { ...PD.getDefaultValues(Params), ...props };
         return createValues(points, s.transform, s.locationIterator, s.theme, p);
@@ -225,14 +241,22 @@ export namespace Points {
 
     function updateBoundingSphere(values: PointsValues, points: Points) {
         const invariantBoundingSphere = Sphere3D.clone(points.boundingSphere);
-        const boundingSphere = calculateTransformBoundingSphere(invariantBoundingSphere, values.aTransform.ref.value, values.instanceCount.ref.value, 0);
+        const boundingSphere = calculateTransformBoundingSphere(
+            invariantBoundingSphere,
+            values.aTransform.ref.value,
+            values.instanceCount.ref.value,
+            0,
+        );
 
         if (!Sphere3D.equals(boundingSphere, values.boundingSphere.ref.value)) {
             ValueCell.update(values.boundingSphere, boundingSphere);
         }
         if (!Sphere3D.equals(invariantBoundingSphere, values.invariantBoundingSphere.ref.value)) {
             ValueCell.update(values.invariantBoundingSphere, invariantBoundingSphere);
-            ValueCell.update(values.uInvariantBoundingSphere, Vec4.fromSphere(values.uInvariantBoundingSphere.ref.value, invariantBoundingSphere));
+            ValueCell.update(
+                values.uInvariantBoundingSphere,
+                Vec4.fromSphere(values.uInvariantBoundingSphere.ref.value, invariantBoundingSphere),
+            );
         }
     }
 

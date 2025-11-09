@@ -26,9 +26,9 @@ export const PlyTypeByteLength = {
     'int32': 4,
     'uint32': 4,
     'float32': 4,
-    'float64': 8
+    'float64': 8,
 };
-export type PlyType = keyof typeof PlyTypeByteLength
+export type PlyType = keyof typeof PlyTypeByteLength;
 export const PlyTypes = new Set(Object.keys(PlyTypeByteLength));
 export function PlyType(str: string): PlyType {
     if (!PlyTypes.has(str)) throw new Error(`unknown ply type '${str}'`);
@@ -36,9 +36,9 @@ export function PlyType(str: string): PlyType {
 }
 
 export interface PlyFile {
-    readonly comments: ReadonlyArray<string>
-    readonly elementNames: ReadonlyArray<string>
-    getElement(name: string): PlyElement | undefined
+    readonly comments: ReadonlyArray<string>;
+    readonly elementNames: ReadonlyArray<string>;
+    getElement(name: string): PlyElement | undefined;
 }
 
 export function PlyFile(elements: PlyElement[], elementNames: string[], comments: string[]): PlyFile {
@@ -51,29 +51,29 @@ export function PlyFile(elements: PlyElement[], elementNames: string[], comments
         elementNames,
         getElement: (name: string) => {
             return elementMap.get(name);
-        }
+        },
     };
 }
 
-export type PlyElement = PlyTable | PlyList
+export type PlyElement = PlyTable | PlyList;
 
 export interface PlyTable {
-    readonly kind: 'table'
-    readonly rowCount: number
-    readonly propertyNames: ReadonlyArray<string>
-    readonly propertyTypes: ReadonlyArray<PlyType>
-    getProperty(name: string): Column<number> | undefined
+    readonly kind: 'table';
+    readonly rowCount: number;
+    readonly propertyNames: ReadonlyArray<string>;
+    readonly propertyTypes: ReadonlyArray<PlyType>;
+    getProperty(name: string): Column<number> | undefined;
 }
 
 export interface PlyListValue {
-    readonly entries: ArrayLike<number>
-    readonly count: number
+    readonly entries: ArrayLike<number>;
+    readonly count: number;
 }
 
 export interface PlyList {
-    readonly kind: 'list'
-    readonly rowCount: number,
-    readonly name: string,
-    readonly type: PlyType,
-    value: (row: number) => PlyListValue
+    readonly kind: 'list';
+    readonly rowCount: number;
+    readonly name: string;
+    readonly type: PlyType;
+    value: (row: number) => PlyListValue;
 }

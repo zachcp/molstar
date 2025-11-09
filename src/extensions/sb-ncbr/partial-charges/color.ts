@@ -35,7 +35,7 @@ export const PartialChargesThemeParams = {
         { min: 0 },
         {
             label: 'Charge Range',
-        }
+        },
     ),
     absolute: PD.Boolean(false, { isHidden: false, label: 'Use Range' }),
     chargeType: PD.Select(
@@ -44,7 +44,7 @@ export const PartialChargesThemeParams = {
             ['atom', 'Atom charges'],
             ['residue', 'Residue charges'],
         ],
-        { isHidden: false }
+        { isHidden: false },
     ),
 };
 export type PartialChargesThemeParams = typeof PartialChargesThemeParams;
@@ -55,7 +55,7 @@ export function getPartialChargesThemeParams() {
 
 export function PartialChargesColorTheme(
     ctx: ThemeDataContext,
-    props: PD.Values<PartialChargesThemeParams>
+    props: PD.Values<PartialChargesThemeParams>,
 ): ColorTheme<PartialChargesThemeParams> {
     const model = ctx.structure?.models[0];
     if (!model) {
@@ -129,8 +129,8 @@ export function PartialChargesColorTheme(
 }
 
 export const SbNcbrPartialChargesColorThemeProvider: ColorTheme.Provider<
-PartialChargesThemeParams,
-'sb-ncbr-partial-charges'
+    PartialChargesThemeParams,
+    'sb-ncbr-partial-charges'
 > = {
     label: 'SB NCBR Partial Charges',
     name: 'sb-ncbr-partial-charges',

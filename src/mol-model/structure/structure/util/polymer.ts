@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Unit, type ElementIndex } from '../../../../mol-model/structure.ts';
-import { Segmentation, OrderedSet, Interval, SortedArray } from '../../../../mol-data/int.ts';
+import { type ElementIndex, Unit } from '../../../../mol-model/structure.ts';
+import { Interval, OrderedSet, Segmentation, SortedArray } from '../../../../mol-data/int.ts';
 import { SortedRanges } from '../../../../mol-data/int/sorted-ranges.ts';
 import { isNucleic, isProtein } from '../../../../mol-model/structure/model/types.ts';
 
@@ -39,7 +39,7 @@ export function getCoarsePolymerElements(unit: Unit.Spheres | Unit.Gaussians) {
     const polymerIt = SortedRanges.transientSegments(polymerRanges, elements);
     while (polymerIt.hasNext) {
         const { start, end } = polymerIt.move();
-        for (let i = start; i < end; ++i) { indices.push(elements[i]); }
+        for (let i = start; i < end; ++i) indices.push(elements[i]);
     }
     return SortedArray.ofSortedArray<ElementIndex>(indices);
 }
@@ -60,7 +60,6 @@ export function getAtomicGapElements(unit: Unit.Atomic) {
         const elementIndexEnd = traceElementIndex[indexEnd];
         indices.push(elementIndexStart === -1 ? residueAtomSegments.offsets[indexStart] : elementIndexStart);
         indices.push(elementIndexEnd === -1 ? residueAtomSegments.offsets[indexEnd] : elementIndexEnd);
-
     }
     return SortedArray.ofSortedArray<ElementIndex>(indices);
 }

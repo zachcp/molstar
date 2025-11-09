@@ -12,7 +12,11 @@ import { Rgb } from './rgb.ts';
 
 export { Hsl };
 
-interface Hsl extends Array<number> { [d: number]: number, '@type': 'hsl', length: 3 }
+interface Hsl extends Array<number> {
+    [d: number]: number;
+    '@type': 'hsl';
+    length: 3;
+}
 
 function Hsl() {
     return Hsl.zero();
@@ -49,9 +53,7 @@ namespace Hsl {
             s = 0;
             h = Number.NaN;
         } else {
-            s = l < 0.5
-                ? (maxRgb - minRgb) / (maxRgb + minRgb)
-                : (maxRgb - minRgb) / (2 - maxRgb - minRgb);
+            s = l < 0.5 ? (maxRgb - minRgb) / (maxRgb + minRgb) : (maxRgb - minRgb) / (2 - maxRgb - minRgb);
         }
 
         if (r === maxRgb) h = (g - b) / (maxRgb - minRgb);

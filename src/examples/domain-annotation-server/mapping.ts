@@ -30,16 +30,22 @@ export function createMapping(allData: any) {
 }
 
 interface DomainAnnotation {
-    name: string,
-    domains: Table<any>,
-    mappings: Table<S.mapping>
+    name: string;
+    domains: Table<any>;
+    mappings: Table<S.mapping>;
 }
 type MappingRow = Table.Row<S.mapping>;
 
 function writeDomain(enc: CifWriter.Encoder, domain: DomainAnnotation | undefined) {
     if (!domain) return;
-    enc.writeCategory({ name: `pdbx_${domain.name}_domain_annotation`, instance: () => CifWriter.Category.ofTable(domain.domains) });
-    enc.writeCategory({ name: `pdbx_${domain.name}_domain_mapping`, instance: () => CifWriter.Category.ofTable(domain.mappings) });
+    enc.writeCategory({
+        name: `pdbx_${domain.name}_domain_annotation`,
+        instance: () => CifWriter.Category.ofTable(domain.domains),
+    });
+    enc.writeCategory({
+        name: `pdbx_${domain.name}_domain_mapping`,
+        instance: () => CifWriter.Category.ofTable(domain.mappings),
+    });
 }
 
 function getSources(data: any): Table<S.Sources> {
@@ -70,7 +76,7 @@ function getMappings(startId: number, group_id: number, mappings: any): MappingR
                 pdbx_beg_PDB_ins_code: entry.start.author_insertion_code,
                 end_label_seq_id: n(entry.end.residue_number),
                 end_auth_seq_id: n(entry.end.author_residue_number),
-                pdbx_end_PDB_ins_code: entry.end.author_insertion_code
+                pdbx_end_PDB_ins_code: entry.end.author_insertion_code,
             });
         } else {
             rows.push({
@@ -78,7 +84,7 @@ function getMappings(startId: number, group_id: number, mappings: any): MappingR
                 group_id,
                 label_entity_id: '' + entry.entity_id,
                 label_asym_id: entry.struct_asym_id,
-                auth_asym_id: entry.chain_id
+                auth_asym_id: entry.chain_id,
             } as any);
         }
     }
@@ -109,9 +115,11 @@ function getDomain(name: string, schema: any, allData: any) {
         mapping_group_id++;
     }
 
-    return domains.length > 0 ? {
-        name,
-        domains: Table.ofRows({ ...S.Base, ...schema }, domains),
-        mappings: Table.ofRows<S.mapping>(S.mapping, mappings)
-    } : void 0;
+    return domains.length > 0
+        ? {
+            name,
+            domains: Table.ofRows({ ...S.Base, ...schema }, domains),
+            mappings: Table.ofRows<S.mapping>(S.mapping, mappings),
+        }
+        : void 0;
 }

@@ -8,10 +8,10 @@
  * These workarounds will also work in browsers as usual.
  */
 
-
 /** Determines whether the current code is running in Node.js */
-import process from "node:process";
-export const RUNNING_IN_NODEJS = typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
+import process from 'node:process';
+export const RUNNING_IN_NODEJS = typeof process !== 'undefined' && process.versions != null &&
+    process.versions.node != null;
 
 /** Like `File` but works also in Node.js */
 export const File_ = getFile();
@@ -23,11 +23,21 @@ function getFile(): typeof File {
             // Blob fields
             readonly size: number;
             readonly type: string;
-            arrayBuffer() { return this.blob.arrayBuffer(); }
-            slice(start?: number, end?: number, contentType?: string) { return this.blob.slice(start, end, contentType); }
-            stream() { return this.blob.stream(); }
-            text() { return this.blob.text(); }
-            bytes() { return this.blob.bytes(); }
+            arrayBuffer() {
+                return this.blob.arrayBuffer();
+            }
+            slice(start?: number, end?: number, contentType?: string) {
+                return this.blob.slice(start, end, contentType);
+            }
+            stream() {
+                return this.blob.stream();
+            }
+            text() {
+                return this.blob.text();
+            }
+            bytes() {
+                return this.blob.bytes();
+            }
             // File fields
             name: string;
             lastModified: number;

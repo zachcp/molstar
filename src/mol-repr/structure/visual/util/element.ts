@@ -6,8 +6,8 @@
  */
 
 import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
-import { Unit, StructureElement, Structure, type ElementIndex } from '../../../../mol-model/structure.ts';
-import { type Loci, EmptyLoci } from '../../../../mol-model/loci.ts';
+import { type ElementIndex, Structure, StructureElement, Unit } from '../../../../mol-model/structure.ts';
+import { EmptyLoci, type Loci } from '../../../../mol-model/loci.ts';
 import { Interval, OrderedSet, SortedArray } from '../../../../mol-data/int.ts';
 import { Mesh } from '../../../../mol-geo/geometry/mesh/mesh.ts';
 import { sphereVertexCount } from '../../../../mol-geo/primitive/sphere.ts';
@@ -19,29 +19,33 @@ import type { VisualContext } from '../../../../mol-repr/visual.ts';
 import type { Theme } from '../../../../mol-theme/theme.ts';
 import { Spheres } from '../../../../mol-geo/geometry/spheres/spheres.ts';
 import { SpheresBuilder } from '../../../../mol-geo/geometry/spheres/spheres-builder.ts';
-import { isTrace, type StructureGroup, isHydrogen } from './common.ts';
+import { isHydrogen, isTrace, type StructureGroup } from './common.ts';
 import { Sphere3D } from '../../../../mol-math/geometry.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3add = Vec3.add;
 
 type ElementProps = {
-    ignoreHydrogens: boolean,
-    ignoreHydrogensVariant: 'all' | 'non-polar',
-    traceOnly: boolean,
-    stride?: number
-}
+    ignoreHydrogens: boolean;
+    ignoreHydrogensVariant: 'all' | 'non-polar';
+    traceOnly: boolean;
+    stride?: number;
+};
 
 export type ElementSphereMeshProps = {
-    detail: number,
-    sizeFactor: number,
-} & ElementProps
+    detail: number;
+    sizeFactor: number;
+} & ElementProps;
 
 export type ElementSphereImpostorProps = {
-    sizeFactor: number,
-} & ElementProps
+    sizeFactor: number;
+} & ElementProps;
 
-export function makeElementIgnoreTest(structure: Structure, unit: Unit, props: ElementProps): undefined | ((i: ElementIndex) => boolean) {
+export function makeElementIgnoreTest(
+    structure: Structure,
+    unit: Unit,
+    props: ElementProps,
+): undefined | ((i: ElementIndex) => boolean) {
     const { ignoreHydrogens, ignoreHydrogensVariant, traceOnly } = props;
 
     const isCoarse = Unit.isCoarse(unit);
@@ -61,7 +65,14 @@ export function makeElementIgnoreTest(structure: Structure, unit: Unit, props: E
     };
 }
 
-export function createElementSphereMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: ElementSphereMeshProps, mesh?: Mesh): Mesh {
+export function createElementSphereMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: ElementSphereMeshProps,
+    mesh?: Mesh,
+): Mesh {
     const { child } = structure;
     const childUnit = child?.unitMap.get(unit.id);
     if (child && !childUnit) return Mesh.createEmpty(mesh);
@@ -114,7 +125,14 @@ export function createElementSphereMesh(ctx: VisualContext, unit: Unit, structur
     return m;
 }
 
-export function createElementSphereImpostor(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: ElementSphereImpostorProps, spheres?: Spheres): Spheres {
+export function createElementSphereImpostor(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: ElementSphereImpostorProps,
+    spheres?: Spheres,
+): Spheres {
     const { child } = structure;
     const childUnit = child?.unitMap.get(unit.id);
     if (child && !childUnit) return Spheres.createEmpty(spheres);
@@ -220,7 +238,13 @@ export function getElementLoci(pickingId: PickingId, structureGroup: StructureGr
 
 //
 
-export function createStructureElementSphereMesh(ctx: VisualContext, structure: Structure, theme: Theme, props: ElementSphereMeshProps, mesh?: Mesh): Mesh {
+export function createStructureElementSphereMesh(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: ElementSphereMeshProps,
+    mesh?: Mesh,
+): Mesh {
     const { child } = structure;
     const { detail, sizeFactor, stride } = props;
 
@@ -279,7 +303,13 @@ export function createStructureElementSphereMesh(ctx: VisualContext, structure: 
     return m;
 }
 
-export function createStructureElementSphereImpostor(ctx: VisualContext, structure: Structure, theme: Theme, props: ElementSphereImpostorProps, spheres?: Spheres): Spheres {
+export function createStructureElementSphereImpostor(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: ElementSphereImpostorProps,
+    spheres?: Spheres,
+): Spheres {
     const { child } = structure;
     const { sizeFactor, stride } = props;
 

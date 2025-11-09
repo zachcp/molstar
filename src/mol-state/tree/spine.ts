@@ -20,8 +20,12 @@ namespace StateTreeSpine {
     export class Impl implements StateTreeSpine {
         private _current: StateObjectCell | undefined = void 0;
 
-        get current(): StateObjectCell | undefined { return this._current; }
-        set current(cell: StateObjectCell | undefined) { this._current = cell; }
+        get current(): StateObjectCell | undefined {
+            return this._current;
+        }
+        set current(cell: StateObjectCell | undefined) {
+            this._current = cell;
+        }
 
         getAncestorOfType<T extends StateObject.Ctor>(t: T): StateObject.From<T> | undefined {
             if (!this._current) return void 0;
@@ -63,7 +67,11 @@ namespace StateTreeSpine {
         return ret;
     }
 
-    export function getRootOfType<T extends StateObject.Ctor>(state: State, t: T, ref: string): StateObject.From<T> | undefined {
+    export function getRootOfType<T extends StateObject.Ctor>(
+        state: State,
+        t: T,
+        ref: string,
+    ): StateObject.From<T> | undefined {
         let ret: StateObjectCell | undefined = void 0;
         let cell = state.cells.get(ref);
         if (!cell) return void 0;

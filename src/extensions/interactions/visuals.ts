@@ -4,20 +4,32 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { addFixedCountDashedCylinder, addSimpleCylinder, type BasicCylinderProps } from '../../mol-geo/geometry/mesh/builder/cylinder.ts';
+import {
+    addFixedCountDashedCylinder,
+    addSimpleCylinder,
+    type BasicCylinderProps,
+} from '../../mol-geo/geometry/mesh/builder/cylinder.ts';
 import type { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
 import { Sphere3D } from '../../mol-math/geometry.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
 import { Shape } from '../../mol-model/shape.ts';
 import { StructureElement } from '../../mol-model/structure.ts';
-import { addLinkCylinderMesh, type AddLinkOptions, type AddLinkParams, DefaultLinkCylinderProps, LinkStyle } from '../../mol-repr/structure/visual/util/link.ts';
+import {
+    addLinkCylinderMesh,
+    type AddLinkOptions,
+    type AddLinkParams,
+    DefaultLinkCylinderProps,
+    LinkStyle,
+} from '../../mol-repr/structure/visual/util/link.ts';
 import { Color } from '../../mol-util/color/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { stringToWords } from '../../mol-util/string.ts';
 import { InteractionKinds, type StructureInteractions } from './model.ts';
 
-function visualParams({ color, style = 'dashed', radius = 0.04 }: { color: Color, style?: 'dashed' | 'solid', radius?: number }) {
+function visualParams(
+    { color, style = 'dashed', radius = 0.04 }: { color: Color; style?: 'dashed' | 'solid'; radius?: number },
+) {
     return PD.Group({
         color: PD.Color(color),
         style: PD.Select<'dashed' | 'solid'>(style, [['dashed', 'Dashed'], ['solid', 'Solid']]),
@@ -25,7 +37,15 @@ function visualParams({ color, style = 'dashed', radius = 0.04 }: { color: Color
     });
 }
 
-function hydrogenVisualParams({ color, style = 'dashed', radius = 0.04, showArrow = true, arrowOffset = 0.18 }: { color: Color, style?: 'dashed' | 'solid', radius?: number, showArrow?: boolean, arrowOffset?: number }) {
+function hydrogenVisualParams(
+    { color, style = 'dashed', radius = 0.04, showArrow = true, arrowOffset = 0.18 }: {
+        color: Color;
+        style?: 'dashed' | 'solid';
+        radius?: number;
+        showArrow?: boolean;
+        arrowOffset?: number;
+    },
+) {
     return PD.Group({
         color: PD.Color(color),
         style: PD.Select<'dashed' | 'solid'>(style, [['dashed', 'Dashed'], ['solid', 'Solid']]),
@@ -36,7 +56,7 @@ function hydrogenVisualParams({ color, style = 'dashed', radius = 0.04, showArro
 }
 
 export const InteractionVisualParams = {
-    kinds: PD.MultiSelect(InteractionKinds, InteractionKinds.map(k => [k, stringToWords(k)])),
+    kinds: PD.MultiSelect(InteractionKinds, InteractionKinds.map((k) => [k, stringToWords(k)])),
     styles: PD.Group({
         'unknown': visualParams({ color: Color(0x0) }),
         'ionic': visualParams({ color: Color(0xADD8E6) }),
@@ -51,19 +71,23 @@ export const InteractionVisualParams = {
             color: PD.Color(Color(0x999999)),
             radius: PD.Numeric(0.1, { min: 0.01, max: 1, step: 0.01 }),
         }),
-    })
+    }),
 };
 
 export type InteractionVisualParams = PD.Values<typeof InteractionVisualParams>;
 
-export function buildInteractionsShape(interactions: StructureInteractions, params: InteractionVisualParams, prev?: Mesh): Shape<Mesh> {
+export function buildInteractionsShape(
+    interactions: StructureInteractions,
+    params: InteractionVisualParams,
+    prev?: Mesh,
+): Shape<Mesh> {
     const mesh = MeshBuilder.createState(interactions.elements.length * 128, 1024, prev);
 
     mesh.currentGroup = -1;
     const tooltips = new Map<number, string>();
 
     const visible = new Set(params.kinds);
-    const kindsToWords = new Map(InteractionKinds.map(k => [k, stringToWords(k)]));
+    const kindsToWords = new Map(InteractionKinds.map((k) => [k, stringToWords(k)]));
 
     const colors = new Map<number, Color>();
 
@@ -140,7 +164,7 @@ export function buildInteractionsShape(interactions: StructureInteractions, para
                     mesh,
                     capPos,
                     pB,
-                    { radiusTop: 0, radiusBottom: height, topCap: false, bottomCap: true }
+                    { radiusTop: 0, radiusBottom: height, topCap: false, bottomCap: true },
                 );
             } else {
                 cylinder(mesh, pA, pB, options.radius, style);
@@ -172,10 +196,9 @@ export function buildInteractionsShape(interactions: StructureInteractions, para
         MeshBuilder.getMesh(mesh),
         (g) => colors.get(g) ?? 0 as Color,
         (g) => 1,
-        (g) => tooltips.get(g) ?? ''
+        (g) => tooltips.get(g) ?? '',
     );
 }
-
 
 function cylinder(mesh: MeshBuilder.State, a: Vec3, b: Vec3, radius: number, style: 'dashed' | 'solid') {
     const props: BasicCylinderProps = {

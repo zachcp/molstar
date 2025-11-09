@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, type Mat4, Mat3 } from '../../../mol-math/linear-algebra.ts';
+import { Mat3, type Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { ChunkedArray } from '../../../mol-data/util.ts';
 import { Mesh } from './mesh.ts';
 import type { Primitive } from '../../primitive/primitive.ts';
@@ -31,22 +31,32 @@ const caAdd = ChunkedArray.add;
 
 export namespace MeshBuilder {
     export interface State {
-        currentGroup: number
-        readonly vertices: ChunkedArray<number, 3>
-        readonly normals: ChunkedArray<number, 3>
-        readonly indices: ChunkedArray<number, 3>
-        readonly groups: ChunkedArray<number, 1>
-        readonly mesh?: Mesh
+        currentGroup: number;
+        readonly vertices: ChunkedArray<number, 3>;
+        readonly normals: ChunkedArray<number, 3>;
+        readonly indices: ChunkedArray<number, 3>;
+        readonly groups: ChunkedArray<number, 1>;
+        readonly mesh?: Mesh;
     }
 
     export function createState(initialCount = 2048, chunkSize = 1024, mesh?: Mesh): State {
         return {
             currentGroup: -1,
-            vertices: ChunkedArray.create(Float32Array, 3, chunkSize, mesh ? mesh.vertexBuffer.ref.value : initialCount),
+            vertices: ChunkedArray.create(
+                Float32Array,
+                3,
+                chunkSize,
+                mesh ? mesh.vertexBuffer.ref.value : initialCount,
+            ),
             normals: ChunkedArray.create(Float32Array, 3, chunkSize, mesh ? mesh.normalBuffer.ref.value : initialCount),
-            indices: ChunkedArray.create(Uint32Array, 3, chunkSize * 3, mesh ? mesh.indexBuffer.ref.value : initialCount * 3),
+            indices: ChunkedArray.create(
+                Uint32Array,
+                3,
+                chunkSize * 3,
+                mesh ? mesh.indexBuffer.ref.value : initialCount * 3,
+            ),
             groups: ChunkedArray.create(Float32Array, 1, chunkSize, mesh ? mesh.groupBuffer.ref.value : initialCount),
-            mesh
+            mesh,
         };
     }
 
@@ -105,7 +115,12 @@ export namespace MeshBuilder {
         }
     }
 
-    export function addTriangleFanWithNormal(state: State, vertices: ArrayLike<number>, indices: ArrayLike<number>, normal: Vec3) {
+    export function addTriangleFanWithNormal(
+        state: State,
+        vertices: ArrayLike<number>,
+        indices: ArrayLike<number>,
+        normal: Vec3,
+    ) {
         v3fromArray(tmpVecA, vertices, indices[0] * 3);
         for (let i = 2, il = indices.length; i < il; ++i) {
             v3fromArray(tmpVecB, vertices, indices[i - 1] * 3);

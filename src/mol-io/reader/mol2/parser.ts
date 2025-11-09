@@ -10,16 +10,16 @@ import { Column } from '../../../mol-data/db.ts';
 import { TokenBuilder, Tokenizer, type Tokens } from '../common/text/tokenizer.ts';
 import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.ts';
 import { ReaderResult as Result } from '../result.ts';
-import { Task, type RuntimeContext, chunkedSubtask } from '../../../mol-task/index.ts';
+import { chunkedSubtask, type RuntimeContext, Task } from '../../../mol-task/index.ts';
 import type { StringLike } from '../../common/string-like.ts';
 import type { Mol2Atoms, Mol2Bonds, Mol2File, Mol2Molecule, Mol2Structure, Mol2Substructure } from './schema.ts';
 
 const { skipWhitespace, eatValue, markLine, getTokenString, skipStrictWhitespace } = Tokenizer;
 
 interface State {
-    tokenizer: Tokenizer,
-    molecule: Mol2Molecule,
-    runtimeCtx: RuntimeContext
+    tokenizer: Tokenizer;
+    molecule: Mol2Molecule;
+    runtimeCtx: RuntimeContext;
 }
 
 function createEmptyMolecule(): Mol2Molecule {
@@ -33,7 +33,7 @@ function createEmptyMolecule(): Mol2Molecule {
         mol_type: '',
         charge_type: '',
         status_bits: '',
-        mol_comment: ''
+        mol_comment: '',
     };
 }
 
@@ -41,7 +41,7 @@ function State(tokenizer: Tokenizer, runtimeCtx: RuntimeContext): State {
     return {
         tokenizer,
         molecule: createEmptyMolecule(),
-        runtimeCtx
+        runtimeCtx,
     };
 }
 
@@ -160,18 +160,21 @@ async function handleAtoms(state: State): Promise<Mol2Atoms> {
         subst_idTokens,
         subst_nameTokens,
         chargeTokens,
-        status_bitsTokens
+        status_bitsTokens,
     ];
 
     const { length } = tokenizer;
     let linesAlreadyRead = 0;
 
-    await chunkedSubtask(state.runtimeCtx, 100000, void 0, chunkSize => {
+    await chunkedSubtask(state.runtimeCtx, 100000, void 0, (chunkSize) => {
         const linesToRead = Math.min(molecule.num_atoms - linesAlreadyRead, chunkSize);
-        maxColumnCount = Math.max(maxColumnCount, _readColumnsAndGetMaxCount(linesToRead, tokenIndexToColumn, tokenizer));
+        maxColumnCount = Math.max(
+            maxColumnCount,
+            _readColumnsAndGetMaxCount(linesToRead, tokenIndexToColumn, tokenizer),
+        );
         linesAlreadyRead += linesToRead;
         return linesToRead;
-    }, ctx => ctx.update({ message: 'Parsing...', current: tokenizer.position, max: length }));
+    }, (ctx) => ctx.update({ message: 'Parsing...', current: tokenizer.position, max: length }));
 
     const ret = {
         count: molecule.num_atoms,
@@ -219,18 +222,21 @@ async function handleBonds(state: State): Promise<Mol2Bonds> {
         origin_bond_idTokens,
         target_bond_idTokens,
         bondTypeTokens,
-        status_bitsTokens
+        status_bitsTokens,
     ];
 
     const { length } = tokenizer;
     let linesAlreadyRead = 0;
 
-    await chunkedSubtask(state.runtimeCtx, 100000, void 0, chunkSize => {
+    await chunkedSubtask(state.runtimeCtx, 100000, void 0, (chunkSize) => {
         const linesToRead = Math.min(molecule.num_bonds - linesAlreadyRead, chunkSize);
-        maxColumnCount = Math.max(maxColumnCount, _readColumnsAndGetMaxCount(linesToRead, tokenIndexToColumn, tokenizer));
+        maxColumnCount = Math.max(
+            maxColumnCount,
+            _readColumnsAndGetMaxCount(linesToRead, tokenIndexToColumn, tokenizer),
+        );
         linesAlreadyRead += linesToRead;
         return linesToRead;
-    }, ctx => ctx.update({ message: 'Parsing...', current: tokenizer.position, max: length }));
+    }, (ctx) => ctx.update({ message: 'Parsing...', current: tokenizer.position, max: length }));
 
     const ret = {
         count: molecule.num_bonds,
@@ -284,18 +290,21 @@ async function handleSubstructures(state: State): Promise<Mol2Substructure | und
         chainTokens,
         sub_typeTokens,
         inter_bondsTokens,
-        status_bitsTokens
+        status_bitsTokens,
     ];
 
     const { length } = tokenizer;
     let linesAlreadyRead = 0;
 
-    await chunkedSubtask(state.runtimeCtx, 100000, void 0, chunkSize => {
+    await chunkedSubtask(state.runtimeCtx, 100000, void 0, (chunkSize) => {
         const linesToRead = Math.min(molecule.num_subst - linesAlreadyRead, chunkSize);
-        maxColumnCount = Math.max(maxColumnCount, _readColumnsAndGetMaxCount(linesToRead, tokenIndexToColumn, tokenizer));
+        maxColumnCount = Math.max(
+            maxColumnCount,
+            _readColumnsAndGetMaxCount(linesToRead, tokenIndexToColumn, tokenizer),
+        );
         linesAlreadyRead += linesToRead;
         return linesToRead;
-    }, ctx => ctx.update({ message: 'Parsing...', current: tokenizer.position, max: length }));
+    }, (ctx) => ctx.update({ message: 'Parsing...', current: tokenizer.position, max: length }));
 
     const ret = {
         count: molecule.num_subst,
@@ -369,7 +378,7 @@ async function parseInternal(ctx: RuntimeContext, data: StringLike, name: string
 }
 
 export function parseMol2(data: StringLike, name: string) {
-    return Task.create<Result<Mol2File>>('Parse MOL2', async ctx => {
+    return Task.create<Result<Mol2File>>('Parse MOL2', async (ctx) => {
         return await parseInternal(ctx, data, name);
     });
 }

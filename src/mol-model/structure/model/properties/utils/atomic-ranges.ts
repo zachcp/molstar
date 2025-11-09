@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { AtomicRanges, AtomicIndex, AtomicHierarchy, AtomicDerivedData } from '../atomic/hierarchy.ts';
-import { Segmentation, Interval } from '../../../../../mol-data/int.ts';
+import type { AtomicDerivedData, AtomicHierarchy, AtomicIndex, AtomicRanges } from '../atomic/hierarchy.ts';
+import { Interval, Segmentation } from '../../../../../mol-data/int.ts';
 import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges.ts';
 import { isPolymer, PolymerType } from '../../types.ts';
 import type { ElementIndex, ResidueIndex } from '../../indexing.ts';
@@ -15,7 +15,13 @@ import { Vec3 } from '../../../../../mol-math/linear-algebra.ts';
 import type { Entities } from '../common.ts';
 import type { StructureSequence } from '../sequence.ts';
 
-function areBackboneConnected(riStart: ResidueIndex, riEnd: ResidueIndex, conformation: AtomicConformation, index: AtomicIndex, derived: AtomicDerivedData) {
+function areBackboneConnected(
+    riStart: ResidueIndex,
+    riEnd: ResidueIndex,
+    conformation: AtomicConformation,
+    index: AtomicIndex,
+    derived: AtomicDerivedData,
+) {
     const { polymerType, traceElementIndex, directionFromElementIndex, directionToElementIndex } = derived.residue;
     const ptStart = polymerType[riStart];
     const ptEnd = polymerType[riEnd];
@@ -33,16 +39,28 @@ function areBackboneConnected(riStart: ResidueIndex, riEnd: ResidueIndex, confor
     const { x, y, z } = conformation;
     const pStart = Vec3.create(x[eiStart], y[eiStart], z[eiStart]);
     const pEnd = Vec3.create(x[eiEnd], y[eiEnd], z[eiEnd]);
-    const isCoarse = directionFromElementIndex[riStart] === -1 || directionToElementIndex[riStart] === -1 || directionFromElementIndex[riEnd] === -1 || directionToElementIndex[riEnd] === -1;
+    const isCoarse = directionFromElementIndex[riStart] === -1 || directionToElementIndex[riStart] === -1 ||
+        directionFromElementIndex[riEnd] === -1 || directionToElementIndex[riEnd] === -1;
     return Vec3.distance(pStart, pEnd) < (isCoarse ? 10 : 3);
 }
 
-export function getAtomicRanges(hierarchy: AtomicHierarchy, entities: Entities, conformation: AtomicConformation, sequence: StructureSequence): AtomicRanges {
+export function getAtomicRanges(
+    hierarchy: AtomicHierarchy,
+    entities: Entities,
+    conformation: AtomicConformation,
+    sequence: StructureSequence,
+): AtomicRanges {
     const polymerRanges: number[] = [];
     const gapRanges: number[] = [];
     const cyclicPolymerMap = new Map<ResidueIndex, ResidueIndex>();
-    const chainIt = Segmentation.transientSegments(hierarchy.chainAtomSegments, Interval.ofBounds(0, hierarchy.atoms._rowCount));
-    const residueIt = Segmentation.transientSegments(hierarchy.residueAtomSegments, Interval.ofBounds(0, hierarchy.atoms._rowCount));
+    const chainIt = Segmentation.transientSegments(
+        hierarchy.chainAtomSegments,
+        Interval.ofBounds(0, hierarchy.atoms._rowCount),
+    );
+    const residueIt = Segmentation.transientSegments(
+        hierarchy.residueAtomSegments,
+        Interval.ofBounds(0, hierarchy.atoms._rowCount),
+    );
     const { index, derived } = hierarchy;
     const { label_seq_id } = hierarchy.residues;
     const { label_entity_id } = hierarchy.chains;
@@ -70,7 +88,10 @@ export function getAtomicRanges(hierarchy: AtomicHierarchy, entities: Entities, 
         const riEnd = hierarchy.residueAtomSegments.index[chainSegment.end - 1];
         const seqIdStart = label_seq_id.value(riStart);
         const seqIdEnd = label_seq_id.value(riEnd);
-        if (seqIdStart === 1 && seqIdEnd === maxSeqId && conformation.xyzDefined && areBackboneConnected(riStart, riEnd, conformation, index, derived)) {
+        if (
+            seqIdStart === 1 && seqIdEnd === maxSeqId && conformation.xyzDefined &&
+            areBackboneConnected(riStart, riEnd, conformation, index, derived)
+        ) {
             cyclicPolymerMap.set(riStart, riEnd);
             cyclicPolymerMap.set(riEnd, riStart);
         }
@@ -92,7 +113,10 @@ export function getAtomicRanges(hierarchy: AtomicHierarchy, entities: Entities, 
                     } else {
                         const riStart = hierarchy.residueAtomSegments.index[residueSegment.start];
                         const riEnd = hierarchy.residueAtomSegments.index[prevEnd - 1];
-                        if (conformation.xyzDefined && !areBackboneConnected(riStart, riEnd, conformation, hierarchy.index, derived)) {
+                        if (
+                            conformation.xyzDefined &&
+                            !areBackboneConnected(riStart, riEnd, conformation, hierarchy.index, derived)
+                        ) {
                             polymerRanges.push(startIndex, prevEnd - 1);
                             // add gap even for consecutive residues if they are not connected
                             gapRanges.push(prevStart, residueSegment.end - 1);
@@ -119,6 +143,6 @@ export function getAtomicRanges(hierarchy: AtomicHierarchy, entities: Entities, 
     return {
         polymerRanges: SortedRanges.ofSortedRanges(polymerRanges as ElementIndex[]),
         gapRanges: SortedRanges.ofSortedRanges(gapRanges as ElementIndex[]),
-        cyclicPolymerMap
+        cyclicPolymerMap,
     };
 }

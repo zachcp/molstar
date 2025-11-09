@@ -6,7 +6,7 @@
 
 import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
 import { type ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
-import { TextureSpec, UniformSpec, DefineSpec, type Values } from '../../mol-gl/renderable/schema.ts';
+import { DefineSpec, TextureSpec, UniformSpec, type Values } from '../../mol-gl/renderable/schema.ts';
 import { ShaderCode } from '../../mol-gl/shader-code.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
@@ -21,12 +21,18 @@ import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
 import { isTimingMode } from '../../mol-util/debug.ts';
 
 export const FxaaParams: PD.Params = {
-    edgeThresholdMin: PD.Numeric(0.0312, { min: 0.0312, max: 0.0833, step: 0.0001 }, { description: 'Trims the algorithm from processing darks.' }),
-    edgeThresholdMax: PD.Numeric(0.063, { min: 0.063, max: 0.333, step: 0.001 }, { description: 'The minimum amount of local contrast required to apply algorithm.' }),
+    edgeThresholdMin: PD.Numeric(0.0312, { min: 0.0312, max: 0.0833, step: 0.0001 }, {
+        description: 'Trims the algorithm from processing darks.',
+    }),
+    edgeThresholdMax: PD.Numeric(0.063, { min: 0.063, max: 0.333, step: 0.001 }, {
+        description: 'The minimum amount of local contrast required to apply algorithm.',
+    }),
     iterations: PD.Numeric(12, { min: 0, max: 16, step: 1 }, { description: 'Number of edge exploration steps.' }),
-    subpixelQuality: PD.Numeric(0.30, { min: 0.00, max: 1.00, step: 0.01 }, { description: 'Choose the amount of sub-pixel aliasing removal.' }),
+    subpixelQuality: PD.Numeric(0.30, { min: 0.00, max: 1.00, step: 0.01 }, {
+        description: 'Choose the amount of sub-pixel aliasing removal.',
+    }),
 };
-export type FxaaProps = PD.Values<typeof FxaaParams>
+export type FxaaProps = PD.Values<typeof FxaaParams>;
 
 export class FxaaPass {
     private readonly renderable: FxaaRenderable;
@@ -52,7 +58,10 @@ export class FxaaPass {
     }
 
     setSize(width: number, height: number) {
-        ValueCell.update(this.renderable.values.uTexSizeInv, Vec2.set(this.renderable.values.uTexSizeInv.ref.value, 1 / width, 1 / height));
+        ValueCell.update(
+            this.renderable.values.uTexSizeInv,
+            Vec2.set(this.renderable.values.uTexSizeInv.ref.value, 1 / width, 1 / height),
+        );
     }
 
     update(input: Texture, props: FxaaProps) {
@@ -109,7 +118,7 @@ const FxaaSchema = {
     dSubpixelQuality: DefineSpec('number'),
 };
 const FxaaShaderCode = ShaderCode('fxaa', quad_vert, fxaa_frag);
-type FxaaRenderable = ComputeRenderable<Values<typeof FxaaSchema>>
+type FxaaRenderable = ComputeRenderable<Values<typeof FxaaSchema>>;
 
 function getFxaaRenderable(ctx: WebGLContext, colorTexture: Texture): FxaaRenderable {
     const width = colorTexture.getWidth();

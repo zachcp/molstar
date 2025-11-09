@@ -46,12 +46,12 @@ const valueOperators: OperatorList = [
                 if (e1.head) {
                     expr = B.core.str.match([
                         B.core.type.regex([`^${e2}$`, 'i']),
-                        B.core.type.str([e1])
+                        B.core.type.str([e1]),
                     ]);
                 } else {
                     expr = B.core.str.match([
                         B.core.type.regex([`^${e1}$`, 'i']),
-                        B.core.type.str([e2])
+                        B.core.type.str([e2]),
                     ]);
                 }
             }
@@ -77,12 +77,13 @@ const valueOperators: OperatorList = [
                     case '<=':
                         expr = B.core.rel.lte([e1, e2]);
                         break;
-                    default: throw new Error(`value operator '${op}' not supported`);
+                    default:
+                        throw new Error(`value operator '${op}' not supported`);
                 }
             }
             return B.struct.generator.atomGroups({ 'atom-test': expr });
-        }
-    }
+        },
+    },
 ];
 
 function atomExpressionQuery(x: any[]) {
@@ -96,10 +97,12 @@ function atomExpressionQuery(x: any[]) {
 
     const resProps = [];
     if (resname) resProps.push(B.core.rel.eq([B.ammp('label_comp_id'), resname]));
-    if (resnoRange) resProps.push(B.core.logic.and([
-        B.core.rel.gre([B.ammp('auth_seq_id'), resnoRange[0]]),
-        B.core.rel.lte([B.ammp('auth_seq_id'), resnoRange[1]])
-    ]));
+    if (resnoRange) {
+        resProps.push(B.core.logic.and([
+            B.core.rel.gre([B.ammp('auth_seq_id'), resnoRange[0]]),
+            B.core.rel.lte([B.ammp('auth_seq_id'), resnoRange[1]]),
+        ]));
+    }
     if (resno) resProps.push(B.core.rel.eq([B.ammp('auth_seq_id'), resno]));
     if (inscode) resProps.push(B.core.rel.eq([B.ammp('pdbx_PDB_ins_code'), inscode]));
     if (resProps.length) tests['residue-test'] = h.andExpr(resProps);
@@ -119,25 +122,26 @@ const lang = P.MonadicParser.createLanguage({
         return P.MonadicParser.alt(
             r.Parens,
             r.Operator,
-            r.Expression
+            r.Expression,
         ).wrap(P.MonadicParser.regexp(/\(\s*/), P.MonadicParser.regexp(/\s*\)/));
     },
 
     Expression: function (r: any) {
         return P.MonadicParser.alt(
             r.Keywords,
-
             r.AtomExpression.map(atomExpressionQuery),
-
             r.Within.map((x: [number, Expression]) => B.struct.modifier.includeSurroundings({ 0: x[1], radius: x[0] })),
             r.ValueQuery,
-
-            r.Element.map((x: string) => B.struct.generator.atomGroups({
-                'atom-test': B.core.rel.eq([B.acp('elementSymbol'), B.struct.type.elementSymbol(x)])
-            })),
-            r.Resname.map((x: string) => B.struct.generator.atomGroups({
-                'residue-test': B.core.rel.eq([B.ammp('label_comp_id'), x])
-            })),
+            r.Element.map((x: string) =>
+                B.struct.generator.atomGroups({
+                    'atom-test': B.core.rel.eq([B.acp('elementSymbol'), B.struct.type.elementSymbol(x)]),
+                })
+            ),
+            r.Resname.map((x: string) =>
+                B.struct.generator.atomGroups({
+                    'residue-test': B.core.rel.eq([B.ammp('label_comp_id'), x]),
+                })
+            ),
         );
     },
 
@@ -156,8 +160,8 @@ const lang = P.MonadicParser.createLanguage({
                 r.Chainname.or(P.MonadicParser.of(null)),
                 r.Atomname.or(P.MonadicParser.of(null)),
                 r.Altloc.or(P.MonadicParser.of(null)),
-                r.Model.or(P.MonadicParser.of(null))
-            )
+                r.Model.or(P.MonadicParser.of(null)),
+            ),
         ).desc('expression');
     },
 
@@ -178,9 +182,9 @@ const lang = P.MonadicParser.createLanguage({
             r.Integer.skip(P.MonadicParser.seq(
                 P.MonadicParser.optWhitespace,
                 P.MonadicParser.string('-'),
-                P.MonadicParser.optWhitespace
+                P.MonadicParser.optWhitespace,
             )),
-            r.Integer
+            r.Integer,
         ).desc('resno-range');
     },
     Within: (r: any) => {
@@ -188,7 +192,7 @@ const lang = P.MonadicParser.createLanguage({
             .skip(P.MonadicParser.regexp(/\s*\(\s*/))
             .then(P.MonadicParser.seq(
                 r.Integer.skip(P.MonadicParser.regexp(/\s*,\s*/)),
-                r.Query
+                r.Query,
             ))
             .skip(P.MonadicParser.regexp(/\)/));
     },
@@ -199,7 +203,7 @@ const lang = P.MonadicParser.createLanguage({
         return P.MonadicParser.alt(
             r.Operator,
             r.Parens,
-            r.Expression
+            r.Expression,
         ).trim(P.MonadicParser.optWhitespace);
     },
 
@@ -215,7 +219,7 @@ const lang = P.MonadicParser.createLanguage({
         return P.MonadicParser.alt(
             P.MonadicParser.regexp(new RegExp(`(?!(${w}))[A-Z0-9_]+`, 'i')),
             P.MonadicParser.regexp(/'((?:[^"\\]|\\.)*)'/, 1),
-            P.MonadicParser.regexp(/"((?:[^"\\]|\\.)*)"/, 1).map(x => B.core.type.regex([`^${x}$`, 'i']))
+            P.MonadicParser.regexp(/"((?:[^"\\]|\\.)*)"/, 1).map((x) => B.core.type.regex([`^${x}$`, 'i'])),
         ).desc('string');
     },
 
@@ -227,7 +231,7 @@ const lang = P.MonadicParser.createLanguage({
         return P.MonadicParser.alt(
             r.ValueParens,
             r.ValueOperator,
-            r.ValueExpressions
+            r.ValueExpressions,
         ).wrap(P.MonadicParser.string('('), P.MonadicParser.string(')'));
     },
 
@@ -242,7 +246,7 @@ const lang = P.MonadicParser.createLanguage({
     ValueExpressions: function (r: any) {
         return P.MonadicParser.alt(
             r.Value,
-            r.ValuePropertyNames
+            r.ValuePropertyNames,
         );
     },
 
@@ -254,14 +258,14 @@ const lang = P.MonadicParser.createLanguage({
                 } else {
                     if (typeof x === 'string' && x.length <= 4) {
                         return B.struct.generator.atomGroups({
-                            'residue-test': B.core.rel.eq([B.ammp('label_comp_id'), x])
+                            'residue-test': B.core.rel.eq([B.ammp('label_comp_id'), x]),
                         });
                     }
                 }
                 throw new Error(`values must be part of an comparison, value '${x}'`);
-            })
+            }),
         );
-    }
+    },
 });
 
-export const transpiler: Transpiler = str => lang.Query.tryParse(str);
+export const transpiler: Transpiler = (str) => lang.Query.tryParse(str);

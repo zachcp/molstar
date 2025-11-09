@@ -40,27 +40,41 @@ namespace Interval {
     export const toString: <T extends number = number>(interval: Interval<T>) => string = Impl.toString as any;
 
     /** Test if two intervals are identical */
-    export const areEqual: <T extends number = number>(a: Interval<T>, b: Interval<T>) => boolean = Impl.areEqual as any;
+    export const areEqual: <T extends number = number>(a: Interval<T>, b: Interval<T>) => boolean = Impl
+        .areEqual as any;
     /** Test if two intervals are intersecting, i.e. their bounds overlap */
-    export const areIntersecting: <T extends number = number>(a: Interval<T>, b: Interval<T>) => boolean = Impl.areIntersecting as any;
+    export const areIntersecting: <T extends number = number>(a: Interval<T>, b: Interval<T>) => boolean = Impl
+        .areIntersecting as any;
 
     /** Test if interval b is fully included in interval a */
-    export const isSubInterval: <T extends number = number>(a: Interval<T>, b: Interval<T>) => boolean = Impl.isSubInterval as any;
+    export const isSubInterval: <T extends number = number>(a: Interval<T>, b: Interval<T>) => boolean = Impl
+        .isSubInterval as any;
 
-    export const findPredecessorIndex: <T extends number = number>(interval: Interval<T>, x: T) => number = Impl.findPredecessorIndex as any;
-    export const findPredecessorIndexInInterval: <T extends number = number>(interval: Interval<T>, x: T, bounds: Interval) => number = Impl.findPredecessorIndexInInterval as any;
-    export const findRange: <T extends number = number>(interval: Interval<T>, min: T, max: T) => Interval = Impl.findRange as any;
+    export const findPredecessorIndex: <T extends number = number>(interval: Interval<T>, x: T) => number = Impl
+        .findPredecessorIndex as any;
+    export const findPredecessorIndexInInterval: <T extends number = number>(
+        interval: Interval<T>,
+        x: T,
+        bounds: Interval,
+    ) => number = Impl.findPredecessorIndexInInterval as any;
+    export const findRange: <T extends number = number>(interval: Interval<T>, min: T, max: T) => Interval = Impl
+        .findRange as any;
     /** Size of the intersection of the two intervals */
-    export const intersectionSize: <T extends number = number>(a: Interval<T>, b: Interval<T>) => number = Impl.intersectionSize as any;
+    export const intersectionSize: <T extends number = number>(a: Interval<T>, b: Interval<T>) => number = Impl
+        .intersectionSize as any;
 
     /** Get a new interval that is the intersection of the two intervals */
-    export const intersect: <T extends number = number>(a: Interval<T>, b: Interval<T>) => Interval<T> = Impl.intersect as any;
+    export const intersect: <T extends number = number>(a: Interval<T>, b: Interval<T>) => Interval<T> = Impl
+        .intersect as any;
 
     /** Get new interval that is shifted by the given offset */
-    export const offset: <T extends number = number>(int: Interval<T>, offset: number) => Interval<T> = Impl.offset as any;
+    export const offset: <T extends number = number>(int: Interval<T>, offset: number) => Interval<T> = Impl
+        .offset as any;
 }
 
 /** Interval describing a range [min, max] of values */
-interface Interval<T extends number = number> { '@type': 'int-interval' }
+interface Interval<T extends number = number> {
+    '@type': 'int-interval';
+}
 
 export { Interval };

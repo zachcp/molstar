@@ -5,8 +5,8 @@
  */
 
 import { ModelCrossLinkRestraint } from './format.ts';
-import { type Unit, type StructureElement, type Structure, Bond } from '../../../mol-model/structure.ts';
-import { PairRestraints, type PairRestraint } from '../pair-restraints.ts';
+import { Bond, type Structure, type StructureElement, type Unit } from '../../../mol-model/structure.ts';
+import { type PairRestraint, PairRestraints } from '../pair-restraints.ts';
 import { CustomStructureProperty } from '../../common/custom-structure-property.ts';
 import type { CustomProperty } from '../../common/custom-property.ts';
 import { DataLocation } from '../../../mol-model/location.ts';
@@ -17,40 +17,41 @@ import { bondLabel } from '../../../mol-theme/label.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
 
-export type CrossLinkRestraintValue = PairRestraints<CrossLinkRestraint>
+export type CrossLinkRestraintValue = PairRestraints<CrossLinkRestraint>;
 
-export const CrossLinkRestraintProvider: CustomStructureProperty.Provider<{}, CrossLinkRestraintValue> = CustomStructureProperty.createProvider({
-    label: 'Cross Link Restraint',
-    descriptor: CustomPropertyDescriptor({
-        name: 'integrative-cross-link-restraint',
-        // TODO `cifExport` and `symbol`
-    }),
-    type: 'local',
-    defaultParams: {},
-    getParams: (data: Structure) => ({}),
-    isApplicable: (data: Structure) => data.models.some(m => !!ModelCrossLinkRestraint.Provider.get(m)),
-    obtain: async (ctx: CustomProperty.Context, data: Structure, props: Partial<{}>) => {
-        return { value: extractCrossLinkRestraints(data) };
-    }
-});
+export const CrossLinkRestraintProvider: CustomStructureProperty.Provider<{}, CrossLinkRestraintValue> =
+    CustomStructureProperty.createProvider({
+        label: 'Cross Link Restraint',
+        descriptor: CustomPropertyDescriptor({
+            name: 'integrative-cross-link-restraint',
+            // TODO `cifExport` and `symbol`
+        }),
+        type: 'local',
+        defaultParams: {},
+        getParams: (data: Structure) => ({}),
+        isApplicable: (data: Structure) => data.models.some((m) => !!ModelCrossLinkRestraint.Provider.get(m)),
+        obtain: async (ctx: CustomProperty.Context, data: Structure, props: Partial<{}>) => {
+            return { value: extractCrossLinkRestraints(data) };
+        },
+    });
 
 export { CrossLinkRestraint };
 
 interface CrossLinkRestraint extends PairRestraint {
-    readonly restraintType: 'harmonic' | 'upper bound' | 'lower bound'
-    readonly distanceThreshold: number
-    readonly psi: number
-    readonly sigma1: number
-    readonly sigma2: number
+    readonly restraintType: 'harmonic' | 'upper bound' | 'lower bound';
+    readonly distanceThreshold: number;
+    readonly psi: number;
+    readonly sigma1: number;
+    readonly sigma2: number;
 }
 
 namespace CrossLinkRestraint {
     export enum Tag {
-        CrossLinkRestraint = 'cross-link-restraint'
+        CrossLinkRestraint = 'cross-link-restraint',
     }
 
     export function isApplicable(structure: Structure) {
-        return structure.models.some(m => !!ModelCrossLinkRestraint.Provider.get(m));
+        return structure.models.some((m) => !!ModelCrossLinkRestraint.Provider.get(m));
     }
 
     const distVecA = Vec3(), distVecB = Vec3();
@@ -60,12 +61,19 @@ namespace CrossLinkRestraint {
         return Vec3.distance(distVecA, distVecB);
     }
 
-    type StructureCrossLinkRestraints = { readonly structure: Structure, readonly crossLinkRestraints: CrossLinkRestraintValue }
+    type StructureCrossLinkRestraints = {
+        readonly structure: Structure;
+        readonly crossLinkRestraints: CrossLinkRestraintValue;
+    };
 
-    export type Element = number
+    export type Element = number;
     export interface Location extends DataLocation<StructureCrossLinkRestraints, Element> {}
 
-    export function Location(crossLinkRestraints: CrossLinkRestraintValue, structure: Structure, index?: number): Location {
+    export function Location(
+        crossLinkRestraints: CrossLinkRestraintValue,
+        structure: Structure,
+        index?: number,
+    ): Location {
         return DataLocation('cross-link-restraints', { structure, crossLinkRestraints }, index as any);
     }
 
@@ -83,26 +91,40 @@ namespace CrossLinkRestraint {
 
     function _label(crossLinkRestraints: CrossLinkRestraintValue, element: Element): string {
         const p = crossLinkRestraints.pairs[element];
-        return `Cross Link Restraint | Type: ${p.restraintType} | Threshold: ${p.distanceThreshold} \u212B | Psi: ${p.psi} | Sigma 1: ${p.sigma1} | Sigma 2: ${p.sigma2} | Distance: ${distance(p).toFixed(2)} \u212B`;
+        return `Cross Link Restraint | Type: ${p.restraintType} | Threshold: ${p.distanceThreshold} \u212B | Psi: ${p.psi} | Sigma 1: ${p.sigma1} | Sigma 2: ${p.sigma2} | Distance: ${
+            distance(p).toFixed(2)
+        } \u212B`;
     }
 
     export function locationLabel(location: Location): string {
         return _label(location.data.crossLinkRestraints, location.element);
     }
 
-    export interface Loci extends DataLoci<StructureCrossLinkRestraints, Element> { }
+    export interface Loci extends DataLoci<StructureCrossLinkRestraints, Element> {}
 
-    export function Loci(structure: Structure, crossLinkRestraints: CrossLinkRestraintValue, elements: ReadonlyArray<Element>): Loci {
-        return DataLoci('cross-link-restraints', { structure, crossLinkRestraints }, elements,
+    export function Loci(
+        structure: Structure,
+        crossLinkRestraints: CrossLinkRestraintValue,
+        elements: ReadonlyArray<Element>,
+    ): Loci {
+        return DataLoci(
+            'cross-link-restraints',
+            { structure, crossLinkRestraints },
+            elements,
             (boundingSphere) => getBoundingSphere(crossLinkRestraints, elements, boundingSphere),
-            () => getLabel(structure, crossLinkRestraints, elements));
+            () => getLabel(structure, crossLinkRestraints, elements),
+        );
     }
 
     export function isLoci(x: any): x is Loci {
         return !!x && x.kind === 'data-loci' && x.tag === 'interactions';
     }
 
-    export function getBoundingSphere(crossLinkRestraints: CrossLinkRestraintValue, elements: ReadonlyArray<Element>, boundingSphere: Sphere3D): Sphere3D {
+    export function getBoundingSphere(
+        crossLinkRestraints: CrossLinkRestraintValue,
+        elements: ReadonlyArray<Element>,
+        boundingSphere: Sphere3D,
+    ): Sphere3D {
         return CentroidHelper.fromPairProvider(elements.length, (i, pA, pB) => {
             const p = crossLinkRestraints.pairs[elements[i]];
             p.unitA.conformation.position(p.unitA.elements[p.indexA], pA);
@@ -110,13 +132,17 @@ namespace CrossLinkRestraint {
         }, boundingSphere);
     }
 
-    export function getLabel(structure: Structure, crossLinkRestraints: CrossLinkRestraintValue, elements: ReadonlyArray<Element>) {
+    export function getLabel(
+        structure: Structure,
+        crossLinkRestraints: CrossLinkRestraintValue,
+        elements: ReadonlyArray<Element>,
+    ) {
         const element = elements[0];
         if (element === undefined) return '';
         const p = crossLinkRestraints.pairs[element];
         return [
             _label(crossLinkRestraints, element),
-            bondLabel(Bond.Location(structure, p.unitA, p.indexA, structure, p.unitB, p.indexB))
+            bondLabel(Bond.Location(structure, p.unitA, p.indexA, structure, p.unitB, p.indexB)),
         ].join('</br>');
     }
 }
@@ -130,7 +156,7 @@ function _addRestraints(map: Map<number, number>, unit: Unit, restraints: ModelC
 
     for (let i = 0; i < elementCount; i++) {
         const e = elements[i];
-        restraints.getIndicesByElement(e, kind).forEach(ri => map.set(ri, i));
+        restraints.getIndicesByElement(e, kind).forEach((ri) => map.set(ri, i));
     }
 }
 
@@ -151,7 +177,7 @@ function extractInter(pairs: CrossLinkRestraint[], unitA: Unit, unitB: Unit) {
         if (indexB !== undefined) {
             pairs.push(
                 createCrossLinkRestraint(unitA, indexA, unitB, indexB, restraints, ri),
-                createCrossLinkRestraint(unitB, indexB, unitA, indexA, restraints, ri)
+                createCrossLinkRestraint(unitB, indexB, unitA, indexA, restraints, ri),
             );
         }
     });
@@ -171,7 +197,7 @@ function extractIntra(pairs: CrossLinkRestraint[], unit: Unit) {
 
     for (let i = 0; i < elementCount; i++) {
         const e = elements[i];
-        restraints.getIndicesByElement(e, kind).forEach(ri => {
+        restraints.getIndicesByElement(e, kind).forEach((ri) => {
             const il = r.get(ri);
             if (il) il.push(i as StructureElement.UnitIndex);
             else r.set(ri, [i as StructureElement.UnitIndex]);
@@ -183,14 +209,24 @@ function extractIntra(pairs: CrossLinkRestraint[], unit: Unit) {
         const [indexA, indexB] = il;
         pairs.push(
             createCrossLinkRestraint(unit, indexA, unit, indexB, restraints, ri),
-            createCrossLinkRestraint(unit, indexB, unit, indexA, restraints, ri)
+            createCrossLinkRestraint(unit, indexB, unit, indexA, restraints, ri),
         );
     });
 }
 
-function createCrossLinkRestraint(unitA: Unit, indexA: StructureElement.UnitIndex, unitB: Unit, indexB: StructureElement.UnitIndex, restraints: ModelCrossLinkRestraint, row: number): CrossLinkRestraint {
+function createCrossLinkRestraint(
+    unitA: Unit,
+    indexA: StructureElement.UnitIndex,
+    unitB: Unit,
+    indexB: StructureElement.UnitIndex,
+    restraints: ModelCrossLinkRestraint,
+    row: number,
+): CrossLinkRestraint {
     return {
-        unitA, indexA, unitB, indexB,
+        unitA,
+        indexA,
+        unitB,
+        indexB,
 
         restraintType: restraints.data.restraint_type.value(row),
         distanceThreshold: restraints.data.distance_threshold.value(row),
@@ -202,7 +238,7 @@ function createCrossLinkRestraint(unitA: Unit, indexA: StructureElement.UnitInde
 
 function extractCrossLinkRestraints(structure: Structure): PairRestraints<CrossLinkRestraint> {
     const pairs: CrossLinkRestraint[] = [];
-    if (!structure.models.some(m => ModelCrossLinkRestraint.Provider.get(m))) {
+    if (!structure.models.some((m) => ModelCrossLinkRestraint.Provider.get(m))) {
         return new PairRestraints(pairs);
     }
 

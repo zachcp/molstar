@@ -7,7 +7,7 @@
 
 import { ValueCell } from '../../../mol-util/index.ts';
 import { type Mat4, Vec3, Vec4 } from '../../../mol-math/linear-algebra.ts';
-import { transformPositionArray, type GroupMapping, createGroupMapping } from '../../util.ts';
+import { createGroupMapping, type GroupMapping, transformPositionArray } from '../../util.ts';
 import type { GeometryUtils } from '../geometry.ts';
 import { createColors } from '../color-data.ts';
 import { createMarkers } from '../marker-data.ts';
@@ -30,46 +30,57 @@ import { createEmptySubstance } from '../substance-data.ts';
 import { createEmptyEmissive } from '../emissive-data.ts';
 
 export interface Cylinders {
-    readonly kind: 'cylinders',
+    readonly kind: 'cylinders';
 
     /** Number of cylinders */
-    cylinderCount: number,
+    cylinderCount: number;
 
     /** Mapping buffer as array of uvw values wrapped in a value cell */
-    readonly mappingBuffer: ValueCell<Float32Array>,
+    readonly mappingBuffer: ValueCell<Float32Array>;
     /** Index buffer as array of vertex index triplets wrapped in a value cell */
-    readonly indexBuffer: ValueCell<Uint32Array>,
+    readonly indexBuffer: ValueCell<Uint32Array>;
     /** Group buffer as array of group ids for each vertex wrapped in a value cell */
-    readonly groupBuffer: ValueCell<Float32Array>,
+    readonly groupBuffer: ValueCell<Float32Array>;
     /** Cylinder start buffer as array of xyz values wrapped in a value cell */
-    readonly startBuffer: ValueCell<Float32Array>,
+    readonly startBuffer: ValueCell<Float32Array>;
     /** Cylinder end buffer as array of xyz values wrapped in a value cell */
-    readonly endBuffer: ValueCell<Float32Array>,
+    readonly endBuffer: ValueCell<Float32Array>;
     /** Cylinder scale buffer as array of scaling factors wrapped in a value cell */
-    readonly scaleBuffer: ValueCell<Float32Array>,
+    readonly scaleBuffer: ValueCell<Float32Array>;
     /** Cylinder cap buffer as array of cap flags wrapped in a value cell */
-    readonly capBuffer: ValueCell<Float32Array>,
+    readonly capBuffer: ValueCell<Float32Array>;
     /**
      * Cylinder colorMode buffer as array of coloring modes flags wrapped in a value cell
      * - for colorMode between 0 and 1 use colorMode to interpolate
      * - for colorMode == 2 do nothing, i.e., use given theme color
      * - for colorMode == 3 use position on cylinder axis to interpolate
      */
-    readonly colorModeBuffer: ValueCell<Float32Array>,
+    readonly colorModeBuffer: ValueCell<Float32Array>;
 
     /** Bounding sphere of the cylinders */
-    readonly boundingSphere: Sphere3D
+    readonly boundingSphere: Sphere3D;
     /** Maps group ids to cylinder indices */
-    readonly groupMapping: GroupMapping
+    readonly groupMapping: GroupMapping;
 
-    setBoundingSphere(boundingSphere: Sphere3D): void
+    setBoundingSphere(boundingSphere: Sphere3D): void;
 }
 
 export namespace Cylinders {
-    export function create(mappings: Float32Array, indices: Uint32Array, groups: Float32Array, starts: Float32Array, ends: Float32Array, scales: Float32Array, caps: Float32Array, colorModes: Float32Array, cylinderCount: number, cylinders?: Cylinders): Cylinders {
-        return cylinders ?
-            update(mappings, indices, groups, starts, ends, scales, caps, colorModes, cylinderCount, cylinders) :
-            fromArrays(mappings, indices, groups, starts, ends, scales, caps, colorModes, cylinderCount);
+    export function create(
+        mappings: Float32Array,
+        indices: Uint32Array,
+        groups: Float32Array,
+        starts: Float32Array,
+        ends: Float32Array,
+        scales: Float32Array,
+        caps: Float32Array,
+        colorModes: Float32Array,
+        cylinderCount: number,
+        cylinders?: Cylinders,
+    ): Cylinders {
+        return cylinders
+            ? update(mappings, indices, groups, starts, ends, scales, caps, colorModes, cylinderCount, cylinders)
+            : fromArrays(mappings, indices, groups, starts, ends, scales, caps, colorModes, cylinderCount);
     }
 
     export function createEmpty(cylinders?: Cylinders): Cylinders {
@@ -86,13 +97,29 @@ export namespace Cylinders {
 
     function hashCode(cylinders: Cylinders) {
         return hashFnv32a([
-            cylinders.cylinderCount, cylinders.mappingBuffer.ref.version, cylinders.indexBuffer.ref.version,
-            cylinders.groupBuffer.ref.version, cylinders.startBuffer.ref.version, cylinders.endBuffer.ref.version, cylinders.scaleBuffer.ref.version, cylinders.capBuffer.ref.version, cylinders.colorModeBuffer.ref.version
+            cylinders.cylinderCount,
+            cylinders.mappingBuffer.ref.version,
+            cylinders.indexBuffer.ref.version,
+            cylinders.groupBuffer.ref.version,
+            cylinders.startBuffer.ref.version,
+            cylinders.endBuffer.ref.version,
+            cylinders.scaleBuffer.ref.version,
+            cylinders.capBuffer.ref.version,
+            cylinders.colorModeBuffer.ref.version,
         ]);
     }
 
-    function fromArrays(mappings: Float32Array, indices: Uint32Array, groups: Float32Array, starts: Float32Array, ends: Float32Array, scales: Float32Array, caps: Float32Array, colorModes: Float32Array, cylinderCount: number): Cylinders {
-
+    function fromArrays(
+        mappings: Float32Array,
+        indices: Uint32Array,
+        groups: Float32Array,
+        starts: Float32Array,
+        ends: Float32Array,
+        scales: Float32Array,
+        caps: Float32Array,
+        colorModes: Float32Array,
+        cylinderCount: number,
+    ): Cylinders {
         const boundingSphere = Sphere3D();
         let groupMapping: GroupMapping;
 
@@ -113,8 +140,16 @@ export namespace Cylinders {
             get boundingSphere() {
                 const newHash = hashCode(cylinders);
                 if (newHash !== currentHash) {
-                    const s = calculateInvariantBoundingSphere(cylinders.startBuffer.ref.value, cylinders.cylinderCount * 6, 6);
-                    const e = calculateInvariantBoundingSphere(cylinders.endBuffer.ref.value, cylinders.cylinderCount * 6, 6);
+                    const s = calculateInvariantBoundingSphere(
+                        cylinders.startBuffer.ref.value,
+                        cylinders.cylinderCount * 6,
+                        6,
+                    );
+                    const e = calculateInvariantBoundingSphere(
+                        cylinders.endBuffer.ref.value,
+                        cylinders.cylinderCount * 6,
+                        6,
+                    );
 
                     Sphere3D.expandBySphere(boundingSphere, s, e);
                     currentHash = newHash;
@@ -131,12 +166,23 @@ export namespace Cylinders {
             setBoundingSphere(sphere: Sphere3D) {
                 Sphere3D.copy(boundingSphere, sphere);
                 currentHash = hashCode(cylinders);
-            }
+            },
         };
         return cylinders;
     }
 
-    function update(mappings: Float32Array, indices: Uint32Array, groups: Float32Array, starts: Float32Array, ends: Float32Array, scales: Float32Array, caps: Float32Array, colorModes: Float32Array, cylinderCount: number, cylinders: Cylinders) {
+    function update(
+        mappings: Float32Array,
+        indices: Uint32Array,
+        groups: Float32Array,
+        starts: Float32Array,
+        ends: Float32Array,
+        scales: Float32Array,
+        caps: Float32Array,
+        colorModes: Float32Array,
+        cylinderCount: number,
+        cylinders: Cylinders,
+    ) {
         if (cylinderCount > cylinders.cylinderCount) {
             ValueCell.update(cylinders.mappingBuffer, mappings);
             ValueCell.update(cylinders.indexBuffer, indices);
@@ -169,14 +215,26 @@ export namespace Cylinders {
         doubleSided: PD.Boolean(false, BaseGeometry.CustomQualityParamInfo),
         ignoreLight: PD.Boolean(false, BaseGeometry.ShadingCategory),
         celShaded: PD.Boolean(false, BaseGeometry.ShadingCategory),
-        xrayShaded: PD.Select<boolean | 'inverted'>(false, [[false, 'Off'], [true, 'On'], ['inverted', 'Inverted']], BaseGeometry.ShadingCategory),
-        transparentBackfaces: PD.Select('off', PD.arrayToOptions(['off', 'on', 'opaque'] as const), BaseGeometry.ShadingCategory),
+        xrayShaded: PD.Select<boolean | 'inverted'>(
+            false,
+            [[false, 'Off'], [true, 'On'], ['inverted', 'Inverted']],
+            BaseGeometry.ShadingCategory,
+        ),
+        transparentBackfaces: PD.Select(
+            'off',
+            PD.arrayToOptions(['off', 'on', 'opaque'] as const),
+            BaseGeometry.ShadingCategory,
+        ),
         solidInterior: PD.Boolean(true, BaseGeometry.ShadingCategory),
         bumpFrequency: PD.Numeric(0, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
         bumpAmplitude: PD.Numeric(1, { min: 0, max: 5, step: 0.1 }, BaseGeometry.ShadingCategory),
-        colorMode: PD.Select('default', PD.arrayToOptions(['default', 'interpolate'] as const), BaseGeometry.ShadingCategory)
+        colorMode: PD.Select(
+            'default',
+            PD.arrayToOptions(['default', 'interpolate'] as const),
+            BaseGeometry.ShadingCategory,
+        ),
     };
-    export type Params = typeof Params
+    export type Params = typeof Params;
 
     export const Utils: GeometryUtils<Cylinders, Params> = {
         Params,
@@ -187,7 +245,7 @@ export namespace Cylinders {
         updateBoundingSphere,
         createRenderableState,
         updateRenderableState,
-        createPositionIterator
+        createPositionIterator,
     };
 
     function createPositionIterator(cylinders: Cylinders, transform: TransformData): LocationIterator {
@@ -210,7 +268,13 @@ export namespace Cylinders {
         return LocationIterator(groupCount, instanceCount, 2, getLocation);
     }
 
-    function createValues(cylinders: Cylinders, transform: TransformData, locationIt: LocationIterator, theme: Theme, props: PD.Values<Params>): CylindersValues {
+    function createValues(
+        cylinders: Cylinders,
+        transform: TransformData,
+        locationIt: LocationIterator,
+        theme: Theme,
+        props: PD.Values<Params>,
+    ): CylindersValues {
         const { instanceCount, groupCount } = locationIt;
         const positionIt = createPositionIterator(cylinders, transform);
 
@@ -225,11 +289,21 @@ export namespace Cylinders {
         const material = createEmptySubstance();
         const clipping = createEmptyClipping();
 
-        const counts = { drawCount: cylinders.cylinderCount * 4 * 3, vertexCount: cylinders.cylinderCount * 6, groupCount, instanceCount };
+        const counts = {
+            drawCount: cylinders.cylinderCount * 4 * 3,
+            vertexCount: cylinders.cylinderCount * 6,
+            groupCount,
+            instanceCount,
+        };
 
         const padding = getMaxSize(size) * props.sizeFactor;
         const invariantBoundingSphere = Sphere3D.clone(cylinders.boundingSphere);
-        const boundingSphere = calculateTransformBoundingSphere(invariantBoundingSphere, transform.aTransform.ref.value, instanceCount, 0);
+        const boundingSphere = calculateTransformBoundingSphere(
+            invariantBoundingSphere,
+            transform.aTransform.ref.value,
+            instanceCount,
+            0,
+        );
         return {
             dGeometryType: ValueCell.create('cylinders'),
 
@@ -261,7 +335,9 @@ export namespace Cylinders {
             uDoubleSided: ValueCell.create(props.doubleSided),
             dIgnoreLight: ValueCell.create(props.ignoreLight),
             dCelShaded: ValueCell.create(props.celShaded),
-            dXrayShaded: ValueCell.create(props.xrayShaded === 'inverted' ? 'inverted' : props.xrayShaded === true ? 'on' : 'off'),
+            dXrayShaded: ValueCell.create(
+                props.xrayShaded === 'inverted' ? 'inverted' : props.xrayShaded === true ? 'on' : 'off',
+            ),
             dTransparentBackfaces: ValueCell.create(props.transparentBackfaces),
             dSolidInterior: ValueCell.create(props.solidInterior),
             uBumpFrequency: ValueCell.create(props.bumpFrequency),
@@ -270,7 +346,13 @@ export namespace Cylinders {
         };
     }
 
-    function createValuesSimple(cylinders: Cylinders, props: Partial<PD.Values<Params>>, colorValue: Color, sizeValue: number, transform?: TransformData) {
+    function createValuesSimple(
+        cylinders: Cylinders,
+        props: Partial<PD.Values<Params>>,
+        colorValue: Color,
+        sizeValue: number,
+        transform?: TransformData,
+    ) {
         const s = BaseGeometry.createSimple(colorValue, sizeValue, transform);
         const p = { ...PD.getDefaultValues(Params), ...props };
         return createValues(cylinders, s.transform, s.locationIterator, s.theme, p);
@@ -282,7 +364,10 @@ export namespace Cylinders {
         ValueCell.updateIfChanged(values.uDoubleSided, props.doubleSided);
         ValueCell.updateIfChanged(values.dIgnoreLight, props.ignoreLight);
         ValueCell.updateIfChanged(values.dCelShaded, props.celShaded);
-        ValueCell.updateIfChanged(values.dXrayShaded, props.xrayShaded === 'inverted' ? 'inverted' : props.xrayShaded === true ? 'on' : 'off');
+        ValueCell.updateIfChanged(
+            values.dXrayShaded,
+            props.xrayShaded === 'inverted' ? 'inverted' : props.xrayShaded === true ? 'on' : 'off',
+        );
         ValueCell.updateIfChanged(values.dTransparentBackfaces, props.transparentBackfaces);
         ValueCell.updateIfChanged(values.dSolidInterior, props.solidInterior);
         ValueCell.updateIfChanged(values.uBumpFrequency, props.bumpFrequency);
@@ -292,14 +377,22 @@ export namespace Cylinders {
 
     function updateBoundingSphere(values: CylindersValues, cylinders: Cylinders) {
         const invariantBoundingSphere = Sphere3D.clone(cylinders.boundingSphere);
-        const boundingSphere = calculateTransformBoundingSphere(invariantBoundingSphere, values.aTransform.ref.value, values.instanceCount.ref.value, 0);
+        const boundingSphere = calculateTransformBoundingSphere(
+            invariantBoundingSphere,
+            values.aTransform.ref.value,
+            values.instanceCount.ref.value,
+            0,
+        );
 
         if (!Sphere3D.equals(boundingSphere, values.boundingSphere.ref.value)) {
             ValueCell.update(values.boundingSphere, boundingSphere);
         }
         if (!Sphere3D.equals(invariantBoundingSphere, values.invariantBoundingSphere.ref.value)) {
             ValueCell.update(values.invariantBoundingSphere, invariantBoundingSphere);
-            ValueCell.update(values.uInvariantBoundingSphere, Vec4.fromSphere(values.uInvariantBoundingSphere.ref.value, invariantBoundingSphere));
+            ValueCell.update(
+                values.uInvariantBoundingSphere,
+                Vec4.fromSphere(values.uInvariantBoundingSphere.ref.value, invariantBoundingSphere),
+            );
         }
     }
 

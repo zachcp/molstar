@@ -11,24 +11,36 @@ import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
 import { computeMarchingCubesMesh } from '../../../mol-geo/util/marching-cubes/algorithm.ts';
 import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
 import type { Texture } from '../../../mol-gl/webgl/texture.ts';
-import { type PositionData, Sphere3D, Box3D, GridLookup3D, fillGridDim } from '../../../mol-math/geometry.ts';
+import { Box3D, fillGridDim, GridLookup3D, type PositionData, Sphere3D } from '../../../mol-math/geometry.ts';
 import { type Boundary, getBoundary } from '../../../mol-math/geometry/boundary.ts';
-import { DefaultMolecularSurfaceCalculationProps, type MolecularSurfaceCalculationProps } from '../../../mol-math/geometry/molecular-surface.ts';
+import {
+    DefaultMolecularSurfaceCalculationProps,
+    type MolecularSurfaceCalculationProps,
+} from '../../../mol-math/geometry/molecular-surface.ts';
 import { lerp, spline } from '../../../mol-math/interpolate.ts';
-import { Vec3, Tensor, Mat4 } from '../../../mol-math/linear-algebra.ts';
+import { Mat4, Tensor, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { Shape } from '../../../mol-model/shape.ts';
 import { ensureReasonableResolution } from '../../../mol-repr/structure/visual/util/common.ts';
-import { Task, type RuntimeContext } from '../../../mol-task/index.ts';
+import { type RuntimeContext, Task } from '../../../mol-task/index.ts';
 import { ValueCell } from '../../../mol-util/index.ts';
 import { Color } from '../../../mol-util/color/index.ts';
-import type { Tunnel, Profile } from './data-model.ts';
+import type { Profile, Tunnel } from './data-model.ts';
 
 type MolecularSurfaceMeta = {
-    resolution?: number
-    colorTexture?: Texture
-}
+    resolution?: number;
+    colorTexture?: Texture;
+};
 
-export async function createSpheresShape(options: { tunnel: Tunnel, color: Color, resolution: number, sampleRate: number, showRadii: boolean, prev?: Shape<Mesh> }) {
+export async function createSpheresShape(
+    options: {
+        tunnel: Tunnel;
+        color: Color;
+        resolution: number;
+        sampleRate: number;
+        showRadii: boolean;
+        prev?: Shape<Mesh>;
+    },
+) {
     const builder = MeshBuilder.createState(512, 512, options.prev?.geometry);
     const tunnel = options.tunnel;
 
@@ -51,21 +63,25 @@ export async function createSpheresShape(options: { tunnel: Tunnel, color: Color
     }
 
     const mesh = MeshBuilder.getMesh(builder);
-    const name = tunnel.props.highlight_label ?
-        tunnel.props.highlight_label :
-        tunnel.props.type && tunnel.props.id ?
-            `${tunnel.props.type} ${tunnel.props.id}` :
-            'Tunnel';
+    const name = tunnel.props.highlight_label
+        ? tunnel.props.highlight_label
+        : tunnel.props.type && tunnel.props.id
+        ? `${tunnel.props.type} ${tunnel.props.id}`
+        : 'Tunnel';
 
-    if (options.showRadii)
+    if (options.showRadii) {
         return Shape.create(
             name,
             tunnel.props,
             mesh,
             () => Color(options.color),
             () => 1,
-            (i) => `[${processedData[i].X.toFixed(3)}, ${processedData[i].Y.toFixed(3)}, ${processedData[i].Z.toFixed(3)}] - radius: ${processedData[i].Radius.toFixed(3)}`,
+            (i) =>
+                `[${processedData[i].X.toFixed(3)}, ${processedData[i].Y.toFixed(3)}, ${
+                    processedData[i].Z.toFixed(3)
+                }] - radius: ${processedData[i].Radius.toFixed(3)}`,
         );
+    }
     return Shape.create(
         name,
         tunnel.props,
@@ -76,20 +92,29 @@ export async function createSpheresShape(options: { tunnel: Tunnel, color: Color
     );
 }
 
-export async function createTunnelShape(options: { tunnel: Tunnel, color: Color, resolution: number, sampleRate: number, webgl: WebGLContext | undefined, prev?: Shape<Mesh> }) {
+export async function createTunnelShape(
+    options: {
+        tunnel: Tunnel;
+        color: Color;
+        resolution: number;
+        sampleRate: number;
+        webgl: WebGLContext | undefined;
+        prev?: Shape<Mesh>;
+    },
+) {
     const tunnel = options.tunnel;
     const mesh = await createTunnelMesh(tunnel.data, {
         detail: options.resolution,
         sampleRate: options.sampleRate,
         webgl: options.webgl,
-        prev: options.prev?.geometry
+        prev: options.prev?.geometry,
     });
 
-    const name = tunnel.props.highlight_label ?
-        tunnel.props.highlight_label :
-        tunnel.props.type && tunnel.props.id ?
-            `${tunnel.props.type} ${tunnel.props.id}` :
-            'Tunnel';
+    const name = tunnel.props.highlight_label
+        ? tunnel.props.highlight_label
+        : tunnel.props.type && tunnel.props.id
+        ? `${tunnel.props.type} ${tunnel.props.id}`
+        : 'Tunnel';
 
     return Shape.create(
         name,
@@ -140,7 +165,7 @@ function interpolateTunnel(profile: Profile[], sampleRate: number) {
                     Charge: lerp(P1.Charge, P2.Charge, t),
                     FreeRadius: spline(P0.FreeRadius, P1.FreeRadius, P2.FreeRadius, P3.FreeRadius, t, 0.5),
                     T: lerp(P1.T, P2.T, t),
-                    Distance: lerp(P1.Distance, P2.Distance, t)
+                    Distance: lerp(P1.Distance, P2.Distance, t),
                 });
                 lastPoint = interpolatedPoint;
                 currentDistance -= pointInterval;
@@ -153,7 +178,6 @@ function interpolateTunnel(profile: Profile[], sampleRate: number) {
 
     return interpolatedProfiles;
 }
-
 
 function convertToPositionData(profile: Profile[], probeRadius: number): Required<PositionData> {
     let position = {} as PositionData;
@@ -185,11 +209,11 @@ function convertToPositionData(profile: Profile[], probeRadius: number): Require
 async function createTunnelMesh(
     data: Profile[],
     options: {
-        detail: number,
-        sampleRate: number,
-        webgl?: WebGLContext,
-        prev?: Mesh
-    }
+        detail: number;
+        sampleRate: number;
+        webgl?: WebGLContext;
+        prev?: Mesh;
+    },
 ) {
     const props = {
         ...DefaultMolecularSurfaceCalculationProps,
@@ -206,14 +230,14 @@ async function createTunnelMesh(
 
     const p = ensureReasonableResolution(bounds.box, props);
 
-    const { field, transform, /* resolution,*/ maxRadius, /* idField */ } = await computeTunnelSurface(
+    const { field, transform, /* resolution,*/ maxRadius /* idField */ } = await computeTunnelSurface(
         {
             positions,
             boundary: bounds,
             maxRadius: maxR,
             box: bounds.box,
-            props: p
-        }
+            props: p,
+        },
     ).run();
 
     const params = {
@@ -253,19 +277,19 @@ function normalToLine(out: Vec3, p: Vec3) {
 
 function computeTunnelSurface(
     surfaceData: {
-        positions: Required<PositionData>,
-        boundary: Boundary,
-        maxRadius: number,
-        box: Box3D | null,
-        props: MolecularSurfaceCalculationProps
-    }
+        positions: Required<PositionData>;
+        boundary: Boundary;
+        maxRadius: number;
+        box: Box3D | null;
+        props: MolecularSurfaceCalculationProps;
+    },
 ) {
     return Task.create('Tunnel Surface', async (ctx) => {
         return await calcTunnelSurface(ctx, surfaceData);
     });
 }
 
-type AnglesTables = { cosTable: Float32Array, sinTable: Float32Array }
+type AnglesTables = { cosTable: Float32Array; sinTable: Float32Array };
 function getAngleTables(probePositions: number): AnglesTables {
     let theta = 0.0;
     const step = 2 * Math.PI / probePositions;
@@ -281,14 +305,13 @@ function getAngleTables(probePositions: number): AnglesTables {
 }
 
 // From '../../../\mol-math\geometry\molecular-surface.ts'
-async function calcTunnelSurface(ctx: RuntimeContext,
-    surfaceData: {
-        positions: Required<PositionData>,
-        boundary: Boundary,
-        maxRadius: number,
-        box: Box3D | null,
-        props: MolecularSurfaceCalculationProps
-    }) {
+async function calcTunnelSurface(ctx: RuntimeContext, surfaceData: {
+    positions: Required<PositionData>;
+    boundary: Boundary;
+    maxRadius: number;
+    box: Box3D | null;
+    props: MolecularSurfaceCalculationProps;
+}) {
     // Field generation method adapted from AstexViewer (Mike Hartshorn) by Fred Ludlow.
     // Other parts based heavily on NGL (Alexander Rose) EDT Surface class
 
@@ -584,7 +607,7 @@ async function calcTunnelSurface(ctx: RuntimeContext,
     const gridy = fillGridDim(dimY, minY, resolution);
     const gridz = fillGridDim(dimZ, minZ, resolution);
 
-    const updateChunk = Math.ceil(100000 / ((Math.pow(Math.pow(surfaceData.maxRadius, 3), 3) * scaleFactor)));
+    const updateChunk = Math.ceil(100000 / (Math.pow(Math.pow(surfaceData.maxRadius, 3), 3) * scaleFactor));
     // console.timeEnd('MolecularSurface createState')
 
     // console.time('MolecularSurface projectPoints')

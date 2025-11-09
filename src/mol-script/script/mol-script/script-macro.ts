@@ -9,10 +9,10 @@ import { MolScriptBuilder as B } from '../../language/builder.ts';
 
 export function getPositionalArgs(args: any) {
     return Object.keys(args)
-        .filter(k => !isNaN(k as any))
-        .map(k => +k)
+        .filter((k) => !isNaN(k as any))
+        .map((k) => +k)
         .sort((a, b) => a - b)
-        .map(k => args[k]);
+        .map((k) => args[k]);
 }
 
 export function tryGetArg(args: any, name: string | number, defaultValue?: any) {
@@ -34,6 +34,6 @@ export function pickArgs(args: any, ...names: string[]) {
 export function aggregate(property: any, fn: any, initial?: any) {
     return B.struct.atomSet.reduce({
         initial: initial !== void 0 ? initial : property,
-        value: fn([B.struct.slot.elementSetReduce(), property])
+        value: fn([B.struct.slot.elementSetReduce(), property]),
     });
 }

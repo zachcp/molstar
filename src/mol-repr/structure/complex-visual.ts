@@ -14,11 +14,11 @@ import { Theme } from '../../mol-theme/theme.ts';
 import { createIdentityTransform } from '../../mol-geo/geometry/transform-data.ts';
 import { createRenderObject, type GraphicsRenderObject, type RenderObjectValues } from '../../mol-gl/render-object.ts';
 import type { PickingId } from '../../mol-geo/geometry/picking.ts';
-import { type Loci, isEveryLoci, EmptyLoci } from '../../mol-model/loci.ts';
+import { EmptyLoci, isEveryLoci, type Loci } from '../../mol-model/loci.ts';
 import { Interval } from '../../mol-data/int.ts';
 import { type LocationCallback, VisualUpdateState } from '../util.ts';
 import { ColorTheme } from '../../mol-theme/color.ts';
-import { ValueCell, deepEqual } from '../../mol-util/index.ts';
+import { deepEqual, ValueCell } from '../../mol-util/index.ts';
 import { createSizes, type SizeData } from '../../mol-geo/geometry/size-data.ts';
 import { createColors } from '../../mol-geo/geometry/color-data.ts';
 import { MarkerAction } from '../../mol-util/marker-action.ts';
@@ -32,7 +32,18 @@ import { Text } from '../../mol-geo/geometry/text/text.ts';
 import { SizeTheme } from '../../mol-theme/size.ts';
 import { DirectVolume } from '../../mol-geo/geometry/direct-volume/direct-volume.ts';
 import { createMarkers } from '../../mol-geo/geometry/marker-data.ts';
-import { StructureParams, StructureMeshParams, StructureTextParams, StructureDirectVolumeParams, StructureLinesParams, StructureCylindersParams, StructureTextureMeshParams, StructureSpheresParams, StructurePointsParams, StructureImageParams } from './params.ts';
+import {
+    StructureCylindersParams,
+    StructureDirectVolumeParams,
+    StructureImageParams,
+    StructureLinesParams,
+    StructureMeshParams,
+    StructureParams,
+    StructurePointsParams,
+    StructureSpheresParams,
+    StructureTextParams,
+    StructureTextureMeshParams,
+} from './params.ts';
 import type { Clipping } from '../../mol-theme/clipping.ts';
 import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
@@ -43,9 +54,16 @@ import type { Emissive } from '../../mol-theme/emissive.ts';
 import { Points } from '../../mol-geo/geometry/points/points.ts';
 import { Image } from '../../mol-geo/geometry/image/image.ts';
 
-export interface ComplexVisual<P extends StructureParams> extends Visual<Structure, P> { }
+export interface ComplexVisual<P extends StructureParams> extends Visual<Structure, P> {}
 
-function createComplexRenderObject<G extends Geometry>(structure: Structure, geometry: G, locationIt: LocationIterator, theme: Theme, props: PD.Values<Geometry.Params<G>>, materialId: number) {
+function createComplexRenderObject<G extends Geometry>(
+    structure: Structure,
+    geometry: G,
+    locationIt: LocationIterator,
+    theme: Theme,
+    props: PD.Values<Geometry.Params<G>>,
+    materialId: number,
+) {
     const { createValues, createRenderableState } = Geometry.getUtils(geometry);
     const transform = createIdentityTransform();
     const values = createValues(geometry, transform, locationIt, theme, props);
@@ -54,23 +72,57 @@ function createComplexRenderObject<G extends Geometry>(structure: Structure, geo
 }
 
 interface ComplexVisualBuilder<P extends StructureParams, G extends Geometry> {
-    defaultProps: PD.Values<P>
-    createGeometry(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<P>, geometry?: G): Promise<G> | G
-    createLocationIterator(structure: Structure, props: PD.Values<P>): LocationIterator
-    getLoci(pickingId: PickingId, structure: Structure, id: number): Loci
-    eachLocation(loci: Loci, structure: Structure, apply: (interval: Interval) => boolean, isMarking: boolean): boolean,
-    setUpdateState(state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructure: Structure, currentStructure: Structure): void
-    mustRecreate?: (structure: Structure, props: PD.Values<P>) => boolean
-    processValues?: (values: RenderObjectValues<G['kind']>, geometry: G, props: PD.Values<P>, theme: Theme, webgl?: WebGLContext) => void
-    dispose?: (geometry: G) => void
+    defaultProps: PD.Values<P>;
+    createGeometry(
+        ctx: VisualContext,
+        structure: Structure,
+        theme: Theme,
+        props: PD.Values<P>,
+        geometry?: G,
+    ): Promise<G> | G;
+    createLocationIterator(structure: Structure, props: PD.Values<P>): LocationIterator;
+    getLoci(pickingId: PickingId, structure: Structure, id: number): Loci;
+    eachLocation(loci: Loci, structure: Structure, apply: (interval: Interval) => boolean, isMarking: boolean): boolean;
+    setUpdateState(
+        state: VisualUpdateState,
+        newProps: PD.Values<P>,
+        currentProps: PD.Values<P>,
+        newTheme: Theme,
+        currentTheme: Theme,
+        newStructure: Structure,
+        currentStructure: Structure,
+    ): void;
+    mustRecreate?: (structure: Structure, props: PD.Values<P>) => boolean;
+    processValues?: (
+        values: RenderObjectValues<G['kind']>,
+        geometry: G,
+        props: PD.Values<P>,
+        theme: Theme,
+        webgl?: WebGLContext,
+    ) => void;
+    dispose?: (geometry: G) => void;
 }
 
-interface ComplexVisualGeometryBuilder<P extends StructureParams, G extends Geometry> extends ComplexVisualBuilder<P, G> {
-    geometryUtils: GeometryUtils<G>
+interface ComplexVisualGeometryBuilder<P extends StructureParams, G extends Geometry>
+    extends ComplexVisualBuilder<P, G> {
+    geometryUtils: GeometryUtils<G>;
 }
 
-export function ComplexVisual<G extends Geometry, P extends StructureParams & Geometry.Params<G>>(builder: ComplexVisualGeometryBuilder<P, G>, materialId: number): ComplexVisual<P> {
-    const { defaultProps, createGeometry, createLocationIterator, getLoci, eachLocation, setUpdateState, mustRecreate, processValues, dispose } = builder;
+export function ComplexVisual<G extends Geometry, P extends StructureParams & Geometry.Params<G>>(
+    builder: ComplexVisualGeometryBuilder<P, G>,
+    materialId: number,
+): ComplexVisual<P> {
+    const {
+        defaultProps,
+        createGeometry,
+        createLocationIterator,
+        getLoci,
+        eachLocation,
+        setUpdateState,
+        mustRecreate,
+        processValues,
+        dispose,
+    } = builder;
     const { updateValues, updateBoundingSphere, updateRenderableState, createPositionIterator } = builder.geometryUtils;
     const updateState = VisualUpdateState.create();
     const previousMark: Visual.PreviousMark = { loci: EmptyLoci, action: MarkerAction.None, status: -1 };
@@ -154,7 +206,14 @@ export function ComplexVisual<G extends Geometry, P extends StructureParams & Ge
         if (updateState.createNew) {
             locationIt = createLocationIterator(newStructure, newProps);
             if (newGeometry) {
-                renderObject = createComplexRenderObject(newStructure, newGeometry, locationIt, newTheme, newProps, materialId);
+                renderObject = createComplexRenderObject(
+                    newStructure,
+                    newGeometry,
+                    locationIt,
+                    newTheme,
+                    newProps,
+                    materialId,
+                );
                 positionIt = createPositionIterator(newGeometry, renderObject.values);
             } else {
                 throw new Error('expected geometry to be given');
@@ -258,15 +317,21 @@ export function ComplexVisual<G extends Geometry, P extends StructureParams & Ge
     }
 
     return {
-        get groupCount() { return locationIt ? locationIt.count : 0; },
-        get renderObject() { return locationIt && locationIt.count ? renderObject : undefined; },
-        get geometryVersion() { return geometryVersion; },
+        get groupCount() {
+            return locationIt ? locationIt.count : 0;
+        },
+        get renderObject() {
+            return locationIt && locationIt.count ? renderObject : undefined;
+        },
+        get geometryVersion() {
+            return geometryVersion;
+        },
         createOrUpdate(ctx: VisualContext, theme: Theme, props: Partial<PD.Values<P>> = {}, structure?: Structure) {
             prepareUpdate(theme, props, structure || currentStructure);
             if (updateState.createGeometry) {
                 const newGeometry = createGeometry(ctx, newStructure, newTheme, newProps, geometry);
                 if (isPromiseLike(newGeometry)) {
-                    return newGeometry.then(g => {
+                    return newGeometry.then((g) => {
                         update(g);
                         finalize(ctx);
                     });
@@ -324,7 +389,7 @@ export function ComplexVisual<G extends Geometry, P extends StructureParams & Ge
         setClipping(clipping: Clipping) {
             Visual.setClipping(renderObject, clipping, lociApply, true);
         },
-        setThemeStrength(strength: { overpaint: number, transparency: number, emissive: number, substance: number }) {
+        setThemeStrength(strength: { overpaint: number; transparency: number; emissive: number; substance: number }) {
             Visual.setThemeStrength(renderObject, strength);
         },
         destroy() {
@@ -334,112 +399,227 @@ export function ComplexVisual<G extends Geometry, P extends StructureParams & Ge
                 renderObject = undefined;
             }
         },
-        mustRecreate
+        mustRecreate,
     };
 }
 
 // mesh
 
 export const ComplexMeshParams = { ...StructureMeshParams, ...StructureParams };
-export type ComplexMeshParams = typeof ComplexMeshParams
+export type ComplexMeshParams = typeof ComplexMeshParams;
 
-export interface ComplexMeshVisualBuilder<P extends ComplexMeshParams> extends ComplexVisualBuilder<P, Mesh> { }
+export interface ComplexMeshVisualBuilder<P extends ComplexMeshParams> extends ComplexVisualBuilder<P, Mesh> {}
 
-export function ComplexMeshVisual<P extends ComplexMeshParams>(builder: ComplexMeshVisualBuilder<P>, materialId: number): ComplexVisual<P> {
+export function ComplexMeshVisual<P extends ComplexMeshParams>(
+    builder: ComplexMeshVisualBuilder<P>,
+    materialId: number,
+): ComplexVisual<P> {
     return ComplexVisual<Mesh, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructure: Structure, currentStructure: Structure) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructure, currentStructure);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructure: Structure,
+            currentStructure: Structure,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructure,
+                currentStructure,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.createGeometry = true;
         },
-        geometryUtils: Mesh.Utils
+        geometryUtils: Mesh.Utils,
     }, materialId);
 }
 
 // spheres
 
 export const ComplexSpheresParams = { ...StructureSpheresParams, ...StructureParams };
-export type ComplexSpheresParams = typeof ComplexSpheresParams
+export type ComplexSpheresParams = typeof ComplexSpheresParams;
 
-export interface ComplexSpheresVisualBuilder<P extends ComplexSpheresParams> extends ComplexVisualBuilder<P, Spheres> { }
+export interface ComplexSpheresVisualBuilder<P extends ComplexSpheresParams> extends ComplexVisualBuilder<P, Spheres> {}
 
-export function ComplexSpheresVisual<P extends ComplexSpheresParams>(builder: ComplexSpheresVisualBuilder<P>, materialId: number): ComplexVisual<P> {
+export function ComplexSpheresVisual<P extends ComplexSpheresParams>(
+    builder: ComplexSpheresVisualBuilder<P>,
+    materialId: number,
+): ComplexVisual<P> {
     return ComplexVisual<Spheres, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructure: Structure, currentStructure: Structure) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructure, currentStructure);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructure: Structure,
+            currentStructure: Structure,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructure,
+                currentStructure,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.updateSize = true;
         },
-        geometryUtils: Spheres.Utils
+        geometryUtils: Spheres.Utils,
     }, materialId);
 }
 
 // cylinders
 
 export const ComplexCylindersParams = { ...StructureCylindersParams, ...StructureParams };
-export type ComplexCylindersParams = typeof ComplexCylindersParams
+export type ComplexCylindersParams = typeof ComplexCylindersParams;
 
-export interface ComplexCylindersVisualBuilder<P extends ComplexCylindersParams> extends ComplexVisualBuilder<P, Cylinders> { }
+export interface ComplexCylindersVisualBuilder<P extends ComplexCylindersParams>
+    extends ComplexVisualBuilder<P, Cylinders> {}
 
-export function ComplexCylindersVisual<P extends ComplexCylindersParams>(builder: ComplexCylindersVisualBuilder<P>, materialId: number): ComplexVisual<P> {
+export function ComplexCylindersVisual<P extends ComplexCylindersParams>(
+    builder: ComplexCylindersVisualBuilder<P>,
+    materialId: number,
+): ComplexVisual<P> {
     return ComplexVisual<Cylinders, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructure: Structure, currentStructure: Structure) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructure, currentStructure);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructure: Structure,
+            currentStructure: Structure,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructure,
+                currentStructure,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.updateSize = true;
         },
-        geometryUtils: Cylinders.Utils
+        geometryUtils: Cylinders.Utils,
     }, materialId);
 }
 
 // points
 
 export const ComplexPointsParams = { ...StructurePointsParams, ...StructureParams };
-export type ComplexPointsParams = typeof ComplexPointsParams
+export type ComplexPointsParams = typeof ComplexPointsParams;
 
-export interface ComplexPointsVisualBuilder<P extends ComplexPointsParams> extends ComplexVisualBuilder<P, Points> { }
+export interface ComplexPointsVisualBuilder<P extends ComplexPointsParams> extends ComplexVisualBuilder<P, Points> {}
 
-export function ComplexPointsVisual<P extends ComplexPointsParams>(builder: ComplexPointsVisualBuilder<P>, materialId: number): ComplexVisual<P> {
+export function ComplexPointsVisual<P extends ComplexPointsParams>(
+    builder: ComplexPointsVisualBuilder<P>,
+    materialId: number,
+): ComplexVisual<P> {
     return ComplexVisual<Points, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructure: Structure, currentStructure: Structure) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructure, currentStructure);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructure: Structure,
+            currentStructure: Structure,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructure,
+                currentStructure,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.updateSize = true;
         },
-        geometryUtils: Points.Utils
+        geometryUtils: Points.Utils,
     }, materialId);
 }
 
 // lines
 
 export const ComplexLinesParams = { ...StructureLinesParams, ...StructureParams };
-export type ComplexLinesParams = typeof ComplexLinesParams
+export type ComplexLinesParams = typeof ComplexLinesParams;
 
-export interface ComplexLinesVisualBuilder<P extends ComplexLinesParams> extends ComplexVisualBuilder<P, Lines> { }
+export interface ComplexLinesVisualBuilder<P extends ComplexLinesParams> extends ComplexVisualBuilder<P, Lines> {}
 
-export function ComplexLinesVisual<P extends ComplexLinesParams>(builder: ComplexLinesVisualBuilder<P>, materialId: number): ComplexVisual<P> {
+export function ComplexLinesVisual<P extends ComplexLinesParams>(
+    builder: ComplexLinesVisualBuilder<P>,
+    materialId: number,
+): ComplexVisual<P> {
     return ComplexVisual<Lines, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructure: Structure, currentStructure: Structure) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructure, currentStructure);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructure: Structure,
+            currentStructure: Structure,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructure,
+                currentStructure,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.updateSize = true;
         },
-        geometryUtils: Lines.Utils
+        geometryUtils: Lines.Utils,
     }, materialId);
 }
 
 // text
 
 export const ComplexTextParams = { ...StructureTextParams, ...StructureParams };
-export type ComplexTextParams = typeof ComplexTextParams
+export type ComplexTextParams = typeof ComplexTextParams;
 
-export interface ComplexTextVisualBuilder<P extends ComplexTextParams> extends ComplexVisualBuilder<P, Text> { }
+export interface ComplexTextVisualBuilder<P extends ComplexTextParams> extends ComplexVisualBuilder<P, Text> {}
 
-export function ComplexTextVisual<P extends ComplexTextParams>(builder: ComplexTextVisualBuilder<P>, materialId: number): ComplexVisual<P> {
+export function ComplexTextVisual<P extends ComplexTextParams>(
+    builder: ComplexTextVisualBuilder<P>,
+    materialId: number,
+): ComplexVisual<P> {
     return ComplexVisual<Text, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructure: Structure, currentStructure: Structure) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructure, currentStructure);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructure: Structure,
+            currentStructure: Structure,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructure,
+                currentStructure,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.updateSize = true;
             if (newProps.background !== currentProps.background) state.createGeometry = true;
             if (newProps.backgroundMargin !== currentProps.backgroundMargin) state.createGeometry = true;
@@ -454,60 +634,119 @@ export function ComplexTextVisual<P extends ComplexTextParams>(builder: ComplexT
             if (newProps.fontVariant !== currentProps.fontVariant) state.createGeometry = true;
             if (newProps.fontWeight !== currentProps.fontWeight) state.createGeometry = true;
         },
-        geometryUtils: Text.Utils
+        geometryUtils: Text.Utils,
     }, materialId);
 }
 
 // direct-volume
 
 export const ComplexDirectVolumeParams = { ...StructureDirectVolumeParams, ...StructureParams };
-export type ComplexDirectVolumeParams = typeof ComplexDirectVolumeParams
+export type ComplexDirectVolumeParams = typeof ComplexDirectVolumeParams;
 
-export interface ComplexDirectVolumeVisualBuilder<P extends ComplexDirectVolumeParams> extends ComplexVisualBuilder<P, DirectVolume> { }
+export interface ComplexDirectVolumeVisualBuilder<P extends ComplexDirectVolumeParams>
+    extends ComplexVisualBuilder<P, DirectVolume> {}
 
-export function ComplexDirectVolumeVisual<P extends ComplexDirectVolumeParams>(builder: ComplexDirectVolumeVisualBuilder<P>, materialId: number): ComplexVisual<P> {
+export function ComplexDirectVolumeVisual<P extends ComplexDirectVolumeParams>(
+    builder: ComplexDirectVolumeVisualBuilder<P>,
+    materialId: number,
+): ComplexVisual<P> {
     return ComplexVisual<DirectVolume, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructure: Structure, currentStructure: Structure) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructure, currentStructure);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructure: Structure,
+            currentStructure: Structure,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructure,
+                currentStructure,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.createGeometry = true;
         },
-        geometryUtils: DirectVolume.Utils
+        geometryUtils: DirectVolume.Utils,
     }, materialId);
 }
 
 // texture-mesh
 
 export const ComplexTextureMeshParams = { ...StructureTextureMeshParams, ...StructureParams };
-export type ComplexTextureMeshParams = typeof ComplexTextureMeshParams
+export type ComplexTextureMeshParams = typeof ComplexTextureMeshParams;
 
-export interface ComplexTextureMeshVisualBuilder<P extends ComplexTextureMeshParams> extends ComplexVisualBuilder<P, TextureMesh> { }
+export interface ComplexTextureMeshVisualBuilder<P extends ComplexTextureMeshParams>
+    extends ComplexVisualBuilder<P, TextureMesh> {}
 
-export function ComplexTextureMeshVisual<P extends ComplexTextureMeshParams>(builder: ComplexTextureMeshVisualBuilder<P>, materialId: number): ComplexVisual<P> {
+export function ComplexTextureMeshVisual<P extends ComplexTextureMeshParams>(
+    builder: ComplexTextureMeshVisualBuilder<P>,
+    materialId: number,
+): ComplexVisual<P> {
     return ComplexVisual<TextureMesh, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructure: Structure, currentStructure: Structure) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructure, currentStructure);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructure: Structure,
+            currentStructure: Structure,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructure,
+                currentStructure,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.createGeometry = true;
         },
-        geometryUtils: TextureMesh.Utils
+        geometryUtils: TextureMesh.Utils,
     }, materialId);
 }
 
 // image
 
 export const ComplexImageParams = { ...StructureImageParams, ...StructureParams };
-export type ComplexImageParams = typeof ComplexImageParams
+export type ComplexImageParams = typeof ComplexImageParams;
 
-export interface ComplexImageVisualBuilder<P extends ComplexImageParams> extends ComplexVisualBuilder<P, Image> { }
+export interface ComplexImageVisualBuilder<P extends ComplexImageParams> extends ComplexVisualBuilder<P, Image> {}
 
-export function ComplexImageVisual<P extends ComplexImageParams>(builder: ComplexImageVisualBuilder<P>, materialId: number): ComplexVisual<P> {
+export function ComplexImageVisual<P extends ComplexImageParams>(
+    builder: ComplexImageVisualBuilder<P>,
+    materialId: number,
+): ComplexVisual<P> {
     return ComplexVisual<Image, P>({
         ...builder,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme, newStructure: Structure, currentStructure: Structure) => {
-            builder.setUpdateState(state, newProps, currentProps, newTheme, currentTheme, newStructure, currentStructure);
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<P>,
+            currentProps: PD.Values<P>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructure: Structure,
+            currentStructure: Structure,
+        ) => {
+            builder.setUpdateState(
+                state,
+                newProps,
+                currentProps,
+                newTheme,
+                currentTheme,
+                newStructure,
+                currentStructure,
+            );
             if (!SizeTheme.areEqual(newTheme.size, currentTheme.size)) state.createGeometry = true;
         },
-        geometryUtils: Image.Utils
+        geometryUtils: Image.Utils,
     }, materialId);
 }

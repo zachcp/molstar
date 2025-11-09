@@ -23,19 +23,25 @@ const v3scale = Vec3.scale;
 const v3add = Vec3.add;
 
 export interface CurveSegmentState {
-    curvePoints: NumberArray,
-    tangentVectors: NumberArray,
-    normalVectors: NumberArray,
-    binormalVectors: NumberArray,
-    widthValues: NumberArray,
-    heightValues: NumberArray,
-    linearSegments: number
+    curvePoints: NumberArray;
+    tangentVectors: NumberArray;
+    normalVectors: NumberArray;
+    binormalVectors: NumberArray;
+    widthValues: NumberArray;
+    heightValues: NumberArray;
+    linearSegments: number;
 }
 
 export interface CurveSegmentControls {
-    secStrucFirst: boolean, secStrucLast: boolean
-    p0: Vec3, p1: Vec3, p2: Vec3, p3: Vec3, p4: Vec3,
-    d12: Vec3, d23: Vec3
+    secStrucFirst: boolean;
+    secStrucLast: boolean;
+    p0: Vec3;
+    p1: Vec3;
+    p2: Vec3;
+    p3: Vec3;
+    p4: Vec3;
+    d12: Vec3;
+    d23: Vec3;
 }
 
 export function createCurveSegmentState(linearSegments: number): CurveSegmentState {
@@ -48,11 +54,16 @@ export function createCurveSegmentState(linearSegments: number): CurveSegmentSta
         binormalVectors: new Float32Array(pn),
         widthValues: new Float32Array(n),
         heightValues: new Float32Array(n),
-        linearSegments
+        linearSegments,
     };
 }
 
-export function interpolateCurveSegment(state: CurveSegmentState, controls: CurveSegmentControls, tension: number, shift: number) {
+export function interpolateCurveSegment(
+    state: CurveSegmentState,
+    controls: CurveSegmentControls,
+    tension: number,
+    shift: number,
+) {
     interpolatePointsAndTangents(state, controls, tension, shift);
     interpolateNormals(state, controls);
 }
@@ -61,7 +72,12 @@ const tanA = Vec3();
 const tanB = Vec3();
 const curvePoint = Vec3();
 
-export function interpolatePointsAndTangents(state: CurveSegmentState, controls: CurveSegmentControls, tension: number, shift: number) {
+export function interpolatePointsAndTangents(
+    state: CurveSegmentState,
+    controls: CurveSegmentControls,
+    tension: number,
+    shift: number,
+) {
     const { curvePoints, tangentVectors, linearSegments } = state;
     const { p0, p1, p2, p3, p4, secStrucFirst, secStrucLast } = controls;
 
@@ -149,7 +165,16 @@ export function interpolateNormals(state: CurveSegmentState, controls: CurveSegm
     }
 }
 
-export function interpolateSizes(state: CurveSegmentState, w0: number, w1: number, w2: number, h0: number, h1: number, h2: number, shift: number) {
+export function interpolateSizes(
+    state: CurveSegmentState,
+    w0: number,
+    w1: number,
+    w2: number,
+    h0: number,
+    h1: number,
+    h2: number,
+    shift: number,
+) {
     const { widthValues, heightValues, linearSegments } = state;
 
     const shift1 = 1 - shift;

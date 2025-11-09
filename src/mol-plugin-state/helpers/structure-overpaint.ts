@@ -15,10 +15,26 @@ import { Color } from '../../mol-util/color/index.ts';
 import type { StructureComponentRef } from '../manager/structure/hierarchy-state.ts';
 import { type EmptyLoci, isEmptyLoci, Loci } from '../../mol-model/loci.ts';
 
-type OverpaintEachReprCallback = (update: StateBuilder.Root, repr: StateObjectCell<PluginStateObject.Molecule.Structure.Representation3D, StateTransform<typeof StateTransforms.Representation.StructureRepresentation3D>>, overpaint?: StateObjectCell<any, StateTransform<typeof StateTransforms.Representation.OverpaintStructureRepresentation3DFromBundle>>) => Promise<void>
+type OverpaintEachReprCallback = (
+    update: StateBuilder.Root,
+    repr: StateObjectCell<
+        PluginStateObject.Molecule.Structure.Representation3D,
+        StateTransform<typeof StateTransforms.Representation.StructureRepresentation3D>
+    >,
+    overpaint?: StateObjectCell<
+        any,
+        StateTransform<typeof StateTransforms.Representation.OverpaintStructureRepresentation3DFromBundle>
+    >,
+) => Promise<void>;
 const OverpaintManagerTag = 'overpaint-controls';
 
-export async function setStructureOverpaint(plugin: PluginContext, components: StructureComponentRef[], color: Color | -1, lociGetter: (structure: Structure) => Promise<StructureElement.Loci | EmptyLoci>, types?: string[]) {
+export async function setStructureOverpaint(
+    plugin: PluginContext,
+    components: StructureComponentRef[],
+    color: Color | -1,
+    lociGetter: (structure: Structure) => Promise<StructureElement.Loci | EmptyLoci>,
+    types?: string[],
+) {
     await eachRepr(plugin, components, async (update, repr, overpaintCell) => {
         if (types && types.length > 0 && !types.includes(repr.params!.values.type.name)) return;
 
@@ -31,7 +47,7 @@ export async function setStructureOverpaint(plugin: PluginContext, components: S
         const layer = {
             bundle: StructureElement.Bundle.fromLoci(loci),
             color: color === -1 ? Color(0) : color,
-            clear: color === -1
+            clear: color === -1,
         };
 
         if (overpaintCell) {
@@ -41,12 +57,20 @@ export async function setStructureOverpaint(plugin: PluginContext, components: S
         } else {
             const filtered = getFilteredBundle([layer], structure);
             update.to(repr.transform.ref)
-                .apply(StateTransforms.Representation.OverpaintStructureRepresentation3DFromBundle, Overpaint.toBundle(filtered), { tags: OverpaintManagerTag });
+                .apply(
+                    StateTransforms.Representation.OverpaintStructureRepresentation3DFromBundle,
+                    Overpaint.toBundle(filtered),
+                    { tags: OverpaintManagerTag },
+                );
         }
     });
 }
 
-export async function clearStructureOverpaint(plugin: PluginContext, components: StructureComponentRef[], types?: string[]) {
+export async function clearStructureOverpaint(
+    plugin: PluginContext,
+    components: StructureComponentRef[],
+    types?: string[],
+) {
     await eachRepr(plugin, components, async (update, repr, overpaintCell) => {
         if (types && types.length > 0 && !types.includes(repr.params!.values.type.name)) return;
         if (overpaintCell) {
@@ -55,12 +79,21 @@ export async function clearStructureOverpaint(plugin: PluginContext, components:
     });
 }
 
-async function eachRepr(plugin: PluginContext, components: StructureComponentRef[], callback: OverpaintEachReprCallback) {
+async function eachRepr(
+    plugin: PluginContext,
+    components: StructureComponentRef[],
+    callback: OverpaintEachReprCallback,
+) {
     const state = plugin.state.data;
     const update = state.build();
     for (const c of components) {
         for (const r of c.representations) {
-            const overpaint = state.select(StateSelection.Generators.ofTransformer(StateTransforms.Representation.OverpaintStructureRepresentation3DFromBundle, r.cell.transform.ref).withTag(OverpaintManagerTag));
+            const overpaint = state.select(
+                StateSelection.Generators.ofTransformer(
+                    StateTransforms.Representation.OverpaintStructureRepresentation3DFromBundle,
+                    r.cell.transform.ref,
+                ).withTag(OverpaintManagerTag),
+            );
             await callback(update, r.cell, overpaint[0]);
         }
     }

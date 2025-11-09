@@ -5,12 +5,19 @@
  */
 
 import { ValueCell } from '../../../mol-util/index.ts';
-import { createComputeRenderable, type ComputeRenderable } from '../../../mol-gl/renderable.ts';
+import { type ComputeRenderable, createComputeRenderable } from '../../../mol-gl/renderable.ts';
 import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
 import { isNullTexture, type Texture } from '../../../mol-gl/webgl/texture.ts';
 import { ShaderCode } from '../../../mol-gl/shader-code.ts';
 import { createComputeRenderItem } from '../../../mol-gl/webgl/render-item.ts';
-import { ValueSpec, AttributeSpec, UniformSpec, TextureSpec, type Values, DefineSpec } from '../../../mol-gl/renderable/schema.ts';
+import {
+    AttributeSpec,
+    DefineSpec,
+    TextureSpec,
+    UniformSpec,
+    type Values,
+    ValueSpec,
+} from '../../../mol-gl/renderable/schema.ts';
 import { quad_vert } from '../../../mol-gl/shader/quad.vert.ts';
 import { normalize_frag } from '../../../mol-gl/shader/compute/color-smoothing/normalize.frag.ts';
 import { QuadSchema, QuadValues } from '../../../mol-gl/compute/util.ts';
@@ -48,20 +55,20 @@ export const ColorAccumulateSchema = {
     uBboxSize: UniformSpec('v3', 'material'),
     uResolution: UniformSpec('f', 'material'),
 };
-type ColorAccumulateValues = Values<typeof ColorAccumulateSchema>
+type ColorAccumulateValues = Values<typeof ColorAccumulateSchema>;
 const ColorAccumulateName = 'color-accumulate';
 const ColorCountName = 'color-count';
 
 interface AccumulateInput {
-    vertexCount: number
-    instanceCount: number
-    groupCount: number
-    transformBuffer: Float32Array
-    instanceBuffer: Float32Array
-    positionTexture: Texture
-    groupTexture: Texture
-    colorData: Texture
-    colorType: 'group' | 'groupInstance'
+    vertexCount: number;
+    instanceCount: number;
+    groupCount: number;
+    transformBuffer: Float32Array;
+    instanceBuffer: Float32Array;
+    positionTexture: Texture;
+    groupTexture: Texture;
+    colorData: Texture;
+    colorType: 'group' | 'groupInstance';
 }
 
 function getSampleBuffer(sampleCount: number, stride: number) {
@@ -72,7 +79,13 @@ function getSampleBuffer(sampleCount: number, stride: number) {
     return sampleBuffer;
 }
 
-function getAccumulateRenderable(ctx: WebGLContext, input: AccumulateInput, box: Box3D, resolution: number, stride: number): ComputeRenderable<ColorAccumulateValues> {
+function getAccumulateRenderable(
+    ctx: WebGLContext,
+    input: AccumulateInput,
+    box: Box3D,
+    resolution: number,
+    stride: number,
+): ComputeRenderable<ColorAccumulateValues> {
     if (ctx.namedComputeRenderables[ColorAccumulateName]) {
         const extent = Vec3.sub(Vec3(), box.max, box.min);
         const v = ctx.namedComputeRenderables[ColorAccumulateName].values as ColorAccumulateValues;
@@ -91,11 +104,17 @@ function getAccumulateRenderable(ctx: WebGLContext, input: AccumulateInput, box:
         ValueCell.update(v.aTransform, input.transformBuffer);
         ValueCell.update(v.aInstance, input.instanceBuffer);
 
-        ValueCell.update(v.uGeoTexDim, Vec2.set(v.uGeoTexDim.ref.value, input.positionTexture.getWidth(), input.positionTexture.getHeight()));
+        ValueCell.update(
+            v.uGeoTexDim,
+            Vec2.set(v.uGeoTexDim.ref.value, input.positionTexture.getWidth(), input.positionTexture.getHeight()),
+        );
         ValueCell.update(v.tPosition, input.positionTexture);
         ValueCell.update(v.tGroup, input.groupTexture);
 
-        ValueCell.update(v.uColorTexDim, Vec2.set(v.uColorTexDim.ref.value, input.colorData.getWidth(), input.colorData.getHeight()));
+        ValueCell.update(
+            v.uColorTexDim,
+            Vec2.set(v.uColorTexDim.ref.value, input.colorData.getWidth(), input.colorData.getHeight()),
+        );
         ValueCell.update(v.tColor, input.colorData);
         ValueCell.updateIfChanged(v.dColorType, input.colorType);
 
@@ -108,12 +127,24 @@ function getAccumulateRenderable(ctx: WebGLContext, input: AccumulateInput, box:
 
         ctx.namedComputeRenderables[ColorAccumulateName].update();
     } else {
-        ctx.namedComputeRenderables[ColorAccumulateName] = createAccumulateRenderable(ctx, input, box, resolution, stride);
+        ctx.namedComputeRenderables[ColorAccumulateName] = createAccumulateRenderable(
+            ctx,
+            input,
+            box,
+            resolution,
+            stride,
+        );
     }
     return ctx.namedComputeRenderables[ColorAccumulateName];
 }
 
-function createAccumulateRenderable(ctx: WebGLContext, input: AccumulateInput, box: Box3D, resolution: number, stride: number) {
+function createAccumulateRenderable(
+    ctx: WebGLContext,
+    input: AccumulateInput,
+    box: Box3D,
+    resolution: number,
+    stride: number,
+) {
     const extent = Vec3.sub(Vec3(), box.max, box.min);
     const sampleCount = Math.round(input.vertexCount / stride);
 
@@ -171,12 +202,15 @@ export const ColorNormalizeSchema = {
     tColor: TextureSpec('texture', 'rgba', 'float', 'nearest'),
     tCount: TextureSpec('texture', 'alpha', 'float', 'nearest'),
     uTexSize: UniformSpec('v2'),
-
 };
-type ColorNormalizeValues = Values<typeof ColorNormalizeSchema>
+type ColorNormalizeValues = Values<typeof ColorNormalizeSchema>;
 const ColorNormalizeName = 'color-normalize';
 
-function getNormalizeRenderable(ctx: WebGLContext, color: Texture, count: Texture): ComputeRenderable<ColorNormalizeValues> {
+function getNormalizeRenderable(
+    ctx: WebGLContext,
+    color: Texture,
+    count: Texture,
+): ComputeRenderable<ColorNormalizeValues> {
     if (ctx.namedComputeRenderables[ColorNormalizeName]) {
         const v = ctx.namedComputeRenderables[ColorNormalizeName].values as ColorNormalizeValues;
 
@@ -238,15 +272,27 @@ function getTexture2dSize(gridDim: Vec3) {
         texDimX = gridDim[0] * gridDim[2];
     }
     // console.log(texDimX, texDimY, texDimY < powerOfTwoSize ? powerOfTwoSize : powerOfTwoSize * 2);
-    return { texDimX, texDimY, texRows, texCols, powerOfTwoSize: texDimY < powerOfTwoSize ? powerOfTwoSize : powerOfTwoSize * 2 };
+    return {
+        texDimX,
+        texDimY,
+        texRows,
+        texCols,
+        powerOfTwoSize: texDimY < powerOfTwoSize ? powerOfTwoSize : powerOfTwoSize * 2,
+    };
 }
 
 interface ColorSmoothingInput extends AccumulateInput {
-    boundingSphere: Sphere3D
-    invariantBoundingSphere: Sphere3D
+    boundingSphere: Sphere3D;
+    invariantBoundingSphere: Sphere3D;
 }
 
-export function calcTextureMeshColorSmoothing(input: ColorSmoothingInput, resolution: number, stride: number, webgl: WebGLContext, texture?: Texture) {
+export function calcTextureMeshColorSmoothing(
+    input: ColorSmoothingInput,
+    resolution: number,
+    stride: number,
+    webgl: WebGLContext,
+    texture?: Texture,
+) {
     const { drawBuffers } = webgl.extensions;
     if (!drawBuffers) throw new Error('need WebGL draw buffers');
 
@@ -404,7 +450,13 @@ function isSupportedColorType(x: string): x is 'group' | 'groupInstance' {
     return x === 'group' || x === 'groupInstance';
 }
 
-export function applyTextureMeshColorSmoothing(values: TextureMeshValues, resolution: number, stride: number, webgl: WebGLContext, colorTexture?: Texture) {
+export function applyTextureMeshColorSmoothing(
+    values: TextureMeshValues,
+    resolution: number,
+    stride: number,
+    webgl: WebGLContext,
+    colorTexture?: Texture,
+) {
     if (!isSupportedColorType(values.dColorType.ref.value)) return;
 
     stride *= 3; // triple because TextureMesh is never indexed (no elements buffer)
@@ -415,19 +467,25 @@ export function applyTextureMeshColorSmoothing(values: TextureMeshValues, resolu
     const colorData = webgl.namedTextures[ColorSmoothingRgbName];
     colorData.load(values.tColor.ref.value);
 
-    const smoothingData = calcTextureMeshColorSmoothing({
-        vertexCount: values.uVertexCount.ref.value,
-        instanceCount: values.uInstanceCount.ref.value,
-        groupCount: values.uGroupCount.ref.value,
-        transformBuffer: values.aTransform.ref.value,
-        instanceBuffer: values.aInstance.ref.value,
-        positionTexture: values.tPosition.ref.value,
-        groupTexture: values.tGroup.ref.value,
-        colorData,
-        colorType: values.dColorType.ref.value,
-        boundingSphere: values.boundingSphere.ref.value,
-        invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
-    }, resolution, stride, webgl, colorTexture);
+    const smoothingData = calcTextureMeshColorSmoothing(
+        {
+            vertexCount: values.uVertexCount.ref.value,
+            instanceCount: values.uInstanceCount.ref.value,
+            groupCount: values.uGroupCount.ref.value,
+            transformBuffer: values.aTransform.ref.value,
+            instanceBuffer: values.aInstance.ref.value,
+            positionTexture: values.tPosition.ref.value,
+            groupTexture: values.tGroup.ref.value,
+            colorData,
+            colorType: values.dColorType.ref.value,
+            boundingSphere: values.boundingSphere.ref.value,
+            invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
+        },
+        resolution,
+        stride,
+        webgl,
+        colorTexture,
+    );
 
     ValueCell.updateIfChanged(values.dColorType, smoothingData.type);
     ValueCell.update(values.tColorGrid, smoothingData.texture);
@@ -440,30 +498,47 @@ function isSupportedOverpaintType(x: string): x is 'groupInstance' {
     return x === 'groupInstance';
 }
 
-export function applyTextureMeshOverpaintSmoothing(values: TextureMeshValues, resolution: number, stride: number, webgl: WebGLContext, colorTexture?: Texture) {
+export function applyTextureMeshOverpaintSmoothing(
+    values: TextureMeshValues,
+    resolution: number,
+    stride: number,
+    webgl: WebGLContext,
+    colorTexture?: Texture,
+) {
     if (!isSupportedOverpaintType(values.dOverpaintType.ref.value)) return;
 
     stride *= 3; // triple because TextureMesh is never indexed (no elements buffer)
 
     if (!webgl.namedTextures[ColorSmoothingRgbaName]) {
-        webgl.namedTextures[ColorSmoothingRgbaName] = webgl.resources.texture('image-uint8', 'rgba', 'ubyte', 'nearest');
+        webgl.namedTextures[ColorSmoothingRgbaName] = webgl.resources.texture(
+            'image-uint8',
+            'rgba',
+            'ubyte',
+            'nearest',
+        );
     }
     const colorData = webgl.namedTextures[ColorSmoothingRgbaName];
     colorData.load(values.tOverpaint.ref.value);
 
-    const smoothingData = calcTextureMeshColorSmoothing({
-        vertexCount: values.uVertexCount.ref.value,
-        instanceCount: values.uInstanceCount.ref.value,
-        groupCount: values.uGroupCount.ref.value,
-        transformBuffer: values.aTransform.ref.value,
-        instanceBuffer: values.aInstance.ref.value,
-        positionTexture: values.tPosition.ref.value,
-        groupTexture: values.tGroup.ref.value,
-        colorData,
-        colorType: values.dOverpaintType.ref.value,
-        boundingSphere: values.boundingSphere.ref.value,
-        invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
-    }, resolution, stride, webgl, colorTexture);
+    const smoothingData = calcTextureMeshColorSmoothing(
+        {
+            vertexCount: values.uVertexCount.ref.value,
+            instanceCount: values.uInstanceCount.ref.value,
+            groupCount: values.uGroupCount.ref.value,
+            transformBuffer: values.aTransform.ref.value,
+            instanceBuffer: values.aInstance.ref.value,
+            positionTexture: values.tPosition.ref.value,
+            groupTexture: values.tGroup.ref.value,
+            colorData,
+            colorType: values.dOverpaintType.ref.value,
+            boundingSphere: values.boundingSphere.ref.value,
+            invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
+        },
+        resolution,
+        stride,
+        webgl,
+        colorTexture,
+    );
 
     ValueCell.updateIfChanged(values.dOverpaintType, smoothingData.type);
     ValueCell.update(values.tOverpaintGrid, smoothingData.texture);
@@ -476,30 +551,47 @@ function isSupportedTransparencyType(x: string): x is 'groupInstance' {
     return x === 'groupInstance';
 }
 
-export function applyTextureMeshTransparencySmoothing(values: TextureMeshValues, resolution: number, stride: number, webgl: WebGLContext, colorTexture?: Texture) {
+export function applyTextureMeshTransparencySmoothing(
+    values: TextureMeshValues,
+    resolution: number,
+    stride: number,
+    webgl: WebGLContext,
+    colorTexture?: Texture,
+) {
     if (!isSupportedTransparencyType(values.dTransparencyType.ref.value)) return;
 
     stride *= 3; // triple because TextureMesh is never indexed (no elements buffer)
 
     if (!webgl.namedTextures[ColorSmoothingAlphaName]) {
-        webgl.namedTextures[ColorSmoothingAlphaName] = webgl.resources.texture('image-uint8', 'alpha', 'ubyte', 'nearest');
+        webgl.namedTextures[ColorSmoothingAlphaName] = webgl.resources.texture(
+            'image-uint8',
+            'alpha',
+            'ubyte',
+            'nearest',
+        );
     }
     const colorData = webgl.namedTextures[ColorSmoothingAlphaName];
     colorData.load(values.tTransparency.ref.value);
 
-    const smoothingData = calcTextureMeshColorSmoothing({
-        vertexCount: values.uVertexCount.ref.value,
-        instanceCount: values.uInstanceCount.ref.value,
-        groupCount: values.uGroupCount.ref.value,
-        transformBuffer: values.aTransform.ref.value,
-        instanceBuffer: values.aInstance.ref.value,
-        positionTexture: values.tPosition.ref.value,
-        groupTexture: values.tGroup.ref.value,
-        colorData,
-        colorType: values.dTransparencyType.ref.value,
-        boundingSphere: values.boundingSphere.ref.value,
-        invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
-    }, resolution, stride, webgl, colorTexture);
+    const smoothingData = calcTextureMeshColorSmoothing(
+        {
+            vertexCount: values.uVertexCount.ref.value,
+            instanceCount: values.uInstanceCount.ref.value,
+            groupCount: values.uGroupCount.ref.value,
+            transformBuffer: values.aTransform.ref.value,
+            instanceBuffer: values.aInstance.ref.value,
+            positionTexture: values.tPosition.ref.value,
+            groupTexture: values.tGroup.ref.value,
+            colorData,
+            colorType: values.dTransparencyType.ref.value,
+            boundingSphere: values.boundingSphere.ref.value,
+            invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
+        },
+        resolution,
+        stride,
+        webgl,
+        colorTexture,
+    );
 
     ValueCell.updateIfChanged(values.dTransparencyType, smoothingData.type);
     ValueCell.update(values.tTransparencyGrid, smoothingData.texture);
@@ -512,30 +604,47 @@ function isSupportedEmissiveType(x: string): x is 'groupInstance' {
     return x === 'groupInstance';
 }
 
-export function applyTextureMeshEmissiveSmoothing(values: TextureMeshValues, resolution: number, stride: number, webgl: WebGLContext, colorTexture?: Texture) {
+export function applyTextureMeshEmissiveSmoothing(
+    values: TextureMeshValues,
+    resolution: number,
+    stride: number,
+    webgl: WebGLContext,
+    colorTexture?: Texture,
+) {
     if (!isSupportedEmissiveType(values.dEmissiveType.ref.value)) return;
 
     stride *= 3; // triple because TextureMesh is never indexed (no elements buffer)
 
     if (!webgl.namedTextures[ColorSmoothingAlphaName]) {
-        webgl.namedTextures[ColorSmoothingAlphaName] = webgl.resources.texture('image-uint8', 'alpha', 'ubyte', 'nearest');
+        webgl.namedTextures[ColorSmoothingAlphaName] = webgl.resources.texture(
+            'image-uint8',
+            'alpha',
+            'ubyte',
+            'nearest',
+        );
     }
     const colorData = webgl.namedTextures[ColorSmoothingAlphaName];
     colorData.load(values.tEmissive.ref.value);
 
-    const smoothingData = calcTextureMeshColorSmoothing({
-        vertexCount: values.uVertexCount.ref.value,
-        instanceCount: values.uInstanceCount.ref.value,
-        groupCount: values.uGroupCount.ref.value,
-        transformBuffer: values.aTransform.ref.value,
-        instanceBuffer: values.aInstance.ref.value,
-        positionTexture: values.tPosition.ref.value,
-        groupTexture: values.tGroup.ref.value,
-        colorData,
-        colorType: values.dEmissiveType.ref.value,
-        boundingSphere: values.boundingSphere.ref.value,
-        invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
-    }, resolution, stride, webgl, colorTexture);
+    const smoothingData = calcTextureMeshColorSmoothing(
+        {
+            vertexCount: values.uVertexCount.ref.value,
+            instanceCount: values.uInstanceCount.ref.value,
+            groupCount: values.uGroupCount.ref.value,
+            transformBuffer: values.aTransform.ref.value,
+            instanceBuffer: values.aInstance.ref.value,
+            positionTexture: values.tPosition.ref.value,
+            groupTexture: values.tGroup.ref.value,
+            colorData,
+            colorType: values.dEmissiveType.ref.value,
+            boundingSphere: values.boundingSphere.ref.value,
+            invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
+        },
+        resolution,
+        stride,
+        webgl,
+        colorTexture,
+    );
 
     ValueCell.updateIfChanged(values.dEmissiveType, smoothingData.type);
     ValueCell.update(values.tEmissiveGrid, smoothingData.texture);
@@ -548,30 +657,47 @@ function isSupportedSubstanceType(x: string): x is 'groupInstance' {
     return x === 'groupInstance';
 }
 
-export function applyTextureMeshSubstanceSmoothing(values: TextureMeshValues, resolution: number, stride: number, webgl: WebGLContext, colorTexture?: Texture) {
+export function applyTextureMeshSubstanceSmoothing(
+    values: TextureMeshValues,
+    resolution: number,
+    stride: number,
+    webgl: WebGLContext,
+    colorTexture?: Texture,
+) {
     if (!isSupportedSubstanceType(values.dSubstanceType.ref.value)) return;
 
     stride *= 3; // triple because TextureMesh is never indexed (no elements buffer)
 
     if (!webgl.namedTextures[ColorSmoothingRgbaName]) {
-        webgl.namedTextures[ColorSmoothingRgbaName] = webgl.resources.texture('image-uint8', 'rgba', 'ubyte', 'nearest');
+        webgl.namedTextures[ColorSmoothingRgbaName] = webgl.resources.texture(
+            'image-uint8',
+            'rgba',
+            'ubyte',
+            'nearest',
+        );
     }
     const colorData = webgl.namedTextures[ColorSmoothingRgbaName];
     colorData.load(values.tSubstance.ref.value);
 
-    const smoothingData = calcTextureMeshColorSmoothing({
-        vertexCount: values.uVertexCount.ref.value,
-        instanceCount: values.uInstanceCount.ref.value,
-        groupCount: values.uGroupCount.ref.value,
-        transformBuffer: values.aTransform.ref.value,
-        instanceBuffer: values.aInstance.ref.value,
-        positionTexture: values.tPosition.ref.value,
-        groupTexture: values.tGroup.ref.value,
-        colorData,
-        colorType: values.dSubstanceType.ref.value,
-        boundingSphere: values.boundingSphere.ref.value,
-        invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
-    }, resolution, stride, webgl, colorTexture);
+    const smoothingData = calcTextureMeshColorSmoothing(
+        {
+            vertexCount: values.uVertexCount.ref.value,
+            instanceCount: values.uInstanceCount.ref.value,
+            groupCount: values.uGroupCount.ref.value,
+            transformBuffer: values.aTransform.ref.value,
+            instanceBuffer: values.aInstance.ref.value,
+            positionTexture: values.tPosition.ref.value,
+            groupTexture: values.tGroup.ref.value,
+            colorData,
+            colorType: values.dSubstanceType.ref.value,
+            boundingSphere: values.boundingSphere.ref.value,
+            invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
+        },
+        resolution,
+        stride,
+        webgl,
+        colorTexture,
+    );
 
     ValueCell.updateIfChanged(values.dSubstanceType, smoothingData.type);
     ValueCell.update(values.tSubstanceGrid, smoothingData.texture);

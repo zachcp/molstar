@@ -6,11 +6,11 @@
 
 import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
 import { StateTransformer } from '../../../mol-state/index.ts';
-import { TunnelStateObject, type Tunnel, TunnelShapeParams, TunnelsStateObject } from './data-model.ts';
+import { type Tunnel, TunnelShapeParams, TunnelsStateObject, TunnelStateObject } from './data-model.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { Task } from '../../../mol-task/index.ts';
-import { createTunnelShape, createSpheresShape } from './algorithm.ts';
+import { createSpheresShape, createTunnelShape } from './algorithm.ts';
 
 const Transform = StateTransformer.builderFactory('sb-ncbr-tunnels');
 
@@ -33,15 +33,15 @@ export const SelectTunnel = Transform({
     display: { name: 'Tunnel Selection' },
     from: TunnelsStateObject,
     to: TunnelStateObject,
-    params: a => {
+    params: (a) => {
         return {
-            index: PD.Numeric(0, { min: 0, max: a!.data.tunnels.length - 1, step: 1 })
+            index: PD.Numeric(0, { min: 0, max: a!.data.tunnels.length - 1, step: 1 }),
         };
-    }
+    },
 })({
     apply({ a, params }) {
         return new TunnelStateObject({ tunnel: a.data.tunnels[params.index] });
-    }
+    },
 });
 
 export const TunnelFromRawData = Transform({
@@ -50,7 +50,7 @@ export const TunnelFromRawData = Transform({
     from: PluginStateObject.Root,
     to: TunnelStateObject,
     params: {
-        data: PD.Value<Tunnel>(undefined as any, { isHidden: true })
+        data: PD.Value<Tunnel>(undefined as any, { isHidden: true }),
     },
 })({
     apply({ params }) {
@@ -63,10 +63,12 @@ export const TunnelShapeProvider = Transform({
     display: { name: 'Tunnel' },
     from: TunnelStateObject,
     to: PluginStateObject.Shape.Provider,
-    params: a => { return TunnelShapeParams; },
+    params: (a) => {
+        return TunnelShapeParams;
+    },
 })({
     apply({ a, params }) {
-        return Task.create('Tunnel Shape Representation', async ctx => {
+        return Task.create('Tunnel Shape Representation', async (ctx) => {
             return new PluginStateObject.Shape.Provider({
                 label: 'Surface',
                 data: { params, data: a.data },
@@ -79,7 +81,8 @@ export const TunnelShapeProvider = Transform({
                             color: data.params.colorTheme,
                             resolution: data.params.visual.params.resolution,
                             sampleRate: data.params.samplingRate,
-                            webgl: data.params.webgl, prev: mesh
+                            webgl: data.params.webgl,
+                            prev: mesh,
                         });
                     }
                     return createSpheresShape({
@@ -87,13 +90,14 @@ export const TunnelShapeProvider = Transform({
                         color: data.params.colorTheme,
                         resolution: data.params.visual.params.resolution,
                         sampleRate: data.params.samplingRate,
-                        showRadii: data.params.showRadii, prev: mesh
+                        showRadii: data.params.showRadii,
+                        prev: mesh,
                     });
-                }
+                },
             }, {
                 label: a.data.tunnel.props.label ?? 'Tunnel',
-                description: a.data.tunnel.props.description
-                ?? (a.data.tunnel.props.type && a.data.tunnel.props.id)
+                description: a.data.tunnel.props.description ??
+                        (a.data.tunnel.props.type && a.data.tunnel.props.id)
                     ? `${a.data.tunnel.props.type} ${a.data.tunnel.props.id}`
                     : '',
             });

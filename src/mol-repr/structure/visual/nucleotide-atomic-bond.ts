@@ -8,7 +8,7 @@
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import type { VisualContext } from '../../visual.ts';
-import { Unit, type Structure } from '../../../mol-model/structure.ts';
+import { type Structure, Unit } from '../../../mol-model/structure.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
@@ -16,8 +16,26 @@ import { Segmentation } from '../../../mol-data/int.ts';
 import type { CylinderProps } from '../../../mol-geo/primitive/cylinder.ts';
 import { isNucleic } from '../../../mol-model/structure/model/types.ts';
 import { addCylinder } from '../../../mol-geo/geometry/mesh/builder/cylinder.ts';
-import { UnitsMeshParams, type UnitsVisual, UnitsMeshVisual, UnitsCylindersParams, UnitsCylindersVisual } from '../units-visual.ts';
-import { NucleotideLocationIterator, getNucleotideElementLoci, eachNucleotideElement, getNucleotideBaseType, createNucleicIndices, setSugarIndices, hasSugarIndices, setPurinIndices, hasPurinIndices, setPyrimidineIndices, hasPyrimidineIndices } from './util/nucleotide.ts';
+import {
+    UnitsCylindersParams,
+    UnitsCylindersVisual,
+    UnitsMeshParams,
+    UnitsMeshVisual,
+    type UnitsVisual,
+} from '../units-visual.ts';
+import {
+    createNucleicIndices,
+    eachNucleotideElement,
+    getNucleotideBaseType,
+    getNucleotideElementLoci,
+    hasPurinIndices,
+    hasPyrimidineIndices,
+    hasSugarIndices,
+    NucleotideLocationIterator,
+    setPurinIndices,
+    setPyrimidineIndices,
+    setSugarIndices,
+} from './util/nucleotide.ts';
 import type { VisualUpdateState } from '../../util.ts';
 import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
@@ -51,20 +69,32 @@ export const NucleotideAtomicBondParams = {
     ...UnitsCylindersParams,
     sizeFactor: PD.Numeric(0.3, { min: 0, max: 10, step: 0.01 }),
     radialSegments: PD.Numeric(16, { min: 2, max: 56, step: 2 }, BaseGeometry.CustomQualityParamInfo),
-    tryUseImpostor: PD.Boolean(true)
+    tryUseImpostor: PD.Boolean(true),
 };
-export type NucleotideAtomicBondParams = typeof NucleotideAtomicBondParams
+export type NucleotideAtomicBondParams = typeof NucleotideAtomicBondParams;
 interface NucleotideAtomicBondImpostorProps {
-    sizeFactor: number,
+    sizeFactor: number;
 }
 
-export function NucleotideAtomicBondVisual(materialId: number, structure: Structure, props: PD.Values<NucleotideAtomicBondParams>, webgl?: WebGLContext) {
+export function NucleotideAtomicBondVisual(
+    materialId: number,
+    structure: Structure,
+    props: PD.Values<NucleotideAtomicBondParams>,
+    webgl?: WebGLContext,
+) {
     return props.tryUseImpostor && checkCylinderImpostorSupport(webgl)
         ? NucleotideAtomicBondImpostorVisual(materialId)
         : NucleotideAtomicBondMeshVisual(materialId);
 }
 
-function createNucleotideAtomicBondImpostor(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: NucleotideAtomicBondImpostorProps, cylinders?: Cylinders) {
+function createNucleotideAtomicBondImpostor(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: NucleotideAtomicBondImpostorProps,
+    cylinders?: Cylinders,
+) {
     if (!Unit.isAtomic(unit)) return Cylinders.createEmpty(cylinders);
 
     const nucleotideElementCount = unit.nucleotideElements.length;
@@ -94,18 +124,94 @@ function createNucleotideAtomicBondImpostor(ctx: VisualContext, unit: Unit, stru
                 setSugarIndices(idx, unit, residueIndex);
 
                 if (hasSugarIndices(idx)) {
-                    c.invariantPosition(idx.C1_1, pC1_1); c.invariantPosition(idx.C2_1, pC2_1); c.invariantPosition(idx.C3_1, pC3_1); c.invariantPosition(idx.C4_1, pC4_1); c.invariantPosition(idx.O4_1, pO4_1);
+                    c.invariantPosition(idx.C1_1, pC1_1);
+                    c.invariantPosition(idx.C2_1, pC2_1);
+                    c.invariantPosition(idx.C3_1, pC3_1);
+                    c.invariantPosition(idx.C4_1, pC4_1);
+                    c.invariantPosition(idx.O4_1, pO4_1);
 
                     // trace cylinder
                     c.invariantPosition(idx.trace, pTrace);
-                    builder.add(pC3_1[0], pC3_1[1], pC3_1[2], pTrace[0], pTrace[1], pTrace[2], 1, true, true, colorModeFlag, i);
+                    builder.add(
+                        pC3_1[0],
+                        pC3_1[1],
+                        pC3_1[2],
+                        pTrace[0],
+                        pTrace[1],
+                        pTrace[2],
+                        1,
+                        true,
+                        true,
+                        colorModeFlag,
+                        i,
+                    );
 
                     // sugar ring
-                    builder.add(pC3_1[0], pC3_1[1], pC3_1[2], pC4_1[0], pC4_1[1], pC4_1[2], 1, true, true, colorModeFlag, i);
-                    builder.add(pC4_1[0], pC4_1[1], pC4_1[2], pO4_1[0], pO4_1[1], pO4_1[2], 1, true, true, colorModeFlag, i);
-                    builder.add(pO4_1[0], pO4_1[1], pO4_1[2], pC1_1[0], pC1_1[1], pC1_1[2], 1, true, true, colorModeFlag, i);
-                    builder.add(pC1_1[0], pC1_1[1], pC1_1[2], pC2_1[0], pC2_1[1], pC2_1[2], 1, true, true, colorModeFlag, i);
-                    builder.add(pC2_1[0], pC2_1[1], pC2_1[2], pC3_1[0], pC3_1[1], pC3_1[2], 1, true, true, colorModeFlag, i);
+                    builder.add(
+                        pC3_1[0],
+                        pC3_1[1],
+                        pC3_1[2],
+                        pC4_1[0],
+                        pC4_1[1],
+                        pC4_1[2],
+                        1,
+                        true,
+                        true,
+                        colorModeFlag,
+                        i,
+                    );
+                    builder.add(
+                        pC4_1[0],
+                        pC4_1[1],
+                        pC4_1[2],
+                        pO4_1[0],
+                        pO4_1[1],
+                        pO4_1[2],
+                        1,
+                        true,
+                        true,
+                        colorModeFlag,
+                        i,
+                    );
+                    builder.add(
+                        pO4_1[0],
+                        pO4_1[1],
+                        pO4_1[2],
+                        pC1_1[0],
+                        pC1_1[1],
+                        pC1_1[2],
+                        1,
+                        true,
+                        true,
+                        colorModeFlag,
+                        i,
+                    );
+                    builder.add(
+                        pC1_1[0],
+                        pC1_1[1],
+                        pC1_1[2],
+                        pC2_1[0],
+                        pC2_1[1],
+                        pC2_1[2],
+                        1,
+                        true,
+                        true,
+                        colorModeFlag,
+                        i,
+                    );
+                    builder.add(
+                        pC2_1[0],
+                        pC2_1[1],
+                        pC2_1[2],
+                        pC3_1[0],
+                        pC3_1[1],
+                        pC3_1[2],
+                        1,
+                        true,
+                        true,
+                        colorModeFlag,
+                        i,
+                    );
                 }
 
                 const { isPurine, isPyrimidine } = getNucleotideBaseType(unit, residueIndex);
@@ -114,15 +220,49 @@ function createNucleotideAtomicBondImpostor(ctx: VisualContext, unit: Unit, stru
                     setPurinIndices(idx, unit, residueIndex);
 
                     if (idx.C1_1 !== -1 && idx.N9 !== -1) {
-                        c.invariantPosition(idx.C1_1, pC1_1); c.invariantPosition(idx.N9, pN9);
-                        builder.add(pN9[0], pN9[1], pN9[2], pC1_1[0], pC1_1[1], pC1_1[2], 1, true, true, colorModeFlag, i);
+                        c.invariantPosition(idx.C1_1, pC1_1);
+                        c.invariantPosition(idx.N9, pN9);
+                        builder.add(
+                            pN9[0],
+                            pN9[1],
+                            pN9[2],
+                            pC1_1[0],
+                            pC1_1[1],
+                            pC1_1[2],
+                            1,
+                            true,
+                            true,
+                            colorModeFlag,
+                            i,
+                        );
                     } else if (idx.N9 !== -1 && idx.trace !== -1) {
-                        c.invariantPosition(idx.N9, pN9); c.invariantPosition(idx.trace, pTrace);
-                        builder.add(pN9[0], pN9[1], pN9[2], pTrace[0], pTrace[1], pTrace[2], 1, true, true, colorModeFlag, i);
+                        c.invariantPosition(idx.N9, pN9);
+                        c.invariantPosition(idx.trace, pTrace);
+                        builder.add(
+                            pN9[0],
+                            pN9[1],
+                            pN9[2],
+                            pTrace[0],
+                            pTrace[1],
+                            pTrace[2],
+                            1,
+                            true,
+                            true,
+                            colorModeFlag,
+                            i,
+                        );
                     }
 
                     if (hasPurinIndices(idx)) {
-                        c.invariantPosition(idx.N1, pN1); c.invariantPosition(idx.C2, pC2); c.invariantPosition(idx.N3, pN3); c.invariantPosition(idx.C4, pC4); c.invariantPosition(idx.C5, pC5); c.invariantPosition(idx.C6, pC6); c.invariantPosition(idx.N7, pN7); c.invariantPosition(idx.C8, pC8); c.invariantPosition(idx.N9, pN9);
+                        c.invariantPosition(idx.N1, pN1);
+                        c.invariantPosition(idx.C2, pC2);
+                        c.invariantPosition(idx.N3, pN3);
+                        c.invariantPosition(idx.C4, pC4);
+                        c.invariantPosition(idx.C5, pC5);
+                        c.invariantPosition(idx.C6, pC6);
+                        c.invariantPosition(idx.N7, pN7);
+                        c.invariantPosition(idx.C8, pC8);
+                        c.invariantPosition(idx.N9, pN9);
 
                         // base ring
                         builder.add(pN9[0], pN9[1], pN9[2], pC8[0], pC8[1], pC8[2], 1, true, true, colorModeFlag, i);
@@ -135,21 +275,51 @@ function createNucleotideAtomicBondImpostor(ctx: VisualContext, unit: Unit, stru
                         builder.add(pN3[0], pN3[1], pN3[2], pC4[0], pC4[1], pC4[2], 1, true, true, colorModeFlag, i);
                         builder.add(pC4[0], pC4[1], pC4[2], pC5[0], pC5[1], pC5[2], 1, true, true, colorModeFlag, i);
                         builder.add(pC4[0], pC4[1], pC4[2], pN9[0], pN9[1], pN9[2], 1, true, true, colorModeFlag, i);
-
                     }
                 } else if (isPyrimidine) {
                     setPyrimidineIndices(idx, unit, residueIndex);
 
                     if (idx.C1_1 !== -1 && idx.N1 !== -1) {
-                        c.invariantPosition(idx.N1, pN1); c.invariantPosition(idx.C1_1, pC1_1);
-                        builder.add(pN1[0], pN1[1], pN1[2], pC1_1[0], pC1_1[1], pC1_1[2], 1, true, true, colorModeFlag, i);
+                        c.invariantPosition(idx.N1, pN1);
+                        c.invariantPosition(idx.C1_1, pC1_1);
+                        builder.add(
+                            pN1[0],
+                            pN1[1],
+                            pN1[2],
+                            pC1_1[0],
+                            pC1_1[1],
+                            pC1_1[2],
+                            1,
+                            true,
+                            true,
+                            colorModeFlag,
+                            i,
+                        );
                     } else if (idx.N1 !== -1 && idx.trace !== -1) {
-                        c.invariantPosition(idx.N1, pN1); c.invariantPosition(idx.trace, pTrace);
-                        builder.add(pN1[0], pN1[1], pN1[2], pTrace[0], pTrace[1], pTrace[2], 1, true, true, colorModeFlag, i);
+                        c.invariantPosition(idx.N1, pN1);
+                        c.invariantPosition(idx.trace, pTrace);
+                        builder.add(
+                            pN1[0],
+                            pN1[1],
+                            pN1[2],
+                            pTrace[0],
+                            pTrace[1],
+                            pTrace[2],
+                            1,
+                            true,
+                            true,
+                            colorModeFlag,
+                            i,
+                        );
                     }
 
                     if (hasPyrimidineIndices(idx)) {
-                        c.invariantPosition(idx.N1, pN1); c.invariantPosition(idx.C2, pC2); c.invariantPosition(idx.N3, pN3); c.invariantPosition(idx.C4, pC4); c.invariantPosition(idx.C5, pC5); c.invariantPosition(idx.C6, pC6);
+                        c.invariantPosition(idx.N1, pN1);
+                        c.invariantPosition(idx.C2, pC2);
+                        c.invariantPosition(idx.N3, pN3);
+                        c.invariantPosition(idx.C4, pC4);
+                        c.invariantPosition(idx.C5, pC5);
+                        c.invariantPosition(idx.C6, pC6);
 
                         // base ring
                         builder.add(pN1[0], pN1[1], pN1[2], pC6[0], pC6[1], pC6[2], 1, true, true, colorModeFlag, i);
@@ -180,23 +350,36 @@ export function NucleotideAtomicBondImpostorVisual(materialId: number): UnitsVis
         createLocationIterator: NucleotideLocationIterator.fromGroup,
         getLoci: getNucleotideElementLoci,
         eachLocation: eachNucleotideElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<NucleotideAtomicBondParams>, currentProps: PD.Values<NucleotideAtomicBondParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor
-            );
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<NucleotideAtomicBondParams>,
+            currentProps: PD.Values<NucleotideAtomicBondParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor;
         },
-        mustRecreate: (structureGroup: StructureGroup, props: PD.Values<NucleotideAtomicBondParams>, webgl?: WebGLContext) => {
+        mustRecreate: (
+            structureGroup: StructureGroup,
+            props: PD.Values<NucleotideAtomicBondParams>,
+            webgl?: WebGLContext,
+        ) => {
             return !props.tryUseImpostor || !webgl;
-        }
+        },
     }, materialId);
 }
 
 interface NucleotideAtomicBondMeshProps {
-    radialSegments: number,
-    sizeFactor: number,
+    radialSegments: number;
+    sizeFactor: number;
 }
 
-function createNucleotideAtomicBondMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: NucleotideAtomicBondMeshProps, mesh?: Mesh) {
+function createNucleotideAtomicBondMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: NucleotideAtomicBondMeshProps,
+    mesh?: Mesh,
+) {
     if (!Unit.isAtomic(unit)) return Mesh.createEmpty(mesh);
 
     const nucleotideElementCount = unit.nucleotideElements.length;
@@ -231,7 +414,11 @@ function createNucleotideAtomicBondMesh(ctx: VisualContext, unit: Unit, structur
                 setSugarIndices(idx, unit, residueIndex);
 
                 if (hasSugarIndices(idx)) {
-                    c.invariantPosition(idx.C1_1, pC1_1); c.invariantPosition(idx.C2_1, pC2_1); c.invariantPosition(idx.C3_1, pC3_1); c.invariantPosition(idx.C4_1, pC4_1); c.invariantPosition(idx.O4_1, pO4_1);
+                    c.invariantPosition(idx.C1_1, pC1_1);
+                    c.invariantPosition(idx.C2_1, pC2_1);
+                    c.invariantPosition(idx.C3_1, pC3_1);
+                    c.invariantPosition(idx.C4_1, pC4_1);
+                    c.invariantPosition(idx.O4_1, pO4_1);
 
                     // trace cylinder
                     c.invariantPosition(idx.trace, pTrace);
@@ -251,15 +438,25 @@ function createNucleotideAtomicBondMesh(ctx: VisualContext, unit: Unit, structur
                     setPurinIndices(idx, unit, residueIndex);
 
                     if (idx.C1_1 !== -1 && idx.N9 !== -1) {
-                        c.invariantPosition(idx.C1_1, pC1_1); c.invariantPosition(idx.N9, pN9);
+                        c.invariantPosition(idx.C1_1, pC1_1);
+                        c.invariantPosition(idx.N9, pN9);
                         addCylinder(builderState, pN9, pC1_1, 1, cylinderProps);
                     } else if (idx.N9 !== -1 && idx.trace !== -1) {
-                        c.invariantPosition(idx.N9, pN9); c.invariantPosition(idx.trace, pTrace);
+                        c.invariantPosition(idx.N9, pN9);
+                        c.invariantPosition(idx.trace, pTrace);
                         addCylinder(builderState, pN9, pTrace, 1, cylinderProps);
                     }
 
                     if (hasPurinIndices(idx)) {
-                        c.invariantPosition(idx.N1, pN1); c.invariantPosition(idx.C2, pC2); c.invariantPosition(idx.N3, pN3); c.invariantPosition(idx.C4, pC4); c.invariantPosition(idx.C5, pC5); c.invariantPosition(idx.C6, pC6); c.invariantPosition(idx.N7, pN7); c.invariantPosition(idx.C8, pC8); c.invariantPosition(idx.N9, pN9);
+                        c.invariantPosition(idx.N1, pN1);
+                        c.invariantPosition(idx.C2, pC2);
+                        c.invariantPosition(idx.N3, pN3);
+                        c.invariantPosition(idx.C4, pC4);
+                        c.invariantPosition(idx.C5, pC5);
+                        c.invariantPosition(idx.C6, pC6);
+                        c.invariantPosition(idx.N7, pN7);
+                        c.invariantPosition(idx.C8, pC8);
+                        c.invariantPosition(idx.N9, pN9);
 
                         // base ring
                         addCylinder(builderState, pN9, pC8, 1, cylinderProps);
@@ -277,15 +474,22 @@ function createNucleotideAtomicBondMesh(ctx: VisualContext, unit: Unit, structur
                     setPyrimidineIndices(idx, unit, residueIndex);
 
                     if (idx.C1_1 !== -1 && idx.N1 !== -1) {
-                        c.invariantPosition(idx.N1, pN1); c.invariantPosition(idx.C1_1, pC1_1);
+                        c.invariantPosition(idx.N1, pN1);
+                        c.invariantPosition(idx.C1_1, pC1_1);
                         addCylinder(builderState, pN1, pC1_1, 1, cylinderProps);
                     } else if (idx.N1 !== -1 && idx.trace !== -1) {
-                        c.invariantPosition(idx.N1, pN1); c.invariantPosition(idx.trace, pTrace);
+                        c.invariantPosition(idx.N1, pN1);
+                        c.invariantPosition(idx.trace, pTrace);
                         addCylinder(builderState, pN1, pTrace, 1, cylinderProps);
                     }
 
                     if (hasPyrimidineIndices(idx)) {
-                        c.invariantPosition(idx.N1, pN1); c.invariantPosition(idx.C2, pC2); c.invariantPosition(idx.N3, pN3); c.invariantPosition(idx.C4, pC4); c.invariantPosition(idx.C5, pC5); c.invariantPosition(idx.C6, pC6);
+                        c.invariantPosition(idx.N1, pN1);
+                        c.invariantPosition(idx.C2, pC2);
+                        c.invariantPosition(idx.N3, pN3);
+                        c.invariantPosition(idx.C4, pC4);
+                        c.invariantPosition(idx.C5, pC5);
+                        c.invariantPosition(idx.C6, pC6);
 
                         // base ring
                         addCylinder(builderState, pN1, pC6, 1, cylinderProps);
@@ -310,7 +514,6 @@ function createNucleotideAtomicBondMesh(ctx: VisualContext, unit: Unit, structur
     return m;
 }
 
-
 export function NucleotideAtomicBondMeshVisual(materialId: number): UnitsVisual<NucleotideAtomicBondParams> {
     return UnitsMeshVisual<NucleotideAtomicBondParams>({
         defaultProps: PD.getDefaultValues(NucleotideAtomicBondParams),
@@ -318,14 +521,20 @@ export function NucleotideAtomicBondMeshVisual(materialId: number): UnitsVisual<
         createLocationIterator: NucleotideLocationIterator.fromGroup,
         getLoci: getNucleotideElementLoci,
         eachLocation: eachNucleotideElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<NucleotideAtomicBondParams>, currentProps: PD.Values<NucleotideAtomicBondParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
-                newProps.radialSegments !== currentProps.radialSegments
-            );
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<NucleotideAtomicBondParams>,
+            currentProps: PD.Values<NucleotideAtomicBondParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
+                newProps.radialSegments !== currentProps.radialSegments;
         },
-        mustRecreate: (structureGroup: StructureGroup, props: PD.Values<NucleotideAtomicBondParams>, webgl?: WebGLContext) => {
+        mustRecreate: (
+            structureGroup: StructureGroup,
+            props: PD.Values<NucleotideAtomicBondParams>,
+            webgl?: WebGLContext,
+        ) => {
             return props.tryUseImpostor && !!webgl;
-        }
+        },
     }, materialId);
 }

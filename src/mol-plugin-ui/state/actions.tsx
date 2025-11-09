@@ -6,15 +6,23 @@
 
 import type { State } from '../../mol-state/index.ts';
 import { PluginUIComponent } from '../base.tsx';
-import { Icon, CodeSvg } from '../controls/icons.tsx';
+import { CodeSvg, Icon } from '../controls/icons.tsx';
 import { ApplyActionControl } from './apply-action.tsx';
 
-export class StateObjectActions extends PluginUIComponent<{ state: State, nodeRef: string, hideHeader?: boolean, initiallyCollapsed?: boolean, alwaysExpandFirst?: boolean }> {
+export class StateObjectActions extends PluginUIComponent<
+    {
+        state: State;
+        nodeRef: string;
+        hideHeader?: boolean;
+        initiallyCollapsed?: boolean;
+        alwaysExpandFirst?: boolean;
+    }
+> {
     get current() {
         return this.props.state.behaviors.currentObject.value;
     }
 
-    override componentDidMount() {        // TODO: handle tree change: some state actions might become invalid
+    override componentDidMount() { // TODO: handle tree change: some state actions might become invalid
         // this.subscribe(this.props.state.events.changed, o => {
         //     this.setState(createStateObjectActionSelectState(this.props));
         // });
@@ -29,7 +37,8 @@ export class StateObjectActions extends PluginUIComponent<{ state: State, nodeRe
         this.subscribe(this.plugin.state.data.actions.events.removed, () => this.forceUpdate());
     }
 
-    override render() {        const { state, nodeRef: ref } = this.props;
+    override render() {
+        const { state, nodeRef: ref } = this.props;
         const cell = state.cells.get(ref)!;
         const actions = state.actions.fromCell(cell, this.plugin);
         if (actions.length === 0) return null;
@@ -37,11 +46,25 @@ export class StateObjectActions extends PluginUIComponent<{ state: State, nodeRe
         const def = cell.transform.transformer.definition;
         const display = cell.obj ? cell.obj.label : (def.display && def.display.name) || def.name;
 
-        return <div className='msp-state-actions'>
-            {!this.props.hideHeader && <div className='msp-section-header'><Icon svg={CodeSvg} /> {`Actions (${display})`}</div> }
-            {actions.map((act, i) => <ApplyActionControl
-                key={`${act.id}`} state={state} action={act} nodeRef={ref}
-                initiallyCollapsed={i === 0 ? !this.props.alwaysExpandFirst && this.props.initiallyCollapsed : this.props.initiallyCollapsed} />)}
-        </div>;
+        return (
+            <div className='msp-state-actions'>
+                {!this.props.hideHeader && (
+                    <div className='msp-section-header'>
+                        <Icon svg={CodeSvg} /> {`Actions (${display})`}
+                    </div>
+                )}
+                {actions.map((act, i) => (
+                    <ApplyActionControl
+                        key={`${act.id}`}
+                        state={state}
+                        action={act}
+                        nodeRef={ref}
+                        initiallyCollapsed={i === 0
+                            ? !this.props.alwaysExpandFirst && this.props.initiallyCollapsed
+                            : this.props.initiallyCollapsed}
+                    />
+                ))}
+            </div>
+        );
     }
 }

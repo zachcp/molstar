@@ -22,11 +22,15 @@ export const AnimateCameraRock = PluginStateAnimation.create({
     isExportable: true,
     params: () => ({
         durationInMs: PD.Numeric(4000, { min: 100, max: 20000, step: 100 }),
-        speed: PD.Numeric(1, { min: 1, max: 10, step: 1 }, { description: 'How many times to rock from side to side.' }),
-        angle: PD.Numeric(10, { min: 0, max: 180, step: 1 }, { description: 'How many degrees to rotate in each direction.' }),
+        speed: PD.Numeric(1, { min: 1, max: 10, step: 1 }, {
+            description: 'How many times to rock from side to side.',
+        }),
+        angle: PD.Numeric(10, { min: 0, max: 180, step: 1 }, {
+            description: 'How many degrees to rotate in each direction.',
+        }),
     }),
     initialState: (p, ctx) => ({ snapshot: ctx.canvas3d!.camera.getSnapshot() }) as State,
-    getDuration: p => ({ kind: 'fixed', durationMs: p.durationInMs }),
+    getDuration: (p) => ({ kind: 'fixed', durationMs: p.durationInMs }),
     teardown: (_, state: State, ctx) => {
         ctx.canvas3d?.requestCameraReset({ snapshot: state.snapshot, durationMs: 0 });
     },
@@ -58,5 +62,5 @@ export const AnimateCameraRock = PluginStateAnimation.create({
         }
 
         return { kind: 'next', state: animState };
-    }
+    },
 });

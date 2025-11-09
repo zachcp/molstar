@@ -16,7 +16,9 @@ export function decodeColor(colorString: string | undefined | null): Color | und
     if (hexColorRegex.test(colorString)) {
         if (colorString.length === 4) {
             // convert short form to full form (#f0f -> #ff00ff)
-            colorString = `#${colorString[1]}${colorString[1]}${colorString[2]}${colorString[2]}${colorString[3]}${colorString[3]}`;
+            colorString = `#${colorString[1]}${colorString[1]}${colorString[2]}${colorString[2]}${colorString[3]}${
+                colorString[3]
+            }`;
         }
         result = Color.fromHexStyle(colorString);
         if (result !== undefined && !isNaN(result)) return result;
@@ -42,7 +44,7 @@ export function getColorGradientBanded(colors: ColorListEntry[]) {
     const n = colors.length;
     const styles: string[] = [];
 
-    const hasOffsets = colors.every(c => Array.isArray(c));
+    const hasOffsets = colors.every((c) => Array.isArray(c));
     if (hasOffsets) {
         const off = [...colors] as [Color, number][];
         // 0 colors present
@@ -57,7 +59,7 @@ export function getColorGradientBanded(colors: ColorListEntry[]) {
             const o = o0 + (o1 - o0) / 2;
             styles.push(
                 `${Color.toStyle(c0)} ${(100 * o).toFixed(2)}%`,
-                `${Color.toStyle(c1)} ${(100 * o).toFixed(2)}%`
+                `${Color.toStyle(c1)} ${(100 * o).toFixed(2)}%`,
             );
         }
         styles.push(`${Color.toStyle(off[off.length - 1][0])} ${(100 * off[off.length - 1][1]).toFixed(2)}%`);
@@ -66,7 +68,7 @@ export function getColorGradientBanded(colors: ColorListEntry[]) {
         for (let i = 1, il = n - 1; i < il; ++i) {
             styles.push(
                 `${colorEntryToStyle(colors[i])} ${100 * (i / n)}%`,
-                `${colorEntryToStyle(colors[i])} ${100 * ((i + 1) / n)}%`
+                `${colorEntryToStyle(colors[i])} ${100 * ((i + 1) / n)}%`,
             );
         }
         styles.push(`${colorEntryToStyle(colors[n - 1])} ${100 * ((n - 1) / n)}%`);
@@ -78,15 +80,15 @@ export function getColorGradientBanded(colors: ColorListEntry[]) {
 export function getColorGradient(colors: ColorListEntry[]) {
     if (colors.length === 0) return 'linear-gradient(to right, #000 0%, #000 100%)';
 
-    const hasOffsets = colors.every(c => Array.isArray(c));
+    const hasOffsets = colors.every((c) => Array.isArray(c));
     let styles;
 
     if (hasOffsets) {
         const off = [...colors] as [Color, number][];
         off.sort((a, b) => a[1] - b[1]);
-        styles = off.map(c => colorEntryToStyle(c, true));
+        styles = off.map((c) => colorEntryToStyle(c, true));
     } else {
-        styles = colors.map(c => colorEntryToStyle(c));
+        styles = colors.map((c) => colorEntryToStyle(c));
     }
 
     return `linear-gradient(to right, ${styles.join(', ')})`;

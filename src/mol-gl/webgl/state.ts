@@ -8,9 +8,9 @@ import type { GLRenderingContext } from './compat.ts';
 import type { WebGLExtensions } from './extensions.ts';
 
 export type WebGLState = {
-    currentProgramId: number
-    currentMaterialId: number
-    currentRenderItemId: number
+    currentProgramId: number;
+    currentMaterialId: number;
+    currentRenderItemId: number;
 
     /**
      * specifies which WebGL capability to enable
@@ -26,7 +26,7 @@ export type WebGLState = {
      * - `ext.CLIP_DISTANCE[0-7]`: clip distance 0 to 7 (with `ext` being `WEBGL_clip_cull_distance`)
      * - `ext.DEPTH_CLAMP`: depth clamping (with `ext` being `EXT_depth_clamp`)
      */
-    enable: (cap: number) => void
+    enable: (cap: number) => void;
     /**
      * specifies which WebGL capability to disable
      * - `gl.BLEND`: blending of the computed fragment color values
@@ -41,54 +41,54 @@ export type WebGLState = {
      * - `ext.CLIP_DISTANCE[0-7]`: clip distance 0 to 7 (with `ext` being `WEBGL_clip_cull_distance`)
      * - `ext.DEPTH_CLAMP`: depth clamping (with `ext` being `EXT_depth_clamp`)
      */
-    disable: (cap: number) => void
+    disable: (cap: number) => void;
 
     /** specifies whether polygons are front- or back-facing by setting a winding orientation */
-    frontFace: (mode: number) => void
+    frontFace: (mode: number) => void;
     /** specifies whether or not front- and/or back-facing polygons can be culled */
-    cullFace: (mode: number) => void
+    cullFace: (mode: number) => void;
     /** sets whether writing into the depth buffer is enabled or disabled */
-    depthMask: (flag: boolean) => void
+    depthMask: (flag: boolean) => void;
     /** specifies the depth value used when clearing depth buffer, used when calling `gl.clear` */
-    clearDepth: (depth: number) => void
+    clearDepth: (depth: number) => void;
     /** sets the depth comparison function */
-    depthFunc: (func: number) => void
+    depthFunc: (func: number) => void;
     /** sets which color components to enable or to disable */
-    colorMask: (red: boolean, green: boolean, blue: boolean, alpha: boolean) => void
+    colorMask: (red: boolean, green: boolean, blue: boolean, alpha: boolean) => void;
     /** specifies the color values used when clearing color buffers, used when calling `gl.clear`, clamped to [0, 1] */
-    clearColor: (red: number, green: number, blue: number, alpha: number) => void
+    clearColor: (red: number, green: number, blue: number, alpha: number) => void;
 
     /** defines which function is used for blending pixel arithmetic */
-    blendFunc: (src: number, dst: number) => void
+    blendFunc: (src: number, dst: number) => void;
     /** defines which function is used for blending pixel arithmetic for RGB and alpha components separately */
-    blendFuncSeparate: (srcRGB: number, dstRGB: number, srcAlpha: number, dstAlpha: number) => void
+    blendFuncSeparate: (srcRGB: number, dstRGB: number, srcAlpha: number, dstAlpha: number) => void;
 
     /** set both the RGB blend equation and alpha blend equation to a single equation, determines how a new pixel is combined with an existing */
-    blendEquation: (mode: number) => void
+    blendEquation: (mode: number) => void;
     /** set the RGB blend equation and alpha blend equation separately, determines how a new pixel is combined with an existing */
-    blendEquationSeparate: (modeRGB: number, modeAlpha: number) => void
+    blendEquationSeparate: (modeRGB: number, modeAlpha: number) => void;
     /** specifies the source and destination blending factors, clamped to [0, 1] */
-    blendColor: (red: number, green: number, blue: number, alpha: number) => void
+    blendColor: (red: number, green: number, blue: number, alpha: number) => void;
 
     /** sets the front and back function and reference value for stencil testing */
-    stencilFunc: (func: number, ref: number, mask: number) => void
+    stencilFunc: (func: number, ref: number, mask: number) => void;
     /** sets the front and/or back function and reference value for stencil testing */
-    stencilFuncSeparate: (face: number, func: number, ref: number, mask: number) => void
+    stencilFuncSeparate: (face: number, func: number, ref: number, mask: number) => void;
     /** controls enabling and disabling of both the front and back writing of individual bits in the stencil planes */
-    stencilMask: (mask: number) => void
+    stencilMask: (mask: number) => void;
     /** controls enabling and disabling of both the front and back writing of individual bits in the stencil planes */
-    stencilMaskSeparate: (face: number, mask: number) => void
+    stencilMaskSeparate: (face: number, mask: number) => void;
     /** sets both the front and back-facing stencil test actions */
-    stencilOp: (fail: number, zfail: number, zpass: number) => void
+    stencilOp: (fail: number, zfail: number, zpass: number) => void;
     /** sets the front and/or back-facing stencil test actions */
-    stencilOpSeparate: (face: number, fail: number, zfail: number, zpass: number) => void
+    stencilOpSeparate: (face: number, fail: number, zfail: number, zpass: number) => void;
 
-    enableVertexAttrib: (index: number) => void
-    clearVertexAttribsState: () => void
-    disableUnusedVertexAttribs: () => void
+    enableVertexAttrib: (index: number) => void;
+    clearVertexAttribsState: () => void;
+    disableUnusedVertexAttribs: () => void;
 
-    viewport: (x: number, y: number, width: number, height: number) => void
-    scissor: (x: number, y: number, width: number, height: number) => void
+    viewport: (x: number, y: number, width: number, height: number) => void;
+    scissor: (x: number, y: number, width: number, height: number) => void;
 
     /**
      * controls the clipping volume behavior
@@ -96,10 +96,10 @@ export type WebGLState = {
      * @param depth must be `ext.NEGATIVE_ONE_TO_ONE` (default) or `ext.ZERO_TO_ONE`.
      * with `ext` being `EXT_clip_control`
      */
-    clipControl?: (origin: number, depth: number) => void
+    clipControl?: (origin: number, depth: number) => void;
 
-    reset: () => void
-}
+    reset: () => void;
+};
 
 export function createState(gl: GLRenderingContext, e: WebGLExtensions): WebGLState {
     let enabledCapabilities: Record<number, boolean> = {};
@@ -200,7 +200,10 @@ export function createState(gl: GLRenderingContext, e: WebGLExtensions): WebGLSt
             }
         },
         colorMask: (red: boolean, green: boolean, blue: boolean, alpha: boolean) => {
-            if (red !== currentColorMask[0] || green !== currentColorMask[1] || blue !== currentColorMask[2] || alpha !== currentColorMask[3]) {
+            if (
+                red !== currentColorMask[0] || green !== currentColorMask[1] || blue !== currentColorMask[2] ||
+                alpha !== currentColorMask[3]
+            ) {
                 gl.colorMask(red, green, blue, alpha);
                 currentColorMask[0] = red;
                 currentColorMask[1] = green;
@@ -209,7 +212,10 @@ export function createState(gl: GLRenderingContext, e: WebGLExtensions): WebGLSt
             }
         },
         clearColor: (red: number, green: number, blue: number, alpha: number) => {
-            if (red !== currentClearColor[0] || green !== currentClearColor[1] || blue !== currentClearColor[2] || alpha !== currentClearColor[3]) {
+            if (
+                red !== currentClearColor[0] || green !== currentClearColor[1] || blue !== currentClearColor[2] ||
+                alpha !== currentClearColor[3]
+            ) {
                 gl.clearColor(red, green, blue, alpha);
                 currentClearColor[0] = red;
                 currentClearColor[1] = green;
@@ -219,7 +225,10 @@ export function createState(gl: GLRenderingContext, e: WebGLExtensions): WebGLSt
         },
 
         blendFunc: (src: number, dst: number) => {
-            if (src !== currentBlendSrcRGB || dst !== currentBlendDstRGB || src !== currentBlendSrcAlpha || dst !== currentBlendDstAlpha) {
+            if (
+                src !== currentBlendSrcRGB || dst !== currentBlendDstRGB || src !== currentBlendSrcAlpha ||
+                dst !== currentBlendDstAlpha
+            ) {
                 gl.blendFunc(src, dst);
                 currentBlendSrcRGB = src;
                 currentBlendDstRGB = dst;
@@ -228,7 +237,10 @@ export function createState(gl: GLRenderingContext, e: WebGLExtensions): WebGLSt
             }
         },
         blendFuncSeparate: (srcRGB: number, dstRGB: number, srcAlpha: number, dstAlpha: number) => {
-            if (srcRGB !== currentBlendSrcRGB || dstRGB !== currentBlendDstRGB || srcAlpha !== currentBlendSrcAlpha || dstAlpha !== currentBlendDstAlpha) {
+            if (
+                srcRGB !== currentBlendSrcRGB || dstRGB !== currentBlendDstRGB || srcAlpha !== currentBlendSrcAlpha ||
+                dstAlpha !== currentBlendDstAlpha
+            ) {
                 gl.blendFuncSeparate(srcRGB, dstRGB, srcAlpha, dstAlpha);
                 currentBlendSrcRGB = srcRGB;
                 currentBlendDstRGB = dstRGB;
@@ -251,7 +263,10 @@ export function createState(gl: GLRenderingContext, e: WebGLExtensions): WebGLSt
             }
         },
         blendColor: (red: number, green: number, blue: number, alpha: number) => {
-            if (red !== currentBlendColor[0] || green !== currentBlendColor[1] || blue !== currentBlendColor[2] || alpha !== currentBlendColor[3]) {
+            if (
+                red !== currentBlendColor[0] || green !== currentBlendColor[1] || blue !== currentBlendColor[2] ||
+                alpha !== currentBlendColor[3]
+            ) {
                 gl.blendColor(red, green, blue, alpha);
                 currentBlendColor[0] = red;
                 currentBlendColor[1] = green;
@@ -261,7 +276,10 @@ export function createState(gl: GLRenderingContext, e: WebGLExtensions): WebGLSt
         },
 
         stencilFunc: (func: number, ref: number, mask: number) => {
-            if (func !== currentStencilFunc || ref !== currentStencilRef || mask !== currentStencilValueMask || func !== currentStencilBackFunc || ref !== currentStencilBackRef || mask !== currentStencilBackValueMask) {
+            if (
+                func !== currentStencilFunc || ref !== currentStencilRef || mask !== currentStencilValueMask ||
+                func !== currentStencilBackFunc || ref !== currentStencilBackRef || mask !== currentStencilBackValueMask
+            ) {
                 gl.stencilFunc(func, ref, mask);
                 currentStencilFunc = func;
                 currentStencilRef = ref;
@@ -280,14 +298,21 @@ export function createState(gl: GLRenderingContext, e: WebGLExtensions): WebGLSt
                     currentStencilValueMask = mask;
                 }
             } else if (face === gl.BACK) {
-                if (func !== currentStencilBackFunc || ref !== currentStencilBackRef || mask !== currentStencilBackValueMask) {
+                if (
+                    func !== currentStencilBackFunc || ref !== currentStencilBackRef ||
+                    mask !== currentStencilBackValueMask
+                ) {
                     gl.stencilFuncSeparate(face, func, ref, mask);
                     currentStencilBackFunc = func;
                     currentStencilBackRef = ref;
                     currentStencilBackValueMask = mask;
                 }
             } else if (face === gl.FRONT_AND_BACK) {
-                if (func !== currentStencilFunc || ref !== currentStencilRef || mask !== currentStencilValueMask || func !== currentStencilBackFunc || ref !== currentStencilBackRef || mask !== currentStencilBackValueMask) {
+                if (
+                    func !== currentStencilFunc || ref !== currentStencilRef || mask !== currentStencilValueMask ||
+                    func !== currentStencilBackFunc || ref !== currentStencilBackRef ||
+                    mask !== currentStencilBackValueMask
+                ) {
                     gl.stencilFuncSeparate(face, func, ref, mask);
                     currentStencilFunc = func;
                     currentStencilRef = ref;
@@ -325,7 +350,11 @@ export function createState(gl: GLRenderingContext, e: WebGLExtensions): WebGLSt
             }
         },
         stencilOp: (fail: number, zfail: number, zpass: number) => {
-            if (fail !== currentStencilFail || zfail !== currentStencilPassDepthFail || zpass !== currentStencilPassDepthPass || fail !== currentStencilBackFail || zfail !== currentStencilBackPassDepthFail || zpass !== currentStencilBackPassDepthPass) {
+            if (
+                fail !== currentStencilFail || zfail !== currentStencilPassDepthFail ||
+                zpass !== currentStencilPassDepthPass || fail !== currentStencilBackFail ||
+                zfail !== currentStencilBackPassDepthFail || zpass !== currentStencilBackPassDepthPass
+            ) {
                 gl.stencilOp(fail, zfail, zpass);
                 currentStencilFail = fail;
                 currentStencilPassDepthFail = zfail;
@@ -337,21 +366,31 @@ export function createState(gl: GLRenderingContext, e: WebGLExtensions): WebGLSt
         },
         stencilOpSeparate: (face: number, fail: number, zfail: number, zpass: number) => {
             if (face === gl.FRONT) {
-                if (fail !== currentStencilFail || zfail !== currentStencilPassDepthFail || zpass !== currentStencilPassDepthPass) {
+                if (
+                    fail !== currentStencilFail || zfail !== currentStencilPassDepthFail ||
+                    zpass !== currentStencilPassDepthPass
+                ) {
                     gl.stencilOpSeparate(face, fail, zfail, zpass);
                     currentStencilFail = fail;
                     currentStencilPassDepthFail = zfail;
                     currentStencilPassDepthPass = zpass;
                 }
             } else if (face === gl.BACK) {
-                if (fail !== currentStencilBackFail || zfail !== currentStencilBackPassDepthFail || zpass !== currentStencilBackPassDepthPass) {
+                if (
+                    fail !== currentStencilBackFail || zfail !== currentStencilBackPassDepthFail ||
+                    zpass !== currentStencilBackPassDepthPass
+                ) {
                     gl.stencilOpSeparate(face, fail, zfail, zpass);
                     currentStencilBackFail = fail;
                     currentStencilBackPassDepthFail = zfail;
                     currentStencilBackPassDepthPass = zpass;
                 }
             } else if (face === gl.FRONT_AND_BACK) {
-                if (fail !== currentStencilFail || zfail !== currentStencilPassDepthFail || zpass !== currentStencilPassDepthPass || fail !== currentStencilBackFail || zfail !== currentStencilBackPassDepthFail || zpass !== currentStencilBackPassDepthPass) {
+                if (
+                    fail !== currentStencilFail || zfail !== currentStencilPassDepthFail ||
+                    zpass !== currentStencilPassDepthPass || fail !== currentStencilBackFail ||
+                    zfail !== currentStencilBackPassDepthFail || zpass !== currentStencilBackPassDepthPass
+                ) {
                     gl.stencilOpSeparate(face, fail, zfail, zpass);
                     currentStencilFail = fail;
                     currentStencilPassDepthFail = zfail;
@@ -375,7 +414,10 @@ export function createState(gl: GLRenderingContext, e: WebGLExtensions): WebGLSt
         },
 
         viewport: (x: number, y: number, width: number, height: number) => {
-            if (x !== currentViewport[0] || y !== currentViewport[1] || width !== currentViewport[2] || height !== currentViewport[3]) {
+            if (
+                x !== currentViewport[0] || y !== currentViewport[1] || width !== currentViewport[2] ||
+                height !== currentViewport[3]
+            ) {
                 gl.viewport(x, y, width, height);
                 currentViewport[0] = x;
                 currentViewport[1] = y;
@@ -385,7 +427,10 @@ export function createState(gl: GLRenderingContext, e: WebGLExtensions): WebGLSt
         },
 
         scissor: (x: number, y: number, width: number, height: number) => {
-            if (x !== currentScissor[0] || y !== currentScissor[1] || width !== currentScissor[2] || height !== currentScissor[3]) {
+            if (
+                x !== currentScissor[0] || y !== currentScissor[1] || width !== currentScissor[2] ||
+                height !== currentScissor[3]
+            ) {
                 gl.scissor(x, y, width, height);
                 currentScissor[0] = x;
                 currentScissor[1] = y;
@@ -394,13 +439,15 @@ export function createState(gl: GLRenderingContext, e: WebGLExtensions): WebGLSt
             }
         },
 
-        clipControl: e.clipControl ? (origin: number, depth: number) => {
-            if (origin !== currentClipOrigin || depth !== currentClipDepthMode) {
-                e.clipControl!.clipControl(origin, depth);
-                currentClipOrigin = origin;
-                currentClipDepthMode = depth;
+        clipControl: e.clipControl
+            ? (origin: number, depth: number) => {
+                if (origin !== currentClipOrigin || depth !== currentClipDepthMode) {
+                    e.clipControl!.clipControl(origin, depth);
+                    currentClipOrigin = origin;
+                    currentClipDepthMode = depth;
+                }
             }
-        } : undefined,
+            : undefined,
 
         reset: () => {
             enabledCapabilities = {};
@@ -447,6 +494,6 @@ export function createState(gl: GLRenderingContext, e: WebGLExtensions): WebGLSt
 
             currentClipOrigin = e.clipControl ? gl.getParameter(e.clipControl.CLIP_ORIGIN) : -1;
             currentClipDepthMode = e.clipControl ? gl.getParameter(e.clipControl.CLIP_DEPTH_MODE) : -1;
-        }
+        },
     };
 }

@@ -137,7 +137,11 @@ export function pickObjectKeys<T extends {}, K extends keyof T>(obj: T, keys: re
 }
 
 /** Same as `pickObjectKeys` but allows loading values into a different key or skipping keys, i.e. return `{ key: obj[remapping[key] ?? key] for key in keys if remapping[key] !== null }`  */
-export function pickObjectKeysWithRemapping<V>(obj: Record<string, V>, keys: string[], remapping: Record<string, string | null>): Record<string, V> {
+export function pickObjectKeysWithRemapping<V>(
+    obj: Record<string, V>,
+    keys: string[],
+    remapping: Record<string, string | null>,
+): Record<string, V> {
     const result: Record<string, V> = {};
     for (const key of keys) {
         let srcKey = remapping[key];

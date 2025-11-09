@@ -7,7 +7,7 @@
 
 import { MaxAsa, type ShrakeRupleyContext, VdWLookup } from './common.ts';
 import { getElementIdx, isHydrogen } from '../../../../mol-model/structure/structure/unit/bonds/common.ts';
-import { isPolymer, isNucleic, MoleculeType, type ElementSymbol } from '../../../../mol-model/structure/model/types.ts';
+import { type ElementSymbol, isNucleic, isPolymer, MoleculeType } from '../../../../mol-model/structure/model/types.ts';
 import { VdwRadius } from '../../../../mol-model/structure/model/properties/atomic.ts';
 import { StructureElement, StructureProperties } from '../../../../mol-model/structure/structure.ts';
 import { getElementMoleculeType } from '../../../../mol-model/structure/util.ts';
@@ -94,17 +94,39 @@ function determineRadiusAmino(atomId: string, element: ElementSymbol, compId: st
             return atomId === 'NZ' ? 4 : 3;
         case 'C':
             switch (atomId) {
-                case 'C': case 'CE1': case 'CE2': case 'CE3': case 'CH2': case 'CZ': case 'CZ2': case 'CZ3':
+                case 'C':
+                case 'CE1':
+                case 'CE2':
+                case 'CE3':
+                case 'CH2':
+                case 'CZ':
+                case 'CZ2':
+                case 'CZ3':
                     return 1;
-                case 'CA': case 'CB': case 'CE': case 'CG1': case 'CG2':
+                case 'CA':
+                case 'CB':
+                case 'CE':
+                case 'CG1':
+                case 'CG2':
                     return 2;
                 default:
                     switch (compId) {
-                        case 'PHE': case 'TRP': case 'TYR': case 'HIS': case 'ASP': case 'ASN':
+                        case 'PHE':
+                        case 'TRP':
+                        case 'TYR':
+                        case 'HIS':
+                        case 'ASP':
+                        case 'ASN':
                             return 1;
-                        case 'PRO': case 'LYS': case 'ARG': case 'MET': case 'ILE': case 'LEU':
+                        case 'PRO':
+                        case 'LYS':
+                        case 'ARG':
+                        case 'MET':
+                        case 'ILE':
+                        case 'LEU':
                             return 2;
-                        case 'GLU': case 'GLN':
+                        case 'GLU':
+                        case 'GLN':
                             return atomId === 'CD' ? 1 : 2;
                     }
             }
@@ -114,10 +136,14 @@ function determineRadiusAmino(atomId: string, element: ElementSymbol, compId: st
 
 function determineRadiusNucl(atomId: string, element: ElementSymbol, compId: string): number {
     switch (element) {
-        case 'C': return 7;
-        case 'N': return 8;
-        case 'P': return 9;
-        case 'O': return 5;
+        case 'C':
+            return 7;
+        case 'N':
+            return 8;
+        case 'P':
+            return 9;
+        case 'O':
+            return 5;
     }
     return handleNonStandardCase(element);
 }

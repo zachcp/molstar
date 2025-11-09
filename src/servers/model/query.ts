@@ -8,7 +8,7 @@
 import * as fs from 'node:fs';
 import { VERSION } from './version.ts';
 import { type LocalInput, runLocal } from './server/api-local.ts';
-import process from "node:process";
+import process from 'node:process';
 
 console.log(`Mol* ModelServer (${VERSION}), (c) 2018-2020 Mol* authors`);
 console.log(``);
@@ -18,41 +18,40 @@ const exampleWorkload: LocalInput = [{
     queries: [{
         input: 'c:/test/quick/1tqn.cif',
         query: 'full', // same as defined in Api/Queries
-    }]
+    }],
 }, {
     output: 'c:/test/quick/localapi/1tqn_full.bcif',
     queries: [{
         input: 'c:/test/quick/1tqn.cif',
-        query: 'full'
-    }]
+        query: 'full',
+    }],
 }, {
     output: 'c:/test/quick/localapi/1cbs_ligint.cif',
     queries: [{
         input: 'c:/test/quick/1cbs_updated.cif',
         query: 'residueInteraction', // action is case sensitive
-        params: { atom_site: { label_comp_id: 'REA' }, radius: 5 }
-    }]
+        params: { atom_site: { label_comp_id: 'REA' }, radius: 5 },
+    }],
 }, {
     output: 'c:/test/quick/localapi/1cbs_ligint.bcif',
     queries: [{
         input: 'c:/test/quick/1cbs_updated.cif', // multiple files that are repeated will only be parsed once
         query: 'residueInteraction',
-        params: { atom_site: [{ label_comp_id: 'REA' }], radius: 5 } // parameters are just a JSON version of the query string
-    }]
+        params: { atom_site: [{ label_comp_id: 'REA' }], radius: 5 }, // parameters are just a JSON version of the query string
+    }],
 }, {
     output: 'c:/test/quick/localapi/multiple.tar.gz',
     queries: [{
         input: 'c:/test/quick/1cbs_updated.cif',
         query: 'residueInteraction', // action is case sensitive
-        params: { atom_site: { label_comp_id: 'REA' }, radius: 5 }
+        params: { atom_site: { label_comp_id: 'REA' }, radius: 5 },
     }, {
         input: 'c:/test/quick/1tqn.cif',
         query: 'full', // same as defined in Api/Queries
     }],
     asTarGz: true,
-    gzipLevel: 6
+    gzipLevel: 6,
 }];
-
 
 if (process.argv.length !== 3) {
     const help = [
@@ -66,7 +65,7 @@ if (process.argv.length !== 3) {
         ``,
         `Jobs example:`,
         ``,
-        JSON.stringify(exampleWorkload, null, 2)
+        JSON.stringify(exampleWorkload, null, 2),
     ];
 
     console.log(help.join('\n'));

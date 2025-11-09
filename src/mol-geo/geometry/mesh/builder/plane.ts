@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra.ts';
+import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra.ts';
 import { SegmentedPlane } from '../../../primitive/plane.ts';
 import { MeshBuilder } from '../mesh-builder.ts';
 
@@ -19,7 +19,15 @@ function setPlaneMat(m: Mat4, center: Vec3, dirMajor: Vec3, dirMinor: Vec3, scal
     return Mat4.scale(m, m, scale);
 }
 
-export function addPlane(state: MeshBuilder.State, center: Vec3, dirMajor: Vec3, dirMinor: Vec3, scale: Vec3, widthSegments: number, heightSegments: number) {
+export function addPlane(
+    state: MeshBuilder.State,
+    center: Vec3,
+    dirMajor: Vec3,
+    dirMinor: Vec3,
+    scale: Vec3,
+    widthSegments: number,
+    heightSegments: number,
+) {
     const plane = SegmentedPlane(widthSegments, heightSegments);
     MeshBuilder.addPrimitive(state, setPlaneMat(tmpPlaneMat, center, dirMajor, dirMinor, scale), plane);
 }

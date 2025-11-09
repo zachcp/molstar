@@ -4,178 +4,174 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from "../../../mol-util/param-definition.ts";
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import {
-  type RepresentationParamsGetter,
-  type RepresentationContext,
-  Representation,
-} from "../../../mol-repr/representation.ts";
-import type { ThemeRegistryContext } from "../../../mol-theme/theme.ts";
-import { Structure } from "../../../mol-model/structure.ts";
+    Representation,
+    type RepresentationContext,
+    type RepresentationParamsGetter,
+} from '../../../mol-repr/representation.ts';
+import type { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import { Structure } from '../../../mol-model/structure.ts';
 import {
-  UnitsRepresentation,
-  type StructureRepresentation,
-  StructureRepresentationStateBuilder,
-  StructureRepresentationProvider,
-  ComplexRepresentation,
-} from "../../../mol-repr/structure/representation.ts";
+    ComplexRepresentation,
+    type StructureRepresentation,
+    StructureRepresentationProvider,
+    StructureRepresentationStateBuilder,
+    UnitsRepresentation,
+} from '../../../mol-repr/structure/representation.ts';
 import {
-  EllipsoidMeshParams,
-  EllipsoidMeshVisual,
-  type StructureEllipsoidMeshParams,
-  StructureEllipsoidMeshVisual,
-} from "../visual/ellipsoid-mesh.ts";
-import { AtomSiteAnisotrop } from "../../../mol-model-formats/structure/property/anisotropic.ts";
+    EllipsoidMeshParams,
+    EllipsoidMeshVisual,
+    type StructureEllipsoidMeshParams,
+    StructureEllipsoidMeshVisual,
+} from '../visual/ellipsoid-mesh.ts';
+import { AtomSiteAnisotrop } from '../../../mol-model-formats/structure/property/anisotropic.ts';
 import {
-  IntraUnitBondCylinderParams,
-  IntraUnitBondCylinderVisual,
-  type StructureIntraUnitBondCylinderParams,
-  StructureIntraUnitBondCylinderVisual,
-} from "../visual/bond-intra-unit-cylinder.ts";
-import {
-  InterUnitBondCylinderVisual,
-  InterUnitBondCylinderParams,
-} from "../visual/bond-inter-unit-cylinder.ts";
-import { getUnitKindsParam } from "../params.ts";
-import { BaseGeometry } from "../../../mol-geo/geometry/base.ts";
+    IntraUnitBondCylinderParams,
+    IntraUnitBondCylinderVisual,
+    type StructureIntraUnitBondCylinderParams,
+    StructureIntraUnitBondCylinderVisual,
+} from '../visual/bond-intra-unit-cylinder.ts';
+import { InterUnitBondCylinderParams, InterUnitBondCylinderVisual } from '../visual/bond-inter-unit-cylinder.ts';
+import { getUnitKindsParam } from '../params.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 
 const EllipsoidVisuals = {
-  "ellipsoid-mesh": (
-    ctx: RepresentationContext,
-    getParams: RepresentationParamsGetter<Structure, EllipsoidMeshParams>,
-  ): StructureRepresentation<EllipsoidMeshParams> =>
-    UnitsRepresentation("Ellipsoid Mesh", ctx, getParams, EllipsoidMeshVisual),
-  "intra-bond": (
-    ctx: RepresentationContext,
-    getParams: RepresentationParamsGetter<
-      Structure,
-      IntraUnitBondCylinderParams
-    >,
-  ): StructureRepresentation<IntraUnitBondCylinderParams> =>
-    UnitsRepresentation(
-      "Intra-unit bond cylinder",
-      ctx,
-      getParams,
-      IntraUnitBondCylinderVisual,
-    ),
-  "inter-bond": (
-    ctx: RepresentationContext,
-    getParams: RepresentationParamsGetter<
-      Structure,
-      InterUnitBondCylinderParams
-    >,
-  ): StructureRepresentation<InterUnitBondCylinderParams> =>
-    ComplexRepresentation(
-      "Inter-unit bond cylinder",
-      ctx,
-      getParams,
-      InterUnitBondCylinderVisual,
-    ),
-  "structure-ellipsoid-mesh": (
-    ctx: RepresentationContext,
-    getParams: RepresentationParamsGetter<
-      Structure,
-      StructureEllipsoidMeshParams
-    >,
-  ): StructureRepresentation<StructureEllipsoidMeshParams> =>
-    ComplexRepresentation(
-      "Structure Ellipsoid Mesh",
-      ctx,
-      getParams,
-      StructureEllipsoidMeshVisual,
-    ),
-  "structure-intra-bond": (
-    ctx: RepresentationContext,
-    getParams: RepresentationParamsGetter<
-      Structure,
-      StructureIntraUnitBondCylinderParams
-    >,
-  ): StructureRepresentation<StructureIntraUnitBondCylinderParams> =>
-    ComplexRepresentation(
-      "Structure intra-unit bond cylinder",
-      ctx,
-      getParams,
-      StructureIntraUnitBondCylinderVisual,
-    ),
+    'ellipsoid-mesh': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, EllipsoidMeshParams>,
+    ): StructureRepresentation<EllipsoidMeshParams> =>
+        UnitsRepresentation('Ellipsoid Mesh', ctx, getParams, EllipsoidMeshVisual),
+    'intra-bond': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<
+            Structure,
+            IntraUnitBondCylinderParams
+        >,
+    ): StructureRepresentation<IntraUnitBondCylinderParams> =>
+        UnitsRepresentation(
+            'Intra-unit bond cylinder',
+            ctx,
+            getParams,
+            IntraUnitBondCylinderVisual,
+        ),
+    'inter-bond': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<
+            Structure,
+            InterUnitBondCylinderParams
+        >,
+    ): StructureRepresentation<InterUnitBondCylinderParams> =>
+        ComplexRepresentation(
+            'Inter-unit bond cylinder',
+            ctx,
+            getParams,
+            InterUnitBondCylinderVisual,
+        ),
+    'structure-ellipsoid-mesh': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<
+            Structure,
+            StructureEllipsoidMeshParams
+        >,
+    ): StructureRepresentation<StructureEllipsoidMeshParams> =>
+        ComplexRepresentation(
+            'Structure Ellipsoid Mesh',
+            ctx,
+            getParams,
+            StructureEllipsoidMeshVisual,
+        ),
+    'structure-intra-bond': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<
+            Structure,
+            StructureIntraUnitBondCylinderParams
+        >,
+    ): StructureRepresentation<StructureIntraUnitBondCylinderParams> =>
+        ComplexRepresentation(
+            'Structure intra-unit bond cylinder',
+            ctx,
+            getParams,
+            StructureIntraUnitBondCylinderVisual,
+        ),
 };
 
 export const EllipsoidParams = {
-  ...EllipsoidMeshParams,
-  ...IntraUnitBondCylinderParams,
-  ...InterUnitBondCylinderParams,
-  includeParent: PD.Boolean(false),
-  adjustCylinderLength: PD.Boolean(false, { isHidden: true }), // not useful here
-  unitKinds: getUnitKindsParam(["atomic"]),
-  sizeFactor: PD.Numeric(1, { min: 0.01, max: 10, step: 0.01 }),
-  sizeAspectRatio: PD.Numeric(0.1, { min: 0.01, max: 3, step: 0.01 }),
-  linkCap: PD.Boolean(true),
-  visuals: PD.MultiSelect(
-    ["ellipsoid-mesh", "intra-bond", "inter-bond"],
-    PD.objectToOptions(EllipsoidVisuals),
-  ),
-  bumpFrequency: PD.Numeric(
-    0,
-    { min: 0, max: 10, step: 0.1 },
-    BaseGeometry.ShadingCategory,
-  ),
+    ...EllipsoidMeshParams,
+    ...IntraUnitBondCylinderParams,
+    ...InterUnitBondCylinderParams,
+    includeParent: PD.Boolean(false),
+    adjustCylinderLength: PD.Boolean(false, { isHidden: true }), // not useful here
+    unitKinds: getUnitKindsParam(['atomic']),
+    sizeFactor: PD.Numeric(1, { min: 0.01, max: 10, step: 0.01 }),
+    sizeAspectRatio: PD.Numeric(0.1, { min: 0.01, max: 3, step: 0.01 }),
+    linkCap: PD.Boolean(true),
+    visuals: PD.MultiSelect(
+        ['ellipsoid-mesh', 'intra-bond', 'inter-bond'],
+        PD.objectToOptions(EllipsoidVisuals),
+    ),
+    bumpFrequency: PD.Numeric(
+        0,
+        { min: 0, max: 10, step: 0.1 },
+        BaseGeometry.ShadingCategory,
+    ),
 };
 export type EllipsoidParams = typeof EllipsoidParams;
 export function getEllipsoidParams(
-  ctx: ThemeRegistryContext,
-  structure: Structure,
+    ctx: ThemeRegistryContext,
+    structure: Structure,
 ): typeof EllipsoidParams {
-  let params = EllipsoidParams;
-  const size = Structure.getSize(structure);
-  if (size >= Structure.Size.Huge) {
-    params = PD.clone(params);
-    params.visuals.defaultValue = ["ellipsoid-mesh", "intra-bond"];
-  } else if (structure.unitSymmetryGroups.length > 5000) {
-    params = PD.clone(params);
-    params.visuals.defaultValue = [
-      "structure-ellipsoid-mesh",
-      "structure-intra-bond",
-    ];
-  }
-  return params;
+    let params = EllipsoidParams;
+    const size = Structure.getSize(structure);
+    if (size >= Structure.Size.Huge) {
+        params = PD.clone(params);
+        params.visuals.defaultValue = ['ellipsoid-mesh', 'intra-bond'];
+    } else if (structure.unitSymmetryGroups.length > 5000) {
+        params = PD.clone(params);
+        params.visuals.defaultValue = [
+            'structure-ellipsoid-mesh',
+            'structure-intra-bond',
+        ];
+    }
+    return params;
 }
 
 export type EllipsoidRepresentation = StructureRepresentation<EllipsoidParams>;
 export function EllipsoidRepresentation(
-  ctx: RepresentationContext,
-  getParams: RepresentationParamsGetter<Structure, EllipsoidParams>,
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, EllipsoidParams>,
 ): EllipsoidRepresentation {
-  return Representation.createMulti(
-    "Ellipsoid",
-    ctx,
-    getParams,
-    StructureRepresentationStateBuilder,
-    EllipsoidVisuals as unknown as Representation.Def<
-      Structure,
-      EllipsoidParams
-    >,
-  );
+    return Representation.createMulti(
+        'Ellipsoid',
+        ctx,
+        getParams,
+        StructureRepresentationStateBuilder,
+        EllipsoidVisuals as unknown as Representation.Def<
+            Structure,
+            EllipsoidParams
+        >,
+    );
 }
 
 export const EllipsoidRepresentationProvider = StructureRepresentationProvider({
-  name: "ellipsoid",
-  label: "Ellipsoid",
-  description:
-    "Displays anisotropic displacement ellipsoids of atomic elements plus bonds as cylinders.",
-  factory: EllipsoidRepresentation,
-  getParams: getEllipsoidParams,
-  defaultValues: PD.getDefaultValues(EllipsoidParams),
-  defaultColorTheme: { name: "element-symbol" },
-  defaultSizeTheme: { name: "uniform" },
-  isApplicable: (structure: Structure) =>
-    structure.elementCount > 0 &&
-    structure.models.some((m) => AtomSiteAnisotrop.Provider.isApplicable(m)),
-  getData: (structure: Structure, props: PD.Values<EllipsoidParams>) => {
-    return props.includeParent ? structure.asParent() : structure;
-  },
-  mustRecreate: (
-    oldProps: PD.Values<EllipsoidParams>,
-    newProps: PD.Values<EllipsoidParams>,
-  ) => {
-    return oldProps.includeParent !== newProps.includeParent;
-  },
+    name: 'ellipsoid',
+    label: 'Ellipsoid',
+    description: 'Displays anisotropic displacement ellipsoids of atomic elements plus bonds as cylinders.',
+    factory: EllipsoidRepresentation,
+    getParams: getEllipsoidParams,
+    defaultValues: PD.getDefaultValues(EllipsoidParams),
+    defaultColorTheme: { name: 'element-symbol' },
+    defaultSizeTheme: { name: 'uniform' },
+    isApplicable: (structure: Structure) =>
+        structure.elementCount > 0 &&
+        structure.models.some((m) => AtomSiteAnisotrop.Provider.isApplicable(m)),
+    getData: (structure: Structure, props: PD.Values<EllipsoidParams>) => {
+        return props.includeParent ? structure.asParent() : structure;
+    },
+    mustRecreate: (
+        oldProps: PD.Values<EllipsoidParams>,
+        newProps: PD.Values<EllipsoidParams>,
+    ) => {
+        return oldProps.includeParent !== newProps.includeParent;
+    },
 });

@@ -38,17 +38,17 @@ const general = {
         // object
         'foobar',
         'protein and bazbar',
-    ]
+    ],
 };
 
 describe('pymol general', () => {
-    general.supported.forEach(str => {
+    general.supported.forEach((str) => {
         it(str, () => {
             transpiler(str);
             //          compile(expr);
         });
     });
-    general.unsupported.forEach(str => {
+    general.unsupported.forEach((str) => {
         it(str, () => {
             const transpileStr = () => transpiler(str);
             expect(transpileStr).toThrow();

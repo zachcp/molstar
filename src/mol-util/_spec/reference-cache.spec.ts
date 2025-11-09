@@ -11,7 +11,7 @@ describe('reference-cache', () => {
         const refCache = createReferenceCache(
             (x: number) => x.toString(),
             (x) => x,
-            () => {}
+            () => {},
         );
         expect(refCache.count).toBe(0);
 

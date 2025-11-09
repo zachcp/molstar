@@ -5,9 +5,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Unit, type Structure, type ElementIndex, StructureElement, type ResidueIndex } from '../../../../mol-model/structure.ts';
+import {
+    type ElementIndex,
+    type ResidueIndex,
+    type Structure,
+    StructureElement,
+    Unit,
+} from '../../../../mol-model/structure.ts';
 import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra.ts';
-import { type TransformData, createTransform } from '../../../../mol-geo/geometry/transform-data.ts';
+import { createTransform, type TransformData } from '../../../../mol-geo/geometry/transform-data.ts';
 import { OrderedSet, SortedArray } from '../../../../mol-data/int.ts';
 import { EmptyLoci, type Loci } from '../../../../mol-model/loci.ts';
 import { AtomicNumbers } from '../../../../mol-model/structure/model/properties/atomic.ts';
@@ -37,7 +43,11 @@ export function checkSphereImpostorSupport(webgl?: WebGLContext) {
             const missing: string[] = [];
             if (!webgl.extensions.fragDepth) missing.push('fragDepth');
             if (!webgl.extensions.textureFloat) missing.push('textureFloat');
-            console.warn(`Missing "${missing.join('", "')}" extensions required for "sphere impostors". Falling back to "sphere mesh".`);
+            console.warn(
+                `Missing "${
+                    missing.join('", "')
+                }" extensions required for "sphere impostors". Falling back to "sphere mesh".`,
+            );
             SphereImpostorWarningShown = true;
         }
     } else {
@@ -58,7 +68,11 @@ export function checkCylinderImpostorSupport(webgl?: WebGLContext) {
         if (isDebugMode && !CylinderImpostorWarningShown) {
             const missing: string[] = [];
             if (!webgl.extensions.fragDepth) missing.push('fragDepth');
-            console.warn(`Missing "${missing.join('", "')}" extensions required for "cylinder impostors". Falling back to "cylinder mesh".`);
+            console.warn(
+                `Missing "${
+                    missing.join('", "')
+                }" extensions required for "cylinder impostors". Falling back to "cylinder mesh".`,
+            );
             CylinderImpostorWarningShown = true;
         }
     } else {
@@ -102,7 +116,12 @@ export function getAltResidueLoci(structure: Structure, unit: Unit.Atomic, eleme
     return StructureElement.Loci(structure, []);
 }
 
-export function getAltResidueLociFromId(structure: Structure, unit: Unit.Atomic, residueIndex: ResidueIndex, elementAltId: string) {
+export function getAltResidueLociFromId(
+    structure: Structure,
+    unit: Unit.Atomic,
+    residueIndex: ResidueIndex,
+    elementAltId: string,
+) {
     const { elements, model } = unit;
     const { label_alt_id } = model.atomicHierarchy.atoms;
     const { offsets } = model.atomicHierarchy.residueAtomSegments;
@@ -123,16 +142,25 @@ export function getAltResidueLociFromId(structure: Structure, unit: Unit.Atomic,
 
 //
 
-export type StructureGroup = { structure: Structure, group: Unit.SymmetryGroup }
+export type StructureGroup = { structure: Structure; group: Unit.SymmetryGroup };
 
-export function createUnitsTransform(structureGroup: StructureGroup, includeParent: boolean, invariantBoundingSphere: Sphere3D, cellSize: number, batchSize: number, transformData?: TransformData) {
+export function createUnitsTransform(
+    structureGroup: StructureGroup,
+    includeParent: boolean,
+    invariantBoundingSphere: Sphere3D,
+    cellSize: number,
+    batchSize: number,
+    transformData?: TransformData,
+) {
     const { child } = structureGroup.structure;
     const units: ReadonlyArray<Unit> = includeParent && child
-        ? structureGroup.group.units.filter(u => child.unitMap.has(u.id))
+        ? structureGroup.group.units.filter((u) => child.unitMap.has(u.id))
         : structureGroup.group.units;
     const unitCount = units.length;
     const n = unitCount * 16;
-    const array = transformData && transformData.aTransform.ref.value.length >= n ? transformData.aTransform.ref.value : new Float32Array(n);
+    const array = transformData && transformData.aTransform.ref.value.length >= n
+        ? transformData.aTransform.ref.value
+        : new Float32Array(n);
     for (let i = 0; i < unitCount; i++) {
         m4toArray(units[i].conformation.operator.matrix, array, i * 16);
     }
@@ -144,7 +172,7 @@ export const UnitKindInfo = {
     'spheres': {},
     'gaussians': {},
 };
-export type UnitKind = keyof typeof UnitKindInfo
+export type UnitKind = keyof typeof UnitKindInfo;
 export const UnitKindOptions = PD.objectToOptions(UnitKindInfo);
 
 export function includesUnitKind(unitKinds: UnitKind[], unit: Unit) {
@@ -175,7 +203,11 @@ export function getVolumeSliceInfo(box: Box3D, resolution: number, maxCells = De
  * Internally it uses the largest 2d slice of the box to determine the
  * maximum resolution to account for the 2d texture layout on the GPU.
  */
-export function ensureReasonableResolution<T>(box: Box3D, props: { resolution: number } & T, maxCells = DefaultMaxCells) {
+export function ensureReasonableResolution<T>(
+    box: Box3D,
+    props: { resolution: number } & T,
+    maxCells = DefaultMaxCells,
+) {
     const { area, areaCells, maxAreaCells } = getVolumeSliceInfo(box, props.resolution, maxCells);
     const resolution = areaCells > maxAreaCells ? Math.sqrt(area / maxAreaCells) : props.resolution;
     return { ...props, resolution };
@@ -183,20 +215,28 @@ export function ensureReasonableResolution<T>(box: Box3D, props: { resolution: n
 
 export function getConformation(unit: Unit) {
     switch (unit.kind) {
-        case Unit.Kind.Atomic: return unit.model.atomicConformation;
-        case Unit.Kind.Spheres: return unit.model.coarseConformation.spheres;
-        case Unit.Kind.Gaussians: return unit.model.coarseConformation.gaussians;
+        case Unit.Kind.Atomic:
+            return unit.model.atomicConformation;
+        case Unit.Kind.Spheres:
+            return unit.model.coarseConformation.spheres;
+        case Unit.Kind.Gaussians:
+            return unit.model.coarseConformation.gaussians;
     }
 }
 
 export const CommonSurfaceParams = {
-    ignoreHydrogens: PD.Boolean(false, { description: 'Whether or not to include hydrogen atoms in the surface calculation.' }),
+    ignoreHydrogens: PD.Boolean(false, {
+        description: 'Whether or not to include hydrogen atoms in the surface calculation.',
+    }),
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     traceOnly: PD.Boolean(false, { description: 'Whether or not to only use trace atoms in the surface calculation.' }),
-    includeParent: PD.Boolean(false, { description: 'Include elements of the parent structure in surface calculation to get a surface patch of the current structure.' }),
+    includeParent: PD.Boolean(false, {
+        description:
+            'Include elements of the parent structure in surface calculation to get a surface patch of the current structure.',
+    }),
 };
 export const DefaultCommonSurfaceProps = PD.getDefaultValues(CommonSurfaceParams);
-export type CommonSurfaceProps = typeof DefaultCommonSurfaceProps
+export type CommonSurfaceProps = typeof DefaultCommonSurfaceProps;
 
 const v = Vec3();
 function squaredDistance(x: number, y: number, z: number, center: Vec3) {
@@ -218,7 +258,12 @@ function filterUnitId(id: AssignableArrayLike<number>, elements: SortedArray, in
     }
 }
 
-export function getUnitConformationAndRadius(structure: Structure, unit: Unit, sizeTheme: SizeTheme<any>, props: CommonSurfaceProps) {
+export function getUnitConformationAndRadius(
+    structure: Structure,
+    unit: Unit,
+    sizeTheme: SizeTheme<any>,
+    props: CommonSurfaceProps,
+) {
     const { ignoreHydrogens, ignoreHydrogensVariant, traceOnly, includeParent } = props;
     const rootUnit = includeParent ? structure.root.unitMap.get(unit.id) : unit;
     const differentRoot = includeParent && rootUnit !== unit;
@@ -267,7 +312,11 @@ export function getUnitConformationAndRadius(structure: Structure, unit: Unit, s
     return { position, boundary, radius };
 }
 
-export function getStructureConformationAndRadius(structure: Structure, sizeTheme: SizeTheme<any>, props: CommonSurfaceProps) {
+export function getStructureConformationAndRadius(
+    structure: Structure,
+    sizeTheme: SizeTheme<any>,
+    props: CommonSurfaceProps,
+) {
     const { ignoreHydrogens, ignoreHydrogensVariant, traceOnly, includeParent } = props;
     const differentRoot = includeParent && !!structure.parent;
     const l = StructureElement.Location.create(structure.root);
@@ -362,11 +411,20 @@ export function getStructureConformationAndRadius(structure: Structure, sizeThem
 }
 
 const _H = AtomicNumbers['H'];
-export function isHydrogen(structure: Structure, unit: Unit, element: ElementIndex, variant: 'all' | 'non-polar' | 'polar') {
+export function isHydrogen(
+    structure: Structure,
+    unit: Unit,
+    element: ElementIndex,
+    variant: 'all' | 'non-polar' | 'polar',
+) {
     if (Unit.isCoarse(unit)) return false;
     if (unit.model.atomicHierarchy.derived.atom.atomicNumber[element] !== _H) return false;
     if (variant === 'all') return true;
-    const polar = hasPolarNeighbour(structure, unit, SortedArray.indexOf(unit.elements, element) as StructureElement.UnitIndex);
+    const polar = hasPolarNeighbour(
+        structure,
+        unit,
+        SortedArray.indexOf(unit.elements, element) as StructureElement.UnitIndex,
+    );
     if (polar && variant === 'polar') return true;
     if (!polar && variant === 'non-polar') return true;
     return false;

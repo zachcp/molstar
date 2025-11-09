@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, type Mat4, Mat3 } from '../../mol-math/linear-algebra.ts';
+import { Mat3, type Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 import type { NumberArray } from '../../mol-util/type-helpers.ts';
 
 export interface Primitive {
-    vertices: ArrayLike<number>
-    normals: ArrayLike<number>
-    indices: ArrayLike<number>
+    vertices: ArrayLike<number>;
+    normals: ArrayLike<number>;
+    indices: ArrayLike<number>;
 }
 
 const a = Vec3(), b = Vec3(), c = Vec3();
@@ -33,15 +33,15 @@ export function copyPrimitive(primitive: Primitive): Primitive {
     return {
         vertices: new Float32Array(primitive.vertices),
         normals: new Float32Array(primitive.normals),
-        indices: new Uint32Array(primitive.indices)
+        indices: new Uint32Array(primitive.indices),
     };
 }
 
 export interface PrimitiveBuilder {
-    add(a: Vec3, b: Vec3, c: Vec3): void
+    add(a: Vec3, b: Vec3, c: Vec3): void;
     /** Shared vertices and normals, must be flat */
-    addQuad(a: Vec3, b: Vec3, c: Vec3, d: Vec3): void
-    getPrimitive(): Primitive
+    addQuad(a: Vec3, b: Vec3, c: Vec3, d: Vec3): void;
+    getPrimitive(): Primitive;
 }
 
 const vn = Vec3();
@@ -91,7 +91,7 @@ export function PrimitiveBuilder(triangleCount: number, vertexCount?: number): P
             vOffset += 12;
             iOffset += 6;
         },
-        getPrimitive: () => ({ vertices, normals, indices })
+        getPrimitive: () => ({ vertices, normals, indices }),
     };
 }
 

@@ -10,7 +10,10 @@ import type { Unit } from '../../../../mol-model/structure/structure.ts';
 import type { ResidueIndex } from '../../../../mol-model/structure.ts';
 import { getBoundary } from '../../../../mol-math/geometry/boundary.ts';
 
-export function calcUnitProteinTraceLookup3D(unit: Unit.Atomic, unitProteinResidues: SortedArray<ResidueIndex>): GridLookup3D {
+export function calcUnitProteinTraceLookup3D(
+    unit: Unit.Atomic,
+    unitProteinResidues: SortedArray<ResidueIndex>,
+): GridLookup3D {
     const { x, y, z } = unit.model.atomicConformation;
     const { traceElementIndex } = unit.model.atomicHierarchy.derived.residue;
     const indices = new Uint32Array(unitProteinResidues.length);

@@ -22,7 +22,7 @@ export const Queries = {
     combinators,
     pred,
     internal,
-    atomset
+    atomset,
 };
 
-export { StructureSelection, StructureQuery };
+export { StructureQuery, StructureSelection };

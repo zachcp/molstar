@@ -4,17 +4,26 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, type Mat4, Mat3 } from '../../linear-algebra.ts';
+import { Mat3, type Mat4, Vec3 } from '../../linear-algebra.ts';
 
-interface Axes3D { origin: Vec3, dirA: Vec3, dirB: Vec3, dirC: Vec3 }
+interface Axes3D {
+    origin: Vec3;
+    dirA: Vec3;
+    dirB: Vec3;
+    dirC: Vec3;
+}
 
 function Axes3D(): Axes3D {
     return Axes3D.empty();
 }
 
 namespace Axes3D {
-    export function create(origin: Vec3, dirA: Vec3, dirB: Vec3, dirC: Vec3): Axes3D { return { origin, dirA, dirB, dirC }; }
-    export function empty(): Axes3D { return { origin: Vec3(), dirA: Vec3(), dirB: Vec3(), dirC: Vec3() }; }
+    export function create(origin: Vec3, dirA: Vec3, dirB: Vec3, dirC: Vec3): Axes3D {
+        return { origin, dirA, dirB, dirC };
+    }
+    export function empty(): Axes3D {
+        return { origin: Vec3(), dirA: Vec3(), dirB: Vec3(), dirC: Vec3() };
+    }
 
     export function copy(out: Axes3D, a: Axes3D): Axes3D {
         Vec3.copy(out.origin, a.origin);
@@ -30,7 +39,12 @@ namespace Axes3D {
 
     /** Get size of each direction */
     export function size(size: Vec3, axes: Axes3D): Vec3 {
-        return Vec3.set(size, Vec3.magnitude(axes.dirA) * 2, Vec3.magnitude(axes.dirB) * 2, Vec3.magnitude(axes.dirC) * 2);
+        return Vec3.set(
+            size,
+            Vec3.magnitude(axes.dirA) * 2,
+            Vec3.magnitude(axes.dirB) * 2,
+            Vec3.magnitude(axes.dirC) * 2,
+        );
     }
 
     const tmpSizeV = Vec3();

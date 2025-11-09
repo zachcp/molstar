@@ -28,8 +28,16 @@ export const list = iots.array;
 export const dict = iots.record;
 
 /** Type definition used to create objects, e.g. `object({ name: str, age: float }, { address: str })` means type `{ name: string, age: number, address?: string }` */
-export function object<P extends iots.Props, Q extends iots.Props>(props: P, optionalProps: undefined, name?: string): iots.TypeC<P>;
-export function object<P extends iots.Props, Q extends iots.Props>(props: P, optionalProps: Q, name?: string): iots.IntersectionC<[iots.TypeC<P>, iots.PartialC<Q>]>;
+export function object<P extends iots.Props, Q extends iots.Props>(
+    props: P,
+    optionalProps: undefined,
+    name?: string,
+): iots.TypeC<P>;
+export function object<P extends iots.Props, Q extends iots.Props>(
+    props: P,
+    optionalProps: Q,
+    name?: string,
+): iots.IntersectionC<[iots.TypeC<P>, iots.PartialC<Q>]>;
 export function object<P extends iots.Props, Q extends iots.Props>(props: P, optionalProps?: Q, name?: string) {
     if (!optionalProps) {
         return iots.type(props, name);
@@ -61,7 +69,11 @@ export function partial<P extends iots.Props>(props: P, name?: string) {
 }
 
 /** Type definition for union types, e.g. `union(str, int)` means string or integer */
-export function union<T1 extends iots.Mixed, T2 extends iots.Mixed, TOthers extends iots.Mixed[]>(first: T1, second: T2, ...others: TOthers): iots.UnionC<[T1, T2, ...TOthers]> {
+export function union<T1 extends iots.Mixed, T2 extends iots.Mixed, TOthers extends iots.Mixed[]>(
+    first: T1,
+    second: T2,
+    ...others: TOthers
+): iots.UnionC<[T1, T2, ...TOthers]> {
     const baseTypes: iots.Mixed[] = [];
     for (const type of [first, second, ...others]) {
         if (type instanceof iots.UnionType) {
@@ -92,31 +104,40 @@ export function literal<V extends string | number | boolean>(...values: V[]) {
     if (values.length === 0) {
         throw new Error(`literal type must have at least one value`);
     }
-    const typeName = values.length === 1 ? onelinerJsonString(values[0]) : `(${values.map(v => onelinerJsonString(v)).join(' | ')})`;
+    const typeName = values.length === 1
+        ? onelinerJsonString(values[0])
+        : `(${values.map((v) => onelinerJsonString(v)).join(' | ')})`;
     const valueSet = new Set(values);
     return new iots.Type<V>(
         typeName,
         ((value: any) => valueSet.has(value)) as any,
-        (value, ctx) => valueSet.has(value as any) ? { _tag: 'Right', right: value as any } : { _tag: 'Left', left: [{ value: value, context: ctx, message: `"${value}" is not a valid value for literal type ${typeName}` }] },
-        value => value
+        (value, ctx) =>
+            valueSet.has(value as any) ? { _tag: 'Right', right: value as any } : {
+                _tag: 'Left',
+                left: [{
+                    value: value,
+                    context: ctx,
+                    message: `"${value}" is not a valid value for literal type ${typeName}`,
+                }],
+            },
+        (value) => value,
     );
 }
 
-
 interface FieldBase<V extends AllowedValueTypes = any, R extends boolean = boolean> {
     /** Definition of allowed types for the field */
-    type: iots.Type<V>,
+    type: iots.Type<V>;
     /** If `required===true`, the value must always be defined in molviewspec format (can be `null` if `type` allows it).
      * If `required===false`, the value can be ommitted (meaning that a default should be used).
      * If `type` allows `null`, the default must be `null`. */
-    required: R,
+    required: R;
     /** Description of what the field value means */
-    description: string,
+    description: string;
 }
 
 /** Schema for param field which must always be provided (has no default value) */
 export interface RequiredField<V extends AllowedValueTypes = any> extends FieldBase<V> {
-    required: true,
+    required: true;
 }
 export function RequiredField<V extends AllowedValueTypes>(type: iots.Type<V>, description: string): RequiredField<V> {
     return { type, required: true, description };
@@ -124,12 +145,16 @@ export function RequiredField<V extends AllowedValueTypes>(type: iots.Type<V>, d
 
 /** Schema for param field which can be dropped (meaning that a default value will be used) */
 export interface OptionalField<V extends AllowedValueTypes = any> extends FieldBase<V> {
-    required: false,
+    required: false;
     /** Default value for optional field.
      * If field type allows `null`, default must be `null` (this is to avoid issues in languages that do not distinguish `null` and `undefined`). */
-    default: DefaultValue<V>,
+    default: DefaultValue<V>;
 }
-export function OptionalField<V extends AllowedValueTypes>(type: iots.Type<V>, defaultValue: DefaultValue<V>, description: string): OptionalField<V> {
+export function OptionalField<V extends AllowedValueTypes>(
+    type: iots.Type<V>,
+    defaultValue: DefaultValue<V>,
+    description: string,
+): OptionalField<V> {
     return { type, required: false, description, default: defaultValue };
 }
 
@@ -140,7 +165,9 @@ export type Field<V extends AllowedValueTypes = any> = RequiredField<V> | Option
 type DefaultValue<V extends AllowedValueTypes> = null extends V ? null : V;
 
 /** Type of valid value for field of type `F` (never includes `undefined`, even if field is optional) */
-export type ValueFor<F extends Field | iots.Any> = F extends Field<infer V> ? V : F extends iots.Any ? iots.TypeOf<F> : never;
+export type ValueFor<F extends Field | iots.Any> = F extends Field<infer V> ? V
+    : F extends iots.Any ? iots.TypeOf<F>
+    : never;
 
 /** Return `undefined` if `value` has correct type for `field`, regardsless of if required or optional.
  * Return description of validation issues, if `value` has wrong type. */
@@ -168,7 +195,7 @@ function getMessage(e: iots.ValidationError) {
 }
 
 function getContextPath(context: iots.ValidationError['context']) {
-    return context.map(a => `${a.key}: ${a.type.name}`).join('/');
+    return context.map((a) => `${a.key}: ${a.type.name}`).join('/');
 }
 
 function getFunctionName(f: Function & { displayName?: string }) {

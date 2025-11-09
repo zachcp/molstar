@@ -7,16 +7,20 @@
 // adapted from three.js, MIT License Copyright 2010-2018 three.js authors
 
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
-import { computeIndexedVertexNormals, appplyRadius } from '../util.ts';
+import { appplyRadius, computeIndexedVertexNormals } from '../util.ts';
 import type { Primitive } from './primitive.ts';
 
 export const DefaultPolyhedronProps = {
     radius: 1,
-    detail: 0
+    detail: 0,
 };
-export type PolyhedronProps = Partial<typeof DefaultPolyhedronProps>
+export type PolyhedronProps = Partial<typeof DefaultPolyhedronProps>;
 
-export function Polyhedron(_vertices: ArrayLike<number>, _indices: ArrayLike<number>, props?: PolyhedronProps): Primitive {
+export function Polyhedron(
+    _vertices: ArrayLike<number>,
+    _indices: ArrayLike<number>,
+    props?: PolyhedronProps,
+): Primitive {
     const { radius, detail } = { ...DefaultPolyhedronProps, ...props };
     const builder = createBuilder();
     const { vertices, indices } = builder;
@@ -33,7 +37,7 @@ export function Polyhedron(_vertices: ArrayLike<number>, _indices: ArrayLike<num
     return {
         vertices: new Float32Array(vertices),
         normals: new Float32Array(normals),
-        indices: new Uint32Array(indices)
+        indices: new Uint32Array(indices),
     };
 
     // helper functions
@@ -53,7 +57,6 @@ export function Polyhedron(_vertices: ArrayLike<number>, _indices: ArrayLike<num
             // perform subdivision
             subdivideFace(a, b, c, detail);
         }
-
     }
 
     function subdivideFace(a: Vec3, b: Vec3, c: Vec3, detail: number) {
@@ -100,9 +103,9 @@ export function Polyhedron(_vertices: ArrayLike<number>, _indices: ArrayLike<num
 }
 
 interface Builder {
-    vertices: number[]
-    indices: number[]
-    add: (v1: Vec3, v2: Vec3, v3: Vec3) => void
+    vertices: number[];
+    indices: number[];
+    add: (v1: Vec3, v2: Vec3, v3: Vec3) => void;
 }
 
 function createBuilder(): Builder {
@@ -127,6 +130,6 @@ function createBuilder(): Builder {
         indices,
         add: (v1: Vec3, v2: Vec3, v3: Vec3) => {
             indices.push(addVertex(v1), addVertex(v2), addVertex(v3));
-        }
+        },
     };
 }

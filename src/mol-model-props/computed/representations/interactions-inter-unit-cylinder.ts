@@ -12,7 +12,11 @@ import type { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { createLinkCylinderMesh, LinkCylinderParams, LinkStyle } from '../../../mol-repr/structure/visual/util/link.ts';
-import { ComplexMeshParams, type ComplexVisual, ComplexMeshVisual } from '../../../mol-repr/structure/complex-visual.ts';
+import {
+    ComplexMeshParams,
+    ComplexMeshVisual,
+    type ComplexVisual,
+} from '../../../mol-repr/structure/complex-visual.ts';
 import type { VisualUpdateState } from '../../../mol-repr/util.ts';
 import type { PickingId } from '../../../mol-geo/geometry/picking.ts';
 import { EmptyLoci, type Loci } from '../../../mol-model/loci.ts';
@@ -28,7 +32,13 @@ import { InteractionsSharedParams } from './shared.ts';
 import { eachBondedAtom } from '../chemistry/util.ts';
 import { isHydrogen } from '../../../mol-repr/structure/visual/util/common.ts';
 
-function createInterUnitInteractionCylinderMesh(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<InteractionsInterUnitParams>, mesh?: Mesh) {
+function createInterUnitInteractionCylinderMesh(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<InteractionsInterUnitParams>,
+    mesh?: Mesh,
+) {
     if (!structure.hasAtomic) return Mesh.createEmpty(mesh);
 
     const l = StructureElement.Location.create(structure);
@@ -54,8 +64,11 @@ function createInterUnitInteractionCylinderMesh(ctx: VisualContext, structure: S
             const uA = structure.unitMap.get(unitA) as Unit.Atomic;
             const uB = structure.unitMap.get(unitB) as Unit.Atomic;
 
-            if ((!ignoreHydrogens || ignoreHydrogensVariant !== 'all') && (
-                t === InteractionType.HydrogenBond || (t === InteractionType.WeakHydrogenBond && ignoreHydrogensVariant !== 'non-polar'))
+            if (
+                (!ignoreHydrogens || ignoreHydrogensVariant !== 'all') && (
+                    t === InteractionType.HydrogenBond ||
+                    (t === InteractionType.WeakHydrogenBond && ignoreHydrogensVariant !== 'non-polar')
+                )
             ) {
                 const idxA = fA.members[fA.offsets[indexA]];
                 const idxB = fB.members[fB.offsets[indexB]];
@@ -65,7 +78,9 @@ function createInterUnitInteractionCylinderMesh(ctx: VisualContext, structure: S
                 let minDistB = minDistA;
                 Vec3.copy(posA, pA);
                 Vec3.copy(posB, pB);
-                const donorType = t === InteractionType.HydrogenBond ? FeatureType.HydrogenDonor : FeatureType.WeakHydrogenDonor;
+                const donorType = t === InteractionType.HydrogenBond
+                    ? FeatureType.HydrogenDonor
+                    : FeatureType.WeakHydrogenDonor;
                 const isHydrogenDonorA = fA.types[fA.offsets[indexA]] === donorType;
 
                 if (isHydrogenDonorA) {
@@ -165,7 +180,7 @@ function createInterUnitInteractionCylinderMesh(ctx: VisualContext, structure: S
             }
 
             return false;
-        }
+        },
     };
 
     const { mesh: m, boundingSphere } = createLinkCylinderMesh(ctx, builderProps, props, mesh);
@@ -186,7 +201,7 @@ export const InteractionsInterUnitParams = {
     ...LinkCylinderParams,
     ...InteractionsSharedParams,
 };
-export type InteractionsInterUnitParams = typeof InteractionsInterUnitParams
+export type InteractionsInterUnitParams = typeof InteractionsInterUnitParams;
 
 export function InteractionsInterUnitVisual(materialId: number): ComplexVisual<InteractionsInterUnitParams> {
     return ComplexMeshVisual<InteractionsInterUnitParams>({
@@ -195,17 +210,23 @@ export function InteractionsInterUnitVisual(materialId: number): ComplexVisual<I
         createLocationIterator: createInteractionsIterator,
         getLoci: getInteractionLoci,
         eachLocation: eachInteraction,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<InteractionsInterUnitParams>, currentProps: PD.Values<InteractionsInterUnitParams>, newTheme: Theme, currentTheme: Theme, newStructure: Structure, currentStructure: Structure) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<InteractionsInterUnitParams>,
+            currentProps: PD.Values<InteractionsInterUnitParams>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructure: Structure,
+            currentStructure: Structure,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.dashCount !== currentProps.dashCount ||
                 newProps.dashScale !== currentProps.dashScale ||
                 newProps.dashCap !== currentProps.dashCap ||
                 newProps.radialSegments !== currentProps.radialSegments ||
                 newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
                 newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant ||
-                newProps.parentDisplay !== currentProps.parentDisplay
-            );
+                newProps.parentDisplay !== currentProps.parentDisplay;
 
             const interactionsHash = InteractionsProvider.get(newStructure).version;
             if ((state.info.interactionsHash as number) !== interactionsHash) {
@@ -214,7 +235,7 @@ export function InteractionsInterUnitVisual(materialId: number): ComplexVisual<I
                 state.updateColor = true;
                 state.info.interactionsHash = interactionsHash;
             }
-        }
+        },
     }, materialId);
 }
 
@@ -265,14 +286,14 @@ function eachInteraction(loci: Loci, structure: Structure, apply: (interval: Int
             const { unit } = e;
             if (!Unit.isAtomic(unit)) continue;
 
-            OrderedSet.forEach(e.indices, v => {
+            OrderedSet.forEach(e.indices, (v) => {
                 for (const idx of contacts.getContactIndicesForElement(v, unit)) {
                     __contactIndicesSet.add(idx);
                 }
             });
         }
 
-        __contactIndicesSet.forEach(i => {
+        __contactIndicesSet.forEach((i) => {
             if (isMarking) {
                 const { indexA, unitA, indexB, unitB } = contacts.edges[i];
 

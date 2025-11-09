@@ -21,7 +21,12 @@ export function unwindStructureAssembly(structure: Structure, unitTransforms: St
 }
 
 const _centerVec = Vec3(), _transVec = Vec3(), _transMat = Mat4();
-export function explodeStructure(structure: Structure, unitTransforms: StructureUnitTransforms, t: number, sphere: Sphere3D) {
+export function explodeStructure(
+    structure: Structure,
+    unitTransforms: StructureUnitTransforms,
+    t: number,
+    sphere: Sphere3D,
+) {
     const d = sphere.radius * t;
 
     for (let i = 0, _i = structure.units.length; i < _i; i++) {
@@ -40,20 +45,20 @@ export function explodeStructure(structure: Structure, unitTransforms: Structure
 export const SpinStructureParams = {
     axis: PD.MappedStatic('custom', {
         structure: PD.Group({
-            principalAxis: PD.Select('dirA', [['dirA', 'A'], ['dirB', 'B'], ['dirC', 'C']] as const)
+            principalAxis: PD.Select('dirA', [['dirA', 'A'], ['dirB', 'B'], ['dirC', 'C']] as const),
         }),
         custom: PD.Group({
-            vector: PD.Vec3(Vec3.create(0, 0, 1))
-        })
+            vector: PD.Vec3(Vec3.create(0, 0, 1)),
+        }),
     }),
     origin: PD.MappedStatic('structure', {
         structure: PD.Group({}),
         custom: PD.Group({
-            vector: PD.Vec3(Vec3.create(0, 0, 0))
-        })
+            vector: PD.Vec3(Vec3.create(0, 0, 0)),
+        }),
     }),
 };
-export type SpinStructureProps = PD.Values<typeof SpinStructureParams>
+export type SpinStructureProps = PD.Values<typeof SpinStructureParams>;
 
 export function getSpinStructureAxisAndOrigin(structure: Structure, props: SpinStructureProps) {
     let axis: Vec3, origin: Vec3;
@@ -78,7 +83,13 @@ export function getSpinStructureAxisAndOrigin(structure: Structure, props: SpinS
 const _rotMat = Mat4();
 const _transMat2 = Mat4();
 const _t = Mat4();
-export function spinStructure(structure: Structure, unitTransforms: StructureUnitTransforms, t: number, axis: Vec3, origin: Vec3) {
+export function spinStructure(
+    structure: Structure,
+    unitTransforms: StructureUnitTransforms,
+    t: number,
+    axis: Vec3,
+    origin: Vec3,
+) {
     for (let i = 0, _i = structure.units.length; i < _i; i++) {
         const u = structure.units[i];
         Vec3.negate(_transVec, origin);

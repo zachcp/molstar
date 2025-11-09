@@ -8,13 +8,13 @@ import type { StructureElement } from '../../../structure/element.ts';
 import { StructureProperties } from '../../../structure/properties.ts';
 
 export interface ResidueSetEntry {
-    label_asym_id: string,
-    label_comp_id: string,
-    label_seq_id: number,
-    label_alt_id: string,
-    ins_code: string,
+    label_asym_id: string;
+    label_comp_id: string;
+    label_seq_id: number;
+    label_alt_id: string;
+    ins_code: string;
     // 1_555 by default
-    operator_name?: string
+    operator_name?: string;
 }
 
 export class ResidueSet {
@@ -77,7 +77,9 @@ export class ResidueSet {
     }
 
     static getLabel(entry: ResidueSetEntry, checkOperator = false) {
-        return `${entry.label_asym_id} ${entry.label_comp_id} ${entry.label_seq_id}:${entry.ins_code}:${entry.label_alt_id}${checkOperator ? ' ' + (entry.operator_name ?? '1_555') : ''}`;
+        return `${entry.label_asym_id} ${entry.label_comp_id} ${entry.label_seq_id}:${entry.ins_code}:${entry.label_alt_id}${
+            checkOperator ? ' ' + (entry.operator_name ?? '1_555') : ''
+        }`;
     }
 
     static getEntryFromLocation(loc: StructureElement.Location): ResidueSetEntry {
@@ -87,13 +89,16 @@ export class ResidueSet {
             label_seq_id: StructureProperties.residue.label_seq_id(loc),
             label_alt_id: StructureProperties.atom.label_alt_id(loc),
             ins_code: StructureProperties.residue.pdbx_PDB_ins_code(loc),
-            operator_name: StructureProperties.unit.operator_name(loc) ?? '1_555'
+            operator_name: StructureProperties.unit.operator_name(loc) ?? '1_555',
         };
     }
 
     private _find(entry: ResidueSetEntry, xs: ResidueSetEntry[]) {
         for (const e of xs) {
-            if (e.label_comp_id !== entry.label_comp_id || e.label_alt_id !== entry.label_alt_id || e.ins_code !== entry.ins_code) continue;
+            if (
+                e.label_comp_id !== entry.label_comp_id || e.label_alt_id !== entry.label_alt_id ||
+                e.ins_code !== entry.ins_code
+            ) continue;
             if (this.checkOperator && (e.operator_name ?? '1_555') !== (entry.operator_name ?? '1_555')) continue;
 
             return true;

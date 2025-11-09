@@ -11,12 +11,16 @@ describe('Mat4', () => {
     it('permutation', () => {
         expect(Mat4.areEqual(Mat4.fromPermutation(Mat4(), [0, 1, 2, 3]), Mat4.identity(), 1e-6)).toBe(true);
 
-        expect(Mat4.areEqual(Mat4.fromPermutation(Mat4(), [1, 0, 2, 3]), Mat4.ofRows([
-            [0, 1, 0, 0],
-            [1, 0, 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1],
-        ]), 1e-6)).toBe(true);
+        expect(Mat4.areEqual(
+            Mat4.fromPermutation(Mat4(), [1, 0, 2, 3]),
+            Mat4.ofRows([
+                [0, 1, 0, 0],
+                [1, 0, 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1],
+            ]),
+            1e-6,
+        )).toBe(true);
 
         const perm = Mat4.fromPermutation(Mat4(), [1, 2, 0, 3]);
 

@@ -28,24 +28,27 @@ const ValidationColorTable: [string, Color][] = [
     ['One Issue', ValidationColors[2]],
     ['Two Issues', ValidationColors[3]],
     ['Three Or More Issues', ValidationColors[4]],
-    ['Not Applicable', ValidationColors[9]]
+    ['Not Applicable', ValidationColors[9]],
 ];
 
 export const StructureQualityReportColorThemeParams = {
     type: PD.MappedStatic('issue-count', {
         'issue-count': PD.Group({}),
         'specific-issue': PD.Group({
-            kind: PD.Text()
-        })
-    })
+            kind: PD.Text(),
+        }),
+    }),
 };
 
-type Params = typeof StructureQualityReportColorThemeParams
+type Params = typeof StructureQualityReportColorThemeParams;
 
 export function StructureQualityReportColorTheme(ctx: ThemeDataContext, props: PD.Values<Params>): ColorTheme<Params> {
     let color: LocationColor;
 
-    if (ctx.structure && !ctx.structure.isEmpty && ctx.structure.models[0].customProperties.has(StructureQualityReportProvider.descriptor)) {
+    if (
+        ctx.structure && !ctx.structure.isEmpty &&
+        ctx.structure.models[0].customProperties.has(StructureQualityReportProvider.descriptor)
+    ) {
         const getIssues = StructureQualityReport.getIssues;
         const l = StructureElement.Location.create(ctx.structure);
 
@@ -83,8 +86,9 @@ export function StructureQualityReportColorTheme(ctx: ThemeDataContext, props: P
         preferSmoothing: true,
         color: color,
         props: props,
-        description: 'Assigns residue colors according to the number of quality issues or a specific quality issue. Data from wwPDB Validation Report, obtained via PDBe.',
-        legend: TableLegend(ValidationColorTable)
+        description:
+            'Assigns residue colors according to the number of quality issues or a specific quality issue. Data from wwPDB Validation Report, obtained via PDBe.',
+        legend: TableLegend(ValidationColorTable),
     };
 }
 
@@ -93,13 +97,13 @@ export const StructureQualityReportColorThemeProvider: ColorTheme.Provider<Param
     label: 'Structure Quality Report',
     category: ColorThemeCategory.Validation,
     factory: StructureQualityReportColorTheme,
-    getParams: ctx => {
+    getParams: (ctx) => {
         const issueTypes = StructureQualityReport.getIssueTypes(ctx.structure);
         if (issueTypes.length === 0) {
             return {
                 type: PD.MappedStatic('issue-count', {
-                    'issue-count': PD.Group({})
-                })
+                    'issue-count': PD.Group({}),
+                }),
             };
         }
 
@@ -107,15 +111,18 @@ export const StructureQualityReportColorThemeProvider: ColorTheme.Provider<Param
             type: PD.MappedStatic('issue-count', {
                 'issue-count': PD.Group({}),
                 'specific-issue': PD.Group({
-                    kind: PD.Select(issueTypes[0], PD.arrayToOptions(issueTypes))
-                }, { isFlat: true })
-            })
+                    kind: PD.Select(issueTypes[0], PD.arrayToOptions(issueTypes)),
+                }, { isFlat: true }),
+            }),
         };
     },
     defaultValues: PD.getDefaultValues(StructureQualityReportColorThemeParams),
     isApplicable: (ctx: ThemeDataContext) => StructureQualityReport.isApplicable(ctx.structure?.models[0]),
     ensureCustomProperties: {
-        attach: (ctx: CustomProperty.Context, data: ThemeDataContext) => data.structure ? StructureQualityReportProvider.attach(ctx, data.structure.models[0], void 0, true) : Promise.resolve(),
-        detach: (data) => data.structure && StructureQualityReportProvider.ref(data.structure.models[0], false)
-    }
+        attach: (ctx: CustomProperty.Context, data: ThemeDataContext) =>
+            data.structure
+                ? StructureQualityReportProvider.attach(ctx, data.structure.models[0], void 0, true)
+                : Promise.resolve(),
+        detach: (data) => data.structure && StructureQualityReportProvider.ref(data.structure.models[0], false),
+    },
 };

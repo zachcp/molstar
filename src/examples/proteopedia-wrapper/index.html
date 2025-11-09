@@ -52,15 +52,16 @@
         <script type="text/javascript" src="./index.js"></script>
     </head>
     <body>
-        <div id='controls'>
+        <div id="controls">
             <h3>Source</h3>
-            <input type='text' id='url' placeholder='url' style='width: 400px' />
-            <input type='text' id='assemblyId' placeholder='assembly id' />
-            <select id='format'>
-                <option value='cif' selected>CIF</option>
-                <option value='pdb'>PDB</option>
+            <input type="text" id="url" placeholder="url" style="width: 400px" />
+            <input type="text" id="assemblyId" placeholder="assembly id" />
+            <select id="format">
+                <option value="cif" selected>CIF</option>
+                <option value="pdb">PDB</option>
             </select>
-            <input type='checkbox' id='isBinary' style="display: inline-block; width: auto" /> <label for="isBinary"> Binary</label><br />
+            <input type="checkbox" id="isBinary" style="display: inline-block; width: auto" />
+            <label for="isBinary"> Binary</label><br />
         </div>
         <div id="app"></div>
         <div id="volume-streaming-wrapper"></div>
@@ -71,26 +72,46 @@
             // create an instance of the plugin
             var PluginWrapper = new MolStarProteopediaWrapper();
 
-            console.log('Wrapper version', MolStarProteopediaWrapper.VERSION_MAJOR, MolStarProteopediaWrapper.VERSION_MINOR);
+            console.log(
+                'Wrapper version',
+                MolStarProteopediaWrapper.VERSION_MAJOR,
+                MolStarProteopediaWrapper.VERSION_MINOR,
+            );
 
-            function $(id) { return document.getElementById(id); }
+            function $(id) {
+                return document.getElementById(id);
+            }
 
-            var pdbId = '1cbs', assemblyId= 'preferred', isBinary = true;
-            var url = 'https://www.ebi.ac.uk/pdbe/entry-files/download/' + pdbId + '.bcif'
+            var pdbId = '1cbs', assemblyId = 'preferred', isBinary = true;
+            var url = 'https://www.ebi.ac.uk/pdbe/entry-files/download/' + pdbId + '.bcif';
             var format = 'cif';
 
             $('url').value = url;
-            $('url').onchange = function (e) { url = e.target.value; }
+            $('url').onchange = function (e) {
+                url = e.target.value;
+            };
             $('assemblyId').value = assemblyId;
-            $('assemblyId').onchange = function (e) { assemblyId = e.target.value; }
+            $('assemblyId').onchange = function (e) {
+                assemblyId = e.target.value;
+            };
             $('format').value = format;
-            $('format').onchange = function (e) { format = e.target.value; }
+            $('format').onchange = function (e) {
+                format = e.target.value;
+            };
             $('isBinary').checked = isBinary;
-            $('isBinary').onchange = function (e) { isBinary = !!e.target.checked; };
+            $('isBinary').onchange = function (e) {
+                isBinary = !!e.target.checked;
+            };
 
             function loadAndSnapshot(params) {
                 PluginWrapper.load(params).then(() => {
-                    setTimeout(() => snapshot = PluginWrapper.plugin.state.getSnapshot({ canvas3d: false /* do not save spinning state */ }), 500);
+                    setTimeout(
+                        () =>
+                            snapshot = PluginWrapper.plugin.state.getSnapshot({
+                                canvas3d: false, /* do not save spinning state */
+                            }),
+                        500,
+                    );
                 });
             }
 
@@ -98,14 +119,20 @@
                 // sequence: { coloring: 'proteopedia-custom' }, // or just { }
                 hetGroups: { kind: 'ball-and-stick' }, // or 'spacefill
                 water: { hide: true },
-                snfg3d: { hide: false }
+                snfg3d: { hide: false },
             };
 
-            PluginWrapper.init('app' /** or document.getElementById('app') */, {
-                customColorList: CustomColors
+            PluginWrapper.init('app', /** or document.getElementById('app') */ {
+                customColorList: CustomColors,
             }).then(() => {
                 PluginWrapper.setBackground(0xffffff);
-                loadAndSnapshot({ url: url, format: format, isBinary: isBinary, assemblyId: assemblyId, representationStyle: representationStyle });
+                loadAndSnapshot({
+                    url: url,
+                    format: format,
+                    isBinary: isBinary,
+                    assemblyId: assemblyId,
+                    representationStyle: representationStyle,
+                });
                 PluginWrapper.toggleSpin();
             });
 
@@ -115,20 +142,38 @@
             });
 
             addControl('Load Asym Unit', () => loadAndSnapshot({ url: url, format: format, isBinary }));
-            addControl('Load Assembly', () => loadAndSnapshot({ url: url, format: format, isBinary, assemblyId: assemblyId }));
+            addControl(
+                'Load Assembly',
+                () => loadAndSnapshot({ url: url, format: format, isBinary, assemblyId: assemblyId }),
+            );
 
             addSeparator();
 
             addHeader('Representation');
 
-            addControl('Custom Chain Colors', () => PluginWrapper.updateStyle({ sequence: { coloring: 'proteopedia-custom' } }, true));
-            addControl('Default Chain Colors', () => PluginWrapper.updateStyle({ sequence: { } }, true));
+            addControl(
+                'Custom Chain Colors',
+                () => PluginWrapper.updateStyle({ sequence: { coloring: 'proteopedia-custom' } }, true),
+            );
+            addControl('Default Chain Colors', () => PluginWrapper.updateStyle({ sequence: {} }, true));
 
-            addControl('HET Spacefill', () => PluginWrapper.updateStyle({ hetGroups: { kind: 'spacefill' } }, true));
-            addControl('HET Ball-and-stick', () => PluginWrapper.updateStyle({ hetGroups: { kind: 'ball-and-stick' } }, true));
+            addControl(
+                'HET Spacefill',
+                () => PluginWrapper.updateStyle({ hetGroups: { kind: 'spacefill' } }, true),
+            );
+            addControl(
+                'HET Ball-and-stick',
+                () => PluginWrapper.updateStyle({ hetGroups: { kind: 'ball-and-stick' } }, true),
+            );
 
-            addControl('Hide 3DSNFG', () => PluginWrapper.updateStyle({ snfg3d: { hide: true } }, true));
-            addControl('Show 3DSNFG', () => PluginWrapper.updateStyle({ snfg3d: { hide: false } }, true));
+            addControl(
+                'Hide 3DSNFG',
+                () => PluginWrapper.updateStyle({ snfg3d: { hide: true } }, true),
+            );
+            addControl(
+                'Show 3DSNFG',
+                () => PluginWrapper.updateStyle({ snfg3d: { hide: false } }, true),
+            );
 
             addControl('Hide Water', () => PluginWrapper.updateStyle({ water: { hide: true } }, true));
             addControl('Show Water', () => PluginWrapper.updateStyle({ water: { hide: false } }, true));
@@ -160,7 +205,15 @@
             addHeader('Misc');
 
             addControl('Apply Evo Cons Style', () => PluginWrapper.coloring.evolutionaryConservation());
-            addControl('Apply Evo Cons Colors', () => PluginWrapper.coloring.evolutionaryConservation({ sequence: true, het: false, keepStyle: true }));
+            addControl(
+                'Apply Evo Cons Colors',
+                () =>
+                    PluginWrapper.coloring.evolutionaryConservation({
+                        sequence: true,
+                        het: false,
+                        keepStyle: true,
+                    }),
+            );
             addControl('Default Visuals', () => PluginWrapper.updateStyle());
 
             addSeparator();
@@ -171,7 +224,10 @@
 
             addSeparator();
             addHeader('Exp. Data');
-            addControl('Init', () => PluginWrapper.experimentalData.init($('volume-streaming-wrapper')));
+            addControl(
+                'Init',
+                () => PluginWrapper.experimentalData.init($('volume-streaming-wrapper')),
+            );
             addControl('Remove', () => PluginWrapper.experimentalData.remove());
 
             addSeparator();

@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, type Mat4, type Mat3 } from '../mol-math/linear-algebra.ts';
+import { type Mat3, type Mat4, Vec3 } from '../mol-math/linear-algebra.ts';
 import type { NumberArray } from '../mol-util/type-helpers.ts';
 import { arrayMax } from '../mol-util/array.ts';
 
@@ -60,8 +60,13 @@ const ab = Vec3();
  *      http://www.iquilezles.org/www/articles/normals/normals.htm
  * - normals array must contain only zeros
  */
-export function computeIndexedVertexNormals<T extends NumberArray>(vertices: NumberArray, indices: NumberArray, normals: T, vertexCount: number, triangleCount: number) {
-
+export function computeIndexedVertexNormals<T extends NumberArray>(
+    vertices: NumberArray,
+    indices: NumberArray,
+    normals: T,
+    vertexCount: number,
+    triangleCount: number,
+) {
     for (let i = 0, il = triangleCount * 3; i < il; i += 3) {
         const ai = indices[i] * 3;
         const bi = indices[i + 1] * 3;
@@ -126,10 +131,10 @@ export function computeVertexNormals<T extends NumberArray>(vertices: NumberArra
  */
 export type GroupMapping = {
     /** data indices */
-    readonly indices: ArrayLike<number>
+    readonly indices: ArrayLike<number>;
     /** range for group i is offsets[i] to offsets[i + 1] */
-    readonly offsets: ArrayLike<number>
-}
+    readonly offsets: ArrayLike<number>;
+};
 
 /**
  * The `step` parameter allows to skip over repeated values in `groups`

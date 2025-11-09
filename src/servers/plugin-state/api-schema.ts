@@ -17,12 +17,13 @@ export function getSchema(config: Config) {
         info: {
             version: VERSION,
             title: 'PluginState Server',
-            description: 'The PluginState Server is a simple service for storing and retreiving states of the Mol* Viewer app.',
+            description:
+                'The PluginState Server is a simple service for storing and retreiving states of the Mol* Viewer app.',
         },
         tags: [
             {
                 name: 'General',
-            }
+            },
         ],
         paths: {
             [mapPath(`list/`)]: {
@@ -35,11 +36,11 @@ export function getSchema(config: Config) {
                         200: {
                             description: 'A list of stored states',
                             content: {
-                                'application/json': { }
-                            }
-                        }
+                                'application/json': {},
+                            },
+                        },
                     },
-                }
+                },
             },
             [mapPath(`get/{id}`)]: {
                 get: {
@@ -53,18 +54,18 @@ export function getSchema(config: Config) {
                             description: `Id of the state.`,
                             required: true,
                             schema: { type: 'string' },
-                            style: 'simple'
-                        }
+                            style: 'simple',
+                        },
                     ],
                     responses: {
                         200: {
                             description: 'A JSON object with the state.',
                             content: {
-                                'application/json': { }
-                            }
-                        }
+                                'application/json': {},
+                            },
+                        },
                     },
-                }
+                },
             },
             [mapPath(`remove/{id}`)]: {
                 get: {
@@ -78,28 +79,29 @@ export function getSchema(config: Config) {
                             description: `Id of the state.`,
                             required: true,
                             schema: { type: 'string' },
-                            style: 'simple'
-                        }
+                            style: 'simple',
+                        },
                     ],
                     responses: {
                         200: {
                             description: 'Empty response.',
-                            content: { 'text/plain': { } }
-                        }
+                            content: { 'text/plain': {} },
+                        },
                     },
-                }
+                },
             },
             [mapPath(`set/`)]: {
                 post: {
                     tags: ['General'],
-                    summary: `Post Mol* Viewer state to the server. At most ${config.max_states} states can be stored. If the limit is reached, older states will be removed.`,
+                    summary:
+                        `Post Mol* Viewer state to the server. At most ${config.max_states} states can be stored. If the limit is reached, older states will be removed.`,
                     operationId: 'set',
                     requestBody: {
                         content: {
                             'application/json': {
-                                schema: { type: 'object' }
-                            }
-                        }
+                                schema: { type: 'object' },
+                            },
+                        },
                     },
                     parameters: [
                         {
@@ -108,7 +110,7 @@ export function getSchema(config: Config) {
                             description: `Name of the state. If none provided, current UTC date-time is used.`,
                             required: false,
                             schema: { type: 'string' },
-                            style: 'simple'
+                            style: 'simple',
                         },
                         {
                             name: 'description',
@@ -116,19 +118,20 @@ export function getSchema(config: Config) {
                             description: `Description of the state.`,
                             required: false,
                             schema: { type: 'string' },
-                            style: 'simple'
-                        }
+                            style: 'simple',
+                        },
                     ],
                     responses: {
                         200: {
                             description: 'Empty response.',
-                            content: { 'text/plain': { } }
-                        }
+                            content: { 'text/plain': {} },
+                        },
                     },
-                }
+                },
             },
-        }
+        },
     };
 }
 
-export const shortcutIconLink = `<link rel='shortcut icon' href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAnUExURQAAAMIrHrspHr0oH7soILonHrwqH7onILsoHrsoH7soH7woILwpIKgVokoAAAAMdFJOUwAQHzNxWmBHS5XO6jdtAmoAAACZSURBVDjLxZNRCsQgDAVNXmwb9f7nXZEaLRgXloXOhwQdjMYYwpOLw55fBT46KhbOKhmRR2zLcFJQj8UR+HxFgArIF5BKJbEncC6NDEdI5SatBRSDJwGAoiFDONrEJXWYhGMIcRJGCrb1TOtDahfUuQXd10jkFYq0ViIrbUpNcVT6redeC1+b9tH2WLR93Sx2VCzkv/7NjfABxjQHksGB7lAAAAAASUVORK5CYII=' />`;
+export const shortcutIconLink =
+    `<link rel='shortcut icon' href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAnUExURQAAAMIrHrspHr0oH7soILonHrwqH7onILsoHrsoH7soH7woILwpIKgVokoAAAAMdFJOUwAQHzNxWmBHS5XO6jdtAmoAAACZSURBVDjLxZNRCsQgDAVNXmwb9f7nXZEaLRgXloXOhwQdjMYYwpOLw55fBT46KhbOKhmRR2zLcFJQj8UR+HxFgArIF5BKJbEncC6NDEdI5SatBRSDJwGAoiFDONrEJXWYhGMIcRJGCrb1TOtDahfUuQXd10jkFYq0ViIrbUpNcVT6redeC1+b9tH2WLR93Sx2VCzkv/7NjfABxjQHksGB7lAAAAAASUVORK5CYII=' />`;

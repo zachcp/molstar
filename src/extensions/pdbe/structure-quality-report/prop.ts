@@ -9,9 +9,9 @@ import { Column, Table } from '../../../mol-data/db.ts';
 import { toTable } from '../../../mol-io/reader/cif/schema.ts';
 import { mmCIF_residueId_schema } from '../../../mol-io/reader/cif/schema/mmcif-extras.ts';
 import { CifWriter } from '../../../mol-io/writer/cif.ts';
-import { Model, type ResidueIndex, Unit, IndexedCustomProperty } from '../../../mol-model/structure.ts';
+import { IndexedCustomProperty, Model, type ResidueIndex, Unit } from '../../../mol-model/structure.ts';
 import { residueIdFields } from '../../../mol-model/structure/export/categories/atom_site.ts';
-import type { StructureElement, CifExportContext, Structure } from '../../../mol-model/structure/structure.ts';
+import type { CifExportContext, Structure, StructureElement } from '../../../mol-model/structure/structure.ts';
 import { CustomPropSymbol } from '../../../mol-script/language/symbol.ts';
 import { Type } from '../../../mol-script/language/type.ts';
 import { QuerySymbolRuntime } from '../../../mol-script/runtime/query/compiler.ts';
@@ -26,10 +26,12 @@ import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts'
 
 export { StructureQualityReport };
 
-type StructureQualityReport = PropertyWrapper<{
-    issues: IndexedCustomProperty.Residue<string[]>,
-    issueTypes: string[]
-} | undefined>
+type StructureQualityReport = PropertyWrapper<
+    {
+        issues: IndexedCustomProperty.Residue<string[]>;
+        issueTypes: string[];
+    } | undefined
+>;
 
 namespace StructureQualityReport {
     export const DefaultServerUrl = 'https://www.ebi.ac.uk/pdbe/api/validation/residuewise_outlier_summary/entry/';
@@ -43,20 +45,20 @@ namespace StructureQualityReport {
 
     export const Schema = {
         pdbe_structure_quality_report: {
-            updated_datetime_utc: Column.Schema.str
+            updated_datetime_utc: Column.Schema.str,
         },
         pdbe_structure_quality_report_issues: {
             id: Column.Schema.int,
             ...mmCIF_residueId_schema,
             pdbx_PDB_model_num: Column.Schema.int,
-            issue_type_group_id: Column.Schema.int
+            issue_type_group_id: Column.Schema.int,
         },
         pdbe_structure_quality_report_issue_types: {
             group_id: Column.Schema.int,
-            issue_type: Column.Schema.str
-        }
+            issue_type: Column.Schema.str,
+        },
     };
-    export type Schema = typeof Schema
+    export type Schema = typeof Schema;
 
     export function fromJson(model: Model, data: any) {
         const info = PropertyWrapper.createInfo();
@@ -64,7 +66,11 @@ namespace StructureQualityReport {
         return { info, data: issueMap };
     }
 
-    export async function fromServer(ctx: CustomProperty.Context, model: Model, props: StructureQualityReportProps): Promise<CustomProperty.Data<StructureQualityReport>> {
+    export async function fromServer(
+        ctx: CustomProperty.Context,
+        model: Model,
+        props: StructureQualityReportProps,
+    ): Promise<CustomProperty.Data<StructureQualityReport>> {
         const url = Asset.getUrlAsset(ctx.assetManager, getEntryUrl(model.entryId, props.serverUrl));
         const json = await ctx.assetManager.resolve(url, 'json').runInContext(ctx.runtime);
         const data = json.data[model.entryId.toLowerCase()];
@@ -72,7 +78,11 @@ namespace StructureQualityReport {
         return { value: fromJson(model, data), assets: [json] };
     }
 
-    export function fromCif(ctx: CustomProperty.Context, model: Model, props: StructureQualityReportProps): StructureQualityReport | undefined {
+    export function fromCif(
+        ctx: CustomProperty.Context,
+        model: Model,
+        props: StructureQualityReportProps,
+    ): StructureQualityReport | undefined {
         const info = PropertyWrapper.tryGetInfoFromCif('pdbe_structure_quality_report', model);
         if (!info) return;
         const data = getCifData(model);
@@ -80,7 +90,11 @@ namespace StructureQualityReport {
         return { info, data: issueMap };
     }
 
-    export async function fromCifOrServer(ctx: CustomProperty.Context, model: Model, props: StructureQualityReportProps): Promise<CustomProperty.Data<StructureQualityReport>> {
+    export async function fromCifOrServer(
+        ctx: CustomProperty.Context,
+        model: Model,
+        props: StructureQualityReportProps,
+    ): Promise<CustomProperty.Data<StructureQualityReport>> {
         const cif = fromCif(ctx, model, props);
         return cif ? { value: cif } : fromServer(ctx, model, props);
     }
@@ -104,19 +118,28 @@ namespace StructureQualityReport {
     function getCifData(model: Model) {
         if (!MmcifFormat.is(model.sourceData)) throw new Error('Data format must be mmCIF.');
         return {
-            residues: toTable(Schema.pdbe_structure_quality_report_issues, model.sourceData.data.frame.categories.pdbe_structure_quality_report_issues),
-            groups: toTable(Schema.pdbe_structure_quality_report_issue_types, model.sourceData.data.frame.categories.pdbe_structure_quality_report_issue_types),
+            residues: toTable(
+                Schema.pdbe_structure_quality_report_issues,
+                model.sourceData.data.frame.categories.pdbe_structure_quality_report_issues,
+            ),
+            groups: toTable(
+                Schema.pdbe_structure_quality_report_issue_types,
+                model.sourceData.data.frame.categories.pdbe_structure_quality_report_issue_types,
+            ),
         };
     }
 }
 
 export const StructureQualityReportParams = {
-    serverUrl: PD.Text(StructureQualityReport.DefaultServerUrl, { description: 'JSON API Server URL' })
+    serverUrl: PD.Text(StructureQualityReport.DefaultServerUrl, { description: 'JSON API Server URL' }),
 };
-export type StructureQualityReportParams = typeof StructureQualityReportParams
-export type StructureQualityReportProps = PD.Values<StructureQualityReportParams>
+export type StructureQualityReportParams = typeof StructureQualityReportParams;
+export type StructureQualityReportProps = PD.Values<StructureQualityReportParams>;
 
-export const StructureQualityReportProvider: CustomModelProperty.Provider<StructureQualityReportParams, StructureQualityReport> = CustomModelProperty.createProvider({
+export const StructureQualityReportProvider: CustomModelProperty.Provider<
+    StructureQualityReportParams,
+    StructureQualityReport
+> = CustomModelProperty.createProvider({
     label: 'Structure Quality Report',
     descriptor: CustomPropertyDescriptor<ReportExportContext, any>({
         name: 'pdbe_structure_quality_report',
@@ -126,27 +149,34 @@ export const StructureQualityReportProvider: CustomModelProperty.Provider<Struct
                 return createExportContext(ctx);
             },
             categories: [
-                PropertyWrapper.defaultInfoCategory<ReportExportContext>('pdbe_structure_quality_report', ctx => ctx.info),
+                PropertyWrapper.defaultInfoCategory<ReportExportContext>(
+                    'pdbe_structure_quality_report',
+                    (ctx) => ctx.info,
+                ),
                 {
                     name: 'pdbe_structure_quality_report_issues',
                     instance(ctx: ReportExportContext) {
                         return {
                             fields: _structure_quality_report_issues_fields,
-                            source: ctx.models.map(data => ({ data, rowCount: data.elements.length }))
+                            source: ctx.models.map((data) => ({ data, rowCount: data.elements.length })),
                         };
-                    }
-                }, {
+                    },
+                },
+                {
                     name: 'pdbe_structure_quality_report_issue_types',
                     instance(ctx: ReportExportContext) {
                         return CifWriter.Category.ofTable(ctx.issueTypes);
-                    }
-                }]
+                    },
+                },
+            ],
         },
         symbols: {
-            issueCount: QuerySymbolRuntime.Dynamic(CustomPropSymbol('pdbe', 'structure-quality.issue-count', Type.Num),
-                ctx => StructureQualityReport.getIssues(ctx.element).length),
+            issueCount: QuerySymbolRuntime.Dynamic(
+                CustomPropSymbol('pdbe', 'structure-quality.issue-count', Type.Num),
+                (ctx) => StructureQualityReport.getIssues(ctx.element).length,
+            ),
             // TODO: add (hasIssue :: IssueType(extends string) -> boolean) symbol
-        }
+        },
     }),
     type: 'static',
     defaultParams: StructureQualityReportParams,
@@ -155,7 +185,7 @@ export const StructureQualityReportProvider: CustomModelProperty.Provider<Struct
     obtain: async (ctx: CustomProperty.Context, data: Model, props: Partial<StructureQualityReportProps>) => {
         const p = { ...PD.getDefaultValues(StructureQualityReportParams), ...props };
         return await StructureQualityReport.fromCifOrServer(ctx, data, p);
-    }
+    },
 });
 
 const _structure_quality_report_issues_fields = CifWriter.fields<number, ReportExportContext['models'][0]>()
@@ -166,11 +196,11 @@ const _structure_quality_report_issues_fields = CifWriter.fields<number, ReportE
 
 interface ReportExportContext {
     models: {
-        elements: StructureElement.Location[],
-        groupId: number[]
-    }[],
-    info: PropertyWrapper.Info,
-    issueTypes: Table<StructureQualityReport.Schema['pdbe_structure_quality_report_issue_types']>,
+        elements: StructureElement.Location[];
+        groupId: number[];
+    }[];
+    info: PropertyWrapper.Info;
+    issueTypes: Table<StructureQualityReport.Schema['pdbe_structure_quality_report_issue_types']>;
 }
 
 function createExportContext(ctx: CifExportContext): ReportExportContext {
@@ -207,7 +237,10 @@ function createExportContext(ctx: CifExportContext): ReportExportContext {
     return {
         info,
         models,
-        issueTypes: Table.ofArrays(StructureQualityReport.Schema.pdbe_structure_quality_report_issue_types, { group_id, issue_type })
+        issueTypes: Table.ofArrays(StructureQualityReport.Schema.pdbe_structure_quality_report_issue_types, {
+            group_id,
+            issue_type,
+        }),
     };
 }
 
@@ -240,27 +273,41 @@ function createIssueMapFromJson(modelData: Model, data: any): StructureQualityRe
 
     return {
         issues: IndexedCustomProperty.fromResidueMap(ret),
-        issueTypes
+        issueTypes,
     };
 }
 
-function createIssueMapFromCif(modelData: Model,
+function createIssueMapFromCif(
+    modelData: Model,
     residueData: Table<typeof StructureQualityReport.Schema.pdbe_structure_quality_report_issues>,
-    groupData: Table<typeof StructureQualityReport.Schema.pdbe_structure_quality_report_issue_types>): StructureQualityReport['data'] | undefined {
-
+    groupData: Table<typeof StructureQualityReport.Schema.pdbe_structure_quality_report_issue_types>,
+): StructureQualityReport['data'] | undefined {
     const ret = new Map<ResidueIndex, string[]>();
-    const { label_entity_id, label_asym_id, auth_seq_id, pdbx_PDB_ins_code, issue_type_group_id, pdbx_PDB_model_num, _rowCount } = residueData;
+    const {
+        label_entity_id,
+        label_asym_id,
+        auth_seq_id,
+        pdbx_PDB_ins_code,
+        issue_type_group_id,
+        pdbx_PDB_model_num,
+        _rowCount,
+    } = residueData;
 
     const groups = parseIssueTypes(groupData);
 
     for (let i = 0; i < _rowCount; i++) {
         if (pdbx_PDB_model_num.value(i) !== modelData.modelNum) continue;
-        const idx = modelData.atomicHierarchy.index.findResidue(label_entity_id.value(i), label_asym_id.value(i), auth_seq_id.value(i), pdbx_PDB_ins_code.value(i));
+        const idx = modelData.atomicHierarchy.index.findResidue(
+            label_entity_id.value(i),
+            label_asym_id.value(i),
+            auth_seq_id.value(i),
+            pdbx_PDB_ins_code.value(i),
+        );
         ret.set(idx, groups.get(issue_type_group_id.value(i))!);
     }
 
     const issueTypes: string[] = [];
-    groups.forEach(issues => {
+    groups.forEach((issues) => {
         for (const t of issues) {
             arraySetAdd(issueTypes, t);
         }
@@ -268,11 +315,13 @@ function createIssueMapFromCif(modelData: Model,
 
     return {
         issues: IndexedCustomProperty.fromResidueMap(ret),
-        issueTypes
+        issueTypes,
     };
 }
 
-function parseIssueTypes(groupData: Table<typeof StructureQualityReport.Schema.pdbe_structure_quality_report_issue_types>): Map<number, string[]> {
+function parseIssueTypes(
+    groupData: Table<typeof StructureQualityReport.Schema.pdbe_structure_quality_report_issue_types>,
+): Map<number, string[]> {
     const ret = new Map<number, string[]>();
     const { group_id, issue_type } = groupData;
     for (let i = 0; i < groupData._rowCount; i++) {

@@ -4,12 +4,11 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-
 /** Job queue that allows at most one running and one pending job.
  * A newly enqueued job will cancel any other pending jobs. */
 export class SingleAsyncQueue {
     private isRunning: boolean;
-    private queue: { id: number, func: () => any }[];
+    private queue: { id: number; func: () => any }[];
     private counter: number;
     private log: boolean;
     constructor(log: boolean = false) {

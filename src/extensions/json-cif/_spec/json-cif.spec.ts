@@ -48,13 +48,17 @@ describe('json-cif', () => {
         graph.addOrUpdateBond(graph.atoms[0], newAtom, { value_order: 'sing', type_id: 'covale' });
         data = graph.getData().block;
         expect(data.categories.atom_site.rows.length).toBe(structure.elementCount + 1);
-        expect(data.categories.molstar_bond_site.rows.length).toBe(file.dataBlocks[0].categories.molstar_bond_site.rows.length + 1);
+        expect(data.categories.molstar_bond_site.rows.length).toBe(
+            file.dataBlocks[0].categories.molstar_bond_site.rows.length + 1,
+        );
 
         // remove bond
         graph.removeBond(graph.atoms[0], newAtom);
         data = graph.getData().block;
         expect(data.categories.atom_site.rows.length).toBe(structure.elementCount + 1);
-        expect(data.categories.molstar_bond_site.rows.length).toBe(file.dataBlocks[0].categories.molstar_bond_site.rows.length);
+        expect(data.categories.molstar_bond_site.rows.length).toBe(
+            file.dataBlocks[0].categories.molstar_bond_site.rows.length,
+        );
     });
 
     it('ligand graph traversal', () => {

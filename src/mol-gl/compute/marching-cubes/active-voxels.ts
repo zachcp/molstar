@@ -7,11 +7,11 @@
 import { type ComputeRenderable, createComputeRenderable } from '../../renderable.ts';
 import type { WebGLContext } from '../../webgl/context.ts';
 import { createComputeRenderItem } from '../../webgl/render-item.ts';
-import { type Values, TextureSpec, UniformSpec, DefineSpec } from '../../renderable/schema.ts';
+import { DefineSpec, TextureSpec, UniformSpec, type Values } from '../../renderable/schema.ts';
 import type { Texture } from '../../../mol-gl/webgl/texture.ts';
 import { ShaderCode } from '../../../mol-gl/shader-code.ts';
 import { ValueCell } from '../../../mol-util/index.ts';
-import type { Vec3, Vec2 } from '../../../mol-math/linear-algebra.ts';
+import type { Vec2, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { QuadSchema, QuadValues } from '../util.ts';
 import { getTriCount } from './tables.ts';
 import { quad_vert } from '../../../mol-gl/shader/quad.vert.ts';
@@ -32,7 +32,7 @@ const ActiveVoxelsSchema = {
 
     uScale: UniformSpec('v2'),
 };
-type ActiveVoxelsValues = Values<typeof ActiveVoxelsSchema>
+type ActiveVoxelsValues = Values<typeof ActiveVoxelsSchema>;
 
 const ActiveVoxelsName = 'active-voxels';
 
@@ -40,7 +40,14 @@ function valueChannel(ctx: WebGLContext, volumeData: Texture) {
     return isWebGL2(ctx.gl) && volumeData.format === ctx.gl.RED ? 'red' : 'alpha';
 }
 
-function getActiveVoxelsRenderable(ctx: WebGLContext, volumeData: Texture, gridDim: Vec3, gridTexDim: Vec3, isoValue: number, scale: Vec2): ComputeRenderable<ActiveVoxelsValues> {
+function getActiveVoxelsRenderable(
+    ctx: WebGLContext,
+    volumeData: Texture,
+    gridDim: Vec3,
+    gridTexDim: Vec3,
+    isoValue: number,
+    scale: Vec2,
+): ComputeRenderable<ActiveVoxelsValues> {
     if (ctx.namedComputeRenderables[ActiveVoxelsName]) {
         const v = ctx.namedComputeRenderables[ActiveVoxelsName].values as ActiveVoxelsValues;
 
@@ -54,12 +61,26 @@ function getActiveVoxelsRenderable(ctx: WebGLContext, volumeData: Texture, gridD
 
         ctx.namedComputeRenderables[ActiveVoxelsName].update();
     } else {
-        ctx.namedComputeRenderables[ActiveVoxelsName] = createActiveVoxelsRenderable(ctx, volumeData, gridDim, gridTexDim, isoValue, scale);
+        ctx.namedComputeRenderables[ActiveVoxelsName] = createActiveVoxelsRenderable(
+            ctx,
+            volumeData,
+            gridDim,
+            gridTexDim,
+            isoValue,
+            scale,
+        );
     }
     return ctx.namedComputeRenderables[ActiveVoxelsName];
 }
 
-function createActiveVoxelsRenderable(ctx: WebGLContext, volumeData: Texture, gridDim: Vec3, gridTexDim: Vec3, isoValue: number, scale: Vec2) {
+function createActiveVoxelsRenderable(
+    ctx: WebGLContext,
+    volumeData: Texture,
+    gridDim: Vec3,
+    gridTexDim: Vec3,
+    isoValue: number,
+    scale: Vec2,
+) {
     const values: ActiveVoxelsValues = {
         ...QuadValues,
         tTriCount: ValueCell.create(getTriCount()),
@@ -91,7 +112,14 @@ function setRenderingDefaults(ctx: WebGLContext) {
     state.clearColor(0, 0, 0, 0);
 }
 
-export function calcActiveVoxels(ctx: WebGLContext, volumeData: Texture, gridDim: Vec3, gridTexDim: Vec3, isoValue: number, gridScale: Vec2) {
+export function calcActiveVoxels(
+    ctx: WebGLContext,
+    volumeData: Texture,
+    gridDim: Vec3,
+    gridTexDim: Vec3,
+    isoValue: number,
+    gridScale: Vec2,
+) {
     if (isTimingMode) ctx.timer.mark('calcActiveVoxels');
     const { gl, state, resources } = ctx;
     const width = volumeData.getWidth();

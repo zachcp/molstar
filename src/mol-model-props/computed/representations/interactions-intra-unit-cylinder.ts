@@ -5,9 +5,9 @@
  * @author Paul Pillot <paul.pillot@tandemai.com>
  */
 
-import { Unit, Structure, StructureElement } from '../../../mol-model/structure.ts';
+import { Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
-import { type Loci, EmptyLoci } from '../../../mol-model/loci.ts';
+import { EmptyLoci, type Loci } from '../../../mol-model/loci.ts';
 import { Interval, OrderedSet, SortedArray } from '../../../mol-data/int.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
@@ -16,19 +16,26 @@ import type { VisualContext } from '../../../mol-repr/visual.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
 import { InteractionsProvider } from '../interactions.ts';
 import { createLinkCylinderMesh, LinkCylinderParams, LinkStyle } from '../../../mol-repr/structure/visual/util/link.ts';
-import { UnitsMeshParams, type UnitsVisual, UnitsMeshVisual } from '../../../mol-repr/structure/units-visual.ts';
+import { UnitsMeshParams, UnitsMeshVisual, type UnitsVisual } from '../../../mol-repr/structure/units-visual.ts';
 import type { VisualUpdateState } from '../../../mol-repr/util.ts';
 import { LocationIterator } from '../../../mol-geo/util/location-iterator.ts';
 import { Interactions } from '../interactions/interactions.ts';
 import { FeatureType, InteractionFlag } from '../interactions/common.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
-import { type StructureGroup, isHydrogen } from '../../../mol-repr/structure/visual/util/common.ts';
+import { isHydrogen, type StructureGroup } from '../../../mol-repr/structure/visual/util/common.ts';
 import { assertUnreachable } from '../../../mol-util/type-helpers.ts';
 import { InteractionsSharedParams } from './shared.ts';
 import { InteractionType } from '../interactions/common.ts';
 import { eachIntraBondedAtom } from '../chemistry/util.ts';
 
-async function createIntraUnitInteractionsCylinderMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PD.Values<InteractionsIntraUnitParams>, mesh?: Mesh) {
+async function createIntraUnitInteractionsCylinderMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<InteractionsIntraUnitParams>,
+    mesh?: Mesh,
+) {
     if (!Unit.isAtomic(unit)) return Mesh.createEmpty(mesh);
 
     const { child } = structure;
@@ -56,8 +63,11 @@ async function createIntraUnitInteractionsCylinderMesh(ctx: VisualContext, unit:
         linkCount: edgeCount * 2,
         position: (posA: Vec3, posB: Vec3, edgeIndex: number) => {
             const t = type[edgeIndex];
-            if ((!ignoreHydrogens || ignoreHydrogensVariant !== 'all') && (
-                t === InteractionType.HydrogenBond || (t === InteractionType.WeakHydrogenBond && ignoreHydrogensVariant !== 'non-polar'))
+            if (
+                (!ignoreHydrogens || ignoreHydrogensVariant !== 'all') && (
+                    t === InteractionType.HydrogenBond ||
+                    (t === InteractionType.WeakHydrogenBond && ignoreHydrogensVariant !== 'non-polar')
+                )
             ) {
                 const idxA = members[offsets[a[edgeIndex]]];
                 const idxB = members[offsets[b[edgeIndex]]];
@@ -67,7 +77,9 @@ async function createIntraUnitInteractionsCylinderMesh(ctx: VisualContext, unit:
                 let minDistB = minDistA;
                 Vec3.copy(posA, pA);
                 Vec3.copy(posB, pB);
-                const donorType = t === InteractionType.HydrogenBond ? FeatureType.HydrogenDonor : FeatureType.WeakHydrogenDonor;
+                const donorType = t === InteractionType.HydrogenBond
+                    ? FeatureType.HydrogenDonor
+                    : FeatureType.WeakHydrogenDonor;
                 const isHydrogenDonorA = types[offsets[a[edgeIndex]]] === donorType;
 
                 if (isHydrogenDonorA) {
@@ -139,7 +151,7 @@ async function createIntraUnitInteractionsCylinderMesh(ctx: VisualContext, unit:
             }
 
             return false;
-        }
+        },
     };
 
     const { mesh: m, boundingSphere } = createLinkCylinderMesh(ctx, builderProps, props, mesh);
@@ -159,7 +171,7 @@ export const InteractionsIntraUnitParams = {
     ...LinkCylinderParams,
     ...InteractionsSharedParams,
 };
-export type InteractionsIntraUnitParams = typeof InteractionsIntraUnitParams
+export type InteractionsIntraUnitParams = typeof InteractionsIntraUnitParams;
 
 export function InteractionsIntraUnitVisual(materialId: number): UnitsVisual<InteractionsIntraUnitParams> {
     return UnitsMeshVisual<InteractionsIntraUnitParams>({
@@ -168,17 +180,23 @@ export function InteractionsIntraUnitVisual(materialId: number): UnitsVisual<Int
         createLocationIterator: createInteractionsIterator,
         getLoci: getInteractionLoci,
         eachLocation: eachInteraction,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<InteractionsIntraUnitParams>, currentProps: PD.Values<InteractionsIntraUnitParams>, newTheme: Theme, currentTheme: Theme, newStructureGroup: StructureGroup, currentStructureGroup: StructureGroup) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<InteractionsIntraUnitParams>,
+            currentProps: PD.Values<InteractionsIntraUnitParams>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructureGroup: StructureGroup,
+            currentStructureGroup: StructureGroup,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.dashCount !== currentProps.dashCount ||
                 newProps.dashScale !== currentProps.dashScale ||
                 newProps.dashCap !== currentProps.dashCap ||
                 newProps.radialSegments !== currentProps.radialSegments ||
                 newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
                 newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant ||
-                newProps.parentDisplay !== currentProps.parentDisplay
-            );
+                newProps.parentDisplay !== currentProps.parentDisplay;
 
             const interactionsHash = InteractionsProvider.get(newStructureGroup.structure).version;
             if ((state.info.interactionsHash as number) !== interactionsHash) {
@@ -187,7 +205,7 @@ export function InteractionsIntraUnitVisual(materialId: number): UnitsVisual<Int
                 state.updateColor = true;
                 state.info.interactionsHash = interactionsHash;
             }
-        }
+        },
     }, materialId);
 }
 
@@ -208,7 +226,12 @@ function getInteractionLoci(pickingId: PickingId, structureGroup: StructureGroup
 
 const __contactIndicesSet = new Set<number>();
 
-function eachInteraction(loci: Loci, structureGroup: StructureGroup, apply: (interval: Interval) => boolean, isMarking: boolean) {
+function eachInteraction(
+    loci: Loci,
+    structureGroup: StructureGroup,
+    apply: (interval: Interval) => boolean,
+    isMarking: boolean,
+) {
     let changed = false;
     if (Interactions.isLoci(loci)) {
         const { structure, group } = structureGroup;
@@ -247,7 +270,7 @@ function eachInteraction(loci: Loci, structureGroup: StructureGroup, apply: (int
             const unitIdx = group.unitIndexMap.get(e.unit.id);
             if (unitIdx === undefined) continue;
 
-            OrderedSet.forEach(e.indices, v => {
+            OrderedSet.forEach(e.indices, (v) => {
                 for (let i = fOffsets[v], il = fOffsets[v + 1]; i < il; ++i) {
                     const fI = fIndices[i];
                     for (let j = offset[fI], jl = offset[fI + 1]; j < jl; ++j) {
@@ -256,7 +279,7 @@ function eachInteraction(loci: Loci, structureGroup: StructureGroup, apply: (int
                 }
             });
 
-            __contactIndicesSet.forEach(i => {
+            __contactIndicesSet.forEach((i) => {
                 if (isMarking) {
                     const fA = contacts.a[i];
                     for (let j = offsets[fA], jl = offsets[fA + 1]; j < jl; ++j) {

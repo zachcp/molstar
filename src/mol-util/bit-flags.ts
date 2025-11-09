@@ -7,19 +7,19 @@
 type BitFlags<Flags> = number & Flags;
 
 namespace BitFlags {
-  export function create<F>(flags: F): BitFlags<F> {
-    return flags as any;
-  }
+    export function create<F>(flags: F): BitFlags<F> {
+        return flags as any;
+    }
 
-  export function has<F>(flags: BitFlags<F>, flag: F): boolean {
-    return ((flags as any) & (flag as any)) !== 0;
-  }
-  /** toCheck must be non-zero */
-  export function hasAll<F>(flags: BitFlags<F>, toCheck: BitFlags<F>): boolean {
-    return (
-      !!toCheck && ((flags as any) & (toCheck as any)) === (toCheck as any)
-    );
-  }
+    export function has<F>(flags: BitFlags<F>, flag: F): boolean {
+        return ((flags as any) & (flag as any)) !== 0;
+    }
+    /** toCheck must be non-zero */
+    export function hasAll<F>(flags: BitFlags<F>, toCheck: BitFlags<F>): boolean {
+        return (
+            !!toCheck && ((flags as any) & (toCheck as any)) === (toCheck as any)
+        );
+    }
 }
 
 export { BitFlags };

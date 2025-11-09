@@ -5,7 +5,7 @@
  */
 
 import { Color, ColorMap } from '../../mol-util/color/index.ts';
-import { StructureElement, Unit, Bond, type ElementIndex } from '../../mol-model/structure.ts';
+import { Bond, type ElementIndex, StructureElement, Unit } from '../../mol-model/structure.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ColorTheme } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
@@ -61,7 +61,7 @@ export const ResidueNameColors = ColorMap({
     'CPN': 0xFFD700,
     'TPN': 0x4169E1,
 });
-export type ResidueNameColors = typeof ResidueNameColors
+export type ResidueNameColors = typeof ResidueNameColors;
 
 const DefaultResidueNameColor = Color(0xFF00FF);
 const Description = 'Assigns a color to every residue according to its name.';
@@ -71,10 +71,10 @@ export const ResidueNameColorThemeParams = {
     lightness: PD.Numeric(1, { min: -6, max: 6, step: 0.1 }),
     colors: PD.MappedStatic('default', {
         'default': PD.EmptyGroup(),
-        'custom': PD.Group(getColorMapParams(ResidueNameColors))
-    })
+        'custom': PD.Group(getColorMapParams(ResidueNameColors)),
+    }),
 };
-export type ResidueNameColorThemeParams = typeof ResidueNameColorThemeParams
+export type ResidueNameColorThemeParams = typeof ResidueNameColorThemeParams;
 export function getResidueNameColorThemeParams(ctx: ThemeDataContext) {
     return ResidueNameColorThemeParams; // TODO return copy
 }
@@ -98,8 +98,15 @@ export function residueNameColor(colorMap: ResidueNameColors, residueName: strin
     return c === undefined ? DefaultResidueNameColor : c;
 }
 
-export function ResidueNameColorTheme(ctx: ThemeDataContext, props: PD.Values<ResidueNameColorThemeParams>): ColorTheme<ResidueNameColorThemeParams> {
-    const colorMap = getAdjustedColorMap(props.colors.name === 'default' ? ResidueNameColors : props.colors.params, props.saturation, props.lightness);
+export function ResidueNameColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<ResidueNameColorThemeParams>,
+): ColorTheme<ResidueNameColorThemeParams> {
+    const colorMap = getAdjustedColorMap(
+        props.colors.name === 'default' ? ResidueNameColors : props.colors.params,
+        props.saturation,
+        props.lightness,
+    );
 
     function color(location: Location): Color {
         if (StructureElement.Location.is(location)) {
@@ -129,9 +136,11 @@ export function ResidueNameColorTheme(ctx: ThemeDataContext, props: PD.Values<Re
         color,
         props,
         description: Description,
-        legend: TableLegend(Object.keys(colorMap).map(name => {
-            return [name, (colorMap as any)[name] as Color] as [string, Color];
-        }).concat([['Unknown', DefaultResidueNameColor]]))
+        legend: TableLegend(
+            Object.keys(colorMap).map((name) => {
+                return [name, (colorMap as any)[name] as Color] as [string, Color];
+            }).concat([['Unknown', DefaultResidueNameColor]]),
+        ),
     };
 }
 
@@ -142,5 +151,5 @@ export const ResidueNameColorThemeProvider: ColorTheme.Provider<ResidueNameColor
     factory: ResidueNameColorTheme,
     getParams: getResidueNameColorThemeParams,
     defaultValues: PD.getDefaultValues(ResidueNameColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
 };

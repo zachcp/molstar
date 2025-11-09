@@ -22,22 +22,31 @@ import { ParameterMappingControl } from '../controls/parameters.tsx';
 import { ViewportHelpContent } from './help.tsx';
 
 export class SimpleSettingsControl extends PluginUIComponent {
-    override componentDidMount() {        if (!this.plugin.canvas3d) return;
+    override componentDidMount() {
+        if (!this.plugin.canvas3d) return;
 
         this.subscribe(this.plugin.events.canvas3d.settingsUpdated, () => this.forceUpdate());
 
-        this.subscribe(this.plugin.canvas3d!.camera.stateChanged.pipe(throttleTime(500, undefined, { leading: true, trailing: true })), state => {
-            if (state.radiusMax !== undefined || state.radius !== undefined) {
-                this.forceUpdate();
-            }
-        });
+        this.subscribe(
+            this.plugin.canvas3d!.camera.stateChanged.pipe(
+                throttleTime(500, undefined, { leading: true, trailing: true }),
+            ),
+            (state) => {
+                if (state.radiusMax !== undefined || state.radius !== undefined) {
+                    this.forceUpdate();
+                }
+            },
+        );
     }
 
-    override render() {        if (!this.plugin.canvas3d) return null;
-        return <>
-            <ParameterMappingControl mapping={SimpleSettingsMapping} />
-            <ViewportHelpContent />
-        </>;
+    override render() {
+        if (!this.plugin.canvas3d) return null;
+        return (
+            <>
+                <ParameterMappingControl mapping={SimpleSettingsMapping} />
+                <ViewportHelpContent />
+            </>
+        );
     }
 }
 
@@ -47,7 +56,7 @@ const LayoutOptions = {
     'left': 'Left Panel',
     'right': 'Right Panel',
 };
-type LayoutOptions = keyof typeof LayoutOptions
+type LayoutOptions = keyof typeof LayoutOptions;
 
 const SimpleSettingsParams = {
     animate: Canvas3DParams.trackball.params.animate,
@@ -80,7 +89,7 @@ const SimpleSettingsParams = {
     }),
 };
 
-type SimpleSettingsParams = typeof SimpleSettingsParams
+type SimpleSettingsParams = typeof SimpleSettingsParams;
 const SimpleSettingsMapping = ParamMapping({
     params: (ctx: PluginUIContext) => {
         const params = PD.clone(SimpleSettingsParams);
@@ -112,7 +121,7 @@ const SimpleSettingsMapping = ParamMapping({
         if (r.right !== 'hidden' && (!c || c.right !== 'none')) layout.push('right');
         const { pixelScale, transparency, resolutionMode } = ctx.canvas3dContext?.props!;
         return { canvas: ctx.canvas3d?.props!, layout, resolutionMode, pixelScale, transparency };
-    }
+    },
 })({
     values(props, ctx) {
         const { canvas } = props;
@@ -181,10 +190,14 @@ const SimpleSettingsMapping = ParamMapping({
         await PluginCommands.Canvas3D.SetSettings(ctx, { settings: props.canvas });
 
         const hideLeft = props.layout.indexOf('left') < 0;
-        const state = produce(ctx.layout.state, s => {
+        const state = produce(ctx.layout.state, (s) => {
             s.regionState.top = props.layout.indexOf('sequence') >= 0 ? 'full' : 'hidden';
             s.regionState.bottom = props.layout.indexOf('log') >= 0 ? 'full' : 'hidden';
-            s.regionState.left = hideLeft ? 'hidden' : ctx.behaviors.layout.leftPanelTabName.value === 'none' ? 'collapsed' : 'full';
+            s.regionState.left = hideLeft
+                ? 'hidden'
+                : ctx.behaviors.layout.leftPanelTabName.value === 'none'
+                ? 'collapsed'
+                : 'full';
             s.regionState.right = props.layout.indexOf('right') >= 0 ? 'full' : 'hidden';
         });
         await PluginCommands.Layout.Update(ctx, { state });
@@ -198,5 +211,5 @@ const SimpleSettingsMapping = ParamMapping({
             pixelScale: props.pixelScale,
             transparency: props.transparency,
         });
-    }
+    },
 });

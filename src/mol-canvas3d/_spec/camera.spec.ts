@@ -6,7 +6,7 @@
 
 import { Vec3, Vec4 } from '../../mol-math/linear-algebra';
 import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4';
-import { Viewport, cameraProject, cameraUnproject } from '../camera/util';
+import { cameraProject, cameraUnproject, Viewport } from '../camera/util';
 
 describe('camera', () => {
     it('project/unproject', () => {

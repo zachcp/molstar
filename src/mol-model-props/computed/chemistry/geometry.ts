@@ -8,7 +8,7 @@
 
 import { degToRad } from '../../../mol-math/misc.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
-import type { Structure, Unit, StructureElement } from '../../../mol-model/structure.ts';
+import type { Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
 import { eachBondedAtom, typeSymbol } from './util.ts';
 import { Elements } from '../../../mol-model/structure/model/properties/atomic/types.ts';
 
@@ -25,7 +25,7 @@ export enum AtomGeometry {
     TrigonalBiPyramidal = 5,
     Octahedral = 6,
     SquarePlanar = 7, // Okay, it breaks down somewhere!
-    Unknown = 8
+    Unknown = 8,
 }
 
 export function geometryLabel(geometry: AtomGeometry): string {
@@ -53,13 +53,18 @@ export function geometryLabel(geometry: AtomGeometry): string {
 
 export function assignGeometry(totalCoordination: number): AtomGeometry {
     switch (totalCoordination) {
-        case 0: return AtomGeometry.Spherical;
-        case 1: return AtomGeometry.Terminal;
-        case 2: return AtomGeometry.Linear;
-        case 3: return AtomGeometry.Trigonal;
-        case 4: return AtomGeometry.Tetrahedral;
-        default: return AtomGeometry.Unknown;
-
+        case 0:
+            return AtomGeometry.Spherical;
+        case 1:
+            return AtomGeometry.Terminal;
+        case 2:
+            return AtomGeometry.Linear;
+        case 3:
+            return AtomGeometry.Trigonal;
+        case 4:
+            return AtomGeometry.Tetrahedral;
+        default:
+            return AtomGeometry.Unknown;
     }
 }
 
@@ -67,7 +72,7 @@ export const AtomGeometryAngles = new Map<AtomGeometry, number>([
     [AtomGeometry.Linear, degToRad(180)],
     [AtomGeometry.Trigonal, degToRad(120)],
     [AtomGeometry.Tetrahedral, degToRad(109.4721)],
-    [AtomGeometry.Octahedral, degToRad(90)]
+    [AtomGeometry.Octahedral, degToRad(90)],
 ]);
 
 // tmp objects for `calcAngles` and `calcPlaneAngle`
@@ -80,7 +85,14 @@ const tmpPosX = Vec3();
 /**
  * Calculate the angles x-a1-a2 for all x where x is a heavy atom (not H) bonded to ap1.
  */
-export function calcAngles(structure: Structure, unitA: Unit.Atomic, indexA: StructureElement.UnitIndex, unitB: Unit.Atomic, indexB: StructureElement.UnitIndex, ignoreHydrogens = true): [number[], number[]] {
+export function calcAngles(
+    structure: Structure,
+    unitA: Unit.Atomic,
+    indexA: StructureElement.UnitIndex,
+    unitB: Unit.Atomic,
+    indexB: StructureElement.UnitIndex,
+    ignoreHydrogens = true,
+): [number[], number[]] {
     const angles: number[] = [];
     const anglesH: number[] = [];
     unitA.conformation.position(unitA.elements[indexA], tmpPosA);
@@ -108,7 +120,13 @@ export function calcAngles(structure: Structure, unitA: Unit.Atomic, indexA: Str
  * @param  {AtomProxy} ap2 Second atom (out-of-plane)
  * @return {number}        Angle from plane to second atom
  */
-export function calcPlaneAngle(structure: Structure, unitA: Unit.Atomic, indexA: StructureElement.UnitIndex, unitB: Unit.Atomic, indexB: StructureElement.UnitIndex): number | undefined {
+export function calcPlaneAngle(
+    structure: Structure,
+    unitA: Unit.Atomic,
+    indexA: StructureElement.UnitIndex,
+    unitB: Unit.Atomic,
+    indexB: StructureElement.UnitIndex,
+): number | undefined {
     unitA.conformation.position(unitA.elements[indexA], tmpPosA);
     unitB.conformation.position(unitB.elements[indexB], tmpPosB);
     Vec3.sub(tmpDir1, tmpPosB, tmpPosA);
@@ -145,7 +163,13 @@ export function calcPlaneAngle(structure: Structure, unitA: Unit.Atomic, indexA:
     return Math.abs((Math.PI / 2) - Vec3.angle(tmpDir2, tmpDir1));
 }
 
-export function closestHydrogenIndex(structure: Structure, unitA: Unit.Atomic, indexA: StructureElement.UnitIndex, unitB: Unit.Atomic, indexB: StructureElement.UnitIndex) {
+export function closestHydrogenIndex(
+    structure: Structure,
+    unitA: Unit.Atomic,
+    indexA: StructureElement.UnitIndex,
+    unitB: Unit.Atomic,
+    indexB: StructureElement.UnitIndex,
+) {
     let hIndex = indexA;
     unitA.conformation.position(unitA.elements[indexA], tmpPosA);
     unitB.conformation.position(unitB.elements[indexB], tmpPosB);

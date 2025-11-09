@@ -8,7 +8,7 @@
  */
 
 import type { NumberArray } from '../type-helpers.ts';
-import { U, makeCodes, codes2map, checkCompressionStreamSupport } from './util.ts';
+import { checkCompressionStreamSupport, codes2map, makeCodes, U } from './util.ts';
 import type { RuntimeContext } from '../../mol-task/index.ts';
 
 function InflateContext(data: Uint8Array<ArrayBuffer>, buf?: Uint8Array<ArrayBuffer>) {
@@ -20,10 +20,10 @@ function InflateContext(data: Uint8Array<ArrayBuffer>, buf?: Uint8Array<ArrayBuf
         noBuf,
         BFINAL: 0,
         off: 0,
-        pos: 0
+        pos: 0,
     };
 }
-type InflateContext = ReturnType<typeof InflateContext>
+type InflateContext = ReturnType<typeof InflateContext>;
 
 function inflateBlocks(ctx: InflateContext, count: number) {
     const { data, noBuf } = ctx;
@@ -47,7 +47,7 @@ function inflateBlocks(ctx: InflateContext, count: number) {
             const len = data[p8 - 4] | (data[p8 - 3] << 8);
             if (noBuf) buf = _check(buf, off + len);
             buf.set(new Uint8Array(data.buffer, data.byteOffset + p8, len), off);
-            pos = ((p8 + len) << 3);
+            pos = (p8 + len) << 3;
             off += len;
             continue;
         }
@@ -82,7 +82,8 @@ function inflateBlocks(ctx: InflateContext, count: number) {
             makeCodes(U.itree, tl);
             codes2map(U.itree, tl, U.imap);
 
-            lmap = U.lmap; dmap = U.dmap;
+            lmap = U.lmap;
+            dmap = U.dmap;
 
             pos = _decodeTiny(U.imap, (1 << tl) - 1, HLIT + HDIST, data, pos, U.ttree);
             const mx0 = _copyOut(U.ttree, 0, HLIT, U.ltree);
@@ -157,7 +158,11 @@ function inflateBlocks(ctx: InflateContext, count: number) {
 // inflate: 428.925048828125 ms
 
 // https://tools.ietf.org/html/rfc1951
-export async function _inflate(runtime: RuntimeContext, data: Uint8Array<ArrayBuffer>, buf?: Uint8Array<ArrayBuffer>): Promise<Uint8Array<ArrayBuffer>> {
+export async function _inflate(
+    runtime: RuntimeContext,
+    data: Uint8Array<ArrayBuffer>,
+    buf?: Uint8Array<ArrayBuffer>,
+): Promise<Uint8Array<ArrayBuffer>> {
     if (data[0] === 3 && data[1] === 0) return (buf ? buf : new Uint8Array(0));
 
     if (checkCompressionStreamSupport('deflate-raw')) {
@@ -226,14 +231,14 @@ function _decodeTiny(lmap: NumberArray, LL: number, len: number, data: Uint8Arra
         } else {
             let ll = 0, n = 0;
             if (lit === 16) {
-                n = (3 + _bitsE(data, pos, 2));
+                n = 3 + _bitsE(data, pos, 2);
                 pos += 2;
                 ll = tree[i - 1];
             } else if (lit === 17) {
-                n = (3 + _bitsE(data, pos, 3));
+                n = 3 + _bitsE(data, pos, 3);
                 pos += 3;
             } else if (lit === 18) {
-                n = (11 + _bitsE(data, pos, 7));
+                n = 11 + _bitsE(data, pos, 7);
                 pos += 7;
             }
             const ni = i + n;
@@ -251,13 +256,13 @@ function _copyOut(src: number[], off: number, len: number, tree: number[]) {
     const tl = tree.length >>> 1;
     while (i < len) {
         const v = src[i + off];
-        tree[(i << 1)] = 0;
+        tree[i << 1] = 0;
         tree[(i << 1) + 1] = v;
-        if (v > mx)mx = v;
+        if (v > mx) mx = v;
         i++;
     }
     while (i < tl) {
-        tree[(i << 1)] = 0;
+        tree[i << 1] = 0;
         tree[(i << 1) + 1] = 0;
         i++;
     }
@@ -269,9 +274,10 @@ function _bitsE(dt: NumberArray, pos: number, length: number) {
 }
 
 function _bitsF(dt: NumberArray, pos: number, length: number) {
-    return ((dt[pos >>> 3] | (dt[(pos >>> 3) + 1] << 8) | (dt[(pos >>> 3) + 2] << 16)) >>> (pos & 7)) & ((1 << length) - 1);
+    return ((dt[pos >>> 3] | (dt[(pos >>> 3) + 1] << 8) | (dt[(pos >>> 3) + 2] << 16)) >>> (pos & 7)) &
+        ((1 << length) - 1);
 }
 
-function _get17(dt: NumberArray, pos: number) {	// return at least 17 meaningful bytes
+function _get17(dt: NumberArray, pos: number) { // return at least 17 meaningful bytes
     return (dt[pos >>> 3] | (dt[(pos >>> 3) + 1] << 8) | (dt[(pos >>> 3) + 2] << 16)) >>> (pos & 7);
 }

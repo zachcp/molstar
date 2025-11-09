@@ -15,59 +15,60 @@ export { StateTree };
  * Represented as an immutable map.
  */
 interface StateTree {
-    readonly root: StateTransform,
-    readonly transforms: StateTree.Transforms,
-    readonly children: StateTree.Children,
+    readonly root: StateTransform;
+    readonly transforms: StateTree.Transforms;
+    readonly children: StateTree.Children;
     /** Refs to all nodes that depend on the given key */
-    readonly dependencies: StateTree.Dependencies,
+    readonly dependencies: StateTree.Dependencies;
 
-    asTransient(): TransientTree
+    asTransient(): TransientTree;
 }
 
 namespace StateTree {
-    type Ref = StateTransform.Ref
+    type Ref = StateTransform.Ref;
 
     export interface ChildSet {
-        readonly size: number,
-        readonly values: OrderedSet<Ref>['values'],
-        has(ref: Ref): boolean,
-        readonly forEach: OrderedSet<Ref>['forEach'],
-        readonly map: OrderedSet<Ref>['map'],
-        toArray(): Ref[],
-        first(defaultValue?: Ref): Ref | undefined,
-        asMutable(): MutableChildSet
+        readonly size: number;
+        readonly values: OrderedSet<Ref>['values'];
+        has(ref: Ref): boolean;
+        readonly forEach: OrderedSet<Ref>['forEach'];
+        readonly map: OrderedSet<Ref>['map'];
+        toArray(): Ref[];
+        first(defaultValue?: Ref): Ref | undefined;
+        asMutable(): MutableChildSet;
     }
 
     export interface MutableChildSet extends ChildSet {
-        add(ref: Ref): MutableChildSet,
-        remove(ref: Ref): MutableChildSet,
-        asImmutable(): ChildSet
+        add(ref: Ref): MutableChildSet;
+        remove(ref: Ref): MutableChildSet;
+        asImmutable(): ChildSet;
     }
 
-
     interface _Map<T> {
-        readonly size: number,
-        has(ref: Ref): boolean,
-        get(ref: Ref): T,
-        asImmutable(): _Map<T>,
-        asMutable(): MutableMap<T>
+        readonly size: number;
+        has(ref: Ref): boolean;
+        get(ref: Ref): T;
+        asImmutable(): _Map<T>;
+        asMutable(): MutableMap<T>;
     }
 
     export interface MutableMap<T> extends _Map<T> {
-        set(ref: Ref, value: T): MutableMap<T>,
-        delete(ref: Ref): MutableMap<T>
+        set(ref: Ref, value: T): MutableMap<T>;
+        delete(ref: Ref): MutableMap<T>;
     }
 
     export interface Transforms extends _Map<StateTransform> {}
-    export interface Children extends _Map<ChildSet> { }
-    export interface Dependencies extends _Map<ChildSet> { }
+    export interface Children extends _Map<ChildSet> {}
+    export interface Dependencies extends _Map<ChildSet> {}
 
     export interface MutableTransforms extends MutableMap<StateTransform> {}
-    export interface MutableChildren extends MutableMap<MutableChildSet> { }
-    export interface MutableDependencies extends MutableMap<MutableChildSet> { }
+    export interface MutableChildren extends MutableMap<MutableChildSet> {}
+    export interface MutableDependencies extends MutableMap<MutableChildSet> {}
 
     class Impl implements StateTree {
-        get root() { return this.transforms.get(StateTransform.RootRef)!; }
+        get root() {
+            return this.transforms.get(StateTransform.RootRef)!;
+        }
 
         asTransient(): TransientTree {
             return new TransientTree(this);
@@ -85,16 +86,23 @@ namespace StateTree {
         return create(
             ImmutableMap([[root.ref, root] as [Ref, StateTransform]]) as Transforms,
             ImmutableMap([[root.ref, OrderedSet()] as [Ref, ChildSet]]) as Children,
-            ImmutableMap() as Dependencies);
+            ImmutableMap() as Dependencies,
+        );
     }
 
     export function create(nodes: Transforms, children: Children, dependencies: Dependencies): StateTree {
         return new Impl(nodes, children, dependencies);
     }
 
-    type VisitorCtx = { tree: StateTree, state: any, f: (node: StateTransform, tree: StateTree, state: any) => boolean | undefined | void };
+    type VisitorCtx = {
+        tree: StateTree;
+        state: any;
+        f: (node: StateTransform, tree: StateTree, state: any) => boolean | undefined | void;
+    };
 
-    function _postOrderFunc(this: VisitorCtx, c: Ref | undefined) { _doPostOrder(this, this.tree.transforms.get(c!)!); }
+    function _postOrderFunc(this: VisitorCtx, c: Ref | undefined) {
+        _doPostOrder(this, this.tree.transforms.get(c!)!);
+    }
     function _doPostOrder(ctx: VisitorCtx, root: StateTransform) {
         const children = ctx.tree.children.get(root.ref);
         if (children && children.size) {
@@ -106,13 +114,20 @@ namespace StateTree {
     /**
      * Visit all nodes in a subtree in "post order", meaning leafs get visited first.
      */
-    export function doPostOrder<S>(tree: StateTree, root: StateTransform, state: S, f: (node: StateTransform, tree: StateTree, state: S) => boolean | undefined | void): S {
+    export function doPostOrder<S>(
+        tree: StateTree,
+        root: StateTransform,
+        state: S,
+        f: (node: StateTransform, tree: StateTree, state: S) => boolean | undefined | void,
+    ): S {
         const ctx: VisitorCtx = { tree, state, f };
         _doPostOrder(ctx, root);
         return ctx.state;
     }
 
-    function _preOrderFunc(this: VisitorCtx, c: Ref | undefined) { _doPreOrder(this, this.tree.transforms.get(c!)!); }
+    function _preOrderFunc(this: VisitorCtx, c: Ref | undefined) {
+        _doPreOrder(this, this.tree.transforms.get(c!)!);
+    }
     function _doPreOrder(ctx: VisitorCtx, root: StateTransform) {
         const ret = ctx.f(root, ctx.tree, ctx.state);
         if (typeof ret === 'boolean' && !ret) return;
@@ -126,13 +141,20 @@ namespace StateTree {
      * Visit all nodes in a subtree in "pre order", meaning leafs get visited last.
      * If the visitor function returns false, the visiting for that branch is interrupted.
      */
-    export function doPreOrder<S>(tree: StateTree, root: StateTransform, state: S, f: (node: StateTransform, tree: StateTree, state: S) => boolean | undefined | void): S {
+    export function doPreOrder<S>(
+        tree: StateTree,
+        root: StateTransform,
+        state: S,
+        f: (node: StateTransform, tree: StateTree, state: S) => boolean | undefined | void,
+    ): S {
         const ctx: VisitorCtx = { tree, state, f };
         _doPreOrder(ctx, root);
         return ctx.state;
     }
 
-    function _subtree(n: StateTransform, _: any, subtree: StateTransform[]) { subtree.push(n); }
+    function _subtree(n: StateTransform, _: any, subtree: StateTransform[]) {
+        subtree.push(n);
+    }
     /**
      * Get all nodes in a subtree, leafs come first.
      */
@@ -148,7 +170,7 @@ namespace StateTree {
 
     export interface Serialized {
         /** Transforms serialized in pre-order */
-        transforms: StateTransform.Serialized[]
+        transforms: StateTransform.Serialized[];
     }
 
     export function toJSON(tree: StateTree): Serialized {
@@ -190,18 +212,22 @@ namespace StateTree {
             }
         }
 
-        dependent.forEach(d => {
+        dependent.forEach((d) => {
             dependencies.set(d, dependencies.get(d)!.asImmutable());
         });
 
-        return create(nodes.asImmutable() as Transforms, children.asImmutable() as Children, dependencies.asImmutable() as Dependencies);
+        return create(
+            nodes.asImmutable() as Transforms,
+            children.asImmutable() as Children,
+            dependencies.asImmutable() as Dependencies,
+        );
     }
 
     export function dump(tree: StateTree) {
         console.log({
             tr: (tree.transforms as ImmutableMap<any, any>).keySeq().toArray(),
-            tr1: (tree.transforms as ImmutableMap<any, any>).valueSeq().toArray().map(t => t.ref),
-            ch: (tree.children as ImmutableMap<any, any>).keySeq().toArray()
+            tr1: (tree.transforms as ImmutableMap<any, any>).valueSeq().toArray().map((t) => t.ref),
+            ch: (tree.children as ImmutableMap<any, any>).keySeq().toArray(),
         });
     }
 
@@ -241,7 +267,7 @@ namespace StateTree {
 
     /** Re-use parameters of transforms with the same ref, transformer, and version */
     export function reuseTransformParams(destination: StateTree.Serialized, source: StateTree.Serialized) {
-        const srcMap = new Map<StateTransform.Ref, StateTransform.Serialized>(source.transforms.map(t => [t.ref, t]));
+        const srcMap = new Map<StateTransform.Ref, StateTransform.Serialized>(source.transforms.map((t) => [t.ref, t]));
 
         for (const dest of destination.transforms) {
             const src = srcMap.get(dest.ref);

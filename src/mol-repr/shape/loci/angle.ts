@@ -11,28 +11,28 @@ import { Text } from '../../../mol-geo/geometry/text/text.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { ColorNames } from '../../../mol-util/color/names.ts';
 import { ShapeRepresentation } from '../representation.ts';
-import { Representation, type RepresentationParamsGetter, type RepresentationContext } from '../../representation.ts';
+import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../../representation.ts';
 import { Shape } from '../../../mol-model/shape.ts';
 import { LinesBuilder } from '../../../mol-geo/geometry/lines/lines-builder.ts';
 import { TextBuilder } from '../../../mol-geo/geometry/text/text-builder.ts';
-import { Vec3, Mat4 } from '../../../mol-math/linear-algebra.ts';
+import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
-import { radToDeg, arcLength } from '../../../mol-math/misc.ts';
+import { arcLength, radToDeg } from '../../../mol-math/misc.ts';
 import { Circle } from '../../../mol-geo/primitive/circle.ts';
 import { transformPrimitive } from '../../../mol-geo/primitive/primitive.ts';
-import { MarkerActions, MarkerAction } from '../../../mol-util/marker-action.ts';
+import { MarkerAction, MarkerActions } from '../../../mol-util/marker-action.ts';
 import { angleLabel } from '../../../mol-theme/label.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { LociLabelTextParams } from './common.ts';
 
 export interface AngleData {
-    triples: Loci.Bundle<3>[]
+    triples: Loci.Bundle<3>[];
 }
 
 const SharedParams = {
     color: PD.Color(ColorNames.lightgreen),
-    arcScale: PD.Numeric(0.7, { min: 0.01, max: 1, step: 0.01 })
+    arcScale: PD.Numeric(0.7, { min: 0.01, max: 1, step: 0.01 }),
 };
 
 const LinesParams = {
@@ -44,14 +44,14 @@ const LinesParams = {
 };
 
 const VectorsParams = {
-    ...LinesParams
+    ...LinesParams,
 };
-type VectorsParams = typeof VectorsParams
+type VectorsParams = typeof VectorsParams;
 
 const ArcParams = {
-    ...LinesParams
+    ...LinesParams,
 };
-type ArcParams = typeof ArcParams
+type ArcParams = typeof ArcParams;
 
 const SectorParams = {
     ...Mesh.Params,
@@ -59,13 +59,22 @@ const SectorParams = {
     ignoreLight: PD.Boolean(true),
     sectorOpacity: PD.Numeric(0.75, { min: 0, max: 1, step: 0.01 }),
 };
-type SectorParams = typeof SectorParams
+type SectorParams = typeof SectorParams;
 
 const AngleVisuals = {
-    'vectors': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<AngleData, VectorsParams>) => ShapeRepresentation(getVectorsShape, Lines.Utils, { modifyState: s => ({ ...s, pickable: false }) }),
-    'arc': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<AngleData, ArcParams>) => ShapeRepresentation(getArcShape, Lines.Utils, { modifyState: s => ({ ...s, pickable: false }) }),
-    'sector': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<AngleData, SectorParams>) => ShapeRepresentation(getSectorShape, Mesh.Utils, { modifyProps: p => ({ ...p, alpha: p.sectorOpacity }), modifyState: s => ({ ...s, markerActions: MarkerActions.Highlighting }) }),
-    'text': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<AngleData, LociLabelTextParams>) => ShapeRepresentation(getTextShape, Text.Utils, { modifyState: s => ({ ...s, markerActions: MarkerAction.None }) }),
+    'vectors': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<AngleData, VectorsParams>) =>
+        ShapeRepresentation(getVectorsShape, Lines.Utils, { modifyState: (s) => ({ ...s, pickable: false }) }),
+    'arc': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<AngleData, ArcParams>) =>
+        ShapeRepresentation(getArcShape, Lines.Utils, { modifyState: (s) => ({ ...s, pickable: false }) }),
+    'sector': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<AngleData, SectorParams>) =>
+        ShapeRepresentation(getSectorShape, Mesh.Utils, {
+            modifyProps: (p) => ({ ...p, alpha: p.sectorOpacity }),
+            modifyState: (s) => ({ ...s, markerActions: MarkerActions.Highlighting }),
+        }),
+    'text': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<AngleData, LociLabelTextParams>) =>
+        ShapeRepresentation(getTextShape, Text.Utils, {
+            modifyState: (s) => ({ ...s, markerActions: MarkerAction.None }),
+        }),
 };
 
 export const AngleParams = {
@@ -75,8 +84,8 @@ export const AngleParams = {
     ...LociLabelTextParams,
     visuals: PD.MultiSelect(['vectors', 'sector', 'text'], PD.objectToOptions(AngleVisuals)),
 };
-export type AngleParams = typeof AngleParams
-export type AngleProps = PD.Values<AngleParams>
+export type AngleParams = typeof AngleParams;
+export type AngleProps = PD.Values<AngleParams>;
 
 //
 
@@ -94,7 +103,7 @@ function getAngleState() {
         angle: 0,
     };
 }
-type AngleState = ReturnType<typeof getAngleState>
+type AngleState = ReturnType<typeof getAngleState>;
 
 const tmpVec = Vec3();
 const tmpMat = Mat4();
@@ -136,7 +145,9 @@ function getCircle(state: AngleState, segmentLength?: number) {
 const tmpState = getAngleState();
 
 function getAngleName(data: AngleData) {
-    return data.triples.length === 1 ? `Angle ${angleLabel(data.triples[0], { measureOnly: true })}` : `${data.triples.length} Angles`;
+    return data.triples.length === 1
+        ? `Angle ${angleLabel(data.triples[0], { measureOnly: true })}`
+        : `${data.triples.length} Angles`;
 }
 
 //
@@ -237,7 +248,16 @@ function getTextShape(ctx: RuntimeContext, data: AngleData, props: AngleProps, s
 
 //
 
-export type AngleRepresentation = Representation<AngleData, AngleParams>
-export function AngleRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<AngleData, AngleParams>): AngleRepresentation {
-    return Representation.createMulti('Angle', ctx, getParams, Representation.StateBuilder, AngleVisuals as unknown as Representation.Def<AngleData, AngleParams>);
+export type AngleRepresentation = Representation<AngleData, AngleParams>;
+export function AngleRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<AngleData, AngleParams>,
+): AngleRepresentation {
+    return Representation.createMulti(
+        'Angle',
+        ctx,
+        getParams,
+        Representation.StateBuilder,
+        AngleVisuals as unknown as Representation.Def<AngleData, AngleParams>,
+    );
 }

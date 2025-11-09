@@ -1,4 +1,4 @@
-﻿@use 'layout/common' as *;
+@use 'layout/common' as *;
 @use 'layout/controls-landscape.scss' as *;
 @use 'layout/controls-outside.scss' as *;
 @use 'layout/controls-portrait.scss' as *;
@@ -24,33 +24,24 @@
     .msp-layout-standard-reactive {
         position: absolute;
 
-        @media (orientation:landscape),
-        (min-width: 1000px) {
+        @media (orientation: landscape), (min-width: 1000px) {
             @include layout-landscape;
         }
 
-        ;
-
-        @media (orientation:portrait) and (max-width: 1000px) {
+        @media (orientation: portrait) and (max-width: 1000px) {
             @include layout-portrait;
         }
-
-        ;
     }
 
     .msp-layout-expanded {
         position: fixed;
 
-        @media (orientation:landscape) {
+        @media (orientation: landscape) {
             @include layout-landscape;
         }
 
-        ;
-
-        @media (orientation:portrait) {
+        @media (orientation: portrait) {
             @include layout-portrait;
         }
-
-        ;
     }
 }

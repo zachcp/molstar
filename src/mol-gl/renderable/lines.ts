@@ -4,10 +4,25 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { type Renderable, type RenderableState, createRenderable } from '../renderable.ts';
+import { createRenderable, type Renderable, type RenderableState } from '../renderable.ts';
 import type { WebGLContext } from '../webgl/context.ts';
 import { createGraphicsRenderItem, type Transparency } from '../webgl/render-item.ts';
-import { GlobalUniformSchema, BaseSchema, AttributeSpec, DefineSpec, type Values, InternalSchema, SizeSchema, ElementsSpec, type InternalValues, GlobalTextureSchema, UniformSpec, type GlobalDefineValues, type GlobalDefines, GlobalDefineSchema } from './schema.ts';
+import {
+    AttributeSpec,
+    BaseSchema,
+    DefineSpec,
+    ElementsSpec,
+    type GlobalDefines,
+    GlobalDefineSchema,
+    type GlobalDefineValues,
+    GlobalTextureSchema,
+    GlobalUniformSchema,
+    InternalSchema,
+    type InternalValues,
+    SizeSchema,
+    UniformSpec,
+    type Values,
+} from './schema.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 import { LinesShaderCode } from '../shader-code.ts';
 
@@ -23,11 +38,25 @@ export const LinesSchema = {
     uDoubleSided: UniformSpec('b', 'material'),
     dFlipSided: DefineSpec('boolean'),
 };
-export type LinesSchema = typeof LinesSchema
-export type LinesValues = Values<LinesSchema>
+export type LinesSchema = typeof LinesSchema;
+export type LinesValues = Values<LinesSchema>;
 
-export function LinesRenderable(ctx: WebGLContext, id: number, values: LinesValues, state: RenderableState, materialId: number, transparency: Transparency, globals: GlobalDefines): Renderable<LinesValues> {
-    const schema = { ...GlobalUniformSchema, ...GlobalTextureSchema, ...GlobalDefineSchema, ...InternalSchema, ...LinesSchema };
+export function LinesRenderable(
+    ctx: WebGLContext,
+    id: number,
+    values: LinesValues,
+    state: RenderableState,
+    materialId: number,
+    transparency: Transparency,
+    globals: GlobalDefines,
+): Renderable<LinesValues> {
+    const schema = {
+        ...GlobalUniformSchema,
+        ...GlobalTextureSchema,
+        ...GlobalDefineSchema,
+        ...InternalSchema,
+        ...LinesSchema,
+    };
     const renderValues: LinesValues & InternalValues & GlobalDefineValues = {
         ...values,
         uObjectId: ValueCell.create(id),
@@ -35,7 +64,15 @@ export function LinesRenderable(ctx: WebGLContext, id: number, values: LinesValu
         dColorMarker: ValueCell.create(globals.dColorMarker),
     };
     const shaderCode = LinesShaderCode;
-    const renderItem = createGraphicsRenderItem(ctx, 'triangles', shaderCode, schema, renderValues, materialId, transparency);
+    const renderItem = createGraphicsRenderItem(
+        ctx,
+        'triangles',
+        shaderCode,
+        schema,
+        renderValues,
+        materialId,
+        transparency,
+    );
 
     return createRenderable(renderItem, renderValues, state);
 }

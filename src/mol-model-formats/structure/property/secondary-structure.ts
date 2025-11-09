@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) 2018-2022 mol* contributors, licensed under MIT, See LICENSE file for more info.
  *
@@ -17,8 +16,8 @@ import type { CustomPropertyDescriptor } from '../../../mol-model/custom-propert
 
 export { ModelSecondaryStructure };
 
-type StructConf = Table<mmCIF_Schema['struct_conf']>
-type StructSheetRange = Table<mmCIF_Schema['struct_sheet_range']>
+type StructConf = Table<mmCIF_Schema['struct_conf']>;
+type StructSheetRange = Table<mmCIF_Schema['struct_sheet_range']>;
 type CoordinateType = 'label' | 'auth';
 
 namespace ModelSecondaryStructure {
@@ -28,7 +27,11 @@ namespace ModelSecondaryStructure {
 
     export const Provider = FormatPropertyProvider.create<SecondaryStructure>(Descriptor);
 
-    export function fromStruct(conf: StructConf, sheetRange: StructSheetRange, hierarchy: AtomicHierarchy): SecondaryStructure {
+    export function fromStruct(
+        conf: StructConf,
+        sheetRange: StructSheetRange,
+        hierarchy: AtomicHierarchy,
+    ): SecondaryStructure {
         const map: SecondaryStructureMap = new Map();
         const elements: SecondaryStructure.Element[] = [{ kind: 'none' }];
 
@@ -44,7 +47,7 @@ namespace ModelSecondaryStructure {
         const secStruct: SecondaryStructureData = {
             type: new Int32Array(n) as any,
             key: new Int32Array(n) as any,
-            elements
+            elements,
         };
 
         if (map.size > 0) assignSecondaryStructureRanges(hierarchy, coordinates, map, secStruct);
@@ -54,25 +57,36 @@ namespace ModelSecondaryStructure {
 
 function getCoordinateType(conf: StructConf, sheetRange: StructSheetRange): CoordinateType {
     if (conf._rowCount > 0) {
-        if (conf.beg_label_seq_id.valueKind(0) !== Column.ValueKinds.Present || conf.end_label_seq_id.valueKind(0) !== Column.ValueKinds.Present) return 'auth';
+        if (
+            conf.beg_label_seq_id.valueKind(0) !== Column.ValueKinds.Present ||
+            conf.end_label_seq_id.valueKind(0) !== Column.ValueKinds.Present
+        ) return 'auth';
     } else if (sheetRange) {
-        if (sheetRange.beg_label_seq_id.valueKind(0) !== Column.ValueKinds.Present || sheetRange.end_label_seq_id.valueKind(0) !== Column.ValueKinds.Present) return 'auth';
+        if (
+            sheetRange.beg_label_seq_id.valueKind(0) !== Column.ValueKinds.Present ||
+            sheetRange.end_label_seq_id.valueKind(0) !== Column.ValueKinds.Present
+        ) return 'auth';
     }
     return 'label';
 }
 
 type SecondaryStructureEntry = {
-    startSeqId: number,
-    startInsCode: string | null,
-    endSeqId: number,
-    endInsCode: string | null,
-    type: SecondaryStructureType,
-    key: number
-}
-type SecondaryStructureMap = Map<string, Map<number, SecondaryStructureEntry[]>>
-type SecondaryStructureData = { type: SecondaryStructureType[], key: number[], elements: SecondaryStructure.Element[] }
+    startSeqId: number;
+    startInsCode: string | null;
+    endSeqId: number;
+    endInsCode: string | null;
+    type: SecondaryStructureType;
+    key: number;
+};
+type SecondaryStructureMap = Map<string, Map<number, SecondaryStructureEntry[]>>;
+type SecondaryStructureData = { type: SecondaryStructureType[]; key: number[]; elements: SecondaryStructure.Element[] };
 
-function addHelices(cat: StructConf, coordinates: CoordinateType, map: SecondaryStructureMap, elements: SecondaryStructure.Element[]) {
+function addHelices(
+    cat: StructConf,
+    coordinates: CoordinateType,
+    map: SecondaryStructureMap,
+    elements: SecondaryStructure.Element[],
+) {
     if (!cat._rowCount) return;
 
     const { beg_label_asym_id, beg_label_seq_id, beg_auth_seq_id, pdbx_beg_PDB_ins_code } = cat;
@@ -83,18 +97,20 @@ function addHelices(cat: StructConf, coordinates: CoordinateType, map: Secondary
     const end_seq_id = coordinates === 'label' ? end_label_seq_id : end_auth_seq_id;
 
     for (let i = 0, _i = cat._rowCount; i < _i; i++) {
-        const type = SecondaryStructureType.create(pdbx_PDB_helix_class.valueKind(i) === Column.ValueKinds.Present
-            ? SecondaryStructureType.SecondaryStructurePdb[pdbx_PDB_helix_class.value(i)]
-            : conf_type_id.valueKind(i) === Column.ValueKinds.Present
+        const type = SecondaryStructureType.create(
+            pdbx_PDB_helix_class.valueKind(i) === Column.ValueKinds.Present
+                ? SecondaryStructureType.SecondaryStructurePdb[pdbx_PDB_helix_class.value(i)]
+                : conf_type_id.valueKind(i) === Column.ValueKinds.Present
                 ? SecondaryStructureType.SecondaryStructureMmcif[conf_type_id.value(i)]
-                : SecondaryStructureType.Flag.NA);
+                : SecondaryStructureType.Flag.NA,
+        );
 
         const element: SecondaryStructure.Helix = {
             kind: 'helix',
             flags: type,
             type_id: conf_type_id.valueKind(i) === Column.ValueKinds.Present ? conf_type_id.value(i) : 'helx_p',
             helix_class: pdbx_PDB_helix_class.value(i),
-            details: details.valueKind(i) === Column.ValueKinds.Present ? details.value(i) : void 0
+            details: details.valueKind(i) === Column.ValueKinds.Present ? details.value(i) : void 0,
         };
         const entry: SecondaryStructureEntry = {
             startSeqId: beg_seq_id.value(i),
@@ -102,7 +118,7 @@ function addHelices(cat: StructConf, coordinates: CoordinateType, map: Secondary
             endSeqId: end_seq_id.value(i),
             endInsCode: pdbx_end_PDB_ins_code.value(i),
             type,
-            key: elements.length
+            key: elements.length,
         };
 
         elements[elements.length] = element;
@@ -121,7 +137,13 @@ function addHelices(cat: StructConf, coordinates: CoordinateType, map: Secondary
     }
 }
 
-function addSheets(cat: StructSheetRange, coordinates: CoordinateType, map: SecondaryStructureMap, sheetCount: number, elements: SecondaryStructure.Element[]) {
+function addSheets(
+    cat: StructSheetRange,
+    coordinates: CoordinateType,
+    map: SecondaryStructureMap,
+    sheetCount: number,
+    elements: SecondaryStructure.Element[],
+) {
     if (!cat._rowCount) return;
 
     const { beg_label_asym_id, beg_label_seq_id, beg_auth_seq_id, pdbx_beg_PDB_ins_code } = cat;
@@ -143,12 +165,14 @@ function addSheets(cat: StructSheetRange, coordinates: CoordinateType, map: Seco
             sheet_id_key.set(id, key);
         }
 
-        const type = SecondaryStructureType.create(SecondaryStructureType.Flag.Beta | SecondaryStructureType.Flag.BetaSheet);
+        const type = SecondaryStructureType.create(
+            SecondaryStructureType.Flag.Beta | SecondaryStructureType.Flag.BetaSheet,
+        );
         const element: SecondaryStructure.Sheet = {
             kind: 'sheet',
             flags: type,
             sheet_id: id,
-            symmetry: void 0
+            symmetry: void 0,
         };
         const entry: SecondaryStructureEntry = {
             startSeqId: beg_seq_id.value(i),
@@ -156,7 +180,7 @@ function addSheets(cat: StructSheetRange, coordinates: CoordinateType, map: Seco
             endSeqId: end_seq_id.value(i),
             endInsCode: pdbx_end_PDB_ins_code.value(i),
             type,
-            key: elements.length
+            key: elements.length,
         };
 
         elements[elements.length] = element;
@@ -177,7 +201,14 @@ function addSheets(cat: StructSheetRange, coordinates: CoordinateType, map: Seco
     return;
 }
 
-function assignSecondaryStructureEntry(hierarchy: AtomicHierarchy, coordinates: CoordinateType, entry: SecondaryStructureEntry, resStart: ResidueIndex, resEnd: ResidueIndex, data: SecondaryStructureData) {
+function assignSecondaryStructureEntry(
+    hierarchy: AtomicHierarchy,
+    coordinates: CoordinateType,
+    entry: SecondaryStructureEntry,
+    resStart: ResidueIndex,
+    resEnd: ResidueIndex,
+    data: SecondaryStructureData,
+) {
     const { auth_seq_id, label_seq_id, pdbx_PDB_ins_code } = hierarchy.residues;
     const { endSeqId, endInsCode, key, type } = entry;
 
@@ -189,8 +220,10 @@ function assignSecondaryStructureEntry(hierarchy: AtomicHierarchy, coordinates: 
         data.type[rI] = type;
         data.key[rI] = key;
 
-        if ((seqNumber > endSeqId) ||
-            (seqNumber === endSeqId && pdbx_PDB_ins_code.value(rI) === endInsCode)) {
+        if (
+            (seqNumber > endSeqId) ||
+            (seqNumber === endSeqId && pdbx_PDB_ins_code.value(rI) === endInsCode)
+        ) {
             break;
         }
 
@@ -198,14 +231,20 @@ function assignSecondaryStructureEntry(hierarchy: AtomicHierarchy, coordinates: 
     }
 }
 
-function assignSecondaryStructureRanges(hierarchy: AtomicHierarchy, coordinates: CoordinateType, map: SecondaryStructureMap, data: SecondaryStructureData) {
+function assignSecondaryStructureRanges(
+    hierarchy: AtomicHierarchy,
+    coordinates: CoordinateType,
+    map: SecondaryStructureMap,
+    data: SecondaryStructureData,
+) {
     const { count: chainCount } = hierarchy.chainAtomSegments;
     const { label_asym_id } = hierarchy.chains;
     const { auth_seq_id, label_seq_id, pdbx_PDB_ins_code } = hierarchy.residues;
     const seq_id = coordinates === 'label' ? label_seq_id : auth_seq_id;
 
     for (let cI = 0 as ChainIndex; cI < chainCount; cI++) {
-        const resStart = AtomicHierarchy.chainStartResidueIndex(hierarchy, cI), resEnd = AtomicHierarchy.chainEndResidueIndexExcl(hierarchy, cI);
+        const resStart = AtomicHierarchy.chainStartResidueIndex(hierarchy, cI),
+            resEnd = AtomicHierarchy.chainEndResidueIndexExcl(hierarchy, cI);
         const asymId = label_asym_id.value(cI);
         if (map.has(asymId)) {
             const entries = map.get(asymId)!;

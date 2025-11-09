@@ -11,6 +11,6 @@ import { StructureSymmetry } from './structure/symmetry.ts';
 import { Bond } from './structure/unit/bonds.ts';
 import { StructureProperties } from './structure/properties.ts';
 
-export { StructureElement, Bond, Structure, Unit, StructureSymmetry, StructureProperties };
+export { Bond, Structure, StructureElement, StructureProperties, StructureSymmetry, Unit };
 export * from './structure/unit/rings.ts';
 export * from './export/mmcif.ts';

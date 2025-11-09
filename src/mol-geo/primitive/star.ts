@@ -11,9 +11,9 @@ export const DefaultStarProps = {
     pointCount: 5,
     outerRadius: 1,
     innerRadius: 0.5,
-    thickness: 0.3
+    thickness: 0.3,
 };
-export type StarProps = Partial<typeof DefaultStarProps>
+export type StarProps = Partial<typeof DefaultStarProps>;
 
 const op = Vec3.zero(), on = Vec3.zero();
 const a = Vec3.zero(), b = Vec3.zero(), c = Vec3.zero();

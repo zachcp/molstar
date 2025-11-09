@@ -20,14 +20,19 @@ import { Button, IconButton, ToggleButton } from '../controls/common.tsx';
 import { CancelOutlinedSvg, CenterFocusStrongSvg } from '../controls/icons.tsx';
 
 interface StructureFocusControlsState {
-    isBusy: boolean
-    showAction: boolean
+    isBusy: boolean;
+    showAction: boolean;
 }
 
-function addSymmetryGroupEntries(entries: Map<string, FocusEntry[]>, location: StructureElement.Location, unitSymmetryGroup: Unit.SymmetryGroup, granularity: 'residue' | 'chain') {
+function addSymmetryGroupEntries(
+    entries: Map<string, FocusEntry[]>,
+    location: StructureElement.Location,
+    unitSymmetryGroup: Unit.SymmetryGroup,
+    granularity: 'residue' | 'chain',
+) {
     const idx = SortedArray.indexOf(location.unit.elements, location.element) as UnitIndex;
     const base = StructureElement.Loci(location.structure, [
-        { unit: location.unit, indices: OrderedSet.ofSingleton(idx) }
+        { unit: location.unit, indices: OrderedSet.ofSingleton(idx) },
     ]);
     const extended = granularity === 'residue'
         ? StructureElement.Loci.extendToWholeResidues(base)
@@ -36,7 +41,7 @@ function addSymmetryGroupEntries(entries: Map<string, FocusEntry[]>, location: S
 
     for (const u of unitSymmetryGroup.units) {
         const loci = StructureElement.Loci(extended.structure, [
-            { unit: u, indices: extended.elements[0].indices }
+            { unit: u, indices: extended.elements[0].indices },
         ]);
 
         let label = lociLabel(loci, { reverse: true, hidePrefix: true, htmlStyling: false, granularity });
@@ -100,17 +105,18 @@ function getFocusEntries(structure: Structure) {
 
 export class StructureFocusControls extends PluginUIComponent<{}, StructureFocusControlsState> {
     override state = { isBusy: false, showAction: false };
-    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.focus.behaviors.current, c => {
+    override componentDidMount() {
+        this.subscribe(this.plugin.managers.structure.focus.behaviors.current, (c) => {
             // clear the memo cache
             this.getSelectionItems([]);
             this.forceUpdate();
         });
 
-        this.subscribe(this.plugin.managers.structure.focus.events.historyUpdated, c => {
+        this.subscribe(this.plugin.managers.structure.focus.events.historyUpdated, (c) => {
             this.forceUpdate();
         });
 
-        this.subscribe(this.plugin.behaviors.state.isBusy, v => {
+        this.subscribe(this.plugin.behaviors.state.isBusy, (v) => {
             this.setState({ isBusy: v, showAction: false });
         });
     }
@@ -129,10 +135,10 @@ export class StructureFocusControls extends PluginUIComponent<{}, StructureFocus
                     presetItems.push([
                         ActionMenu.Header(d.label, { description: d.label }),
                         ...ActionMenu.createItems(entries, {
-                            label: f => f.label,
-                            category: f => f.category,
-                            description: f => f.label
-                        })
+                            label: (f) => f.label,
+                            category: (f) => f.category,
+                            description: (f) => f.label,
+                        }),
                     ]);
                 }
             }
@@ -147,17 +153,17 @@ export class StructureFocusControls extends PluginUIComponent<{}, StructureFocus
             historyItems.push([
                 ActionMenu.Header('History', { description: 'Previously focused on items.' }),
                 ...ActionMenu.createItems(history, {
-                    label: f => f.label,
-                    description: f => {
-                        return f.category && f.label !== f.category
-                            ? `${f.category} | ${f.label}`
-                            : f.label;
-                    }
-                })
+                    label: (f) => f.label,
+                    description: (f) => {
+                        return f.category && f.label !== f.category ? `${f.category} | ${f.label}` : f.label;
+                    },
+                }),
             ]);
         }
 
-        const presetItems: ActionMenu.Items[] = this.getSelectionItems(this.plugin.managers.structure.hierarchy.selection.structures);
+        const presetItems: ActionMenu.Items[] = this.getSelectionItems(
+            this.plugin.managers.structure.hierarchy.selection.structures,
+        );
         if (presetItems.length === 1) {
             const item = presetItems[0] as ActionMenu.Items[];
             const header = item[0] as ActionMenu.Header;
@@ -214,7 +220,8 @@ export class StructureFocusControls extends PluginUIComponent<{}, StructureFocus
         return Binding.formatTriggers(binding);
     }
 
-    override render() {        const { current } = this.plugin.managers.structure.focus;
+    override render() {
+        const { current } = this.plugin.managers.structure.focus;
         const label = current?.label || 'Nothing Focused';
 
         let title = 'Click to Center Camera';
@@ -226,16 +233,41 @@ export class StructureFocusControls extends PluginUIComponent<{}, StructureFocus
             }
         }
 
-        return <>
-            <div className='msp-flex-row'>
-                <Button noOverflow onClick={this.focusCamera} title={title} onMouseEnter={this.highlightCurrent} onMouseLeave={this.clearHighlights} disabled={this.isDisabled || !current}
-                    style={{ textAlignLast: current ? 'left' : void 0 }}>
-                    {label}
-                </Button>
-                {current && <IconButton svg={CancelOutlinedSvg} onClick={this.clear} title='Clear' className='msp-form-control' flex disabled={this.isDisabled} />}
-                <ToggleButton icon={CenterFocusStrongSvg} title='Select a focus target to center on an show its surroundings. Hold shift to focus on multiple targets.' toggle={this.toggleAction} isSelected={this.state.showAction} disabled={this.isDisabled} style={{ flex: '0 0 40px', padding: 0 }} />
-            </div>
-            {this.state.showAction && <ActionMenu items={this.actionItems} onSelect={this.selectAction} />}
-        </>;
+        return (
+            <>
+                <div className='msp-flex-row'>
+                    <Button
+                        noOverflow
+                        onClick={this.focusCamera}
+                        title={title}
+                        onMouseEnter={this.highlightCurrent}
+                        onMouseLeave={this.clearHighlights}
+                        disabled={this.isDisabled || !current}
+                        style={{ textAlignLast: current ? 'left' : void 0 }}
+                    >
+                        {label}
+                    </Button>
+                    {current && (
+                        <IconButton
+                            svg={CancelOutlinedSvg}
+                            onClick={this.clear}
+                            title='Clear'
+                            className='msp-form-control'
+                            flex
+                            disabled={this.isDisabled}
+                        />
+                    )}
+                    <ToggleButton
+                        icon={CenterFocusStrongSvg}
+                        title='Select a focus target to center on an show its surroundings. Hold shift to focus on multiple targets.'
+                        toggle={this.toggleAction}
+                        isSelected={this.state.showAction}
+                        disabled={this.isDisabled}
+                        style={{ flex: '0 0 40px', padding: 0 }}
+                    />
+                </div>
+                {this.state.showAction && <ActionMenu items={this.actionItems} onSelect={this.selectAction} />}
+            </>
+        );
     }
 }

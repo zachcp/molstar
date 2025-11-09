@@ -7,7 +7,6 @@
 import { LinkedList } from '../linked-list';
 
 describe('linked list', () => {
-
     function toArray<T>(list: LinkedList<T>) {
         const ret: T[] = [];
         for (let t = list.first; !!t; t = t.next) {

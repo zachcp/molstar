@@ -9,18 +9,18 @@ import { LinkedList } from '../../../mol-data/generic.ts';
 import { ModelServerConfig as ServerConfig } from '../config.ts';
 
 interface CacheEntry<T> {
-    key: string,
-    approximateSize: number,
-    timeoutId: NodeJS.Timeout | undefined,
-    item: T
+    key: string;
+    approximateSize: number;
+    timeoutId: NodeJS.Timeout | undefined;
+    item: T;
 }
 
-type CacheNode<T> = LinkedList.Node<CacheEntry<T>>
+type CacheNode<T> = LinkedList.Node<CacheEntry<T>>;
 
 export interface CacheParams {
-    useCache: boolean,
-    maxApproximateSizeInBytes: number, // = 2 * 1014 * 1024 * 1024; // 2 GB
-    entryTimeoutInMs: number // = 10 * 60 * 1000; // 10 minutes
+    useCache: boolean;
+    maxApproximateSizeInBytes: number; // = 2 * 1014 * 1024 * 1024; // 2 GB
+    entryTimeoutInMs: number; // = 10 * 60 * 1000; // 10 minutes
 }
 
 export class Cache<T> {

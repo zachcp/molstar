@@ -5,7 +5,7 @@
  */
 
 import { type Color, ColorScale } from '../../mol-util/color/index.ts';
-import { StructureElement, Unit, Bond, type ElementIndex } from '../../mol-model/structure.ts';
+import { Bond, type ElementIndex, StructureElement, Unit } from '../../mol-model/structure.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ColorTheme } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
@@ -13,13 +13,17 @@ import type { ThemeDataContext } from '../theme.ts';
 import { ResidueHydrophobicity } from '../../mol-model/structure/model/types.ts';
 import { ColorThemeCategory } from './categories.ts';
 
-const Description = 'Assigns a color to every amino acid according to the "Experimentally determined hydrophobicity scale for proteins at membrane interfaces" by Wimely and White (doi:10.1038/nsb1096-842).';
+const Description =
+    'Assigns a color to every amino acid according to the "Experimentally determined hydrophobicity scale for proteins at membrane interfaces" by Wimely and White (doi:10.1038/nsb1096-842).';
 
 export const HydrophobicityColorThemeParams = {
     list: PD.ColorList('red-yellow-green', { presetKind: 'scale' }),
-    scale: PD.Select('DGwif', [['DGwif', 'DG water-membrane'], ['DGwoct', 'DG water-octanol'], ['Oct-IF', 'DG difference']] as const)
+    scale: PD.Select(
+        'DGwif',
+        [['DGwif', 'DG water-membrane'], ['DGwoct', 'DG water-octanol'], ['Oct-IF', 'DG difference']] as const,
+    ),
 };
-export type HydrophobicityColorThemeParams = typeof HydrophobicityColorThemeParams
+export type HydrophobicityColorThemeParams = typeof HydrophobicityColorThemeParams;
 export function getHydrophobicityColorThemeParams(ctx: ThemeDataContext) {
     return HydrophobicityColorThemeParams; // TODO return copy
 }
@@ -45,7 +49,10 @@ function getCoarseCompId(unit: Unit.Spheres | Unit.Gaussians, element: ElementIn
     }
 }
 
-export function HydrophobicityColorTheme(ctx: ThemeDataContext, props: PD.Values<HydrophobicityColorThemeParams>): ColorTheme<HydrophobicityColorThemeParams> {
+export function HydrophobicityColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<HydrophobicityColorThemeParams>,
+): ColorTheme<HydrophobicityColorThemeParams> {
     const scaleIndex = scaleIndexMap[props.scale];
 
     // get domain
@@ -61,7 +68,7 @@ export function HydrophobicityColorTheme(ctx: ThemeDataContext, props: PD.Values
         listOrName: props.list.colors,
         domain: [max, min],
         minLabel: 'Hydrophilic',
-        maxLabel: 'Hydrophobic'
+        maxLabel: 'Hydrophobic',
     });
 
     function color(location: Location): Color {
@@ -89,7 +96,7 @@ export function HydrophobicityColorTheme(ctx: ThemeDataContext, props: PD.Values
         color,
         props,
         description: Description,
-        legend: scale ? scale.legend : undefined
+        legend: scale ? scale.legend : undefined,
     };
 }
 
@@ -100,5 +107,5 @@ export const HydrophobicityColorThemeProvider: ColorTheme.Provider<Hydrophobicit
     factory: HydrophobicityColorTheme,
     getParams: getHydrophobicityColorThemeParams,
     defaultValues: PD.getDefaultValues(HydrophobicityColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
 };

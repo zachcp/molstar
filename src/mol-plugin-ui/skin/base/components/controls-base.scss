@@ -1,9 +1,7 @@
 @use '../vars' as *;
 @use '../common' as *;
 
-
 @mixin msp-btn($name, $font, $bg) {
-
     .msp-btn-#{$name},
     .msp-btn-#{$name}:active,
     .msp-btn-#{$name}:focus {
@@ -101,7 +99,6 @@
         white-space: nowrap;
         @include user-select(none);
 
-
         padding: 0 $control-spacing;
         line-height: $row-height;
         border: none;
@@ -142,14 +139,14 @@
     }
 
     .msp-btn-block {
-        >.msp-material-icon {
+        > .msp-material-icon {
             margin-left: 0;
-            margin-right: .4em;
+            margin-right: 0.4em;
         }
     }
 
     .msp-btn-childless {
-        >.msp-material-icon {
+        > .msp-material-icon {
             margin-left: 0;
             margin-right: 0;
         }
@@ -231,7 +228,6 @@
 
         &[disabled],
         fieldset[disabled] & {
-
             &:hover,
             &:focus {
                 text-decoration: none;
@@ -291,12 +287,12 @@
         line-height: $row-height;
     }
 
-    input[type="file"] {
+    input[type='file'] {
         display: block;
     }
 
     // Make range inputs behave like textual form controls
-    input[type="range"] {
+    input[type='range'] {
         display: block;
         width: 100%;
     }

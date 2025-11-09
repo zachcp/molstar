@@ -9,7 +9,6 @@
 
 import type { StringLike } from '../../../common/string-like.ts';
 
-
 /**
  * Efficient integer and float parsers.
  *
@@ -94,19 +93,19 @@ export const enum NumberTypes {
     Int = 0,
     Float = 1,
     Scientific = 2,
-    NaN = 3
+    NaN = 3,
 }
 
 export const NumberType = {
     Int: NumberTypes.Int,
     Float: NumberTypes.Float,
     Scientific: NumberTypes.Scientific,
-    NaN: NumberTypes.NaN
+    NaN: NumberTypes.NaN,
 } as const;
 export type NumberType = (typeof NumberType)[keyof typeof NumberType];
 
 function isInt(str: string, start: number, end: number) {
-    if (str.charCodeAt(start) === 45 /* - */) { start++; }
+    if (str.charCodeAt(start) === 45 /* - */) start++;
     for (; start < end; start++) {
         const c = str.charCodeAt(start) - 48;
         if (c > 9 || c < 0) return false;

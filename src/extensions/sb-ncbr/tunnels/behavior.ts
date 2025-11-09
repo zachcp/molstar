@@ -7,14 +7,17 @@
 import { PluginBehavior } from '../../../mol-plugin/behavior.ts';
 import { DownloadTunnels } from './actions.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
+import {
+    PresetStructureRepresentations,
+    StructureRepresentationPresetProvider,
+} from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
 import { Model, type Structure } from '../../../mol-model/structure.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
 import { StateObjectRef } from '../../../mol-state/index.ts';
 import { getTunnelsConfig, TunnelsDataParams } from './props.ts';
 import { StateTransforms } from '../../../mol-plugin-state/transforms.ts';
-import type { Tunnel, ChannelsDBdata, TunnelDB } from './data-model.ts';
-import { TunnelShapeProvider, TunnelFromRawData } from './representation.ts';
+import type { ChannelsDBdata, Tunnel, TunnelDB } from './data-model.ts';
+import { TunnelFromRawData, TunnelShapeProvider } from './representation.ts';
 import { ColorGenerator } from '../../meshes/mesh-utils.ts';
 
 export const SbNcbrTunnels = PluginBehavior.create<{ autoAttach: boolean }>({
@@ -35,9 +38,8 @@ export const SbNcbrTunnels = PluginBehavior.create<{ autoAttach: boolean }>({
     },
     params: () => ({
         autoAttach: PD.Boolean(true),
-    })
+    }),
 });
-
 
 export function isApplicable(structure?: Structure): boolean {
     return (
@@ -49,8 +51,9 @@ export function isApplicable(structure?: Structure): boolean {
 export const TunnelsPreset = StructureRepresentationPresetProvider({
     id: 'sb-ncbr-preset-structure-tunnels',
     display: {
-        name: 'Tunnels', group: 'Annotation',
-        description: 'Shows Tunnels from ChannelsDB contained in the structure.'
+        name: 'Tunnels',
+        group: 'Annotation',
+        description: 'Shows Tunnels from ChannelsDB contained in the structure.',
     },
     isApplicable(a): boolean {
         return isApplicable(a.data);
@@ -58,7 +61,7 @@ export const TunnelsPreset = StructureRepresentationPresetProvider({
     params: (a, plugin) => {
         return {
             ...StructureRepresentationPresetProvider.CommonParams,
-            ...getConfiguredDefaultParams(plugin)
+            ...getConfiguredDefaultParams(plugin),
         };
     },
     async apply(ref, params, plugin) {
@@ -68,7 +71,9 @@ export const TunnelsPreset = StructureRepresentationPresetProvider({
 
         const update = plugin.build();
         const webgl = plugin.canvas3dContext?.webgl;
-        const response = await (await fetch(`${params.serverUrl}/channels/${params.serverType}/${structure.model.entryId.toLowerCase()}`)).json();
+        const response = await (await fetch(
+            `${params.serverUrl}/channels/${params.serverType}/${structure.model.entryId.toLowerCase()}`,
+        )).json();
         const tunnels: Tunnel[] = [];
 
         Object.entries(response.Channels as ChannelsDBdata).forEach(([key, values]) => {
@@ -93,8 +98,8 @@ export const TunnelsPreset = StructureRepresentationPresetProvider({
 
         const preset = await PresetStructureRepresentations.auto.apply(ref, { ...params }, plugin);
 
-        return { components: preset.components, representations: { ...preset.representations, } };
-    }
+        return { components: preset.components, representations: { ...preset.representations } };
+    },
 });
 
 function getConfiguredDefaultParams(plugin: PluginContext) {

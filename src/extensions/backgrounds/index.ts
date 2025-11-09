@@ -19,20 +19,20 @@ import face_nebula_px from './skyboxes/nebula/nebula_right1.jpg.ts';
 import face_nebula_py from './skyboxes/nebula/nebula_top3.jpg.ts';
 import face_nebula_pz from './skyboxes/nebula/nebula_front5.jpg.ts';
 
-export const Backgrounds = PluginBehavior.create<{ }>({
+export const Backgrounds = PluginBehavior.create<{}>({
     name: 'extension-backgrounds',
     category: 'misc',
     display: {
-        name: 'Backgrounds'
+        name: 'Backgrounds',
     },
-    ctor: class extends PluginBehavior.Handler<{ }> {
+    ctor: class extends PluginBehavior.Handler<{}> {
         register(): void {
             this.ctx.config.set(PluginConfig.Background.Styles, [
                 [{
                     variant: {
                         name: 'off',
-                        params: {}
-                    }
+                        params: {},
+                    },
                 }, 'Off'],
                 [{
                     variant: {
@@ -42,8 +42,8 @@ export const Backgrounds = PluginBehavior.create<{ }>({
                             edgeColor: Color(0x808080),
                             ratio: 0.2,
                             coverage: 'viewport',
-                        }
-                    }
+                        },
+                    },
                 }, 'Light Radial Gradient'],
                 [{
                     variant: {
@@ -51,15 +51,15 @@ export const Backgrounds = PluginBehavior.create<{ }>({
                         params: {
                             source: {
                                 name: 'url',
-                                params: image_cells
+                                params: image_cells,
                             },
                             lightness: 0,
                             saturation: 0,
                             opacity: 1,
                             blur: 0,
                             coverage: 'viewport',
-                        }
-                    }
+                        },
+                    },
                 }, 'Normal Cells Image'],
                 [{
                     variant: {
@@ -74,15 +74,15 @@ export const Backgrounds = PluginBehavior.create<{ }>({
                                     px: face_nebula_px,
                                     py: face_nebula_py,
                                     pz: face_nebula_pz,
-                                }
+                                },
                             },
                             lightness: 0,
                             saturation: 0,
                             opacity: 1,
                             blur: 0.3,
                             rotation: { x: 0, y: 0, z: 0 },
-                        }
-                    }
+                        },
+                    },
                 }, 'Purple Nebula Skybox'],
             ]);
         }
@@ -95,5 +95,5 @@ export const Backgrounds = PluginBehavior.create<{ }>({
             this.ctx.config.set(PluginConfig.Background.Styles, []);
         }
     },
-    params: () => ({ })
+    params: () => ({}),
 });

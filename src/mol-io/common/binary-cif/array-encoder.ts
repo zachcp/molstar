@@ -8,13 +8,13 @@
  */
 
 import { ChunkedArray } from '../../../mol-data/util.ts';
-import { Encoding, type EncodedData } from './encoding.ts';
+import { type EncodedData, Encoding } from './encoding.ts';
 import { classifyIntArray } from './classifier.ts';
-import type { TypedIntArray, TypedFloatArray } from '../../../mol-util/type-helpers.ts';
+import type { TypedFloatArray, TypedIntArray } from '../../../mol-util/type-helpers.ts';
 
 export interface ArrayEncoder {
-    and(f: ArrayEncoding.Provider): ArrayEncoder,
-    encode(data: ArrayLike<any>): EncodedData
+    and(f: ArrayEncoding.Provider): ArrayEncoder;
+    encode(data: ArrayLike<any>): EncodedData;
 }
 
 export class ArrayEncoderImpl implements ArrayEncoder {
@@ -41,12 +41,11 @@ export class ArrayEncoderImpl implements ArrayEncoder {
         }
         return {
             encoding,
-            data: data as Uint8Array<ArrayBuffer>
+            data: data as Uint8Array<ArrayBuffer>,
         };
     }
 
     constructor(private providers: ArrayEncoding.Provider[]) {
-
     }
 }
 
@@ -66,26 +65,42 @@ export namespace ArrayEncoder {
 
     function getProvider(e: Encoding): ArrayEncoding.Provider {
         switch (e.kind) {
-            case 'ByteArray': return ArrayEncoding.byteArray;
-            case 'FixedPoint': return ArrayEncoding.fixedPoint(e.factor);
-            case 'IntervalQuantization': return ArrayEncoding.intervalQuantizaiton(e.min, e.max, e.numSteps);
-            case 'RunLength': return ArrayEncoding.runLength;
-            case 'Delta': return ArrayEncoding.delta;
-            case 'IntegerPacking': return ArrayEncoding.integerPacking;
-            case 'StringArray': return ArrayEncoding.stringArray;
+            case 'ByteArray':
+                return ArrayEncoding.byteArray;
+            case 'FixedPoint':
+                return ArrayEncoding.fixedPoint(e.factor);
+            case 'IntervalQuantization':
+                return ArrayEncoding.intervalQuantizaiton(e.min, e.max, e.numSteps);
+            case 'RunLength':
+                return ArrayEncoding.runLength;
+            case 'Delta':
+                return ArrayEncoding.delta;
+            case 'IntegerPacking':
+                return ArrayEncoding.integerPacking;
+            case 'StringArray':
+                return ArrayEncoding.stringArray;
         }
     }
 }
 
 export namespace ArrayEncoding {
-    export type TypedArrayCtor = { new(size: number): ArrayLike<number> & { buffer: ArrayBuffer, byteLength: number, byteOffset: number, BYTES_PER_ELEMENT: number } }
+    export type TypedArrayCtor = {
+        new (
+            size: number,
+        ): ArrayLike<number> & {
+            buffer: ArrayBuffer;
+            byteLength: number;
+            byteOffset: number;
+            BYTES_PER_ELEMENT: number;
+        };
+    };
 
     export interface Result {
-        encodings: Encoding[],
-        data: any
+        encodings: Encoding[];
+        data: any;
     }
 
-    export type Provider = (data: any) => Result
+    export type Provider = (data: any) => Result;
 
     export function by(f: Provider): ArrayEncoder {
         return new ArrayEncoderImpl([f]);
@@ -94,24 +109,36 @@ export namespace ArrayEncoding {
     function uint8(data: Uint8Array): Result {
         return {
             encodings: [{ kind: 'ByteArray', type: Encoding.IntDataType.Uint8 }],
-            data
+            data,
         };
     }
 
     function int8(data: Int8Array): Result {
         return {
             encodings: [{ kind: 'ByteArray', type: Encoding.IntDataType.Int8 }],
-            data: new Uint8Array(data.buffer, data.byteOffset)
+            data: new Uint8Array(data.buffer, data.byteOffset),
         };
     }
 
     const writers = {
-        [Encoding.IntDataType.Int16]: function (v: DataView, i: number, a: number) { v.setInt16(2 * i, a, true); },
-        [Encoding.IntDataType.Uint16]: function (v: DataView, i: number, a: number) { v.setUint16(2 * i, a, true); },
-        [Encoding.IntDataType.Int32]: function (v: DataView, i: number, a: number) { v.setInt32(4 * i, a, true); },
-        [Encoding.IntDataType.Uint32]: function (v: DataView, i: number, a: number) { v.setUint32(4 * i, a, true); },
-        [Encoding.FloatDataType.Float32]: function (v: DataView, i: number, a: number) { v.setFloat32(4 * i, a, true); },
-        [Encoding.FloatDataType.Float64]: function (v: DataView, i: number, a: number) { v.setFloat64(8 * i, a, true); }
+        [Encoding.IntDataType.Int16]: function (v: DataView, i: number, a: number) {
+            v.setInt16(2 * i, a, true);
+        },
+        [Encoding.IntDataType.Uint16]: function (v: DataView, i: number, a: number) {
+            v.setUint16(2 * i, a, true);
+        },
+        [Encoding.IntDataType.Int32]: function (v: DataView, i: number, a: number) {
+            v.setInt32(4 * i, a, true);
+        },
+        [Encoding.IntDataType.Uint32]: function (v: DataView, i: number, a: number) {
+            v.setUint32(4 * i, a, true);
+        },
+        [Encoding.FloatDataType.Float32]: function (v: DataView, i: number, a: number) {
+            v.setFloat32(4 * i, a, true);
+        },
+        [Encoding.FloatDataType.Float64]: function (v: DataView, i: number, a: number) {
+            v.setFloat64(8 * i, a, true);
+        },
     };
 
     const byteSizes = {
@@ -120,7 +147,7 @@ export namespace ArrayEncoding {
         [Encoding.IntDataType.Int32]: 4,
         [Encoding.IntDataType.Uint32]: 4,
         [Encoding.FloatDataType.Float32]: 4,
-        [Encoding.FloatDataType.Float64]: 8
+        [Encoding.FloatDataType.Float64]: 8,
     };
 
     export function byteArray(data: TypedFloatArray | TypedIntArray) {
@@ -136,8 +163,8 @@ export namespace ArrayEncoding {
             w(view, i, data[i]);
         }
         return {
-            encodings: [<Encoding.ByteArray>{ kind: 'ByteArray', type }],
-            data: result
+            encodings: [<Encoding.ByteArray> { kind: 'ByteArray', type }],
+            data: result,
         };
     }
 
@@ -149,17 +176,25 @@ export namespace ArrayEncoding {
         }
         return {
             encodings: [{ kind: 'FixedPoint', factor, srcType }],
-            data: result
+            data: result,
         };
     }
-    export function fixedPoint(factor: number): Provider { return data => _fixedPoint(data as TypedFloatArray, factor); }
+    export function fixedPoint(factor: number): Provider {
+        return (data) => _fixedPoint(data as TypedFloatArray, factor);
+    }
 
-    function _intervalQuantizaiton(data: TypedFloatArray, min: number, max: number, numSteps: number, arrayType: new (size: number) => TypedIntArray): Result {
+    function _intervalQuantizaiton(
+        data: TypedFloatArray,
+        min: number,
+        max: number,
+        numSteps: number,
+        arrayType: new (size: number) => TypedIntArray,
+    ): Result {
         const srcType = Encoding.getDataType(data) as Encoding.FloatDataType;
         if (!data.length) {
             return {
                 encodings: [{ kind: 'IntervalQuantization', min, max, numSteps, srcType }],
-                data: new Int32Array(0)
+                data: new Int32Array(0),
             };
         }
 
@@ -181,11 +216,16 @@ export namespace ArrayEncoding {
 
         return {
             encodings: [{ kind: 'IntervalQuantization', min, max, numSteps, srcType }],
-            data: output
+            data: output,
         };
     }
-    export function intervalQuantizaiton(min: number, max: number, numSteps: number, arrayType: new (size: number) => TypedIntArray = Int32Array): Provider {
-        return data => _intervalQuantizaiton(data as TypedFloatArray, min, max, numSteps, arrayType);
+    export function intervalQuantizaiton(
+        min: number,
+        max: number,
+        numSteps: number,
+        arrayType: new (size: number) => TypedIntArray = Int32Array,
+    ): Provider {
+        return (data) => _intervalQuantizaiton(data as TypedFloatArray, min, max, numSteps, arrayType);
     }
 
     export function runLength(data: TypedIntArray): Result {
@@ -198,7 +238,7 @@ export namespace ArrayEncoding {
         if (!data.length) {
             return {
                 encodings: [{ kind: 'RunLength', srcType, srcSize: 0 }],
-                data: new Int32Array(0)
+                data: new Int32Array(0),
             };
         }
 
@@ -226,7 +266,7 @@ export namespace ArrayEncoding {
         output[offset + 1] = runLength;
         return {
             encodings: [{ kind: 'RunLength', srcType, srcSize: data.length }],
-            data: output
+            data: output,
         };
     }
 
@@ -243,7 +283,7 @@ export namespace ArrayEncoding {
         if (!data.length) {
             return {
                 encodings: [{ kind: 'Delta', origin: 0, srcType }],
-                data: new (data as any).constructor(0)
+                data: new (data as any).constructor(0),
             };
         }
 
@@ -256,7 +296,7 @@ export namespace ArrayEncoding {
         output[0] = 0;
         return {
             encodings: [{ kind: 'Delta', origin, srcType }],
-            data: output
+            data: output,
         };
     }
 
@@ -276,7 +316,6 @@ export namespace ArrayEncoding {
         return size;
     }
 
-
     function packingSizeSigned(data: Int32Array, upperLimit: number) {
         const lowerLimit = -upperLimit - 1;
         let size = 0;
@@ -292,7 +331,7 @@ export namespace ArrayEncoding {
         return size;
     }
 
-    function determinePacking(data: Int32Array): { isSigned: boolean, size: number, bytesPerElement: number } {
+    function determinePacking(data: Int32Array): { isSigned: boolean; size: number; bytesPerElement: number } {
         const signed = isSigned(data);
         const size8 = signed ? packingSizeSigned(data, 0x7F) : packingSizeUnsigned(data, 0xFF);
         const size16 = signed ? packingSizeSigned(data, 0x7FFF) : packingSizeUnsigned(data, 0xFFFF);
@@ -302,26 +341,29 @@ export namespace ArrayEncoding {
             return {
                 isSigned: signed,
                 size: data.length,
-                bytesPerElement: 4
+                bytesPerElement: 4,
             };
         } else if (size16 * 2 < size8) {
             // 2 byte packing is the most effective
             return {
                 isSigned: signed,
                 size: size16,
-                bytesPerElement: 2
+                bytesPerElement: 2,
             };
         } else {
             // 1 byte packing is the most effective
             return {
                 isSigned: signed,
                 size: size8,
-                bytesPerElement: 1
+                bytesPerElement: 1,
             };
-        };
+        }
     }
 
-    function _integerPacking(data: Int32Array, packing: { isSigned: boolean, size: number, bytesPerElement: number }): Result {
+    function _integerPacking(
+        data: Int32Array,
+        packing: { isSigned: boolean; size: number; bytesPerElement: number },
+    ): Result {
         const upperLimit = packing.isSigned
             ? (packing.bytesPerElement === 1 ? 0x7F : 0x7FFF)
             : (packing.bytesPerElement === 1 ? 0xFF : 0xFFFF);
@@ -330,7 +372,9 @@ export namespace ArrayEncoding {
         const n = data.length;
         const packed = packing.isSigned
             ? packing.bytesPerElement === 1 ? new Int8Array(packing.size) : new Int16Array(packing.size)
-            : packing.bytesPerElement === 1 ? new Uint8Array(packing.size) : new Uint16Array(packing.size);
+            : packing.bytesPerElement === 1
+            ? new Uint8Array(packing.size)
+            : new Uint16Array(packing.size);
         let j = 0;
         for (let i = 0; i < n; i++) {
             let value = data[i];
@@ -357,11 +401,9 @@ export namespace ArrayEncoding {
                 kind: 'IntegerPacking',
                 byteCount: packing.bytesPerElement,
                 isUnsigned: !packing.isSigned,
-                srcSize: n
-            },
-            result.encodings[0]
-            ],
-            data: result.data
+                srcSize: n,
+            }, result.encodings[0]],
+            data: result.data,
         };
     }
 
@@ -387,7 +429,11 @@ export namespace ArrayEncoding {
         const map: any = Object.create(null);
         const strings: string[] = [];
         const output = new Int32Array(data.length);
-        const offsets = ChunkedArray.create<number>(Int32Array, 1, Math.min(1024, data.length < 32 ? data.length + 1 : Math.round(data.length / 8) + 1));
+        const offsets = ChunkedArray.create<number>(
+            Int32Array,
+            1,
+            Math.min(1024, data.length < 32 ? data.length + 1 : Math.round(data.length / 8) + 1),
+        );
 
         ChunkedArray.add(offsets, 0);
         let accLength = 0;
@@ -423,8 +469,14 @@ export namespace ArrayEncoding {
         const encodedData = dataEncoding.encode(output);
 
         return {
-            encodings: [{ kind: 'StringArray', dataEncoding: encodedData.encoding, stringData: strings.join(''), offsetEncoding: encodedOddsets.encoding, offsets: encodedOddsets.data }],
-            data: encodedData.data
+            encodings: [{
+                kind: 'StringArray',
+                dataEncoding: encodedData.encoding,
+                stringData: strings.join(''),
+                offsetEncoding: encodedOddsets.encoding,
+                offsets: encodedOddsets.data,
+            }],
+            data: encodedData.data,
         };
     }
 }

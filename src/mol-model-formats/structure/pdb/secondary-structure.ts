@@ -10,7 +10,7 @@ import type { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
 import type { Tokens } from '../../../mol-io/reader/common/text/tokenizer.ts';
 import { Column } from '../../../mol-data/db.ts';
 
-const HelixTypes: {[k: string]: mmCIF_Schema['struct_conf']['conf_type_id']['T']} = {
+const HelixTypes: { [k: string]: mmCIF_Schema['struct_conf']['conf_type_id']['T'] } = {
     // CLASS NUMBER
     // TYPE OF  HELIX                     (COLUMNS 39 - 40)
     // --------------------------------------------------------------
@@ -40,19 +40,19 @@ function getStructConfTypeId(type: string): mmCIF_Schema['struct_conf']['conf_ty
 }
 
 interface PdbHelix {
-    serNum: string,
-    helixID: string,
-    initResName: string,
-    initChainID: string,
-    initSeqNum: string,
-    initICode: string,
-    endResName: string,
-    endChainID: string,
-    endSeqNum: string,
-    endICode: string,
-    helixClass: string,
-    comment: string,
-    length: string
+    serNum: string;
+    helixID: string;
+    initResName: string;
+    initChainID: string;
+    initSeqNum: string;
+    initICode: string;
+    endResName: string;
+    endChainID: string;
+    endSeqNum: string;
+    endICode: string;
+    helixClass: string;
+    comment: string;
+    length: string;
 }
 
 export function parseHelix(lines: Tokens, lineStart: number, lineEnd: number): CifCategory {
@@ -99,15 +99,15 @@ export function parseHelix(lines: Tokens, lineStart: number, lineEnd: number): C
             endICode: line.substring(37, 38).trim(),
             helixClass: line.substring(38, 40).trim(),
             comment: line.substring(40, 70).trim(),
-            length: line.substring(71, 76).trim()
+            length: line.substring(71, 76).trim(),
         });
     }
 
-    const beg_auth_asym_id = CifField.ofStrings(helices.map(h => h.initChainID));
-    const beg_auth_comp_id = CifField.ofStrings(helices.map(h => h.initResName));
+    const beg_auth_asym_id = CifField.ofStrings(helices.map((h) => h.initChainID));
+    const beg_auth_comp_id = CifField.ofStrings(helices.map((h) => h.initResName));
 
-    const end_auth_asym_id = CifField.ofStrings(helices.map(h => h.endChainID));
-    const end_auth_comp_id = CifField.ofStrings(helices.map(h => h.endResName));
+    const end_auth_asym_id = CifField.ofStrings(helices.map((h) => h.endChainID));
+    const end_auth_comp_id = CifField.ofStrings(helices.map((h) => h.endResName));
 
     const struct_conf: CifCategory.Fields<mmCIF_Schema['struct_conf']> = {
         beg_label_asym_id: beg_auth_asym_id,
@@ -115,24 +115,24 @@ export function parseHelix(lines: Tokens, lineStart: number, lineEnd: number): C
         beg_label_seq_id: CifField.ofUndefined(helices.length, Column.Schema.int),
         beg_auth_asym_id,
         beg_auth_comp_id,
-        beg_auth_seq_id: CifField.ofStrings(helices.map(h => h.initSeqNum)),
+        beg_auth_seq_id: CifField.ofStrings(helices.map((h) => h.initSeqNum)),
 
-        conf_type_id: CifField.ofStrings(helices.map(h => getStructConfTypeId(h.helixClass))),
-        details: CifField.ofStrings(helices.map(h => h.comment)),
+        conf_type_id: CifField.ofStrings(helices.map((h) => getStructConfTypeId(h.helixClass))),
+        details: CifField.ofStrings(helices.map((h) => h.comment)),
 
         end_label_asym_id: end_auth_asym_id,
         end_label_comp_id: end_auth_comp_id,
         end_label_seq_id: CifField.ofUndefined(helices.length, Column.Schema.int),
         end_auth_asym_id,
         end_auth_comp_id,
-        end_auth_seq_id: CifField.ofStrings(helices.map(h => h.endSeqNum)),
+        end_auth_seq_id: CifField.ofStrings(helices.map((h) => h.endSeqNum)),
 
-        id: CifField.ofStrings(helices.map(h => h.serNum)),
-        pdbx_beg_PDB_ins_code: CifField.ofStrings(helices.map(h => h.initICode)),
-        pdbx_end_PDB_ins_code: CifField.ofStrings(helices.map(h => h.endICode)),
-        pdbx_PDB_helix_class: CifField.ofStrings(helices.map(h => h.helixClass)),
-        pdbx_PDB_helix_length: CifField.ofStrings(helices.map(h => h.length)),
-        pdbx_PDB_helix_id: CifField.ofStrings(helices.map(h => h.helixID)),
+        id: CifField.ofStrings(helices.map((h) => h.serNum)),
+        pdbx_beg_PDB_ins_code: CifField.ofStrings(helices.map((h) => h.initICode)),
+        pdbx_end_PDB_ins_code: CifField.ofStrings(helices.map((h) => h.endICode)),
+        pdbx_PDB_helix_class: CifField.ofStrings(helices.map((h) => h.helixClass)),
+        pdbx_PDB_helix_length: CifField.ofStrings(helices.map((h) => h.length)),
+        pdbx_PDB_helix_id: CifField.ofStrings(helices.map((h) => h.helixID)),
     };
     return CifCategory.ofFields('struct_conf', struct_conf);
 }
@@ -140,28 +140,28 @@ export function parseHelix(lines: Tokens, lineStart: number, lineEnd: number): C
 //
 
 interface PdbSheet {
-    strand: string,
-    sheetID: string,
-    numStrands: string,
-    initResName: string,
-    initChainID: string,
-    initSeqNum: string,
-    initICode: string,
-    endResName: string,
-    endChainID: string,
-    endSeqNum: string,
-    endICode: string,
-    sense: string,
-    curAtom: string,
-    curResName: string,
-    curChainId: string,
-    curResSeq: string,
-    curICode: string,
-    prevAtom: string,
-    prevResName: string,
-    prevChainId: string,
-    prevResSeq: string,
-    prevICode: string,
+    strand: string;
+    sheetID: string;
+    numStrands: string;
+    initResName: string;
+    initChainID: string;
+    initSeqNum: string;
+    initICode: string;
+    endResName: string;
+    endChainID: string;
+    endSeqNum: string;
+    endICode: string;
+    sense: string;
+    curAtom: string;
+    curResName: string;
+    curChainId: string;
+    curResSeq: string;
+    curICode: string;
+    prevAtom: string;
+    prevResName: string;
+    prevChainId: string;
+    prevResSeq: string;
+    prevICode: string;
 }
 
 export function parseSheet(lines: Tokens, lineStart: number, lineEnd: number): CifCategory {
@@ -242,13 +242,13 @@ export function parseSheet(lines: Tokens, lineStart: number, lineEnd: number): C
         });
     }
 
-    const beg_auth_asym_id = CifField.ofStrings(sheets.map(s => s.initChainID));
-    const beg_auth_comp_id = CifField.ofStrings(sheets.map(s => s.initResName));
-    const beg_auth_seq_id = CifField.ofStrings(sheets.map(s => s.initSeqNum));
+    const beg_auth_asym_id = CifField.ofStrings(sheets.map((s) => s.initChainID));
+    const beg_auth_comp_id = CifField.ofStrings(sheets.map((s) => s.initResName));
+    const beg_auth_seq_id = CifField.ofStrings(sheets.map((s) => s.initSeqNum));
 
-    const end_auth_asym_id = CifField.ofStrings(sheets.map(s => s.endChainID));
-    const end_auth_comp_id = CifField.ofStrings(sheets.map(s => s.endResName));
-    const end_auth_seq_id = CifField.ofStrings(sheets.map(s => s.endSeqNum));
+    const end_auth_asym_id = CifField.ofStrings(sheets.map((s) => s.endChainID));
+    const end_auth_comp_id = CifField.ofStrings(sheets.map((s) => s.endResName));
+    const end_auth_seq_id = CifField.ofStrings(sheets.map((s) => s.endSeqNum));
 
     const struct_sheet_range: CifCategory.Fields<mmCIF_Schema['struct_sheet_range']> = {
         beg_label_asym_id: beg_auth_asym_id,
@@ -265,10 +265,10 @@ export function parseSheet(lines: Tokens, lineStart: number, lineEnd: number): C
         end_auth_comp_id,
         end_auth_seq_id,
 
-        id: CifField.ofStrings(sheets.map(s => s.strand)),
-        sheet_id: CifField.ofStrings(sheets.map(s => s.sheetID)), // TODO wrong, needs to point to _struct_sheet.id
-        pdbx_beg_PDB_ins_code: CifField.ofStrings(sheets.map(s => s.initICode)),
-        pdbx_end_PDB_ins_code: CifField.ofStrings(sheets.map(s => s.endICode)),
+        id: CifField.ofStrings(sheets.map((s) => s.strand)),
+        sheet_id: CifField.ofStrings(sheets.map((s) => s.sheetID)), // TODO wrong, needs to point to _struct_sheet.id
+        pdbx_beg_PDB_ins_code: CifField.ofStrings(sheets.map((s) => s.initICode)),
+        pdbx_end_PDB_ins_code: CifField.ofStrings(sheets.map((s) => s.endICode)),
     };
     return CifCategory.ofFields('struct_sheet_range', struct_sheet_range);
 }

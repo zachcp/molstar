@@ -5,14 +5,32 @@
  */
 
 export type AminoAlphabet =
-    | 'H' | 'R' | 'K' | 'I' | 'F' | 'L' | 'W' | 'A' | 'M' | 'P' | 'C' | 'N' | 'V' | 'G' | 'S' | 'Q' | 'Y' | 'D' | 'E' | 'T' | 'U' | 'O'
+    | 'H'
+    | 'R'
+    | 'K'
+    | 'I'
+    | 'F'
+    | 'L'
+    | 'W'
+    | 'A'
+    | 'M'
+    | 'P'
+    | 'C'
+    | 'N'
+    | 'V'
+    | 'G'
+    | 'S'
+    | 'Q'
+    | 'Y'
+    | 'D'
+    | 'E'
+    | 'T'
+    | 'U'
+    | 'O'
     | 'X' /** = Unknown */
-    | '-' /** = Gap */
+    | '-'; /** = Gap */
 
-export type NuclecicAlphabet =
-    | 'A' | 'C' | 'G' | 'T' | 'U'
-    | 'X' /** = Unknown */
-    | '-' /** = Gap */
+export type NuclecicAlphabet = 'A' | 'C' | 'G' | 'T' | 'U' | 'X' /** = Unknown */ | '-'; /** = Gap */
 
 // from NGL
 const ProteinOneLetterCodes: { [name: string]: AminoAlphabet } = {
@@ -41,13 +59,17 @@ const ProteinOneLetterCodes: { [name: string]: AminoAlphabet } = {
     'PYL': 'O', // as per IUPAC definition
 
     // charmm ff
-    'HSD': 'H', 'HSE': 'H', 'HSP': 'H',
+    'HSD': 'H',
+    'HSE': 'H',
+    'HSP': 'H',
     'LSN': 'K',
     'ASPP': 'D',
     'GLUP': 'E',
 
     // amber ff
-    'HID': 'H', 'HIE': 'H', 'HIP': 'H',
+    'HID': 'H',
+    'HIE': 'H',
+    'HIP': 'H',
     'LYN': 'K',
     'ASH': 'D',
     'GLH': 'E',
@@ -58,7 +80,7 @@ const DnaOneLetterCodes: { [name: string]: NuclecicAlphabet } = {
     'DC': 'C',
     'DG': 'G',
     'DT': 'T',
-    'DU': 'U'
+    'DU': 'U',
 };
 
 const RnaOneLetterCodes: { [name: string]: NuclecicAlphabet } = {
@@ -66,7 +88,7 @@ const RnaOneLetterCodes: { [name: string]: NuclecicAlphabet } = {
     'C': 'C',
     'G': 'G',
     'T': 'T',
-    'U': 'U'
+    'U': 'U',
 };
 
 export function getProteinOneLetterCode(residueName: string): AminoAlphabet {

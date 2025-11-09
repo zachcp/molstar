@@ -4,44 +4,44 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { SizeTheme } from "../size.ts";
-import { ParamDefinition as PD } from "../../mol-util/param-definition.ts";
-import type { ThemeDataContext } from "../../mol-theme/theme.ts";
+import type { SizeTheme } from '../size.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { ThemeDataContext } from '../../mol-theme/theme.ts';
 
-const Description = "Gives everything the same, uniform size.";
+const Description = 'Gives everything the same, uniform size.';
 
 export const UniformSizeThemeParams: PD.Params = {
-  value: PD.Numeric(1, { min: 0, max: 20, step: 0.1 }),
+    value: PD.Numeric(1, { min: 0, max: 20, step: 0.1 }),
 };
 export type UniformSizeThemeParams = typeof UniformSizeThemeParams;
 export function getUniformSizeThemeParams(ctx: ThemeDataContext) {
-  return UniformSizeThemeParams; // TODO return copy
+    return UniformSizeThemeParams; // TODO return copy
 }
 
 export function UniformSizeTheme(
-  ctx: ThemeDataContext,
-  props: PD.Values<UniformSizeThemeParams>,
+    ctx: ThemeDataContext,
+    props: PD.Values<UniformSizeThemeParams>,
 ): SizeTheme<UniformSizeThemeParams> {
-  const size = props.value;
+    const size = props.value;
 
-  return {
-    factory: UniformSizeTheme,
-    granularity: "uniform",
-    size: () => size,
-    props,
-    description: Description,
-  };
+    return {
+        factory: UniformSizeTheme,
+        granularity: 'uniform',
+        size: () => size,
+        props,
+        description: Description,
+    };
 }
 
 export const UniformSizeThemeProvider: SizeTheme.Provider<
-  UniformSizeThemeParams,
-  "uniform"
+    UniformSizeThemeParams,
+    'uniform'
 > = {
-  name: "uniform",
-  label: "Uniform",
-  category: "",
-  factory: UniformSizeTheme,
-  getParams: getUniformSizeThemeParams,
-  defaultValues: PD.getDefaultValues(UniformSizeThemeParams),
-  isApplicable: (ctx: ThemeDataContext) => true,
+    name: 'uniform',
+    label: 'Uniform',
+    category: '',
+    factory: UniformSizeTheme,
+    getParams: getUniformSizeThemeParams,
+    defaultValues: PD.getDefaultValues(UniformSizeThemeParams),
+    isApplicable: (ctx: ThemeDataContext) => true,
 };

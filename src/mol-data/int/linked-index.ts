@@ -6,9 +6,9 @@
 
 /** A data structure useful for graph traversal */
 interface LinkedIndex {
-    readonly head: number,
-    has(i: number): boolean,
-    remove(i: number): void
+    readonly head: number;
+    has(i: number): boolean;
+    remove(i: number): void;
 }
 
 function LinkedIndex(size: number): LinkedIndex {

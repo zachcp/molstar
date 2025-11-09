@@ -11,7 +11,10 @@ import { TransformUpdaterControl } from '../../../mol-plugin-ui/state/update-tra
 import { StateElements } from '../helpers.ts';
 
 export function volumeStreamingControls(plugin: PluginUIContext, parent: Element) {
-    ReactDOM.render(<PluginContextContainer plugin={plugin}>
-        <TransformUpdaterControl nodeRef={StateElements.VolumeStreaming} />
-    </PluginContextContainer>, parent);
+    ReactDOM.render(
+        <PluginContextContainer plugin={plugin}>
+            <TransformUpdaterControl nodeRef={StateElements.VolumeStreaming} />
+        </PluginContextContainer>,
+        parent,
+    );
 }

@@ -9,10 +9,10 @@ import type { StructureElement, Unit } from '../../mol-model/structure.ts';
 const emptyArray: number[] = [];
 
 export interface PairRestraint {
-    readonly unitA: Unit,
-    readonly unitB: Unit,
-    readonly indexA: StructureElement.UnitIndex,
-    readonly indexB: StructureElement.UnitIndex,
+    readonly unitA: Unit;
+    readonly unitB: Unit;
+    readonly indexA: StructureElement.UnitIndex;
+    readonly indexB: StructureElement.UnitIndex;
 }
 
 function getPairKey(indexA: StructureElement.UnitIndex, unitA: Unit, indexB: StructureElement.UnitIndex, unitB: Unit) {
@@ -24,14 +24,19 @@ export class PairRestraints<T extends PairRestraint> {
     private readonly pairKeyIndices: Map<string, number[]>;
 
     /** Indices into this.pairs */
-    getPairIndices(indexA: StructureElement.UnitIndex, unitA: Unit, indexB: StructureElement.UnitIndex, unitB: Unit): ReadonlyArray<number> {
+    getPairIndices(
+        indexA: StructureElement.UnitIndex,
+        unitA: Unit,
+        indexB: StructureElement.UnitIndex,
+        unitB: Unit,
+    ): ReadonlyArray<number> {
         const key = getPairKey(indexA, unitA, indexB, unitB);
         return this.pairKeyIndices.get(key) || emptyArray;
     }
 
     getPairs(indexA: StructureElement.UnitIndex, unitA: Unit, indexB: StructureElement.UnitIndex, unitB: Unit): T[] {
         const indices = this.getPairIndices(indexA, unitA, indexB, unitB);
-        return indices.map(idx => this.pairs[idx]);
+        return indices.map((idx) => this.pairs[idx]);
     }
 
     constructor(public pairs: ReadonlyArray<T>) {

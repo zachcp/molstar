@@ -28,7 +28,6 @@ import { ungzip } from '../../mol-util/zip/zip.ts';
 import { StringLike } from '../../mol-io/common/string-like.ts';
 import { utf8ReadLong } from '../../mol-io/common/utf8.ts';
 
-
 export { Download };
 export { DownloadBlob };
 export { DeflateData };
@@ -49,20 +48,24 @@ export { ImportJson };
 export { ParseJson };
 export { LazyVolume };
 
-type Download = typeof Download
+type Download = typeof Download;
 const Download: StateTransformer<SO.Root, SO.Data.String | SO.Data.Binary> = PluginStateTransform.BuiltIn({
     name: 'download',
     display: { name: 'Download', description: 'Download string or binary data from the specified URL' },
     from: [SO.Root],
     to: [SO.Data.String, SO.Data.Binary],
     params: {
-        url: PD.Url('https://www.ebi.ac.uk/pdbe/static/entry/1cbs_updated.cif', { description: 'Resource URL. Must be the same domain or support CORS.' }),
+        url: PD.Url('https://www.ebi.ac.uk/pdbe/static/entry/1cbs_updated.cif', {
+            description: 'Resource URL. Must be the same domain or support CORS.',
+        }),
         label: PD.Optional(PD.Text('')),
-        isBinary: PD.Optional(PD.Boolean(false, { description: 'If true, download data as binary (string otherwise)' }))
-    }
+        isBinary: PD.Optional(
+            PD.Boolean(false, { description: 'If true, download data as binary (string otherwise)' }),
+        ),
+    },
 })({
     apply({ params: p, cache }, plugin: PluginContext) {
-        return Task.create('Download', async ctx => {
+        return Task.create('Download', async (ctx) => {
             const url = Asset.getUrlAsset(plugin.managers.asset, p.url);
             const asset = await plugin.managers.asset.resolve(url, p.isBinary ? 'binary' : 'string').runInContext(ctx);
             (cache as any).asset = asset;
@@ -75,16 +78,18 @@ const Download: StateTransformer<SO.Root, SO.Data.String | SO.Data.Binary> = Plu
         ((cache as any)?.asset as Asset.Wrapper | undefined)?.dispose();
     },
     update({ oldParams, newParams, b }) {
-        if (oldParams.url !== newParams.url || oldParams.isBinary !== newParams.isBinary) return StateTransformer.UpdateResult.Recreate;
+        if (oldParams.url !== newParams.url || oldParams.isBinary !== newParams.isBinary) {
+            return StateTransformer.UpdateResult.Recreate;
+        }
         if (oldParams.label !== newParams.label) {
             b.label = newParams.label || ((typeof newParams.url === 'string') ? newParams.url : newParams.url.url);
             return StateTransformer.UpdateResult.Updated;
         }
         return StateTransformer.UpdateResult.Unchanged;
-    }
+    },
 });
 
-type DownloadBlob = typeof DownloadBlob
+type DownloadBlob = typeof DownloadBlob;
 const DownloadBlob: StateTransformer<SO.Root, SO.Data.Blob> = PluginStateTransform.BuiltIn({
     name: 'download-blob',
     display: { name: 'Download Blob', description: 'Download multiple string or binary data from the specified URLs.' },
@@ -93,15 +98,25 @@ const DownloadBlob: StateTransformer<SO.Root, SO.Data.Blob> = PluginStateTransfo
     params: {
         sources: PD.ObjectList({
             id: PD.Text('', { label: 'Unique ID' }),
-            url: PD.Url('https://www.ebi.ac.uk/pdbe/static/entry/1cbs_updated.cif', { description: 'Resource URL. Must be the same domain or support CORS.' }),
-            isBinary: PD.Optional(PD.Boolean(false, { description: 'If true, download data as binary (string otherwise)' })),
-            canFail: PD.Optional(PD.Boolean(false, { description: 'Indicate whether the download can fail and not be included in the blob as a result.' }))
-        }, e => `${e.id}: ${e.url}`),
-        maxConcurrency: PD.Optional(PD.Numeric(4, { min: 1, max: 12, step: 1 }, { description: 'The maximum number of concurrent downloads.' }))
-    }
+            url: PD.Url('https://www.ebi.ac.uk/pdbe/static/entry/1cbs_updated.cif', {
+                description: 'Resource URL. Must be the same domain or support CORS.',
+            }),
+            isBinary: PD.Optional(
+                PD.Boolean(false, { description: 'If true, download data as binary (string otherwise)' }),
+            ),
+            canFail: PD.Optional(
+                PD.Boolean(false, {
+                    description: 'Indicate whether the download can fail and not be included in the blob as a result.',
+                }),
+            ),
+        }, (e) => `${e.id}: ${e.url}`),
+        maxConcurrency: PD.Optional(
+            PD.Numeric(4, { min: 1, max: 12, step: 1 }, { description: 'The maximum number of concurrent downloads.' }),
+        ),
+    },
 })({
     apply({ params, cache }, plugin: PluginContext) {
-        return Task.create('Download Blob', async ctx => {
+        return Task.create('Download Blob', async (ctx) => {
             const entries: SO.Data.BlobEntry[] = [];
             const data = await ajaxGetMany(ctx, plugin.managers.asset, params.sources, params.maxConcurrency || 4);
 
@@ -112,13 +127,18 @@ const DownloadBlob: StateTransformer<SO.Root, SO.Data.Blob> = PluginStateTransfo
                 if (r.kind === 'error') plugin.log.warn(`Download ${r.id} (${src.url}) failed: ${r.error}`);
                 else {
                     assets.push(r.result);
-                    entries.push(src.isBinary
-                        ? { id: r.id, kind: 'binary', data: r.result.data as Uint8Array<ArrayBuffer> }
-                        : { id: r.id, kind: 'string', data: r.result.data as string });
+                    entries.push(
+                        src.isBinary
+                            ? { id: r.id, kind: 'binary', data: r.result.data as Uint8Array<ArrayBuffer> }
+                            : { id: r.id, kind: 'string', data: r.result.data as string },
+                    );
                 }
             }
             (cache as any).assets = assets;
-            return new SO.Data.Blob(entries, { label: 'Data Blob', description: `${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}` });
+            return new SO.Data.Blob(entries, {
+                label: 'Data Blob',
+                description: `${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}`,
+            });
         });
     },
     dispose({ cache }, plugin: PluginContext) {
@@ -127,7 +147,7 @@ const DownloadBlob: StateTransformer<SO.Root, SO.Data.Blob> = PluginStateTransfo
         for (const a of assets) {
             a.dispose();
         }
-    }
+    },
     // TODO: ??
     // update({ oldParams, newParams, b }) {
     //     return 0 as any;
@@ -140,7 +160,7 @@ const DownloadBlob: StateTransformer<SO.Root, SO.Data.Blob> = PluginStateTransfo
     // }
 });
 
-type DeflateData = typeof DeflateData
+type DeflateData = typeof DeflateData;
 const DeflateData: StateTransformer<SO.Data.Binary, SO.Data.Binary | SO.Data.String> = PluginStateTransform.BuiltIn({
     name: 'defalate-data',
     display: { name: 'Deflate', description: 'Deflate compressed data' },
@@ -148,13 +168,13 @@ const DeflateData: StateTransformer<SO.Data.Binary, SO.Data.Binary | SO.Data.Str
         method: PD.Select('gzip', [['gzip', 'gzip']]), // later on we might have to add say brotli
         isString: PD.Boolean(false),
         stringEncoding: PD.Optional(PD.Select('utf-8', [['utf-8', 'UTF8']])),
-        label: PD.Optional(PD.Text(''))
+        label: PD.Optional(PD.Text('')),
     },
     from: [SO.Data.Binary],
-    to: [SO.Data.Binary, SO.Data.String]
+    to: [SO.Data.Binary, SO.Data.String],
 })({
     apply({ a, params }, plugin: PluginContext) {
-        return Task.create('Gzip', async ctx => {
+        return Task.create('Gzip', async (ctx) => {
             const decompressedData = await ungzip(ctx, a.data);
             const label = params.label ? params.label : a.label;
             // handle decoding based on stringEncoding param
@@ -164,10 +184,10 @@ const DeflateData: StateTransformer<SO.Data.Binary, SO.Data.Binary | SO.Data.Str
             }
             return new SO.Data.Binary(decompressedData as Uint8Array<ArrayBuffer>, { label });
         });
-    }
+    },
 });
 
-type RawData = typeof RawData
+type RawData = typeof RawData;
 const RawData: StateTransformer<SO.Root, SO.Data.String | SO.Data.Binary> = PluginStateTransform.BuiltIn({
     name: 'raw-data',
     display: { name: 'Raw Data', description: 'Raw data supplied by value.' },
@@ -175,8 +195,8 @@ const RawData: StateTransformer<SO.Root, SO.Data.String | SO.Data.Binary> = Plug
     to: [SO.Data.String, SO.Data.Binary],
     params: {
         data: PD.Value<string | number[] | ArrayBuffer | Uint8Array<ArrayBuffer>>('', { isHidden: true }),
-        label: PD.Optional(PD.Text(''))
-    }
+        label: PD.Optional(PD.Text('')),
+    },
 })({
     apply({ params: p }) {
         return Task.create('Raw Data', async () => {
@@ -218,11 +238,11 @@ const RawData: StateTransformer<SO.Root, SO.Data.String | SO.Data.Binary> = Plug
         },
         fromJSON(data: any) {
             return data;
-        }
-    }
+        },
+    },
 });
 
-type ReadFile = typeof ReadFile
+type ReadFile = typeof ReadFile;
 const ReadFile: StateTransformer<SO.Root, SO.Data.String | SO.Data.Binary> = PluginStateTransform.BuiltIn({
     name: 'read-file',
     display: { name: 'Read File', description: 'Read string or binary data from the specified file' },
@@ -231,17 +251,19 @@ const ReadFile: StateTransformer<SO.Root, SO.Data.String | SO.Data.Binary> = Plu
     params: {
         file: PD.File(),
         label: PD.Optional(PD.Text('')),
-        isBinary: PD.Optional(PD.Boolean(false, { description: 'If true, open file as as binary (string otherwise)' }))
-    }
+        isBinary: PD.Optional(PD.Boolean(false, { description: 'If true, open file as as binary (string otherwise)' })),
+    },
 })({
     apply({ params: p, cache }, plugin: PluginContext) {
-        return Task.create('Open File', async ctx => {
+        return Task.create('Open File', async (ctx) => {
             if (p.file === null) {
                 plugin.log.error('No file(s) selected');
                 return StateObject.Null;
             }
 
-            const asset = await plugin.managers.asset.resolve(p.file, p.isBinary ? 'binary' : 'string').runInContext(ctx);
+            const asset = await plugin.managers.asset.resolve(p.file, p.isBinary ? 'binary' : 'string').runInContext(
+                ctx,
+            );
             (cache as any).asset = asset;
             const o = p.isBinary
                 ? new SO.Data.Binary(asset.data as Uint8Array<ArrayBuffer>, { label: p.label ? p.label : p.file.name })
@@ -260,10 +282,10 @@ const ReadFile: StateTransformer<SO.Root, SO.Data.String | SO.Data.Binary> = Plu
         }
         return StateTransformer.UpdateResult.Unchanged;
     },
-    isSerializable: () => ({ isSerializable: false, reason: 'Cannot serialize user loaded files.' })
+    isSerializable: () => ({ isSerializable: false, reason: 'Cannot serialize user loaded files.' }),
 });
 
-type ParseBlob = typeof ParseBlob
+type ParseBlob = typeof ParseBlob;
 const ParseBlob: StateTransformer<SO.Data.Blob, SO.Format.Blob> = PluginStateTransform.BuiltIn({
     name: 'parse-blob',
     display: { name: 'Parse Blob', description: 'Parse multiple data enties' },
@@ -272,12 +294,12 @@ const ParseBlob: StateTransformer<SO.Data.Blob, SO.Format.Blob> = PluginStateTra
     params: {
         formats: PD.ObjectList({
             id: PD.Text('', { label: 'Unique ID' }),
-            format: PD.Select<'cif'>('cif', [['cif', 'cif']])
-        }, e => `${e.id}: ${e.format}`)
-    }
+            format: PD.Select<'cif'>('cif', [['cif', 'cif']]),
+        }, (e) => `${e.id}: ${e.format}`),
+    },
 })({
     apply({ a, params }, plugin: PluginContext) {
-        return Task.create('Parse Blob', async ctx => {
+        return Task.create('Parse Blob', async (ctx) => {
             const map = new Map<string, string>();
             for (const f of params.formats) map.set(f.id, f.format);
 
@@ -286,12 +308,17 @@ const ParseBlob: StateTransformer<SO.Data.Blob, SO.Format.Blob> = PluginStateTra
             for (const e of a.data) {
                 if (!map.has(e.id)) continue;
 
-                const parsed = await (e.kind === 'string' ? CIF.parse(e.data) : CIF.parseBinary(e.data)).runInContext(ctx);
+                const parsed = await (e.kind === 'string' ? CIF.parse(e.data) : CIF.parseBinary(e.data)).runInContext(
+                    ctx,
+                );
                 if (parsed.isError) throw new Error(`${e.id}: ${parsed.message}`);
                 entries.push({ id: e.id, kind: 'cif', data: parsed.result });
             }
 
-            return new SO.Format.Blob(entries, { label: 'Format Blob', description: `${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}` });
+            return new SO.Format.Blob(entries, {
+                label: 'Format Blob',
+                description: `${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}`,
+            });
         });
     },
     // TODO: ??
@@ -306,152 +333,152 @@ const ParseBlob: StateTransformer<SO.Data.Blob, SO.Format.Blob> = PluginStateTra
     // }
 });
 
-type ParseCif = typeof ParseCif
+type ParseCif = typeof ParseCif;
 const ParseCif: StateTransformer<SO.Data.String | SO.Data.Binary, SO.Format.Cif> = PluginStateTransform.BuiltIn({
     name: 'parse-cif',
     display: { name: 'Parse CIF', description: 'Parse CIF from String or Binary data' },
     from: [SO.Data.String, SO.Data.Binary],
-    to: SO.Format.Cif
+    to: SO.Format.Cif,
 })({
     apply({ a }) {
-        return Task.create('Parse CIF', async ctx => {
+        return Task.create('Parse CIF', async (ctx) => {
             const parsed = await (CIF.parse(a.data)).runInContext(ctx);
             if (parsed.isError) throw new Error(parsed.message);
             if (parsed.result.blocks.length === 0) return StateObject.Null;
             return new SO.Format.Cif(parsed.result);
         });
-    }
+    },
 });
 
-type ParseCube = typeof ParseCube
+type ParseCube = typeof ParseCube;
 const ParseCube: StateTransformer<SO.Data.String, SO.Format.Cube> = PluginStateTransform.BuiltIn({
     name: 'parse-cube',
     display: { name: 'Parse Cube', description: 'Parse Cube from String data' },
     from: SO.Data.String,
-    to: SO.Format.Cube
+    to: SO.Format.Cube,
 })({
     apply({ a }) {
-        return Task.create('Parse Cube', async ctx => {
+        return Task.create('Parse Cube', async (ctx) => {
             const parsed = await parseCube(a.data, a.label).runInContext(ctx);
             if (parsed.isError) throw new Error(parsed.message);
             return new SO.Format.Cube(parsed.result);
         });
-    }
+    },
 });
 
-type ParsePsf = typeof ParsePsf
+type ParsePsf = typeof ParsePsf;
 const ParsePsf: StateTransformer<SO.Data.String, SO.Format.Psf> = PluginStateTransform.BuiltIn({
     name: 'parse-psf',
     display: { name: 'Parse PSF', description: 'Parse PSF from String data' },
     from: [SO.Data.String],
-    to: SO.Format.Psf
+    to: SO.Format.Psf,
 })({
     apply({ a }) {
-        return Task.create('Parse PSF', async ctx => {
+        return Task.create('Parse PSF', async (ctx) => {
             const parsed = await parsePsf(a.data).runInContext(ctx);
             if (parsed.isError) throw new Error(parsed.message);
             return new SO.Format.Psf(parsed.result);
         });
-    }
+    },
 });
 
-type ParsePrmtop = typeof ParsePrmtop
+type ParsePrmtop = typeof ParsePrmtop;
 const ParsePrmtop: StateTransformer<SO.Data.String, SO.Format.Prmtop> = PluginStateTransform.BuiltIn({
     name: 'parse-prmtop',
     display: { name: 'Parse PRMTOP', description: 'Parse PRMTOP from String data' },
     from: [SO.Data.String],
-    to: SO.Format.Prmtop
+    to: SO.Format.Prmtop,
 })({
     apply({ a }) {
-        return Task.create('Parse PRMTOP', async ctx => {
+        return Task.create('Parse PRMTOP', async (ctx) => {
             const parsed = await parsePrmtop(a.data).runInContext(ctx);
             if (parsed.isError) throw new Error(parsed.message);
             return new SO.Format.Prmtop(parsed.result);
         });
-    }
+    },
 });
 
-type ParseTop = typeof ParseTop
+type ParseTop = typeof ParseTop;
 const ParseTop: StateTransformer<SO.Data.String, SO.Format.Top> = PluginStateTransform.BuiltIn({
     name: 'parse-top',
     display: { name: 'Parse TOP', description: 'Parse TOP from String data' },
     from: [SO.Data.String],
-    to: SO.Format.Top
+    to: SO.Format.Top,
 })({
     apply({ a }) {
-        return Task.create('Parse TOP', async ctx => {
+        return Task.create('Parse TOP', async (ctx) => {
             const parsed = await parseTop(a.data).runInContext(ctx);
             if (parsed.isError) throw new Error(parsed.message);
             return new SO.Format.Top(parsed.result);
         });
-    }
+    },
 });
 
-type ParsePly = typeof ParsePly
+type ParsePly = typeof ParsePly;
 const ParsePly: StateTransformer<SO.Data.String, SO.Format.Ply> = PluginStateTransform.BuiltIn({
     name: 'parse-ply',
     display: { name: 'Parse PLY', description: 'Parse PLY from String data' },
     from: [SO.Data.String],
-    to: SO.Format.Ply
+    to: SO.Format.Ply,
 })({
     apply({ a }) {
-        return Task.create('Parse PLY', async ctx => {
+        return Task.create('Parse PLY', async (ctx) => {
             const parsed = await PLY.parsePly(a.data).runInContext(ctx);
             if (parsed.isError) throw new Error(parsed.message);
             return new SO.Format.Ply(parsed.result, { label: parsed.result.comments[0] || 'PLY Data' });
         });
-    }
+    },
 });
 
-type ParseCcp4 = typeof ParseCcp4
+type ParseCcp4 = typeof ParseCcp4;
 const ParseCcp4: StateTransformer<SO.Data.Binary, SO.Format.Ccp4> = PluginStateTransform.BuiltIn({
     name: 'parse-ccp4',
     display: { name: 'Parse CCP4/MRC/MAP', description: 'Parse CCP4/MRC/MAP from Binary data' },
     from: [SO.Data.Binary],
-    to: SO.Format.Ccp4
+    to: SO.Format.Ccp4,
 })({
     apply({ a }) {
-        return Task.create('Parse CCP4/MRC/MAP', async ctx => {
+        return Task.create('Parse CCP4/MRC/MAP', async (ctx) => {
             const parsed = await CCP4.parse(a.data, a.label).runInContext(ctx);
             if (parsed.isError) throw new Error(parsed.message);
             return new SO.Format.Ccp4(parsed.result);
         });
-    }
+    },
 });
 
-type ParseDsn6 = typeof ParseDsn6
+type ParseDsn6 = typeof ParseDsn6;
 const ParseDsn6: StateTransformer<SO.Data.Binary, SO.Format.Dsn6> = PluginStateTransform.BuiltIn({
     name: 'parse-dsn6',
     display: { name: 'Parse DSN6/BRIX', description: 'Parse CCP4/BRIX from Binary data' },
     from: [SO.Data.Binary],
-    to: SO.Format.Dsn6
+    to: SO.Format.Dsn6,
 })({
     apply({ a }) {
-        return Task.create('Parse DSN6/BRIX', async ctx => {
+        return Task.create('Parse DSN6/BRIX', async (ctx) => {
             const parsed = await DSN6.parse(a.data, a.label).runInContext(ctx);
             if (parsed.isError) throw new Error(parsed.message);
             return new SO.Format.Dsn6(parsed.result);
         });
-    }
+    },
 });
 
-type ParseDx = typeof ParseDx
+type ParseDx = typeof ParseDx;
 const ParseDx: StateTransformer<SO.Data.String | SO.Data.Binary, SO.Format.Dx> = PluginStateTransform.BuiltIn({
     name: 'parse-dx',
     display: { name: 'Parse DX', description: 'Parse DX from Binary/String data' },
     from: [SO.Data.Binary, SO.Data.String],
-    to: SO.Format.Dx
+    to: SO.Format.Dx,
 })({
     apply({ a }) {
-        return Task.create('Parse DX', async ctx => {
+        return Task.create('Parse DX', async (ctx) => {
             const parsed = await parseDx(a.data, a.label).runInContext(ctx);
             if (parsed.isError) throw new Error(parsed.message);
             return new SO.Format.Dx(parsed.result);
         });
-    }
+    },
 });
 
-type ImportString = typeof ImportString
+type ImportString = typeof ImportString;
 const ImportString = PluginStateTransform.BuiltIn({
     name: 'import-string',
     display: { name: 'Import String', description: 'Import given data as a string' },
@@ -460,7 +487,7 @@ const ImportString = PluginStateTransform.BuiltIn({
     params: {
         data: PD.Value(''),
         label: PD.Optional(PD.Text('')),
-    }
+    },
 })({
     apply({ params: { data, label } }) {
         return new SO.Data.String(data, { label: label || '' });
@@ -473,10 +500,10 @@ const ImportString = PluginStateTransform.BuiltIn({
         }
         return StateTransformer.UpdateResult.Unchanged;
     },
-    isSerializable: () => ({ isSerializable: false, reason: 'Cannot serialize user imported strings.' })
+    isSerializable: () => ({ isSerializable: false, reason: 'Cannot serialize user imported strings.' }),
 });
 
-type ImportJson = typeof ImportJson
+type ImportJson = typeof ImportJson;
 const ImportJson = PluginStateTransform.BuiltIn({
     name: 'import-json',
     display: { name: 'Import JSON', description: 'Import given data as a JSON' },
@@ -485,7 +512,7 @@ const ImportJson = PluginStateTransform.BuiltIn({
     params: {
         data: PD.Value<any>({}),
         label: PD.Optional(PD.Text('')),
-    }
+    },
 })({
     apply({ params: { data, label } }) {
         return new SO.Format.Json(data, { label: label || '' });
@@ -498,25 +525,25 @@ const ImportJson = PluginStateTransform.BuiltIn({
         }
         return StateTransformer.UpdateResult.Unchanged;
     },
-    isSerializable: () => ({ isSerializable: false, reason: 'Cannot serialize user imported JSON.' })
+    isSerializable: () => ({ isSerializable: false, reason: 'Cannot serialize user imported JSON.' }),
 });
 
-type ParseJson = typeof ParseJson
+type ParseJson = typeof ParseJson;
 const ParseJson: StateTransformer<SO.Data.String, SO.Format.Json> = PluginStateTransform.BuiltIn({
     name: 'parse-json',
     display: { name: 'Parse JSON', description: 'Parse JSON from String data' },
     from: [SO.Data.String],
-    to: SO.Format.Json
+    to: SO.Format.Json,
 })({
     apply({ a }) {
-        return Task.create('Parse JSON', async ctx => {
+        return Task.create('Parse JSON', async (ctx) => {
             const json = await (new Response(StringLike.toString(a.data))).json(); // async JSON parsing via fetch API
             return new SO.Format.Json(json);
         });
-    }
+    },
 });
 
-type LazyVolume = typeof LazyVolume
+type LazyVolume = typeof LazyVolume;
 const LazyVolume = PluginStateTransform.BuiltIn({
     name: 'lazy-volume',
     display: { name: 'Lazy Volume', description: 'A placeholder for lazy loaded volume representation' },
@@ -533,14 +560,13 @@ const LazyVolume = PluginStateTransform.BuiltIn({
             color: PD.Color(ColorNames.black),
             alpha: PD.Numeric(1, { min: 0, max: 1, step: 0.01 }),
             volumeIndex: PD.Numeric(0),
-        }, e => `${e.type} ${e.value}`)
-    }
+        }, (e) => `${e.type} ${e.value}`),
+    },
 })({
     apply({ a, params }) {
-        return Task.create('Lazy Volume', async ctx => {
+        return Task.create('Lazy Volume', async (ctx) => {
             const entryId = Array.isArray(params.entryId) ? params.entryId.join(', ') : params.entryId;
             return new SO.Volume.Lazy(params, { label: `${entryId || params.url}`, description: 'Lazy Volume' });
         });
-    }
+    },
 });
-

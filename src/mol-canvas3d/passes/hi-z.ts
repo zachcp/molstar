@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { type HiZRenderable, createHiZRenderable } from '../../mol-gl/compute/hi-z.ts';
+import { createHiZRenderable, type HiZRenderable } from '../../mol-gl/compute/hi-z.ts';
 import { isWebGL2 } from '../../mol-gl/webgl/compat.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import type { Framebuffer } from '../../mol-gl/webgl/framebuffer.ts';
@@ -67,7 +67,7 @@ function perspectiveProjectSphere(out: Vec4, p: Vec3, r: number, projection: Mat
         maxx * -0.5 + 0.5,
         miny * 0.5 + 0.5,
         minx * -0.5 + 0.5,
-        maxy * 0.5 + 0.5
+        maxy * 0.5 + 0.5,
     );
 }
 
@@ -85,7 +85,7 @@ function orthographicProjectSphere(out: Vec4, p: Vec3, r: number, projection: Ma
         maxx * 0.5 + 0.5,
         miny * -0.5 + 0.5,
         minx * 0.5 + 0.5,
-        maxy * -0.5 + 0.5
+        maxy * -0.5 + 0.5,
     );
 }
 
@@ -96,19 +96,21 @@ function projectSphere(out: Vec4, p: Vec3, r: number, projection: Mat4) {
 }
 
 type LevelData = {
-    texture: Texture,
-    framebuffer: Framebuffer,
-    size: Vec2,
-    invSize: Vec2,
-    offset: number
-}[]
+    texture: Texture;
+    framebuffer: Framebuffer;
+    size: Vec2;
+    invSize: Vec2;
+    offset: number;
+}[];
 
 export const HiZParams: PD.Params = {
     enabled: PD.Boolean(false, { description: 'Hierarchical Z-buffer occlusion culling. Only available for WebGL2.' }),
-    maxFrameLag: PD.Numeric(10, { min: 1, max: 30, step: 1 }, { description: 'Maximum number of frames to wait for Z-buffer data.' }),
+    maxFrameLag: PD.Numeric(10, { min: 1, max: 30, step: 1 }, {
+        description: 'Maximum number of frames to wait for Z-buffer data.',
+    }),
     minLevel: PD.Numeric(3, { min: 1, max: 10, step: 1 }),
 };
-export type HiZProps = PD.Values<typeof HiZParams>
+export type HiZProps = PD.Values<typeof HiZParams>;
 
 export class HiZPass {
     private readonly viewport = Viewport();
@@ -192,7 +194,10 @@ export class HiZPass {
         //
 
         const v = this.renderable.values;
-        const s = Math.pow(2, Math.ceil(Math.log(Math.max(gl.drawingBufferWidth, gl.drawingBufferHeight)) / Math.log(2)) - 1);
+        const s = Math.pow(
+            2,
+            Math.ceil(Math.log(Math.max(gl.drawingBufferWidth, gl.drawingBufferHeight)) / Math.log(2)) - 1,
+        );
 
         for (let i = 0, il = this.levelData.length; i < il; ++i) {
             const td = this.levelData[i];
@@ -204,10 +209,14 @@ export class HiZPass {
                 ValueCell.update(v.tPreviousLevel, this.levelData[i - 1].texture);
             } else {
                 ValueCell.update(v.uInvSize, Vec2.set(v.uInvSize.ref.value, 1 / s, 1 / s));
-                ValueCell.update(v.uOffset, Vec2.set(v.uOffset.ref.value,
-                    this.viewport.x / gl.drawingBufferWidth,
-                    this.viewport.y / gl.drawingBufferHeight
-                ));
+                ValueCell.update(
+                    v.uOffset,
+                    Vec2.set(
+                        v.uOffset.ref.value,
+                        this.viewport.x / gl.drawingBufferWidth,
+                        this.viewport.y / gl.drawingBufferHeight,
+                    ),
+                );
                 ValueCell.update(v.tPreviousLevel, this.drawPass.depthTextureOpaque);
             }
 
@@ -393,10 +402,10 @@ export class HiZPass {
     //
 
     private debug?: {
-        container: HTMLDivElement
-        canvas: HTMLCanvasElement
-        ctx: CanvasRenderingContext2D
-        rect: HTMLDivElement
+        container: HTMLDivElement;
+        canvas: HTMLCanvasElement;
+        ctx: CanvasRenderingContext2D;
+        rect: HTMLDivElement;
     };
 
     private initDebug(element: HTMLElement) {
@@ -540,7 +549,12 @@ export class HiZPass {
         }
     }
 
-    constructor(private webgl: WebGLContext, private drawPass: DrawPass, canvas: HTMLCanvasElement | undefined, props: Partial<HiZProps>) {
+    constructor(
+        private webgl: WebGLContext,
+        private drawPass: DrawPass,
+        canvas: HTMLCanvasElement | undefined,
+        props: Partial<HiZProps>,
+    ) {
         this.props = { ...PD.getDefaultValues(HiZParams), ...props };
 
         const { gl, extensions } = webgl;

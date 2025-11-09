@@ -8,7 +8,6 @@
 
 import { ChunkedBigString, MAX_STRING_LENGTH, type StringLike } from './string-like.ts';
 
-
 export function utf8Write(data: Uint8Array, offset: number, str: string) {
     for (let i = 0, l = str.length; i < l; i++) {
         const codePoint = str.charCodeAt(i);
@@ -73,16 +72,16 @@ function _utf8Read(data: Uint8Array, offset: number, length: number) {
             // Three byte character
             chunk[chunkOffset++] = String.fromCharCode(
                 ((byte & 0x0f) << 12) |
-                ((data[++i] & 0x3f) << 6) |
-                ((data[++i] & 0x3f) << 0)
+                    ((data[++i] & 0x3f) << 6) |
+                    ((data[++i] & 0x3f) << 0),
             );
         } else if ((byte & 0xf8) === 0xf0) {
             // Four byte character
             chunk[chunkOffset++] = String.fromCharCode(
                 ((byte & 0x07) << 18) |
-                ((data[++i] & 0x3f) << 12) |
-                ((data[++i] & 0x3f) << 6) |
-                ((data[++i] & 0x3f) << 0)
+                    ((data[++i] & 0x3f) << 12) |
+                    ((data[++i] & 0x3f) << 6) |
+                    ((data[++i] & 0x3f) << 0),
             );
         } else throwError('Invalid byte ' + byte.toString(16));
 

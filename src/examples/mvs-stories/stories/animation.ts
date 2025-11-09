@@ -5,7 +5,11 @@
  */
 
 import type { MVSData_States } from '../../../extensions/mvs/mvs-data.ts';
-import { createMVSBuilder, type Structure as MVSStructure, type Root } from '../../../extensions/mvs/tree/mvs/mvs-builder.ts';
+import {
+    createMVSBuilder,
+    type Root,
+    type Structure as MVSStructure,
+} from '../../../extensions/mvs/tree/mvs/mvs-builder.ts';
 import type { MVSNodeParams } from '../../../extensions/mvs/tree/mvs/mvs-tree.ts';
 import type { ColorT } from '../../../extensions/mvs/tree/mvs/param-types.ts';
 import { Mat4 } from '../../../mol-math/linear-algebra.ts';
@@ -50,8 +54,8 @@ A story showcasing MolViewSpec animation capabilities.
                     molstar_trackball: {
                         name: 'rock',
                         params: { speed: 0.5 },
-                    }
-                }
+                    },
+                },
             });
             anim.interpolate({
                 kind: 'scalar',
@@ -73,7 +77,6 @@ A story showcasing MolViewSpec animation capabilities.
                 start: 1,
                 end: 0.66,
             });
-
 
             // Uncomment this to make 2nd frame render much faster
             // It will cause shader compilation to happen during the 1st snapshot
@@ -125,8 +128,8 @@ A story showcasing MolViewSpec animation capabilities.
                         ALA: 'red',
                         ILE: 'white',
                         LYS: 'white',
-                    }
-                }
+                    },
+                },
             });
 
             const surface = poly.representation({
@@ -237,11 +240,11 @@ A story showcasing MolViewSpec animation capabilities.
             const builder = createMVSBuilder();
 
             const _1cbs = structure(builder, '1cbs');
-            const [poly,] = polymer(_1cbs, { color: Colors['1cbs'] });
+            const [poly] = polymer(_1cbs, { color: Colors['1cbs'] });
 
             poly.representation({
                 type: 'surface',
-                surface_type: 'gaussian'
+                surface_type: 'gaussian',
             }).opacity({ ref: 'opacity', opacity: 1 }).color({ ref: 'surface-color', color: 'white' });
 
             _1cbs.component({ selector: 'ligand' })
@@ -252,15 +255,15 @@ A story showcasing MolViewSpec animation capabilities.
                     custom: {
                         molstar_representation_params: {
                             emissive: 0,
-                        }
-                    }
+                        },
+                    },
                 })
                 .color({ color: Colors['ligand-docked'] });
 
             const primitives = builder.primitives({
                 ref: 'primitives',
                 instances: [
-                    Mat4.identity()
+                    Mat4.identity(),
                 ],
                 opacity: 0,
             });
@@ -268,7 +271,7 @@ A story showcasing MolViewSpec animation capabilities.
             primitives.ellipsoid({
                 center: [0, 0, 0],
                 radius: [2, 3, 2.5],
-                color: 'red'
+                color: 'red',
             });
 
             const anim = builder.animation();
@@ -312,7 +315,6 @@ A story showcasing MolViewSpec animation capabilities.
                 end: 1,
             });
 
-
             anim.interpolate({
                 kind: 'color',
                 target_ref: 'surface-color',
@@ -321,7 +323,7 @@ A story showcasing MolViewSpec animation capabilities.
                 palette: {
                     kind: 'continuous',
                     colors: ['white', Colors['1cbs'], 'white'],
-                }
+                },
             });
 
             return builder;
@@ -331,7 +333,7 @@ A story showcasing MolViewSpec animation capabilities.
             target: [21.79, 22.2, 23.43],
             up: [0.8, 0.57, 0.2],
         } satisfies MVSNodeParams<'camera'>,
-    }
+    },
 ];
 
 function structure(builder: Root, id: string): MVSStructure {
@@ -369,7 +371,7 @@ export function buildStory(): MVSData_States {
                         params: {
                             topColor: 0x777777,
                             bottomColor: 0xffffff,
-                        }
+                        },
                     },
                     // Example with background image:
                     // background: {
@@ -379,8 +381,8 @@ export function buildStory(): MVSData_States {
                     //         source: { name: 'url', params: 'URL' }
                     //     }
                     // }
-                }
-            }
+                },
+            },
         });
 
         const description = i > 0 ? `${s.description}\n\n[Go to start](#intro)` : s.description;
@@ -402,6 +404,6 @@ export function buildStory(): MVSData_States {
             title: 'Animation Showcase',
             version: '1.0',
             timestamp: new Date().toISOString(),
-        }
+        },
     };
 }

@@ -10,7 +10,12 @@ import { CifCategory, CifField } from '../../../mol-io/reader/cif.ts';
 import type { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
 import type { Tokens } from '../../../mol-io/reader/common/text/tokenizer.ts';
 
-export function parseConect(lines: Tokens, lineStart: number, lineEnd: number, sites: { [K in keyof mmCIF_Schema['atom_site']]?: CifField }): CifCategory {
+export function parseConect(
+    lines: Tokens,
+    lineStart: number,
+    lineEnd: number,
+    sites: { [K in keyof mmCIF_Schema['atom_site']]?: CifField },
+): CifCategory {
     const idMap: { [k: string]: number } = {};
     for (let i = 0, il = sites.id!.rowCount; i < il; ++i) {
         idMap[sites.id!.str(i)] = i;
@@ -40,7 +45,7 @@ export function parseConect(lines: Tokens, lineStart: number, lineEnd: number, s
 
     let k = 1;
     let currentIdxA = -1;
-    let bondIndex: {[k: number]: number} = {};
+    let bondIndex: { [k: number]: number } = {};
     let hasMultipleBonds = false;
 
     for (let i = lineStart; i < lineEnd; i++) {
@@ -114,7 +119,7 @@ export function parseConect(lines: Tokens, lineStart: number, lineEnd: number, s
 
     if (hasMultipleBonds) {
         const valueOrder = ['sing', 'doub', 'trpl', 'quad'];
-        struct_conn.pdbx_value_order = CifField.ofStrings(bondOrder.map(bo => valueOrder[bo - 1] || 'sing'));
+        struct_conn.pdbx_value_order = CifField.ofStrings(bondOrder.map((bo) => valueOrder[bo - 1] || 'sing'));
     }
 
     return CifCategory.ofFields('struct_conn', struct_conn);

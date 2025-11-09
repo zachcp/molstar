@@ -4,14 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, type RuntimeContext } from '../../../mol-task/index.ts';
-import { Tokenizer, TokenBuilder } from '../common/text/tokenizer.ts';
+import { type RuntimeContext, Task } from '../../../mol-task/index.ts';
+import { TokenBuilder, Tokenizer } from '../common/text/tokenizer.ts';
 import { ReaderResult as Result } from '../result.ts';
 import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.ts';
 import { Column, Table } from '../../../mol-data/db.ts';
 import type { Mutable } from '../../../mol-util/type-helpers.ts';
 import type { StringLike } from '../../common/string-like.ts';
-
 
 // https://manual.gromacs.org/2021-current/reference-manual/file-formats.html#top
 
@@ -37,14 +36,14 @@ const MoleculesSchema = {
 };
 
 type Compound = {
-    atoms: Table<typeof AtomsSchema>
-    bonds?: Table<typeof BondsSchema>
-}
+    atoms: Table<typeof AtomsSchema>;
+    bonds?: Table<typeof BondsSchema>;
+};
 
 export interface TopFile {
-    readonly system: string
-    readonly molecules: Table<typeof MoleculesSchema>
-    readonly compounds: Record<string, Compound>
+    readonly system: string;
+    readonly molecules: Table<typeof MoleculesSchema>;
+    readonly compounds: Record<string, Compound>;
 }
 
 const { readLine, markLine, skipWhitespace, markStart, eatValue, eatLine } = Tokenizer;
@@ -55,7 +54,7 @@ function State(tokenizer: Tokenizer, runtimeCtx: RuntimeContext) {
         runtimeCtx,
     };
 }
-type State = ReturnType<typeof State>
+type State = ReturnType<typeof State>;
 
 const reField = /\[ (.+) \]/;
 const reWhitespace = /\s+/;
@@ -112,14 +111,30 @@ function handleAtoms(state: State) {
             eatValue(tokenizer);
 
             switch (j) {
-                case 0: TokenBuilder.add(nr, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                case 1: TokenBuilder.add(type, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                case 2: TokenBuilder.add(resnr, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                case 3: TokenBuilder.add(residu, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                case 4: TokenBuilder.add(atom, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                case 5: TokenBuilder.add(cgnr, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                case 6: TokenBuilder.add(charge, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                case 7: TokenBuilder.add(mass, tokenizer.tokenStart, tokenizer.tokenEnd); break;
+                case 0:
+                    TokenBuilder.add(nr, tokenizer.tokenStart, tokenizer.tokenEnd);
+                    break;
+                case 1:
+                    TokenBuilder.add(type, tokenizer.tokenStart, tokenizer.tokenEnd);
+                    break;
+                case 2:
+                    TokenBuilder.add(resnr, tokenizer.tokenStart, tokenizer.tokenEnd);
+                    break;
+                case 3:
+                    TokenBuilder.add(residu, tokenizer.tokenStart, tokenizer.tokenEnd);
+                    break;
+                case 4:
+                    TokenBuilder.add(atom, tokenizer.tokenStart, tokenizer.tokenEnd);
+                    break;
+                case 5:
+                    TokenBuilder.add(cgnr, tokenizer.tokenStart, tokenizer.tokenEnd);
+                    break;
+                case 6:
+                    TokenBuilder.add(charge, tokenizer.tokenStart, tokenizer.tokenEnd);
+                    break;
+                case 7:
+                    TokenBuilder.add(mass, tokenizer.tokenStart, tokenizer.tokenEnd);
+                    break;
             }
         }
         // ignore any extra columns
@@ -159,8 +174,12 @@ function handleBonds(state: State) {
             eatValue(tokenizer);
 
             switch (j) {
-                case 0: TokenBuilder.add(ai, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                case 1: TokenBuilder.add(aj, tokenizer.tokenStart, tokenizer.tokenEnd); break;
+                case 0:
+                    TokenBuilder.add(ai, tokenizer.tokenStart, tokenizer.tokenEnd);
+                    break;
+                case 1:
+                    TokenBuilder.add(aj, tokenizer.tokenStart, tokenizer.tokenEnd);
+                    break;
             }
         }
         // ignore any extra columns
@@ -219,8 +238,12 @@ function handleMolecules(state: State) {
             eatValue(tokenizer);
 
             switch (j) {
-                case 0: TokenBuilder.add(compound, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                case 1: TokenBuilder.add(molCount, tokenizer.tokenStart, tokenizer.tokenEnd); break;
+                case 0:
+                    TokenBuilder.add(compound, tokenizer.tokenStart, tokenizer.tokenEnd);
+                    break;
+                case 1:
+                    TokenBuilder.add(molCount, tokenizer.tokenStart, tokenizer.tokenEnd);
+                    break;
             }
         }
         // ignore any extra columns
@@ -299,7 +322,7 @@ async function parseInternal(data: StringLike, ctx: RuntimeContext): Promise<Res
 }
 
 export function parseTop(data: StringLike) {
-    return Task.create<Result<TopFile>>('Parse TOP', async ctx => {
+    return Task.create<Result<TopFile>>('Parse TOP', async (ctx) => {
         return await parseInternal(data, ctx);
     });
 }

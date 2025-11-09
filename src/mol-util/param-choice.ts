@@ -6,7 +6,6 @@
 
 import { ParamDefinition } from './param-definition.ts';
 
-
 /**
  * Represents a set of values to choose from, with a default value. Example:
  * ```
@@ -20,7 +19,7 @@ export class Choice<T extends string, D extends T> {
     private readonly nameDict: { [value in T]: string };
     constructor(opts: { [value in T]: string }, defaultValue: D) {
         this.defaultValue = defaultValue;
-        this.options = Object.keys(opts).map(k => [k as T, opts[k as T]]);
+        this.options = Object.keys(opts).map((k) => [k as T, opts[k as T]]);
         this.nameDict = opts;
     }
     PDSelect(defaultValue?: T, info?: ParamDefinition.Info): ParamDefinition.Select<T> {

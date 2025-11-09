@@ -6,7 +6,7 @@
 
 import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
 import { type ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
-import { TextureSpec, UniformSpec, DefineSpec, type Values } from '../../mol-gl/renderable/schema.ts';
+import { DefineSpec, TextureSpec, UniformSpec, type Values } from '../../mol-gl/renderable/schema.ts';
 import { ShaderCode } from '../../mol-gl/shader-code.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
@@ -28,7 +28,7 @@ export const SmaaParams: PD.Params = {
     edgeThreshold: PD.Numeric(0.1, { min: 0.05, max: 0.15, step: 0.01 }),
     maxSearchSteps: PD.Numeric(16, { min: 0, max: 32, step: 1 }),
 };
-export type SmaaProps = PD.Values<typeof SmaaParams>
+export type SmaaProps = PD.Values<typeof SmaaParams>;
 
 export class SmaaPass {
     private readonly edgesTarget!: RenderTarget;
@@ -83,9 +83,18 @@ export class SmaaPass {
         state.clearColor(0, 0, 0, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        ValueCell.update(this.edgesRenderable.values.uViewport, Viewport.toVec4(this.edgesRenderable.values.uViewport.ref.value, viewport));
-        ValueCell.update(this.weightsRenderable.values.uViewport, Viewport.toVec4(this.weightsRenderable.values.uViewport.ref.value, viewport));
-        ValueCell.update(this.blendRenderable.values.uViewport, Viewport.toVec4(this.blendRenderable.values.uViewport.ref.value, viewport));
+        ValueCell.update(
+            this.edgesRenderable.values.uViewport,
+            Viewport.toVec4(this.edgesRenderable.values.uViewport.ref.value, viewport),
+        );
+        ValueCell.update(
+            this.weightsRenderable.values.uViewport,
+            Viewport.toVec4(this.weightsRenderable.values.uViewport.ref.value, viewport),
+        );
+        ValueCell.update(
+            this.blendRenderable.values.uViewport,
+            Viewport.toVec4(this.blendRenderable.values.uViewport.ref.value, viewport),
+        );
     }
 
     setSize(width: number, height: number) {
@@ -96,9 +105,18 @@ export class SmaaPass {
             this.edgesTarget.setSize(width, height);
             this.weightsTarget.setSize(width, height);
 
-            ValueCell.update(this.edgesRenderable.values.uTexSizeInv, Vec2.set(this.edgesRenderable.values.uTexSizeInv.ref.value, 1 / width, 1 / height));
-            ValueCell.update(this.weightsRenderable.values.uTexSizeInv, Vec2.set(this.weightsRenderable.values.uTexSizeInv.ref.value, 1 / width, 1 / height));
-            ValueCell.update(this.blendRenderable.values.uTexSizeInv, Vec2.set(this.blendRenderable.values.uTexSizeInv.ref.value, 1 / width, 1 / height));
+            ValueCell.update(
+                this.edgesRenderable.values.uTexSizeInv,
+                Vec2.set(this.edgesRenderable.values.uTexSizeInv.ref.value, 1 / width, 1 / height),
+            );
+            ValueCell.update(
+                this.weightsRenderable.values.uTexSizeInv,
+                Vec2.set(this.weightsRenderable.values.uTexSizeInv.ref.value, 1 / width, 1 / height),
+            );
+            ValueCell.update(
+                this.blendRenderable.values.uTexSizeInv,
+                Vec2.set(this.blendRenderable.values.uTexSizeInv.ref.value, 1 / width, 1 / height),
+            );
         }
     }
 
@@ -154,10 +172,10 @@ const EdgesSchema = {
     uTexSizeInv: UniformSpec('v2'),
     uViewport: UniformSpec('v4'),
 
-    dEdgeThreshold: DefineSpec('number')
+    dEdgeThreshold: DefineSpec('number'),
 };
 const EdgesShaderCode = ShaderCode('smaa-edges', edges_vert, edges_frag);
-type EdgesRenderable = ComputeRenderable<Values<typeof EdgesSchema>>
+type EdgesRenderable = ComputeRenderable<Values<typeof EdgesSchema>>;
 
 function getEdgesRenderable(ctx: WebGLContext, colorTexture: Texture): EdgesRenderable {
     const width = colorTexture.getWidth();
@@ -191,7 +209,7 @@ const WeightsSchema = {
     dMaxSearchSteps: DefineSpec('number'),
 };
 const WeightsShaderCode = ShaderCode('smaa-weights', weights_vert, weights_frag);
-type WeightsRenderable = ComputeRenderable<Values<typeof WeightsSchema>>
+type WeightsRenderable = ComputeRenderable<Values<typeof WeightsSchema>>;
 
 function getWeightsRenderable(ctx: WebGLContext, edgesTexture: Texture): WeightsRenderable {
     const width = edgesTexture.getWidth();
@@ -231,7 +249,7 @@ const BlendSchema = {
     uViewport: UniformSpec('v4'),
 };
 const BlendShaderCode = ShaderCode('smaa-blend', blend_vert, blend_frag);
-type BlendRenderable = ComputeRenderable<Values<typeof BlendSchema>>
+type BlendRenderable = ComputeRenderable<Values<typeof BlendSchema>>;
 
 function getBlendRenderable(ctx: WebGLContext, colorTexture: Texture, weightsTexture: Texture): BlendRenderable {
     const width = colorTexture.getWidth();

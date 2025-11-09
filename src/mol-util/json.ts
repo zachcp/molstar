@@ -6,9 +6,8 @@
 
 import { isPlainObject } from './object.ts';
 
-
 /** A JSON-serializable value */
-export type Jsonable = string | number | boolean | null | Jsonable[] | { [key: string]: Jsonable | undefined }
+export type Jsonable = string | number | boolean | null | Jsonable[] | { [key: string]: Jsonable | undefined };
 
 /** Return a canonical string representation for a JSON-able object,
  * independent from object key order and undefined properties. */

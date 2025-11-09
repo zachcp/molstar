@@ -10,4 +10,4 @@ import { Iterator } from './iterator.ts';
 import * as Util from './util.ts';
 import * as Generic from './generic.ts';
 
-export { DB, Int, Iterator, Util, Generic };
+export { DB, Generic, Int, Iterator, Util };

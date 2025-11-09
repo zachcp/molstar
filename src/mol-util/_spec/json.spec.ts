@@ -6,7 +6,6 @@
 
 import { canonicalJsonString } from '../json';
 
-
 describe('object utils', () => {
     it('canonicalJsonString', async () => {
         expect(canonicalJsonString({})).toEqual('{}');

@@ -8,13 +8,13 @@
  */
 
 import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
-import { TextureSpec, type Values, UniformSpec, DefineSpec } from '../../mol-gl/renderable/schema.ts';
+import { DefineSpec, TextureSpec, UniformSpec, type Values } from '../../mol-gl/renderable/schema.ts';
 import { ShaderCode } from '../../mol-gl/shader-code.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import type { Texture } from '../../mol-gl/webgl/texture.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
-import { createComputeRenderable, type ComputeRenderable } from '../../mol-gl/renderable.ts';
+import { type ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
 import { Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
@@ -31,12 +31,11 @@ import { BackgroundParams, BackgroundPass } from './background.ts';
 import type { AssetManager } from '../../mol-util/assets.ts';
 import type { Light } from '../../mol-gl/renderer.ts';
 import { CasParams, CasPass } from './cas.ts';
-import { DofPass, DofParams } from './dof.ts';
+import { DofParams, DofPass } from './dof.ts';
 import { BloomParams } from './bloom.ts';
-import { OutlinePass, type OutlineProps, OutlineParams } from './outline.ts';
-import { ShadowPass, type ShadowProps, ShadowParams } from './shadow.ts';
-import { SsaoPass, type SsaoProps, SsaoParams } from './ssao.ts';
-
+import { OutlineParams, OutlinePass, type OutlineProps } from './outline.ts';
+import { ShadowParams, ShadowPass, type ShadowProps } from './shadow.ts';
+import { SsaoParams, SsaoPass, type SsaoProps } from './ssao.ts';
 
 const PostprocessingSchema = {
     ...QuadSchema,
@@ -73,9 +72,20 @@ const PostprocessingSchema = {
     dOutlineScale: DefineSpec('number'),
     dTransparentOutline: DefineSpec('boolean'),
 };
-type PostprocessingRenderable = ComputeRenderable<Values<typeof PostprocessingSchema>>
+type PostprocessingRenderable = ComputeRenderable<Values<typeof PostprocessingSchema>>;
 
-function getPostprocessingRenderable(ctx: WebGLContext, colorTexture: Texture, transparentColorTexture: Texture, depthTextureOpaque: Texture, depthTextureTransparent: Texture, shadowsTexture: Texture, outlinesTexture: Texture, ssaoDepthTexture: Texture, ssaoDepthTransparentTexture: Texture, transparentOutline: boolean): PostprocessingRenderable {
+function getPostprocessingRenderable(
+    ctx: WebGLContext,
+    colorTexture: Texture,
+    transparentColorTexture: Texture,
+    depthTextureOpaque: Texture,
+    depthTextureTransparent: Texture,
+    shadowsTexture: Texture,
+    outlinesTexture: Texture,
+    ssaoDepthTexture: Texture,
+    ssaoDepthTransparentTexture: Texture,
+    transparentOutline: boolean,
+): PostprocessingRenderable {
     const values: Values<typeof PostprocessingSchema> = {
         ...QuadValues,
         tSsaoDepth: ValueCell.create(ssaoDepthTexture),
@@ -123,53 +133,69 @@ export const PostprocessingParams: PD.Params = {
     enabled: PD.Boolean(true),
     occlusion: PD.MappedStatic('on', {
         on: PD.Group(SsaoParams),
-        off: PD.Group({})
-    }, { cycle: true, description: 'Darken occluded crevices with the ambient occlusion effect', hideIf: p => p.enabled === false }),
+        off: PD.Group({}),
+    }, {
+        cycle: true,
+        description: 'Darken occluded crevices with the ambient occlusion effect',
+        hideIf: (p) => p.enabled === false,
+    }),
     shadow: PD.MappedStatic('off', {
         on: PD.Group(ShadowParams),
-        off: PD.Group({})
-    }, { cycle: true, description: 'Simplistic shadows', hideIf: p => p.enabled === false }),
+        off: PD.Group({}),
+    }, { cycle: true, description: 'Simplistic shadows', hideIf: (p) => p.enabled === false }),
     outline: PD.MappedStatic('off', {
         on: PD.Group(OutlineParams),
-        off: PD.Group({})
-    }, { cycle: true, description: 'Draw outline around 3D objects', hideIf: p => p.enabled === false }),
+        off: PD.Group({}),
+    }, { cycle: true, description: 'Draw outline around 3D objects', hideIf: (p) => p.enabled === false }),
     dof: PD.MappedStatic('off', {
         on: PD.Group(DofParams),
-        off: PD.Group({})
-    }, { cycle: true, description: 'DOF', hideIf: p => p.enabled === false }),
+        off: PD.Group({}),
+    }, { cycle: true, description: 'DOF', hideIf: (p) => p.enabled === false }),
     antialiasing: PD.MappedStatic('smaa', {
         fxaa: PD.Group(FxaaParams),
         smaa: PD.Group(SmaaParams),
-        off: PD.Group({})
-    }, { options: [['fxaa', 'FXAA'], ['smaa', 'SMAA'], ['off', 'Off']], description: 'Smooth pixel edges', hideIf: p => p.enabled === false }),
+        off: PD.Group({}),
+    }, {
+        options: [['fxaa', 'FXAA'], ['smaa', 'SMAA'], ['off', 'Off']],
+        description: 'Smooth pixel edges',
+        hideIf: (p) => p.enabled === false,
+    }),
     sharpening: PD.MappedStatic('off', {
         on: PD.Group(CasParams),
-        off: PD.Group({})
-    }, { cycle: true, description: 'Contrast Adaptive Sharpening', hideIf: p => p.enabled === false }),
-    background: PD.Group(BackgroundParams, { isFlat: true, hideIf: p => p.enabled === false }),
+        off: PD.Group({}),
+    }, { cycle: true, description: 'Contrast Adaptive Sharpening', hideIf: (p) => p.enabled === false }),
+    background: PD.Group(BackgroundParams, { isFlat: true, hideIf: (p) => p.enabled === false }),
     bloom: PD.MappedStatic('on', {
         on: PD.Group(BloomParams),
-        off: PD.Group({})
-    }, { cycle: true, description: 'Bloom', hideIf: p => p.enabled === false }),
+        off: PD.Group({}),
+    }, { cycle: true, description: 'Bloom', hideIf: (p) => p.enabled === false }),
 };
 
-export type PostprocessingProps = PD.Values<typeof PostprocessingParams>
+export type PostprocessingProps = PD.Values<typeof PostprocessingParams>;
 
 export class PostprocessingPass {
     static isEnabled(props: PostprocessingProps): boolean {
-        return props.enabled && (SsaoPass.isEnabled(props) || ShadowPass.isEnabled(props) || OutlinePass.isEnabled(props) || props.background.variant.name !== 'off');
+        return props.enabled &&
+            (SsaoPass.isEnabled(props) || ShadowPass.isEnabled(props) || OutlinePass.isEnabled(props) ||
+                props.background.variant.name !== 'off');
     }
 
     static isTransparentDepthRequired(scene: Scene, props: PostprocessingProps): boolean {
-        return props.enabled && (DofPass.isEnabled(props) || OutlinePass.isEnabled(props) && PostprocessingPass.isTransparentOutlineEnabled(props) || SsaoPass.isEnabled(props) && PostprocessingPass.isTransparentSsaoEnabled(scene, props)) && scene.opacityAverage < 1;
+        return props.enabled &&
+            (DofPass.isEnabled(props) ||
+                OutlinePass.isEnabled(props) && PostprocessingPass.isTransparentOutlineEnabled(props) ||
+                SsaoPass.isEnabled(props) && PostprocessingPass.isTransparentSsaoEnabled(scene, props)) &&
+            scene.opacityAverage < 1;
     }
 
     static isTransparentOutlineEnabled(props: PostprocessingProps): boolean {
-        return props.enabled && OutlinePass.isEnabled(props) && ((props.outline.params as OutlineProps).includeTransparent ?? true);
+        return props.enabled && OutlinePass.isEnabled(props) &&
+            ((props.outline.params as OutlineProps).includeTransparent ?? true);
     }
 
     static isTransparentSsaoEnabled(scene: Scene, props: PostprocessingProps): boolean {
-        return props.enabled && SsaoPass.isEnabled(props) && SsaoPass.isTransparentEnabled(scene, props.occlusion.params as SsaoProps);
+        return props.enabled && SsaoPass.isEnabled(props) &&
+            SsaoPass.isTransparentEnabled(scene, props.occlusion.params as SsaoProps);
     }
 
     static isSsaoEnabled(props: PostprocessingProps): boolean {
@@ -186,7 +212,8 @@ export class PostprocessingPass {
     readonly background: BackgroundPass;
 
     constructor(private readonly webgl: WebGLContext, assetManager: AssetManager, readonly drawPass: DrawPass) {
-        const { colorTarget, transparentColorTarget, depthTextureOpaque, depthTextureTransparent, packedDepth } = drawPass;
+        const { colorTarget, transparentColorTarget, depthTextureOpaque, depthTextureTransparent, packedDepth } =
+            drawPass;
         const width = colorTarget.getWidth();
         const height = colorTarget.getHeight();
 
@@ -197,7 +224,18 @@ export class PostprocessingPass {
         this.shadow = new ShadowPass(webgl, width, height, depthTextureOpaque);
         this.outline = new OutlinePass(webgl, width, height, depthTextureTransparent, depthTextureOpaque);
 
-        this.renderable = getPostprocessingRenderable(webgl, colorTarget.texture, transparentColorTarget.texture, depthTextureOpaque, depthTextureTransparent, this.shadow.target.texture, this.outline.target.texture, this.ssao.ssaoDepthTexture, this.ssao.ssaoDepthTransparentTexture, true);
+        this.renderable = getPostprocessingRenderable(
+            webgl,
+            colorTarget.texture,
+            transparentColorTarget.texture,
+            depthTextureOpaque,
+            depthTextureTransparent,
+            this.shadow.target.texture,
+            this.outline.target.texture,
+            this.ssao.ssaoDepthTexture,
+            this.ssao.ssaoDepthTransparentTexture,
+            true,
+        );
 
         this.background = new BackgroundPass(webgl, assetManager, width, height);
     }
@@ -216,7 +254,10 @@ export class PostprocessingPass {
 
         if (width !== w || height !== h) {
             this.target.setSize(width, height);
-            ValueCell.update(this.renderable.values.uTexSize, Vec2.set(this.renderable.values.uTexSize.ref.value, width, height));
+            ValueCell.update(
+                this.renderable.values.uTexSize,
+                Vec2.set(this.renderable.values.uTexSize.ref.value, width, height),
+            );
         }
 
         this.ssao.setSize(width, height);
@@ -229,7 +270,15 @@ export class PostprocessingPass {
         this.ssao.reset();
     }
 
-    updateState(camera: ICamera, scene: Scene, transparentBackground: boolean, backgroundColor: Color, props: PostprocessingProps, light: Light, ambientColor: Vec3) {
+    updateState(
+        camera: ICamera,
+        scene: Scene,
+        transparentBackground: boolean,
+        backgroundColor: Color,
+        props: PostprocessingProps,
+        light: Light,
+        ambientColor: Vec3,
+    ) {
         let needsUpdateMain = false;
 
         const orthographic = camera.state.mode === 'orthographic' ? 1 : 0;
@@ -245,7 +294,10 @@ export class PostprocessingPass {
                 needsUpdateMain = true;
                 ValueCell.update(this.renderable.values.dOcclusionIncludeTransparency, includeTransparency);
             }
-            ValueCell.update(this.renderable.values.uOcclusionColor, Color.toVec3Normalized(this.renderable.values.uOcclusionColor.ref.value, params.color));
+            ValueCell.update(
+                this.renderable.values.uOcclusionColor,
+                Color.toVec3Normalized(this.renderable.values.uOcclusionColor.ref.value, params.color),
+            );
         }
 
         if (shadowsEnabled) {
@@ -254,9 +306,17 @@ export class PostprocessingPass {
 
         if (outlinesEnabled) {
             const outlineProps = props.outline.params as OutlineProps;
-            const { transparentOutline, outlineScale } = this.outline.update(camera, outlineProps, this.drawPass.depthTextureTransparent, this.drawPass.depthTextureOpaque);
+            const { transparentOutline, outlineScale } = this.outline.update(
+                camera,
+                outlineProps,
+                this.drawPass.depthTextureTransparent,
+                this.drawPass.depthTextureOpaque,
+            );
 
-            ValueCell.update(this.renderable.values.uOutlineColor, Color.toVec3Normalized(this.renderable.values.uOutlineColor.ref.value, outlineProps.color));
+            ValueCell.update(
+                this.renderable.values.uOutlineColor,
+                Color.toVec3Normalized(this.renderable.values.uOutlineColor.ref.value, outlineProps.color),
+            );
 
             if (this.renderable.values.dOutlineScale.ref.value !== outlineScale) {
                 needsUpdateMain = true;
@@ -272,7 +332,10 @@ export class PostprocessingPass {
         ValueCell.updateIfChanged(this.renderable.values.uNear, camera.near);
         ValueCell.updateIfChanged(this.renderable.values.uFogFar, camera.fogFar);
         ValueCell.updateIfChanged(this.renderable.values.uFogNear, camera.fogNear);
-        ValueCell.update(this.renderable.values.uFogColor, Color.toVec3Normalized(this.renderable.values.uFogColor.ref.value, backgroundColor));
+        ValueCell.update(
+            this.renderable.values.uFogColor,
+            Color.toVec3Normalized(this.renderable.values.uFogColor.ref.value, backgroundColor),
+        );
         ValueCell.updateIfChanged(this.renderable.values.uTransparentBackground, transparentBackground);
 
         if (this.renderable.values.dOrthographic.ref.value !== orthographic) {
@@ -315,7 +378,10 @@ export class PostprocessingPass {
     setOcclusionOffset(x: number, y: number) {
         this.occlusionOffset[0] = x;
         this.occlusionOffset[1] = y;
-        ValueCell.update(this.renderable.values.uOcclusionOffset, Vec2.set(this.renderable.values.uOcclusionOffset.ref.value, x, y));
+        ValueCell.update(
+            this.renderable.values.uOcclusionOffset,
+            Vec2.set(this.renderable.values.uOcclusionOffset.ref.value, x, y),
+        );
     }
 
     private transparentBackground = false;
@@ -323,7 +389,16 @@ export class PostprocessingPass {
         this.transparentBackground = value;
     }
 
-    render(camera: ICamera, scene: Scene, toDrawingBuffer: boolean, transparentBackground: boolean, backgroundColor: Color, props: PostprocessingProps, light: Light, ambientColor: Vec3) {
+    render(
+        camera: ICamera,
+        scene: Scene,
+        toDrawingBuffer: boolean,
+        transparentBackground: boolean,
+        backgroundColor: Color,
+        props: PostprocessingProps,
+        light: Light,
+        ambientColor: Vec3,
+    ) {
         if (isTimingMode) this.webgl.timer.mark('PostprocessingPass.render');
         this.updateState(camera, scene, transparentBackground, backgroundColor, props, light, ambientColor);
 
@@ -418,7 +493,12 @@ export class AntialiasingPass {
         this.smaa.render(camera.viewport, target);
     }
 
-    private _renderAntialiasing(camera: ICamera, input: Texture, target: RenderTarget | undefined, props: PostprocessingProps) {
+    private _renderAntialiasing(
+        camera: ICamera,
+        input: Texture,
+        target: RenderTarget | undefined,
+        props: PostprocessingProps,
+    ) {
         if (props.antialiasing.name === 'fxaa') {
             this._renderFxaa(camera, input, target, props);
         } else if (props.antialiasing.name === 'smaa') {
@@ -442,9 +522,7 @@ export class AntialiasingPass {
             return;
         }
 
-        const target = toDrawingBuffer === true
-            ? undefined : toDrawingBuffer === false
-                ? this.target : toDrawingBuffer;
+        const target = toDrawingBuffer === true ? undefined : toDrawingBuffer === false ? this.target : toDrawingBuffer;
         if (props.sharpening.name === 'off') {
             this._renderAntialiasing(camera, input, target, props);
         } else if (props.antialiasing.name === 'off') {

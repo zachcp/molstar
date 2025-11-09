@@ -4,10 +4,26 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { type Renderable, type RenderableState, createRenderable } from '../renderable.ts';
+import { createRenderable, type Renderable, type RenderableState } from '../renderable.ts';
 import type { WebGLContext } from '../webgl/context.ts';
 import { createGraphicsRenderItem, type Transparency } from '../webgl/render-item.ts';
-import { GlobalUniformSchema, BaseSchema, AttributeSpec, UniformSpec, type Values, InternalSchema, SizeSchema, type InternalValues, TextureSpec, ElementsSpec, ValueSpec, GlobalTextureSchema, type GlobalDefineValues, type GlobalDefines, GlobalDefineSchema } from './schema.ts';
+import {
+    AttributeSpec,
+    BaseSchema,
+    ElementsSpec,
+    type GlobalDefines,
+    GlobalDefineSchema,
+    type GlobalDefineValues,
+    GlobalTextureSchema,
+    GlobalUniformSchema,
+    InternalSchema,
+    type InternalValues,
+    SizeSchema,
+    TextureSpec,
+    UniformSpec,
+    type Values,
+    ValueSpec,
+} from './schema.ts';
 import { TextShaderCode } from '../shader-code.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 
@@ -32,11 +48,25 @@ export const TextSchema = {
     uBackgroundColor: UniformSpec('v3', 'material'),
     uBackgroundOpacity: UniformSpec('f', 'material'),
 };
-export type TextSchema = typeof TextSchema
-export type TextValues = Values<TextSchema>
+export type TextSchema = typeof TextSchema;
+export type TextValues = Values<TextSchema>;
 
-export function TextRenderable(ctx: WebGLContext, id: number, values: TextValues, state: RenderableState, materialId: number, transparency: Transparency, globals: GlobalDefines): Renderable<TextValues> {
-    const schema = { ...GlobalUniformSchema, ...GlobalTextureSchema, ...GlobalDefineSchema, ...InternalSchema, ...TextSchema };
+export function TextRenderable(
+    ctx: WebGLContext,
+    id: number,
+    values: TextValues,
+    state: RenderableState,
+    materialId: number,
+    transparency: Transparency,
+    globals: GlobalDefines,
+): Renderable<TextValues> {
+    const schema = {
+        ...GlobalUniformSchema,
+        ...GlobalTextureSchema,
+        ...GlobalDefineSchema,
+        ...InternalSchema,
+        ...TextSchema,
+    };
     const renderValues: TextValues & InternalValues & GlobalDefineValues = {
         ...values,
         uObjectId: ValueCell.create(id),
@@ -44,6 +74,14 @@ export function TextRenderable(ctx: WebGLContext, id: number, values: TextValues
         dColorMarker: ValueCell.create(globals.dColorMarker),
     };
     const shaderCode = TextShaderCode;
-    const renderItem = createGraphicsRenderItem(ctx, 'triangles', shaderCode, schema, renderValues, materialId, transparency);
+    const renderItem = createGraphicsRenderItem(
+        ctx,
+        'triangles',
+        shaderCode,
+        schema,
+        renderValues,
+        materialId,
+        transparency,
+    );
     return createRenderable(renderItem, renderValues, state);
 }

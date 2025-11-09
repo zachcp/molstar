@@ -13,23 +13,23 @@
  * is called.
  */
 interface ChunkedArray<T, C extends 1 | 2 | 3 | 4 = 1> {
-    ctor: { new (size: number): ArrayLike<T> },
-    elementSize: C,
+    ctor: { new (size: number): ArrayLike<T> };
+    elementSize: C;
 
-    growBy: number,
-    allocatedSize: number,
+    growBy: number;
+    allocatedSize: number;
     /** current size of the array */
-    elementCount: number,
+    elementCount: number;
 
-    currentSize: number,
-    currentChunk: any,
-    currentIndex: number,
+    currentSize: number;
+    currentChunk: any;
+    currentIndex: number;
 
-    chunks: any[][]
+    chunks: any[][];
 }
 
 namespace ChunkedArray {
-    type Sizes = 1 | 2 | 3 | 4
+    type Sizes = 1 | 2 | 3 | 4;
 
     export function is(x: any): x is ChunkedArray<any> {
         return x.creator && x.chunkSize;
@@ -155,7 +155,12 @@ namespace ChunkedArray {
      * The size of the initial chunk is elementSize * initialCount.
      * Use the provided array as the initial chunk. The size of the array must be divisible by the elementSize.
      */
-    export function create<T, C extends Sizes = 1>(ctor: { new (size: number): ArrayLike<T> }, elementSize: C, chunkSize: number, initialChunkOrCount?: number | ArrayLike<T>): ChunkedArray<T, C> {
+    export function create<T, C extends Sizes = 1>(
+        ctor: { new (size: number): ArrayLike<T> },
+        elementSize: C,
+        chunkSize: number,
+        initialChunkOrCount?: number | ArrayLike<T>,
+    ): ChunkedArray<T, C> {
         const ret: ChunkedArray<T, C> = {
             ctor,
             elementSize,
@@ -168,7 +173,7 @@ namespace ChunkedArray {
             currentChunk: void 0,
             currentIndex: 0,
 
-            chunks: []
+            chunks: [],
         };
 
         if (typeof initialChunkOrCount === 'undefined') return ret;
@@ -182,7 +187,9 @@ namespace ChunkedArray {
         }
 
         const initialChunk = initialChunkOrCount;
-        if (initialChunk.length % elementSize !== 0) throw new Error('initialChunk length must be a multiple of the element size.');
+        if (initialChunk.length % elementSize !== 0) {
+            throw new Error('initialChunk length must be a multiple of the element size.');
+        }
         ret.currentChunk = initialChunk;
         ret.allocatedSize = initialChunk.length;
         ret.currentSize = initialChunk.length;

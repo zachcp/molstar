@@ -6,7 +6,7 @@
 
 import type { Structure } from '../../mol-model/structure.ts';
 import { objectForEach } from '../../mol-util/object.ts';
-import { RepresentationRegistry, type RepresentationProvider } from '../representation.ts';
+import { type RepresentationProvider, RepresentationRegistry } from '../representation.ts';
 import type { StructureRepresentationState } from './representation.ts';
 import { BallAndStickRepresentationProvider } from './representation/ball-and-stick.ts';
 import { CarbohydrateRepresentationProvider } from './representation/carbohydrate.ts';
@@ -28,7 +28,9 @@ export class StructureRepresentationRegistry extends RepresentationRegistry<Stru
     constructor() {
         super();
         objectForEach(StructureRepresentationRegistry.BuiltIn, (p, k) => {
-            if (p.name !== k) throw new Error(`Fix BuiltInStructureRepresentations to have matching names. ${p.name} ${k}`);
+            if (p.name !== k) {
+                throw new Error(`Fix BuiltInStructureRepresentations to have matching names. ${p.name} ${k}`);
+            }
             this.add(p as any);
         });
     }
@@ -53,7 +55,7 @@ export namespace StructureRepresentationRegistry {
         'spacefill': SpacefillRepresentationProvider,
     };
 
-    type _BuiltIn = typeof BuiltIn
-    export type BuiltIn = keyof _BuiltIn
-    export type BuiltInParams<T extends BuiltIn> = Partial<RepresentationProvider.ParamValues<_BuiltIn[T]>>
+    type _BuiltIn = typeof BuiltIn;
+    export type BuiltIn = keyof _BuiltIn;
+    export type BuiltInParams<T extends BuiltIn> = Partial<RepresentationProvider.ParamValues<_BuiltIn[T]>>;
 }

@@ -16,14 +16,14 @@ import type { ModelFormat } from '../format.ts';
 import { IndexPairBonds } from './property/bonds/index-pair.ts';
 import type { Mol2Crysin, Mol2File } from '../../mol-io/reader/mol2/schema.ts';
 import { AtomPartialCharge } from './property/partial-charge.ts';
-import { type Trajectory, ArrayTrajectory } from '../../mol-model/structure.ts';
+import { ArrayTrajectory, type Trajectory } from '../../mol-model/structure.ts';
 import { guessElementSymbolString } from './util.ts';
 import { ModelSymmetry } from './property/symmetry.ts';
 import { Spacegroup, SpacegroupCell } from '../../mol-math/geometry.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
 import { getChainId } from './common/util.ts';
 
-type Subst = { chain: string, subType: string }
+type Subst = { chain: string; subType: string };
 
 async function getModels(mol2: Mol2File, ctx: RuntimeContext) {
     const models: Model[] = [];
@@ -143,16 +143,16 @@ async function getModels(mol2: Mol2File, ctx: RuntimeContext) {
         const basic = createBasic({
             entity: entityBuilder.getEntityTable(),
             chem_comp: componentBuilder.getChemCompTable(),
-            atom_site
+            atom_site,
         });
 
         const _models = await createModels(basic, Mol2Format.create(mol2), ctx);
 
         if (_models.frameCount > 0) {
-            const indexA = Column.ofIntArray(Column.mapToArray(bonds.origin_atom_id, x => x - 1, Int32Array));
-            const indexB = Column.ofIntArray(Column.mapToArray(bonds.target_atom_id, x => x - 1, Int32Array));
+            const indexA = Column.ofIntArray(Column.mapToArray(bonds.origin_atom_id, (x) => x - 1, Int32Array));
+            const indexB = Column.ofIntArray(Column.mapToArray(bonds.target_atom_id, (x) => x - 1, Int32Array));
             const key = bonds.bond_id;
-            const order = Column.ofIntArray(Column.mapToArray(bonds.bond_type, x => {
+            const order = Column.ofIntArray(Column.mapToArray(bonds.bond_type, (x) => {
                 switch (x) {
                     case 'ar': // aromatic
                     case 'am': // amide
@@ -165,7 +165,7 @@ async function getModels(mol2: Mol2File, ctx: RuntimeContext) {
                         return parseInt(x);
                 }
             }, Int8Array));
-            const flag = Column.ofIntArray(Column.mapToArray(bonds.bond_type, x => {
+            const flag = Column.ofIntArray(Column.mapToArray(bonds.bond_type, (x) => {
                 switch (x) {
                     case 'ar': // aromatic
                     case 'am': // amide
@@ -180,7 +180,7 @@ async function getModels(mol2: Mol2File, ctx: RuntimeContext) {
             }, Int8Array));
             const pairBonds = IndexPairBonds.fromData(
                 { pairs: { key, indexA, indexB, order, flag }, count: atoms.count },
-                { maxDistance: crysin ? -1 : Infinity }
+                { maxDistance: crysin ? -1 : Infinity },
             );
 
             const first = _models.representative;
@@ -188,7 +188,7 @@ async function getModels(mol2: Mol2File, ctx: RuntimeContext) {
 
             AtomPartialCharge.Provider.set(first, {
                 data: atoms.charge,
-                type: molecule.charge_type
+                type: molecule.charge_type,
             });
 
             if (crysin) {
@@ -210,14 +210,14 @@ function getSymmetry(crysin: Mol2Crysin): Symmetry | undefined {
     const spaceCell = SpacegroupCell.create(
         crysin.spaceGroup,
         Vec3.create(crysin.a, crysin.b, crysin.c),
-        Vec3.scale(Vec3(), Vec3.create(crysin.alpha, crysin.beta, crysin.gamma), Math.PI / 180)
+        Vec3.scale(Vec3(), Vec3.create(crysin.alpha, crysin.beta, crysin.gamma), Math.PI / 180),
     );
 
     return {
         spacegroup: Spacegroup.create(spaceCell),
         assemblies: [],
         isNonStandardCrystalFrame: false,
-        ncsOperators: []
+        ncsOperators: [],
     };
 }
 
@@ -225,7 +225,7 @@ function getSymmetry(crysin: Mol2Crysin): Symmetry | undefined {
 
 export { Mol2Format };
 
-type Mol2Format = ModelFormat<Mol2File>
+type Mol2Format = ModelFormat<Mol2File>;
 
 namespace Mol2Format {
     export function is(x?: ModelFormat): x is Mol2Format {
@@ -238,5 +238,5 @@ namespace Mol2Format {
 }
 
 export function trajectoryFromMol2(mol2: Mol2File): Task<Trajectory> {
-    return Task.create('Parse MOL2', ctx => getModels(mol2, ctx));
+    return Task.create('Parse MOL2', (ctx) => getModels(mol2, ctx));
 }

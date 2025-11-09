@@ -1,4 +1,4 @@
-﻿@use '../vars' as *;
+@use '../vars' as *;
 
 @mixin layout-landscape {
     .msp-layout-main {
@@ -56,7 +56,6 @@
             right: 0;
         }
     }
-
 
     .msp-layout-hide-left {
         .msp-layout-left {

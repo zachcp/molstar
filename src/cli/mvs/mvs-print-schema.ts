@@ -14,16 +14,20 @@ import { ArgumentParser } from 'argparse';
 import { treeSchemaToMarkdown, treeSchemaToString } from '../../extensions/mvs/tree/generic/tree-validation.ts';
 import { MVSTreeSchema } from '../../extensions/mvs/tree/mvs/mvs-tree.ts';
 
-
 /** Command line argument values for `main` */
 interface Args {
-    markdown: boolean,
+    markdown: boolean;
 }
 
 /** Return parsed command line arguments for `main` */
 function parseArguments(): Args {
-    const parser = new ArgumentParser({ description: 'Command-line application for printing MolViewSpec tree schema.' });
-    parser.add_argument('-m', '--markdown', { action: 'store_true', help: 'Print the schema as markdown instead of plain text.' });
+    const parser = new ArgumentParser({
+        description: 'Command-line application for printing MolViewSpec tree schema.',
+    });
+    parser.add_argument('-m', '--markdown', {
+        action: 'store_true',
+        help: 'Print the schema as markdown instead of plain text.',
+    });
     const args = parser.parse_args();
     return { ...args };
 }

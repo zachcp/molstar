@@ -7,11 +7,19 @@
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { Expression } from '../../mol-script/language/expression.ts';
 import { MolScriptBuilder } from '../../mol-script/language/builder.ts';
-import { StructureElement, Structure, StructureSelection as Sel, type StructureQuery, Queries, QueryContext, Model } from '../../mol-model/structure.ts';
+import {
+    Model,
+    Queries,
+    QueryContext,
+    Structure,
+    StructureElement,
+    type StructureQuery,
+    StructureSelection as Sel,
+} from '../../mol-model/structure.ts';
 import { StructureQueryHelper } from './structure-query.ts';
 import { PluginStateObject as SO } from '../objects.ts';
 import { StructureSelectionQueries } from './structure-selection-query.ts';
-import { StateTransformer, StateObject } from '../../mol-state/index.ts';
+import { StateObject, StateTransformer } from '../../mol-state/index.ts';
 import { Script } from '../../mol-script/script.ts';
 import { assertUnreachable } from '../../mol-util/type-helpers.ts';
 
@@ -30,10 +38,10 @@ export const StaticStructureComponentTypes = [
     'ligand',
     'non-standard',
 
-    'coarse'
+    'coarse',
 ] as const;
 
-export type StaticStructureComponentType = (typeof StaticStructureComponentTypes)[number]
+export type StaticStructureComponentType = (typeof StaticStructureComponentTypes)[number];
 
 export const StructureComponentParams = () => ({
     type: PD.MappedStatic('static', {
@@ -43,11 +51,15 @@ export const StructureComponentParams = () => ({
         script: PD.Script({ language: 'mol-script', expression: '(sel.atom.all)' }),
     }, { isHidden: true }),
     nullIfEmpty: PD.Optional(PD.Boolean(true, { isHidden: true })),
-    label: PD.Text('', { isHidden: true })
+    label: PD.Text('', { isHidden: true }),
 });
-export type StructureComponentParams = PD.ValuesFor<ReturnType<typeof StructureComponentParams>>
+export type StructureComponentParams = PD.ValuesFor<ReturnType<typeof StructureComponentParams>>;
 
-export function createStructureComponent(a: Structure, params: StructureComponentParams, cache: { source: Structure, entry?: StructureQueryHelper.CacheEntry }) {
+export function createStructureComponent(
+    a: Structure,
+    params: StructureComponentParams,
+    cache: { source: Structure; entry?: StructureQueryHelper.CacheEntry },
+) {
     cache.source = a;
 
     let component: Structure = Structure.Empty;
@@ -56,24 +68,58 @@ export function createStructureComponent(a: Structure, params: StructureComponen
         case 'static': {
             let query: StructureQuery;
             switch (params.type.params) {
-                case 'all': query = StructureSelectionQueries.all.query; label = 'All'; break;
+                case 'all':
+                    query = StructureSelectionQueries.all.query;
+                    label = 'All';
+                    break;
 
-                case 'polymer': query = StructureSelectionQueries.polymer.query; label = 'Polymer'; break;
+                case 'polymer':
+                    query = StructureSelectionQueries.polymer.query;
+                    label = 'Polymer';
+                    break;
 
-                case 'protein': query = StructureSelectionQueries.protein.query; label = 'Protein'; break;
-                case 'nucleic': query = StructureSelectionQueries.nucleic.query; label = 'Nucleic'; break;
-                case 'water': query = Queries.internal.water(); label = 'Water'; break;
-                case 'ion': query = StructureSelectionQueries.ion.query; label = 'Ion'; break;
-                case 'lipid': query = StructureSelectionQueries.lipid.query; label = 'Lipid'; break;
+                case 'protein':
+                    query = StructureSelectionQueries.protein.query;
+                    label = 'Protein';
+                    break;
+                case 'nucleic':
+                    query = StructureSelectionQueries.nucleic.query;
+                    label = 'Nucleic';
+                    break;
+                case 'water':
+                    query = Queries.internal.water();
+                    label = 'Water';
+                    break;
+                case 'ion':
+                    query = StructureSelectionQueries.ion.query;
+                    label = 'Ion';
+                    break;
+                case 'lipid':
+                    query = StructureSelectionQueries.lipid.query;
+                    label = 'Lipid';
+                    break;
 
-                case 'branched': query = StructureSelectionQueries.branchedPlusConnected.query; label = 'Branched'; break;
-                case 'ligand': query = StructureSelectionQueries.ligandPlusConnected.query; label = 'Ligand'; break;
+                case 'branched':
+                    query = StructureSelectionQueries.branchedPlusConnected.query;
+                    label = 'Branched';
+                    break;
+                case 'ligand':
+                    query = StructureSelectionQueries.ligandPlusConnected.query;
+                    label = 'Ligand';
+                    break;
 
-                case 'non-standard': query = StructureSelectionQueries.nonStandardPolymer.query; label = 'Non-standard'; break;
+                case 'non-standard':
+                    query = StructureSelectionQueries.nonStandardPolymer.query;
+                    label = 'Non-standard';
+                    break;
 
-                case 'coarse': query = StructureSelectionQueries.coarse.query; label = 'Coarse'; break;
+                case 'coarse':
+                    query = StructureSelectionQueries.coarse.query;
+                    label = 'Coarse';
+                    break;
 
-                default: assertUnreachable(params.type);
+                default:
+                    assertUnreachable(params.type);
             }
             const result = query(new QueryContext(a));
             component = Sel.unionStructure(result);
@@ -95,11 +141,20 @@ export function createStructureComponent(a: Structure, params: StructureComponen
 
     if (params.nullIfEmpty && component.elementCount === 0) return StateObject.Null;
 
-    const props = { label: `${params.label || label || 'Component'}`, description: Structure.elementDescription(component) };
+    const props = {
+        label: `${params.label || label || 'Component'}`,
+        description: Structure.elementDescription(component),
+    };
     return new SO.Molecule.Structure(component, props);
 }
 
-export function updateStructureComponent(a: Structure, b: SO.Molecule.Structure, oldParams: StructureComponentParams, newParams: StructureComponentParams, cache: { source: Structure, entry?: StructureQueryHelper.CacheEntry }) {
+export function updateStructureComponent(
+    a: Structure,
+    b: SO.Molecule.Structure,
+    oldParams: StructureComponentParams,
+    newParams: StructureComponentParams,
+    cache: { source: Structure; entry?: StructureQueryHelper.CacheEntry },
+) {
     if (oldParams.type.name !== newParams.type.name) return StateTransformer.UpdateResult.Recreate;
 
     let updated = false;
@@ -139,7 +194,13 @@ export function updateStructureComponent(a: Structure, b: SO.Molecule.Structure,
             break;
         }
         case 'bundle': {
-            if (a === cache.source && StructureElement.Bundle.areEqual(oldParams.type.params as StructureElement.Bundle, newParams.type.params)) {
+            if (
+                a === cache.source &&
+                StructureElement.Bundle.areEqual(
+                    oldParams.type.params as StructureElement.Bundle,
+                    newParams.type.params,
+                )
+            ) {
                 break;
             }
 

@@ -10,23 +10,22 @@ import type { ChainIndex, ElementIndex, Model, ResidueIndex } from '../../../mol
 import { filterInPlace, range, sortIfNeeded } from '../../../mol-util/array.ts';
 import { type Mapping, MultiMap, NumberMap } from './utils.ts';
 
-
 /** Auxiliary data structure for efficiently finding chains/residues/atoms in a model by their properties */
 export interface IndicesAndSortings {
-    chainsByLabelEntityId: Mapping<string, readonly ChainIndex[]>,
-    chainsByLabelAsymId: Mapping<string, readonly ChainIndex[]>,
-    chainsByAuthAsymId: Mapping<string, readonly ChainIndex[]>,
-    residuesSortedByLabelSeqId: Mapping<ChainIndex, Sorting<ResidueIndex, number>>,
-    residuesSortedByAuthSeqId: Mapping<ChainIndex, Sorting<ResidueIndex, number>>,
-    residuesByInsCode: Mapping<ChainIndex, Mapping<string, readonly ResidueIndex[]>>,
-    residuesByLabelCompId: Mapping<ChainIndex, Mapping<string, readonly ResidueIndex[]>>,
+    chainsByLabelEntityId: Mapping<string, readonly ChainIndex[]>;
+    chainsByLabelAsymId: Mapping<string, readonly ChainIndex[]>;
+    chainsByAuthAsymId: Mapping<string, readonly ChainIndex[]>;
+    residuesSortedByLabelSeqId: Mapping<ChainIndex, Sorting<ResidueIndex, number>>;
+    residuesSortedByAuthSeqId: Mapping<ChainIndex, Sorting<ResidueIndex, number>>;
+    residuesByInsCode: Mapping<ChainIndex, Mapping<string, readonly ResidueIndex[]>>;
+    residuesByLabelCompId: Mapping<ChainIndex, Mapping<string, readonly ResidueIndex[]>>;
     /** Indicates if each residue is listed only once in `residuesByLabelCompId` (i.e. if each residue has only one label_comp_id) */
-    residuesByLabelCompIdIsPure: boolean,
-    residuesByAuthCompId: Mapping<ChainIndex, Mapping<string, readonly ResidueIndex[]>>,
+    residuesByLabelCompIdIsPure: boolean;
+    residuesByAuthCompId: Mapping<ChainIndex, Mapping<string, readonly ResidueIndex[]>>;
     /** Indicates if each residue is listed only once in `residuesByAuthCompId` (i.e. if each residue has only one auth_comp_id) */
-    residuesByAuthCompIdIsPure: boolean,
-    atomsById: Mapping<number, ElementIndex>,
-    atomsByIndex: Mapping<number, ElementIndex>,
+    residuesByAuthCompIdIsPure: boolean;
+    atomsById: Mapping<number, ElementIndex>;
+    atomsByIndex: Mapping<number, ElementIndex>;
 }
 
 export const IndicesAndSortings = {
@@ -69,10 +68,16 @@ export const IndicesAndSortings = {
             const iResFrom = h.residueAtomSegments.index[h.chainAtomSegments.offsets[iChain]];
             const iResTo = h.residueAtomSegments.index[h.chainAtomSegments.offsets[iChain + 1] - 1] + 1;
 
-            const residuesWithLabelSeqId = filterInPlace(range(iResFrom, iResTo) as ResidueIndex[], iRes => label_seq_id.valueKind(iRes) === Present);
+            const residuesWithLabelSeqId = filterInPlace(
+                range(iResFrom, iResTo) as ResidueIndex[],
+                (iRes) => label_seq_id.valueKind(iRes) === Present,
+            );
             residuesSortedByLabelSeqId.set(iChain, Sorting.create(residuesWithLabelSeqId, label_seq_id.value));
 
-            const residuesWithAuthSeqId = filterInPlace(range(iResFrom, iResTo) as ResidueIndex[], iRes => auth_seq_id.valueKind(iRes) === Present);
+            const residuesWithAuthSeqId = filterInPlace(
+                range(iResFrom, iResTo) as ResidueIndex[],
+                (iRes) => auth_seq_id.valueKind(iRes) === Present,
+            );
             residuesSortedByAuthSeqId.set(iChain, Sorting.create(residuesWithAuthSeqId, auth_seq_id.value));
 
             const residuesHereByInsCode = new MultiMap<string, ResidueIndex>();
@@ -108,21 +113,28 @@ export const IndicesAndSortings = {
         }
 
         return {
-            chainsByLabelEntityId, chainsByLabelAsymId, chainsByAuthAsymId,
-            residuesSortedByLabelSeqId, residuesSortedByAuthSeqId, residuesByInsCode,
-            residuesByLabelCompId, residuesByLabelCompIdIsPure, residuesByAuthCompId, residuesByAuthCompIdIsPure,
-            atomsById, atomsByIndex,
+            chainsByLabelEntityId,
+            chainsByLabelAsymId,
+            chainsByAuthAsymId,
+            residuesSortedByLabelSeqId,
+            residuesSortedByAuthSeqId,
+            residuesByInsCode,
+            residuesByLabelCompId,
+            residuesByLabelCompIdIsPure,
+            residuesByAuthCompId,
+            residuesByAuthCompIdIsPure,
+            atomsById,
+            atomsByIndex,
         };
     },
 };
 
-
 /** Represents a set of things (keys) of type `K`, sorted by some property (value) of type `V` */
 export interface Sorting<K, V extends number> {
     /** Keys sorted by their corresponding values */
-    keys: readonly K[],
+    keys: readonly K[];
     /** Sorted values corresponding to each key (value for `keys[i]` is `values[i]`) */
-    values: SortedArray<V>,
+    values: SortedArray<V>;
 }
 
 export const Sorting = {

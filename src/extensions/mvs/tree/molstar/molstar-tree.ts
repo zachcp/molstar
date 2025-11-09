@@ -5,12 +5,17 @@
  */
 
 import { omitObjectKeys, pickObjectKeys } from '../../../../mol-util/object.ts';
-import { RequiredField, bool, str } from '../generic/field-schema.ts';
+import { bool, RequiredField, str } from '../generic/field-schema.ts';
 import { SimpleParamsSchema } from '../generic/params-schema.ts';
-import { type NodeFor, type ParamsOfKind, type SubtreeOfKind, type TreeFor, TreeSchema } from '../generic/tree-schema.ts';
+import {
+    type NodeFor,
+    type ParamsOfKind,
+    type SubtreeOfKind,
+    type TreeFor,
+    TreeSchema,
+} from '../generic/tree-schema.ts';
 import { FullMVSTreeSchema } from '../mvs/mvs-tree.ts';
 import { MolstarParseFormatT } from '../mvs/param-types.ts';
-
 
 /** Schema for `MolstarTree` (intermediate tree representation between `MVSTree` and a real Molstar state) */
 export const MolstarTreeSchema = TreeSchema({
@@ -48,7 +53,10 @@ export const MolstarTreeSchema = TreeSchema({
             params: SimpleParamsSchema({
                 /** File format */
                 format: RequiredField(MolstarParseFormatT, 'File format'),
-                ...pickObjectKeys(FullMVSTreeSchema.nodes.structure.params.fields, ['block_header', 'block_index'] as const),
+                ...pickObjectKeys(
+                    FullMVSTreeSchema.nodes.structure.params.fields,
+                    ['block_header', 'block_index'] as const,
+                ),
             }),
         },
         /** Auxiliary node corresponding to Molstar's TrajectoryFrom*. */
@@ -73,7 +81,7 @@ export const MolstarTreeSchema = TreeSchema({
             description: "Auxiliary node corresponding to Molstar's ModelFromTrajectory.",
             parent: ['trajectory', 'trajectory_with_coordinates', 'topology_with_coordinates'],
             params: SimpleParamsSchema(
-                pickObjectKeys(FullMVSTreeSchema.nodes.structure.params.fields, ['model_index'] as const)
+                pickObjectKeys(FullMVSTreeSchema.nodes.structure.params.fields, ['model_index'] as const),
             ),
         },
         /** Auxiliary node corresponding to Molstar's StructureFromModel. */
@@ -81,24 +89,26 @@ export const MolstarTreeSchema = TreeSchema({
             ...FullMVSTreeSchema.nodes.structure,
             parent: ['model'],
             params: SimpleParamsSchema(
-                omitObjectKeys(FullMVSTreeSchema.nodes.structure.params.fields, ['block_header', 'block_index', 'model_index', 'coordinates_ref'] as const)
+                omitObjectKeys(
+                    FullMVSTreeSchema.nodes.structure.params.fields,
+                    ['block_header', 'block_index', 'model_index', 'coordinates_ref'] as const,
+                ),
             ),
         },
-    }
+    },
 });
-
 
 /** Node kind in a `MolstarTree` */
 export type MolstarKind = keyof typeof MolstarTreeSchema.nodes;
 
 /** Node in a `MolstarTree` */
-export type MolstarNode<TKind extends MolstarKind = MolstarKind> = NodeFor<typeof MolstarTreeSchema, TKind>
+export type MolstarNode<TKind extends MolstarKind = MolstarKind> = NodeFor<typeof MolstarTreeSchema, TKind>;
 
 /** Params for a specific node kind in a `MolstarTree` */
-export type MolstarNodeParams<TKind extends MolstarKind> = ParamsOfKind<MolstarTree, TKind>
+export type MolstarNodeParams<TKind extends MolstarKind> = ParamsOfKind<MolstarTree, TKind>;
 
 /** Intermediate tree representation between `MVSTree` and a real Molstar state */
-export type MolstarTree = TreeFor<typeof MolstarTreeSchema>
+export type MolstarTree = TreeFor<typeof MolstarTreeSchema>;
 
 /** Any subtree in a `MolstarTree` (e.g. its root doesn't need to be 'root') */
-export type MolstarSubtree<TKind extends MolstarKind = MolstarKind> = SubtreeOfKind<MolstarTree, TKind>
+export type MolstarSubtree<TKind extends MolstarKind = MolstarKind> = SubtreeOfKind<MolstarTree, TKind>;

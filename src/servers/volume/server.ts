@@ -15,8 +15,7 @@ import { configureServer, ServerConfig } from './config.ts';
 import { State } from './server/state.ts';
 import { VOLUME_SERVER_HEADER } from './server/version.ts';
 import { init } from './server/web-api.ts';
-import process from "node:process";
-
+import process from 'node:process';
 
 function setupShutdown() {
     if (ServerConfig.shutdownTimeoutVarianceMinutes > ServerConfig.shutdownTimeoutMinutes) {

@@ -20,28 +20,29 @@ import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { MVSAnnotationColorThemeProvider } from './components/annotation-color-theme.ts';
 import { MVSAnnotationLabelRepresentationProvider } from './components/annotation-label/representation.ts';
 import { MVSAnnotationsProvider } from './components/annotation-prop.ts';
-import { MVSAnnotationTooltipsLabelProvider, MVSAnnotationTooltipsProvider } from './components/annotation-tooltips-prop.ts';
+import {
+    MVSAnnotationTooltipsLabelProvider,
+    MVSAnnotationTooltipsProvider,
+} from './components/annotation-tooltips-prop.ts';
 import { CustomLabelRepresentationProvider } from './components/custom-label/representation.ts';
 import { CustomTooltipsLabelProvider, CustomTooltipsProvider } from './components/custom-tooltips-prop.ts';
-import { LoadMvsData, MVSJFormatProvider, MVSXFormatProvider, loadMVSX } from './components/formats.ts';
+import { LoadMvsData, loadMVSX, MVSJFormatProvider, MVSXFormatProvider } from './components/formats.ts';
 import { IsMVSModelProvider } from './components/is-mvs-model-prop.ts';
 import { makeMultilayerColorThemeProvider } from './components/multilayer-color-theme.ts';
 import { loadMVS } from './load.ts';
 import { MVSData } from './mvs-data.ts';
 
-
 /** Collection of things that can be register/unregistered in a plugin */
 interface Registrables {
-    customModelProperties?: CustomModelProperty.Provider<any, any>[],
-    customStructureProperties?: CustomStructureProperty.Provider<any, any>[],
-    representations?: StructureRepresentationProvider<any>[],
-    colorThemes?: ColorTheme.Provider[],
-    lociLabels?: LociLabelProvider[],
-    dragAndDropHandlers?: DragAndDropHandler[],
-    dataFormats?: { name: string, provider: DataFormatProvider }[],
-    actions?: StateAction[],
+    customModelProperties?: CustomModelProperty.Provider<any, any>[];
+    customStructureProperties?: CustomStructureProperty.Provider<any, any>[];
+    representations?: StructureRepresentationProvider<any>[];
+    colorThemes?: ColorTheme.Provider[];
+    lociLabels?: LociLabelProvider[];
+    dragAndDropHandlers?: DragAndDropHandler[];
+    dataFormats?: { name: string; provider: DataFormatProvider }[];
+    actions?: StateAction[];
 }
-
 
 /** Registers everything needed for loading MolViewSpec files */
 export const MolViewSpec = PluginBehavior.create<{ autoAttach: boolean }>({
@@ -82,7 +83,7 @@ export const MolViewSpec = PluginBehavior.create<{ autoAttach: boolean }>({
             ],
             actions: [
                 LoadMvsData,
-            ]
+            ],
         };
 
         register(): void {
@@ -112,27 +113,28 @@ export const MolViewSpec = PluginBehavior.create<{ autoAttach: boolean }>({
             }
 
             this.ctx.managers.markdownExtensions.registerRefResolver('mvs', (plugin, refs) => {
-                const mvsRefs = new Set(refs.map(ref => `mvs-ref:${ref}`));
+                const mvsRefs = new Set(refs.map((ref) => `mvs-ref:${ref}`));
                 return StateTree.doPreOrder(
                     plugin.state.data.tree,
                     plugin.state.data.tree.root,
                     { mvsRefs, plugin, cells: [] as StateObjectCell[] },
                     (n, _, s) => {
-                    if (!n.tags) return;
-                    for (const tag of n.tags) {
-                        if (!s.mvsRefs.has(tag)) continue;
-                        const cell = s.plugin.state.data.cells.get(n.ref);
-                        if (cell) {
-                            s.cells.push(cell);
-                            break;
+                        if (!n.tags) return;
+                        for (const tag of n.tags) {
+                            if (!s.mvsRefs.has(tag)) continue;
+                            const cell = s.plugin.state.data.cells.get(n.ref);
+                            if (cell) {
+                                s.cells.push(cell);
+                                break;
+                            }
                         }
-                    }
-                }).cells;
+                    },
+                ).cells;
             });
 
             this.ctx.managers.markdownExtensions.registerUriResolver('mvs', (plugin, uri) => {
                 const { assets } = plugin.managers.asset;
-                const asset = assets.find(a => a.file.name === uri);
+                const asset = assets.find((a) => a.file.name === uri);
                 if (!asset) {
                     return undefined;
                 }
@@ -185,14 +187,13 @@ export const MolViewSpec = PluginBehavior.create<{ autoAttach: boolean }>({
     },
     params: () => ({
         autoAttach: PD.Boolean(false),
-    })
+    }),
 });
-
 
 /** Registrable method for handling dragged-and-dropped files */
 interface DragAndDropHandler {
-    name: string,
-    handle: PluginDragAndDropHandler,
+    name: string;
+    handle: PluginDragAndDropHandler;
 }
 
 /** DragAndDropHandler handler for `.mvsj` and `.mvsx` files */
@@ -205,20 +206,28 @@ const MVSDragAndDropHandler: DragAndDropHandler = {
         let applied = false;
         for (const file of files) {
             if (file.name.toLowerCase().endsWith('.mvsj')) {
-                const task = Task.create('Load MVSJ file', async ctx => {
+                const task = Task.create('Load MVSJ file', async (ctx) => {
                     const data = await file.text();
                     const mvsData = MVSData.fromMVSJ(data);
-                    await loadMVS(plugin, mvsData, { sanityChecks: true, appendSnapshots: applied, sourceUrl: undefined });
+                    await loadMVS(plugin, mvsData, {
+                        sanityChecks: true,
+                        appendSnapshots: applied,
+                        sourceUrl: undefined,
+                    });
                 });
                 await plugin.runTask(task);
                 applied = true;
             }
             if (file.name.toLowerCase().endsWith('.mvsx')) {
-                const task = Task.create('Load MVSX file', async ctx => {
+                const task = Task.create('Load MVSX file', async (ctx) => {
                     const buffer = await file.arrayBuffer();
                     const array = new Uint8Array(buffer);
                     const parsed = await loadMVSX(plugin, ctx, array);
-                    await loadMVS(plugin, parsed.mvsData, { sanityChecks: true, appendSnapshots: applied, sourceUrl: parsed.sourceUrl });
+                    await loadMVS(plugin, parsed.mvsData, {
+                        sanityChecks: true,
+                        appendSnapshots: applied,
+                        sourceUrl: parsed.sourceUrl,
+                    });
                 });
                 await plugin.runTask(task);
                 applied = true;

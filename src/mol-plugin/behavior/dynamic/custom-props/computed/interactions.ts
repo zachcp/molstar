@@ -18,11 +18,11 @@ import { arraySetAdd } from '../../../../../mol-util/array.ts';
 import { InteractionTypeColorThemeProvider } from '../../../../../mol-model-props/computed/themes/interaction-type.ts';
 import { InteractionsRepresentationProvider } from '../../../../../mol-model-props/computed/representations/interactions.ts';
 
-export const Interactions = PluginBehavior.create<{ autoAttach: boolean, showTooltip: boolean }>({
+export const Interactions = PluginBehavior.create<{ autoAttach: boolean; showTooltip: boolean }>({
     name: 'computed-interactions-prop',
     category: 'custom-props',
     display: { name: 'Interactions' },
-    ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean, showTooltip: boolean }> {
+    ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean; showTooltip: boolean }> {
         private provider = InteractionsProvider;
 
         private getStructures(structure: Structure) {
@@ -30,7 +30,9 @@ export const Interactions = PluginBehavior.create<{ autoAttach: boolean, showToo
             const root = this.ctx.helpers.substructureParent.get(structure);
             if (root) {
                 const state = this.ctx.state.data;
-                const selections = state.select(StateSelection.Generators.ofType(PluginStateObject.Molecule.Structure, root.transform.ref));
+                const selections = state.select(
+                    StateSelection.Generators.ofType(PluginStateObject.Molecule.Structure, root.transform.ref),
+                );
                 for (const s of selections) {
                     if (s.obj) arraySetAdd(structures, s.obj.data);
                 }
@@ -83,18 +85,21 @@ export const Interactions = PluginBehavior.create<{ autoAttach: boolean, showToo
 
                         return labels.length ? labels.join('<br/>') : undefined;
 
-                    default: return void 0;
+                    default:
+                        return void 0;
                 }
-            }
+            },
         };
 
-        override update(p: { autoAttach: boolean, showTooltip: boolean }) {            const updated = (
-                this.params.autoAttach !== p.autoAttach ||
-                this.params.showTooltip !== p.showTooltip
-            );
+        override update(p: { autoAttach: boolean; showTooltip: boolean }) {
+            const updated = this.params.autoAttach !== p.autoAttach ||
+                this.params.showTooltip !== p.showTooltip;
             this.params.autoAttach = p.autoAttach;
             this.params.showTooltip = p.showTooltip;
-            this.ctx.customStructureProperties.setDefaultAutoAttach(this.provider.descriptor.name, this.params.autoAttach);
+            this.ctx.customStructureProperties.setDefaultAutoAttach(
+                this.provider.descriptor.name,
+                this.params.autoAttach,
+            );
             return updated;
         }
 
@@ -114,6 +119,6 @@ export const Interactions = PluginBehavior.create<{ autoAttach: boolean, showToo
     },
     params: () => ({
         autoAttach: PD.Boolean(false),
-        showTooltip: PD.Boolean(true)
-    })
+        showTooltip: PD.Boolean(true),
+    }),
 });

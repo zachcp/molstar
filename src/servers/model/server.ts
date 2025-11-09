@@ -12,7 +12,7 @@ import { PerformanceMonitor } from '../../mol-util/performance-monitor.ts';
 import { configureServer, ModelServerConfig as ServerConfig } from './config.ts';
 import { initWebApi } from './server/api-web.ts';
 import { VERSION } from './version.ts';
-import process from "node:process";
+import process from 'node:process';
 
 function setupShutdown() {
     if (ServerConfig.shutdownTimeoutVarianceMinutes > ServerConfig.shutdownTimeoutMinutes) {
@@ -46,12 +46,14 @@ configureServer();
 function startServer() {
     const app = express();
     app.use(compression({
-        level: 6, memLevel: 9, chunkSize: 16 * 16384,
+        level: 6,
+        memLevel: 9,
+        chunkSize: 16 * 16384,
         filter: (req, res) => {
             const ct = res.getHeader('Content-Type');
             if (typeof ct === 'string' && ct.indexOf('tar+gzip') > 0) return false;
             return true;
-        }
+        },
     }));
 
     initWebApi(app);

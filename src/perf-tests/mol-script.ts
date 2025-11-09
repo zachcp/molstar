@@ -1,14 +1,17 @@
 import { MolScriptBuilder } from '../mol-script/language/builder.ts';
-import { compile, QuerySymbolRuntime, DefaultQueryRuntimeTable } from '../mol-script/runtime/query/compiler.ts';
+import { compile, DefaultQueryRuntimeTable, QuerySymbolRuntime } from '../mol-script/runtime/query/compiler.ts';
 import { QueryContext, Structure, type StructureQuery } from '../mol-model/structure.ts';
-import { readCifFile, getModelsAndStructure } from '../cli/structure-info/model.ts';
+import { getModelsAndStructure, readCifFile } from '../cli/structure-info/model.ts';
 import { CustomPropSymbol } from '../mol-script/language/symbol.ts';
 import { Type } from '../mol-script/language/type.ts';
 import { parseMolScript } from '../mol-script/language/parser.ts';
 import * as util from 'node:util';
 import { transpileMolScript } from '../mol-script/script/mol-script/symbols.ts';
 import { formatMolScript } from '../mol-script/language/expression-formatter.ts';
-import { StructureQualityReport, StructureQualityReportProvider } from '../extensions/pdbe/structure-quality-report/prop.ts';
+import {
+    StructureQualityReport,
+    StructureQualityReportProvider,
+} from '../extensions/pdbe/structure-quality-report/prop.ts';
 import fetch from 'node-fetch';
 import { CustomPropertyDescriptor } from '../mol-model/custom-property.ts';
 
@@ -51,12 +54,15 @@ const CustomProp = CustomPropertyDescriptor({
     name: 'test_prop',
     cifExport: { prefix: '', categories: [] },
     symbols: {
-        residueIndex: QuerySymbolRuntime.Dynamic(CustomPropSymbol('custom.test-prop', 'residue-index', Type.Num), ctx => {
-            const e = ctx.element;
-            // console.log(e.element, e.unit.model.atomicHierarchy.residueAtomSegments.index[e.element])
-            return e.unit.model.atomicHierarchy.residueAtomSegments.index[e.element];
-        })
-    }
+        residueIndex: QuerySymbolRuntime.Dynamic(
+            CustomPropSymbol('custom.test-prop', 'residue-index', Type.Num),
+            (ctx) => {
+                const e = ctx.element;
+                // console.log(e.element, e.unit.model.atomicHierarchy.residueAtomSegments.index[e.element])
+                return e.unit.model.atomicHierarchy.residueAtomSegments.index[e.element];
+            },
+        ),
+    },
 });
 
 DefaultQueryRuntimeTable.addCustomProp(CustomProp);
@@ -68,7 +74,9 @@ export async function testQ() {
     const { structure } = await getModelsAndStructure(frame);
     const model = structure.models[0];
 
-    const rawData = await fetch(`https://www.ebi.ac.uk/pdbe/api/validation/residuewise_outlier_summary/entry/${model.entryId.toLowerCase()}`);
+    const rawData = await fetch(
+        `https://www.ebi.ac.uk/pdbe/api/validation/residuewise_outlier_summary/entry/${model.entryId.toLowerCase()}`,
+    );
     const data = StructureQualityReport.fromJson(model, await rawData.json());
 
     StructureQualityReportProvider.set(model, { serverUrl: '' }, data);
@@ -76,13 +84,13 @@ export async function testQ() {
     let expr = MolScriptBuilder.struct.generator.atomGroups({
         'atom-test': MolScriptBuilder.core.rel.eq([
             MolScriptBuilder.struct.atomProperty.core.elementSymbol(),
-            MolScriptBuilder.es('C')
+            MolScriptBuilder.es('C'),
         ]),
         // 'residue-test': MolScriptBuilder.core.rel.eq([
         //     MolScriptBuilder.struct.atomProperty.macromolecular.label_comp_id(),
         //     'REA'
         // ])
-        'residue-test': MolScriptBuilder.core.rel.inRange([CustomProp.symbols.residueIndex.symbol(), 1, 5])
+        'residue-test': MolScriptBuilder.core.rel.inRange([CustomProp.symbols.residueIndex.symbol(), 1, 5]),
     });
 
     expr = tsp;

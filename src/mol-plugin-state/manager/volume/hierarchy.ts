@@ -17,14 +17,14 @@ export class VolumeHierarchyManager extends PluginComponent {
         notified: false,
 
         hierarchy: VolumeHierarchy(),
-        selection: void 0 as VolumeRef | undefined
+        selection: void 0 as VolumeRef | undefined,
     };
 
     readonly behaviors = {
         selection: this.ev.behavior({
             hierarchy: this.current,
-            volume: this.selection
-        })
+            volume: this.selection,
+        }),
     };
 
     private get dataState() {
@@ -66,7 +66,9 @@ export class VolumeHierarchyManager extends PluginComponent {
         if (!this.state.selection) {
             this.state.selection = hierarchy.volumes[0];
         } else {
-            this.state.selection = hierarchy.refs.has(this.state.selection.cell.transform.ref) ? hierarchy.refs.get(this.state.selection.cell.transform.ref) as VolumeRef : hierarchy.volumes[0];
+            this.state.selection = hierarchy.refs.has(this.state.selection.cell.transform.ref)
+                ? hierarchy.refs.get(this.state.selection.cell.transform.ref) as VolumeRef
+                : hierarchy.volumes[0];
         }
 
         if (notify) {
@@ -79,7 +81,10 @@ export class VolumeHierarchyManager extends PluginComponent {
 
     setCurrent(volume?: VolumeRef) {
         this.state.selection = volume || this.state.hierarchy.volumes[0];
-        this.behaviors.selection.next({ hierarchy: this.state.hierarchy, volume: volume || this.state.hierarchy.volumes[0] });
+        this.behaviors.selection.next({
+            hierarchy: this.state.hierarchy,
+            volume: volume || this.state.hierarchy.volumes[0],
+        });
     }
 
     // TODO: have common util
@@ -94,9 +99,7 @@ export class VolumeHierarchyManager extends PluginComponent {
     toggleVisibility(refs: ReadonlyArray<VolumeHierarchyRef>, action?: 'show' | 'hide') {
         if (refs.length === 0) return;
 
-        const isHidden = action !== void 0
-            ? (action === 'show' ? false : true)
-            : !refs[0].cell.state.isHidden;
+        const isHidden = action !== void 0 ? (action === 'show' ? false : true) : !refs[0].cell.state.isHidden;
         for (const c of refs) {
             setSubtreeVisibility(this.dataState, c.cell.transform.ref, isHidden);
         }
@@ -105,9 +108,12 @@ export class VolumeHierarchyManager extends PluginComponent {
     addRepresentation(ref: VolumeRef, type: string) {
         const update = this.dataState.build()
             .to(ref.cell)
-            .apply(StateTransforms.Representation.VolumeRepresentation3D, createVolumeRepresentationParams(this.plugin, ref.cell.obj?.data, {
-                type: type as any,
-            }));
+            .apply(
+                StateTransforms.Representation.VolumeRepresentation3D,
+                createVolumeRepresentationParams(this.plugin, ref.cell.obj?.data, {
+                    type: type as any,
+                }),
+            );
 
         return update.commit({ canUndo: 'Add Representation' });
     }
@@ -115,12 +121,12 @@ export class VolumeHierarchyManager extends PluginComponent {
     constructor(private plugin: PluginContext) {
         super();
 
-        this.subscribe(plugin.state.data.events.changed, e => {
+        this.subscribe(plugin.state.data.events.changed, (e) => {
             if (e.inTransaction || plugin.behaviors.state.isAnimating.value) return;
             this.sync(true);
         });
 
-        this.subscribe(plugin.behaviors.state.isAnimating, isAnimating => {
+        this.subscribe(plugin.behaviors.state.isAnimating, (isAnimating) => {
             if (!isAnimating && !plugin.behaviors.state.isUpdating.value) this.sync(true);
         });
     }

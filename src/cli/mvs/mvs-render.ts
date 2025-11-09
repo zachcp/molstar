@@ -27,7 +27,7 @@ import { setCanvasModule } from '../../mol-geo/geometry/text/font-atlas.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import { HeadlessPluginContext } from '../../mol-plugin/headless-plugin-context.ts';
 import { DefaultPluginSpec, PluginSpec } from '../../mol-plugin/spec.ts';
-import { type ExternalModules, defaultCanvas3DParams } from '../../mol-plugin/util/headless-screenshot.ts';
+import { defaultCanvas3DParams, type ExternalModules } from '../../mol-plugin/util/headless-screenshot.ts';
 import { Task } from '../../mol-task/index.ts';
 import { setFSModule } from '../../mol-util/data-source.ts';
 import { onelinerJsonString } from '../../mol-util/json.ts';
@@ -40,7 +40,6 @@ import { loadMVSX } from '../../extensions/mvs/components/formats.ts';
 import { loadMVS } from '../../extensions/mvs/load.ts';
 import { MVSData } from '../../extensions/mvs/mvs-data.ts';
 
-
 setFSModule(fs);
 setCanvasModule(require('canvas'));
 
@@ -48,31 +47,58 @@ const DEFAULT_SIZE = '800x800';
 
 /** Command line argument values for `main` */
 interface Args {
-    input: string[],
-    output: string[],
-    size: { width: number, height: number },
-    molj: boolean,
-    no_extensions: boolean,
+    input: string[];
+    output: string[];
+    size: { width: number; height: number };
+    molj: boolean;
+    no_extensions: boolean;
 }
 
 /** Return parsed command line arguments for `main` */
 function parseArguments(): Args {
-    const parser = new ArgumentParser({ description: 'Command-line application for rendering images from MolViewSpec files' });
-    parser.add_argument('-i', '--input', { required: true, nargs: '+', help: 'Input file(s) in .mvsj or .mvsx format. File format is inferred from the file extension.' });
-    parser.add_argument('-o', '--output', { required: true, nargs: '+', help: 'File path(s) for output files (one output path for each input file). Output format is inferred from the file extension (.png or .jpg)' });
-    parser.add_argument('-s', '--size', { help: `Output image resolution, {width}x{height}. Default: ${DEFAULT_SIZE}.`, default: DEFAULT_SIZE });
-    parser.add_argument('-m', '--molj', { action: 'store_true', help: `Save Mol* state (.molj) in addition to rendered images (use the same output file paths but with .molj extension)` });
-    parser.add_argument('-n', '--no-extensions', { action: 'store_true', help: `Do not apply builtin MVS-loading extensions (not a part of standard MVS specification)` });
+    const parser = new ArgumentParser({
+        description: 'Command-line application for rendering images from MolViewSpec files',
+    });
+    parser.add_argument('-i', '--input', {
+        required: true,
+        nargs: '+',
+        help: 'Input file(s) in .mvsj or .mvsx format. File format is inferred from the file extension.',
+    });
+    parser.add_argument('-o', '--output', {
+        required: true,
+        nargs: '+',
+        help:
+            'File path(s) for output files (one output path for each input file). Output format is inferred from the file extension (.png or .jpg)',
+    });
+    parser.add_argument('-s', '--size', {
+        help: `Output image resolution, {width}x{height}. Default: ${DEFAULT_SIZE}.`,
+        default: DEFAULT_SIZE,
+    });
+    parser.add_argument('-m', '--molj', {
+        action: 'store_true',
+        help:
+            `Save Mol* state (.molj) in addition to rendered images (use the same output file paths but with .molj extension)`,
+    });
+    parser.add_argument('-n', '--no-extensions', {
+        action: 'store_true',
+        help: `Do not apply builtin MVS-loading extensions (not a part of standard MVS specification)`,
+    });
     const args = parser.parse_args();
     try {
         const parts = args.size.split('x');
         if (parts.length !== 2) throw new Error('Must contain two x-separated parts');
         args.size = { width: parseIntStrict(parts[0]), height: parseIntStrict(parts[1]) };
     } catch {
-        parser.error(`argument: --size: invalid image size string: '${args.size}' (must be two x-separated integers (width and height), e.g. '400x300')`);
+        parser.error(
+            `argument: --size: invalid image size string: '${args.size}' (must be two x-separated integers (width and height), e.g. '400x300')`,
+        );
     }
     if (args.input.length !== args.output.length) {
-        parser.error(`argument: --output: must specify the same number of input and output file paths (specified ${args.input.length} input path${args.input.length !== 1 ? 's' : ''} but ${args.output.length} output path${args.output.length !== 1 ? 's' : ''})`);
+        parser.error(
+            `argument: --output: must specify the same number of input and output file paths (specified ${args.input.length} input path${
+                args.input.length !== 1 ? 's' : ''
+            } but ${args.output.length} output path${args.output.length !== 1 ? 's' : ''})`,
+        );
     }
     return { ...args };
 }
@@ -94,13 +120,17 @@ async function main(args: Args): Promise<void> {
             sourceUrl = `file://${path.resolve(input)}`;
         } else if (input.toLowerCase().endsWith('.mvsx')) {
             const data = fs.readFileSync(input);
-            const mvsx = await plugin.runTask(Task.create('Load MVSX', async ctx => loadMVSX(plugin, ctx, data)));
+            const mvsx = await plugin.runTask(Task.create('Load MVSX', async (ctx) => loadMVSX(plugin, ctx, data)));
             mvsData = mvsx.mvsData;
             sourceUrl = mvsx.sourceUrl;
         } else {
             throw new Error(`Input file name must end with .mvsj or .mvsx: ${input}`);
         }
-        await loadMVS(plugin, mvsData, { sanityChecks: true, sourceUrl: sourceUrl, extensions: args.no_extensions ? [] : undefined });
+        await loadMVS(plugin, mvsData, {
+            sanityChecks: true,
+            sourceUrl: sourceUrl,
+            extensions: args.no_extensions ? [] : undefined,
+        });
 
         fs.mkdirSync(path.dirname(output), { recursive: true });
         if (args.molj) {
@@ -157,7 +187,7 @@ function withExtension(filename: string, extension: string): string {
 /** Check Mol* state, print and throw error if any cell is not OK. */
 function checkState(plugin: PluginContext): void {
     const cells = Array.from(plugin.state.data.cells.values());
-    const badCell = cells.find(cell => cell.status !== 'ok');
+    const badCell = cells.find((cell) => cell.status !== 'ok');
     if (badCell) {
         console.error(`Building Mol* state failed`);
         console.error(`    Transformer: ${badCell.transform.transformer.id}`);

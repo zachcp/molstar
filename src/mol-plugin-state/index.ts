@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-export * from "./actions.ts";
-export * from "./component.ts";
-export * from "./objects.ts";
-export * from "./transforms.ts";
+export * from './actions.ts';
+export * from './component.ts';
+export * from './objects.ts';
+export * from './transforms.ts';

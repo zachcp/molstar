@@ -20,15 +20,13 @@
  *   should have the value 'abcefg' but will have the value 'abc\\nefg' instead.
  *   Post processing of this is left to the consumer of the data.
  * - Similarly, things like punctuation (\', ..) are left to be processed by the user if needed.
- *
  */
 
 import * as Data from '../data-model.ts';
-import { type Tokens, TokenBuilder, Tokenizer } from '../../common/text/tokenizer.ts';
+import { TokenBuilder, Tokenizer, type Tokens } from '../../common/text/tokenizer.ts';
 import { ReaderResult as Result } from '../../result.ts';
-import { Task, type RuntimeContext, chunkedSubtask } from '../../../../mol-task/index.ts';
+import { chunkedSubtask, type RuntimeContext, Task } from '../../../../mol-task/index.ts';
 import type { StringLike } from '../../../common/string-like.ts';
-
 
 /**
  * Types of supported mmCIF tokens.
@@ -40,24 +38,24 @@ const enum CifTokenType {
     Value = 3,
     ColumnName = 4,
     Comment = 5,
-    End = 6
+    End = 6,
 }
 
 interface TokenizerState {
-    data: StringLike,
+    data: StringLike;
 
-    position: number,
-    length: number,
-    isEscaped: boolean,
-    isImportGet: boolean,
-    inSaveFrame: boolean,
+    position: number;
+    length: number;
+    isEscaped: boolean;
+    isImportGet: boolean;
+    inSaveFrame: boolean;
 
-    lineNumber: number,
-    tokenType: CifTokenType,
-    tokenStart: number,
-    tokenEnd: number,
+    lineNumber: number;
+    tokenType: CifTokenType;
+    tokenStart: number;
+    tokenEnd: number;
 
-    runtimeCtx: RuntimeContext
+    runtimeCtx: RuntimeContext;
 }
 
 /**
@@ -86,7 +84,6 @@ function eatValue(state: TokenizerState) {
  * "Degenerate" cases:
  * - 'xx'x' => xx'x
  * - 'xxxNEWLINE => 'xxx
- *
  */
 function eatEscaped(state: TokenizerState, esc: number) {
     let next: number, c: number;
@@ -258,7 +255,6 @@ function skipWhitespace(state: TokenizerState): number {
     }
     return prev;
 }
-
 
 /**
  * Returns true if there are two consecutive ' in +1 and +2 positions.
@@ -458,19 +454,19 @@ function moveNextInternal(state: TokenizerState) {
             // escaped is always Value
             if (state.isEscaped) {
                 state.tokenType = CifTokenType.Value;
-            // _ means column name, including _import.get
+                // _ means column name, including _import.get
             } else if (state.data.charCodeAt(state.tokenStart) === 95) { // _
                 if (state.inSaveFrame && isImportGet(state)) {
                     state.isImportGet = true;
                 }
                 state.tokenType = CifTokenType.ColumnName;
-            // 5th char needs to be _ for data_, save_ or loop_
+                // 5th char needs to be _ for data_, save_ or loop_
             } else if (state.tokenEnd - state.tokenStart >= 5 && state.data.charCodeAt(state.tokenStart + 4) === 95) {
                 if (isData(state)) state.tokenType = CifTokenType.Data;
                 else if (isSave(state)) state.tokenType = CifTokenType.Save;
                 else if (isLoop(state)) state.tokenType = CifTokenType.Loop;
                 else state.tokenType = CifTokenType.Value;
-            // all other tests failed, we are at Value token.
+                // all other tests failed, we are at Value token.
             } else {
                 state.tokenType = CifTokenType.Value;
             }
@@ -499,7 +495,7 @@ function createTokenizer(data: StringLike, runtimeCtx: RuntimeContext): Tokenize
         isImportGet: false,
         inSaveFrame: false,
 
-        runtimeCtx
+        runtimeCtx,
     };
 }
 
@@ -513,22 +509,25 @@ interface CifCategoryResult {
 }
 
 interface CifCategoryData {
-    name: string,
-    rowCount: number,
-    fieldNames: string[],
-    fields: { [name: string]: Data.CifField }
+    name: string;
+    rowCount: number;
+    fieldNames: string[];
+    fields: { [name: string]: Data.CifField };
 }
 
 type FrameContext = {
-    categoryNames: string[],
-    categoryData: { [name: string]: CifCategoryData }
-}
+    categoryNames: string[];
+    categoryData: { [name: string]: CifCategoryData };
+};
 
 function FrameContext(): FrameContext {
     return { categoryNames: [], categoryData: Object.create(null) };
 }
 
-function CifCategories(categoryNames: string[], categoryData: { [name: string]: CifCategoryData }): { [name: string]: Data.CifCategory } {
+function CifCategories(
+    categoryNames: string[],
+    categoryData: { [name: string]: CifCategoryData },
+): { [name: string]: Data.CifCategory } {
     const categories = Object.create(null);
     for (const name of categoryNames) {
         const d = categoryData[name];
@@ -545,7 +544,13 @@ function CifSaveFrame(ctx: FrameContext, header: string): Data.CifBlock {
     return Data.CifBlock(ctx.categoryNames, CifCategories(ctx.categoryNames, ctx.categoryData), header);
 }
 
-function addFields(ctx: FrameContext, name: string, rowCount: number, fieldNames: string[], fields: { [k: string]: Data.CifField }) {
+function addFields(
+    ctx: FrameContext,
+    name: string,
+    rowCount: number,
+    fieldNames: string[],
+    fields: { [k: string]: Data.CifField },
+) {
     if (name in ctx.categoryData) {
         const cat = ctx.categoryData[name];
         cat.fieldNames.push(...fieldNames);
@@ -578,10 +583,14 @@ function handleSingle(tokenizer: TokenizerState, ctx: FrameContext): CifCategory
             return {
                 hasError: true,
                 errorLine: tokenizer.lineNumber,
-                errorMessage: 'Expected value.'
+                errorMessage: 'Expected value.',
             };
         }
-        fields[fieldName] = Data.CifField.ofTokens({ data: tokenizer.data, indices: [tokenizer.tokenStart, tokenizer.tokenEnd], count: 1 });
+        fields[fieldName] = Data.CifField.ofTokens({
+            data: tokenizer.data,
+            indices: [tokenizer.tokenStart, tokenizer.tokenEnd],
+            count: 1,
+        });
         fieldNames[fieldNames.length] = fieldName;
         moveNext(tokenizer);
     }
@@ -591,15 +600,15 @@ function handleSingle(tokenizer: TokenizerState, ctx: FrameContext): CifCategory
     return {
         hasError: false,
         errorLine: 0,
-        errorMessage: ''
+        errorMessage: '',
     };
 }
 
 interface LoopReadState {
-    tokenizer: TokenizerState,
-    tokens: Tokens[],
-    fieldCount: number,
-    tokenCount: number
+    tokenizer: TokenizerState;
+    tokens: Tokens[];
+    fieldCount: number;
+    tokenCount: number;
 }
 
 function readLoopChunk(chunkSize: number, state: LoopReadState) {
@@ -650,7 +659,7 @@ async function handleLoop(tokenizer: TokenizerState, ctx: FrameContext): Promise
         fieldCount,
         tokenCount: 0,
         tokenizer,
-        tokens
+        tokens,
     };
 
     await chunkedSubtask(tokenizer.runtimeCtx, 1000000, state, readLoopChunk, updateLoopChunk);
@@ -659,7 +668,8 @@ async function handleLoop(tokenizer: TokenizerState, ctx: FrameContext): Promise
         return {
             hasError: true,
             errorLine: tokenizer.lineNumber,
-            errorMessage: `The number of values for loop starting at line ${loopLine} is not a multiple of the number of columns.`
+            errorMessage:
+                `The number of values for loop starting at line ${loopLine} is not a multiple of the number of columns.`,
         };
     }
 
@@ -681,7 +691,7 @@ async function handleLoop(tokenizer: TokenizerState, ctx: FrameContext): Promise
     return {
         hasError: false,
         errorLine: 0,
-        errorMessage: ''
+        errorMessage: '',
     };
 }
 
@@ -715,7 +725,9 @@ async function parseInternal(data: StringLike, runtimeCtx: RuntimeContext) {
     let saveFrames: Data.CifFrame[] = [];
     let saveCtx = FrameContext();
     const saveFrame: Data.CifFrame = Data.CifSaveFrame(
-        saveCtx.categoryNames, CifCategories(saveCtx.categoryNames, saveCtx.categoryData), ''
+        saveCtx.categoryNames,
+        CifCategories(saveCtx.categoryNames, saveCtx.categoryData),
+        '',
     );
 
     let saveHeader = '';
@@ -738,7 +750,7 @@ async function parseInternal(data: StringLike, runtimeCtx: RuntimeContext) {
             blockCtx = FrameContext();
             saveFrames = [];
             moveNext(tokenizer);
-        // Save frame
+            // Save frame
         } else if (token === CifTokenType.Save) {
             if (tokenizer.tokenEnd - tokenizer.tokenStart === 5) { // end of save frame
                 if (saveCtx.categoryNames.length > 0) {
@@ -755,19 +767,19 @@ async function parseInternal(data: StringLike, runtimeCtx: RuntimeContext) {
                 // saveFrame = CifSaveFrame(saveCtx, saveHeader);
             }
             moveNext(tokenizer);
-        // Loop
+            // Loop
         } else if (token === CifTokenType.Loop) {
             const cat = await handleLoop(tokenizer, tokenizer.inSaveFrame ? saveCtx : blockCtx);
             if (cat.hasError) {
                 return error(cat.errorLine, cat.errorMessage);
             }
-        // Single row
+            // Single row
         } else if (token === CifTokenType.ColumnName) {
             const cat = handleSingle(tokenizer, tokenizer.inSaveFrame ? saveCtx : blockCtx);
             if (cat.hasError) {
                 return error(cat.errorLine, cat.errorMessage);
             }
-        // Out of options
+            // Out of options
         } else {
             console.log(tokenizer.tokenType, Tokenizer.getTokenString(tokenizer));
             return error(tokenizer.lineNumber, 'Unexpected token. Expected data_, loop_, or data name.');
@@ -787,7 +799,7 @@ async function parseInternal(data: StringLike, runtimeCtx: RuntimeContext) {
 }
 
 export function parseCifText(data: StringLike) {
-    return Task.create<Result<Data.CifFile>>('Parse CIF', async ctx => {
+    return Task.create<Result<Data.CifFile>>('Parse CIF', async (ctx) => {
         return await parseInternal(data, ctx);
     });
 }

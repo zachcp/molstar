@@ -22,16 +22,20 @@ export function getQmeanScoreColorThemeParams(ctx: ThemeDataContext) {
         metricId: QualityAssessment.getLocalOptions(ctx.structure?.models[0], 'qmean'),
     };
 }
-export type QmeanScoreColorThemeParams = ReturnType<typeof getQmeanScoreColorThemeParams>
+export type QmeanScoreColorThemeParams = ReturnType<typeof getQmeanScoreColorThemeParams>;
 
-export function QmeanScoreColorTheme(ctx: ThemeDataContext, props: PD.Values<QmeanScoreColorThemeParams>): ColorTheme<QmeanScoreColorThemeParams> {
+export function QmeanScoreColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<QmeanScoreColorThemeParams>,
+): ColorTheme<QmeanScoreColorThemeParams> {
     let color: LocationColor = () => DefaultColor;
 
     const scale = ColorScale.create({
         domain: [0, 1],
         listOrName: [
-            [Color(0xFF5000), 0.5], [Color(0x025AFD), 1.0]
-        ]
+            [Color(0xFF5000), 0.5],
+            [Color(0x025AFD), 1.0],
+        ],
     });
 
     if (ctx.structure) {
@@ -69,7 +73,7 @@ export function QmeanScoreColorTheme(ctx: ThemeDataContext, props: PD.Values<Qme
         color,
         props,
         description: 'Assigns residue colors according to the QMEAN score.',
-        legend: scale.legend
+        legend: scale.legend,
     };
 }
 
@@ -80,7 +84,8 @@ export const QmeanScoreColorThemeProvider: ColorTheme.Provider<QmeanScoreColorTh
     factory: QmeanScoreColorTheme,
     getParams: getQmeanScoreColorThemeParams,
     defaultValues: PD.getDefaultValues(getQmeanScoreColorThemeParams({})),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure?.models.some(m => QualityAssessment.isApplicable(m, 'qmean')),
+    isApplicable: (ctx: ThemeDataContext) =>
+        !!ctx.structure?.models.some((m) => QualityAssessment.isApplicable(m, 'qmean')),
     ensureCustomProperties: {
         attach: async (ctx: CustomProperty.Context, data: ThemeDataContext) => {
             if (data.structure) {
@@ -95,6 +100,6 @@ export const QmeanScoreColorThemeProvider: ColorTheme.Provider<QmeanScoreColorTh
                     QualityAssessmentProvider.ref(m, false);
                 }
             }
-        }
-    }
+        },
+    },
 };

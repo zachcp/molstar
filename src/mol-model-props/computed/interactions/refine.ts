@@ -7,15 +7,21 @@
  */
 
 import type { Interactions } from './interactions.ts';
-import { InteractionType, InteractionFlag, type InteractionsIntraContacts, FeatureType, type InteractionsInterContacts } from './common.ts';
-import { Unit, type Structure } from '../../../mol-model/structure.ts';
+import {
+    FeatureType,
+    InteractionFlag,
+    type InteractionsInterContacts,
+    type InteractionsIntraContacts,
+    InteractionType,
+} from './common.ts';
+import { type Structure, Unit } from '../../../mol-model/structure.ts';
 import { Features } from './features.ts';
 
 interface ContactRefiner {
-    isApplicable: (type: InteractionType) => boolean
-    handleInterContact: (index: number, infoA: Features.Info, infoB: Features.Info) => void
-    startUnit: (unit: Unit.Atomic, contacts: InteractionsIntraContacts, features: Features) => void
-    handleIntraContact: (index: number, infoA: Features.Info, infoB: Features.Info) => void
+    isApplicable: (type: InteractionType) => boolean;
+    handleInterContact: (index: number, infoA: Features.Info, infoB: Features.Info) => void;
+    startUnit: (unit: Unit.Atomic, contacts: InteractionsIntraContacts, features: Features) => void;
+    handleIntraContact: (index: number, infoA: Features.Info, infoB: Features.Info) => void;
 }
 
 export function refineInteractions(structure: Structure, interactions: Interactions) {
@@ -82,7 +88,13 @@ function hydrophobicRefiner(structure: Structure, interactions: Interactions): C
     const { contacts } = interactions;
 
     /* keep only closest contact between residues */
-    const handleResidueContact = function (dist: number, edge: number, key: string, map: Map<string, [number, number]>, set: (i: number) => void) {
+    const handleResidueContact = function (
+        dist: number,
+        edge: number,
+        key: string,
+        map: Map<string, [number, number]>,
+        set: (i: number) => void,
+    ) {
         const [minDist, minIndex] = map.get(key) || [Infinity, -1];
         if (dist < minDist) {
             if (minIndex !== -1) set(minIndex);
@@ -92,7 +104,13 @@ function hydrophobicRefiner(structure: Structure, interactions: Interactions): C
         }
     };
 
-    function handleEdge(edge: number, infoA: Features.Info, infoB: Features.Info, map: Map<string, [number, number]>, set: (i: number) => void) {
+    function handleEdge(
+        edge: number,
+        infoA: Features.Info,
+        infoB: Features.Info,
+        map: Map<string, [number, number]>,
+        set: (i: number) => void,
+    ) {
         const elementA = infoA.members[infoA.offsets[infoA.feature]];
         const elementB = infoB.members[infoB.offsets[infoB.feature]];
         const residueA = infoA.unit.getResidueIndex(elementA);
@@ -124,7 +142,7 @@ function hydrophobicRefiner(structure: Structure, interactions: Interactions): C
         },
         handleIntraContact: (index: number, infoA: Features.Info, infoB: Features.Info) => {
             handleEdge(index, infoA, infoB, residueIntraMap, setIntraFiltered);
-        }
+        },
     };
 }
 
@@ -140,7 +158,9 @@ function weakHydrogenBondsRefiner(structure: Structure, interactions: Interactio
 
         // check intra
         const eI = acc.members[acc.offsets[acc.feature]];
-        const { edgeProps: { type }, elementsIndex: { offsets, indices } } = interactions.unitsContacts.get(acc.unit.id);
+        const { edgeProps: { type }, elementsIndex: { offsets, indices } } = interactions.unitsContacts.get(
+            acc.unit.id,
+        );
         for (let i = offsets[eI], il = offsets[eI + 1]; i < il; ++i) {
             if (type[indices[i]] === InteractionType.HydrogenBond) return true;
         }
@@ -167,14 +187,20 @@ function weakHydrogenBondsRefiner(structure: Structure, interactions: Interactio
                 const { flag } = interactions.unitsContacts.get(infoA.unit.id).edgeProps;
                 flag[index] = InteractionFlag.Filtered;
             }
-        }
+        },
     };
 }
 
 /**
  * Filter inter-unit contact `index` if there is a contact of `types` between its members
  */
-function filterInter(types: InteractionType[], index: number, infoA: Features.Info, infoB: Features.Info, contacts: InteractionsInterContacts) {
+function filterInter(
+    types: InteractionType[],
+    index: number,
+    infoA: Features.Info,
+    infoB: Features.Info,
+    contacts: InteractionsInterContacts,
+) {
     const { offsets: offsetsA, feature: featureA } = infoA;
     const { offsets: offsetsB, feature: featureB } = infoB;
 
@@ -199,7 +225,13 @@ function filterInter(types: InteractionType[], index: number, infoA: Features.In
 /**
  * Filter intra-unit contact `index` if there is a contact of `types` between its members
  */
-function filterIntra(types: InteractionType[], index: number, infoA: Features.Info, infoB: Features.Info, contacts: InteractionsIntraContacts) {
+function filterIntra(
+    types: InteractionType[],
+    index: number,
+    infoA: Features.Info,
+    infoB: Features.Info,
+    contacts: InteractionsIntraContacts,
+) {
     const { edgeProps: { type, flag }, elementsIndex: { offsets, indices } } = contacts;
     const { offsets: offsetsA, feature: featureA } = infoA;
     const { offsets: offsetsB, feature: featureB } = infoB;
@@ -233,12 +265,24 @@ function saltBridgeRefiner(structure: Structure, interactions: Interactions): Co
     return {
         isApplicable: (type: InteractionType) => type === InteractionType.Ionic,
         handleInterContact: (index: number, infoA: Features.Info, infoB: Features.Info) => {
-            filterInter([InteractionType.HydrogenBond, InteractionType.WeakHydrogenBond], index, infoA, infoB, contacts);
+            filterInter(
+                [InteractionType.HydrogenBond, InteractionType.WeakHydrogenBond],
+                index,
+                infoA,
+                infoB,
+                contacts,
+            );
         },
         startUnit: () => {},
         handleIntraContact: (index: number, infoA: Features.Info, infoB: Features.Info) => {
-            filterIntra([InteractionType.HydrogenBond, InteractionType.WeakHydrogenBond], index, infoA, infoB, interactions.unitsContacts.get(infoA.unit.id));
-        }
+            filterIntra(
+                [InteractionType.HydrogenBond, InteractionType.WeakHydrogenBond],
+                index,
+                infoA,
+                infoB,
+                interactions.unitsContacts.get(infoA.unit.id),
+            );
+        },
     };
 }
 
@@ -250,14 +294,21 @@ function piStackingRefiner(structure: Structure, interactions: Interactions): Co
     const { contacts } = interactions;
 
     return {
-        isApplicable: (type: InteractionType) => type === InteractionType.Hydrophobic || type === InteractionType.CationPi,
+        isApplicable: (type: InteractionType) =>
+            type === InteractionType.Hydrophobic || type === InteractionType.CationPi,
         handleInterContact: (index: number, infoA: Features.Info, infoB: Features.Info) => {
             filterInter([InteractionType.PiStacking], index, infoA, infoB, contacts);
         },
         startUnit: () => {},
         handleIntraContact: (index: number, infoA: Features.Info, infoB: Features.Info) => {
-            filterIntra([InteractionType.PiStacking], index, infoA, infoB, interactions.unitsContacts.get(infoA.unit.id));
-        }
+            filterIntra(
+                [InteractionType.PiStacking],
+                index,
+                infoA,
+                infoB,
+                interactions.unitsContacts.get(infoA.unit.id),
+            );
+        },
     };
 }
 
@@ -275,7 +326,13 @@ function metalCoordinationRefiner(structure: Structure, interactions: Interactio
         },
         startUnit: () => {},
         handleIntraContact: (index: number, infoA: Features.Info, infoB: Features.Info) => {
-            filterIntra([InteractionType.MetalCoordination], index, infoA, infoB, interactions.unitsContacts.get(infoA.unit.id));
-        }
+            filterIntra(
+                [InteractionType.MetalCoordination],
+                index,
+                infoA,
+                infoB,
+                interactions.unitsContacts.get(infoA.unit.id),
+            );
+        },
     };
 }

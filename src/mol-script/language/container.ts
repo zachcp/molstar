@@ -7,7 +7,7 @@
 import type { Expression } from './expression.ts';
 
 export interface Container {
-    source?: string,
-    version: string,
-    expression: Expression
+    source?: string;
+    version: string;
+    expression: Expression;
 }

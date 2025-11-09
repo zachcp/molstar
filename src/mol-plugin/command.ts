@@ -10,13 +10,15 @@ import { UUID } from '../mol-util/index.ts';
 export { PluginCommand, PluginCommandManager };
 
 interface PluginCommand<T = unknown> {
-    (ctx: PluginContext, params?: T): Promise<void>,
-    readonly id: UUID,
-    subscribe(ctx: PluginContext, action: PluginCommand.Action<T>): PluginCommand.Subscription
+    (ctx: PluginContext, params?: T): Promise<void>;
+    readonly id: UUID;
+    subscribe(ctx: PluginContext, action: PluginCommand.Action<T>): PluginCommand.Subscription;
 }
 
 function PluginCommand<T>(): PluginCommand<T> {
-    const ret: PluginCommand<T> = ((ctx, params) => ctx.commands.dispatch(ret, params || {} as any)) as PluginCommand<T>;
+    const ret: PluginCommand<T> = ((ctx, params) => ctx.commands.dispatch(ret, params || {} as any)) as PluginCommand<
+        T
+    >;
     ret.subscribe = (ctx, action) => ctx.commands.subscribe(ret, action);
     (ret.id as UUID) = UUID.create22();
 
@@ -24,16 +26,16 @@ function PluginCommand<T>(): PluginCommand<T> {
 }
 
 namespace PluginCommand {
-    export type Id = string & { '@type': 'plugin-command-id' }
+    export type Id = string & { '@type': 'plugin-command-id' };
 
     export interface Subscription {
-        unsubscribe(): void
+        unsubscribe(): void;
     }
 
-    export type Action<T> = (params: T) => unknown | Promise<unknown>
+    export type Action<T> = (params: T) => unknown | Promise<unknown>;
 }
 
-type Instance = { cmd: PluginCommand<any>, params: any, resolve: () => void, reject: (e: any) => void }
+type Instance = { cmd: PluginCommand<any>; params: any; resolve: () => void; reject: (e: any) => void };
 class PluginCommandManager {
     private subs = new Map<string, PluginCommand.Action<any>[]>();
     private disposing = false;
@@ -56,10 +58,9 @@ class PluginCommandManager {
                     actions[i - 1] = actions[i];
                 }
                 actions.pop();
-            }
+            },
         };
     }
-
 
     /** Resolves after all actions have completed */
     dispatch<T>(cmd: PluginCommand<T>, params: T) {

@@ -9,7 +9,7 @@ import type { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
 export function CustomColorTheme(
     ctx: ThemeDataContext,
-    props: PD.Values<{}>
+    props: PD.Values<{}>,
 ): ColorTheme<{}> {
     const { radius, center } = ctx.structure?.boundary.sphere!;
     const radiusSq = Math.max(radius * radius, 0.001);
@@ -18,7 +18,7 @@ export function CustomColorTheme(
     return {
         factory: CustomColorTheme,
         granularity: 'vertex',
-        color: location => {
+        color: (location) => {
             if (!isPositionLocation(location)) return ColorNames.black;
             const dist = Vec3.squaredDistance(location.position, center);
             const t = Math.min(dist / radiusSq, 1);
@@ -33,8 +33,8 @@ export function CustomColorTheme(
                 ColorNames.orange,
                 ColorNames.yellow,
                 ColorNames.green,
-                ColorNames.blue
-            ]
+                ColorNames.blue,
+            ],
         },
         props: props,
         description: '',
@@ -47,6 +47,6 @@ export const CustomColorThemeProvider: ColorTheme.Provider<{}, 'basic-wrapper-cu
     category: ColorThemeCategory.Misc,
     factory: CustomColorTheme,
     getParams: () => ({}),
-    defaultValues: { },
+    defaultValues: {},
     isApplicable: (ctx: ThemeDataContext) => true,
 };

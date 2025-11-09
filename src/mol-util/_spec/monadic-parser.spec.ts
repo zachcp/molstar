@@ -46,7 +46,7 @@ describe('parser', () => {
     });
 
     it('sepBy', () => {
-        const p = P.sepBy(P.digits, P.string(',')).map(xs => xs.map(x => +x));
+        const p = P.sepBy(P.digits, P.string(',')).map((xs) => xs.map((x) => +x));
         expect(p.tryParse('1,2,3,4')).toEqual([1, 2, 3, 4]);
     });
 });

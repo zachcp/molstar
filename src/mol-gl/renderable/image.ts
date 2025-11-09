@@ -4,10 +4,25 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { type Renderable, type RenderableState, createRenderable } from '../renderable.ts';
+import { createRenderable, type Renderable, type RenderableState } from '../renderable.ts';
 import type { WebGLContext } from '../webgl/context.ts';
 import { createGraphicsRenderItem, type Transparency } from '../webgl/render-item.ts';
-import { AttributeSpec, type Values, GlobalUniformSchema, InternalSchema, TextureSpec, ElementsSpec, DefineSpec, type InternalValues, BaseSchema, UniformSpec, GlobalTextureSchema, type GlobalDefineValues, type GlobalDefines, GlobalDefineSchema } from './schema.ts';
+import {
+    AttributeSpec,
+    BaseSchema,
+    DefineSpec,
+    ElementsSpec,
+    type GlobalDefines,
+    GlobalDefineSchema,
+    type GlobalDefineValues,
+    GlobalTextureSchema,
+    GlobalUniformSchema,
+    InternalSchema,
+    type InternalValues,
+    TextureSpec,
+    UniformSpec,
+    type Values,
+} from './schema.ts';
 import { ImageShaderCode } from '../shader-code.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 import { InterpolationTypeNames } from '../../mol-geo/geometry/image/image.ts';
@@ -35,11 +50,25 @@ export const ImageSchema = {
 
     dInterpolation: DefineSpec('string', InterpolationTypeNames),
 };
-export type ImageSchema = typeof ImageSchema
-export type ImageValues = Values<ImageSchema>
+export type ImageSchema = typeof ImageSchema;
+export type ImageValues = Values<ImageSchema>;
 
-export function ImageRenderable(ctx: WebGLContext, id: number, values: ImageValues, state: RenderableState, materialId: number, transparency: Transparency, globals: GlobalDefines): Renderable<ImageValues> {
-    const schema = { ...GlobalUniformSchema, ...GlobalTextureSchema, ...GlobalDefineSchema, ...InternalSchema, ...ImageSchema };
+export function ImageRenderable(
+    ctx: WebGLContext,
+    id: number,
+    values: ImageValues,
+    state: RenderableState,
+    materialId: number,
+    transparency: Transparency,
+    globals: GlobalDefines,
+): Renderable<ImageValues> {
+    const schema = {
+        ...GlobalUniformSchema,
+        ...GlobalTextureSchema,
+        ...GlobalDefineSchema,
+        ...InternalSchema,
+        ...ImageSchema,
+    };
     const renderValues: ImageValues & InternalValues & GlobalDefineValues = {
         ...values,
         uObjectId: ValueCell.create(id),
@@ -47,6 +76,14 @@ export function ImageRenderable(ctx: WebGLContext, id: number, values: ImageValu
         dColorMarker: ValueCell.create(globals.dColorMarker),
     };
     const shaderCode = ImageShaderCode;
-    const renderItem = createGraphicsRenderItem(ctx, 'triangles', shaderCode, schema, renderValues, materialId, transparency);
+    const renderItem = createGraphicsRenderItem(
+        ctx,
+        'triangles',
+        shaderCode,
+        schema,
+        renderValues,
+        materialId,
+        transparency,
+    );
     return createRenderable(renderItem, renderValues, state);
 }

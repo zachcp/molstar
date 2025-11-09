@@ -7,12 +7,12 @@
 
 import { asciiWrite } from '../../mol-io/common/ascii.ts';
 import type { Box3D } from '../../mol-math/geometry.ts';
-import { Vec3, Mat3, Mat4 } from '../../mol-math/linear-algebra.ts';
+import { Mat3, Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 import type { RuntimeContext } from '../../mol-task/index.ts';
 import { StringBuilder } from '../../mol-util/index.ts';
 import { Color } from '../../mol-util/color/color.ts';
 import { zip } from '../../mol-util/zip/zip.ts';
-import { MeshExporter, type AddMeshInput } from './mesh-exporter.ts';
+import { type AddMeshInput, MeshExporter } from './mesh-exporter.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3fromArray = Vec3.fromArray;
@@ -24,9 +24,9 @@ const mat3directionTransform = Mat3.directionTransform;
 // http://paulbourke.net/dataformats/mtl/
 
 export type ObjData = {
-    obj: string
-    mtl: string
-}
+    obj: string;
+    mtl: string;
+};
 
 export class ObjExporter extends MeshExporter<ObjData> {
     readonly fileExtension = 'zip';
@@ -48,7 +48,7 @@ export class ObjExporter extends MeshExporter<ObjData> {
         StringBuilder.newline(this.obj);
         if (!this.materialSet.has(material)) {
             this.materialSet.add(material);
-            const [r, g, b] = Color.toRgbNormalized(color).map(v => Math.round(v * 1000) / 1000);
+            const [r, g, b] = Color.toRgbNormalized(color).map((v) => Math.round(v * 1000) / 1000);
             const mtl = this.mtl;
             StringBuilder.writeSafe(mtl, `newmtl ${material}\n`);
             StringBuilder.writeSafe(mtl, 'illum 2\n'); // illumination model
@@ -88,18 +88,36 @@ export class ObjExporter extends MeshExporter<ObjData> {
 
         let interpolatedColors: Uint8Array | undefined;
         if (webgl && mesh && (colorType === 'volume' || colorType === 'volumeInstance')) {
-            interpolatedColors = ObjExporter.getInterpolatedColors(webgl, { vertices: mesh.vertices, vertexCount: mesh.vertexCount, values, stride, colorType });
+            interpolatedColors = ObjExporter.getInterpolatedColors(webgl, {
+                vertices: mesh.vertices,
+                vertexCount: mesh.vertexCount,
+                values,
+                stride,
+                colorType,
+            });
         }
 
         let interpolatedOverpaint: Uint8Array | undefined;
         if (webgl && mesh && overpaintType === 'volumeInstance') {
-            interpolatedOverpaint = ObjExporter.getInterpolatedOverpaint(webgl, { vertices: mesh.vertices, vertexCount: mesh.vertexCount, values, stride, colorType: overpaintType });
+            interpolatedOverpaint = ObjExporter.getInterpolatedOverpaint(webgl, {
+                vertices: mesh.vertices,
+                vertexCount: mesh.vertexCount,
+                values,
+                stride,
+                colorType: overpaintType,
+            });
         }
 
         let interpolatedTransparency: Uint8Array | undefined;
         if (webgl && mesh && transparencyType === 'volumeInstance') {
             const stride = isGeoTexture ? 4 : 3;
-            interpolatedTransparency = ObjExporter.getInterpolatedTransparency(webgl, { vertices: mesh.vertices, vertexCount: mesh.vertexCount, values, stride, colorType: transparencyType });
+            interpolatedTransparency = ObjExporter.getInterpolatedTransparency(webgl, {
+                vertices: mesh.vertices,
+                vertexCount: mesh.vertexCount,
+                values,
+                stride,
+                colorType: transparencyType,
+            });
         }
 
         await ctx.update({ isIndeterminate: false, current: 0, max: instanceCount });
@@ -107,7 +125,10 @@ export class ObjExporter extends MeshExporter<ObjData> {
         for (let instanceIndex = 0; instanceIndex < instanceCount; ++instanceIndex) {
             if (ctx.shouldUpdate) await ctx.update({ current: instanceIndex + 1 });
 
-            const { vertices, normals, indices, groups, vertexCount, drawCount } = ObjExporter.getInstance(input, instanceIndex);
+            const { vertices, normals, indices, groups, vertexCount, drawCount } = ObjExporter.getInstance(
+                input,
+                instanceIndex,
+            );
 
             Mat4.fromArray(t, aTransform, instanceIndex * 16);
             Mat4.mul(t, this.centerTransform, t);
@@ -180,7 +201,7 @@ export class ObjExporter extends MeshExporter<ObjData> {
     async getData() {
         return {
             obj: StringBuilder.getString(this.obj),
-            mtl: StringBuilder.getString(this.mtl)
+            mtl: StringBuilder.getString(this.mtl),
         };
     }
 
@@ -192,7 +213,7 @@ export class ObjExporter extends MeshExporter<ObjData> {
         asciiWrite(mtlData, mtl);
         const zipDataObj = {
             [this.filename + '.obj']: objData,
-            [this.filename + '.mtl']: mtlData
+            [this.filename + '.mtl']: mtlData,
         };
         return new Blob([await zip(ctx, zipDataObj)], { type: 'application/zip' });
     }

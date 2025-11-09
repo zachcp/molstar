@@ -7,8 +7,21 @@
 
 import * as iots from 'io-ts';
 import { ColorName, HexColor } from '../../helpers/utils.ts';
-import { type ValueFor, bool, dict, float, int, list, literal, nullable, object, partial, str, tuple, union } from '../generic/field-schema.ts';
-
+import {
+    bool,
+    dict,
+    float,
+    int,
+    list,
+    literal,
+    nullable,
+    object,
+    partial,
+    str,
+    tuple,
+    union,
+    type ValueFor,
+} from '../generic/field-schema.ts';
 
 /** `format` parameter values for `parse` node in MVS tree */
 export const ParseFormatT = literal(
@@ -28,7 +41,7 @@ export const ParseFormatT = literal(
     // volumes
     'map',
 );
-export type ParseFormatT = ValueFor<typeof ParseFormatT>
+export type ParseFormatT = ValueFor<typeof ParseFormatT>;
 
 /** `format` parameter values for `parse` node in Molstar tree */
 export const MolstarParseFormatT = literal(
@@ -45,15 +58,25 @@ export const MolstarParseFormatT = literal(
     // coordinates
     'xtc',
     // volumes
-    'map'
+    'map',
 );
-export type MolstarParseFormatT = ValueFor<typeof MolstarParseFormatT>
+export type MolstarParseFormatT = ValueFor<typeof MolstarParseFormatT>;
 
 /** `kind` parameter values for `structure` node in MVS tree */
 export const StructureTypeT = literal('model', 'assembly', 'symmetry', 'symmetry_mates');
 
 /** `selector` parameter values for `component` node in MVS tree */
-export const ComponentSelectorT = literal('all', 'polymer', 'protein', 'nucleic', 'branched', 'ligand', 'ion', 'water', 'coarse');
+export const ComponentSelectorT = literal(
+    'all',
+    'polymer',
+    'protein',
+    'nucleic',
+    'branched',
+    'ligand',
+    'ion',
+    'water',
+    'coarse',
+);
 
 /** `selector` parameter values for `component` node in MVS tree */
 export const ComponentExpressionT = partial({
@@ -79,51 +102,73 @@ export const ComponentExpressionT = partial({
      * like 'ASM-X0-1' for assemblies or '1_555' for crystals */
     instance_id: str,
 });
-export type ComponentExpressionT = ValueFor<typeof ComponentExpressionT>
+export type ComponentExpressionT = ValueFor<typeof ComponentExpressionT>;
 
 /** `schema` parameter values for `*_from_uri` and `*_from_source` nodes in MVS tree */
-export const SchemaT = literal('whole_structure', 'entity', 'chain', 'auth_chain', 'residue', 'auth_residue', 'residue_range', 'auth_residue_range', 'atom', 'auth_atom', 'all_atomic');
+export const SchemaT = literal(
+    'whole_structure',
+    'entity',
+    'chain',
+    'auth_chain',
+    'residue',
+    'auth_residue',
+    'residue_range',
+    'auth_residue_range',
+    'atom',
+    'auth_atom',
+    'all_atomic',
+);
 
 /** `format` parameter values for `*_from_uri` nodes in MVS tree */
 export const SchemaFormatT = literal('cif', 'bcif', 'json');
 
 /** Parameter values for vector params, e.g. `position` */
 export const Vector3 = tuple([float, float, float]);
-export type Vector3 = ValueFor<typeof Vector3>
+export type Vector3 = ValueFor<typeof Vector3>;
 
 /** Parameter values for matrix params, e.g. `rotation` */
 export const Matrix = list(float);
 
 /** Primitives-related types */
-export const PrimitiveComponentExpressionT = partial({ structure_ref: str, expression_schema: SchemaT, expressions: list(ComponentExpressionT) });
-export type PrimitiveComponentExpressionT = ValueFor<typeof PrimitiveComponentExpressionT>
+export const PrimitiveComponentExpressionT = partial({
+    structure_ref: str,
+    expression_schema: SchemaT,
+    expressions: list(ComponentExpressionT),
+});
+export type PrimitiveComponentExpressionT = ValueFor<typeof PrimitiveComponentExpressionT>;
 export const PrimitivePositionT = union(Vector3, ComponentExpressionT, PrimitiveComponentExpressionT);
-export type PrimitivePositionT = ValueFor<typeof PrimitivePositionT>
+export type PrimitivePositionT = ValueFor<typeof PrimitivePositionT>;
 
 export const FloatList = list(float);
 export const IntList = list(int);
 export const StrList = list(str);
 
-
 /** `color` parameter values for `color` node in MVS tree */
 export const HexColorT = new iots.Type<HexColor>(
     'HexColor',
     ((value: any) => typeof value === 'string') as any,
-    (value, ctx) => HexColor.is(value) ? { _tag: 'Right', right: value } : { _tag: 'Left', left: [{ value: value, context: ctx, message: `"${value}" is not a valid hex color string` }] },
-    value => value
+    (value, ctx) =>
+        HexColor.is(value) ? { _tag: 'Right', right: value } : {
+            _tag: 'Left',
+            left: [{ value: value, context: ctx, message: `"${value}" is not a valid hex color string` }],
+        },
+    (value) => value,
 );
 
 /** `color` parameter values for `color` node in MVS tree */
 export const ColorNameT = new iots.Type<ColorName>(
     'ColorName',
     ((value: any) => typeof value === 'string') as any,
-    (value, ctx) => ColorName.is(value) ? { _tag: 'Right', right: value } : { _tag: 'Left', left: [{ value: value, context: ctx, message: `"${value}" is not a valid color name` }] },
-    value => value
+    (value, ctx) =>
+        ColorName.is(value)
+            ? { _tag: 'Right', right: value }
+            : { _tag: 'Left', left: [{ value: value, context: ctx, message: `"${value}" is not a valid color name` }] },
+    (value) => value,
 );
 
 /** `color` parameter values for `color` node in MVS tree */
 export const ColorT = union(ColorNameT, HexColorT);
-export type ColorT = ValueFor<typeof ColorT>
+export type ColorT = ValueFor<typeof ColorT>;
 
 /** Type helpers */
 export function isVector3(x: any): x is Vector3 {
@@ -138,22 +183,62 @@ export function isComponentExpression(x: any): x is ComponentExpressionT {
     return !!x && typeof x === 'object' && !x.expressions;
 }
 
-
 export const ColorListNameT = literal(
     // Color lists from https://observablehq.com/@d3/color-schemes (definitions: https://colorbrewer2.org/export/colorbrewer.js)
     // Sequential single-hue
-    'Reds', 'Oranges', 'Greens', 'Blues', 'Purples', 'Greys',
+    'Reds',
+    'Oranges',
+    'Greens',
+    'Blues',
+    'Purples',
+    'Greys',
     // Sequential multi-hue
-    'OrRd', 'BuGn', 'PuBuGn', 'GnBu', 'PuBu', 'BuPu', 'RdPu', 'PuRd', 'YlOrRd', 'YlOrBr', 'YlGn', 'YlGnBu',
-    'Magma', 'Inferno', 'Plasma', 'Viridis', 'Cividis', 'Turbo', 'Warm', 'Cool', 'CubehelixDefault',
+    'OrRd',
+    'BuGn',
+    'PuBuGn',
+    'GnBu',
+    'PuBu',
+    'BuPu',
+    'RdPu',
+    'PuRd',
+    'YlOrRd',
+    'YlOrBr',
+    'YlGn',
+    'YlGnBu',
+    'Magma',
+    'Inferno',
+    'Plasma',
+    'Viridis',
+    'Cividis',
+    'Turbo',
+    'Warm',
+    'Cool',
+    'CubehelixDefault',
     // Cyclical
-    'Rainbow', 'Sinebow',
+    'Rainbow',
+    'Sinebow',
     // Diverging
-    'RdBu', 'RdGy', 'PiYG', 'BrBG', 'PRGn', 'PuOr', 'RdYlGn', 'RdYlBu', 'Spectral',
+    'RdBu',
+    'RdGy',
+    'PiYG',
+    'BrBG',
+    'PRGn',
+    'PuOr',
+    'RdYlGn',
+    'RdYlBu',
+    'Spectral',
     // Categorical
-    'Category10', 'Observable10', 'Tableau10',
-    'Set1', 'Set2', 'Set3', 'Pastel1', 'Pastel2', 'Dark2', 'Paired', 'Accent',
-
+    'Category10',
+    'Observable10',
+    'Tableau10',
+    'Set1',
+    'Set2',
+    'Set3',
+    'Pastel1',
+    'Pastel2',
+    'Dark2',
+    'Paired',
+    'Accent',
     // Additional lists, not standard for visualization in general, but commonly used for structures
     'Chainbow',
 );
@@ -161,7 +246,6 @@ export type ColorListNameT = ValueFor<typeof ColorListNameT>;
 
 export const ColorDictNameT = literal('ElementSymbol', 'ResidueName', 'ResidueProperties', 'SecondaryStructure');
 export type ColorDictNameT = ValueFor<typeof ColorDictNameT>;
-
 
 export const CategoricalPalette = object(
     {
@@ -185,7 +269,7 @@ export const CategoricalPalette = object(
         case_insensitive: bool,
         /** Color to use when a) `colors` is a dictionary (or a color dictionary name) and given key is not present, or b) `colors` is a list (or a color list name) and there are more actual annotation values than listed colors and `repeat_color_list` is not true. */
         missing_color: nullable(ColorT),
-    }
+    },
 );
 export type CategoricalPalette = ValueFor<typeof CategoricalPalette>;
 
@@ -198,7 +282,6 @@ export const CategoricalPaletteDefaults: Required<CategoricalPalette> = {
     case_insensitive: false,
     missing_color: null,
 };
-
 
 export const DiscretePalette = object(
     {
@@ -224,7 +307,7 @@ export const DiscretePalette = object(
         mode: literal('normalized', 'absolute'),
         /** Defines `x_min` and `x_max` for normalization of annotation values. Either can be `null`, meaning that minimum/maximum of the actual values will be used. Only used when `mode` is `"normalized"`. */
         value_domain: tuple([nullable(float), nullable(float)]),
-    }
+    },
 );
 export type DiscretePalette = ValueFor<typeof DiscretePalette>;
 
@@ -236,11 +319,9 @@ export const DiscretePaletteDefaults: Required<DiscretePalette> = {
     value_domain: [null, null],
 };
 
-
 export const ContinuousPalette = object(
     {
         kind: literal('continuous'),
-
     },
     // Optionals:
     {
@@ -262,7 +343,7 @@ export const ContinuousPalette = object(
         underflow_color: nullable(union(literal('auto'), ColorT)),
         /** Color to use for values above the highest checkpoint. 'auto' means color of the highest checkpoint. */
         overflow_color: nullable(union(literal('auto'), ColorT)),
-    }
+    },
 );
 export type ContinuousPalette = ValueFor<typeof ContinuousPalette>;
 

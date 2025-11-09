@@ -16,12 +16,12 @@ import { useBehavior } from '../hooks/use-behavior.ts';
 import { Task } from '../../mol-task/index.ts';
 
 export interface ScreenshotPreviewProps {
-    plugin: PluginContext,
-    suspend?: boolean,
-    cropFrameColor?: string,
-    borderColor?: string,
-    borderWidth?: number,
-    customBackground?: string
+    plugin: PluginContext;
+    suspend?: boolean;
+    cropFrameColor?: string;
+    borderColor?: string;
+    borderWidth?: number;
+    customBackground?: string;
 }
 
 const _ScreenshotPreview = (props: ScreenshotPreviewProps) => {
@@ -69,7 +69,7 @@ const _ScreenshotPreview = (props: ScreenshotPreviewProps) => {
 
         subscribe(plugin.events.canvas3d.settingsUpdated, () => isDirty = true);
         subscribe(plugin.canvas3d?.didDraw, () => isDirty = true);
-        subscribe(plugin.state.data.behaviors.isUpdating, v => {
+        subscribe(plugin.state.data.behaviors.isUpdating, (v) => {
             if (!v) isDirty = true;
         });
         subscribe(helper?.behaviors.values, () => isDirty = true);
@@ -87,31 +87,55 @@ const _ScreenshotPreview = (props: ScreenshotPreviewProps) => {
 
         return () => {
             clearInterval(interval);
-            subs.forEach(s => s.unsubscribe());
+            subs.forEach((s) => s.unsubscribe());
             resizeObserver?.unobserve(canvas);
         };
     }, [helper]);
 
     useLayoutEffect(() => {
         if (canvasRef.current) {
-            drawPreview(plugin, helper, canvasRef.current, props.customBackground, props.borderColor, props.borderWidth);
+            drawPreview(
+                plugin,
+                helper,
+                canvasRef.current,
+                props.customBackground,
+                props.borderColor,
+                props.borderWidth,
+            );
         }
     }, [...Object.values(props)]);
 
-    return <>
-        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-            <canvas ref={canvasRef} onContextMenu={e => { e.preventDefault(); e.stopPropagation(); }} style={{ display: 'block', width: '100%', height: '100%' }}></canvas>
-            <ViewportFrame plugin={plugin} canvas={currentCanvas} color={cropFrameColor} />
-        </div>
-    </>;
+    return (
+        <>
+            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                <canvas
+                    ref={canvasRef}
+                    onContextMenu={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }}
+                    style={{ display: 'block', width: '100%', height: '100%' }}
+                >
+                </canvas>
+                <ViewportFrame plugin={plugin} canvas={currentCanvas} color={cropFrameColor} />
+            </div>
+        </>
+    );
 };
 
 export const ScreenshotPreview = React.memo(_ScreenshotPreview, (prev, next) => shallowEqual(prev, next));
 
 declare const ResizeObserver: any;
 
-async function drawPreview(plugin: PluginContext, helper: ViewportScreenshotHelper | undefined, target: HTMLCanvasElement, customBackground?: string, borderColor?: string, borderWidth?: number) {
-    const task = Task.create('Render Screenshot', async runtime => {
+async function drawPreview(
+    plugin: PluginContext,
+    helper: ViewportScreenshotHelper | undefined,
+    target: HTMLCanvasElement,
+    customBackground?: string,
+    borderColor?: string,
+    borderWidth?: number,
+) {
+    const task = Task.create('Render Screenshot', async (runtime) => {
         if (!helper) return;
 
         const p = await helper.getPreview(runtime)!;
@@ -159,7 +183,13 @@ async function drawPreview(plugin: PluginContext, helper: ViewportScreenshotHelp
     return plugin.runTask(task, { useOverlay: true });
 }
 
-function ViewportFrame({ plugin, canvas, color = 'rgba(255, 87, 45, 0.75)' }: { plugin: PluginContext, canvas: HTMLCanvasElement | null, color?: string }) {
+function ViewportFrame(
+    { plugin, canvas, color = 'rgba(255, 87, 45, 0.75)' }: {
+        plugin: PluginContext;
+        canvas: HTMLCanvasElement | null;
+        color?: string;
+    },
+) {
     const helper = plugin.helpers.viewportScreenshot;
     const params = useBehavior(helper?.behaviors.values);
     const cropParams = useBehavior(helper?.behaviors.cropParams);
@@ -181,7 +211,7 @@ function ViewportFrame({ plugin, canvas, color = 'rgba(255, 87, 45, 0.75)' }: { 
         x: frame.x + Math.floor(frame.width * crop.x),
         y: frame.y + Math.floor(frame.height * crop.y),
         width: Math.ceil(frame.width * crop.width),
-        height: Math.ceil(frame.height * crop.height)
+        height: Math.ceil(frame.height * crop.height),
     };
 
     const rectCrop = toRect(cropFrame);
@@ -284,7 +314,7 @@ function ViewportFrame({ plugin, canvas, color = 'rgba(255, 87, 45, 0.75)' }: { 
             x: (cropFrame.x - frame.x) / frame.width,
             y: (cropFrame.y - frame.y) / frame.height,
             width: cropFrame.width / frame.width,
-            height: cropFrame.height / frame.height
+            height: cropFrame.height / frame.height,
         });
         setDrag('');
         const p = [0, 0];
@@ -301,19 +331,156 @@ function ViewportFrame({ plugin, canvas, color = 'rgba(255, 87, 45, 0.75)' }: { 
     const border = `3px solid ${color}`;
     const transparent = 'transparent';
 
-    return <>
-        <div data-drag='move' style={{ position: 'absolute', left: cropFrame.x, top: cropFrame.y, width: cropFrame.width, height: cropFrame.height, border, cursor: 'move' }} onMouseDown={onStart} onTouchStart={onTouchStart} draggable={false} onContextMenu={contextMenu} />
+    return (
+        <>
+            <div
+                data-drag='move'
+                style={{
+                    position: 'absolute',
+                    left: cropFrame.x,
+                    top: cropFrame.y,
+                    width: cropFrame.width,
+                    height: cropFrame.height,
+                    border,
+                    cursor: 'move',
+                }}
+                onMouseDown={onStart}
+                onTouchStart={onTouchStart}
+                draggable={false}
+                onContextMenu={contextMenu}
+            />
 
-        <div data-drag='left' style={{ position: 'absolute', left: cropFrame.x - d, top: cropFrame.y + d, width: 4 * d, height: cropFrame.height - d, background: transparent, cursor: 'w-resize' }} onMouseDown={onStart} onTouchStart={onTouchStart} draggable={false} onContextMenu={contextMenu} />
-        <div data-drag='right' style={{ position: 'absolute', left: rectCrop.r - 2 * d, top: cropFrame.y, width: 4 * d, height: cropFrame.height - d, background: transparent, cursor: 'w-resize' }} onMouseDown={onStart} onTouchStart={onTouchStart} draggable={false} onContextMenu={contextMenu} />
-        <div data-drag='top' style={{ position: 'absolute', left: cropFrame.x - d, top: cropFrame.y - d, width: cropFrame.width + 2 * d, height: 4 * d, background: transparent, cursor: 'n-resize' }} onMouseDown={onStart} onTouchStart={onTouchStart} draggable={false} onContextMenu={contextMenu} />
-        <div data-drag='bottom' style={{ position: 'absolute', left: cropFrame.x - d, top: rectCrop.b - 2 * d, width: cropFrame.width + 2 * d, height: 4 * d, background: transparent, cursor: 'n-resize' }} onMouseDown={onStart} onTouchStart={onTouchStart} draggable={false} onContextMenu={contextMenu} />
+            <div
+                data-drag='left'
+                style={{
+                    position: 'absolute',
+                    left: cropFrame.x - d,
+                    top: cropFrame.y + d,
+                    width: 4 * d,
+                    height: cropFrame.height - d,
+                    background: transparent,
+                    cursor: 'w-resize',
+                }}
+                onMouseDown={onStart}
+                onTouchStart={onTouchStart}
+                draggable={false}
+                onContextMenu={contextMenu}
+            />
+            <div
+                data-drag='right'
+                style={{
+                    position: 'absolute',
+                    left: rectCrop.r - 2 * d,
+                    top: cropFrame.y,
+                    width: 4 * d,
+                    height: cropFrame.height - d,
+                    background: transparent,
+                    cursor: 'w-resize',
+                }}
+                onMouseDown={onStart}
+                onTouchStart={onTouchStart}
+                draggable={false}
+                onContextMenu={contextMenu}
+            />
+            <div
+                data-drag='top'
+                style={{
+                    position: 'absolute',
+                    left: cropFrame.x - d,
+                    top: cropFrame.y - d,
+                    width: cropFrame.width + 2 * d,
+                    height: 4 * d,
+                    background: transparent,
+                    cursor: 'n-resize',
+                }}
+                onMouseDown={onStart}
+                onTouchStart={onTouchStart}
+                draggable={false}
+                onContextMenu={contextMenu}
+            />
+            <div
+                data-drag='bottom'
+                style={{
+                    position: 'absolute',
+                    left: cropFrame.x - d,
+                    top: rectCrop.b - 2 * d,
+                    width: cropFrame.width + 2 * d,
+                    height: 4 * d,
+                    background: transparent,
+                    cursor: 'n-resize',
+                }}
+                onMouseDown={onStart}
+                onTouchStart={onTouchStart}
+                draggable={false}
+                onContextMenu={contextMenu}
+            />
 
-        <div data-drag='top, left' style={{ position: 'absolute', left: rectCrop.l - d, top: rectCrop.t - d, width: 4 * d, height: 4 * d, background: transparent, cursor: 'nw-resize' }} onMouseDown={onStart} onTouchStart={onTouchStart} draggable={false} onContextMenu={contextMenu} />
-        <div data-drag='bottom, right' style={{ position: 'absolute', left: rectCrop.r - 2 * d, top: rectCrop.b - 2 * d, width: 4 * d, height: 4 * d, background: transparent, cursor: 'nw-resize' }} onMouseDown={onStart} onTouchStart={onTouchStart} draggable={false} onContextMenu={contextMenu} />
-        <div data-drag='top, right' style={{ position: 'absolute', left: rectCrop.r - 2 * d, top: rectCrop.t - d, width: 4 * d, height: 4 * d, background: transparent, cursor: 'ne-resize' }} onMouseDown={onStart} onTouchStart={onTouchStart} draggable={false} onContextMenu={contextMenu} />
-        <div data-drag='bottom, left' style={{ position: 'absolute', left: rectCrop.l - d, top: rectCrop.b - 2 * d, width: 4 * d, height: 4 * d, background: transparent, cursor: 'ne-resize' }} onMouseDown={onStart} onTouchStart={onTouchStart} draggable={false} onContextMenu={contextMenu} />
-    </>;
+            <div
+                data-drag='top, left'
+                style={{
+                    position: 'absolute',
+                    left: rectCrop.l - d,
+                    top: rectCrop.t - d,
+                    width: 4 * d,
+                    height: 4 * d,
+                    background: transparent,
+                    cursor: 'nw-resize',
+                }}
+                onMouseDown={onStart}
+                onTouchStart={onTouchStart}
+                draggable={false}
+                onContextMenu={contextMenu}
+            />
+            <div
+                data-drag='bottom, right'
+                style={{
+                    position: 'absolute',
+                    left: rectCrop.r - 2 * d,
+                    top: rectCrop.b - 2 * d,
+                    width: 4 * d,
+                    height: 4 * d,
+                    background: transparent,
+                    cursor: 'nw-resize',
+                }}
+                onMouseDown={onStart}
+                onTouchStart={onTouchStart}
+                draggable={false}
+                onContextMenu={contextMenu}
+            />
+            <div
+                data-drag='top, right'
+                style={{
+                    position: 'absolute',
+                    left: rectCrop.r - 2 * d,
+                    top: rectCrop.t - d,
+                    width: 4 * d,
+                    height: 4 * d,
+                    background: transparent,
+                    cursor: 'ne-resize',
+                }}
+                onMouseDown={onStart}
+                onTouchStart={onTouchStart}
+                draggable={false}
+                onContextMenu={contextMenu}
+            />
+            <div
+                data-drag='bottom, left'
+                style={{
+                    position: 'absolute',
+                    left: rectCrop.l - d,
+                    top: rectCrop.b - 2 * d,
+                    width: 4 * d,
+                    height: 4 * d,
+                    background: transparent,
+                    cursor: 'ne-resize',
+                }}
+                onMouseDown={onStart}
+                onTouchStart={onTouchStart}
+                draggable={false}
+                onContextMenu={contextMenu}
+            />
+        </>
+    );
 }
 
 function toRect(viewport: Viewport) {

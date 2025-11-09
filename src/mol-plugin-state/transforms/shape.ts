@@ -16,7 +16,7 @@ import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { PluginStateObject as SO, PluginStateTransform } from '../objects.ts';
 
 export { BoxShape3D };
-type BoxShape3D = typeof BoxShape3D
+type BoxShape3D = typeof BoxShape3D;
 const BoxShape3D = PluginStateTransform.BuiltIn({
     name: 'box-shape-3d',
     display: 'Box Shape',
@@ -26,14 +26,14 @@ const BoxShape3D = PluginStateTransform.BuiltIn({
         bottomLeft: PD.Vec3(Vec3()),
         topRight: PD.Vec3(Vec3.create(1, 1, 1)),
         radius: PD.Numeric(0.15, { min: 0.01, max: 4, step: 0.01 }),
-        color: PD.Color(ColorNames.red)
-    }
+        color: PD.Color(ColorNames.red),
+    },
 })({
     canAutoUpdate() {
         return true;
     },
     apply({ params }) {
-        return Task.create('Shape Representation', async ctx => {
+        return Task.create('Shape Representation', async (ctx) => {
             return new SO.Shape.Provider({
                 label: 'Box',
                 data: params,
@@ -42,10 +42,10 @@ const BoxShape3D = PluginStateTransform.BuiltIn({
                     const mesh = getBoxMesh(Box3D.create(params.bottomLeft, params.topRight), params.radius);
                     return Shape.create('Box', data, mesh, () => data.color, () => 1, () => 'Box');
                 },
-                geometryUtils: Mesh.Utils
+                geometryUtils: Mesh.Utils,
             }, { label: 'Box' });
         });
-    }
+    },
 });
 
 export function getBoxMesh(box: Box3D, radius: number, oldMesh?: Mesh) {

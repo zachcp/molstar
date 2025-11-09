@@ -8,7 +8,7 @@ import { Geometry, type GeometryUtils } from '../../mol-geo/geometry/geometry.ts
 import { Representation } from '../representation.ts';
 import { Shape, ShapeGroup } from '../../mol-model/shape.ts';
 import { Subject } from 'rxjs';
-import { getNextMaterialId, createRenderObject, type GraphicsRenderObject } from '../../mol-gl/render-object.ts';
+import { createRenderObject, getNextMaterialId, type GraphicsRenderObject } from '../../mol-gl/render-object.ts';
 import { Theme } from '../../mol-theme/theme.ts';
 import type { LocationIterator } from '../../mol-geo/util/location-iterator.ts';
 import { type LocationCallback, VisualUpdateState } from '../util.ts';
@@ -17,7 +17,7 @@ import { type MarkerAction, MarkerActions } from '../../mol-util/marker-action.t
 import { ValueCell } from '../../mol-util/index.ts';
 import { createColors } from '../../mol-geo/geometry/color-data.ts';
 import { createSizes, type SizeData } from '../../mol-geo/geometry/size-data.ts';
-import { type Loci, isEveryLoci, EmptyLoci } from '../../mol-model/loci.ts';
+import { EmptyLoci, isEveryLoci, type Loci } from '../../mol-model/loci.ts';
 import { Interval, OrderedSet } from '../../mol-data/int.ts';
 import { PickingId } from '../../mol-geo/geometry/picking.ts';
 import { Visual } from '../visual.ts';
@@ -25,18 +25,28 @@ import { type RuntimeContext, Task } from '../../mol-task/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { isDebugMode } from '../../mol-util/debug.ts';
 
-export interface ShapeRepresentation<D, G extends Geometry, P extends Geometry.Params<G>> extends Representation<D, P> { }
+export interface ShapeRepresentation<D, G extends Geometry, P extends Geometry.Params<G>>
+    extends Representation<D, P> {}
 
-export type ShapeGetter<D, G extends Geometry, P extends Geometry.Params<G>> = (ctx: RuntimeContext, data: D, props: PD.Values<P>, shape?: Shape<G>) => Shape<G> | Promise<Shape<G>>
+export type ShapeGetter<D, G extends Geometry, P extends Geometry.Params<G>> = (
+    ctx: RuntimeContext,
+    data: D,
+    props: PD.Values<P>,
+    shape?: Shape<G>,
+) => Shape<G> | Promise<Shape<G>>;
 
 export interface ShapeBuilder<G extends Geometry, P extends Geometry.Params<G>> {
     /** Hook to modify representation props */
-    modifyProps?: (props: Partial<PD.Values<P>>) => Partial<PD.Values<P>>
+    modifyProps?: (props: Partial<PD.Values<P>>) => Partial<PD.Values<P>>;
     /** Hook to modify representation state */
-    modifyState?: (state: Partial<Representation.State>) => Partial<Representation.State>
+    modifyState?: (state: Partial<Representation.State>) => Partial<Representation.State>;
 }
 
-export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Params<G>>(getShape: ShapeGetter<D, G, P>, geometryUtils: GeometryUtils<G>, builder: ShapeBuilder<G, P> = {}): ShapeRepresentation<D, G, P> {
+export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Params<G>>(
+    getShape: ShapeGetter<D, G, P>,
+    geometryUtils: GeometryUtils<G>,
+    builder: ShapeBuilder<G, P> = {},
+): ShapeRepresentation<D, G, P> {
     let version = 0;
     const updated = new Subject<number>();
     const _state = Representation.createState();
@@ -97,7 +107,7 @@ export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Pa
     function createOrUpdate(props: Partial<PD.Values<P>> = {}, data?: D) {
         if (builder.modifyProps) props = builder.modifyProps(props);
 
-        return Task.create('ShapeRepresentation.create', async runtime => {
+        return Task.create('ShapeRepresentation.create', async (runtime) => {
             const newProps = Object.assign(currentProps, props);
             const shape = data ? await getShape(runtime, data, newProps, _shape) : undefined;
 
@@ -111,7 +121,12 @@ export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Pa
             if (updateState.createNew) {
                 renderObjects.length = 0; // clear list o renderObjects
                 locationIt = Shape.groupIterator(_shape);
-                const transform = Shape.createTransform(_shape.transforms, _shape.geometry.boundingSphere, newProps.cellSize, newProps.batchSize);
+                const transform = Shape.createTransform(
+                    _shape.transforms,
+                    _shape.geometry.boundingSphere,
+                    newProps.cellSize,
+                    newProps.batchSize,
+                );
                 const values = geometryUtils.createValues(_shape.geometry, transform, locationIt, _theme, newProps);
                 const state = geometryUtils.createRenderableState(newProps);
                 if (builder.modifyState) Object.assign(state, builder.modifyState(state));
@@ -138,7 +153,13 @@ export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Pa
 
                 if (updateState.updateMatrix) {
                     // console.log('update matrix');
-                    Shape.createTransform(_shape.transforms, _shape.geometry.boundingSphere, newProps.cellSize, newProps.batchSize, _renderObject.values);
+                    Shape.createTransform(
+                        _shape.transforms,
+                        _shape.geometry.boundingSphere,
+                        newProps.cellSize,
+                        newProps.batchSize,
+                        _renderObject.values,
+                    );
                     if ('lodLevels' in _renderObject.values) {
                         // to trigger `uLod` update in `renderable.cull`
                         ValueCell.update(_renderObject.values.lodLevels, _renderObject.values.lodLevels.ref.value);
@@ -148,7 +169,10 @@ export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Pa
                 if (updateState.createGeometry) {
                     // console.log('update geometry')
                     ValueCell.updateIfChanged(_renderObject.values.drawCount, Geometry.getDrawCount(_shape.geometry));
-                    ValueCell.updateIfChanged(_renderObject.values.uVertexCount, Geometry.getVertexCount(_shape.geometry));
+                    ValueCell.updateIfChanged(
+                        _renderObject.values.uVertexCount,
+                        Geometry.getVertexCount(_shape.geometry),
+                    );
                     ValueCell.updateIfChanged(_renderObject.values.uGroupCount, locationIt.groupCount);
                 }
 
@@ -214,13 +238,25 @@ export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Pa
 
     return {
         label: 'Shape geometry',
-        get groupCount() { return locationIt ? locationIt.count : 0; },
-        get props() { return currentProps; },
-        get params() { return currentParams; },
-        get state() { return _state; },
-        get theme() { return _theme; },
+        get groupCount() {
+            return locationIt ? locationIt.count : 0;
+        },
+        get props() {
+            return currentProps;
+        },
+        get params() {
+            return currentParams;
+        },
+        get state() {
+            return _state;
+        },
+        get theme() {
+            return _theme;
+        },
         renderObjects,
-        get geometryVersion() { return geometryVersion; },
+        get geometryVersion() {
+            return geometryVersion;
+        },
         updated,
         createOrUpdate,
         getLoci(pickingId: PickingId) {
@@ -277,7 +313,9 @@ export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Pa
         },
         setTheme(theme: Theme) {
             if (isDebugMode) {
-                console.warn('The `ShapeRepresentation` theme is fixed to `ShapeGroupColorTheme` and `ShapeGroupSizeTheme`. Colors are taken from `Shape.getColor` and sizes from `Shape.getSize`');
+                console.warn(
+                    'The `ShapeRepresentation` theme is fixed to `ShapeGroupColorTheme` and `ShapeGroupSizeTheme`. Colors are taken from `Shape.getColor` and sizes from `Shape.getSize`',
+                );
             }
         },
         destroy() {
@@ -286,7 +324,7 @@ export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Pa
                 _renderObject.state.disposed = true;
                 _renderObject = undefined;
             }
-        }
+        },
     };
 }
 

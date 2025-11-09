@@ -18,7 +18,7 @@ import { createBasic } from './basic/schema.ts';
 
 export { PdbFormat };
 
-type PdbFormat = ModelFormat<PdbFile>
+type PdbFormat = ModelFormat<PdbFile>;
 
 namespace PdbFormat {
     export function is(x?: ModelFormat): x is PdbFormat {
@@ -31,7 +31,7 @@ namespace PdbFormat {
 }
 
 export function trajectoryFromPDB(pdb: PdbFile): Task<Trajectory> {
-    return Task.create('Parse PDB', async ctx => {
+    return Task.create('Parse PDB', async (ctx) => {
         await ctx.update('Converting to mmCIF');
         const cif = await pdbToMmCif(pdb);
         const format = MmcifFormat.fromFrame(cif, undefined, PdbFormat.create(pdb));
@@ -49,12 +49,12 @@ export function trajectoryFromPDB(pdb: PdbFile): Task<Trajectory> {
 
                 const q = partial_charge.toFloatArray();
                 const partialCharge = srcIndexArray
-                    ? Column.ofFloatArray(Column.mapToArray(srcIndex, i => q[i], Float32Array))
+                    ? Column.ofFloatArray(Column.mapToArray(srcIndex, (i) => q[i], Float32Array))
                     : Column.ofFloatArray(q);
 
                 AtomPartialCharge.Provider.set(first, {
                     data: partialCharge,
-                    type: 'GASTEIGER' // from PDBQT
+                    type: 'GASTEIGER', // from PDBQT
                 });
             }
         }

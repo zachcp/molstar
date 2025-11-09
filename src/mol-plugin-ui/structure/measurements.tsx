@@ -9,7 +9,11 @@
 import type * as React from 'react';
 import { Loci } from '../../mol-model/loci.ts';
 import type { StructureElement } from '../../mol-model/structure.ts';
-import { type StructureMeasurementCell, type StructureMeasurementOptions, StructureMeasurementParams } from '../../mol-plugin-state/manager/structure/measurement.ts';
+import {
+    type StructureMeasurementCell,
+    type StructureMeasurementOptions,
+    StructureMeasurementParams,
+} from '../../mol-plugin-state/manager/structure/measurement.ts';
 import type { StructureSelectionHistoryEntry } from '../../mol-plugin-state/manager/structure/selection.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { PluginConfig } from '../../mol-plugin/config.ts';
@@ -18,12 +22,31 @@ import type { DihedralData } from '../../mol-repr/shape/loci/dihedral.ts';
 import type { DistanceData } from '../../mol-repr/shape/loci/distance.ts';
 import type { LabelData } from '../../mol-repr/shape/loci/label.ts';
 import type { OrientationData } from '../../mol-repr/shape/loci/orientation.ts';
-import { angleLabel, dihedralLabel, distanceLabel, lociLabel, structureElementLociLabelMany } from '../../mol-theme/label.ts';
+import {
+    angleLabel,
+    dihedralLabel,
+    distanceLabel,
+    lociLabel,
+    structureElementLociLabelMany,
+} from '../../mol-theme/label.ts';
 import type { FiniteArray } from '../../mol-util/type-helpers.ts';
 import { CollapsableControls, PurePluginUIComponent } from '../base.tsx';
 import { ActionMenu } from '../controls/action-menu.tsx';
 import { Button, ExpandGroup, IconButton, ToggleButton } from '../controls/common.tsx';
-import { AddSvg, ArrowDownwardSvg, ArrowUpwardSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, MoreHorizSvg, PencilRulerSvg, SetSvg, TuneSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg } from '../controls/icons.tsx';
+import {
+    AddSvg,
+    ArrowDownwardSvg,
+    ArrowUpwardSvg,
+    DeleteOutlinedSvg,
+    HelpOutlineSvg,
+    Icon,
+    MoreHorizSvg,
+    PencilRulerSvg,
+    SetSvg,
+    TuneSvg,
+    VisibilityOffOutlinedSvg,
+    VisibilityOutlinedSvg,
+} from '../controls/icons.tsx';
 import { ParameterControls } from '../controls/parameters.tsx';
 import { UpdateTransformControl } from '../state/update-transform.tsx';
 import { ToggleSelectionModeButton } from './selection.tsx';
@@ -35,20 +58,23 @@ export class StructureMeasurementsControls extends CollapsableControls {
         return {
             isCollapsed: false,
             header: 'Measurements',
-            brand: { accent: 'gray' as const, svg: PencilRulerSvg }
+            brand: { accent: 'gray' as const, svg: PencilRulerSvg },
         };
     }
 
     renderControls() {
-        return <>
-            <MeasurementControls />
-            <MeasurementList />
-        </>;
+        return (
+            <>
+                <MeasurementControls />
+                <MeasurementList />
+            </>
+        );
     }
 }
 
 export class MeasurementList extends PurePluginUIComponent {
-    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.measurement.behaviors.state, () => {
+    override componentDidMount() {
+        this.subscribe(this.plugin.managers.structure.measurement.behaviors.state, () => {
             this.forceUpdate();
         });
     }
@@ -61,36 +87,43 @@ export class MeasurementList extends PurePluginUIComponent {
         return group.length ? <ExpandGroup header={header} initiallyExpanded>{group}</ExpandGroup> : null;
     }
 
-    override render() {        const measurements = this.plugin.managers.structure.measurement.state;
-        return <div style={{ marginTop: '6px' }}>
-            {this.renderGroup(measurements.labels, 'Labels')}
-            {this.renderGroup(measurements.distances, 'Distances')}
-            {this.renderGroup(measurements.angles, 'Angles')}
-            {this.renderGroup(measurements.dihedrals, 'Dihedrals')}
-            {this.renderGroup(measurements.orientations, 'Orientations')}
-            {this.renderGroup(measurements.planes, 'Planes')}
-        </div>;
+    override render() {
+        const measurements = this.plugin.managers.structure.measurement.state;
+        return (
+            <div style={{ marginTop: '6px' }}>
+                {this.renderGroup(measurements.labels, 'Labels')}
+                {this.renderGroup(measurements.distances, 'Distances')}
+                {this.renderGroup(measurements.angles, 'Angles')}
+                {this.renderGroup(measurements.dihedrals, 'Dihedrals')}
+                {this.renderGroup(measurements.orientations, 'Orientations')}
+                {this.renderGroup(measurements.planes, 'Planes')}
+            </div>
+        );
     }
 }
 
-export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boolean, action?: 'add' | 'options' }> {
+export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boolean; action?: 'add' | 'options' }> {
     override state = { isBusy: false, action: void 0 as 'add' | 'options' | undefined };
-    override componentDidMount() {        this.subscribe(this.selection.events.additionsHistoryUpdated, () => {
+    override componentDidMount() {
+        this.subscribe(this.selection.events.additionsHistoryUpdated, () => {
             this.forceUpdate();
             this.updateOrderLabels();
         });
 
-        this.subscribe(this.plugin.behaviors.state.isBusy, v => {
+        this.subscribe(this.plugin.behaviors.state.isBusy, (v) => {
             this.setState({ isBusy: v });
         });
     }
 
-    override componentWillUnmount() {        this.clearOrderLabels();
+    override componentWillUnmount() {
+        this.clearOrderLabels();
         super.componentWillUnmount();
     }
 
-    override componentDidUpdate(prevProps: {}, prevState: { isBusy: boolean, action?: 'add' | 'options' }) {        if (this.state.action !== prevState.action)
+    override componentDidUpdate(prevProps: {}, prevState: { isBusy: boolean; action?: 'add' | 'options' }) {
+        if (this.state.action !== prevState.action) {
             this.updateOrderLabels();
+        }
     }
 
     clearOrderLabels() {
@@ -105,8 +138,9 @@ export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boo
 
         const locis = [];
         const history = this.selection.additionsHistory;
-        for (let idx = 0; idx < history.length && idx < 4; idx++)
+        for (let idx = 0; idx < history.length && idx < 4; idx++) {
             locis.push(history[idx].loci);
+        }
         this.plugin.managers.structure.measurement.addOrderLabels(locis);
     }
 
@@ -136,7 +170,7 @@ export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boo
 
     addOrientation = () => {
         const locis: StructureElement.Loci[] = [];
-        this.plugin.managers.structure.selection.entries.forEach(v => {
+        this.plugin.managers.structure.selection.entries.forEach((v) => {
             locis.push(v.selection);
         });
         this.plugin.managers.structure.measurement.addOrientation(locis);
@@ -144,7 +178,7 @@ export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boo
 
     addPlane = () => {
         const locis: StructureElement.Loci[] = [];
-        this.plugin.managers.structure.selection.entries.forEach(v => {
+        this.plugin.managers.structure.selection.entries.forEach((v) => {
             locis.push(v.selection);
         });
         this.plugin.managers.structure.measurement.addPlane(locis);
@@ -153,17 +187,47 @@ export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boo
     get actions(): ActionMenu.Items {
         const history = this.selection.additionsHistory;
         const ret: ActionMenu.Item[] = [
-            { kind: 'item', label: `Label ${history.length === 0 ? ' (1 selection item required)' : ' (1st selection item)'}`, value: this.addLabel, disabled: history.length === 0 },
-            { kind: 'item', label: `Distance ${history.length < 2 ? ' (2 selection items required)' : ' (top 2 selection items)'}`, value: this.measureDistance, disabled: history.length < 2 },
-            { kind: 'item', label: `Angle ${history.length < 3 ? ' (3 selection items required)' : ' (top 3 items)'}`, value: this.measureAngle, disabled: history.length < 3 },
-            { kind: 'item', label: `Dihedral ${history.length < 4 ? ' (4 selection items required)' : ' (top 4 selection items)'}`, value: this.measureDihedral, disabled: history.length < 4 },
-            { kind: 'item', label: `Orientation ${history.length === 0 ? ' (selection required)' : ' (current selection)'}`, value: this.addOrientation, disabled: history.length === 0 },
-            { kind: 'item', label: `Plane ${history.length === 0 ? ' (selection required)' : ' (current selection)'}`, value: this.addPlane, disabled: history.length === 0 },
+            {
+                kind: 'item',
+                label: `Label ${history.length === 0 ? ' (1 selection item required)' : ' (1st selection item)'}`,
+                value: this.addLabel,
+                disabled: history.length === 0,
+            },
+            {
+                kind: 'item',
+                label: `Distance ${history.length < 2 ? ' (2 selection items required)' : ' (top 2 selection items)'}`,
+                value: this.measureDistance,
+                disabled: history.length < 2,
+            },
+            {
+                kind: 'item',
+                label: `Angle ${history.length < 3 ? ' (3 selection items required)' : ' (top 3 items)'}`,
+                value: this.measureAngle,
+                disabled: history.length < 3,
+            },
+            {
+                kind: 'item',
+                label: `Dihedral ${history.length < 4 ? ' (4 selection items required)' : ' (top 4 selection items)'}`,
+                value: this.measureDihedral,
+                disabled: history.length < 4,
+            },
+            {
+                kind: 'item',
+                label: `Orientation ${history.length === 0 ? ' (selection required)' : ' (current selection)'}`,
+                value: this.addOrientation,
+                disabled: history.length === 0,
+            },
+            {
+                kind: 'item',
+                label: `Plane ${history.length === 0 ? ' (selection required)' : ' (current selection)'}`,
+                value: this.addPlane,
+                disabled: history.length === 0,
+            },
         ];
         return ret;
     }
 
-    selectAction: ActionMenu.OnSelect = item => {
+    selectAction: ActionMenu.OnSelect = (item) => {
         this.toggleAdd();
         if (!item) return;
         (item?.value as any)();
@@ -186,14 +250,51 @@ export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boo
 
     historyEntry(e: StructureSelectionHistoryEntry, idx: number) {
         const history = this.plugin.managers.structure.selection.additionsHistory;
-        return <div className='msp-flex-row' key={e.id} onMouseEnter={() => this.highlight(e.loci)} onMouseLeave={() => this.plugin.managers.interactivity.lociHighlights.clearHighlights()}>
-            <Button noOverflow title='Click to focus. Hover to highlight.' onClick={() => this.focusLoci(e.loci)} style={{ width: 'auto', textAlign: 'left' }}>
-                {idx}. <span dangerouslySetInnerHTML={{ __html: e.label }} />
-            </Button>
-            {history.length > 1 && <IconButton svg={ArrowUpwardSvg} small className='msp-form-control' onClick={() => this.moveHistory(e, 'up')} flex='20px' title="Move up" />}
-            {history.length > 1 && <IconButton svg={ArrowDownwardSvg} small className='msp-form-control' onClick={() => this.moveHistory(e, 'down')} flex='20px' title="Move down" />}
-            <IconButton svg={DeleteOutlinedSvg} small className='msp-form-control' onClick={() => this.plugin.managers.structure.selection.modifyHistory(e, 'remove')} flex title="Remove" />
-        </div>;
+        return (
+            <div
+                className='msp-flex-row'
+                key={e.id}
+                onMouseEnter={() => this.highlight(e.loci)}
+                onMouseLeave={() => this.plugin.managers.interactivity.lociHighlights.clearHighlights()}
+            >
+                <Button
+                    noOverflow
+                    title='Click to focus. Hover to highlight.'
+                    onClick={() => this.focusLoci(e.loci)}
+                    style={{ width: 'auto', textAlign: 'left' }}
+                >
+                    {idx}. <span dangerouslySetInnerHTML={{ __html: e.label }} />
+                </Button>
+                {history.length > 1 && (
+                    <IconButton
+                        svg={ArrowUpwardSvg}
+                        small
+                        className='msp-form-control'
+                        onClick={() => this.moveHistory(e, 'up')}
+                        flex='20px'
+                        title='Move up'
+                    />
+                )}
+                {history.length > 1 && (
+                    <IconButton
+                        svg={ArrowDownwardSvg}
+                        small
+                        className='msp-form-control'
+                        onClick={() => this.moveHistory(e, 'down')}
+                        flex='20px'
+                        title='Move down'
+                    />
+                )}
+                <IconButton
+                    svg={DeleteOutlinedSvg}
+                    small
+                    className='msp-form-control'
+                    onClick={() => this.plugin.managers.structure.selection.modifyHistory(e, 'remove')}
+                    flex
+                    title='Remove'
+                />
+            </div>
+        );
     }
 
     add() {
@@ -205,37 +306,70 @@ export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boo
         }
 
         const shouldShowToggleHint = this.plugin.config.get(PluginConfig.Viewport.ShowSelectionMode);
-        const toggleHint = shouldShowToggleHint ? (<>{' '}(toggle <ToggleSelectionModeButton inline /> mode)</>) : null;
+        const toggleHint = shouldShowToggleHint
+            ? (
+                <>
+                    {' '}(toggle <ToggleSelectionModeButton inline /> mode)
+                </>
+            )
+            : null;
 
-        return <>
-            <ActionMenu items={this.actions} onSelect={this.selectAction} />
-            {entries.length > 0 && <div className='msp-control-offset'>
-                {entries}
-            </div>}
-            {entries.length === 0 && <div className='msp-control-offset msp-help-text'>
-                <div className='msp-help-description'><Icon svg={HelpOutlineSvg} inline />Add one or more selections{toggleHint}</div>
-            </div>}
-        </>;
+        return (
+            <>
+                <ActionMenu items={this.actions} onSelect={this.selectAction} />
+                {entries.length > 0 && (
+                    <div className='msp-control-offset'>
+                        {entries}
+                    </div>
+                )}
+                {entries.length === 0 && (
+                    <div className='msp-control-offset msp-help-text'>
+                        <div className='msp-help-description'>
+                            <Icon svg={HelpOutlineSvg} inline />Add one or more selections{toggleHint}
+                        </div>
+                    </div>
+                )}
+            </>
+        );
     }
 
-    override render() {        return <>
-            <div className='msp-flex-row'>
-                <ToggleButton icon={AddSvg} label='Add' toggle={this.toggleAdd} isSelected={this.state.action === 'add'} disabled={this.state.isBusy} className='msp-btn-apply-simple' />
-                <ToggleButton icon={TuneSvg} label='' title='Options' toggle={this.toggleOptions} isSelected={this.state.action === 'options'} disabled={this.state.isBusy} style={{ flex: '0 0 40px', padding: 0 }} />
-            </div>
-            {this.state.action === 'add' && this.add()}
-            {this.state.action === 'options' && <MeasurementsOptions />}
-        </>;
+    override render() {
+        return (
+            <>
+                <div className='msp-flex-row'>
+                    <ToggleButton
+                        icon={AddSvg}
+                        label='Add'
+                        toggle={this.toggleAdd}
+                        isSelected={this.state.action === 'add'}
+                        disabled={this.state.isBusy}
+                        className='msp-btn-apply-simple'
+                    />
+                    <ToggleButton
+                        icon={TuneSvg}
+                        label=''
+                        title='Options'
+                        toggle={this.toggleOptions}
+                        isSelected={this.state.action === 'options'}
+                        disabled={this.state.isBusy}
+                        style={{ flex: '0 0 40px', padding: 0 }}
+                    />
+                </div>
+                {this.state.action === 'add' && this.add()}
+                {this.state.action === 'options' && <MeasurementsOptions />}
+            </>
+        );
     }
 }
 
 class MeasurementsOptions extends PurePluginUIComponent<{}, { isDisabled: boolean }> {
     override state = { isDisabled: false };
-    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.measurement.behaviors.state, () => {
+    override componentDidMount() {
+        this.subscribe(this.plugin.managers.structure.measurement.behaviors.state, () => {
             this.forceUpdate();
         });
 
-        this.subscribe(this.plugin.behaviors.state.isBusy, v => {
+        this.subscribe(this.plugin.behaviors.state.isBusy, (v) => {
             this.setState({ isDisabled: v });
         });
     }
@@ -244,32 +378,50 @@ class MeasurementsOptions extends PurePluginUIComponent<{}, { isDisabled: boolea
         this.plugin.managers.structure.measurement.setOptions(options);
     };
 
-    override render() {        const measurements = this.plugin.managers.structure.measurement.state;
+    override render() {
+        const measurements = this.plugin.managers.structure.measurement.state;
 
-        return <div className='msp-control-offset'>
-            <ParameterControls params={StructureMeasurementParams} values={measurements.options} onChangeValues={this.changed} isDisabled={this.state.isDisabled} />
-        </div>;
+        return (
+            <div className='msp-control-offset'>
+                <ParameterControls
+                    params={StructureMeasurementParams}
+                    values={measurements.options}
+                    onChangeValues={this.changed}
+                    isDisabled={this.state.isDisabled}
+                />
+            </div>
+        );
     }
 }
 
 class MeasurementEntry extends PurePluginUIComponent<{ cell: StructureMeasurementCell }, { showUpdate: boolean }> {
     override state = { showUpdate: false };
-    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
+    override componentDidMount() {
+        this.subscribe(this.plugin.state.events.cell.stateUpdated, (e) => {
             this.forceUpdate();
         });
     }
 
     get selections() {
-        return this.props.cell.obj?.data.sourceData as Partial<DistanceData & AngleData & DihedralData & LabelData & OrientationData> | undefined;
+        return this.props.cell.obj?.data.sourceData as
+            | Partial<DistanceData & AngleData & DihedralData & LabelData & OrientationData>
+            | undefined;
     }
 
     delete = () => {
-        PluginCommands.State.RemoveObject(this.plugin, { state: this.props.cell.parent!, ref: this.props.cell.transform.parent, removeParentGhosts: true });
+        PluginCommands.State.RemoveObject(this.plugin, {
+            state: this.props.cell.parent!,
+            ref: this.props.cell.transform.parent,
+            removeParentGhosts: true,
+        });
     };
 
     toggleVisibility = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
-        PluginCommands.State.ToggleVisibility(this.plugin, { state: this.props.cell.parent!, ref: this.props.cell.transform.parent });
+        PluginCommands.State.ToggleVisibility(this.plugin, {
+            state: this.props.cell.parent!,
+            ref: this.props.cell.transform.parent,
+        });
         e.currentTarget.blur();
     };
 
@@ -321,7 +473,12 @@ class MeasurementEntry extends PurePluginUIComponent<{ cell: StructureMeasuremen
 
         if (!selections) return '<empty>';
         if (selections.infos) return lociLabel(selections.infos[0].loci, { condensed: true });
-        if (selections.pairs) return distanceLabel(selections.pairs[0], { condensed: true, unitLabel: this.plugin.managers.structure.measurement.state.options.distanceUnitLabel });
+        if (selections.pairs) {
+            return distanceLabel(selections.pairs[0], {
+                condensed: true,
+                unitLabel: this.plugin.managers.structure.measurement.state.options.distanceUnitLabel,
+            });
+        }
         if (selections.triples) return angleLabel(selections.triples[0], { condensed: true });
         if (selections.quads) return dihedralLabel(selections.quads[0], { condensed: true });
         if (selections.locis) return structureElementLociLabelMany(selections.locis, { countsOnly: true });
@@ -330,36 +487,85 @@ class MeasurementEntry extends PurePluginUIComponent<{ cell: StructureMeasuremen
 
     get actions(): ActionMenu.Items {
         this.props.cell.sourceRef;
-        return [ActionMenu.Item('Select This', () => this.plugin.managers.structure.selection.fromSelections(this.props.cell.sourceRef!), { icon: SetSvg })];
+        return [
+            ActionMenu.Item(
+                'Select This',
+                () => this.plugin.managers.structure.selection.fromSelections(this.props.cell.sourceRef!),
+                { icon: SetSvg },
+            ),
+        ];
     }
 
-    selectAction: ActionMenu.OnSelect = item => {
+    selectAction: ActionMenu.OnSelect = (item) => {
         if (!item) return;
         this.setState({ showUpdate: false });
         (item?.value as any)();
     };
 
-    override render() {        const { cell } = this.props;
+    override render() {
+        const { cell } = this.props;
         const { obj } = cell;
         if (!obj) return null;
 
-        return <>
-            <div className='msp-flex-row' key={obj.id} onMouseEnter={this.highlight} onMouseLeave={this.clearHighlight}>
-                <button className='msp-form-control msp-control-button-label msp-no-overflow' title='Click to focus. Hover to highlight.' onClick={this.focus} style={{ width: 'auto', textAlign: 'left' }}>
-                    <span dangerouslySetInnerHTML={{ __html: this.label }} />
-                </button>
-                <IconButton svg={cell.state.isHidden ? VisibilityOffOutlinedSvg : VisibilityOutlinedSvg} toggleState={false} small className='msp-form-control' onClick={this.toggleVisibility} flex title={cell.state.isHidden ? 'Show' : 'Hide'} />
-                <IconButton svg={DeleteOutlinedSvg} small className='msp-form-control' onClick={this.delete} flex title='Delete' toggleState={false} />
-                <IconButton svg={MoreHorizSvg} className='msp-form-control' onClick={this.toggleUpdate} flex title='Actions' toggleState={this.state.showUpdate} />
-            </div>
-            {this.state.showUpdate && cell.parent && <>
-                <div className='msp-accent-offset'>
-                    <ActionMenu items={this.actions} onSelect={this.selectAction} noOffset />
-                    <ExpandGroup header='Options' noOffset>
-                        <UpdateTransformControl state={cell.parent} transform={cell.transform} customHeader='none' autoHideApply />
-                    </ExpandGroup>
+        return (
+            <>
+                <div
+                    className='msp-flex-row'
+                    key={obj.id}
+                    onMouseEnter={this.highlight}
+                    onMouseLeave={this.clearHighlight}
+                >
+                    <button
+                        className='msp-form-control msp-control-button-label msp-no-overflow'
+                        title='Click to focus. Hover to highlight.'
+                        onClick={this.focus}
+                        style={{ width: 'auto', textAlign: 'left' }}
+                    >
+                        <span dangerouslySetInnerHTML={{ __html: this.label }} />
+                    </button>
+                    <IconButton
+                        svg={cell.state.isHidden ? VisibilityOffOutlinedSvg : VisibilityOutlinedSvg}
+                        toggleState={false}
+                        small
+                        className='msp-form-control'
+                        onClick={this.toggleVisibility}
+                        flex
+                        title={cell.state.isHidden ? 'Show' : 'Hide'}
+                    />
+                    <IconButton
+                        svg={DeleteOutlinedSvg}
+                        small
+                        className='msp-form-control'
+                        onClick={this.delete}
+                        flex
+                        title='Delete'
+                        toggleState={false}
+                    />
+                    <IconButton
+                        svg={MoreHorizSvg}
+                        className='msp-form-control'
+                        onClick={this.toggleUpdate}
+                        flex
+                        title='Actions'
+                        toggleState={this.state.showUpdate}
+                    />
                 </div>
-            </>}
-        </>;
+                {this.state.showUpdate && cell.parent && (
+                    <>
+                        <div className='msp-accent-offset'>
+                            <ActionMenu items={this.actions} onSelect={this.selectAction} noOffset />
+                            <ExpandGroup header='Options' noOffset>
+                                <UpdateTransformControl
+                                    state={cell.parent}
+                                    transform={cell.transform}
+                                    customHeader='none'
+                                    autoHideApply
+                                />
+                            </ExpandGroup>
+                        </div>
+                    </>
+                )}
+            </>
+        );
     }
 }

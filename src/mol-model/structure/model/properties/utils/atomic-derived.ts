@@ -5,9 +5,17 @@
  */
 
 import { type AtomicData, AtomNumber } from '../atomic.ts';
-import type { AtomicIndex, AtomicDerivedData, AtomicSegments } from '../atomic/hierarchy.ts';
+import type { AtomicDerivedData, AtomicIndex, AtomicSegments } from '../atomic/hierarchy.ts';
 import type { ElementIndex, ResidueIndex } from '../../indexing.ts';
-import { type MoleculeType, getMoleculeType, getComponentType, type PolymerType, getPolymerType, isPolymer, ElementSymbol } from '../../types.ts';
+import {
+    ElementSymbol,
+    getComponentType,
+    getMoleculeType,
+    getPolymerType,
+    isPolymer,
+    type MoleculeType,
+    type PolymerType,
+} from '../../types.ts';
 import { getAtomIdForAtomRole } from '../../../../../mol-model/structure/util.ts';
 import type { ChemicalComponentMap } from '../common.ts';
 import { isProductionMode } from '../../../../../mol-util/debug.ts';
@@ -15,7 +23,12 @@ import type { mmCIF_chemComp_schema } from '../../../../../mol-io/reader/cif/sch
 
 type ChemCompType = mmCIF_chemComp_schema['type']['T'];
 
-export function getAtomicDerivedData(data: AtomicData, segments: AtomicSegments, index: AtomicIndex, chemicalComponentMap: ChemicalComponentMap): AtomicDerivedData {
+export function getAtomicDerivedData(
+    data: AtomicData,
+    segments: AtomicSegments,
+    index: AtomicIndex,
+    chemicalComponentMap: ChemicalComponentMap,
+): AtomicDerivedData {
     const { label_comp_id, type_symbol, _rowCount: atomCount } = data.atoms;
     const { _rowCount: residueCount } = data.residues;
     const { offsets } = segments.residueAtomSegments;
@@ -81,7 +94,7 @@ export function getAtomicDerivedData(data: AtomicData, segments: AtomicSegments,
 
     return {
         atom: {
-            atomicNumber: atomicNumber as unknown as ArrayLike<number>
+            atomicNumber: atomicNumber as unknown as ArrayLike<number>,
         },
         residue: {
             traceElementIndex: traceElementIndex as unknown as ArrayLike<ElementIndex | -1>,
@@ -89,6 +102,6 @@ export function getAtomicDerivedData(data: AtomicData, segments: AtomicSegments,
             directionToElementIndex: directionToElementIndex as unknown as ArrayLike<ElementIndex | -1>,
             moleculeType: moleculeType as unknown as ArrayLike<MoleculeType>,
             polymerType: polymerType as unknown as ArrayLike<PolymerType>,
-        }
+        },
     };
 }

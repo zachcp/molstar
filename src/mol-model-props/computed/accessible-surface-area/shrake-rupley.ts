@@ -5,25 +5,33 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, type RuntimeContext } from '../../../mol-task/index.ts';
+import { type RuntimeContext, Task } from '../../../mol-task/index.ts';
 // import { BitFlags } from '../../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { type Structure, type StructureElement, StructureProperties } from '../../../mol-model/structure.ts';
 import { assignRadiusForHeavyAtoms } from './shrake-rupley/radii.ts';
-import { type ShrakeRupleyContext, VdWLookup, MaxAsa, DefaultMaxAsa } from './shrake-rupley/common.ts';
+import { DefaultMaxAsa, MaxAsa, type ShrakeRupleyContext, VdWLookup } from './shrake-rupley/common.ts';
 import { computeArea } from './shrake-rupley/area.ts';
 import { SortedArray } from '../../../mol-data/int.ts';
 
 export const ShrakeRupleyComputationParams = {
-    numberOfSpherePoints: PD.Numeric(92, { min: 12, max: 360, step: 1 }, { description: 'Number of sphere points to sample per atom: 92 (original paper), 960 (BioJava), 3000 (EPPIC) - see Shrake A, Rupley JA: Environment and exposure to solvent of protein atoms. Lysozyme and insulin. J Mol Biol 1973.' }),
-    probeSize: PD.Numeric(1.4, { min: 0.1, max: 4, step: 0.01 }, { description: 'Corresponds to the size of a water molecule: 1.4 (original paper), 1.5 (occassionally used)' }),
+    numberOfSpherePoints: PD.Numeric(92, { min: 12, max: 360, step: 1 }, {
+        description:
+            'Number of sphere points to sample per atom: 92 (original paper), 960 (BioJava), 3000 (EPPIC) - see Shrake A, Rupley JA: Environment and exposure to solvent of protein atoms. Lysozyme and insulin. J Mol Biol 1973.',
+    }),
+    probeSize: PD.Numeric(1.4, { min: 0.1, max: 4, step: 0.01 }, {
+        description: 'Corresponds to the size of a water molecule: 1.4 (original paper), 1.5 (occassionally used)',
+    }),
     // buriedRasaThreshold: PD.Numeric(0.16, { min: 0.0, max: 1.0 }, { description: 'below this cutoff of relative accessible surface area a residue will be considered buried - see: Rost B, Sander C: Conservation and prediction of solvent accessibility in protein families. Proteins 1994.' }),
     nonPolymer: PD.Boolean(false, { description: 'Include non-polymer atoms as occluders.' }),
-    traceOnly: PD.Boolean(false, { description: 'Compute only using alpha-carbons, if true increase probeSize accordingly (e.g., 4 A). Considers only canonical amino acids.' })
+    traceOnly: PD.Boolean(false, {
+        description:
+            'Compute only using alpha-carbons, if true increase probeSize accordingly (e.g., 4 A). Considers only canonical amino acids.',
+    }),
 };
-export type ShrakeRupleyComputationParams = typeof ShrakeRupleyComputationParams
-export type ShrakeRupleyComputationProps = PD.Values<ShrakeRupleyComputationParams>
+export type ShrakeRupleyComputationParams = typeof ShrakeRupleyComputationParams;
+export type ShrakeRupleyComputationProps = PD.Values<ShrakeRupleyComputationParams>;
 
 // TODO
 // - add back buried and relative asa
@@ -31,8 +39,8 @@ export type ShrakeRupleyComputationProps = PD.Values<ShrakeRupleyComputationPara
 export { AccessibleSurfaceArea };
 
 interface AccessibleSurfaceArea {
-    readonly serialResidueIndex: ArrayLike<number>
-    readonly area: ArrayLike<number>
+    readonly serialResidueIndex: ArrayLike<number>;
+    readonly area: ArrayLike<number>;
 }
 
 namespace AccessibleSurfaceArea {
@@ -42,12 +50,16 @@ namespace AccessibleSurfaceArea {
      */
     export function compute(structure: Structure, props: Partial<ShrakeRupleyComputationProps> = {}) {
         const p = { ...PD.getDefaultValues(ShrakeRupleyComputationParams), ...props };
-        return Task.create('Compute Accessible Surface Area', async runtime => {
+        return Task.create('Compute Accessible Surface Area', async (runtime) => {
             return await calculate(runtime, structure, p);
         });
     }
 
-    async function calculate(runtime: RuntimeContext, structure: Structure, props: ShrakeRupleyComputationProps): Promise<AccessibleSurfaceArea> {
+    async function calculate(
+        runtime: RuntimeContext,
+        structure: Structure,
+        props: ShrakeRupleyComputationProps,
+    ): Promise<AccessibleSurfaceArea> {
         const ctx = initialize(structure, props);
 
         assignRadiusForHeavyAtoms(ctx);
@@ -71,7 +83,7 @@ namespace AccessibleSurfaceArea {
             maxLookupRadius: 2 * props.probeSize + 2 * VdWLookup[2], // 2x probe size + 2x largest VdW
             atomRadiusType: new Int8Array(elementCount),
             serialResidueIndex: new Int32Array(elementCount),
-            area: new Float32Array(atomicResidueCount)
+            area: new Float32Array(atomicResidueCount),
         };
     }
 
@@ -92,13 +104,13 @@ namespace AccessibleSurfaceArea {
     export const enum Flags {
         NA = 0x0,
         Buried = 0x1,
-        Accessible = 0x2
+        Accessible = 0x2,
     }
 
     export const Flag = {
         NA: Flags.NA,
         Buried: Flags.Buried,
-        Accessible: Flags.Accessible
+        Accessible: Flags.Accessible,
     } as const;
     export type Flag = (typeof Flag)[keyof typeof Flag];
 
@@ -110,20 +122,26 @@ namespace AccessibleSurfaceArea {
 
     export function getValue(location: StructureElement.Location, accessibleSurfaceArea: AccessibleSurfaceArea) {
         const { area, serialResidueIndex } = accessibleSurfaceArea;
-        const rSI = serialResidueIndex[SortedArray.indexOf(SortedArray.ofSortedArray(location.structure.root.serialMapping.elementIndices), location.element)];
+        const rSI = serialResidueIndex[
+            SortedArray.indexOf(
+                SortedArray.ofSortedArray(location.structure.root.serialMapping.elementIndices),
+                location.element,
+            )
+        ];
         if (rSI === -1) return -1;
         return area[rSI];
     }
 
-    export function getNormalizedValue(location: StructureElement.Location, accessibleSurfaceArea: AccessibleSurfaceArea) {
+    export function getNormalizedValue(
+        location: StructureElement.Location,
+        accessibleSurfaceArea: AccessibleSurfaceArea,
+    ) {
         const value = getValue(location, accessibleSurfaceArea);
         return value === -1 ? -1 : normalize(StructureProperties.atom.label_comp_id(location), value);
     }
 
     export function getFlag(location: StructureElement.Location, accessibleSurfaceArea: AccessibleSurfaceArea) {
         const value = getNormalizedValue(location, accessibleSurfaceArea);
-        return value === -1 ? Flags.NA :
-            value < 0.16 ? Flags.Buried :
-                Flags.Accessible;
+        return value === -1 ? Flags.NA : value < 0.16 ? Flags.Buried : Flags.Accessible;
     }
 }

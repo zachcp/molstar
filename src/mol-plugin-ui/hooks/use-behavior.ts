@@ -38,15 +38,13 @@ function useBehaviorReact18<T>(s: Behavior<T> | undefined) {
                 const sub = (s as any)?.pipe(skip(1)).subscribe(callback);
                 return () => sub?.unsubscribe();
             },
-            [s]
+            [s],
         ),
-        React.useCallback(() => s?.value, [s])
+        React.useCallback(() => s?.value, [s]),
     );
 }
 
-const _useBehavior = !!(React as any).useSyncExternalStore
-    ? useBehaviorReact18
-    : useBehaviorLegacy;
+const _useBehavior = !!(React as any).useSyncExternalStore ? useBehaviorReact18 : useBehaviorLegacy;
 
 export function useBehavior<T>(s: Behavior<T>): T;
 export function useBehavior<T>(s: Behavior<T> | undefined): T | undefined;

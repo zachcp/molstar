@@ -7,11 +7,13 @@
 declare const process: any;
 declare const window: any;
 
-const now: () => now.Timestamp = (function () {
+const now: () => now.Timestamp = function () {
     if (typeof window !== 'undefined' && window.performance) {
         const perf = window.performance;
         return () => perf.now();
-    } else if (typeof process !== 'undefined' && process.hrtime !== 'undefined' && typeof process.hrtime === 'function') {
+    } else if (
+        typeof process !== 'undefined' && process.hrtime !== 'undefined' && typeof process.hrtime === 'function'
+    ) {
         return () => {
             const t = process.hrtime();
             return t[0] * 1000 + t[1] / 1000000;
@@ -21,12 +23,11 @@ const now: () => now.Timestamp = (function () {
     } else {
         return () => +new Date();
     }
-}());
+}();
 
 namespace now {
-    export type Timestamp = number & { '@type': 'now-timestamp' }
+    export type Timestamp = number & { '@type': 'now-timestamp' };
 }
-
 
 function formatTimespan(t: number, includeMsZeroes = true) {
     if (isNaN(t)) return 'n/a';
@@ -45,4 +46,4 @@ function formatTimespan(t: number, includeMsZeroes = true) {
     return `${t.toFixed(0)}ms`;
 }
 
-export { now, formatTimespan };
+export { formatTimespan, now };

@@ -18,7 +18,7 @@ import type { StructureElement } from '../../structure/element.ts';
 import { SortedArray } from '../../../../mol-data/int.ts';
 
 export function pick(query: StructureQuery, pred: QueryFn<any>): StructureQuery {
-    return ctx => {
+    return (ctx) => {
         const sel = query(ctx);
         const ret = StructureSelection.LinearBuilder(ctx.inputStructure);
         ctx.pushCurrentElement();
@@ -33,13 +33,15 @@ export function pick(query: StructureQuery, pred: QueryFn<any>): StructureQuery 
 }
 
 export function first(query: StructureQuery): StructureQuery {
-    return ctx => {
+    return (ctx) => {
         const sel = query(ctx);
         const ret = StructureSelection.LinearBuilder(ctx.inputStructure);
         if (sel.kind === 'singletons') {
             if (sel.structure.elementCount > 0) {
                 const u = sel.structure.units[0];
-                const s = Structure.create([u.getChild(SortedArray.ofSingleton(u.elements[0]))], { parent: ctx.inputStructure });
+                const s = Structure.create([u.getChild(SortedArray.ofSingleton(u.elements[0]))], {
+                    parent: ctx.inputStructure,
+                });
                 ret.add(s);
             }
         } else {
@@ -91,8 +93,12 @@ function getSelectionProperties(ctx: QueryContext, query: StructureQuery, props:
     return set;
 }
 
-export function withSameAtomProperties(query: StructureQuery, propertySource: StructureQuery, props: QueryFn<any>): StructureQuery {
-    return ctx => {
+export function withSameAtomProperties(
+    query: StructureQuery,
+    propertySource: StructureQuery,
+    props: QueryFn<any>,
+): StructureQuery {
+    return (ctx) => {
         const sel = query(ctx);
         const propSet = getSelectionProperties(ctx, propertySource, props);
 
@@ -113,7 +119,7 @@ export function withSameAtomProperties(query: StructureQuery, propertySource: St
 }
 
 export function areIntersectedBy(query: StructureQuery, by: StructureQuery): StructureQuery {
-    return ctx => {
+    return (ctx) => {
         const mask = StructureSelection.unionStructure(by(ctx));
         const ret = StructureSelection.LinearBuilder(ctx.inputStructure);
 
@@ -126,16 +132,16 @@ export function areIntersectedBy(query: StructureQuery, by: StructureQuery): Str
 }
 
 export interface WithinParams {
-    query: StructureQuery,
-    target: StructureQuery,
-    minRadius?: number,
-    maxRadius: number,
-    elementRadius?: QueryFn<number>,
-    invert?: boolean
+    query: StructureQuery;
+    target: StructureQuery;
+    minRadius?: number;
+    maxRadius: number;
+    elementRadius?: QueryFn<number>;
+    invert?: boolean;
 }
 
 export function within(params: WithinParams): StructureQuery {
-    return queryCtx => {
+    return (queryCtx) => {
         const ctx: WithinContext = {
             queryCtx,
             selection: params.query(queryCtx),
@@ -157,13 +163,13 @@ export function within(params: WithinParams): StructureQuery {
 }
 
 interface WithinContext {
-    queryCtx: QueryContext,
-    selection: StructureSelection,
-    target: StructureSelection,
-    minRadius: number,
-    maxRadius: number,
-    invert: boolean,
-    elementRadius: QueryFn<number>
+    queryCtx: QueryContext;
+    selection: StructureSelection;
+    target: StructureSelection;
+    minRadius: number;
+    maxRadius: number;
+    invert: boolean;
+    elementRadius: QueryFn<number>;
 }
 function withinMaxRadiusLookup({ queryCtx, selection, target, maxRadius, invert }: WithinContext) {
     const targetLookup = StructureSelection.unionStructure(target).lookup3d;
@@ -211,13 +217,22 @@ function withinMaxRadius({ queryCtx, selection, target, maxRadius, invert, eleme
     return ret.getSelection();
 }
 
-function withinMinMaxRadius({ queryCtx, selection, target, minRadius, maxRadius, invert, elementRadius }: WithinContext) {
+function withinMinMaxRadius(
+    { queryCtx, selection, target, minRadius, maxRadius, invert, elementRadius }: WithinContext,
+) {
     const targetStructure = StructureSelection.unionStructure(target);
     const ret = StructureSelection.LinearBuilder(queryCtx.inputStructure);
 
     queryCtx.pushCurrentElement();
     StructureSelection.forEach(selection, (s, sI) => {
-        let withinRadius = checkStructureMinMaxDistance(queryCtx, targetStructure, s, minRadius, maxRadius, elementRadius);
+        let withinRadius = checkStructureMinMaxDistance(
+            queryCtx,
+            targetStructure,
+            s,
+            minRadius,
+            maxRadius,
+            elementRadius,
+        );
         if (invert) withinRadius = !withinRadius;
         if (withinRadius) ret.add(s);
         if (sI % 10 === 0) queryCtx.throwIfTimedOut();
@@ -228,10 +243,10 @@ function withinMinMaxRadius({ queryCtx, selection, target, minRadius, maxRadius,
 }
 
 interface IsConnectedToCtx {
-    queryCtx: QueryContext,
-    disjunct: boolean,
-    input: Structure,
-    target: Structure
+    queryCtx: QueryContext;
+    disjunct: boolean;
+    input: Structure;
+    target: Structure;
 }
 
 function checkConnected(ctx: IsConnectedToCtx, structure: Structure) {
@@ -306,15 +321,15 @@ function checkConnected(ctx: IsConnectedToCtx, structure: Structure) {
 }
 
 export interface IsConnectedToParams {
-    query: StructureQuery,
-    target: StructureQuery,
-    bondTest?: QueryFn<boolean>,
-    disjunct: boolean,
-    invert: boolean
+    query: StructureQuery;
+    target: StructureQuery;
+    bondTest?: QueryFn<boolean>;
+    disjunct: boolean;
+    invert: boolean;
 }
 
 export function isConnectedTo({ query, target, disjunct, invert, bondTest }: IsConnectedToParams): StructureQuery {
-    return ctx => {
+    return (ctx) => {
         const targetSel = target(ctx);
         if (StructureSelection.isEmpty(targetSel)) return targetSel;
         const selection = query(ctx);
@@ -324,7 +339,7 @@ export function isConnectedTo({ query, target, disjunct, invert, bondTest }: IsC
             queryCtx: ctx,
             input: ctx.inputStructure,
             disjunct,
-            target: StructureSelection.unionStructure(targetSel)
+            target: StructureSelection.unionStructure(targetSel),
         };
 
         const ret = StructureSelection.LinearBuilder(ctx.inputStructure);

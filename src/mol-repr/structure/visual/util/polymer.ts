@@ -5,9 +5,16 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Unit, type ElementIndex, StructureElement, Bond, Structure, type ResidueIndex } from '../../../../mol-model/structure.ts';
+import {
+    Bond,
+    type ElementIndex,
+    type ResidueIndex,
+    Structure,
+    StructureElement,
+    Unit,
+} from '../../../../mol-model/structure.ts';
 import type { SortedRanges } from '../../../../mol-data/int/sorted-ranges.ts';
-import { OrderedSet, Interval, type SortedArray } from '../../../../mol-data/int.ts';
+import { Interval, OrderedSet, type SortedArray } from '../../../../mol-data/int.ts';
 import { EmptyLoci, type Loci } from '../../../../mol-model/loci.ts';
 import { LocationIterator } from '../../../../mol-geo/util/location-iterator.ts';
 import { PickingId } from '../../../../mol-geo/geometry/picking.ts';
@@ -26,17 +33,23 @@ export const OverhangFactor = 2;
 
 export function getPolymerRanges(unit: Unit): SortedRanges<ElementIndex> {
     switch (unit.kind) {
-        case Unit.Kind.Atomic: return unit.model.atomicRanges.polymerRanges;
-        case Unit.Kind.Spheres: return unit.model.coarseHierarchy.spheres.polymerRanges;
-        case Unit.Kind.Gaussians: return unit.model.coarseHierarchy.gaussians.polymerRanges;
+        case Unit.Kind.Atomic:
+            return unit.model.atomicRanges.polymerRanges;
+        case Unit.Kind.Spheres:
+            return unit.model.coarseHierarchy.spheres.polymerRanges;
+        case Unit.Kind.Gaussians:
+            return unit.model.coarseHierarchy.gaussians.polymerRanges;
     }
 }
 
 export function getGapRanges(unit: Unit): SortedRanges<ElementIndex> {
     switch (unit.kind) {
-        case Unit.Kind.Atomic: return unit.model.atomicRanges.gapRanges;
-        case Unit.Kind.Spheres: return unit.model.coarseHierarchy.spheres.gapRanges;
-        case Unit.Kind.Gaussians: return unit.model.coarseHierarchy.gaussians.gapRanges;
+        case Unit.Kind.Atomic:
+            return unit.model.atomicRanges.gapRanges;
+        case Unit.Kind.Spheres:
+            return unit.model.coarseHierarchy.spheres.gapRanges;
+        case Unit.Kind.Gaussians:
+            return unit.model.coarseHierarchy.gaussians.gapRanges;
     }
 }
 
@@ -108,8 +121,14 @@ export function getPolymerElementLoci(pickingId: PickingId, structureGroup: Stru
     return EmptyLoci;
 }
 
-
-function tryApplyResidueInterval(offset: number, elements: SortedArray<ElementIndex>, traceElementIndex: ArrayLike<ElementIndex | -1>, apply: (interval: Interval) => boolean, r1: ResidueIndex, r2: ResidueIndex) {
+function tryApplyResidueInterval(
+    offset: number,
+    elements: SortedArray<ElementIndex>,
+    traceElementIndex: ArrayLike<ElementIndex | -1>,
+    apply: (interval: Interval) => boolean,
+    r1: ResidueIndex,
+    r2: ResidueIndex,
+) {
     let start = -1, startIdx = -1;
 
     for (let rI = r1; rI <= r2; rI++) {
@@ -141,7 +160,13 @@ function tryApplyResidueInterval(offset: number, elements: SortedArray<ElementIn
     return apply(Interval.ofRange(offset + start, offset + end));
 }
 
-export function eachAtomicUnitTracedElement(offset: number, groupSize: number, elementsSelector: (u: Unit.Atomic) => SortedArray<ElementIndex>, apply: (interval: Interval) => boolean, e: StructureElement.Loci['elements'][0]) {
+export function eachAtomicUnitTracedElement(
+    offset: number,
+    groupSize: number,
+    elementsSelector: (u: Unit.Atomic) => SortedArray<ElementIndex>,
+    apply: (interval: Interval) => boolean,
+    e: StructureElement.Loci['elements'][0],
+) {
     let changed = false;
 
     const { elements } = e.unit;
@@ -180,7 +205,9 @@ export function eachAtomicUnitTracedElement(offset: number, groupSize: number, e
     return changed;
 }
 
-function selectPolymerElements(u: Unit) { return u.polymerElements; }
+function selectPolymerElements(u: Unit) {
+    return u.polymerElements;
+}
 
 /** Mark a polymer element (e.g. part of a cartoon trace) */
 export function eachPolymerElement(loci: Loci, structureGroup: StructureGroup, apply: (interval: Interval) => boolean) {
@@ -223,18 +250,25 @@ export function getPolymerGapElementLoci(pickingId: PickingId, structureGroup: S
         const { structure, group } = structureGroup;
         const unit = group.units[instanceId];
         const unitIndexA = OrderedSet.indexOf(unit.elements, unit.gapElements[groupId]) as StructureElement.UnitIndex;
-        const unitIndexB = OrderedSet.indexOf(unit.elements, unit.gapElements[groupId % 2 ? groupId - 1 : groupId + 1]) as StructureElement.UnitIndex;
+        const unitIndexB = OrderedSet.indexOf(
+            unit.elements,
+            unit.gapElements[groupId % 2 ? groupId - 1 : groupId + 1],
+        ) as StructureElement.UnitIndex;
         if (unitIndexA !== -1 && unitIndexB !== -1) {
             return Bond.Loci(structure, [
                 Bond.Location(structure, unit, unitIndexA, structure, unit, unitIndexB),
-                Bond.Location(structure, unit, unitIndexB, structure, unit, unitIndexA)
+                Bond.Location(structure, unit, unitIndexB, structure, unit, unitIndexA),
             ]);
         }
     }
     return EmptyLoci;
 }
 
-export function eachPolymerGapElement(loci: Loci, structureGroup: StructureGroup, apply: (interval: Interval) => boolean) {
+export function eachPolymerGapElement(
+    loci: Loci,
+    structureGroup: StructureGroup,
+    apply: (interval: Interval) => boolean,
+) {
     let changed = false;
     if (Bond.isLoci(loci)) {
         const { structure, group } = structureGroup;
@@ -259,7 +293,7 @@ export function eachPolymerGapElement(loci: Loci, structureGroup: StructureGroup
         for (const e of loci.elements) {
             const unitIdx = group.unitIndexMap.get(e.unit.id);
             if (unitIdx !== undefined) {
-                OrderedSet.forEach(e.indices, v => {
+                OrderedSet.forEach(e.indices, (v) => {
                     const idx = OrderedSet.indexOf(e.unit.gapElements, e.unit.elements[v]);
                     if (idx !== -1) {
                         if (apply(Interval.ofSingleton(unitIdx * groupCount + idx))) changed = true;

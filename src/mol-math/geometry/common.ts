@@ -6,42 +6,42 @@
  */
 
 import type { OrderedSet } from '../../mol-data/int.ts';
-import { type Mat4, type Tensor, Vec3, type Vec2 } from '../linear-algebra.ts';
+import { type Mat4, type Tensor, type Vec2, Vec3 } from '../linear-algebra.ts';
 import { Box3D } from './primitives/box3d.ts';
 import type { Texture } from '../../mol-gl/webgl/texture.ts';
 
 export interface PositionData {
-    x: ArrayLike<number>,
-    y: ArrayLike<number>,
-    z: ArrayLike<number>,
+    x: ArrayLike<number>;
+    y: ArrayLike<number>;
+    z: ArrayLike<number>;
     /** subset of indices into the x/y/z/radius arrays */
-    indices: OrderedSet,
+    indices: OrderedSet;
     /** optional element radius */
-    radius?: ArrayLike<number>,
+    radius?: ArrayLike<number>;
     /** optional element id */
-    id?: ArrayLike<number>,
+    id?: ArrayLike<number>;
 }
 
 export type DensityData = {
-    transform: Mat4,
-    field: Tensor,
-    idField: Tensor,
-    resolution: number,
-    maxRadius: number,
-}
+    transform: Mat4;
+    field: Tensor;
+    idField: Tensor;
+    resolution: number;
+    maxRadius: number;
+};
 
 export type DensityTextureData = {
-    transform: Mat4,
-    texture: Texture,
-    bbox: Box3D,
-    gridDim: Vec3,
-    gridTexDim: Vec3
-    gridTexScale: Vec2
-}
+    transform: Mat4;
+    texture: Texture;
+    bbox: Box3D;
+    gridDim: Vec3;
+    gridTexDim: Vec3;
+    gridTexScale: Vec2;
+};
 
 export interface RegularGrid3d {
-    box: Box3D,
-    dimensions: Vec3
+    box: Box3D;
+    dimensions: Vec3;
 }
 
 export function getRegularGrid3dDelta({ box, dimensions }: RegularGrid3d) {

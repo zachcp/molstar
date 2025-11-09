@@ -7,10 +7,10 @@
 
 import { Column, ColumnHelpers } from '../../../../../mol-data/db.ts';
 import type { Tokens } from '../tokenizer.ts';
-import { parseInt as fastParseInt, parseFloat as fastParseFloat } from '../number-parser.ts';
+import { parseFloat as fastParseFloat, parseInt as fastParseInt } from '../number-parser.ts';
 
 export function TokenColumnProvider(tokens: Tokens) {
-    return function<T extends Column.Schema>(type: T) {
+    return function <T extends Column.Schema>(type: T) {
         return TokenColumn(tokens, type);
     };
 }
@@ -19,12 +19,11 @@ export function TokenColumn<T extends Column.Schema>(tokens: Tokens, schema: T):
     const { data, indices, count: rowCount } = tokens;
     const { valueType: type } = schema;
 
-    const value: Column<T['T']>['value'] =
-        type === 'str'
-            ? row => data.substring(indices[2 * row], indices[2 * row + 1])
-            : type === 'int'
-                ? row => fastParseInt(data, indices[2 * row], indices[2 * row + 1]) || 0
-                : row => fastParseFloat(data, indices[2 * row], indices[2 * row + 1]) || 0;
+    const value: Column<T['T']>['value'] = type === 'str'
+        ? (row) => data.substring(indices[2 * row], indices[2 * row + 1])
+        : type === 'int'
+        ? (row) => fastParseInt(data, indices[2 * row], indices[2 * row + 1]) || 0
+        : (row) => fastParseFloat(data, indices[2 * row], indices[2 * row + 1]) || 0;
 
     return {
         schema: schema,
@@ -32,9 +31,9 @@ export function TokenColumn<T extends Column.Schema>(tokens: Tokens, schema: T):
         isDefined: true,
         rowCount,
         value,
-        valueKind: row => Column.ValueKinds.Present,
-        toArray: params => ColumnHelpers.createAndFillArray(rowCount, value, params),
-        areValuesEqual: areValuesEqualProvider(tokens)
+        valueKind: (row) => Column.ValueKinds.Present,
+        toArray: (params) => ColumnHelpers.createAndFillArray(rowCount, value, params),
+        areValuesEqual: areValuesEqualProvider(tokens),
     };
 }
 

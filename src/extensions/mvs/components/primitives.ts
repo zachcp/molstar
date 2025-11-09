@@ -8,7 +8,11 @@
 import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 import { Lines } from '../../../mol-geo/geometry/lines/lines.ts';
 import { LinesBuilder } from '../../../mol-geo/geometry/lines/lines-builder.ts';
-import { addFixedCountDashedCylinder, addSimpleCylinder, type BasicCylinderProps } from '../../../mol-geo/geometry/mesh/builder/cylinder.ts';
+import {
+    addFixedCountDashedCylinder,
+    addSimpleCylinder,
+    type BasicCylinderProps,
+} from '../../../mol-geo/geometry/mesh/builder/cylinder.ts';
 import { addEllipsoid } from '../../../mol-geo/geometry/mesh/builder/ellipsoid.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
@@ -42,15 +46,19 @@ import { collectMVSReferences, decodeColor, isDefined } from '../helpers/utils.t
 import { addParamDefaults } from '../tree/generic/params-schema.ts';
 import type { MolstarNode, MolstarNodeParams, MolstarSubtree } from '../tree/molstar/molstar-tree.ts';
 import { type MVSNode, MVSTreeSchema } from '../tree/mvs/mvs-tree.ts';
-import { isComponentExpression, isPrimitiveComponentExpressions, isVector3, type PrimitivePositionT } from '../tree/mvs/param-types.ts';
+import {
+    isComponentExpression,
+    isPrimitiveComponentExpressions,
+    isVector3,
+    type PrimitivePositionT,
+} from '../tree/mvs/param-types.ts';
 import { MVSTransform } from './annotation-structure-component.ts';
 
+type PrimitivesParams = MolstarNode<'primitives'>['params'];
 
-type PrimitivesParams = MolstarNode<'primitives'>['params']
-
-type _PrimitiveParams = MolstarNode<'primitive'>['params']
-type PrimitiveKind = _PrimitiveParams['kind']
-type PrimitiveParams<T extends PrimitiveKind = PrimitiveKind> = Extract<_PrimitiveParams, { kind: T }>
+type _PrimitiveParams = MolstarNode<'primitive'>['params'];
+type PrimitiveKind = _PrimitiveParams['kind'];
+type PrimitiveParams<T extends PrimitiveKind = PrimitiveKind> = Extract<_PrimitiveParams, { kind: T }>;
 
 export function getPrimitiveStructureRefs(primitives: MolstarSubtree<'primitives'>) {
     const refs = new Set<string>();
@@ -62,10 +70,14 @@ export function getPrimitiveStructureRefs(primitives: MolstarSubtree<'primitives
     return refs;
 }
 
-export class MVSPrimitivesData extends SO.Create<PrimitiveBuilderContext>({ name: 'Primitive Data', typeClass: 'Object' }) { }
-export class MVSPrimitiveShapes extends SO.Create<{ mesh?: Shape<Mesh>, labels?: Shape<Text> }>({ name: 'Primitive Shapes', typeClass: 'Object' }) { }
+export class MVSPrimitivesData
+    extends SO.Create<PrimitiveBuilderContext>({ name: 'Primitive Data', typeClass: 'Object' }) {}
+export class MVSPrimitiveShapes extends SO.Create<{ mesh?: Shape<Mesh>; labels?: Shape<Text> }>({
+    name: 'Primitive Shapes',
+    typeClass: 'Object',
+}) {}
 
-export type MVSDownloadPrimitiveData = typeof MVSDownloadPrimitiveData
+export type MVSDownloadPrimitiveData = typeof MVSDownloadPrimitiveData;
 export const MVSDownloadPrimitiveData = MVSTransform({
     name: 'mvs-download-primitive-data',
     display: { name: 'MVS Primitives' },
@@ -73,11 +85,11 @@ export const MVSDownloadPrimitiveData = MVSTransform({
     to: MVSPrimitivesData,
     params: {
         uri: PD.Url('', { isHidden: true }),
-        format: PD.Text<'mvs-node-json'>('mvs-node-json', { isHidden: true })
+        format: PD.Text<'mvs-node-json'>('mvs-node-json', { isHidden: true }),
     },
 })({
     apply({ a, params, cache }, plugin: PluginContext) {
-        return Task.create('Download Primitive Data', async ctx => {
+        return Task.create('Download Primitive Data', async (ctx) => {
             const url = Asset.getUrlAsset(plugin.managers.asset, params.uri);
             const asset = await plugin.managers.asset.resolve(url, 'string').runInContext(ctx);
             const node = JSON.parse(StringLike.toString(asset.data)) as MolstarSubtree<'primitives'>;
@@ -100,15 +112,15 @@ export const MVSDownloadPrimitiveData = MVSTransform({
 
 /* Cannot use MolstarSubtree<'primitives'>> because information about type of children would be lost and cause TypeScript errors in dependent code */
 interface PrimitivesSubtree {
-    kind: 'primitives',
-    params: MolstarNodeParams<'primitives'>,
+    kind: 'primitives';
+    params: MolstarNodeParams<'primitives'>;
     children?: {
-        kind: 'primitive',
-        params: MolstarNodeParams<'primitive'>,
-    }[],
+        kind: 'primitive';
+        params: MolstarNodeParams<'primitive'>;
+    }[];
 }
 
-export type MVSInlinePrimitiveData = typeof MVSInlinePrimitiveData
+export type MVSInlinePrimitiveData = typeof MVSInlinePrimitiveData;
 export const MVSInlinePrimitiveData = MVSTransform({
     name: 'mvs-inline-primitive-data',
     display: { name: 'MVS Primitives' },
@@ -131,25 +143,27 @@ export const MVSInlinePrimitiveData = MVSTransform({
             positionCache: new Map(),
             instances: getInstances(params.node.params),
         }, { label: 'Primitive Data' });
-    }
+    },
 });
 
-export type MVSBuildPrimitiveShape = typeof MVSBuildPrimitiveShape
+export type MVSBuildPrimitiveShape = typeof MVSBuildPrimitiveShape;
 export const MVSBuildPrimitiveShape = MVSTransform({
     name: 'mvs-build-primitive-shape',
     display: { name: 'MVS Primitives' },
     from: MVSPrimitivesData,
     to: SO.Shape.Provider,
     params: {
-        kind: PD.Text<'mesh' | 'labels' | 'lines'>('mesh')
-    }
+        kind: PD.Text<'mesh' | 'labels' | 'lines'>('mesh'),
+    },
 })({
     apply({ a, params, dependencies }) {
         const structureRefs = dependencies ? collectMVSReferences([SO.Molecule.Structure], dependencies) : {};
         const context: PrimitiveBuilderContext = { ...a.data, structureRefs };
 
         const snapshotKey = { snapshotKey: { ...SnapshotKey, defaultValue: a.data.options?.snapshot_key ?? '' } };
-        const markdownCommands = { markdownCommands: { ...MarkdownCommands, defaultValue: a.data.node?.custom?.molstar_markdown_commands } };
+        const markdownCommands = {
+            markdownCommands: { ...MarkdownCommands, defaultValue: a.data.node?.custom?.molstar_markdown_commands },
+        };
 
         const label = capitalize(params.kind);
         if (params.kind === 'mesh') {
@@ -210,7 +224,7 @@ export const MVSBuildPrimitiveShape = MVSTransform({
         }
 
         return StateObject.Null;
-    }
+    },
 });
 
 export const MVSShapeRepresentation3D = MVSTransform({
@@ -220,13 +234,13 @@ export const MVSShapeRepresentation3D = MVSTransform({
     to: SO.Shape.Representation3D,
     params: (a, ctx: PluginContext) => {
         return a ? a.data.params : BaseGeometry.Params;
-    }
+    },
 })({
     canAutoUpdate() {
         return true;
     },
     apply({ a, params }) {
-        return Task.create('Shape Representation', async ctx => {
+        return Task.create('Shape Representation', async (ctx) => {
             const props = { ...PD.getDefaultValues(a.data.params), ...params };
             const repr = ShapeRepresentation(a.data.getShape, a.data.geometryUtils);
             await repr.createOrUpdate(props, a.data.data).runInContext(ctx);
@@ -240,7 +254,7 @@ export const MVSShapeRepresentation3D = MVSTransform({
         });
     },
     update({ a, b, newParams }) {
-        return Task.create('Shape Representation', async ctx => {
+        return Task.create('Shape Representation', async (ctx) => {
             const props = { ...b.data.repr.props, ...newParams };
             await b.data.repr.createOrUpdate(props, a.data.data).runInContext(ctx);
             b.data.sourceData = a.data;
@@ -252,10 +266,14 @@ export const MVSShapeRepresentation3D = MVSTransform({
 
             return StateTransformer.UpdateResult.Updated;
         });
-    }
+    },
 });
 
-const SnapshotKey = PD.Text('', { isEssential: true, disableInteractiveUpdates: true, description: 'Activate the snapshot with the provided key when clicking on the label' });
+const SnapshotKey = PD.Text('', {
+    isEssential: true,
+    disableInteractiveUpdates: true,
+    description: 'Activate the snapshot with the provided key when clicking on the label',
+});
 const MarkdownCommands = PD.Value<any>(undefined, { isHidden: true });
 
 /* **************************************************** */
@@ -313,7 +331,11 @@ interface PrimitiveBuilderContext {
 
 function printEmptySelectionWarning(ctx: PrimitiveBuilderContext, position: PrimitivePositionT): void {
     if (!ctx.emptySelectionWarningPrinted) {
-        console.warn('Some primitives use positions which refer to empty substructure, not showing these primitives.', position, '(There may be more)');
+        console.warn(
+            'Some primitives use positions which refer to empty substructure, not showing these primitives.',
+            position,
+            '(There may be more)',
+        );
         ctx.emptySelectionWarningPrinted = true;
     }
 }
@@ -348,16 +370,31 @@ const DefaultLabelParams = PD.withDefaults(Text.Params, BaseLabelProps);
 
 interface PrimitiveBuilder {
     builders: {
-        mesh?: (context: PrimitiveBuilderContext, state: MeshBuilderState, node: MVSNode<'primitive'>, params: any) => void,
-        line?: (context: PrimitiveBuilderContext, state: LineBuilderState, node: MVSNode<'primitive'>, params: any) => void,
-        label?: (context: PrimitiveBuilderContext, state: LabelBuilderState, node: MVSNode<'primitive'>, params: any) => void,
-    }
+        mesh?: (
+            context: PrimitiveBuilderContext,
+            state: MeshBuilderState,
+            node: MVSNode<'primitive'>,
+            params: any,
+        ) => void;
+        line?: (
+            context: PrimitiveBuilderContext,
+            state: LineBuilderState,
+            node: MVSNode<'primitive'>,
+            params: any,
+        ) => void;
+        label?: (
+            context: PrimitiveBuilderContext,
+            state: LabelBuilderState,
+            node: MVSNode<'primitive'>,
+            params: any,
+        ) => void;
+    };
     isApplicable?: {
-        mesh?: ((primitive: any, context: PrimitiveBuilderContext) => boolean),
-        line?: ((primitive: any, context: PrimitiveBuilderContext) => boolean),
-        label?: ((primitive: any, context: PrimitiveBuilderContext) => boolean),
-    },
-    resolveRefs?: (params: any, refs: Set<string>) => void,
+        mesh?: (primitive: any, context: PrimitiveBuilderContext) => boolean;
+        line?: (primitive: any, context: PrimitiveBuilderContext) => boolean;
+        label?: (primitive: any, context: PrimitiveBuilderContext) => boolean;
+    };
+    resolveRefs?: (params: any, refs: Set<string>) => void;
 }
 
 const Builders: Record<PrimitiveParams['kind'], PrimitiveBuilder> = {
@@ -442,12 +479,11 @@ const Builders: Record<PrimitiveParams['kind'], PrimitiveBuilder> = {
         resolveRefs: (params: PrimitiveParams<'box'>, refs: Set<string>) => {
             addRef(params.center, refs);
         },
-    }
+    },
 };
 
-
 function getPrimitives(primitives: MolstarSubtree<'primitives'>) {
-    return (primitives.children ?? []).filter(c => c.kind === 'primitive') as MolstarNode<'primitive'>[];
+    return (primitives.children ?? []).filter((c) => c.kind === 'primitive') as MolstarNode<'primitive'>[];
 }
 
 function addRef(position: PrimitivePositionT, refs: Set<string>) {
@@ -474,7 +510,11 @@ function hasPrimitiveKind(context: PrimitiveBuilderContext, kind: 'mesh' | 'line
 /** Save resolved position into `targetPosition`.
  * Return `true` if the resolved position is defined (i.e. vector or non-empty selection);
  * return `false` if the resolved position is not defined (i.e. empty selection). */
-function resolveBasePosition(context: PrimitiveBuilderContext, position: PrimitivePositionT, targetPosition: Vec3): boolean {
+function resolveBasePosition(
+    context: PrimitiveBuilderContext,
+    position: PrimitivePositionT,
+    targetPosition: Vec3,
+): boolean {
     return resolvePosition(context, position, targetPosition, undefined, undefined);
 }
 
@@ -484,7 +524,13 @@ const _EmptyBox = Box3D.zero();
 /** Save resolved position into `targetPosition`, `targetSphere`, `targetBox`.
  * Return `true` if the resolved position is defined (i.e. vector or non-empty selection);
  * return `false` if the resolved position is not defined (i.e. empty selection). */
-function resolvePosition(context: PrimitiveBuilderContext, position: PrimitivePositionT, targetPosition: Vec3 | undefined, targetSphere: Sphere3D | undefined, targetBox: Box3D | undefined): boolean {
+function resolvePosition(
+    context: PrimitiveBuilderContext,
+    position: PrimitivePositionT,
+    targetPosition: Vec3 | undefined,
+    targetSphere: Sphere3D | undefined,
+    targetBox: Box3D | undefined,
+): boolean {
     let expr: Expression | undefined;
     let pivotRef: string | undefined;
 
@@ -552,7 +598,7 @@ function resolvePosition(context: PrimitiveBuilderContext, position: PrimitivePo
 
 function getInstances(options: PrimitivesParams | undefined): Mat4[] | undefined {
     if (!options?.instances?.length) return undefined;
-    return options.instances.map(i => Mat4.fromArray(Mat4(), i, 0));
+    return options.instances.map((i) => Mat4.fromArray(Mat4(), i, 0));
 }
 
 function buildPrimitiveMesh(context: PrimitiveBuilderContext, prev?: Mesh): Shape<Mesh> {
@@ -623,11 +669,20 @@ function buildPrimitiveLines(context: PrimitiveBuilderContext, prev?: Lines): Sh
     );
 }
 
-function buildPrimitiveLabels(context: PrimitiveBuilderContext, prev: Text | undefined, props: PD.Values<Text.Params>): Shape<Text> {
-    const labelsBuilder = TextBuilder.create({
-        ...BaseLabelProps,
-        ...props,
-    }, 1024, 1024, prev);
+function buildPrimitiveLabels(
+    context: PrimitiveBuilderContext,
+    prev: Text | undefined,
+    props: PD.Values<Text.Params>,
+): Shape<Text> {
+    const labelsBuilder = TextBuilder.create(
+        {
+            ...BaseLabelProps,
+            ...props,
+        },
+        1024,
+        1024,
+        prev,
+    );
     const state: LabelBuilderState = { groups: new GroupManager(), labels: labelsBuilder };
 
     for (const c of context.primitives) {
@@ -658,7 +713,13 @@ function buildPrimitiveLabels(context: PrimitiveBuilderContext, prev: Text | und
     );
 }
 
-function addMeshFaces(context: PrimitiveBuilderContext, groups: GroupManager, node: MVSNode<'primitive'>, params: PrimitiveParams<'mesh'>, addFace: (mvsGroup: number, builderGroup: number, a: Vec3, b: Vec3, c: Vec3) => void) {
+function addMeshFaces(
+    context: PrimitiveBuilderContext,
+    groups: GroupManager,
+    node: MVSNode<'primitive'>,
+    params: PrimitiveParams<'mesh'>,
+    addFace: (mvsGroup: number, builderGroup: number, a: Vec3, b: Vec3, c: Vec3) => void,
+) {
     const a = Vec3.zero();
     const b = Vec3.zero();
     const c = Vec3.zero();
@@ -679,7 +740,12 @@ function addMeshFaces(context: PrimitiveBuilderContext, groups: GroupManager, no
     }
 }
 
-function addMesh(context: PrimitiveBuilderContext, { groups, mesh }: MeshBuilderState, node: MVSNode<'primitive'>, params: PrimitiveParams<'mesh'>) {
+function addMesh(
+    context: PrimitiveBuilderContext,
+    { groups, mesh }: MeshBuilderState,
+    node: MVSNode<'primitive'>,
+    params: PrimitiveParams<'mesh'>,
+) {
     if (!params.show_triangles) return;
 
     const { group_colors, group_tooltips, color, tooltip } = params;
@@ -693,7 +759,12 @@ function addMesh(context: PrimitiveBuilderContext, { groups, mesh }: MeshBuilder
     // this could be slightly improved by only updating color and tooltip once per group instead of once per triangle
 }
 
-function addMeshWireframe(context: PrimitiveBuilderContext, { groups, lines }: LineBuilderState, node: MVSNode<'primitive'>, params: PrimitiveParams<'mesh'>) {
+function addMeshWireframe(
+    context: PrimitiveBuilderContext,
+    { groups, lines }: LineBuilderState,
+    node: MVSNode<'primitive'>,
+    params: PrimitiveParams<'mesh'>,
+) {
     if (!params.show_wireframe) return;
     const width = params.wireframe_width;
 
@@ -709,7 +780,12 @@ function addMeshWireframe(context: PrimitiveBuilderContext, { groups, lines }: L
     });
 }
 
-function addLines(context: PrimitiveBuilderContext, { groups, lines }: LineBuilderState, node: MVSNode<'primitive'>, params: PrimitiveParams<'lines'>) {
+function addLines(
+    context: PrimitiveBuilderContext,
+    { groups, lines }: LineBuilderState,
+    node: MVSNode<'primitive'>,
+    params: PrimitiveParams<'lines'>,
+) {
     const a = Vec3.zero();
     const b = Vec3.zero();
 
@@ -741,7 +817,13 @@ function resolveLineRefs(params: PrimitiveParams<'tube' | 'distance_measurement'
 const lStart = Vec3.zero();
 const lEnd = Vec3.zero();
 
-function addTubeMesh(context: PrimitiveBuilderContext, { groups, mesh }: MeshBuilderState, node: MVSNode<'primitive'>, params: PrimitiveParams<'tube'>, options?: { skipResolvePosition?: boolean }) {
+function addTubeMesh(
+    context: PrimitiveBuilderContext,
+    { groups, mesh }: MeshBuilderState,
+    node: MVSNode<'primitive'>,
+    params: PrimitiveParams<'tube'>,
+    options?: { skipResolvePosition?: boolean },
+) {
     if (!options?.skipResolvePosition) {
         const startDefined = resolveBasePosition(context, params.start, lStart);
         const endDefined = resolveBasePosition(context, params.end, lEnd);
@@ -777,7 +859,12 @@ const ArrowState = {
     endCap: Vec3.zero(),
 };
 
-function addArrowMesh(context: PrimitiveBuilderContext, { groups, mesh }: MeshBuilderState, node: MVSNode<'primitive'>, params: PrimitiveParams<'arrow'>) {
+function addArrowMesh(
+    context: PrimitiveBuilderContext,
+    { groups, mesh }: MeshBuilderState,
+    node: MVSNode<'primitive'>,
+    params: PrimitiveParams<'arrow'>,
+) {
     const startDefined = resolveBasePosition(context, params.start, ArrowState.start);
     if (!startDefined) return;
 
@@ -854,10 +941,13 @@ function addArrowMesh(context: PrimitiveBuilderContext, { groups, mesh }: MeshBu
     }
 }
 
-
 /** Return distance in angstroms, or `undefined` if any of the endpoints corresponds to empty substructure.
  * This function also sets `lStart`, `lEnd` globals. */
-function computeDistance(context: PrimitiveBuilderContext, start: PrimitivePositionT, end: PrimitivePositionT): number | undefined {
+function computeDistance(
+    context: PrimitiveBuilderContext,
+    start: PrimitivePositionT,
+    end: PrimitivePositionT,
+): number | undefined {
     const startDefined = resolveBasePosition(context, start, lStart);
     const endDefined = resolveBasePosition(context, end, lEnd);
     if (startDefined && endDefined) return Vec3.distance(lStart, lEnd);
@@ -871,7 +961,12 @@ function distanceLabel(distance: number, params: PrimitiveParams<'distance_measu
     else return distStr;
 }
 
-function addDistanceMesh(context: PrimitiveBuilderContext, state: MeshBuilderState, node: MVSNode<'primitive'>, params: PrimitiveParams<'distance_measurement'>) {
+function addDistanceMesh(
+    context: PrimitiveBuilderContext,
+    state: MeshBuilderState,
+    node: MVSNode<'primitive'>,
+    params: PrimitiveParams<'distance_measurement'>,
+) {
     const distance = computeDistance(context, params.start, params.end); // sets lStart, lEnd
     if (distance === undefined) return; // empty substructure in measurement
     const tooltip = distanceLabel(distance, params);
@@ -880,7 +975,12 @@ function addDistanceMesh(context: PrimitiveBuilderContext, state: MeshBuilderSta
 
 const labelPos = Vec3.zero();
 
-function addDistanceLabel(context: PrimitiveBuilderContext, state: LabelBuilderState, node: MVSNode<'primitive'>, params: PrimitiveParams<'distance_measurement'>) {
+function addDistanceLabel(
+    context: PrimitiveBuilderContext,
+    state: LabelBuilderState,
+    node: MVSNode<'primitive'>,
+    params: PrimitiveParams<'distance_measurement'>,
+) {
     const { labels, groups } = state;
     const dist = computeDistance(context, params.start, params.end); // sets lStart, lEnd
     if (dist === undefined) return; // empty substructure in measurement
@@ -901,7 +1001,6 @@ function addDistanceLabel(context: PrimitiveBuilderContext, state: LabelBuilderS
 
     labels.add(distanceLabel(dist, params), labelPos[0], labelPos[1], labelPos[2], 1.05 * (params.radius), 1, group);
 }
-
 
 const AngleState = {
     isDefined: false,
@@ -928,7 +1027,9 @@ function syncAngleState(context: PrimitiveBuilderContext, params: PrimitiveParam
     const value = radToDeg(Vec3.angle(AngleState.ba, AngleState.bc));
 
     const angle = `${round(value, 2)}\u00B0`;
-    AngleState.label = typeof params.label_template === 'string' ? params.label_template.replace('{{angle}}', angle) : angle;
+    AngleState.label = typeof params.label_template === 'string'
+        ? params.label_template.replace('{{angle}}', angle)
+        : angle;
 
     if (typeof params.section_radius === 'number') {
         AngleState.radius = params.section_radius;
@@ -940,7 +1041,12 @@ function syncAngleState(context: PrimitiveBuilderContext, params: PrimitiveParam
     }
 }
 
-function addAngleMesh(context: PrimitiveBuilderContext, state: MeshBuilderState, node: MVSNode<'primitive'>, params: PrimitiveParams<'angle_measurement'>) {
+function addAngleMesh(
+    context: PrimitiveBuilderContext,
+    state: MeshBuilderState,
+    node: MVSNode<'primitive'>,
+    params: PrimitiveParams<'angle_measurement'>,
+) {
     syncAngleState(context, params);
     if (!AngleState.isDefined) return; // empty substructure in measurement
 
@@ -990,7 +1096,12 @@ function addAngleMesh(context: PrimitiveBuilderContext, state: MeshBuilderState,
     }
 }
 
-function addAngleLabel(context: PrimitiveBuilderContext, state: LabelBuilderState, node: MVSNode<'primitive'>, params: PrimitiveParams<'angle_measurement'>) {
+function addAngleLabel(
+    context: PrimitiveBuilderContext,
+    state: LabelBuilderState,
+    node: MVSNode<'primitive'>,
+    params: PrimitiveParams<'angle_measurement'>,
+) {
     const { labels, groups } = state;
     syncAngleState(context, params);
     if (!AngleState.isDefined) return; // empty substructure in measurement
@@ -1028,9 +1139,20 @@ const PrimitiveLabelState = {
     sphere: Sphere3D.zero(),
 };
 
-function addPrimitiveLabel(context: PrimitiveBuilderContext, state: LabelBuilderState, node: MVSNode<'primitive'>, params: PrimitiveParams<'label'>) {
+function addPrimitiveLabel(
+    context: PrimitiveBuilderContext,
+    state: LabelBuilderState,
+    node: MVSNode<'primitive'>,
+    params: PrimitiveParams<'label'>,
+) {
     const { labels, groups } = state;
-    const positionDefined = resolvePosition(context, params.position, PrimitiveLabelState.position, PrimitiveLabelState.sphere, undefined);
+    const positionDefined = resolvePosition(
+        context,
+        params.position,
+        PrimitiveLabelState.position,
+        PrimitiveLabelState.sphere,
+        undefined,
+    );
     if (!positionDefined) return;
 
     const group = groups.allocateSingle(node);
@@ -1038,12 +1160,20 @@ function addPrimitiveLabel(context: PrimitiveBuilderContext, state: LabelBuilder
     groups.updateSize(group, params.label_size);
 
     const offset = PrimitiveLabelState.sphere.radius + params.label_offset;
-    labels.add(params.text, PrimitiveLabelState.position[0], PrimitiveLabelState.position[1], PrimitiveLabelState.position[2], offset, 1, group);
+    labels.add(
+        params.text,
+        PrimitiveLabelState.position[0],
+        PrimitiveLabelState.position[1],
+        PrimitiveLabelState.position[2],
+        offset,
+        1,
+        group,
+    );
 }
 
 const circleCache = new Map<string, Primitive>();
 
-function getCircle(options: { thetaStart?: number, thetaEnd?: number }) {
+function getCircle(options: { thetaStart?: number; thetaEnd?: number }) {
     const key = JSON.stringify(options);
     if (circleCache.has(key)) return circleCache.get(key)!;
     const thetaLength = (options.thetaEnd ?? 2 * Math.PI) - (options.thetaStart ?? 0);
@@ -1073,8 +1203,12 @@ const EllipseState = {
     xform: Mat4.identity(),
 };
 
-
-function addEllipseMesh(context: PrimitiveBuilderContext, state: MeshBuilderState, node: MVSNode<'primitive'>, params: PrimitiveParams<'ellipse'>) {
+function addEllipseMesh(
+    context: PrimitiveBuilderContext,
+    state: MeshBuilderState,
+    node: MVSNode<'primitive'>,
+    params: PrimitiveParams<'ellipse'>,
+) {
     // Unit circle in the XZ plane (Y up)
     // X = minor axis, Y = normal, Z = major axis
 
@@ -1085,7 +1219,13 @@ function addEllipseMesh(context: PrimitiveBuilderContext, state: MeshBuilderStat
     if (!centerDefined) return;
 
     if (params.major_axis_endpoint) {
-        const endpointDefined = resolvePosition(context, params.major_axis_endpoint, EllipseState.majorPos, undefined, undefined);
+        const endpointDefined = resolvePosition(
+            context,
+            params.major_axis_endpoint,
+            EllipseState.majorPos,
+            undefined,
+            undefined,
+        );
         if (!endpointDefined) return;
         Vec3.sub(EllipseState.majorAxis, EllipseState.majorPos, EllipseState.centerPos);
     } else {
@@ -1093,7 +1233,13 @@ function addEllipseMesh(context: PrimitiveBuilderContext, state: MeshBuilderStat
     }
 
     if (params.minor_axis_endpoint) {
-        const endpointDefined = resolvePosition(context, params.minor_axis_endpoint, EllipseState.minorPos, undefined, undefined);
+        const endpointDefined = resolvePosition(
+            context,
+            params.minor_axis_endpoint,
+            EllipseState.minorPos,
+            undefined,
+            undefined,
+        );
         if (!endpointDefined) return;
         Vec3.sub(EllipseState.minorAxis, EllipseState.minorPos, EllipseState.centerPos);
     } else {
@@ -1147,13 +1293,29 @@ const EllipsoidState = {
     up: Vec3.zero(),
 };
 
-
-function addEllipsoidMesh(context: PrimitiveBuilderContext, state: MeshBuilderState, node: MVSNode<'primitive'>, params: PrimitiveParams<'ellipsoid'>) {
-    const centerDefined = resolvePosition(context, params.center, EllipsoidState.centerPos, EllipsoidState.sphere, undefined);
+function addEllipsoidMesh(
+    context: PrimitiveBuilderContext,
+    state: MeshBuilderState,
+    node: MVSNode<'primitive'>,
+    params: PrimitiveParams<'ellipsoid'>,
+) {
+    const centerDefined = resolvePosition(
+        context,
+        params.center,
+        EllipsoidState.centerPos,
+        EllipsoidState.sphere,
+        undefined,
+    );
     if (!centerDefined) return;
 
     if (params.major_axis_endpoint) {
-        const endpointDefined = resolvePosition(context, params.major_axis_endpoint, EllipsoidState.majorPos, undefined, undefined);
+        const endpointDefined = resolvePosition(
+            context,
+            params.major_axis_endpoint,
+            EllipsoidState.majorPos,
+            undefined,
+            undefined,
+        );
         if (!endpointDefined) return;
         Vec3.sub(EllipsoidState.majorAxis, EllipsoidState.majorPos, EllipsoidState.centerPos);
     } else if (params.major_axis) {
@@ -1163,7 +1325,13 @@ function addEllipsoidMesh(context: PrimitiveBuilderContext, state: MeshBuilderSt
     }
 
     if (params.minor_axis_endpoint) {
-        const endpointDefined = resolvePosition(context, params.minor_axis_endpoint, EllipsoidState.minorPos, undefined, undefined);
+        const endpointDefined = resolvePosition(
+            context,
+            params.minor_axis_endpoint,
+            EllipsoidState.minorPos,
+            undefined,
+            undefined,
+        );
         if (!endpointDefined) return;
         Vec3.sub(EllipsoidState.minorAxis, EllipsoidState.minorPos, EllipsoidState.centerPos);
     } else if (params.minor_axis) {
@@ -1204,7 +1372,6 @@ function addEllipsoidMesh(context: PrimitiveBuilderContext, state: MeshBuilderSt
     addEllipsoid(mesh, EllipsoidState.centerPos, EllipsoidState.up, EllipsoidState.minorAxis, EllipsoidState.radius, 3);
 }
 
-
 const BoxState = {
     center: Vec3.zero(),
     boundary: Box3D.zero(),
@@ -1215,7 +1382,12 @@ const BoxState = {
     xform: Mat4.identity(),
 };
 
-function addBoxMesh(context: PrimitiveBuilderContext, state: MeshBuilderState, node: MVSNode<'primitive'>, params: PrimitiveParams<'box'>) {
+function addBoxMesh(
+    context: PrimitiveBuilderContext,
+    state: MeshBuilderState,
+    node: MVSNode<'primitive'>,
+    params: PrimitiveParams<'box'>,
+) {
     if (!params.show_edges && !params.show_faces) return;
 
     const positionDefined = resolvePosition(context, params.center, BoxState.center, undefined, BoxState.boundary);

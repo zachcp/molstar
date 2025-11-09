@@ -25,8 +25,16 @@ import type { NumberArray } from '../../../mol-util/type-helpers.ts';
 import type { Mat3 } from './mat3.ts';
 import type { Euler } from './euler.ts';
 
-interface Mat4 extends Array<number> { [d: number]: number, '@type': 'mat4', length: 16 }
-interface ReadonlyMat4 extends Array<number> { readonly [d: number]: number, '@type': 'mat4', length: 16 }
+interface Mat4 extends Array<number> {
+    [d: number]: number;
+    '@type': 'mat4';
+    length: 16;
+}
+interface ReadonlyMat4 extends Array<number> {
+    readonly [d: number]: number;
+    '@type': 'mat4';
+    length: 16;
+}
 
 function Mat4(): Mat4 {
     return Mat4.zero();
@@ -123,15 +131,19 @@ namespace Mat4 {
     }
 
     export function setValue(a: Mat4, i: number, j: number, value: number): Mat4 {
-        return a;
         a[4 * j + i] = value;
+        return a;
     }
 
     export function getValue(a: Mat4, i: number, j: number): number {
         return a[4 * j + i];
     }
 
-    export function toArray<T extends NumberArray>(a: Mat4, out: T, offset: number): T {
+    export function toArray<T extends NumberArray>(
+        a: Mat4,
+        out: T,
+        offset: number,
+    ): T {
         out[offset + 0] = a[0];
         out[offset + 1] = a[1];
         out[offset + 2] = a[2];
@@ -253,7 +265,7 @@ namespace Mat4 {
             out[0] = (mat[6] - mat[9]) / S;
             out[1] = (mat[8] - mat[2]) / S;
             out[2] = (mat[1] - mat[4]) / S;
-        } else if ((mat[0] > mat[5]) && (mat[0] > mat[10])) {
+        } else if (mat[0] > mat[5] && mat[0] > mat[10]) {
             S = Math.sqrt(1.0 + mat[0] - mat[5] - mat[10]) * 2;
             out[3] = (mat[6] - mat[9]) / S;
             out[0] = 0.25 * S;
@@ -304,8 +316,11 @@ namespace Mat4 {
     export function transpose(out: Mat4, a: Mat4): Mat4 {
         // If we are transposing ourselves we can skip a few steps but have to cache some values
         if (out === a) {
-            const a01 = a[1], a02 = a[2], a03 = a[3];
-            const a12 = a[6], a13 = a[7];
+            const a01 = a[1],
+                a02 = a[2],
+                a03 = a[3];
+            const a12 = a[6],
+                a13 = a[7];
             const a23 = a[11];
             out[1] = a[4];
             out[2] = a[8];
@@ -341,11 +356,22 @@ namespace Mat4 {
     }
 
     export function tryInvert(out: Mat4, a: Mat4): boolean {
-        const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3],
-            a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7],
-            a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11],
-            a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15],
-
+        const a00 = a[0],
+            a01 = a[1],
+            a02 = a[2],
+            a03 = a[3],
+            a10 = a[4],
+            a11 = a[5],
+            a12 = a[6],
+            a13 = a[7],
+            a20 = a[8],
+            a21 = a[9],
+            a22 = a[10],
+            a23 = a[11],
+            a30 = a[12],
+            a31 = a[13],
+            a32 = a[14],
+            a33 = a[15],
             b00 = a00 * a11 - a01 * a10,
             b01 = a00 * a12 - a02 * a10,
             b02 = a00 * a13 - a03 * a10,
@@ -395,31 +421,55 @@ namespace Mat4 {
     }
 
     export function mul(out: Mat4, a: Mat4, b: Mat4): Mat4 {
-        const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3],
-            a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7],
-            a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11],
-            a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+        const a00 = a[0],
+            a01 = a[1],
+            a02 = a[2],
+            a03 = a[3],
+            a10 = a[4],
+            a11 = a[5],
+            a12 = a[6],
+            a13 = a[7],
+            a20 = a[8],
+            a21 = a[9],
+            a22 = a[10],
+            a23 = a[11],
+            a30 = a[12],
+            a31 = a[13],
+            a32 = a[14],
+            a33 = a[15];
 
         // Cache only the current line of the second matrix
-        let b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
+        let b0 = b[0],
+            b1 = b[1],
+            b2 = b[2],
+            b3 = b[3];
         out[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
         out[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
         out[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
         out[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
 
-        b0 = b[4]; b1 = b[5]; b2 = b[6]; b3 = b[7];
+        b0 = b[4];
+        b1 = b[5];
+        b2 = b[6];
+        b3 = b[7];
         out[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
         out[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
         out[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
         out[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
 
-        b0 = b[8]; b1 = b[9]; b2 = b[10]; b3 = b[11];
+        b0 = b[8];
+        b1 = b[9];
+        b2 = b[10];
+        b3 = b[11];
         out[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
         out[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
         out[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
         out[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
 
-        b0 = b[12]; b1 = b[13]; b2 = b[14]; b3 = b[15];
+        b0 = b[12];
+        b1 = b[13];
+        b2 = b[14];
+        b3 = b[15];
         out[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
         out[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
         out[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
@@ -430,32 +480,63 @@ namespace Mat4 {
     /**
      * Like `mul` but with offsets into arrays
      */
-    export function mulOffset(out: NumberArray, a: NumberArray, b: NumberArray, oOut: number, oA: number, oB: number): NumberArray {
-        const a00 = a[0 + oA], a01 = a[1 + oA], a02 = a[2 + oA], a03 = a[3 + oA],
-            a10 = a[4 + oA], a11 = a[5 + oA], a12 = a[6 + oA], a13 = a[7 + oA],
-            a20 = a[8 + oA], a21 = a[9 + oA], a22 = a[10 + oA], a23 = a[11 + oA],
-            a30 = a[12 + oA], a31 = a[13 + oA], a32 = a[14 + oA], a33 = a[15 + oA];
+    export function mulOffset(
+        out: NumberArray,
+        a: NumberArray,
+        b: NumberArray,
+        oOut: number,
+        oA: number,
+        oB: number,
+    ): NumberArray {
+        const a00 = a[0 + oA],
+            a01 = a[1 + oA],
+            a02 = a[2 + oA],
+            a03 = a[3 + oA],
+            a10 = a[4 + oA],
+            a11 = a[5 + oA],
+            a12 = a[6 + oA],
+            a13 = a[7 + oA],
+            a20 = a[8 + oA],
+            a21 = a[9 + oA],
+            a22 = a[10 + oA],
+            a23 = a[11 + oA],
+            a30 = a[12 + oA],
+            a31 = a[13 + oA],
+            a32 = a[14 + oA],
+            a33 = a[15 + oA];
 
         // Cache only the current line of the second matrix
-        let b0 = b[0 + oB], b1 = b[1 + oB], b2 = b[2 + oB], b3 = b[3 + oB];
+        let b0 = b[0 + oB],
+            b1 = b[1 + oB],
+            b2 = b[2 + oB],
+            b3 = b[3 + oB];
         out[0 + oOut] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
         out[1 + oOut] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
         out[2 + oOut] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
         out[3 + oOut] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
 
-        b0 = b[4 + oB]; b1 = b[5 + oB]; b2 = b[6 + oB]; b3 = b[7 + oB];
+        b0 = b[4 + oB];
+        b1 = b[5 + oB];
+        b2 = b[6 + oB];
+        b3 = b[7 + oB];
         out[4 + oOut] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
         out[5 + oOut] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
         out[6 + oOut] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
         out[7 + oOut] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
 
-        b0 = b[8 + oB]; b1 = b[9 + oB]; b2 = b[10 + oB]; b3 = b[11 + oB];
+        b0 = b[8 + oB];
+        b1 = b[9 + oB];
+        b2 = b[10 + oB];
+        b3 = b[11 + oB];
         out[8 + oOut] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
         out[9 + oOut] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
         out[10 + oOut] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
         out[11 + oOut] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
 
-        b0 = b[12 + oB]; b1 = b[13 + oB]; b2 = b[14 + oB]; b3 = b[15 + oB];
+        b0 = b[12 + oB];
+        b1 = b[13 + oB];
+        b2 = b[14 + oB];
+        b3 = b[15 + oB];
         out[12 + oOut] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
         out[13 + oOut] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
         out[14 + oOut] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
@@ -469,10 +550,21 @@ namespace Mat4 {
 
     /** Translate a Mat4 by the given Vec3 */
     export function translate(out: Mat4, a: Mat4, v: Vec3): Mat4 {
-        const x = v[0], y = v[1], z = v[2];
-        let a00: number, a01: number, a02: number, a03: number,
-            a10: number, a11: number, a12: number, a13: number,
-            a20: number, a21: number, a22: number, a23: number;
+        const x = v[0],
+            y = v[1],
+            z = v[2];
+        let a00: number,
+            a01: number,
+            a02: number,
+            a03: number,
+            a10: number,
+            a11: number,
+            a12: number,
+            a13: number,
+            a20: number,
+            a21: number,
+            a22: number,
+            a23: number;
 
         if (a === out) {
             out[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
@@ -480,13 +572,31 @@ namespace Mat4 {
             out[14] = a[2] * x + a[6] * y + a[10] * z + a[14];
             out[15] = a[3] * x + a[7] * y + a[11] * z + a[15];
         } else {
-            a00 = a[0]; a01 = a[1]; a02 = a[2]; a03 = a[3];
-            a10 = a[4]; a11 = a[5]; a12 = a[6]; a13 = a[7];
-            a20 = a[8]; a21 = a[9]; a22 = a[10]; a23 = a[11];
+            a00 = a[0];
+            a01 = a[1];
+            a02 = a[2];
+            a03 = a[3];
+            a10 = a[4];
+            a11 = a[5];
+            a12 = a[6];
+            a13 = a[7];
+            a20 = a[8];
+            a21 = a[9];
+            a22 = a[10];
+            a23 = a[11];
 
-            out[0] = a00; out[1] = a01; out[2] = a02; out[3] = a03;
-            out[4] = a10; out[5] = a11; out[6] = a12; out[7] = a13;
-            out[8] = a20; out[9] = a21; out[10] = a22; out[11] = a23;
+            out[0] = a00;
+            out[1] = a01;
+            out[2] = a02;
+            out[3] = a03;
+            out[4] = a10;
+            out[5] = a11;
+            out[6] = a12;
+            out[7] = a13;
+            out[8] = a20;
+            out[9] = a21;
+            out[10] = a22;
+            out[11] = a23;
 
             out[12] = a00 * x + a10 * y + a20 * z + a[12];
             out[13] = a01 * x + a11 * y + a21 * z + a[13];
@@ -543,7 +653,9 @@ namespace Mat4 {
     }
 
     export function rotate(out: Mat4, a: Mat4, rad: number, axis: Vec3): Mat4 {
-        let x = axis[0], y = axis[1], z = axis[2];
+        let x = axis[0],
+            y = axis[1],
+            z = axis[2];
         let len = Math.sqrt(x * x + y * y + z * z);
 
         if (Math.abs(len) < EPSILON) {
@@ -559,14 +671,29 @@ namespace Mat4 {
         const c = Math.cos(rad);
         const t = 1 - c;
 
-        const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
-        const a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
-        const a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
+        const a00 = a[0],
+            a01 = a[1],
+            a02 = a[2],
+            a03 = a[3];
+        const a10 = a[4],
+            a11 = a[5],
+            a12 = a[6],
+            a13 = a[7];
+        const a20 = a[8],
+            a21 = a[9],
+            a22 = a[10],
+            a23 = a[11];
 
         // Construct the elements of the rotation matrix
-        const b00 = x * x * t + c, b01 = y * x * t + z * s, b02 = z * x * t - y * s;
-        const b10 = x * y * t - z * s, b11 = y * y * t + c, b12 = z * y * t + x * s;
-        const b20 = x * z * t + y * s, b21 = y * z * t - x * s, b22 = z * z * t + c;
+        const b00 = x * x * t + c,
+            b01 = y * x * t + z * s,
+            b02 = z * x * t - y * s;
+        const b10 = x * y * t - z * s,
+            b11 = y * y * t + c,
+            b12 = z * y * t + x * s;
+        const b20 = x * z * t + y * s,
+            b21 = y * z * t - x * s,
+            b22 = z * z * t + c;
 
         // Perform rotation-specific matrix multiplication
         out[0] = a00 * b00 + a10 * b01 + a20 * b02;
@@ -582,7 +709,8 @@ namespace Mat4 {
         out[10] = a02 * b20 + a12 * b21 + a22 * b22;
         out[11] = a03 * b20 + a13 * b21 + a23 * b22;
 
-        if (a !== out) { // If the source and destination differ, copy the unchanged last row
+        if (a !== out) {
+            // If the source and destination differ, copy the unchanged last row
             out[12] = a[12];
             out[13] = a[13];
             out[14] = a[14];
@@ -592,10 +720,12 @@ namespace Mat4 {
     }
 
     export function fromRotation(out: Mat4, rad: number, axis: Vec3): Mat4 {
-        let x = axis[0], y = axis[1], z = axis[2];
+        let x = axis[0],
+            y = axis[1],
+            z = axis[2];
         let len = Math.sqrt(x * x + y * y + z * z);
 
-        if (Math.abs(len) < EPSILON) { return setIdentity(out); }
+        if (Math.abs(len) < EPSILON) return setIdentity(out);
 
         len = 1 / len;
         x *= len;
@@ -627,7 +757,9 @@ namespace Mat4 {
     }
 
     export function scale(out: Mat4, a: Mat4, v: Vec3): Mat4 {
-        const x = v[0], y = v[1], z = v[2];
+        const x = v[0],
+            y = v[1],
+            z = v[2];
 
         out[0] = a[0] * x;
         out[1] = a[1] * x;
@@ -748,12 +880,25 @@ namespace Mat4 {
         return out;
     }
 
-    export function compose(out: Mat4, position: Vec3, quaternion: Quat, scale: Vec3): Mat4 {
+    export function compose(
+        out: Mat4,
+        position: Vec3,
+        quaternion: Quat,
+        scale: Vec3,
+    ): Mat4 {
         const [x, y, z, w] = quaternion;
-        const x2 = x + x,	y2 = y + y, z2 = z + z;
-        const xx = x * x2, xy = x * y2, xz = x * z2;
-        const yy = y * y2, yz = y * z2, zz = z * z2;
-        const wx = w * x2, wy = w * y2, wz = w * z2;
+        const x2 = x + x,
+            y2 = y + y,
+            z2 = z + z;
+        const xx = x * x2,
+            xy = x * y2,
+            xz = x * z2;
+        const yy = y * y2,
+            yz = y * z2,
+            zz = z * z2;
+        const wx = w * x2,
+            wy = w * y2,
+            wz = w * z2;
 
         const [sx, sy, sz] = scale;
 
@@ -782,8 +927,12 @@ namespace Mat4 {
 
     const _v3 = [0, 0, 0] as unknown as Vec3;
     const _m4 = zero();
-    export function decompose(m: Mat4, position: Vec3, quaternion: Quat, scale: Vec3): Mat4 {
-
+    export function decompose(
+        m: Mat4,
+        position: Vec3,
+        quaternion: Quat,
+        scale: Vec3,
+    ): Mat4 {
         let sx = Vec3.magnitude(Vec3.set(_v3, m[0], m[1], m[2]));
         const sy = Vec3.magnitude(Vec3.set(_v3, m[4], m[5], m[6]));
         const sz = Vec3.magnitude(Vec3.set(_v3, m[8], m[9], m[10]));
@@ -824,7 +973,11 @@ namespace Mat4 {
         return m;
     }
 
-    export function getDecomposition(m: Mat4): { position: Vec3, quaternion: Quat, scale: Vec3 } {
+    export function getDecomposition(m: Mat4): {
+        position: Vec3;
+        quaternion: Quat;
+        scale: Vec3;
+    } {
         const position = Vec3();
         const quaternion = Quat();
         const scale = Vec3();
@@ -845,11 +998,22 @@ namespace Mat4 {
     }
 
     export function determinant(a: Mat4): number {
-        const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3],
-            a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7],
-            a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11],
-            a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15],
-
+        const a00 = a[0],
+            a01 = a[1],
+            a02 = a[2],
+            a03 = a[3],
+            a10 = a[4],
+            a11 = a[5],
+            a12 = a[6],
+            a13 = a[7],
+            a20 = a[8],
+            a21 = a[9],
+            a22 = a[10],
+            a23 = a[11],
+            a30 = a[12],
+            a31 = a[13],
+            a32 = a[14],
+            a33 = a[15],
             b00 = a00 * a11 - a01 * a10,
             b01 = a00 * a12 - a02 * a10,
             b02 = a00 * a13 - a03 * a10,
@@ -864,7 +1028,9 @@ namespace Mat4 {
             b11 = a22 * a33 - a23 * a32;
 
         // Calculate the determinant
-        return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+        return (
+            b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06
+        );
     }
 
     /**
@@ -875,21 +1041,42 @@ namespace Mat4 {
      * Allows for improper rotations
      */
     export function isRotationAndTranslation(a: Mat4, eps?: number): boolean {
-        return _isRotationAndTranslation(a, typeof eps !== 'undefined' ? eps : EPSILON);
+        return _isRotationAndTranslation(
+            a,
+            typeof eps !== 'undefined' ? eps : EPSILON,
+        );
     }
 
     function _isRotationAndTranslation(a: Mat4, eps: number) {
-        const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3],
-            a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7],
-            a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11],
+        const a00 = a[0],
+            a01 = a[1],
+            a02 = a[2],
+            a03 = a[3],
+            a10 = a[4],
+            a11 = a[5],
+            a12 = a[6],
+            a13 = a[7],
+            a20 = a[8],
+            a21 = a[9],
+            a22 = a[10],
+            a23 = a[11],
             a33 = a[15];
 
-        if (!equalEps(a33, 1, eps) || !equalEps(a03, 0, eps) || !equalEps(a13, 0, eps) || !equalEps(a23, 0, eps)) {
+        if (
+            !equalEps(a33, 1, eps) ||
+            !equalEps(a03, 0, eps) ||
+            !equalEps(a13, 0, eps) ||
+            !equalEps(a23, 0, eps)
+        ) {
             return false;
         }
 
         // use `abs` to allow for improper rotations
-        const det3x3 = Math.abs(a00 * (a11 * a22 - a12 * a21) - a01 * (a10 * a22 - a12 * a20) + a02 * (a10 * a21 - a11 * a20));
+        const det3x3 = Math.abs(
+            a00 * (a11 * a22 - a12 * a21) -
+                a01 * (a10 * a22 - a12 * a20) +
+                a02 * (a10 * a21 - a11 * a20),
+        );
         if (!equalEps(det3x3, 1, eps)) {
             return false;
         }
@@ -903,8 +1090,14 @@ namespace Mat4 {
      * [ 0  0  S  Z ]
      * [ 0  0  0  1 ]
      */
-    export function isTranslationAndUniformScaling(a: Mat4, eps?: number): boolean {
-        return _isTranslationAndUniformScaling(a, typeof eps !== 'undefined' ? eps : EPSILON);
+    export function isTranslationAndUniformScaling(
+        a: Mat4,
+        eps?: number,
+    ): boolean {
+        return _isTranslationAndUniformScaling(
+            a,
+            typeof eps !== 'undefined' ? eps : EPSILON,
+        );
     }
 
     function _isTranslationAndUniformScaling(a: Mat4, eps: number) {
@@ -928,7 +1121,10 @@ namespace Mat4 {
     }
 
     export function fromQuat(out: Mat4, q: Quat): Mat4 {
-        const x = q[0], y = q[1], z = q[2], w = q[3];
+        const x = q[0],
+            y = q[1],
+            z = q[2],
+            w = q[3];
         const x2 = x + x;
         const y2 = y + y;
         const z2 = z + z;
@@ -967,70 +1163,93 @@ namespace Mat4 {
     }
 
     export function fromEuler(out: Mat4, euler: Euler, order: Euler.Order): Mat4 {
-        const x = euler[0], y = euler[1], z = euler[2];
-        const a = Math.cos(x), b = Math.sin(x);
-        const c = Math.cos(y), d = Math.sin(y);
-        const e = Math.cos(z), f = Math.sin(z);
+        const x = euler[0],
+            y = euler[1],
+            z = euler[2];
+        const a = Math.cos(x),
+            b = Math.sin(x);
+        const c = Math.cos(y),
+            d = Math.sin(y);
+        const e = Math.cos(z),
+            f = Math.sin(z);
 
         if (order === 'XYZ') {
-            const ae = a * e, af = a * f, be = b * e, bf = b * f;
+            const ae = a * e,
+                af = a * f,
+                be = b * e,
+                bf = b * f;
             out[0] = c * e;
-            out[4] = - c * f;
+            out[4] = -c * f;
             out[8] = d;
             out[1] = af + be * d;
             out[5] = ae - bf * d;
-            out[9] = - b * c;
+            out[9] = -b * c;
             out[2] = bf - ae * d;
             out[6] = be + af * d;
             out[10] = a * c;
         } else if (order === 'YXZ') {
-            const ce = c * e, cf = c * f, de = d * e, df = d * f;
+            const ce = c * e,
+                cf = c * f,
+                de = d * e,
+                df = d * f;
             out[0] = ce + df * b;
             out[4] = de * b - cf;
             out[8] = a * d;
             out[1] = a * f;
             out[5] = a * e;
-            out[9] = - b;
+            out[9] = -b;
             out[2] = cf * b - de;
             out[6] = df + ce * b;
             out[10] = a * c;
         } else if (order === 'ZXY') {
-            const ce = c * e, cf = c * f, de = d * e, df = d * f;
+            const ce = c * e,
+                cf = c * f,
+                de = d * e,
+                df = d * f;
             out[0] = ce - df * b;
-            out[4] = - a * f;
+            out[4] = -a * f;
             out[8] = de + cf * b;
             out[1] = cf + de * b;
             out[5] = a * e;
             out[9] = df - ce * b;
-            out[2] = - a * d;
+            out[2] = -a * d;
             out[6] = b;
             out[10] = a * c;
         } else if (order === 'ZYX') {
-            const ae = a * e, af = a * f, be = b * e, bf = b * f;
+            const ae = a * e,
+                af = a * f,
+                be = b * e,
+                bf = b * f;
             out[0] = c * e;
             out[4] = be * d - af;
             out[8] = ae * d + bf;
             out[1] = c * f;
             out[5] = bf * d + ae;
             out[9] = af * d - be;
-            out[2] = - d;
+            out[2] = -d;
             out[6] = b * c;
             out[10] = a * c;
         } else if (order === 'YZX') {
-            const ac = a * c, ad = a * d, bc = b * c, bd = b * d;
+            const ac = a * c,
+                ad = a * d,
+                bc = b * c,
+                bd = b * d;
             out[0] = c * e;
             out[4] = bd - ac * f;
             out[8] = bc * f + ad;
             out[1] = f;
             out[5] = a * e;
-            out[9] = - b * e;
-            out[2] = - d * e;
+            out[9] = -b * e;
+            out[2] = -d * e;
             out[6] = ad * f + bc;
             out[10] = ac - bd * f;
         } else if (order === 'XZY') {
-            const ac = a * c, ad = a * d, bc = b * c, bd = b * d;
+            const ac = a * c,
+                ad = a * d,
+                bc = b * c,
+                bd = b * d;
             out[0] = c * e;
-            out[4] = - f;
+            out[4] = -f;
             out[8] = d * e;
             out[1] = ac * f + bd;
             out[5] = a * e;
@@ -1057,14 +1276,22 @@ namespace Mat4 {
     /**
      * Generates a perspective projection (frustum) matrix with the given bounds
      */
-    export function perspective(out: Mat4, left: number, right: number, top: number, bottom: number, near: number, far: number): Mat4 {
-        const x = 2 * near / (right - left);
-        const y = 2 * near / (top - bottom);
+    export function perspective(
+        out: Mat4,
+        left: number,
+        right: number,
+        top: number,
+        bottom: number,
+        near: number,
+        far: number,
+    ): Mat4 {
+        const x = (2 * near) / (right - left);
+        const y = (2 * near) / (top - bottom);
 
         const a = (right + left) / (right - left);
         const b = (top + bottom) / (top - bottom);
         const c = -(far + near) / (far - near);
-        const d = -2 * far * near / (far - near);
+        const d = (-2 * far * near) / (far - near);
 
         out[0] = x;
         out[1] = 0;
@@ -1088,7 +1315,15 @@ namespace Mat4 {
     /**
      * Generates a orthogonal projection matrix with the given bounds
      */
-    export function ortho(out: Mat4, left: number, right: number, top: number, bottom: number, near: number, far: number): Mat4 {
+    export function ortho(
+        out: Mat4,
+        left: number,
+        right: number,
+        top: number,
+        bottom: number,
+        near: number,
+        far: number,
+    ): Mat4 {
         const w = 1.0 / (right - left);
         const h = 1.0 / (top - bottom);
         const p = 1.0 / (far - near);
@@ -1131,7 +1366,8 @@ namespace Mat4 {
         const centery = center[1];
         const centerz = center[2];
 
-        if (Math.abs(eyex - centerx) < EPSILON &&
+        if (
+            Math.abs(eyex - centerx) < EPSILON &&
             Math.abs(eyey - centery) < EPSILON &&
             Math.abs(eyez - centerz) < EPSILON
         ) {
@@ -1271,11 +1507,11 @@ namespace Mat4 {
         return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
     }
 
-    export function extractBasis(m: Mat4): { x: Vec3, y: Vec3, z: Vec3 } {
+    export function extractBasis(m: Mat4): { x: Vec3; y: Vec3; z: Vec3 } {
         return {
             x: Vec3.create(m[0], m[1], m[2]),
             y: Vec3.create(m[4], m[5], m[6]),
-            z: Vec3.create(m[8], m[9], m[10])
+            z: Vec3.create(m[8], m[9], m[10]),
         };
     }
 
@@ -1286,17 +1522,33 @@ namespace Mat4 {
     /** Rotation matrix for 90deg around x-axis */
     export const rotX90: ReadonlyMat4 = fromRotation(zero(), degToRad(90), xAxis);
     /** Rotation matrix for 180deg around x-axis */
-    export const rotX180: ReadonlyMat4 = fromRotation(zero(), degToRad(180), xAxis);
+    export const rotX180: ReadonlyMat4 = fromRotation(
+        zero(),
+        degToRad(180),
+        xAxis,
+    );
     /** Rotation matrix for 90deg around y-axis */
     export const rotY90: ReadonlyMat4 = fromRotation(zero(), degToRad(90), yAxis);
     /** Rotation matrix for 180deg around y-axis */
-    export const rotY180: ReadonlyMat4 = fromRotation(zero(), degToRad(180), yAxis);
+    export const rotY180: ReadonlyMat4 = fromRotation(
+        zero(),
+        degToRad(180),
+        yAxis,
+    );
     /** Rotation matrix for 270deg around y-axis */
-    export const rotY270: ReadonlyMat4 = fromRotation(zero(), degToRad(270), yAxis);
+    export const rotY270: ReadonlyMat4 = fromRotation(
+        zero(),
+        degToRad(270),
+        yAxis,
+    );
     /** Rotation matrix for 90deg around z-axis */
     export const rotZ90: ReadonlyMat4 = fromRotation(zero(), degToRad(90), zAxis);
     /** Rotation matrix for 180deg around z-axis */
-    export const rotZ180: ReadonlyMat4 = fromRotation(zero(), degToRad(180), zAxis);
+    export const rotZ180: ReadonlyMat4 = fromRotation(
+        zero(),
+        degToRad(180),
+        zAxis,
+    );
     /** Rotation matrix for 90deg around first x-axis and then y-axis */
     export const rotXY90: ReadonlyMat4 = mul(zero(), rotX90, rotY90);
     /** Rotation matrix for 90deg around first z-axis and then y-axis */

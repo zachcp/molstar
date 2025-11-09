@@ -8,9 +8,9 @@
 
 import { Column } from '../../../../mol-data/db.ts';
 import { StringBuilder } from '../../../../mol-util/string-builder.ts';
-import { Category, Field, type Encoder } from '../encoder.ts';
+import { Category, type Encoder, Field } from '../encoder.ts';
 import type { Writer } from '../../writer.ts';
-import { getFieldDigitCount, getIncludedFields, getCategoryInstanceData, type CategoryInstanceData } from './util.ts';
+import { type CategoryInstanceData, getCategoryInstanceData, getFieldDigitCount, getIncludedFields } from './util.ts';
 
 export class TextEncoder implements Encoder<string> {
     private builder = StringBuilder.create();
@@ -80,7 +80,14 @@ export class TextEncoder implements Encoder<string> {
     }
 }
 
-function writeValue(builder: StringBuilder, data: any, key: any, f: Field<any, any>, floatPrecision: number, index: number): boolean {
+function writeValue(
+    builder: StringBuilder,
+    data: any,
+    key: any,
+    f: Field<any, any>,
+    floatPrecision: number,
+    index: number,
+): boolean {
     const kind = f.valueKind;
     const p = kind ? kind(key, data) : Column.ValueKinds.Present;
     if (p !== Column.ValueKinds.Present) {
@@ -109,13 +116,23 @@ function getFloatPrecisions(categoryName: string, fields: Field[], formatter: Ca
     const ret: number[] = [];
     for (const f of fields) {
         const format = formatter.getFormat(categoryName, f.name);
-        if (format && typeof format.digitCount !== 'undefined') ret[ret.length] = f.type === Field.Type.Float ? Math.pow(10, Math.max(0, Math.min(format.digitCount, 15))) : 0;
-        else ret[ret.length] = f.type === Field.Type.Float ? Math.pow(10, getFieldDigitCount(f)) : 0;
+        if (format && typeof format.digitCount !== 'undefined') {
+            ret[ret.length] = f.type === Field.Type.Float
+                ? Math.pow(10, Math.max(0, Math.min(format.digitCount, 15)))
+                : 0;
+        } else ret[ret.length] = f.type === Field.Type.Float ? Math.pow(10, getFieldDigitCount(f)) : 0;
     }
     return ret;
 }
 
-function writeCifSingleRecord(category: Category, instance: Category.Instance, source: CategoryInstanceData['source'], builder: StringBuilder, filter: Category.Filter, formatter: Category.Formatter) {
+function writeCifSingleRecord(
+    category: Category,
+    instance: Category.Instance,
+    source: CategoryInstanceData['source'],
+    builder: StringBuilder,
+    filter: Category.Filter,
+    formatter: Category.Formatter,
+) {
     const fields = getIncludedFields(instance);
     const src = source[0];
     const data = src.data;
@@ -140,9 +157,18 @@ function writeCifSingleRecord(category: Category, instance: Category.Instance, s
     StringBuilder.write(builder, '#\n');
 }
 
-function writeCifLoop(category: Category, instance: Category.Instance, source: CategoryInstanceData['source'], builder: StringBuilder, filter: Category.Filter, formatter: Category.Formatter) {
+function writeCifLoop(
+    category: Category,
+    instance: Category.Instance,
+    source: CategoryInstanceData['source'],
+    builder: StringBuilder,
+    filter: Category.Filter,
+    formatter: Category.Formatter,
+) {
     const fieldSource = getIncludedFields(instance);
-    const fields = filter === Category.DefaultFilter ? fieldSource : fieldSource.filter(f => filter.includeField(category.name, f.name));
+    const fields = filter === Category.DefaultFilter
+        ? fieldSource
+        : fieldSource.filter((f) => filter.includeField(category.name, f.name));
     const fieldCount = fields.length;
     if (fieldCount === 0) return;
 
@@ -255,14 +281,18 @@ function writeChecked(builder: StringBuilder, val: string) {
         }
     }
 
-    if (!escape && (fst === 35 /* # */ || fst === 36 /* $ */ || fst === 59 /* ; */ || fst === 91 /* [ */ || fst === 93 /* ] */ || fst === 95 /* _ */)) {
+    if (
+        !escape &&
+        (fst === 35 /* # */ || fst === 36 /* $ */ || fst === 59 /* ; */ || fst === 91 /* [ */ || fst === 93 /* ] */ ||
+            fst === 95 /* _ */)
+    ) {
         escape = true;
     }
 
     if (escape) {
-        StringBuilder.writeSafe(builder, escapeKind ? '"' : '\'');
+        StringBuilder.writeSafe(builder, escapeKind ? '"' : "'");
         StringBuilder.writeSafe(builder, val);
-        StringBuilder.writeSafe(builder, escapeKind ? '" ' : '\' ');
+        StringBuilder.writeSafe(builder, escapeKind ? '" ' : "' ");
     } else {
         StringBuilder.writeSafe(builder, val);
         StringBuilder.writeSafe(builder, ' ');

@@ -8,14 +8,17 @@ import { BehaviorSubject } from 'rxjs';
 import type { MVSData } from '../../extensions/mvs/mvs-data.ts';
 import type { MVSStoriesViewerModel } from './elements/viewer.tsx';
 
-export type MVSStoriesCommand =
-    | { kind: 'load-mvs', format?: 'mvsj' | 'mvsx', url?: string, data?: MVSData | string | Uint8Array<ArrayBuffer> }
-
+export type MVSStoriesCommand = {
+    kind: 'load-mvs';
+    format?: 'mvsj' | 'mvsx';
+    url?: string;
+    data?: MVSData | string | Uint8Array<ArrayBuffer>;
+};
 
 export class MVSStoriesContext {
     commands = new BehaviorSubject<MVSStoriesCommand | undefined>(undefined);
     state = {
-        viewers: new BehaviorSubject<{ name?: string, model: MVSStoriesViewerModel }[]>([]),
+        viewers: new BehaviorSubject<{ name?: string; model: MVSStoriesViewerModel }[]>([]),
         currentStoryData: new BehaviorSubject<string | Uint8Array<ArrayBuffer> | undefined>(undefined),
         isLoading: new BehaviorSubject(false),
     };
@@ -28,7 +31,7 @@ export class MVSStoriesContext {
     }
 }
 
-export function getMVSStoriesContext(options?: { name?: string, container?: object }): MVSStoriesContext {
+export function getMVSStoriesContext(options?: { name?: string; container?: object }): MVSStoriesContext {
     const container: any = options?.container ?? window;
     container.componentContexts ??= {};
     const name = options?.name ?? '<default>';

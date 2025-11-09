@@ -15,7 +15,7 @@ import { createPoints } from './points.spec';
 export function createRenderer(gl: WebGLRenderingContext) {
     const ctx = createContext(gl);
     const camera = new Camera({
-        position: Vec3.create(0, 0, 50)
+        position: Vec3.create(0, 0, 50),
     });
     const renderer = Renderer.create(ctx);
     return { ctx, camera, renderer };

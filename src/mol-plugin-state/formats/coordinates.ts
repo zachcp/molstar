@@ -23,7 +23,7 @@ const DcdProvider = DataFormatProvider({
             .apply(StateTransforms.Model.CoordinatesFromDcd);
 
         return coordinates.commit();
-    }
+    },
 });
 type DcdProvider = typeof DcdProvider;
 
@@ -39,7 +39,7 @@ const XtcProvider = DataFormatProvider({
             .apply(StateTransforms.Model.CoordinatesFromXtc);
 
         return coordinates.commit();
-    }
+    },
 });
 type XtcProvider = typeof XtcProvider;
 
@@ -55,7 +55,7 @@ const TrrProvider = DataFormatProvider({
             .apply(StateTransforms.Model.CoordinatesFromTrr);
 
         return coordinates.commit();
-    }
+    },
 });
 type TrrProvider = typeof TrrProvider;
 
@@ -71,7 +71,7 @@ const NctrajProvider = DataFormatProvider({
             .apply(StateTransforms.Model.CoordinatesFromNctraj);
 
         return coordinates.commit();
-    }
+    },
 });
 type NctrajProvider = typeof NctrajProvider;
 
@@ -87,11 +87,9 @@ const LammpsTrajectoryProvider = DataFormatProvider({
             .apply(StateTransforms.Model.CoordinatesFromLammpstraj);
 
         return coordinates.commit();
-    }
+    },
 });
 type LammpsTrajectoryProvider = typeof LammpsTrajectoryProvider;
-
-
 
 export type CoordinatesProvider = DcdProvider | XtcProvider | TrrProvider | LammpsTrajectoryProvider;
 
@@ -103,4 +101,4 @@ export const BuiltInCoordinatesFormats = [
     ['lammpstrj', LammpsTrajectoryProvider] as const,
 ] as const;
 
-export type BuiltInCoordinatesFormat = (typeof BuiltInCoordinatesFormats)[number][0]
+export type BuiltInCoordinatesFormat = (typeof BuiltInCoordinatesFormats)[number][0];

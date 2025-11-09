@@ -13,7 +13,7 @@ import { MmcifFormat } from '../../mol-model-formats/structure/mmcif.ts';
 import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
 
 export namespace PDBeStructRefDomain {
-    export type Property = PropertyWrapper<Table<Schema['pdbe_struct_ref_domain']> | undefined>
+    export type Property = PropertyWrapper<Table<Schema['pdbe_struct_ref_domain']> | undefined>;
 
     export function get(model: Model): Property | undefined {
         return model._staticPropertyData.__PDBeStructRefSeq__;
@@ -36,26 +36,29 @@ export namespace PDBeStructRefDomain {
             beg_label_seq_id: Column.Schema.int,
             beg_pdbx_PDB_ins_code: Column.Schema.str,
             end_label_seq_id: Column.Schema.int,
-            end_pdbx_PDB_ins_code: Column.Schema.str
-        }
+            end_pdbx_PDB_ins_code: Column.Schema.str,
+        },
     };
-    export type Schema = typeof Schema
+    export type Schema = typeof Schema;
 
     export const Descriptor = CustomPropertyDescriptor({
         name: 'pdbe_struct_ref_domain',
         cifExport: {
             prefix: 'pdbe',
-            context(ctx): Property { return get(ctx.firstModel)!; },
+            context(ctx): Property {
+                return get(ctx.firstModel)!;
+            },
             categories: [
-                PropertyWrapper.defaultInfoCategory<Property>('pdbe_struct_ref_domain_info', ctx => ctx.info),
+                PropertyWrapper.defaultInfoCategory<Property>('pdbe_struct_ref_domain_info', (ctx) => ctx.info),
                 {
                     name: 'pdbe_struct_ref_domain',
                     instance(ctx: Property) {
                         if (!ctx || !ctx.data) return CifWriter.Category.Empty;
                         return CifWriter.Category.ofTable(ctx.data);
-                    }
-                }]
-        }
+                    },
+                },
+            ],
+        },
     });
 
     function fromCifData(model: Model): Property['data'] {
@@ -67,10 +70,9 @@ export namespace PDBeStructRefDomain {
 
     export async function attachFromCifOrApi(model: Model, params: {
         // optional JSON source
-        PDBe_apiSourceJson?: (model: Model) => Promise<any>
+        PDBe_apiSourceJson?: (model: Model) => Promise<any>;
     }) {
         if (model.customProperties.has(Descriptor)) return true;
-
 
         let table: Property['data'];
         let info = PropertyWrapper.tryGetInfoFromCif('pdbe_struct_ref_domain_info', model);
@@ -117,5 +119,8 @@ function fromPDBeJson(modelData: Model, data: any): PDBeStructRefDomain.Property
         }
     }
 
-    return Table.ofRows(PDBeStructRefDomain.Schema.pdbe_struct_ref_domain, rows) as PDBeStructRefDomain.Property['data'];
+    return Table.ofRows(
+        PDBeStructRefDomain.Schema.pdbe_struct_ref_domain,
+        rows,
+    ) as PDBeStructRefDomain.Property['data'];
 }

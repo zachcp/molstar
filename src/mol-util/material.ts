@@ -9,11 +9,11 @@ import { ParamDefinition as PD } from './param-definition.ts';
 
 export interface Material {
     /** Normalized to [0, 1] range */
-    metalness: number,
+    metalness: number;
     /** Normalized to [0, 1] range */
-    roughness: number
+    roughness: number;
     /** Normalized to [0, 1] range */
-    bumpiness: number
+    bumpiness: number;
 }
 
 export function Material(values?: Partial<Material>): Material {
@@ -34,7 +34,7 @@ export namespace Material {
         return `M ${metalness.toFixed(2)} | R ${roughness.toFixed(2)} | B ${bumpiness.toFixed(2)}`;
     }
 
-    export function getParam(info?: { isExpanded?: boolean, isFlat?: boolean }) {
+    export function getParam(info?: { isExpanded?: boolean; isFlat?: boolean }) {
         return PD.Group({
             metalness: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }),
             roughness: PD.Numeric(1, { min: 0, max: 1, step: 0.01 }),
@@ -46,7 +46,7 @@ export namespace Material {
                 [{ metalness: 0, roughness: 0.2, bumpiness: 0 }, 'Plastic'],
                 [{ metalness: 0, roughness: 0.6, bumpiness: 0 }, 'Glossy'],
                 [{ metalness: 1.0, roughness: 0.6, bumpiness: 0 }, 'Metallic'],
-            ]
+            ],
         });
     }
 }

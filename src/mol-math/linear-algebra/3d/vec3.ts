@@ -18,7 +18,7 @@
  */
 
 import { Mat4 } from './mat4.ts';
-import { spline as _spline, quadraticBezier as _quadraticBezier, clamp as _clamp } from '../../interpolate.ts';
+import { clamp as _clamp, quadraticBezier as _quadraticBezier, spline as _spline } from '../../interpolate.ts';
 import type { NumberArray } from '../../../mol-util/type-helpers.ts';
 import type { Mat3 } from './mat3.ts';
 import type { Quat } from './quat.ts';
@@ -26,8 +26,16 @@ import { EPSILON } from './common.ts';
 
 const _isFinite = isFinite;
 
-export interface Vec3 extends Array<number> { [d: number]: number, '@type': 'vec3', length: 3 }
-export interface ReadonlyVec3 extends Array<number> { readonly [d: number]: number, '@type': 'vec3', length: 3 }
+export interface Vec3 extends Array<number> {
+    [d: number]: number;
+    '@type': 'vec3';
+    length: 3;
+}
+export interface ReadonlyVec3 extends Array<number> {
+    readonly [d: number]: number;
+    '@type': 'vec3';
+    length: 3;
+}
 
 export function Vec3(): Vec3 {
     return Vec3.zero();
@@ -63,7 +71,7 @@ export namespace Vec3 {
         return out;
     }
 
-    export function fromObj(v: { x: number, y: number, z: number }): Vec3 {
+    export function fromObj(v: { x: number; y: number; z: number }): Vec3 {
         return create(v.x, v.y, v.z);
     }
 
@@ -331,8 +339,7 @@ export namespace Vec3 {
     }
 
     export function cross(out: Vec3, a: Vec3, b: Vec3): Vec3 {
-        const ax = a[0], ay = a[1], az = a[2],
-            bx = b[0], by = b[1], bz = b[2];
+        const ax = a[0], ay = a[1], az = a[2], bx = b[0], by = b[1], bz = b[2];
 
         out[0] = ay * bz - az * by;
         out[1] = az * bx - ax * bz;
@@ -435,8 +442,7 @@ export namespace Vec3 {
      * Transforms the Vec3 with a Mat4. 4th vector component is implicitly '1'
      */
     export function transformMat4(out: Vec3, a: Vec3, m: Mat4): Vec3 {
-        const x = a[0], y = a[1], z = a[2],
-            w = 1 / ((m[3] * x + m[7] * y + m[11] * z + m[15]) || 1.0);
+        const x = a[0], y = a[1], z = a[2], w = 1 / ((m[3] * x + m[7] * y + m[11] * z + m[15]) || 1.0);
         out[0] = (m[0] * x + m[4] * y + m[8] * z + m[12]) * w;
         out[1] = (m[1] * x + m[5] * y + m[9] * z + m[13]) * w;
         out[2] = (m[2] * x + m[6] * y + m[10] * z + m[14]) * w;
@@ -454,8 +460,17 @@ export namespace Vec3 {
     /**
      * Like `transformMat4` but with offsets into arrays
      */
-    export function transformMat4Offset(out: NumberArray, a: NumberArray, m: NumberArray, outO: number, aO: number, oM: number): NumberArray {
-        const x = a[0 + aO], y = a[1 + aO], z = a[2 + aO],
+    export function transformMat4Offset(
+        out: NumberArray,
+        a: NumberArray,
+        m: NumberArray,
+        outO: number,
+        aO: number,
+        oM: number,
+    ): NumberArray {
+        const x = a[0 + aO],
+            y = a[1 + aO],
+            z = a[2 + aO],
             w = 1 / ((m[3 + oM] * x + m[7 + oM] * y + m[11 + oM] * z + m[15 + oM]) || 1.0);
         out[0 + outO] = (m[0 + oM] * x + m[4 + oM] * y + m[8 + oM] * z + m[12 + oM]) * w;
         out[1 + outO] = (m[1 + oM] * x + m[5 + oM] * y + m[9 + oM] * z + m[13 + oM]) * w;
@@ -468,7 +483,14 @@ export namespace Vec3 {
      * This means the translation components of the matrix are ignored.
      * Assumes that m is already the transpose of the inverse matrix suitable for normal transformation.
      */
-    export function transformDirectionOffset(out: NumberArray, a: NumberArray, m: NumberArray, outO: number, aO: number, oM: number): NumberArray {
+    export function transformDirectionOffset(
+        out: NumberArray,
+        a: NumberArray,
+        m: NumberArray,
+        outO: number,
+        aO: number,
+        oM: number,
+    ): NumberArray {
         const x = a[0 + aO], y = a[1 + aO], z = a[2 + aO];
         out[0 + outO] = m[0 + oM] * x + m[4 + oM] * y + m[8 + oM] * z;
         out[1 + outO] = m[1 + oM] * x + m[5 + oM] * y + m[9 + oM] * z;
@@ -552,10 +574,11 @@ export namespace Vec3 {
      * @param radius [0, +Inf]
      */
     export function directionFromSpherical(out: Vec3, inclination: number, azimuth: number, radius: number): Vec3 {
-        return Vec3.set(out,
+        return Vec3.set(
+            out,
             radius * Math.cos(azimuth) * Math.sin(inclination),
             radius * Math.sin(azimuth) * Math.sin(inclination),
-            radius * Math.cos(inclination)
+            radius * Math.cos(inclination),
         );
     }
 
@@ -573,8 +596,8 @@ export namespace Vec3 {
         const a0 = a[0], a1 = a[1], a2 = a[2];
         const b0 = b[0], b1 = b[1], b2 = b[2];
         return (Math.abs(a0 - b0) <= EPSILON * Math.max(1.0, Math.abs(a0), Math.abs(b0)) &&
-                Math.abs(a1 - b1) <= EPSILON * Math.max(1.0, Math.abs(a1), Math.abs(b1)) &&
-                Math.abs(a2 - b2) <= EPSILON * Math.max(1.0, Math.abs(a2), Math.abs(b2)));
+            Math.abs(a1 - b1) <= EPSILON * Math.max(1.0, Math.abs(a1), Math.abs(b1)) &&
+            Math.abs(a2 - b2) <= EPSILON * Math.max(1.0, Math.abs(a2), Math.abs(b2)));
     }
 
     const rotTemp = zero();

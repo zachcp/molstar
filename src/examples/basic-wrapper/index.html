@@ -45,36 +45,47 @@
         <script type="text/javascript" src="./index.js"></script>
     </head>
     <body>
-        <div id='controls'>
+        <div id="controls">
             <h3>Source</h3>
-            <input type='text' id='url' placeholder='url' />
-            <input type='text' id='assemblyId' placeholder='assembly id' />
-            <select id='format'>
-                <option value='mmcif' selected>mmCIF</option>
-                <option value='pdb'>PDB</option>
+            <input type="text" id="url" placeholder="url" />
+            <input type="text" id="assemblyId" placeholder="assembly id" />
+            <select id="format">
+                <option value="mmcif" selected>mmCIF</option>
+                <option value="pdb">PDB</option>
             </select>
         </div>
         <div id="app"></div>
         <script>
-            function $(id) { return document.getElementById(id); }
+            function $(id) {
+                return document.getElementById(id);
+            }
 
-            var pdbId = '1grm', assemblyId= '1';
+            var pdbId = '1grm', assemblyId = '1';
             var url = 'https://www.ebi.ac.uk/pdbe/static/entry/' + pdbId + '_updated.cif';
             var format = 'mmcif';
 
             $('url').value = url;
-            $('url').onchange = function (e) { url = e.target.value; }
+            $('url').onchange = function (e) {
+                url = e.target.value;
+            };
             $('assemblyId').value = assemblyId;
-            $('assemblyId').onchange = function (e) { assemblyId = e.target.value; }
+            $('assemblyId').onchange = function (e) {
+                assemblyId = e.target.value;
+            };
             $('format').value = format;
-            $('format').onchange = function (e) { format = e.target.value; }
+            $('format').onchange = function (e) {
+                format = e.target.value;
+            };
 
             BasicMolStarWrapper.init('app' /** or document.getElementById('app') */).then(() => {
                 BasicMolStarWrapper.setBackground(0xffffff);
             });
 
             addControl('Load Asym Unit', () => BasicMolStarWrapper.load({ url: url, format: format }));
-            addControl('Load Assembly', () => BasicMolStarWrapper.load({ url: url, format: format, assemblyId: assemblyId }));
+            addControl(
+                'Load Assembly',
+                () => BasicMolStarWrapper.load({ url: url, format: format, assemblyId: assemblyId }),
+            );
 
             addSeparator();
 

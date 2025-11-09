@@ -8,36 +8,44 @@
 
 import type { Iterator } from '../../mol-data/index.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
-import { NullLocation, type Location } from '../../mol-model/location.ts';
+import { type Location, NullLocation } from '../../mol-model/location.ts';
 
 export interface LocationValue {
-    location: Location
-    location2: Location
-    index: number
-    groupIndex: number
-    instanceIndex: number
-    isSecondary: boolean
+    location: Location;
+    location2: Location;
+    index: number;
+    groupIndex: number;
+    instanceIndex: number;
+    isSecondary: boolean;
 }
 
 export interface LocationIterator extends Iterator<LocationValue> {
-    readonly hasNext: boolean
-    readonly isNextNewInstance: boolean
-    readonly groupCount: number
-    readonly instanceCount: number
-    readonly count: number
-    readonly stride: number
-    readonly nonInstanceable: boolean
-    readonly hasLocation2: boolean
-    move(): LocationValue
-    reset(): void
-    skipInstance(): void
-    voidInstances(): void
+    readonly hasNext: boolean;
+    readonly isNextNewInstance: boolean;
+    readonly groupCount: number;
+    readonly instanceCount: number;
+    readonly count: number;
+    readonly stride: number;
+    readonly nonInstanceable: boolean;
+    readonly hasLocation2: boolean;
+    move(): LocationValue;
+    reset(): void;
+    skipInstance(): void;
+    voidInstances(): void;
 }
 
-type LocationGetter = (groupIndex: number, instanceIndex: number) => Location
-type IsSecondaryGetter = (groupIndex: number, instanceIndex: number) => boolean
+type LocationGetter = (groupIndex: number, instanceIndex: number) => Location;
+type IsSecondaryGetter = (groupIndex: number, instanceIndex: number) => boolean;
 
-export function LocationIterator(groupCount: number, instanceCount: number, stride: number, getLocation: LocationGetter, nonInstanceable = false, isSecondary: IsSecondaryGetter = () => false, getLocation2?: LocationGetter): LocationIterator {
+export function LocationIterator(
+    groupCount: number,
+    instanceCount: number,
+    stride: number,
+    getLocation: LocationGetter,
+    nonInstanceable = false,
+    isSecondary: IsSecondaryGetter = () => false,
+    getLocation2?: LocationGetter,
+): LocationIterator {
     if (groupCount % stride !== 0) {
         throw new Error('incompatible groupCount and stride');
     }
@@ -48,7 +56,7 @@ export function LocationIterator(groupCount: number, instanceCount: number, stri
         index: 0,
         groupIndex: 0,
         instanceIndex: 0,
-        isSecondary: false
+        isSecondary: false,
     };
 
     let hasNext = value.groupIndex < groupCount;
@@ -60,8 +68,12 @@ export function LocationIterator(groupCount: number, instanceCount: number, stri
     const hasLocation2 = !!getLocation2;
 
     return {
-        get hasNext() { return hasNext; },
-        get isNextNewInstance(): boolean { return isNextNewInstance; },
+        get hasNext() {
+            return hasNext;
+        },
+        get isNextNewInstance(): boolean {
+            return isNextNewInstance;
+        },
         groupCount,
         instanceCount,
         count: groupCount * instanceCount,
@@ -111,13 +123,17 @@ export function LocationIterator(groupCount: number, instanceCount: number, stri
         },
         voidInstances() {
             voidInstances = true;
-        }
+        },
     };
 }
 
 export const EmptyLocationIterator: LocationIterator = {
-    get hasNext() { return false; },
-    get isNextNewInstance(): boolean { return false; },
+    get hasNext() {
+        return false;
+    },
+    get isNextNewInstance(): boolean {
+        return false;
+    },
     groupCount: 0,
     instanceCount: 0,
     count: 0,
@@ -131,28 +147,28 @@ export const EmptyLocationIterator: LocationIterator = {
             index: 0,
             groupIndex: 0,
             instanceIndex: 0,
-            isSecondary: false
+            isSecondary: false,
         };
     },
     reset() {},
     skipInstance() {},
-    voidInstances() {}
+    voidInstances() {},
 };
 
 //
 
 /** A position Location */
 export interface PositionLocation {
-    readonly kind: 'position-location',
-    readonly position: Vec3,
+    readonly kind: 'position-location';
+    readonly position: Vec3;
     /** Normal vector at the position (used for surface coloring) */
-    readonly normal: Vec3
+    readonly normal: Vec3;
 }
 export function PositionLocation(position?: Vec3, normal?: Vec3): PositionLocation {
     return {
         kind: 'position-location',
         position: position ? Vec3.clone(position) : Vec3(),
-        normal: normal ? Vec3.clone(normal) : Vec3()
+        normal: normal ? Vec3.clone(normal) : Vec3(),
     };
 }
 export function isPositionLocation(x: any): x is PositionLocation {

@@ -8,13 +8,13 @@
  */
 
 import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
-import { TextureSpec, type Values, UniformSpec, DefineSpec } from '../../mol-gl/renderable/schema.ts';
+import { DefineSpec, TextureSpec, UniformSpec, type Values } from '../../mol-gl/renderable/schema.ts';
 import { ShaderCode } from '../../mol-gl/shader-code.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import type { Texture } from '../../mol-gl/webgl/texture.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
-import { createComputeRenderable, type ComputeRenderable } from '../../mol-gl/renderable.ts';
+import { type ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
 import { Mat4, Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
@@ -31,7 +31,7 @@ export const ShadowParams: PD.Params = {
     tolerance: PD.Numeric(1.0, { min: 0.0, max: 10.0, step: 0.1 }),
 };
 
-export type ShadowProps = PD.Values<typeof ShadowParams>
+export type ShadowProps = PD.Values<typeof ShadowParams>;
 
 export class ShadowPass {
     static isEnabled(props: PostprocessingProps): boolean {
@@ -57,7 +57,10 @@ export class ShadowPass {
         const [w, h] = this.renderable.values.uTexSize.ref.value;
         if (width !== w || height !== h) {
             this.target.setSize(width, height);
-            ValueCell.update(this.renderable.values.uTexSize, Vec2.set(this.renderable.values.uTexSize.ref.value, width, height));
+            ValueCell.update(
+                this.renderable.values.uTexSize,
+                Vec2.set(this.renderable.values.uTexSize.ref.value, width, height),
+            );
         }
     }
 
@@ -72,12 +75,7 @@ export class ShadowPass {
         ValueCell.update(this.renderable.values.uProjection, camera.projection);
         ValueCell.update(this.renderable.values.uInvProjection, Mat4.invert(this.invProjection, camera.projection));
 
-        Vec4.set(this.renderable.values.uBounds.ref.value,
-            v.x / w,
-            v.y / h,
-            (v.x + v.width) / w,
-            (v.y + v.height) / h
-        );
+        Vec4.set(this.renderable.values.uBounds.ref.value, v.x / w, v.y / h, (v.x + v.width) / w, (v.y + v.height) / h);
         ValueCell.update(this.renderable.values.uBounds, this.renderable.values.uBounds.ref.value);
 
         ValueCell.updateIfChanged(this.renderable.values.uNear, camera.near);
@@ -96,7 +94,10 @@ export class ShadowPass {
 
         const hasHeadRotation = !Mat4.isZero(camera.headRotation);
         if (hasHeadRotation) {
-            ValueCell.update(this.renderable.values.uLightDirection, getTransformedLightDirection(light, Mat4.invert(this.invHeadRotation, camera.headRotation)));
+            ValueCell.update(
+                this.renderable.values.uLightDirection,
+                getTransformedLightDirection(light, Mat4.invert(this.invHeadRotation, camera.headRotation)),
+            );
         } else {
             ValueCell.update(this.renderable.values.uLightDirection, light.direction);
         }
@@ -142,7 +143,7 @@ const ShadowsSchema = {
     dLightCount: DefineSpec('number'),
     uAmbientColor: UniformSpec('v3'),
 };
-type ShadowsRenderable = ComputeRenderable<Values<typeof ShadowsSchema>>
+type ShadowsRenderable = ComputeRenderable<Values<typeof ShadowsSchema>>;
 
 function getShadowsRenderable(ctx: WebGLContext, depthTexture: Texture): ShadowsRenderable {
     const width = depthTexture.getWidth();

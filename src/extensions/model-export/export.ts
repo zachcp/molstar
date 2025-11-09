@@ -20,7 +20,7 @@ export const ModelExport = {
     },
     setStructureName(structure: Structure, name: string) {
         return structure.inheritedPropertyData[ModelExportNameProp] = name;
-    }
+    },
 };
 
 export async function exportHierarchy(plugin: PluginContext, options?: { format?: 'cif' | 'bcif' }) {
@@ -33,7 +33,7 @@ export async function exportHierarchy(plugin: PluginContext, options?: { format?
 }
 
 function _exportHierarchy(plugin: PluginContext, options?: { format?: 'cif' | 'bcif' }) {
-    return Task.create('Export', async ctx => {
+    return Task.create('Export', async (ctx) => {
         await ctx.update({ message: 'Exporting...', isIndeterminate: true, canAbort: false });
 
         const format = options?.format ?? 'cif';
@@ -49,29 +49,29 @@ function _exportHierarchy(plugin: PluginContext, options?: { format?: 'cif' | 'b
                 plugin.log.warn(`[Export] Skipping ${_s.cell.obj?.label}: Multimodel exports not supported.`);
                 continue;
             }
-            if (s.units.some(u => !Unit.isAtomic(u))) {
+            if (s.units.some((u) => !Unit.isAtomic(u))) {
                 plugin.log.warn(`[Export] Skipping ${_s.cell.obj?.label}: Non-atomic model exports not supported.`);
                 continue;
             }
 
             const name = ModelExport.getStructureName(s) || s.model.entryId || 'unnamed';
 
-            const fileName = entryMap.has(name)
-                ? `${name}_${entryMap.get(name)! + 1}.${format}`
-                : `${name}.${format}`;
+            const fileName = entryMap.has(name) ? `${name}_${entryMap.get(name)! + 1}.${format}` : `${name}.${format}`;
             entryMap.set(name, (entryMap.get(name) ?? 0) + 1);
 
             await ctx.update({ message: `Exporting ${name}...`, isIndeterminate: true, canAbort: false });
             if (s.elementCount > 100000) {
                 // Give UI chance to update, only needed for larger structures.
-                await new Promise(res => setTimeout(res, 50));
+                await new Promise((res) => setTimeout(res, 50));
             }
 
             try {
                 files.push([fileName, to_mmCIF(name, s, format === 'bcif', { copyAllCategories: true })]);
             } catch (e) {
                 if (format === 'cif' && s.elementCount > 2000000) {
-                    plugin.log.warn(`[Export] The structure might be too big to be exported as Text CIF, consider using the BinaryCIF format instead.`);
+                    plugin.log.warn(
+                        `[Export] The structure might be too big to be exported as Text CIF, consider using the BinaryCIF format instead.`,
+                    );
                 }
                 throw e;
             }

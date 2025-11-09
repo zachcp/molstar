@@ -24,7 +24,7 @@ export const CasParams: PD.Params = {
     sharpness: PD.Numeric(0.5, { min: 0, max: 1, step: 0.05 }),
     denoise: PD.Boolean(true),
 };
-export type CasProps = PD.Values<typeof CasParams>
+export type CasProps = PD.Values<typeof CasParams>;
 
 export class CasPass {
     private readonly renderable: CasRenderable;
@@ -50,7 +50,10 @@ export class CasPass {
     }
 
     setSize(width: number, height: number) {
-        ValueCell.update(this.renderable.values.uTexSizeInv, Vec2.set(this.renderable.values.uTexSizeInv.ref.value, 1 / width, 1 / height));
+        ValueCell.update(
+            this.renderable.values.uTexSizeInv,
+            Vec2.set(this.renderable.values.uTexSizeInv.ref.value, 1 / width, 1 / height),
+        );
     }
 
     update(input: Texture, props: CasProps) {
@@ -98,7 +101,7 @@ const CasSchema = {
     dDenoise: DefineSpec('boolean'),
 };
 const CasShaderCode = ShaderCode('cas', quad_vert, cas_frag);
-type CasRenderable = ComputeRenderable<Values<typeof CasSchema>>
+type CasRenderable = ComputeRenderable<Values<typeof CasSchema>>;
 
 function getCasRenderable(ctx: WebGLContext, colorTexture: Texture): CasRenderable {
     const width = colorTexture.getWidth();

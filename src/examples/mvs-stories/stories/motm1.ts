@@ -8,7 +8,11 @@
 
 import { decodeColor } from '../../../extensions/mvs/helpers/utils.ts';
 import type { MVSData_States } from '../../../extensions/mvs/mvs-data.ts';
-import { createMVSBuilder, type Structure as MVSStructure, type Root } from '../../../extensions/mvs/tree/mvs/mvs-builder.ts';
+import {
+    createMVSBuilder,
+    type Root,
+    type Structure as MVSStructure,
+} from '../../../extensions/mvs/tree/mvs/mvs-builder.ts';
 import type { MVSNodeParams } from '../../../extensions/mvs/tree/mvs/mvs-tree.ts';
 import { Mat4 } from '../../../mol-math/linear-algebra/3d/mat4.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra/3d/vec3.ts';
@@ -16,9 +20,43 @@ import { MolScriptBuilder as MS } from '../../../mol-script/language/builder.ts'
 import { formatMolScript } from '../../../mol-script/language/expression-formatter.ts';
 
 // 1pmb->1mbn
-const align = Mat4.fromArray(Mat4.zero(), [0.4634187130865737, -0.7131589697034304, 0.5259728687171936, 0, -0.22944227902330105, -0.6698811108214233, -0.7061273127008398, 0, 0.8559202154942049, 0.2065522332899299, -0.4740643150728161, 0, -52.54880970106205, 37.49099778180445, -6.133850309914719, 1], 0);
+const align = Mat4.fromArray(Mat4.zero(), [
+    0.4634187130865737,
+    -0.7131589697034304,
+    0.5259728687171936,
+    0,
+    -0.22944227902330105,
+    -0.6698811108214233,
+    -0.7061273127008398,
+    0,
+    0.8559202154942049,
+    0.2065522332899299,
+    -0.4740643150728161,
+    0,
+    -52.54880970106205,
+    37.49099778180445,
+    -6.133850309914719,
+    1,
+], 0);
 // 1mbo->1myf
-const alignmbo = Mat4.fromArray(Mat4.zero(), [-0.8334619943964441, -0.512838061396133, -0.20576353166796402, 0, -0.20145089001561267, 0.628743285359846, -0.7510655776229758, 0, 0.5145474196737698, -0.5845332204089626, -0.6273453801378679, 0, 11.864847328611186, -1.5261713438028912, 23.638919347623467, 1], 0);
+const alignmbo = Mat4.fromArray(Mat4.zero(), [
+    -0.8334619943964441,
+    -0.512838061396133,
+    -0.20576353166796402,
+    0,
+    -0.20145089001561267,
+    0.628743285359846,
+    -0.7510655776229758,
+    0,
+    0.5145474196737698,
+    -0.5845332204089626,
+    -0.6273453801378679,
+    0,
+    11.864847328611186,
+    -1.5261713438028912,
+    23.638919347623467,
+    1,
+], 0);
 
 const ill_color = (color: string, carbonLightness: number) => ({
     molstar_color_theme_name: 'illustrative',
@@ -29,10 +67,10 @@ const ill_color = (color: string, carbonLightness: number) => ({
                 value: decodeColor(color),
                 saturation: 0,
                 lightness: 0,
-            }
+            },
         },
-        carbonLightness: carbonLightness // required parameter
-    }
+        carbonLightness: carbonLightness, // required parameter
+    },
 });
 
 const GColors2 = ill_color('#947c7c', 0.8);
@@ -70,8 +108,8 @@ const GColors3 = {
             'N': '#CCE6FF',
             'O': '#FFCCCC',
             'S': '#FFE680',
-        }
-    }
+        },
+    },
 } as unknown as MVSNodeParams<'color_from_source'>;
 
 const audioPathBase = 'https://raw.githubusercontent.com/molstar/molstar/master';
@@ -82,8 +120,7 @@ const _Audio2 = audioPathBase + '/examples/audio/AudioMOM1_B.mp3';
 const _Audio3 = audioPathBase + '/examples/audio/AudioMOM1_C.mp3';
 const _Audio4 = audioPathBase + '/examples/audio/AudioMOM1_D.mp3';
 
-const q = (expr: string, lang = 'pymol') =>
-    `!query=${encodeURIComponent(expr)}&lang=${lang}&action=highlight,focus`;
+const q = (expr: string, lang = 'pymol') => `!query=${encodeURIComponent(expr)}&lang=${lang}&action=highlight,focus`;
 
 const desc_intro = `
 # Introduction
@@ -137,31 +174,30 @@ You can learn more about the work of Irving Geis at the **[Geis Archive on PDB-1
 Used with permission from the Howard Hughes Medical Institute, Copyright 2015.*
 `;
 
-
 const query1 = MS.struct.generator.atomGroups({
     'entity-test': MS.core.rel.eq([
         MS.struct.atomProperty.core.modelEntryId(),
-        '1MBN'
-    ])
+        '1MBN',
+    ]),
 });
 const firstEntity1 = q(formatMolScript(query1), 'mol-script');
 const query2 = MS.struct.generator.atomGroups({
     'entity-test': MS.core.rel.eq([
         MS.struct.atomProperty.core.modelEntryId(),
-        '1PMB'
-    ])
+        '1PMB',
+    ]),
 });
 const firstEntity2 = q(formatMolScript(query2), 'mol-script');
 
 const query3 = MS.struct.generator.atomGroups({
     'entity-test': MS.core.rel.eq([
         MS.struct.atomProperty.core.modelEntryId(),
-        '1MBN'
+        '1MBN',
     ]),
     'residue-test': MS.core.set.has([
         MS.set(12, 140, 87),
-        MS.struct.atomProperty.macromolecular.auth_seq_id()
-    ])
+        MS.struct.atomProperty.macromolecular.auth_seq_id(),
+    ]),
 });
 const charged_residues = q(formatMolScript(query3), 'mol-script');
 
@@ -248,7 +284,7 @@ const Steps = [
             builder.extendRootCustomState({
                 molstar_on_load_markdown_commands: {
                     'dispose-audio': _Audio1,
-                }
+                },
             });
 
             const anim = builder.animation(
@@ -257,21 +293,21 @@ const Steps = [
                         molstar_trackball: {
                             name: 'spin',
                             params: { speed: -0.05 },
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             );
 
             const prims = _1mbn.struct.primitives({
                 ref: 'start-story',
                 label_opacity: 0,
                 label_background_color: 'grey',
-                snapshot_key: 'intro'
+                snapshot_key: 'intro',
             });
             prims.label({
                 text: 'Start story',
                 position: [13.5, -4, 7.7],
-                label_size: 8
+                label_size: 8,
             });
 
             anim.interpolate({
@@ -283,7 +319,6 @@ const Steps = [
                 start: 0.0,
                 end: 1.0,
             });
-
 
             return builder;
         },
@@ -321,8 +356,8 @@ const Steps = [
                             'N': '#CCE6FF',
                             'O': '#FFCCCC',
                             'S': '#FFE680',
-                        }
-                    }
+                        },
+                    },
                 }).opacity({ ref: 'cpkopa1', opacity: 0.0 });
 
             _1mbn.struct.component({ selector: { auth_seq_id: 155 } })
@@ -334,7 +369,7 @@ const Steps = [
             builder.extendRootCustomState({
                 molstar_on_load_markdown_commands: {
                     'play-audio': _Audio1,
-                }
+                },
             });
             const anim = builder.animation(
                 {
@@ -342,9 +377,9 @@ const Steps = [
                         molstar_trackball: {
                             name: 'spin',
                             params: { speed: -0.05 },
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             );
             anim.interpolate({
                 kind: 'scalar',
@@ -428,8 +463,8 @@ const Steps = [
                             'N': '#CCE6FF',
                             'O': '#FFCCCC',
                             'S': '#FFE680',
-                        }
-                    }
+                        },
+                    },
                 });
 
             _1mbn.component({ selector: { auth_seq_id: 155 } })
@@ -446,7 +481,7 @@ const Steps = [
                 .label({
                     text: 'whale',
                     position: { label_asym_id: 'A', auth_seq_id: 8 },
-                    label_size: 10
+                    label_size: 10,
                 });
 
             _1mbn.primitives({
@@ -454,16 +489,22 @@ const Steps = [
                 label_opacity: 0,
             })
                 .label({
-                    text: '★', label_offset: 4,
-                    position: { label_asym_id: 'A', auth_seq_id: 12, atom_id: 96 }, label_size: 5
+                    text: '★',
+                    label_offset: 4,
+                    position: { label_asym_id: 'A', auth_seq_id: 12, atom_id: 96 },
+                    label_size: 5,
                 })
                 .label({
-                    text: '★', label_offset: 4,
-                    position: { label_asym_id: 'A', auth_seq_id: 140, auth_atom_id: 'NZ' }, label_size: 5
+                    text: '★',
+                    label_offset: 4,
+                    position: { label_asym_id: 'A', auth_seq_id: 140, auth_atom_id: 'NZ' },
+                    label_size: 5,
                 })
                 .label({
-                    text: '★', label_offset: 4,
-                    position: { label_asym_id: 'A', auth_seq_id: 87, auth_atom_id: 'NZ' }, label_size: 5
+                    text: '★',
+                    label_offset: 4,
+                    position: { label_asym_id: 'A', auth_seq_id: 87, auth_atom_id: 'NZ' },
+                    label_size: 5,
                 });
 
             // the following doesnt work
@@ -471,11 +512,16 @@ const Steps = [
                 selector: [
                     { label_asym_id: 'A', auth_seq_id: 12 },
                     { label_asym_id: 'A', auth_seq_id: 140 },
-                    { label_asym_id: 'A', auth_seq_id: 87 }
-                ]
+                    { label_asym_id: 'A', auth_seq_id: 87 },
+                ],
             });
 
-            seld.representation({ ref: 'scharged', type: 'surface', surface_type: 'gaussian', custom: { molstar_representation_params: { emissive: 0.0, ignoreLight: true } } })
+            seld.representation({
+                ref: 'scharged',
+                type: 'surface',
+                surface_type: 'gaussian',
+                custom: { molstar_representation_params: { emissive: 0.0, ignoreLight: true } },
+            })
                 .colorFromSource(GColors3);
 
             // pig
@@ -489,7 +535,6 @@ const Steps = [
                 .representation({ type: 'spacefill', custom: { molstar_representation_params: { ignoreLight: true } } })
                 .color({ custom: GColors2 });
 
-
             _1pmb.primitives({
                 ref: 'labelpig',
                 label_opacity: 1,
@@ -500,13 +545,13 @@ const Steps = [
                 .label({
                     text: 'pig',
                     position: { label_asym_id: 'A', auth_seq_id: 8 },
-                    label_size: 10
+                    label_size: 10,
                 });
 
             builder.extendRootCustomState({
                 molstar_on_load_markdown_commands: {
                     'play-audio': _Audio2,
-                }
+                },
             });
 
             const anim = builder.animation(
@@ -515,9 +560,10 @@ const Steps = [
                         molstar_trackball: {
                             name: 'spin',
                             params: { speed: -0.05 },
-                        }
-                    }
-                });
+                        },
+                    },
+                },
+            );
             anim.interpolate({
                 kind: 'vec3',
                 target_ref: 'whalex',
@@ -624,10 +670,10 @@ const Steps = [
                         molstar_color_theme_params: {
                             carbonColor: {
                                 name: 'uniform',
-                                params: { value: decodeColor(red2) }
+                                params: { value: decodeColor(red2) },
                             },
-                        }
-                    }
+                        },
+                    },
                 });
 
             _1myf.component({ selector: { label_asym_id: 'A' } })
@@ -636,11 +682,13 @@ const Steps = [
 
             _1mbo.component({ selector: { label_asym_id: 'D', auth_seq_id: 555 } })
                 .representation({
-                    ref: 'oxy', type: 'spacefill', custom: {
+                    ref: 'oxy',
+                    type: 'spacefill',
+                    custom: {
                         molstar_representation_params: {
-                            emissive: 0.0
-                        }
-                    }
+                            emissive: 0.0,
+                        },
+                    },
                 })
                 .color({ color: blue1 });
 
@@ -653,7 +701,7 @@ const Steps = [
             builder.extendRootCustomState({
                 molstar_on_load_markdown_commands: {
                     'play-audio': _Audio3,
-                }
+                },
             });
             const anim = builder.animation(
                 {
@@ -661,9 +709,10 @@ const Steps = [
                         molstar_trackball: {
                             name: 'spin',
                             params: { speed: -0.05 },
-                        }
-                    }
-                });
+                        },
+                    },
+                },
+            );
             anim.interpolate({
                 kind: 'scalar',
                 target_ref: 'spo',
@@ -744,10 +793,12 @@ const Steps = [
             const builder = createMVSBuilder();
             const _1mbn = structure(builder, '1mbn');
             // resn ALA+VAL+LEU+ILE+MET+PHE+TRP+PRO
-            const carb = ['ALA', 'VAL', 'LEU', 'ILE', 'MET', 'PHE', 'TRP', 'PRO'].map(amk => ({ label_comp_id: amk }));
+            const carb = ['ALA', 'VAL', 'LEU', 'ILE', 'MET', 'PHE', 'TRP', 'PRO'].map((amk) => ({
+                label_comp_id: amk,
+            }));
             // resn LYS+ARG+HIS+ASP+GLU
-            const chargedp = ['LYS', 'ARG', 'HIS'].map(amk => ({ label_comp_id: amk }));
-            const chargedn = ['ASP', 'GLU'].map(amk => ({ label_comp_id: amk }));
+            const chargedp = ['LYS', 'ARG', 'HIS'].map((amk) => ({ label_comp_id: amk }));
+            const chargedn = ['ASP', 'GLU'].map((amk) => ({ label_comp_id: amk }));
 
             // salt bridge
             // ASP44-OD1-356-LYS47-NZ-388
@@ -758,14 +809,16 @@ const Steps = [
                 .distance({
                     start: { label_asym_id: 'A', auth_seq_id: 44, atom_id: 356 },
                     end: { label_asym_id: 'A', auth_seq_id: 47, atom_id: 388 },
-                    radius: 0.1, dash_length: 0.1,
-                    label_size: 2
+                    radius: 0.1,
+                    dash_length: 0.1,
+                    label_size: 2,
                 })
                 .distance({
                     start: { label_asym_id: 'A', auth_seq_id: 77, atom_id: 613 },
                     end: { label_asym_id: 'A', auth_seq_id: 18, atom_id: 149 },
-                    radius: 0.1, dash_length: 0.1,
-                    label_size: 2
+                    radius: 0.1,
+                    dash_length: 0.1,
+                    label_size: 2,
                 });
             // 44 OD1 22.300 33.300 -6.200
             // 47 NZ 23.200 32.000 -8.400
@@ -800,19 +853,20 @@ const Steps = [
 
             _1mbn.component({ selector: 'ligand' })
                 .representation({
-                    ref: 'ligand', type: 'ball_and_stick',
+                    ref: 'ligand',
+                    type: 'ball_and_stick',
                     custom: {
                         molstar_representation_params: {
-                            emissive: 0.0
-                        }
-                    }
+                            emissive: 0.0,
+                        },
+                    },
                 })
                 .color({ color: 'orange' });
 
             builder.extendRootCustomState({
                 molstar_on_load_markdown_commands: {
                     'play-audio': _Audio4,
-                }
+                },
             });
 
             const anim = builder.animation({});
@@ -904,14 +958,14 @@ function addNextButton(builder: any, snapshotKey: string, position: [number, num
         tooltip: 'Click for next part',
         label_opacity: 0,
         label_background_color: 'grey',
-        snapshot_key: snapshotKey
+        snapshot_key: snapshotKey,
     })
         .label({
             ref: 'next_label',
             position: position,
             text: 'Next Scene →',
             label_color: 'white',
-            label_size: 5
+            label_size: 5,
         });
 }
 function structure(builder: Root, id: string): MVSStructure {
@@ -965,7 +1019,7 @@ export function buildStory(): MVSData_States {
             title: 'RCSB PDB Molecule of the Month 1',
             version: '1.0',
             timestamp: new Date().toISOString(),
-        }
+        },
     };
 }
 
@@ -1006,7 +1060,7 @@ function build1mbn(builder: any, pdbId: string) {
         refs: {
             surfaceOpacity: 'surfopa',
             lineOpacity: 'lineopa',
-        }
+        },
     };
 }
 

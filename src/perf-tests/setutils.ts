@@ -25,7 +25,7 @@ function createSerialSet(count: number, offset: number) {
 function isSuperset<T>(setA: ReadonlySet<T>, setB: ReadonlySet<T>) {
     if (setA.size < setB.size) return false;
     let flag = true;
-    setB.forEach(elem => {
+    setB.forEach((elem) => {
         if (!setA.has(elem)) flag = false;
     });
     return flag;
@@ -34,7 +34,7 @@ function isSuperset<T>(setA: ReadonlySet<T>, setB: ReadonlySet<T>) {
 function isSuperset2<T>(setA: ReadonlySet<T>, setB: ReadonlySet<T>) {
     if (setA.size < setB.size) return false;
     let flag = true;
-    setB.forEach(elem => {
+    setB.forEach((elem) => {
         if (flag && !setA.has(elem)) flag = false;
     });
     return flag;
@@ -51,7 +51,7 @@ function isSupersetIter<T>(setA: ReadonlySet<T>, setB: ReadonlySet<T>) {
 function areIntersecting<T>(setA: ReadonlySet<T>, setB: ReadonlySet<T>): boolean {
     if (setA.size < setB.size) [setA, setB] = [setB, setA];
     let flag = false;
-    setB.forEach(elem => {
+    setB.forEach((elem) => {
         if (setA.has(elem)) flag = true;
     });
     return flag;
@@ -60,7 +60,7 @@ function areIntersecting<T>(setA: ReadonlySet<T>, setB: ReadonlySet<T>): boolean
 function areIntersecting2<T>(setA: ReadonlySet<T>, setB: ReadonlySet<T>): boolean {
     if (setA.size < setB.size) [setA, setB] = [setB, setA];
     let flag = false;
-    setB.forEach(elem => {
+    setB.forEach((elem) => {
         if (!flag && setA.has(elem)) flag = true;
     });
     return flag;

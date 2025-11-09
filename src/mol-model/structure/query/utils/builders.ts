@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StructureElement, Structure } from '../../structure.ts';
+import { Structure, StructureElement } from '../../structure.ts';
 import { StructureSelection } from '../selection.ts';
 import { HashSet } from '../../../../mol-data/generic.ts';
 import { structureUnion } from './structure-set.ts';
@@ -25,7 +25,9 @@ export class UniqueStructuresBuilder {
     }
 
     getSelection() {
-        if (this.allSingletons) return StructureSelection.Singletons(this.source, structureUnion(this.source, this.structures));
+        if (this.allSingletons) {
+            return StructureSelection.Singletons(this.source, structureUnion(this.source, this.structures));
+        }
         return StructureSelection.Sequence(this.source, this.structures);
     }
 
@@ -79,5 +81,5 @@ export class LinearGroupingBuilder {
         return this.fullSelection();
     }
 
-    constructor(private source: Structure) { }
+    constructor(private source: Structure) {}
 }

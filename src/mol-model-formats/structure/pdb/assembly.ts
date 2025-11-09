@@ -33,22 +33,22 @@ export function parseCryst1(id: string, record: string): CifCategory[] {
         angle_beta: CifField.ofString(get(40, 7)),
         angle_gamma: CifField.ofString(get(47, 7)),
         Z_PDB: CifField.ofString(get(66, 4)),
-        pdbx_unique_axis: CifField.ofString('?')
+        pdbx_unique_axis: CifField.ofString('?'),
     };
     const symmetry: CifCategory.Fields<mmCIF_Schema['symmetry']> = {
         entry_id: CifField.ofString(id),
         'space_group_name_H-M': CifField.ofString(get(55, 11)),
         Int_Tables_number: CifField.ofString('?'),
         cell_setting: CifField.ofString('?'),
-        space_group_name_Hall: CifField.ofString('?')
+        space_group_name_Hall: CifField.ofString('?'),
     };
     return [CifCategory.ofFields('cell', cell), CifCategory.ofFields('symmetry', symmetry)];
 }
 
 interface PdbAssembly {
-    id: string,
-    details: string,
-    groups: { chains: string[], operators: { id: number, matrix: Mat4 }[] }[]
+    id: string;
+    details: string;
+    groups: { chains: string[]; operators: { id: number; matrix: Mat4 }[] }[];
 }
 
 function PdbAssembly(id: string, details: string): PdbAssembly {
@@ -88,8 +88,8 @@ export function parseRemark350(lines: Tokens, lineStart: number, lineEnd: number
             Mat4.setValue(matrix!, row, 3, parseFloat(biomt[7]));
         } else if (
             line.substr(11, 30) === 'APPLY THE FOLLOWING TO CHAINS:' ||
-            line.substr(11, 30) === '                   AND CHAINS:') {
-
+            line.substr(11, 30) === '                   AND CHAINS:'
+        ) {
             if (line.substr(11, 5) === 'APPLY') {
                 group = { chains: [], operators: [] };
                 current!.groups.push(group);
@@ -126,30 +126,33 @@ export function parseRemark350(lines: Tokens, lineStart: number, lineEnd: number
 
     // pdbx_struct_assembly
     const pdbx_struct_assembly: CifCategory.SomeFields<mmCIF_Schema['pdbx_struct_assembly']> = {
-        id: CifField.ofStrings(assemblies.map(a => a.id)),
-        details: CifField.ofStrings(assemblies.map(a => a.details))
+        id: CifField.ofStrings(assemblies.map((a) => a.id)),
+        details: CifField.ofStrings(assemblies.map((a) => a.details)),
     };
 
-
     // pdbx_struct_assembly_gen
-    const pdbx_struct_assembly_gen_rows: { [P in keyof CifCategory.Fields<mmCIF_Schema['pdbx_struct_assembly_gen']>]: string }[] = [];
+    const pdbx_struct_assembly_gen_rows: {
+        [P in keyof CifCategory.Fields<mmCIF_Schema['pdbx_struct_assembly_gen']>]: string;
+    }[] = [];
     for (const asm of assemblies) {
         for (const group of asm.groups) {
             pdbx_struct_assembly_gen_rows.push({
                 assembly_id: asm.id,
-                oper_expression: group.operators.map(o => o.id).join(','),
-                asym_id_list: group.chains.join(',')
+                oper_expression: group.operators.map((o) => o.id).join(','),
+                asym_id_list: group.chains.join(','),
             });
         }
     }
     const pdbx_struct_assembly_gen: CifCategory.Fields<mmCIF_Schema['pdbx_struct_assembly_gen']> = {
-        assembly_id: CifField.ofStrings(pdbx_struct_assembly_gen_rows.map(r => r.assembly_id)),
-        oper_expression: CifField.ofStrings(pdbx_struct_assembly_gen_rows.map(r => r.oper_expression)),
-        asym_id_list: CifField.ofStrings(pdbx_struct_assembly_gen_rows.map(r => r.asym_id_list))
+        assembly_id: CifField.ofStrings(pdbx_struct_assembly_gen_rows.map((r) => r.assembly_id)),
+        oper_expression: CifField.ofStrings(pdbx_struct_assembly_gen_rows.map((r) => r.oper_expression)),
+        asym_id_list: CifField.ofStrings(pdbx_struct_assembly_gen_rows.map((r) => r.asym_id_list)),
     };
 
     // pdbx_struct_oper_list
-    const pdbx_struct_oper_list_rows: { [P in keyof CifCategory.Fields<mmCIF_Schema['pdbx_struct_oper_list']>]?: string }[] = [];
+    const pdbx_struct_oper_list_rows: {
+        [P in keyof CifCategory.Fields<mmCIF_Schema['pdbx_struct_oper_list']>]?: string;
+    }[] = [];
     for (const asm of assemblies) {
         for (const group of asm.groups) {
             for (const oper of group.operators) {
@@ -157,7 +160,7 @@ export function parseRemark350(lines: Tokens, lineStart: number, lineEnd: number
                     id: '' + oper.id,
                     type: '?',
                     name: '?',
-                    symmetry_operation: '?'
+                    symmetry_operation: '?',
                 } as (typeof pdbx_struct_oper_list_rows)[0] as any;
                 for (let i = 0; i < 3; i++) {
                     for (let j = 0; j < 3; j++) {
@@ -171,24 +174,26 @@ export function parseRemark350(lines: Tokens, lineStart: number, lineEnd: number
     }
 
     const pdbx_struct_oper_list: CifCategory.SomeFields<mmCIF_Schema['pdbx_struct_oper_list']> = {
-        id: CifField.ofStrings(pdbx_struct_oper_list_rows.map(r => r.id!)),
-        type: CifField.ofStrings(pdbx_struct_oper_list_rows.map(r => r.type!)),
-        name: CifField.ofStrings(pdbx_struct_oper_list_rows.map(r => r.name!)),
-        symmetry_operation: CifField.ofStrings(pdbx_struct_oper_list_rows.map(r => r.symmetry_operation!))
+        id: CifField.ofStrings(pdbx_struct_oper_list_rows.map((r) => r.id!)),
+        type: CifField.ofStrings(pdbx_struct_oper_list_rows.map((r) => r.type!)),
+        name: CifField.ofStrings(pdbx_struct_oper_list_rows.map((r) => r.name!)),
+        symmetry_operation: CifField.ofStrings(pdbx_struct_oper_list_rows.map((r) => r.symmetry_operation!)),
     };
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             const k = `matrix[${i + 1}][${j + 1}]`;
-            (pdbx_struct_oper_list as any)[k] = CifField.ofStrings(pdbx_struct_oper_list_rows.map(r => (r as any)[k]!));
+            (pdbx_struct_oper_list as any)[k] = CifField.ofStrings(
+                pdbx_struct_oper_list_rows.map((r) => (r as any)[k]!),
+            );
         }
         const k = `vector[${i + 1}]`;
-        (pdbx_struct_oper_list as any)[k] = CifField.ofStrings(pdbx_struct_oper_list_rows.map(r => (r as any)[k]!));
+        (pdbx_struct_oper_list as any)[k] = CifField.ofStrings(pdbx_struct_oper_list_rows.map((r) => (r as any)[k]!));
     }
 
     return [
         CifCategory.ofFields('pdbx_struct_assembly', pdbx_struct_assembly),
         CifCategory.ofFields('pdbx_struct_assembly_gen', pdbx_struct_assembly_gen),
-        CifCategory.ofFields('pdbx_struct_oper_list', pdbx_struct_oper_list)
+        CifCategory.ofFields('pdbx_struct_oper_list', pdbx_struct_oper_list),
     ];
 }
 
@@ -222,7 +227,7 @@ export function parseMtrix(lines: Tokens, lineStart: number, lineEnd: number): C
         const row = {
             id: 'ncsop' + (id++),
             code: '.',
-            details: '.'
+            details: '.',
         } as (typeof struct_ncs_oper_rows)[0] as any;
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
@@ -234,17 +239,17 @@ export function parseMtrix(lines: Tokens, lineStart: number, lineEnd: number): C
     }
 
     const struct_ncs_oper: CifCategory.SomeFields<mmCIF_Schema['struct_ncs_oper']> = {
-        id: CifField.ofStrings(struct_ncs_oper_rows.map(r => r.id!)),
-        code: CifField.ofStrings(struct_ncs_oper_rows.map(r => r.code!)),
-        details: CifField.ofStrings(struct_ncs_oper_rows.map(r => r.details!)),
+        id: CifField.ofStrings(struct_ncs_oper_rows.map((r) => r.id!)),
+        code: CifField.ofStrings(struct_ncs_oper_rows.map((r) => r.code!)),
+        details: CifField.ofStrings(struct_ncs_oper_rows.map((r) => r.details!)),
     };
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             const k = `matrix[${i + 1}][${j + 1}]`;
-            (struct_ncs_oper as any)[k] = CifField.ofStrings(struct_ncs_oper_rows.map(r => (r as any)[k]!));
+            (struct_ncs_oper as any)[k] = CifField.ofStrings(struct_ncs_oper_rows.map((r) => (r as any)[k]!));
         }
         const k = `vector[${i + 1}]`;
-        (struct_ncs_oper as any)[k] = CifField.ofStrings(struct_ncs_oper_rows.map(r => (r as any)[k]!));
+        (struct_ncs_oper as any)[k] = CifField.ofStrings(struct_ncs_oper_rows.map((r) => (r as any)[k]!));
     }
 
     return [CifCategory.ofFields('struct_ncs_oper', struct_ncs_oper)];

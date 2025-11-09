@@ -18,6 +18,6 @@ export const MeasurementRepresentationCommonTextParams = {
 export const LociLabelTextParams = {
     ...Text.Params,
     ...MeasurementRepresentationCommonTextParams,
-    borderWidth: PD.Numeric(0.2, { min: 0, max: 0.5, step: 0.01 })
+    borderWidth: PD.Numeric(0.2, { min: 0, max: 0.5, step: 0.01 }),
 };
-export type LociLabelTextParams = typeof LociLabelTextParams
+export type LociLabelTextParams = typeof LociLabelTextParams;

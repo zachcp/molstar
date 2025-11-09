@@ -8,9 +8,9 @@ import type { ShapeGetter } from '../../mol-repr/shape/representation.ts';
 import type { Geometry, GeometryUtils } from '../../mol-geo/geometry/geometry.ts';
 
 export interface ShapeProvider<D, G extends Geometry, P extends Geometry.Params<G>> {
-    label: string
-    data: D
-    params: P
-    getShape: ShapeGetter<D, G, P>
-    geometryUtils: GeometryUtils<G>
+    label: string;
+    data: D;
+    params: P;
+    getShape: ShapeGetter<D, G, P>;
+    geometryUtils: GeometryUtils<G>;
 }

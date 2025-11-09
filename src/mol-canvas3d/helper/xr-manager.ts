@@ -45,8 +45,8 @@ function getRayFromPose(pose: XRPose, view?: Mat4): Ray3D {
 }
 
 type InputInfo = {
-    targetRayPose: XRPose,
-}
+    targetRayPose: XRPose;
+};
 
 export const DefaultXRManagerBindings = {
     exit: Binding([Key('GamepadB')]),
@@ -56,16 +56,18 @@ export const DefaultXRManagerBindings = {
 export const DefaultXRManagerAttribs = {
     bindings: DefaultXRManagerBindings,
 };
-export type XRManagerAttribs = typeof DefaultXRManagerAttribs
+export type XRManagerAttribs = typeof DefaultXRManagerAttribs;
 
 export const XRManagerParams = {
     minTargetDistance: PD.Numeric(0.4, { min: 0.001, max: 1, step: 0.001 }),
     disablePostprocessing: PD.Boolean(true),
     resolutionScale: PD.Numeric(1, { min: 0.1, max: 2, step: 0.1 }),
-    sceneRadiusInMeters: PD.Numeric(0.25, { min: 0.01, max: 2, step: 0.01 }, { description: 'The radius of the scene bounding sphere in meters, used to set the initial camera scale.' }),
+    sceneRadiusInMeters: PD.Numeric(0.25, { min: 0.01, max: 2, step: 0.01 }, {
+        description: 'The radius of the scene bounding sphere in meters, used to set the initial camera scale.',
+    }),
 };
-export type XRManagerParams = typeof XRManagerParams
-export type XRManagerProps = PD.Values<XRManagerParams>
+export type XRManagerParams = typeof XRManagerParams;
+export type XRManagerProps = PD.Values<XRManagerParams>;
 
 export class XRManager {
     private hoverSub: Subscription;
@@ -86,7 +88,7 @@ export class XRManager {
 
     private scaleFactor = 1;
     private prevScale = 0;
-    private prevInput: { left?: InputInfo, right?: InputInfo } = {};
+    private prevInput: { left?: InputInfo; right?: InputInfo } = {};
     private hit: Vec3 | undefined = undefined;
 
     readonly props: XRManagerProps;
@@ -95,7 +97,12 @@ export class XRManager {
         Object.assign(this.props, props);
     }
 
-    private intersect(camera: ICamera, view: Mat4, plane: Plane3D, targetRayPose: XRPose): { point: Vec3, screen: Vec2 } | undefined {
+    private intersect(
+        camera: ICamera,
+        view: Mat4,
+        plane: Plane3D,
+        targetRayPose: XRPose,
+    ): { point: Vec3; screen: Vec2 } | undefined {
         const point = Vec3();
         const ray = getRayFromPose(targetRayPose, view);
         if (Plane3D.intersectRay3D(point, plane, ray)) {
@@ -174,7 +181,11 @@ export class XRManager {
                 const ray = getRayFromPose(targetRayPose, camera.view);
                 pointers.push(ray);
 
-                const sceneBoundingSphere = Sphere3D.scaleNX(Sphere3D(), this.scene.boundingSphereVisible, camLeft.scale);
+                const sceneBoundingSphere = Sphere3D.scaleNX(
+                    Sphere3D(),
+                    this.scene.boundingSphereVisible,
+                    camLeft.scale,
+                );
 
                 const si = Vec3();
                 if (Ray3D.intersectSphere3D(si, ray, sceneBoundingSphere)) {
@@ -191,7 +202,9 @@ export class XRManager {
                 const prevInput = handedness === 'left' ? this.prevInput.left : this.prevInput.right;
 
                 const intersection = this.intersect(camLeft, camera.view, cameraPlane, targetRayPose);
-                const prevIntersection = prevInput ? this.intersect(camLeft, camera.view, cameraPlane, prevInput.targetRayPose) : undefined;
+                const prevIntersection = prevInput
+                    ? this.intersect(camLeft, camera.view, cameraPlane, prevInput.targetRayPose)
+                    : undefined;
 
                 const [x, y] = intersection?.screen ?? [0, 0];
                 const [prevX, prevY] = prevIntersection?.screen ?? [x, y];
@@ -203,8 +216,12 @@ export class XRManager {
                 trackedPointers.push({
                     handedness,
                     buttons,
-                    x, y, dx, dy, ray,
-                    axes: gamepad?.axes
+                    x,
+                    y,
+                    dx,
+                    dy,
+                    ray,
+                    axes: gamepad?.axes,
                 });
 
                 if (handedness === 'left') {
@@ -293,7 +310,17 @@ export class XRManager {
         navigator.xr?.removeEventListener('devicechange', this.checkSupported);
     }
 
-    constructor(private webgl: WebGLContext, private input: InputObserver, private scene: Scene, private camera: Camera, private stereoCamera: StereoCamera, private pointerHelper: PointerHelper, private interactionHelper: Canvas3dInteractionHelper, props: Partial<XRManagerProps> = {}, attribs: Partial<XRManagerAttribs> = {}) {
+    constructor(
+        private webgl: WebGLContext,
+        private input: InputObserver,
+        private scene: Scene,
+        private camera: Camera,
+        private stereoCamera: StereoCamera,
+        private pointerHelper: PointerHelper,
+        private interactionHelper: Canvas3dInteractionHelper,
+        props: Partial<XRManagerProps> = {},
+        attribs: Partial<XRManagerAttribs> = {},
+    ) {
         this.props = { ...PD.getDefaultValues(XRManagerParams), ...props };
 
         this.hoverSub = this.interactionHelper.events.hover.subscribe(({ position }) => {

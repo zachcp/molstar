@@ -6,7 +6,7 @@
  * @author Panagiotis Tourlas <panagiot_tourlov@hotmail.com>
  */
 
-import { parseMol, formalChargeMapper } from '../mol/parser';
+import { formalChargeMapper, parseMol } from '../mol/parser';
 
 const MolString = `2244
   -OEChem-04072009073D

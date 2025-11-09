@@ -24,7 +24,7 @@ const ConfidenceColors = {
     'Very Low': Color(0xff7d45),
     'Low': Color(0xffdb13),
     'Confident': Color(0x65cbf3),
-    'Very High': Color(0x0053d6)
+    'Very High': Color(0x0053d6),
 };
 
 const ConfidenceColorLegend = TableLegend(Object.entries(ConfidenceColors));
@@ -34,9 +34,12 @@ export function getPLDDTConfidenceColorThemeParams(ctx: ThemeDataContext) {
         metricId: QualityAssessment.getLocalOptions(ctx.structure?.models[0], 'pLDDT'),
     };
 }
-export type PLDDTConfidenceColorThemeParams = ReturnType<typeof getPLDDTConfidenceColorThemeParams>
+export type PLDDTConfidenceColorThemeParams = ReturnType<typeof getPLDDTConfidenceColorThemeParams>;
 
-export function PLDDTConfidenceColorTheme(ctx: ThemeDataContext, props: PD.Values<PLDDTConfidenceColorThemeParams>): ColorTheme<PLDDTConfidenceColorThemeParams> {
+export function PLDDTConfidenceColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<PLDDTConfidenceColorThemeParams>,
+): ColorTheme<PLDDTConfidenceColorThemeParams> {
     let color: LocationColor = () => DefaultColor;
 
     if (ctx.structure) {
@@ -84,19 +87,27 @@ export function PLDDTConfidenceColorTheme(ctx: ThemeDataContext, props: PD.Value
         preferSmoothing: true,
         color,
         props,
-        description: 'Assigns residue colors according to the pLDDT Confidence score. If no Model Archive quality assessment score is available, the B-factor value is used instead.',
-        legend: ConfidenceColorLegend
+        description:
+            'Assigns residue colors according to the pLDDT Confidence score. If no Model Archive quality assessment score is available, the B-factor value is used instead.',
+        legend: ConfidenceColorLegend,
     };
 }
 
-export const PLDDTConfidenceColorThemeProvider: ColorTheme.Provider<PLDDTConfidenceColorThemeParams, 'plddt-confidence'> = {
+export const PLDDTConfidenceColorThemeProvider: ColorTheme.Provider<
+    PLDDTConfidenceColorThemeParams,
+    'plddt-confidence'
+> = {
     name: 'plddt-confidence',
     label: 'pLDDT Confidence',
     category: ColorThemeCategory.Validation,
     factory: PLDDTConfidenceColorTheme,
     getParams: getPLDDTConfidenceColorThemeParams,
     defaultValues: PD.getDefaultValues(getPLDDTConfidenceColorThemeParams({})),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure?.models.some(m => QualityAssessment.isApplicable(m, 'pLDDT') || (m.atomicConformation.B_iso_or_equiv.isDefined && !Model.isExperimental(m))),
+    isApplicable: (ctx: ThemeDataContext) =>
+        !!ctx.structure?.models.some((m) =>
+            QualityAssessment.isApplicable(m, 'pLDDT') ||
+            (m.atomicConformation.B_iso_or_equiv.isDefined && !Model.isExperimental(m))
+        ),
     ensureCustomProperties: {
         attach: async (ctx: CustomProperty.Context, data: ThemeDataContext) => {
             if (data.structure) {
@@ -111,6 +122,6 @@ export const PLDDTConfidenceColorThemeProvider: ColorTheme.Provider<PLDDTConfide
                     QualityAssessmentProvider.ref(m, false);
                 }
             }
-        }
-    }
+        },
+    },
 };

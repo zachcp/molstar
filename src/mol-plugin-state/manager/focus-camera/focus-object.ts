@@ -16,19 +16,25 @@ import type { PluginState } from '../../../mol-plugin/state.ts';
 import { type StateObjectCell, StateSelection, type StateTransform } from '../../../mol-state/index.ts';
 import { PluginStateObject } from '../../objects.ts';
 
-
 /** Return camera snapshot focused on a plugin state object cell (if `targetRef` is defined)
  * or on the whole scene (if `targetRef` is undefined).
  * If `direction` and `up` are not provided, use current camera orientation. */
-export function getFocusSnapshot(plugin: PluginContext, options: PluginState.SnapshotFocusInfo & { minRadius?: number }) {
+export function getFocusSnapshot(
+    plugin: PluginContext,
+    options: PluginState.SnapshotFocusInfo & { minRadius?: number },
+) {
     if (!plugin.canvas3d) return undefined;
-    const targetSpheres = options.targets?.map(target => {
-        const bounding = (target.targetRef !== undefined) ? getCellBoundingSphere(plugin, target.targetRef) : getPluginBoundingSphere(plugin);
+    const targetSpheres = options.targets?.map((target) => {
+        const bounding = (target.targetRef !== undefined)
+            ? getCellBoundingSphere(plugin, target.targetRef)
+            : getPluginBoundingSphere(plugin);
         if (!bounding) return undefined;
         const radius = target.radius ?? bounding.radius * (target.radiusFactor ?? 1) + (target.extraRadius ?? 0);
         return Sphere3D.create(bounding.center, radius);
-    }).filter(sphere => sphere !== undefined);
-    const mergedSphere = (targetSpheres && targetSpheres.length > 0) ? boundingSphereOfSpheres(targetSpheres) : getPluginBoundingSphere(plugin);
+    }).filter((sphere) => sphere !== undefined);
+    const mergedSphere = (targetSpheres && targetSpheres.length > 0)
+        ? boundingSphereOfSpheres(targetSpheres)
+        : getPluginBoundingSphere(plugin);
     return snapshotFromSphereAndDirections(plugin.canvas3d.camera, {
         center: mergedSphere.center,
         radius: Math.max(mergedSphere.radius, options.minRadius ?? 0),
@@ -42,7 +48,10 @@ const _tmpVec = Vec3();
 /** Return camera snapshot for focusing a sphere with given `center` and `radius`,
  * while ensuring given view `direction` (aligns with vector position->target)
  * and `up` (aligns with screen Y axis). */
-function snapshotFromSphereAndDirections(camera: Camera, options: { center: Vec3, radius: number, direction?: Vec3, up?: Vec3 }): Partial<Camera.Snapshot> {
+function snapshotFromSphereAndDirections(
+    camera: Camera,
+    options: { center: Vec3; radius: number; direction?: Vec3; up?: Vec3 },
+): Partial<Camera.Snapshot> {
     // This might seem to repeat `plugin.canvas3d.camera.getFocus` but avoid flipping
     const target = options.center;
     const radius = Math.max(options.radius, 0.01);
@@ -70,13 +79,16 @@ function collectCellBoundingSpheres(out: Sphere3D[], plugin: PluginContext, cell
         out.push(...spheres);
     } else {
         const children = plugin.state.data.tree.children.get(cellRef);
-        children.forEach(child => collectCellBoundingSpheres(out, plugin, child));
+        children.forEach((child) => collectCellBoundingSpheres(out, plugin, child));
     }
     return out;
 }
 
 /** Return a set of bounding spheres of a plugin state object. Return `undefined` if this plugin state object type does not define bounding spheres. */
-function getStateObjectBoundingSpheres(plugin: PluginContext, cell: StateObjectCell | undefined): Sphere3D[] | undefined {
+function getStateObjectBoundingSpheres(
+    plugin: PluginContext,
+    cell: StateObjectCell | undefined,
+): Sphere3D[] | undefined {
     const obj = cell?.obj;
     if (!obj) return undefined;
     if (!obj.data) {
@@ -84,7 +96,10 @@ function getStateObjectBoundingSpheres(plugin: PluginContext, cell: StateObjectC
         return undefined;
     }
     if (obj.data instanceof Structure) {
-        const decorated = StateSelection.getDecorated<PluginStateObject.Molecule.Structure>(plugin.state.data, cell.transform.ref);
+        const decorated = StateSelection.getDecorated<PluginStateObject.Molecule.Structure>(
+            plugin.state.data,
+            cell.transform.ref,
+        );
         const data = decorated?.obj?.data ?? obj?.data;
         const sphere = Loci.getBoundingSphere(Structure.Loci(data));
         return sphere ? [sphere] : [];
@@ -102,14 +117,16 @@ function getStateObjectBoundingSpheres(plugin: PluginContext, cell: StateObjectC
 /** Return the bounding sphere of the whole visible scene. */
 export function getPluginBoundingSphere(plugin: PluginContext) {
     const renderObjects = getRenderObjects(plugin, false);
-    const spheres = renderObjects.map(r => r.values.boundingSphere.ref.value).filter(sphere => sphere.radius > 0);
+    const spheres = renderObjects.map((r) => r.values.boundingSphere.ref.value).filter((sphere) => sphere.radius > 0);
     return boundingSphereOfSpheres(spheres);
 }
 
 function getRenderObjects(plugin: PluginContext, includeHidden: boolean): GraphicsRenderObject[] {
-    let reprCells = Array.from(plugin.state.data.cells.values()).filter(cell => cell.obj && PluginStateObject.isRepresentation3D(cell.obj));
-    if (!includeHidden) reprCells = reprCells.filter(cell => !cell.state.isHidden);
-    const renderables = reprCells.flatMap(cell => cell.obj!.data.repr.renderObjects);
+    let reprCells = Array.from(plugin.state.data.cells.values()).filter((cell) =>
+        cell.obj && PluginStateObject.isRepresentation3D(cell.obj)
+    );
+    if (!includeHidden) reprCells = reprCells.filter((cell) => !cell.state.isHidden);
+    const renderables = reprCells.flatMap((cell) => cell.obj!.data.repr.renderObjects);
     return renderables;
 }
 

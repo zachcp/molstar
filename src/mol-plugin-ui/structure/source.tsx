@@ -6,7 +6,11 @@
  */
 
 import { Model } from '../../mol-model/structure.ts';
-import type { ModelRef, StructureHierarchyRef, TrajectoryRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
+import type {
+    ModelRef,
+    StructureHierarchyRef,
+    TrajectoryRef,
+} from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
 import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
 import { StateSelection } from '../../mol-state/index.ts';
 import { CollapsableControls, type CollapsableState } from '../base.tsx';
@@ -19,8 +23,8 @@ import { StructureFocusControls } from './focus.tsx';
 import { StructureSelectionStatsControls } from './selection.tsx';
 
 interface StructureSourceControlState extends CollapsableState {
-    isBusy: boolean,
-    show?: 'hierarchy' | 'presets'
+    isBusy: boolean;
+    show?: 'hierarchy' | 'presets';
 }
 
 export class StructureSourceControls extends CollapsableControls<{}, StructureSourceControlState> {
@@ -29,12 +33,13 @@ export class StructureSourceControls extends CollapsableControls<{}, StructureSo
             header: 'Structure',
             isCollapsed: false,
             isBusy: false,
-            brand: { accent: 'purple', svg: MoleculeSvg }
+            brand: { accent: 'purple', svg: MoleculeSvg },
         };
     }
 
-    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, () => this.forceUpdate());
-        this.subscribe(this.plugin.behaviors.state.isBusy, v => {
+    override componentDidMount() {
+        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, () => this.forceUpdate());
+        this.subscribe(this.plugin.behaviors.state.isBusy, (v) => {
             this.setState({ isBusy: v });
         });
     }
@@ -47,23 +52,38 @@ export class StructureSourceControls extends CollapsableControls<{}, StructureSo
             case 'model': {
                 const model = ref.cell.obj?.data;
                 if (model && Model.TrajectoryInfo.get(model).size > 1) {
-                    label = `${ref.cell.obj?.data.entryId} | Model ${Model.TrajectoryInfo.get(model).index + 1} of ${Model.TrajectoryInfo.get(model).size}`;
+                    label = `${ref.cell.obj?.data.entryId} | Model ${Model.TrajectoryInfo.get(model).index + 1} of ${
+                        Model.TrajectoryInfo.get(model).size
+                    }`;
                 }
-                label = `${ref.cell.obj?.data.entryId} | ${ref.cell.obj?.label}`; break;
+                label = `${ref.cell.obj?.data.entryId} | ${ref.cell.obj?.label}`;
+                break;
             }
             case 'structure': {
                 const model = ref.cell.obj?.data.models[0];
                 if (model && Model.TrajectoryInfo.get(model).size! > 1) {
-                    label = `${model.entryId} | ${ref.cell.obj?.label} (Model ${Model.TrajectoryInfo.get(model).index + 1} of ${Model.TrajectoryInfo.get(model).size})`; break;
+                    label = `${model.entryId} | ${ref.cell.obj?.label} (Model ${
+                        Model.TrajectoryInfo.get(model).index + 1
+                    } of ${Model.TrajectoryInfo.get(model).size})`;
+                    break;
                 } else if (model) {
-                    label = `${model.entryId} | ${ref.cell.obj?.label}`; break;
+                    label = `${model.entryId} | ${ref.cell.obj?.label}`;
+                    break;
                 } else {
-                    label = `${ref.cell.obj?.label}`; break;
+                    label = `${ref.cell.obj?.label}`;
+                    break;
                 }
             }
-            default: label = ref.cell.obj?.label; break;
+            default:
+                label = ref.cell.obj?.label;
+                break;
         }
-        const item: ActionMenu.Item = { kind: 'item', label: label || ref.kind, selected: selected.has(ref.cell.transform.ref), value: [ref] };
+        const item: ActionMenu.Item = {
+            kind: 'item',
+            label: label || ref.kind,
+            selected: selected.has(ref.cell.transform.ref),
+            value: [ref],
+        };
         return item;
     };
 
@@ -77,7 +97,11 @@ export class StructureSourceControls extends CollapsableControls<{}, StructureSo
         if (m.structures.length === 1) {
             const selected = this.plugin.managers.structure.hierarchy.seletionSet;
             const ref = m.structures[0];
-            return { label: `${m.cell.obj?.label} | ${ref.cell.obj?.label}`, selected: selected.has(ref.cell.transform.ref), value: [m, ref] } as ActionMenu.Item;
+            return {
+                label: `${m.cell.obj?.label} | ${ref.cell.obj?.label}`,
+                selected: selected.has(ref.cell.transform.ref),
+                value: [m, ref],
+            } as ActionMenu.Item;
         }
         return [ActionMenu.Header(m.cell.obj?.label!), ...m.structures.map(this.item)];
     };
@@ -90,14 +114,14 @@ export class StructureSourceControls extends CollapsableControls<{}, StructureSo
         if (current.trajectories.length > 1) {
             ret.push([
                 ActionMenu.Header('Trajectories'),
-                ...current.trajectories.map(this.item)
+                ...current.trajectories.map(this.item),
             ]);
         }
 
         if (current.models.length > 1 || current.trajectories.length > 1) {
             ret.push([
                 ActionMenu.Header('Models'),
-                ...current.models.map(this.item)
+                ...current.models.map(this.item),
             ]);
         }
 
@@ -106,7 +130,7 @@ export class StructureSourceControls extends CollapsableControls<{}, StructureSo
         } else if (current.structures.length > 0) {
             ret.push([
                 ActionMenu.Header('Structures'),
-                ...current.structures.map(this.item)
+                ...current.structures.map(this.item),
             ]);
         }
 
@@ -139,7 +163,9 @@ export class StructureSourceControls extends CollapsableControls<{}, StructureSo
                 }
             }
 
-            return sameTraj && t ? `${t.cell.obj?.label} | ${structures.length} structures` : `${structures.length} structures`;
+            return sameTraj && t
+                ? `${t.cell.obj?.label} | ${structures.length} structures`
+                : `${structures.length} structures`;
         }
 
         if (models.length > 0) {
@@ -148,7 +174,9 @@ export class StructureSourceControls extends CollapsableControls<{}, StructureSo
             if (models.length === 1) {
                 const model = models[0].cell.obj?.data;
                 if (model && Model.TrajectoryInfo.get(model).size > 1) {
-                    return `${t?.cell.obj?.label} | Model ${Model.TrajectoryInfo.get(model).index + 1} of ${Model.TrajectoryInfo.get(model).size}`;
+                    return `${t?.cell.obj?.label} | Model ${Model.TrajectoryInfo.get(model).index + 1} of ${
+                        Model.TrajectoryInfo.get(model).size
+                    }`;
                 } else {
                     return `${t?.cell.obj?.label} | Model`;
                 }
@@ -166,7 +194,9 @@ export class StructureSourceControls extends CollapsableControls<{}, StructureSo
         }
 
         if (trajectories.length > 0) {
-            return trajectories.length === 1 ? `${trajectories[0].cell.obj?.label} trajectory` : `${trajectories.length} trajectories`;
+            return trajectories.length === 1
+                ? `${trajectories[0].cell.obj?.label} trajectory`
+                : `${trajectories.length} trajectories`;
         }
 
         if (trajectories.length === 0 && models.length === 0 && structures.length === 0) {
@@ -207,7 +237,7 @@ export class StructureSourceControls extends CollapsableControls<{}, StructureSo
                     if (!current.has(p)) providerSet.delete(p);
                 }
             }
-            providers = providers.filter(p => providerSet.has(p));
+            providers = providers.filter((p) => providerSet.has(p));
         }
 
         for (const p of providers) {
@@ -217,7 +247,7 @@ export class StructureSourceControls extends CollapsableControls<{}, StructureSo
         return actions;
     }
 
-    applyPreset: ActionMenu.OnSelect = item => {
+    applyPreset: ActionMenu.OnSelect = (item) => {
         this.setState({ show: void 0 });
 
         if (!item) return;
@@ -239,7 +269,12 @@ export class StructureSourceControls extends CollapsableControls<{}, StructureSo
             this.isUpdatingModel = true;
             const { selection } = this.plugin.managers.structure.hierarchy;
             const m = selection.structures[0].model!;
-            await this.plugin.state.updateTransform(this.plugin.state.data, m.cell.transform.ref, params, 'Model Index');
+            await this.plugin.state.updateTransform(
+                this.plugin.state.data,
+                m.cell.transform.ref,
+                params,
+                'Model Index',
+            );
         } finally {
             this.isUpdatingModel = false;
             this._updateStructureModel();
@@ -261,7 +296,14 @@ export class StructureSourceControls extends CollapsableControls<{}, StructureSo
         const params = m.cell.params?.definition;
         if (!params) return null;
 
-        return <ParameterControls params={params} values={m.cell.params?.values} onChangeValues={this.updateStructureModel} isDisabled={this.state.isBusy} />;
+        return (
+            <ParameterControls
+                params={params}
+                values={m.cell.params?.values}
+                onChangeValues={this.updateStructureModel}
+                isDisabled={this.state.isBusy}
+            />
+        );
     }
 
     updateStructure = (params: any) => {
@@ -277,7 +319,16 @@ export class StructureSourceControls extends CollapsableControls<{}, StructureSo
         const params = s.cell.params?.definition;
         if (!params || !s.cell.parent) return null;
 
-        return <UpdateTransformControl state={s.cell.parent} transform={s.cell.transform} customHeader='none' customUpdate={this.updateStructure} noMargin autoHideApply />;
+        return (
+            <UpdateTransformControl
+                state={s.cell.parent}
+                transform={s.cell.transform}
+                customHeader='none'
+                customUpdate={this.updateStructure}
+                noMargin
+                autoHideApply
+            />
+        );
     }
 
     get transform() {
@@ -285,33 +336,61 @@ export class StructureSourceControls extends CollapsableControls<{}, StructureSo
         if (selection.structures.length !== 1) return null;
         const pivot = selection.structures[0];
         if (!pivot.cell.parent) return null;
-        const t = StateSelection.tryFindDecorator(this.plugin.state.data, pivot.cell.transform.ref, StateTransforms.Model.TransformStructureConformation);
+        const t = StateSelection.tryFindDecorator(
+            this.plugin.state.data,
+            pivot.cell.transform.ref,
+            StateTransforms.Model.TransformStructureConformation,
+        );
         if (!t) return;
 
-        return <ExpandGroup header={`Conformation Transform`}>
-            <UpdateTransformControl state={t.parent!} transform={t.transform} customHeader='none' noMargin autoHideApply />
-        </ExpandGroup>;
+        return (
+            <ExpandGroup header={`Conformation Transform`}>
+                <UpdateTransformControl
+                    state={t.parent!}
+                    transform={t.transform}
+                    customHeader='none'
+                    noMargin
+                    autoHideApply
+                />
+            </ExpandGroup>
+        );
     }
 
     renderControls() {
         const disabled = this.state.isBusy || this.isEmpty;
         const presets = this.presetActions;
         const label = this.label;
-        return <>
-            <div className='msp-flex-row' style={{ marginTop: '1px' }}>
-                <Button noOverflow flex onClick={this.toggleHierarchy} disabled={disabled} title={label}>{label}</Button>
-                {presets.length > 0 && <IconButton svg={BookmarksOutlinedSvg} className='msp-form-control' flex='40px' onClick={this.togglePreset} title='Apply a structure presets to the current hierarchy.' toggleState={this.state.show === 'presets'} disabled={disabled} />}
-            </div>
-            {this.state.show === 'hierarchy' && <ActionMenu items={this.hierarchyItems} onSelect={this.selectHierarchy} multiselect />}
-            {this.state.show === 'presets' && <ActionMenu items={presets} onSelect={this.applyPreset} />}
-            {this.modelIndex}
-            {this.structureType}
-            {this.transform}
+        return (
+            <>
+                <div className='msp-flex-row' style={{ marginTop: '1px' }}>
+                    <Button noOverflow flex onClick={this.toggleHierarchy} disabled={disabled} title={label}>
+                        {label}
+                    </Button>
+                    {presets.length > 0 && (
+                        <IconButton
+                            svg={BookmarksOutlinedSvg}
+                            className='msp-form-control'
+                            flex='40px'
+                            onClick={this.togglePreset}
+                            title='Apply a structure presets to the current hierarchy.'
+                            toggleState={this.state.show === 'presets'}
+                            disabled={disabled}
+                        />
+                    )}
+                </div>
+                {this.state.show === 'hierarchy' && (
+                    <ActionMenu items={this.hierarchyItems} onSelect={this.selectHierarchy} multiselect />
+                )}
+                {this.state.show === 'presets' && <ActionMenu items={presets} onSelect={this.applyPreset} />}
+                {this.modelIndex}
+                {this.structureType}
+                {this.transform}
 
-            <div style={{ marginTop: '6px' }}>
-                <StructureFocusControls />
-                <StructureSelectionStatsControls hideOnEmpty />
-            </div>
-        </>;
+                <div style={{ marginTop: '6px' }}>
+                    <StructureFocusControls />
+                    <StructureSelectionStatsControls hideOnEmpty />
+                </div>
+            </>
+        );
     }
 }

@@ -4,7 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { parseFloat as fastParseFloat, parseInt as fastParseInt, getNumberType, NumberTypes } from '../../../mol-io/reader/common/text/number-parser';
+import {
+    getNumberType,
+    NumberTypes,
+    parseFloat as fastParseFloat,
+    parseInt as fastParseInt,
+} from '../../../mol-io/reader/common/text/number-parser';
 
 describe('common', () => {
     it('number-parser fastParseFloat', () => {

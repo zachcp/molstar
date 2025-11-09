@@ -7,37 +7,36 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-
 import { IOBuffer } from '../io-buffer.ts';
 
 export interface NetCDFRecordDimension {
-    length: number,
-    id?: number,
-    name?: string,
-    recordStep?: number
+    length: number;
+    id?: number;
+    name?: string;
+    recordStep?: number;
 }
 
 export interface NetCDFVariable {
-    name: string
-    dimensions: any[]
-    attributes: any[]
-    type: string
-    size: number
-    offset: number
-    record: boolean
+    name: string;
+    dimensions: any[];
+    attributes: any[];
+    type: string;
+    size: number;
+    offset: number;
+    record: boolean;
 }
 
 export interface NetCDFHeader {
-    recordDimension: NetCDFRecordDimension,
-    version: number,
-    dimensions: { name: string, size: number }[],
-    globalAttributes: { name: string, type: string, value: string | number }[],
-    variables: NetCDFVariable[]
+    recordDimension: NetCDFRecordDimension;
+    version: number;
+    dimensions: { name: string; size: number }[];
+    globalAttributes: { name: string; type: string; value: string | number }[];
+    variables: NetCDFVariable[];
 }
 
 export interface NetCDFDimension {
-    name: string,
-    size: number
+    name: string;
+    size: number;
 }
 
 /**
@@ -80,7 +79,7 @@ const types = {
     SHORT: 3,
     INT: 4,
     FLOAT: 5,
-    DOUBLE: 6
+    DOUBLE: 6,
 };
 
 /**
@@ -202,7 +201,7 @@ function trimNull(value: string) {
 /**
  * Read data for the given non-record variable
  */
-function nonRecord(buffer: IOBuffer, variable: { type: string, size: number }) {
+function nonRecord(buffer: IOBuffer, variable: { type: string; size: number }) {
     // variable type
     const type = str2num(variable.type);
 
@@ -221,7 +220,7 @@ function nonRecord(buffer: IOBuffer, variable: { type: string, size: number }) {
 /**
  * Read data for the given record variable
  */
-function record(buffer: IOBuffer, variable: { type: string, size: number }, recordDimension: NetCDFRecordDimension) {
+function record(buffer: IOBuffer, variable: { type: string; size: number }, recordDimension: NetCDFRecordDimension) {
     // variable type
     const type = str2num(variable.type);
     const width = variable.size ? variable.size / num2bytes(type) : 1;
@@ -266,7 +265,7 @@ function header(buffer: IOBuffer, version: number) {
     header.version = version;
 
     // List of dimensions
-    const dimList = dimensionsList(buffer) as { dimensions: NetCDFDimension[], recordId: number, recordName: string };
+    const dimList = dimensionsList(buffer) as { dimensions: NetCDFDimension[]; recordId: number; recordName: string };
     header.recordDimension!.id = dimList.recordId;
     header.recordDimension!.name = dimList.recordName;
     header.dimensions = dimList.dimensions;
@@ -275,7 +274,7 @@ function header(buffer: IOBuffer, version: number) {
     header.globalAttributes = attributesList(buffer);
 
     // List of variables
-    const variables = variablesList(buffer, dimList.recordId, version) as { variables: any[], recordStep: number };
+    const variables = variablesList(buffer, dimList.recordId, version) as { variables: any[]; recordStep: number };
     header.variables = variables.variables;
     header.recordDimension!.recordStep = variables.recordStep;
 
@@ -289,10 +288,10 @@ function dimensionsList(buffer: IOBuffer) {
     let dimensions: NetCDFDimension[], recordId, recordName;
     const dimList = buffer.readUint32();
     if (dimList === ZERO) {
-        notNetcdf((buffer.readUint32() !== ZERO), 'wrong empty tag for list of dimensions');
+        notNetcdf(buffer.readUint32() !== ZERO, 'wrong empty tag for list of dimensions');
         return [];
     } else {
-        notNetcdf((dimList !== NC_DIMENSION), 'wrong tag for list of dimensions');
+        notNetcdf(dimList !== NC_DIMENSION, 'wrong tag for list of dimensions');
 
         // Length of dimensions
         const dimensionSize = buffer.readUint32();
@@ -310,13 +309,13 @@ function dimensionsList(buffer: IOBuffer) {
 
             dimensions[dim] = {
                 name: name,
-                size: size
+                size: size,
             };
         }
         return {
             dimensions: dimensions,
             recordId: recordId,
-            recordName: recordName
+            recordName: recordName,
         };
     }
 }
@@ -325,13 +324,13 @@ function dimensionsList(buffer: IOBuffer) {
  * List of attributes
  */
 function attributesList(buffer: IOBuffer) {
-    let attributes: { name: string, type: ReturnType<typeof num2str>, value: any }[];
+    let attributes: { name: string; type: ReturnType<typeof num2str>; value: any }[];
     const gAttList = buffer.readUint32();
     if (gAttList === ZERO) {
-        notNetcdf((buffer.readUint32() !== ZERO), 'wrong empty tag for list of attributes');
+        notNetcdf(buffer.readUint32() !== ZERO, 'wrong empty tag for list of attributes');
         return [];
     } else {
-        notNetcdf((gAttList !== NC_ATTRIBUTE), 'wrong tag for list of attributes');
+        notNetcdf(gAttList !== NC_ATTRIBUTE, 'wrong tag for list of attributes');
 
         // Length of attributes
         const attributeSize = buffer.readUint32();
@@ -342,7 +341,7 @@ function attributesList(buffer: IOBuffer) {
 
             // Read type
             const type = buffer.readUint32();
-            notNetcdf(((type < 1) || (type > 6)), 'non valid type ' + type);
+            notNetcdf((type < 1) || (type > 6), 'non valid type ' + type);
 
             // Read attribute
             const size = buffer.readUint32();
@@ -354,7 +353,7 @@ function attributesList(buffer: IOBuffer) {
             attributes[gAtt] = {
                 name: name,
                 type: num2str(type),
-                value: value
+                value: value,
             };
         }
     }
@@ -370,12 +369,12 @@ function variablesList(buffer: IOBuffer, recordId: number, version: number) {
     let variables;
     if (varList === ZERO) {
         notNetcdf(
-            (buffer.readUint32() !== ZERO),
-            'wrong empty tag for list of variables'
+            buffer.readUint32() !== ZERO,
+            'wrong empty tag for list of variables',
         );
         return [];
     } else {
-        notNetcdf((varList !== NC_VARIABLE), 'wrong tag for list of variables');
+        notNetcdf(varList !== NC_VARIABLE, 'wrong tag for list of variables');
 
         // Length of variables
         const variableSize = buffer.readUint32();
@@ -398,7 +397,7 @@ function variablesList(buffer: IOBuffer, recordId: number, version: number) {
 
             // Read type
             const type = buffer.readUint32();
-            notNetcdf(((type < 1) && (type > 6)), 'non valid type ' + type);
+            notNetcdf((type < 1) && (type > 6), 'non valid type ' + type);
 
             // Read variable size
             // The 32-bit varSize field is not large enough to contain the
@@ -409,7 +408,7 @@ function variablesList(buffer: IOBuffer, recordId: number, version: number) {
             // Read offset
             let offset = buffer.readUint32();
             if (version === 2) {
-                notNetcdf((offset > 0), 'offsets larger than 4GB not supported');
+                notNetcdf(offset > 0, 'offsets larger than 4GB not supported');
                 offset = buffer.readUint32();
             }
 
@@ -425,14 +424,14 @@ function variablesList(buffer: IOBuffer, recordId: number, version: number) {
                 type: num2str(type),
                 size: varSize,
                 offset: offset,
-                record: (dimensionsIds[0] === recordId)
+                record: (dimensionsIds[0] === recordId),
             };
         }
     }
 
     return {
         variables: variables,
-        recordStep: recordStep
+        recordStep: recordStep,
     };
 }
 
@@ -449,11 +448,11 @@ export class NetcdfReader {
         buffer.setBigEndian();
 
         // Validate that it's a NetCDF file
-        notNetcdf((buffer.readChars(3) !== 'CDF'), 'should start with CDF');
+        notNetcdf(buffer.readChars(3) !== 'CDF', 'should start with CDF');
 
         // Check the NetCDF format
         const version = buffer.readByte();
-        notNetcdf((version > 2), 'unknown version');
+        notNetcdf(version > 2, 'unknown version');
 
         // Read the header
         this.header = header(buffer, version);
@@ -493,7 +492,7 @@ export class NetcdfReader {
      * @return {Boolean} - Variable existence
      */
     hasDataVariable(variableName: string) {
-        return this.header.variables && this.header.variables.findIndex(val => val.name === variableName) !== -1;
+        return this.header.variables && this.header.variables.findIndex((val) => val.name === variableName) !== -1;
     }
 
     /**

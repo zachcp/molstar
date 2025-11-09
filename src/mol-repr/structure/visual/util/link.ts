@@ -13,7 +13,11 @@ import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts'
 import { Mesh } from '../../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../../mol-geo/geometry/mesh/mesh-builder.ts';
 import type { CylinderProps } from '../../../../mol-geo/primitive/cylinder.ts';
-import { addFixedCountDashedCylinder, addCylinder, addDoubleCylinder } from '../../../../mol-geo/geometry/mesh/builder/cylinder.ts';
+import {
+    addCylinder,
+    addDoubleCylinder,
+    addFixedCountDashedCylinder,
+} from '../../../../mol-geo/geometry/mesh/builder/cylinder.ts';
 import type { VisualContext } from '../../../visual.ts';
 import { BaseGeometry } from '../../../../mol-geo/geometry/base.ts';
 import { Lines } from '../../../../mol-geo/geometry/lines/lines.ts';
@@ -34,10 +38,14 @@ export const LinkCylinderParams = {
     dashCap: PD.Boolean(true),
     stubCap: PD.Boolean(true),
     radialSegments: PD.Numeric(16, { min: 2, max: 56, step: 2 }, BaseGeometry.CustomQualityParamInfo),
-    colorMode: PD.Select('default', PD.arrayToOptions(['default', 'interpolate'] as const), BaseGeometry.ShadingCategory)
+    colorMode: PD.Select(
+        'default',
+        PD.arrayToOptions(['default', 'interpolate'] as const),
+        BaseGeometry.ShadingCategory,
+    ),
 };
 export const DefaultLinkCylinderProps = PD.getDefaultValues(LinkCylinderParams);
-export type LinkCylinderProps = typeof DefaultLinkCylinderProps
+export type LinkCylinderProps = typeof DefaultLinkCylinderProps;
 
 export const LinkLineParams = {
     linkScale: PD.Numeric(0.5, { min: 0, max: 1, step: 0.1 }),
@@ -46,7 +54,7 @@ export const LinkLineParams = {
     dashCount: PD.Numeric(4, { min: 0, max: 10, step: 1 }),
 };
 export const DefaultLinkLineProps = PD.getDefaultValues(LinkLineParams);
-export type LinkLineProps = typeof DefaultLinkLineProps
+export type LinkLineProps = typeof DefaultLinkLineProps;
 
 const tmpV12 = Vec3();
 const tmpShiftV12 = Vec3();
@@ -80,19 +88,19 @@ export function calculateShiftDir(out: Vec3, v1: Vec3, v2: Vec3, v3: Vec3 | null
 }
 
 export interface LinkBuilderProps {
-    linkCount: number
-    position: (posA: Vec3, posB: Vec3, edgeIndex: number, adjust: boolean) => void
-    radius: (edgeIndex: number) => number,
-    referencePosition?: (edgeIndex: number) => Vec3 | null
-    style?: (edgeIndex: number) => LinkStyle
-    ignore?: (edgeIndex: number) => boolean
-    stub?: (edgeIndex: number) => boolean
+    linkCount: number;
+    position: (posA: Vec3, posB: Vec3, edgeIndex: number, adjust: boolean) => void;
+    radius: (edgeIndex: number) => number;
+    referencePosition?: (edgeIndex: number) => Vec3 | null;
+    style?: (edgeIndex: number) => LinkStyle;
+    ignore?: (edgeIndex: number) => boolean;
+    stub?: (edgeIndex: number) => boolean;
 }
 
 export const EmptyLinkBuilderProps: LinkBuilderProps = {
     linkCount: 0,
-    position: () => { },
-    radius: () => 0
+    position: () => {},
+    radius: () => 0,
 };
 
 export const enum LinkStyle {
@@ -118,7 +126,12 @@ const v3dot = Vec3.dot;
  * Each edge is included twice to allow for coloring/picking
  * the half closer to the first vertex, i.e. vertex a.
  */
-export function createLinkCylinderMesh(ctx: VisualContext, linkBuilder: LinkBuilderProps, props: LinkCylinderProps, mesh?: Mesh): { mesh: Mesh, boundingSphere?: Sphere3D } {
+export function createLinkCylinderMesh(
+    ctx: VisualContext,
+    linkBuilder: LinkBuilderProps,
+    props: LinkCylinderProps,
+    mesh?: Mesh,
+): { mesh: Mesh; boundingSphere?: Sphere3D } {
     const { linkCount, referencePosition, position, style, radius, ignore, stub } = linkBuilder;
 
     if (!linkCount) return { mesh: Mesh.createEmpty(mesh) };
@@ -179,19 +192,19 @@ export function createLinkCylinderMesh(ctx: VisualContext, linkBuilder: LinkBuil
 }
 
 export interface AddLinkOptions {
-    builderState: MeshBuilder.State,
-    props: LinkCylinderProps,
-    assignNonAdjustedPosition?: (posA: Vec3, posB: Vec3) => void,
-    referencePosition?: () => Vec3 | null,
-};
+    builderState: MeshBuilder.State;
+    props: LinkCylinderProps;
+    assignNonAdjustedPosition?: (posA: Vec3, posB: Vec3) => void;
+    referencePosition?: () => Vec3 | null;
+}
 
 export interface AddLinkParams {
-    linkStub: boolean,
-    linkRadius: number,
-    linkStyle: LinkStyle,
-    a: Vec3,
-    b: Vec3,
-    group: number,
+    linkStub: boolean;
+    linkRadius: number;
+    linkStyle: LinkStyle;
+    a: Vec3;
+    b: Vec3;
+    group: number;
 }
 
 const AddLinkCylinderState = {
@@ -210,7 +223,18 @@ const AddLinkCylinderState = {
 export function addLinkCylinderMesh(options: AddLinkOptions, params: AddLinkParams) {
     const { builderState, props, assignNonAdjustedPosition, referencePosition } = options;
     const { linkRadius, linkStub, linkStyle, a, b } = params;
-    const { linkScale, linkSpacing, radialSegments, linkCap, aromaticScale, aromaticSpacing, aromaticDashCount, dashCount, dashScale, dashCap } = props;
+    const {
+        linkScale,
+        linkSpacing,
+        radialSegments,
+        linkCap,
+        aromaticScale,
+        aromaticSpacing,
+        aromaticDashCount,
+        dashCount,
+        dashScale,
+        dashCap,
+    } = props;
 
     const { cylinderProps, vShift, va, vb } = AddLinkCylinderState;
     cylinderProps.radialSegments = radialSegments;
@@ -234,9 +258,16 @@ export function addLinkCylinderMesh(options: AddLinkOptions, params: AddLinkPara
         cylinderProps.radiusTop = cylinderProps.radiusBottom = linkRadius * dashScale;
         cylinderProps.topCap = cylinderProps.bottomCap = dashCap;
         addFixedCountDashedCylinder(builderState, va, vb, 0.5, dashCount, linkStub, cylinderProps);
-    } else if (linkStyle === LinkStyle.Double || linkStyle === LinkStyle.OffsetDouble || linkStyle === LinkStyle.Triple || linkStyle === LinkStyle.OffsetTriple || linkStyle === LinkStyle.Aromatic || linkStyle === LinkStyle.MirroredAromatic) {
-        const order = (linkStyle === LinkStyle.Double || linkStyle === LinkStyle.OffsetDouble) ? 2 :
-            (linkStyle === LinkStyle.Triple || linkStyle === LinkStyle.OffsetTriple) ? 3 : 1.5;
+    } else if (
+        linkStyle === LinkStyle.Double || linkStyle === LinkStyle.OffsetDouble || linkStyle === LinkStyle.Triple ||
+        linkStyle === LinkStyle.OffsetTriple || linkStyle === LinkStyle.Aromatic ||
+        linkStyle === LinkStyle.MirroredAromatic
+    ) {
+        const order = (linkStyle === LinkStyle.Double || linkStyle === LinkStyle.OffsetDouble)
+            ? 2
+            : (linkStyle === LinkStyle.Triple || linkStyle === LinkStyle.OffsetTriple)
+            ? 3
+            : 1.5;
         const multiRadius = linkRadius * (linkScale / (0.5 * order));
         const absOffset = (linkRadius - multiRadius) * linkSpacing;
 
@@ -249,7 +280,8 @@ export function addLinkCylinderMesh(options: AddLinkOptions, params: AddLinkPara
             cylinderProps.radiusTop = cylinderProps.radiusBottom = linkRadius;
             addCylinder(builderState, va, vb, 0.5, cylinderProps);
 
-            const aromaticOffset = linkRadius + aromaticScale * linkRadius + aromaticScale * linkRadius * aromaticSpacing;
+            const aromaticOffset = linkRadius + aromaticScale * linkRadius +
+                aromaticScale * linkRadius * aromaticSpacing;
 
             if (assignNonAdjustedPosition) {
                 assignNonAdjustedPosition(va, vb);
@@ -315,18 +347,35 @@ export function addLinkCylinderMesh(options: AddLinkOptions, params: AddLinkPara
 
         addCylinder(builderState, va, vb, 0.5, cylinderProps);
     }
-};
+}
 
 /**
  * Each edge is included twice to allow for coloring/picking
  * the half closer to the first vertex, i.e. vertex a.
  */
-export function createLinkCylinderImpostors(ctx: VisualContext, linkBuilder: LinkBuilderProps, props: LinkCylinderProps, cylinders?: Cylinders): { cylinders: Cylinders, boundingSphere?: Sphere3D } {
+export function createLinkCylinderImpostors(
+    ctx: VisualContext,
+    linkBuilder: LinkBuilderProps,
+    props: LinkCylinderProps,
+    cylinders?: Cylinders,
+): { cylinders: Cylinders; boundingSphere?: Sphere3D } {
     const { linkCount, referencePosition, position, style, radius, ignore, stub } = linkBuilder;
 
     if (!linkCount) return { cylinders: Cylinders.createEmpty(cylinders) };
 
-    const { linkScale, linkSpacing, linkCap, aromaticScale, aromaticSpacing, aromaticDashCount, dashCount, dashScale, dashCap, stubCap, colorMode } = props;
+    const {
+        linkScale,
+        linkSpacing,
+        linkCap,
+        aromaticScale,
+        aromaticSpacing,
+        aromaticDashCount,
+        dashCount,
+        dashScale,
+        dashCap,
+        stubCap,
+        colorMode,
+    } = props;
     const interpolate = colorMode === 'interpolate';
     const colorModeFlag = interpolate === true ? 3 : 2;
 
@@ -359,10 +408,27 @@ export function createLinkCylinderImpostors(ctx: VisualContext, linkBuilder: Lin
             builder.add(va[0], va[1], va[2], vm[0], vm[1], vm[2], 1, linkCap, linkStub, colorModeFlag, edgeIndex);
         } else if (linkStyle === LinkStyle.Dashed) {
             v3scale(vm, v3add(vm, va, vb), 0.5);
-            builder.addFixedCountDashes(va, vm, dashCount, dashScale, dashCap, dashCap, linkStub, interpolate, edgeIndex);
-        } else if (linkStyle === LinkStyle.Double || linkStyle === LinkStyle.OffsetDouble || linkStyle === LinkStyle.Triple || linkStyle === LinkStyle.OffsetTriple || linkStyle === LinkStyle.Aromatic || linkStyle === LinkStyle.MirroredAromatic) {
-            const order = (linkStyle === LinkStyle.Double || linkStyle === LinkStyle.OffsetDouble) ? 2 :
-                (linkStyle === LinkStyle.Triple || linkStyle === LinkStyle.OffsetTriple) ? 3 : 1.5;
+            builder.addFixedCountDashes(
+                va,
+                vm,
+                dashCount,
+                dashScale,
+                dashCap,
+                dashCap,
+                linkStub,
+                interpolate,
+                edgeIndex,
+            );
+        } else if (
+            linkStyle === LinkStyle.Double || linkStyle === LinkStyle.OffsetDouble || linkStyle === LinkStyle.Triple ||
+            linkStyle === LinkStyle.OffsetTriple || linkStyle === LinkStyle.Aromatic ||
+            linkStyle === LinkStyle.MirroredAromatic
+        ) {
+            const order = (linkStyle === LinkStyle.Double || linkStyle === LinkStyle.OffsetDouble)
+                ? 2
+                : (linkStyle === LinkStyle.Triple || linkStyle === LinkStyle.OffsetTriple)
+                ? 3
+                : 1.5;
             const multiScale = linkScale / (0.5 * order);
             const absOffset = (linkRadius - multiScale * linkRadius) * linkSpacing;
 
@@ -372,7 +438,8 @@ export function createLinkCylinderImpostors(ctx: VisualContext, linkBuilder: Lin
             if (linkStyle === LinkStyle.Aromatic || linkStyle === LinkStyle.MirroredAromatic) {
                 builder.add(va[0], va[1], va[2], vm[0], vm[1], vm[2], 1, linkCap, linkStub, colorModeFlag, edgeIndex);
 
-                const aromaticOffset = linkRadius + aromaticScale * linkRadius + aromaticScale * linkRadius * aromaticSpacing;
+                const aromaticOffset = linkRadius + aromaticScale * linkRadius +
+                    aromaticScale * linkRadius * aromaticSpacing;
 
                 position(va, vb, edgeIndex, false);
 
@@ -382,13 +449,33 @@ export function createLinkCylinderImpostors(ctx: VisualContext, linkBuilder: Lin
                 v3setMagnitude(vShift, vShift, aromaticOffset);
                 v3sub(va, va, vShift);
                 v3sub(vm, vm, vShift);
-                builder.addFixedCountDashes(va, vm, aromaticDashCount, aromaticScale, dashCap, dashCap, linkStub, interpolate, edgeIndex);
+                builder.addFixedCountDashes(
+                    va,
+                    vm,
+                    aromaticDashCount,
+                    aromaticScale,
+                    dashCap,
+                    dashCap,
+                    linkStub,
+                    interpolate,
+                    edgeIndex,
+                );
 
                 if (linkStyle === LinkStyle.MirroredAromatic) {
                     v3setMagnitude(vShift, vShift, aromaticOffset * 2);
                     v3add(va, va, vShift);
                     v3add(vm, vm, vShift);
-                    builder.addFixedCountDashes(va, vm, aromaticDashCount, aromaticScale, dashCap, dashCap, linkStub, interpolate, edgeIndex);
+                    builder.addFixedCountDashes(
+                        va,
+                        vm,
+                        aromaticDashCount,
+                        aromaticScale,
+                        dashCap,
+                        dashCap,
+                        linkStub,
+                        interpolate,
+                        edgeIndex,
+                    );
                 }
             } else if (linkStyle === LinkStyle.OffsetDouble || linkStyle === LinkStyle.OffsetTriple) {
                 const multipleOffset = linkRadius + multiScale * linkRadius + linkScale * linkRadius * linkSpacing;
@@ -399,14 +486,78 @@ export function createLinkCylinderImpostors(ctx: VisualContext, linkBuilder: Lin
                 v3setMagnitude(tmpV12, v3sub(tmpV12, va, vm), linkRadius / 1.5);
                 v3sub(va, va, tmpV12);
 
-                if (order === 3) builder.add(va[0] + vShift[0], va[1] + vShift[1], va[2] + vShift[2], vm[0] + vShift[0], vm[1] + vShift[1], vm[2] + vShift[2], multiScale, linkCap, linkStub, colorModeFlag, edgeIndex);
-                builder.add(va[0] - vShift[0], va[1] - vShift[1], va[2] - vShift[2], vm[0] - vShift[0], vm[1] - vShift[1], vm[2] - vShift[2], multiScale, dashCap, linkStub, colorModeFlag, edgeIndex);
+                if (order === 3) {
+                    builder.add(
+                        va[0] + vShift[0],
+                        va[1] + vShift[1],
+                        va[2] + vShift[2],
+                        vm[0] + vShift[0],
+                        vm[1] + vShift[1],
+                        vm[2] + vShift[2],
+                        multiScale,
+                        linkCap,
+                        linkStub,
+                        colorModeFlag,
+                        edgeIndex,
+                    );
+                }
+                builder.add(
+                    va[0] - vShift[0],
+                    va[1] - vShift[1],
+                    va[2] - vShift[2],
+                    vm[0] - vShift[0],
+                    vm[1] - vShift[1],
+                    vm[2] - vShift[2],
+                    multiScale,
+                    dashCap,
+                    linkStub,
+                    colorModeFlag,
+                    edgeIndex,
+                );
             } else {
                 v3setMagnitude(vShift, vShift, absOffset);
 
-                if (order === 3) builder.add(va[0], va[1], va[2], vm[0], vm[1], vm[2], multiScale, linkCap, linkStub, colorModeFlag, edgeIndex);
-                builder.add(va[0] + vShift[0], va[1] + vShift[1], va[2] + vShift[2], vm[0] + vShift[0], vm[1] + vShift[1], vm[2] + vShift[2], multiScale, linkCap, linkStub, colorModeFlag, edgeIndex);
-                builder.add(va[0] - vShift[0], va[1] - vShift[1], va[2] - vShift[2], vm[0] - vShift[0], vm[1] - vShift[1], vm[2] - vShift[2], multiScale, linkCap, linkStub, colorModeFlag, edgeIndex);
+                if (order === 3) {
+                    builder.add(
+                        va[0],
+                        va[1],
+                        va[2],
+                        vm[0],
+                        vm[1],
+                        vm[2],
+                        multiScale,
+                        linkCap,
+                        linkStub,
+                        colorModeFlag,
+                        edgeIndex,
+                    );
+                }
+                builder.add(
+                    va[0] + vShift[0],
+                    va[1] + vShift[1],
+                    va[2] + vShift[2],
+                    vm[0] + vShift[0],
+                    vm[1] + vShift[1],
+                    vm[2] + vShift[2],
+                    multiScale,
+                    linkCap,
+                    linkStub,
+                    colorModeFlag,
+                    edgeIndex,
+                );
+                builder.add(
+                    va[0] - vShift[0],
+                    va[1] - vShift[1],
+                    va[2] - vShift[2],
+                    vm[0] - vShift[0],
+                    vm[1] - vShift[1],
+                    vm[2] - vShift[2],
+                    multiScale,
+                    linkCap,
+                    linkStub,
+                    colorModeFlag,
+                    edgeIndex,
+                );
             }
         } else if (linkStyle === LinkStyle.Disk) {
             v3scale(tmpV12, v3sub(tmpV12, vm, va), 0.475);
@@ -434,7 +585,12 @@ export function createLinkCylinderImpostors(ctx: VisualContext, linkBuilder: Lin
  * Each edge is included twice to allow for coloring/picking
  * the half closer to the first vertex, i.e. vertex a.
  */
-export function createLinkLines(ctx: VisualContext, linkBuilder: LinkBuilderProps, props: LinkLineProps, lines?: Lines): { lines: Lines, boundingSphere?: Sphere3D } {
+export function createLinkLines(
+    ctx: VisualContext,
+    linkBuilder: LinkBuilderProps,
+    props: LinkLineProps,
+    lines?: Lines,
+): { lines: Lines; boundingSphere?: Sphere3D } {
     const { linkCount, referencePosition, position, style, ignore } = linkBuilder;
 
     if (!linkCount) return { lines: Lines.createEmpty(lines) };
@@ -472,9 +628,16 @@ export function createLinkLines(ctx: VisualContext, linkBuilder: LinkBuilderProp
         } else if (linkStyle === LinkStyle.Dashed) {
             v3scale(vm, v3add(vm, va, vb), 0.5);
             builder.addFixedCountDashes(va, vm, dashCount, edgeIndex);
-        } else if (linkStyle === LinkStyle.Double || linkStyle === LinkStyle.OffsetDouble || linkStyle === LinkStyle.Triple || linkStyle === LinkStyle.OffsetTriple || linkStyle === LinkStyle.Aromatic || linkStyle === LinkStyle.MirroredAromatic) {
-            const order = linkStyle === LinkStyle.Double || linkStyle === LinkStyle.OffsetDouble ? 2 :
-                linkStyle === LinkStyle.Triple || linkStyle === LinkStyle.OffsetTriple ? 3 : 1.5;
+        } else if (
+            linkStyle === LinkStyle.Double || linkStyle === LinkStyle.OffsetDouble || linkStyle === LinkStyle.Triple ||
+            linkStyle === LinkStyle.OffsetTriple || linkStyle === LinkStyle.Aromatic ||
+            linkStyle === LinkStyle.MirroredAromatic
+        ) {
+            const order = linkStyle === LinkStyle.Double || linkStyle === LinkStyle.OffsetDouble
+                ? 2
+                : linkStyle === LinkStyle.Triple || linkStyle === LinkStyle.OffsetTriple
+                ? 3
+                : 1.5;
             const multiRadius = 1 * (linkScale / (0.5 * order));
             const absOffset = (1 - multiRadius) * linkSpacing;
 
@@ -508,14 +671,48 @@ export function createLinkLines(ctx: VisualContext, linkBuilder: LinkBuilderProp
                 v3scale(tmpV12, v3sub(tmpV12, va, vm), linkSpacing * linkScale);
                 v3sub(va, va, tmpV12);
 
-                if (order === 3) builder.add(va[0] + vShift[0], va[1] + vShift[1], va[2] + vShift[2], vm[0] + vShift[0], vm[1] + vShift[1], vm[2] + vShift[2], edgeIndex);
-                builder.add(va[0] - vShift[0], va[1] - vShift[1], va[2] - vShift[2], vm[0] - vShift[0], vm[1] - vShift[1], vm[2] - vShift[2], edgeIndex);
+                if (order === 3) {
+                    builder.add(
+                        va[0] + vShift[0],
+                        va[1] + vShift[1],
+                        va[2] + vShift[2],
+                        vm[0] + vShift[0],
+                        vm[1] + vShift[1],
+                        vm[2] + vShift[2],
+                        edgeIndex,
+                    );
+                }
+                builder.add(
+                    va[0] - vShift[0],
+                    va[1] - vShift[1],
+                    va[2] - vShift[2],
+                    vm[0] - vShift[0],
+                    vm[1] - vShift[1],
+                    vm[2] - vShift[2],
+                    edgeIndex,
+                );
             } else {
                 v3setMagnitude(vShift, vShift, absOffset * 1.5);
 
                 if (order === 3) builder.add(va[0], va[1], va[2], vm[0], vm[1], vm[2], edgeIndex);
-                builder.add(va[0] + vShift[0], va[1] + vShift[1], va[2] + vShift[2], vm[0] + vShift[0], vm[1] + vShift[1], vm[2] + vShift[2], edgeIndex);
-                builder.add(va[0] - vShift[0], va[1] - vShift[1], va[2] - vShift[2], vm[0] - vShift[0], vm[1] - vShift[1], vm[2] - vShift[2], edgeIndex);
+                builder.add(
+                    va[0] + vShift[0],
+                    va[1] + vShift[1],
+                    va[2] + vShift[2],
+                    vm[0] + vShift[0],
+                    vm[1] + vShift[1],
+                    vm[2] + vShift[2],
+                    edgeIndex,
+                );
+                builder.add(
+                    va[0] - vShift[0],
+                    va[1] - vShift[1],
+                    va[2] - vShift[2],
+                    vm[0] - vShift[0],
+                    vm[1] - vShift[1],
+                    vm[2] - vShift[2],
+                    edgeIndex,
+                );
             }
         } else if (linkStyle === LinkStyle.Disk) {
             v3scale(tmpV12, v3sub(tmpV12, vm, va), 0.475);

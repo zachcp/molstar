@@ -12,8 +12,12 @@ import { PrincipalAxes } from '../matrix/principal-axes';
 describe('PrincipalAxes', () => {
     it('same-cartesian-plane', () => {
         const positions: NumberArray = [ // same y coordinate
-            0.1945, -0.0219, -0.0416,
-            -0.0219, -0.0219, -0.0119,
+            0.1945,
+            -0.0219,
+            -0.0416,
+            -0.0219,
+            -0.0219,
+            -0.0119,
         ];
         const pa = PrincipalAxes.ofPositions(positions);
         expect(Vec3.isFinite(pa.boxAxes.origin)).toBe(true);
@@ -22,8 +26,12 @@ describe('PrincipalAxes', () => {
 
     it('same-point', () => {
         const positions: NumberArray = [ // same coordinates
-            0.1945, -0.0219, -0.0416,
-            0.1945, -0.0219, -0.0416,
+            0.1945,
+            -0.0219,
+            -0.0416,
+            0.1945,
+            -0.0219,
+            -0.0416,
         ];
         const pa = PrincipalAxes.ofPositions(positions);
         expect(Vec3.isFinite(pa.boxAxes.origin)).toBe(true);

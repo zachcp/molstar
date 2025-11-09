@@ -12,24 +12,24 @@ import * as Coordinate from './algebra/coordinate.ts';
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import process from "node:process";
-import { Buffer } from "node:buffer";
+import process from 'node:process';
+import { Buffer } from 'node:buffer';
 
 export interface JobEntry {
     source: {
-        filename: string,
-        name: string,
-        id: string
-    },
+        filename: string;
+        name: string;
+        id: string;
+    };
     query: {
-        kind: 'box' | 'cell',
-        space?: 'fractional' | 'cartesian',
-        bottomLeft?: number[],
-        topRight?: number[],
-    }
+        kind: 'box' | 'cell';
+        space?: 'fractional' | 'cartesian';
+        bottomLeft?: number[];
+        topRight?: number[];
+    };
     params: {
         /** Determines the detail level as specified in server-config */
-        detail?: number,
+        detail?: number;
         /**
          * Determines the sampling level:
          * 1: Original data
@@ -37,11 +37,11 @@ export interface JobEntry {
          * ...
          * N: downsampled 1/2^(N-1)
          */
-        forcedSamplingLevel?: number,
-        asBinary: boolean,
-    },
-    outputFolder: string,
-    outputFilename?: string
+        forcedSamplingLevel?: number;
+        asBinary: boolean;
+    };
+    outputFolder: string;
+    outputFilename?: string;
 }
 
 export async function run(jobs: JobEntry[]) {
@@ -89,14 +89,17 @@ async function query(job: JobEntry) {
         asBinary: job.params.asBinary,
         box,
         detail: !job.params.detail ? 0 : job.params.detail,
-        forcedSamplingLevel: job.params.forcedSamplingLevel
+        forcedSamplingLevel: job.params.forcedSamplingLevel,
     };
 
     if (!fs.existsSync(job.outputFolder)) {
         makeDir(job.outputFolder);
     }
 
-    const filename = path.join(job.outputFolder, job.outputFilename ?? Api.getOutputFilename(job.source.name, job.source.id, params));
+    const filename = path.join(
+        job.outputFolder,
+        job.outputFilename ?? Api.getOutputFilename(job.source.name, job.source.id, params),
+    );
     const res = () => wrapFile(filename);
     await Api.queryBox(params, res);
 }
@@ -135,12 +138,12 @@ function wrapFile(fn: string) {
         },
         end(this: any) {
             if (!this.opened || this.ended) return;
-            fs.close(this.file, function () { });
+            fs.close(this.file, function () {});
             this.ended = true;
         },
         file: 0,
         ended: false,
-        opened: false
+        opened: false,
     };
 
     return w;

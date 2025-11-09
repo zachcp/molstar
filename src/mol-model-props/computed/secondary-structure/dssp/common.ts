@@ -13,25 +13,25 @@ import type { ProteinInfo } from './protein-info.ts';
 
 export interface DSSPContext {
     params: {
-        oldDefinition: boolean
-        oldOrdering: boolean
-    },
-    getResidueFlag: (f: DSSPType) => SecondaryStructureType,
-    getFlagName: (f: DSSPType) => string,
+        oldDefinition: boolean;
+        oldOrdering: boolean;
+    };
+    getResidueFlag: (f: DSSPType) => SecondaryStructureType;
+    getFlagName: (f: DSSPType) => string;
 
-    unit: Unit.Atomic
-    proteinInfo: ProteinInfo
+    unit: Unit.Atomic;
+    proteinInfo: ProteinInfo;
     /** flags for each residue */
-    flags: Uint32Array
-    hbonds: DsspHbonds,
+    flags: Uint32Array;
+    hbonds: DsspHbonds;
 
-    torsionAngles: { phi: Float32Array, psi: Float32Array },
-    ladders: Ladder[],
-    bridges: Bridge[]
+    torsionAngles: { phi: Float32Array; psi: Float32Array };
+    ladders: Ladder[];
+    bridges: Bridge[];
 }
 
 export { DSSPType };
-type DSSPType = BitFlags<DSSPType.Flag>
+type DSSPType = BitFlags<DSSPType.Flag>;
 namespace DSSPType {
     export const is: (t: DSSPType, f: Flag) => boolean = BitFlags.has;
     export const create: (f: Flag) => DSSPType = BitFlags.create;
@@ -49,25 +49,25 @@ namespace DSSPType {
         T5 = 0x200,
         T3S = 0x400, // marks 3-turn start
         T4S = 0x800,
-        T5S = 0x1000
+        T5S = 0x1000,
     }
 }
 
-export type DsspHbonds = IntAdjacencyGraph<number, { readonly energies: ArrayLike<number> }>
+export type DsspHbonds = IntAdjacencyGraph<number, { readonly energies: ArrayLike<number> }>;
 
 export interface Ladder {
-    previousLadder: number,
-    nextLadder: number,
-    firstStart: number,
-    secondStart: number,
-    secondEnd: number,
-    firstEnd: number,
-    type: BridgeType
+    previousLadder: number;
+    nextLadder: number;
+    firstStart: number;
+    secondStart: number;
+    secondEnd: number;
+    firstEnd: number;
+    type: BridgeType;
 }
 
 export const enum BridgeType {
     PARALLEL = 0x0,
-    ANTI_PARALLEL = 0x1
+    ANTI_PARALLEL = 0x1,
 }
 
 export class Bridge {

@@ -13,4 +13,4 @@ import { LinkedIndex } from './int/linked-index.ts';
 import { IntMap } from './int/map.ts';
 import { Iterator } from './iterator.ts';
 
-export { Interval, OrderedSet, Segmentation, SortedArray, Tuple, LinkedIndex, IntMap, Iterator };
+export { Interval, IntMap, Iterator, LinkedIndex, OrderedSet, Segmentation, SortedArray, Tuple };

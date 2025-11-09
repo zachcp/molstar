@@ -5,31 +5,51 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { sortArray, hash3, hash4, createRangeArray } from '../../util.ts';
+import { createRangeArray, hash3, hash4, sortArray } from '../../util.ts';
 import { Interval } from '../interval.ts';
 
-type Nums = ArrayLike<number>
-
+type Nums = ArrayLike<number>;
 
 export const Empty: Nums = [];
 
-export function ofSingleton(v: number) { return [v]; }
-export function ofSortedArray(xs: Nums) { return xs; }
-export function ofUnsortedArray(xs: Nums) { sortArray(xs); return xs; }
+export function ofSingleton(v: number) {
+    return [v];
+}
+export function ofSortedArray(xs: Nums) {
+    return xs;
+}
+export function ofUnsortedArray(xs: Nums) {
+    sortArray(xs);
+    return xs;
+}
 export function ofRange(min: number, max: number) {
     if (max < min) return [];
     const ret = new Int32Array(max - min + 1);
     for (let i = min; i <= max; i++) ret[i - min] = i;
     return ret;
 }
-export function is(xs: any): xs is Nums { return xs && (Array.isArray(xs) || !!xs.buffer); }
-export function isRange(xs: Nums) { return xs[xs.length - 1] - xs[0] + 1 === xs.length; }
+export function is(xs: any): xs is Nums {
+    return xs && (Array.isArray(xs) || !!xs.buffer);
+}
+export function isRange(xs: Nums) {
+    return xs[xs.length - 1] - xs[0] + 1 === xs.length;
+}
 
-export function start(xs: Nums) { return xs[0]; }
-export function end(xs: Nums) { return xs[xs.length - 1] + 1; }
-export function min(xs: Nums) { return xs[0]; }
-export function max(xs: Nums) { return xs[xs.length - 1]; }
-export function size(xs: Nums): number { return xs.length; }
+export function start(xs: Nums) {
+    return xs[0];
+}
+export function end(xs: Nums) {
+    return xs[xs.length - 1] + 1;
+}
+export function min(xs: Nums) {
+    return xs[0];
+}
+export function max(xs: Nums) {
+    return xs[xs.length - 1];
+}
+export function size(xs: Nums): number {
+    return xs.length;
+}
 export function hashCode(xs: Nums) {
     // hash of tuple (size, min, max, mid)
     const s = xs.length;
@@ -55,9 +75,13 @@ export function indexOfInRange(xs: Nums, v: number, s: number, e: number) {
     const l = xs.length;
     return l === 0 || e <= s ? -1 : xs[s] <= v && v <= xs[e - 1] ? binarySearchRange(xs, v, s, e) : -1;
 }
-export function has(xs: Nums, v: number): boolean { return indexOf(xs, v) >= 0; }
+export function has(xs: Nums, v: number): boolean {
+    return indexOf(xs, v) >= 0;
+}
 
-export function getAt(xs: Nums, i: number) { return xs[i]; }
+export function getAt(xs: Nums, i: number) {
+    return xs[i];
+}
 
 export function areEqual(a: Nums, b: Nums): boolean {
     if (a === b) return true;
@@ -83,7 +107,7 @@ export function findPredecessorIndex(xs: Nums, query: number) {
 /**
  * Return index of the first element of `xs` within range `bounds` which is greater than or equal to `query`.
  * Return end of `bounds` (exclusive) if all elements in the range are less than `query`.
-*/
+ */
 export function findPredecessorIndexInInterval(xs: Nums, query: number, bounds: Interval) {
     return binarySearchPredIndexRange(xs, query, Interval.start(bounds), Interval.end(bounds));
 }
@@ -113,7 +137,7 @@ function binarySearchRange(xs: Nums, value: number, start: number, end: number) 
 }
 
 /** Return index of the first element within range [start, end) which is greater than or equal to `query`.
-* Return `end` if all elements in the range are less than `query`. */
+ * Return `end` if all elements in the range are less than `query`. */
 function binarySearchPredIndexRange(xs: Nums, query: number, start: number, end: number): number {
     if (start === end) return start;
     if (xs[start] >= query) return start;
@@ -166,7 +190,9 @@ export function isSubset(a: Nums, b: Nums) {
         } else if (x > y) {
             j++;
         } else {
-            i++; j++; equal++;
+            i++;
+            j++;
+            equal++;
         }
     }
     return equal === lenB;
@@ -199,11 +225,15 @@ export function union(a: Nums, b: Nums): Nums {
     while (i < endI && j < endJ) {
         const x = a[i], y = b[j];
         if (x < y) {
-            indices[offset++] = x; i++;
+            indices[offset++] = x;
+            i++;
         } else if (x > y) {
-            indices[offset++] = y; j++;
+            indices[offset++] = y;
+            j++;
         } else {
-            indices[offset++] = x; i++; j++;
+            indices[offset++] = x;
+            i++;
+            j++;
         }
     }
 
@@ -234,7 +264,9 @@ function getCommonCount(a: Nums, b: Nums, startI: number, startJ: number, endI: 
         } else if (x > y) {
             j++;
         } else {
-            i++; j++; commonCount++;
+            i++;
+            j++;
+            commonCount++;
         }
     }
     return commonCount;
@@ -265,7 +297,9 @@ export function intersect(a: Nums, b: Nums) {
         } else if (x > y) {
             j++;
         } else {
-            indices[offset++] = x; i++; j++;
+            indices[offset++] = x;
+            i++;
+            j++;
         }
     }
 
@@ -286,7 +320,9 @@ export function subtract(a: Nums, b: Nums) {
         } else if (x > y) {
             j++;
         } else {
-            i++; j++; commonCount++;
+            i++;
+            j++;
+            commonCount++;
         }
     }
 
@@ -306,11 +342,13 @@ export function subtract(a: Nums, b: Nums) {
     while (i < endI && j < endJ) {
         const x = a[i], y = b[j];
         if (x < y) {
-            indices[offset++] = x; i++;
+            indices[offset++] = x;
+            i++;
         } else if (x > y) {
             j++;
         } else {
-            i++; j++;
+            i++;
+            j++;
         }
     }
 
@@ -349,7 +387,9 @@ export function indicesOf(a: Nums, b: Nums): Nums {
         } else if (x > y) {
             j++;
         } else {
-            i++; j++; commonCount++;
+            i++;
+            j++;
+            commonCount++;
         }
     }
 
@@ -370,7 +410,9 @@ export function indicesOf(a: Nums, b: Nums): Nums {
         } else if (x > y) {
             j++;
         } else {
-            indices[offset++] = i; i++; j++;
+            indices[offset++] = i;
+            i++;
+            j++;
         }
     }
 

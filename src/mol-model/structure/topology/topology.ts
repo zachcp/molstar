@@ -12,17 +12,17 @@ import type { ModelFormat } from '../../../mol-model-formats/format.ts';
 export { Topology };
 
 interface Topology {
-    readonly id: UUID
-    readonly label: string
+    readonly id: UUID;
+    readonly label: string;
 
-    readonly basic: BasicData
-    readonly sourceData: ModelFormat
+    readonly basic: BasicData;
+    readonly sourceData: ModelFormat;
 
     readonly bonds: {
-        readonly indexA: Column<number>,
-        readonly indexB: Column<number>
-        readonly order: Column<number>
-    }
+        readonly indexA: Column<number>;
+        readonly indexB: Column<number>;
+        readonly order: Column<number>;
+    };
 
     // TODO
     // readonly angles: {
@@ -55,7 +55,7 @@ namespace Topology {
             label,
             basic,
             sourceData: format,
-            bonds
+            bonds,
         };
     }
 }

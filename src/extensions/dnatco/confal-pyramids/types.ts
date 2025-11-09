@@ -24,7 +24,13 @@ export namespace ConfalPyramidsTypes {
     export interface Loci extends DataLoci<DnatcoTypes.Step[], number> {}
 
     export function Loci(data: DnatcoTypes.Step[], elements: ReadonlyArray<number>): Loci {
-        return DataLoci(DnatcoTypes.DataTag, data, elements, undefined, () => elements[0] !== undefined ? confalPyramidLabel(data[elements[0]]) : '');
+        return DataLoci(
+            DnatcoTypes.DataTag,
+            data,
+            elements,
+            undefined,
+            () => elements[0] !== undefined ? confalPyramidLabel(data[elements[0]]) : '',
+        );
     }
 
     export function isLoci(x: any): x is Loci {

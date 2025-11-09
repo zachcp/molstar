@@ -71,7 +71,11 @@ describe('interval', () => {
     test('predIndexInt1', Interval.findPredecessorIndexInInterval(r05, 4, Interval.ofRange(2, 3)), 4);
 
     test('predIndexInt2', Interval.findPredecessorIndex(Interval.ofRange(3, 10), 5), 2);
-    test('predIndexInt3', Interval.findPredecessorIndexInInterval(Interval.ofRange(3, 10), 5, Interval.ofRange(2, 6)), 2);
+    test(
+        'predIndexInt3',
+        Interval.findPredecessorIndexInInterval(Interval.ofRange(3, 10), 5, Interval.ofRange(2, 6)),
+        2,
+    );
 
     testI('findRange', Interval.findRange(r05, 2, 3), Interval.ofRange(2, 3));
 

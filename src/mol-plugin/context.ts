@@ -5,772 +5,743 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { produce } from "../mol-util/produce.ts";
-import { List } from "immutable";
-import { merge, type Subscription } from "rxjs";
-import { debounceTime, filter, take, throttleTime } from "rxjs/operators";
+import { produce } from '../mol-util/produce.ts';
+import { List } from 'immutable';
+import { merge, type Subscription } from 'rxjs';
+import { debounceTime, filter, take, throttleTime } from 'rxjs/operators';
 import {
-  Canvas3D,
-  Canvas3DContext,
-  DefaultCanvas3DParams,
-  type Canvas3DProps,
-  type PartialCanvas3DProps,
-} from "../mol-canvas3d/canvas3d.ts";
-import { resizeCanvas } from "../mol-canvas3d/util.ts";
-import { Vec2 } from "../mol-math/linear-algebra.ts";
-import { CustomProperty } from "../mol-model-props/common/custom-property.ts";
-import type { Model, Structure } from "../mol-model/structure.ts";
-import { DataBuilder } from "../mol-plugin-state/builder/data.ts";
-import { StructureBuilder } from "../mol-plugin-state/builder/structure.ts";
-import { DataFormatRegistry } from "../mol-plugin-state/formats/registry.ts";
-import { StructureSelectionQueryRegistry } from "../mol-plugin-state/helpers/structure-selection-query.ts";
-import { PluginAnimationManager } from "../mol-plugin-state/manager/animation.ts";
-import { CameraManager } from "../mol-plugin-state/manager/camera.ts";
-import { InteractivityManager } from "../mol-plugin-state/manager/interactivity.ts";
-import {
-  type LociLabel,
-  LociLabelManager,
-} from "../mol-plugin-state/manager/loci-label.ts";
-import { PluginStateSnapshotManager } from "../mol-plugin-state/manager/snapshots.ts";
-import { StructureComponentManager } from "../mol-plugin-state/manager/structure/component.ts";
-import { StructureFocusManager } from "../mol-plugin-state/manager/structure/focus.ts";
-import { StructureHierarchyManager } from "../mol-plugin-state/manager/structure/hierarchy.ts";
-import type { StructureHierarchyRef } from "../mol-plugin-state/manager/structure/hierarchy-state.ts";
-import { StructureMeasurementManager } from "../mol-plugin-state/manager/structure/measurement.ts";
-import { StructureSelectionManager } from "../mol-plugin-state/manager/structure/selection.ts";
-import { VolumeHierarchyManager } from "../mol-plugin-state/manager/volume/hierarchy.ts";
-import { MarkdownExtensionManager } from "../mol-plugin-state/manager/markdown-extensions.ts";
-import { type LeftPanelTabName, PluginLayout } from "./layout.ts";
-import { Representation } from "../mol-repr/representation.ts";
-import { StructureRepresentationRegistry } from "../mol-repr/structure/registry.ts";
-import { VolumeRepresentationRegistry } from "../mol-repr/volume/registry.ts";
-import { StateTransform, StateBuilder } from "../mol-state/index.ts";
-import { type RuntimeContext, Scheduler, Task } from "../mol-task/index.ts";
-import { ColorTheme } from "../mol-theme/color.ts";
-import { SizeTheme } from "../mol-theme/size.ts";
-import type { ThemeRegistryContext } from "../mol-theme/theme.ts";
-import { AssetManager } from "../mol-util/assets.ts";
-import { Color } from "../mol-util/color/index.ts";
-import { ajaxGet } from "../mol-util/data-source.ts";
-import { isDebugMode, isProductionMode } from "../mol-util/debug.ts";
-import {
-  EmptyKeyInput,
-  type KeyInput,
-  ModifiersKeys,
-} from "../mol-util/input/input-observer.ts";
-import { LogEntry } from "../mol-util/log-entry.ts";
-import { objectForEach } from "../mol-util/object.ts";
-import { RxEventHelper } from "../mol-util/rx-event-helper.ts";
-import { PluginAnimationLoop } from "./animation-loop.ts";
-import { BuiltInPluginBehaviors } from "./behavior.ts";
-import { PluginBehavior } from "./behavior/behavior.ts";
-import { PluginCommandManager } from "./command.ts";
-import { PluginCommands } from "./commands.ts";
-import { PluginConfig, PluginConfigManager } from "./config.ts";
-import type { PluginSpec } from "./spec.ts";
-import { PluginState } from "./state.ts";
-import { SubstructureParentHelper } from "./util/substructure-parent-helper.ts";
-import { TaskManager } from "./util/task-manager.ts";
-import { PluginToastManager } from "./util/toast.ts";
-import { ViewportScreenshotHelper } from "./util/viewport-screenshot.ts";
-import { PLUGIN_VERSION, PLUGIN_VERSION_DATE } from "./version.ts";
-import { setSaccharideCompIdMapType } from "../mol-model/structure/structure/carbohydrates/constants.ts";
-import { DragAndDropManager } from "../mol-plugin-state/manager/drag-and-drop.ts";
-import { ErrorContext } from "../mol-util/error-context.ts";
-import { PluginContainer } from "./container.ts";
+    Canvas3D,
+    Canvas3DContext,
+    type Canvas3DProps,
+    DefaultCanvas3DParams,
+    type PartialCanvas3DProps,
+} from '../mol-canvas3d/canvas3d.ts';
+import { resizeCanvas } from '../mol-canvas3d/util.ts';
+import { Vec2 } from '../mol-math/linear-algebra.ts';
+import { CustomProperty } from '../mol-model-props/common/custom-property.ts';
+import type { Model, Structure } from '../mol-model/structure.ts';
+import { DataBuilder } from '../mol-plugin-state/builder/data.ts';
+import { StructureBuilder } from '../mol-plugin-state/builder/structure.ts';
+import { DataFormatRegistry } from '../mol-plugin-state/formats/registry.ts';
+import { StructureSelectionQueryRegistry } from '../mol-plugin-state/helpers/structure-selection-query.ts';
+import { PluginAnimationManager } from '../mol-plugin-state/manager/animation.ts';
+import { CameraManager } from '../mol-plugin-state/manager/camera.ts';
+import { InteractivityManager } from '../mol-plugin-state/manager/interactivity.ts';
+import { type LociLabel, LociLabelManager } from '../mol-plugin-state/manager/loci-label.ts';
+import { PluginStateSnapshotManager } from '../mol-plugin-state/manager/snapshots.ts';
+import { StructureComponentManager } from '../mol-plugin-state/manager/structure/component.ts';
+import { StructureFocusManager } from '../mol-plugin-state/manager/structure/focus.ts';
+import { StructureHierarchyManager } from '../mol-plugin-state/manager/structure/hierarchy.ts';
+import type { StructureHierarchyRef } from '../mol-plugin-state/manager/structure/hierarchy-state.ts';
+import { StructureMeasurementManager } from '../mol-plugin-state/manager/structure/measurement.ts';
+import { StructureSelectionManager } from '../mol-plugin-state/manager/structure/selection.ts';
+import { VolumeHierarchyManager } from '../mol-plugin-state/manager/volume/hierarchy.ts';
+import { MarkdownExtensionManager } from '../mol-plugin-state/manager/markdown-extensions.ts';
+import { type LeftPanelTabName, PluginLayout } from './layout.ts';
+import { Representation } from '../mol-repr/representation.ts';
+import { StructureRepresentationRegistry } from '../mol-repr/structure/registry.ts';
+import { VolumeRepresentationRegistry } from '../mol-repr/volume/registry.ts';
+import { type StateBuilder, StateTransform } from '../mol-state/index.ts';
+import { type RuntimeContext, Scheduler, Task } from '../mol-task/index.ts';
+import { ColorTheme } from '../mol-theme/color.ts';
+import { SizeTheme } from '../mol-theme/size.ts';
+import type { ThemeRegistryContext } from '../mol-theme/theme.ts';
+import { AssetManager } from '../mol-util/assets.ts';
+import { Color } from '../mol-util/color/index.ts';
+import { ajaxGet } from '../mol-util/data-source.ts';
+import { isDebugMode, isProductionMode } from '../mol-util/debug.ts';
+import { EmptyKeyInput, type KeyInput, ModifiersKeys } from '../mol-util/input/input-observer.ts';
+import { LogEntry } from '../mol-util/log-entry.ts';
+import { objectForEach } from '../mol-util/object.ts';
+import { RxEventHelper } from '../mol-util/rx-event-helper.ts';
+import { PluginAnimationLoop } from './animation-loop.ts';
+import { BuiltInPluginBehaviors } from './behavior.ts';
+import { PluginBehavior } from './behavior/behavior.ts';
+import { PluginCommandManager } from './command.ts';
+import { PluginCommands } from './commands.ts';
+import { PluginConfig, PluginConfigManager } from './config.ts';
+import type { PluginSpec } from './spec.ts';
+import { PluginState } from './state.ts';
+import { SubstructureParentHelper } from './util/substructure-parent-helper.ts';
+import { TaskManager } from './util/task-manager.ts';
+import { PluginToastManager } from './util/toast.ts';
+import { ViewportScreenshotHelper } from './util/viewport-screenshot.ts';
+import { PLUGIN_VERSION, PLUGIN_VERSION_DATE } from './version.ts';
+import { setSaccharideCompIdMapType } from '../mol-model/structure/structure/carbohydrates/constants.ts';
+import { DragAndDropManager } from '../mol-plugin-state/manager/drag-and-drop.ts';
+import { ErrorContext } from '../mol-util/error-context.ts';
+import { PluginContainer } from './container.ts';
 
 export type PluginInitializedState =
-  | { kind: "no" }
-  | { kind: "yes" }
-  | { kind: "error"; error: any };
+    | { kind: 'no' }
+    | { kind: 'yes' }
+    | { kind: 'error'; error: any };
 
 export class PluginContext {
-  runTask = <T>(task: Task<T>, params?: { useOverlay?: boolean }) =>
-    this.managers.task.run(task, params);
-  resolveTask = <T>(object: Task<T> | T | undefined) => {
-    if (!object) return void 0;
-    if (Task.is(object)) return this.runTask(object);
-    return object;
-  };
-
-  protected subs: Subscription[] = [];
-  private initCanvas3dPromiseCallbacks: [
-    res: () => void,
-    rej: (err: any) => void,
-  ] = [() => {}, () => {}];
-  private _isInitialized = false;
-  private initializedPromiseCallbacks: [
-    res: () => void,
-    rej: (err: any) => void,
-  ] = [() => {}, () => {}];
-
-  private disposed: boolean = false;
-  private container: PluginContainer | undefined = void 0;
-  private ev = RxEventHelper.create();
-
-  readonly config!: PluginConfigManager; // needed to init state
-  readonly state: PluginState = new PluginState(this);
-  readonly commands: PluginCommandManager = new PluginCommandManager();
-
-  private canvas3dInit = this.ev.behavior<boolean>(false);
-  readonly behaviors = {
-    state: {
-      isAnimating: this.ev.behavior<boolean>(false),
-      isUpdating: this.ev.behavior<boolean>(false),
-      // TODO: should there be separate "updated" event?
-      //   Often, this is used to indicate that the state has updated
-      //   and it might not be the best way to react to state updates.
-      isBusy: this.ev.behavior<boolean>(false),
-    },
-    interaction: {
-      hover: this.ev.behavior<InteractivityManager.HoverEvent>({
-        current: Representation.Loci.Empty,
-        modifiers: ModifiersKeys.None,
-        buttons: 0,
-        button: 0,
-      }),
-      click: this.ev.behavior<InteractivityManager.ClickEvent>({
-        current: Representation.Loci.Empty,
-        modifiers: ModifiersKeys.None,
-        buttons: 0,
-        button: 0,
-      }),
-      drag: this.ev.behavior<InteractivityManager.DragEvent>({
-        current: Representation.Loci.Empty,
-        modifiers: ModifiersKeys.None,
-        buttons: 0,
-        button: 0,
-        pageStart: Vec2(),
-        pageEnd: Vec2(),
-      }),
-      key: this.ev.behavior<KeyInput>(EmptyKeyInput),
-      keyReleased: this.ev.behavior<KeyInput>(EmptyKeyInput),
-      selectionMode: this.ev.behavior<boolean>(false),
-    },
-    labels: {
-      highlight: this.ev.behavior<{ labels: ReadonlyArray<LociLabel> }>({
-        labels: [],
-      }),
-    },
-    layout: {
-      leftPanelTabName: this.ev.behavior<LeftPanelTabName>("root"),
-    },
-    canvas3d: {
-      // TODO: remove in 4.0?
-      initialized: this.canvas3dInit.pipe(
-        filter((v) => !!v),
-        take(1),
-      ),
-    },
-  } as const;
-
-  readonly canvas3dInitialized: Promise<void> = new Promise<void>(
-    (res, rej) => {
-      this.initCanvas3dPromiseCallbacks = [res, rej];
-    },
-  );
-
-  readonly initialized: Promise<void> = new Promise<void>((res, rej) => {
-    this.initializedPromiseCallbacks = [res, rej];
-  });
-
-  get isInitialized(): boolean {
-    return this._isInitialized;
-  }
-
-  readonly canvas3dContext: Canvas3DContext | undefined;
-  readonly canvas3d: Canvas3D | undefined;
-  readonly layout: PluginLayout = new PluginLayout(this);
-  readonly animationLoop: PluginAnimationLoop = new PluginAnimationLoop(this);
-
-  readonly representation = {
-    structure: {
-      registry: new StructureRepresentationRegistry(),
-      themes: {
-        colorThemeRegistry: ColorTheme.createRegistry(),
-        sizeThemeRegistry: SizeTheme.createRegistry(),
-      } as ThemeRegistryContext,
-    },
-    volume: {
-      registry: new VolumeRepresentationRegistry(),
-      themes: {
-        colorThemeRegistry: ColorTheme.createRegistry(),
-        sizeThemeRegistry: SizeTheme.createRegistry(),
-      } as ThemeRegistryContext,
-    },
-  } as const;
-
-  readonly query = {
-    structure: {
-      registry: new StructureSelectionQueryRegistry(),
-    },
-  } as const;
-
-  readonly dataFormats: DataFormatRegistry = new DataFormatRegistry();
-
-  readonly builders = {
-    data: new DataBuilder(this),
-    structure: void 0 as any as StructureBuilder,
-  };
-
-  build() {
-    return this.state.data.build();
-  }
-
-  readonly helpers = {
-    substructureParent: new SubstructureParentHelper(this),
-    viewportScreenshot: void 0 as ViewportScreenshotHelper | undefined,
-  } as const;
-
-  readonly managers = {
-    structure: {
-      hierarchy: new StructureHierarchyManager(this),
-      component: new StructureComponentManager(this),
-      measurement: new StructureMeasurementManager(this),
-      selection: new StructureSelectionManager(this),
-      focus: new StructureFocusManager(this),
-    },
-    volume: {
-      hierarchy: new VolumeHierarchyManager(this),
-    },
-    interactivity: void 0 as any as InteractivityManager,
-    camera: new CameraManager(this),
-    animation: new PluginAnimationManager(this),
-    snapshot: new PluginStateSnapshotManager(this),
-    lociLabels: void 0 as any as LociLabelManager,
-    toast: new PluginToastManager(this),
-    asset: new AssetManager(),
-    task: new TaskManager(),
-    markdownExtensions: new MarkdownExtensionManager(this),
-    dragAndDrop: new DragAndDropManager(this),
-  } as const;
-
-  readonly events = {
-    log: this.ev<LogEntry>(),
-    task: this.managers.task.events,
-    canvas3d: {
-      settingsUpdated: this.ev(),
-    },
-  } as const;
-
-  readonly customModelProperties = new CustomProperty.Registry<Model>();
-  readonly customStructureProperties = new CustomProperty.Registry<Structure>();
-
-  readonly customStructureControls: Map<string, new () => any> = new Map<
-    string,
-    {
-      new (): any /* constructible react components with <action.customControl /> */;
-    }
-  >();
-  readonly customImportControls: Map<string, new () => any> = new Map<
-    string,
-    {
-      new (): any /* constructible react components with <action.customControl /> */;
-    }
-  >();
-  readonly genericRepresentationControls: Map<
-    string,
-    (
-      selection: StructureHierarchyManager["selection"],
-    ) => [StructureHierarchyRef[], string]
-  > = new Map<
-    string,
-    (
-      selection: StructureHierarchyManager["selection"],
-    ) => [StructureHierarchyRef[], string]
-  >();
-
-  /**
-   * A helper for collecting and notifying errors
-   * in async contexts such as custom properties.
-   *
-   * Individual extensions are responsible for using this
-   * context and displaying the errors in appropriate ways.
-   */
-  readonly errorContext = new ErrorContext();
-
-  /**
-   * Used to store application specific custom state which is then available
-   * to State Actions and similar constructs via the PluginContext.
-   */
-  readonly customState: unknown = Object.create(null);
-
-  async initViewerAsync(
-    canvas: HTMLCanvasElement,
-    container: HTMLDivElement,
-    canvas3dContext?: Canvas3DContext,
-  ): Promise<boolean> {
-    return this._initViewer(canvas, container, canvas3dContext);
-  }
-
-  async initContainerAsync(options?: {
-    canvas3dContext?: Canvas3DContext;
-    checkeredCanvasBackground?: boolean;
-  }): Promise<boolean> {
-    return this._initContainer(options);
-  }
-
-  async mountAsync(
-    target: HTMLElement,
-    initOptions?: {
-      canvas3dContext?: Canvas3DContext;
-      checkeredCanvasBackground?: boolean;
-    },
-  ): Promise<boolean> {
-    return this._mount(target, initOptions);
-  }
-
-  private _initContainer(options?: {
-    canvas3dContext?: Canvas3DContext;
-    checkeredCanvasBackground?: boolean;
-  }): boolean {
-    if (this.container) return true;
-    const container = new PluginContainer({
-      checkeredCanvasBackground: options?.checkeredCanvasBackground,
-      canvas: options?.canvas3dContext?.canvas,
-    });
-    if (
-      !this._initViewer(
-        container.canvas,
-        container.parent,
-        options?.canvas3dContext,
-      )
-    ) {
-      return false;
-    }
-    this.container = container;
-    return true;
-  }
-
-  /**
-   * Mount the plugin into the target element (assumes the target has "relative"-like positioninig).
-   * If initContainer wasn't called separately before, initOptions will be passed to it.
-   */
-  private _mount(
-    target: HTMLElement,
-    initOptions?: {
-      canvas3dContext?: Canvas3DContext;
-      checkeredCanvasBackground?: boolean;
-    },
-  ): boolean {
-    if (this.disposed) throw new Error("Cannot mount a disposed context");
-
-    if (!this._initContainer(initOptions)) return false;
-    this.container?.mount(target);
-    this.handleResize();
-    return true;
-  }
-
-  unmount(): void {
-    this.container?.unmount();
-  }
-
-  private _initViewer(
-    canvas: HTMLCanvasElement,
-    container: HTMLDivElement,
-    canvas3dContext?: Canvas3DContext,
-  ): boolean {
-    try {
-      this.layout.setRoot(container);
-      if (this.spec.layout && this.spec.layout.initial)
-        this.layout.setProps(this.spec.layout.initial);
-
-      if (!canvas3dContext) {
-        canvas3dContext = Canvas3DContext.fromCanvas(
-          canvas,
-          this.managers.asset,
-          {
-            antialias: !(
-              this.config.get(PluginConfig.General.DisableAntialiasing) ?? false
-            ),
-            preserveDrawingBuffer: !(
-              this.config.get(
-                PluginConfig.General.DisablePreserveDrawingBuffer,
-              ) ?? false
-            ),
-            preferWebGl1:
-              this.config.get(PluginConfig.General.PreferWebGl1) || false,
-            failIfMajorPerformanceCaveat: !(
-              this.config.get(
-                PluginConfig.General.AllowMajorPerformanceCaveat,
-              ) ?? false
-            ),
-            powerPreference:
-              this.config.get(PluginConfig.General.PowerPreference) ||
-              "high-performance",
-            handleResize: this.handleResize,
-          },
-          {
-            pixelScale: this.config.get(PluginConfig.General.PixelScale) || 1,
-            pickScale: this.config.get(PluginConfig.General.PickScale) || 0.25,
-            transparency:
-              this.config.get(PluginConfig.General.Transparency) || "wboit",
-            resolutionMode:
-              this.config.get(PluginConfig.General.ResolutionMode) || "auto",
-          },
-        );
-      }
-      (this.canvas3dContext as Canvas3DContext) = canvas3dContext;
-      (this.canvas3d as Canvas3D) = Canvas3D.create(this.canvas3dContext!);
-      this.canvas3dInit.next(true);
-      let props: PartialCanvas3DProps | undefined = this.spec.canvas3d;
-
-      const backgroundColor: Color = Color(0xfcfbf9);
-      if (!props) {
-        this.canvas3d?.setProps({ renderer: { backgroundColor } });
-      } else {
-        if (props.renderer?.backgroundColor === void 0) {
-          props = produce(props, (p) => {
-            if (p.renderer) p.renderer.backgroundColor = backgroundColor;
-            else p.renderer = { backgroundColor };
-          });
-        }
-        this.canvas3d?.setProps(props);
-      }
-      this.animationLoop.start();
-      (this.helpers.viewportScreenshot as ViewportScreenshotHelper) =
-        new ViewportScreenshotHelper(this);
-
-      this.subs.push(
-        this.canvas3d!.interaction.click.subscribe((e) =>
-          this.behaviors.interaction.click.next(e),
-        ),
-      );
-      this.subs.push(
-        this.canvas3d!.interaction.drag.subscribe((e) =>
-          this.behaviors.interaction.drag.next(e),
-        ),
-      );
-      this.subs.push(
-        this.canvas3d!.interaction.hover.subscribe((e) =>
-          this.behaviors.interaction.hover.next(e),
-        ),
-      );
-      this.subs.push(
-        this.canvas3d!.input.resize.pipe(
-          debounceTime(50),
-          throttleTime(100, undefined, { leading: false, trailing: true }),
-        ).subscribe(() => this.handleResize()),
-      );
-      this.subs.push(
-        this.canvas3d!.input.keyDown.subscribe((e) =>
-          this.behaviors.interaction.key.next(e),
-        ),
-      );
-      this.subs.push(
-        this.canvas3d!.input.keyUp.subscribe((e) =>
-          this.behaviors.interaction.keyReleased.next(e),
-        ),
-      );
-      this.subs.push(
-        this.canvas3d!.xr.isPresenting.subscribe((e) =>
-          this.log.info(`WebXR ${e ? "enabled" : "disabled"}`),
-        ),
-      );
-      this.subs.push(
-        this.canvas3d!.xr.requestFailed.subscribe((e) =>
-          this.log.error(`WebXR request failed: ${e}`),
-        ),
-      );
-      this.subs.push(
-        this.layout.events.updated.subscribe(() =>
-          requestAnimationFrame(() => this.handleResize()),
-        ),
-      );
-
-      this.handleResize();
-
-      Scheduler.setImmediate(() => this.initCanvas3dPromiseCallbacks[0]());
-      return true;
-    } catch (e) {
-      this.log.error("" + e);
-      console.error(e);
-      Scheduler.setImmediate(() => this.initCanvas3dPromiseCallbacks[1](e));
-      return false;
-    }
-  }
-
-  handleResize: () => void = () => {
-    const canvas: HTMLCanvasElement | undefined = this.canvas3dContext?.canvas;
-    const container: HTMLElement | undefined = this.layout.root;
-    if (container && canvas) {
-      resizeCanvas(canvas, container, this.canvas3dContext!.pixelScale);
-      this.canvas3dContext!.syncPixelScale();
-      this.canvas3d?.requestResize();
-    }
-  };
-
-  readonly log = {
-    entries: List<LogEntry>(),
-    entry: (e: LogEntry) => this.events.log.next(e),
-    error: (msg: string) => this.events.log.next(LogEntry.error(msg)),
-    message: (msg: string) => this.events.log.next(LogEntry.message(msg)),
-    info: (msg: string) => this.events.log.next(LogEntry.info(msg)),
-    warn: (msg: string) => this.events.log.next(LogEntry.warning(msg)),
-  };
-
-  /**
-   * This should be used in all transform related request so that it could be "spoofed" to allow
-   * "static" access to resources.
-   */
-  readonly fetch = ajaxGet;
-
-  /** return true is animating or updating */
-  get isBusy(): boolean {
-    return (
-      this.behaviors.state.isAnimating.value ||
-      this.behaviors.state.isUpdating.value
-    );
-  }
-
-  get selectionMode(): boolean {
-    return this.behaviors.interaction.selectionMode.value;
-  }
-
-  set selectionMode(mode: boolean) {
-    this.behaviors.interaction.selectionMode.next(mode);
-  }
-
-  dataTransaction(
-    f: (ctx: RuntimeContext) => Promise<void> | void,
-    options?: { canUndo?: string | boolean; rethrowErrors?: boolean },
-  ): Promise<void> {
-    return this.runTask(this.state.data.transaction(f, options));
-  }
-
-  clear(resetViewportSettings = false): Promise<void> {
-    if (resetViewportSettings) this.canvas3d?.setProps(DefaultCanvas3DParams);
-    return PluginCommands.State.RemoveObject(this, {
-      state: this.state.data,
-      ref: StateTransform.RootRef,
-    });
-  }
-
-  dispose(options?: {
-    doNotForceWebGLContextLoss?: boolean;
-    doNotDisposeCanvas3DContext?: boolean;
-  }) {
-    if (this.disposed) return;
-
-    for (const s of this.subs) {
-      s.unsubscribe();
-    }
-    this.subs = [];
-
-    this.managers.markdownExtensions.audio.dispose();
-    this.animationLoop.stop();
-    this.commands.dispose();
-    this.canvas3d?.dispose();
-    if (!options?.doNotDisposeCanvas3DContext) {
-      this.canvas3dContext?.dispose(options);
-    }
-    this.ev.dispose();
-    this.state.dispose();
-    this.helpers.substructureParent.dispose();
-
-    objectForEach(this.managers, (m) => (m as any)?.dispose?.());
-    objectForEach(this.managers.structure, (m) => (m as any)?.dispose?.());
-    objectForEach(this.managers.volume, (m) => (m as any)?.dispose?.());
-
-    this.unmount();
-    this.container = undefined;
-    (this.customState as any) = {};
-
-    this.disposed = true;
-  }
-
-  private initBehaviorEvents(): void {
-    this.subs.push(
-      merge(
-        this.state.data.behaviors.isUpdating,
-        this.state.behaviors.behaviors.isUpdating,
-      ).subscribe((u) => {
-        if (this.behaviors.state.isUpdating.value !== u)
-          this.behaviors.state.isUpdating.next(u);
-      }),
-    );
-
-    const timeoutMs: number =
-      this.config.get(PluginConfig.General.IsBusyTimeoutMs) || 750;
-    const isBusy = this.behaviors.state.isBusy;
-
-    let timeout: any = void 0;
-    const setBusy = () => {
-      if (!isBusy.value) isBusy.next(true);
-    };
-    const reset: () => void = () => {
-      if (timeout !== void 0) clearTimeout(timeout);
-      timeout = void 0;
+    runTask = <T>(task: Task<T>, params?: { useOverlay?: boolean }) => this.managers.task.run(task, params);
+    resolveTask = <T>(object: Task<T> | T | undefined) => {
+        if (!object) return void 0;
+        if (Task.is(object)) return this.runTask(object);
+        return object;
     };
 
-    this.subs.push(
-      merge(
-        this.behaviors.state.isUpdating,
-        this.behaviors.state.isAnimating,
-      ).subscribe((v) => {
-        const isUpdating = this.behaviors.state.isUpdating.value;
-        const isAnimating = this.behaviors.state.isAnimating.value;
+    protected subs: Subscription[] = [];
+    private initCanvas3dPromiseCallbacks: [
+        res: () => void,
+        rej: (err: any) => void,
+    ] = [() => {}, () => {}];
+    private _isInitialized = false;
+    private initializedPromiseCallbacks: [
+        res: () => void,
+        rej: (err: any) => void,
+    ] = [() => {}, () => {}];
 
-        if (isUpdating || isAnimating) {
-          if (!isBusy.value) {
-            reset();
-            timeout = setTimeout(setBusy, timeoutMs);
-          }
-        } else {
-          reset();
-          isBusy.next(false);
+    private disposed: boolean = false;
+    private container: PluginContainer | undefined = void 0;
+    private ev = RxEventHelper.create();
+
+    readonly config!: PluginConfigManager; // needed to init state
+    readonly state: PluginState = new PluginState(this);
+    readonly commands: PluginCommandManager = new PluginCommandManager();
+
+    private canvas3dInit = this.ev.behavior<boolean>(false);
+    readonly behaviors = {
+        state: {
+            isAnimating: this.ev.behavior<boolean>(false),
+            isUpdating: this.ev.behavior<boolean>(false),
+            // TODO: should there be separate "updated" event?
+            //   Often, this is used to indicate that the state has updated
+            //   and it might not be the best way to react to state updates.
+            isBusy: this.ev.behavior<boolean>(false),
+        },
+        interaction: {
+            hover: this.ev.behavior<InteractivityManager.HoverEvent>({
+                current: Representation.Loci.Empty,
+                modifiers: ModifiersKeys.None,
+                buttons: 0,
+                button: 0,
+            }),
+            click: this.ev.behavior<InteractivityManager.ClickEvent>({
+                current: Representation.Loci.Empty,
+                modifiers: ModifiersKeys.None,
+                buttons: 0,
+                button: 0,
+            }),
+            drag: this.ev.behavior<InteractivityManager.DragEvent>({
+                current: Representation.Loci.Empty,
+                modifiers: ModifiersKeys.None,
+                buttons: 0,
+                button: 0,
+                pageStart: Vec2(),
+                pageEnd: Vec2(),
+            }),
+            key: this.ev.behavior<KeyInput>(EmptyKeyInput),
+            keyReleased: this.ev.behavior<KeyInput>(EmptyKeyInput),
+            selectionMode: this.ev.behavior<boolean>(false),
+        },
+        labels: {
+            highlight: this.ev.behavior<{ labels: ReadonlyArray<LociLabel> }>({
+                labels: [],
+            }),
+        },
+        layout: {
+            leftPanelTabName: this.ev.behavior<LeftPanelTabName>('root'),
+        },
+        canvas3d: {
+            // TODO: remove in 4.0?
+            initialized: this.canvas3dInit.pipe(
+                filter((v) => !!v),
+                take(1),
+            ),
+        },
+    } as const;
+
+    readonly canvas3dInitialized: Promise<void> = new Promise<void>(
+        (res, rej) => {
+            this.initCanvas3dPromiseCallbacks = [res, rej];
+        },
+    );
+
+    readonly initialized: Promise<void> = new Promise<void>((res, rej) => {
+        this.initializedPromiseCallbacks = [res, rej];
+    });
+
+    get isInitialized(): boolean {
+        return this._isInitialized;
+    }
+
+    readonly canvas3dContext: Canvas3DContext | undefined;
+    readonly canvas3d: Canvas3D | undefined;
+    readonly layout: PluginLayout = new PluginLayout(this);
+    readonly animationLoop: PluginAnimationLoop = new PluginAnimationLoop(this);
+
+    readonly representation = {
+        structure: {
+            registry: new StructureRepresentationRegistry(),
+            themes: {
+                colorThemeRegistry: ColorTheme.createRegistry(),
+                sizeThemeRegistry: SizeTheme.createRegistry(),
+            } as ThemeRegistryContext,
+        },
+        volume: {
+            registry: new VolumeRepresentationRegistry(),
+            themes: {
+                colorThemeRegistry: ColorTheme.createRegistry(),
+                sizeThemeRegistry: SizeTheme.createRegistry(),
+            } as ThemeRegistryContext,
+        },
+    } as const;
+
+    readonly query = {
+        structure: {
+            registry: new StructureSelectionQueryRegistry(),
+        },
+    } as const;
+
+    readonly dataFormats: DataFormatRegistry = new DataFormatRegistry();
+
+    readonly builders = {
+        data: new DataBuilder(this),
+        structure: void 0 as any as StructureBuilder,
+    };
+
+    build() {
+        return this.state.data.build();
+    }
+
+    readonly helpers = {
+        substructureParent: new SubstructureParentHelper(this),
+        viewportScreenshot: void 0 as ViewportScreenshotHelper | undefined,
+    } as const;
+
+    readonly managers = {
+        structure: {
+            hierarchy: new StructureHierarchyManager(this),
+            component: new StructureComponentManager(this),
+            measurement: new StructureMeasurementManager(this),
+            selection: new StructureSelectionManager(this),
+            focus: new StructureFocusManager(this),
+        },
+        volume: {
+            hierarchy: new VolumeHierarchyManager(this),
+        },
+        interactivity: void 0 as any as InteractivityManager,
+        camera: new CameraManager(this),
+        animation: new PluginAnimationManager(this),
+        snapshot: new PluginStateSnapshotManager(this),
+        lociLabels: void 0 as any as LociLabelManager,
+        toast: new PluginToastManager(this),
+        asset: new AssetManager(),
+        task: new TaskManager(),
+        markdownExtensions: new MarkdownExtensionManager(this),
+        dragAndDrop: new DragAndDropManager(this),
+    } as const;
+
+    readonly events = {
+        log: this.ev<LogEntry>(),
+        task: this.managers.task.events,
+        canvas3d: {
+            settingsUpdated: this.ev(),
+        },
+    } as const;
+
+    readonly customModelProperties = new CustomProperty.Registry<Model>();
+    readonly customStructureProperties = new CustomProperty.Registry<Structure>();
+
+    readonly customStructureControls: Map<string, new () => any> = new Map<
+        string,
+        {
+            new (): any /* constructible react components with <action.customControl /> */;
         }
-      }),
-    );
-
-    this.subs.push(
-      this.behaviors.interaction.selectionMode.subscribe((v): void => {
-        if (!v) {
-          this.managers.interactivity?.lociSelects.deselectAll();
+    >();
+    readonly customImportControls: Map<string, new () => any> = new Map<
+        string,
+        {
+            new (): any /* constructible react components with <action.customControl /> */;
         }
-      }),
-    );
-  }
+    >();
+    readonly genericRepresentationControls: Map<
+        string,
+        (
+            selection: StructureHierarchyManager['selection'],
+        ) => [StructureHierarchyRef[], string]
+    > = new Map<
+        string,
+        (
+            selection: StructureHierarchyManager['selection'],
+        ) => [StructureHierarchyRef[], string]
+    >();
 
-  private initBuiltInBehavior(): void {
-    BuiltInPluginBehaviors.State.registerDefault(this);
-    BuiltInPluginBehaviors.Representation.registerDefault(this);
-    BuiltInPluginBehaviors.Camera.registerDefault(this);
-    BuiltInPluginBehaviors.Misc.registerDefault(this);
+    /**
+     * A helper for collecting and notifying errors
+     * in async contexts such as custom properties.
+     *
+     * Individual extensions are responsible for using this
+     * context and displaying the errors in appropriate ways.
+     */
+    readonly errorContext = new ErrorContext();
 
-    this.subs.push(
-      merge(
-        this.state.data.events.log,
-        this.state.behaviors.events.log,
-      ).subscribe((e) => {
-        return this.events.log.next(e);
-      }),
-    );
-  }
+    /**
+     * Used to store application specific custom state which is then available
+     * to State Actions and similar constructs via the PluginContext.
+     */
+    readonly customState: unknown = Object.create(null);
 
-  private async initBehaviors(): Promise<void> {
-    let tree: StateBuilder.Root = this.state.behaviors.build();
+    async initViewerAsync(
+        canvas: HTMLCanvasElement,
+        container: HTMLDivElement,
+        canvas3dContext?: Canvas3DContext,
+    ): Promise<boolean> {
+        return this._initViewer(canvas, container, canvas3dContext);
+    }
 
-    for (const cat of Object.keys(PluginBehavior.Categories)) {
-      tree
-        .toRoot()
-        .apply(
-          PluginBehavior.CreateCategory,
-          { label: (PluginBehavior.Categories as any)[cat] },
-          { ref: cat, state: { isLocked: true } },
+    async initContainerAsync(options?: {
+        canvas3dContext?: Canvas3DContext;
+        checkeredCanvasBackground?: boolean;
+    }): Promise<boolean> {
+        return this._initContainer(options);
+    }
+
+    async mountAsync(
+        target: HTMLElement,
+        initOptions?: {
+            canvas3dContext?: Canvas3DContext;
+            checkeredCanvasBackground?: boolean;
+        },
+    ): Promise<boolean> {
+        return this._mount(target, initOptions);
+    }
+
+    private _initContainer(options?: {
+        canvas3dContext?: Canvas3DContext;
+        checkeredCanvasBackground?: boolean;
+    }): boolean {
+        if (this.container) return true;
+        const container = new PluginContainer({
+            checkeredCanvasBackground: options?.checkeredCanvasBackground,
+            canvas: options?.canvas3dContext?.canvas,
+        });
+        if (
+            !this._initViewer(
+                container.canvas,
+                container.parent,
+                options?.canvas3dContext,
+            )
+        ) {
+            return false;
+        }
+        this.container = container;
+        return true;
+    }
+
+    /**
+     * Mount the plugin into the target element (assumes the target has "relative"-like positioninig).
+     * If initContainer wasn't called separately before, initOptions will be passed to it.
+     */
+    private _mount(
+        target: HTMLElement,
+        initOptions?: {
+            canvas3dContext?: Canvas3DContext;
+            checkeredCanvasBackground?: boolean;
+        },
+    ): boolean {
+        if (this.disposed) throw new Error('Cannot mount a disposed context');
+
+        if (!this._initContainer(initOptions)) return false;
+        this.container?.mount(target);
+        this.handleResize();
+        return true;
+    }
+
+    unmount(): void {
+        this.container?.unmount();
+    }
+
+    private _initViewer(
+        canvas: HTMLCanvasElement,
+        container: HTMLDivElement,
+        canvas3dContext?: Canvas3DContext,
+    ): boolean {
+        try {
+            this.layout.setRoot(container);
+            if (this.spec.layout && this.spec.layout.initial) {
+                this.layout.setProps(this.spec.layout.initial);
+            }
+
+            if (!canvas3dContext) {
+                canvas3dContext = Canvas3DContext.fromCanvas(
+                    canvas,
+                    this.managers.asset,
+                    {
+                        antialias: !(
+                            this.config.get(PluginConfig.General.DisableAntialiasing) ?? false
+                        ),
+                        preserveDrawingBuffer: !(
+                            this.config.get(
+                                PluginConfig.General.DisablePreserveDrawingBuffer,
+                            ) ?? false
+                        ),
+                        preferWebGl1: this.config.get(PluginConfig.General.PreferWebGl1) || false,
+                        failIfMajorPerformanceCaveat: !(
+                            this.config.get(
+                                PluginConfig.General.AllowMajorPerformanceCaveat,
+                            ) ?? false
+                        ),
+                        powerPreference: this.config.get(PluginConfig.General.PowerPreference) ||
+                            'high-performance',
+                        handleResize: this.handleResize,
+                    },
+                    {
+                        pixelScale: this.config.get(PluginConfig.General.PixelScale) || 1,
+                        pickScale: this.config.get(PluginConfig.General.PickScale) || 0.25,
+                        transparency: this.config.get(PluginConfig.General.Transparency) || 'wboit',
+                        resolutionMode: this.config.get(PluginConfig.General.ResolutionMode) || 'auto',
+                    },
+                );
+            }
+            (this.canvas3dContext as Canvas3DContext) = canvas3dContext;
+            (this.canvas3d as Canvas3D) = Canvas3D.create(this.canvas3dContext!);
+            this.canvas3dInit.next(true);
+            let props: PartialCanvas3DProps | undefined = this.spec.canvas3d;
+
+            const backgroundColor: Color = Color(0xfcfbf9);
+            if (!props) {
+                this.canvas3d?.setProps({ renderer: { backgroundColor } });
+            } else {
+                if (props.renderer?.backgroundColor === void 0) {
+                    props = produce(props, (p) => {
+                        if (p.renderer) p.renderer.backgroundColor = backgroundColor;
+                        else p.renderer = { backgroundColor };
+                    });
+                }
+                this.canvas3d?.setProps(props);
+            }
+            this.animationLoop.start();
+            (this.helpers.viewportScreenshot as ViewportScreenshotHelper) = new ViewportScreenshotHelper(this);
+
+            this.subs.push(
+                this.canvas3d!.interaction.click.subscribe((e) => this.behaviors.interaction.click.next(e)),
+            );
+            this.subs.push(
+                this.canvas3d!.interaction.drag.subscribe((e) => this.behaviors.interaction.drag.next(e)),
+            );
+            this.subs.push(
+                this.canvas3d!.interaction.hover.subscribe((e) => this.behaviors.interaction.hover.next(e)),
+            );
+            this.subs.push(
+                this.canvas3d!.input.resize.pipe(
+                    debounceTime(50),
+                    throttleTime(100, undefined, { leading: false, trailing: true }),
+                ).subscribe(() => this.handleResize()),
+            );
+            this.subs.push(
+                this.canvas3d!.input.keyDown.subscribe((e) => this.behaviors.interaction.key.next(e)),
+            );
+            this.subs.push(
+                this.canvas3d!.input.keyUp.subscribe((e) => this.behaviors.interaction.keyReleased.next(e)),
+            );
+            this.subs.push(
+                this.canvas3d!.xr.isPresenting.subscribe((e) => this.log.info(`WebXR ${e ? 'enabled' : 'disabled'}`)),
+            );
+            this.subs.push(
+                this.canvas3d!.xr.requestFailed.subscribe((e) => this.log.error(`WebXR request failed: ${e}`)),
+            );
+            this.subs.push(
+                this.layout.events.updated.subscribe(() => requestAnimationFrame(() => this.handleResize())),
+            );
+
+            this.handleResize();
+
+            Scheduler.setImmediate(() => this.initCanvas3dPromiseCallbacks[0]());
+            return true;
+        } catch (e) {
+            this.log.error('' + e);
+            console.error(e);
+            Scheduler.setImmediate(() => this.initCanvas3dPromiseCallbacks[1](e));
+            return false;
+        }
+    }
+
+    handleResize: () => void = () => {
+        const canvas: HTMLCanvasElement | undefined = this.canvas3dContext?.canvas;
+        const container: HTMLElement | undefined = this.layout.root;
+        if (container && canvas) {
+            resizeCanvas(canvas, container, this.canvas3dContext!.pixelScale);
+            this.canvas3dContext!.syncPixelScale();
+            this.canvas3d?.requestResize();
+        }
+    };
+
+    readonly log = {
+        entries: List<LogEntry>(),
+        entry: (e: LogEntry) => this.events.log.next(e),
+        error: (msg: string) => this.events.log.next(LogEntry.error(msg)),
+        message: (msg: string) => this.events.log.next(LogEntry.message(msg)),
+        info: (msg: string) => this.events.log.next(LogEntry.info(msg)),
+        warn: (msg: string) => this.events.log.next(LogEntry.warning(msg)),
+    };
+
+    /**
+     * This should be used in all transform related request so that it could be "spoofed" to allow
+     * "static" access to resources.
+     */
+    readonly fetch = ajaxGet;
+
+    /** return true is animating or updating */
+    get isBusy(): boolean {
+        return (
+            this.behaviors.state.isAnimating.value ||
+            this.behaviors.state.isUpdating.value
         );
     }
 
-    // Init custom properties 1st
-    for (const b of this.spec.behaviors) {
-      const cat:
-        | "common"
-        | "representation"
-        | "interaction"
-        | "custom-props"
-        | "misc" = PluginBehavior.getCategoryId(b.transformer);
-      if (cat !== "custom-props") continue;
-
-      tree
-        .to(PluginBehavior.getCategoryId(b.transformer))
-        .apply(b.transformer, b.defaultParams, { ref: b.transformer.id });
+    get selectionMode(): boolean {
+        return this.behaviors.interaction.selectionMode.value;
     }
-    await this.runTask(
-      this.state.behaviors.updateTree(tree, {
-        doNotUpdateCurrent: true,
-        doNotLogTiming: true,
-      }),
-    );
 
-    tree = this.state.behaviors.build();
-    for (const b of this.spec.behaviors) {
-      const cat:
-        | "common"
-        | "representation"
-        | "interaction"
-        | "custom-props"
-        | "misc" = PluginBehavior.getCategoryId(b.transformer);
-      if (cat === "custom-props") continue;
-
-      tree
-        .to(PluginBehavior.getCategoryId(b.transformer))
-        .apply(b.transformer, b.defaultParams, { ref: b.transformer.id });
+    set selectionMode(mode: boolean) {
+        this.behaviors.interaction.selectionMode.next(mode);
     }
-    await this.runTask(
-      this.state.behaviors.updateTree(tree, {
-        doNotUpdateCurrent: true,
-        doNotLogTiming: true,
-      }),
-    );
-  }
 
-  private initCustomFormats() {
-    if (!this.spec.customFormats) return;
-
-    for (const f of this.spec.customFormats) {
-      this.dataFormats.add(f[0], f[1]);
+    dataTransaction(
+        f: (ctx: RuntimeContext) => Promise<void> | void,
+        options?: { canUndo?: string | boolean; rethrowErrors?: boolean },
+    ): Promise<void> {
+        return this.runTask(this.state.data.transaction(f, options));
     }
-  }
 
-  private initAnimations() {
-    if (!this.spec.animations) return;
-    for (const anim of this.spec.animations) {
-      this.managers.animation.register(anim);
+    clear(resetViewportSettings = false): Promise<void> {
+        if (resetViewportSettings) this.canvas3d?.setProps(DefaultCanvas3DParams);
+        return PluginCommands.State.RemoveObject(this, {
+            state: this.state.data,
+            ref: StateTransform.RootRef,
+        });
     }
-  }
 
-  private initDataActions() {
-    if (!this.spec.actions) return;
-    for (const a of this.spec.actions) {
-      this.state.data.actions.add(a.action);
+    dispose(options?: {
+        doNotForceWebGLContextLoss?: boolean;
+        doNotDisposeCanvas3DContext?: boolean;
+    }) {
+        if (this.disposed) return;
+
+        for (const s of this.subs) {
+            s.unsubscribe();
+        }
+        this.subs = [];
+
+        this.managers.markdownExtensions.audio.dispose();
+        this.animationLoop.stop();
+        this.commands.dispose();
+        this.canvas3d?.dispose();
+        if (!options?.doNotDisposeCanvas3DContext) {
+            this.canvas3dContext?.dispose(options);
+        }
+        this.ev.dispose();
+        this.state.dispose();
+        this.helpers.substructureParent.dispose();
+
+        objectForEach(this.managers, (m) => (m as any)?.dispose?.());
+        objectForEach(this.managers.structure, (m) => (m as any)?.dispose?.());
+        objectForEach(this.managers.volume, (m) => (m as any)?.dispose?.());
+
+        this.unmount();
+        this.container = undefined;
+        (this.customState as any) = {};
+
+        this.disposed = true;
     }
-  }
 
-  async init(): Promise<void> {
-    try {
-      this.subs.push(
-        this.events.log.subscribe(
-          (e) => (this.log.entries = this.log.entries.push(e)),
-        ),
-      );
+    private initBehaviorEvents(): void {
+        this.subs.push(
+            merge(
+                this.state.data.behaviors.isUpdating,
+                this.state.behaviors.behaviors.isUpdating,
+            ).subscribe((u) => {
+                if (this.behaviors.state.isUpdating.value !== u) {
+                    this.behaviors.state.isUpdating.next(u);
+                }
+            }),
+        );
 
-      this.initCustomFormats();
-      this.initBehaviorEvents();
-      this.initBuiltInBehavior();
+        const timeoutMs: number = this.config.get(PluginConfig.General.IsBusyTimeoutMs) || 750;
+        const isBusy = this.behaviors.state.isBusy;
 
-      (this.managers.interactivity as InteractivityManager) =
-        new InteractivityManager(this);
-      (this.managers.lociLabels as LociLabelManager) = new LociLabelManager(
-        this,
-      );
-      (this.builders.structure as StructureBuilder) = new StructureBuilder(
-        this,
-      );
+        let timeout: any = void 0;
+        const setBusy = () => {
+            if (!isBusy.value) isBusy.next(true);
+        };
+        const reset: () => void = () => {
+            if (timeout !== void 0) clearTimeout(timeout);
+            timeout = void 0;
+        };
 
-      this.initAnimations();
-      this.initDataActions();
+        this.subs.push(
+            merge(
+                this.behaviors.state.isUpdating,
+                this.behaviors.state.isAnimating,
+            ).subscribe((v) => {
+                const isUpdating = this.behaviors.state.isUpdating.value;
+                const isAnimating = this.behaviors.state.isAnimating.value;
 
-      await this.initBehaviors();
+                if (isUpdating || isAnimating) {
+                    if (!isBusy.value) {
+                        reset();
+                        timeout = setTimeout(setBusy, timeoutMs);
+                    }
+                } else {
+                    reset();
+                    isBusy.next(false);
+                }
+            }),
+        );
 
-      this.log.message(
-        `Mol* Plugin ${PLUGIN_VERSION} [${PLUGIN_VERSION_DATE.toLocaleString()}]`,
-      );
-      if (!isProductionMode) this.log.message(`Development mode enabled`);
-      if (isDebugMode) this.log.message(`Debug mode enabled`);
-
-      this._isInitialized = true;
-      this.initializedPromiseCallbacks[0]();
-    } catch (err) {
-      this.initializedPromiseCallbacks[1](err);
-      throw err;
+        this.subs.push(
+            this.behaviors.interaction.selectionMode.subscribe((v): void => {
+                if (!v) {
+                    this.managers.interactivity?.lociSelects.deselectAll();
+                }
+            }),
+        );
     }
-  }
 
-  constructor(public spec: PluginSpec) {
-    this.config = new PluginConfigManager(this.spec.config);
-    setSaccharideCompIdMapType(
-      this.config.get(PluginConfig.Structure.SaccharideCompIdMapType) ??
-        "default",
-    );
-  }
+    private initBuiltInBehavior(): void {
+        BuiltInPluginBehaviors.State.registerDefault(this);
+        BuiltInPluginBehaviors.Representation.registerDefault(this);
+        BuiltInPluginBehaviors.Camera.registerDefault(this);
+        BuiltInPluginBehaviors.Misc.registerDefault(this);
+
+        this.subs.push(
+            merge(
+                this.state.data.events.log,
+                this.state.behaviors.events.log,
+            ).subscribe((e) => {
+                return this.events.log.next(e);
+            }),
+        );
+    }
+
+    private async initBehaviors(): Promise<void> {
+        let tree: StateBuilder.Root = this.state.behaviors.build();
+
+        for (const cat of Object.keys(PluginBehavior.Categories)) {
+            tree
+                .toRoot()
+                .apply(
+                    PluginBehavior.CreateCategory,
+                    { label: (PluginBehavior.Categories as any)[cat] },
+                    { ref: cat, state: { isLocked: true } },
+                );
+        }
+
+        // Init custom properties 1st
+        for (const b of this.spec.behaviors) {
+            const cat:
+                | 'common'
+                | 'representation'
+                | 'interaction'
+                | 'custom-props'
+                | 'misc' = PluginBehavior.getCategoryId(b.transformer);
+            if (cat !== 'custom-props') continue;
+
+            tree
+                .to(PluginBehavior.getCategoryId(b.transformer))
+                .apply(b.transformer, b.defaultParams, { ref: b.transformer.id });
+        }
+        await this.runTask(
+            this.state.behaviors.updateTree(tree, {
+                doNotUpdateCurrent: true,
+                doNotLogTiming: true,
+            }),
+        );
+
+        tree = this.state.behaviors.build();
+        for (const b of this.spec.behaviors) {
+            const cat:
+                | 'common'
+                | 'representation'
+                | 'interaction'
+                | 'custom-props'
+                | 'misc' = PluginBehavior.getCategoryId(b.transformer);
+            if (cat === 'custom-props') continue;
+
+            tree
+                .to(PluginBehavior.getCategoryId(b.transformer))
+                .apply(b.transformer, b.defaultParams, { ref: b.transformer.id });
+        }
+        await this.runTask(
+            this.state.behaviors.updateTree(tree, {
+                doNotUpdateCurrent: true,
+                doNotLogTiming: true,
+            }),
+        );
+    }
+
+    private initCustomFormats() {
+        if (!this.spec.customFormats) return;
+
+        for (const f of this.spec.customFormats) {
+            this.dataFormats.add(f[0], f[1]);
+        }
+    }
+
+    private initAnimations() {
+        if (!this.spec.animations) return;
+        for (const anim of this.spec.animations) {
+            this.managers.animation.register(anim);
+        }
+    }
+
+    private initDataActions() {
+        if (!this.spec.actions) return;
+        for (const a of this.spec.actions) {
+            this.state.data.actions.add(a.action);
+        }
+    }
+
+    async init(): Promise<void> {
+        try {
+            this.subs.push(
+                this.events.log.subscribe(
+                    (e) => (this.log.entries = this.log.entries.push(e)),
+                ),
+            );
+
+            this.initCustomFormats();
+            this.initBehaviorEvents();
+            this.initBuiltInBehavior();
+
+            (this.managers.interactivity as InteractivityManager) = new InteractivityManager(this);
+            (this.managers.lociLabels as LociLabelManager) = new LociLabelManager(
+                this,
+            );
+            (this.builders.structure as StructureBuilder) = new StructureBuilder(
+                this,
+            );
+
+            this.initAnimations();
+            this.initDataActions();
+
+            await this.initBehaviors();
+
+            this.log.message(
+                `Mol* Plugin ${PLUGIN_VERSION} [${PLUGIN_VERSION_DATE.toLocaleString()}]`,
+            );
+            if (!isProductionMode) this.log.message(`Development mode enabled`);
+            if (isDebugMode) this.log.message(`Debug mode enabled`);
+
+            this._isInitialized = true;
+            this.initializedPromiseCallbacks[0]();
+        } catch (err) {
+            this.initializedPromiseCallbacks[1](err);
+            throw err;
+        }
+    }
+
+    constructor(public spec: PluginSpec) {
+        this.config = new PluginConfigManager(this.spec.config);
+        setSaccharideCompIdMapType(
+            this.config.get(PluginConfig.Structure.SaccharideCompIdMapType) ??
+                'default',
+        );
+    }
 }

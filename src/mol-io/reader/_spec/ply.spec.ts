@@ -5,7 +5,7 @@
  */
 
 import { parsePly } from '../ply/parser';
-import type { PlyTable, PlyList } from '../ply/schema';
+import type { PlyList, PlyTable } from '../ply/schema';
 
 const plyString = `ply
 format ascii 1.0

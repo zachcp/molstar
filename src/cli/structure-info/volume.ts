@@ -17,7 +17,7 @@ import { StringBuilder } from '../../mol-util/index.ts';
 import { Task } from '../../mol-task/index.ts';
 import { createVolumeIsosurfaceMesh } from '../../mol-repr/volume/isosurface.ts';
 import { Theme } from '../../mol-theme/theme.ts';
-import { volumeFromDensityServerData, DscifFormat } from '../../mol-model-formats/volume/density-server.ts';
+import { DscifFormat, volumeFromDensityServerData } from '../../mol-model-formats/volume/density-server.ts';
 
 require('util.promisify').shim();
 const writeFileAsync = util.promisify(fs.writeFile);
@@ -38,7 +38,13 @@ function print(volume: Volume) {
 }
 
 async function doMesh(volume: Volume, filename: string) {
-    const mesh = await Task.create('', runtime => createVolumeIsosurfaceMesh({ runtime }, volume, -1, Theme.createEmpty(), { isoValue: Volume.IsoValue.absolute(1.5) })).run();
+    const mesh = await Task.create(
+        '',
+        (runtime) =>
+            createVolumeIsosurfaceMesh({ runtime }, volume, -1, Theme.createEmpty(), {
+                isoValue: Volume.IsoValue.absolute(1.5),
+            }),
+    ).run();
     console.log({ vc: mesh.vertexCount, tc: mesh.triangleCount });
 
     // Export the mesh in OBJ format.
@@ -76,18 +82,18 @@ async function run(url: string, meshFilename: string) {
 
 const parser = new argparse.ArgumentParser({
     add_help: true,
-    description: 'Info about VolumeData from mol-model module'
+    description: 'Info about VolumeData from mol-model module',
 });
 parser.add_argument('--emdb', '-e', {
     help: 'EMDB id, for example 8116',
 });
 parser.add_argument('--mesh', {
     help: 'Mesh filename',
-    required: true
+    required: true,
 });
 interface Args {
-    emdb?: string,
-    mesh: string
+    emdb?: string;
+    mesh: string;
 }
 const args: Args = parser.parse_args();
 

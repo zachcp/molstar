@@ -2,7 +2,7 @@ import type { PluginContext } from '../../../../mol-plugin/context.ts';
 import { onelinerJsonString } from '../../../../mol-util/json.ts';
 import { isPlainObject } from '../../../../mol-util/object.ts';
 import type { Field } from './field-schema.ts';
-import { type SimpleParamsSchema, paramsValidationIssues } from './params-schema.ts';
+import { paramsValidationIssues, type SimpleParamsSchema } from './params-schema.ts';
 import { getChildren, getParams, type Tree, type TreeSchema } from './tree-schema.ts';
 import { treeToString } from './tree-utils.ts';
 
@@ -12,16 +12,26 @@ import { treeToString } from './tree-utils.ts';
  * If `options.noExtra` is true, presence of any extra parameters is treated as an issue.
  * If `options.anyRoot` is true, the kind of the root node is not enforced.
  */
-export function treeValidationIssues(schema: TreeSchema, tree: Tree, options: { requireAll?: boolean, noExtra?: boolean, anyRoot?: boolean, parent?: string } = {}): string[] | undefined {
+export function treeValidationIssues(
+    schema: TreeSchema,
+    tree: Tree,
+    options: { requireAll?: boolean; noExtra?: boolean; anyRoot?: boolean; parent?: string } = {},
+): string[] | undefined {
     if (!isPlainObject(tree)) return [`Node must be an object, not ${tree}`];
-    if (!options.anyRoot && tree.kind !== schema.rootKind) return [`Invalid root node kind "${tree.kind}", root must be of kind "${schema.rootKind}"`];
+    if (!options.anyRoot && tree.kind !== schema.rootKind) {
+        return [`Invalid root node kind "${tree.kind}", root must be of kind "${schema.rootKind}"`];
+    }
     const nodeSchema = schema.nodes[tree.kind];
     if (!nodeSchema) return [`Unknown node kind "${tree.kind}"`];
     if (nodeSchema.parent && (options.parent !== undefined) && !nodeSchema.parent.includes(options.parent)) {
-        return [`Node of kind "${tree.kind}" cannot appear as a child of "${options.parent}". Allowed parents for "${tree.kind}" are: ${nodeSchema.parent.map(s => `"${s}"`).join(', ')}`];
+        return [
+            `Node of kind "${tree.kind}" cannot appear as a child of "${options.parent}". Allowed parents for "${tree.kind}" are: ${
+                nodeSchema.parent.map((s) => `"${s}"`).join(', ')
+            }`,
+        ];
     }
     const issues = paramsValidationIssues(nodeSchema.params, getParams(tree), options);
-    if (issues) return [`Invalid parameters for node of kind "${tree.kind}":`, ...issues.map(s => '  ' + s)];
+    if (issues) return [`Invalid parameters for node of kind "${tree.kind}":`, ...issues.map((s) => '  ' + s)];
     if (tree.custom !== undefined && (typeof tree.custom !== 'object' || tree.custom === null)) {
         return [`Invalid "custom" for node of kind "${tree.kind}": must be an object, not ${tree.custom}.`];
     }
@@ -100,7 +110,11 @@ function treeSchemaToString_<S extends TreeSchema>(schema: S, markdown: boolean 
     return out.join(newline);
 }
 
-function formatSimpleParams(out: string[], params: SimpleParamsSchema, formatting: { h: string, p: string, code: (str: string) => string, bold: (str: string) => string }): void {
+function formatSimpleParams(
+    out: string[],
+    params: SimpleParamsSchema,
+    formatting: { h: string; p: string; code: (str: string) => string; bold: (str: string) => string },
+): void {
     const { h, p, code, bold } = formatting;
     for (const key in params.fields) {
         const field = params.fields[key];

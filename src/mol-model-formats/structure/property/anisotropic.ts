@@ -4,91 +4,91 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { Table, Column } from "../../../mol-data/db.ts";
-import type { CustomPropertyDescriptor } from "../../../mol-model/custom-property.ts";
-import { mmCIF_Schema } from "../../../mol-io/reader/cif/schema/mmcif.ts";
-import { CifWriter } from "../../../mol-io/writer/cif.ts";
-import { FormatPropertyProvider } from "../common/property.ts";
-import { MmcifFormat } from "../mmcif.ts";
+import type { Column, Table } from '../../../mol-data/db.ts';
+import type { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
+import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
+import { CifWriter } from '../../../mol-io/writer/cif.ts';
+import { FormatPropertyProvider } from '../common/property.ts';
+import { MmcifFormat } from '../mmcif.ts';
 
 export { AtomSiteAnisotrop };
 
 const Anisotrop = {
-  U: mmCIF_Schema.atom_site_anisotrop.U,
-  U_esd: mmCIF_Schema.atom_site_anisotrop.U_esd,
+    U: mmCIF_Schema.atom_site_anisotrop.U,
+    U_esd: mmCIF_Schema.atom_site_anisotrop.U_esd,
 };
 type Anisotrop = Table<typeof Anisotrop>;
 
 interface AtomSiteAnisotrop {
-  data: Anisotrop;
-  /** maps atom_site-index to atom_site_anisotrop-index */
-  elementToAnsiotrop: Int32Array;
+    data: Anisotrop;
+    /** maps atom_site-index to atom_site_anisotrop-index */
+    elementToAnsiotrop: Int32Array;
 }
 
 namespace AtomSiteAnisotrop {
-  export const Schema = Anisotrop;
+    export const Schema = Anisotrop;
 
-  export const Descriptor: CustomPropertyDescriptor = {
-    name: "atom_site_anisotrop",
-    cifExport: {
-      prefix: "",
-      categories: [
-        {
-          name: "atom_site_anisotrop",
-          instance(ctx) {
-            const p = Provider.get(ctx.firstModel);
-            if (!p) return CifWriter.Category.Empty;
-            if (!MmcifFormat.is(ctx.firstModel.sourceData))
-              return CifWriter.Category.Empty;
-            // TODO filter to write only data for elements that exist in model
-            return CifWriter.Category.ofTable(
-              ctx.firstModel.sourceData.data.db.atom_site_anisotrop,
-            );
-          },
+    export const Descriptor: CustomPropertyDescriptor = {
+        name: 'atom_site_anisotrop',
+        cifExport: {
+            prefix: '',
+            categories: [
+                {
+                    name: 'atom_site_anisotrop',
+                    instance(ctx) {
+                        const p = Provider.get(ctx.firstModel);
+                        if (!p) return CifWriter.Category.Empty;
+                        if (!MmcifFormat.is(ctx.firstModel.sourceData)) {
+                            return CifWriter.Category.Empty;
+                        }
+                        // TODO filter to write only data for elements that exist in model
+                        return CifWriter.Category.ofTable(
+                            ctx.firstModel.sourceData.data.db.atom_site_anisotrop,
+                        );
+                    },
+                },
+            ],
         },
-      ],
-    },
-  };
+    };
 
-  export const Provider =
-    FormatPropertyProvider.create<AtomSiteAnisotrop>(Descriptor);
+    export const Provider = FormatPropertyProvider.create<AtomSiteAnisotrop>(Descriptor);
 
-  export function getElementToAnsiotrop(
-    atomId: Column<number>,
-    ansioId: Column<number>,
-  ): Int32Array {
-    const atomIdToElement = new Int32Array(atomId.rowCount);
-    atomIdToElement.fill(-1);
-    for (let i = 0, il = atomId.rowCount; i < il; i++) {
-      atomIdToElement[atomId.value(i)] = i;
+    export function getElementToAnsiotrop(
+        atomId: Column<number>,
+        ansioId: Column<number>,
+    ): Int32Array {
+        const atomIdToElement = new Int32Array(atomId.rowCount);
+        atomIdToElement.fill(-1);
+        for (let i = 0, il = atomId.rowCount; i < il; i++) {
+            atomIdToElement[atomId.value(i)] = i;
+        }
+
+        const elementToAnsiotrop = new Int32Array(atomId.rowCount);
+        elementToAnsiotrop.fill(-1);
+        for (let i = 0, il = ansioId.rowCount; i < il; ++i) {
+            const ei = atomIdToElement[ansioId.value(i)];
+            if (ei !== -1) elementToAnsiotrop[ei] = i;
+        }
+
+        return elementToAnsiotrop;
     }
 
-    const elementToAnsiotrop = new Int32Array(atomId.rowCount);
-    elementToAnsiotrop.fill(-1);
-    for (let i = 0, il = ansioId.rowCount; i < il; ++i) {
-      const ei = atomIdToElement[ansioId.value(i)];
-      if (ei !== -1) elementToAnsiotrop[ei] = i;
+    export function getElementToAnsiotropFromLabel(
+        atomLabel: Column<string>,
+        ansioLabel: Column<string>,
+    ): Int32Array {
+        const atomLabelToElement: { [k: string]: number | undefined } = {};
+        for (let i = 0, il = atomLabel.rowCount; i < il; i++) {
+            atomLabelToElement[atomLabel.value(i)] = i;
+        }
+
+        const elementToAnsiotrop = new Int32Array(atomLabel.rowCount);
+        elementToAnsiotrop.fill(-1);
+        for (let i = 0, il = ansioLabel.rowCount; i < il; ++i) {
+            const ei = atomLabelToElement[ansioLabel.value(i)];
+            if (ei !== undefined) elementToAnsiotrop[ei] = i;
+        }
+
+        return elementToAnsiotrop;
     }
-
-    return elementToAnsiotrop;
-  }
-
-  export function getElementToAnsiotropFromLabel(
-    atomLabel: Column<string>,
-    ansioLabel: Column<string>,
-  ): Int32Array {
-    const atomLabelToElement: { [k: string]: number | undefined } = {};
-    for (let i = 0, il = atomLabel.rowCount; i < il; i++) {
-      atomLabelToElement[atomLabel.value(i)] = i;
-    }
-
-    const elementToAnsiotrop = new Int32Array(atomLabel.rowCount);
-    elementToAnsiotrop.fill(-1);
-    for (let i = 0, il = ansioLabel.rowCount; i < il; ++i) {
-      const ei = atomLabelToElement[ansioLabel.value(i)];
-      if (ei !== undefined) elementToAnsiotrop[ei] = i;
-    }
-
-    return elementToAnsiotrop;
-  }
 }

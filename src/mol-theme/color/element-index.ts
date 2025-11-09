@@ -6,27 +6,31 @@
 
 import { Color } from '../../mol-util/color/index.ts';
 import type { Location } from '../../mol-model/location.ts';
-import { StructureElement, Bond } from '../../mol-model/structure.ts';
+import { Bond, StructureElement } from '../../mol-model/structure.ts';
 import { OrderedSet } from '../../mol-data/int.ts';
 import type { ColorTheme, LocationColor } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../../mol-theme/theme.ts';
-import { getPaletteParams, getPalette } from '../../mol-util/color/palette.ts';
-import type { TableLegend, ScaleLegend } from '../../mol-util/legend.ts';
+import { getPalette, getPaletteParams } from '../../mol-util/color/palette.ts';
+import type { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
 import { ColorThemeCategory } from './categories.ts';
 
 const DefaultColor = Color(0xCCCCCC);
-const Description = 'Gives every element (atom or coarse sphere/gaussian) a unique color based on the position (index) of the element in the list of elements in the structure.';
+const Description =
+    'Gives every element (atom or coarse sphere/gaussian) a unique color based on the position (index) of the element in the list of elements in the structure.';
 
 export const ElementIndexColorThemeParams = {
     ...getPaletteParams({ type: 'colors', colorList: 'red-yellow-blue' }),
 };
-export type ElementIndexColorThemeParams = typeof ElementIndexColorThemeParams
+export type ElementIndexColorThemeParams = typeof ElementIndexColorThemeParams;
 export function getElementIndexColorThemeParams(ctx: ThemeDataContext) {
     return ElementIndexColorThemeParams; // TODO return copy
 }
 
-export function ElementIndexColorTheme(ctx: ThemeDataContext, props: PD.Values<ElementIndexColorThemeParams>): ColorTheme<ElementIndexColorThemeParams> {
+export function ElementIndexColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<ElementIndexColorThemeParams>,
+): ColorTheme<ElementIndexColorThemeParams> {
     let color: LocationColor;
     let legend: ScaleLegend | TableLegend | undefined;
 
@@ -53,7 +57,10 @@ export function ElementIndexColorTheme(ctx: ThemeDataContext, props: PD.Values<E
                 return palette.color(cummulativeElementCount.get(unitIndex)! + unitElementIndex);
             } else if (Bond.isLocation(location)) {
                 const unitIndex = unitIdIndex.get(location.aUnit.id)!;
-                const unitElementIndex = OrderedSet.findPredecessorIndex(units[unitIndex].elements, location.aUnit.elements[location.aIndex]);
+                const unitElementIndex = OrderedSet.findPredecessorIndex(
+                    units[unitIndex].elements,
+                    location.aUnit.elements[location.aIndex],
+                );
                 return palette.color(cummulativeElementCount.get(unitIndex)! + unitElementIndex);
             }
             return DefaultColor;
@@ -69,7 +76,7 @@ export function ElementIndexColorTheme(ctx: ThemeDataContext, props: PD.Values<E
         color,
         props,
         description: Description,
-        legend
+        legend,
     };
 }
 
@@ -80,5 +87,5 @@ export const ElementIndexColorThemeProvider: ColorTheme.Provider<ElementIndexCol
     factory: ElementIndexColorTheme,
     getParams: getElementIndexColorThemeParams,
     defaultValues: PD.getDefaultValues(ElementIndexColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
 };

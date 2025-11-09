@@ -12,7 +12,7 @@ import * as P from '../../../mol-util/monadic-parser.ts';
 import * as h from '../helper.ts';
 import { MolScriptBuilder } from '../../../mol-script/language/builder.ts';
 const B = MolScriptBuilder;
-import { sstrucMap, sstrucDict, properties } from './properties.ts';
+import { properties, sstrucDict, sstrucMap } from './properties.ts';
 import { operators } from './operators.ts';
 import { keywords } from './keywords.ts';
 import { functions } from './functions.ts';
@@ -30,11 +30,14 @@ const valueOperators: OperatorList = [
         rule: P.MonadicParser.regexp(/\s*(\*|\/)\s*/, 1),
         map: (op, e1, e2) => {
             switch (op) {
-                case '*': return B.core.math.mult([e1, e2]);
-                case '/': return B.core.math.div([e1, e2]);
-                default: throw new Error(`value operator '${op}' not supported`);
+                case '*':
+                    return B.core.math.mult([e1, e2]);
+                case '/':
+                    return B.core.math.div([e1, e2]);
+                default:
+                    throw new Error(`value operator '${op}' not supported`);
             }
-        }
+        },
     },
     {
         '@desc': 'addition, substraction',
@@ -44,18 +47,24 @@ const valueOperators: OperatorList = [
         rule: P.MonadicParser.regexp(/\s*(-|\+)\s*/, 1),
         map: (op, e1, e2) => {
             switch (op) {
-                case '-': return B.core.math.sub([e1, e2]);
-                case '+': return B.core.math.add([e1, e2]);
-                default: throw new Error(`value operator '${op}' not supported`);
+                case '-':
+                    return B.core.math.sub([e1, e2]);
+                case '+':
+                    return B.core.math.add([e1, e2]);
+                default:
+                    throw new Error(`value operator '${op}' not supported`);
             }
-        }
+        },
     },
     {
         '@desc': 'value comparisons',
         '@examples': [],
         name: 'comparison',
         type: h.binaryLeft,
-        rule: P.MonadicParser.alt(P.MonadicParser.regexp(/\s*(=~|==|>=|<=|=|!=|>|<)\s*/, 1), P.MonadicParser.whitespace.result('=')),
+        rule: P.MonadicParser.alt(
+            P.MonadicParser.regexp(/\s*(=~|==|>=|<=|=|!=|>|<)\s*/, 1),
+            P.MonadicParser.whitespace.result('='),
+        ),
         map: (op, e1, e2) => {
             let expr;
             if (e1.head !== undefined) {
@@ -76,12 +85,12 @@ const valueOperators: OperatorList = [
                 if (e1.head) {
                     expr = B.core.str.match([
                         B.core.type.regex([`^${e2}$`, 'i']),
-                        B.core.type.str([e1])
+                        B.core.type.str([e1]),
                     ]);
                 } else {
                     expr = B.core.str.match([
                         B.core.type.regex([`^${e1}$`, 'i']),
-                        B.core.type.str([e2])
+                        B.core.type.str([e2]),
                     ]);
                 }
             }
@@ -108,12 +117,13 @@ const valueOperators: OperatorList = [
                     case '<=':
                         expr = B.core.rel.lte([e1, e2]);
                         break;
-                    default: throw new Error(`value operator '${op}' not supported`);
+                    default:
+                        throw new Error(`value operator '${op}' not supported`);
                 }
             }
             return B.struct.generator.atomGroups({ 'atom-test': expr });
-        }
-    }
+        },
+    },
 ];
 
 const lang = P.MonadicParser.createLanguage({
@@ -121,7 +131,7 @@ const lang = P.MonadicParser.createLanguage({
         return P.MonadicParser.alt(
             r.Parens,
             r.Operator,
-            r.Expression
+            r.Expression,
         ).wrap(P.MonadicParser.string('('), P.MonadicParser.string(')'));
     },
 
@@ -144,8 +154,8 @@ const lang = P.MonadicParser.createLanguage({
         return P.MonadicParser.seq(
             r.Value
                 .skip(P.MonadicParser.regexp(/\s+TO\s+/i)),
-            r.Value
-        ).map(x => ({ range: x }));
+            r.Value,
+        ).map((x) => ({ range: x }));
     },
 
     RangeListProperty: function (r: any) {
@@ -154,9 +164,9 @@ const lang = P.MonadicParser.createLanguage({
                 .skip(P.MonadicParser.whitespace),
             P.MonadicParser.alt(
                 r.ValueRange,
-                r.Value
-            ).sepBy1(P.MonadicParser.whitespace)
-        ).map(x => {
+                r.Value,
+            ).sepBy1(P.MonadicParser.whitespace),
+        ).map((x) => {
             const [property, values] = x;
             const listValues: (string | number)[] = [];
             const rangeValues: any[] = [];
@@ -164,7 +174,7 @@ const lang = P.MonadicParser.createLanguage({
             values.forEach((v: any) => {
                 if (v.range) {
                     rangeValues.push(
-                        B.core.rel.inRange([property, v.range[0], v.range[1]])
+                        B.core.rel.inRange([property, v.range[0], v.range[1]]),
                     );
                 } else {
                     listValues.push(h.wrapValue(property, v, sstrucDict));
@@ -193,7 +203,7 @@ const lang = P.MonadicParser.createLanguage({
         return P.MonadicParser.alt(
             r.Operator,
             r.Parens,
-            r.Expression
+            r.Expression,
         ).trim(P.MonadicParser.optWhitespace);
     },
 
@@ -209,7 +219,7 @@ const lang = P.MonadicParser.createLanguage({
         return P.MonadicParser.alt(
             P.MonadicParser.regexp(new RegExp(`(?!(${w}))[A-Z0-9_]+`, 'i')),
             P.MonadicParser.regexp(/'((?:[^"\\]|\\.)*)'/, 1),
-            P.MonadicParser.regexp(/"((?:[^"\\]|\\.)*)"/, 1).map((x: any) => B.core.type.regex([`^${x}$`, 'i']))
+            P.MonadicParser.regexp(/"((?:[^"\\]|\\.)*)"/, 1).map((x: any) => B.core.type.regex([`^${x}$`, 'i'])),
         ).desc('string');
     },
 
@@ -221,7 +231,7 @@ const lang = P.MonadicParser.createLanguage({
         return P.MonadicParser.alt(
             r.ValueParens,
             r.ValueOperator,
-            r.ValueExpressions
+            r.ValueExpressions,
         ).wrap(P.MonadicParser.string('('), P.MonadicParser.string(')'));
     },
 
@@ -237,7 +247,7 @@ const lang = P.MonadicParser.createLanguage({
         return P.MonadicParser.alt(
             r.ValueFunctions,
             r.Value,
-            r.ValuePropertyNames
+            r.ValuePropertyNames,
         );
     },
 
@@ -254,9 +264,9 @@ const lang = P.MonadicParser.createLanguage({
                 } else {
                     return x as any;
                 }
-            })
+            }),
         );
-    }
+    },
 });
 
-export const transpiler: Transpiler = str => lang.Query.tryParse(str);
+export const transpiler: Transpiler = (str) => lang.Query.tryParse(str);

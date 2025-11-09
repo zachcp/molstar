@@ -14,6 +14,9 @@ export const InteractionsSharedParams = {
     ignoreHydrogens: PD.Boolean(false),
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     includeParent: PD.Boolean(false),
-    parentDisplay: PD.Select('stub', PD.arrayToOptions(['stub', 'full', 'between'] as const), { description: 'Only has an effect when "includeParent" is enabled. "Stub" shows just the child side of interactions to the parent. "Full" shows both sides of interactions to the parent. "Between" shows only interactions to the parent.' }),
+    parentDisplay: PD.Select('stub', PD.arrayToOptions(['stub', 'full', 'between'] as const), {
+        description:
+            'Only has an effect when "includeParent" is enabled. "Stub" shows just the child side of interactions to the parent. "Full" shows both sides of interactions to the parent. "Between" shows only interactions to the parent.',
+    }),
 };
-export type InteractionsSharedParams = typeof InteractionsSharedParams
+export type InteractionsSharedParams = typeof InteractionsSharedParams;

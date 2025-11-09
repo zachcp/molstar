@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Unit, StructureProperties, StructureElement, Bond, type Structure } from '../../mol-model/structure.ts';
+import { Bond, type Structure, StructureElement, StructureProperties, Unit } from '../../mol-model/structure.ts';
 
 import { Color } from '../../mol-util/color/index.ts';
 import type { Location } from '../../mol-model/location.ts';
@@ -12,7 +12,7 @@ import type { ColorTheme, LocationColor } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../../mol-theme/theme.ts';
 import { getPalette, getPaletteParams } from '../../mol-util/color/palette.ts';
-import type { TableLegend, ScaleLegend } from '../../mol-util/legend.ts';
+import type { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
 import { Segmentation } from '../../mol-data/int.ts';
 import { ColorLists, getColorListFromName } from '../../mol-util/color/lists.ts';
 import { ColorThemeCategory } from './categories.ts';
@@ -24,7 +24,7 @@ const Description = 'Gives every polymer chain a color based on its `asym_id` va
 export const PolymerIdColorThemeParams = {
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
 };
-export type PolymerIdColorThemeParams = typeof PolymerIdColorThemeParams
+export type PolymerIdColorThemeParams = typeof PolymerIdColorThemeParams;
 export function getPolymerIdColorThemeParams(ctx: ThemeDataContext) {
     const params = PD.clone(PolymerIdColorThemeParams);
     if (ctx.structure) {
@@ -32,7 +32,7 @@ export function getPolymerIdColorThemeParams(ctx: ThemeDataContext) {
             params.palette.defaultValue.name = 'colors';
             params.palette.defaultValue.params = {
                 ...params.palette.defaultValue.params,
-                list: { kind: 'interpolate', colors: getColorListFromName(DefaultList).list }
+                list: { kind: 'interpolate', colors: getColorListFromName(DefaultList).list },
             };
         }
     }
@@ -86,7 +86,10 @@ function getPolymerAsymIdSerialMap(structure: Structure) {
     return map;
 }
 
-export function PolymerIdColorTheme(ctx: ThemeDataContext, props: PD.Values<PolymerIdColorThemeParams>): ColorTheme<PolymerIdColorThemeParams> {
+export function PolymerIdColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<PolymerIdColorThemeParams>,
+): ColorTheme<PolymerIdColorThemeParams> {
     let color: LocationColor;
     let legend: ScaleLegend | TableLegend | undefined;
 
@@ -123,7 +126,7 @@ export function PolymerIdColorTheme(ctx: ThemeDataContext, props: PD.Values<Poly
         color,
         props,
         description: Description,
-        legend
+        legend,
     };
 }
 
@@ -134,5 +137,5 @@ export const PolymerIdColorThemeProvider: ColorTheme.Provider<PolymerIdColorThem
     factory: PolymerIdColorTheme,
     getParams: getPolymerIdColorThemeParams,
     defaultValues: PD.getDefaultValues(PolymerIdColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
 };

@@ -8,7 +8,15 @@
 import { Interval, OrderedSet, SortedArray } from '../../mol-data/int.ts';
 import type { Loci } from '../../mol-model/loci.ts';
 import type { Sequence } from '../../mol-model/sequence.ts';
-import { Queries, StructureProperties as SP, Structure, StructureElement, StructureQuery, StructureSelection, Unit } from '../../mol-model/structure.ts';
+import {
+    Queries,
+    Structure,
+    StructureElement,
+    StructureProperties as SP,
+    StructureQuery,
+    StructureSelection,
+    Unit,
+} from '../../mol-model/structure.ts';
 import type { MissingResidues } from '../../mol-model/structure/model/properties/common.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import { SequenceWrapper, type StructureUnit } from './wrapper.ts';
@@ -31,9 +39,7 @@ export class PolymerSequenceWrapper extends SequenceWrapper<StructureUnit> {
     }
 
     residueColor(seqIdx: number) {
-        return this.missing.has(this.modelNum, this.asymId, this.seqId(seqIdx))
-            ? ColorNames.grey
-            : ColorNames.black;
+        return this.missing.has(this.modelNum, this.asymId, this.seqId(seqIdx)) ? ColorNames.grey : ColorNames.black;
     }
     residueClass(seqIdx: number) {
         return this.missing.has(this.modelNum, this.asymId, this.seqId(seqIdx))
@@ -68,7 +74,11 @@ export class PolymerSequenceWrapper extends SequenceWrapper<StructureUnit> {
     }
 
     override getLoci(seqIdx: number) {
-        const query = createResidueQuery(this.data.units[0].chainGroupId, this.data.units[0].conformation.operator.name, this.seqId(seqIdx));
+        const query = createResidueQuery(
+            this.data.units[0].chainGroupId,
+            this.data.units[0].conformation.operator.name,
+            this.seqId(seqIdx),
+        );
         return StructureSelection.toLociWithSourceUnits(StructureQuery.run(query, this.data.structure));
     }
 
@@ -99,13 +109,13 @@ export class PolymerSequenceWrapper extends SequenceWrapper<StructureUnit> {
 
 function createResidueQuery(chainGroupId: number, operatorName: string, label_seq_id: number) {
     return Queries.generators.atoms({
-        unitTest: ctx => {
+        unitTest: (ctx) => {
             return (
                 SP.unit.chainGroupId(ctx.element) === chainGroupId &&
                 SP.unit.operator_name(ctx.element) === operatorName
             );
         },
-        residueTest: ctx => {
+        residueTest: (ctx) => {
             if (ctx.element.unit.kind === Unit.Kind.Atomic) {
                 return SP.residue.label_seq_id(ctx.element) === label_seq_id;
             } else {
@@ -114,7 +124,7 @@ function createResidueQuery(chainGroupId: number, operatorName: string, label_se
                     SP.coarse.seq_id_end(ctx.element) >= label_seq_id
                 );
             }
-        }
+        },
     });
 }
 
@@ -123,7 +133,7 @@ function collectSeqIdxAtomic(out: number[], e: StructureElement.Loci.Element, in
     const { index: residueIndex } = model.atomicHierarchy.residueAtomSegments;
     const { label_seq_id } = model.atomicHierarchy.residues;
 
-    OrderedSet.forEachSegment(e.indices, i => residueIndex[elements[i]], rI => {
+    OrderedSet.forEachSegment(e.indices, (i) => residueIndex[elements[i]], (rI) => {
         const seqId = label_seq_id.value(rI);
         const seqIdx = index(seqId);
         out.push(seqIdx);
@@ -133,10 +143,14 @@ function collectSeqIdxAtomic(out: number[], e: StructureElement.Loci.Element, in
 
 function collectSeqIdxCoarse(out: number[], e: StructureElement.Loci.Element, index: (seqId: number) => number) {
     const { model, elements } = e.unit;
-    const begin = Unit.isSpheres(e.unit) ? model.coarseHierarchy.spheres.seq_id_begin : model.coarseHierarchy.gaussians.seq_id_begin;
-    const end = Unit.isSpheres(e.unit) ? model.coarseHierarchy.spheres.seq_id_end : model.coarseHierarchy.gaussians.seq_id_end;
+    const begin = Unit.isSpheres(e.unit)
+        ? model.coarseHierarchy.spheres.seq_id_begin
+        : model.coarseHierarchy.gaussians.seq_id_begin;
+    const end = Unit.isSpheres(e.unit)
+        ? model.coarseHierarchy.spheres.seq_id_end
+        : model.coarseHierarchy.gaussians.seq_id_end;
 
-    OrderedSet.forEach(e.indices, i => {
+    OrderedSet.forEach(e.indices, (i) => {
         const eI = elements[i];
         for (let s = index(begin.value(eI)), e = index(end.value(eI)); s <= e; s++) {
             out.push(s);

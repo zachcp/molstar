@@ -11,8 +11,12 @@ import { getFontAtlas } from './font-atlas.ts';
 import { assertUnreachable } from '../../../mol-util/type-helpers.ts';
 
 const quadIndices = new Uint16Array([
-    0, 1, 2,
-    1, 3, 2
+    0,
+    1,
+    2,
+    1,
+    3,
+    2,
 ]);
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
@@ -21,20 +25,55 @@ const caAdd2 = ChunkedArray.add2;
 const caAdd = ChunkedArray.add;
 
 export interface TextBuilder {
-    add(str: string, x: number, y: number, z: number, depth: number, scale: number, group: number): void
-    getText(): Text
+    add(str: string, x: number, y: number, z: number, depth: number, scale: number, group: number): void;
+    getText(): Text;
 }
 
 export namespace TextBuilder {
-    export function create(props: Partial<PD.Values<Text.Params>> = {}, initialCount = 2048, chunkSize = 1024, text?: Text): TextBuilder {
+    export function create(
+        props: Partial<PD.Values<Text.Params>> = {},
+        initialCount = 2048,
+        chunkSize = 1024,
+        text?: Text,
+    ): TextBuilder {
         initialCount *= 2;
         chunkSize *= 2;
-        const centers = ChunkedArray.create(Float32Array, 3, chunkSize, text ? text.centerBuffer.ref.value : initialCount);
-        const mappings = ChunkedArray.create(Float32Array, 2, chunkSize, text ? text.mappingBuffer.ref.value : initialCount);
-        const depths = ChunkedArray.create(Float32Array, 1, chunkSize, text ? text.depthBuffer.ref.value : initialCount);
-        const indices = ChunkedArray.create(Uint32Array, 3, chunkSize, text ? text.indexBuffer.ref.value : initialCount);
-        const groups = ChunkedArray.create(Float32Array, 1, chunkSize, text ? text.groupBuffer.ref.value : initialCount);
-        const tcoords = ChunkedArray.create(Float32Array, 2, chunkSize, text ? text.tcoordBuffer.ref.value : initialCount);
+        const centers = ChunkedArray.create(
+            Float32Array,
+            3,
+            chunkSize,
+            text ? text.centerBuffer.ref.value : initialCount,
+        );
+        const mappings = ChunkedArray.create(
+            Float32Array,
+            2,
+            chunkSize,
+            text ? text.mappingBuffer.ref.value : initialCount,
+        );
+        const depths = ChunkedArray.create(
+            Float32Array,
+            1,
+            chunkSize,
+            text ? text.depthBuffer.ref.value : initialCount,
+        );
+        const indices = ChunkedArray.create(
+            Uint32Array,
+            3,
+            chunkSize,
+            text ? text.indexBuffer.ref.value : initialCount,
+        );
+        const groups = ChunkedArray.create(
+            Float32Array,
+            1,
+            chunkSize,
+            text ? text.groupBuffer.ref.value : initialCount,
+        );
+        const tcoords = ChunkedArray.create(
+            Float32Array,
+            2,
+            chunkSize,
+            text ? text.tcoordBuffer.ref.value : initialCount,
+        );
 
         const p = { ...PD.getDefaultValues(Text.Params), ...props };
         const { attachment, background, backgroundMargin, tether, tetherLength, tetherBaseWidth } = p;
@@ -296,7 +335,7 @@ export namespace TextBuilder {
                 const gb = ChunkedArray.compact(groups, true) as Float32Array;
                 const tb = ChunkedArray.compact(tcoords, true) as Float32Array;
                 return Text.create(ft, cb, mb, db, ib, gb, tb, indices.elementCount / 2, text);
-            }
+            },
         };
     }
 }

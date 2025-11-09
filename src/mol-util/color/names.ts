@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ColorMap, type Color } from './color.ts';
+import { type Color, ColorMap } from './color.ts';
 
 /** X11 color names http://www.w3.org/TR/css3-color/#svg-color */
 export const ColorNames = ColorMap({
@@ -162,13 +162,13 @@ export const ColorNames = ColorMap({
     white: 0xffffff,
     whitesmoke: 0xf5f5f5,
     yellow: 0xffff00,
-    yellowgreen: 0x9acd32
+    yellowgreen: 0x9acd32,
 });
-export type ColorNames = typeof ColorNames
-export type ColorName = keyof ColorNames
+export type ColorNames = typeof ColorNames;
+export type ColorName = keyof ColorNames;
 export const ColorNamesValueMap = (function () {
     const map = new Map<Color, ColorName>();
-    Object.keys(ColorNames).forEach(name => {
+    Object.keys(ColorNames).forEach((name) => {
         map.set(ColorNames[name as ColorName], name as ColorName);
     });
     return map;

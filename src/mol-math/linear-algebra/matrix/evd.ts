@@ -8,11 +8,11 @@ import { Matrix } from './matrix.ts';
 
 export namespace EVD {
     export interface Cache {
-        size: number,
-        matrix: Matrix,
-        eigenValues: number[],
-        D: number[],
-        E: number[]
+        size: number;
+        matrix: Matrix;
+        eigenValues: number[];
+        D: number[];
+        E: number[];
     }
 
     export function createCache(size: number): Cache {
@@ -21,7 +21,7 @@ export namespace EVD {
             matrix: Matrix.create(size, size),
             eigenValues: <any> new Float64Array(size),
             D: <any> new Float64Array(size),
-            E: <any> new Float64Array(size)
+            E: <any> new Float64Array(size),
         };
     }
 

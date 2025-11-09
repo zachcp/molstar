@@ -14,7 +14,6 @@ import { omitObjectKeys } from '../../../mol-util/object.ts';
 import type { ColorDictNameT, ColorListNameT } from '../tree/mvs/param-types.ts';
 import { decodeColor } from './utils.ts';
 
-
 /** Colors for amino acid groups, based on Clustal (https://www.jalview.org/help/html/colourSchemes/clustal.html) */
 const AminoGroupColors = {
     aromatic: decodeColor('#15A4A4')!,

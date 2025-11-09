@@ -10,28 +10,28 @@ import { Task } from '../../mol-task/index.ts';
 import { inflate } from '../../mol-util/zip/zip.ts';
 
 export interface G3dHeader {
-    magic: 'G3D',
-    version: number,
-    genome: string,
-    name: string,
-    offsets: { [resolution: string]: { offset: number, size: number } },
-    resolutions: number[]
+    magic: 'G3D';
+    version: number;
+    genome: string;
+    name: string;
+    offsets: { [resolution: string]: { offset: number; size: number } };
+    resolutions: number[];
 }
 
 export type G3dDataBlock = {
-    header: G3dHeader,
-    resolution: number,
+    header: G3dHeader;
+    resolution: number;
     data: {
         [haplotype: string]: {
             [ch: string]: {
-                start: number[]
-                x: number[],
-                y: number[],
-                z: number[],
-            }
-        }
-    }
-}
+                start: number[];
+                x: number[];
+                y: number[];
+                z: number[];
+            };
+        };
+    };
+};
 
 const HEADER_SIZE = 64000;
 
@@ -45,21 +45,32 @@ export async function getG3dHeader(ctx: PluginContext, urlOrData: string | Uint8
     return header;
 }
 
-export async function getG3dDataBlock(ctx: PluginContext, header: G3dHeader, urlOrData: string | Uint8Array, resolution: number): Promise<G3dDataBlock> {
+export async function getG3dDataBlock(
+    ctx: PluginContext,
+    header: G3dHeader,
+    urlOrData: string | Uint8Array,
+    resolution: number,
+): Promise<G3dDataBlock> {
     if (!header.offsets[resolution]) throw new Error(`Resolution ${resolution} not available.`);
     const data = await getRawData(ctx, urlOrData, header.offsets[resolution]);
-    const unzipped = await ctx.runTask(Task.create('Unzip', ctx => inflate(ctx, data)));
+    const unzipped = await ctx.runTask(Task.create('Unzip', (ctx) => inflate(ctx, data)));
 
     return {
         header,
         resolution,
-        data: decodeMsgPack(unzipped)
+        data: decodeMsgPack(unzipped),
     };
 }
 
-async function getRawData(ctx: PluginContext, urlOrData: string | Uint8Array, range: { offset: number, size: number }) {
+async function getRawData(ctx: PluginContext, urlOrData: string | Uint8Array, range: { offset: number; size: number }) {
     if (typeof urlOrData === 'string') {
-        return await ctx.runTask(ctx.fetch({ url: urlOrData, headers: [['Range', `bytes=${range.offset}-${range.offset + range.size - 1}`]], type: 'binary' }));
+        return await ctx.runTask(
+            ctx.fetch({
+                url: urlOrData,
+                headers: [['Range', `bytes=${range.offset}-${range.offset + range.size - 1}`]],
+                type: 'binary',
+            }),
+        );
     } else {
         return urlOrData.slice(range.offset, range.offset + range.size);
     }

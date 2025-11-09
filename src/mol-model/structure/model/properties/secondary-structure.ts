@@ -11,44 +11,49 @@ import type { mmCIF_Schema } from '../../../../mol-io/reader/cif/schema/mmcif.ts
 
 /** Secondary structure "indexed" by residues. */
 interface SecondaryStructure {
-    readonly type: ArrayLike<SecondaryStructureType>,
+    readonly type: ArrayLike<SecondaryStructureType>;
     /** index into the elements array */
-    readonly key: ArrayLike<number>,
+    readonly key: ArrayLike<number>;
     /** indexed by key */
-    readonly elements: ReadonlyArray<SecondaryStructure.Element>
+    readonly elements: ReadonlyArray<SecondaryStructure.Element>;
     /** mapping from residue index */
-    readonly getIndex: (rI: ResidueIndex) => number,
+    readonly getIndex: (rI: ResidueIndex) => number;
 }
 
-function SecondaryStructure(type: SecondaryStructure['type'], key: SecondaryStructure['key'], elements: SecondaryStructure['elements'], getIndex: SecondaryStructure['getIndex']) {
+function SecondaryStructure(
+    type: SecondaryStructure['type'],
+    key: SecondaryStructure['key'],
+    elements: SecondaryStructure['elements'],
+    getIndex: SecondaryStructure['getIndex'],
+) {
     return { type, key, elements, getIndex };
 }
 
 namespace SecondaryStructure {
-    export type Element = None | Turn | Helix | Sheet
+    export type Element = None | Turn | Helix | Sheet;
 
     export interface None {
-        kind: 'none'
+        kind: 'none';
     }
 
     export interface Turn {
-        kind: 'turn',
-        flags: SecondaryStructureType
+        kind: 'turn';
+        flags: SecondaryStructureType;
     }
 
     export interface Helix {
-        kind: 'helix',
-        flags: SecondaryStructureType,
-        type_id: mmCIF_Schema['struct_conf']['conf_type_id']['T'],
-        helix_class: string,
-        details?: string
+        kind: 'helix';
+        flags: SecondaryStructureType;
+        type_id: mmCIF_Schema['struct_conf']['conf_type_id']['T'];
+        helix_class: string;
+        details?: string;
     }
 
     export interface Sheet {
-        kind: 'sheet',
-        flags: SecondaryStructureType,
-        sheet_id: string,
-        symmetry?: string
+        kind: 'sheet';
+        flags: SecondaryStructureType;
+        sheet_id: string;
+        symmetry?: string;
     }
 }
 

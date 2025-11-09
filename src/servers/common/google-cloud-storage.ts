@@ -4,9 +4,8 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-
 // Using dodgy typing to avoid importing peer dependency directly:
-import type { Buffer } from "node:buffer";
+import type { Buffer } from 'node:buffer';
 type gsStorage = any; // import { type Storage as gsStorage } from '@google-cloud/storage';
 interface gsCreateReadStreamOptions {
     userProject?: string;
@@ -30,11 +29,12 @@ function getGsModule() {
     try {
         return require('@google-cloud/storage');
     } catch (err) {
-        console.error('Dynamic import of "@google-cloud/storage" failed. If you want to use ModelServer/VolumeServer with Google Cloud Storage, install "@google-cloud/storage" package (see peerDependencies in package.json).');
+        console.error(
+            'Dynamic import of "@google-cloud/storage" failed. If you want to use ModelServer/VolumeServer with Google Cloud Storage, install "@google-cloud/storage" package (see peerDependencies in package.json).',
+        );
         throw err;
     }
 }
-
 
 function parseGsUrl(url: string) {
     if (!url.startsWith('gs://')) throw new Error(`Invalid Google Cloud Storage URL (must start with 'gs://'): ${url}`);
@@ -55,7 +55,9 @@ export async function downloadGs(gsUrl: string, options?: gsCreateReadStreamOpti
         return buffer;
     } catch (err) {
         if (err.code === 401) {
-            console.error('Error 401: Unauthorized access to Google Cloud Storage. To set up authorization, run `export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credential/file.json`');
+            console.error(
+                'Error 401: Unauthorized access to Google Cloud Storage. To set up authorization, run `export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credential/file.json`',
+            );
         }
         throw err;
     }

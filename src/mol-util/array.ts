@@ -5,7 +5,7 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { type Jsonable, canonicalJsonString } from './json.ts';
+import { canonicalJsonString, type Jsonable } from './json.ts';
 import type { NumberArray } from './type-helpers.ts';
 
 // TODO move to mol-math as Vector???

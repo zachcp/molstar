@@ -53,8 +53,17 @@ export function finalize(ctx: Data.Context) {
  *  - downsampleUV uses the K axis as the fastest moving one
  */
 
-
-function conv(w: number, c: number[], src: TypedArrayValueArray, b: number, i0: number, i1: number, i2: number, i3: number, i4: number) {
+function conv(
+    w: number,
+    c: number[],
+    src: TypedArrayValueArray,
+    b: number,
+    i0: number,
+    i1: number,
+    i2: number,
+    i3: number,
+    i4: number,
+) {
     return w * (c[0] * src[b + i0] + c[1] * src[b + i1] + c[2] * src[b + i2] + c[3] * src[b + i3] + c[4] * src[b + i4]);
 }
 
@@ -63,7 +72,13 @@ function conv(w: number, c: number[], src: TypedArrayValueArray, b: number, i0: 
  * flipping the 1st and 2nd axis in the process to optimize cache coherency for downsampleUV call
  * (i.e. use (K, H, L) axis order).
  */
-function downsampleH(kernel: Data.Kernel, srcDims: number[], src: TypedArrayValueArray, srcLOffset: number, buffer: Data.DownsamplingBuffer) {
+function downsampleH(
+    kernel: Data.Kernel,
+    srcDims: number[],
+    src: TypedArrayValueArray,
+    srcLOffset: number,
+    buffer: Data.DownsamplingBuffer,
+) {
     const target = buffer.downsampleH;
     const sizeH = srcDims[0], sizeK = srcDims[1], srcBaseOffset = srcLOffset * sizeH * sizeK;
     const targetH = Math.floor((sizeH + 1) / 2);
@@ -109,10 +124,12 @@ function downsampleHK(kernel: Data.Kernel, dimsX: number[], buffer: Data.Downsam
         let targetOffset = targetBaseOffset + k * kernelSize;
         target[targetOffset] = conv(w, c, src, sourceOffset, 0, 0, 0, 1, 2);
         for (let h = 1; h < targetH - 1; h++) {
-            sourceOffset += 2; targetOffset += targetSliceSize;
+            sourceOffset += 2;
+            targetOffset += targetSliceSize;
             target[targetOffset] = conv(w, c, src, sourceOffset, -2, -1, 0, 1, 2);
         }
-        sourceOffset += 2; targetOffset += targetSliceSize;
+        sourceOffset += 2;
+        targetOffset += targetSliceSize;
         if (isEven) target[targetOffset] = conv(w, c, src, sourceOffset, -2, -1, 0, 1, 1);
         else target[targetOffset] = conv(w, c, src, sourceOffset, -2, -1, 0, 0, 0);
     }
@@ -123,7 +140,13 @@ function downsampleHK(kernel: Data.Kernel, dimsX: number[], buffer: Data.Downsam
 function downsampleSlice(ctx: Data.Context, sampling: Data.Sampling) {
     const dimsU = [sampling.sampleCount[1], Math.floor((sampling.sampleCount[0] + 1) / 2)];
     for (let i = 0, _ii = sampling.blocks.values.length; i < _ii; i++) {
-        downsampleH(ctx.kernel, sampling.sampleCount, sampling.blocks.values[i], sampling.blocks.slicesWritten - 1, sampling.downsampling![i]);
+        downsampleH(
+            ctx.kernel,
+            sampling.sampleCount,
+            sampling.blocks.values[i],
+            sampling.blocks.slicesWritten - 1,
+            sampling.downsampling![i],
+        );
         downsampleHK(ctx.kernel, dimsU, sampling.downsampling![i]);
     }
 }

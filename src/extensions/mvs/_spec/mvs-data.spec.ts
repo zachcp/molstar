@@ -7,7 +7,6 @@
 import fs from 'node:fs';
 import { MVSData } from '../mvs-data';
 
-
 describe('MVSData', () => {
     it.skip('MVSData functions work', async () => {
         const data = fs.readFileSync('examples/mvs/1cbs.mvsj', { encoding: 'utf8' });

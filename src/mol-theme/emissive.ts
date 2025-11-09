@@ -11,16 +11,16 @@ import { Script } from '../mol-script/script.ts';
 export { Emissive };
 
 type Emissive<T extends Loci = Loci> = {
-    readonly kind: T['kind']
-    readonly layers: ReadonlyArray<Emissive.Layer<T>>
-}
+    readonly kind: T['kind'];
+    readonly layers: ReadonlyArray<Emissive.Layer<T>>;
+};
 
 function Emissive<T extends Loci>(kind: T['kind'], layers: ReadonlyArray<Emissive.Layer<T>>): Emissive {
     return { kind, layers };
 }
 
 namespace Emissive {
-    export type Layer<T extends Loci = Loci> = { readonly loci: T, readonly value: number }
+    export type Layer<T extends Loci = Loci> = { readonly loci: T; readonly value: number };
     export const Empty: Emissive = { kind: 'empty-loci', layers: [] };
 
     export function areEqual(eA: Emissive, eB: Emissive): boolean {
@@ -101,7 +101,7 @@ namespace Emissive {
         }
     }
 
-    export type ScriptLayer = { script: Script, value: number }
+    export type ScriptLayer = { script: Script; value: number };
     export function ofScript(scriptLayers: ScriptLayer[], structure: Structure): Emissive {
         const layers: Emissive.Layer[] = [];
         for (let i = 0, il = scriptLayers.length; i < il; ++i) {
@@ -114,7 +114,7 @@ namespace Emissive {
         return { kind: 'element-loci', layers };
     }
 
-    export type BundleLayer = { bundle: StructureElement.Bundle, value: number }
+    export type BundleLayer = { bundle: StructureElement.Bundle; value: number };
     export function ofBundle(bundleLayers: BundleLayer[], structure: Structure): Emissive {
         const layers: Emissive.Layer[] = [];
         for (let i = 0, il = bundleLayers.length; i < il; ++i) {
@@ -125,7 +125,9 @@ namespace Emissive {
         return { kind: 'element-loci', layers };
     }
 
-    export function toBundle(emissive: Emissive<StructureElement.Loci>): { kind: 'element-loci', layers: BundleLayer[] } {
+    export function toBundle(
+        emissive: Emissive<StructureElement.Loci>,
+    ): { kind: 'element-loci'; layers: BundleLayer[] } {
         const layers: BundleLayer[] = [];
         for (let i = 0, il = emissive.layers.length; i < il; ++i) {
             const { loci, value } = emissive.layers[i];

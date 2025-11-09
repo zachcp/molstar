@@ -17,7 +17,7 @@ export type SphericalBasisOrder = 'gaussian' | 'cca' | 'cca-reverse';
 export function normalizeBasicOrder(
     L: number,
     alpha: number[],
-    order: SphericalBasisOrder
+    order: SphericalBasisOrder,
 ) {
     if (order === 'gaussian' || L === 0) return alpha;
 
@@ -35,7 +35,7 @@ export type SphericalFunc = (
     alpha: number[],
     x: number,
     y: number,
-    z: number
+    z: number,
 ) => number;
 
 export const SphericalFunctions: SphericalFunc[] = [L0, L1, L2, L3, L4];
@@ -83,7 +83,9 @@ function L4(alpha: number[], x: number, y: number, z: number) {
         alpha[0] * (0.375 * xxxx + 0.75 * xx * yy + 0.375 * yyyy - 3.0 * xx * zz - 3.0 * yy * zz + zzzz) +
         alpha[1] * (-2.3717082451262845 * xxx * z - 2.3717082451262845 * x * yy * z + 3.1622776601683795 * x * zzz) +
         alpha[2] * (-2.3717082451262845 * xx * y * z - 2.3717082451262845 * yyy * z + 3.1622776601683795 * y * zzz) +
-        alpha[3] * (-0.5590169943749475 * xxxx + 0.5590169943749475 * yyyy + 3.3541019662496847 * xx * zz - 3.3541019662496847 * yy * zz) +
+        alpha[3] *
+            (-0.5590169943749475 * xxxx + 0.5590169943749475 * yyyy + 3.3541019662496847 * xx * zz -
+                3.3541019662496847 * yy * zz) +
         alpha[4] * (-1.118033988749895 * xxx * y - 1.118033988749895 * x * yyy + 6.708203932499369 * x * y * zz) +
         alpha[5] * (2.091650066335189 * xxx * z + -6.274950199005566 * x * yy * z) +
         alpha[6] * (6.274950199005566 * xx * y * z + -2.091650066335189 * yyy * z) +

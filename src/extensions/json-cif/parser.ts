@@ -11,15 +11,15 @@ import { Task } from '../../mol-task/index.ts';
 import type { JSONCifCategory, JSONCifFile } from './model.ts';
 
 function Field(rows: Record<string, any>[], name: string): CifField {
-    const str: CifField['str'] = row => {
+    const str: CifField['str'] = (row) => {
         const v = rows[row][name];
         if (v === null || v === undefined) return '';
         if (typeof v === 'string') return v;
         return '' + v;
     };
 
-    const number: CifField['int'] = row => +rows[row][name];
-    const valueKind: CifField['valueKind'] = row => {
+    const number: CifField['int'] = (row) => +rows[row][name];
+    const valueKind: CifField['valueKind'] = (row) => {
         const v = rows[row][name];
         if (v === null) return Column.ValueKinds.NotPresent;
         if (v === undefined) return Column.ValueKinds.Unknown;
@@ -37,9 +37,9 @@ function Field(rows: Record<string, any>[], name: string): CifField {
         float: number,
         valueKind,
         areValuesEqual: (rowA, rowB) => rows[rowA][name] === rows[rowB][name],
-        toStringArray: params => ColumnHelpers.createAndFillArray(rowCount, str, params),
-        toIntArray: params => ColumnHelpers.createAndFillArray(rowCount, number, params),
-        toFloatArray: params => ColumnHelpers.createAndFillArray(rowCount, number, params),
+        toStringArray: (params) => ColumnHelpers.createAndFillArray(rowCount, str, params),
+        toIntArray: (params) => ColumnHelpers.createAndFillArray(rowCount, number, params),
+        toFloatArray: (params) => ColumnHelpers.createAndFillArray(rowCount, number, params),
     };
 }
 
@@ -56,7 +56,7 @@ function Category(data: JSONCifCategory): CifCategory {
             if (!!cache[name]) return cache[name];
             cache[name] = Field(data.rows, name);
             return cache[name];
-        }
+        },
     };
 }
 
@@ -70,11 +70,11 @@ function checkVersions(min: number[], current: number[]) {
 export function parseJSONCif(data: JSONCifFile) {
     const minVersion = [0, 1];
 
-    if (!checkVersions(minVersion, data.version.match(/(\d)\.(\d)\.\d/)!.slice(1).map(v => +v))) {
+    if (!checkVersions(minVersion, data.version.match(/(\d)\.(\d)\.\d/)!.slice(1).map((v) => +v))) {
         throw new Error(`Unsupported format version. Current ${data.version}, required ${minVersion.join('.')}.`);
     }
 
-    return CifFile(data.dataBlocks.map(block => {
+    return CifFile(data.dataBlocks.map((block) => {
         const cats = Object.create(null);
         for (const cat of block.categoryNames) cats[cat] = Category(block.categories[cat]);
         return CifBlock(block.categoryNames, cats, block.header);
@@ -82,7 +82,7 @@ export function parseJSONCif(data: JSONCifFile) {
 }
 
 export function parseJSONCifString(data: string) {
-    return Task.create<ReaderResult<CifFile>>('Parse BinaryCIF', async ctx => {
+    return Task.create<ReaderResult<CifFile>>('Parse BinaryCIF', async (ctx) => {
         try {
             const json = JSON.parse(data) as JSONCifFile;
             const file = parseJSONCif(json);

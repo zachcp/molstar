@@ -91,13 +91,20 @@ export class MolEncoder extends LigandEncoder {
     private mapCharge(raw: number): number {
         // 0 = uncharged or value other than these, 1 = +3, 2 = +2, 3 = +1, 4 = doublet radical, 5 = -1, 6 = -2, 7 = -3
         switch (raw) {
-            case 3: return 1;
-            case 2: return 2;
-            case 1: return 3;
-            case -1: return 5;
-            case -2: return 6;
-            case -3: return 7;
-            default: return 0;
+            case 3:
+                return 1;
+            case 2:
+                return 2;
+            case 1:
+                return 3;
+            case -1:
+                return 5;
+            case -2:
+                return 6;
+            case -3:
+                return 7;
+            default:
+                return 0;
         }
     }
 

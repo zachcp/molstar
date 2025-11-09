@@ -12,17 +12,23 @@ import type { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { createLinkCylinderMesh, LinkCylinderParams, LinkStyle } from './util/link.ts';
 import { UnitsMeshParams } from '../units-visual.ts';
-import { type ComplexVisual, ComplexMeshVisual } from '../complex-visual.ts';
+import { ComplexMeshVisual, type ComplexVisual } from '../complex-visual.ts';
 import type { VisualUpdateState } from '../../util.ts';
 import { LocationIterator } from '../../../mol-geo/util/location-iterator.ts';
-import { OrderedSet, Interval } from '../../../mol-data/int.ts';
+import { Interval, OrderedSet } from '../../../mol-data/int.ts';
 import { PickingId } from '../../../mol-geo/geometry/picking.ts';
 import { EmptyLoci, type Loci } from '../../../mol-model/loci.ts';
 import { getElementIdx, MetalsSet } from '../../../mol-model/structure/structure/unit/bonds/common.ts';
-import { getAltResidueLociFromId, getAltResidueLoci } from './util/common.ts';
+import { getAltResidueLoci, getAltResidueLociFromId } from './util/common.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 
-function createCarbohydrateTerminalLinkCylinderMesh(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<CarbohydrateTerminalLinkParams>, mesh?: Mesh) {
+function createCarbohydrateTerminalLinkCylinderMesh(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<CarbohydrateTerminalLinkParams>,
+    mesh?: Mesh,
+) {
     const { terminalLinks, elements } = structure.carbohydrates;
     const { terminalLinkSizeFactor } = props;
 
@@ -58,7 +64,7 @@ function createCarbohydrateTerminalLinkCylinderMesh(ctx: VisualContext, structur
             const eI = l.elementUnit.elements[l.elementIndex];
             const beI = getElementIdx(l.elementUnit.model.atomicHierarchy.atoms.type_symbol.value(eI));
             return MetalsSet.has(beI) ? LinkStyle.Dashed : LinkStyle.Solid;
-        }
+        },
     };
 
     const { mesh: m, boundingSphere } = createLinkCylinderMesh(ctx, builderProps, props, mesh);
@@ -78,7 +84,7 @@ export const CarbohydrateTerminalLinkParams = {
     ...LinkCylinderParams,
     terminalLinkSizeFactor: PD.Numeric(0.2, { min: 0, max: 3, step: 0.01 }),
 };
-export type CarbohydrateTerminalLinkParams = typeof CarbohydrateTerminalLinkParams
+export type CarbohydrateTerminalLinkParams = typeof CarbohydrateTerminalLinkParams;
 
 export function CarbohydrateTerminalLinkVisual(materialId: number): ComplexVisual<CarbohydrateTerminalLinkParams> {
     return ComplexMeshVisual<CarbohydrateTerminalLinkParams>({
@@ -87,13 +93,15 @@ export function CarbohydrateTerminalLinkVisual(materialId: number): ComplexVisua
         createLocationIterator: CarbohydrateTerminalLinkIterator,
         getLoci: getTerminalLinkLoci,
         eachLocation: eachTerminalLink,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<CarbohydrateTerminalLinkParams>, currentProps: PD.Values<CarbohydrateTerminalLinkParams>) => {
-            state.createGeometry = (
-                newProps.terminalLinkSizeFactor !== currentProps.terminalLinkSizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<CarbohydrateTerminalLinkParams>,
+            currentProps: PD.Values<CarbohydrateTerminalLinkParams>,
+        ) => {
+            state.createGeometry = newProps.terminalLinkSizeFactor !== currentProps.terminalLinkSizeFactor ||
                 newProps.radialSegments !== currentProps.radialSegments ||
-                newProps.linkCap !== currentProps.linkCap
-            );
-        }
+                newProps.linkCap !== currentProps.linkCap;
+        },
     }, materialId);
 }
 
@@ -130,7 +138,7 @@ function getTerminalLinkLoci(pickingId: PickingId, structure: Structure, id: num
 
             return StructureElement.Loci.union(
                 getAltResidueLociFromId(structure, carb.unit, carb.residueIndex, carb.altId),
-                getAltResidueLoci(structure, l.elementUnit, l.elementUnit.elements[l.elementIndex])
+                getAltResidueLoci(structure, l.elementUnit, l.elementUnit.elements[l.elementIndex]),
             );
         }
     }
@@ -149,7 +157,7 @@ function eachTerminalLink(loci: Loci, structure: Structure, apply: (interval: In
         if (!Unit.isAtomic(unit)) continue;
 
         __linkIndicesSet.clear();
-        OrderedSet.forEach(indices, v => {
+        OrderedSet.forEach(indices, (v) => {
             const linkIndices = getTerminalLinkIndices(unit, unit.elements[v]);
             for (let i = 0, il = linkIndices.length; i < il; ++i) {
                 if (!__linkIndicesSet.has(linkIndices[i])) {

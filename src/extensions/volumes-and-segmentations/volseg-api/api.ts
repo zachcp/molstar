@@ -6,9 +6,7 @@
 
 import type { Metadata } from './data.ts';
 
-
 export const DEFAULT_VOLSEG_SERVER = 'https://molstarvolseg.ncbr.muni.cz/v2';
-
 
 export class VolumeApiV2 {
     public volumeServerUrl: string;
@@ -24,7 +22,12 @@ export class VolumeApiV2 {
     public metadataUrl(source: string, entryId: string): string {
         return `${this.volumeServerUrl}/${source}/${entryId}/metadata`;
     }
-    public volumeUrl(source: string, entryId: string, box: [[number, number, number], [number, number, number]] | null, maxPoints: number): string {
+    public volumeUrl(
+        source: string,
+        entryId: string,
+        box: [[number, number, number], [number, number, number]] | null,
+        maxPoints: number,
+    ): string {
         if (box) {
             const [[a1, a2, a3], [b1, b2, b3]] = box;
             return `${this.volumeServerUrl}/${source}/${entryId}/volume/box/${a1}/${a2}/${a3}/${b1}/${b2}/${b3}?max_points=${maxPoints}`;
@@ -32,7 +35,13 @@ export class VolumeApiV2 {
             return `${this.volumeServerUrl}/${source}/${entryId}/volume/cell?max_points=${maxPoints}`;
         }
     }
-    public latticeUrl(source: string, entryId: string, segmentation: number, box: [[number, number, number], [number, number, number]] | null, maxPoints: number): string {
+    public latticeUrl(
+        source: string,
+        entryId: string,
+        segmentation: number,
+        box: [[number, number, number], [number, number, number]] | null,
+        maxPoints: number,
+    ): string {
         if (box) {
             const [[a1, a2, a3], [b1, b2, b3]] = box;
             return `${this.volumeServerUrl}/${source}/${entryId}/segmentation/box/${segmentation}/${a1}/${a2}/${a3}/${b1}/${b2}/${b3}?max_points=${maxPoints}`;

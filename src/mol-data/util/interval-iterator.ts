@@ -5,7 +5,7 @@
  */
 
 import type { Iterator } from '../iterator.ts';
-import { OrderedSet, Interval, type Segmentation } from '../int.ts';
+import { Interval, OrderedSet, type Segmentation } from '../int.ts';
 
 /** Emits a segment of length one for each element in the interval that is also in the set */
 export class IntervalIterator<I extends number = number> implements Iterator<Segmentation.Segment<I>> {

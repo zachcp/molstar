@@ -32,16 +32,16 @@ type Props = {
     marking: MarkingProps;
     transparentBackground: boolean;
     dpoitIterations: number;
-}
+};
 
 type RenderContext = {
     renderer: Renderer;
     camera: Camera | StereoCamera;
     scene: Scene;
     helper: Helper;
-}
+};
 
-type TransparencyMode = 'wboit' | 'dpoit' | 'blended'
+type TransparencyMode = 'wboit' | 'dpoit' | 'blended';
 
 export class DrawPass {
     private readonly drawTarget: RenderTarget;
@@ -88,7 +88,13 @@ export class DrawPass {
         return this.transparencyMode;
     }
 
-    constructor(private webgl: WebGLContext, assetManager: AssetManager, width: number, height: number, transparency: 'wboit' | 'dpoit' | 'blended') {
+    constructor(
+        private webgl: WebGLContext,
+        assetManager: AssetManager,
+        width: number,
+        height: number,
+        transparency: 'wboit' | 'dpoit' | 'blended',
+    ) {
         const { extensions, resources, isWebGL2 } = webgl;
         this.drawTarget = webgl.createDrawTarget();
         this.colorTarget = webgl.createRenderTarget(width, height, true, 'uint8', 'linear');
@@ -101,7 +107,9 @@ export class DrawPass {
 
         this.depthTargetOpaque = this.packedDepth ? webgl.createRenderTarget(width, height) : null;
 
-        this.depthTextureOpaque = this.depthTargetOpaque ? this.depthTargetOpaque.texture : resources.texture('image-depth', 'depth', isWebGL2 ? 'float' : 'ushort', 'nearest');
+        this.depthTextureOpaque = this.depthTargetOpaque
+            ? this.depthTargetOpaque.texture
+            : resources.texture('image-depth', 'depth', isWebGL2 ? 'float' : 'ushort', 'nearest');
         if (!this.packedDepth) {
             this.depthTextureOpaque.define(width, height);
         }
@@ -126,9 +134,7 @@ export class DrawPass {
             this.colorTarget.getByteCount() +
             this.transparentColorTarget.getByteCount() +
             this.depthTargetTransparent.getByteCount() +
-            (this.depthTargetOpaque
-                ? this.depthTargetOpaque.getByteCount()
-                : this.depthTextureOpaque.getByteCount()) +
+            (this.depthTargetOpaque ? this.depthTargetOpaque.getByteCount() : this.depthTextureOpaque.getByteCount()) +
             this.wboit.getByteCount() +
             this.dpoit.getByteCount() +
             this.marking.getByteCount() +
@@ -160,8 +166,14 @@ export class DrawPass {
                 this.depthTextureOpaque.define(width, height);
             }
 
-            ValueCell.update(this.copyFboTarget.values.uTexSize, Vec2.set(this.copyFboTarget.values.uTexSize.ref.value, width, height));
-            ValueCell.update(this.copyFboPostprocessing.values.uTexSize, Vec2.set(this.copyFboPostprocessing.values.uTexSize.ref.value, width, height));
+            ValueCell.update(
+                this.copyFboTarget.values.uTexSize,
+                Vec2.set(this.copyFboTarget.values.uTexSize.ref.value, width, height),
+            );
+            ValueCell.update(
+                this.copyFboPostprocessing.values.uTexSize,
+                Vec2.set(this.copyFboPostprocessing.values.uTexSize.ref.value, width, height),
+            );
         }
 
         if (this.wboit.supported) {
@@ -179,7 +191,14 @@ export class DrawPass {
         this.bloom.setSize(width, height);
     }
 
-    private _renderDpoit(renderer: Renderer, camera: ICamera, scene: Scene, iterations: number, transparentBackground: boolean, postprocessingProps: PostprocessingProps) {
+    private _renderDpoit(
+        renderer: Renderer,
+        camera: ICamera,
+        scene: Scene,
+        iterations: number,
+        transparentBackground: boolean,
+        postprocessingProps: PostprocessingProps,
+    ) {
         if (!this.dpoit.supported) throw new Error('expected dpoit to be supported');
 
         this.depthTextureOpaque.attachFramebuffer(this.colorTarget.framebuffer, 'depth');
@@ -230,7 +249,16 @@ export class DrawPass {
         }
 
         if (PostprocessingPass.isEnabled(postprocessingProps)) {
-            this.postprocessing.render(camera, scene, false, transparentBackground, renderer.props.backgroundColor, postprocessingProps, renderer.light, renderer.ambientColor);
+            this.postprocessing.render(
+                camera,
+                scene,
+                false,
+                transparentBackground,
+                renderer.props.backgroundColor,
+                postprocessingProps,
+                renderer.light,
+                renderer.ambientColor,
+            );
         }
 
         // render transparent volumes
@@ -239,7 +267,13 @@ export class DrawPass {
         }
     }
 
-    private _renderWboit(renderer: Renderer, camera: ICamera, scene: Scene, transparentBackground: boolean, postprocessingProps: PostprocessingProps) {
+    private _renderWboit(
+        renderer: Renderer,
+        camera: ICamera,
+        scene: Scene,
+        transparentBackground: boolean,
+        postprocessingProps: PostprocessingProps,
+    ) {
         if (!this.wboit.supported) throw new Error('expected wboit to be supported');
 
         this.depthTextureOpaque.attachFramebuffer(this.colorTarget.framebuffer, 'depth');
@@ -276,7 +310,16 @@ export class DrawPass {
         }
 
         if (PostprocessingPass.isEnabled(postprocessingProps)) {
-            this.postprocessing.render(camera, scene, false, transparentBackground, renderer.props.backgroundColor, postprocessingProps, renderer.light, renderer.ambientColor);
+            this.postprocessing.render(
+                camera,
+                scene,
+                false,
+                transparentBackground,
+                renderer.props.backgroundColor,
+                postprocessingProps,
+                renderer.light,
+                renderer.ambientColor,
+            );
         }
 
         // render volumes
@@ -289,10 +332,16 @@ export class DrawPass {
             target.bind();
             this.wboit.render();
         }
-
     }
 
-    private _renderBlended(renderer: Renderer, camera: ICamera, scene: Scene, toDrawingBuffer: boolean, transparentBackground: boolean, postprocessingProps: PostprocessingProps) {
+    private _renderBlended(
+        renderer: Renderer,
+        camera: ICamera,
+        scene: Scene,
+        toDrawingBuffer: boolean,
+        transparentBackground: boolean,
+        postprocessingProps: PostprocessingProps,
+    ) {
         if (toDrawingBuffer) {
             this.drawTarget.bind();
         } else {
@@ -358,7 +407,16 @@ export class DrawPass {
                     this.colorTarget.depthRenderbuffer?.detachFramebuffer(this.postprocessing.target.framebuffer);
                 }
 
-                this.postprocessing.render(camera, scene, false, transparentBackground, renderer.props.backgroundColor, postprocessingProps, renderer.light, renderer.ambientColor);
+                this.postprocessing.render(
+                    camera,
+                    scene,
+                    false,
+                    transparentBackground,
+                    renderer.props.backgroundColor,
+                    postprocessingProps,
+                    renderer.light,
+                    renderer.ambientColor,
+                );
 
                 if (!this.packedDepth) {
                     this.depthTextureOpaque.attachFramebuffer(this.postprocessing.target.framebuffer, 'depth');
@@ -369,7 +427,8 @@ export class DrawPass {
 
             if (scene.volumes.renderables.length > 0) {
                 const target = PostprocessingPass.isEnabled(postprocessingProps)
-                    ? this.postprocessing.target : this.colorTarget;
+                    ? this.postprocessing.target
+                    : this.colorTarget;
 
                 if (!this.packedDepth) {
                     this.depthTextureOpaque.detachFramebuffer(target.framebuffer, 'depth');
@@ -392,7 +451,15 @@ export class DrawPass {
         }
     }
 
-    private _render(renderer: Renderer, camera: ICamera, scene: Scene, helper: Helper, toDrawingBuffer: boolean, transparentBackground: boolean, props: Props) {
+    private _render(
+        renderer: Renderer,
+        camera: ICamera,
+        scene: Scene,
+        helper: Helper,
+        toDrawingBuffer: boolean,
+        transparentBackground: boolean,
+        props: Props,
+    ) {
         if (camera.disabled) return;
 
         const volumeRendering = scene.volumes.renderables.length > 0;
@@ -416,17 +483,31 @@ export class DrawPass {
             this._renderWboit(renderer, camera, scene, transparentBackground, props.postprocessing);
             oitEnabled = true;
         } else if (this.transparencyMode === 'dpoit' && this.dpoit.supported) {
-            this._renderDpoit(renderer, camera, scene, props.dpoitIterations, transparentBackground, props.postprocessing);
+            this._renderDpoit(
+                renderer,
+                camera,
+                scene,
+                props.dpoitIterations,
+                transparentBackground,
+                props.postprocessing,
+            );
             oitEnabled = true;
         } else {
-            this._renderBlended(renderer, camera, scene, !volumeRendering && !postprocessingEnabled && !antialiasingEnabled && toDrawingBuffer, transparentBackground, props.postprocessing);
+            this._renderBlended(
+                renderer,
+                camera,
+                scene,
+                !volumeRendering && !postprocessingEnabled && !antialiasingEnabled && toDrawingBuffer,
+                transparentBackground,
+                props.postprocessing,
+            );
         }
 
         const target = postprocessingEnabled
             ? this.postprocessing.target
             : !toDrawingBuffer || volumeRendering || oitEnabled
-                ? this.colorTarget
-                : this.drawTarget;
+            ? this.colorTarget
+            : this.drawTarget;
 
         if (markingEnabled && scene.markerAverage > 0) {
             const markingDepthTest = props.marking.ghostEdgeStrength < 1;
@@ -438,7 +519,11 @@ export class DrawPass {
 
             this.marking.maskTarget.bind();
             renderer.clear(false, true);
-            renderer.renderMarkingMask(scene.primitives, camera, markingDepthTest ? this.marking.depthTarget.texture : null);
+            renderer.renderMarkingMask(
+                scene.primitives,
+                camera,
+                markingDepthTest ? this.marking.depthTarget.texture : null,
+            );
 
             this.marking.update(props.marking);
             this.marking.render(camera.viewport, target);
@@ -479,9 +564,16 @@ export class DrawPass {
             const input = AntialiasingPass.isEnabled(props.postprocessing)
                 ? this.antialiasing.target.texture
                 : PostprocessingPass.isEnabled(props.postprocessing)
-                    ? this.postprocessing.target.texture
-                    : this.colorTarget.texture;
-            this.dof.update(camera, input, this.depthTargetOpaque?.texture || this.depthTextureOpaque, this.depthTextureTransparent, props.postprocessing.dof.params, scene.boundingSphereVisible);
+                ? this.postprocessing.target.texture
+                : this.colorTarget.texture;
+            this.dof.update(
+                camera,
+                input,
+                this.depthTargetOpaque?.texture || this.depthTextureOpaque,
+                this.depthTextureTransparent,
+                props.postprocessing.dof.params,
+                scene.boundingSphereVisible,
+            );
             this.dof.render(camera.viewport, toDrawingBuffer ? undefined : this.getColorTarget(props.postprocessing));
         } else if (toDrawingBuffer && !AntialiasingPass.isEnabled(props.postprocessing)) {
             needsTargetCopy = true;
@@ -509,8 +601,16 @@ export class DrawPass {
             }
 
             if (!emissiveBloom || scene.emissiveAverage > 0) {
-                this.bloom.update(this.colorTarget.texture, this.bloom.emissiveTarget.texture, this.depthTargetOpaque?.texture || this.depthTextureOpaque, props.postprocessing.bloom.params);
-                this.bloom.render(camera.viewport, toDrawingBuffer ? undefined : this.getColorTarget(props.postprocessing));
+                this.bloom.update(
+                    this.colorTarget.texture,
+                    this.bloom.emissiveTarget.texture,
+                    this.depthTargetOpaque?.texture || this.depthTextureOpaque,
+                    props.postprocessing.bloom.params,
+                );
+                this.bloom.render(
+                    camera.viewport,
+                    toDrawingBuffer ? undefined : this.getColorTarget(props.postprocessing),
+                );
             }
         }
 
@@ -522,7 +622,8 @@ export class DrawPass {
         const { renderer, camera, scene, helper } = ctx;
 
         this.postprocessing.setTransparentBackground(props.transparentBackground);
-        const transparentBackground = props.transparentBackground || this.postprocessing.background.isEnabled(props.postprocessing);
+        const transparentBackground = props.transparentBackground ||
+            this.postprocessing.background.isEnabled(props.postprocessing);
 
         renderer.setTransparentBackground(transparentBackground);
         renderer.setDrawingBufferSize(this.colorTarget.getWidth(), this.colorTarget.getHeight());

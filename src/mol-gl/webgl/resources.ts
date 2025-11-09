@@ -4,28 +4,53 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { type ProgramProps, createProgram, type Program } from './program.ts';
-import { type ShaderType, createShader, type Shader, type ShaderProps } from './shader.ts';
+import { createProgram, type Program, type ProgramProps } from './program.ts';
+import { createShader, type Shader, type ShaderProps, type ShaderType } from './shader.ts';
 import { type GLRenderingContext, isWebGL2 } from './compat.ts';
-import { type Framebuffer, createFramebuffer } from './framebuffer.ts';
+import { createFramebuffer, type Framebuffer } from './framebuffer.ts';
 import type { WebGLExtensions } from './extensions.ts';
 import type { WebGLState } from './state.ts';
-import { type AttributeBuffer, type UsageHint, type ArrayType, type AttributeItemSize, createAttributeBuffer, type ElementsBuffer, createElementsBuffer, type ElementsType, type AttributeBuffers, type PixelPackBuffer, createPixelPackBuffer } from './buffer.ts';
+import {
+    type ArrayType,
+    type AttributeBuffer,
+    type AttributeBuffers,
+    type AttributeItemSize,
+    createAttributeBuffer,
+    createElementsBuffer,
+    createPixelPackBuffer,
+    type ElementsBuffer,
+    type ElementsType,
+    type PixelPackBuffer,
+    type UsageHint,
+} from './buffer.ts';
 import { createReferenceCache, type ReferenceItem } from '../../mol-util/reference-cache.ts';
 import type { WebGLParameters, WebGLStats } from './context.ts';
-import { hashString, hashFnv32a } from '../../mol-data/util.ts';
+import { hashFnv32a, hashString } from '../../mol-data/util.ts';
 import type { DefineValues, ShaderCode } from '../shader-code.ts';
 import type { RenderableSchema } from '../renderable/schema.ts';
-import { createRenderbuffer, type Renderbuffer, type RenderbufferAttachment, type RenderbufferFormat } from './renderbuffer.ts';
-import { type Texture, type TextureKind, type TextureFormat, type TextureType, type TextureFilter, createTexture, type CubeFaces, createCubeTexture } from './texture.ts';
-import { type VertexArray, createVertexArray } from './vertex-array.ts';
+import {
+    createRenderbuffer,
+    type Renderbuffer,
+    type RenderbufferAttachment,
+    type RenderbufferFormat,
+} from './renderbuffer.ts';
+import {
+    createCubeTexture,
+    createTexture,
+    type CubeFaces,
+    type Texture,
+    type TextureFilter,
+    type TextureFormat,
+    type TextureKind,
+    type TextureType,
+} from './texture.ts';
+import { createVertexArray, type VertexArray } from './vertex-array.ts';
 import { now } from '../../mol-util/now.ts';
 import type { ProgramVariant } from './render-item.ts';
 import { isTimingMode } from '../../mol-util/debug.ts';
 
 function defineValueHash(v: boolean | number | string): number {
-    return typeof v === 'boolean' ? (v ? 1 : 0) :
-        typeof v === 'number' ? (v * 10000) : hashString(v);
+    return typeof v === 'boolean' ? (v ? 1 : 0) : typeof v === 'number' ? (v * 10000) : hashString(v);
 }
 
 function wrapCached<T extends Resource>(resourceItem: ReferenceItem<T>) {
@@ -33,7 +58,7 @@ function wrapCached<T extends Resource>(resourceItem: ReferenceItem<T>) {
         ...resourceItem.value,
         destroy: () => {
             resourceItem.free();
-        }
+        },
     };
 
     return wrapped;
@@ -42,43 +67,59 @@ function wrapCached<T extends Resource>(resourceItem: ReferenceItem<T>) {
 //
 
 interface Resource {
-    reset: () => void
-    destroy: () => void
+    reset: () => void;
+    destroy: () => void;
 }
 
-type ResourceName = keyof WebGLStats['resourceCounts']
+type ResourceName = keyof WebGLStats['resourceCounts'];
 
 type ByteCounts = {
-    texture: number
-    cubeTexture: number
-    attribute: number
-    elements: number
-    pixelPack: number
-    renderbuffer: number
-}
+    texture: number;
+    cubeTexture: number;
+    attribute: number;
+    elements: number;
+    pixelPack: number;
+    renderbuffer: number;
+};
 
 export interface WebGLResources {
-    attribute: (array: ArrayType, itemSize: AttributeItemSize, divisor: number, usageHint?: UsageHint) => AttributeBuffer
-    elements: (array: ElementsType, usageHint?: UsageHint) => ElementsBuffer
-    pixelPack: (format: TextureFormat, type: TextureType) => PixelPackBuffer
-    framebuffer: () => Framebuffer
-    program: (defineValues: DefineValues, shaderCode: ShaderCode, schema: RenderableSchema) => Program
-    renderbuffer: (format: RenderbufferFormat, attachment: RenderbufferAttachment, width: number, height: number) => Renderbuffer
-    shader: (type: ShaderType, source: string) => Shader
-    texture: (kind: TextureKind, format: TextureFormat, type: TextureType, filter: TextureFilter) => Texture,
-    cubeTexture: (faces: CubeFaces, mipmaps: boolean, onload?: () => void) => Texture,
-    vertexArray: (program: Program, attributeBuffers: AttributeBuffers, elementsBuffer?: ElementsBuffer) => VertexArray,
+    attribute: (
+        array: ArrayType,
+        itemSize: AttributeItemSize,
+        divisor: number,
+        usageHint?: UsageHint,
+    ) => AttributeBuffer;
+    elements: (array: ElementsType, usageHint?: UsageHint) => ElementsBuffer;
+    pixelPack: (format: TextureFormat, type: TextureType) => PixelPackBuffer;
+    framebuffer: () => Framebuffer;
+    program: (defineValues: DefineValues, shaderCode: ShaderCode, schema: RenderableSchema) => Program;
+    renderbuffer: (
+        format: RenderbufferFormat,
+        attachment: RenderbufferAttachment,
+        width: number,
+        height: number,
+    ) => Renderbuffer;
+    shader: (type: ShaderType, source: string) => Shader;
+    texture: (kind: TextureKind, format: TextureFormat, type: TextureType, filter: TextureFilter) => Texture;
+    cubeTexture: (faces: CubeFaces, mipmaps: boolean, onload?: () => void) => Texture;
+    vertexArray: (program: Program, attributeBuffers: AttributeBuffers, elementsBuffer?: ElementsBuffer) => VertexArray;
 
-    getByteCounts: () => ByteCounts
+    getByteCounts: () => ByteCounts;
 
-    linkPrograms: (variants?: ProgramVariant[]) => void
-    finalizePrograms: (variants?: ProgramVariant[], isSynchronous?: boolean) => boolean
+    linkPrograms: (variants?: ProgramVariant[]) => void;
+    finalizePrograms: (variants?: ProgramVariant[], isSynchronous?: boolean) => boolean;
 
-    reset: () => void
-    destroy: () => void
+    reset: () => void;
+    destroy: () => void;
 }
 
-export function createResources(gl: GLRenderingContext, state: WebGLState, stats: WebGLStats, extensions: WebGLExtensions, parameters: WebGLParameters): WebGLResources {
+export function createResources(
+    gl: GLRenderingContext,
+    state: WebGLState,
+    stats: WebGLStats,
+    extensions: WebGLExtensions,
+    parameters: WebGLParameters,
+): WebGLResources {
     const sets: { [k in ResourceName]: Set<Resource> } = {
         attribute: new Set<Resource>(),
         elements: new Set<Resource>(),
@@ -101,14 +142,16 @@ export function createResources(gl: GLRenderingContext, state: WebGLState, stats
                 resource.destroy();
                 sets[name].delete(resource);
                 stats.resourceCounts[name] -= 1;
-            }
+            },
         };
     }
 
     const shaderCache = createReferenceCache(
         (props: ShaderProps) => JSON.stringify(props),
         (props: ShaderProps) => wrap('shader', createShader(gl, props)),
-        (shader: Shader) => { shader.destroy(); }
+        (shader: Shader) => {
+            shader.destroy();
+        },
     );
 
     function getShader(type: ShaderType, source: string) {
@@ -120,7 +163,7 @@ export function createResources(gl: GLRenderingContext, state: WebGLState, stats
         (props: ProgramProps) => {
             const array = [props.shaderCode.id];
             const variant = (props.defineValues.dRenderVariant?.ref.value || '') as string;
-            Object.keys(props.defineValues).forEach(k => {
+            Object.keys(props.defineValues).forEach((k) => {
                 if (!props.shaderCode.ignoreDefine?.(k, variant, props.defineValues)) {
                     array.push(hashString(k), defineValueHash(props.defineValues[k].ref.value));
                 }
@@ -137,7 +180,7 @@ export function createResources(gl: GLRenderingContext, state: WebGLState, stats
         (program: Program) => {
             pendingPrograms.delete(program);
             program.destroy();
-        }
+        },
     );
 
     return {
@@ -159,7 +202,12 @@ export function createResources(gl: GLRenderingContext, state: WebGLState, stats
         program: (defineValues: DefineValues, shaderCode: ShaderCode, schema: RenderableSchema) => {
             return wrapCached(programCache.get({ defineValues, shaderCode, schema }));
         },
-        renderbuffer: (format: RenderbufferFormat, attachment: RenderbufferAttachment, width: number, height: number) => {
+        renderbuffer: (
+            format: RenderbufferFormat,
+            attachment: RenderbufferAttachment,
+            width: number,
+            height: number,
+        ) => {
             return wrap('renderbuffer', createRenderbuffer(gl, format, attachment, width, height));
         },
         shader: getShader,
@@ -175,32 +223,32 @@ export function createResources(gl: GLRenderingContext, state: WebGLState, stats
 
         getByteCounts: () => {
             let texture = 0;
-            sets.texture.forEach(r => {
+            sets.texture.forEach((r) => {
                 texture += (r as Texture).getByteCount();
             });
 
             let cubeTexture = 0;
-            sets.cubeTexture.forEach(r => {
+            sets.cubeTexture.forEach((r) => {
                 cubeTexture += (r as Texture).getByteCount();
             });
 
             let attribute = 0;
-            sets.attribute.forEach(r => {
+            sets.attribute.forEach((r) => {
                 attribute += (r as AttributeBuffer).getByteCount();
             });
 
             let elements = 0;
-            sets.elements.forEach(r => {
+            sets.elements.forEach((r) => {
                 elements += (r as ElementsBuffer).getByteCount();
             });
 
             let pixelPack = 0;
-            sets.pixelPack.forEach(r => {
+            sets.pixelPack.forEach((r) => {
                 pixelPack += (r as PixelPackBuffer).getByteCount();
             });
 
             let renderbuffer = 0;
-            sets.renderbuffer.forEach(r => {
+            sets.renderbuffer.forEach((r) => {
                 renderbuffer += (r as Renderbuffer).getByteCount();
             });
 
@@ -243,39 +291,43 @@ export function createResources(gl: GLRenderingContext, state: WebGLState, stats
             }
 
             if (isTimingMode) {
-                console.log(`Finalized ${finalizedCount} of ${pendingCount} programs (${variants ? variants.join(', ') : 'all'}) in ${(now() - t).toFixed(2)} ms`);
+                console.log(
+                    `Finalized ${finalizedCount} of ${pendingCount} programs (${
+                        variants ? variants.join(', ') : 'all'
+                    }) in ${(now() - t).toFixed(2)} ms`,
+                );
             }
 
             return linkStatus;
         },
 
         reset: () => {
-            sets.attribute.forEach(r => r.reset());
-            sets.elements.forEach(r => r.reset());
-            sets.pixelPack.forEach(r => r.reset());
-            sets.framebuffer.forEach(r => r.reset());
-            sets.renderbuffer.forEach(r => r.reset());
-            sets.shader.forEach(r => r.reset());
-            sets.program.forEach(r => r.reset());
-            sets.vertexArray.forEach(r => r.reset());
-            sets.texture.forEach(r => r.reset());
-            sets.cubeTexture.forEach(r => r.reset());
+            sets.attribute.forEach((r) => r.reset());
+            sets.elements.forEach((r) => r.reset());
+            sets.pixelPack.forEach((r) => r.reset());
+            sets.framebuffer.forEach((r) => r.reset());
+            sets.renderbuffer.forEach((r) => r.reset());
+            sets.shader.forEach((r) => r.reset());
+            sets.program.forEach((r) => r.reset());
+            sets.vertexArray.forEach((r) => r.reset());
+            sets.texture.forEach((r) => r.reset());
+            sets.cubeTexture.forEach((r) => r.reset());
         },
         destroy: () => {
-            sets.attribute.forEach(r => r.destroy());
-            sets.elements.forEach(r => r.destroy());
-            sets.pixelPack.forEach(r => r.destroy());
-            sets.framebuffer.forEach(r => r.destroy());
-            sets.renderbuffer.forEach(r => r.destroy());
-            sets.shader.forEach(r => r.destroy());
-            sets.program.forEach(r => r.destroy());
-            sets.vertexArray.forEach(r => r.destroy());
-            sets.texture.forEach(r => r.destroy());
-            sets.cubeTexture.forEach(r => r.destroy());
+            sets.attribute.forEach((r) => r.destroy());
+            sets.elements.forEach((r) => r.destroy());
+            sets.pixelPack.forEach((r) => r.destroy());
+            sets.framebuffer.forEach((r) => r.destroy());
+            sets.renderbuffer.forEach((r) => r.destroy());
+            sets.shader.forEach((r) => r.destroy());
+            sets.program.forEach((r) => r.destroy());
+            sets.vertexArray.forEach((r) => r.destroy());
+            sets.texture.forEach((r) => r.destroy());
+            sets.cubeTexture.forEach((r) => r.destroy());
 
             shaderCache.clear();
             programCache.clear();
             pendingPrograms.clear();
-        }
+        },
     };
 }

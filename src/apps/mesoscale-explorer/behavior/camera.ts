@@ -19,24 +19,34 @@ const Trigger = Binding.Trigger;
 const Key = Binding.TriggerKey;
 
 const DefaultMesoFocusLociBindings = {
-    clickCenter: Binding([
-        Trigger(B.Flag.Primary, M.create()),
-        Trigger(B.Flag.Trigger),
-    ], 'Camera center', 'Click element using ${triggers}'),
-    clickCenterFocus: Binding([
-        Trigger(B.Flag.Secondary, M.create()),
-    ], 'Camera center and focus', 'Click element using ${triggers}'),
+    clickCenter: Binding(
+        [
+            Trigger(B.Flag.Primary, M.create()),
+            Trigger(B.Flag.Trigger),
+        ],
+        'Camera center',
+        'Click element using ${triggers}',
+    ),
+    clickCenterFocus: Binding(
+        [
+            Trigger(B.Flag.Secondary, M.create()),
+        ],
+        'Camera center and focus',
+        'Click element using ${triggers}',
+    ),
     keyCenterOnly: Binding([Key('C')], 'Center Only Toggle', 'Press ${triggers}'),
 };
 
 export const MesoFocusLociParams = {
     minRadius: PD.Numeric(8, { min: 1, max: 50, step: 1 }),
-    extraRadius: PD.Numeric(4, { min: 1, max: 50, step: 1 }, { description: 'Value added to the bounding-sphere radius of the Loci' }),
+    extraRadius: PD.Numeric(4, { min: 1, max: 50, step: 1 }, {
+        description: 'Value added to the bounding-sphere radius of the Loci',
+    }),
     durationMs: PD.Numeric(250, { min: 0, max: 1000, step: 1 }, { description: 'Camera transition duration' }),
     centerOnly: PD.Boolean(true, { description: 'Keep current camera distance' }),
     bindings: PD.Value(DefaultMesoFocusLociBindings, { isHidden: true }),
 };
-type MesoFocusLociProps = PD.Values<typeof MesoFocusLociParams>
+type MesoFocusLociProps = PD.Values<typeof MesoFocusLociParams>;
 
 export const MesoFocusLoci = PluginBehavior.create<MesoFocusLociProps>({
     name: 'camera-meso-focus-loci',
@@ -57,7 +67,7 @@ export const MesoFocusLoci = PluginBehavior.create<MesoFocusLociProps>({
                 if (Binding.match(clickCenter, button, modifiers)) {
                     // left mouse button
                     if (Loci.isEmpty(current.loci)) {
-                        PluginCommands.Camera.Reset(this.ctx, { });
+                        PluginCommands.Camera.Reset(this.ctx, {});
                         return;
                     }
                     if (StructureElement.Loci.is(current.loci)) {
@@ -71,7 +81,7 @@ export const MesoFocusLoci = PluginBehavior.create<MesoFocusLociProps>({
                 } else if (Binding.match(clickCenterFocus, button, modifiers)) {
                     // right mouse button
                     if (Loci.isEmpty(current.loci)) {
-                        PluginCommands.Camera.Reset(this.ctx, { });
+                        PluginCommands.Camera.Reset(this.ctx, {});
                         return;
                     }
                     if (centerOnly) {
@@ -95,5 +105,5 @@ export const MesoFocusLoci = PluginBehavior.create<MesoFocusLociProps>({
         }
     },
     params: () => MesoFocusLociParams,
-    display: { name: 'Camera Meso Focus Loci on Canvas' }
+    display: { name: 'Camera Meso Focus Loci on Canvas' },
 });

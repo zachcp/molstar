@@ -12,7 +12,7 @@ import { BoundaryHelper } from './boundary-helper.ts';
 import { Box3D } from '../geometry/primitives/box3d.ts';
 import { Sphere3D } from '../geometry/primitives/sphere3d.ts';
 
-export type Boundary = { readonly box: Box3D, readonly sphere: Sphere3D }
+export type Boundary = { readonly box: Box3D; readonly sphere: Sphere3D };
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3set = Vec3.set;

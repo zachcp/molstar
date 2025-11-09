@@ -6,13 +6,17 @@
  */
 
 import type { MVSData_States } from '../../../extensions/mvs/mvs-data.ts';
-import { createMVSBuilder, type Structure as MVSStructure, type Root } from '../../../extensions/mvs/tree/mvs/mvs-builder.ts';
+import {
+    createMVSBuilder,
+    type Root,
+    type Structure as MVSStructure,
+} from '../../../extensions/mvs/tree/mvs/mvs-builder.ts';
 import type { MVSNodeParams } from '../../../extensions/mvs/tree/mvs/mvs-tree.ts';
 import {
     type ColorT,
     type ComponentExpressionT,
     isPrimitiveComponentExpressions,
-    type PrimitivePositionT
+    type PrimitivePositionT,
 } from '../../../extensions/mvs/tree/mvs/param-types.ts';
 import { Mat3, Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { decodeColor } from '../../../extensions/mvs/helpers/utils.ts';
@@ -30,9 +34,60 @@ const Colors = {
 
 // Obtained using https://www.rcsb.org/alignment
 const Superpositions = {
-    '1cdw': [-0.4665815186, 0.6063873444, -0.6438913535, 0, -0.581544075, -0.7588303199, -0.2932286385, 0, -0.6664144171, 0.2376361381, 0.7066971703, 0, 135.0863694935, 105.5007997009, 153.6890178993, 1] as unknown as Mat4,
-    '1vtl': [-0.4769460004, 0.7214347188, -0.5020502557, 0, -0.297882932, 0.4047204695, 0.8645617968, 0, 0.8269149119, 0.5619014932, 0.0218732801, 0, 65.6043682658, -3.7328402905, -16.8650755387, 1] as unknown as Mat4,
-    '7enc': [0.8975055044, -0.4316347566, -0.0904174009, 0, 0.247274877, 0.3227849997, 0.9136000105, 0, -0.3651561375, -0.8423189899, 0.3964337454, 0, -189.7572972798, 304.0841220076, -411.5005782853, 1] as unknown as Mat4,
+    '1cdw': [
+        -0.4665815186,
+        0.6063873444,
+        -0.6438913535,
+        0,
+        -0.581544075,
+        -0.7588303199,
+        -0.2932286385,
+        0,
+        -0.6664144171,
+        0.2376361381,
+        0.7066971703,
+        0,
+        135.0863694935,
+        105.5007997009,
+        153.6890178993,
+        1,
+    ] as unknown as Mat4,
+    '1vtl': [
+        -0.4769460004,
+        0.7214347188,
+        -0.5020502557,
+        0,
+        -0.297882932,
+        0.4047204695,
+        0.8645617968,
+        0,
+        0.8269149119,
+        0.5619014932,
+        0.0218732801,
+        0,
+        65.6043682658,
+        -3.7328402905,
+        -16.8650755387,
+        1,
+    ] as unknown as Mat4,
+    '7enc': [
+        0.8975055044,
+        -0.4316347566,
+        -0.0904174009,
+        0,
+        0.247274877,
+        0.3227849997,
+        0.9136000105,
+        0,
+        -0.3651561375,
+        -0.8423189899,
+        0.3964337454,
+        0,
+        -189.7572972798,
+        304.0841220076,
+        -411.5005782853,
+        1,
+    ] as unknown as Mat4,
 };
 
 const Steps = [
@@ -65,13 +120,13 @@ The convex face of the saddle would interact with other proteins during transcri
                     custom: {
                         molstar_color_theme_name: 'sequence-id',
                         molstar_color_theme_params: { carbonColor: { name: 'sequence-id', params: {} } },
-                    }
+                    },
                 });
             _1vok.primitives().label({
                 position: { label_asym_id: 'A', label_seq_id: 88, label_atom_id: 'OD2' },
                 text: 'TATA-Binding Protein',
                 label_size: 5,
-                label_color: Colors['1vok']
+                label_color: Colors['1vok'],
             });
 
             return builder;
@@ -81,7 +136,8 @@ The convex face of the saddle would interact with other proteins during transcri
             target: [74.81, 66.8, 30.7],
             up: [-0.55, 0.83, 0.1],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'TBP: Highly Conserved in Eukaryotes [1/2]',
         key: 'highly-conserved-1',
         description: `
@@ -89,7 +145,11 @@ The convex face of the saddle would interact with other proteins during transcri
 
 TBP has a phylogenetically conserved, 180 amino-acid carboxy-terminal domain (ranging from 38 to 93% identity among eukaryotes and archaebacteria), containing two structural repeats flanking a highly basic segment known as the basic repeat.
 The C-terminal or core portion of the protein binds the TATA consensus sequence with high affinity, interacting with the minor groove and promoting DNA bending.
-Structural superposition of TBP bound to DNA in human ([PDB ID 1CDW](${wwPDBLink('1cdw')})) and *A. thaliana* ([PDB ID 1VTL](${wwPDBLink('1vtl')})) shows that their sequences are 83% identical and the RMSD between the structures is 0.43 Å.
+Structural superposition of TBP bound to DNA in human ([PDB ID 1CDW](${
+            wwPDBLink('1cdw')
+        })) and *A. thaliana* ([PDB ID 1VTL](${
+            wwPDBLink('1vtl')
+        })) shows that their sequences are 83% identical and the RMSD between the structures is 0.43 Å.
 `,
         state: () => {
             const builder = createMVSBuilder();
@@ -98,14 +158,20 @@ Structural superposition of TBP bound to DNA in human ([PDB ID 1CDW](${wwPDBLink
             select(_1cdw, { color: Colors['1cdw'], selector: 'protein' });
             select(_1cdw, { color: Colors['1cdw'], selector: 'nucleic', opacity: 0.5 })[0].label({ text: 'DNA' });
             // uses a range to 'adjust' font size of label
-            label(_1cdw, { selector: { label_asym_id: 'C', beg_label_seq_id: 160, end_label_seq_id: 177 }, text: 'TBP (H. sapiens)' });
+            label(_1cdw, {
+                selector: { label_asym_id: 'C', beg_label_seq_id: 160, end_label_seq_id: 177 },
+                text: 'TBP (H. sapiens)',
+            });
 
             const _1vtl = structure(builder, '1vtl');
             select(_1vtl, { color: Colors['1vtl'], selector: { label_asym_id: 'E' } });
             select(_1vtl, { color: Colors['1vtl'], selector: { label_asym_id: 'A' }, opacity: 0.5 });
             select(_1vtl, { color: Colors['1vtl'], selector: { label_asym_id: 'B' }, opacity: 0.5 });
             // uses a range to 'adjust' font size of label
-            label(_1vtl, { selector: { label_asym_id: 'E', beg_label_seq_id: 75, end_label_seq_id: 92 }, text: 'TBP (A. thaliana)' });
+            label(_1vtl, {
+                selector: { label_asym_id: 'E', beg_label_seq_id: 75, end_label_seq_id: 92 },
+                text: 'TBP (A. thaliana)',
+            });
 
             return builder;
         },
@@ -114,7 +180,8 @@ Structural superposition of TBP bound to DNA in human ([PDB ID 1CDW](${wwPDBLink
             target: [77.48, 59.61, 30.36],
             up: [-0.73, 0.68, 0.06],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'TBP: Minor Groove [2/2]',
         key: 'highly-conserved-2',
         description: `
@@ -151,16 +218,21 @@ The structures of *A. thaliana* and human core TBP-TATA element co-crystal struc
             target: [80.16, 56.15, 28.96],
             up: [-0.71, 0.68, 0.17],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'TBP: Binding to TATA Box [1/5]',
         key: 'tata-box-overview',
         description: `
 ### TATA-Binding Protein Binds to the Minor Groove of the TATA Box
 
 When the first structures of TBP-DNA complexes were determined, researchers discovered that TBP is not gentle when it binds to DNA.
-Instead, it grabs the TATA sequence, bends and unwinds it to open up the minor groove, and kinks it sharply in two places (*e.g.*, [PDB ID 1VTL](${wwPDBLink('1vtl')})) and ([PDB ID 1CDW](${wwPDBLink('1cdw')})). 
+Instead, it grabs the TATA sequence, bends and unwinds it to open up the minor groove, and kinks it sharply in two places (*e.g.*, [PDB ID 1VTL](${
+            wwPDBLink('1vtl')
+        })) and ([PDB ID 1CDW](${wwPDBLink('1cdw')})). 
 
-Interactions with the minor groove can be divided into different classes as seen in PDB ([PDB ID 1CDW](${wwPDBLink('1cdw')})).
+Interactions with the minor groove can be divided into different classes as seen in PDB ([PDB ID 1CDW](${
+            wwPDBLink('1cdw')
+        })).
 The combination of interactions allows TATA-binding protein to recognize the proper DNA sequence.
 `,
         state: () => {
@@ -178,7 +250,8 @@ The combination of interactions allows TATA-binding protein to recognize the pro
             target: [77.48, 59.61, 30.36],
             up: [-0.73, 0.68, 0.06],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'TBP: Arginine [2/5]',
         key: 'tata-box-1',
         description: `
@@ -196,26 +269,58 @@ A string of arginine amino acids interact with the phosphate groups of the DNA a
 
             label(_1cdw, { selector: { label_asym_id: 'C', label_seq_id: 38 }, text: 'Arg192' });
             drawInteractions(_1cdw, [
-                ['H-bond', { label_asym_id: 'C', label_seq_id: 38, label_atom_id: 'NH2' }, { label_asym_id: 'B', label_seq_id: 7, label_atom_id: 'OP1' }],
-                ['H-bond', { label_asym_id: 'C', label_seq_id: 38, label_atom_id: 'NH2' }, { label_asym_id: 'B', label_seq_id: 6, label_atom_id: `O3'` }],
-                ['H-bond', { label_asym_id: 'C', label_seq_id: 38, label_atom_id: 'NH1' }, { label_asym_id: 'B', label_seq_id: 7, label_atom_id: 'OP1' }],
+                ['H-bond', { label_asym_id: 'C', label_seq_id: 38, label_atom_id: 'NH2' }, {
+                    label_asym_id: 'B',
+                    label_seq_id: 7,
+                    label_atom_id: 'OP1',
+                }],
+                ['H-bond', { label_asym_id: 'C', label_seq_id: 38, label_atom_id: 'NH2' }, {
+                    label_asym_id: 'B',
+                    label_seq_id: 6,
+                    label_atom_id: `O3'`,
+                }],
+                ['H-bond', { label_asym_id: 'C', label_seq_id: 38, label_atom_id: 'NH1' }, {
+                    label_asym_id: 'B',
+                    label_seq_id: 7,
+                    label_atom_id: 'OP1',
+                }],
             ]);
 
             label(_1cdw, { selector: { label_asym_id: 'C', label_seq_id: 45 }, text: 'Arg199' });
             drawInteractions(_1cdw, [
-                ['H-bond', { label_asym_id: 'C', label_seq_id: 45, label_atom_id: 'NE' }, { label_asym_id: 'B', label_seq_id: 8, label_atom_id: 'OP1' }],
-                ['H-bond', { label_asym_id: 'C', label_seq_id: 45, label_atom_id: 'NH2' }, { label_asym_id: 'B', label_seq_id: 8, label_atom_id: 'OP1' }],
+                ['H-bond', { label_asym_id: 'C', label_seq_id: 45, label_atom_id: 'NE' }, {
+                    label_asym_id: 'B',
+                    label_seq_id: 8,
+                    label_atom_id: 'OP1',
+                }],
+                ['H-bond', { label_asym_id: 'C', label_seq_id: 45, label_atom_id: 'NH2' }, {
+                    label_asym_id: 'B',
+                    label_seq_id: 8,
+                    label_atom_id: 'OP1',
+                }],
             ]);
 
             label(_1cdw, { selector: { label_asym_id: 'C', label_seq_id: 136 }, text: 'Arg290' });
             drawInteractions(_1cdw, [
-                ['H-bond', { label_asym_id: 'C', label_seq_id: 136, label_atom_id: 'NH1' }, { label_asym_id: 'A', label_seq_id: 8, label_atom_id: 'OP1' }],
+                ['H-bond', { label_asym_id: 'C', label_seq_id: 136, label_atom_id: 'NH1' }, {
+                    label_asym_id: 'A',
+                    label_seq_id: 8,
+                    label_atom_id: 'OP1',
+                }],
             ]);
 
             label(_1cdw, { selector: { label_asym_id: 'C', label_seq_id: 50 }, text: 'Arg204' });
             drawInteractions(_1cdw, [
-                ['H-bond', { label_asym_id: 'B', label_seq_id: 9, label_atom_id: 'OP1' }, { label_asym_id: 'C', label_seq_id: 50, label_atom_id: 'NH1' }],
-                ['H-bond', { label_asym_id: 'B', label_seq_id: 9, label_atom_id: 'OP1' }, { label_asym_id: 'C', label_seq_id: 50, label_atom_id: 'NH2' }],
+                ['H-bond', { label_asym_id: 'B', label_seq_id: 9, label_atom_id: 'OP1' }, {
+                    label_asym_id: 'C',
+                    label_seq_id: 50,
+                    label_atom_id: 'NH1',
+                }],
+                ['H-bond', { label_asym_id: 'B', label_seq_id: 9, label_atom_id: 'OP1' }, {
+                    label_asym_id: 'C',
+                    label_seq_id: 50,
+                    label_atom_id: 'NH2',
+                }],
             ]);
 
             return builder;
@@ -225,7 +330,8 @@ A string of arginine amino acids interact with the phosphate groups of the DNA a
             target: [77.29, 61.61, 18.73],
             up: [-0.28, 0.96, 0.04],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'TBP: Phenylalanine [3/5]',
         key: 'tata-box-2',
         description: `
@@ -255,7 +361,8 @@ At either end of the TATA element there are two pairs of phenylalanine side chai
             target: [85.52, 57.53, 19.15],
             up: [-0.51, 0.85, -0.11],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'TBP: H-Bonds in Minor Groove [4/5]',
         key: 'tata-box-3',
         description: `
@@ -275,9 +382,21 @@ Polar side chains make minor groove hydrogen bonds with acceptors of base pairs 
             label(_1cdw, { selector: { label_asym_id: 'C', label_seq_id: 9 }, text: 'Asn163' });
             label(_1cdw, { selector: { label_asym_id: 'C', label_seq_id: 155 }, text: 'Thr309' });
             drawInteractions(_1cdw, [
-                ['H-bond', { label_asym_id: 'C', label_seq_id: 9, label_atom_id: 'ND2' }, { label_asym_id: 'B', label_seq_id: 8, label_atom_id: 'O2' }],
-                ['H-bond', { label_asym_id: 'B', label_seq_id: 9, label_atom_id: 'O2' }, { label_asym_id: 'C', label_seq_id: 9, label_atom_id: 'ND2' }],
-                ['H-bond', { label_asym_id: 'C', label_seq_id: 155, label_atom_id: 'OG1' }, { label_asym_id: 'A', label_seq_id: 8, label_atom_id: 'N3' }],
+                ['H-bond', { label_asym_id: 'C', label_seq_id: 9, label_atom_id: 'ND2' }, {
+                    label_asym_id: 'B',
+                    label_seq_id: 8,
+                    label_atom_id: 'O2',
+                }],
+                ['H-bond', { label_asym_id: 'B', label_seq_id: 9, label_atom_id: 'O2' }, {
+                    label_asym_id: 'C',
+                    label_seq_id: 9,
+                    label_atom_id: 'ND2',
+                }],
+                ['H-bond', { label_asym_id: 'C', label_seq_id: 155, label_atom_id: 'OG1' }, {
+                    label_asym_id: 'A',
+                    label_seq_id: 8,
+                    label_atom_id: 'N3',
+                }],
             ]);
             bindingSite(_1cdw, [
                 [{ label_asym_id: 'C', label_seq_id: 99 }, 'Asn253'],
@@ -290,7 +409,8 @@ Polar side chains make minor groove hydrogen bonds with acceptors of base pairs 
             target: [75.68, 63.48, 32.29],
             up: [-0.9, 0.39, 0.18],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'TBP: Non-Polar Interactions [5/5]',
         key: 'tata-box-4',
         description: `
@@ -322,13 +442,16 @@ Several residues projecting from the concave surface of TBP make hydrophobic or 
             target: [77.48, 59.61, 30.36],
             up: [-0.73, 0.68, 0.06],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'TBP and Transcription Pre-Initiation Complex',
         key: 'pre-init-complex',
         description: `
 ### TATA-Binding Protein and the Transcription Pre-Initiation Complex
 
-The structure shown here, from [PDB ID 7ENC](${wwPDBLink('7enc')}), is that of a pol II “pre-initiation complex” (PIC) poised to start transcription.
+The structure shown here, from [PDB ID 7ENC](${
+            wwPDBLink('7enc')
+        }), is that of a pol II “pre-initiation complex” (PIC) poised to start transcription.
 This complex includes eukaryotic Mediator and pol II, along with a collection of general transcription factors that perform the necessary tasks of recognizing the transcription start site of genes, separating the two strands of the DNA double helix, and facilitating transcription initiation by RNA polymerase II.
 
 TBP starts the process of assembling the PIC and works with TBP-associated factors (TAFs) as part of a large multi-component transcription factor, TFIID, that belongs to the collection of general transcription factors that cradle pol II with in the PIC.
@@ -350,12 +473,31 @@ Lying at the very heart of this complex macromolecular machine, it is highly con
             select(_7enc, { color: Colors['7enc-3'], opacity: 0.5 });
 
             _7enc.primitives()
-                .label({ position: { label_entity_id: '57' }, text: 'pol II', label_size: 20, label_color: Colors['7enc'] })
-                .label({ position: { label_entity_id: '53' }, text: 'DNA', label_size: 20, label_color: Colors['7enc-2'] })
-                .label({ position: { label_entity_id: '21' }, text: 'mediator', label_size: 20, label_color: Colors['7enc-3'] })
-                .label({ position: { label_entity_id: '42' }, text: 'TBP-associated factors (TAFs)', label_size: 20, label_color: Colors['7enc-4'] })
-                .label({ position: [100, 150, 0], text: 'PIC', label_size: 30, label_color: Colors['1vok'] })
-            ;
+                .label({
+                    position: { label_entity_id: '57' },
+                    text: 'pol II',
+                    label_size: 20,
+                    label_color: Colors['7enc'],
+                })
+                .label({
+                    position: { label_entity_id: '53' },
+                    text: 'DNA',
+                    label_size: 20,
+                    label_color: Colors['7enc-2'],
+                })
+                .label({
+                    position: { label_entity_id: '21' },
+                    text: 'mediator',
+                    label_size: 20,
+                    label_color: Colors['7enc-3'],
+                })
+                .label({
+                    position: { label_entity_id: '42' },
+                    text: 'TBP-associated factors (TAFs)',
+                    label_size: 20,
+                    label_color: Colors['7enc-4'],
+                })
+                .label({ position: [100, 150, 0], text: 'PIC', label_size: 30, label_color: Colors['1vok'] });
 
             return builder;
         },
@@ -364,7 +506,8 @@ Lying at the very heart of this complex macromolecular machine, it is highly con
             target: [77.48, 59.61, 30.36],
             up: [-0.73, 0.68, 0.06],
         } satisfies MVSNodeParams<'camera'>,
-    }, {
+    },
+    {
         header: 'The End',
         key: 'end',
         description: `
@@ -384,10 +527,15 @@ Read more in the relevant publications on PDB IDs [1VOK](https://doi.org/10.1038
             target: [87.56, -22.14, 54.59],
             up: [-0.55, 0.83, 0.1],
         } satisfies MVSNodeParams<'camera'>,
-    }
+    },
 ];
 
-type Interaction = [label: string, res1: PrimitivePositionT, res2: PrimitivePositionT, options?: { skipResidue?: boolean }]
+type Interaction = [
+    label: string,
+    res1: PrimitivePositionT,
+    res2: PrimitivePositionT,
+    options?: { skipResidue?: boolean },
+];
 
 function drawInteractions(structure: MVSStructure, interactions: Interaction[]) {
     const primitives = structure.primitives();
@@ -427,7 +575,7 @@ function drawInteractions(structure: MVSStructure, interactions: Interaction[]) 
             custom: {
                 molstar_color_theme_name: 'element-symbol',
                 molstar_color_theme_params: { carbonColor: { name: 'element-symbol', params: {} } },
-            }
+            },
         });
 }
 
@@ -454,28 +602,42 @@ function structure(builder: Root, id: string): MVSStructure {
     return ret;
 }
 
-function select(structure: MVSStructure, { color, opacity = 1.0, selector = 'polymer' }: { color: ColorT, opacity?: number, selector?: Partial<MVSNodeParams<'component'>>['selector'] }) {
+function select(
+    structure: MVSStructure,
+    { color, opacity = 1.0, selector = 'polymer' }: {
+        color: ColorT;
+        opacity?: number;
+        selector?: Partial<MVSNodeParams<'component'>>['selector'];
+    },
+) {
     const component = structure.component({ selector });
     const representation = component.representation({ type: 'cartoon' });
     representation.color({ color }).opacity({ opacity });
     return [component, representation] as const;
 }
 
-function label(structure: MVSStructure, { selector, text }: { selector: Partial<MVSNodeParams<'component'>>['selector'], text: string }) {
+function label(
+    structure: MVSStructure,
+    { selector, text }: { selector: Partial<MVSNodeParams<'component'>>['selector']; text: string },
+) {
     structure.component({ selector })
         .label({ text });
 }
 
 function surface(structure: MVSStructure, options: {
-    selector: ComponentExpressionT | ComponentExpressionT[],
-    carbon_color?: ColorT,
+    selector: ComponentExpressionT | ComponentExpressionT[];
+    carbon_color?: ColorT;
 }) {
     const comp = structure.component({ selector: options.selector });
     const coloring = {
         custom: {
             molstar_color_theme_name: 'element-symbol',
-            molstar_color_theme_params: { carbonColor: options?.carbon_color ? { name: 'uniform', params: { value: decodeColor(options?.carbon_color) } } : { name: 'element-symbol', params: { } } }
-        }
+            molstar_color_theme_params: {
+                carbonColor: options?.carbon_color
+                    ? { name: 'uniform', params: { value: decodeColor(options?.carbon_color) } }
+                    : { name: 'element-symbol', params: {} },
+            },
+        },
     };
     comp.representation({ type: 'surface' }).color(coloring).opacity({ opacity: 0.33 });
 
@@ -483,19 +645,21 @@ function surface(structure: MVSStructure, options: {
 }
 
 function bindingSite(structure: MVSStructure, residues: [selector: ComponentExpressionT, label: string][], options: {
-    color?: ColorT,
-    label_size?: number,
-    label_color?: ColorT,
+    color?: ColorT;
+    label_size?: number;
+    label_color?: ColorT;
 }) {
     const color: ColorT = options.color ?? '#5B53A4';
     const coloring = {
         custom: {
             molstar_color_theme_name: 'element-symbol',
-            molstar_color_theme_params: { carbonColor: { name: 'uniform', params: { value: decodeColor(color) } } }
-        }
+            molstar_color_theme_params: { carbonColor: { name: 'uniform', params: { value: decodeColor(color) } } },
+        },
     };
 
-    structure.component({ selector: residues.map(r => r[0]) }).representation({ type: 'ball_and_stick' }).color(coloring);
+    structure.component({ selector: residues.map((r) => r[0]) }).representation({ type: 'ball_and_stick' }).color(
+        coloring,
+    );
 
     const primitives = structure.primitives();
     for (const [selector, label] of residues) {
@@ -503,7 +667,7 @@ function bindingSite(structure: MVSStructure, residues: [selector: ComponentExpr
             position: selector,
             text: label,
             label_color: options?.label_color ?? color,
-            label_size: options?.label_size ?? 1.5
+            label_size: options?.label_size ?? 1.5,
         });
     }
 }
@@ -536,6 +700,6 @@ export function buildStory(): MVSData_States {
             title: 'The Structural Story of TATA-Binding Protein and its Role in Transcription Initiation',
             version: '1.0',
             timestamp: new Date().toISOString(),
-        }
+        },
     };
 }

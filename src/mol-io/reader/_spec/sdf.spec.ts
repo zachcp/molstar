@@ -476,15 +476,15 @@ describe('sdf reader', () => {
 
         const formalCharges1 = {
             atomIdx: compound1.molFile.formalCharges.atomIdx,
-            charge: compound1.molFile.formalCharges.charge
+            charge: compound1.molFile.formalCharges.charge,
         };
         const formalCharges2 = {
             atomIdx: compound2.molFile.formalCharges.atomIdx,
-            charge: compound2.molFile.formalCharges.charge
+            charge: compound2.molFile.formalCharges.charge,
         };
         const formalCharges3 = {
             atomIdx: compound3.molFile.formalCharges.atomIdx,
-            charge: compound3.molFile.formalCharges.charge
+            charge: compound3.molFile.formalCharges.charge,
         };
 
         expect(formalCharges1.atomIdx.rowCount).toBe(3);
@@ -495,7 +495,6 @@ describe('sdf reader', () => {
         expect(formalCharges2.charge.rowCount === formalCharges2.atomIdx.rowCount).toBe(true);
         expect(formalCharges3.charge.rowCount === formalCharges3.atomIdx.rowCount).toBe(true);
     });
-
 
     it('v3000', async () => {
         const parsed = await parseSdf(V3000SdfString).run();

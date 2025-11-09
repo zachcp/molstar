@@ -26,10 +26,10 @@
             var pdbqt = getParam('pdbqt', '[^&]+').trim() || '../../examples/ace2.pdbqt';
             var mol2 = getParam('mol2', '[^&]+').trim() || '../../examples/ace2-hit.mol2';
 
-            DockingViewer.create('app', [0x33DD22, 0x1133EE], true).then(viewer => {
+            DockingViewer.create('app', [0x33DD22, 0x1133EE], true).then((viewer) => {
                 viewer.loadStructuresFromUrlsAndMerge([
                     { url: pdbqt, format: 'pdbqt' },
-                    { url: mol2, format: 'mol2' }
+                    { url: mol2, format: 'mol2' },
                 ]);
             });
         </script>

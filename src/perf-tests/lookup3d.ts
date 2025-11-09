@@ -7,7 +7,7 @@ import { Structure } from '../mol-model/structure.ts';
 import { GridLookup3D } from '../mol-math/geometry.ts';
 // import { sortArray } from 'mol-data/util';
 import { OrderedSet } from '../mol-data/int.ts';
-import { trajectoryFromMmCIF, type MmcifFormat } from '../mol-model-formats/structure/mmcif.ts';
+import { type MmcifFormat, trajectoryFromMmCIF } from '../mol-model-formats/structure/mmcif.ts';
 import { getBoundary } from '../mol-math/geometry/boundary.ts';
 
 require('util.promisify').shim();
@@ -23,7 +23,6 @@ async function readData(path: string) {
         return readFileAsync(path, 'utf8');
     }
 }
-
 
 export async function readCIF(path: string) {
     const input = await readData(path);
@@ -42,7 +41,10 @@ export async function readCIF(path: string) {
 export async function test() {
     const { mmcif, structures } = await readCIF('e:/test/quick/1tqn_updated.cif');
 
-    const position = { x: mmcif.db.atom_site.Cartn_x.toArray(), y: mmcif.db.atom_site.Cartn_y.toArray(), z: mmcif.db.atom_site.Cartn_z.toArray(),
+    const position = {
+        x: mmcif.db.atom_site.Cartn_x.toArray(),
+        y: mmcif.db.atom_site.Cartn_y.toArray(),
+        z: mmcif.db.atom_site.Cartn_z.toArray(),
         indices: OrderedSet.ofBounds(0, mmcif.db.atom_site._rowCount),
         // radius: [1, 1, 1, 1]
         // indices: [1]

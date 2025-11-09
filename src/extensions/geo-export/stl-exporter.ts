@@ -6,10 +6,10 @@
 
 import { asciiWrite } from '../../mol-io/common/ascii.ts';
 import type { Box3D } from '../../mol-math/geometry.ts';
-import { Vec3, Mat4 } from '../../mol-math/linear-algebra.ts';
+import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { PLUGIN_VERSION } from '../../mol-plugin/version.ts';
 import type { RuntimeContext } from '../../mol-task/index.ts';
-import { MeshExporter, type AddMeshInput } from './mesh-exporter.ts';
+import { type AddMeshInput, MeshExporter } from './mesh-exporter.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3fromArray = Vec3.fromArray;
@@ -20,8 +20,8 @@ const v3toArray = Vec3.toArray;
 // https://www.fabbers.com/tech/STL_Format
 
 export type StlData = {
-    stl: Uint8Array
-}
+    stl: Uint8Array;
+};
 
 export class StlExporter extends MeshExporter<StlData> {
     readonly fileExtension = 'stl';
