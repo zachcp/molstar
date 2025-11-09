@@ -64,7 +64,7 @@ class TransientTree implements StateTree {
     return this.transforms.get(StateTransform.RootRef)!;
   }
 
-  asTransient() {
+  asTransient(): TransientTree {
     return this.asImmutable().asTransient();
   }
 
@@ -179,7 +179,7 @@ class TransientTree implements StateTree {
   }
 
   /** Calls Transform.definition.params.areEqual if available, otherwise uses shallowEqual to check if the params changed */
-  setParams(ref: StateTransform.Ref, params: any) {
+  setParams(ref: StateTransform.Ref, params: any): boolean {
     ensurePresent(this.transforms, ref);
 
     const transform = this.transforms.get(ref)!;
@@ -201,7 +201,10 @@ class TransientTree implements StateTree {
   }
 
   /** Calls Transform.definition.params.areEqual if available, otherwise uses shallowEqual to check if the params changed */
-  setTags(ref: StateTransform.Ref, tags: string | string[] | undefined) {
+  setTags(
+    ref: StateTransform.Ref,
+    tags: string | string[] | undefined,
+  ): boolean {
     ensurePresent(this.transforms, ref);
 
     const transform = this.transforms.get(ref)!;
@@ -224,7 +227,7 @@ class TransientTree implements StateTree {
   setDependsOn(
     ref: StateTransform.Ref,
     dependsOn: string | string[] | undefined,
-  ) {
+  ): boolean {
     ensurePresent(this.transforms, ref);
 
     const transform = this.transforms.get(ref)!;
@@ -243,7 +246,10 @@ class TransientTree implements StateTree {
     return true;
   }
 
-  assignState(ref: StateTransform.Ref, state?: Partial<StateTransform.State>) {
+  assignState(
+    ref: StateTransform.Ref,
+    state?: Partial<StateTransform.State>,
+  ): StateTransform {
     ensurePresent(this.transforms, ref);
 
     const old = this.transforms.get(ref);
@@ -311,7 +317,7 @@ class TransientTree implements StateTree {
     return st;
   }
 
-  asImmutable() {
+  asImmutable(): StateTree {
     if (!this.changedNodes && !this.changedChildren && !this._childMutations)
       return this.tree;
     if (this._childMutations)
