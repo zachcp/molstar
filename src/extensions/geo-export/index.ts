@@ -18,7 +18,7 @@ export const GeometryExport = PluginBehavior.create<{}>({
             this.ctx.customStructureControls.set('geo-export', GeometryExporterUI as any);
         }
 
-        update() {
+        override update() {
             return false;
         }
 

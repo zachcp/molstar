@@ -46,7 +46,7 @@ export class MAPairwiseScorePlotPanel extends CollapsableControls<{}, State> {
         };
     }
 
-    toggleCollapsed() {
+    override toggleCollapsed() {
         if (!this.state.isCollapsed) {
             this.setState({ isCollapsed: true });
         } else {
@@ -62,7 +62,7 @@ export class MAPairwiseScorePlotPanel extends CollapsableControls<{}, State> {
     interactivity = new BehaviorSubject<PlotInteractivityState>({});
     queue = new SingleAsyncQueue();
 
-    componentDidMount() {
+    override componentDidMount() {
         this.subscribe(
             combineLatest([
                 this.plugin.state.data.events.changed,

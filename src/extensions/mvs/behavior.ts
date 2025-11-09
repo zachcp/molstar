@@ -146,7 +146,7 @@ export const MolViewSpec = PluginBehavior.create<{ autoAttach: boolean }>({
                 }
             });
         }
-        update(p: { autoAttach: boolean }) {
+        override update(p: { autoAttach: boolean }) {
             const updated = this.params.autoAttach !== p.autoAttach;
             this.params.autoAttach = p.autoAttach;
             for (const prop of this.registrables.customModelProperties ?? []) {

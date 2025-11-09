@@ -71,7 +71,7 @@ export const MAQualityAssessment = PluginBehavior.create<{ autoAttach: boolean; 
             }
         }
 
-        update(p: { autoAttach: boolean; showTooltip: boolean }) {
+        override update(p: { autoAttach: boolean; showTooltip: boolean }) {
             const updated = this.params.autoAttach !== p.autoAttach;
             this.params.autoAttach = p.autoAttach;
             this.params.showTooltip = p.showTooltip;

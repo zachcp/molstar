@@ -68,7 +68,7 @@ export const RCSBValidationReport = PluginBehavior.create<{ autoAttach: boolean;
             this.ctx.builders.structure.representation.registerPreset(ValidationReportRandomCoilIndexPreset);
         }
 
-        update(p: { autoAttach: boolean; showTooltip: boolean }) {
+        override update(p: { autoAttach: boolean; showTooltip: boolean }) {
             const updated = this.params.autoAttach !== p.autoAttach;
             this.params.autoAttach = p.autoAttach;
             this.params.showTooltip = p.showTooltip;

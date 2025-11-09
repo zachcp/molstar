@@ -18,7 +18,7 @@ export const ZenodoImport = PluginBehavior.create<{}>({
             this.ctx.customImportControls.set('zenodo-import', ZenodoImportUI as any);
         }
 
-        update() {
+        override update() {
             return false;
         }
 

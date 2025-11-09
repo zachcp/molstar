@@ -20,7 +20,7 @@ export const wwPDBChemicalComponentDictionary = PluginBehavior.create<{}>({
             this.ctx.builders.structure.representation.registerPreset(ChemicalComponentPreset);
         }
 
-        update() {
+        override update() {
             return false;
         }
 

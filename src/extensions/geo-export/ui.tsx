@@ -68,7 +68,7 @@ export class GeometryExporterUI extends CollapsableControls<{}, State> {
         );
     }
 
-    componentDidMount() {
+    override componentDidMount() {
         if (!this.plugin.canvas3d) return;
 
         const merged = merge(
@@ -81,7 +81,7 @@ export class GeometryExporterUI extends CollapsableControls<{}, State> {
         });
     }
 
-    componentWillUnmount() {
+    override componentWillUnmount() {
         super.componentWillUnmount();
         this._controls?.dispose();
         this._controls = void 0;

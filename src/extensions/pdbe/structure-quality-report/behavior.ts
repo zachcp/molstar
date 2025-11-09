@@ -57,7 +57,7 @@ export const PDBeStructureQualityReport = PluginBehavior.create<{ autoAttach: bo
             this.ctx.representation.structure.themes.colorThemeRegistry.add(StructureQualityReportColorThemeProvider);
         }
 
-        update(p: { autoAttach: boolean; showTooltip: boolean }) {
+        override update(p: { autoAttach: boolean; showTooltip: boolean }) {
             const updated = this.params.autoAttach !== p.autoAttach;
             this.params.autoAttach = p.autoAttach;
             this.params.showTooltip = p.showTooltip;

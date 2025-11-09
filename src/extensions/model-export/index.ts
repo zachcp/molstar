@@ -18,7 +18,7 @@ export const ModelExport = PluginBehavior.create<{}>({
             this.ctx.customStructureControls.set('model-export', ModelExportUI as any);
         }
 
-        update() {
+        override update() {
             return false;
         }
 
