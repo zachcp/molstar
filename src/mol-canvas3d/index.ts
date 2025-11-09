@@ -5,6 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-export * from './canvas3d.ts';
-export * from './camera.ts';
-export * from './util.ts';
+export * from "./canvas3d.ts";
+export * from "./camera.ts";
+export * from "./util.ts";
+export * from "./passes/background.ts";
