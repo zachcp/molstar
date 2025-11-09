@@ -55,8 +55,7 @@
     "noImplicitThis": true,
     "noUnusedLocals": false,
     "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "allowSyntheticDefaultImports": true
+    "strictFunctionTypes": true
   },
   "lint": {
     "exclude": [
