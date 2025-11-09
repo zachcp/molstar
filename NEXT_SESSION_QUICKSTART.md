@@ -116,15 +116,32 @@ export function getConformation(u: Unit):
 
 ### DO:
 - Test immediately: `deno publish --dry-run 2>&1 | tail -30`
-- Commit every 10-20 fixes
+- **Count TS errors BEFORE and AFTER changes**: `deno publish --dry-run 2>&1 | grep "TS[0-9]" | wc -l`
+- Commit every 5-10 fixes
 - Read the code to understand return types
-- Use hover in VS Code to see inferred types
+- Use hover in VS Code/Zed to see inferred types
+- Check for TypeScript errors after adding return types
+- Use `sed` for surgical edits to avoid reformatting
 
 ### DON'T:
+- ❌ Add return types that cause TypeScript errors
 - ❌ Add `: PD.Params` to `export const Params = { ... }` definitions
 - ❌ Make batch changes without testing
 - ❌ Guess return types - verify them!
-- ❌ Keep code that introduces TypeScript errors
+- ❌ Keep code that introduces new errors
+- ❌ Let the editor/tool reformat entire files (changes quotes, indentation)
+
+### ⚠️ COMMON FAILURE MODE: Introduced TypeScript Errors
+**Problem:** Adding return type annotations can introduce NEW TypeScript type errors even when the slow-type errors are fixed!
+
+**Example:** Adding `: { palette: PD.Mapped<any> }` to `getPaletteParams()` fixed the slow-type error but introduced 30 TS2345 errors throughout the codebase because the return type was too specific.
+
+**Solution:**
+1. Count TS errors BEFORE: `deno publish --dry-run 2>&1 | grep "TS[0-9]" | wc -l`
+2. Make changes
+3. Count TS errors AFTER: `deno publish --dry-run 2>&1 | grep "TS[0-9]" | wc -l`
+4. If NEW TS errors appear, REVERT immediately: `git reset --hard HEAD`
+5. Try a more generic return type (e.g., `any` or inferred type)
 
 ---
 
