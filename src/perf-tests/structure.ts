@@ -6,19 +6,19 @@
 
 import * as B from 'benchmark';
 
-import * as util from 'util';
-import * as fs from 'fs';
+import * as util from 'node:util';
+import * as fs from 'node:fs';
 import fetch from 'node-fetch';
-import { CIF } from '../mol-io/reader/cif';
+import { CIF } from '../mol-io/reader/cif.ts';
 
-import { Structure, Model, Queries as Q, StructureElement, StructureSelection, StructureSymmetry, StructureQuery, StructureProperties as SP } from '../mol-model/structure';
-// import { Segmentation, OrderedSet } from '../mol-data/int'
+import { Structure, type Model, Queries as Q, StructureElement, StructureSelection, StructureSymmetry, StructureQuery, StructureProperties as SP } from '../mol-model/structure.ts';
+// import { Segmentation, OrderedSet } from '../mol-data/int.ts'
 
-import { to_mmCIF } from '../mol-model/structure/export/mmcif';
-import { Vec3 } from '../mol-math/linear-algebra';
-import { trajectoryFromMmCIF, MmcifFormat } from '../mol-model-formats/structure/mmcif';
-// import { printUnits } from '../apps/structure-info/model';
-// import { EquivalenceClasses } from '../mol-data/util';
+import { to_mmCIF } from '../mol-model/structure/export/mmcif.ts';
+import { Vec3 } from '../mol-math/linear-algebra.ts';
+import { trajectoryFromMmCIF, MmcifFormat } from '../mol-model-formats/structure/mmcif.ts';
+// import { printUnits } from '../apps/structure-info/model.ts';
+// import { EquivalenceClasses } from '../mol-data/util.ts';
 
 require('util.promisify').shim();
 const readFileAsync = util.promisify(fs.readFile);

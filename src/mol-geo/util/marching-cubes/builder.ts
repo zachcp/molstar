@@ -6,12 +6,12 @@
  * @author Fred Ludlow <fred.ludlow@gmail.com>
  */
 
-import { ChunkedArray } from '../../../mol-data/util';
-import { noop } from '../../../mol-util';
-import { Mesh } from '../../geometry/mesh/mesh';
-import { AllowedContours } from './tables';
-import { LinesBuilder } from '../../geometry/lines/lines-builder';
-import { Lines } from '../../geometry/lines/lines';
+import { ChunkedArray } from '../../../mol-data/util.ts';
+import { noop } from '../../../mol-util/index.ts';
+import { Mesh } from '../../geometry/mesh/mesh.ts';
+import { AllowedContours } from './tables.ts';
+import { LinesBuilder } from '../../geometry/lines/lines-builder.ts';
+import type { Lines } from '../../geometry/lines/lines.ts';
 
 export interface MarchingCubesBuilder<T> {
     addVertex(x: number, y: number, z: number): number

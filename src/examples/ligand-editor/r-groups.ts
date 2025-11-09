@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { JSONCifLigandGraph, JSONCifLigandGraphAtom } from '../../extensions/json-cif/ligand-graph';
-import { molfileToJSONCif } from '../../extensions/json-cif/utils';
-import { Mat4, Vec3 } from '../../mol-math/linear-algebra';
+import { JSONCifLigandGraph, type JSONCifLigandGraphAtom } from '../../extensions/json-cif/ligand-graph.ts';
+import { molfileToJSONCif } from '../../extensions/json-cif/utils.ts';
+import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 
 export type RGroupName = keyof typeof RGroups;
 

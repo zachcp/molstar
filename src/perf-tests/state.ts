@@ -1,6 +1,6 @@
-// import { State, StateObject, StateTree, Transformer } from '../mol-state';
-// import { Task } from '../mol-task';
-// import * as util from 'util';
+// import { State, StateObject, StateTree, Transformer } from '../mol-state/index.ts';
+// import { Task } from '../mol-task/index.ts';
+// import * as util from 'node:util';
 
 // export type TypeClass = 'root' | 'shape' | 'prop'
 // export interface ObjProps { label: string }

@@ -5,13 +5,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column } from '../../../../mol-data/db';
-import { AtomicHierarchy } from './atomic/hierarchy';
-import { Entities } from './common';
-import { Sequence } from '../../../sequence';
-import { ChainIndex } from '../indexing';
-import { CoarseHierarchy } from './coarse';
-import { CoarseElements } from './coarse/hierarchy';
+import { Column } from '../../../../mol-data/db.ts';
+import type { AtomicHierarchy } from './atomic/hierarchy.ts';
+import type { Entities } from './common.ts';
+import { Sequence } from '../../../sequence.ts';
+import type { ChainIndex } from '../indexing.ts';
+import type { CoarseHierarchy } from './coarse.ts';
+import type { CoarseElements } from './coarse/hierarchy.ts';
 
 interface StructureSequence {
     readonly sequences: ReadonlyArray<StructureSequence.Entity>,

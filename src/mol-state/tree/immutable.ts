@@ -5,8 +5,8 @@
  */
 
 import { Map as ImmutableMap, OrderedSet } from 'immutable';
-import { StateTransform } from '../transform';
-import { TransientTree } from './transient';
+import { StateTransform } from '../transform.ts';
+import { TransientTree } from './transient.ts';
 
 export { StateTree };
 

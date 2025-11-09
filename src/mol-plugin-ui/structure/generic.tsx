@@ -5,22 +5,21 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as React from 'react';
-import { StructureHierarchyRef } from '../../mol-plugin-state/manager/structure/hierarchy-state';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { State } from '../../mol-state';
-import { PurePluginUIComponent } from '../base';
-import { IconButton } from '../controls/common';
-import { UpdateTransformControl } from '../state/update-transform';
-import { VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, MoreHorizSvg } from '../controls/icons';
+import type * as React from 'react';
+import type { StructureHierarchyRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { State } from '../../mol-state/index.ts';
+import { PurePluginUIComponent } from '../base.tsx';
+import { IconButton } from '../controls/common.tsx';
+import { UpdateTransformControl } from '../state/update-transform.tsx';
+import { VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, MoreHorizSvg } from '../controls/icons.tsx';
 
 export class GenericEntryListControls extends PurePluginUIComponent {
     get current() {
         return this.plugin.managers.structure.hierarchy.behaviors.selection;
     }
 
-    componentDidMount() {
-        this.subscribe(this.current, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.current, () => this.forceUpdate());
     }
 
     get unitcell() {
@@ -50,8 +49,7 @@ export class GenericEntryListControls extends PurePluginUIComponent {
         return controls.length > 0 ? controls : null;
     }
 
-    render() {
-        return <>
+    override render() {        return <>
             <div style={{ marginTop: '6px' }}>
                 {this.unitcell}
                 {this.customControls}
@@ -61,10 +59,8 @@ export class GenericEntryListControls extends PurePluginUIComponent {
 }
 
 export class GenericEntry<T extends StructureHierarchyRef> extends PurePluginUIComponent<{ refs: T[], labelMultiple?: string }, { showOptions: boolean }> {
-    state = { showOptions: false };
-
-    componentDidMount() {
-        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
+    override state = { showOptions: false };
+    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
             if (State.ObjectEvent.isCell(e, this.pivot?.cell)) this.forceUpdate();
         });
     }
@@ -120,8 +116,7 @@ export class GenericEntry<T extends StructureHierarchyRef> extends PurePluginUIC
 
     toggleOptions = () => this.setState({ showOptions: !this.state.showOptions });
 
-    render() {
-        const { refs, labelMultiple } = this.props;
+    override render() {        const { refs, labelMultiple } = this.props;
         if (refs.length === 0) return null;
 
         const pivot = refs[0];

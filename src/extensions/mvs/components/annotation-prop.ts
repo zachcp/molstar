@@ -4,26 +4,26 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Column } from '../../../mol-data/db';
-import { CIF, CifBlock, CifCategory, CifFile } from '../../../mol-io/reader/cif';
-import { toTable } from '../../../mol-io/reader/cif/schema';
-import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif';
-import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property';
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
-import { Model } from '../../../mol-model/structure';
-import { Structure, StructureElement, Unit } from '../../../mol-model/structure/structure';
-import { Asset } from '../../../mol-util/assets';
-import { Jsonable, canonicalJsonString } from '../../../mol-util/json';
-import { objectOfArraysToArrayOfObjects, pickObjectKeysWithRemapping, promiseAllObj } from '../../../mol-util/object';
-import { Choice } from '../../../mol-util/param-choice';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { ElementRanges } from '../helpers/element-ranges';
-import { IndicesAndSortings } from '../helpers/indexing';
-import { MaybeStringParamDefinition } from '../helpers/param-definition';
-import { MVSAnnotationRow, MVSAnnotationSchema, getCifAnnotationSchema } from '../helpers/schemas';
-import { getAtomRangesForRow, getGaussianRangesForRow, getSphereRangesForRow } from '../helpers/selections';
-import { Maybe, isDefined, safePromise } from '../helpers/utils';
+import { Column } from '../../../mol-data/db.ts';
+import { CIF, CifBlock, type CifCategory, CifFile } from '../../../mol-io/reader/cif.ts';
+import { toTable } from '../../../mol-io/reader/cif/schema.ts';
+import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif.ts';
+import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property.ts';
+import type { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
+import type { Model } from '../../../mol-model/structure.ts';
+import type { Structure, StructureElement } from '../../../mol-model/structure/structure.ts';
+import { Asset } from '../../../mol-util/assets.ts';
+import { type Jsonable, canonicalJsonString } from '../../../mol-util/json.ts';
+import { objectOfArraysToArrayOfObjects, pickObjectKeysWithRemapping, promiseAllObj } from '../../../mol-util/object.ts';
+import { Choice } from '../../../mol-util/param-choice.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { AtomRanges } from '../helpers/atom-ranges.ts';
+import { IndicesAndSortings } from '../helpers/indexing.ts';
+import { MaybeStringParamDefinition } from '../helpers/param-definition.ts';
+import { type MVSAnnotationRow, MVSAnnotationSchema, getCifAnnotationSchema } from '../helpers/schemas.ts';
+import { getAtomRangesForRow } from '../helpers/selections.ts';
+import { type Maybe, isDefined, safePromise } from '../helpers/utils.ts';
 
 
 /** Allowed values for the annotation format parameter */
@@ -141,25 +141,10 @@ export function getMVSAnnotationForStructure(structure: Structure, annotationId:
 
 type FieldRemapping = Record<string, string | null>;
 
-/** Mapping `ElementIndex` -> annotation row index for all elements of one kind (atoms, spheres, gaussians) in a `Model`.
+/** Mapping `ElementIndex` -> annotation row index for all elements in a `Model`.
  * `-1` means no row applies to the element.
  * `null` means no row applies to any element. */
-type IndexedElements = number[] | null;
-
-/** Mapping `ElementIndex` -> annotation row index for atoms, spheres, and gaussians in a `Model`. */
-type IndexedModel = {
-    atoms: IndexedElements,
-    spheres: IndexedElements,
-    gaussians: IndexedElements,
-};
-
-function getIndexedElementsForUnitKind(indexedModel: IndexedModel, unitKind: Unit.Kind): IndexedElements {
-    if (unitKind === Unit.Kind.Atomic) return indexedModel.atoms;
-    if (unitKind === Unit.Kind.Spheres) return indexedModel.spheres;
-    if (unitKind === Unit.Kind.Gaussians) return indexedModel.gaussians;
-    console.warn(`Unknown Unit.Kind value: ${unitKind}`);
-    return null;
-}
+type IndexedModel = number[] | null;
 
 /** Main class for processing MVS annotation */
 export class MVSAnnotation {
@@ -217,8 +202,7 @@ export class MVSAnnotation {
     /** Return value of field `fieldName` assigned to location `loc`, if any */
     getValueForLocation(loc: StructureElement.Location, fieldName: string): string | undefined {
         const indexedModel = this.getIndexedModel(loc.unit.model, loc.unit.conformation.operator.instanceId);
-        const indexedElements = getIndexedElementsForUnitKind(indexedModel, loc.unit.kind);
-        const iRow = indexedElements ? indexedElements[loc.element] : -1;
+        const iRow = (indexedModel !== null) ? indexedModel[loc.element] : -1;
         return this.getValueForRow(iRow, fieldName);
     }
     /** Return value of field `fieldName` assigned to `i`-th annotation row, if any */
@@ -251,22 +235,16 @@ export class MVSAnnotation {
     private getRowForEachAtom(model: Model, instanceId: string): IndexedModel {
         const indices = IndicesAndSortings.get(model);
         const nAtoms = model.atomicHierarchy.atoms._rowCount;
-        const nSpheres = model.coarseHierarchy.spheres.count;
-        const nGaussians = model.coarseHierarchy.gaussians.count;
-        let indexedAtoms: IndexedElements = null;
-        let indexedSpheres: IndexedElements = null;
-        let indexedGaussians: IndexedElements = null;
+        let result: IndexedModel = null;
         const rows = this.getRows();
-        for (let iRow = 0, nRows = rows.length; iRow < nRows; iRow++) {
-            const row = rows[iRow];
+        for (let i = 0, nRows = rows.length; i < nRows; i++) {
+            const row = rows[i];
             const atomRanges = getAtomRangesForRow(row, model, instanceId, indices);
-            indexedAtoms = fillValueOnRanges(indexedAtoms, nAtoms, atomRanges, iRow);
-            const sphereRanges = getSphereRangesForRow(row, model, instanceId, indices);
-            indexedSpheres = fillValueOnRanges(indexedSpheres, nSpheres, sphereRanges, iRow);
-            const gaussianRanges = getGaussianRangesForRow(row, model, instanceId, indices);
-            indexedGaussians = fillValueOnRanges(indexedGaussians, nGaussians, gaussianRanges, iRow);
+            if (AtomRanges.count(atomRanges) === 0) continue;
+            result ??= Array(nAtoms).fill(-1);
+            AtomRanges.foreach(atomRanges, (from, to) => result!.fill(i, from, to));
         }
-        return { atoms: indexedAtoms, spheres: indexedSpheres, gaussians: indexedGaussians };
+        return result;
     }
 
     /** Parse and return all annotation rows in this annotation, or return cached result if available */
@@ -377,7 +355,6 @@ function getRowsFromCif(data: CifCategory, schema: MVSAnnotationSchema, fieldRem
         const columnArray = getArrayFromCifCategory(data, srcKey, cifSchema[key]); // Avoiding `column.toArray` as it replaces . and ? fields by 0 or ''
         if (columnArray) columns[key] = columnArray;
     }
-    if (Object.keys(columns).length === 0) return new Array(data.rowCount).fill({});
     return objectOfArraysToArrayOfObjects(columns);
 }
 
@@ -459,12 +436,4 @@ function annotationSourceFromSpec(s: MVSAnnotationSpec): MVSAnnotationSource {
         case 'source-cif':
             return { kind: 'source-cif' };
     }
-}
-
-/** In `array`, set value `fillValue` to all positions described by `fillRanges`. In case `array` is `null`, initialize it with length `n` prefilled with -1. */
-function fillValueOnRanges(array: IndexedElements, n: number, fillRanges: ElementRanges | undefined, fillValue: number): IndexedElements {
-    if (!fillRanges || ElementRanges.count(fillRanges) === 0) return array;
-    const out = array ?? Array(n).fill(-1);
-    ElementRanges.foreach(fillRanges, (from, to) => out.fill(fillValue, from, to));
-    return out;
 }

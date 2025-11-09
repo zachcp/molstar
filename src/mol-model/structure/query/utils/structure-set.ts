@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Structure, Unit, StructureElement } from '../../structure';
-import { SortedArray } from '../../../../mol-data/int';
-import { StructureSubsetBuilder } from '../../structure/util/subset-builder';
+import { Structure, type Unit, type StructureElement } from '../../structure.ts';
+import { SortedArray } from '../../../../mol-data/int.ts';
+import type { StructureSubsetBuilder } from '../../structure/util/subset-builder.ts';
 
 export function structureUnion(source: Structure, structures: Structure[]) {
     if (structures.length === 0) return Structure.Empty;

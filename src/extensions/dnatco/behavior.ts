@@ -5,16 +5,16 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { PluginBehavior } from '../../mol-plugin/behavior/behavior';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ConfalPyramidsPreset } from './confal-pyramids/behavior';
-import { ConfalPyramidsColorThemeProvider } from './confal-pyramids/color';
-import { ConfalPyramidsProvider } from './confal-pyramids/property';
-import { ConfalPyramidsRepresentationProvider } from './confal-pyramids/representation';
-import { NtCTubePreset } from './ntc-tube/behavior';
-import { NtCTubeColorThemeProvider } from './ntc-tube/color';
-import { NtCTubeProvider } from './ntc-tube/property';
-import { NtCTubeRepresentationProvider } from './ntc-tube/representation';
+import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ConfalPyramidsPreset } from './confal-pyramids/behavior.ts';
+import { ConfalPyramidsColorThemeProvider } from './confal-pyramids/color.ts';
+import { ConfalPyramidsProvider } from './confal-pyramids/property.ts';
+import { ConfalPyramidsRepresentationProvider } from './confal-pyramids/representation.ts';
+import { NtCTubePreset } from './ntc-tube/behavior.ts';
+import { NtCTubeColorThemeProvider } from './ntc-tube/color.ts';
+import { NtCTubeProvider } from './ntc-tube/property.ts';
+import { NtCTubeRepresentationProvider } from './ntc-tube/representation.ts';
 
 
 export const DnatcoNtCs = PluginBehavior.create<{ autoAttach: boolean, showToolTip: boolean }>({

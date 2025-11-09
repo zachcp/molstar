@@ -5,15 +5,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Structure, StructureElement } from '../../mol-model/structure';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { StateTransforms } from '../../mol-plugin-state/transforms';
-import { PluginContext } from '../../mol-plugin/context';
-import { StateBuilder, StateObjectCell, StateSelection, StateTransform } from '../../mol-state';
-import { Overpaint } from '../../mol-theme/overpaint';
-import { Color } from '../../mol-util/color';
-import { StructureComponentRef } from '../manager/structure/hierarchy-state';
-import { EmptyLoci, isEmptyLoci, Loci } from '../../mol-model/loci';
+import { type Structure, StructureElement } from '../../mol-model/structure.ts';
+import type { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { type StateBuilder, type StateObjectCell, StateSelection, type StateTransform } from '../../mol-state/index.ts';
+import { Overpaint } from '../../mol-theme/overpaint.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import type { StructureComponentRef } from '../manager/structure/hierarchy-state.ts';
+import { type EmptyLoci, isEmptyLoci, Loci } from '../../mol-model/loci.ts';
 
 type OverpaintEachReprCallback = (update: StateBuilder.Root, repr: StateObjectCell<PluginStateObject.Molecule.Structure.Representation3D, StateTransform<typeof StateTransforms.Representation.StructureRepresentation3D>>, overpaint?: StateObjectCell<any, StateTransform<typeof StateTransforms.Representation.OverpaintStructureRepresentation3DFromBundle>>) => Promise<void>
 const OverpaintManagerTag = 'overpaint-controls';

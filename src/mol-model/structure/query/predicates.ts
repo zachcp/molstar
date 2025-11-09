@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { QueryFn, QueryPredicate, QueryContextView } from './context';
+import type { QueryFn, QueryPredicate, QueryContextView } from './context.ts';
 
 namespace Predicates {
     export interface SetLike<A> { has(v: A): boolean }

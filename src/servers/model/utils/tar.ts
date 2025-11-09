@@ -3,7 +3,8 @@
  * Copyright (c) 2014 Mathias Buus, MIT License (MIT)
  */
 
-import { constants } from 'fs';
+import { constants } from 'node:fs';
+import { Buffer } from "node:buffer";
 
 const alloc = Buffer.alloc;
 

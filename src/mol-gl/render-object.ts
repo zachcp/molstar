@@ -4,21 +4,21 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { RenderableState, Renderable } from './renderable';
-import { idFactory } from '../mol-util/id-factory';
-import { WebGLContext } from './webgl/context';
-import { DirectVolumeValues, DirectVolumeRenderable } from './renderable/direct-volume';
-import { MeshValues, MeshRenderable } from './renderable/mesh';
-import { PointsValues, PointsRenderable } from './renderable/points';
-import { LinesValues, LinesRenderable } from './renderable/lines';
-import { SpheresValues, SpheresRenderable } from './renderable/spheres';
-import { TextValues, TextRenderable } from './renderable/text';
-import { TextureMeshValues, TextureMeshRenderable } from './renderable/texture-mesh';
-import { ImageValues, ImageRenderable } from './renderable/image';
-import { CylindersRenderable, CylindersValues } from './renderable/cylinders';
-import { Transparency } from './webgl/render-item';
-import { GlobalDefines } from './renderable/schema';
-import { assertUnreachable } from '../mol-util/type-helpers';
+import type { RenderableState, Renderable } from './renderable.ts';
+import { idFactory } from '../mol-util/id-factory.ts';
+import type { WebGLContext } from './webgl/context.ts';
+import { type DirectVolumeValues, DirectVolumeRenderable } from './renderable/direct-volume.ts';
+import { type MeshValues, MeshRenderable } from './renderable/mesh.ts';
+import { type PointsValues, PointsRenderable } from './renderable/points.ts';
+import { type LinesValues, LinesRenderable } from './renderable/lines.ts';
+import { type SpheresValues, SpheresRenderable } from './renderable/spheres.ts';
+import { type TextValues, TextRenderable } from './renderable/text.ts';
+import { type TextureMeshValues, TextureMeshRenderable } from './renderable/texture-mesh.ts';
+import { type ImageValues, ImageRenderable } from './renderable/image.ts';
+import { CylindersRenderable, type CylindersValues } from './renderable/cylinders.ts';
+import type { Transparency } from './webgl/render-item.ts';
+import type { GlobalDefines } from './renderable/schema.ts';
+import { assertUnreachable } from '../mol-util/type-helpers.ts';
 
 const getNextId = idFactory(0, 0x7FFFFFFF);
 

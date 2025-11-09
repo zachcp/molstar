@@ -1,11 +1,11 @@
-import { Model } from '../../../mol-model/structure';
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
-import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property';
-import { arrayMinMax } from '../../../mol-util/array';
-import { Column } from '../../../mol-data/db';
+import type { Model } from '../../../mol-model/structure.ts';
+import type { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif.ts';
+import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
+import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property.ts';
+import { arrayMinMax } from '../../../mol-util/array.ts';
+import { Column } from '../../../mol-data/db.ts';
 
 type TypeId = number;
 type IdToCharge = Map<number, number>;

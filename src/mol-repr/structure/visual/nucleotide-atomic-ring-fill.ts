@@ -5,20 +5,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { NumberArray } from '../../../mol-util/type-helpers';
-import { VisualContext } from '../../visual';
-import { Unit, Structure } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { Segmentation } from '../../../mol-data/int';
-import { isNucleic } from '../../../mol-model/structure/model/types';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual';
-import { NucleotideLocationIterator, getNucleotideElementLoci, eachNucleotideElement, getNucleotideBaseType, createNucleicIndices, setSugarIndices, hasSugarIndices, setPurinIndices, hasPyrimidineIndices, setPyrimidineIndices, hasPurinIndices } from './util/nucleotide';
-import { VisualUpdateState } from '../../util';
-import { Sphere3D } from '../../../mol-math/geometry';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import type { NumberArray } from '../../../mol-util/type-helpers.ts';
+import type { VisualContext } from '../../visual.ts';
+import { Unit, type Structure } from '../../../mol-model/structure.ts';
+import type { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Segmentation } from '../../../mol-data/int.ts';
+import { isNucleic } from '../../../mol-model/structure/model/types.ts';
+import { UnitsMeshParams, type UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
+import { NucleotideLocationIterator, getNucleotideElementLoci, eachNucleotideElement, getNucleotideBaseType, createNucleicIndices, setSugarIndices, hasSugarIndices, setPurinIndices, hasPyrimidineIndices, setPyrimidineIndices, hasPurinIndices } from './util/nucleotide.ts';
+import type { VisualUpdateState } from '../../util.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
 
 // TODO support ring-fills for multiple locations (including from microheterogeneity)
 

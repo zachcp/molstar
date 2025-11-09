@@ -7,15 +7,15 @@
  * copyright (c) 2010-2022 three.js authors. MIT License
  */
 
-import { Mat4 } from '../../linear-algebra/3d/mat4';
-import { Vec3 } from '../../linear-algebra/3d/vec3';
-import { Box3D } from './box3d';
-import { Plane3D } from './plane3d';
-import { Sphere3D } from './sphere3d';
+import type { Mat4 } from '../../linear-algebra/3d/mat4.ts';
+import { Vec3 } from '../../linear-algebra/3d/vec3.ts';
+import type { Box3D } from './box3d.ts';
+import { Plane3D } from './plane3d.ts';
+import type { Sphere3D } from './sphere3d.ts';
 
 interface Frustum3D { 0: Plane3D, 1: Plane3D, 2: Plane3D, 3: Plane3D, 4: Plane3D, 5: Plane3D; length: 6; }
 
-function Frustum3D() {
+function Frustum3D(): Frustum3D {
     return Frustum3D.create(Plane3D(), Plane3D(), Plane3D(), Plane3D(), Plane3D(), Plane3D());
 }
 
@@ -42,7 +42,7 @@ namespace Frustum3D {
         return copy(Frustum3D(), f);
     }
 
-    export function fromProjectionMatrix(out: Frustum3D, m: Mat4) {
+    export function fromProjectionMatrix(out: Frustum3D, m: Mat4): Frustum3D {
         const a00 = m[0], a01 = m[1], a02 = m[2], a03 = m[3];
         const a10 = m[4], a11 = m[5], a12 = m[6], a13 = m[7];
         const a20 = m[8], a21 = m[9], a22 = m[10], a23 = m[11];
@@ -58,7 +58,7 @@ namespace Frustum3D {
         return out;
     }
 
-    export function intersectsSphere3D(frustum: Frustum3D, sphere: Sphere3D) {
+    export function intersectsSphere3D(frustum: Frustum3D, sphere: Sphere3D): boolean {
         const center = sphere.center;
         const negRadius = -sphere.radius;
 
@@ -70,7 +70,7 @@ namespace Frustum3D {
     }
 
     const boxTmpV = Vec3();
-    export function intersectsBox3D(frustum: Frustum3D, box: Box3D) {
+    export function intersectsBox3D(frustum: Frustum3D, box: Box3D): boolean {
         for (let i = 0 as PlaneIndex; i < 6; ++i) {
             const plane = frustum[i];
 
@@ -86,7 +86,7 @@ namespace Frustum3D {
         return true;
     }
 
-    export function containsPoint(frustum: Frustum3D, point: Vec3) {
+    export function containsPoint(frustum: Frustum3D, point: Vec3): boolean {
         for (let i = 0 as PlaneIndex; i < 6; ++i) {
             if (Plane3D.distanceToPoint(frustum[i], point) < 0) {
                 return false;

@@ -4,23 +4,23 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { QuadSchema, QuadValues } from '../../mol-gl/compute/util';
-import { ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable';
-import { TextureSpec, UniformSpec, DefineSpec, Values } from '../../mol-gl/renderable/schema';
-import { ShaderCode } from '../../mol-gl/shader-code';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { createComputeRenderItem } from '../../mol-gl/webgl/render-item';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { Vec2 } from '../../mol-math/linear-algebra';
-import { ValueCell } from '../../mol-util';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { quad_vert } from '../../mol-gl/shader/quad.vert';
-import { fxaa_frag } from '../../mol-gl/shader/fxaa.frag';
-import { Viewport } from '../camera/util';
-import { RenderTarget } from '../../mol-gl/webgl/render-target';
-import { isTimingMode } from '../../mol-util/debug';
+import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
+import { type ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
+import { TextureSpec, UniformSpec, DefineSpec, type Values } from '../../mol-gl/renderable/schema.ts';
+import { ShaderCode } from '../../mol-gl/shader-code.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
+import type { Texture } from '../../mol-gl/webgl/texture.ts';
+import { Vec2 } from '../../mol-math/linear-algebra.ts';
+import { ValueCell } from '../../mol-util/index.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
+import { fxaa_frag } from '../../mol-gl/shader/fxaa.frag.ts';
+import type { Viewport } from '../camera/util.ts';
+import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
+import { isTimingMode } from '../../mol-util/debug.ts';
 
-export const FxaaParams = {
+export const FxaaParams: PD.Params = {
     edgeThresholdMin: PD.Numeric(0.0312, { min: 0.0312, max: 0.0833, step: 0.0001 }, { description: 'Trims the algorithm from processing darks.' }),
     edgeThresholdMax: PD.Numeric(0.063, { min: 0.063, max: 0.333, step: 0.001 }, { description: 'The minimum amount of local contrast required to apply algorithm.' }),
     iterations: PD.Numeric(12, { min: 0, max: 16, step: 1 }, { description: 'Number of edge exploration steps.' }),

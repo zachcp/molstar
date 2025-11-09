@@ -5,20 +5,20 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { PluginUIComponent } from '../base';
-import { StateTransformParameters } from '../state/common';
-import { VolumeStreaming } from '../../mol-plugin/behavior/dynamic/volume-streaming/behavior';
-import { ExpandableControlRow, IconButton } from '../controls/common';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ParameterControls, ParamOnChange } from '../controls/parameters';
-import { Slider } from '../controls/slider';
-import { Volume, Grid } from '../../mol-model/volume';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { ColorNames } from '../../mol-util/color/names';
-import { toPrecision } from '../../mol-util/number';
-import { StateSelection, StateObjectCell } from '../../mol-state';
-import { setSubtreeVisibility } from '../../mol-plugin/behavior/static/state';
-import { VisibilityOutlinedSvg, VisibilityOffOutlinedSvg } from '../controls/icons';
+import { PluginUIComponent } from '../base.tsx';
+import type { StateTransformParameters } from '../state/common.tsx';
+import { VolumeStreaming } from '../../mol-plugin/behavior/dynamic/volume-streaming/behavior.ts';
+import { ExpandableControlRow, IconButton } from '../controls/common.tsx';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ParameterControls, type ParamOnChange } from '../controls/parameters.tsx';
+import { Slider } from '../controls/slider.tsx';
+import { Volume, type Grid } from '../../mol-model/volume.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { toPrecision } from '../../mol-util/number.ts';
+import { StateSelection, type StateObjectCell } from '../../mol-state/index.ts';
+import { setSubtreeVisibility } from '../../mol-plugin/behavior/static/state.ts';
+import { VisibilityOutlinedSvg, VisibilityOffOutlinedSvg } from '../controls/icons.tsx';
 
 const ChannelParams = {
     color: PD.Color(ColorNames.black, { description: 'Display color of the volume.' }),
@@ -49,12 +49,10 @@ class Channel extends PluginUIComponent<{
 }> {
     private ref = StateSelection.findTagInSubtree(this.plugin.state.data.tree, this.props.bCell!.transform.ref, this.props.name);
 
-    componentDidUpdate() {
-        this.ref = StateSelection.findTagInSubtree(this.plugin.state.data.tree, this.props.bCell!.transform.ref, this.props.name);
+    override componentDidUpdate() {        this.ref = StateSelection.findTagInSubtree(this.plugin.state.data.tree, this.props.bCell!.transform.ref, this.props.name);
     }
 
-    componentDidMount() {
-        this.subscribe(this.plugin.state.data.events.cell.stateUpdated, e => {
+    override componentDidMount() {        this.subscribe(this.plugin.state.data.events.cell.stateUpdated, e => {
             if (this.ref === e.ref) this.forceUpdate();
         });
     }
@@ -73,8 +71,7 @@ class Channel extends PluginUIComponent<{
         setSubtreeVisibility(state, ref, !state.cells.get(ref)!.state.isHidden);
     };
 
-    render() {
-        const props = this.props;
+    override render() {        const props = this.props;
         const { isRelative, stats } = props;
         const channel = props.channels[props.name]!;
 
@@ -236,8 +233,7 @@ export class VolumeStreamingCustomControls extends PluginUIComponent<StateTransf
         }
     };
 
-    render() {
-        if (!this.props.b) return null;
+    override render() {        if (!this.props.b) return null;
         const b = (this.props.b as VolumeStreaming).data;
 
         const isEM = b.info.kind === 'em';

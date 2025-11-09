@@ -6,24 +6,24 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { PluginStateObject as SO, PluginStateTransform } from '../../../../mol-plugin-state/objects';
-import { VolumeServerInfo, VolumeServerHeader } from './model';
-import { ParamDefinition as PD } from '../../../../mol-util/param-definition';
-import { Task } from '../../../../mol-task';
-import { PluginContext } from '../../../../mol-plugin/context';
-import { urlCombine } from '../../../../mol-util/url';
-import { Volume } from '../../../../mol-model/volume';
-import { StateAction, StateObject, StateTransformer } from '../../../../mol-state';
-import { getStreamingMethod, getIds, getContourLevel, getEmdbIds } from './util';
-import { VolumeStreaming } from './behavior';
-import { VolumeRepresentation3DHelpers } from '../../../../mol-plugin-state/transforms/representation';
-import { VolumeRepresentationRegistry } from '../../../../mol-repr/volume/registry';
-import { Theme } from '../../../../mol-theme/theme';
-import { Box3D } from '../../../../mol-math/geometry';
-import { Vec3 } from '../../../../mol-math/linear-algebra';
-import { PluginConfig } from '../../../config';
-import { Model } from '../../../../mol-model/structure';
-import { GlobalModelTransformInfo } from '../../../../mol-model/structure/model/properties/global-transform';
+import { PluginStateObject as SO, PluginStateTransform } from '../../../../mol-plugin-state/objects.ts';
+import { VolumeServerInfo, type VolumeServerHeader } from './model.ts';
+import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
+import { Task } from '../../../../mol-task/index.ts';
+import type { PluginContext } from '../../../../mol-plugin/context.ts';
+import { urlCombine } from '../../../../mol-util/url.ts';
+import { Volume } from '../../../../mol-model/volume.ts';
+import { StateAction, StateObject, StateTransformer } from '../../../../mol-state/index.ts';
+import { getStreamingMethod, getIds, getContourLevel, getEmdbIds } from './util.ts';
+import { VolumeStreaming } from './behavior.ts';
+import { VolumeRepresentation3DHelpers } from '../../../../mol-plugin-state/transforms/representation.ts';
+import { VolumeRepresentationRegistry } from '../../../../mol-repr/volume/registry.ts';
+import { Theme } from '../../../../mol-theme/theme.ts';
+import { Box3D } from '../../../../mol-math/geometry.ts';
+import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { PluginConfig } from '../../../config.ts';
+import { Model } from '../../../../mol-model/structure.ts';
+import { GlobalModelTransformInfo } from '../../../../mol-model/structure/model/properties/global-transform.ts';
 
 function addEntry(entries: InfoEntryProps[], method: VolumeServerInfo.Kind, dataId: string, emDefaultContourLevel: number) {
     entries.push({

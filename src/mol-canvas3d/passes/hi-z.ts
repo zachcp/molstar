@@ -4,23 +4,23 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { HiZRenderable, createHiZRenderable } from '../../mol-gl/compute/hi-z';
-import { isWebGL2 } from '../../mol-gl/webgl/compat';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Framebuffer } from '../../mol-gl/webgl/framebuffer';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { fasterLog2 as _fasterLog2 } from '../../mol-math/approx';
-import { Sphere3D } from '../../mol-math/geometry';
-import { Mat4, Vec4 } from '../../mol-math/linear-algebra';
-import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
-import { isDebugMode, isTimingMode } from '../../mol-util/debug';
-import { ValueCell } from '../../mol-util/value-cell';
-import { Camera } from '../camera';
-import { Viewport } from '../camera/util';
-import { DrawPass } from './draw';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { PixelPackBuffer } from '../../mol-gl/webgl/buffer';
+import { type HiZRenderable, createHiZRenderable } from '../../mol-gl/compute/hi-z.ts';
+import { isWebGL2 } from '../../mol-gl/webgl/compat.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import type { Framebuffer } from '../../mol-gl/webgl/framebuffer.ts';
+import type { Texture } from '../../mol-gl/webgl/texture.ts';
+import { fasterLog2 as _fasterLog2 } from '../../mol-math/approx.ts';
+import type { Sphere3D } from '../../mol-math/geometry.ts';
+import { Mat4, Vec4 } from '../../mol-math/linear-algebra.ts';
+import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
+import { isDebugMode, isTimingMode } from '../../mol-util/debug.ts';
+import { ValueCell } from '../../mol-util/value-cell.ts';
+import type { Camera } from '../camera.ts';
+import { Viewport } from '../camera/util.ts';
+import type { DrawPass } from './draw.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { PixelPackBuffer } from '../../mol-gl/webgl/buffer.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3transformMat4 = Vec3.transformMat4;
@@ -103,7 +103,7 @@ type LevelData = {
     offset: number
 }[]
 
-export const HiZParams = {
+export const HiZParams: PD.Params = {
     enabled: PD.Boolean(false, { description: 'Hierarchical Z-buffer occlusion culling. Only available for WebGL2.' }),
     maxFrameLag: PD.Numeric(10, { min: 1, max: 30, step: 1 }, { description: 'Maximum number of frames to wait for Z-buffer data.' }),
     minLevel: PD.Numeric(3, { min: 1, max: 10, step: 1 }),
@@ -127,10 +127,10 @@ export class HiZPass {
     private readonly vp = Vec3();
 
     private readonly levelData: LevelData = [];
-    private readonly fb: Framebuffer;
-    private readonly buf: PixelPackBuffer;
-    private readonly tex: Texture;
-    private readonly renderable: HiZRenderable;
+    private readonly fb!: Framebuffer;
+    private readonly buf!: PixelPackBuffer;
+    private readonly tex!: Texture;
+    private readonly renderable!: HiZRenderable;
     private readonly supported: boolean;
 
     private sync: WebGLSync | null = null;
@@ -140,7 +140,7 @@ export class HiZPass {
 
     readonly props: HiZProps;
 
-    getByteCount() {
+    getByteCount(): number {
         if (!this.supported) return 0;
         return (
             this.tex.getByteCount() +
@@ -149,7 +149,7 @@ export class HiZPass {
         );
     }
 
-    clear() {
+    clear(): void {
         if (!this.supported) return;
 
         const { gl } = this.webgl;

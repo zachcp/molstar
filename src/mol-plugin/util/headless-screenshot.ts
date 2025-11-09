@@ -8,22 +8,23 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import fs from 'fs';
-import path from 'path';
-import { type BufferRet as JpegBufferRet } from 'jpeg-js'; // Only import type here, the actual import must be provided by the caller
-import { type PNG } from 'pngjs'; // Only import type here, the actual import must be provided by the caller
+import fs from 'node:fs';
+import path from 'node:path';
+import type { BufferRet as JpegBufferRet } from 'jpeg-js'; // Only import type here, the actual import must be provided by the caller
+import type { PNG } from 'pngjs'; // Only import type here, the actual import must be provided by the caller
 
-import { Canvas3D, Canvas3DContext, Canvas3DProps, DefaultCanvas3DParams } from '../../mol-canvas3d/canvas3d';
-import { ImagePass, ImageProps } from '../../mol-canvas3d/passes/image';
-import { Passes } from '../../mol-canvas3d/passes/passes';
-import { PostprocessingParams, PostprocessingProps } from '../../mol-canvas3d/passes/postprocessing';
-import { createContext } from '../../mol-gl/webgl/context';
-import { AssetManager } from '../../mol-util/assets';
-import { ColorNames } from '../../mol-util/color/names';
-import { PixelData } from '../../mol-util/image';
-import { InputObserver } from '../../mol-util/input/input-observer';
-import { ParamDefinition } from '../../mol-util/param-definition';
-import { RuntimeContext } from '../../mol-task';
+import { Canvas3D, Canvas3DContext, type Canvas3DProps, DefaultCanvas3DParams } from '../../mol-canvas3d/canvas3d.ts';
+import type { ImagePass, ImageProps } from '../../mol-canvas3d/passes/image.ts';
+import { Passes } from '../../mol-canvas3d/passes/passes.ts';
+import { PostprocessingParams, type PostprocessingProps } from '../../mol-canvas3d/passes/postprocessing.ts';
+import { createContext } from '../../mol-gl/webgl/context.ts';
+import { AssetManager } from '../../mol-util/assets.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { PixelData } from '../../mol-util/image.ts';
+import { InputObserver } from '../../mol-util/input/input-observer.ts';
+import { ParamDefinition } from '../../mol-util/param-definition.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
+import { Buffer } from "node:buffer";
 
 export interface ExternalModules {
     'gl': typeof import('gl'),

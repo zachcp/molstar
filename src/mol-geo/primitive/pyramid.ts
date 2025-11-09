@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { Primitive, PrimitiveBuilder, createPrimitive } from './primitive';
-import { polygon } from './polygon';
-import { Cage } from './cage';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { type Primitive, PrimitiveBuilder, createPrimitive } from './primitive.ts';
+import { polygon } from './polygon.ts';
+import type { Cage } from './cage.ts';
 
 const on = Vec3.create(0, 0, -0.5), op = Vec3.create(0, 0, 0.5);
 const a = Vec3(), b = Vec3(), c = Vec3(), d = Vec3();

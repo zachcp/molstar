@@ -5,72 +5,82 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ElementIndex } from '../../model';
-import { Unit } from '../unit';
-import { Vec3 } from '../../../../mol-math/linear-algebra';
-import { Structure } from '../structure';
+import type { ElementIndex, ResidueIndex, ChainIndex } from "../../model.ts";
+import type { Unit } from "../unit.ts";
+import { Vec3 } from "../../../../mol-math/linear-algebra.ts";
+import type { Structure } from "../structure.ts";
 
 export { Location };
 
 interface Location<U = Unit> {
-    readonly kind: 'element-location',
-    structure: Structure,
-    unit: U,
-    /** Index into element (atomic/coarse) properties of unit.model */
-    element: ElementIndex
+  readonly kind: "element-location";
+  structure: Structure;
+  unit: U;
+  /** Index into element (atomic/coarse) properties of unit.model */
+  element: ElementIndex;
 }
 
 namespace Location {
-    export function create<U extends Unit>(structure?: Structure, unit?: U, element?: ElementIndex): Location<U> {
-        return {
-            kind: 'element-location',
-            structure: structure as any,
-            unit: unit as any,
-            element: element || (0 as ElementIndex)
-        };
-    }
+  export function create<U extends Unit>(
+    structure?: Structure,
+    unit?: U,
+    element?: ElementIndex,
+  ): Location<U> {
+    return {
+      kind: "element-location",
+      structure: structure as any,
+      unit: unit as any,
+      element: element || (0 as ElementIndex),
+    };
+  }
 
-    export function clone<U extends Unit>(l: Location<U>): Location<U> {
-        return create(l.structure, l.unit, l.element);
-    }
+  export function clone<U extends Unit>(l: Location<U>): Location<U> {
+    return create(l.structure, l.unit, l.element);
+  }
 
-    export function set(a: Location, structure?: Structure, unit?: Unit, element?: ElementIndex): Location {
-        if (structure) a.structure = structure;
-        if (unit) a.unit = unit;
-        if (element !== undefined) a.element = element;
-        return a;
-    }
+  export function set(
+    a: Location,
+    structure?: Structure,
+    unit?: Unit,
+    element?: ElementIndex,
+  ): Location {
+    if (structure) a.structure = structure;
+    if (unit) a.unit = unit;
+    if (element !== undefined) a.element = element;
+    return a;
+  }
 
-    export function copy(out: Location, a: Location): Location {
-        out.unit = a.unit;
-        out.element = a.element;
-        return out;
-    }
+  export function copy(out: Location, a: Location): Location {
+    out.unit = a.unit;
+    out.element = a.element;
+    return out;
+  }
 
-    export function is(x: any): x is Location {
-        return !!x && x.kind === 'element-location';
-    }
+  export function is(x: any): x is Location {
+    return !!x && x.kind === "element-location";
+  }
 
-    export function areEqual(a: Location, b: Location) {
-        return a.unit === b.unit && a.element === b.element;
-    }
+  export function areEqual(a: Location, b: Location): boolean {
+    return a.unit === b.unit && a.element === b.element;
+  }
 
-    const pA = Vec3(), pB = Vec3();
-    export function distance(a: Location, b: Location) {
-        a.unit.conformation.position(a.element, pA);
-        b.unit.conformation.position(b.element, pB);
-        return Vec3.distance(pA, pB);
-    }
+  const pA = Vec3(),
+    pB = Vec3();
+  export function distance(a: Location, b: Location): number {
+    a.unit.conformation.position(a.element, pA);
+    b.unit.conformation.position(b.element, pB);
+    return Vec3.distance(pA, pB);
+  }
 
-    export function position(out: Vec3, l: Location): Vec3 {
-        return l.unit.conformation.position(l.element, out);
-    }
+  export function position(out: Vec3, l: Location): Vec3 {
+    return l.unit.conformation.position(l.element, out);
+  }
 
-    export function residueIndex(l: Location) {
-        return l.unit.model.atomicHierarchy.residueAtomSegments.index[l.element];
-    }
+  export function residueIndex(l: Location): ResidueIndex {
+    return l.unit.model.atomicHierarchy.residueAtomSegments.index[l.element];
+  }
 
-    export function chainIndex(l: Location) {
-        return l.unit.model.atomicHierarchy.chainAtomSegments.index[l.element];
-    }
+  export function chainIndex(l: Location): ChainIndex {
+    return l.unit.model.atomicHierarchy.chainAtomSegments.index[l.element];
+  }
 }

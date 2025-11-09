@@ -5,25 +5,25 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { VisualContext } from '../../visual';
-import { Structure, StructureElement, Bond, Unit } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { BitFlags, arrayEqual } from '../../../mol-util';
-import { createLinkCylinderImpostors, createLinkCylinderMesh, LinkBuilderProps, LinkStyle } from './util/link';
-import { ComplexMeshParams, ComplexVisual, ComplexMeshVisual, ComplexCylindersParams, ComplexCylindersVisual } from '../complex-visual';
-import { VisualUpdateState } from '../../util';
-import { BondType } from '../../../mol-model/structure/model/types';
-import { BondCylinderParams, BondIterator, getInterBondLoci, eachInterBond, makeInterBondIgnoreTest, hasStructureVisibleBonds } from './util/bond';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { Cylinders } from '../../../mol-geo/geometry/cylinders/cylinders';
-import { WebGLContext } from '../../../mol-gl/webgl/context';
-import { SortedArray } from '../../../mol-data/int/sorted-array';
-import { SizeTheme } from '../../../mol-theme/size';
-import { EmptyLocationIterator } from '../../../mol-geo/util/location-iterator';
-import { checkCylinderImpostorSupport } from './util/common';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { VisualContext } from '../../visual.ts';
+import { type Structure, StructureElement, Bond, type Unit } from '../../../mol-model/structure.ts';
+import type { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { BitFlags, arrayEqual } from '../../../mol-util/index.ts';
+import { createLinkCylinderImpostors, createLinkCylinderMesh, type LinkBuilderProps, LinkStyle } from './util/link.ts';
+import { ComplexMeshParams, type ComplexVisual, ComplexMeshVisual, ComplexCylindersParams, ComplexCylindersVisual } from '../complex-visual.ts';
+import type { VisualUpdateState } from '../../util.ts';
+import { BondType } from '../../../mol-model/structure/model/types.ts';
+import { BondCylinderParams, BondIterator, getInterBondLoci, eachInterBond, makeInterBondIgnoreTest, hasStructureVisibleBonds } from './util/bond.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { Cylinders } from '../../../mol-geo/geometry/cylinders/cylinders.ts';
+import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
+import { SortedArray } from '../../../mol-data/int/sorted-array.ts';
+import { SizeTheme } from '../../../mol-theme/size.ts';
+import { EmptyLocationIterator } from '../../../mol-geo/util/location-iterator.ts';
+import { checkCylinderImpostorSupport } from './util/common.ts';
 
 const tmpRefPosBondIt = new Bond.ElementBondIterator();
 function setRefPosition(pos: Vec3, structure: Structure, unit: Unit.Atomic, index: StructureElement.UnitIndex) {

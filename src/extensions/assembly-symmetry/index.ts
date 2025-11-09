@@ -4,4 +4,4 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-export { AssemblySymmetry, AssemblySymmetryConfig } from './behavior';
+export { AssemblySymmetry, AssemblySymmetryConfig } from './behavior.ts';

@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task } from '../../mol-task';
-import { TrrFile } from '../../mol-io/reader/trr/parser';
-import { Coordinates, Frame, Time } from '../../mol-model/structure/coordinates';
-import { Cell } from '../../mol-math/geometry/spacegroup/cell';
-import { Vec3 } from '../../mol-math/linear-algebra';
+import { Task } from '../../mol-task/index.ts';
+import type { TrrFile } from '../../mol-io/reader/trr/parser.ts';
+import { Coordinates, type Frame, Time } from '../../mol-model/structure/coordinates.ts';
+import { Cell } from '../../mol-math/geometry/spacegroup/cell.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
 
 export function coordinatesFromTrr(file: TrrFile): Task<Coordinates> {
     return Task.create('Parse TRR', async ctx => {

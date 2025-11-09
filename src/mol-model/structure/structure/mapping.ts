@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { OrderedSet } from '../../../mol-data/int/ordered-set';
-import { ElementIndex } from '../model/indexing';
-import { Structure } from './structure';
-import { Unit } from './unit';
+import { OrderedSet } from '../../../mol-data/int/ordered-set.ts';
+import type { ElementIndex } from '../model/indexing.ts';
+import type { Structure } from './structure.ts';
+import { Unit } from './unit.ts';
 
 /** Serial index of an element in the structure across all units */
 export type SerialIndex = { readonly '@type': 'serial-index' } & number

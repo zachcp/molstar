@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Unit, StructureElement, ElementIndex, ResidueIndex, Structure } from '../../../../../mol-model/structure';
-import { Iterator } from '../../../../../mol-data/iterator';
-import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges';
-import { getGapRanges } from '../polymer';
+import { Unit, StructureElement, type ElementIndex, type ResidueIndex, type Structure } from '../../../../../mol-model/structure.ts';
+import type { Iterator } from '../../../../../mol-data/iterator.ts';
+import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges.ts';
+import { getGapRanges } from '../polymer.ts';
 
 /** Iterates over gaps, i.e. the stem residues/coarse elements adjacent to gaps */
 export function PolymerGapIterator(structure: Structure, unit: Unit): Iterator<PolymerGapPair> {

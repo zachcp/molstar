@@ -7,25 +7,25 @@
  */
 
 import * as React from 'react';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { type BehaviorSubject, Subject } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
-import { OrderedSet } from '../../mol-data/int';
-import { ColorTypeLocation } from '../../mol-geo/geometry/color-data';
-import { EveryLoci } from '../../mol-model/loci';
-import { StructureElement, StructureProperties, Unit } from '../../mol-model/structure';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginContext } from '../../mol-plugin/context';
-import { Representation } from '../../mol-repr/representation';
-import { Task } from '../../mol-task';
-import { ColorTheme, LocationColor } from '../../mol-theme/color';
-import { Color } from '../../mol-util/color';
-import { ButtonsType, getButton, getButtons, getModifiers, ModifiersKeys } from '../../mol-util/input/input-observer';
-import { MarkerAction } from '../../mol-util/marker-action';
-import { memoizeLatest } from '../../mol-util/memoize';
-import { PluginUIComponent } from '../base';
-import { SequenceWrapper } from './wrapper';
-import { ThemeDataContext } from '../../mol-theme/theme';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { OrderedSet } from '../../mol-data/int.ts';
+import type { ColorTypeLocation } from '../../mol-geo/geometry/color-data.ts';
+import { EveryLoci } from '../../mol-model/loci.ts';
+import { StructureElement, StructureProperties, Unit } from '../../mol-model/structure.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { Representation } from '../../mol-repr/representation.ts';
+import { Task } from '../../mol-task/index.ts';
+import type { ColorTheme, LocationColor } from '../../mol-theme/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { ButtonsType, getButton, getButtons, getModifiers, type ModifiersKeys } from '../../mol-util/input/input-observer.ts';
+import type { MarkerAction } from '../../mol-util/marker-action.ts';
+import { memoizeLatest } from '../../mol-util/memoize.ts';
+import { PluginUIComponent } from '../base.tsx';
+import type { SequenceWrapper } from './wrapper.ts';
+import type { ThemeDataContext } from '../../mol-theme/theme.ts';
+import type { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
 
 type SequenceProps = {
@@ -79,8 +79,7 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         return 1;
     }
 
-    componentDidMount() {
-        this.plugin.managers.interactivity.lociHighlights.addProvider(this.lociHighlightProvider);
+    override componentDidMount() {        this.plugin.managers.interactivity.lociHighlights.addProvider(this.lociHighlightProvider);
         this.plugin.managers.interactivity.lociSelects.addProvider(this.lociSelectionProvider);
 
         this.subscribe(this.highlightQueue.pipe(throttleTime(3 * 16.666, void 0, { leading: true, trailing: true })), (e) => {
@@ -124,8 +123,7 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         }
     }
 
-    componentWillUnmount() {
-        super.componentWillUnmount();
+    override componentWillUnmount() {        super.componentWillUnmount();
 
         this.plugin.managers.interactivity.lociHighlights.removeProvider(this.lociHighlightProvider);
         this.plugin.managers.interactivity.lociSelects.removeProvider(this.lociSelectionProvider);
@@ -347,8 +345,7 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         this.highlightQueue.next({ seqIdx: -1, buttons, button, modifiers });
     };
 
-    render() {
-        const sw = this.props.sequenceWrapper;
+    override render() {        const sw = this.props.sequenceWrapper;
         const elems: JSX.Element[] = [];
 
         if (this.customColorThemeWrapper) {

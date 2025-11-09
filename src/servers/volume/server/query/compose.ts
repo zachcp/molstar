@@ -6,10 +6,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as Data from './data-model';
-import * as Box from '../algebra/box';
-import * as Coords from '../algebra/coordinate';
-import { createTypedArrayBufferContext, getElementByteSize, readTypedArray } from '../../../../mol-io/common/typed-array';
+import type * as Data from './data-model.ts';
+import * as Box from '../algebra/box.ts';
+import * as Coords from '../algebra/coordinate.ts';
+import { createTypedArrayBufferContext, getElementByteSize, readTypedArray } from '../../../../mol-io/common/typed-array.ts';
 
 export async function compose(query: Data.QueryContext.Data) {
     for (const block of query.samplingInfo.blocks) {

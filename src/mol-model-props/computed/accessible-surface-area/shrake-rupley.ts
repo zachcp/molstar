@@ -5,15 +5,15 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, RuntimeContext } from '../../../mol-task';
-// import { BitFlags } from '../../../mol-util';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { Structure, StructureElement, StructureProperties } from '../../../mol-model/structure';
-import { assignRadiusForHeavyAtoms } from './shrake-rupley/radii';
-import { ShrakeRupleyContext, VdWLookup, MaxAsa, DefaultMaxAsa } from './shrake-rupley/common';
-import { computeArea } from './shrake-rupley/area';
-import { SortedArray } from '../../../mol-data/int';
+import { Task, type RuntimeContext } from '../../../mol-task/index.ts';
+// import { BitFlags } from '../../../mol-util/index.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { type Structure, type StructureElement, StructureProperties } from '../../../mol-model/structure.ts';
+import { assignRadiusForHeavyAtoms } from './shrake-rupley/radii.ts';
+import { type ShrakeRupleyContext, VdWLookup, MaxAsa, DefaultMaxAsa } from './shrake-rupley/common.ts';
+import { computeArea } from './shrake-rupley/area.ts';
+import { SortedArray } from '../../../mol-data/int.ts';
 
 export const ShrakeRupleyComputationParams = {
     numberOfSpherePoints: PD.Numeric(92, { min: 12, max: 360, step: 1 }, { description: 'Number of sphere points to sample per atom: 92 (original paper), 960 (BioJava), 3000 (EPPIC) - see Shrake A, Rupley JA: Environment and exposure to solvent of protein atoms. Lysozyme and insulin. J Mol Biol 1973.' }),

@@ -5,45 +5,76 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { BondType } from '../../../model/types';
-import { IntAdjacencyGraph } from '../../../../../mol-math/graph';
-import { Unit } from '../../unit';
-import { StructureElement } from '../../element';
-import { Bond } from '../bonds';
-import { InterUnitGraph } from '../../../../../mol-math/graph/inter-unit-graph';
+import type { BondType } from "../../../model/types.ts";
+import { IntAdjacencyGraph } from "../../../../../mol-math/graph.ts";
+import { Unit } from "../../unit.ts";
+import type { StructureElement } from "../../element.ts";
+import type { Bond } from "../bonds.ts";
+import { InterUnitGraph } from "../../../../../mol-math/graph/inter-unit-graph.ts";
 
 export type IntraUnitBondProps = {
-    /** Can remap even with `dynamicBonds` on, e.g., for water molecules */
-    readonly canRemap?: boolean
-    /** Can be cached in `ElementSetIntraBondCache` */
-    readonly cacheable?: boolean
-}
+  /** Can remap even with `dynamicBonds` on, e.g., for water molecules */
+  readonly canRemap?: boolean;
+  /** Can be cached in `ElementSetIntraBondCache` */
+  readonly cacheable?: boolean;
+};
 
-export type IntraUnitBonds = IntAdjacencyGraph<StructureElement.UnitIndex, {
-    readonly order: ArrayLike<number>,
-    readonly flags: ArrayLike<BondType.Flag>
-    readonly key: ArrayLike<number>,
-}, IntraUnitBondProps>
+export type IntraUnitBonds = IntAdjacencyGraph<
+  StructureElement.UnitIndex,
+  {
+    readonly order: ArrayLike<number>;
+    readonly flags: ArrayLike<BondType.Flag>;
+    readonly key: ArrayLike<number>;
+  },
+  IntraUnitBondProps
+>;
 
 export namespace IntraUnitBonds {
-    export const Empty: IntraUnitBonds = IntAdjacencyGraph.create([], [], [], 0, { flags: [], order: [], key: [] });
+  export const Empty: IntraUnitBonds = IntAdjacencyGraph.create([], [], [], 0, {
+    flags: [],
+    order: [],
+    key: [],
+  });
 }
 
-export type InterUnitEdgeProps = { readonly order: number, readonly flag: BondType.Flag, readonly key: number }
+export type InterUnitEdgeProps = {
+  readonly order: number;
+  readonly flag: BondType.Flag;
+  readonly key: number;
+};
 
-export class InterUnitBonds extends InterUnitGraph<number, StructureElement.UnitIndex, InterUnitEdgeProps> {
-    /** Get inter-unit bond given a bond-location */
-    getBondFromLocation(l: Bond.Location) {
-        return Unit.isAtomic(l.aUnit) && Unit.isAtomic(l.bUnit) ? this.getEdge(l.aIndex, l.aUnit.id, l.bIndex, l.bUnit.id) : undefined;
-    }
+export class InterUnitBonds extends InterUnitGraph<
+  number,
+  StructureElement.UnitIndex,
+  InterUnitEdgeProps
+> {
+  /** Get inter-unit bond given a bond-location */
+  getBondFromLocation(
+    l: Bond.Location,
+  ):
+    | InterUnitGraph.EdgeInfo<StructureElement.UnitIndex, InterUnitEdgeProps>
+    | undefined {
+    return Unit.isAtomic(l.aUnit) && Unit.isAtomic(l.bUnit)
+      ? this.getEdge(l.aIndex, l.aUnit.id, l.bIndex, l.bUnit.id)
+      : undefined;
+  }
 
-    /** Get inter-unit bond index given a bond-location */
-    getBondIndexFromLocation(l: Bond.Location) {
-        return Unit.isAtomic(l.aUnit) && Unit.isAtomic(l.bUnit) ? this.getEdgeIndex(l.aIndex, l.aUnit.id, l.bIndex, l.bUnit.id) : -1;
-    }
+  /** Get inter-unit bond index given a bond-location */
+  getBondIndexFromLocation(l: Bond.Location): number {
+    return Unit.isAtomic(l.aUnit) && Unit.isAtomic(l.bUnit)
+      ? this.getEdgeIndex(l.aIndex, l.aUnit.id, l.bIndex, l.bUnit.id)
+      : -1;
+  }
 }
 
 export namespace InterUnitBonds {
-    export class UnitPairBonds extends InterUnitGraph.UnitPairEdges<number, StructureElement.UnitIndex, InterUnitEdgeProps> {}
-    export type BondInfo = InterUnitGraph.EdgeInfo<StructureElement.UnitIndex, InterUnitEdgeProps>
+  export class UnitPairBonds extends InterUnitGraph.UnitPairEdges<
+    number,
+    StructureElement.UnitIndex,
+    InterUnitEdgeProps
+  > {}
+  export type BondInfo = InterUnitGraph.EdgeInfo<
+    StructureElement.UnitIndex,
+    InterUnitEdgeProps
+  >;
 }

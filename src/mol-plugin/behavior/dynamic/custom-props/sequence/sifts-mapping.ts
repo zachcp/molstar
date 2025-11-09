@@ -4,13 +4,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { OrderedSet } from '../../../../../mol-data/int';
-import { SIFTSMapping as BestDatabaseSequenceMappingProp } from '../../../../../mol-model-props/sequence/sifts-mapping';
-import { SIFTSMappingColorThemeProvider } from '../../../../../mol-model-props/sequence/themes/sifts-mapping';
-import { Loci } from '../../../../../mol-model/loci';
-import { StructureElement } from '../../../../../mol-model/structure';
-import { ParamDefinition as PD } from '../../../../../mol-util/param-definition';
-import { PluginBehavior } from '../../../behavior';
+import { OrderedSet } from '../../../../../mol-data/int.ts';
+import { SIFTSMapping as BestDatabaseSequenceMappingProp } from '../../../../../mol-model-props/sequence/sifts-mapping.ts';
+import { SIFTSMappingColorThemeProvider } from '../../../../../mol-model-props/sequence/themes/sifts-mapping.ts';
+import type { Loci } from '../../../../../mol-model/loci.ts';
+import { StructureElement } from '../../../../../mol-model/structure.ts';
+import { ParamDefinition as PD } from '../../../../../mol-util/param-definition.ts';
+import { PluginBehavior } from '../../../behavior.ts';
 
 export const SIFTSMapping = PluginBehavior.create<{ autoAttach: boolean, showTooltip: boolean }>({
     name: 'sifts-mapping-prop',
@@ -26,8 +26,7 @@ export const SIFTSMapping = PluginBehavior.create<{ autoAttach: boolean, showToo
             }
         };
 
-        update(p: { autoAttach: boolean, showTooltip: boolean }) {
-            const updated = (
+        override update(p: { autoAttach: boolean, showTooltip: boolean }) {            const updated = (
                 this.params.autoAttach !== p.autoAttach ||
                 this.params.showTooltip !== p.showTooltip
             );

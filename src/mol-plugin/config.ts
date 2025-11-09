@@ -5,14 +5,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure, Model } from '../mol-model/structure';
-import { PluginContext } from './context';
-import { PdbDownloadProvider } from '../mol-plugin-state/actions/structure';
-import { EmdbDownloadProvider } from '../mol-plugin-state/actions/volume';
-import { StructureRepresentationPresetProvider } from '../mol-plugin-state/builder/structure/representation-preset';
-import { PluginFeatureDetection } from './features';
-import { SaccharideCompIdMapType } from '../mol-model/structure/structure/carbohydrates/constants';
-import { BackgroundProps } from '../mol-canvas3d/passes/background';
+import { Structure, Model } from '../mol-model/structure.ts';
+import type { PluginContext } from './context.ts';
+import type { PdbDownloadProvider } from '../mol-plugin-state/actions/structure.ts';
+import type { EmdbDownloadProvider } from '../mol-plugin-state/actions/volume.ts';
+import type { StructureRepresentationPresetProvider } from '../mol-plugin-state/builder/structure/representation-preset.ts';
+import { PluginFeatureDetection } from './features.ts';
+import type { SaccharideCompIdMapType } from '../mol-model/structure/structure/carbohydrates/constants.ts';
+import type { BackgroundProps } from '../mol-canvas3d/passes/background.ts';
 
 export class PluginConfigItem<T = any> {
     toString() { return this.key; }
@@ -20,7 +20,7 @@ export class PluginConfigItem<T = any> {
     constructor(public key: string, public defaultValue?: T) { }
 }
 
-function item<T>(key: string, defaultValue?: T) { return new PluginConfigItem(key, defaultValue); }
+function item<T>(key: string, defaultValue?: T): PluginConfigItem<T> { return new PluginConfigItem(key, defaultValue); }
 
 export const PluginConfig = {
     item,
@@ -79,7 +79,7 @@ export const PluginConfig = {
 };
 
 export class PluginConfigManager {
-    private _config = new Map<PluginConfigItem<any>, unknown>();
+    private _config: Map<PluginConfigItem<any>, unknown> = new Map<PluginConfigItem<any>, unknown>();
 
     get<T>(key: PluginConfigItem<T>) {
         if (!this._config.has(key)) return key.defaultValue;

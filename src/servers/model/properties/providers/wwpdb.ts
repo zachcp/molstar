@@ -4,15 +4,15 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as fs from 'fs';
-import * as util from 'util';
-import { AttachModelProperty } from '../../property-provider';
-import { CIF } from '../../../../mol-io/reader/cif';
-import { getParam } from '../../../common/util';
-import { mmCIF_Database, mmCIF_Schema } from '../../../../mol-io/reader/cif/schema/mmcif';
-import { ComponentBond } from '../../../../mol-model-formats/structure/property/bonds/chem_comp';
-import { ComponentAtom } from '../../../../mol-model-formats/structure/property/atoms/chem_comp';
-import { CCD_Database, CCD_Schema } from '../../../../mol-io/reader/cif/schema/ccd';
+import * as fs from 'node:fs';
+import * as util from 'node:util';
+import type { AttachModelProperty } from '../../property-provider.ts';
+import { CIF } from '../../../../mol-io/reader/cif.ts';
+import { getParam } from '../../../common/util.ts';
+import { type mmCIF_Database, mmCIF_Schema } from '../../../../mol-io/reader/cif/schema/mmcif.ts';
+import { ComponentBond } from '../../../../mol-model-formats/structure/property/bonds/chem_comp.ts';
+import { ComponentAtom } from '../../../../mol-model-formats/structure/property/atoms/chem_comp.ts';
+import { type CCD_Database, CCD_Schema } from '../../../../mol-io/reader/cif/schema/ccd.ts';
 
 require('util.promisify').shim();
 const readFile = util.promisify(fs.readFile);

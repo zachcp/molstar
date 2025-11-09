@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as DB from './db';
-import * as Int from './int';
-import { Iterator } from './iterator';
-import * as Util from './util';
-import * as Generic from './generic';
+import * as DB from './db.ts';
+import * as Int from './int.ts';
+import { Iterator } from './iterator.ts';
+import * as Util from './util.ts';
+import * as Generic from './generic.ts';
 
 export { DB, Int, Iterator, Util, Generic };

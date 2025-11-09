@@ -5,21 +5,21 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { InteractionsRepresentationProvider } from '../../../../mol-model-props/computed/representations/interactions';
-import { InteractionTypeColorThemeProvider } from '../../../../mol-model-props/computed/themes/interaction-type';
-import { StructureElement } from '../../../../mol-model/structure';
-import { createStructureRepresentationParams } from '../../../../mol-plugin-state/helpers/structure-representation-params';
-import { PluginStateObject } from '../../../../mol-plugin-state/objects';
-import { StateTransforms } from '../../../../mol-plugin-state/transforms';
-import { PluginBehavior } from '../../../behavior';
-import { MolScriptBuilder as MS } from '../../../../mol-script/language/builder';
-import { StateObjectCell, StateSelection, StateTransform } from '../../../../mol-state';
-import { SizeTheme } from '../../../../mol-theme/size';
-import { ParamDefinition as PD } from '../../../../mol-util/param-definition';
-import { PluginCommands } from '../../../commands';
-import { PluginContext } from '../../../context';
-import { Material } from '../../../../mol-util/material';
-import { Clip } from '../../../../mol-util/clip';
+import { InteractionsRepresentationProvider } from '../../../../mol-model-props/computed/representations/interactions.ts';
+import { InteractionTypeColorThemeProvider } from '../../../../mol-model-props/computed/themes/interaction-type.ts';
+import { StructureElement } from '../../../../mol-model/structure.ts';
+import { createStructureRepresentationParams } from '../../../../mol-plugin-state/helpers/structure-representation-params.ts';
+import type { PluginStateObject } from '../../../../mol-plugin-state/objects.ts';
+import { StateTransforms } from '../../../../mol-plugin-state/transforms.ts';
+import { PluginBehavior } from '../../../behavior.ts';
+import { MolScriptBuilder as MS } from '../../../../mol-script/language/builder.ts';
+import { type StateObjectCell, StateSelection, StateTransform } from '../../../../mol-state/index.ts';
+import { SizeTheme } from '../../../../mol-theme/size.ts';
+import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
+import { PluginCommands } from '../../../commands.ts';
+import type { PluginContext } from '../../../context.ts';
+import { Material } from '../../../../mol-util/material.ts';
+import { Clip } from '../../../../mol-util/clip.ts';
 
 const StructureFocusRepresentationParams = (plugin: PluginContext) => {
     const reprParams = StateTransforms.Representation.StructureRepresentation3D.definition.params!(void 0, plugin) as PD.Params;

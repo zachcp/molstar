@@ -6,12 +6,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as Format from './format';
-import * as File from '../common/file';
-import * as Data from './data-model';
-import * as Sampling from './sampling';
-import * as DataFormat from '../common/data-format';
-import { FileHandle } from '../../../mol-io/common/file-handle';
+import * as Format from './format.ts';
+import * as File from '../common/file.ts';
+import * as Data from './data-model.ts';
+import * as Sampling from './sampling.ts';
+import * as DataFormat from '../common/data-format.ts';
+import type { FileHandle } from '../../../mol-io/common/file-handle.ts';
+import process from "node:process";
+import { Buffer } from "node:buffer";
 
 export async function pack(input: { name: string, filename: string }[], blockSizeInMB: number, isPeriodic: boolean, outputFilename: string, format: Format.Type) {
     try {

@@ -5,7 +5,7 @@
  */
 
 import * as B from 'benchmark';
-import { arrayExtend, range, sortIfNeeded } from '../mol-util/array';
+import { arrayExtend, range, sortIfNeeded } from '../mol-util/array.ts';
 
 
 function randomFloats(n: number) {

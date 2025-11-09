@@ -6,8 +6,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task } from '../../../mol-task';
-import { ReaderResult as Result } from '../result';
+import { Task } from '../../../mol-task/index.ts';
+import { ReaderResult as Result } from '../result.ts';
 
 export interface TrrFile {
     frames: { count: number, x: Float32Array, y: Float32Array, z: Float32Array }[],

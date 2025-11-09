@@ -5,6 +5,7 @@
  */
 
 import * as argparse from 'argparse';
+import process from "node:process";
 
 export interface Config {
     working_folder: string,

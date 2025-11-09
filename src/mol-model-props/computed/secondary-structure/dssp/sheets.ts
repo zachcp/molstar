@@ -5,7 +5,7 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { DSSPContext, DSSPType, BridgeType } from './common';
+import { type DSSPContext, DSSPType, BridgeType } from './common.ts';
 
 function isHelixType(f: DSSPType) {
     return DSSPType.is(f, DSSPType.Flag.G) || DSSPType.is(f, DSSPType.Flag.H) || DSSPType.is(f, DSSPType.Flag.I);

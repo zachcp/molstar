@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec2, Vec3 } from '../../mol-math/linear-algebra';
-import { InputObserver } from '../../mol-util/input/input-observer';
-import { Camera } from '../camera';
-import { Viewport } from '../camera/util';
+import { Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
+import type { InputObserver } from '../../mol-util/input/input-observer.ts';
+import type { Camera } from '../camera.ts';
+import type { Viewport } from '../camera/util.ts';
 
 export namespace ObjectControls {
     function mouseOnScreen(out: Vec2, page: Vec2, viewport: Viewport) {
@@ -32,7 +32,7 @@ export namespace ObjectControls {
      * `pageStart` and `pageEnd` are 2d window coordinates;
      * `ref` defines the plane depth, if not given `camera.target` is used
      */
-    export function panDirection(out: Vec3, pageStart: Vec2, pageEnd: Vec2, input: InputObserver, camera: Camera, ref?: Vec3) {
+    export function panDirection(out: Vec3, pageStart: Vec2, pageEnd: Vec2, input: InputObserver, camera: Camera, ref?: Vec3): Vec3 {
         mouseOnScreen(panStart, pageStart, camera.viewport);
         mouseOnScreen(panEnd, pageEnd, camera.viewport);
         Vec2.sub(panMouseChange, Vec2.copy(panMouseChange, panEnd), panStart);

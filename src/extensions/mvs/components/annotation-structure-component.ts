@@ -4,15 +4,15 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Structure, StructureSelection } from '../../../mol-model/structure';
-import { StructureQueryHelper } from '../../../mol-plugin-state/helpers/structure-query';
-import { PluginStateObject as SO } from '../../../mol-plugin-state/objects';
-import { StateObject, StateTransformer } from '../../../mol-state';
-import { deepEqual } from '../../../mol-util';
-import { omitObjectKeys } from '../../../mol-util/object';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { rowsToExpression } from '../helpers/selections';
-import { getMVSAnnotationForStructure } from './annotation-prop';
+import { Structure, StructureSelection } from '../../../mol-model/structure.ts';
+import { StructureQueryHelper } from '../../../mol-plugin-state/helpers/structure-query.ts';
+import { PluginStateObject as SO } from '../../../mol-plugin-state/objects.ts';
+import { StateObject, StateTransformer } from '../../../mol-state/index.ts';
+import { deepEqual } from '../../../mol-util/index.ts';
+import { omitObjectKeys } from '../../../mol-util/object.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { rowsToExpression } from '../helpers/selections.ts';
+import { getMVSAnnotationForStructure } from './annotation-prop.ts';
 
 
 /** Parameter definition for `MVSAnnotationStructureComponent` transformer */

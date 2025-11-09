@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4, Mat3 } from '../../../mol-math/linear-algebra';
-import { ChunkedArray } from '../../../mol-data/util';
-import { Mesh } from './mesh';
-import { Primitive } from '../../primitive/primitive';
-import { Cage } from '../../../mol-geo/primitive/cage';
-import { addSphere } from './builder/sphere';
-import { addCylinder } from './builder/cylinder';
+import { Vec3, type Mat4, Mat3 } from '../../../mol-math/linear-algebra.ts';
+import { ChunkedArray } from '../../../mol-data/util.ts';
+import { Mesh } from './mesh.ts';
+import type { Primitive } from '../../primitive/primitive.ts';
+import type { Cage } from '../../../mol-geo/primitive/cage.ts';
+import { addSphere } from './builder/sphere.ts';
+import { addCylinder } from './builder/cylinder.ts';
 
 const tmpV = Vec3();
 const tmpMat3 = Mat3();

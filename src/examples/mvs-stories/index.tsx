@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { download } from '../../mol-util/download';
+import { download } from '../../mol-util/download.ts';
 import { BehaviorSubject } from 'rxjs';
-import { Stories } from './stories';
-import { useBehavior } from '../../mol-plugin-ui/hooks/use-behavior';
+import { Stories } from './stories.ts';
+import { useBehavior } from '../../mol-plugin-ui/hooks/use-behavior.ts';
 import { createRoot } from 'react-dom/client';
-import { getMVSStoriesContext } from '../../apps/mvs-stories/context';
+import { getMVSStoriesContext } from '../../apps/mvs-stories/context.ts';
 import '../../apps/mvs-stories/elements';
 
 import './favicon.ico';
@@ -67,7 +67,7 @@ function init() {
         }
     });
 
-    const urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(globalThis.location.search);
     const storyUrl = urlParams.get('story-url');
     const dataFormat = urlParams.get('data-format') as 'mvsx' | 'mvsj' | null;
     const storyId = urlParams.get('story');

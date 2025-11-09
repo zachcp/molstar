@@ -4,24 +4,22 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as React from 'react';
+import type * as React from 'react';
 import { debounceTime, filter } from 'rxjs/operators';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { State, StateAction, StateObject, StateObjectCell, StateTransform } from '../../mol-state';
-import { StateTreeSpine } from '../../mol-state/tree/spine';
-import { PluginUIComponent, _Props, _State } from '../base';
-import { ActionMenu } from '../controls/action-menu';
-import { Button, ControlGroup, IconButton } from '../controls/common';
-import { Icon, HomeOutlinedSvg, ArrowRightSvg, ArrowDropDownSvg, DeleteOutlinedSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, CloseSvg } from '../controls/icons';
-import { ApplyActionControl } from './apply-action';
-import { UpdateTransformControl } from './update-transform';
+import type { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { type State, type StateAction, StateObject, type StateObjectCell, StateTransform } from '../../mol-state/index.ts';
+import { StateTreeSpine } from '../../mol-state/tree/spine.ts';
+import { PluginUIComponent, type _Props, type _State } from '../base.tsx';
+import { ActionMenu } from '../controls/action-menu.tsx';
+import { Button, ControlGroup, IconButton } from '../controls/common.tsx';
+import { Icon, HomeOutlinedSvg, ArrowRightSvg, ArrowDropDownSvg, DeleteOutlinedSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, CloseSvg } from '../controls/icons.tsx';
+import { ApplyActionControl } from './apply-action.tsx';
+import { UpdateTransformControl } from './update-transform.tsx';
 
 export class StateTree extends PluginUIComponent<{ state: State }, { showActions: boolean }> {
-    state = { showActions: true };
-
-    componentDidMount() {
-        this.subscribe(this.plugin.state.events.cell.created, e => {
+    override state = { showActions: true };
+    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.created, e => {
             if (e.cell.transform.parent === StateTransform.RootRef) this.forceUpdate();
         });
 
@@ -38,8 +36,7 @@ export class StateTree extends PluginUIComponent<{ state: State }, { showActions
         return { showActions };
     }
 
-    render() {
-        const ref = this.props.state.tree.root.ref;
+    override render() {        const ref = this.props.state.tree.root.ref;
         if (this.state.showActions) {
             return <div style={{ margin: '10px', cursor: 'default' }}>
                 <p>Nothing to see here yet.</p>
@@ -59,8 +56,7 @@ class StateTreeNode extends PluginUIComponent<{ cell: StateObjectCell, depth: nu
         return this.props.cell.transform.ref;
     }
 
-    componentDidMount() {
-        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
+    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
             if (this.props.cell === e.cell && this.is(e) && e.state.cells.has(this.ref)) {
                 if (this.state.isCollapsed !== !!e.cell.state.isCollapsed
                     || this.state.isNull !== StateTreeNode.isNull(e.cell)
@@ -83,8 +79,7 @@ class StateTreeNode extends PluginUIComponent<{ cell: StateObjectCell, depth: nu
         });
     }
 
-    state = {
-        isCollapsed: !!this.props.cell.state.isCollapsed,
+    override state = {        isCollapsed: !!this.props.cell.state.isCollapsed,
         isNull: StateTreeNode.isNull(this.props.cell),
         showLabel: StateTreeNode.showLabel(this.props.cell)
     };
@@ -111,8 +106,7 @@ class StateTreeNode extends PluginUIComponent<{ cell: StateObjectCell, depth: nu
         return (cell.transform.ref !== StateTransform.RootRef) && (cell.status !== 'ok' || (!cell.state.isGhost && !StateTreeNode.hasDecorator(cell)));
     }
 
-    render() {
-        if (this.state.isNull) {
+    override render() {        if (this.state.isNull) {
             return null;
         }
 
@@ -156,8 +150,7 @@ class StateTreeNodeLabel extends PluginUIComponent<{ cell: StateObjectCell, dept
         return this.props.cell.transform.ref;
     }
 
-    componentDidMount() {
-        this.subscribe(this.plugin.state.events.cell.stateUpdated.pipe(filter(e => this.is(e)), debounceTime(33)), e => {
+    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.stateUpdated.pipe(filter(e => this.is(e)), debounceTime(33)), e => {
             this.forceUpdate();
         });
 
@@ -183,8 +176,7 @@ class StateTreeNodeLabel extends PluginUIComponent<{ cell: StateObjectCell, dept
         }
     }
 
-    state: StateTreeNodeLabelState = {
-        isCurrent: this.props.cell.parent!.current === this.ref,
+    override state: StateTreeNodeLabelState = {        isCurrent: this.props.cell.parent!.current === this.ref,
         isCollapsed: !!this.props.cell.state.isCollapsed,
         action: void 0,
         currentAction: void 0 as StateAction | undefined
@@ -275,8 +267,7 @@ class StateTreeNodeLabel extends PluginUIComponent<{ cell: StateObjectCell, dept
         return <div className='msp-tree-updates-wrapper'>{decorators}</div>;
     }
 
-    render() {
-        const cell = this.props.cell;
+    override render() {        const cell = this.props.cell;
         const n = cell.transform;
         if (!cell) return null;
 
@@ -321,7 +312,7 @@ class StateTreeNodeLabel extends PluginUIComponent<{ cell: StateObjectCell, dept
         if (this.state.action === 'apply' && this.state.currentAction) {
             return <div style={{ marginBottom: '1px' }}>
                 {row}
-                <ControlGroup header={`Apply ${this.state.currentAction.definition.display.name}`} initialExpanded={true} hideExpander={true} hideOffset={false} onHeaderClick={this.hideApply} topRightIcon={CloseSvg} headerLeftMargin={`${this.props.depth * 8 + 21}px`}>
+                <ControlGroup header={`Apply ${this.state.currentAction.definition.display.name}`} initialExpanded hideExpander hideOffset={false} onHeaderClick={this.hideApply} topRightIcon={CloseSvg} headerLeftMargin={`${this.props.depth * 8 + 21}px`}>
                     <ApplyActionControl onApply={this.hideApply} state={this.props.cell.parent!} action={this.state.currentAction} nodeRef={this.props.cell.transform.ref} hideHeader noMargin />
                 </ControlGroup>
             </div>;

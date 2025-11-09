@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StateTransformer } from './transformer';
-import { UUID } from '../mol-util';
-import { hashMurmur128o } from '../mol-data/util';
+import { StateTransformer } from './transformer.ts';
+import { UUID } from '../mol-util/index.ts';
+import { hashMurmur128o } from '../mol-data/util.ts';
 
 export { Transform as StateTransform };
 
@@ -156,12 +156,12 @@ namespace Transform {
         return create(RootRef, StateTransformer.ROOT, {}, { ref: RootRef, state });
     }
 
-    export function hasTag(t: Transform, tag: string) {
+    export function hasTag(t: Transform, tag: string): boolean {
         if (!t.tags) return false;
         return t.tags.indexOf(tag) >= 0;
     }
 
-    export function hasTags(t: Transform, tags: string | string[]) {
+    export function hasTags(t: Transform, tags: string | string[]): boolean {
         if (!t.tags) return typeof tags !== 'string' && tags.length === 0;
         if (typeof tags === 'string') return hasTag(t, tags);
         for (const tag of tags) {
@@ -172,7 +172,7 @@ namespace Transform {
 
     const _emptyParams = {};
     /** Updates the version of the transform to be computed as hash of the parameters */
-    export function setParamsHashVersion(t: Transform) {
+    export function setParamsHashVersion(t: Transform): void {
         let version: string;
         try {
             version = hashMurmur128o(t.params ?? _emptyParams);

@@ -4,15 +4,15 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { PluginBehavior } from '../behavior';
-import { Binding } from '../../../mol-util/binding';
-import { ModifiersKeys } from '../../../mol-util/input/input-observer';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { PluginBehavior } from '../behavior.ts';
+import { Binding } from '../../../mol-util/binding.ts';
+import { ModifiersKeys } from '../../../mol-util/input/input-observer.ts';
 
 const M = ModifiersKeys;
 const Key = Binding.TriggerKey;
 
-const DefaultSnapshotControlsBindings = {
+const DefaultSnapshotControlsBindings: Record<string, Binding> = {
     next: Binding([
         Key('ArrowRight', M.create({ control: true })),
         Key('GamepadY'),
@@ -28,7 +28,7 @@ const DefaultSnapshotControlsBindings = {
         Key('ArrowDown', M.create({ control: true })),
     ]),
 };
-const SnapshotControlsParams = {
+const SnapshotControlsParams: PD.Params = {
     bindings: PD.Value(DefaultSnapshotControlsBindings, { isHidden: true }),
 };
 type SnapshotControlsProps = PD.Values<typeof SnapshotControlsParams>
@@ -38,7 +38,7 @@ export const SnapshotControls = PluginBehavior.create<SnapshotControlsProps>({
     category: 'interaction',
     ctor: class extends PluginBehavior.Handler<SnapshotControlsProps> {
         register(): void {
-            this.subscribeObservable(this.ctx.behaviors.interaction.keyReleased, ({ code, modifiers, key }) => {
+            this.subscribeObservable(this.ctx.behaviors.interaction.keyReleased, ({ code, modifiers, key }): Promise<void> | undefined => {
                 if (!this.ctx.canvas3d || this.ctx.isBusy) return;
 
                 const b = this.params.bindings;

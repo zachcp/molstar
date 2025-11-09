@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Loci } from '../mol-model/loci';
-import { Color } from '../mol-util/color';
-import { Structure, StructureElement } from '../mol-model/structure';
-import { Script } from '../mol-script/script';
+import { Loci } from '../mol-model/loci.ts';
+import { Color } from '../mol-util/color/index.ts';
+import { type Structure, StructureElement } from '../mol-model/structure.ts';
+import { Script } from '../mol-script/script.ts';
 
 export { Overpaint };
 
@@ -24,7 +24,7 @@ namespace Overpaint {
     export type Layer<T extends Loci = Loci> = { readonly loci: T, readonly color: Color, readonly clear: boolean }
     export const Empty: Overpaint = { kind: 'empty-loci', layers: [] };
 
-    export function areEqual(oA: Overpaint, oB: Overpaint) {
+    export function areEqual(oA: Overpaint, oB: Overpaint): boolean {
         if (oA.layers.length === 0 && oB.layers.length === 0) return true;
         if (oA.layers.length !== oB.layers.length) return false;
         for (let i = 0, il = oA.layers.length; i < il; ++i) {
@@ -35,7 +35,7 @@ namespace Overpaint {
         return true;
     }
 
-    export function isEmpty(overpaint: Overpaint) {
+    export function isEmpty(overpaint: Overpaint): boolean {
         return overpaint.layers.length === 0;
     }
 
@@ -130,7 +130,7 @@ namespace Overpaint {
         return { kind: 'element-loci', layers };
     }
 
-    export function toBundle(overpaint: Overpaint<StructureElement.Loci>) {
+    export function toBundle(overpaint: Overpaint<StructureElement.Loci>): { kind: 'element-loci', layers: BundleLayer[] } {
         const layers: BundleLayer[] = [];
         for (let i = 0, il = overpaint.layers.length; i < il; ++i) {
             const { loci, color, clear } = overpaint.layers[i];

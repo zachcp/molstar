@@ -1,10 +1,10 @@
 import {
     PresetStructureRepresentations,
     StructureRepresentationPresetProvider,
-} from '../../../mol-plugin-state/builder/structure/representation-preset';
-import { StateObjectRef } from '../../../mol-state';
-import { SbNcbrPartialChargesPropertyProvider } from './property';
-import { SbNcbrPartialChargesColorThemeProvider } from './color';
+} from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
+import { StateObjectRef } from '../../../mol-state/index.ts';
+import { SbNcbrPartialChargesPropertyProvider } from './property.ts';
+import { SbNcbrPartialChargesColorThemeProvider } from './color.ts';
 
 export const SbNcbrPartialChargesPreset = StructureRepresentationPresetProvider({
     id: 'sb-ncbr-partial-charges-preset',
@@ -13,7 +13,7 @@ export const SbNcbrPartialChargesPreset = StructureRepresentationPresetProvider(
         group: 'Annotation',
         description: 'Color atoms and residues based on their partial charge.',
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return !!a.data.models.some((m) => SbNcbrPartialChargesPropertyProvider.isApplicable(m));
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,

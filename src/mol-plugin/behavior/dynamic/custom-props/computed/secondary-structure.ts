@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginBehavior } from '../../../behavior';
-import { ParamDefinition as PD } from '../../../../../mol-util/param-definition';
-import { SecondaryStructureProvider } from '../../../../../mol-model-props/computed/secondary-structure';
+import { PluginBehavior } from '../../../behavior.ts';
+import { ParamDefinition as PD } from '../../../../../mol-util/param-definition.ts';
+import { SecondaryStructureProvider } from '../../../../../mol-model-props/computed/secondary-structure.ts';
 
 export const SecondaryStructure = PluginBehavior.create<{ autoAttach: boolean }>({
     name: 'computed-secondary-structure-prop',
@@ -15,8 +15,7 @@ export const SecondaryStructure = PluginBehavior.create<{ autoAttach: boolean }>
     ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean }> {
         private provider = SecondaryStructureProvider;
 
-        update(p: { autoAttach: boolean, showTooltip: boolean }) {
-            const updated = (
+        override update(p: { autoAttach: boolean, showTooltip: boolean }) {            const updated = (
                 this.params.autoAttach !== p.autoAttach
             );
             this.params.autoAttach = p.autoAttach;

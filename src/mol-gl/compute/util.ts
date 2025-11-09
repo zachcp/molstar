@@ -4,16 +4,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { createNullTexture, Texture } from '../../mol-gl/webgl/texture';
-import { ValueCell } from '../../mol-util';
-import { ValueSpec, AttributeSpec, UniformSpec, Values, TextureSpec } from '../../mol-gl/renderable/schema';
-import { Vec2 } from '../../mol-math/linear-algebra';
-import { ShaderCode } from '../shader-code';
-import { copy_frag } from '../shader/copy.frag';
-import { quad_vert } from '../shader/quad.vert';
-import { createComputeRenderItem } from '../webgl/render-item';
-import { ComputeRenderable, createComputeRenderable } from '../renderable';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { createNullTexture, type Texture } from '../../mol-gl/webgl/texture.ts';
+import { ValueCell } from '../../mol-util/index.ts';
+import { ValueSpec, AttributeSpec, UniformSpec, type Values, TextureSpec } from '../../mol-gl/renderable/schema.ts';
+import { Vec2 } from '../../mol-math/linear-algebra.ts';
+import { ShaderCode } from '../shader-code.ts';
+import { copy_frag } from '../shader/copy.frag.ts';
+import { quad_vert } from '../shader/quad.vert.ts';
+import { createComputeRenderItem } from '../webgl/render-item.ts';
+import { type ComputeRenderable, createComputeRenderable } from '../renderable.ts';
 
 export const QuadPositions = new Float32Array([
     1.0, 1.0, -1.0, 1.0, -1.0, -1.0, // First triangle

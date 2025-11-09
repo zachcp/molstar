@@ -5,17 +5,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { SetUtils } from '../../../../mol-util/set';
-import { Unit } from '../../structure';
-import { QueryContext, QueryFn } from '../context';
-import { StructureQuery } from '../query';
-import { StructureSelection } from '../selection';
-import { structureAreIntersecting } from '../utils/structure-set';
-import { Vec3 } from '../../../../mol-math/linear-algebra';
-import { checkStructureMaxRadiusDistance, checkStructureMinMaxDistance } from '../utils/structure-distance';
-import { Structure } from '../../structure/structure';
-import { StructureElement } from '../../structure/element';
-import { SortedArray } from '../../../../mol-data/int';
+import { SetUtils } from '../../../../mol-util/set.ts';
+import { Unit } from '../../structure.ts';
+import type { QueryContext, QueryFn } from '../context.ts';
+import type { StructureQuery } from '../query.ts';
+import { StructureSelection } from '../selection.ts';
+import { structureAreIntersecting } from '../utils/structure-set.ts';
+import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { checkStructureMaxRadiusDistance, checkStructureMinMaxDistance } from '../utils/structure-distance.ts';
+import { Structure } from '../../structure/structure.ts';
+import type { StructureElement } from '../../structure/element.ts';
+import { SortedArray } from '../../../../mol-data/int.ts';
 
 export function pick(query: StructureQuery, pred: QueryFn<any>): StructureQuery {
     return ctx => {

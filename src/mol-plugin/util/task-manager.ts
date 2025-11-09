@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Task, Progress, RuntimeContext } from '../../mol-task';
-import { RxEventHelper } from '../../mol-util/rx-event-helper';
-import { now } from '../../mol-util/now';
-import { CreateObservableCtx, ExecuteInContext } from '../../mol-task/execution/observable';
-import { arrayRemoveInPlace } from '../../mol-util/array';
+import { Task, type Progress, type RuntimeContext } from '../../mol-task/index.ts';
+import { RxEventHelper } from '../../mol-util/rx-event-helper.ts';
+import { now } from '../../mol-util/now.ts';
+import { CreateObservableCtx, ExecuteInContext } from '../../mol-task/execution/observable.ts';
+import { arrayRemoveInPlace } from '../../mol-util/array.ts';
 
 export { TaskManager };
 

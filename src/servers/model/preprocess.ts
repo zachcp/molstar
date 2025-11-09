@@ -5,8 +5,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import cluster from 'cluster';
-import { runChild } from './preprocess/parallel';
+import cluster from 'node:cluster';
+import { runChild } from './preprocess/parallel.ts';
 
 if (cluster.isPrimary) {
     require('./preprocess/master');

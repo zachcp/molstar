@@ -5,9 +5,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Encoding, EncodedData } from './encoding';
-import { IsNativeEndianLittle, flipByteOrder } from '../binary';
-import { assertUnreachable } from '../../../mol-util/type-helpers';
+import { Encoding, type EncodedData } from './encoding.ts';
+import { IsNativeEndianLittle, flipByteOrder } from '../binary.ts';
+import { assertUnreachable } from '../../../mol-util/type-helpers.ts';
 
 /**
  * Fixed point, delta, RLE, integer packing adopted from https://github.com/rcsb/mmtf-javascript/

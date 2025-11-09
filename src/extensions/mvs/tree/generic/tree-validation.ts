@@ -1,10 +1,10 @@
-import { PluginContext } from '../../../../mol-plugin/context';
-import { onelinerJsonString } from '../../../../mol-util/json';
-import { isPlainObject } from '../../../../mol-util/object';
-import { Field } from './field-schema';
-import { SimpleParamsSchema, paramsValidationIssues } from './params-schema';
-import { getChildren, getParams, Tree, TreeSchema } from './tree-schema';
-import { treeToString } from './tree-utils';
+import type { PluginContext } from '../../../../mol-plugin/context.ts';
+import { onelinerJsonString } from '../../../../mol-util/json.ts';
+import { isPlainObject } from '../../../../mol-util/object.ts';
+import type { Field } from './field-schema.ts';
+import { type SimpleParamsSchema, paramsValidationIssues } from './params-schema.ts';
+import { getChildren, getParams, type Tree, type TreeSchema } from './tree-schema.ts';
+import { treeToString } from './tree-utils.ts';
 
 /** Return `undefined` if a tree conforms to the given schema,
  * return validation issues (as a list of lines) if it does not conform.

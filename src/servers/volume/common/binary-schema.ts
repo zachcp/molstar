@@ -6,8 +6,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as UTF8 from '../../../mol-io/common/utf8';
-import { SimpleBuffer } from '../../../mol-io/common/simple-buffer';
+import * as UTF8 from '../../../mol-io/common/utf8.ts';
+import type { SimpleBuffer } from '../../../mol-io/common/simple-buffer.ts';
+import { Buffer } from "node:buffer";
 
 export type Bool = { kind: 'bool' }
 export type Int = { kind: 'int' }

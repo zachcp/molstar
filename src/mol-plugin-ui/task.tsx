@@ -4,14 +4,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginReactContext, PluginUIComponent } from './base';
+import { PluginReactContext, PluginUIComponent } from './base.tsx';
 import { OrderedMap } from 'immutable';
-import { TaskManager } from '../mol-plugin/util/task-manager';
-import { Progress } from '../mol-task';
-import { IconButton } from './controls/common';
-import { CancelSvg } from './controls/icons';
+import type { TaskManager } from '../mol-plugin/util/task-manager.ts';
+import type { Progress } from '../mol-task/index.ts';
+import { IconButton } from './controls/common.tsx';
+import { CancelSvg } from './controls/icons.tsx';
 import { useContext, useEffect, useState } from 'react';
-import { useBehavior } from './hooks/use-behavior';
+import { useBehavior } from './hooks/use-behavior.ts';
 
 export function BackgroundTaskProgress() {
     const plugin = useContext(PluginReactContext);
@@ -61,8 +61,7 @@ class ProgressEntry extends PluginUIComponent<{ event: TaskManager.ProgressEvent
         this.plugin.managers.task.requestAbort(this.props.event.progress.root.progress.taskId, 'User Request');
     };
 
-    render() {
-        const root = this.props.event.progress.root;
+    override render() {        const root = this.props.event.progress.root;
         const subtaskCount = countSubtasks(this.props.event.progress.root) - 1;
         const pr = root.progress.isIndeterminate
             ? void 0

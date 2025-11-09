@@ -11,8 +11,8 @@
  */
 
 import { ArgumentParser } from 'argparse';
-import { treeSchemaToMarkdown, treeSchemaToString } from '../../extensions/mvs/tree/generic/tree-validation';
-import { MVSTreeSchema } from '../../extensions/mvs/tree/mvs/mvs-tree';
+import { treeSchemaToMarkdown, treeSchemaToString } from '../../extensions/mvs/tree/generic/tree-validation.ts';
+import { MVSTreeSchema } from '../../extensions/mvs/tree/mvs/mvs-tree.ts';
 
 
 /** Command line argument values for `main` */

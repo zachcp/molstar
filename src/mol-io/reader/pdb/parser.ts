@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PdbFile } from './schema';
-import { Task } from '../../../mol-task';
-import { ReaderResult } from '../result';
-import { Tokenizer } from '../common/text/tokenizer';
-import { StringLike } from '../../common/string-like';
+import type { PdbFile } from './schema.ts';
+import { Task } from '../../../mol-task/index.ts';
+import { ReaderResult } from '../result.ts';
+import { Tokenizer } from '../common/text/tokenizer.ts';
+import type { StringLike } from '../../common/string-like.ts';
 
 export function parsePDB(data: StringLike, id?: string, isPdbqt = false): Task<ReaderResult<PdbFile>> {
     return Task.create('Parse PDB', async ctx => ReaderResult.success({

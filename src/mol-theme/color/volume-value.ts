@@ -4,17 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ColorTheme } from '../color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../theme';
-import { ColorNames } from '../../mol-util/color/names';
-import { Location } from '../../mol-model/location';
-import { Volume } from '../../mol-model/volume/volume';
-import { ColorThemeCategory } from './categories';
-import { clamp, normalize } from '../../mol-math/interpolate';
-import { Color } from '../../mol-util/color/color';
-import { Grid } from '../../mol-model/volume/grid';
-import { isPositionLocation } from '../../mol-geo/util/location-iterator';
+import { ColorTheme } from '../color.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { ThemeDataContext } from '../theme.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import type { Location } from '../../mol-model/location.ts';
+import { Volume } from '../../mol-model/volume/volume.ts';
+import { ColorThemeCategory } from './categories.ts';
+import { clamp, normalize } from '../../mol-math/interpolate.ts';
+import { Color } from '../../mol-util/color/color.ts';
+import { Grid } from '../../mol-model/volume/grid.ts';
+import { isPositionLocation } from '../../mol-geo/util/location-iterator.ts';
 
 const Description = 'Assign color based on the given value of a volume cell.';
 

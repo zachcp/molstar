@@ -4,17 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Volume } from '../../mol-model/volume';
-import { Loci } from '../../mol-model/loci';
-import { Interval, OrderedSet, SortedArray } from '../../mol-data/int';
-import { equalEps } from '../../mol-math/linear-algebra/3d/common';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
-import { packIntToRGBArray } from '../../mol-util/number-packing';
-import { SetUtils } from '../../mol-util/set';
-import { Box3D } from '../../mol-math/geometry';
-import { toHalfFloat } from '../../mol-util/number-conversion';
-import { clamp } from '../../mol-math/interpolate';
-import { LocationIterator } from '../../mol-geo/util/location-iterator';
+import { Volume } from '../../mol-model/volume.ts';
+import type { Loci } from '../../mol-model/loci.ts';
+import { Interval, OrderedSet, type SortedArray } from '../../mol-data/int.ts';
+import { equalEps } from '../../mol-math/linear-algebra/3d/common.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
+import { packIntToRGBArray } from '../../mol-util/number-packing.ts';
+import { SetUtils } from '../../mol-util/set.ts';
+import { Box3D } from '../../mol-math/geometry.ts';
+import { toHalfFloat } from '../../mol-util/number-conversion.ts';
+import { clamp } from '../../mol-math/interpolate.ts';
+import { LocationIterator } from '../../mol-geo/util/location-iterator.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3set = Vec3.set;

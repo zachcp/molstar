@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as Impl from './impl/sorted-array';
-import { Interval } from './interval';
+import * as Impl from './impl/sorted-array.ts';
+import type { Interval } from './interval.ts';
 
 namespace SortedArray {
     export const Empty: SortedArray = Impl.Empty as any;

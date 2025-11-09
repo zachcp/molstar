@@ -6,7 +6,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ChunkedBigString, MAX_STRING_LENGTH, StringLike } from './string-like';
+import { ChunkedBigString, MAX_STRING_LENGTH, type StringLike } from './string-like.ts';
 
 
 export function utf8Write(data: Uint8Array, offset: number, str: string) {

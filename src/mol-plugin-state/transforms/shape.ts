@@ -4,16 +4,16 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder';
-import { BoxCage } from '../../mol-geo/primitive/box';
-import { Box3D, Sphere3D } from '../../mol-math/geometry';
-import { Mat4, Vec3 } from '../../mol-math/linear-algebra';
-import { Shape } from '../../mol-model/shape';
-import { Task } from '../../mol-task';
-import { ColorNames } from '../../mol-util/color/names';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { PluginStateObject as SO, PluginStateTransform } from '../objects';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { BoxCage } from '../../mol-geo/primitive/box.ts';
+import { Box3D, Sphere3D } from '../../mol-math/geometry.ts';
+import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { Shape } from '../../mol-model/shape.ts';
+import { Task } from '../../mol-task/index.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { PluginStateObject as SO, PluginStateTransform } from '../objects.ts';
 
 export { BoxShape3D };
 type BoxShape3D = typeof BoxShape3D

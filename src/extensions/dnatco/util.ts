@@ -5,10 +5,10 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { DnatcoTypes } from './types';
-import { OrderedSet, Segmentation } from '../../mol-data/int';
-import { EmptyLoci } from '../../mol-model/loci';
-import { ElementIndex, ResidueIndex, Structure, StructureElement, StructureProperties, Unit } from '../../mol-model/structure';
+import type { DnatcoTypes } from './types.ts';
+import { OrderedSet, Segmentation } from '../../mol-data/int.ts';
+import { EmptyLoci } from '../../mol-model/loci.ts';
+import { type ElementIndex, type ResidueIndex, type Structure, StructureElement, StructureProperties, type Unit } from '../../mol-model/structure.ts';
 
 const EmptyStepIndices = new Array<number>();
 

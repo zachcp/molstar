@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mat4, Vec3 } from '../../mol-math/linear-algebra';
-import { NumberArray } from '../../mol-util/type-helpers';
+import { type Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
+import type { NumberArray } from '../../mol-util/type-helpers.ts';
 
 export interface Cage {
     readonly vertices: ArrayLike<number>

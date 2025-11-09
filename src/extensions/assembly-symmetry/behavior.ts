@@ -4,19 +4,19 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { AssemblySymmetryProvider, AssemblySymmetryData, AssemblySymmetryDataProvider, AssemblySymmetryDataParams } from './prop';
-import { PluginBehavior } from '../../mol-plugin/behavior/behavior';
-import { AssemblySymmetryParams, AssemblySymmetryRepresentation } from './representation';
-import { AssemblySymmetryClusterColorThemeProvider } from './color';
-import { PluginStateTransform, PluginStateObject } from '../../mol-plugin-state/objects';
-import { Task } from '../../mol-task';
-import { PluginConfigItem } from '../../mol-plugin/config';
-import { PluginContext } from '../../mol-plugin/context';
-import { StateTransformer, StateAction, StateObject, StateTransform, StateObjectRef } from '../../mol-state';
-import { GenericRepresentationRef } from '../../mol-plugin-state/manager/structure/hierarchy-state';
-import { AssemblySymmetryControls } from './ui';
-import { StructureRepresentationPresetProvider, PresetStructureRepresentations } from '../../mol-plugin-state/builder/structure/representation-preset';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { AssemblySymmetryProvider, AssemblySymmetryData, AssemblySymmetryDataProvider, AssemblySymmetryDataParams } from './prop.ts';
+import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
+import { AssemblySymmetryParams, AssemblySymmetryRepresentation } from './representation.ts';
+import { AssemblySymmetryClusterColorThemeProvider } from './color.ts';
+import { PluginStateTransform, PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { Task } from '../../mol-task/index.ts';
+import { PluginConfigItem } from '../../mol-plugin/config.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { StateTransformer, StateAction, StateObject, type StateTransform, StateObjectRef } from '../../mol-state/index.ts';
+import type { GenericRepresentationRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
+import { AssemblySymmetryControls } from './ui.tsx';
+import { StructureRepresentationPresetProvider, PresetStructureRepresentations } from '../../mol-plugin-state/builder/structure/representation-preset.ts';
 
 const Tag = AssemblySymmetryData.Tag;
 
@@ -147,7 +147,7 @@ const AssemblySymmetry3D = PluginStateTransform.BuiltIn({
             return StateTransformer.UpdateResult.Updated;
         });
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return AssemblySymmetryData.isApplicable(a.data);
     }
 });
@@ -160,7 +160,7 @@ export const AssemblySymmetryPreset = StructureRepresentationPresetProvider({
         name: 'Assembly Symmetry', group: 'Annotation',
         description: 'Shows Assembly Symmetry axes and cage; colors structure according to assembly symmetry cluster membership. Data provided by RCSB PDB (calculated with BioJava) or by PDBe.'
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return AssemblySymmetryData.isApplicable(a.data);
     },
     params: (a, plugin) => {

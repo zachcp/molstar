@@ -4,28 +4,28 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Grid, Volume } from '../../mol-model/volume';
-import { VisualContext } from '../visual';
-import { Theme, ThemeRegistryContext } from '../../mol-theme/theme';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { computeMarchingCubesMesh } from '../../mol-geo/util/marching-cubes/algorithm';
-import { VolumeVisual, VolumeRepresentation, VolumeRepresentationProvider, VolumeKey } from './representation';
-import { LocationIterator } from '../../mol-geo/util/location-iterator';
-import { VisualUpdateState } from '../util';
-import { RepresentationContext, RepresentationParamsGetter, Representation } from '../representation';
-import { PickingId } from '../../mol-geo/geometry/picking';
-import { EmptyLoci, Loci } from '../../mol-model/loci';
-import { Interval, OrderedSet, SortedArray } from '../../mol-data/int';
-import { Mat4, Tensor, Vec2, Vec3 } from '../../mol-math/linear-algebra';
-import { fillSerial } from '../../mol-util/array';
-import { createSegmentTexture2d, eachVolumeLoci, getVolumeTexture2dLayout } from './util';
-import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { BaseGeometry } from '../../mol-geo/geometry/base';
-import { ValueCell } from '../../mol-util/value-cell';
-import { extractIsosurface } from '../../mol-gl/compute/marching-cubes/isosurface';
-import { Box3D } from '../../mol-math/geometry/primitives/box3d';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Grid, Volume } from '../../mol-model/volume.ts';
+import type { VisualContext } from '../visual.ts';
+import type { Theme, ThemeRegistryContext } from '../../mol-theme/theme.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { computeMarchingCubesMesh } from '../../mol-geo/util/marching-cubes/algorithm.ts';
+import { VolumeVisual, VolumeRepresentation, VolumeRepresentationProvider, type VolumeKey } from './representation.ts';
+import { LocationIterator } from '../../mol-geo/util/location-iterator.ts';
+import type { VisualUpdateState } from '../util.ts';
+import { type RepresentationContext, type RepresentationParamsGetter, Representation } from '../representation.ts';
+import { PickingId } from '../../mol-geo/geometry/picking.ts';
+import { EmptyLoci, type Loci } from '../../mol-model/loci.ts';
+import { Interval, OrderedSet, SortedArray } from '../../mol-data/int.ts';
+import { Mat4, Tensor, Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { fillSerial } from '../../mol-util/array.ts';
+import { createSegmentTexture2d, eachVolumeLoci, getVolumeTexture2dLayout } from './util.ts';
+import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { BaseGeometry } from '../../mol-geo/geometry/base.ts';
+import { ValueCell } from '../../mol-util/value-cell.ts';
+import { extractIsosurface } from '../../mol-gl/compute/marching-cubes/isosurface.ts';
+import { Box3D } from '../../mol-math/geometry/primitives/box3d.ts';
 
 export const VolumeSegmentParams = {
     segments: PD.Converted(
@@ -45,7 +45,7 @@ function gpuSupport(webgl: WebGLContext) {
 
 const Padding = 1;
 
-function suitableForGpu(volume: Volume, webgl: WebGLContext) {
+function suitableForGpu(volume: Volume, webgl: WebGLContext): boolean {
     // small volumes are about as fast or faster on CPU vs integrated GPU
     if (volume.grid.cells.data.length < Math.pow(10, 3)) return false;
     // the GPU is much more memory contraint, especially true for integrated GPUs,
@@ -69,7 +69,7 @@ export function SegmentVisual(materialId: number, volume: Volume, key: number, p
     return SegmentMeshVisual(materialId);
 }
 
-function getLoci(volume: Volume, props: VolumeSegmentProps) {
+function getLoci(volume: Volume, props: VolumeSegmentProps): Volume.Segment.Loci {
     const segments = SortedArray.ofUnsortedArray<Volume.SegmentIndex>(props.segments);
     const instances = Interval.ofLength(volume.instances.length as Volume.InstanceIndex);
     return Volume.Segment.Loci(volume, [{ segments, instances }]);
@@ -94,7 +94,7 @@ function getSegmentLoci(pickingId: PickingId, volume: Volume, key: number, props
     return EmptyLoci;
 }
 
-export function eachSegment(loci: Loci, volume: Volume, key: number, props: VolumeSegmentProps, apply: (interval: Interval) => boolean) {
+export function eachSegment(loci: Loci, volume: Volume, key: number, props: VolumeSegmentProps, apply: (interval: Interval) => boolean): boolean {
     const segments = SortedArray.ofSingleton(key);
     return eachVolumeLoci(loci, volume, { segments }, apply);
 }
@@ -140,7 +140,7 @@ function getSegmentCells(set: number[], bbox: Box3D, cells: Tensor): Tensor {
     return segmentCells;
 }
 
-export async function createVolumeSegmentMesh(ctx: VisualContext, volume: Volume, key: Volume.SegmentIndex, theme: Theme, props: VolumeSegmentProps, mesh?: Mesh) {
+export async function createVolumeSegmentMesh(ctx: VisualContext, volume: Volume, key: Volume.SegmentIndex, theme: Theme, props: VolumeSegmentProps, mesh?: Mesh): Promise<Mesh> {
     const segmentation = Volume.Segmentation.get(volume);
     if (!segmentation) throw new Error('missing volume segmentation');
 
@@ -251,7 +251,7 @@ function getSegmentTexture(volume: Volume, segment: Volume.SegmentIndex, webgl: 
     };
 }
 
-async function createVolumeSegmentTextureMesh(ctx: VisualContext, volume: Volume, segment: Volume.SegmentIndex, theme: Theme, props: VolumeSegmentProps, textureMesh?: TextureMesh) {
+async function createVolumeSegmentTextureMesh(ctx: VisualContext, volume: Volume, segment: Volume.SegmentIndex, theme: Theme, props: VolumeSegmentProps, textureMesh?: TextureMesh): Promise<TextureMesh> {
     if (!ctx.webgl) throw new Error('webgl context required to create volume segment texture-mesh');
 
     if (volume.grid.cells.data.length <= 1) {
@@ -305,7 +305,7 @@ function getSegments(props: VolumeSegmentProps): SortedArray {
 }
 
 const SegmentVisuals = {
-    'segment': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, SegmentMeshParams>) => VolumeRepresentation('Segment mesh', ctx, getParams, SegmentVisual, getLoci, getSegments),
+    'segment': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, SegmentMeshParams>): VolumeRepresentation<SegmentMeshParams> => VolumeRepresentation('Segment mesh', ctx, getParams, SegmentVisual, getLoci, getSegments),
 };
 
 export const SegmentParams = {
@@ -314,7 +314,7 @@ export const SegmentParams = {
     bumpFrequency: PD.Numeric(1, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
 };
 export type SegmentParams = typeof SegmentParams
-export function getSegmentParams(ctx: ThemeRegistryContext, volume: Volume) {
+export function getSegmentParams(ctx: ThemeRegistryContext, volume: Volume): typeof SegmentParams {
     const p = PD.clone(SegmentParams);
 
     const segmentation = Volume.Segmentation.get(volume);

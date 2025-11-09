@@ -4,9 +4,9 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { canonicalJsonString } from '../../../../mol-util/json';
-import { addParamDefaults } from './params-schema';
-import { CustomProps, Kind, Node, Subtree, SubtreeOfKind, Tree, TreeFor, TreeSchema, TreeSchemaWithAllRequired, getParams } from './tree-schema';
+import { canonicalJsonString } from '../../../../mol-util/json.ts';
+import { addParamDefaults } from './params-schema.ts';
+import { type CustomProps, type Kind, type Node, type Subtree, type SubtreeOfKind, type Tree, type TreeFor, type TreeSchema, type TreeSchemaWithAllRequired, getParams } from './tree-schema.ts';
 
 
 /** Run DFS (depth-first search) algorithm on a rooted tree.
@@ -199,5 +199,5 @@ function resolveUri(...refs: (string | undefined)[]): string | undefined {
 
 /** Return URL of the current page when running in a browser; `undefined` when running in Node. */
 function windowUrl(): string | undefined {
-    return (typeof window !== 'undefined') ? window.location.href : undefined;
+    return (typeof window !== 'undefined') ? globalThis.location.href : undefined;
 }

@@ -5,17 +5,19 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { CIF, CifCategory, getCifFieldType, CifField, CifFile } from '../../mol-io/reader/cif';
-import { CifWriter, EncodingStrategyHint } from '../../mol-io/writer/cif';
-import * as util from 'util';
-import * as fs from 'fs';
-import * as zlib from 'zlib';
-import { Progress, Task, RuntimeContext } from '../../mol-task';
-import { classifyFloatArray, classifyIntArray } from '../../mol-io/common/binary-cif';
-import { BinaryEncodingProvider } from '../../mol-io/writer/cif/encoder/binary';
-import { Category } from '../../mol-io/writer/cif/encoder';
-import { ReaderResult } from '../../mol-io/reader/result';
-import { utf8ReadLong } from '../../mol-io/common/utf8';
+import { CIF, type CifCategory, getCifFieldType, type CifField, type CifFile } from '../../mol-io/reader/cif.ts';
+import { CifWriter, type EncodingStrategyHint } from '../../mol-io/writer/cif.ts';
+import * as util from 'node:util';
+import * as fs from 'node:fs';
+import * as zlib from 'node:zlib';
+import { Progress, Task, type RuntimeContext } from '../../mol-task/index.ts';
+import { classifyFloatArray, classifyIntArray } from '../../mol-io/common/binary-cif.ts';
+import type { BinaryEncodingProvider } from '../../mol-io/writer/cif/encoder/binary.ts';
+import { Category } from '../../mol-io/writer/cif/encoder.ts';
+import type { ReaderResult } from '../../mol-io/reader/result.ts';
+import { utf8ReadLong } from '../../mol-io/common/utf8.ts';
+import process from "node:process";
+import type { Buffer } from "node:buffer";
 
 function showProgress(p: Progress) {
     process.stdout.write(`\r${new Array(80).join(' ')}`);

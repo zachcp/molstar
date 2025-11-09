@@ -4,22 +4,22 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Loci } from '../../../mol-model/loci';
-import { RuntimeContext } from '../../../mol-task';
-import { Lines } from '../../../mol-geo/geometry/lines/lines';
-import { Text } from '../../../mol-geo/geometry/text/text';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { ColorNames } from '../../../mol-util/color/names';
-import { ShapeRepresentation } from '../representation';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation';
-import { Shape } from '../../../mol-model/shape';
-import { LinesBuilder } from '../../../mol-geo/geometry/lines/lines-builder';
-import { TextBuilder } from '../../../mol-geo/geometry/text/text-builder';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { MarkerActions, MarkerAction } from '../../../mol-util/marker-action';
-import { distanceLabel } from '../../../mol-theme/label';
-import { LociLabelTextParams } from './common';
-import { Sphere3D } from '../../../mol-math/geometry';
+import { Loci } from '../../../mol-model/loci.ts';
+import type { RuntimeContext } from '../../../mol-task/index.ts';
+import { Lines } from '../../../mol-geo/geometry/lines/lines.ts';
+import { Text } from '../../../mol-geo/geometry/text/text.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { ColorNames } from '../../../mol-util/color/names.ts';
+import { ShapeRepresentation } from '../representation.ts';
+import { Representation, type RepresentationParamsGetter, type RepresentationContext } from '../../representation.ts';
+import { Shape } from '../../../mol-model/shape.ts';
+import { LinesBuilder } from '../../../mol-geo/geometry/lines/lines-builder.ts';
+import { TextBuilder } from '../../../mol-geo/geometry/text/text-builder.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { MarkerActions, MarkerAction } from '../../../mol-util/marker-action.ts';
+import { distanceLabel } from '../../../mol-theme/label.ts';
+import { LociLabelTextParams } from './common.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
 
 export interface DistanceData {
     pairs: Loci.Bundle<2>[]
@@ -102,7 +102,7 @@ function buildLines(data: DistanceData, props: DistanceProps, lines?: Lines): Li
     return builder.getLines();
 }
 
-function getLinesShape(ctx: RuntimeContext, data: DistanceData, props: DistanceProps, shape?: Shape<Lines>) {
+function getLinesShape(ctx: RuntimeContext, data: DistanceData, props: DistanceProps, shape?: Shape<Lines>): Shape<Lines> {
     const lines = buildLines(data, props, shape && shape.geometry);
     const name = getDistanceName(data, props.unitLabel);
     const getLabel = (groupId: number) => distanceLabel(data.pairs[groupId], props);
@@ -124,7 +124,7 @@ function buildText(data: DistanceData, props: DistanceProps, text?: Text): Text 
     return builder.getText();
 }
 
-function getTextShape(ctx: RuntimeContext, data: DistanceData, props: DistanceProps, shape?: Shape<Text>) {
+function getTextShape(ctx: RuntimeContext, data: DistanceData, props: DistanceProps, shape?: Shape<Text>): Shape<Text> {
     const text = buildText(data, props, shape && shape.geometry);
     const name = getDistanceName(data, props.unitLabel);
     const getLabel = (groupId: number) => distanceLabel(data.pairs[groupId], props);

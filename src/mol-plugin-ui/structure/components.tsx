@@ -5,21 +5,21 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as React from 'react';
-import { getStructureThemeTypes } from '../../mol-plugin-state/helpers/structure-representation-params';
-import { StructureComponentManager } from '../../mol-plugin-state/manager/structure/component';
-import { StructureHierarchyManager } from '../../mol-plugin-state/manager/structure/hierarchy';
-import { StructureComponentRef, StructureRepresentationRef } from '../../mol-plugin-state/manager/structure/hierarchy-state';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { State } from '../../mol-state';
-import { ParamDefinition } from '../../mol-util/param-definition';
-import { CollapsableControls, CollapsableState, PurePluginUIComponent } from '../base';
-import { ActionMenu } from '../controls/action-menu';
-import { Button, ExpandGroup, IconButton, ToggleButton, ControlRow, TextInput } from '../controls/common';
-import { CubeOutlineSvg, IntersectSvg, SetSvg, SubtractSvg, UnionSvg, BookmarksOutlinedSvg, AddSvg, TuneSvg, RestoreSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, DeleteOutlinedSvg, MoreHorizSvg, CheckSvg } from '../controls/icons';
-import { ParameterControls } from '../controls/parameters';
-import { UpdateTransformControl } from '../state/update-transform';
-import { GenericEntryListControls } from './generic';
+import type * as React from 'react';
+import { getStructureThemeTypes } from '../../mol-plugin-state/helpers/structure-representation-params.ts';
+import { StructureComponentManager } from '../../mol-plugin-state/manager/structure/component.ts';
+import { StructureHierarchyManager } from '../../mol-plugin-state/manager/structure/hierarchy.ts';
+import type { StructureComponentRef, StructureRepresentationRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { State } from '../../mol-state/index.ts';
+import { ParamDefinition } from '../../mol-util/param-definition.ts';
+import { CollapsableControls, type CollapsableState, PurePluginUIComponent } from '../base.tsx';
+import { ActionMenu } from '../controls/action-menu.tsx';
+import { Button, ExpandGroup, IconButton, ToggleButton, ControlRow, TextInput } from '../controls/common.tsx';
+import { CubeOutlineSvg, IntersectSvg, SetSvg, SubtractSvg, UnionSvg, BookmarksOutlinedSvg, AddSvg, TuneSvg, RestoreSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, DeleteOutlinedSvg, MoreHorizSvg, CheckSvg } from '../controls/icons.tsx';
+import { ParameterControls } from '../controls/parameters.tsx';
+import { UpdateTransformControl } from '../state/update-transform.tsx';
+import { GenericEntryListControls } from './generic.tsx';
 
 interface StructureComponentControlState extends CollapsableState {
     isDisabled: boolean
@@ -35,8 +35,7 @@ export class StructureComponentControls extends CollapsableControls<{}, Structur
         };
     }
 
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, c => this.setState({
+    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, c => this.setState({
             description: StructureHierarchyManager.getSelectedStructuresDescription(this.plugin)
         }));
     }
@@ -58,8 +57,7 @@ interface ComponentEditorControlsState {
 }
 
 class ComponentEditorControls extends PurePluginUIComponent<{}, ComponentEditorControlsState> {
-    state: ComponentEditorControlsState = {
-        isEmpty: true,
+    override state: ComponentEditorControlsState = {        isEmpty: true,
         isBusy: false,
         canUndo: false
     };
@@ -68,8 +66,7 @@ class ComponentEditorControls extends PurePluginUIComponent<{}, ComponentEditorC
         return this.state.isBusy || this.state.isEmpty;
     }
 
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, c => this.setState({
+    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, c => this.setState({
             action: this.state.action !== 'options' || c.structures.length === 0 ? void 0 : 'options',
             isEmpty: c.structures.length === 0
         }));
@@ -116,8 +113,7 @@ class ComponentEditorControls extends PurePluginUIComponent<{}, ComponentEditorC
         if (task) this.plugin.runTask(task);
     };
 
-    render() {
-        const undoTitle = this.state.canUndo
+    override render() {        const undoTitle = this.state.canUndo
             ? `Undo ${this.plugin.state.data.latestUndoLabel}`
             : 'Some mistakes of the past can be undone.';
         return <>
@@ -152,8 +148,7 @@ export class AddComponentControls extends PurePluginUIComponent<AddComponentCont
         return { params, values: ParamDefinition.getDefaultValues(params) };
     }
 
-    state = this.createState();
-
+    override state = this.createState();
     get selectedStructures() {
         return this.plugin.managers.structure.component.currentStructures;
     }
@@ -170,8 +165,7 @@ export class AddComponentControls extends PurePluginUIComponent<AddComponentCont
 
     paramsChanged = (values: any) => this.setState({ values });
 
-    render() {
-        return <>
+    override render() {        return <>
             <ParameterControls params={this.state.params} values={this.state.values} onChangeValues={this.paramsChanged} />
             <Button icon={AddSvg} title='Use Selection and optional Representation to create a new Component.' className='msp-btn-commit msp-btn-commit-on' onClick={this.apply} style={{ marginTop: '1px' }}>
                 Create Component
@@ -181,26 +175,22 @@ export class AddComponentControls extends PurePluginUIComponent<AddComponentCont
 }
 
 class ComponentOptionsControls extends PurePluginUIComponent<{ isDisabled: boolean }> {
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.structure.component.events.optionsUpdated, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.component.events.optionsUpdated, () => this.forceUpdate());
     }
 
     update = (options: StructureComponentManager.Options) => this.plugin.managers.structure.component.setOptions(options);
 
-    render() {
-        return <ParameterControls params={StructureComponentManager.OptionsParams} values={this.plugin.managers.structure.component.state.options} onChangeValues={this.update} isDisabled={this.props.isDisabled} />;
+    override render() {        return <ParameterControls params={StructureComponentManager.OptionsParams} values={this.plugin.managers.structure.component.state.options} onChangeValues={this.update} isDisabled={this.props.isDisabled} />;
     }
 }
 
 class ComponentListControls extends PurePluginUIComponent {
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, () => {
+    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, () => {
             this.forceUpdate();
         });
     }
 
-    render() {
-        const componentGroups = this.plugin.managers.structure.hierarchy.currentComponentGroups;
+    override render() {        const componentGroups = this.plugin.managers.structure.hierarchy.currentComponentGroups;
         if (componentGroups.length === 0) return null;
 
         return <div style={{ marginTop: '6px' }}>
@@ -212,14 +202,12 @@ class ComponentListControls extends PurePluginUIComponent {
 type StructureComponentEntryActions = 'action' | 'label'
 
 class StructureComponentGroup extends PurePluginUIComponent<{ group: StructureComponentRef[] }, { action?: StructureComponentEntryActions }> {
-    state = { action: void 0 as StructureComponentEntryActions | undefined };
-
+    override state = { action: void 0 as StructureComponentEntryActions | undefined };
     get pivot() {
         return this.props.group[0];
     }
 
-    componentDidMount() {
-        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
+    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
             if (State.ObjectEvent.isCell(e, this.pivot.cell)) this.forceUpdate();
         });
     }
@@ -330,8 +318,7 @@ class StructureComponentGroup extends PurePluginUIComponent<{ group: StructureCo
         this.plugin.managers.structure.component.updateLabel(this.pivot, v);
     };
 
-    render() {
-        const component = this.pivot;
+    override render() {        const component = this.pivot;
         const cell = component.cell;
         const label = cell.obj?.label;
         const reprLabel = this.reprLabel;
@@ -347,7 +334,7 @@ class StructureComponentGroup extends PurePluginUIComponent<{ group: StructureCo
             </div>
             {this.state.action === 'label' && <div className='msp-control-offset' style={{ marginBottom: '6px' }}>
                 <ControlRow label='Label' control={<div style={{ display: 'flex', textAlignLast: 'center' }}>
-                    <TextInput onChange={this.updateLabel} value={label} style={{ flex: '1 1 auto', minWidth: 0 }} className='msp-form-control' blurOnEnter={true} blurOnEscape={true} />
+                    <TextInput onChange={this.updateLabel} value={label} style={{ flex: '1 1 auto', minWidth: 0 }} className='msp-form-control' blurOnEnter blurOnEscape />
                     <IconButton svg={CheckSvg} onClick={this.toggleLabel}className='msp-form-control msp-control-button-label' flex />
                 </div>}/>
             </div>}
@@ -371,16 +358,14 @@ class StructureRepresentationEntry extends PurePluginUIComponent<{ group: Struct
         this.plugin.managers.structure.component.toggleVisibility(this.props.group, this.props.representation);
     };
 
-    componentDidMount() {
-        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
+    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
             if (State.ObjectEvent.isCell(e, this.props.representation.cell)) this.forceUpdate();
         });
     }
 
     update = (params: any) => this.plugin.managers.structure.component.updateRepresentations(this.props.group, this.props.representation, params);
 
-    render() {
-        const repr = this.props.representation.cell;
+    override render() {        const repr = this.props.representation.cell;
         return <div className='msp-representation-entry'>
             {repr.parent && <ExpandGroup header={`${repr.obj?.label || ''} Representation`} noOffset>
                 <UpdateTransformControl state={repr.parent} transform={repr.transform} customHeader='none' customUpdate={this.update} noMargin />

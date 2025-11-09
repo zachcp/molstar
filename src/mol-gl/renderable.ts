@@ -4,18 +4,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Program } from './webgl/program';
-import { RenderableValues, Values, RenderableSchema, BaseValues } from './renderable/schema';
-import { GraphicsRenderItem, ComputeRenderItem, GraphicsRenderVariant, MultiDrawBaseData, Transparency } from './webgl/render-item';
-import { ValueCell } from '../mol-util';
-import { idFactory } from '../mol-util/id-factory';
-import { clamp } from '../mol-math/interpolate';
-import { Frustum3D } from '../mol-math/geometry/primitives/frustum3d';
-import { Plane3D } from '../mol-math/geometry/primitives/plane3d';
-import { Sphere3D } from '../mol-math/geometry';
-import { Vec4 } from '../mol-math/linear-algebra/3d/vec4';
-import { WebGLStats } from './webgl/context';
-import { isTimingMode } from '../mol-util/debug';
+import type { Program } from './webgl/program.ts';
+import type { RenderableValues, Values, RenderableSchema, BaseValues } from './renderable/schema.ts';
+import type { GraphicsRenderItem, ComputeRenderItem, GraphicsRenderVariant, MultiDrawBaseData, Transparency } from './webgl/render-item.ts';
+import { ValueCell } from '../mol-util/index.ts';
+import { idFactory } from '../mol-util/id-factory.ts';
+import { clamp } from '../mol-math/interpolate.ts';
+import { Frustum3D } from '../mol-math/geometry/primitives/frustum3d.ts';
+import { Plane3D } from '../mol-math/geometry/primitives/plane3d.ts';
+import { Sphere3D } from '../mol-math/geometry.ts';
+import { Vec4 } from '../mol-math/linear-algebra/3d/vec4.ts';
+import type { WebGLStats } from './webgl/context.ts';
+import { isTimingMode } from '../mol-util/debug.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const p3distanceToPoint = Plane3D.distanceToPoint;

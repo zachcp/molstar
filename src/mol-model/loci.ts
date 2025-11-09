@@ -4,20 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StructureElement } from './structure';
-import { Bond } from './structure/structure/unit/bonds';
-import { Shape, ShapeGroup } from './shape';
-import { Sphere3D } from '../mol-math/geometry';
-import { Vec3 } from '../mol-math/linear-algebra';
-import { Structure } from './structure/structure';
-import { PrincipalAxes } from '../mol-math/linear-algebra/matrix/principal-axes';
-import { ParamDefinition } from '../mol-util/param-definition';
-import { shallowEqual } from '../mol-util';
-import { FiniteArray } from '../mol-util/type-helpers';
-import { BoundaryHelper } from '../mol-math/geometry/boundary-helper';
-import { stringToWords } from '../mol-util/string';
-import { Volume } from './volume/volume';
-import { Interval } from '../mol-data/int';
+import { StructureElement } from './structure.ts';
+import { Bond } from './structure/structure/unit/bonds.ts';
+import { Shape, ShapeGroup } from './shape.ts';
+import { Sphere3D } from '../mol-math/geometry.ts';
+import { Vec3 } from '../mol-math/linear-algebra.ts';
+import { Structure } from './structure/structure.ts';
+import type { PrincipalAxes } from '../mol-math/linear-algebra/matrix/principal-axes.ts';
+import { ParamDefinition } from '../mol-util/param-definition.ts';
+import { shallowEqual } from '../mol-util/index.ts';
+import type { FiniteArray } from '../mol-util/type-helpers.ts';
+import { BoundaryHelper } from '../mol-math/geometry/boundary-helper.ts';
+import { stringToWords } from '../mol-util/string.ts';
+import { Volume } from './volume/volume.ts';
+import { Interval } from '../mol-data/int.ts';
 
 /** A Loci that includes every loci */
 export const EveryLoci = { kind: 'every-loci' as 'every-loci' };
@@ -80,7 +80,7 @@ namespace Loci {
         return boundaryHelper.getSphere();
     }
 
-    export function areEqual(lociA: Loci, lociB: Loci) {
+    export function areEqual(lociA: Loci, lociB: Loci): boolean {
         if (isEveryLoci(lociA) && isEveryLoci(lociB)) return true;
         if (isEmptyLoci(lociA) && isEmptyLoci(lociB)) return true;
         if (isDataLoci(lociA) && isDataLoci(lociB)) {
@@ -120,7 +120,7 @@ namespace Loci {
         return !!loci && loci.kind === 'every-loci';
     }
 
-    export function isEmpty(loci: Loci) {
+    export function isEmpty(loci: Loci): boolean {
         if (isEveryLoci(loci)) return false;
         if (isEmptyLoci(loci)) return true;
         if (isDataLoci(loci)) return isDataLociEmpty(loci);
@@ -136,7 +136,7 @@ namespace Loci {
         return false;
     }
 
-    export function remap<T>(loci: Loci, data: T) {
+    export function remap<T>(loci: Loci, data: T): Loci {
         if (data instanceof Structure) {
             if (StructureElement.Loci.is(loci)) {
                 loci = StructureElement.Loci.remap(loci, data);
@@ -221,32 +221,32 @@ namespace Loci {
 
     const Granularity = {
         'element': (loci: Loci) => loci,
-        'residue': (loci: Loci) => {
+        'residue': (loci: Loci): Loci => {
             return StructureElement.Loci.is(loci)
                 ? StructureElement.Loci.extendToWholeResidues(loci, true)
                 : loci;
         },
-        'chain': (loci: Loci) => {
+        'chain': (loci: Loci): Loci => {
             return StructureElement.Loci.is(loci)
                 ? StructureElement.Loci.extendToWholeChains(loci)
                 : loci;
         },
-        'entity': (loci: Loci) => {
+        'entity': (loci: Loci): Loci => {
             return StructureElement.Loci.is(loci)
                 ? StructureElement.Loci.extendToWholeEntities(loci)
                 : loci;
         },
-        'model': (loci: Loci) => {
+        'model': (loci: Loci): Loci => {
             return StructureElement.Loci.is(loci)
                 ? StructureElement.Loci.extendToWholeModels(loci)
                 : loci;
         },
-        'operator': (loci: Loci) => {
+        'operator': (loci: Loci): Loci => {
             return StructureElement.Loci.is(loci)
                 ? StructureElement.Loci.extendToWholeOperators(loci)
                 : loci;
         },
-        'structure': (loci: Loci) => {
+        'structure': (loci: Loci): Loci => {
             return StructureElement.Loci.is(loci)
                 ? Structure.toStructureElementLoci(loci.structure)
                 : ShapeGroup.isLoci(loci)
@@ -257,17 +257,17 @@ namespace Loci {
                             ? Volume.Loci(loci.volume, Interval.ofLength(loci.volume.instances.length))
                             : loci;
         },
-        'elementInstances': (loci: Loci) => {
+        'elementInstances': (loci: Loci): Loci => {
             return StructureElement.Loci.is(loci)
                 ? StructureElement.Loci.extendToAllInstances(loci)
                 : loci;
         },
-        'residueInstances': (loci: Loci) => {
+        'residueInstances': (loci: Loci): Loci => {
             return StructureElement.Loci.is(loci)
                 ? StructureElement.Loci.extendToAllInstances(StructureElement.Loci.extendToWholeResidues(loci, true))
                 : loci;
         },
-        'chainInstances': (loci: Loci) => {
+        'chainInstances': (loci: Loci): Loci => {
             return StructureElement.Loci.is(loci)
                 ? StructureElement.Loci.extendToAllInstances(StructureElement.Loci.extendToWholeChains(loci))
                 : loci;
@@ -285,11 +285,11 @@ namespace Loci {
     });
 
     /** Exclude `Instances` granularity kinds */
-    export function simpleGranularity(granularity: Granularity) {
+    export function simpleGranularity(granularity: Granularity): Granularity {
         return granularity.replace('Instances', '') as Granularity;
     }
 
-    export function applyGranularity(loci: Loci, granularity: Granularity) {
+    export function applyGranularity(loci: Loci, granularity: Granularity): Loci {
         return Granularity[granularity](loci);
     }
 
@@ -297,7 +297,7 @@ namespace Loci {
      * Converts structure related loci to StructureElement.Loci and applies
      * granularity if given
      */
-    export function normalize(loci: Loci, granularity?: Granularity, alwaysConvertBonds = false) {
+    export function normalize(loci: Loci, granularity?: Granularity, alwaysConvertBonds = false): Loci {
         if ((granularity !== 'element' || alwaysConvertBonds) && Bond.isLoci(loci)) {
             // convert Bond.Loci to a StructureElement.Loci so granularity can be applied
             loci = Bond.toStructureElementLoci(loci);

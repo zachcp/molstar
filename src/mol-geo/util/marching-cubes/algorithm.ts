@@ -5,13 +5,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, RuntimeContext } from '../../../mol-task';
-import { Tensor } from '../../../mol-math/linear-algebra';
-import { Mesh } from '../../geometry/mesh/mesh';
-import { Index, EdgeIdInfo, CubeEdges, EdgeTable, TriTable } from './tables';
-import { defaults } from '../../../mol-util';
-import { MarchingCubesBuilder, MarchingCubesMeshBuilder, MarchingCubesLinesBuilder } from './builder';
-import { Lines } from '../../geometry/lines/lines';
+import { Task, type RuntimeContext } from '../../../mol-task/index.ts';
+import type { Tensor } from '../../../mol-math/linear-algebra.ts';
+import type { Mesh } from '../../geometry/mesh/mesh.ts';
+import { type Index, EdgeIdInfo, CubeEdges, EdgeTable, TriTable } from './tables.ts';
+import { defaults } from '../../../mol-util/index.ts';
+import { type MarchingCubesBuilder, MarchingCubesMeshBuilder, MarchingCubesLinesBuilder } from './builder.ts';
+import type { Lines } from '../../geometry/lines/lines.ts';
 
 /**
  * The parameters required by the algorithm.
@@ -72,7 +72,7 @@ export function computeMarchingCubesLines(params: MarchingCubesParams, lines?: L
 class MarchingCubesComputation {
     private size: number;
     private sliceSize: number;
-    private edgeFilter: number;
+    private edgeFilter!: number;
 
     private minX = 0; private minY = 0; private minZ = 0;
     private maxX = 0; private maxY = 0; private maxZ = 0;

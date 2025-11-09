@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ElementIndex } from '../../indexing';
-import { CoarseElementData, CoarseElementReference, CoarseIndex, CoarseElementKey } from '../coarse';
+import type { ElementIndex } from '../../indexing.ts';
+import type { CoarseElementData, CoarseElementReference, CoarseIndex, CoarseElementKey } from '../coarse.ts';
 
 export function getCoarseIndex(data: { spheres: CoarseElementData, gaussians: CoarseElementData }): CoarseIndex {
     return new Index(data);

@@ -4,19 +4,19 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import express from 'express';
-import { MembraneServerConfig } from './config';
-import { swaggerUiAssetsHandler, swaggerUiIndexHandler } from '../common/swagger-ui';
-import { getSchema, shortcutIconLink } from './web-schema';
-import { MembraneOrientationProvider } from '../../extensions/anvil/prop';
-import { SyncRuntimeContext } from '../../mol-task/execution/synchronous';
-import { AssetManager } from '../../mol-util/assets';
-import { CIF, CifFrame } from '../../mol-io/reader/cif';
-import { Model, Structure, StructureSymmetry } from '../../mol-model/structure';
-import { trajectoryFromMmCIF } from '../../mol-model-formats/structure/mmcif';
-import { ANVILParams, ANVILProps } from '../../extensions/anvil/algorithm';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ConsoleLogger } from '../../mol-util/console-logger';
+import type express from 'express';
+import { MembraneServerConfig } from './config.ts';
+import { swaggerUiAssetsHandler, swaggerUiIndexHandler } from '../common/swagger-ui.ts';
+import { getSchema, shortcutIconLink } from './web-schema.ts';
+import { MembraneOrientationProvider } from '../../extensions/anvil/prop.ts';
+import { SyncRuntimeContext } from '../../mol-task/execution/synchronous.ts';
+import { AssetManager } from '../../mol-util/assets.ts';
+import { CIF, type CifFrame } from '../../mol-io/reader/cif.ts';
+import { type Model, Structure, StructureSymmetry } from '../../mol-model/structure.ts';
+import { trajectoryFromMmCIF } from '../../mol-model-formats/structure/mmcif.ts';
+import { ANVILParams, type ANVILProps } from '../../extensions/anvil/algorithm.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ConsoleLogger } from '../../mol-util/console-logger.ts';
 
 const assetManager = new AssetManager();
 

@@ -7,55 +7,55 @@
  * @author Ludovic Autin <ludovic.autin@gmail.com>
  */
 
-import { parseDcd } from '../../mol-io/reader/dcd/parser';
-import { parseGRO } from '../../mol-io/reader/gro/parser';
-import { parsePDB } from '../../mol-io/reader/pdb/parser';
-import { Mat4, Vec3 } from '../../mol-math/linear-algebra';
-import { shapeFromPly } from '../../mol-model-formats/shape/ply';
-import { coordinatesFromDcd } from '../../mol-model-formats/structure/dcd';
-import { trajectoryFromGRO } from '../../mol-model-formats/structure/gro';
-import { trajectoryFromCCD, trajectoryFromMmCIF } from '../../mol-model-formats/structure/mmcif';
-import { trajectoryFromPDB } from '../../mol-model-formats/structure/pdb';
-import { topologyFromPsf } from '../../mol-model-formats/structure/psf';
-import { Coordinates, Model, Queries, QueryContext, Structure, StructureElement, StructureQuery, StructureSelection as Sel, Topology, ArrayTrajectory, Trajectory, Frame } from '../../mol-model/structure';
-import { PluginContext } from '../../mol-plugin/context';
-import { MolScriptBuilder } from '../../mol-script/language/builder';
-import { Expression } from '../../mol-script/language/expression';
-import { Script } from '../../mol-script/script';
-import { StateObject, StateTransformer } from '../../mol-state';
-import { RuntimeContext, Task } from '../../mol-task';
-import { deepEqual } from '../../mol-util';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { RootStructureDefinition } from '../helpers/root-structure';
-import { createStructureComponent, StructureComponentParams, updateStructureComponent } from '../helpers/structure-component';
-import { StructureQueryHelper } from '../helpers/structure-query';
-import { StructureSelectionQueries } from '../helpers/structure-selection-query';
-import { PluginStateObject as SO, PluginStateTransform } from '../objects';
-import { parseMol } from '../../mol-io/reader/mol/parser';
-import { trajectoryFromMol } from '../../mol-model-formats/structure/mol';
-import { trajectoryFromCifCore } from '../../mol-model-formats/structure/cif-core';
-import { trajectoryFromCube } from '../../mol-model-formats/structure/cube';
-import { parseMol2 } from '../../mol-io/reader/mol2/parser';
-import { trajectoryFromMol2 } from '../../mol-model-formats/structure/mol2';
-import { parseXtc } from '../../mol-io/reader/xtc/parser';
-import { coordinatesFromXtc } from '../../mol-model-formats/structure/xtc';
-import { parseXyz } from '../../mol-io/reader/xyz/parser';
-import { trajectoryFromXyz } from '../../mol-model-formats/structure/xyz';
-import { UnitStyles } from '../../mol-io/reader/lammps/schema';
-import { parseLammpsData } from '../../mol-io/reader/lammps/data/parser';
-import { trajectoryFromLammpsData } from '../../mol-model-formats/structure/lammps-data';
-import { parseLammpsTrajectory } from '../../mol-io/reader/lammps/traj/parser';
-import { coordinatesFromLammpsTrajectory, trajectoryFromLammpsTrajectory } from '../../mol-model-formats/structure/lammps-trajectory';
-import { parseSdf } from '../../mol-io/reader/sdf/parser';
-import { trajectoryFromSdf } from '../../mol-model-formats/structure/sdf';
-import { assertUnreachable } from '../../mol-util/type-helpers';
-import { parseTrr } from '../../mol-io/reader/trr/parser';
-import { coordinatesFromTrr } from '../../mol-model-formats/structure/trr';
-import { parseNctraj } from '../../mol-io/reader/nctraj/parser';
-import { coordinatesFromNctraj } from '../../mol-model-formats/structure/nctraj';
-import { topologyFromPrmtop } from '../../mol-model-formats/structure/prmtop';
-import { topologyFromTop } from '../../mol-model-formats/structure/top';
-import { getTransformFromParams, TransformParam, transformParamsNeedCentroid } from './helpers';
+import { parseDcd } from '../../mol-io/reader/dcd/parser.ts';
+import { parseGRO } from '../../mol-io/reader/gro/parser.ts';
+import { parsePDB } from '../../mol-io/reader/pdb/parser.ts';
+import { type Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { shapeFromPly } from '../../mol-model-formats/shape/ply.ts';
+import { coordinatesFromDcd } from '../../mol-model-formats/structure/dcd.ts';
+import { trajectoryFromGRO } from '../../mol-model-formats/structure/gro.ts';
+import { trajectoryFromCCD, trajectoryFromMmCIF } from '../../mol-model-formats/structure/mmcif.ts';
+import { trajectoryFromPDB } from '../../mol-model-formats/structure/pdb.ts';
+import { topologyFromPsf } from '../../mol-model-formats/structure/psf.ts';
+import { type Coordinates, Model, Queries, QueryContext, Structure, StructureElement, type StructureQuery, StructureSelection as Sel, type Topology, ArrayTrajectory, type Trajectory, type Frame } from '../../mol-model/structure.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { MolScriptBuilder } from '../../mol-script/language/builder.ts';
+import type { Expression } from '../../mol-script/language/expression.ts';
+import { Script } from '../../mol-script/script.ts';
+import { StateObject, StateTransformer } from '../../mol-state/index.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
+import { deepEqual } from '../../mol-util/index.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { RootStructureDefinition } from '../helpers/root-structure.ts';
+import { createStructureComponent, StructureComponentParams, updateStructureComponent } from '../helpers/structure-component.ts';
+import { StructureQueryHelper } from '../helpers/structure-query.ts';
+import { StructureSelectionQueries } from '../helpers/structure-selection-query.ts';
+import { PluginStateObject as SO, PluginStateTransform } from '../objects.ts';
+import { parseMol } from '../../mol-io/reader/mol/parser.ts';
+import { trajectoryFromMol } from '../../mol-model-formats/structure/mol.ts';
+import { trajectoryFromCifCore } from '../../mol-model-formats/structure/cif-core.ts';
+import { trajectoryFromCube } from '../../mol-model-formats/structure/cube.ts';
+import { parseMol2 } from '../../mol-io/reader/mol2/parser.ts';
+import { trajectoryFromMol2 } from '../../mol-model-formats/structure/mol2.ts';
+import { parseXtc } from '../../mol-io/reader/xtc/parser.ts';
+import { coordinatesFromXtc } from '../../mol-model-formats/structure/xtc.ts';
+import { parseXyz } from '../../mol-io/reader/xyz/parser.ts';
+import { trajectoryFromXyz } from '../../mol-model-formats/structure/xyz.ts';
+import { UnitStyles } from '../../mol-io/reader/lammps/schema.ts';
+import { parseLammpsData } from '../../mol-io/reader/lammps/data/parser.ts';
+import { trajectoryFromLammpsData } from '../../mol-model-formats/structure/lammps-data.ts';
+import { parseLammpsTrajectory } from '../../mol-io/reader/lammps/traj/parser.ts';
+import { coordinatesFromLammpsTrajectory, trajectoryFromLammpsTrajectory } from '../../mol-model-formats/structure/lammps-trajectory.ts';
+import { parseSdf } from '../../mol-io/reader/sdf/parser.ts';
+import { trajectoryFromSdf } from '../../mol-model-formats/structure/sdf.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
+import { parseTrr } from '../../mol-io/reader/trr/parser.ts';
+import { coordinatesFromTrr } from '../../mol-model-formats/structure/trr.ts';
+import { parseNctraj } from '../../mol-io/reader/nctraj/parser.ts';
+import { coordinatesFromNctraj } from '../../mol-model-formats/structure/nctraj.ts';
+import { topologyFromPrmtop } from '../../mol-model-formats/structure/prmtop.ts';
+import { topologyFromTop } from '../../mol-model-formats/structure/top.ts';
+import { getTransformFromParams, TransformParam, transformParamsNeedCentroid } from './helpers.ts';
 
 export { CoordinatesFromDcd };
 export { CoordinatesFromXtc };
@@ -95,8 +95,7 @@ export { CustomModelProperties };
 export { CustomStructureProperties };
 export { ShapeFromPly };
 
-type CoordinatesFromDcd = typeof CoordinatesFromDcd
-const CoordinatesFromDcd = PluginStateTransform.BuiltIn({
+const CoordinatesFromDcd: StateTransformer<SO.Data.Binary, SO.Molecule.Coordinates> = PluginStateTransform.BuiltIn({
     name: 'coordinates-from-dcd',
     display: { name: 'Parse DCD', description: 'Parse DCD binary data.' },
     from: [SO.Data.Binary],
@@ -111,9 +110,9 @@ const CoordinatesFromDcd = PluginStateTransform.BuiltIn({
         });
     }
 });
+type CoordinatesFromDcd = typeof CoordinatesFromDcd
 
-type CoordinatesFromXtc = typeof CoordinatesFromXtc
-const CoordinatesFromXtc = PluginStateTransform.BuiltIn({
+const CoordinatesFromXtc: StateTransformer<SO.Data.Binary, SO.Molecule.Coordinates> = PluginStateTransform.BuiltIn({
     name: 'coordinates-from-xtc',
     display: { name: 'Parse XTC', description: 'Parse XTC binary data.' },
     from: [SO.Data.Binary],
@@ -128,9 +127,9 @@ const CoordinatesFromXtc = PluginStateTransform.BuiltIn({
         });
     }
 });
+type CoordinatesFromXtc = typeof CoordinatesFromXtc
 
-type CoordinatesFromTrr = typeof CoordinatesFromTrr
-const CoordinatesFromTrr = PluginStateTransform.BuiltIn({
+const CoordinatesFromTrr: StateTransformer<SO.Data.Binary, SO.Molecule.Coordinates> = PluginStateTransform.BuiltIn({
     name: 'coordinates-from-trr',
     display: { name: 'Parse TRR', description: 'Parse TRR binary data.' },
     from: [SO.Data.Binary],
@@ -145,9 +144,9 @@ const CoordinatesFromTrr = PluginStateTransform.BuiltIn({
         });
     }
 });
+type CoordinatesFromTrr = typeof CoordinatesFromTrr
 
-type CoordinatesFromNctraj = typeof CoordinatesFromNctraj
-const CoordinatesFromNctraj = PluginStateTransform.BuiltIn({
+const CoordinatesFromNctraj: StateTransformer<SO.Data.Binary, SO.Molecule.Coordinates> = PluginStateTransform.BuiltIn({
     name: 'coordinates-from-nctraj',
     display: { name: 'Parse NCTRAJ', description: 'Parse NCTRAJ binary data.' },
     from: [SO.Data.Binary],
@@ -162,9 +161,9 @@ const CoordinatesFromNctraj = PluginStateTransform.BuiltIn({
         });
     }
 });
+type CoordinatesFromNctraj = typeof CoordinatesFromNctraj
 
-type CoordinatesFromLammpstraj = typeof CoordinatesFromLammpstraj
-const CoordinatesFromLammpstraj = PluginStateTransform.BuiltIn({
+const CoordinatesFromLammpstraj: StateTransformer<SO.Data.String, SO.Molecule.Coordinates> = PluginStateTransform.BuiltIn({
     name: 'coordinates-from-lammpstraj',
     display: { name: 'Parse LAMMPSTRAJ', description: 'Parse LAMMPSTRAJ data.' },
     from: [SO.Data.String],
@@ -179,9 +178,9 @@ const CoordinatesFromLammpstraj = PluginStateTransform.BuiltIn({
         });
     }
 });
+type CoordinatesFromLammpstraj = typeof CoordinatesFromLammpstraj
 
-type TopologyFromPsf = typeof TopologyFromPsf
-const TopologyFromPsf = PluginStateTransform.BuiltIn({
+const TopologyFromPsf: StateTransformer<SO.Format.Psf, SO.Molecule.Topology> = PluginStateTransform.BuiltIn({
     name: 'topology-from-psf',
     display: { name: 'PSF Topology', description: 'Create topology from PSF.' },
     from: [SO.Format.Psf],
@@ -194,9 +193,9 @@ const TopologyFromPsf = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TopologyFromPsf = typeof TopologyFromPsf
 
-type TopologyFromPrmtop = typeof TopologyFromPrmtop
-const TopologyFromPrmtop = PluginStateTransform.BuiltIn({
+const TopologyFromPrmtop: StateTransformer<SO.Format.Prmtop, SO.Molecule.Topology> = PluginStateTransform.BuiltIn({
     name: 'topology-from-prmtop',
     display: { name: 'PRMTOP Topology', description: 'Create topology from PRMTOP.' },
     from: [SO.Format.Prmtop],
@@ -209,9 +208,9 @@ const TopologyFromPrmtop = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TopologyFromPrmtop = typeof TopologyFromPrmtop
 
-type TopologyFromTop = typeof TopologyFromTop
-const TopologyFromTop = PluginStateTransform.BuiltIn({
+const TopologyFromTop: StateTransformer<SO.Format.Top, SO.Molecule.Topology> = PluginStateTransform.BuiltIn({
     name: 'topology-from-top',
     display: { name: 'TOP Topology', description: 'Create topology from TOP.' },
     from: [SO.Format.Top],
@@ -224,6 +223,7 @@ const TopologyFromTop = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TopologyFromTop = typeof TopologyFromTop
 
 export async function getTrajectory(ctx: RuntimeContext, obj: StateObject, coordinates: Coordinates) {
     if (obj.type === SO.Molecule.Topology.type) {
@@ -236,8 +236,7 @@ export async function getTrajectory(ctx: RuntimeContext, obj: StateObject, coord
     throw new Error('no model/topology found');
 }
 
-type TrajectoryFromModelAndCoordinates = typeof TrajectoryFromModelAndCoordinates
-const TrajectoryFromModelAndCoordinates = PluginStateTransform.BuiltIn({
+const TrajectoryFromModelAndCoordinates: StateTransformer<SO.Root, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-model-and-coordinates',
     display: { name: 'Trajectory from Topology & Coordinates', description: 'Create a trajectory from existing model/topology and coordinates.' },
     from: SO.Root,
@@ -256,8 +255,8 @@ const TrajectoryFromModelAndCoordinates = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromModelAndCoordinates = typeof TrajectoryFromModelAndCoordinates
 
-type TrajectoryFromBlob = typeof TrajectoryFromBlob
 const TrajectoryFromBlob = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-blob',
     display: { name: 'Parse Blob', description: 'Parse format blob into a single trajectory.' },
@@ -288,14 +287,14 @@ const TrajectoryFromBlob = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromBlob = typeof TrajectoryFromBlob
 
 function trajectoryProps(trajectory: Trajectory) {
     const first = trajectory.representative;
     return { label: `${first.entry}`, description: `${trajectory.frameCount} model${trajectory.frameCount === 1 ? '' : 's'}` };
 }
 
-type TrajectoryFromMmCif = typeof TrajectoryFromMmCif
-const TrajectoryFromMmCif = PluginStateTransform.BuiltIn({
+const TrajectoryFromMmCif: StateTransformer<SO.Format.Cif, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-mmcif',
     display: { name: 'Trajectory from mmCIF', description: 'Identify and create all separate models in the specified CIF data block' },
     from: SO.Format.Cif,
@@ -347,9 +346,9 @@ const TrajectoryFromMmCif = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromMmCif = typeof TrajectoryFromMmCif
 
-type TrajectoryFromPDB = typeof TrajectoryFromPDB
-const TrajectoryFromPDB = PluginStateTransform.BuiltIn({
+const TrajectoryFromPDB: StateTransformer<SO.Data.String, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-pdb',
     display: { name: 'Parse PDB', description: 'Parse PDB string and create trajectory.' },
     from: [SO.Data.String],
@@ -368,9 +367,9 @@ const TrajectoryFromPDB = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromPDB = typeof TrajectoryFromPDB
 
-type TrajectoryFromGRO = typeof TrajectoryFromGRO
-const TrajectoryFromGRO = PluginStateTransform.BuiltIn({
+const TrajectoryFromGRO: StateTransformer<SO.Data.String, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-gro',
     display: { name: 'Parse GRO', description: 'Parse GRO string and create trajectory.' },
     from: [SO.Data.String],
@@ -386,9 +385,9 @@ const TrajectoryFromGRO = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromGRO = typeof TrajectoryFromGRO
 
-type TrajectoryFromXYZ = typeof TrajectoryFromXYZ
-const TrajectoryFromXYZ = PluginStateTransform.BuiltIn({
+const TrajectoryFromXYZ: StateTransformer<SO.Data.String, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-xyz',
     display: { name: 'Parse XYZ', description: 'Parse XYZ string and create trajectory.' },
     from: [SO.Data.String],
@@ -404,9 +403,9 @@ const TrajectoryFromXYZ = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromXYZ = typeof TrajectoryFromXYZ
 
-type TrajectoryFromLammpsData = typeof TrajectoryFromLammpsData
-const TrajectoryFromLammpsData = PluginStateTransform.BuiltIn({
+const TrajectoryFromLammpsData: StateTransformer<SO.Data.String, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-lammps-data',
     display: { name: 'Parse Lammps Data', description: 'Parse Lammps Data from string and create trajectory.' },
     from: [SO.Data.String],
@@ -425,9 +424,9 @@ const TrajectoryFromLammpsData = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromLammpsData = typeof TrajectoryFromLammpsData
 
-type TrajectoryFromLammpsTrajData = typeof TrajectoryFromLammpsTrajData
-const TrajectoryFromLammpsTrajData = PluginStateTransform.BuiltIn({
+const TrajectoryFromLammpsTrajData: StateTransformer<SO.Data.String, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-lammps-traj-data',
     display: { name: 'Parse Lammps traj Data', description: 'Parse Lammps Traj Data string and create trajectory.' },
     from: [SO.Data.String],
@@ -446,10 +445,10 @@ const TrajectoryFromLammpsTrajData = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromLammpsTrajData = typeof TrajectoryFromLammpsTrajData
 
 
-type TrajectoryFromMOL = typeof TrajectoryFromMOL
-const TrajectoryFromMOL = PluginStateTransform.BuiltIn({
+const TrajectoryFromMOL: StateTransformer<SO.Data.String, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-mol',
     display: { name: 'Parse MOL', description: 'Parse MOL string and create trajectory.' },
     from: [SO.Data.String],
@@ -465,9 +464,9 @@ const TrajectoryFromMOL = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromMOL = typeof TrajectoryFromMOL
 
-type TrajectoryFromSDF = typeof TrajectoryFromSDF
-const TrajectoryFromSDF = PluginStateTransform.BuiltIn({
+const TrajectoryFromSDF: StateTransformer<SO.Data.String, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-sdf',
     display: { name: 'Parse SDF', description: 'Parse SDF string and create trajectory.' },
     from: [SO.Data.String],
@@ -494,10 +493,11 @@ const TrajectoryFromSDF = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromSDF = typeof TrajectoryFromSDF
 
 
 type TrajectoryFromMOL2 = typeof TrajectoryFromMOL
-const TrajectoryFromMOL2 = PluginStateTransform.BuiltIn({
+const TrajectoryFromMOL2: StateTransformer<SO.Data.String, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-mol2',
     display: { name: 'Parse MOL2', description: 'Parse MOL2 string and create trajectory.' },
     from: [SO.Data.String],
@@ -514,7 +514,6 @@ const TrajectoryFromMOL2 = PluginStateTransform.BuiltIn({
     }
 });
 
-type TrajectoryFromCube = typeof TrajectoryFromCube
 const TrajectoryFromCube = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-cube',
     display: { name: 'Parse Cube', description: 'Parse Cube file to create a trajectory.' },
@@ -529,9 +528,9 @@ const TrajectoryFromCube = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromCube = typeof TrajectoryFromCube
 
-type TrajectoryFromCifCore = typeof TrajectoryFromCifCore
-const TrajectoryFromCifCore = PluginStateTransform.BuiltIn({
+const TrajectoryFromCifCore: StateTransformer<SO.Format.Cif, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-cif-core',
     display: { name: 'Parse CIF Core', description: 'Identify and create all separate models in the specified CIF data block' },
     from: SO.Format.Cif,
@@ -560,10 +559,10 @@ const TrajectoryFromCifCore = PluginStateTransform.BuiltIn({
         });
     }
 });
+type TrajectoryFromCifCore = typeof TrajectoryFromCifCore
 
 const plus1 = (v: number) => v + 1, minus1 = (v: number) => v - 1;
-type ModelFromTrajectory = typeof ModelFromTrajectory
-const ModelFromTrajectory = PluginStateTransform.BuiltIn({
+const ModelFromTrajectory: StateTransformer<SO.Molecule.Trajectory, SO.Molecule.Model> = PluginStateTransform.BuiltIn({
     name: 'model-from-trajectory',
     display: { name: 'Molecular Model', description: 'Create a molecular model from specified index in a trajectory.' },
     from: SO.Molecule.Trajectory,
@@ -594,8 +593,8 @@ const ModelFromTrajectory = PluginStateTransform.BuiltIn({
         b?.data.customProperties.dispose();
     }
 });
+type ModelFromTrajectory = typeof ModelFromTrajectory
 
-type StructureFromTrajectory = typeof StructureFromTrajectory
 const StructureFromTrajectory = PluginStateTransform.BuiltIn({
     name: 'structure-from-trajectory',
     display: { name: 'Structure from Trajectory', description: 'Create a molecular structure from a trajectory.' },
@@ -613,9 +612,9 @@ const StructureFromTrajectory = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type StructureFromTrajectory = typeof StructureFromTrajectory
 
-type StructureFromModel = typeof StructureFromModel
-const StructureFromModel = PluginStateTransform.BuiltIn({
+const StructureFromModel: StateTransformer<SO.Molecule.Model, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'structure-from-model',
     display: { name: 'Structure', description: 'Create a molecular structure (model, assembly, or symmetry) from the specified model.' },
     from: SO.Molecule.Model,
@@ -643,9 +642,9 @@ const StructureFromModel = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type StructureFromModel = typeof StructureFromModel
 
-type TransformStructureConformation = typeof TransformStructureConformation
-const TransformStructureConformation = PluginStateTransform.BuiltIn({
+const TransformStructureConformation: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'transform-structure-conformation',
     display: { name: 'Transform Conformation' },
     isDecorator: true,
@@ -681,10 +680,10 @@ const TransformStructureConformation = PluginStateTransform.BuiltIn({
     //     return { axis, angle, translation };
     // }
 });
+type TransformStructureConformation = typeof TransformStructureConformation
 
 
-type StructureInstances = typeof StructureInstances
-const StructureInstances = PluginStateTransform.BuiltIn({
+const StructureInstances: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'structure-instances',
     display: { name: 'Structure Instances' },
     isDecorator: true,
@@ -711,9 +710,9 @@ const StructureInstances = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type StructureInstances = typeof StructureInstances
 
-type ModelWithCoordinates = typeof ModelWithCoordinates
-const ModelWithCoordinates = PluginStateTransform.BuiltIn({
+const ModelWithCoordinates: StateTransformer<SO.Molecule.Model, SO.Molecule.Model> = PluginStateTransform.BuiltIn({
     name: 'model-with-coordinates',
     display: { name: 'Model With Coordinates', description: 'Updates the current model with provided coordinate frame' },
     from: SO.Molecule.Model,
@@ -746,9 +745,9 @@ const ModelWithCoordinates = PluginStateTransform.BuiltIn({
         return StateTransformer.UpdateResult.Updated;
     },
 });
+type ModelWithCoordinates = typeof ModelWithCoordinates
 
-type StructureSelectionFromExpression = typeof StructureSelectionFromExpression
-const StructureSelectionFromExpression = PluginStateTransform.BuiltIn({
+const StructureSelectionFromExpression: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'structure-selection-from-expression',
     display: { name: 'Selection', description: 'Create a molecular structure from the specified expression.' },
     from: SO.Molecule.Structure,
@@ -786,9 +785,9 @@ const StructureSelectionFromExpression = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type StructureSelectionFromExpression = typeof StructureSelectionFromExpression
 
-type MultiStructureSelectionFromExpression = typeof MultiStructureSelectionFromExpression
-const MultiStructureSelectionFromExpression = PluginStateTransform.BuiltIn({
+const MultiStructureSelectionFromExpression: StateTransformer<SO.Root, SO.Molecule.Structure.Selections> = PluginStateTransform.BuiltIn({
     name: 'structure-multi-selection-from-expression',
     display: { name: 'Multi-structure Measurement Selection', description: 'Create selection object from multiple structures.' },
     from: SO.Root,
@@ -912,9 +911,9 @@ const MultiStructureSelectionFromExpression = PluginStateTransform.BuiltIn({
         return StateTransformer.UpdateResult.Updated;
     }
 });
+type MultiStructureSelectionFromExpression = typeof MultiStructureSelectionFromExpression
 
-type MultiStructureSelectionFromBundle = typeof MultiStructureSelectionFromBundle
-const MultiStructureSelectionFromBundle = PluginStateTransform.BuiltIn({
+const MultiStructureSelectionFromBundle: StateTransformer<SO.Root, SO.Molecule.Structure.Selections> = PluginStateTransform.BuiltIn({
     name: 'structure-multi-selection-from-bundle',
     display: { name: 'Multi-structure Measurement Selection', description: 'Create selection object from multiple structures.' },
     from: SO.Root,
@@ -1012,9 +1011,9 @@ const MultiStructureSelectionFromBundle = PluginStateTransform.BuiltIn({
         return StateTransformer.UpdateResult.Updated;
     }
 });
+type MultiStructureSelectionFromBundle = typeof MultiStructureSelectionFromBundle
 
-type StructureSelectionFromScript = typeof StructureSelectionFromScript
-const StructureSelectionFromScript = PluginStateTransform.BuiltIn({
+const StructureSelectionFromScript: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'structure-selection-from-script',
     display: { name: 'Selection', description: 'Create a molecular structure from the specified script.' },
     from: SO.Molecule.Structure,
@@ -1051,9 +1050,9 @@ const StructureSelectionFromScript = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type StructureSelectionFromScript = typeof StructureSelectionFromScript
 
-type StructureSelectionFromBundle = typeof StructureSelectionFromBundle
-const StructureSelectionFromBundle = PluginStateTransform.BuiltIn({
+const StructureSelectionFromBundle: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'structure-selection-from-bundle',
     display: { name: 'Selection', description: 'Create a molecular structure from the specified structure-element bundle.' },
     from: SO.Molecule.Structure,
@@ -1102,6 +1101,7 @@ const StructureSelectionFromBundle = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type StructureSelectionFromBundle = typeof StructureSelectionFromBundle
 
 export const StructureComplexElementTypes = {
     'polymer': 'polymer',
@@ -1125,8 +1125,7 @@ export type StructureComplexElementTypes = keyof typeof StructureComplexElementT
 
 const StructureComplexElementTypeTuples = PD.objectToOptions(StructureComplexElementTypes);
 
-type StructureComplexElement = typeof StructureComplexElement
-const StructureComplexElement = PluginStateTransform.BuiltIn({
+const StructureComplexElement: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'structure-complex-element',
     display: { name: 'Complex Element', description: 'Create a molecular structure from the specified model.' },
     from: SO.Molecule.Structure,
@@ -1168,9 +1167,9 @@ const StructureComplexElement = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type StructureComplexElement = typeof StructureComplexElement
 
-type StructureComponent = typeof StructureComponent
-const StructureComponent = PluginStateTransform.BuiltIn({
+const StructureComponent: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'structure-component',
     display: { name: 'Component', description: 'A molecular structure component.' },
     from: SO.Molecule.Structure,
@@ -1187,9 +1186,9 @@ const StructureComponent = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type StructureComponent = typeof StructureComponent
 
-type CustomModelProperties = typeof CustomModelProperties
-const CustomModelProperties = PluginStateTransform.BuiltIn({
+const CustomModelProperties: StateTransformer<SO.Molecule.Model, SO.Molecule.Model> = PluginStateTransform.BuiltIn({
     name: 'custom-model-properties',
     display: { name: 'Custom Model Properties' },
     isDecorator: true,
@@ -1223,6 +1222,7 @@ const CustomModelProperties = PluginStateTransform.BuiltIn({
         b?.data.customProperties.dispose();
     }
 });
+type CustomModelProperties = typeof CustomModelProperties
 async function attachModelProps(model: Model, ctx: PluginContext, taskCtx: RuntimeContext, params: ReturnType<CustomModelProperties['createDefaultParams']>) {
     const propertyCtx = { runtime: taskCtx, assetManager: ctx.managers.asset, errorContext: ctx.errorContext };
     const { autoAttach, properties } = params;
@@ -1241,8 +1241,7 @@ async function attachModelProps(model: Model, ctx: PluginContext, taskCtx: Runti
     }
 }
 
-type CustomStructureProperties = typeof CustomStructureProperties
-const CustomStructureProperties = PluginStateTransform.BuiltIn({
+const CustomStructureProperties: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'custom-structure-properties',
     display: { name: 'Custom Structure Properties' },
     isDecorator: true,
@@ -1278,6 +1277,7 @@ const CustomStructureProperties = PluginStateTransform.BuiltIn({
         b?.data.customPropertyDescriptors.dispose();
     }
 });
+type CustomStructureProperties = typeof CustomStructureProperties
 async function attachStructureProps(structure: Structure, ctx: PluginContext, taskCtx: RuntimeContext, params: ReturnType<CustomStructureProperties['createDefaultParams']>) {
     const propertyCtx = { runtime: taskCtx, assetManager: ctx.managers.asset, errorContext: ctx.errorContext };
     const { autoAttach, properties } = params;
@@ -1296,8 +1296,7 @@ async function attachStructureProps(structure: Structure, ctx: PluginContext, ta
     }
 }
 
-type ShapeFromPly = typeof ShapeFromPly
-const ShapeFromPly = PluginStateTransform.BuiltIn({
+const ShapeFromPly: StateTransformer<SO.Format.Ply, SO.Shape.Provider> = PluginStateTransform.BuiltIn({
     name: 'shape-from-ply',
     display: { name: 'Shape from PLY', description: 'Create Shape from PLY data' },
     from: SO.Format.Ply,
@@ -1317,3 +1316,4 @@ const ShapeFromPly = PluginStateTransform.BuiltIn({
         });
     }
 });
+type ShapeFromPly = typeof ShapeFromPly

@@ -6,10 +6,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
-import { FileHandle } from '../../../mol-io/common/file-handle';
-import { SimpleBuffer } from '../../../mol-io/common/simple-buffer';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import type { FileHandle } from '../../../mol-io/common/file-handle.ts';
+import { SimpleBuffer } from '../../../mol-io/common/simple-buffer.ts';
+import { Buffer } from "node:buffer";
 
 export async function openRead(filename: string) {
     return new Promise<number>((res, rej) => {

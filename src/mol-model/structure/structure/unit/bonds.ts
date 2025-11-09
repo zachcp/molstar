@@ -6,16 +6,16 @@
  * @author Paul Pillot <paul.pillot@tandemai.com>
  */
 
-import { Unit, StructureElement } from '../../structure';
-import { Structure } from '../structure';
-import { BondType } from '../../model/types';
-import { SortedArray, Iterator, OrderedSet } from '../../../../mol-data/int';
-import { CentroidHelper } from '../../../../mol-math/geometry/centroid-helper';
-import { Sphere3D } from '../../../../mol-math/geometry';
+import { Unit, StructureElement } from '../../structure.ts';
+import type { Structure } from '../structure.ts';
+import { BondType } from '../../model/types.ts';
+import { SortedArray, type Iterator, OrderedSet } from '../../../../mol-data/int.ts';
+import { CentroidHelper } from '../../../../mol-math/geometry/centroid-helper.ts';
+import type { Sphere3D } from '../../../../mol-math/geometry.ts';
 
-export * from './bonds/data';
-export * from './bonds/intra-compute';
-export * from './bonds/inter-compute';
+export * from './bonds/data.ts';
+export * from './bonds/intra-compute.ts';
+export * from './bonds/inter-compute.ts';
 
 namespace Bond {
     export interface Location<U extends Unit = Unit> {
@@ -48,7 +48,7 @@ namespace Bond {
         return !!x && x.kind === 'bond-location';
     }
 
-    export function areLocationsEqual(locA: Location, locB: Location) {
+    export function areLocationsEqual(locA: Location, locB: Location): boolean {
         return (
             locA.aStructure.label === locB.aStructure.label && locA.bStructure.label === locB.bStructure.label &&
             locA.aIndex === locB.aIndex && locA.bIndex === locB.bIndex &&
@@ -70,7 +70,7 @@ namespace Bond {
         return !!x && x.kind === 'bond-loci';
     }
 
-    export function areLociEqual(a: Loci, b: Loci) {
+    export function areLociEqual(a: Loci, b: Loci): boolean {
         if (a.structure !== b.structure) return false;
         if (a.bonds.length !== b.bonds.length) return false;
         for (let i = 0, il = a.bonds.length; i < il; ++i) {
@@ -79,7 +79,7 @@ namespace Bond {
         return true;
     }
 
-    export function isLociEmpty(loci: Loci) {
+    export function isLociEmpty(loci: Loci): boolean {
         return loci.bonds.length === 0 ? true : false;
     }
 
@@ -185,16 +185,16 @@ namespace Bond {
     export class ElementBondIterator implements Iterator<ElementBondData> {
         private current: ElementBondData = {} as any;
 
-        private structure: Structure;
-        private unit: Unit.Atomic;
-        private index: StructureElement.UnitIndex;
+        private structure!: Structure;
+        private unit!: Unit.Atomic;
+        private index!: StructureElement.UnitIndex;
 
-        private interBondIndices: ReadonlyArray<number>;
-        private interBondCount: number;
-        private interBondIndex: number;
+        private interBondIndices!: ReadonlyArray<number>;
+        private interBondCount!: number;
+        private interBondIndex!: number;
 
-        private intraBondEnd: number;
-        private intraBondIndex: number;
+        private intraBondEnd!: number;
+        private intraBondIndex!: number;
 
         hasNext: boolean;
         move(): ElementBondData {
@@ -243,7 +243,7 @@ namespace Bond {
         }
     }
 
-    export function getBoundingSphere(loci: Loci, boundingSphere: Sphere3D) {
+    export function getBoundingSphere(loci: Loci, boundingSphere: Sphere3D): Sphere3D {
         return CentroidHelper.fromPairProvider(loci.bonds.length, (i, pA, pB) => {
             const { aUnit, aIndex, bUnit, bIndex } = loci.bonds[i];
             aUnit.conformation.position(aUnit.elements[aIndex], pA);

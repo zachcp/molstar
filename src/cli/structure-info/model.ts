@@ -9,17 +9,17 @@
 import * as argparse from 'argparse';
 require('util.promisify').shim();
 
-import { CifFrame } from '../../mol-io/reader/cif';
-import { Model, Structure, StructureElement, Unit, StructureProperties, UnitRing, Trajectory } from '../../mol-model/structure';
-// import { Run, Progress } from '../../mol-task'
-import { OrderedSet } from '../../mol-data/int';
-import { openCif, downloadCif } from './helpers';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { trajectoryFromMmCIF } from '../../mol-model-formats/structure/mmcif';
-import { Sequence } from '../../mol-model/sequence';
-import { ModelSecondaryStructure } from '../../mol-model-formats/structure/property/secondary-structure';
-import { ModelSymmetry } from '../../mol-model-formats/structure/property/symmetry';
-import { Task } from '../../mol-task';
+import type { CifFrame } from '../../mol-io/reader/cif.ts';
+import { type Model, Structure, StructureElement, Unit, StructureProperties, UnitRing, type Trajectory } from '../../mol-model/structure.ts';
+// import { Run, Progress } from '../../mol-task/index.ts'
+import { OrderedSet } from '../../mol-data/int.ts';
+import { openCif, downloadCif } from './helpers.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { trajectoryFromMmCIF } from '../../mol-model-formats/structure/mmcif.ts';
+import { Sequence } from '../../mol-model/sequence.ts';
+import { ModelSecondaryStructure } from '../../mol-model-formats/structure/property/secondary-structure.ts';
+import { ModelSymmetry } from '../../mol-model-formats/structure/property/symmetry.ts';
+import { Task } from '../../mol-task/index.ts';
 
 
 async function downloadFromPdb(pdb: string) {

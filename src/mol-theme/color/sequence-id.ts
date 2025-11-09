@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Unit, StructureElement, Bond, ElementIndex } from '../../mol-model/structure';
+import { Unit, StructureElement, Bond, type ElementIndex } from '../../mol-model/structure.ts';
 
-import { ColorScale, Color } from '../../mol-util/color';
-import { Location } from '../../mol-model/location';
-import type { ColorTheme } from '../color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../../mol-theme/theme';
-import { ColorThemeCategory } from './categories';
+import { ColorScale, Color } from '../../mol-util/color/index.ts';
+import type { Location } from '../../mol-model/location.ts';
+import type { ColorTheme } from '../color.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { ThemeDataContext } from '../../mol-theme/theme.ts';
+import { ColorThemeCategory } from './categories.ts';
 
 const DefaultColor = Color(0xCCCCCC);
 const Description = 'Gives every polymer residue a color based on its `seq_id` value.';

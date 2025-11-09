@@ -5,29 +5,27 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as React from 'react';
+import type * as React from 'react';
 import { throttleTime } from 'rxjs';
-import { Canvas3DContext, Canvas3DParams } from '../mol-canvas3d/canvas3d';
-import { PluginCommands } from '../mol-plugin/commands';
-import { LeftPanelTabName } from '../mol-plugin/layout';
-import { StateTransform } from '../mol-state';
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { PluginUIComponent } from './base';
-import { IconButton, SectionHeader } from './controls/common';
-import { AccountTreeOutlinedSvg, DeleteOutlinedSvg, HelpOutlineSvg, HomeOutlinedSvg, SaveOutlinedSvg, TuneSvg } from './controls/icons';
-import { ParameterControls } from './controls/parameters';
-import { StateObjectActions } from './state/actions';
-import { RemoteStateSnapshots, StateSnapshots } from './state/snapshots';
-import { StateTree } from './state/tree';
-import { HelpContent } from './viewport/help';
+import { Canvas3DContext, Canvas3DParams } from '../mol-canvas3d/canvas3d.ts';
+import { PluginCommands } from '../mol-plugin/commands.ts';
+import type { LeftPanelTabName } from '../mol-plugin/layout.ts';
+import { StateTransform } from '../mol-state/index.ts';
+import type { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import { PluginUIComponent } from './base.tsx';
+import { IconButton, SectionHeader } from './controls/common.tsx';
+import { AccountTreeOutlinedSvg, DeleteOutlinedSvg, HelpOutlineSvg, HomeOutlinedSvg, SaveOutlinedSvg, TuneSvg } from './controls/icons.tsx';
+import { ParameterControls } from './controls/parameters.tsx';
+import { StateObjectActions } from './state/actions.tsx';
+import { RemoteStateSnapshots, StateSnapshots } from './state/snapshots.tsx';
+import { StateTree } from './state/tree.tsx';
+import { HelpContent } from './viewport/help.tsx';
 
 export class CustomImportControls extends PluginUIComponent<{ initiallyCollapsed?: boolean }> {
-    componentDidMount() {
-        this.subscribe(this.plugin.state.behaviors.events.changed, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.plugin.state.behaviors.events.changed, () => this.forceUpdate());
     }
 
-    render() {
-        const controls: JSX.Element[] = [];
+    override render() {        const controls: JSX.Element[] = [];
         this.plugin.customImportControls.forEach((Controls, key) => {
             controls.push(<Controls initiallyCollapsed={this.props.initiallyCollapsed} key={key} />);
         });
@@ -36,10 +34,8 @@ export class CustomImportControls extends PluginUIComponent<{ initiallyCollapsed
 }
 
 export class LeftPanelControls extends PluginUIComponent<{}, { tab: LeftPanelTabName }> {
-    state = { tab: this.plugin.behaviors.layout.leftPanelTabName.value };
-
-    componentDidMount() {
-        this.subscribe(this.plugin.behaviors.layout.leftPanelTabName, tab => {
+    override state = { tab: this.plugin.behaviors.layout.leftPanelTabName.value };
+    override componentDidMount() {        this.subscribe(this.plugin.behaviors.layout.leftPanelTabName, tab => {
             if (this.state.tab !== tab) this.setState({ tab });
             if (tab === 'none' && this.plugin.layout.state.regionState.left !== 'collapsed') {
                 PluginCommands.Layout.Update(this.plugin, { state: { regionState: { ...this.plugin.layout.state.regionState, left: 'collapsed' } } });
@@ -69,7 +65,7 @@ export class LeftPanelControls extends PluginUIComponent<{}, { tab: LeftPanelTab
         'none': <></>,
         'root': <>
             <SectionHeader icon={HomeOutlinedSvg} title='Home' />
-            <StateObjectActions state={this.plugin.state.data} nodeRef={StateTransform.RootRef} hideHeader={true} initiallyCollapsed={true} alwaysExpandFirst={true} />
+            <StateObjectActions state={this.plugin.state.data} nodeRef={StateTransform.RootRef} hideHeader initiallyCollapsed alwaysExpandFirst />
             <CustomImportControls />
             {this.plugin.spec.components?.remoteState !== 'none' && <RemoteStateSnapshots listOnly /> }
         </>,
@@ -88,8 +84,7 @@ export class LeftPanelControls extends PluginUIComponent<{}, { tab: LeftPanelTab
         </>
     };
 
-    render() {
-        const tab = this.state.tab;
+    override render() {        const tab = this.state.tab;
 
         return <div className='msp-left-panel-controls'>
             <div className='msp-left-panel-controls-buttons'>
@@ -109,14 +104,12 @@ export class LeftPanelControls extends PluginUIComponent<{}, { tab: LeftPanelTab
 }
 
 class DataIcon extends PluginUIComponent<{ set: (tab: LeftPanelTabName) => void }, { changed: boolean }> {
-    state = { changed: false };
-
+    override state = { changed: false };
     get tab() {
         return this.plugin.behaviors.layout.leftPanelTabName.value;
     }
 
-    componentDidMount() {
-        this.subscribe(this.plugin.behaviors.layout.leftPanelTabName, tab => {
+    override componentDidMount() {        this.subscribe(this.plugin.behaviors.layout.leftPanelTabName, tab => {
             if (this.tab === 'data') this.setState({ changed: false });
             else this.forceUpdate();
         });
@@ -126,8 +119,7 @@ class DataIcon extends PluginUIComponent<{ set: (tab: LeftPanelTabName) => void 
         });
     }
 
-    render() {
-        return <IconButton
+    override render() {        return <IconButton
             svg={AccountTreeOutlinedSvg} toggleState={this.tab === 'data'} transparent onClick={() => this.props.set('data')} title='State Tree'
             style={{ position: 'relative' }} extraContent={this.state.changed ? <div className='msp-left-panel-controls-button-data-dirty' /> : void 0} />;
     }
@@ -143,8 +135,7 @@ class FullSettings extends PluginUIComponent {
         this.plugin.events.canvas3d.settingsUpdated.next(void 0);
     };
 
-    componentDidMount() {
-        this.subscribe(this.plugin.events.canvas3d.settingsUpdated, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.plugin.events.canvas3d.settingsUpdated, () => this.forceUpdate());
         this.subscribe(this.plugin.layout.events.updated, () => this.forceUpdate());
 
         if (this.plugin.canvas3d) {
@@ -156,8 +147,7 @@ class FullSettings extends PluginUIComponent {
         }
     }
 
-    render() {
-        return <>
+    override render() {        return <>
             {this.plugin.canvas3d && this.plugin.canvas3dContext && <>
                 <SectionHeader title='Viewport' />
                 <ParameterControls params={Canvas3DParams} values={this.plugin.canvas3d.props} onChange={this.setSettings} />
@@ -170,8 +160,7 @@ class FullSettings extends PluginUIComponent {
 }
 
 class RemoveAllButton extends PluginUIComponent<{ }> {
-    componentDidMount() {
-        this.subscribe(this.plugin.state.events.cell.created, e => {
+    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.created, e => {
             if (e.cell.transform.parent === StateTransform.RootRef) this.forceUpdate();
         });
 
@@ -185,9 +174,8 @@ class RemoveAllButton extends PluginUIComponent<{ }> {
         PluginCommands.State.RemoveObject(this.plugin, { state: this.plugin.state.data, ref: StateTransform.RootRef });
     };
 
-    render() {
-        const count = this.plugin.state.data.tree.children.get(StateTransform.RootRef).size;
+    override render() {        const count = this.plugin.state.data.tree.children.get(StateTransform.RootRef).size;
         if (count === 0) return null;
-        return <IconButton svg={DeleteOutlinedSvg} onClick={this.remove} title={'Remove All'} style={{ display: 'inline-block' }} small className='msp-no-hover-outline' transparent />;
+        return <IconButton svg={DeleteOutlinedSvg} onClick={this.remove} title="Remove All" style={{ display: 'inline-block' }} small className='msp-no-hover-outline' transparent />;
     }
 }

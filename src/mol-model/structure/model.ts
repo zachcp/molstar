@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Model } from './model/model';
-import * as Types from './model/types';
-import { Symmetry } from './model/properties/symmetry';
-import { StructureSequence } from './model/properties/sequence';
+import { Model } from './model/model.ts';
+import * as Types from './model/types.ts';
+import { Symmetry } from './model/properties/symmetry.ts';
+import { StructureSequence } from './model/properties/sequence.ts';
 
-export * from './model/properties/custom/indexed';
-export * from './model/indexing';
+export * from './model/properties/custom/indexed.ts';
+export * from './model/indexing.ts';
 export { Model, Types, Symmetry, StructureSequence };

@@ -4,16 +4,16 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Location } from '../../../mol-model/location';
-import { Bond, StructureElement, Unit } from '../../../mol-model/structure';
-import { ColorTheme, LocationColor } from '../../../mol-theme/color';
-import { ColorThemeCategory } from '../../../mol-theme/color/categories';
-import { ThemeDataContext } from '../../../mol-theme/theme';
-import { Color } from '../../../mol-util/color';
-import { getPalette, getPaletteParams } from '../../../mol-util/color/palette';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { CustomProperty } from '../../common/custom-property';
-import { SIFTSMapping } from '../sifts-mapping';
+import type { Location } from '../../../mol-model/location.ts';
+import { Bond, StructureElement, Unit } from '../../../mol-model/structure.ts';
+import type { ColorTheme, LocationColor } from '../../../mol-theme/color.ts';
+import { ColorThemeCategory } from '../../../mol-theme/color/categories.ts';
+import type { ThemeDataContext } from '../../../mol-theme/theme.ts';
+import { Color } from '../../../mol-util/color/index.ts';
+import { getPalette, getPaletteParams } from '../../../mol-util/color/palette.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { CustomProperty } from '../../common/custom-property.ts';
+import { SIFTSMapping } from '../sifts-mapping.ts';
 
 const DefaultColor = Color(0xFAFAFA);
 const Description = 'Assigns a color based on SIFTS mapping.';

@@ -6,9 +6,9 @@
  * Adapted from MolQL project
  */
 
-import { transpiler as jmol } from './jmol/parser';
-import { transpiler as pymol } from './pymol/parser';
-import { transpiler as vmd } from './vmd/parser';
+import { transpiler as jmol } from './jmol/parser.ts';
+import { transpiler as pymol } from './pymol/parser.ts';
+import { transpiler as vmd } from './vmd/parser.ts';
 
 export const _transpiler = {
     pymol,

@@ -7,23 +7,24 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import * as DataFormat from '../../common/data-format';
-import * as Data from './data-model';
-import * as Coords from '../algebra/coordinate';
-import * as Box from '../algebra/box';
-import { ConsoleLogger } from '../../../../mol-util/console-logger';
-import { State } from '../state';
+import * as DataFormat from '../../common/data-format.ts';
+import type * as Data from './data-model.ts';
+import * as Coords from '../algebra/coordinate.ts';
+import * as Box from '../algebra/box.ts';
+import { ConsoleLogger } from '../../../../mol-util/console-logger.ts';
+import { State } from '../state.ts';
 
-import { findUniqueBlocks } from './identify';
-import { compose } from './compose';
-import { encode } from './encode';
-import { SpacegroupCell } from '../../../../mol-math/geometry';
-import { Vec3 } from '../../../../mol-math/linear-algebra';
-import { UUID } from '../../../../mol-util';
-import { FileHandle } from '../../../../mol-io/common/file-handle';
-import { createTypedArray, TypedArrayValueType } from '../../../../mol-io/common/typed-array';
-import { LimitsConfig } from '../../config';
-import { fileHandleFromPathOrUrl } from '../../../common/file-handle';
+import { findUniqueBlocks } from './identify.ts';
+import { compose } from './compose.ts';
+import { encode } from './encode.ts';
+import { SpacegroupCell } from '../../../../mol-math/geometry.ts';
+import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { UUID } from '../../../../mol-util/index.ts';
+import type { FileHandle } from '../../../../mol-io/common/file-handle.ts';
+import { createTypedArray, type TypedArrayValueType } from '../../../../mol-io/common/typed-array.ts';
+import { LimitsConfig } from '../../config.ts';
+import { fileHandleFromPathOrUrl } from '../../../common/file-handle.ts';
+import process from "node:process";
 
 export async function execute(params: Data.QueryParams, outputProvider: () => Data.QueryOutputStream) {
     const start = getTime();

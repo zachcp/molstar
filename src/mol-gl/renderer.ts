@@ -5,25 +5,25 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { Viewport } from '../mol-canvas3d/camera/util';
-import { ICamera } from '../mol-canvas3d/camera';
-import { Scene } from './scene';
-import { WebGLContext } from './webgl/context';
-import { Mat4, Vec3, Vec4, Vec2 } from '../mol-math/linear-algebra';
-import { GraphicsRenderable } from './renderable';
-import { Color } from '../mol-util/color';
-import { ValueCell, deepEqual } from '../mol-util';
-import { GlobalUniformValues } from './renderable/schema';
-import { GraphicsRenderVariant } from './webgl/render-item';
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { degToRad } from '../mol-math/misc';
-import { Texture, Textures } from './webgl/texture';
-import { arrayMapUpsert } from '../mol-util/array';
-import { clamp } from '../mol-math/interpolate';
-import { isTimingMode } from '../mol-util/debug';
-import { Frustum3D } from '../mol-math/geometry/primitives/frustum3d';
-import { Plane3D } from '../mol-math/geometry/primitives/plane3d';
-import { Sphere3D } from '../mol-math/geometry';
+import { Viewport } from '../mol-canvas3d/camera/util.ts';
+import type { ICamera } from '../mol-canvas3d/camera.ts';
+import type { Scene } from './scene.ts';
+import type { WebGLContext } from './webgl/context.ts';
+import { Mat4, Vec3, Vec4, Vec2 } from '../mol-math/linear-algebra.ts';
+import type { GraphicsRenderable } from './renderable.ts';
+import { Color } from '../mol-util/color/index.ts';
+import { ValueCell, deepEqual } from '../mol-util/index.ts';
+import type { GlobalUniformValues } from './renderable/schema.ts';
+import type { GraphicsRenderVariant } from './webgl/render-item.ts';
+import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import { degToRad } from '../mol-math/misc.ts';
+import type { Texture, Textures } from './webgl/texture.ts';
+import { arrayMapUpsert } from '../mol-util/array.ts';
+import { clamp } from '../mol-math/interpolate.ts';
+import { isTimingMode } from '../mol-util/debug.ts';
+import { Frustum3D } from '../mol-math/geometry/primitives/frustum3d.ts';
+import { Plane3D } from '../mol-math/geometry/primitives/plane3d.ts';
+import { Sphere3D } from '../mol-math/geometry.ts';
 
 export interface RendererStats {
     programCount: number

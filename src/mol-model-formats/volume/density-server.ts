@@ -4,13 +4,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { DensityServer_Data_Database } from '../../mol-io/reader/cif/schema/density-server';
-import { Volume } from '../../mol-model/volume';
-import { Task } from '../../mol-task';
-import { SpacegroupCell, Box3D } from '../../mol-math/geometry';
-import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra';
-import { ModelFormat } from '../format';
-import { CustomProperties } from '../../mol-model/custom-property';
+import type { DensityServer_Data_Database } from '../../mol-io/reader/cif/schema/density-server.ts';
+import type { Volume } from '../../mol-model/volume.ts';
+import { Task } from '../../mol-task/index.ts';
+import { SpacegroupCell, Box3D } from '../../mol-math/geometry.ts';
+import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra.ts';
+import type { ModelFormat } from '../format.ts';
+import { CustomProperties } from '../../mol-model/custom-property.ts';
 
 export function volumeFromDensityServerData(source: DensityServer_Data_Database, params?: Partial<{ label: string, entryId: string }>): Task<Volume> {
     return Task.create<Volume>('Create Volume', async ctx => {

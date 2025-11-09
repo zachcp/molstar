@@ -6,27 +6,27 @@
 
 import { createRoot } from 'react-dom/client';
 import { BehaviorSubject } from 'rxjs';
-import { InteractionElementSchema, InteractionKind, StructureInteractionElement, StructureInteractions } from '../../extensions/interactions/model';
-import { ComputeContacts, CustomInteractions, InteractionsShape } from '../../extensions/interactions/transforms';
-import { MolViewSpec } from '../../extensions/mvs/behavior';
-import { ResidueIndex, Structure, StructureElement, StructureProperties, StructureQuery } from '../../mol-model/structure';
-import { atoms } from '../../mol-model/structure/query/queries/generators';
-import { BuiltInTrajectoryFormat } from '../../mol-plugin-state/formats/trajectory';
-import { MultiStructureSelectionFromBundle, StructureSelectionFromBundle } from '../../mol-plugin-state/transforms/model';
-import { ShapeRepresentation3D, StructureRepresentation3D } from '../../mol-plugin-state/transforms/representation';
-import { createPluginUI } from '../../mol-plugin-ui';
-import { useBehavior } from '../../mol-plugin-ui/hooks/use-behavior';
-import { renderReact18 } from '../../mol-plugin-ui/react18';
-import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginConfig } from '../../mol-plugin/config';
-import { PluginContext } from '../../mol-plugin/context';
-import { PluginSpec } from '../../mol-plugin/spec';
+import type { InteractionElementSchema, InteractionKind, StructureInteractionElement, StructureInteractions } from '../../extensions/interactions/model.ts';
+import { ComputeContacts, CustomInteractions, InteractionsShape } from '../../extensions/interactions/transforms.ts';
+import { MolViewSpec } from '../../extensions/mvs/behavior.ts';
+import { type ResidueIndex, Structure, StructureElement, StructureProperties, StructureQuery } from '../../mol-model/structure.ts';
+import { atoms } from '../../mol-model/structure/query/queries/generators.ts';
+import type { BuiltInTrajectoryFormat } from '../../mol-plugin-state/formats/trajectory.ts';
+import { MultiStructureSelectionFromBundle, StructureSelectionFromBundle } from '../../mol-plugin-state/transforms/model.ts';
+import { ShapeRepresentation3D, StructureRepresentation3D } from '../../mol-plugin-state/transforms/representation.ts';
+import { createPluginUI } from '../../mol-plugin-ui/index.ts';
+import { useBehavior } from '../../mol-plugin-ui/hooks/use-behavior.ts';
+import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
+import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { PluginSpec } from '../../mol-plugin/spec.ts';
 
 import '../../mol-plugin-ui/skin/light.scss';
 import './index.html';
-import { Task } from '../../mol-task';
-import { computeContacts } from '../../extensions/interactions/compute';
+import { Task } from '../../mol-task/index.ts';
+import { computeContacts } from '../../extensions/interactions/compute.ts';
 
 async function createViewer(root: HTMLElement) {
     const spec = DefaultPluginUISpec();

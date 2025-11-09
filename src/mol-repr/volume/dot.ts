@@ -5,29 +5,29 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Grid, Volume } from '../../mol-model/volume';
-import { VisualContext } from '../visual';
-import { Theme, ThemeRegistryContext } from '../../mol-theme/theme';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { VolumeVisual, VolumeRepresentation, VolumeRepresentationProvider, VolumeKey } from './representation';
-import { VisualUpdateState } from '../util';
-import { RepresentationContext, RepresentationParamsGetter, Representation } from '../representation';
-import { PickingId } from '../../mol-geo/geometry/picking';
-import { EmptyLoci, Loci } from '../../mol-model/loci';
-import { Interval, OrderedSet } from '../../mol-data/int';
-import { createVolumeCellLocationIterator, eachVolumeLoci } from './util';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { BaseGeometry } from '../../mol-geo/geometry/base';
-import { Spheres } from '../../mol-geo/geometry/spheres/spheres';
-import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder';
-import { SpheresBuilder } from '../../mol-geo/geometry/spheres/spheres-builder';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
-import { addSphere } from '../../mol-geo/geometry/mesh/builder/sphere';
-import { sphereVertexCount } from '../../mol-geo/primitive/sphere';
-import { Points } from '../../mol-geo/geometry/points/points';
-import { PointsBuilder } from '../../mol-geo/geometry/points/points-builder';
-import { Mat4 } from '../../mol-math/linear-algebra';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Grid, Volume } from '../../mol-model/volume.ts';
+import type { VisualContext } from '../visual.ts';
+import type { Theme, ThemeRegistryContext } from '../../mol-theme/theme.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { VolumeVisual, VolumeRepresentation, VolumeRepresentationProvider, type VolumeKey } from './representation.ts';
+import type { VisualUpdateState } from '../util.ts';
+import { type RepresentationContext, type RepresentationParamsGetter, Representation } from '../representation.ts';
+import { PickingId } from '../../mol-geo/geometry/picking.ts';
+import { EmptyLoci, type Loci } from '../../mol-model/loci.ts';
+import { Interval, OrderedSet } from '../../mol-data/int.ts';
+import { createVolumeCellLocationIterator, eachVolumeLoci } from './util.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { BaseGeometry } from '../../mol-geo/geometry/base.ts';
+import { Spheres } from '../../mol-geo/geometry/spheres/spheres.ts';
+import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { SpheresBuilder } from '../../mol-geo/geometry/spheres/spheres-builder.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
+import { addSphere } from '../../mol-geo/geometry/mesh/builder/sphere.ts';
+import { sphereVertexCount } from '../../mol-geo/primitive/sphere.ts';
+import { Points } from '../../mol-geo/geometry/points/points.ts';
+import { PointsBuilder } from '../../mol-geo/geometry/points/points-builder.ts';
+import { Mat4 } from '../../mol-math/linear-algebra.ts';
 
 export const VolumeDotParams = {
     isoValue: Volume.IsoValueParam,
@@ -68,7 +68,7 @@ export function VolumeSphereImpostorVisual(materialId: number): VolumeVisual<Vol
             );
         },
         geometryUtils: Spheres.Utils,
-        mustRecreate: (volumekey: VolumeKey, props: PD.Values<VolumeSphereParams>, webgl?: WebGLContext) => {
+        mustRecreate: (volumekey: VolumeKey, props: PD.Values<VolumeSphereParams>, webgl?: WebGLContext): boolean => {
             return !props.tryUseImpostor || !webgl;
         }
     }, materialId);
@@ -279,7 +279,7 @@ export function createVolumePoint(ctx: VisualContext, volume: Volume, key: numbe
 
 //
 
-function getLoci(volume: Volume, props: VolumeDotProps) {
+function getLoci(volume: Volume, props: VolumeDotProps): Volume.Isosurface.Loci {
     const instances = Interval.ofLength(volume.instances.length as Volume.InstanceIndex);
     return Volume.Isosurface.Loci(volume, props.isoValue, instances);
 }
@@ -302,15 +302,15 @@ function getDotLoci(pickingId: PickingId, volume: Volume, key: number, props: Vo
     return EmptyLoci;
 }
 
-function eachDot(loci: Loci, volume: Volume, key: number, props: VolumeDotProps, apply: (interval: Interval) => boolean) {
+function eachDot(loci: Loci, volume: Volume, key: number, props: VolumeDotProps, apply: (interval: Interval) => boolean): boolean {
     return eachVolumeLoci(loci, volume, { isoValue: props.isoValue }, apply);
 }
 
 //
 
 const DotVisuals = {
-    'sphere': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, VolumeSphereParams>) => VolumeRepresentation('Dot sphere', ctx, getParams, VolumeSphereVisual, getLoci),
-    'point': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, VolumePointParams>) => VolumeRepresentation('Dot point', ctx, getParams, VolumePointVisual, getLoci),
+    'sphere': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, VolumeSphereParams>): VolumeRepresentation<VolumeSphereParams> => VolumeRepresentation('Dot sphere', ctx, getParams, VolumeSphereVisual, getLoci),
+    'point': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, VolumePointParams>): VolumeRepresentation<VolumePointParams> => VolumeRepresentation('Dot point', ctx, getParams, VolumePointVisual, getLoci),
 };
 
 export const DotParams = {
@@ -320,7 +320,7 @@ export const DotParams = {
     bumpFrequency: PD.Numeric(1, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
 };
 export type DotParams = typeof DotParams
-export function getDotParams(ctx: ThemeRegistryContext, volume: Volume) {
+export function getDotParams(ctx: ThemeRegistryContext, volume: Volume): typeof DotParams {
     const p = PD.clone(DotParams);
     p.isoValue = Volume.createIsoValueParam(Volume.IsoValue.relative(2), volume.grid.stats);
     return p;

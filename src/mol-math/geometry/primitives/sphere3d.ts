@@ -5,13 +5,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4, EPSILON } from '../../linear-algebra';
-import { PositionData } from '../common';
-import { OrderedSet } from '../../../mol-data/int';
-import { NumberArray, PickRequired } from '../../../mol-util/type-helpers';
-import { Box3D } from './box3d';
-import { Axes3D } from './axes3d';
-import { PrincipalAxes } from '../../linear-algebra/matrix/principal-axes';
+import { Vec3, Mat4, EPSILON } from '../../linear-algebra.ts';
+import type { PositionData } from '../common.ts';
+import { OrderedSet } from '../../../mol-data/int.ts';
+import type { NumberArray, PickRequired } from '../../../mol-util/type-helpers.ts';
+import type { Box3D } from './box3d.ts';
+import { Axes3D } from './axes3d.ts';
+import { PrincipalAxes } from '../../linear-algebra/matrix/principal-axes.ts';
 
 interface Sphere3D {
     center: Vec3,
@@ -19,7 +19,7 @@ interface Sphere3D {
     extrema?: Vec3[]
 }
 
-function Sphere3D() {
+function Sphere3D(): Sphere3D {
     return Sphere3D.zero();
 }
 
@@ -37,13 +37,13 @@ namespace Sphere3D {
         return out;
     }
 
-    export function set(out: Sphere3D, center: Vec3, radius: number) {
+    export function set(out: Sphere3D, center: Vec3, radius: number): Sphere3D {
         Vec3.copy(out.center, center);
         out.radius = radius;
         return out;
     }
 
-    export function copy(out: Sphere3D, a: Sphere3D) {
+    export function copy(out: Sphere3D, a: Sphere3D): Sphere3D {
         Vec3.copy(out.center, a.center);
         out.radius = a.radius;
         if (hasExtrema(a)) setExtrema(out, a.extrema.map(e => Vec3.clone(e)));
@@ -101,7 +101,7 @@ namespace Sphere3D {
     }
 
     /** Translate sphere by Vec3 */
-    export function translate(out: Sphere3D, sphere: Sphere3D, v: Vec3) {
+    export function translate(out: Sphere3D, sphere: Sphere3D, v: Vec3): Sphere3D {
         Vec3.add(out.center, sphere.center, v);
         if (hasExtrema(sphere)) {
             setExtrema(out, sphere.extrema.map(e => Vec3.add(Vec3(), e, v)));
@@ -110,7 +110,7 @@ namespace Sphere3D {
     }
 
     /** Scale sphere by a number */
-    export function scale(out: Sphere3D, sphere: Sphere3D, s: number) {
+    export function scale(out: Sphere3D, sphere: Sphere3D, s: number): Sphere3D {
         Vec3.scale(out.center, sphere.center, s);
         out.radius = sphere.radius * s;
         if (hasExtrema(sphere)) {
@@ -120,25 +120,25 @@ namespace Sphere3D {
     }
 
     /** Scale sphere by a number but without extrema */
-    export function scaleNX(out: Sphere3D, sphere: Sphere3D, s: number) {
+    export function scaleNX(out: Sphere3D, sphere: Sphere3D, s: number): Sphere3D {
         Vec3.scale(out.center, sphere.center, s);
         out.radius = sphere.radius * s;
         return out;
     }
 
-    export function toArray<T extends NumberArray>(s: Sphere3D, out: T, offset: number) {
+    export function toArray<T extends NumberArray>(s: Sphere3D, out: T, offset: number): T {
         Vec3.toArray(s.center, out, offset);
         out[offset + 3] = s.radius;
         return out;
     }
 
-    export function fromArray(out: Sphere3D, array: NumberArray, offset: number) {
+    export function fromArray(out: Sphere3D, array: NumberArray, offset: number): Sphere3D {
         Vec3.fromArray(out.center, array, offset);
         out.radius = array[offset + 3];
         return out;
     }
 
-    export function fromBox3D(out: Sphere3D, box: Box3D) {
+    export function fromBox3D(out: Sphere3D, box: Box3D): Sphere3D {
         Vec3.scale(out.center, Vec3.add(out.center, box.max, box.min), 0.5);
         out.radius = Vec3.distance(out.center, box.max);
 
@@ -156,7 +156,7 @@ namespace Sphere3D {
         return out;
     }
 
-    export function fromAxes3D(out: Sphere3D, axes: Axes3D) {
+    export function fromAxes3D(out: Sphere3D, axes: Axes3D): Sphere3D {
         Vec3.copy(out.center, axes.origin);
         out.radius = Math.max(Vec3.magnitude(axes.dirA), Vec3.magnitude(axes.dirB), Vec3.magnitude(axes.dirC));
         return out;
@@ -164,7 +164,7 @@ namespace Sphere3D {
 
     const tmpCenter = Vec3();
     /** Get a tight sphere around a transformed box */
-    export function fromDimensionsAndTransform(out: Sphere3D, dimensions: Vec3, transform: Mat4) {
+    export function fromDimensionsAndTransform(out: Sphere3D, dimensions: Vec3, transform: Mat4): Sphere3D {
         const [x, y, z] = dimensions;
 
         const cpA = Vec3.create(0, 0, 0); Vec3.transformMat4(cpA, cpA, transform);
@@ -187,7 +187,7 @@ namespace Sphere3D {
     }
 
     const tmpAddVec3 = Vec3();
-    export function addVec3(out: Sphere3D, s: Sphere3D, v: Vec3) {
+    export function addVec3(out: Sphere3D, s: Sphere3D, v: Vec3): Sphere3D {
         const d = Vec3.distance(s.center, v);
         if (d < s.radius) return Sphere3D.copy(out, s);
         Vec3.sub(tmpAddVec3, s.center, v);
@@ -199,7 +199,7 @@ namespace Sphere3D {
     }
 
     /** Expand sphere radius by another sphere */
-    export function expandBySphere(out: Sphere3D, sphere: Sphere3D, by: Sphere3D) {
+    export function expandBySphere(out: Sphere3D, sphere: Sphere3D, by: Sphere3D): Sphere3D {
         Vec3.copy(out.center, sphere.center);
         out.radius = Math.max(sphere.radius, Vec3.distance(sphere.center, by.center) + by.radius);
         if (hasExtrema(sphere) && hasExtrema(by)) {
@@ -258,14 +258,14 @@ namespace Sphere3D {
     /**
      * Returns whether or not the spheres have exactly the same center and radius (when compared with ===)
      */
-    export function exactEquals(a: Sphere3D, b: Sphere3D) {
+    export function exactEquals(a: Sphere3D, b: Sphere3D): boolean {
         return a.radius === b.radius && Vec3.exactEquals(a.center, b.center);
     }
 
     /**
      * Returns whether or not the spheres have approximately the same center and radius.
      */
-    export function equals(a: Sphere3D, b: Sphere3D) {
+    export function equals(a: Sphere3D, b: Sphere3D): boolean {
         const ar = a.radius;
         const br = b.radius;
         return (Math.abs(ar - br) <= EPSILON * Math.max(1.0, Math.abs(ar), Math.abs(br)) &&
@@ -275,7 +275,7 @@ namespace Sphere3D {
     /**
      * Check if `a` includes `b`, use `extrema` of `b` when available
      */
-    export function includes(a: Sphere3D, b: Sphere3D) {
+    export function includes(a: Sphere3D, b: Sphere3D): boolean {
         if (hasExtrema(b)) {
             for (const e of b.extrema) {
                 if (Vec3.distance(a.center, e) > a.radius) return false;
@@ -287,12 +287,12 @@ namespace Sphere3D {
     }
 
     /** Check if `a` and `b` are overlapping */
-    export function overlaps(a: Sphere3D, b: Sphere3D) {
+    export function overlaps(a: Sphere3D, b: Sphere3D): boolean {
         return Vec3.distance(a.center, b.center) <= a.radius + b.radius;
     }
 
     /** Get the signed distance of `a` and `b` */
-    export function distance(a: Sphere3D, b: Sphere3D) {
+    export function distance(a: Sphere3D, b: Sphere3D): number {
         return Vec3.distance(a.center, b.center) - a.radius + b.radius;
     }
 

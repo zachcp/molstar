@@ -4,25 +4,25 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Representation, RepresentationContext, RepresentationParamsGetter } from '../../../mol-repr/representation';
-import { ThemeRegistryContext } from '../../../mol-theme/theme';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { LocationIterator } from '../../../mol-geo/util/location-iterator';
-import { PickingId } from '../../../mol-geo/geometry/picking';
-import { EmptyLoci, Loci } from '../../../mol-model/loci';
-import { Interval } from '../../../mol-data/int';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Structure, StructureElement } from '../../../mol-model/structure';
-import { VisualContext } from '../../../mol-repr/visual';
-import { createLinkCylinderMesh, LinkCylinderParams } from '../../../mol-repr/structure/visual/util/link';
-import { ComplexMeshParams, ComplexVisual, ComplexMeshVisual } from '../../../mol-repr/structure/complex-visual';
-import { VisualUpdateState } from '../../../mol-repr/util';
-import { ComplexRepresentation, StructureRepresentation, StructureRepresentationStateBuilder, StructureRepresentationProvider } from '../../../mol-repr/structure/representation';
-import { CustomProperty } from '../../common/custom-property';
-import { CrossLinkRestraintProvider, CrossLinkRestraint } from './property';
-import { Sphere3D } from '../../../mol-math/geometry';
+import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../../../mol-repr/representation.ts';
+import type { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
+import type { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import type { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { LocationIterator } from '../../../mol-geo/util/location-iterator.ts';
+import type { PickingId } from '../../../mol-geo/geometry/picking.ts';
+import { EmptyLoci, type Loci } from '../../../mol-model/loci.ts';
+import { Interval } from '../../../mol-data/int.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { Structure, StructureElement } from '../../../mol-model/structure.ts';
+import type { VisualContext } from '../../../mol-repr/visual.ts';
+import { createLinkCylinderMesh, LinkCylinderParams } from '../../../mol-repr/structure/visual/util/link.ts';
+import { ComplexMeshParams, type ComplexVisual, ComplexMeshVisual } from '../../../mol-repr/structure/complex-visual.ts';
+import type { VisualUpdateState } from '../../../mol-repr/util.ts';
+import { ComplexRepresentation, type StructureRepresentation, StructureRepresentationStateBuilder, StructureRepresentationProvider } from '../../../mol-repr/structure/representation.ts';
+import type { CustomProperty } from '../../common/custom-property.ts';
+import { CrossLinkRestraintProvider, CrossLinkRestraint } from './property.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
 
 function createCrossLinkRestraintCylinderMesh(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<CrossLinkRestraintCylinderParams>, mesh?: Mesh) {
 

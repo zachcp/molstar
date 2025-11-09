@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { now } from '../../mol-util/now';
-import { GLRenderingContext } from './compat';
-import { WebGLStats } from './context';
-import { WebGLExtensions } from './extensions';
+import { now } from '../../mol-util/now.ts';
+import type { GLRenderingContext } from './compat.ts';
+import type { WebGLStats } from './context.ts';
+import type { WebGLExtensions } from './extensions.ts';
 
 function movingAverage(avg: number, sample: number, count: number) {
     avg -= avg / count;
@@ -33,7 +33,7 @@ class MovingAverage {
         return Object.fromEntries(this.avgs.entries());
     }
 
-    clear() {
+    clear(): void {
         this.avgs.clear();
     }
 

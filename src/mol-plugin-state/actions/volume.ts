@@ -5,17 +5,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginContext } from '../../mol-plugin/context';
-import { StateAction, StateTransformer, StateSelection } from '../../mol-state';
-import { Task } from '../../mol-task';
-import { getFileNameInfo } from '../../mol-util/file-info';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { PluginStateObject } from '../objects';
-import { Download } from '../transforms/data';
-import { DataFormatProvider } from '../formats/provider';
-import { Asset } from '../../mol-util/assets';
-import { StateTransforms } from '../transforms';
-import { assertUnreachable } from '../../mol-util/type-helpers';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { StateAction, type StateTransformer, StateSelection } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
+import { getFileNameInfo } from '../../mol-util/file-info.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { PluginStateObject } from '../objects.ts';
+import type { Download } from '../transforms/data.ts';
+import type { DataFormatProvider } from '../formats/provider.ts';
+import { Asset } from '../../mol-util/assets.ts';
+import { StateTransforms } from '../transforms.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
 
 export type EmdbDownloadProvider = 'pdbe' | 'rcsb'
 
@@ -139,7 +139,7 @@ const DownloadDensity = StateAction.build({
 export const AssignColorVolume = StateAction.build({
     display: { name: 'Assign Volume Colors', description: 'Assigns another volume to be available for coloring.' },
     from: PluginStateObject.Volume.Data,
-    isApplicable(a) { return !a.data.colorVolume; },
+    isApplicable(a): boolean { return !a.data.colorVolume; },
     params(a, plugin: PluginContext) {
         const cells = plugin.state.data.select(StateSelection.Generators.root.subtree().ofType(PluginStateObject.Volume.Data).filter(cell => !!cell.obj && !cell.obj?.data.colorVolume && cell.obj !== a));
         if (cells.length === 0) return { ref: PD.Text('', { isHidden: true, label: 'Volume' }) };

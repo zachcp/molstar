@@ -4,23 +4,23 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PickingId } from '../../mol-geo/geometry/picking';
-import { PickType, Renderer } from '../../mol-gl/renderer';
-import { Scene } from '../../mol-gl/scene';
-import { PixelPackBuffer } from '../../mol-gl/webgl/buffer';
-import { isWebGL2 } from '../../mol-gl/webgl/compat';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Framebuffer } from '../../mol-gl/webgl/framebuffer';
-import { RenderTarget } from '../../mol-gl/webgl/render-target';
-import { Renderbuffer } from '../../mol-gl/webgl/renderbuffer';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { isDebugMode, isTimingMode } from '../../mol-util/debug';
-import { now } from '../../mol-util/now';
-import { unpackRGBAToDepth, unpackRGBToInt } from '../../mol-util/number-packing';
-import { ICamera } from '../camera';
-import { Viewport } from '../camera/util';
-import { Helper } from '../helper/helper';
+import { PickingId } from '../../mol-geo/geometry/picking.ts';
+import { PickType, type Renderer } from '../../mol-gl/renderer.ts';
+import type { Scene } from '../../mol-gl/scene.ts';
+import type { PixelPackBuffer } from '../../mol-gl/webgl/buffer.ts';
+import { isWebGL2 } from '../../mol-gl/webgl/compat.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import type { Framebuffer } from '../../mol-gl/webgl/framebuffer.ts';
+import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
+import type { Renderbuffer } from '../../mol-gl/webgl/renderbuffer.ts';
+import type { Texture } from '../../mol-gl/webgl/texture.ts';
+import type { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { isDebugMode, isTimingMode } from '../../mol-util/debug.ts';
+import { now } from '../../mol-util/now.ts';
+import { unpackRGBAToDepth, unpackRGBToInt } from '../../mol-util/number-packing.ts';
+import type { ICamera } from '../camera.ts';
+import { Viewport } from '../camera/util.ts';
+import type { Helper } from '../helper/helper.ts';
 
 export type PickData = { id: PickingId, position: Vec3 }
 
@@ -37,24 +37,24 @@ export type PickOptions = typeof DefaultPickOptions
 //
 
 export class PickPass {
-    private readonly objectPickTarget: RenderTarget;
-    private readonly instancePickTarget: RenderTarget;
-    private readonly groupPickTarget: RenderTarget;
-    private readonly depthPickTarget: RenderTarget;
+    private readonly objectPickTarget!: RenderTarget;
+    private readonly instancePickTarget!: RenderTarget;
+    private readonly groupPickTarget!: RenderTarget;
+    private readonly depthPickTarget!: RenderTarget;
 
-    private readonly framebuffer: Framebuffer;
+    private readonly framebuffer!: Framebuffer;
 
-    private readonly objectPickTexture: Texture;
-    private readonly instancePickTexture: Texture;
-    private readonly groupPickTexture: Texture;
-    private readonly depthPickTexture: Texture;
+    private readonly objectPickTexture!: Texture;
+    private readonly instancePickTexture!: Texture;
+    private readonly groupPickTexture!: Texture;
+    private readonly depthPickTexture!: Texture;
 
-    private readonly objectPickFramebuffer: Framebuffer;
-    private readonly instancePickFramebuffer: Framebuffer;
-    private readonly groupPickFramebuffer: Framebuffer;
-    private readonly depthPickFramebuffer: Framebuffer;
+    private readonly objectPickFramebuffer!: Framebuffer;
+    private readonly instancePickFramebuffer!: Framebuffer;
+    private readonly groupPickFramebuffer!: Framebuffer;
+    private readonly depthPickFramebuffer!: Framebuffer;
 
-    private readonly depthRenderbuffer: Renderbuffer;
+    private readonly depthRenderbuffer!: Renderbuffer;
 
     private pickWidth: number;
     private pickHeight: number;
@@ -117,7 +117,7 @@ export class PickPass {
         }
     }
 
-    getByteCount() {
+    getByteCount(): number {
         if (this.webgl.extensions.drawBuffers) {
             return (
                 this.objectPickTexture.getByteCount() +
@@ -159,7 +159,7 @@ export class PickPass {
         }
     }
 
-    get pickRatio() {
+    get pickRatio(): number {
         return this.pickScale / this.webgl.pixelRatio;
     }
 
@@ -200,7 +200,7 @@ export class PickPass {
         }
     }
 
-    get drawingBufferHeight() {
+    get drawingBufferHeight(): number {
         return this.height;
     }
 
@@ -313,15 +313,15 @@ export function checkAsyncPickingSupport(webgl: WebGLContext): boolean {
 export enum AsyncPickStatus { Pending, Resolved, Failed };
 
 export class PickBuffers {
-    private object: Uint8Array;
-    private instance: Uint8Array;
-    private group: Uint8Array;
-    private depth: Uint8Array;
+    private object!: Uint8Array;
+    private instance!: Uint8Array;
+    private group!: Uint8Array;
+    private depth!: Uint8Array;
 
-    private objectBuffer: PixelPackBuffer;
-    private instanceBuffer: PixelPackBuffer;
-    private groupBuffer: PixelPackBuffer;
-    private depthBuffer: PixelPackBuffer;
+    private objectBuffer!: PixelPackBuffer;
+    private instanceBuffer!: PixelPackBuffer;
+    private groupBuffer!: PixelPackBuffer;
+    private depthBuffer!: PixelPackBuffer;
 
     private viewport = Viewport.create(0, 0, 0, 0);
 

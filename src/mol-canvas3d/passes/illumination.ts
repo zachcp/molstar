@@ -4,37 +4,37 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { CopyRenderable, QuadSchema, QuadValues, createCopyRenderable } from '../../mol-gl/compute/util';
-import { DefineSpec, TextureSpec, UniformSpec, Values } from '../../mol-gl/renderable/schema';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { ValueCell } from '../../mol-util';
-import { isDebugMode, isTimingMode } from '../../mol-util/debug';
-import { Renderer, RendererProps } from '../../mol-gl/renderer';
-import { Camera, ICamera } from '../camera';
-import { Scene } from '../../mol-gl/scene';
-import { RenderTarget } from '../../mol-gl/webgl/render-target';
-import { ShaderCode } from '../../mol-gl/shader-code';
-import { quad_vert } from '../../mol-gl/shader/quad.vert';
-import { ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable';
-import { compose_frag } from '../../mol-gl/shader/illumination/compose.frag';
-import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2';
-import { createComputeRenderItem } from '../../mol-gl/webgl/render-item';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Color } from '../../mol-util/color/color';
-import { AntialiasingPass, PostprocessingPass, PostprocessingProps } from './postprocessing';
-import { DrawPass } from './draw';
-import { MarkingPass, MarkingProps } from './marking';
-import { Helper } from '../helper/helper';
-import { DofPass } from './dof';
-import { TracingParams, TracingPass } from './tracing';
-import { JitterVectors, MultiSampleProps } from './multi-sample';
-import { compose_frag as multiSample_compose_frag } from '../../mol-gl/shader/compose.frag';
-import { clamp, lerp } from '../../mol-math/interpolate';
-import { SsaoProps } from './ssao';
-import { OutlinePass } from './outline';
-import { BloomPass } from './bloom';
+import { type CopyRenderable, QuadSchema, QuadValues, createCopyRenderable } from '../../mol-gl/compute/util.ts';
+import { DefineSpec, TextureSpec, UniformSpec, type Values } from '../../mol-gl/renderable/schema.ts';
+import type { Texture } from '../../mol-gl/webgl/texture.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { ValueCell } from '../../mol-util/index.ts';
+import { isDebugMode, isTimingMode } from '../../mol-util/debug.ts';
+import type { Renderer, RendererProps } from '../../mol-gl/renderer.ts';
+import { Camera, type ICamera } from '../camera.ts';
+import type { Scene } from '../../mol-gl/scene.ts';
+import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
+import { ShaderCode } from '../../mol-gl/shader-code.ts';
+import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
+import { type ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
+import { compose_frag } from '../../mol-gl/shader/illumination/compose.frag.ts';
+import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2.ts';
+import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Color } from '../../mol-util/color/color.ts';
+import { AntialiasingPass, PostprocessingPass, type PostprocessingProps } from './postprocessing.ts';
+import type { DrawPass } from './draw.ts';
+import { MarkingPass, type MarkingProps } from './marking.ts';
+import type { Helper } from '../helper/helper.ts';
+import { DofPass } from './dof.ts';
+import { TracingParams, TracingPass } from './tracing.ts';
+import { JitterVectors, type MultiSampleProps } from './multi-sample.ts';
+import { compose_frag as multiSample_compose_frag } from '../../mol-gl/shader/compose.frag.ts';
+import { clamp, lerp } from '../../mol-math/interpolate.ts';
+import type { SsaoProps } from './ssao.ts';
+import { OutlinePass } from './outline.ts';
+import { BloomPass } from './bloom.ts';
 
 let IlluminationWarningShown = false;
 
@@ -84,33 +84,33 @@ export const IlluminationParams = {
 export type IlluminationProps = PD.Values<typeof IlluminationParams>
 
 export class IlluminationPass {
-    private readonly tracing: TracingPass;
+    private readonly tracing!: TracingPass;
 
-    private readonly transparentTarget: RenderTarget;
-    private readonly outputTarget: RenderTarget;
+    private readonly transparentTarget!: RenderTarget;
+    private readonly outputTarget!: RenderTarget;
 
-    readonly packedDepth: boolean;
+    readonly packedDepth!: boolean;
 
-    private readonly copyRenderable: CopyRenderable;
-    private readonly composeRenderable: ComposeRenderable;
+    private readonly copyRenderable!: CopyRenderable;
+    private readonly composeRenderable!: ComposeRenderable;
 
-    private multiSampleComposeTarget: RenderTarget;
-    private multiSampleHoldTarget: RenderTarget;
-    private multiSampleAccumulateTarget: RenderTarget;
-    private multiSampleCompose: MultiSampleComposeRenderable;
+    private multiSampleComposeTarget!: RenderTarget;
+    private multiSampleHoldTarget!: RenderTarget;
+    private multiSampleAccumulateTarget!: RenderTarget;
+    private multiSampleCompose!: MultiSampleComposeRenderable;
 
     private _iteration = 0;
-    get iteration() { return this._iteration; }
+    get iteration(): number { return this._iteration; }
 
-    private _colorTarget: RenderTarget;
-    get colorTarget() { return this._colorTarget; }
+    private _colorTarget!: RenderTarget;
+    get colorTarget(): RenderTarget { return this._colorTarget; }
 
     private _supported = false;
-    get supported() {
+    get supported(): boolean {
         return this._supported;
     }
 
-    getByteCount() {
+    getByteCount(): number {
         if (!this._supported) return 0;
         return (
             this.tracing.getByteCount() +
@@ -122,15 +122,15 @@ export class IlluminationPass {
         );
     }
 
-    getMaxIterations(props: IlluminationProps) {
+    getMaxIterations(props: IlluminationProps): number {
         return Math.pow(2, props.maxIterations);
     }
 
-    static isSupported(webgl: WebGLContext) {
+    static isSupported(webgl: WebGLContext): boolean {
         return checkIlluminationSupport(webgl);
     }
 
-    static isEnabled(webgl: WebGLContext, props: IlluminationProps) {
+    static isEnabled(webgl: WebGLContext, props: IlluminationProps): boolean {
         return props.enabled && checkIlluminationSupport(webgl);
     }
 
@@ -263,7 +263,7 @@ export class IlluminationPass {
         if (isTimingMode) this.webgl.timer.markEnd('IlluminationPass.renderInput');
     }
 
-    shouldRender(props: IlluminationProps) {
+    shouldRender(props: IlluminationProps): boolean {
         return this._supported && props.enabled && this._iteration < this.getMaxIterations(props);
     }
 

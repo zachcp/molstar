@@ -5,15 +5,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { UnitsMeshParams, UnitsSpheresParams, UnitsVisual, UnitsSpheresVisual, UnitsMeshVisual } from '../units-visual';
-import { WebGLContext } from '../../../mol-gl/webgl/context';
-import { createElementSphereImpostor, ElementIterator, getElementLoci, eachElement, createElementSphereMesh, createStructureElementSphereImpostor, getSerialElementLoci, eachSerialElement, createStructureElementSphereMesh } from './util/element';
-import { VisualUpdateState } from '../../util';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
-import { Structure } from '../../../mol-model/structure';
-import { checkSphereImpostorSupport, StructureGroup } from './util/common';
-import { ComplexMeshParams, ComplexMeshVisual, ComplexSpheresParams, ComplexSpheresVisual, ComplexVisual } from '../complex-visual';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { UnitsMeshParams, UnitsSpheresParams, type UnitsVisual, UnitsSpheresVisual, UnitsMeshVisual } from '../units-visual.ts';
+import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
+import { createElementSphereImpostor, ElementIterator, getElementLoci, eachElement, createElementSphereMesh, createStructureElementSphereImpostor, getSerialElementLoci, eachSerialElement, createStructureElementSphereMesh } from './util/element.ts';
+import type { VisualUpdateState } from '../../util.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
+import type { Structure } from '../../../mol-model/structure.ts';
+import { checkSphereImpostorSupport, type StructureGroup } from './util/common.ts';
+import { ComplexMeshParams, ComplexMeshVisual, ComplexSpheresParams, ComplexSpheresVisual, type ComplexVisual } from '../complex-visual.ts';
 
 export const CommonElementSphereParams = {
     sizeFactor: PD.Numeric(1, { min: 0, max: 10, step: 0.1 }),

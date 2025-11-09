@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column } from '../../../mol-data/db';
+import type { Column } from '../../../mol-data/db.ts';
 
 // http://paulbourke.net/dataformats/ply/
 // https://en.wikipedia.org/wiki/PLY_(file_format)
@@ -30,7 +30,7 @@ export const PlyTypeByteLength = {
 };
 export type PlyType = keyof typeof PlyTypeByteLength
 export const PlyTypes = new Set(Object.keys(PlyTypeByteLength));
-export function PlyType(str: string) {
+export function PlyType(str: string): PlyType {
     if (!PlyTypes.has(str)) throw new Error(`unknown ply type '${str}'`);
     return str as PlyType;
 }

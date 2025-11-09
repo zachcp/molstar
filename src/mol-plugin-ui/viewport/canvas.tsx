@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { PluginUIComponent } from '../base';
+import { PluginUIComponent } from '../base.tsx';
 
 interface ViewportCanvasState {
     noWebGl: boolean
@@ -29,8 +29,7 @@ export class ViewportCanvas extends PluginUIComponent<ViewportCanvasParams, View
     private container = React.createRef<HTMLDivElement>();
     private mounted = false;
 
-    state: ViewportCanvasState = {
-        noWebGl: false,
+    override state: ViewportCanvasState = {        noWebGl: false,
         showLogo: true
     };
 
@@ -52,8 +51,7 @@ export class ViewportCanvas extends PluginUIComponent<ViewportCanvasParams, View
         }
     }
 
-    componentDidMount() {
-        this.mounted = true;
+    override componentDidMount() {        this.mounted = true;
 
         if (!this.container.current) {
             this.setState({ noWebGl: true });
@@ -63,8 +61,7 @@ export class ViewportCanvas extends PluginUIComponent<ViewportCanvasParams, View
         this.applyMount();
     }
 
-    componentWillUnmount() {
-        this.mounted = false;
+    override componentWillUnmount() {        this.mounted = false;
 
         super.componentWillUnmount();
         this.plugin.unmount();
@@ -85,8 +82,7 @@ export class ViewportCanvas extends PluginUIComponent<ViewportCanvasParams, View
         </div>;
     }
 
-    render() {
-        if (this.state.noWebGl) return this.renderMissing();
+    override render() {        if (this.state.noWebGl) return this.renderMissing();
 
         const Logo = this.props.logo;
 

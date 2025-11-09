@@ -4,8 +4,8 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { VERSION } from './version';
-import { MembraneServerConfig } from './config';
+import { VERSION } from './version.ts';
+import { MembraneServerConfig } from './config.ts';
 
 export function getSchema() {
     return {

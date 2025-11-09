@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { MoleculeType, isPolymer } from '../../../mol-model/structure/model/types';
-import { Column, Table } from '../../../mol-data/db';
-import { BasicSchema } from '../basic/schema';
+import { MoleculeType, isPolymer } from '../../../mol-model/structure/model/types.ts';
+import { Column, Table } from '../../../mol-data/db.ts';
+import { BasicSchema } from '../basic/schema.ts';
 
 export type EntityCompound = { chains: string[], description: string }
 

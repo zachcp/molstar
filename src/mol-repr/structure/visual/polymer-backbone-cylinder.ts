@@ -4,26 +4,26 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { VisualContext } from '../../visual';
-import { Unit, Structure, StructureElement, ElementIndex } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { CylinderProps } from '../../../mol-geo/primitive/cylinder';
-import { eachPolymerElement, getPolymerElementLoci, NucleicShift, PolymerLocationIterator, StandardShift } from './util/polymer';
-import { addCylinder } from '../../../mol-geo/geometry/mesh/builder/cylinder';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual, UnitsCylindersVisual, UnitsCylindersParams } from '../units-visual';
-import { VisualUpdateState } from '../../util';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { isNucleic, MoleculeType } from '../../../mol-model/structure/model/types';
-import { WebGLContext } from '../../../mol-gl/webgl/context';
-import { Cylinders } from '../../../mol-geo/geometry/cylinders/cylinders';
-import { CylindersBuilder } from '../../../mol-geo/geometry/cylinders/cylinders-builder';
-import { eachPolymerBackboneLink } from './util/polymer/backbone';
-import { checkCylinderImpostorSupport, StructureGroup } from './util/common';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { VisualContext } from '../../visual.ts';
+import { type Unit, type Structure, StructureElement, type ElementIndex } from '../../../mol-model/structure.ts';
+import type { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import type { CylinderProps } from '../../../mol-geo/primitive/cylinder.ts';
+import { eachPolymerElement, getPolymerElementLoci, NucleicShift, PolymerLocationIterator, StandardShift } from './util/polymer.ts';
+import { addCylinder } from '../../../mol-geo/geometry/mesh/builder/cylinder.ts';
+import { UnitsMeshParams, type UnitsVisual, UnitsMeshVisual, UnitsCylindersVisual, UnitsCylindersParams } from '../units-visual.ts';
+import type { VisualUpdateState } from '../../util.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { isNucleic, type MoleculeType } from '../../../mol-model/structure/model/types.ts';
+import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
+import { Cylinders } from '../../../mol-geo/geometry/cylinders/cylinders.ts';
+import { CylindersBuilder } from '../../../mol-geo/geometry/cylinders/cylinders-builder.ts';
+import { eachPolymerBackboneLink } from './util/polymer/backbone.ts';
+import { checkCylinderImpostorSupport, type StructureGroup } from './util/common.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3scale = Vec3.scale;

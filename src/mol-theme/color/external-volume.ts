@@ -6,17 +6,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color, ColorScale } from '../../mol-util/color';
-import { Location } from '../../mol-model/location';
-import { ColorTheme, LocationColor } from '../color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../theme';
-import { Grid, Volume } from '../../mol-model/volume';
-import { type PluginContext } from '../../mol-plugin/context';
-import { isPositionLocation } from '../../mol-geo/util/location-iterator';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { clamp } from '../../mol-math/interpolate';
-import { ColorThemeCategory } from './categories';
+import { Color, ColorScale } from '../../mol-util/color/index.ts';
+import type { Location } from '../../mol-model/location.ts';
+import { ColorTheme, type LocationColor } from '../color.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { ThemeDataContext } from '../theme.ts';
+import { Grid, Volume } from '../../mol-model/volume.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { isPositionLocation } from '../../mol-geo/util/location-iterator.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { clamp } from '../../mol-math/interpolate.ts';
+import { ColorThemeCategory } from './categories.ts';
 
 const Description = `Assigns a color based on volume value at a given vertex.`;
 

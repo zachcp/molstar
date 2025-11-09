@@ -5,18 +5,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { parseCifText } from './cif/text/parser';
-import { parseCifBinary } from './cif/binary/parser';
-import { CifFrame } from './cif/data-model';
-import { toDatabaseCollection, toDatabase } from './cif/schema';
-import { mmCIF_Schema, mmCIF_Database } from './cif/schema/mmcif';
-import { CCD_Schema, CCD_Database } from './cif/schema/ccd';
-import { BIRD_Schema, BIRD_Database } from './cif/schema/bird';
-import { dic_Schema, dic_Database } from './cif/schema/dic';
-import { DensityServer_Data_Schema, DensityServer_Data_Database } from './cif/schema/density-server';
-import { CifCore_Database, CifCore_Schema, CifCore_Aliases } from './cif/schema/cif-core';
-import { Segmentation_Data_Database, Segmentation_Data_Schema } from './cif/schema/segmentation';
-import { StringLike } from '../common/string-like';
+import { parseCifText } from './cif/text/parser.ts';
+import { parseCifBinary } from './cif/binary/parser.ts';
+import type { CifFrame } from './cif/data-model.ts';
+import { toDatabaseCollection, toDatabase } from './cif/schema.ts';
+import { mmCIF_Schema, type mmCIF_Database } from './cif/schema/mmcif.ts';
+import { CCD_Schema, type CCD_Database } from './cif/schema/ccd.ts';
+import { BIRD_Schema, type BIRD_Database } from './cif/schema/bird.ts';
+import { dic_Schema, type dic_Database } from './cif/schema/dic.ts';
+import { DensityServer_Data_Schema, type DensityServer_Data_Database } from './cif/schema/density-server.ts';
+import { type CifCore_Database, CifCore_Schema, CifCore_Aliases } from './cif/schema/cif-core.ts';
+import { type Segmentation_Data_Database, Segmentation_Data_Schema } from './cif/schema/segmentation.ts';
+import { StringLike } from '../common/string-like.ts';
 
 
 export const CIF = {
@@ -36,4 +36,4 @@ export const CIF = {
     }
 };
 
-export * from './cif/data-model';
+export * from './cif/data-model.ts';

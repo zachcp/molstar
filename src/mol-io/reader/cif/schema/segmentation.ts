@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column, Database } from '../../../../mol-data/db';
-import { DensityServer_Data_Schema } from './density-server';
+import { Column, type Database } from '../../../../mol-data/db.ts';
+import { DensityServer_Data_Schema } from './density-server.ts';
 
 import Schema = Column.Schema
 

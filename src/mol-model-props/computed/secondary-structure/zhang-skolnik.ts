@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { SecondaryStructure } from '../../../mol-model/structure/model/properties/secondary-structure';
-import { SecondaryStructureType } from '../../../mol-model/structure/model/types';
-import { Unit } from '../../../mol-model/structure';
-import { ElementIndex, ResidueIndex } from '../../../mol-model/structure/model';
-import { SortedArray } from '../../../mol-data/int';
-import { Vec3 } from '../../../mol-math/linear-algebra/3d/vec3';
+import { SecondaryStructure } from '../../../mol-model/structure/model/properties/secondary-structure.ts';
+import { SecondaryStructureType } from '../../../mol-model/structure/model/types.ts';
+import type { Unit } from '../../../mol-model/structure.ts';
+import type { ElementIndex, ResidueIndex } from '../../../mol-model/structure/model.ts';
+import { SortedArray } from '../../../mol-data/int.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra/3d/vec3.ts';
 
 const HelixDistances = [5.45, 5.18, 6.37];
 const HelixDelta = 2.1;

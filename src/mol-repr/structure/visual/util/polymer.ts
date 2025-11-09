@@ -5,18 +5,18 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Unit, ElementIndex, StructureElement, Bond, Structure, ResidueIndex } from '../../../../mol-model/structure';
-import { SortedRanges } from '../../../../mol-data/int/sorted-ranges';
-import { OrderedSet, Interval, SortedArray } from '../../../../mol-data/int';
-import { EmptyLoci, Loci } from '../../../../mol-model/loci';
-import { LocationIterator } from '../../../../mol-geo/util/location-iterator';
-import { PickingId } from '../../../../mol-geo/geometry/picking';
-import { getResidueLoci, StructureGroup } from './common';
+import { Unit, type ElementIndex, StructureElement, Bond, Structure, type ResidueIndex } from '../../../../mol-model/structure.ts';
+import type { SortedRanges } from '../../../../mol-data/int/sorted-ranges.ts';
+import { OrderedSet, Interval, type SortedArray } from '../../../../mol-data/int.ts';
+import { EmptyLoci, type Loci } from '../../../../mol-model/loci.ts';
+import { LocationIterator } from '../../../../mol-geo/util/location-iterator.ts';
+import { PickingId } from '../../../../mol-geo/geometry/picking.ts';
+import { getResidueLoci, type StructureGroup } from './common.ts';
 
-export * from './polymer/backbone';
-export * from './polymer/gap-iterator';
-export * from './polymer/trace-iterator';
-export * from './polymer/curve-segment';
+export * from './polymer/backbone.ts';
+export * from './polymer/gap-iterator.ts';
+export * from './polymer/trace-iterator.ts';
+export * from './polymer/curve-segment.ts';
 
 export const StandardTension = 0.5;
 export const HelixTension = 0.9;

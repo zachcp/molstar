@@ -5,8 +5,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Camera } from '../mol-canvas3d/camera';
-import { Vec3 } from '../mol-math/linear-algebra';
+import type { Camera } from '../mol-canvas3d/camera.ts';
+import { Vec3 } from '../mol-math/linear-algebra.ts';
 
 /** Return the distance adjustment ratio for conversion from the "reference camera"
  * to a camera with an arbitrary field of view `fov`. */

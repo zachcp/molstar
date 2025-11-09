@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { NumberArray } from '../../../mol-util/type-helpers';
-import { Vec } from '../3d';
+import type { NumberArray } from '../../../mol-util/type-helpers.ts';
+import type { Vec } from '../3d.ts';
 
 interface Matrix<N extends number = number, M extends number = number> {
     data: NumberArray,

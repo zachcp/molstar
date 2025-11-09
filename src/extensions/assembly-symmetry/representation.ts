@@ -4,35 +4,35 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { AssemblySymmetryValue, AssemblySymmetryProvider, AssemblySymmetryData } from './prop';
-import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder';
-import { Vec3, Mat4, Mat3 } from '../../mol-math/linear-algebra';
-import { addCylinder } from '../../mol-geo/geometry/mesh/builder/cylinder';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { RuntimeContext } from '../../mol-task';
-import { Shape } from '../../mol-model/shape';
-import { ColorNames } from '../../mol-util/color/names';
-import { ShapeRepresentation } from '../../mol-repr/shape/representation';
-import { MarkerActions } from '../../mol-util/marker-action';
-import { Prism, PrismCage } from '../../mol-geo/primitive/prism';
-import { Wedge, WedgeCage } from '../../mol-geo/primitive/wedge';
-import { Primitive, transformPrimitive } from '../../mol-geo/primitive/primitive';
-import { memoize1 } from '../../mol-util/memoize';
-import { polygon } from '../../mol-geo/primitive/polygon';
-import { ColorMap, Color } from '../../mol-util/color';
-import { TableLegend } from '../../mol-util/legend';
-import { Representation, RepresentationContext, RepresentationParamsGetter } from '../../mol-repr/representation';
-import { Cage, transformCage, cloneCage } from '../../mol-geo/primitive/cage';
-import { OctahedronCage } from '../../mol-geo/primitive/octahedron';
-import { TetrahedronCage } from '../../mol-geo/primitive/tetrahedron';
-import { IcosahedronCage } from '../../mol-geo/primitive/icosahedron';
-import { degToRad, radToDeg } from '../../mol-math/misc';
-import { Mutable } from '../../mol-util/type-helpers';
-import { equalEps } from '../../mol-math/linear-algebra/3d/common';
-import { Structure } from '../../mol-model/structure';
-import { isInteger } from '../../mol-util/number';
-import { Sphere3D } from '../../mol-math/geometry';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { type AssemblySymmetryValue, AssemblySymmetryProvider, AssemblySymmetryData } from './prop.ts';
+import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Vec3, Mat4, Mat3 } from '../../mol-math/linear-algebra.ts';
+import { addCylinder } from '../../mol-geo/geometry/mesh/builder/cylinder.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
+import { Shape } from '../../mol-model/shape.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { ShapeRepresentation } from '../../mol-repr/shape/representation.ts';
+import { MarkerActions } from '../../mol-util/marker-action.ts';
+import { Prism, PrismCage } from '../../mol-geo/primitive/prism.ts';
+import { Wedge, WedgeCage } from '../../mol-geo/primitive/wedge.ts';
+import { type Primitive, transformPrimitive } from '../../mol-geo/primitive/primitive.ts';
+import { memoize1 } from '../../mol-util/memoize.ts';
+import { polygon } from '../../mol-geo/primitive/polygon.ts';
+import { ColorMap, type Color } from '../../mol-util/color/index.ts';
+import { TableLegend } from '../../mol-util/legend.ts';
+import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../../mol-repr/representation.ts';
+import { type Cage, transformCage, cloneCage } from '../../mol-geo/primitive/cage.ts';
+import { OctahedronCage } from '../../mol-geo/primitive/octahedron.ts';
+import { TetrahedronCage } from '../../mol-geo/primitive/tetrahedron.ts';
+import { IcosahedronCage } from '../../mol-geo/primitive/icosahedron.ts';
+import { degToRad, radToDeg } from '../../mol-math/misc.ts';
+import type { Mutable } from '../../mol-util/type-helpers.ts';
+import { equalEps } from '../../mol-math/linear-algebra/3d/common.ts';
+import type { Structure } from '../../mol-model/structure.ts';
+import { isInteger } from '../../mol-util/number.ts';
+import { Sphere3D } from '../../mol-math/geometry.ts';
 
 const OrderColors = ColorMap({
     '2': ColorNames.deepskyblue,
@@ -154,7 +154,7 @@ function getAxesMesh(data: AssemblySymmetryValue, props: PD.Values<AxesParams>, 
     return MeshBuilder.getMesh(builderState);
 }
 
-function getAxesShape(ctx: RuntimeContext, data: Structure, props: AssemblySymmetryProps, shape?: Shape<Mesh>) {
+function getAxesShape(ctx: RuntimeContext, data: Structure, props: AssemblySymmetryProps, shape?: Shape<Mesh>): Shape<Mesh> {
     const assemblySymmetry = AssemblySymmetryProvider.get(data).value!;
     const geo = getAxesMesh(assemblySymmetry, props, shape && shape.geometry);
     const getColor = (groupId: number) => {

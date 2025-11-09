@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ElementSymbol } from '../../../model/types';
+import type { ElementSymbol } from '../../../model/types.ts';
 
 /** Default for atomic bonds */
 export const DefaultBondMaxRadius = 4;

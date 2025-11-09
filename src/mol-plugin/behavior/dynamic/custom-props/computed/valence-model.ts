@@ -4,16 +4,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginBehavior } from '../../../behavior';
-import { ParamDefinition as PD } from '../../../../../mol-util/param-definition';
-import { ValenceModelProvider } from '../../../../../mol-model-props/computed/valence-model';
-import { Loci } from '../../../../../mol-model/loci';
-import { PluginStateObject } from '../../../../../mol-plugin-state/objects';
-import { StateSelection } from '../../../../../mol-state';
-import { Structure, StructureElement } from '../../../../../mol-model/structure';
-import { OrderedSet } from '../../../../../mol-data/int';
-import { geometryLabel } from '../../../../../mol-model-props/computed/chemistry/geometry';
-import { arraySetAdd } from '../../../../../mol-util/array';
+import { PluginBehavior } from '../../../behavior.ts';
+import { ParamDefinition as PD } from '../../../../../mol-util/param-definition.ts';
+import { ValenceModelProvider } from '../../../../../mol-model-props/computed/valence-model.ts';
+import type { Loci } from '../../../../../mol-model/loci.ts';
+import { PluginStateObject } from '../../../../../mol-plugin-state/objects.ts';
+import { StateSelection } from '../../../../../mol-state/index.ts';
+import { type Structure, StructureElement } from '../../../../../mol-model/structure.ts';
+import { OrderedSet } from '../../../../../mol-data/int.ts';
+import { geometryLabel } from '../../../../../mol-model-props/computed/chemistry/geometry.ts';
+import { arraySetAdd } from '../../../../../mol-util/array.ts';
 
 export const ValenceModel = PluginBehavior.create<{ autoAttach: boolean, showTooltip: boolean }>({
     name: 'computed-valence-model-prop',
@@ -75,8 +75,7 @@ export const ValenceModel = PluginBehavior.create<{ autoAttach: boolean, showToo
             }
         };
 
-        update(p: { autoAttach: boolean, showTooltip: boolean }) {
-            const updated = (
+        override update(p: { autoAttach: boolean, showTooltip: boolean }) {            const updated = (
                 this.params.autoAttach !== p.autoAttach ||
                 this.params.showTooltip !== p.showTooltip
             );

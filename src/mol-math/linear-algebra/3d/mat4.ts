@@ -17,18 +17,18 @@
  * furnished to do so, subject to the following conditions:
  */
 
-import { EPSILON, equalEps } from './common';
-import { Vec3 } from './vec3';
-import { Quat } from './quat';
-import { degToRad } from '../../misc';
-import { NumberArray } from '../../../mol-util/type-helpers';
-import { Mat3 } from './mat3';
-import { Euler } from './euler';
+import { EPSILON, equalEps } from './common.ts';
+import { Vec3 } from './vec3.ts';
+import { Quat } from './quat.ts';
+import { degToRad } from '../../misc.ts';
+import type { NumberArray } from '../../../mol-util/type-helpers.ts';
+import type { Mat3 } from './mat3.ts';
+import type { Euler } from './euler.ts';
 
 interface Mat4 extends Array<number> { [d: number]: number, '@type': 'mat4', length: 16 }
 interface ReadonlyMat4 extends Array<number> { readonly [d: number]: number, '@type': 'mat4', length: 16 }
 
-function Mat4() {
+function Mat4(): Mat4 {
     return Mat4.zero();
 }
 
@@ -106,31 +106,32 @@ namespace Mat4 {
     }
 
     const _id = identity();
-    export function isIdentity(m: Mat4, eps?: number) {
+    export function isIdentity(m: Mat4, eps?: number): boolean {
         return areEqual(m, _id, typeof eps === 'undefined' ? EPSILON : eps);
     }
 
-    export function hasNaN(m: Mat4) {
+    export function hasNaN(m: Mat4): boolean {
         for (let i = 0; i < 16; i++) if (isNaN(m[i])) return true;
         return false;
     }
 
-    export function areEqual(a: Mat4, b: Mat4, eps: number) {
+    export function areEqual(a: Mat4, b: Mat4, eps: number): boolean {
         for (let i = 0; i < 16; i++) {
             if (Math.abs(a[i] - b[i]) > eps) return false;
         }
         return true;
     }
 
-    export function setValue(a: Mat4, i: number, j: number, value: number) {
+    export function setValue(a: Mat4, i: number, j: number, value: number): Mat4 {
+        return a;
         a[4 * j + i] = value;
     }
 
-    export function getValue(a: Mat4, i: number, j: number) {
+    export function getValue(a: Mat4, i: number, j: number): number {
         return a[4 * j + i];
     }
 
-    export function toArray<T extends NumberArray>(a: Mat4, out: T, offset: number) {
+    export function toArray<T extends NumberArray>(a: Mat4, out: T, offset: number): T {
         out[offset + 0] = a[0];
         out[offset + 1] = a[1];
         out[offset + 2] = a[2];
@@ -150,7 +151,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function fromArray(a: Mat4, array: NumberArray, offset: number) {
+    export function fromArray(a: Mat4, array: NumberArray, offset: number): Mat4 {
         a[0] = array[offset + 0];
         a[1] = array[offset + 1];
         a[2] = array[offset + 2];
@@ -170,7 +171,7 @@ namespace Mat4 {
         return a;
     }
 
-    export function fromBasis(a: Mat4, x: Vec3, y: Vec3, z: Vec3) {
+    export function fromBasis(a: Mat4, x: Vec3, y: Vec3, z: Vec3): Mat4 {
         setZero(a);
         setValue(a, 0, 0, x[0]);
         setValue(a, 1, 0, x[1]);
@@ -185,7 +186,7 @@ namespace Mat4 {
         return a;
     }
 
-    export function copy(out: Mat4, a: Mat4) {
+    export function copy(out: Mat4, a: Mat4): Mat4 {
         out[0] = a[0];
         out[1] = a[1];
         out[2] = a[2];
@@ -205,14 +206,14 @@ namespace Mat4 {
         return out;
     }
 
-    export function clone(a: Mat4) {
+    export function clone(a: Mat4): Mat4 {
         return copy(zero(), a);
     }
 
     /**
      * Returns the translation vector component of a transformation matrix.
      */
-    export function getTranslation(out: Vec3, mat: Mat4) {
+    export function getTranslation(out: Vec3, mat: Mat4): Vec3 {
         out[0] = mat[12];
         out[1] = mat[13];
         out[2] = mat[14];
@@ -222,7 +223,7 @@ namespace Mat4 {
     /**
      * Returns the scaling factor component of a transformation matrix.
      */
-    export function getScaling(out: Vec3, mat: Mat4) {
+    export function getScaling(out: Vec3, mat: Mat4): Vec3 {
         const m11 = mat[0];
         const m12 = mat[1];
         const m13 = mat[2];
@@ -241,7 +242,7 @@ namespace Mat4 {
     /**
      * Returns a quaternion representing the rotational component of a transformation matrix.
      */
-    export function getRotation(out: Quat, mat: Mat4) {
+    export function getRotation(out: Quat, mat: Mat4): Quat {
         // Algorithm taken from http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
         const trace = mat[0] + mat[5] + mat[10];
         let S = 0;
@@ -275,7 +276,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function extractRotation(out: Mat4, mat: Mat4) {
+    export function extractRotation(out: Mat4, mat: Mat4): Mat4 {
         const scaleX = 1 / Math.sqrt(mat[0] * mat[0] + mat[1] * mat[1] + mat[2] * mat[2]);
         const scaleY = 1 / Math.sqrt(mat[4] * mat[4] + mat[5] * mat[5] + mat[6] * mat[6]);
         const scaleZ = 1 / Math.sqrt(mat[8] * mat[8] + mat[9] * mat[9] + mat[10] * mat[10]);
@@ -300,7 +301,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function transpose(out: Mat4, a: Mat4) {
+    export function transpose(out: Mat4, a: Mat4): Mat4 {
         // If we are transposing ourselves we can skip a few steps but have to cache some values
         if (out === a) {
             const a01 = a[1], a02 = a[2], a03 = a[3];
@@ -339,7 +340,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function tryInvert(out: Mat4, a: Mat4) {
+    export function tryInvert(out: Mat4, a: Mat4): boolean {
         const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3],
             a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7],
             a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11],
@@ -386,14 +387,14 @@ namespace Mat4 {
         return true;
     }
 
-    export function invert(out: Mat4, a: Mat4) {
+    export function invert(out: Mat4, a: Mat4): Mat4 {
         if (!tryInvert(out, a)) {
             console.warn('non-invertible matrix.', a);
         }
         return out;
     }
 
-    export function mul(out: Mat4, a: Mat4, b: Mat4) {
+    export function mul(out: Mat4, a: Mat4, b: Mat4): Mat4 {
         const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3],
             a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7],
             a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11],
@@ -429,7 +430,7 @@ namespace Mat4 {
     /**
      * Like `mul` but with offsets into arrays
      */
-    export function mulOffset(out: NumberArray, a: NumberArray, b: NumberArray, oOut: number, oA: number, oB: number) {
+    export function mulOffset(out: NumberArray, a: NumberArray, b: NumberArray, oOut: number, oA: number, oB: number): NumberArray {
         const a00 = a[0 + oA], a01 = a[1 + oA], a02 = a[2 + oA], a03 = a[3 + oA],
             a10 = a[4 + oA], a11 = a[5 + oA], a12 = a[6 + oA], a13 = a[7 + oA],
             a20 = a[8 + oA], a21 = a[9 + oA], a22 = a[10 + oA], a23 = a[11 + oA],
@@ -462,12 +463,12 @@ namespace Mat4 {
         return out;
     }
 
-    export function mul3(out: Mat4, a: Mat4, b: Mat4, c: Mat4) {
+    export function mul3(out: Mat4, a: Mat4, b: Mat4, c: Mat4): Mat4 {
         return mul(out, mul(out, a, b), c);
     }
 
     /** Translate a Mat4 by the given Vec3 */
-    export function translate(out: Mat4, a: Mat4, v: Vec3) {
+    export function translate(out: Mat4, a: Mat4, v: Vec3): Mat4 {
         const x = v[0], y = v[1], z = v[2];
         let a00: number, a01: number, a02: number, a03: number,
             a10: number, a11: number, a12: number, a13: number,
@@ -496,7 +497,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function fromTranslation(out: Mat4, v: Vec3) {
+    export function fromTranslation(out: Mat4, v: Vec3): Mat4 {
         out[0] = 1;
         out[1] = 0;
         out[2] = 0;
@@ -516,7 +517,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function setTranslation(out: Mat4, v: Vec3) {
+    export function setTranslation(out: Mat4, v: Vec3): Mat4 {
         out[12] = v[0];
         out[13] = v[1];
         out[14] = v[2];
@@ -528,7 +529,7 @@ namespace Mat4 {
      * axes. Each axis is a vec3 and is expected to be unit length and
      * perpendicular to all other specified axes.
      */
-    export function setAxes(out: Mat4, view: Vec3, right: Vec3, up: Vec3) {
+    export function setAxes(out: Mat4, view: Vec3, right: Vec3, up: Vec3): Mat4 {
         out[0] = right[0];
         out[4] = right[1];
         out[8] = right[2];
@@ -541,7 +542,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function rotate(out: Mat4, a: Mat4, rad: number, axis: Vec3) {
+    export function rotate(out: Mat4, a: Mat4, rad: number, axis: Vec3): Mat4 {
         let x = axis[0], y = axis[1], z = axis[2];
         let len = Math.sqrt(x * x + y * y + z * z);
 
@@ -590,7 +591,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function fromRotation(out: Mat4, rad: number, axis: Vec3) {
+    export function fromRotation(out: Mat4, rad: number, axis: Vec3): Mat4 {
         let x = axis[0], y = axis[1], z = axis[2];
         let len = Math.sqrt(x * x + y * y + z * z);
 
@@ -625,7 +626,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function scale(out: Mat4, a: Mat4, v: Vec3) {
+    export function scale(out: Mat4, a: Mat4, v: Vec3): Mat4 {
         const x = v[0], y = v[1], z = v[2];
 
         out[0] = a[0] * x;
@@ -647,7 +648,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function scaleUniformly(out: Mat4, a: Mat4, scale: number) {
+    export function scaleUniformly(out: Mat4, a: Mat4, scale: number): Mat4 {
         out[0] = a[0] * scale;
         out[1] = a[1] * scale;
         out[2] = a[2] * scale;
@@ -667,7 +668,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function fromScaling(out: Mat4, v: Vec3) {
+    export function fromScaling(out: Mat4, v: Vec3): Mat4 {
         out[0] = v[0];
         out[1] = 0;
         out[2] = 0;
@@ -687,7 +688,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function fromUniformScaling(out: Mat4, scale: number) {
+    export function fromUniformScaling(out: Mat4, scale: number): Mat4 {
         out[0] = scale;
         out[1] = 0;
         out[2] = 0;
@@ -712,7 +713,7 @@ namespace Mat4 {
     /**
      * Creates a matrix from a plane defined by a normal vector and a point.
      */
-    export function fromPlane(out: Mat4, normal: Vec3, point: Vec3) {
+    export function fromPlane(out: Mat4, normal: Vec3, point: Vec3): Mat4 {
         const tangent0 = Vec3.cross(_v3pa, normal, Vec3.unitX);
         if (Vec3.dot(tangent0, tangent0) < EPSILON) {
             Vec3.cross(tangent0, normal, Vec3.unitY);
@@ -734,7 +735,7 @@ namespace Mat4 {
     /**
      * Copies the mat3 into upper-left 3x3 values.
      */
-    export function fromMat3(out: Mat4, a: Mat3) {
+    export function fromMat3(out: Mat4, a: Mat3): Mat4 {
         out[0] = a[0];
         out[1] = a[1];
         out[2] = a[2];
@@ -747,7 +748,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function compose(out: Mat4, position: Vec3, quaternion: Quat, scale: Vec3) {
+    export function compose(out: Mat4, position: Vec3, quaternion: Quat, scale: Vec3): Mat4 {
         const [x, y, z, w] = quaternion;
         const x2 = x + x,	y2 = y + y, z2 = z + z;
         const xx = x * x2, xy = x * y2, xz = x * z2;
@@ -781,7 +782,7 @@ namespace Mat4 {
 
     const _v3 = [0, 0, 0] as unknown as Vec3;
     const _m4 = zero();
-    export function decompose(m: Mat4, position: Vec3, quaternion: Quat, scale: Vec3) {
+    export function decompose(m: Mat4, position: Vec3, quaternion: Quat, scale: Vec3): Mat4 {
 
         let sx = Vec3.magnitude(Vec3.set(_v3, m[0], m[1], m[2]));
         const sy = Vec3.magnitude(Vec3.set(_v3, m[4], m[5], m[6]));
@@ -831,7 +832,7 @@ namespace Mat4 {
         return { position, quaternion, scale };
     }
 
-    export function makeTable(m: Mat4) {
+    export function makeTable(m: Mat4): string {
         let ret = '';
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 4; j++) {
@@ -843,7 +844,7 @@ namespace Mat4 {
         return ret;
     }
 
-    export function determinant(a: Mat4) {
+    export function determinant(a: Mat4): number {
         const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3],
             a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7],
             a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11],
@@ -873,7 +874,7 @@ namespace Mat4 {
      *
      * Allows for improper rotations
      */
-    export function isRotationAndTranslation(a: Mat4, eps?: number) {
+    export function isRotationAndTranslation(a: Mat4, eps?: number): boolean {
         return _isRotationAndTranslation(a, typeof eps !== 'undefined' ? eps : EPSILON);
     }
 
@@ -902,7 +903,7 @@ namespace Mat4 {
      * [ 0  0  S  Z ]
      * [ 0  0  0  1 ]
      */
-    export function isTranslationAndUniformScaling(a: Mat4, eps?: number) {
+    export function isTranslationAndUniformScaling(a: Mat4, eps?: number): boolean {
         return _isTranslationAndUniformScaling(a, typeof eps !== 'undefined' ? eps : EPSILON);
     }
 
@@ -926,7 +927,7 @@ namespace Mat4 {
         );
     }
 
-    export function fromQuat(out: Mat4, q: Quat) {
+    export function fromQuat(out: Mat4, q: Quat): Mat4 {
         const x = q[0], y = q[1], z = q[2], w = q[3];
         const x2 = x + x;
         const y2 = y + y;
@@ -965,7 +966,7 @@ namespace Mat4 {
         return out;
     }
 
-    export function fromEuler(out: Mat4, euler: Euler, order: Euler.Order) {
+    export function fromEuler(out: Mat4, euler: Euler, order: Euler.Order): Mat4 {
         const x = euler[0], y = euler[1], z = euler[2];
         const a = Math.cos(x), b = Math.sin(x);
         const c = Math.cos(y), d = Math.sin(y);
@@ -1056,7 +1057,7 @@ namespace Mat4 {
     /**
      * Generates a perspective projection (frustum) matrix with the given bounds
      */
-    export function perspective(out: Mat4, left: number, right: number, top: number, bottom: number, near: number, far: number) {
+    export function perspective(out: Mat4, left: number, right: number, top: number, bottom: number, near: number, far: number): Mat4 {
         const x = 2 * near / (right - left);
         const y = 2 * near / (top - bottom);
 
@@ -1087,7 +1088,7 @@ namespace Mat4 {
     /**
      * Generates a orthogonal projection matrix with the given bounds
      */
-    export function ortho(out: Mat4, left: number, right: number, top: number, bottom: number, near: number, far: number) {
+    export function ortho(out: Mat4, left: number, right: number, top: number, bottom: number, near: number, far: number): Mat4 {
         const w = 1.0 / (right - left);
         const h = 1.0 / (top - bottom);
         const p = 1.0 / (far - near);
@@ -1118,7 +1119,7 @@ namespace Mat4 {
     /**
      * Generates a look-at matrix with the given eye position, focal point, and up axis
      */
-    export function lookAt(out: Mat4, eye: Vec3, center: Vec3, up: Vec3) {
+    export function lookAt(out: Mat4, eye: Vec3, center: Vec3, up: Vec3): Mat4 {
         let x0, x1, x2, y0, y1, y2, z0, z1, z2, len;
         const eyex = eye[0];
         const eyey = eye[1];
@@ -1200,7 +1201,7 @@ namespace Mat4 {
     /**
      * Generates a matrix that makes something look at something else.
      */
-    export function targetTo(out: Mat4, eye: Vec3, target: Vec3, up: Vec3) {
+    export function targetTo(out: Mat4, eye: Vec3, target: Vec3, up: Vec3): Mat4 {
         const eyex = eye[0],
             eyey = eye[1],
             eyez = eye[2],
@@ -1254,7 +1255,7 @@ namespace Mat4 {
     /**
      * Perm is 0-indexed permutation
      */
-    export function fromPermutation(out: Mat4, perm: number[]) {
+    export function fromPermutation(out: Mat4, perm: number[]): Mat4 {
         setZero(out);
         for (let i = 0; i < 4; i++) {
             const p = perm[i];
@@ -1263,14 +1264,14 @@ namespace Mat4 {
         return out;
     }
 
-    export function getMaxScaleOnAxis(m: Mat4) {
+    export function getMaxScaleOnAxis(m: Mat4): number {
         const scaleXSq = m[0] * m[0] + m[1] * m[1] + m[2] * m[2];
         const scaleYSq = m[4] * m[4] + m[5] * m[5] + m[6] * m[6];
         const scaleZSq = m[8] * m[8] + m[9] * m[9] + m[10] * m[10];
         return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
     }
 
-    export function extractBasis(m: Mat4) {
+    export function extractBasis(m: Mat4): { x: Vec3, y: Vec3, z: Vec3 } {
         return {
             x: Vec3.create(m[0], m[1], m[2]),
             y: Vec3.create(m[4], m[5], m[6]),

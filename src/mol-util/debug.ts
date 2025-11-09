@@ -9,6 +9,7 @@
  * by the DefinePlugin to the webpack `mode` value
  */
 
+import process from "node:process";
 let isProductionMode = function () {
     try {
         return process.env.NODE_ENV === 'production';

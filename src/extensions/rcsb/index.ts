@@ -4,4 +4,4 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-export { RCSBValidationReport } from './validation-report/behavior';
+export { RCSBValidationReport } from './validation-report/behavior.ts';

@@ -1,7 +1,7 @@
 import * as Data from '../../reader/cif/data-model';
 import { CifWriter } from '../cif';
 import { decodeMsgPack } from '../../common/msgpack/decode';
-import { EncodedFile, EncodedCategory } from '../../common/binary-cif';
+import type { EncodedFile, EncodedCategory } from '../../common/binary-cif';
 import { Field } from '../../reader/cif/binary/field';
 import { TextEncoder } from '../cif/encoder/text';
 import * as C from '../cif/encoder';

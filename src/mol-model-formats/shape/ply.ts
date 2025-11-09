@@ -5,22 +5,22 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { RuntimeContext, Task } from '../../mol-task';
-import { ShapeProvider } from '../../mol-model/shape/provider';
-import { Color } from '../../mol-util/color';
-import { PlyFile, PlyTable, PlyList } from '../../mol-io/reader/ply/schema';
-import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { Shape } from '../../mol-model/shape';
-import { ChunkedArray } from '../../mol-data/util';
-import { arrayMax, fillSerial } from '../../mol-util/array';
-import { Column } from '../../mol-data/db';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ColorNames } from '../../mol-util/color/names';
-import { deepClone } from '../../mol-util/object';
-import { stringToWords } from '../../mol-util/string';
-import { ValueCell } from '../../mol-util/value-cell';
-import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
+import type { ShapeProvider } from '../../mol-model/shape/provider.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import type { PlyFile, PlyTable, PlyList } from '../../mol-io/reader/ply/schema.ts';
+import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { Shape } from '../../mol-model/shape.ts';
+import { ChunkedArray } from '../../mol-data/util.ts';
+import { arrayMax, fillSerial } from '../../mol-util/array.ts';
+import { Column } from '../../mol-data/db.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { deepClone } from '../../mol-util/object.ts';
+import { stringToWords } from '../../mol-util/string.ts';
+import { ValueCell } from '../../mol-util/value-cell.ts';
+import type { Mat4 } from '../../mol-math/linear-algebra/3d/mat4.ts';
 
 // TODO support 'edge' element, see https://www.mathworks.com/help/vision/ug/the-ply-format.html
 // TODO support missing face element

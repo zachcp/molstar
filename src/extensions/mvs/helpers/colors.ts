@@ -4,15 +4,15 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { ElementSymbolColors } from '../../../mol-theme/color/element-symbol';
-import { ResidueNameColors } from '../../../mol-theme/color/residue-name';
-import { SecondaryStructureColors as SecStrColors } from '../../../mol-theme/color/secondary-structure';
-import { Color } from '../../../mol-util/color';
-import { ColorList } from '../../../mol-util/color/color';
-import { ColorLists } from '../../../mol-util/color/lists';
-import { omitObjectKeys } from '../../../mol-util/object';
-import { ColorDictNameT, ColorListNameT } from '../tree/mvs/param-types';
-import { decodeColor } from './utils';
+import { ElementSymbolColors } from '../../../mol-theme/color/element-symbol.ts';
+import { ResidueNameColors } from '../../../mol-theme/color/residue-name.ts';
+import { SecondaryStructureColors as SecStrColors } from '../../../mol-theme/color/secondary-structure.ts';
+import { Color } from '../../../mol-util/color/index.ts';
+import type { ColorList } from '../../../mol-util/color/color.ts';
+import { ColorLists } from '../../../mol-util/color/lists.ts';
+import { omitObjectKeys } from '../../../mol-util/object.ts';
+import type { ColorDictNameT, ColorListNameT } from '../tree/mvs/param-types.ts';
+import { decodeColor } from './utils.ts';
 
 
 /** Colors for amino acid groups, based on Clustal (https://www.jalview.org/help/html/colourSchemes/clustal.html) */

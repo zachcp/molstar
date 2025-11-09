@@ -6,15 +6,16 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { Structure } from '../structure';
-import { Lookup3D, GridLookup3D, Result } from '../../../../mol-math/geometry';
-import { Vec3 } from '../../../../mol-math/linear-algebra';
-import { OrderedSet } from '../../../../mol-data/int';
-import { StructureUniqueSubsetBuilder } from './unique-subset-builder';
-import { StructureElement } from '../element';
-import { Unit } from '../unit';
-import { UnitIndex } from '../element/util';
-import { FibonacciHeap } from '../../../../mol-util/fibonacci-heap';
+import type { Structure } from '../structure.ts';
+import { type Lookup3D, GridLookup3D, Result } from '../../../../mol-math/geometry.ts';
+import type { Boundary } from '../../../../mol-math/geometry/boundary.ts';
+import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { OrderedSet } from '../../../../mol-data/int.ts';
+import type { StructureUniqueSubsetBuilder } from './unique-subset-builder.ts';
+import { StructureElement } from '../element.ts';
+import type { Unit } from '../unit.ts';
+import type { UnitIndex } from '../element/util.ts';
+import { FibonacciHeap } from '../../../../mol-util/fibonacci-heap.ts';
 
 export interface StructureResult extends Result<StructureElement.UnitIndex> {
     units: Unit[]
@@ -32,7 +33,7 @@ export namespace StructureResult {
         return { count: 0, indices: [], units: [], squaredDistances: [] };
     }
 
-    export function copy(out: StructureResult, result: StructureResult) {
+    export function copy(out: StructureResult, result: StructureResult): StructureResult {
         for (let i = 0; i < result.count; ++i) {
             out.indices[i] = result.indices[i];
             out.units[i] = result.units[i];
@@ -270,7 +271,7 @@ export class StructureLookup3D {
         return ctx.result;
     }
 
-    get boundary() {
+    get boundary(): Boundary {
         return this.structure.boundary;
     }
 

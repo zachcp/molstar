@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra';
-import { MeshBuilder } from '../mesh-builder';
-import { Primitive } from '../../../primitive/primitive';
-import { Sphere } from '../../../primitive/sphere';
+import { type Vec3, Mat4 } from '../../../../mol-math/linear-algebra.ts';
+import { MeshBuilder } from '../mesh-builder.ts';
+import type { Primitive } from '../../../primitive/primitive.ts';
+import { Sphere } from '../../../primitive/sphere.ts';
 
 const sphereMap = new Map<number, Primitive>();
 const tmpSphereMat = Mat4.identity();

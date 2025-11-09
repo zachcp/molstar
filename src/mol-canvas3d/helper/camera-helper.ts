@@ -4,29 +4,29 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { produce } from '../../mol-util/produce';
-import { Interval } from '../../mol-data/int/interval';
-import { addCylinder } from '../../mol-geo/geometry/mesh/builder/cylinder';
-import { addSphere } from '../../mol-geo/geometry/mesh/builder/sphere';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder';
-import { PickingId } from '../../mol-geo/geometry/picking';
-import { Text } from '../../mol-geo/geometry/text/text';
-import { TextBuilder } from '../../mol-geo/geometry/text/text-builder';
-import { GraphicsRenderObject } from '../../mol-gl/render-object';
-import { Scene } from '../../mol-gl/scene';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Sphere3D } from '../../mol-math/geometry';
-import { Mat4, Vec3 } from '../../mol-math/linear-algebra';
-import { DataLoci, EmptyLoci, isEveryLoci, Loci } from '../../mol-model/loci';
-import { Shape } from '../../mol-model/shape';
-import { Visual } from '../../mol-repr/visual';
-import { ColorNames } from '../../mol-util/color/names';
-import { MarkerAction, MarkerActions } from '../../mol-util/marker-action';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { assertUnreachable } from '../../mol-util/type-helpers';
-import { Camera, ICamera } from '../camera';
-import { Viewport } from '../camera/util';
+import { produce } from '../../mol-util/produce.ts';
+import { Interval } from '../../mol-data/int/interval.ts';
+import { addCylinder } from '../../mol-geo/geometry/mesh/builder/cylinder.ts';
+import { addSphere } from '../../mol-geo/geometry/mesh/builder/sphere.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
+import type { PickingId } from '../../mol-geo/geometry/picking.ts';
+import { Text } from '../../mol-geo/geometry/text/text.ts';
+import { TextBuilder } from '../../mol-geo/geometry/text/text-builder.ts';
+import type { GraphicsRenderObject } from '../../mol-gl/render-object.ts';
+import { Scene } from '../../mol-gl/scene.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { Sphere3D } from '../../mol-math/geometry.ts';
+import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { DataLoci, EmptyLoci, isEveryLoci, type Loci } from '../../mol-model/loci.ts';
+import { Shape } from '../../mol-model/shape.ts';
+import { Visual } from '../../mol-repr/visual.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { type MarkerAction, MarkerActions } from '../../mol-util/marker-action.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
+import { Camera, type ICamera } from '../camera.ts';
+import type { Viewport } from '../camera/util.ts';
 
 // TODO add scale line/grid
 
@@ -119,11 +119,11 @@ export class CameraHelper {
         });
     }
 
-    get isEnabled() {
+    get isEnabled(): boolean {
         return this.props.axes.name === 'on';
     }
 
-    getLoci(pickingId: PickingId) {
+    getLoci(pickingId: PickingId): EmptyLoci | CameraAxesLoci {
         const { objectId, groupId, instanceId } = pickingId;
         if ((
             (!this.meshRenderObject || objectId !== this.meshRenderObject.id) &&
@@ -152,7 +152,7 @@ export class CameraHelper {
         return changed;
     };
 
-    mark(loci: Loci, action: MarkerAction) {
+    mark(loci: Loci, action: MarkerAction): boolean {
         if (!MarkerActions.is(MarkerActions.Highlighting, action)) return false;
         if (!isEveryLoci(loci)) {
             if (!isCameraAxesLoci(loci)) return false;
@@ -238,7 +238,7 @@ function getAxisLabel(axis: number, cameraHelper: CameraHelper) {
     }
 }
 
-function CameraAxesLoci(cameraHelper: CameraHelper, groupId: number, instanceId: number) {
+function CameraAxesLoci(cameraHelper: CameraHelper, groupId: number, instanceId: number): DataLoci<CameraHelper, { groupId: number, instanceId: number }> {
     return DataLoci('camera-axes', cameraHelper, [{ groupId, instanceId }],
         void 0 /** bounding sphere */,
         () => getAxisLabel(groupId, cameraHelper));

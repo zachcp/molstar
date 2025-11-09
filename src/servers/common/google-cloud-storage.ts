@@ -6,6 +6,7 @@
 
 
 // Using dodgy typing to avoid importing peer dependency directly:
+import type { Buffer } from "node:buffer";
 type gsStorage = any; // import { type Storage as gsStorage } from '@google-cloud/storage';
 interface gsCreateReadStreamOptions {
     userProject?: string;

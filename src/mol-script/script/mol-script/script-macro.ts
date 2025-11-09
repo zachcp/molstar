@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { MolScriptBuilder as B } from '../../language/builder';
+import { MolScriptBuilder as B } from '../../language/builder.ts';
 
 export function getPositionalArgs(args: any) {
     return Object.keys(args)

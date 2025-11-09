@@ -5,8 +5,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Box3D } from '../primitives/box3d';
-import { Sphere3D } from '../primitives/sphere3d';
+import type { Box3D } from '../primitives/box3d.ts';
+import type { Sphere3D } from '../primitives/sphere3d.ts';
 
 export interface Result<T> {
     count: number,
@@ -28,7 +28,7 @@ export namespace Result {
         return { count: 0, indices: [], squaredDistances: [] };
     }
 
-    export function copy<T = number>(out: Result<T>, result: Result<T>) {
+    export function copy<T = number>(out: Result<T>, result: Result<T>): Result<T> {
         for (let i = 0; i < result.count; ++i) {
             out.indices[i] = result.indices[i];
             out.squaredDistances[i] = result.squaredDistances[i];

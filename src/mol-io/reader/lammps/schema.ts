@@ -6,7 +6,7 @@
  * @author Ludovic Autin <ludovic.autin@gmail.com>
  */
 
-import { Column } from '../../../mol-data/db';
+import type { Column } from '../../../mol-data/db.ts';
 
 interface LammpsUnitStyle {
     mass: string;

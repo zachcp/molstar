@@ -5,14 +5,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Structure, StructureElement } from '../../mol-model/structure';
-import { PluginStateObject } from '../objects';
-import { StateTransforms } from '../transforms';
-import { PluginContext } from '../../mol-plugin/context';
-import { StateBuilder, StateObjectCell, StateSelection, StateTransform } from '../../mol-state';
-import { StructureComponentRef } from '../manager/structure/hierarchy-state';
-import { EmptyLoci, isEmptyLoci, Loci } from '../../mol-model/loci';
-import { Emissive } from '../../mol-theme/emissive';
+import { type Structure, StructureElement } from '../../mol-model/structure.ts';
+import type { PluginStateObject } from '../objects.ts';
+import { StateTransforms } from '../transforms.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { type StateBuilder, type StateObjectCell, StateSelection, type StateTransform } from '../../mol-state/index.ts';
+import type { StructureComponentRef } from '../manager/structure/hierarchy-state.ts';
+import { type EmptyLoci, isEmptyLoci, Loci } from '../../mol-model/loci.ts';
+import { Emissive } from '../../mol-theme/emissive.ts';
 
 type EmissiveEachReprCallback = (update: StateBuilder.Root, repr: StateObjectCell<PluginStateObject.Molecule.Structure.Representation3D, StateTransform<typeof StateTransforms.Representation.StructureRepresentation3D>>, emissive?: StateObjectCell<any, StateTransform<typeof StateTransforms.Representation.EmissiveStructureRepresentation3DFromBundle>>) => Promise<void>
 const EmissiveManagerTag = 'emissive-controls';

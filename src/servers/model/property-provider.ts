@@ -4,14 +4,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as fs from 'fs';
-import { Model } from '../../mol-model/structure';
-import { ModelServerConfig as Config } from './config';
-import { ConsoleLogger } from '../../mol-util/console-logger';
+import * as fs from 'node:fs';
+import type { Model } from '../../mol-model/structure.ts';
+import { ModelServerConfig as Config } from './config.ts';
+import { ConsoleLogger } from '../../mol-util/console-logger.ts';
 
 // TODO enable dynamic imports again
-import * as pdbeProps from './properties/pdbe';
-import * as wwpdbProps from './properties/wwpdb';
+import * as pdbeProps from './properties/pdbe.ts';
+import * as wwpdbProps from './properties/wwpdb.ts';
 
 const attachModelProperties: { [k: string]: AttachModelProperties } = {
     pdbe: pdbeProps.attachModelProperties,

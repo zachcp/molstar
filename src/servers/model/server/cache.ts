@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ConsoleLogger } from '../../../mol-util/console-logger';
-import { LinkedList } from '../../../mol-data/generic';
-import { ModelServerConfig as ServerConfig } from '../config';
+import { ConsoleLogger } from '../../../mol-util/console-logger.ts';
+import { LinkedList } from '../../../mol-data/generic.ts';
+import { ModelServerConfig as ServerConfig } from '../config.ts';
 
 interface CacheEntry<T> {
     key: string,

@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StructureElement, Unit } from '../../mol-model/structure';
+import type { StructureElement, Unit } from '../../mol-model/structure.ts';
 
 const emptyArray: number[] = [];
 

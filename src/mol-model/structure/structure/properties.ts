@@ -5,12 +5,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StructureElement } from './element';
-import { Unit } from './unit';
-import { VdwRadius } from '../model/properties/atomic';
-import { SecondaryStructureType } from '../model/types';
-import { SecondaryStructureProvider } from '../../../mol-model-props/computed/secondary-structure';
-import { SymmetryOperator } from '../../../mol-math/geometry';
+import type { StructureElement } from './element.ts';
+import { Unit } from './unit.ts';
+import { VdwRadius } from '../model/properties/atomic.ts';
+import { SecondaryStructureType } from '../model/types.ts';
+import { SecondaryStructureProvider } from '../../../mol-model-props/computed/secondary-structure.ts';
+import { SymmetryOperator } from '../../../mol-math/geometry.ts';
 
 function p<T>(p: StructureElement.Property<T>) { return p; }
 

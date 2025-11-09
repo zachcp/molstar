@@ -5,15 +5,15 @@
  */
 
 import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
-import { PluginComponent } from '../../../mol-plugin-state/component';
-import { getMVSStoriesContext, MVSStoriesContext } from '../context';
-import { MVSStoriesViewerModel } from './viewer';
-import { useBehavior } from '../../../mol-plugin-ui/hooks/use-behavior';
+import { PluginComponent } from '../../../mol-plugin-state/component.ts';
+import { getMVSStoriesContext, type MVSStoriesContext } from '../context.ts';
+import type { MVSStoriesViewerModel } from './viewer.tsx';
+import { useBehavior } from '../../../mol-plugin-ui/hooks/use-behavior.ts';
 import { createRoot } from 'react-dom/client';
-import { PluginStateSnapshotManager } from '../../../mol-plugin-state/manager/snapshots';
-import { PluginReactContext } from '../../../mol-plugin-ui/base';
-import { CSSProperties, useEffect, useState } from 'react';
-import { Markdown } from '../../../mol-plugin-ui/controls/markdown';
+import type { PluginStateSnapshotManager } from '../../../mol-plugin-state/manager/snapshots.ts';
+import { PluginReactContext } from '../../../mol-plugin-ui/base.tsx';
+import type { CSSProperties } from 'react';
+import { Markdown } from '../../../mol-plugin-ui/controls/markdown.tsx';
 
 export class MVSStoriesSnapshotMarkdownModel extends PluginComponent {
     readonly context: MVSStoriesContext;
@@ -70,28 +70,6 @@ export class MVSStoriesSnapshotMarkdownModel extends PluginComponent {
     }
 }
 
-function Loading() {
-    return <div>
-        <div style={{ marginBottom: 16 }}><i>Loading times may vary depending on the story size, your internet connection, and device performance</i></div>
-        <div>Fetching data<Dots /></div>
-        <div>Generating animations<Dots /></div>
-        <div>Preparing visuals<Dots /></div>
-    </div>;
-}
-
-function Dots() {
-    const [dots, setDots] = useState(0);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setDots(d => (d + 1) % 4);
-        }, Math.random() * 500 + 300);
-        return () => clearInterval(interval);
-    }, []);
-
-    return <span>{'.'.repeat(dots)}</span>;
-}
-
 export function MVSStoriesSnapshotMarkdownUI({ model }: { model: MVSStoriesSnapshotMarkdownModel }) {
     const state = useBehavior(model.state);
     const isLoading = useBehavior(model.context.state.isLoading);
@@ -101,8 +79,7 @@ export function MVSStoriesSnapshotMarkdownUI({ model }: { model: MVSStoriesSnaps
 
     if (isLoading) {
         return <div style={style} className={className}>
-            <h3>The story will be ready momentarily</h3>
-            <Loading />
+            <i>Loading...</i>
         </div>;
     }
 
@@ -149,4 +126,4 @@ export class MVSStoriesSnapshotMarkdownViewer extends HTMLElement {
     }
 }
 
-window.customElements.define('mvs-stories-snapshot-markdown', MVSStoriesSnapshotMarkdownViewer);
+globalThis.customElements.define('mvs-stories-snapshot-markdown', MVSStoriesSnapshotMarkdownViewer);

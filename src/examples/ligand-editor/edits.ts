@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { JSONCifLigandGraph, JSONCifLigandGraphAtom, JSONCifLigandGraphBondProps } from '../../extensions/json-cif/ligand-graph';
-import { Quat, Vec3 } from '../../mol-math/linear-algebra';
-import { VdwRadius } from '../../mol-model/structure/model/properties/atomic';
-import { ElementSymbol } from '../../mol-model/structure/model/types';
-import { attachRGroup, RGroupName } from './r-groups';
+import type { JSONCifLigandGraph, JSONCifLigandGraphAtom, JSONCifLigandGraphBondProps } from '../../extensions/json-cif/ligand-graph.ts';
+import { Quat, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { VdwRadius } from '../../mol-model/structure/model/properties/atomic.ts';
+import { ElementSymbol } from '../../mol-model/structure/model/types.ts';
+import { attachRGroup, type RGroupName } from './r-groups.ts';
 
 export const TopologyEdits = {
     setElement: async (graph: JSONCifLigandGraph, atomIds: number[], type_symbol: string) => {

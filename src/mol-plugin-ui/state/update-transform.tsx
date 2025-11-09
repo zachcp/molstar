@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { State, StateTransform, StateTransformer } from '../../mol-state';
-import { memoizeLatest } from '../../mol-util/memoize';
-import { StateTransformParameters, TransformControlBase } from './common';
-import { Observable } from 'rxjs';
-import { PluginUIComponent } from '../base';
+import type { State, StateTransform, StateTransformer } from '../../mol-state/index.ts';
+import { memoizeLatest } from '../../mol-util/memoize.ts';
+import { StateTransformParameters, TransformControlBase } from './common.tsx';
+import type { Observable } from 'rxjs';
+import { PluginUIComponent } from '../base.tsx';
 
 export { UpdateTransformControl, TransformUpdaterControl };
 
@@ -68,8 +68,7 @@ class UpdateTransformControl extends TransformControlBase<UpdateTransformControl
         return autoUpdate({ a: parentCell.obj!, b: cell.obj!, oldParams: this.getInfo().initialValues, newParams }, this.plugin);
     }
 
-    componentDidMount() {
-        super.componentDidMount();
+    override componentDidMount() {        super.componentDidMount();
 
         if (this.props.toggleCollapsed) this.subscribe(this.props.toggleCollapsed, () => this.setState({ isCollapsed: !this.state.isCollapsed }));
 
@@ -86,8 +85,7 @@ class UpdateTransformControl extends TransformControlBase<UpdateTransformControl
 
     state: UpdateTransformControl.ComponentState = { error: void 0, isInitial: true, params: this.getInfo().initialValues, busy: false, isCollapsed: this.props.initiallyCollapsed };
 
-    componentDidUpdate(prevProps: UpdateTransformControl.Props) {
-        if (this.props.transform !== prevProps.transform) {
+    override componentDidUpdate(prevProps: UpdateTransformControl.Props) {        if (this.props.transform !== prevProps.transform) {
             const cell = this.props.state.cells.get(this.props.transform.ref)!;
             this.setState({
                 params: cell.params?.values || { },
@@ -100,15 +98,13 @@ class UpdateTransformControl extends TransformControlBase<UpdateTransformControl
 }
 
 class TransformUpdaterControl extends PluginUIComponent<{ nodeRef: string, initiallyCollapsed?: boolean, header?: StateTransformer.Definition['display'] }> {
-    componentDidMount() {
-        this.subscribe(this.plugin.state.events.object.updated, ({ ref, state }) => {
+    override componentDidMount() {        this.subscribe(this.plugin.state.events.object.updated, ({ ref, state }) => {
             if (this.props.nodeRef !== ref || this.plugin.state.data !== state) return;
             this.forceUpdate();
         });
     }
 
-    render() {
-        const state = this.plugin.state.data;
+    override render() {        const state = this.plugin.state.data;
         const ref = this.props.nodeRef;
         const cell = state.cells.get(ref)!;
 

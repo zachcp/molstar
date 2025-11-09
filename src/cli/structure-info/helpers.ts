@@ -4,13 +4,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as util from 'util';
-import * as fs from 'fs';
+import * as util from 'node:util';
+import * as fs from 'node:fs';
 import fetch from 'node-fetch';
 require('util.promisify').shim();
 
-import { CIF } from '../../mol-io/reader/cif';
-import { Progress } from '../../mol-task';
+import { CIF } from '../../mol-io/reader/cif.ts';
+import { Progress } from '../../mol-task/index.ts';
 
 const readFileAsync = util.promisify(fs.readFile);
 

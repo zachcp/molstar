@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StructureElement, Unit, Structure } from '../../../mol-model/structure/structure';
-import { ChunkedArray } from '../../../mol-data/util';
-import { GridLookup3D } from '../../../mol-math/geometry';
-import { OrderedSet, SortedArray } from '../../../mol-data/int';
-import { FeatureGroup, FeatureType } from './common';
-import { ValenceModelProvider } from '../valence-model';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { getBoundary } from '../../../mol-math/geometry/boundary';
+import type { StructureElement, Unit, Structure } from '../../../mol-model/structure/structure.ts';
+import { ChunkedArray } from '../../../mol-data/util.ts';
+import { GridLookup3D } from '../../../mol-math/geometry.ts';
+import { OrderedSet, SortedArray } from '../../../mol-data/int.ts';
+import type { FeatureGroup, FeatureType } from './common.ts';
+import { ValenceModelProvider } from '../valence-model.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { getBoundary } from '../../../mol-math/geometry/boundary.ts';
 
 export { Features };
 
@@ -42,7 +42,7 @@ namespace Features {
     /** Index into Features data arrays */
     export type FeatureIndex = { readonly '@type': 'feature-index' } & number
 
-    export function setPosition(out: Vec3, unit: Unit, index: FeatureIndex, features: Features) {
+    export function setPosition(out: Vec3, unit: Unit, index: FeatureIndex, features: Features): Vec3 {
         Vec3.set(out, features.x[index], features.y[index], features.z[index]);
         Vec3.transformMat4(out, out, unit.conformation.operator.matrix);
         return out;
@@ -170,7 +170,7 @@ namespace Features {
         };
     }
 
-    export function position(out: Vec3, info: Info) {
+    export function position(out: Vec3, info: Info): Vec3 {
         Vec3.set(out, info.x[info.feature], info.y[info.feature], info.z[info.feature]);
         Vec3.transformMat4(out, out, info.unit.conformation.operator.matrix);
         return out;
@@ -178,7 +178,7 @@ namespace Features {
 
     const tmpVecA = Vec3();
     const tmpVecB = Vec3();
-    export function distance(infoA: Info, infoB: Info) {
+    export function distance(infoA: Info, infoB: Info): number {
         const elementA = infoA.members[infoA.offsets[infoA.feature]];
         const elementB = infoB.members[infoB.offsets[infoB.feature]];
         infoA.unit.conformation.position(infoA.unit.elements[elementA], tmpVecA);

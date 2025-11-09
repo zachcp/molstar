@@ -2,8 +2,8 @@
  * Copyright (c) 2016 - now, David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
  */
 
-import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra';
-import { SpacegroupCell } from '../../../../mol-math/geometry';
+import { type Mat4, Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import type { SpacegroupCell } from '../../../../mol-math/geometry.ts';
 
 /** Information about a region sampled in fractional coordinates */
 export interface GridInfo {

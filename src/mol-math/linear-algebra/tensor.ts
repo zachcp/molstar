@@ -1,4 +1,4 @@
-import { Mat3 } from './3d/mat3';
+import { Mat3 } from './3d/mat3.ts';
 /**
  * Copyright (c) 2017-2020 mol* contributors, licensed under MIT, See LICENSE file for more info.
  *
@@ -6,9 +6,9 @@ import { Mat3 } from './3d/mat3';
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mat4 } from './3d/mat4';
-import { Vec3 } from './3d/vec3';
-import { Vec4 } from './3d/vec4';
+import { Mat4 } from './3d/mat4.ts';
+import type { Vec3 } from './3d/vec3.ts';
+import type { Vec4 } from './3d/vec4.ts';
 
 export interface Tensor { data: Tensor.Data, space: Tensor.Space }
 
@@ -58,9 +58,9 @@ export namespace Tensor {
 
     export function Data1(values: ArrayLike<number>): Data { return values as Data; }
 
-    export function Vector(d: number, ctor?: ArrayCtor) { return Space([d], [0], ctor); }
-    export function ColumnMajorMatrix(rows: number, cols: number, ctor?: ArrayCtor) { return Space([rows, cols], [1, 0], ctor); }
-    export function RowMajorMatrix(rows: number, cols: number, ctor?: ArrayCtor) { return Space([rows, cols], [0, 1], ctor); }
+    export function Vector(d: number, ctor?: ArrayCtor): Space { return Space([d], [0], ctor); }
+    export function ColumnMajorMatrix(rows: number, cols: number, ctor?: ArrayCtor): Space { return Space([rows, cols], [1, 0], ctor); }
+    export function RowMajorMatrix(rows: number, cols: number, ctor?: ArrayCtor): Space { return Space([rows, cols], [0, 1], ctor); }
 
     export function toMat4(out: Mat4, space: Space, data: Tensor.Data): Mat4 {
         if (space.rank !== 2) throw new Error('Invalid tensor rank');
@@ -94,7 +94,7 @@ export namespace Tensor {
         return out;
     }
 
-    export function areEqualExact(a: Tensor.Data, b: Tensor.Data) {
+    export function areEqualExact(a: Tensor.Data, b: Tensor.Data): boolean {
         const len = a.length;
         if (len !== b.length) return false;
         for (let i = 0; i < len; i++) if (a[i] !== b[i]) return false;
@@ -288,7 +288,7 @@ export namespace Tensor {
     }
 
     // Convers "slow to fast" axis order to "fast to slow" and vice versa.
-    export function invertAxisOrder(v: number[]) {
+    export function invertAxisOrder(v: number[]): number[] {
         const ret: number[] = [];
         for (let i = 0; i < v.length; i++) {
             ret[i] = v[v.length - i - 1];
@@ -302,13 +302,13 @@ export namespace Tensor {
         return ret;
     }
 
-    export function convertToCanonicalAxisIndicesFastToSlow(order: number[]) {
+    export function convertToCanonicalAxisIndicesFastToSlow(order: number[]): (xs: number[]) => number[] {
         const indices = new Int32Array(order.length) as any as number[];
         for (let i = 0; i < order.length; i++) indices[order[i]] = i;
         return (xs: number[]) => reorder(xs, indices);
     }
 
-    export function convertToCanonicalAxisIndicesSlowToFast(order: number[]) {
+    export function convertToCanonicalAxisIndicesSlowToFast(order: number[]): (xs: number[]) => number[] {
         const indices = new Int32Array(order.length) as any as number[];
         for (let i = 0; i < order.length; i++) indices[order[order.length - i - 1]] = i;
         return (xs: number[]) => reorder(xs, indices);

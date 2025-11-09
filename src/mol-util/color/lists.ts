@@ -5,9 +5,9 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { type ParamDefinition as PD } from '../param-definition';
-import { capitalize } from '../string';
-import { ColorList } from './color';
+import type { ParamDefinition as PD } from '../param-definition.ts';
+import { capitalize } from '../string.ts';
+import { ColorList } from './color.ts';
 
 export const ColorLists = {
     // Brewer Color Lists

@@ -5,9 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { AminoAlphabet, NuclecicAlphabet, getProteinOneLetterCode, getRnaOneLetterCode, getDnaOneLetterCode } from './constants';
-import { Column } from '../../mol-data/db';
-import { assertUnreachable } from '../../mol-util/type-helpers';
+import { type AminoAlphabet, type NuclecicAlphabet, getProteinOneLetterCode, getRnaOneLetterCode, getDnaOneLetterCode } from './constants.ts';
+import { Column } from '../../mol-data/db.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
 
 // TODO add mapping support to other sequence spaces, e.g. uniprot
 
@@ -45,7 +45,7 @@ namespace Sequence {
     export interface DNA extends Base<Kind.DNA, NuclecicAlphabet> { }
     export interface Generic extends Base<Kind.Generic, 'X' | '-'> { }
 
-    export function getSequenceString(seq: Sequence) {
+    export function getSequenceString(seq: Sequence): string {
         const array = seq.code.toArray();
         return (array instanceof Array ? array : Array.from(array)).join('');
     }

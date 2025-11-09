@@ -4,15 +4,15 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Unit, StructureElement, Structure, ResidueIndex, ElementIndex } from '../../../../mol-model/structure';
-import { Loci, EmptyLoci } from '../../../../mol-model/loci';
-import { Interval } from '../../../../mol-data/int';
-import { LocationIterator } from '../../../../mol-geo/util/location-iterator';
-import { PickingId } from '../../../../mol-geo/geometry/picking';
-import { getResidueLoci, StructureGroup } from './common';
-import { eachAtomicUnitTracedElement } from './polymer';
-import { isPurineBase, isPyrimidineBase } from '../../../../mol-model/structure/model/types';
-import { Vec3 } from '../../../../mol-math/linear-algebra/3d/vec3';
+import { Unit, StructureElement, Structure, type ResidueIndex, type ElementIndex } from '../../../../mol-model/structure.ts';
+import { type Loci, EmptyLoci } from '../../../../mol-model/loci.ts';
+import { Interval } from '../../../../mol-data/int.ts';
+import { LocationIterator } from '../../../../mol-geo/util/location-iterator.ts';
+import { PickingId } from '../../../../mol-geo/geometry/picking.ts';
+import { getResidueLoci, type StructureGroup } from './common.ts';
+import { eachAtomicUnitTracedElement } from './polymer.ts';
+import { isPurineBase, isPyrimidineBase } from '../../../../mol-model/structure/model/types.ts';
+import { Vec3 } from '../../../../mol-math/linear-algebra/3d/vec3.ts';
 
 export namespace NucleotideLocationIterator {
     export function fromGroup(structureGroup: StructureGroup): LocationIterator {

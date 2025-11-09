@@ -4,6 +4,6 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-export { PDBeStructureQualityReport } from './structure-quality-report/behavior';
-export { PDBePreferredAssembly } from './preferred-assembly';
-export { PDBeStructRefDomain } from './struct-ref-domain';
+export { PDBeStructureQualityReport } from './structure-quality-report/behavior.ts';
+export { PDBePreferredAssembly } from './preferred-assembly.ts';
+export { PDBeStructRefDomain } from './struct-ref-domain.ts';

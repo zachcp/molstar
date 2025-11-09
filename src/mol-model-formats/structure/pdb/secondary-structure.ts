@@ -5,10 +5,10 @@
  * @author Kim Juho <juho_kim@outlook.com>
  */
 
-import { CifCategory, CifField } from '../../../mol-io/reader/cif';
-import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif';
-import { Tokens } from '../../../mol-io/reader/common/text/tokenizer';
-import { Column } from '../../../mol-data/db';
+import { CifCategory, CifField } from '../../../mol-io/reader/cif.ts';
+import type { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
+import type { Tokens } from '../../../mol-io/reader/common/text/tokenizer.ts';
+import { Column } from '../../../mol-data/db.ts';
 
 const HelixTypes: {[k: string]: mmCIF_Schema['struct_conf']['conf_type_id']['T']} = {
     // CLASS NUMBER

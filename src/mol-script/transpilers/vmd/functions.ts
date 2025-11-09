@@ -7,9 +7,9 @@
  * Adapted from MolQL project
  */
 
-import { MolScriptBuilder } from '../../../mol-script/language/builder';
+import { MolScriptBuilder } from '../../../mol-script/language/builder.ts';
 const B = MolScriptBuilder;
-import { FunctionDict } from '../types';
+import type { FunctionDict } from '../types.ts';
 
 export const functions: FunctionDict = {
     'sqr': {

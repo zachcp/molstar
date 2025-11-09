@@ -8,12 +8,12 @@
  * Adapted from LiteMol
  */
 
-import { StringLike } from '../mol-io/common/string-like';
-import { utf8Read, utf8ReadLong } from '../mol-io/common/utf8';
-import { RuntimeContext, Task } from '../mol-task';
-import { Asset, AssetManager } from './assets';
-import { RUNNING_IN_NODEJS } from './nodejs-shims';
-import { ungzip, unzip } from './zip/zip';
+import type { StringLike } from '../mol-io/common/string-like.ts';
+import { utf8Read, utf8ReadLong } from '../mol-io/common/utf8.ts';
+import { type RuntimeContext, Task } from '../mol-task/index.ts';
+import { Asset, type AssetManager } from './assets.ts';
+import { RUNNING_IN_NODEJS } from './nodejs-shims.ts';
+import { ungzip, unzip } from './zip/zip.ts';
 
 
 export enum DataCompressionMethod {
@@ -290,7 +290,7 @@ function ajaxGetInternal<T extends DataType>(title: string | undefined, url: str
 }
 
 // NOTE: a workaround for using this in Node.js
-let _fs: (typeof import('fs')) | undefined = undefined;
+let _fs: (typeof import('node:fs')) | undefined = undefined;
 function getFS() {
     if (!_fs) {
         throw new Error('When running in Node.js and reading from files, call mol-util/data-source\'s setFSModule function first.');
@@ -298,7 +298,7 @@ function getFS() {
     return _fs;
 }
 
-export function setFSModule(fs: typeof import('fs')) {
+export function setFSModule(fs: typeof import('node:fs')) {
     _fs = fs;
 }
 

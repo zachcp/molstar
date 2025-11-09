@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task } from '../../mol-task';
-import { NctrajFile } from '../../mol-io/reader/nctraj/parser';
-import { Coordinates, Frame, Time } from '../../mol-model/structure/coordinates';
-import { Cell } from '../../mol-math/geometry/spacegroup/cell';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { Mutable } from '../../mol-util/type-helpers';
+import { Task } from '../../mol-task/index.ts';
+import type { NctrajFile } from '../../mol-io/reader/nctraj/parser.ts';
+import { Coordinates, type Frame, Time } from '../../mol-model/structure/coordinates.ts';
+import { Cell } from '../../mol-math/geometry/spacegroup/cell.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import type { Mutable } from '../../mol-util/type-helpers.ts';
 
 export function coordinatesFromNctraj(file: NctrajFile): Task<Coordinates> {
     return Task.create('Parse NCTRAJ', async ctx => {

@@ -4,14 +4,14 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { PluginStateObject, PluginStateTransform } from '../../mol-plugin-state/objects';
-import { PluginContext } from '../../mol-plugin/context';
-import { StateTransformer } from '../../mol-state';
-import { Task } from '../../mol-task';
+import { PluginStateObject, PluginStateTransform } from '../../mol-plugin-state/objects.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { StateTransformer } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
 
-import { VolsegEntry, VolsegEntryData, createVolsegEntryParams } from './entry-root';
-import { VolsegState, VolsegStateParams, VOLSEG_STATE_FROM_ENTRY_TRANSFORMER_NAME } from './entry-state';
-import { VolsegGlobalState, VolsegGlobalStateData, VolsegGlobalStateParams } from './global-state';
+import { VolsegEntry, VolsegEntryData, createVolsegEntryParams } from './entry-root.ts';
+import { VolsegState, VolsegStateParams, VOLSEG_STATE_FROM_ENTRY_TRANSFORMER_NAME } from './entry-state.ts';
+import { VolsegGlobalState, VolsegGlobalStateData, VolsegGlobalStateParams } from './global-state.ts';
 
 
 export const VolsegEntryFromRoot = PluginStateTransform.BuiltIn({

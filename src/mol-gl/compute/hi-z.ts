@@ -4,17 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2';
-import { ValueCell } from '../../mol-util/value-cell';
-import { ComputeRenderable, createComputeRenderable } from '../renderable';
-import { TextureSpec, UniformSpec, Values } from '../renderable/schema';
-import { ShaderCode } from '../shader-code';
-import { hiZ_frag } from '../shader/hi-z.frag';
-import { quad_vert } from '../shader/quad.vert';
-import { createComputeRenderItem } from '../webgl/render-item';
-import { Texture } from '../webgl/texture';
-import { QuadSchema, QuadValues } from './util';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2.ts';
+import { ValueCell } from '../../mol-util/value-cell.ts';
+import { type ComputeRenderable, createComputeRenderable } from '../renderable.ts';
+import { TextureSpec, UniformSpec, type Values } from '../renderable/schema.ts';
+import { ShaderCode } from '../shader-code.ts';
+import { hiZ_frag } from '../shader/hi-z.frag.ts';
+import { quad_vert } from '../shader/quad.vert.ts';
+import { createComputeRenderItem } from '../webgl/render-item.ts';
+import type { Texture } from '../webgl/texture.ts';
+import { QuadSchema, QuadValues } from './util.ts';
 
 
 const HiZSchema = {

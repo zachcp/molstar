@@ -4,17 +4,17 @@
  * @author Dušan Veľký <dvelky@mail.muni.cz>
  */
 
-import { PluginStateObject } from '../../../mol-plugin-state/objects';
-import { StateTransforms } from '../../../mol-plugin-state/transforms';
-import { PluginContext } from '../../../mol-plugin/context';
-import { StateAction } from '../../../mol-state';
-import { Task } from '../../../mol-task';
-import { Asset } from '../../../mol-util/assets';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { assertUnreachable } from '../../../mol-util/type-helpers';
-import { ChannelsDBdata, Tunnel, TunnelDB } from './data-model';
-import { TunnelsServerConfig } from './props';
-import { TunnelsFromRawData, SelectTunnel, TunnelShapeProvider } from './representation';
+import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
+import { StateTransforms } from '../../../mol-plugin-state/transforms.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import { StateAction } from '../../../mol-state/index.ts';
+import { Task } from '../../../mol-task/index.ts';
+import type { Asset } from '../../../mol-util/assets.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { assertUnreachable } from '../../../mol-util/type-helpers.ts';
+import type { ChannelsDBdata, Tunnel, TunnelDB } from './data-model.ts';
+import { TunnelsServerConfig } from './props.ts';
+import { TunnelsFromRawData, SelectTunnel, TunnelShapeProvider } from './representation.ts';
 
 export const TunnelDownloadServer = {
     'channelsdb': PD.EmptyGroup({ label: 'ChannelsDB' })

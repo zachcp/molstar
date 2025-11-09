@@ -5,8 +5,8 @@
  */
 
 import * as argparse from 'argparse';
-import { VERSION } from './version';
-import { ObjectKeys } from '../../mol-util/type-helpers';
+import { VERSION } from './version.ts';
+import { ObjectKeys } from '../../mol-util/type-helpers.ts';
 
 const DefaultMembraneServerConfig = {
     /**

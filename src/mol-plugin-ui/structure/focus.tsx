@@ -4,20 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { OrderedSet, SortedArray } from '../../mol-data/int';
-import { Structure, StructureElement, StructureProperties, Unit } from '../../mol-model/structure';
-import { UnitIndex } from '../../mol-model/structure/structure/element/element';
-import { FocusEntry } from '../../mol-plugin-state/manager/structure/focus';
-import { StructureRef } from '../../mol-plugin-state/manager/structure/hierarchy-state';
-import { FocusLoci } from '../../mol-plugin/behavior/dynamic/representation';
-import { StateTransform } from '../../mol-state';
-import { lociLabel } from '../../mol-theme/label';
-import { Binding } from '../../mol-util/binding';
-import { memoizeLatest } from '../../mol-util/memoize';
-import { PluginUIComponent } from '../base';
-import { ActionMenu } from '../controls/action-menu';
-import { Button, IconButton, ToggleButton } from '../controls/common';
-import { CancelOutlinedSvg, CenterFocusStrongSvg } from '../controls/icons';
+import { OrderedSet, SortedArray } from '../../mol-data/int.ts';
+import { type Structure, StructureElement, StructureProperties, Unit } from '../../mol-model/structure.ts';
+import type { UnitIndex } from '../../mol-model/structure/structure/element/element.ts';
+import type { FocusEntry } from '../../mol-plugin-state/manager/structure/focus.ts';
+import type { StructureRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
+import { FocusLoci } from '../../mol-plugin/behavior/dynamic/representation.ts';
+import type { StateTransform } from '../../mol-state/index.ts';
+import { lociLabel } from '../../mol-theme/label.ts';
+import { Binding } from '../../mol-util/binding.ts';
+import { memoizeLatest } from '../../mol-util/memoize.ts';
+import { PluginUIComponent } from '../base.tsx';
+import { ActionMenu } from '../controls/action-menu.tsx';
+import { Button, IconButton, ToggleButton } from '../controls/common.tsx';
+import { CancelOutlinedSvg, CenterFocusStrongSvg } from '../controls/icons.tsx';
 
 interface StructureFocusControlsState {
     isBusy: boolean
@@ -99,10 +99,8 @@ function getFocusEntries(structure: Structure) {
 }
 
 export class StructureFocusControls extends PluginUIComponent<{}, StructureFocusControlsState> {
-    state = { isBusy: false, showAction: false };
-
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.structure.focus.behaviors.current, c => {
+    override state = { isBusy: false, showAction: false };
+    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.focus.behaviors.current, c => {
             // clear the memo cache
             this.getSelectionItems([]);
             this.forceUpdate();
@@ -216,8 +214,7 @@ export class StructureFocusControls extends PluginUIComponent<{}, StructureFocus
         return Binding.formatTriggers(binding);
     }
 
-    render() {
-        const { current } = this.plugin.managers.structure.focus;
+    override render() {        const { current } = this.plugin.managers.structure.focus;
         const label = current?.label || 'Nothing Focused';
 
         let title = 'Click to Center Camera';

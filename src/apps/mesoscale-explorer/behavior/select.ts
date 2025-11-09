@@ -4,19 +4,19 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { EveryLoci, Loci } from '../../../mol-model/loci';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { PluginBehavior } from '../../../mol-plugin/behavior';
-import { ButtonsType, ModifiersKeys } from '../../../mol-util/input/input-observer';
-import { Binding } from '../../../mol-util/binding';
-import { PluginStateObject as SO } from '../../../mol-plugin-state/objects';
-import { Structure, StructureElement } from '../../../mol-model/structure';
-import { StateSelection } from '../../../mol-state';
-import { StateTreeSpine } from '../../../mol-state/tree/spine';
-import { Representation } from '../../../mol-repr/representation';
-import { MarkerAction } from '../../../mol-util/marker-action';
-import { PluginContext } from '../../../mol-plugin/context';
-import { MesoscaleState, expandAllGroups, getCellDescription, getEveryEntity } from '../data/state';
+import { EveryLoci, Loci } from '../../../mol-model/loci.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { PluginBehavior } from '../../../mol-plugin/behavior.ts';
+import { ButtonsType, ModifiersKeys } from '../../../mol-util/input/input-observer.ts';
+import { Binding } from '../../../mol-util/binding.ts';
+import { PluginStateObject as SO } from '../../../mol-plugin-state/objects.ts';
+import { Structure, StructureElement } from '../../../mol-model/structure.ts';
+import { StateSelection } from '../../../mol-state/index.ts';
+import { StateTreeSpine } from '../../../mol-state/tree/spine.ts';
+import type { Representation } from '../../../mol-repr/representation.ts';
+import { MarkerAction } from '../../../mol-util/marker-action.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import { MesoscaleState, expandAllGroups, getCellDescription, getEveryEntity } from '../data/state.ts';
 
 const B = ButtonsType;
 const M = ModifiersKeys;

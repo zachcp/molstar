@@ -5,8 +5,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StateTransforms } from '../transforms';
-import { DataFormatProvider } from './provider';
+import { StateTransforms } from '../transforms.ts';
+import { DataFormatProvider } from './provider.ts';
 
 export const TopologyFormatCategory = 'Topology';
 

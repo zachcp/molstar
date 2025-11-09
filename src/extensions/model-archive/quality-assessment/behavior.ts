@@ -5,21 +5,21 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { PluginBehavior } from '../../../mol-plugin/behavior/behavior';
-import { Loci } from '../../../mol-model/loci';
-import { DefaultQueryRuntimeTable } from '../../../mol-script/runtime/query/compiler';
-import { PLDDTConfidenceColorThemeProvider } from './color/plddt';
-import { QualityAssessment, QualityAssessmentProvider } from './prop';
-import { StructureSelectionCategory, StructureSelectionQuery } from '../../../mol-plugin-state/helpers/structure-selection-query';
-import { MolScriptBuilder as MS } from '../../../mol-script/language/builder';
-import { OrderedSet } from '../../../mol-data/int';
-import { cantorPairing } from '../../../mol-data/util';
-import { QmeanScoreColorThemeProvider } from './color/qmean';
-import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from '../../../mol-plugin-state/builder/structure/representation-preset';
-import { StateObjectRef } from '../../../mol-state';
-import { MAPairwiseScorePlotPanel } from './pairwise/ui';
-import { PluginConfigItem } from '../../../mol-plugin/config';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { PluginBehavior } from '../../../mol-plugin/behavior/behavior.ts';
+import type { Loci } from '../../../mol-model/loci.ts';
+import { DefaultQueryRuntimeTable } from '../../../mol-script/runtime/query/compiler.ts';
+import { PLDDTConfidenceColorThemeProvider } from './color/plddt.ts';
+import { QualityAssessment, QualityAssessmentProvider } from './prop.ts';
+import { StructureSelectionCategory, StructureSelectionQuery } from '../../../mol-plugin-state/helpers/structure-selection-query.ts';
+import { MolScriptBuilder as MS } from '../../../mol-script/language/builder.ts';
+import { OrderedSet } from '../../../mol-data/int.ts';
+import { cantorPairing } from '../../../mol-data/util.ts';
+import { QmeanScoreColorThemeProvider } from './color/qmean.ts';
+import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
+import { StateObjectRef } from '../../../mol-state/index.ts';
+import { MAPairwiseScorePlotPanel } from './pairwise/ui.tsx';
+import { PluginConfigItem } from '../../../mol-plugin/config.ts';
 
 export const MAQualityAssessmentConfig = {
     EnablePairwiseScorePlot: new PluginConfigItem('ma-quality-assessment-prop.enable-pairwise-score-plot', true),
@@ -205,7 +205,7 @@ export const QualityAssessmentPLDDTPreset = StructureRepresentationPresetProvide
         name: 'Quality Assessment (pLDDT)', group: 'Annotation',
         description: 'Color structure based on pLDDT Confidence.'
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return !!a.data.models.some(m => QualityAssessment.isApplicable(m, 'pLDDT'));
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,
@@ -225,7 +225,7 @@ export const QualityAssessmentQmeanPreset = StructureRepresentationPresetProvide
         name: 'Quality Assessment (QMEAN)', group: 'Annotation',
         description: 'Color structure based on QMEAN Score.'
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return !!a.data.models.some(m => QualityAssessment.isApplicable(m, 'qmean'));
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,

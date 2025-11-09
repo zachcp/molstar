@@ -4,15 +4,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { createGrid3dComputeRenderable } from '../../../mol-gl/compute/grid3d';
-import { TextureSpec, UnboxedValues, UniformSpec } from '../../../mol-gl/renderable/schema';
-import { WebGLContext } from '../../../mol-gl/webgl/context';
-import { RuntimeContext } from '../../../mol-task';
-import { ValueCell } from '../../../mol-util';
-import { arrayMin } from '../../../mol-util/array';
-import { AlphaOrbital, Basis, CubeGridInfo } from '../data-model';
-import { normalizeBasicOrder, SphericalBasisOrder } from '../spherical-functions';
-import { MAIN, UTILS } from './shader.frag';
+import { createGrid3dComputeRenderable } from '../../../mol-gl/compute/grid3d.ts';
+import { TextureSpec, type UnboxedValues, UniformSpec } from '../../../mol-gl/renderable/schema.ts';
+import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
+import type { RuntimeContext } from '../../../mol-task/index.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
+import { arrayMin } from '../../../mol-util/array.ts';
+import type { AlphaOrbital, Basis, CubeGridInfo } from '../data-model.ts';
+import { normalizeBasicOrder, type SphericalBasisOrder } from '../spherical-functions.ts';
+import { MAIN, UTILS } from './shader.frag.ts';
 
 const Schema = {
     tCenters: TextureSpec('image-float32', 'rgba', 'float', 'nearest'),

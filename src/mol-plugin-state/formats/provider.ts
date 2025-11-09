@@ -5,12 +5,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { decodeMsgPack } from '../../mol-io/common/msgpack/decode';
-import { StringLike } from '../../mol-io/common/string-like';
-import { PluginContext } from '../../mol-plugin/context';
-import { StateObjectRef } from '../../mol-state';
-import { FileNameInfo } from '../../mol-util/file-info';
-import { PluginStateObject } from '../objects';
+import { decodeMsgPack } from '../../mol-io/common/msgpack/decode.ts';
+import type { StringLike } from '../../mol-io/common/string-like.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import type { StateObjectRef } from '../../mol-state/index.ts';
+import type { FileNameInfo } from '../../mol-util/file-info.ts';
+import type { PluginStateObject } from '../objects.ts';
 
 
 export interface DataFormatProvider<P = any, R = any, V = any> {

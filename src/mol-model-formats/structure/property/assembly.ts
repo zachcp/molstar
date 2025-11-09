@@ -4,13 +4,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Mat4, Tensor, Vec3 } from '../../../mol-math/linear-algebra';
-import { SymmetryOperator } from '../../../mol-math/geometry/symmetry-operator';
-import { Assembly, OperatorGroup, OperatorGroups } from '../../../mol-model/structure/model/properties/symmetry';
-import { Queries as Q } from '../../../mol-model/structure';
-import { StructureProperties } from '../../../mol-model/structure';
-import { Table } from '../../../mol-data/db';
-import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif';
+import { Mat4, Tensor, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { SymmetryOperator } from '../../../mol-math/geometry/symmetry-operator.ts';
+import { Assembly, type OperatorGroup, type OperatorGroups } from '../../../mol-model/structure/model/properties/symmetry.ts';
+import { Queries as Q } from '../../../mol-model/structure.ts';
+import { StructureProperties } from '../../../mol-model/structure.ts';
+import type { Table } from '../../../mol-data/db.ts';
+import type { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
 
 type StructAssembly = Table<mmCIF_Schema['pdbx_struct_assembly']>
 type StructAssemblyGen = Table<mmCIF_Schema['pdbx_struct_assembly_gen']>

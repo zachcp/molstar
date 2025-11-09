@@ -4,17 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure } from '../../mol-model/structure';
-import { DSSPComputationParams, DSSPComputationProps, DefaultDSSPComputationProps, computeUnitDSSP } from './secondary-structure/dssp';
-import { SecondaryStructure } from '../../mol-model/structure/model/properties/secondary-structure';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Unit } from '../../mol-model/structure/structure';
-import { CustomStructureProperty } from '../common/custom-structure-property';
-import { CustomProperty } from '../common/custom-property';
-import { ModelSecondaryStructure } from '../../mol-model-formats/structure/property/secondary-structure';
-import { CustomPropertyDescriptor } from '../../mol-model/custom-property';
-import { Model } from '../../mol-model/structure/model';
-import { computeUnitZhangSkolnik } from './secondary-structure/zhang-skolnik';
+import type { Structure } from '../../mol-model/structure.ts';
+import { DSSPComputationParams, type DSSPComputationProps, DefaultDSSPComputationProps, computeUnitDSSP } from './secondary-structure/dssp.ts';
+import type { SecondaryStructure } from '../../mol-model/structure/model/properties/secondary-structure.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Unit } from '../../mol-model/structure/structure.ts';
+import { CustomStructureProperty } from '../common/custom-structure-property.ts';
+import type { CustomProperty } from '../common/custom-property.ts';
+import { ModelSecondaryStructure } from '../../mol-model-formats/structure/property/secondary-structure.ts';
+import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
+import { Model } from '../../mol-model/structure/model.ts';
+import { computeUnitZhangSkolnik } from './secondary-structure/zhang-skolnik.ts';
 
 function getSecondaryStructureParams(_data?: Structure) {
     return {

@@ -5,8 +5,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { UniqueArray } from '../../mol-data/generic';
-import { cantorPairing } from '../../mol-data/util';
+import { UniqueArray } from '../../mol-data/generic.ts';
+import { cantorPairing } from '../../mol-data/util.ts';
 
 export { InterUnitGraph };
 
@@ -88,7 +88,7 @@ class InterUnitGraph<UnitId extends number, VertexIndex extends number, EdgeProp
 
 namespace InterUnitGraph {
     export class UnitPairEdges<UnitId extends number, VertexIndex extends number, EdgeProps extends EdgePropsBase = {}> {
-        hasEdges(indexA: VertexIndex) {
+        hasEdges(indexA: VertexIndex): boolean {
             return this.edgeMap.has(indexA);
         }
 
@@ -97,7 +97,7 @@ namespace InterUnitGraph {
             return this.edgeMap.get(indexA)!;
         }
 
-        get areUnitsOrdered() {
+        get areUnitsOrdered(): boolean {
             return this.unitA < this.unitB;
         }
 
@@ -123,15 +123,15 @@ namespace InterUnitGraph {
         readonly props: EdgeProps
     }
 
-    export function getEdgeUnitKey<UnitId extends number>(unitA: UnitId, unitB: UnitId) {
+    export function getEdgeUnitKey<UnitId extends number>(unitA: UnitId, unitB: UnitId): number {
         return cantorPairing(unitA, unitB);
     }
 
-    export function getEdgeIndexKey<VertexIndex extends number>(indexA: VertexIndex, indexB: VertexIndex) {
+    export function getEdgeIndexKey<VertexIndex extends number>(indexA: VertexIndex, indexB: VertexIndex): number {
         return cantorPairing(indexA, indexB);
     }
 
-    export function getVertexKey<UnitId extends number, VertexIndex extends number>(index: VertexIndex, unit: UnitId) {
+    export function getVertexKey<UnitId extends number, VertexIndex extends number>(index: VertexIndex, unit: UnitId): number {
         return cantorPairing(index, unit);
     }
 
@@ -144,13 +144,13 @@ namespace InterUnitGraph {
 
 
     export class Builder<UnitId extends number, VertexIndex extends number, EdgeProps extends InterUnitGraph.EdgePropsBase = {}> {
-        private uA: UnitId;
-        private uB: UnitId;
-        private mapAB: Map<number, EdgeInfo<VertexIndex, EdgeProps>[]>;
-        private mapBA: Map<number, EdgeInfo<VertexIndex, EdgeProps>[]>;
-        private linkedA: UniqueArray<VertexIndex, VertexIndex>;
-        private linkedB: UniqueArray<VertexIndex, VertexIndex>;
-        private linkCount: number;
+        private uA!: UnitId;
+        private uB!: UnitId;
+        private mapAB!: Map<number, EdgeInfo<VertexIndex, EdgeProps>[]>;
+        private mapBA!: Map<number, EdgeInfo<VertexIndex, EdgeProps>[]>;
+        private linkedA!: UniqueArray<VertexIndex, VertexIndex>;
+        private linkedB!: UniqueArray<VertexIndex, VertexIndex>;
+        private linkCount!: number;
 
         private map = new Map<number, UnitPairEdges<UnitId, VertexIndex, EdgeProps>[]>();
 

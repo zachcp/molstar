@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StructureElement } from './structure';
-import { Bond } from './structure/structure/unit/bonds';
-import { ShapeGroup } from './shape/shape';
-import { PositionLocation } from '../mol-geo/util/location-iterator';
-import { Volume } from './volume';
+import type { StructureElement } from './structure.ts';
+import type { Bond } from './structure/structure/unit/bonds.ts';
+import type { ShapeGroup } from './shape/shape.ts';
+import type { PositionLocation } from '../mol-geo/util/location-iterator.ts';
+import type { Volume } from './volume.ts';
 
 /** A null value Location */
 export const NullLocation = { kind: 'null-location' as const };

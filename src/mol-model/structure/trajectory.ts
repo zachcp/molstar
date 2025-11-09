@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Task } from '../../mol-task';
-import { Model } from '../structure';
+import type { Task } from '../../mol-task/index.ts';
+import type { Model } from '../structure.ts';
 
 export type TrajectoryFrameType =
   | { type: 'default' }

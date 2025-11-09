@@ -5,16 +5,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { asciiWrite } from '../../mol-io/common/ascii';
-import { IsNativeEndianLittle, flipByteOrder } from '../../mol-io/common/binary';
-import { Box3D } from '../../mol-math/geometry';
-import { Vec3, Mat4 } from '../../mol-math/linear-algebra';
-import { PLUGIN_VERSION } from '../../mol-plugin/version';
-import { RuntimeContext } from '../../mol-task';
-import { Color } from '../../mol-util/color/color';
-import { fillSerial } from '../../mol-util/array';
-import { NumberArray, assertUnreachable } from '../../mol-util/type-helpers';
-import { MeshExporter, AddMeshInput, MeshGeoData } from './mesh-exporter';
+import { asciiWrite } from '../../mol-io/common/ascii.ts';
+import { IsNativeEndianLittle, flipByteOrder } from '../../mol-io/common/binary.ts';
+import type { Box3D } from '../../mol-math/geometry.ts';
+import { Vec3, Mat4 } from '../../mol-math/linear-algebra.ts';
+import { PLUGIN_VERSION } from '../../mol-plugin/version.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
+import { Color } from '../../mol-util/color/color.ts';
+import { fillSerial } from '../../mol-util/array.ts';
+import { type NumberArray, assertUnreachable } from '../../mol-util/type-helpers.ts';
+import { MeshExporter, type AddMeshInput, type MeshGeoData } from './mesh-exporter.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3fromArray = Vec3.fromArray;

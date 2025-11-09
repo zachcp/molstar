@@ -4,17 +4,17 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { mmCIF_Database, mmCIF_Schema } from '../../../../mol-io/reader/cif/schema/mmcif';
-import { SetUtils } from '../../../../mol-util/set';
-import { Model } from '../../model';
-import { Structure } from '../../structure';
-import { EntityIndex } from '../../model/indexing';
-import { UniqueArray } from '../../../../mol-data/generic';
-import { sortArray } from '../../../../mol-data/util';
-import { CifWriter } from '../../../../mol-io/writer/cif';
-import { CifExportContext } from '../mmcif';
-import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif';
-import { CifCategory, CifField, getCifFieldType } from '../../../../mol-io/reader/cif';
+import type { mmCIF_Database, mmCIF_Schema } from '../../../../mol-io/reader/cif/schema/mmcif.ts';
+import { SetUtils } from '../../../../mol-util/set.ts';
+import type { Model } from '../../model.ts';
+import type { Structure } from '../../structure.ts';
+import type { EntityIndex } from '../../model/indexing.ts';
+import { UniqueArray } from '../../../../mol-data/generic.ts';
+import { sortArray } from '../../../../mol-data/util.ts';
+import { CifWriter } from '../../../../mol-io/writer/cif.ts';
+import type { CifExportContext } from '../mmcif.ts';
+import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif.ts';
+import { type CifCategory, type CifField, getCifFieldType } from '../../../../mol-io/reader/cif.ts';
 
 export function getModelMmCifCategory<K extends keyof mmCIF_Schema>(model: Model, name: K): mmCIF_Database[K] | undefined {
     if (!MmcifFormat.is(model.sourceData)) return;

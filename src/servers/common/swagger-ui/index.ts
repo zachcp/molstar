@@ -6,10 +6,10 @@
 
 import * as express from 'express';
 import { getAbsoluteFSPath } from 'swagger-ui-dist';
-import { ServeStaticOptions } from 'serve-static';
-import { interpolate } from '../../../mol-util/string';
-import { Handler } from 'express-serve-static-core';
-import { indexTemplate } from './indexTemplate';
+import type { ServeStaticOptions } from 'serve-static';
+import { interpolate } from '../../../mol-util/string.ts';
+import type { Handler } from 'express-serve-static-core';
+import { indexTemplate } from './indexTemplate.ts';
 
 export function swaggerUiAssetsHandler(options?: ServeStaticOptions): Handler {
     const opts = options || {};

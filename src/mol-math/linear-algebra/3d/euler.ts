@@ -7,15 +7,15 @@
  * copyright (c) 2010-2023 three.js authors. MIT License
  */
 
-import { Mat4 } from './mat4';
-import { assertUnreachable, NumberArray } from '../../../mol-util/type-helpers';
-import { Quat } from './quat';
-import { Vec3 } from './vec3';
-import { clamp } from '../../interpolate';
+import { Mat4 } from './mat4.ts';
+import { assertUnreachable, type NumberArray } from '../../../mol-util/type-helpers.ts';
+import type { Quat } from './quat.ts';
+import type { Vec3 } from './vec3.ts';
+import { clamp } from '../../interpolate.ts';
 
 interface Euler extends Array<number> { [d: number]: number, '@type': 'euler', length: 3 }
 
-function Euler() {
+function Euler(): Euler {
     return Euler.zero();
 }
 
@@ -37,7 +37,7 @@ namespace Euler {
         return out;
     }
 
-    export function set(out: Euler, x: number, y: number, z: number) {
+    export function set(out: Euler, x: number, y: number, z: number): Euler {
         out[0] = x;
         out[0] = y;
         out[0] = z;
@@ -52,7 +52,7 @@ namespace Euler {
         return out;
     }
 
-    export function copy(out: Euler, a: Euler) {
+    export function copy(out: Euler, a: Euler): Euler {
         out[0] = a[0];
         out[1] = a[1];
         out[2] = a[2];
@@ -136,27 +136,27 @@ namespace Euler {
     }
 
     const _mat4 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] as unknown as Mat4;
-    export function fromQuat(out: Euler, q: Quat, order: Order) {
+    export function fromQuat(out: Euler, q: Quat, order: Order): Euler {
         Mat4.fromQuat(_mat4, q);
         return fromMat4(out, _mat4, order);
     }
 
-    export function fromVec3(out: Euler, v: Vec3) {
+    export function fromVec3(out: Euler, v: Vec3): Euler {
         return set(out, v[0], v[1], v[2]);
     }
 
-    export function exactEquals(a: Euler, b: Euler) {
+    export function exactEquals(a: Euler, b: Euler): boolean {
         return a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
     }
 
-    export function fromArray(e: Euler, array: ArrayLike<number>, offset: number) {
+    export function fromArray(e: Euler, array: ArrayLike<number>, offset: number): Euler {
         e[0] = array[offset + 0];
         e[1] = array[offset + 1];
         e[2] = array[offset + 2];
         return e;
     }
 
-    export function toArray<T extends NumberArray>(e: Euler, out: T, offset: number) {
+    export function toArray<T extends NumberArray>(e: Euler, out: T, offset: number): T {
         out[offset + 0] = e[0];
         out[offset + 1] = e[1];
         out[offset + 2] = e[2];

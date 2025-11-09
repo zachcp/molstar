@@ -4,24 +4,24 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Renderer } from '../../mol-gl/renderer';
-import { Scene } from '../../mol-gl/scene';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Ray3D } from '../../mol-math/geometry/primitives/ray3d';
-import { Mat4, Quat, Vec3 } from '../../mol-math/linear-algebra';
-import { degToRad, spiral2d } from '../../mol-math/misc';
-import { isTimingMode } from '../../mol-util/debug';
-import { Camera } from '../camera';
-import { cameraUnproject } from '../camera/util';
-import { Viewport } from '../camera/util';
-import { Helper } from './helper';
-import { AsyncPickData, PickBuffers, PickData, PickPass, PickOptions, checkAsyncPickingSupport, AsyncPickStatus } from '../passes/pick';
-import { Sphere3D } from '../../mol-math/geometry/primitives/sphere3d';
+import type { Renderer } from '../../mol-gl/renderer.ts';
+import type { Scene } from '../../mol-gl/scene.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { Ray3D } from '../../mol-math/geometry/primitives/ray3d.ts';
+import { Mat4, Quat, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { degToRad, spiral2d } from '../../mol-math/misc.ts';
+import { isTimingMode } from '../../mol-util/debug.ts';
+import { Camera } from '../camera.ts';
+import { cameraUnproject } from '../camera/util.ts';
+import { Viewport } from '../camera/util.ts';
+import type { Helper } from './helper.ts';
+import { type AsyncPickData, PickBuffers, type PickData, PickPass, type PickOptions, checkAsyncPickingSupport, AsyncPickStatus } from '../passes/pick.ts';
+import { Sphere3D } from '../../mol-math/geometry/primitives/sphere3d.ts';
 
 export class RayHelper {
     private viewport = Viewport();
-    private size: number;
-    private spiral: [number, number][];
+    private size!: number;
+    private spiral!: [number, number][];
 
     private pickPadding: number;
     private camera: Camera;

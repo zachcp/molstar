@@ -5,12 +5,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column, ColumnHelpers, Table } from '../../../mol-data/db';
-import { Tensor } from '../../../mol-math/linear-algebra';
-import { getNumberType, NumberTypes, parseInt as fastParseInt, parseFloat as fastParseFloat } from '../common/text/number-parser';
-import { Encoding } from '../../common/binary-cif';
-import { Tokens } from '../common/text/tokenizer';
-import { areValuesEqualProvider } from '../common/text/column/token';
+import { Column, ColumnHelpers, type Table } from '../../../mol-data/db.ts';
+import type { Tensor } from '../../../mol-math/linear-algebra.ts';
+import { getNumberType, NumberTypes, parseInt as fastParseInt, parseFloat as fastParseFloat } from '../common/text/number-parser.ts';
+import type { Encoding } from '../../common/binary-cif.ts';
+import type { Tokens } from '../common/text/tokenizer.ts';
+import { areValuesEqualProvider } from '../common/text/column/token.ts';
 
 export interface CifFile {
     readonly name?: string,
@@ -79,7 +79,7 @@ export namespace CifCategory {
         };
     }
 
-    export function ofTable(name: string, table: Table<any>) {
+    export function ofTable(name: string, table: Table<any>): CifCategory {
         const fields: { [name: string]: CifField | undefined } = {};
         for (const name of table._columns) {
             fields[name] = CifField.ofColumn(table[name]);
@@ -113,7 +113,7 @@ export interface CifField {
 }
 
 export namespace CifField {
-    export function ofString(value: string) {
+    export function ofString(value: string): CifField {
         return ofStrings([value]);
     }
 

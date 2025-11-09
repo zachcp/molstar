@@ -6,7 +6,7 @@
  */
 
 import * as iots from 'io-ts';
-import { onelinerJsonString } from '../../../../mol-util/json';
+import { onelinerJsonString } from '../../../../mol-util/json.ts';
 
 /** All types that can be used in tree node params.
  * Can be extended, this is just to list them all in one place and possibly catch some typing errors */

@@ -5,10 +5,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as ColumnHelpers from './column-helpers';
-import { Tensor as Tensors } from '../../mol-math/linear-algebra';
-import { Tokens } from '../../mol-io/reader/common/text/tokenizer';
-import { parseInt as fastParseInt, parseFloat as fastParseFloat } from '../../mol-io/reader/common/text/number-parser';
+import * as ColumnHelpers from './column-helpers.ts';
+import { Tensor as Tensors } from '../../mol-math/linear-algebra.ts';
+import type { Tokens } from '../../mol-io/reader/common/text/tokenizer.ts';
+import { parseInt as fastParseInt, parseFloat as fastParseFloat } from '../../mol-io/reader/common/text/number-parser.ts';
 
 interface Column<T> {
     readonly schema: Column.Schema,
@@ -141,27 +141,27 @@ namespace Column {
         return arrayColumn(spec);
     }
 
-    export function ofIntArray(array: ArrayLike<number>) {
+    export function ofIntArray(array: ArrayLike<number>): Column<number> {
         return arrayColumn({ array, schema: Schema.int });
     }
 
-    export function ofFloatArray(array: ArrayLike<number>) {
+    export function ofFloatArray(array: ArrayLike<number>): Column<number> {
         return arrayColumn({ array, schema: Schema.float });
     }
 
-    export function ofStringArray(array: ArrayLike<string>) {
+    export function ofStringArray(array: ArrayLike<string>): Column<string> {
         return arrayColumn({ array, schema: Schema.str });
     }
 
-    export function ofStringAliasArray<T extends string>(array: ArrayLike<T>) {
+    export function ofStringAliasArray<T extends string>(array: ArrayLike<T>): Column<T> {
         return arrayColumn<Schema.Aliased<T>>({ array, schema: Schema.Aliased(Schema.str) });
     }
 
-    export function ofStringListArray<T extends string>(array: ArrayLike<T[]>, separator = ',') {
+    export function ofStringListArray<T extends string>(array: ArrayLike<T[]>, separator = ','): Column<T[]> {
         return arrayColumn<Schema.List<T>>({ array, schema: Schema.List<T>(separator, x => x as T) });
     }
 
-    export function ofIntTokens(tokens: Tokens) {
+    export function ofIntTokens(tokens: Tokens): Column<number> {
         const { count, data, indices } = tokens;
         return lambdaColumn({
             value: (row: number) => fastParseInt(data, indices[2 * row], indices[2 * row + 1]) || 0,
@@ -170,7 +170,7 @@ namespace Column {
         });
     }
 
-    export function ofFloatTokens(tokens: Tokens) {
+    export function ofFloatTokens(tokens: Tokens): Column<number> {
         const { count, data, indices } = tokens;
         return lambdaColumn({
             value: (row: number) => fastParseFloat(data, indices[2 * row], indices[2 * row + 1]) || 0,
@@ -179,7 +179,7 @@ namespace Column {
         });
     }
 
-    export function ofStringTokens(tokens: Tokens) {
+    export function ofStringTokens(tokens: Tokens): Column<string> {
         const { count, data, indices } = tokens;
         return lambdaColumn({
             value: (row: number) => {
@@ -192,20 +192,20 @@ namespace Column {
         });
     }
 
-    export function window<T>(column: Column<T>, start: number, end: number) {
+    export function window<T>(column: Column<T>, start: number, end: number): Column<T> {
         return windowColumn(column, start, end);
     }
 
-    export function view<T>(column: Column<T>, indices: ArrayLike<number>, checkIndentity = true) {
+    export function view<T>(column: Column<T>, indices: ArrayLike<number>, checkIndentity = true): Column<T> {
         return columnView(column, indices, checkIndentity);
     }
 
     /** A map of the 1st occurence of each value. */
-    export function createFirstIndexMap<T>(column: Column<T>) {
+    export function createFirstIndexMap<T>(column: Column<T>): Map<T, number> {
         return createFirstIndexMapOfColumn(column);
     }
 
-    export function createIndexer<T, R extends number = number>(column: Column<T>) {
+    export function createIndexer<T, R extends number = number>(column: Column<T>): (value: T) => R {
         return createIndexerOfColumn(column) as ((e: T) => R);
     }
 
@@ -213,11 +213,11 @@ namespace Column {
         return mapToArrayImpl<T, S>(column, f, ctor || Array);
     }
 
-    export function areEqual<T>(a: Column<T>, b: Column<T>) {
+    export function areEqual<T>(a: Column<T>, b: Column<T>): boolean {
         return areColumnsEqual(a, b);
     }
 
-    export function indicesOf<T>(c: Column<T>, test: (e: T) => boolean) {
+    export function indicesOf<T>(c: Column<T>, test: (e: T) => boolean): number[] {
         return columnIndicesOf(c, test);
     }
 
@@ -238,7 +238,7 @@ namespace Column {
         }
     }
 
-    export function isIdentity<T extends number>(c: Column<T>) {
+    export function isIdentity<T extends number>(c: Column<T>): boolean {
         for (let i = 0, _i = c.rowCount; i < _i; i++) {
             if (i !== c.value(i)) return false;
         }

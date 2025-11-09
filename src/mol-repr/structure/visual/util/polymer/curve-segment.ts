@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3 } from '../../../../../mol-math/linear-algebra';
-import { NumberArray } from '../../../../../mol-util/type-helpers';
-import { lerp, smoothstep } from '../../../../../mol-math/interpolate';
+import { Vec3 } from '../../../../../mol-math/linear-algebra.ts';
+import type { NumberArray } from '../../../../../mol-util/type-helpers.ts';
+import { lerp, smoothstep } from '../../../../../mol-math/interpolate.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3fromArray = Vec3.fromArray;

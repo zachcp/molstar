@@ -5,8 +5,8 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { sortArray, hash3, hash4, createRangeArray } from '../../util';
-import { Interval } from '../interval';
+import { sortArray, hash3, hash4, createRangeArray } from '../../util.ts';
+import { Interval } from '../interval.ts';
 
 type Nums = ArrayLike<number>
 
@@ -29,7 +29,7 @@ export function start(xs: Nums) { return xs[0]; }
 export function end(xs: Nums) { return xs[xs.length - 1] + 1; }
 export function min(xs: Nums) { return xs[0]; }
 export function max(xs: Nums) { return xs[xs.length - 1]; }
-export function size(xs: Nums) { return xs.length; }
+export function size(xs: Nums): number { return xs.length; }
 export function hashCode(xs: Nums) {
     // hash of tuple (size, min, max, mid)
     const s = xs.length;
@@ -37,7 +37,7 @@ export function hashCode(xs: Nums) {
     if (s > 2) return hash4(s, xs[0], xs[s - 1], xs[s >> 1]);
     return hash3(s, xs[0], xs[s - 1]);
 }
-export function toString(xs: Nums) {
+export function toString(xs: Nums): string {
     const s = xs.length;
     if (s > 5) return `[${xs[0]}, ${xs[1]}, ..., ${xs[s - 1]}], length ${s}`;
     return `[${(xs as number[]).join(', ')}]`;
@@ -55,11 +55,11 @@ export function indexOfInRange(xs: Nums, v: number, s: number, e: number) {
     const l = xs.length;
     return l === 0 || e <= s ? -1 : xs[s] <= v && v <= xs[e - 1] ? binarySearchRange(xs, v, s, e) : -1;
 }
-export function has(xs: Nums, v: number) { return indexOf(xs, v) >= 0; }
+export function has(xs: Nums, v: number): boolean { return indexOf(xs, v) >= 0; }
 
 export function getAt(xs: Nums, i: number) { return xs[i]; }
 
-export function areEqual(a: Nums, b: Nums) {
+export function areEqual(a: Nums, b: Nums): boolean {
     if (a === b) return true;
     let aSize = a.length;
     if (aSize !== b.length || a[0] !== b[0] || a[aSize - 1] !== b[aSize - 1]) return false;

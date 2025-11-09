@@ -5,12 +5,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { MaxAsa, ShrakeRupleyContext, VdWLookup } from './common';
-import { getElementIdx, isHydrogen } from '../../../../mol-model/structure/structure/unit/bonds/common';
-import { isPolymer, isNucleic, MoleculeType, ElementSymbol } from '../../../../mol-model/structure/model/types';
-import { VdwRadius } from '../../../../mol-model/structure/model/properties/atomic';
-import { StructureElement, StructureProperties } from '../../../../mol-model/structure/structure';
-import { getElementMoleculeType } from '../../../../mol-model/structure/util';
+import { MaxAsa, type ShrakeRupleyContext, VdWLookup } from './common.ts';
+import { getElementIdx, isHydrogen } from '../../../../mol-model/structure/structure/unit/bonds/common.ts';
+import { isPolymer, isNucleic, MoleculeType, type ElementSymbol } from '../../../../mol-model/structure/model/types.ts';
+import { VdwRadius } from '../../../../mol-model/structure/model/properties/atomic.ts';
+import { StructureElement, StructureProperties } from '../../../../mol-model/structure/structure.ts';
+import { getElementMoleculeType } from '../../../../mol-model/structure/util.ts';
 
 export function assignRadiusForHeavyAtoms(ctx: ShrakeRupleyContext) {
     const { key } = StructureProperties.residue;

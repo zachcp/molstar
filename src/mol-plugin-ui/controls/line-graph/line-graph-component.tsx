@@ -4,12 +4,12 @@
  * @author Paul Luna <paulluna0215@gmail.com>
  * @author David Sehnal <david.sehnal@gmail.com>
  */
-import { PointComponent } from './point-component';
+import { PointComponent } from './point-component.tsx';
 
 import * as React from 'react';
-import { Vec2 } from '../../../mol-math/linear-algebra';
-import { Grid } from '../../../mol-model/volume';
-import { arrayMax } from '../../../mol-util/array';
+import { Vec2 } from '../../../mol-math/linear-algebra.ts';
+import { Grid } from '../../../mol-model/volume.ts';
+import { arrayMax } from '../../../mol-util/array.ts';
 
 interface LineGraphComponentState {
     points: Vec2[],
@@ -22,11 +22,11 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
     private height: number;
     private width: number;
     private padding: number;
-    private updatedX: number;
-    private updatedY: number;
+    private updatedX!: number;
+    private updatedY!: number;
     private selected?: number[];
     private ghostPoints: SVGElement[];
-    private gElement: SVGElement;
+    private gElement!: SVGElement;
     private namespace: string;
 
     constructor(props: any) {
@@ -76,8 +76,7 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
 
     }
 
-    public render() {
-        const points = this.renderPoints();
+    public override render() {        const points = this.renderPoints();
         const lines = this.renderLines();
         const histogram = this.renderHistogram();
 
@@ -109,8 +108,7 @@ export class LineGraphComponent extends React.Component<any, LineGraphComponentS
         ]);
     }
 
-    componentDidMount() {
-        this.gElement = document.getElementsByClassName('ghost-points')[0] as SVGElement;
+    override componentDidMount() {        this.gElement = document.getElementsByClassName('ghost-points')[0] as SVGElement;
     }
 
     private change(points: Vec2[]) {

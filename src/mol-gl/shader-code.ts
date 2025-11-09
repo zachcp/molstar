@@ -5,12 +5,12 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { ValueCell } from '../mol-util';
-import { idFactory } from '../mol-util/id-factory';
-import { WebGLExtensions } from './webgl/extensions';
-import { isWebGL2, GLRenderingContext } from './webgl/compat';
-import { WebGLParameters } from './webgl/context';
-import { assertUnreachable } from '../mol-util/type-helpers';
+import type { ValueCell } from '../mol-util/index.ts';
+import { idFactory } from '../mol-util/id-factory.ts';
+import type { WebGLExtensions } from './webgl/extensions.ts';
+import { isWebGL2, type GLRenderingContext } from './webgl/compat.ts';
+import type { WebGLParameters } from './webgl/context.ts';
+import { assertUnreachable } from '../mol-util/type-helpers.ts';
 
 export type DefineKind = 'boolean' | 'string' | 'number'
 export type DefineType = boolean | string
@@ -45,39 +45,39 @@ export interface ShaderCode {
     readonly ignoreDefine?: IgnoreDefine
 }
 
-import { apply_fog } from './shader/chunks/apply-fog.glsl';
-import { apply_interior_color } from './shader/chunks/apply-interior-color.glsl';
-import { apply_light_color } from './shader/chunks/apply-light-color.glsl';
-import { apply_marker_color } from './shader/chunks/apply-marker-color.glsl';
-import { assign_clipping_varying } from './shader/chunks/assign-clipping-varying.glsl';
-import { assign_color_varying } from './shader/chunks/assign-color-varying.glsl';
-import { assign_group } from './shader/chunks/assign-group.glsl';
-import { assign_marker_varying } from './shader/chunks/assign-marker-varying.glsl';
-import { assign_material_color } from './shader/chunks/assign-material-color.glsl';
-import { assign_position } from './shader/chunks/assign-position.glsl';
-import { assign_size } from './shader/chunks/assign-size.glsl';
-import { check_picking_alpha } from './shader/chunks/check-picking-alpha.glsl';
-import { check_transparency } from './shader/chunks/check-transparency.glsl';
-import { clip_instance } from './shader/chunks/clip-instance.glsl';
-import { clip_pixel } from './shader/chunks/clip-pixel.glsl';
-import { color_frag_params } from './shader/chunks/color-frag-params.glsl';
-import { color_vert_params } from './shader/chunks/color-vert-params.glsl';
-import { common_clip } from './shader/chunks/common-clip.glsl';
-import { common_frag_params } from './shader/chunks/common-frag-params.glsl';
-import { common_vert_params } from './shader/chunks/common-vert-params.glsl';
-import { common } from './shader/chunks/common.glsl';
-import { fade_lod } from './shader/chunks/fade-lod.glsl';
-import { float_to_rgba } from './shader/chunks/float-to-rgba.glsl';
-import { light_frag_params } from './shader/chunks/light-frag-params.glsl';
-import { normal_frag_params } from './shader/chunks/normal-frag-params.glsl';
-import { read_from_texture } from './shader/chunks/read-from-texture.glsl';
-import { rgba_to_float } from './shader/chunks/rgba-to-float.glsl';
-import { size_vert_params } from './shader/chunks/size-vert-params.glsl';
-import { texture3d_from_1d_trilinear } from './shader/chunks/texture3d-from-1d-trilinear.glsl';
-import { texture3d_from_2d_linear } from './shader/chunks/texture3d-from-2d-linear.glsl';
-import { texture3d_from_2d_nearest } from './shader/chunks/texture3d-from-2d-nearest.glsl';
-import { wboit_write } from './shader/chunks/wboit-write.glsl';
-import { dpoit_write } from './shader/chunks/dpoit-write.glsl';
+import { apply_fog } from './shader/chunks/apply-fog.glsl.ts';
+import { apply_interior_color } from './shader/chunks/apply-interior-color.glsl.ts';
+import { apply_light_color } from './shader/chunks/apply-light-color.glsl.ts';
+import { apply_marker_color } from './shader/chunks/apply-marker-color.glsl.ts';
+import { assign_clipping_varying } from './shader/chunks/assign-clipping-varying.glsl.ts';
+import { assign_color_varying } from './shader/chunks/assign-color-varying.glsl.ts';
+import { assign_group } from './shader/chunks/assign-group.glsl.ts';
+import { assign_marker_varying } from './shader/chunks/assign-marker-varying.glsl.ts';
+import { assign_material_color } from './shader/chunks/assign-material-color.glsl.ts';
+import { assign_position } from './shader/chunks/assign-position.glsl.ts';
+import { assign_size } from './shader/chunks/assign-size.glsl.ts';
+import { check_picking_alpha } from './shader/chunks/check-picking-alpha.glsl.ts';
+import { check_transparency } from './shader/chunks/check-transparency.glsl.ts';
+import { clip_instance } from './shader/chunks/clip-instance.glsl.ts';
+import { clip_pixel } from './shader/chunks/clip-pixel.glsl.ts';
+import { color_frag_params } from './shader/chunks/color-frag-params.glsl.ts';
+import { color_vert_params } from './shader/chunks/color-vert-params.glsl.ts';
+import { common_clip } from './shader/chunks/common-clip.glsl.ts';
+import { common_frag_params } from './shader/chunks/common-frag-params.glsl.ts';
+import { common_vert_params } from './shader/chunks/common-vert-params.glsl.ts';
+import { common } from './shader/chunks/common.glsl.ts';
+import { fade_lod } from './shader/chunks/fade-lod.glsl.ts';
+import { float_to_rgba } from './shader/chunks/float-to-rgba.glsl.ts';
+import { light_frag_params } from './shader/chunks/light-frag-params.glsl.ts';
+import { normal_frag_params } from './shader/chunks/normal-frag-params.glsl.ts';
+import { read_from_texture } from './shader/chunks/read-from-texture.glsl.ts';
+import { rgba_to_float } from './shader/chunks/rgba-to-float.glsl.ts';
+import { size_vert_params } from './shader/chunks/size-vert-params.glsl.ts';
+import { texture3d_from_1d_trilinear } from './shader/chunks/texture3d-from-1d-trilinear.glsl.ts';
+import { texture3d_from_2d_linear } from './shader/chunks/texture3d-from-2d-linear.glsl.ts';
+import { texture3d_from_2d_nearest } from './shader/chunks/texture3d-from-2d-nearest.glsl.ts';
+import { wboit_write } from './shader/chunks/wboit-write.glsl.ts';
+import { dpoit_write } from './shader/chunks/dpoit-write.glsl.ts';
 
 const ShaderChunks: { [k: string]: string } = {
     apply_fog,
@@ -193,36 +193,36 @@ function ignoreDefineUnlit(name: string, variant: string, defines: ShaderDefines
     return ignoreDefine(name, variant, defines);
 };
 
-import { points_vert } from './shader/points.vert';
-import { points_frag } from './shader/points.frag';
+import { points_vert } from './shader/points.vert.ts';
+import { points_frag } from './shader/points.frag.ts';
 export const PointsShaderCode = ShaderCode('points', points_vert, points_frag, { drawBuffers: 'optional' }, {}, ignoreDefineUnlit);
 
-import { spheres_vert } from './shader/spheres.vert';
-import { spheres_frag } from './shader/spheres.frag';
+import { spheres_vert } from './shader/spheres.vert.ts';
+import { spheres_frag } from './shader/spheres.frag.ts';
 export const SpheresShaderCode = ShaderCode('spheres', spheres_vert, spheres_frag, { fragDepth: 'required', drawBuffers: 'optional' }, {}, ignoreDefine);
 
-import { cylinders_vert } from './shader/cylinders.vert';
-import { cylinders_frag } from './shader/cylinders.frag';
+import { cylinders_vert } from './shader/cylinders.vert.ts';
+import { cylinders_frag } from './shader/cylinders.frag.ts';
 export const CylindersShaderCode = ShaderCode('cylinders', cylinders_vert, cylinders_frag, { fragDepth: 'required', drawBuffers: 'optional' }, {}, ignoreDefine);
 
-import { text_vert } from './shader/text.vert';
-import { text_frag } from './shader/text.frag';
+import { text_vert } from './shader/text.vert.ts';
+import { text_frag } from './shader/text.frag.ts';
 export const TextShaderCode = ShaderCode('text', text_vert, text_frag, { drawBuffers: 'optional' }, {}, ignoreDefineUnlit);
 
-import { lines_vert } from './shader/lines.vert';
-import { lines_frag } from './shader/lines.frag';
+import { lines_vert } from './shader/lines.vert.ts';
+import { lines_frag } from './shader/lines.frag.ts';
 export const LinesShaderCode = ShaderCode('lines', lines_vert, lines_frag, { drawBuffers: 'optional' }, {}, ignoreDefineUnlit);
 
-import { mesh_vert } from './shader/mesh.vert';
-import { mesh_frag } from './shader/mesh.frag';
+import { mesh_vert } from './shader/mesh.vert.ts';
+import { mesh_frag } from './shader/mesh.frag.ts';
 export const MeshShaderCode = ShaderCode('mesh', mesh_vert, mesh_frag, { drawBuffers: 'optional' }, {}, ignoreDefine);
 
-import { directVolume_vert } from './shader/direct-volume.vert';
-import { directVolume_frag } from './shader/direct-volume.frag';
+import { directVolume_vert } from './shader/direct-volume.vert.ts';
+import { directVolume_frag } from './shader/direct-volume.frag.ts';
 export const DirectVolumeShaderCode = ShaderCode('direct-volume', directVolume_vert, directVolume_frag, { fragDepth: 'optional', drawBuffers: 'optional' }, {}, ignoreDefine);
 
-import { image_vert } from './shader/image.vert';
-import { image_frag } from './shader/image.frag';
+import { image_vert } from './shader/image.vert.ts';
+import { image_frag } from './shader/image.frag.ts';
 export const ImageShaderCode = ShaderCode('image', image_vert, image_frag, { drawBuffers: 'optional' }, {}, ignoreDefineUnlit);
 
 //

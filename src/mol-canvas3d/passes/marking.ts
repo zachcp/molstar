@@ -4,25 +4,25 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { QuadSchema, QuadValues } from '../../mol-gl/compute/util';
-import { ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable';
-import { DefineSpec, TextureSpec, UniformSpec, Values } from '../../mol-gl/renderable/schema';
-import { ShaderCode } from '../../mol-gl/shader-code';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { createComputeRenderItem } from '../../mol-gl/webgl/render-item';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { Vec2, Vec3 } from '../../mol-math/linear-algebra';
-import { ValueCell } from '../../mol-util';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { quad_vert } from '../../mol-gl/shader/quad.vert';
-import { overlay_frag } from '../../mol-gl/shader/marking/overlay.frag';
-import { Viewport } from '../camera/util';
-import { RenderTarget } from '../../mol-gl/webgl/render-target';
-import { Color } from '../../mol-util/color';
-import { edge_frag } from '../../mol-gl/shader/marking/edge.frag';
-import { isTimingMode } from '../../mol-util/debug';
+import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
+import { type ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
+import { DefineSpec, TextureSpec, UniformSpec, type Values } from '../../mol-gl/renderable/schema.ts';
+import { ShaderCode } from '../../mol-gl/shader-code.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
+import type { Texture } from '../../mol-gl/webgl/texture.ts';
+import { Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { ValueCell } from '../../mol-util/index.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { quad_vert } from '../../mol-gl/shader/quad.vert.ts';
+import { overlay_frag } from '../../mol-gl/shader/marking/overlay.frag.ts';
+import type { Viewport } from '../camera/util.ts';
+import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { edge_frag } from '../../mol-gl/shader/marking/edge.frag.ts';
+import { isTimingMode } from '../../mol-util/debug.ts';
 
-export const MarkingParams = {
+export const MarkingParams: PD.Params = {
     enabled: PD.Boolean(true),
     highlightEdgeColor: PD.Color(Color.darken(Color.fromNormalizedRgb(1.0, 0.4, 0.6), 1.0)),
     selectEdgeColor: PD.Color(Color.darken(Color.fromNormalizedRgb(0.2, 1.0, 0.1), 1.0)),
@@ -35,7 +35,7 @@ export const MarkingParams = {
 export type MarkingProps = PD.Values<typeof MarkingParams>
 
 export class MarkingPass {
-    static isEnabled(props: MarkingProps) {
+    static isEnabled(props: MarkingProps): boolean {
         return props.enabled;
     }
 
@@ -55,7 +55,7 @@ export class MarkingPass {
         this.overlay = getOverlayRenderable(webgl, this.edgesTarget.texture);
     }
 
-    getByteCount() {
+    getByteCount(): number {
         return this.depthTarget.getByteCount() + this.maskTarget.getByteCount() + this.edgesTarget.getByteCount();
     }
 

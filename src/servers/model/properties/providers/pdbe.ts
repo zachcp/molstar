@@ -4,17 +4,17 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
-import { Model } from '../../../../mol-model/structure';
-import { StructureQualityReportProvider, StructureQualityReport } from '../../../../extensions/pdbe/structure-quality-report/prop';
-import { fetchRetry } from '../../utils/fetch-retry';
-import { UUID } from '../../../../mol-util';
-import { PDBePreferredAssembly } from '../../../../extensions/pdbe/preferred-assembly';
-import { PDBeStructRefDomain } from '../../../../extensions/pdbe/struct-ref-domain';
-import { AttachModelProperty } from '../../property-provider';
-import { ConsoleLogger } from '../../../../mol-util/console-logger';
-import { getParam } from '../../../common/util';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import type { Model } from '../../../../mol-model/structure.ts';
+import { StructureQualityReportProvider, StructureQualityReport } from '../../../../extensions/pdbe/structure-quality-report/prop.ts';
+import { fetchRetry } from '../../utils/fetch-retry.ts';
+import { UUID } from '../../../../mol-util/index.ts';
+import { PDBePreferredAssembly } from '../../../../extensions/pdbe/preferred-assembly.ts';
+import { PDBeStructRefDomain } from '../../../../extensions/pdbe/struct-ref-domain.ts';
+import type { AttachModelProperty } from '../../property-provider.ts';
+import { ConsoleLogger } from '../../../../mol-util/console-logger.ts';
+import { getParam } from '../../../common/util.ts';
 
 export const PDBe_structureQualityReport: AttachModelProperty = async ({ model, params, cache }) => {
     const PDBe_apiSourceJson = useFileSource(params)

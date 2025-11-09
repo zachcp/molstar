@@ -6,27 +6,27 @@
  * @author Jason Pattle <jpattle.exscientia.co.uk>
  */
 
-import * as React from 'react';
-import { Loci } from '../../mol-model/loci';
-import { StructureElement } from '../../mol-model/structure';
-import { StructureMeasurementCell, StructureMeasurementOptions, StructureMeasurementParams } from '../../mol-plugin-state/manager/structure/measurement';
-import { StructureSelectionHistoryEntry } from '../../mol-plugin-state/manager/structure/selection';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginConfig } from '../../mol-plugin/config';
-import { AngleData } from '../../mol-repr/shape/loci/angle';
-import { DihedralData } from '../../mol-repr/shape/loci/dihedral';
-import { DistanceData } from '../../mol-repr/shape/loci/distance';
-import { LabelData } from '../../mol-repr/shape/loci/label';
-import { OrientationData } from '../../mol-repr/shape/loci/orientation';
-import { angleLabel, dihedralLabel, distanceLabel, lociLabel, structureElementLociLabelMany } from '../../mol-theme/label';
-import { FiniteArray } from '../../mol-util/type-helpers';
-import { CollapsableControls, PurePluginUIComponent } from '../base';
-import { ActionMenu } from '../controls/action-menu';
-import { Button, ExpandGroup, IconButton, ToggleButton } from '../controls/common';
-import { AddSvg, ArrowDownwardSvg, ArrowUpwardSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, MoreHorizSvg, PencilRulerSvg, SetSvg, TuneSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg } from '../controls/icons';
-import { ParameterControls } from '../controls/parameters';
-import { UpdateTransformControl } from '../state/update-transform';
-import { ToggleSelectionModeButton } from './selection';
+import type * as React from 'react';
+import { Loci } from '../../mol-model/loci.ts';
+import type { StructureElement } from '../../mol-model/structure.ts';
+import { type StructureMeasurementCell, type StructureMeasurementOptions, StructureMeasurementParams } from '../../mol-plugin-state/manager/structure/measurement.ts';
+import type { StructureSelectionHistoryEntry } from '../../mol-plugin-state/manager/structure/selection.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import type { AngleData } from '../../mol-repr/shape/loci/angle.ts';
+import type { DihedralData } from '../../mol-repr/shape/loci/dihedral.ts';
+import type { DistanceData } from '../../mol-repr/shape/loci/distance.ts';
+import type { LabelData } from '../../mol-repr/shape/loci/label.ts';
+import type { OrientationData } from '../../mol-repr/shape/loci/orientation.ts';
+import { angleLabel, dihedralLabel, distanceLabel, lociLabel, structureElementLociLabelMany } from '../../mol-theme/label.ts';
+import type { FiniteArray } from '../../mol-util/type-helpers.ts';
+import { CollapsableControls, PurePluginUIComponent } from '../base.tsx';
+import { ActionMenu } from '../controls/action-menu.tsx';
+import { Button, ExpandGroup, IconButton, ToggleButton } from '../controls/common.tsx';
+import { AddSvg, ArrowDownwardSvg, ArrowUpwardSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, MoreHorizSvg, PencilRulerSvg, SetSvg, TuneSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg } from '../controls/icons.tsx';
+import { ParameterControls } from '../controls/parameters.tsx';
+import { UpdateTransformControl } from '../state/update-transform.tsx';
+import { ToggleSelectionModeButton } from './selection.tsx';
 
 // TODO details, options (e.g. change text for labels)
 
@@ -48,8 +48,7 @@ export class StructureMeasurementsControls extends CollapsableControls {
 }
 
 export class MeasurementList extends PurePluginUIComponent {
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.structure.measurement.behaviors.state, () => {
+    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.measurement.behaviors.state, () => {
             this.forceUpdate();
         });
     }
@@ -59,11 +58,10 @@ export class MeasurementList extends PurePluginUIComponent {
         for (const cell of cells) {
             if (cell.obj) group.push(<MeasurementEntry key={cell.obj.id} cell={cell} />);
         }
-        return group.length ? <ExpandGroup header={header} initiallyExpanded={true}>{group}</ExpandGroup> : null;
+        return group.length ? <ExpandGroup header={header} initiallyExpanded>{group}</ExpandGroup> : null;
     }
 
-    render() {
-        const measurements = this.plugin.managers.structure.measurement.state;
+    override render() {        const measurements = this.plugin.managers.structure.measurement.state;
         return <div style={{ marginTop: '6px' }}>
             {this.renderGroup(measurements.labels, 'Labels')}
             {this.renderGroup(measurements.distances, 'Distances')}
@@ -76,10 +74,8 @@ export class MeasurementList extends PurePluginUIComponent {
 }
 
 export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boolean, action?: 'add' | 'options' }> {
-    state = { isBusy: false, action: void 0 as 'add' | 'options' | undefined };
-
-    componentDidMount() {
-        this.subscribe(this.selection.events.additionsHistoryUpdated, () => {
+    override state = { isBusy: false, action: void 0 as 'add' | 'options' | undefined };
+    override componentDidMount() {        this.subscribe(this.selection.events.additionsHistoryUpdated, () => {
             this.forceUpdate();
             this.updateOrderLabels();
         });
@@ -89,13 +85,11 @@ export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boo
         });
     }
 
-    componentWillUnmount() {
-        this.clearOrderLabels();
+    override componentWillUnmount() {        this.clearOrderLabels();
         super.componentWillUnmount();
     }
 
-    componentDidUpdate(prevProps: {}, prevState: { isBusy: boolean, action?: 'add' | 'options' }) {
-        if (this.state.action !== prevState.action)
+    override componentDidUpdate(prevProps: {}, prevState: { isBusy: boolean, action?: 'add' | 'options' }) {        if (this.state.action !== prevState.action)
             this.updateOrderLabels();
     }
 
@@ -196,9 +190,9 @@ export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boo
             <Button noOverflow title='Click to focus. Hover to highlight.' onClick={() => this.focusLoci(e.loci)} style={{ width: 'auto', textAlign: 'left' }}>
                 {idx}. <span dangerouslySetInnerHTML={{ __html: e.label }} />
             </Button>
-            {history.length > 1 && <IconButton svg={ArrowUpwardSvg} small={true} className='msp-form-control' onClick={() => this.moveHistory(e, 'up')} flex='20px' title={'Move up'} />}
-            {history.length > 1 && <IconButton svg={ArrowDownwardSvg} small={true} className='msp-form-control' onClick={() => this.moveHistory(e, 'down')} flex='20px' title={'Move down'} />}
-            <IconButton svg={DeleteOutlinedSvg} small={true} className='msp-form-control' onClick={() => this.plugin.managers.structure.selection.modifyHistory(e, 'remove')} flex title={'Remove'} />
+            {history.length > 1 && <IconButton svg={ArrowUpwardSvg} small className='msp-form-control' onClick={() => this.moveHistory(e, 'up')} flex='20px' title="Move up" />}
+            {history.length > 1 && <IconButton svg={ArrowDownwardSvg} small className='msp-form-control' onClick={() => this.moveHistory(e, 'down')} flex='20px' title="Move down" />}
+            <IconButton svg={DeleteOutlinedSvg} small className='msp-form-control' onClick={() => this.plugin.managers.structure.selection.modifyHistory(e, 'remove')} flex title="Remove" />
         </div>;
     }
 
@@ -224,8 +218,7 @@ export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boo
         </>;
     }
 
-    render() {
-        return <>
+    override render() {        return <>
             <div className='msp-flex-row'>
                 <ToggleButton icon={AddSvg} label='Add' toggle={this.toggleAdd} isSelected={this.state.action === 'add'} disabled={this.state.isBusy} className='msp-btn-apply-simple' />
                 <ToggleButton icon={TuneSvg} label='' title='Options' toggle={this.toggleOptions} isSelected={this.state.action === 'options'} disabled={this.state.isBusy} style={{ flex: '0 0 40px', padding: 0 }} />
@@ -237,10 +230,8 @@ export class MeasurementControls extends PurePluginUIComponent<{}, { isBusy: boo
 }
 
 class MeasurementsOptions extends PurePluginUIComponent<{}, { isDisabled: boolean }> {
-    state = { isDisabled: false };
-
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.structure.measurement.behaviors.state, () => {
+    override state = { isDisabled: false };
+    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.measurement.behaviors.state, () => {
             this.forceUpdate();
         });
 
@@ -253,8 +244,7 @@ class MeasurementsOptions extends PurePluginUIComponent<{}, { isDisabled: boolea
         this.plugin.managers.structure.measurement.setOptions(options);
     };
 
-    render() {
-        const measurements = this.plugin.managers.structure.measurement.state;
+    override render() {        const measurements = this.plugin.managers.structure.measurement.state;
 
         return <div className='msp-control-offset'>
             <ParameterControls params={StructureMeasurementParams} values={measurements.options} onChangeValues={this.changed} isDisabled={this.state.isDisabled} />
@@ -263,10 +253,8 @@ class MeasurementsOptions extends PurePluginUIComponent<{}, { isDisabled: boolea
 }
 
 class MeasurementEntry extends PurePluginUIComponent<{ cell: StructureMeasurementCell }, { showUpdate: boolean }> {
-    state = { showUpdate: false };
-
-    componentDidMount() {
-        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
+    override state = { showUpdate: false };
+    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
             this.forceUpdate();
         });
     }
@@ -351,8 +339,7 @@ class MeasurementEntry extends PurePluginUIComponent<{ cell: StructureMeasuremen
         (item?.value as any)();
     };
 
-    render() {
-        const { cell } = this.props;
+    override render() {        const { cell } = this.props;
         const { obj } = cell;
         if (!obj) return null;
 

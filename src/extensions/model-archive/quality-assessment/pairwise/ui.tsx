@@ -4,26 +4,26 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { CSSProperties, Fragment, memo, ReactNode, useEffect, useRef } from 'react';
+import { type CSSProperties, Fragment, memo, type ReactNode, useEffect, useRef } from 'react';
 import { BehaviorSubject, combineLatest, distinctUntilChanged, throttleTime } from 'rxjs';
-import { clamp } from '../../../../mol-math/interpolate';
-import { Model, ResidueIndex, StructureElement, StructureProperties, StructureQuery } from '../../../../mol-model/structure';
-import { AtomicHierarchy } from '../../../../mol-model/structure/model/properties/atomic';
-import { atoms } from '../../../../mol-model/structure/query/queries/generators';
-import { PluginStateObject } from '../../../../mol-plugin-state/objects';
-import { OverpaintStructureRepresentation3DFromBundle } from '../../../../mol-plugin-state/transforms/representation';
-import { CollapsableControls, CollapsableState } from '../../../../mol-plugin-ui/base';
-import { ScatterPlotSvg } from '../../../../mol-plugin-ui/controls/icons';
-import { ParameterControls } from '../../../../mol-plugin-ui/controls/parameters';
-import { useBehavior } from '../../../../mol-plugin-ui/hooks/use-behavior';
-import { PluginContext } from '../../../../mol-plugin/context';
-import { StateBuilder, StateTransform } from '../../../../mol-state';
-import { round } from '../../../../mol-util';
-import { Color } from '../../../../mol-util/color';
-import { ParamDefinition as PD } from '../../../../mol-util/param-definition';
-import { SingleAsyncQueue } from '../../../../mol-util/single-async-queue';
-import { QualityAssessment } from '../prop';
-import { maDrawPairwiseMetricPNG, MAPairwiseMetricDrawing } from './plot';
+import { clamp } from '../../../../mol-math/interpolate.ts';
+import { type Model, type ResidueIndex, StructureElement, StructureProperties, StructureQuery } from '../../../../mol-model/structure.ts';
+import { AtomicHierarchy } from '../../../../mol-model/structure/model/properties/atomic.ts';
+import { atoms } from '../../../../mol-model/structure/query/queries/generators.ts';
+import { PluginStateObject } from '../../../../mol-plugin-state/objects.ts';
+import { OverpaintStructureRepresentation3DFromBundle } from '../../../../mol-plugin-state/transforms/representation.ts';
+import { CollapsableControls, type CollapsableState } from '../../../../mol-plugin-ui/base.tsx';
+import { ScatterPlotSvg } from '../../../../mol-plugin-ui/controls/icons.tsx';
+import { ParameterControls } from '../../../../mol-plugin-ui/controls/parameters.tsx';
+import { useBehavior } from '../../../../mol-plugin-ui/hooks/use-behavior.ts';
+import type { PluginContext } from '../../../../mol-plugin/context.ts';
+import type { StateBuilder, StateTransform } from '../../../../mol-state/index.ts';
+import { round } from '../../../../mol-util/index.ts';
+import { Color } from '../../../../mol-util/color/index.ts';
+import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
+import { SingleAsyncQueue } from '../../../../mol-util/single-async-queue.ts';
+import { QualityAssessment } from '../prop.ts';
+import { maDrawPairwiseMetricPNG, type MAPairwiseMetricDrawing } from './plot.ts';
 
 type State = ReturnType<typeof getPropsAndValues>
 
@@ -218,11 +218,11 @@ export const MAPairwiseScorePlotBase = memo(({ model, pairwiseMetric, interactiv
             const offset = getPlotMouseOffsetBase(interactivityRect.current!, ev.clientX, ev.clientY);
             interactivity.next({ ...interactivity.value, mouseDown: false, boxEnd: offset });
         };
-        window.addEventListener('mousemove', moveEvent);
-        window.addEventListener('mouseup', mouseUpEvent);
+        globalThis.addEventListener('mousemove', moveEvent);
+        globalThis.addEventListener('mouseup', mouseUpEvent);
         return () => {
-            window.removeEventListener('mousemove', moveEvent);
-            window.removeEventListener('mouseup', mouseUpEvent);
+            globalThis.removeEventListener('mousemove', moveEvent);
+            globalThis.removeEventListener('mouseup', mouseUpEvent);
         };
     }, [model, interactivity, drawing]);
 

@@ -6,21 +6,22 @@
  * @author Yakov Pechersky <ffxen158@gmail.com>
  */
 
-import { CIF } from '../../mol-io/reader/cif';
-import { Mat4, Vec3 } from '../../mol-math/linear-algebra';
-import { volumeFromCcp4 } from '../../mol-model-formats/volume/ccp4';
-import { volumeFromDensityServerData } from '../../mol-model-formats/volume/density-server';
-import { volumeFromDsn6 } from '../../mol-model-formats/volume/dsn6';
-import { Task } from '../../mol-task';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { PluginStateObject as SO, PluginStateTransform } from '../objects';
-import { volumeFromCube } from '../../mol-model-formats/volume/cube';
-import { volumeFromDx } from '../../mol-model-formats/volume/dx';
-import { Grid, Volume } from '../../mol-model/volume';
-import { PluginContext } from '../../mol-plugin/context';
-import { StateSelection } from '../../mol-state';
-import { volumeFromSegmentationData } from '../../mol-model-formats/volume/segmentation';
-import { getTransformFromParams, TransformParam, transformParamsNeedCentroid } from './helpers';
+import { CIF } from '../../mol-io/reader/cif.ts';
+import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { volumeFromCcp4 } from '../../mol-model-formats/volume/ccp4.ts';
+import { volumeFromDensityServerData } from '../../mol-model-formats/volume/density-server.ts';
+import { volumeFromDsn6 } from '../../mol-model-formats/volume/dsn6.ts';
+import { Task } from '../../mol-task/index.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { PluginStateObject as SO, PluginStateTransform } from '../objects.ts';
+import { volumeFromCube } from '../../mol-model-formats/volume/cube.ts';
+import { volumeFromDx } from '../../mol-model-formats/volume/dx.ts';
+import { Grid, type Volume } from '../../mol-model/volume.ts';
+import type { StateTransformer } from '../../mol-state/index.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { StateSelection } from '../../mol-state/index.ts';
+import { volumeFromSegmentationData } from '../../mol-model-formats/volume/segmentation.ts';
+import { getTransformFromParams, TransformParam, transformParamsNeedCentroid } from './helpers.ts';
 
 export { VolumeFromCcp4 };
 export { VolumeFromDsn6 };
@@ -31,7 +32,7 @@ export { VolumeFromDensityServerCif };
 export { VolumeFromSegmentationCif };
 
 type VolumeFromCcp4 = typeof VolumeFromCcp4
-const VolumeFromCcp4 = PluginStateTransform.BuiltIn({
+const VolumeFromCcp4: StateTransformer<SO.Format.Ccp4, SO.Volume.Data> = PluginStateTransform.BuiltIn({
     name: 'volume-from-ccp4',
     display: { name: 'Volume from CCP4/MRC/MAP', description: 'Create Volume from CCP4/MRC/MAP data' },
     from: SO.Format.Ccp4,
@@ -57,7 +58,7 @@ const VolumeFromCcp4 = PluginStateTransform.BuiltIn({
 });
 
 type VolumeFromDsn6 = typeof VolumeFromDsn6
-const VolumeFromDsn6 = PluginStateTransform.BuiltIn({
+const VolumeFromDsn6: StateTransformer<SO.Format.Dsn6, SO.Volume.Data> = PluginStateTransform.BuiltIn({
     name: 'volume-from-dsn6',
     display: { name: 'Volume from DSN6/BRIX', description: 'Create Volume from DSN6/BRIX data' },
     from: SO.Format.Dsn6,
@@ -82,7 +83,7 @@ const VolumeFromDsn6 = PluginStateTransform.BuiltIn({
 });
 
 type VolumeFromCube = typeof VolumeFromCube
-const VolumeFromCube = PluginStateTransform.BuiltIn({
+const VolumeFromCube: StateTransformer<SO.Format.Cube, SO.Volume.Data> = PluginStateTransform.BuiltIn({
     name: 'volume-from-cube',
     display: { name: 'Volume from Cube', description: 'Create Volume from Cube data' },
     from: SO.Format.Cube,
@@ -127,7 +128,7 @@ const VolumeFromDx = PluginStateTransform.BuiltIn({
 });
 
 type VolumeFromDensityServerCif = typeof VolumeFromDensityServerCif
-const VolumeFromDensityServerCif = PluginStateTransform.BuiltIn({
+const VolumeFromDensityServerCif: StateTransformer<SO.Format.Cif, SO.Volume.Data> = PluginStateTransform.BuiltIn({
     name: 'volume-from-density-server-cif',
     display: { name: 'Volume from density-server CIF', description: 'Identify and create all separate models in the specified CIF data block' },
     from: SO.Format.Cif,
@@ -165,7 +166,7 @@ const VolumeFromDensityServerCif = PluginStateTransform.BuiltIn({
 });
 
 type VolumeFromSegmentationCif = typeof VolumeFromSegmentationCif
-const VolumeFromSegmentationCif = PluginStateTransform.BuiltIn({
+const VolumeFromSegmentationCif: StateTransformer<SO.Format.Cif, SO.Volume.Data> = PluginStateTransform.BuiltIn({
     name: 'volume-from-segmentation-cif',
     display: { name: 'Volume from Segmentation CIF' },
     from: SO.Format.Cif,
@@ -203,7 +204,7 @@ const VolumeFromSegmentationCif = PluginStateTransform.BuiltIn({
 });
 
 type AssignColorVolume = typeof AssignColorVolume
-const AssignColorVolume = PluginStateTransform.BuiltIn({
+const AssignColorVolume: StateTransformer<SO.Volume.Data, SO.Volume.Data> = PluginStateTransform.BuiltIn({
     name: 'assign-color-volume',
     display: { name: 'Assign Color Volume', description: 'Assigns another volume to be available for coloring.' },
     from: SO.Volume.Data,

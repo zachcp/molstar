@@ -5,13 +5,13 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { StateTree } from '../tree/immutable';
-import { TransientTree } from '../tree/transient';
-import { StateObject, StateObjectCell, StateObjectSelector, StateObjectRef } from '../object';
-import { StateTransform } from '../transform';
-import { StateTransformer } from '../transformer';
-import { State } from '../state';
-import { produce } from '../../mol-util/produce';
+import { StateTree } from '../tree/immutable.ts';
+import type { TransientTree } from '../tree/transient.ts';
+import { type StateObject, StateObjectCell, StateObjectSelector, StateObjectRef } from '../object.ts';
+import { StateTransform } from '../transform.ts';
+import type { StateTransformer } from '../transformer.ts';
+import type { State } from '../state.ts';
+import { produce } from '../../mol-util/produce.ts';
 
 export { StateBuilder };
 
@@ -108,8 +108,8 @@ namespace StateBuilder {
 
     export class Root implements StateBuilder {
         private state: BuildState;
-        get editInfo() { return this.state.editInfo; }
-        get currentTree() { return this.state.tree; }
+        get editInfo(): StateBuilder.EditInfo { return this.state.editInfo; }
+        get currentTree(): TransientTree { return this.state.tree; }
 
         to<A extends StateObject, T extends StateTransformer>(ref: StateTransform.Ref): To<A, T>
         to<A extends StateObject, T extends StateTransformer>(ref: StateObjectRef<A>): To<A, T>
@@ -143,8 +143,8 @@ namespace StateBuilder {
     }
 
     export class To<A extends StateObject, T extends StateTransformer = StateTransformer> implements StateBuilder {
-        get editInfo() { return this.state.editInfo; }
-        get selector() { return new StateObjectSelector<A, T>(this.ref, this.state.state); }
+        get editInfo(): StateBuilder.EditInfo { return this.state.editInfo; }
+        get selector(): StateObjectSelector<A, T> { return new StateObjectSelector<A, T>(this.ref, this.state.state); }
 
         readonly ref: StateTransform.Ref;
 

@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginUIComponent } from '../../mol-plugin-ui/base';
+import { PluginUIComponent } from '../../mol-plugin-ui/base.tsx';
 
 export class CustomToastMessage extends PluginUIComponent {
     render() {

@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column } from '../../../../mol-data/db';
-import { CifWriter } from '../../../../mol-io/writer/cif';
-import { Structure } from '../../structure';
-import { CifExportContext } from '../mmcif';
-import { getModelMmCifCategory, getUniqueEntityIdsFromStructures } from './utils';
+import { Column } from '../../../../mol-data/db.ts';
+import { CifWriter } from '../../../../mol-io/writer/cif.ts';
+import type { Structure } from '../../structure.ts';
+import type { CifExportContext } from '../mmcif.ts';
+import { getModelMmCifCategory, getUniqueEntityIdsFromStructures } from './utils.ts';
 import CifCategory = CifWriter.Category
 
 export const _struct_asym: CifCategory<CifExportContext> = createCategory('struct_asym');

@@ -5,29 +5,29 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Grid, Volume } from '../../mol-model/volume';
-import { VisualContext } from '../visual';
-import { Theme, ThemeRegistryContext } from '../../mol-theme/theme';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { computeMarchingCubesMesh, computeMarchingCubesLines } from '../../mol-geo/util/marching-cubes/algorithm';
-import { VolumeVisual, VolumeRepresentation, VolumeRepresentationProvider, VolumeKey } from './representation';
-import { VisualUpdateState } from '../util';
-import { Lines } from '../../mol-geo/geometry/lines/lines';
-import { RepresentationContext, RepresentationParamsGetter, Representation } from '../representation';
-import { PickingId } from '../../mol-geo/geometry/picking';
-import { EmptyLoci, Loci } from '../../mol-model/loci';
-import { Interval, OrderedSet } from '../../mol-data/int';
-import { Tensor, Vec2, Vec3 } from '../../mol-math/linear-algebra';
-import { fillSerial } from '../../mol-util/array';
-import { createVolumeCellLocationIterator, createVolumeTexture2d, eachVolumeLoci, getVolumeTexture2dLayout } from './util';
-import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh';
-import { extractIsosurface } from '../../mol-gl/compute/marching-cubes/isosurface';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { CustomPropertyDescriptor } from '../../mol-model/custom-property';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { BaseGeometry } from '../../mol-geo/geometry/base';
-import { ValueCell } from '../../mol-util/value-cell';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Grid, Volume } from '../../mol-model/volume.ts';
+import type { VisualContext } from '../visual.ts';
+import type { Theme, ThemeRegistryContext } from '../../mol-theme/theme.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { computeMarchingCubesMesh, computeMarchingCubesLines } from '../../mol-geo/util/marching-cubes/algorithm.ts';
+import { VolumeVisual, VolumeRepresentation, VolumeRepresentationProvider, type VolumeKey } from './representation.ts';
+import type { VisualUpdateState } from '../util.ts';
+import { Lines } from '../../mol-geo/geometry/lines/lines.ts';
+import { type RepresentationContext, type RepresentationParamsGetter, Representation } from '../representation.ts';
+import { PickingId } from '../../mol-geo/geometry/picking.ts';
+import { EmptyLoci, type Loci } from '../../mol-model/loci.ts';
+import { Interval, OrderedSet } from '../../mol-data/int.ts';
+import { Tensor, Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { fillSerial } from '../../mol-util/array.ts';
+import { createVolumeCellLocationIterator, createVolumeTexture2d, eachVolumeLoci, getVolumeTexture2dLayout } from './util.ts';
+import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh.ts';
+import { extractIsosurface } from '../../mol-gl/compute/marching-cubes/isosurface.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
+import type { Texture } from '../../mol-gl/webgl/texture.ts';
+import { BaseGeometry } from '../../mol-geo/geometry/base.ts';
+import { ValueCell } from '../../mol-util/value-cell.ts';
 
 export const VolumeIsosurfaceParams = {
     isoValue: Volume.IsoValueParam,
@@ -49,7 +49,7 @@ function gpuSupport(webgl: WebGLContext) {
 
 const Padding = 1;
 
-function suitableForGpu(volume: Volume, webgl: WebGLContext) {
+function suitableForGpu(volume: Volume, webgl: WebGLContext): boolean {
     // small volumes are about as fast or faster on CPU vs integrated GPU
     if (volume.grid.cells.data.length < Math.pow(10, 3)) return false;
     // the GPU is much more memory contraint, especially true for integrated GPUs,
@@ -66,7 +66,7 @@ export function IsosurfaceVisual(materialId: number, volume: Volume, key: number
     return IsosurfaceMeshVisual(materialId);
 }
 
-function getLoci(volume: Volume, props: VolumeIsosurfaceProps) {
+function getLoci(volume: Volume, props: VolumeIsosurfaceProps): Volume.Isosurface.Loci {
     const instances = Interval.ofLength(volume.instances.length as Volume.InstanceIndex);
     return Volume.Isosurface.Loci(volume, props.isoValue, instances);
 }
@@ -302,8 +302,8 @@ export function IsosurfaceWireframeVisual(materialId: number): VolumeVisual<Isos
 //
 
 const IsosurfaceVisuals = {
-    'solid': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, IsosurfaceMeshParams>) => VolumeRepresentation('Isosurface mesh', ctx, getParams, IsosurfaceVisual, getLoci),
-    'wireframe': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, IsosurfaceWireframeParams>) => VolumeRepresentation('Isosurface wireframe', ctx, getParams, IsosurfaceWireframeVisual, getLoci),
+    'solid': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, IsosurfaceMeshParams>): VolumeRepresentation<IsosurfaceMeshParams> => VolumeRepresentation('Isosurface mesh', ctx, getParams, IsosurfaceVisual, getLoci),
+    'wireframe': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, IsosurfaceWireframeParams>): VolumeRepresentation<IsosurfaceWireframeParams> => VolumeRepresentation('Isosurface wireframe', ctx, getParams, IsosurfaceWireframeVisual, getLoci),
 };
 
 export const IsosurfaceParams = {
@@ -313,7 +313,7 @@ export const IsosurfaceParams = {
     bumpFrequency: PD.Numeric(1, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
 };
 export type IsosurfaceParams = typeof IsosurfaceParams
-export function getIsosurfaceParams(ctx: ThemeRegistryContext, volume: Volume) {
+export function getIsosurfaceParams(ctx: ThemeRegistryContext, volume: Volume): typeof IsosurfaceParams {
     const p = PD.clone(IsosurfaceParams);
     p.isoValue = Volume.createIsoValueParam(Volume.IsoValue.relative(2), volume.grid.stats);
     return p;

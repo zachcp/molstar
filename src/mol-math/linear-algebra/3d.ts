@@ -17,13 +17,13 @@
  * furnished to do so, subject to the following conditions:
  */
 
-import { Mat4 } from './3d/mat4';
-import { Mat3 } from './3d/mat3';
-import { Vec2 } from './3d/vec2';
-import { Vec3 } from './3d/vec3';
-import { Vec4 } from './3d/vec4';
-import { Quat } from './3d/quat';
-import { EPSILON } from './3d/common';
+import { Mat4 } from './3d/mat4.ts';
+import { Mat3 } from './3d/mat3.ts';
+import { Vec2 } from './3d/vec2.ts';
+import { Vec3 } from './3d/vec3.ts';
+import { Vec4 } from './3d/vec4.ts';
+import { Quat } from './3d/quat.ts';
+import { EPSILON } from './3d/common.ts';
 
 export { Mat4, Mat3, Vec2, Vec3, Vec4, Quat, EPSILON };
 

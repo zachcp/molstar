@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { LinkedList } from '../mol-data/generic';
-import { GraphicsRenderObject } from './render-object';
+import { LinkedList } from '../mol-data/generic.ts';
+import type { GraphicsRenderObject } from './render-object.ts';
 
 type N = LinkedList.Node<GraphicsRenderObject>
 
@@ -15,7 +15,7 @@ export class CommitQueue {
     private addList = LinkedList<GraphicsRenderObject>();
     private addMap = new Map<GraphicsRenderObject, N>();
 
-    get isEmpty() {
+    get isEmpty(): boolean {
         return this.removeList.count === 0 && this.addList.count === 0;
     }
 

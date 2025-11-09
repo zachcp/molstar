@@ -5,18 +5,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Model } from '../../mol-model/structure';
-import { ModelRef, StructureHierarchyRef, TrajectoryRef } from '../../mol-plugin-state/manager/structure/hierarchy-state';
-import { StateTransforms } from '../../mol-plugin-state/transforms';
-import { StateSelection } from '../../mol-state';
-import { CollapsableControls, CollapsableState } from '../base';
-import { ActionMenu } from '../controls/action-menu';
-import { Button, ExpandGroup, IconButton } from '../controls/common';
-import { BookmarksOutlinedSvg, MoleculeSvg } from '../controls/icons';
-import { ParameterControls } from '../controls/parameters';
-import { UpdateTransformControl } from '../state/update-transform';
-import { StructureFocusControls } from './focus';
-import { StructureSelectionStatsControls } from './selection';
+import { Model } from '../../mol-model/structure.ts';
+import type { ModelRef, StructureHierarchyRef, TrajectoryRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
+import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
+import { StateSelection } from '../../mol-state/index.ts';
+import { CollapsableControls, type CollapsableState } from '../base.tsx';
+import { ActionMenu } from '../controls/action-menu.tsx';
+import { Button, ExpandGroup, IconButton } from '../controls/common.tsx';
+import { BookmarksOutlinedSvg, MoleculeSvg } from '../controls/icons.tsx';
+import { ParameterControls } from '../controls/parameters.tsx';
+import { UpdateTransformControl } from '../state/update-transform.tsx';
+import { StructureFocusControls } from './focus.tsx';
+import { StructureSelectionStatsControls } from './selection.tsx';
 
 interface StructureSourceControlState extends CollapsableState {
     isBusy: boolean,
@@ -33,8 +33,7 @@ export class StructureSourceControls extends CollapsableControls<{}, StructureSo
         };
     }
 
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, () => this.forceUpdate());
         this.subscribe(this.plugin.behaviors.state.isBusy, v => {
             this.setState({ isBusy: v });
         });

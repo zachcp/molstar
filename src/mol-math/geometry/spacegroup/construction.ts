@@ -5,9 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4 } from '../../linear-algebra';
-import { SpacegroupName, TransformData, GroupData, getSpacegroupIndex, OperatorData, SpacegroupNumber } from './tables';
-import { SymmetryOperator } from '../../geometry/symmetry-operator';
+import { Vec3, Mat4 } from '../../linear-algebra.ts';
+import { SpacegroupName, TransformData, GroupData, getSpacegroupIndex, OperatorData, SpacegroupNumber } from './tables.ts';
+import { SymmetryOperator } from '../../geometry/symmetry-operator.ts';
 
 interface SpacegroupCell {
     /** Index into spacegroup data table */
@@ -35,7 +35,7 @@ namespace SpacegroupCell {
     export const Zero: SpacegroupCell = create('P 1', Vec3.create(1, 1, 1), Vec3.create(Math.PI / 2, Math.PI / 2, Math.PI / 2));
 
     /** True if 'P 1' with cellsize [1, 1, 1] */
-    export function isZero(cell?: SpacegroupCell) {
+    export function isZero(cell?: SpacegroupCell): boolean {
         if (!cell) return true;
         return cell.index === 0 && cell.size[0] === 1 && cell.size[1] === 1 && cell.size[1] === 1;
     }
@@ -89,7 +89,7 @@ namespace Spacegroup {
 
     const _ijkVec = Vec3();
     const _tempMat = Mat4();
-    export function setOperatorMatrix(spacegroup: Spacegroup, index: number, i: number, j: number, k: number, target: Mat4) {
+    export function setOperatorMatrix(spacegroup: Spacegroup, index: number, i: number, j: number, k: number, target: Mat4): Mat4 {
         Vec3.set(_ijkVec, i, j, k);
 
         Mat4.fromTranslation(_tempMat, _ijkVec);
@@ -118,7 +118,7 @@ namespace Spacegroup {
      * Get Symmetry operator for transformation around the given
      * reference point `ref` in fractional coordinates
      */
-    export function getSymmetryOperatorRef(spacegroup: Spacegroup, spgrOp: number, i: number, j: number, k: number, ref: Vec3) {
+    export function getSymmetryOperatorRef(spacegroup: Spacegroup, spgrOp: number, i: number, j: number, k: number, ref: Vec3): SymmetryOperator {
 
         const operator = Mat4.zero();
 

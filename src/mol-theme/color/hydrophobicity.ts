@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color, ColorScale } from '../../mol-util/color';
-import { StructureElement, Unit, Bond, ElementIndex } from '../../mol-model/structure';
-import { Location } from '../../mol-model/location';
-import type { ColorTheme } from '../color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../theme';
-import { ResidueHydrophobicity } from '../../mol-model/structure/model/types';
-import { ColorThemeCategory } from './categories';
+import { type Color, ColorScale } from '../../mol-util/color/index.ts';
+import { StructureElement, Unit, Bond, type ElementIndex } from '../../mol-model/structure.ts';
+import type { Location } from '../../mol-model/location.ts';
+import type { ColorTheme } from '../color.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { ThemeDataContext } from '../theme.ts';
+import { ResidueHydrophobicity } from '../../mol-model/structure/model/types.ts';
+import { ColorThemeCategory } from './categories.ts';
 
 const Description = 'Assigns a color to every amino acid according to the "Experimentally determined hydrophobicity scale for proteins at membrane interfaces" by Wimely and White (doi:10.1038/nsb1096-842).';
 

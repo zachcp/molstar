@@ -4,13 +4,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { OrderedSet } from '../../../mol-data/int';
-import { StructureQualityReport, StructureQualityReportProvider } from './prop';
-import { StructureQualityReportColorThemeProvider } from './color';
-import { Loci } from '../../../mol-model/loci';
-import { StructureElement } from '../../../mol-model/structure';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { PluginBehavior } from '../../../mol-plugin/behavior/behavior';
+import { OrderedSet } from '../../../mol-data/int.ts';
+import { StructureQualityReport, StructureQualityReportProvider } from './prop.ts';
+import { StructureQualityReportColorThemeProvider } from './color.ts';
+import type { Loci } from '../../../mol-model/loci.ts';
+import { StructureElement } from '../../../mol-model/structure.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { PluginBehavior } from '../../../mol-plugin/behavior/behavior.ts';
 
 export const PDBeStructureQualityReport = PluginBehavior.create<{ autoAttach: boolean, showTooltip: boolean }>({
     name: 'pdbe-structure-quality-report-prop',

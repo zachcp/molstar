@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { MolstarLoadingExtension } from '../load';
+import type { MolstarLoadingExtension } from '../load.ts';
 
 export const IsHiddenCustomStateExtension: MolstarLoadingExtension<{}> = {
     id: 'ww-pdb/is-hidden-custom-state',

@@ -5,20 +5,20 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { ErrorColor, NtCColors } from '../color';
-import { ConfalPyramidsProvider } from './property';
-import { ConfalPyramidsTypes as CPT } from './types';
-import { Dnatco } from '../property';
-import { Location } from '../../../mol-model/location';
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { ColorTheme } from '../../../mol-theme/color';
-import { ThemeDataContext } from '../../../mol-theme/theme';
-import { Color, ColorMap } from '../../../mol-util/color';
-import { getColorMapParams } from '../../../mol-util/color/params';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { TableLegend } from '../../../mol-util/legend';
-import { ObjectKeys } from '../../../mol-util/type-helpers';
-import { ColorThemeCategory } from '../../../mol-theme/color/categories';
+import { ErrorColor, NtCColors } from '../color/index.ts';
+import { ConfalPyramidsProvider } from './property.ts';
+import { ConfalPyramidsTypes as CPT } from './types.ts';
+import { Dnatco } from '../property.ts';
+import type { Location } from '../../../mol-model/location.ts';
+import type { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import type { ColorTheme } from '../../../mol-theme/color.ts';
+import type { ThemeDataContext } from '../../../mol-theme/theme.ts';
+import { type Color, ColorMap } from '../../../mol-util/color/index.ts';
+import { getColorMapParams } from '../../../mol-util/color/params.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { TableLegend } from '../../../mol-util/legend.ts';
+import { ObjectKeys } from '../../../mol-util/type-helpers.ts';
+import { ColorThemeCategory } from '../../../mol-theme/color/categories.ts';
 
 const Description = 'Assigns colors to confal pyramids';
 

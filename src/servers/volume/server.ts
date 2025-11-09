@@ -10,11 +10,12 @@
 
 import compression from 'compression';
 import express from 'express';
-import { ConsoleLogger } from '../../mol-util/console-logger';
-import { configureServer, ServerConfig } from './config';
-import { State } from './server/state';
-import { VOLUME_SERVER_HEADER } from './server/version';
-import { init } from './server/web-api';
+import { ConsoleLogger } from '../../mol-util/console-logger.ts';
+import { configureServer, ServerConfig } from './config.ts';
+import { State } from './server/state.ts';
+import { VOLUME_SERVER_HEADER } from './server/version.ts';
+import { init } from './server/web-api.ts';
+import process from "node:process";
 
 
 function setupShutdown() {

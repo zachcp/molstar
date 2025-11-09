@@ -6,13 +6,13 @@
  * @author Ludovic Autin <ludovic.autin@gmail.com>
  */
 
-import { Task, RuntimeContext, chunkedSubtask } from '../../../../mol-task';
-import { Tokenizer, TokenBuilder } from '../../common/text/tokenizer';
-import { ReaderResult as Result } from '../../result';
-import { TokenColumnProvider as TokenColumn } from '../../common/text/column/token';
-import { Column } from '../../../../mol-data/db';
-import { LammpsFrame, LammpsTrajectoryFile } from '../schema';
-import { StringLike } from '../../../common/string-like';
+import { Task, type RuntimeContext, chunkedSubtask } from '../../../../mol-task/index.ts';
+import { Tokenizer, TokenBuilder } from '../../common/text/tokenizer.ts';
+import { ReaderResult as Result } from '../../result.ts';
+import { TokenColumnProvider as TokenColumn } from '../../common/text/column/token.ts';
+import { Column } from '../../../../mol-data/db.ts';
+import type { LammpsFrame, LammpsTrajectoryFile } from '../schema.ts';
+import type { StringLike } from '../../../common/string-like.ts';
 
 
 const { readLine, skipWhitespace, eatValue, eatLine, markStart } = Tokenizer;

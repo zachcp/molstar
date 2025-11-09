@@ -7,8 +7,8 @@
  * Copyright (c) 2011-2018, Gregor Aisch, BSD license
  */
 
-import type { Color } from '../color';
-import { Rgb } from './rgb';
+import type { Color } from '../color.ts';
+import { Rgb } from './rgb.ts';
 
 export { Hsl };
 

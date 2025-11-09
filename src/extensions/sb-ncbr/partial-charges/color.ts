@@ -1,12 +1,12 @@
-import { Bond, StructureElement, StructureProperties, Unit } from '../../../mol-model/structure';
-import { ColorTheme, LocationColor } from '../../../mol-theme/color';
-import { ThemeDataContext } from '../../../mol-theme/theme';
-import { Color } from '../../../mol-util/color';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { Location } from '../../../mol-model/location';
-import { SbNcbrPartialChargesPropertyProvider } from './property';
-import { CustomProperty } from '../../../mol-model-props/common/custom-property';
-import { ColorThemeCategory } from '../../../mol-theme/color/categories';
+import { Bond, StructureElement, StructureProperties, Unit } from '../../../mol-model/structure.ts';
+import type { ColorTheme, LocationColor } from '../../../mol-theme/color.ts';
+import type { ThemeDataContext } from '../../../mol-theme/theme.ts';
+import { Color } from '../../../mol-util/color/index.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { Location } from '../../../mol-model/location.ts';
+import { SbNcbrPartialChargesPropertyProvider } from './property.ts';
+import type { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
+import { ColorThemeCategory } from '../../../mol-theme/color/categories.ts';
 
 const Colors = {
     Bond: Color(0xffffff),

@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { ChunkedArray } from '../../../mol-data/util';
-import { Text } from './text';
-import { getFontAtlas } from './font-atlas';
-import { assertUnreachable } from '../../../mol-util/type-helpers';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { ChunkedArray } from '../../../mol-data/util.ts';
+import { Text } from './text.ts';
+import { getFontAtlas } from './font-atlas.ts';
+import { assertUnreachable } from '../../../mol-util/type-helpers.ts';
 
 const quadIndices = new Uint16Array([
     0, 1, 2,

@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Sphere3D, SymmetryOperator } from '../../mol-math/geometry';
-import { Mat4, Vec3 } from '../../mol-math/linear-algebra';
-import { Structure } from '../../mol-model/structure';
-import { StructureUnitTransforms } from '../../mol-model/structure/structure/util/unit-transforms';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { type Sphere3D, SymmetryOperator } from '../../mol-math/geometry.ts';
+import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { Structure } from '../../mol-model/structure.ts';
+import type { StructureUnitTransforms } from '../../mol-model/structure/structure/util/unit-transforms.ts';
 
 const _unwindMatrix = Mat4();
 export function unwindStructureAssembly(structure: Structure, unitTransforms: StructureUnitTransforms, t: number) {

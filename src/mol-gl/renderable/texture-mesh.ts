@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Renderable, RenderableState, createRenderable } from '../renderable';
-import { WebGLContext } from '../webgl/context';
-import { createGraphicsRenderItem, Transparency } from '../webgl/render-item';
-import { GlobalUniformSchema, BaseSchema, DefineSpec, Values, InternalSchema, InternalValues, UniformSpec, TextureSpec, GlobalTextureSchema, ValueSpec, GlobalDefineValues, GlobalDefines, GlobalDefineSchema } from './schema';
-import { MeshShaderCode } from '../shader-code';
-import { ValueCell } from '../../mol-util';
+import { type Renderable, type RenderableState, createRenderable } from '../renderable.ts';
+import type { WebGLContext } from '../webgl/context.ts';
+import { createGraphicsRenderItem, type Transparency } from '../webgl/render-item.ts';
+import { GlobalUniformSchema, BaseSchema, DefineSpec, type Values, InternalSchema, type InternalValues, UniformSpec, TextureSpec, GlobalTextureSchema, ValueSpec, type GlobalDefineValues, type GlobalDefines, GlobalDefineSchema } from './schema.ts';
+import { MeshShaderCode } from '../shader-code.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 
 export const TextureMeshSchema = {
     ...BaseSchema,

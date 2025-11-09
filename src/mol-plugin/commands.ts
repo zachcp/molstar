@@ -6,16 +6,16 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Camera } from '../mol-canvas3d/camera';
-import { PluginCommand } from './command';
-import { StateTransform, State, StateAction } from '../mol-state';
-import { Canvas3DProps } from '../mol-canvas3d/canvas3d';
-import { PluginLayoutStateProps } from './layout';
-import { Structure, StructureElement } from '../mol-model/structure';
-import { PluginState } from './state';
-import { PluginToast } from './util/toast';
-import { Vec3 } from '../mol-math/linear-algebra';
-import { PluginStateSnapshotManager } from '../mol-plugin-state/manager/snapshots';
+import type { Camera } from '../mol-canvas3d/camera.ts';
+import { PluginCommand } from './command.ts';
+import type { StateTransform, State, StateAction } from '../mol-state/index.ts';
+import type { Canvas3DProps } from '../mol-canvas3d/canvas3d.ts';
+import type { PluginLayoutStateProps } from './layout.ts';
+import type { Structure, StructureElement } from '../mol-model/structure.ts';
+import type { PluginState } from './state.ts';
+import type { PluginToast } from './util/toast.ts';
+import type { Vec3 } from '../mol-math/linear-algebra.ts';
+import type { PluginStateSnapshotManager } from '../mol-plugin-state/manager/snapshots.ts';
 
 export const PluginCommands = {
     State: {

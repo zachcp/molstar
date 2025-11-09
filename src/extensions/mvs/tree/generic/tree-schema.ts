@@ -4,8 +4,8 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { mapObjectMap } from '../../../../mol-util/object';
-import { AllRequired, ParamsSchema, ValuesFor } from './params-schema';
+import { mapObjectMap } from '../../../../mol-util/object.ts';
+import { AllRequired, type ParamsSchema, type ValuesFor } from './params-schema.ts';
 
 /** Type of "custom" of a tree node (key-value storage with arbitrary JSONable values) */
 export type CustomProps = Partial<Record<string, any>>

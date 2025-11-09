@@ -5,18 +5,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { AssetManager } from '../../mol-util/assets';
-import { Canvas3D, Canvas3DProps, Canvas3DContext } from '../../mol-canvas3d/canvas3d';
-import { resizeCanvas } from '../../mol-canvas3d/util';
-import { parseSdf as _parseSdf, SdfFile } from '../../mol-io/reader/sdf/parser';
-import { Structure } from '../../mol-model/structure';
-import { trajectoryFromSdf } from '../../mol-model-formats/structure/sdf';
-import { ColorTheme } from '../../mol-theme/color';
-import { SizeTheme } from '../../mol-theme/size';
-import { RepresentationContext } from '../../mol-repr/representation';
-import { BallAndStickRepresentationProvider } from '../../mol-repr/structure/representation/ball-and-stick';
-import { StructureRepresentationProvider } from '../../mol-repr/structure/representation';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { AssetManager } from '../../mol-util/assets.ts';
+import { Canvas3D, type Canvas3DProps, Canvas3DContext } from '../../mol-canvas3d/canvas3d.ts';
+import { resizeCanvas } from '../../mol-canvas3d/util.ts';
+import { parseSdf as _parseSdf, type SdfFile } from '../../mol-io/reader/sdf/parser.ts';
+import { Structure } from '../../mol-model/structure.ts';
+import { trajectoryFromSdf } from '../../mol-model-formats/structure/sdf.ts';
+import { ColorTheme } from '../../mol-theme/color.ts';
+import { SizeTheme } from '../../mol-theme/size.ts';
+import type { RepresentationContext } from '../../mol-repr/representation.ts';
+import { BallAndStickRepresentationProvider } from '../../mol-repr/structure/representation/ball-and-stick.ts';
+import type { StructureRepresentationProvider } from '../../mol-repr/structure/representation.ts';
+import type { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
 async function downloadPubChemSdf(cid: number) {
     const root = 'https://pubchem.ncbi.nlm.nih.gov/rest';

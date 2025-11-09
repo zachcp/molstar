@@ -4,24 +4,24 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color, ColorMap } from '../../mol-util/color';
-import { StructureElement, Unit, Bond, ElementIndex } from '../../mol-model/structure';
-import { Location } from '../../mol-model/location';
-import type { ColorTheme } from '../color';
-import { SecondaryStructureType, MoleculeType } from '../../mol-model/structure/model/types';
-import { getElementMoleculeType } from '../../mol-model/structure/util';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../theme';
-import { TableLegend } from '../../mol-util/legend';
-import { SecondaryStructureProvider, SecondaryStructureValue } from '../../mol-model-props/computed/secondary-structure';
-import { getAdjustedColorMap } from '../../mol-util/color/color';
-import { getColorMapParams } from '../../mol-util/color/params';
-import { CustomProperty } from '../../mol-model-props/common/custom-property';
-import { hash2 } from '../../mol-data/util';
-import { ColorThemeCategory } from './categories';
+import { Color, ColorMap } from '../../mol-util/color/index.ts';
+import { StructureElement, Unit, Bond, type ElementIndex } from '../../mol-model/structure.ts';
+import type { Location } from '../../mol-model/location.ts';
+import type { ColorTheme } from '../color.ts';
+import { SecondaryStructureType, MoleculeType } from '../../mol-model/structure/model/types.ts';
+import { getElementMoleculeType } from '../../mol-model/structure/util.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { ThemeDataContext } from '../theme.ts';
+import { TableLegend } from '../../mol-util/legend.ts';
+import { SecondaryStructureProvider, type SecondaryStructureValue } from '../../mol-model-props/computed/secondary-structure.ts';
+import { getAdjustedColorMap } from '../../mol-util/color/color.ts';
+import { getColorMapParams } from '../../mol-util/color/params.ts';
+import type { CustomProperty } from '../../mol-model-props/common/custom-property.ts';
+import { hash2 } from '../../mol-data/util.ts';
+import { ColorThemeCategory } from './categories.ts';
 
 // from Jmol http://jmol.sourceforge.net/jscolors/ (shapely)
-export const SecondaryStructureColors = ColorMap({
+export const SecondaryStructureColors: ColorMap<any> = ColorMap({
     'alphaHelix': 0xFF0080,
     'threeTenHelix': 0xA00080,
     'piHelix': 0x600080,
@@ -41,7 +41,7 @@ export type SecondaryStructureColors = typeof SecondaryStructureColors
 const DefaultSecondaryStructureColor = Color(0x808080);
 const Description = 'Assigns a color based on the type of secondary structure and basic molecule type.';
 
-export const SecondaryStructureColorThemeParams = {
+export const SecondaryStructureColorThemeParams: PD.Params = {
     saturation: PD.Numeric(-1, { min: -6, max: 6, step: 0.1 }),
     lightness: PD.Numeric(0, { min: -6, max: 6, step: 0.1 }),
     colors: PD.MappedStatic('default', {

@@ -5,24 +5,23 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column, Table } from '../../../mol-data/db';
-import { Interval, Segmentation } from '../../../mol-data/int';
-import { toDatabase } from '../../../mol-io/reader/cif/schema';
-import { SymmetryOperator } from '../../../mol-math/geometry';
-import { Mat4, Vec3 } from '../../../mol-math/linear-algebra';
-import { ChainIndex, ElementIndex } from '../../../mol-model/structure';
-import { AtomSiteOperatorMappingSchema } from '../../../mol-model/structure/export/categories/atom_site_operator_mapping';
-import { Model } from '../../../mol-model/structure/model/model';
-import { AtomicConformation, AtomicData, AtomicHierarchy, AtomicSegments, AtomsSchema, ChainsSchema, ResiduesSchema } from '../../../mol-model/structure/model/properties/atomic';
-import { Entities } from '../../../mol-model/structure/model/properties/common';
-import { getAtomicDerivedData } from '../../../mol-model/structure/model/properties/utils/atomic-derived';
-import { getAtomicIndex } from '../../../mol-model/structure/model/properties/utils/atomic-index';
-import { ElementSymbol } from '../../../mol-model/structure/model/types';
-import { range } from '../../../mol-util/array';
-import { UUID } from '../../../mol-util/uuid';
-import { ModelFormat } from '../../format';
-import { MmcifFormat } from '../mmcif';
-import { AtomSite } from './schema';
+import { Column, Table } from '../../../mol-data/db.ts';
+import { Interval, Segmentation } from '../../../mol-data/int.ts';
+import { toDatabase } from '../../../mol-io/reader/cif/schema.ts';
+import { SymmetryOperator } from '../../../mol-math/geometry.ts';
+import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import type { ChainIndex, ElementIndex } from '../../../mol-model/structure.ts';
+import { AtomSiteOperatorMappingSchema } from '../../../mol-model/structure/export/categories/atom_site_operator_mapping.ts';
+import type { Model } from '../../../mol-model/structure/model/model.ts';
+import { type AtomicConformation, type AtomicData, type AtomicHierarchy, type AtomicSegments, AtomsSchema, ChainsSchema, ResiduesSchema } from '../../../mol-model/structure/model/properties/atomic.ts';
+import type { Entities } from '../../../mol-model/structure/model/properties/common.ts';
+import { getAtomicDerivedData } from '../../../mol-model/structure/model/properties/utils/atomic-derived.ts';
+import { getAtomicIndex } from '../../../mol-model/structure/model/properties/utils/atomic-index.ts';
+import { ElementSymbol } from '../../../mol-model/structure/model/types.ts';
+import { UUID } from '../../../mol-util/uuid.ts';
+import type { ModelFormat } from '../../format.ts';
+import { MmcifFormat } from '../mmcif.ts';
+import type { AtomSite } from './schema.ts';
 
 function findHierarchyOffsets(atom_site: AtomSite) {
     if (atom_site._rowCount === 0) return { residues: [], chains: [] };
@@ -79,29 +78,7 @@ function createHierarchyData(atom_site: AtomSite, sourceIndex: Column<number>, o
     Table.columnToArray(residues, 'label_seq_id', Int32Array);
     Table.columnToArray(residues, 'auth_seq_id', Int32Array);
 
-    const residueSourceIndex = getResidueSourceIndex(sourceIndex, offsets.residues.length, offsets.residues);
-
-    return { atoms, residues, chains, atomSourceIndex: sourceIndex, residueSourceIndex };
-}
-
-function getResidueSourceIndex(atomSourceIndex: Column<number>, nResidues: number, residueOffsets: ArrayLike<number>): Column<number> {
-    const residueSourceIndex = new Uint32Array(nResidues); // Source index of the first atom of each residue
-    for (let iRes = 0; iRes < nResidues; iRes++) {
-        const fromAtom = residueOffsets[iRes];
-        const toAtom = (iRes + 1 < nResidues) ? residueOffsets[iRes + 1] : atomSourceIndex.rowCount;
-        let firstSrcIdx = atomSourceIndex.value(fromAtom);
-        for (let iAtom = fromAtom + 1; iAtom < toAtom; iAtom++) {
-            const srcIdx = atomSourceIndex.value(iAtom);
-            if (srcIdx < firstSrcIdx) firstSrcIdx = srcIdx;
-        }
-        residueSourceIndex[iRes] = firstSrcIdx;
-    }
-    const sortedResidues = range(nResidues).sort((ia, ib) => residueSourceIndex[ia] - residueSourceIndex[ib]);
-    // Reusing `residueSourceIndex` array for source index of the residue:
-    for (let i = 0; i < nResidues; i++) {
-        residueSourceIndex[sortedResidues[i]] = i;
-    }
-    return Column.ofIntArray(residueSourceIndex);
+    return { atoms, residues, chains, atomSourceIndex: sourceIndex };
 }
 
 function getConformation(atom_site: AtomSite): AtomicConformation {

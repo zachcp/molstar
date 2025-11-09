@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 
 export function makeDir(path: string, root?: string): boolean {
     const dirs = path.split(/\/|\\/g),

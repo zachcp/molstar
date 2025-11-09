@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Loci } from '../mol-model/loci';
-import { StructureElement, Structure } from '../mol-model/structure';
-import { Script } from '../mol-script/script';
-import { BitFlags } from '../mol-util/bit-flags';
+import { Loci } from '../mol-model/loci.ts';
+import { StructureElement, type Structure } from '../mol-model/structure.ts';
+import { Script } from '../mol-script/script.ts';
+import { BitFlags } from '../mol-util/bit-flags.ts';
 
 export { Clipping };
 
@@ -86,7 +86,7 @@ namespace Clipping {
         }
     }
 
-    export function areEqual(cA: Clipping, cB: Clipping) {
+    export function areEqual(cA: Clipping, cB: Clipping): boolean {
         if (cA.layers.length !== cB.layers.length) return false;
         for (let i = 0, il = cA.layers.length; i < il; ++i) {
             if (cA.layers[i].groups !== cB.layers[i].groups) return false;
@@ -96,7 +96,7 @@ namespace Clipping {
     }
 
     /** Check if layers empty */
-    export function isEmpty(clipping: Clipping) {
+    export function isEmpty(clipping: Clipping): boolean {
         return clipping.layers.length === 0;
     }
 
@@ -191,7 +191,7 @@ namespace Clipping {
         return { kind: 'element-loci', layers };
     }
 
-    export function toBundle(clipping: Clipping<StructureElement.Loci>) {
+    export function toBundle(clipping: Clipping<StructureElement.Loci>): { kind: 'element-loci', layers: BundleLayer[] } {
         const layers: BundleLayer[] = [];
         for (let i = 0, il = clipping.layers.length; i < il; ++i) {
             const { loci, groups } = clipping.layers[i];

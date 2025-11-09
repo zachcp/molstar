@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { IntTuple as Tuple } from '../tuple';
+import { IntTuple as Tuple } from '../tuple.ts';
 
 export const Empty = Tuple.Zero;
 export function ofRange(min: number, max: number) { return max < min ? Tuple.create(min, min) : Tuple.create(min, max + 1); }
@@ -21,7 +21,7 @@ export const size = Tuple.diff;
 export const hashCode = Tuple.hashCode;
 export const toString = Tuple.toString;
 
-export function has(int: Tuple, v: number) { return Tuple.fst(int) <= v && v < Tuple.snd(int); }
+export function has(int: Tuple, v: number): boolean { return Tuple.fst(int) <= v && v < Tuple.snd(int); }
 /** Returns the index of `x` in `set` or -1 if not found. */
 export function indexOf(int: Tuple, x: number) { const m = start(int); return x >= m && x < end(int) ? x - m : -1; }
 export function getAt(int: Tuple, i: number) { return Tuple.fst(int) + i; }

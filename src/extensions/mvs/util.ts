@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginContext } from '../../mol-plugin/context';
-import { StateObjectSelector, StateTree } from '../../mol-state';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { StateObjectSelector, StateTree } from '../../mol-state/index.ts';
 
 
 /**

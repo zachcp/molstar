@@ -5,17 +5,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Model, Structure, StructureSymmetry } from '../../mol-model/structure';
-import { stringToWords } from '../../mol-util/string';
-import { SpacegroupCell, Spacegroup } from '../../mol-math/geometry';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { RuntimeContext } from '../../mol-task';
-import { PluginContext } from '../../mol-plugin/context';
-import { Assembly, Symmetry } from '../../mol-model/structure/model/properties/symmetry';
-import { PluginStateObject as SO } from '../objects';
-import { ModelSymmetry } from '../../mol-model-formats/structure/property/symmetry';
-import { assertUnreachable } from '../../mol-util/type-helpers';
+import { type Model, Structure, StructureSymmetry } from '../../mol-model/structure.ts';
+import { stringToWords } from '../../mol-util/string.ts';
+import { SpacegroupCell, Spacegroup } from '../../mol-math/geometry.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import type { RuntimeContext } from '../../mol-task/index.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { type Assembly, Symmetry } from '../../mol-model/structure/model/properties/symmetry.ts';
+import { PluginStateObject as SO } from '../objects.ts';
+import { ModelSymmetry } from '../../mol-model-formats/structure/property/symmetry.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
 
 const CommonStructureParams = {
     dynamicBonds: PD.Optional(PD.Boolean(false, { description: 'Ensure bonds are recalculated upon model changes. Also enables calculation of inter-unit bonds in water molecules and ions.' })),

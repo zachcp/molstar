@@ -5,46 +5,46 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure, StructureElement } from '../../mol-model/structure';
-import { Volume } from '../../mol-model/volume';
-import { PluginContext } from '../../mol-plugin/context';
-import { VolumeRepresentationRegistry } from '../../mol-repr/volume/registry';
-import { StateTransformer, StateObject } from '../../mol-state';
-import { Task } from '../../mol-task';
-import { ColorTheme } from '../../mol-theme/color';
-import { SizeTheme } from '../../mol-theme/size';
-import { Theme } from '../../mol-theme/theme';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { PluginStateObject as SO, PluginStateTransform } from '../objects';
-import { ColorNames } from '../../mol-util/color/names';
-import { ShapeRepresentation } from '../../mol-repr/shape/representation';
-import { StructureUnitTransforms } from '../../mol-model/structure/structure/util/unit-transforms';
-import { unwindStructureAssembly, explodeStructure, spinStructure, SpinStructureParams, getSpinStructureAxisAndOrigin } from '../animation/helpers';
-import { Color } from '../../mol-util/color';
-import { Overpaint } from '../../mol-theme/overpaint';
-import { Transparency } from '../../mol-theme/transparency';
-import { BaseGeometry, hasColorSmoothingProp } from '../../mol-geo/geometry/base';
-import { Script } from '../../mol-script/script';
-import { UnitcellParams, UnitcellRepresentation, getUnitcellData } from '../../mol-repr/shape/model/unitcell';
-import { DistanceParams, DistanceRepresentation } from '../../mol-repr/shape/loci/distance';
-import { getDistanceDataFromStructureSelections, getLabelDataFromStructureSelections, getOrientationDataFromStructureSelections, getAngleDataFromStructureSelections, getDihedralDataFromStructureSelections, getPlaneDataFromStructureSelections } from './helpers';
-import { LabelParams, LabelRepresentation } from '../../mol-repr/shape/loci/label';
-import { OrientationRepresentation, OrientationParams } from '../../mol-repr/shape/loci/orientation';
-import { AngleParams, AngleRepresentation } from '../../mol-repr/shape/loci/angle';
-import { DihedralParams, DihedralRepresentation } from '../../mol-repr/shape/loci/dihedral';
-import { ModelSymmetry } from '../../mol-model-formats/structure/property/symmetry';
-import { Clipping } from '../../mol-theme/clipping';
-import { ObjectKeys } from '../../mol-util/type-helpers';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { getBoxMesh } from './shape';
-import { Shape } from '../../mol-model/shape';
-import { Box3D } from '../../mol-math/geometry';
-import { PlaneParams, PlaneRepresentation } from '../../mol-repr/shape/loci/plane';
-import { Substance } from '../../mol-theme/substance';
-import { Material } from '../../mol-util/material';
-import { lerp } from '../../mol-math/interpolate';
-import { MarkerAction, MarkerActions } from '../../mol-util/marker-action';
-import { Emissive } from '../../mol-theme/emissive';
+import { Structure, StructureElement } from '../../mol-model/structure.ts';
+import { Volume } from '../../mol-model/volume.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import type { VolumeRepresentationRegistry } from '../../mol-repr/volume/registry.ts';
+import { StateTransformer, StateObject } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
+import type { ColorTheme } from '../../mol-theme/color.ts';
+import type { SizeTheme } from '../../mol-theme/size.ts';
+import { Theme } from '../../mol-theme/theme.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { PluginStateObject as SO, PluginStateTransform } from '../objects.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { ShapeRepresentation } from '../../mol-repr/shape/representation.ts';
+import { StructureUnitTransforms } from '../../mol-model/structure/structure/util/unit-transforms.ts';
+import { unwindStructureAssembly, explodeStructure, spinStructure, SpinStructureParams, getSpinStructureAxisAndOrigin } from '../animation/helpers.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { Overpaint } from '../../mol-theme/overpaint.ts';
+import { Transparency } from '../../mol-theme/transparency.ts';
+import { BaseGeometry, hasColorSmoothingProp } from '../../mol-geo/geometry/base.ts';
+import { Script } from '../../mol-script/script.ts';
+import { UnitcellParams, UnitcellRepresentation, getUnitcellData } from '../../mol-repr/shape/model/unitcell.ts';
+import { DistanceParams, DistanceRepresentation } from '../../mol-repr/shape/loci/distance.ts';
+import { getDistanceDataFromStructureSelections, getLabelDataFromStructureSelections, getOrientationDataFromStructureSelections, getAngleDataFromStructureSelections, getDihedralDataFromStructureSelections, getPlaneDataFromStructureSelections } from './helpers.ts';
+import { LabelParams, LabelRepresentation } from '../../mol-repr/shape/loci/label.ts';
+import { OrientationRepresentation, OrientationParams } from '../../mol-repr/shape/loci/orientation.ts';
+import { AngleParams, AngleRepresentation } from '../../mol-repr/shape/loci/angle.ts';
+import { DihedralParams, DihedralRepresentation } from '../../mol-repr/shape/loci/dihedral.ts';
+import { ModelSymmetry } from '../../mol-model-formats/structure/property/symmetry.ts';
+import { Clipping } from '../../mol-theme/clipping.ts';
+import { ObjectKeys } from '../../mol-util/type-helpers.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { getBoxMesh } from './shape.ts';
+import { Shape } from '../../mol-model/shape.ts';
+import type { Box3D } from '../../mol-math/geometry.ts';
+import { PlaneParams, PlaneRepresentation } from '../../mol-repr/shape/loci/plane.ts';
+import { Substance } from '../../mol-theme/substance.ts';
+import { Material } from '../../mol-util/material.ts';
+import { lerp } from '../../mol-math/interpolate.ts';
+import { MarkerAction, MarkerActions } from '../../mol-util/marker-action.ts';
+import { Emissive } from '../../mol-theme/emissive.ts';
 
 export { StructureRepresentation3D };
 export { ExplodeStructureRepresentation3D };
@@ -64,7 +64,7 @@ export { ThemeStrengthRepresentation3D };
 export { VolumeRepresentation3D };
 
 type StructureRepresentation3D = typeof StructureRepresentation3D
-const StructureRepresentation3D = PluginStateTransform.BuiltIn({
+const StructureRepresentation3D: StateTransformer<SO.Molecule.Structure, SO.Molecule.Structure.Representation3D> = PluginStateTransform.BuiltIn({
     name: 'structure-representation-3d',
     display: '3D Representation',
     from: SO.Molecule.Structure,
@@ -198,7 +198,7 @@ const StructureRepresentation3D = PluginStateTransform.BuiltIn({
 });
 
 type UnwindStructureAssemblyRepresentation3D = typeof UnwindStructureAssemblyRepresentation3D
-const UnwindStructureAssemblyRepresentation3D = PluginStateTransform.BuiltIn({
+const UnwindStructureAssemblyRepresentation3D: StateTransformer<SO.Molecule.Structure.Representation3D, SO.Molecule.Structure.Representation3DState> = PluginStateTransform.BuiltIn({
     name: 'unwind-structure-assembly-representation-3d',
     display: 'Unwind Assembly 3D Representation',
     from: SO.Molecule.Structure.Representation3D,
@@ -234,7 +234,7 @@ const UnwindStructureAssemblyRepresentation3D = PluginStateTransform.BuiltIn({
 });
 
 type ExplodeStructureRepresentation3D = typeof ExplodeStructureRepresentation3D
-const ExplodeStructureRepresentation3D = PluginStateTransform.BuiltIn({
+const ExplodeStructureRepresentation3D: StateTransformer<SO.Molecule.Structure.Representation3D, SO.Molecule.Structure.Representation3DState> = PluginStateTransform.BuiltIn({
     name: 'explode-structure-representation-3d',
     display: 'Explode 3D Representation',
     from: SO.Molecule.Structure.Representation3D,
@@ -270,7 +270,7 @@ const ExplodeStructureRepresentation3D = PluginStateTransform.BuiltIn({
 });
 
 type SpinStructureRepresentation3D = typeof SpinStructureRepresentation3D
-const SpinStructureRepresentation3D = PluginStateTransform.BuiltIn({
+const SpinStructureRepresentation3D: StateTransformer<SO.Molecule.Structure.Representation3D, SO.Molecule.Structure.Representation3DState> = PluginStateTransform.BuiltIn({
     name: 'spin-structure-representation-3d',
     display: 'Spin 3D Representation',
     from: SO.Molecule.Structure.Representation3D,
@@ -313,7 +313,7 @@ const SpinStructureRepresentation3D = PluginStateTransform.BuiltIn({
 });
 
 type OverpaintStructureRepresentation3DFromScript = typeof OverpaintStructureRepresentation3DFromScript
-const OverpaintStructureRepresentation3DFromScript = PluginStateTransform.BuiltIn({
+const OverpaintStructureRepresentation3DFromScript: StateTransformer<SO.Molecule.Structure.Representation3D, SO.Molecule.Structure.Representation3DState> = PluginStateTransform.BuiltIn({
     name: 'overpaint-structure-representation-3d-from-script',
     display: 'Overpaint 3D Representation',
     from: SO.Molecule.Structure.Representation3D,
@@ -370,7 +370,7 @@ const OverpaintStructureRepresentation3DFromScript = PluginStateTransform.BuiltI
 });
 
 type OverpaintStructureRepresentation3DFromBundle = typeof OverpaintStructureRepresentation3DFromBundle
-const OverpaintStructureRepresentation3DFromBundle = PluginStateTransform.BuiltIn({
+const OverpaintStructureRepresentation3DFromBundle: StateTransformer<SO.Molecule.Structure.Representation3D, SO.Molecule.Structure.Representation3DState> = PluginStateTransform.BuiltIn({
     name: 'overpaint-structure-representation-3d-from-bundle',
     display: 'Overpaint 3D Representation',
     from: SO.Molecule.Structure.Representation3D,
@@ -428,7 +428,7 @@ const OverpaintStructureRepresentation3DFromBundle = PluginStateTransform.BuiltI
 });
 
 type TransparencyStructureRepresentation3DFromScript = typeof TransparencyStructureRepresentation3DFromScript
-const TransparencyStructureRepresentation3DFromScript = PluginStateTransform.BuiltIn({
+const TransparencyStructureRepresentation3DFromScript: StateTransformer<SO.Molecule.Structure.Representation3D, SO.Molecule.Structure.Representation3DState> = PluginStateTransform.BuiltIn({
     name: 'transparency-structure-representation-3d-from-script',
     display: 'Transparency 3D Representation',
     from: SO.Molecule.Structure.Representation3D,
@@ -483,7 +483,7 @@ const TransparencyStructureRepresentation3DFromScript = PluginStateTransform.Bui
 });
 
 type TransparencyStructureRepresentation3DFromBundle = typeof TransparencyStructureRepresentation3DFromBundle
-const TransparencyStructureRepresentation3DFromBundle = PluginStateTransform.BuiltIn({
+const TransparencyStructureRepresentation3DFromBundle: StateTransformer<SO.Molecule.Structure.Representation3D, SO.Molecule.Structure.Representation3DState> = PluginStateTransform.BuiltIn({
     name: 'transparency-structure-representation-3d-from-bundle',
     display: 'Transparency 3D Representation',
     from: SO.Molecule.Structure.Representation3D,
@@ -540,7 +540,7 @@ const TransparencyStructureRepresentation3DFromBundle = PluginStateTransform.Bui
 
 
 type EmissiveStructureRepresentation3DFromScript = typeof EmissiveStructureRepresentation3DFromScript
-const EmissiveStructureRepresentation3DFromScript = PluginStateTransform.BuiltIn({
+const EmissiveStructureRepresentation3DFromScript: StateTransformer<SO.Molecule.Structure.Representation3D, SO.Molecule.Structure.Representation3DState> = PluginStateTransform.BuiltIn({
     name: 'emissive-structure-representation-3d-from-script',
     display: 'Emissive 3D Representation',
     from: SO.Molecule.Structure.Representation3D,
@@ -595,7 +595,7 @@ const EmissiveStructureRepresentation3DFromScript = PluginStateTransform.BuiltIn
 });
 
 type EmissiveStructureRepresentation3DFromBundle = typeof EmissiveStructureRepresentation3DFromBundle
-const EmissiveStructureRepresentation3DFromBundle = PluginStateTransform.BuiltIn({
+const EmissiveStructureRepresentation3DFromBundle: StateTransformer<SO.Molecule.Structure.Representation3D, SO.Molecule.Structure.Representation3DState> = PluginStateTransform.BuiltIn({
     name: 'emissive-structure-representation-3d-from-bundle',
     display: 'Emissive 3D Representation',
     from: SO.Molecule.Structure.Representation3D,
@@ -651,7 +651,7 @@ const EmissiveStructureRepresentation3DFromBundle = PluginStateTransform.BuiltIn
 });
 
 type SubstanceStructureRepresentation3DFromScript = typeof SubstanceStructureRepresentation3DFromScript
-const SubstanceStructureRepresentation3DFromScript = PluginStateTransform.BuiltIn({
+const SubstanceStructureRepresentation3DFromScript: StateTransformer<SO.Molecule.Structure.Representation3D, SO.Molecule.Structure.Representation3DState> = PluginStateTransform.BuiltIn({
     name: 'substance-structure-representation-3d-from-script',
     display: 'Substance 3D Representation',
     from: SO.Molecule.Structure.Representation3D,
@@ -708,7 +708,7 @@ const SubstanceStructureRepresentation3DFromScript = PluginStateTransform.BuiltI
 });
 
 type SubstanceStructureRepresentation3DFromBundle = typeof SubstanceStructureRepresentation3DFromBundle
-const SubstanceStructureRepresentation3DFromBundle = PluginStateTransform.BuiltIn({
+const SubstanceStructureRepresentation3DFromBundle: StateTransformer<SO.Molecule.Structure.Representation3D, SO.Molecule.Structure.Representation3DState> = PluginStateTransform.BuiltIn({
     name: 'substance-structure-representation-3d-from-bundle',
     display: 'Substance 3D Representation',
     from: SO.Molecule.Structure.Representation3D,
@@ -766,7 +766,7 @@ const SubstanceStructureRepresentation3DFromBundle = PluginStateTransform.BuiltI
 });
 
 type ClippingStructureRepresentation3DFromScript = typeof ClippingStructureRepresentation3DFromScript
-const ClippingStructureRepresentation3DFromScript = PluginStateTransform.BuiltIn({
+const ClippingStructureRepresentation3DFromScript: StateTransformer<SO.Molecule.Structure.Representation3D, SO.Molecule.Structure.Representation3DState> = PluginStateTransform.BuiltIn({
     name: 'clipping-structure-representation-3d-from-script',
     display: 'Clipping 3D Representation',
     from: SO.Molecule.Structure.Representation3D,
@@ -814,7 +814,7 @@ const ClippingStructureRepresentation3DFromScript = PluginStateTransform.BuiltIn
 });
 
 type ClippingStructureRepresentation3DFromBundle = typeof ClippingStructureRepresentation3DFromBundle
-const ClippingStructureRepresentation3DFromBundle = PluginStateTransform.BuiltIn({
+const ClippingStructureRepresentation3DFromBundle: StateTransformer<SO.Molecule.Structure.Representation3D, SO.Molecule.Structure.Representation3DState> = PluginStateTransform.BuiltIn({
     name: 'clipping-structure-representation-3d-from-bundle',
     display: 'Clipping 3D Representation',
     from: SO.Molecule.Structure.Representation3D,
@@ -863,7 +863,7 @@ const ClippingStructureRepresentation3DFromBundle = PluginStateTransform.BuiltIn
 });
 
 type ThemeStrengthRepresentation3D = typeof ThemeStrengthRepresentation3D
-const ThemeStrengthRepresentation3D = PluginStateTransform.BuiltIn({
+const ThemeStrengthRepresentation3D: StateTransformer<SO.Molecule.Structure.Representation3D, SO.Molecule.Structure.Representation3DState> = PluginStateTransform.BuiltIn({
     name: 'theme-strength-representation-3d',
     display: 'Theme Strength 3D Representation',
     from: SO.Molecule.Structure.Representation3D,
@@ -959,7 +959,7 @@ export namespace VolumeRepresentation3DHelpers {
     }
 }
 type VolumeRepresentation3D = typeof VolumeRepresentation3D
-const VolumeRepresentation3D = PluginStateTransform.BuiltIn({
+const VolumeRepresentation3D: StateTransformer<SO.Volume.Data, SO.Volume.Representation3D> = PluginStateTransform.BuiltIn({
     name: 'volume-representation-3d',
     display: '3D Representation',
     from: SO.Volume.Data,
@@ -1043,7 +1043,7 @@ const VolumeRepresentation3D = PluginStateTransform.BuiltIn({
 
 export { ShapeRepresentation3D };
 type ShapeRepresentation3D = typeof ShapeRepresentation3D
-const ShapeRepresentation3D = PluginStateTransform.BuiltIn({
+const ShapeRepresentation3D: StateTransformer<SO.Shape.Provider, SO.Shape.Representation3D> = PluginStateTransform.BuiltIn({
     name: 'shape-representation-3d',
     display: '3D Representation',
     from: SO.Shape.Provider,
@@ -1075,7 +1075,7 @@ const ShapeRepresentation3D = PluginStateTransform.BuiltIn({
 
 export { ModelUnitcell3D };
 type ModelUnitcell3D = typeof ModelUnitcell3D
-const ModelUnitcell3D = PluginStateTransform.BuiltIn({
+const ModelUnitcell3D: StateTransformer<SO.Molecule.Model, SO.Shape.Representation3D> = PluginStateTransform.BuiltIn({
     name: 'model-unitcell-3d',
     display: 'Model Unit Cell',
     from: SO.Molecule.Model,
@@ -1113,7 +1113,7 @@ const ModelUnitcell3D = PluginStateTransform.BuiltIn({
 
 export { StructureBoundingBox3D };
 type StructureBoundingBox3D = typeof StructureBoundingBox3D
-const StructureBoundingBox3D = PluginStateTransform.BuiltIn({
+const StructureBoundingBox3D: StateTransformer<SO.Molecule.Structure, SO.Shape.Representation3D> = PluginStateTransform.BuiltIn({
     name: 'structure-bounding-box-3d',
     display: 'Bounding Box',
     from: SO.Molecule.Structure,
@@ -1148,7 +1148,7 @@ const StructureBoundingBox3D = PluginStateTransform.BuiltIn({
 
 export { StructureSelectionsDistance3D };
 type StructureSelectionsDistance3D = typeof StructureSelectionsDistance3D
-const StructureSelectionsDistance3D = PluginStateTransform.BuiltIn({
+const StructureSelectionsDistance3D: StateTransformer<SO.Molecule.Structure.Selections, SO.Shape.Representation3D> = PluginStateTransform.BuiltIn({
     name: 'structure-selections-distance-3d',
     display: '3D Distance',
     from: SO.Molecule.Structure.Selections,
@@ -1181,7 +1181,7 @@ const StructureSelectionsDistance3D = PluginStateTransform.BuiltIn({
 
 export { StructureSelectionsAngle3D };
 type StructureSelectionsAngle3D = typeof StructureSelectionsAngle3D
-const StructureSelectionsAngle3D = PluginStateTransform.BuiltIn({
+const StructureSelectionsAngle3D: StateTransformer<SO.Molecule.Structure.Selections, SO.Shape.Representation3D> = PluginStateTransform.BuiltIn({
     name: 'structure-selections-angle-3d',
     display: '3D Angle',
     from: SO.Molecule.Structure.Selections,
@@ -1214,7 +1214,7 @@ const StructureSelectionsAngle3D = PluginStateTransform.BuiltIn({
 
 export { StructureSelectionsDihedral3D };
 type StructureSelectionsDihedral3D = typeof StructureSelectionsDihedral3D
-const StructureSelectionsDihedral3D = PluginStateTransform.BuiltIn({
+const StructureSelectionsDihedral3D: StateTransformer<SO.Molecule.Structure.Selections, SO.Shape.Representation3D> = PluginStateTransform.BuiltIn({
     name: 'structure-selections-dihedral-3d',
     display: '3D Dihedral',
     from: SO.Molecule.Structure.Selections,
@@ -1247,7 +1247,7 @@ const StructureSelectionsDihedral3D = PluginStateTransform.BuiltIn({
 
 export { StructureSelectionsLabel3D };
 type StructureSelectionsLabel3D = typeof StructureSelectionsLabel3D
-const StructureSelectionsLabel3D = PluginStateTransform.BuiltIn({
+const StructureSelectionsLabel3D: StateTransformer<SO.Molecule.Structure.Selections, SO.Shape.Representation3D> = PluginStateTransform.BuiltIn({
     name: 'structure-selections-label-3d',
     display: '3D Label',
     from: SO.Molecule.Structure.Selections,
@@ -1290,7 +1290,7 @@ const StructureSelectionsLabel3D = PluginStateTransform.BuiltIn({
 
 export { StructureSelectionsOrientation3D };
 type StructureSelectionsOrientation3D = typeof StructureSelectionsOrientation3D
-const StructureSelectionsOrientation3D = PluginStateTransform.BuiltIn({
+const StructureSelectionsOrientation3D: StateTransformer<SO.Molecule.Structure.Selections, SO.Shape.Representation3D> = PluginStateTransform.BuiltIn({
     name: 'structure-selections-orientation-3d',
     display: '3D Orientation',
     from: SO.Molecule.Structure.Selections,
@@ -1323,7 +1323,7 @@ const StructureSelectionsOrientation3D = PluginStateTransform.BuiltIn({
 
 export { StructureSelectionsPlane3D };
 type StructureSelectionsPlane3D = typeof StructureSelectionsPlane3D
-const StructureSelectionsPlane3D = PluginStateTransform.BuiltIn({
+const StructureSelectionsPlane3D: StateTransformer<SO.Molecule.Structure.Selections, SO.Shape.Representation3D> = PluginStateTransform.BuiltIn({
     name: 'structure-selections-plane-3d',
     display: '3D Plane',
     from: SO.Molecule.Structure.Selections,

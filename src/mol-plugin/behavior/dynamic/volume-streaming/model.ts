@@ -5,9 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginStateObject } from '../../../../mol-plugin-state/objects';
-import { Volume } from '../../../../mol-model/volume';
-import { Structure } from '../../../../mol-model/structure';
+import { PluginStateObject } from '../../../../mol-plugin-state/objects.ts';
+import type { Volume } from '../../../../mol-model/volume.ts';
+import type { Structure } from '../../../../mol-model/structure.ts';
 
 export class VolumeServerInfo extends PluginStateObject.Create<VolumeServerInfo.Data>({ name: 'Volume Streaming', typeClass: 'Object' }) { }
 

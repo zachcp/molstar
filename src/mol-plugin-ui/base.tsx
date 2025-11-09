@@ -6,16 +6,15 @@
  */
 
 import * as React from 'react';
-import { Observable, Subscription } from 'rxjs';
-import { PluginUIContext } from './context';
-import { Button, ColorAccent } from './controls/common';
-import { Icon, ArrowRightSvg, ArrowDropDownSvg } from './controls/icons';
+import type { Observable, Subscription } from 'rxjs';
+import type { PluginUIContext } from './context.ts';
+import { Button, type ColorAccent } from './controls/common.tsx';
+import { Icon, ArrowRightSvg, ArrowDropDownSvg } from './controls/icons.tsx';
 
-export const PluginReactContext = React.createContext(void 0 as any as PluginUIContext);
+export const PluginReactContext    = React.createContext(void 0 as any as PluginUIContext);
 
 export abstract class PluginUIComponent<P extends {} = {}, S = {}, SS = {}> extends React.Component<P & { children?: any }, S, SS> {
-    static contextType = PluginReactContext;
-    readonly plugin: PluginUIContext;
+    static override contextType = PluginReactContext;    readonly plugin: PluginUIContext;
 
     private subs: Subscription[] | undefined = void 0;
 
@@ -24,8 +23,7 @@ export abstract class PluginUIComponent<P extends {} = {}, S = {}, SS = {}> exte
         this.subs.push(obs.subscribe(action));
     }
 
-    componentWillUnmount() {
-        if (!this.subs) return;
+    override componentWillUnmount() {        if (!this.subs) return;
         for (const s of this.subs) s.unsubscribe();
         this.subs = void 0;
     }
@@ -40,8 +38,7 @@ export abstract class PluginUIComponent<P extends {} = {}, S = {}, SS = {}> exte
 }
 
 export abstract class PurePluginUIComponent<P = {}, S = {}, SS = {}> extends React.PureComponent<P, S, SS> {
-    static contextType = PluginReactContext;
-    readonly plugin: PluginUIContext;
+    static override contextType = PluginReactContext;    readonly plugin: PluginUIContext;
 
     private subs: Subscription[] | undefined = void 0;
 
@@ -50,8 +47,7 @@ export abstract class PurePluginUIComponent<P = {}, S = {}, SS = {}> extends Rea
         this.subs.push(obs.subscribe(action));
     }
 
-    componentWillUnmount() {
-        if (!this.subs) return;
+    override componentWillUnmount() {        if (!this.subs) return;
         for (const s of this.subs) s.unsubscribe();
         this.subs = void 0;
     }
@@ -84,8 +80,7 @@ export abstract class CollapsableControls<P = {}, S = {}, SS = {}> extends Plugi
         this.setState({ isCollapsed: !this.state.isCollapsed } as (S & CollapsableState));
     };
 
-    componentDidUpdate(prevProps: P & CollapsableProps) {
-        if (this.props.initiallyCollapsed !== undefined && prevProps.initiallyCollapsed !== this.props.initiallyCollapsed) {
+    override componentDidUpdate(prevProps: P & CollapsableProps) {        if (this.props.initiallyCollapsed !== undefined && prevProps.initiallyCollapsed !== this.props.initiallyCollapsed) {
             this.setState({ isCollapsed: this.props.initiallyCollapsed as any });
         }
     }
@@ -93,8 +88,7 @@ export abstract class CollapsableControls<P = {}, S = {}, SS = {}> extends Plugi
     protected abstract defaultState(): (S & CollapsableState)
     protected abstract renderControls(): JSX.Element | null
 
-    render() {
-        if (this.state.isHidden) return null;
+    override render() {        if (this.state.isHidden) return null;
         const divid = this.state.header.toLowerCase().replace(/\s/g, '');
         const wrapClass = this.state.isCollapsed
             ? 'msp-transform-wrapper msp-transform-wrapper-collapsed'

@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column, ColumnHelpers } from '../../mol-data/db';
-import { CifBlock, CifCategory, CifField, CifFile } from '../../mol-io/reader/cif';
-import { ReaderResult } from '../../mol-io/reader/result';
-import { Task } from '../../mol-task';
-import { JSONCifCategory, JSONCifFile } from './model';
+import { Column, ColumnHelpers } from '../../mol-data/db.ts';
+import { CifBlock, type CifCategory, type CifField, CifFile } from '../../mol-io/reader/cif.ts';
+import { ReaderResult } from '../../mol-io/reader/result.ts';
+import { Task } from '../../mol-task/index.ts';
+import type { JSONCifCategory, JSONCifFile } from './model.ts';
 
 function Field(rows: Record<string, any>[], name: string): CifField {
     const str: CifField['str'] = row => {

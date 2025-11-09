@@ -4,25 +4,25 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column, Table } from '../../mol-data/db';
-import { Model, Symmetry } from '../../mol-model/structure/model';
-import { MoleculeType, BondType } from '../../mol-model/structure/model/types';
-import { RuntimeContext, Task } from '../../mol-task';
-import { createModels } from './basic/parser';
-import { BasicSchema, createBasic } from './basic/schema';
-import { ComponentBuilder } from './common/component';
-import { EntityBuilder } from './common/entity';
-import { ModelFormat } from '../format';
-import { CifCore_Database } from '../../mol-io/reader/cif/schema/cif-core';
-import { CifFrame, CIF } from '../../mol-io/reader/cif';
-import { Spacegroup, SpacegroupCell } from '../../mol-math/geometry';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { ModelSymmetry } from './property/symmetry';
-import { IndexPairBonds } from './property/bonds/index-pair';
-import { AtomSiteAnisotrop } from './property/anisotropic';
-import { guessElementSymbolString } from './util';
-import { Trajectory } from '../../mol-model/structure';
-import { cantorPairing } from '../../mol-data/util';
+import { Column, Table } from '../../mol-data/db.ts';
+import type { Model, Symmetry } from '../../mol-model/structure/model.ts';
+import { MoleculeType, BondType } from '../../mol-model/structure/model/types.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
+import { createModels } from './basic/parser.ts';
+import { BasicSchema, createBasic } from './basic/schema.ts';
+import { ComponentBuilder } from './common/component.ts';
+import { EntityBuilder } from './common/entity.ts';
+import type { ModelFormat } from '../format.ts';
+import type { CifCore_Database } from '../../mol-io/reader/cif/schema/cif-core.ts';
+import { type CifFrame, CIF } from '../../mol-io/reader/cif.ts';
+import { Spacegroup, SpacegroupCell } from '../../mol-math/geometry.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { ModelSymmetry } from './property/symmetry.ts';
+import { IndexPairBonds } from './property/bonds/index-pair.ts';
+import { AtomSiteAnisotrop } from './property/anisotropic.ts';
+import { guessElementSymbolString } from './util.ts';
+import type { Trajectory } from '../../mol-model/structure.ts';
+import { cantorPairing } from '../../mol-data/util.ts';
 
 function getSpacegroupNameOrNumber(space_group: CifCore_Database['space_group']) {
     const groupNumber = space_group.it_number.value(0);

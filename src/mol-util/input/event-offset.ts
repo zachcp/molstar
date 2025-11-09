@@ -9,11 +9,11 @@
  * copyright (c) 2014 Matt DesLauriers. MIT License
  */
 
-import { Vec2 } from '../../mol-math/linear-algebra';
+import type { Vec2 } from '../../mol-math/linear-algebra.ts';
 
 const rootPosition = { left: 0, top: 0 };
 
-export function eventOffset(out: Vec2, ev: MouseEvent | Touch, target: Element) {
+export function eventOffset(out: Vec2, ev: MouseEvent | Touch, target: Element): Vec2 {
     const cx = ev.clientX || 0;
     const cy = ev.clientY || 0;
     const rect = getBoundingClientOffset(target);

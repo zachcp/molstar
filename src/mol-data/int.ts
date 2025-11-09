@@ -4,13 +4,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Interval } from './int/interval';
-import { OrderedSet } from './int/ordered-set';
-import { Segmentation } from './int/segmentation';
-import { SortedArray } from './int/sorted-array';
-import { IntTuple as Tuple } from './int/tuple';
-import { LinkedIndex } from './int/linked-index';
-import { IntMap } from './int/map';
-import { Iterator } from './iterator';
+import { Interval } from './int/interval.ts';
+import { OrderedSet } from './int/ordered-set.ts';
+import { Segmentation } from './int/segmentation.ts';
+import { SortedArray } from './int/sorted-array.ts';
+import { IntTuple as Tuple } from './int/tuple.ts';
+import { LinkedIndex } from './int/linked-index.ts';
+import { IntMap } from './int/map.ts';
+import { Iterator } from './iterator.ts';
 
 export { Interval, OrderedSet, Segmentation, SortedArray, Tuple, LinkedIndex, IntMap, Iterator };

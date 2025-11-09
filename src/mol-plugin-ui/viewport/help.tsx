@@ -5,14 +5,14 @@
  */
 
 import * as React from 'react';
-import { Binding } from '../../mol-util/binding';
-import { PluginUIComponent } from '../base';
-import { StateTransformer, StateSelection, State } from '../../mol-state';
-import { SelectLoci } from '../../mol-plugin/behavior/dynamic/representation';
-import { FocusLoci } from '../../mol-plugin/behavior/dynamic/representation';
-import { Icon, ArrowDropDownSvg, ArrowRightSvg, CameraSvg } from '../controls/icons';
-import { Button } from '../controls/common';
-import { memoizeLatest } from '../../mol-util/memoize';
+import { Binding } from '../../mol-util/binding.ts';
+import { PluginUIComponent } from '../base.tsx';
+import { type StateTransformer, StateSelection, type State } from '../../mol-state/index.ts';
+import { SelectLoci } from '../../mol-plugin/behavior/dynamic/representation.ts';
+import { FocusLoci } from '../../mol-plugin/behavior/dynamic/representation.ts';
+import { Icon, ArrowDropDownSvg, ArrowRightSvg, CameraSvg } from '../controls/icons.tsx';
+import { Button } from '../controls/common.tsx';
+import { memoizeLatest } from '../../mol-util/memoize.ts';
 
 function getBindingsList(bindings: { [k: string]: Binding }) {
     return Object.keys(bindings).map(k => [k, bindings[k]] as [string, Binding]).filter(b => Binding.isBinding(b[1]));
@@ -33,29 +33,25 @@ export class BindingsHelp extends React.PureComponent<{ bindings: { [k: string]:
         </>;
     }
 
-    render() {
-        return <HelpText>{this.getBindingComponents()}</HelpText>;
+    override render() {        return <HelpText>{this.getBindingComponents()}</HelpText>;
     }
 }
 
 export class HelpText extends React.PureComponent<{ children?: any }> {
-    render() {
-        return <div className='msp-help-text'>
+    override render() {        return <div className='msp-help-text'>
             <div>{this.props.children}</div>
         </div>;
     }
 }
 
 export class HelpGroup extends React.PureComponent<{ children?: any, header: string, initiallyExpanded?: boolean }, { isExpanded: boolean }> {
-    state = {
-        header: this.props.header,
+    override state = {        header: this.props.header,
         isExpanded: !!this.props.initiallyExpanded
     };
 
     toggleExpanded = () => this.setState({ isExpanded: !this.state.isExpanded });
 
-    render() {
-        return <div className='msp-control-group-wrapper'>
+    override render() {        return <div className='msp-control-group-wrapper'>
             <div className='msp-control-group-header'>
                 <Button onClick={this.toggleExpanded}>
                     <Icon svg={this.state.isExpanded ? ArrowDropDownSvg : ArrowRightSvg} />
@@ -74,8 +70,7 @@ function HelpSection(props: { header: string }) {
 }
 
 export class ViewportHelpContent extends PluginUIComponent<{ selectOnly?: boolean }> {
-    componentDidMount() {
-        this.subscribe(this.plugin.events.canvas3d.settingsUpdated, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.plugin.events.canvas3d.settingsUpdated, () => this.forceUpdate());
     }
 
     getInteractionBindings = memoizeLatest((cells: State.Cells) => {
@@ -92,8 +87,7 @@ export class ViewportHelpContent extends PluginUIComponent<{ selectOnly?: boolea
         return interactionBindings;
     });
 
-    render() {
-        const interactionBindings = this.getInteractionBindings(this.plugin.state.behaviors.cells);
+    override render() {        const interactionBindings = this.getInteractionBindings(this.plugin.state.behaviors.cells);
 
         return <>
             {(!this.props.selectOnly && this.plugin.canvas3d) && <HelpGroup key='trackball' header='Moving in 3D'>
@@ -107,8 +101,7 @@ export class ViewportHelpContent extends PluginUIComponent<{ selectOnly?: boolea
 }
 
 export class HelpContent extends PluginUIComponent {
-    componentDidMount() {
-        this.subscribe(this.plugin.events.canvas3d.settingsUpdated, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.plugin.events.canvas3d.settingsUpdated, () => this.forceUpdate());
     }
 
     private formatTriggers(binding: Binding) {
@@ -124,8 +117,7 @@ export class HelpContent extends PluginUIComponent {
         return this.formatTriggers(binding);
     }
 
-    render() {
-        const selectToggleTriggers = this.getTriggerFor(SelectLoci, 'clickSelectToggle');
+    override render() {        const selectToggleTriggers = this.getTriggerFor(SelectLoci, 'clickSelectToggle');
         const focusTriggers = this.getTriggerFor(FocusLoci, 'clickFocus');
 
         // TODO: interactive help, for example for density

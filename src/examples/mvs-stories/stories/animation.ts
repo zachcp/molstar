@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { MVSData_States } from '../../../extensions/mvs/mvs-data';
-import { createMVSBuilder, Structure as MVSStructure, Root } from '../../../extensions/mvs/tree/mvs/mvs-builder';
-import { MVSNodeParams } from '../../../extensions/mvs/tree/mvs/mvs-tree';
-import { ColorT } from '../../../extensions/mvs/tree/mvs/param-types';
-import { Mat4 } from '../../../mol-math/linear-algebra';
+import type { MVSData_States } from '../../../extensions/mvs/mvs-data.ts';
+import { createMVSBuilder, type Structure as MVSStructure, type Root } from '../../../extensions/mvs/tree/mvs/mvs-builder.ts';
+import type { MVSNodeParams } from '../../../extensions/mvs/tree/mvs/mvs-tree.ts';
+import type { ColorT } from '../../../extensions/mvs/tree/mvs/param-types.ts';
+import { Mat4 } from '../../../mol-math/linear-algebra.ts';
 
 const Colors = {
     '1cbs': '#4577B2' as ColorT,

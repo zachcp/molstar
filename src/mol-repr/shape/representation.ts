@@ -4,26 +4,26 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Geometry, GeometryUtils } from '../../mol-geo/geometry/geometry';
-import { Representation } from '../representation';
-import { Shape, ShapeGroup } from '../../mol-model/shape';
+import { Geometry, type GeometryUtils } from '../../mol-geo/geometry/geometry.ts';
+import { Representation } from '../representation.ts';
+import { Shape, ShapeGroup } from '../../mol-model/shape.ts';
 import { Subject } from 'rxjs';
-import { getNextMaterialId, createRenderObject, GraphicsRenderObject } from '../../mol-gl/render-object';
-import { Theme } from '../../mol-theme/theme';
-import { LocationIterator } from '../../mol-geo/util/location-iterator';
-import { LocationCallback, VisualUpdateState } from '../util';
-import { createMarkers } from '../../mol-geo/geometry/marker-data';
-import { MarkerAction, MarkerActions } from '../../mol-util/marker-action';
-import { ValueCell } from '../../mol-util';
-import { createColors } from '../../mol-geo/geometry/color-data';
-import { createSizes, SizeData } from '../../mol-geo/geometry/size-data';
-import { Loci, isEveryLoci, EmptyLoci } from '../../mol-model/loci';
-import { Interval, OrderedSet } from '../../mol-data/int';
-import { PickingId } from '../../mol-geo/geometry/picking';
-import { Visual } from '../visual';
-import { RuntimeContext, Task } from '../../mol-task';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { isDebugMode } from '../../mol-util/debug';
+import { getNextMaterialId, createRenderObject, type GraphicsRenderObject } from '../../mol-gl/render-object.ts';
+import { Theme } from '../../mol-theme/theme.ts';
+import type { LocationIterator } from '../../mol-geo/util/location-iterator.ts';
+import { type LocationCallback, VisualUpdateState } from '../util.ts';
+import { createMarkers } from '../../mol-geo/geometry/marker-data.ts';
+import { type MarkerAction, MarkerActions } from '../../mol-util/marker-action.ts';
+import { ValueCell } from '../../mol-util/index.ts';
+import { createColors } from '../../mol-geo/geometry/color-data.ts';
+import { createSizes, type SizeData } from '../../mol-geo/geometry/size-data.ts';
+import { type Loci, isEveryLoci, EmptyLoci } from '../../mol-model/loci.ts';
+import { Interval, OrderedSet } from '../../mol-data/int.ts';
+import { PickingId } from '../../mol-geo/geometry/picking.ts';
+import { Visual } from '../visual.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { isDebugMode } from '../../mol-util/debug.ts';
 
 export interface ShapeRepresentation<D, G extends Geometry, P extends Geometry.Params<G>> extends Representation<D, P> { }
 
@@ -244,7 +244,7 @@ export function ShapeRepresentation<D, G extends Geometry, P extends Geometry.Pa
                 cb(location, isSecondary);
             }
         },
-        mark(loci: Loci, action: MarkerAction) {
+        mark(loci: Loci, action: MarkerAction): boolean {
             if (!MarkerActions.is(_state.markerActions, action)) return false;
             if (ShapeGroup.isLoci(loci) || Shape.isLoci(loci)) {
                 if (loci.shape !== _shape) return false;

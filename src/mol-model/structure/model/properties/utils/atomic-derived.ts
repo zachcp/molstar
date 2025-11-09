@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { AtomicData, AtomNumber } from '../atomic';
-import { AtomicIndex, AtomicDerivedData, AtomicSegments } from '../atomic/hierarchy';
-import { ElementIndex, ResidueIndex } from '../../indexing';
-import { MoleculeType, getMoleculeType, getComponentType, PolymerType, getPolymerType, isPolymer, ElementSymbol } from '../../types';
-import { getAtomIdForAtomRole } from '../../../../../mol-model/structure/util';
-import { ChemicalComponentMap } from '../common';
-import { isProductionMode } from '../../../../../mol-util/debug';
-import { mmCIF_chemComp_schema } from '../../../../../mol-io/reader/cif/schema/mmcif-extras';
+import { type AtomicData, AtomNumber } from '../atomic.ts';
+import type { AtomicIndex, AtomicDerivedData, AtomicSegments } from '../atomic/hierarchy.ts';
+import type { ElementIndex, ResidueIndex } from '../../indexing.ts';
+import { type MoleculeType, getMoleculeType, getComponentType, type PolymerType, getPolymerType, isPolymer, ElementSymbol } from '../../types.ts';
+import { getAtomIdForAtomRole } from '../../../../../mol-model/structure/util.ts';
+import type { ChemicalComponentMap } from '../common.ts';
+import { isProductionMode } from '../../../../../mol-util/debug.ts';
+import type { mmCIF_chemComp_schema } from '../../../../../mol-io/reader/cif/schema/mmcif-extras.ts';
 
 type ChemCompType = mmCIF_chemComp_schema['type']['T'];
 

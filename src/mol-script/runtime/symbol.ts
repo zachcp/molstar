@@ -4,9 +4,9 @@
 //  * @author David Sehnal <david.sehnal@gmail.com>
 //  */
 
-// import Environment from './environment'
-// import RuntimeExpression from './expression'
-// import Expression from '../language/expression';
+// import Environment from './environment.ts'
+// import RuntimeExpression from './expression.ts'
+// import Expression from '../language/expression.ts';
 
 // type SymbolRuntime = SymbolRuntime.Dynamic | SymbolRuntime.Static
 

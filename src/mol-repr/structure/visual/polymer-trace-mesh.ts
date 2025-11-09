@@ -5,25 +5,25 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { VisualContext } from '../../visual';
-import { Unit, Structure } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { createCurveSegmentState, PolymerTraceIterator, interpolateCurveSegment, interpolateSizes, PolymerLocationIterator, getPolymerElementLoci, eachPolymerElement, HelixTension, NucleicShift, StandardShift, StandardTension, OverhangFactor } from './util/polymer';
-import { isNucleic, SecondaryStructureType } from '../../../mol-model/structure/model/types';
-import { addSheet } from '../../../mol-geo/geometry/mesh/builder/sheet';
-import { addTube } from '../../../mol-geo/geometry/mesh/builder/tube';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual';
-import { VisualUpdateState } from '../../util';
-import { SecondaryStructureProvider } from '../../../mol-model-props/computed/secondary-structure';
-import { addRibbon } from '../../../mol-geo/geometry/mesh/builder/ribbon';
-import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { StructureGroup } from './util/common';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { VisualContext } from '../../visual.ts';
+import { Unit, type Structure } from '../../../mol-model/structure.ts';
+import type { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { createCurveSegmentState, PolymerTraceIterator, interpolateCurveSegment, interpolateSizes, PolymerLocationIterator, getPolymerElementLoci, eachPolymerElement, HelixTension, NucleicShift, StandardShift, StandardTension, OverhangFactor } from './util/polymer.ts';
+import { isNucleic, SecondaryStructureType } from '../../../mol-model/structure/model/types.ts';
+import { addSheet } from '../../../mol-geo/geometry/mesh/builder/sheet.ts';
+import { addTube } from '../../../mol-geo/geometry/mesh/builder/tube.ts';
+import { UnitsMeshParams, type UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
+import type { VisualUpdateState } from '../../util.ts';
+import { SecondaryStructureProvider } from '../../../mol-model-props/computed/secondary-structure.ts';
+import { addRibbon } from '../../../mol-geo/geometry/mesh/builder/ribbon.ts';
+import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import type { StructureGroup } from './util/common.ts';
 
 export const PolymerTraceMeshParams = {
     sizeFactor: PD.Numeric(0.2, { min: 0, max: 10, step: 0.01 }),

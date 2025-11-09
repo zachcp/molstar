@@ -7,23 +7,23 @@
 /** Defines new types of State tree transformers for dealing with mesh data. */
 
 
-import { BaseGeometry, VisualQuality, VisualQualityOptions } from '../../mol-geo/geometry/base';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { CifFile } from '../../mol-io/reader/cif';
-import { Box3D } from '../../mol-math/geometry';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { Shape } from '../../mol-model/shape';
-import { ShapeProvider } from '../../mol-model/shape/provider';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { StateTransforms } from '../../mol-plugin-state/transforms';
-import { Download } from '../../mol-plugin-state/transforms/data';
-import { ShapeRepresentation3D } from '../../mol-plugin-state/transforms/representation';
-import { PluginContext } from '../../mol-plugin/context';
-import { StateObjectRef, StateObjectSelector, StateTransformer } from '../../mol-state';
-import { Task } from '../../mol-task';
-import { Color } from '../../mol-util/color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import * as MeshUtils from './mesh-utils';
+import { BaseGeometry, type VisualQuality, VisualQualityOptions } from '../../mol-geo/geometry/base.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import type { CifFile } from '../../mol-io/reader/cif.ts';
+import { Box3D } from '../../mol-math/geometry.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { Shape } from '../../mol-model/shape.ts';
+import type { ShapeProvider } from '../../mol-model/shape/provider.ts';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
+import { Download } from '../../mol-plugin-state/transforms/data.ts';
+import { ShapeRepresentation3D } from '../../mol-plugin-state/transforms/representation.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { type StateObjectRef, type StateObjectSelector, StateTransformer } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
+import type { Color } from '../../mol-util/color/index.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import * as MeshUtils from './mesh-utils.ts';
 
 
 export const BACKGROUND_OPACITY = 0.2;

@@ -12,21 +12,22 @@
  */
 
 import { ArgumentParser } from 'argparse';
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import gl from 'gl';
 
-import { Task } from '../../mol-task';
-import { Download } from '../../mol-plugin-state/transforms/data';
-import { GraphicsRenderObject } from '../../mol-gl/render-object';
-import { GlbExporter } from '../../extensions/geo-export/glb-exporter';
-import { Box3D } from '../../mol-math/geometry';
-import { ModelFromTrajectory, StructureFromModel, TrajectoryFromSDF } from '../../mol-plugin-state/transforms/model';
-import { StructureRepresentation3D } from '../../mol-plugin-state/transforms/representation';
-import { HeadlessPluginContext } from '../../mol-plugin/headless-plugin-context';
-import { DefaultPluginSpec } from '../../mol-plugin/spec';
-import { ExternalModules } from '../../mol-plugin/util/headless-screenshot';
-import { setFSModule } from '../../mol-util/data-source';
+import { Task } from '../../mol-task/index.ts';
+import { Download } from '../../mol-plugin-state/transforms/data.ts';
+import type { GraphicsRenderObject } from '../../mol-gl/render-object.ts';
+import { GlbExporter } from '../../extensions/geo-export/glb-exporter.ts';
+import { Box3D } from '../../mol-math/geometry.ts';
+import { ModelFromTrajectory, StructureFromModel, TrajectoryFromSDF } from '../../mol-plugin-state/transforms/model.ts';
+import { StructureRepresentation3D } from '../../mol-plugin-state/transforms/representation.ts';
+import { HeadlessPluginContext } from '../../mol-plugin/headless-plugin-context.ts';
+import { DefaultPluginSpec } from '../../mol-plugin/spec.ts';
+import type { ExternalModules } from '../../mol-plugin/util/headless-screenshot.ts';
+import { setFSModule } from '../../mol-util/data-source.ts';
+import { Buffer } from "node:buffer";
 
 setFSModule(fs);
 

@@ -6,22 +6,22 @@
 
 /** Testing examples for using mesh-extension.ts. */
 
-import { CIF } from '../../mol-io/reader/cif';
-import { Volume } from '../../mol-model/volume';
-import { createStructureRepresentationParams } from '../../mol-plugin-state/helpers/structure-representation-params';
-import { createVolumeRepresentationParams } from '../../mol-plugin-state/helpers/volume-representation-params';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { StateTransforms } from '../../mol-plugin-state/transforms';
-import { PluginContext } from '../../mol-plugin/context';
-import { StateObjectSelector } from '../../mol-state';
-import { Asset } from '../../mol-util/assets';
-import { Color } from '../../mol-util/color';
-import { ParamDefinition } from '../../mol-util/param-definition';
+import { CIF } from '../../mol-io/reader/cif.ts';
+import { Volume } from '../../mol-model/volume.ts';
+import { createStructureRepresentationParams } from '../../mol-plugin-state/helpers/structure-representation-params.ts';
+import { createVolumeRepresentationParams } from '../../mol-plugin-state/helpers/volume-representation-params.ts';
+import type { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import type { StateObjectSelector } from '../../mol-state/index.ts';
+import { Asset } from '../../mol-util/assets.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { ParamDefinition } from '../../mol-util/param-definition.ts';
 
-import { createMeshFromUrl } from './mesh-extension';
-import { MeshServerInfo } from './mesh-streaming/server-info';
-import { InitMeshStreaming } from './mesh-streaming/transformers';
-import * as MeshUtils from './mesh-utils';
+import { createMeshFromUrl } from './mesh-extension.ts';
+import { MeshServerInfo } from './mesh-streaming/server-info.ts';
+import { InitMeshStreaming } from './mesh-streaming/transformers.ts';
+import * as MeshUtils from './mesh-utils.ts';
 
 
 export const DB_URL = '/db'; // local

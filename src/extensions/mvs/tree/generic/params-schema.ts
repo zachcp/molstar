@@ -5,8 +5,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { isPlainObject, mapObjectMap, omitObjectKeys } from '../../../../mol-util/object';
-import { Field, fieldValidationIssues, OptionalField, RequiredField, ValueFor } from './field-schema';
+import { isPlainObject, mapObjectMap, omitObjectKeys } from '../../../../mol-util/object.ts';
+import { type Field, fieldValidationIssues, type OptionalField, RequiredField, type ValueFor } from './field-schema.ts';
 
 
 type Fields = { [key in string]: Field };

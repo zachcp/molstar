@@ -5,11 +5,11 @@
  * @author Cai Huiyu <szmun.caihy@gmail.com>
  */
 
-import { PluginStateObject as SO } from '../../objects';
-import { StateObject, StateTransform, State, StateObjectCell, StateTree, StateTransformer } from '../../../mol-state';
-import { StateTransforms } from '../../transforms';
-import { VolumeStreaming } from '../../../mol-plugin/behavior/dynamic/volume-streaming/behavior';
-import { CreateVolumeStreamingBehavior } from '../../../mol-plugin/behavior/dynamic/volume-streaming/transformers';
+import { PluginStateObject as SO } from '../../objects.ts';
+import { StateObject, type StateTransform, type State, type StateObjectCell, type StateTree, type StateTransformer } from '../../../mol-state/index.ts';
+import { StateTransforms } from '../../transforms.ts';
+import { VolumeStreaming } from '../../../mol-plugin/behavior/dynamic/volume-streaming/behavior.ts';
+import type { CreateVolumeStreamingBehavior } from '../../../mol-plugin/behavior/dynamic/volume-streaming/transformers.ts';
 
 export function buildStructureHierarchy(state: State, previous?: StructureHierarchy) {
     const build = BuildState(state, previous || StructureHierarchy());

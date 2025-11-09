@@ -4,53 +4,53 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color } from '../mol-util/color';
-import { Location } from '../mol-model/location';
-import { ColorType, ColorTypeDirect, ColorTypeGrid, ColorTypeLocation } from '../mol-geo/geometry/color-data';
-import { CarbohydrateSymbolColorThemeProvider } from './color/carbohydrate-symbol';
-import { UniformColorThemeProvider } from './color/uniform';
-import { deepEqual } from '../mol-util';
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { ThemeDataContext, ThemeRegistry, ThemeProvider } from './theme';
-import { ChainIdColorThemeProvider } from './color/chain-id';
-import { ElementIndexColorThemeProvider } from './color/element-index';
-import { ElementSymbolColorThemeProvider } from './color/element-symbol';
-import { MoleculeTypeColorThemeProvider } from './color/molecule-type';
-import { PolymerIdColorThemeProvider } from './color/polymer-id';
-import { PolymerIndexColorThemeProvider } from './color/polymer-index';
-import { ResidueNameColorThemeProvider } from './color/residue-name';
-import { SecondaryStructureColorThemeProvider } from './color/secondary-structure';
-import { SequenceIdColorThemeProvider } from './color/sequence-id';
-import { ShapeGroupColorThemeProvider } from './color/shape-group';
-import { UnitIndexColorThemeProvider } from './color/unit-index';
-import { ScaleLegend, TableLegend } from '../mol-util/legend';
-import { UncertaintyColorThemeProvider } from './color/uncertainty';
-import { EntitySourceColorThemeProvider } from './color/entity-source';
-import { IllustrativeColorThemeProvider } from './color/illustrative';
-import { HydrophobicityColorThemeProvider } from './color/hydrophobicity';
-import { TrajectoryIndexColorThemeProvider } from './color/trajectory-index';
-import { OccupancyColorThemeProvider } from './color/occupancy';
-import { OperatorNameColorThemeProvider } from './color/operator-name';
-import { OperatorHklColorThemeProvider } from './color/operator-hkl';
-import { PartialChargeColorThemeProvider } from './color/partial-charge';
-import { AtomIdColorThemeProvider } from './color/atom-id';
-import { EntityIdColorThemeProvider } from './color/entity-id';
-import type { Texture, TextureFilter } from '../mol-gl/webgl/texture';
-import { VolumeValueColorThemeProvider } from './color/volume-value';
-import { Vec3, Vec4 } from '../mol-math/linear-algebra';
-import { ModelIndexColorThemeProvider } from './color/model-index';
-import { StructureIndexColorThemeProvider } from './color/structure-index';
-import { VolumeSegmentColorThemeProvider } from './color/volume-segment';
-import { ExternalVolumeColorThemeProvider } from './color/external-volume';
-import { ColorThemeCategory } from './color/categories';
-import { CartoonColorThemeProvider } from './color/cartoon';
-import { FormalChargeColorThemeProvider } from './color/formal-charge';
-import { ExternalStructureColorThemeProvider } from './color/external-structure';
-import { ColorListEntry } from '../mol-util/color/color';
-import { getPrecision } from '../mol-util/number';
-import { SortedArray } from '../mol-data/int/sorted-array';
-import { normalize } from '../mol-math/interpolate';
-import { VolumeInstanceColorThemeProvider } from './color/volume-instance';
+import { Color } from '../mol-util/color/index.ts';
+import type { Location } from '../mol-model/location.ts';
+import type { ColorType, ColorTypeDirect, ColorTypeGrid, ColorTypeLocation } from '../mol-geo/geometry/color-data.ts';
+import { CarbohydrateSymbolColorThemeProvider } from './color/carbohydrate-symbol.ts';
+import { UniformColorThemeProvider } from './color/uniform.ts';
+import { deepEqual } from '../mol-util/index.ts';
+import type { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import { type ThemeDataContext, ThemeRegistry, type ThemeProvider } from './theme.ts';
+import { ChainIdColorThemeProvider } from './color/chain-id.ts';
+import { ElementIndexColorThemeProvider } from './color/element-index.ts';
+import { ElementSymbolColorThemeProvider } from './color/element-symbol.ts';
+import { MoleculeTypeColorThemeProvider } from './color/molecule-type.ts';
+import { PolymerIdColorThemeProvider } from './color/polymer-id.ts';
+import { PolymerIndexColorThemeProvider } from './color/polymer-index.ts';
+import { ResidueNameColorThemeProvider } from './color/residue-name.ts';
+import { SecondaryStructureColorThemeProvider } from './color/secondary-structure.ts';
+import { SequenceIdColorThemeProvider } from './color/sequence-id.ts';
+import { ShapeGroupColorThemeProvider } from './color/shape-group.ts';
+import { UnitIndexColorThemeProvider } from './color/unit-index.ts';
+import type { ScaleLegend, TableLegend } from '../mol-util/legend.ts';
+import { UncertaintyColorThemeProvider } from './color/uncertainty.ts';
+import { EntitySourceColorThemeProvider } from './color/entity-source.ts';
+import { IllustrativeColorThemeProvider } from './color/illustrative.ts';
+import { HydrophobicityColorThemeProvider } from './color/hydrophobicity.ts';
+import { TrajectoryIndexColorThemeProvider } from './color/trajectory-index.ts';
+import { OccupancyColorThemeProvider } from './color/occupancy.ts';
+import { OperatorNameColorThemeProvider } from './color/operator-name.ts';
+import { OperatorHklColorThemeProvider } from './color/operator-hkl.ts';
+import { PartialChargeColorThemeProvider } from './color/partial-charge.ts';
+import { AtomIdColorThemeProvider } from './color/atom-id.ts';
+import { EntityIdColorThemeProvider } from './color/entity-id.ts';
+import type { Texture, TextureFilter } from '../mol-gl/webgl/texture.ts';
+import { VolumeValueColorThemeProvider } from './color/volume-value.ts';
+import type { Vec3, Vec4 } from '../mol-math/linear-algebra.ts';
+import { ModelIndexColorThemeProvider } from './color/model-index.ts';
+import { StructureIndexColorThemeProvider } from './color/structure-index.ts';
+import { VolumeSegmentColorThemeProvider } from './color/volume-segment.ts';
+import { ExternalVolumeColorThemeProvider } from './color/external-volume.ts';
+import { ColorThemeCategory } from './color/categories.ts';
+import { CartoonColorThemeProvider } from './color/cartoon.ts';
+import { FormalChargeColorThemeProvider } from './color/formal-charge.ts';
+import { ExternalStructureColorThemeProvider } from './color/external-structure.ts';
+import type { ColorListEntry } from '../mol-util/color/color.ts';
+import { getPrecision } from '../mol-util/number.ts';
+import { SortedArray } from '../mol-data/int/sorted-array.ts';
+import { normalize } from '../mol-math/interpolate.ts';
+import { VolumeInstanceColorThemeProvider } from './color/volume-instance.ts';
 
 export type LocationColor = (location: Location, isSecondary: boolean) => Color
 
@@ -165,7 +165,7 @@ namespace ColorTheme {
         props: {}
     };
 
-    export function areEqual(themeA: ColorTheme<any, any>, themeB: ColorTheme<any, any>) {
+    export function areEqual(themeA: ColorTheme<any, any>, themeB: ColorTheme<any, any>): boolean {
         return themeA.contextHash === themeB.contextHash && themeA.factory === themeB.factory && deepEqual(themeA.props, themeB.props);
     }
 

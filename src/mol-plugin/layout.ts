@@ -6,10 +6,10 @@
  * @author Lukáš Polák <admin@lukaspolak.cz>
  */
 
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { StatefulPluginComponent } from '../mol-plugin-state/component';
-import { PluginCommands } from './commands';
-import { PluginContext } from './context';
+import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import { StatefulPluginComponent } from '../mol-plugin-state/component.ts';
+import { PluginCommands } from './commands.ts';
+import type { PluginContext } from './context.ts';
 
 const regionStateOptions = [
     ['full', 'Full'],
@@ -83,7 +83,7 @@ export class PluginLayout extends StatefulPluginComponent<PluginLayoutStateProps
 
     root: HTMLElement | undefined;
     private rootState: RootState | undefined = void 0;
-    private expandedViewport: HTMLMetaElement;
+    private expandedViewport!: HTMLMetaElement;
 
     setProps(props: Partial<PluginLayoutStateProps>) {
         this.updateState(props);

@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { State } from '../state';
-import { StateTransform } from '../transform';
-import { StateObject, StateObjectCell } from '../object';
+import type { State } from '../state.ts';
+import { StateTransform } from '../transform.ts';
+import type { StateObject, StateObjectCell } from '../object.ts';
 
 export { StateTreeSpine };
 
@@ -20,7 +20,7 @@ namespace StateTreeSpine {
     export class Impl implements StateTreeSpine {
         private _current: StateObjectCell | undefined = void 0;
 
-        get current() { return this._current; }
+        get current(): StateObjectCell | undefined { return this._current; }
         set current(cell: StateObjectCell | undefined) { this._current = cell; }
 
         getAncestorOfType<T extends StateObject.Ctor>(t: T): StateObject.From<T> | undefined {

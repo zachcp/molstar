@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginContext } from './context';
-import { now } from '../mol-util/now';
-import { PluginAnimationManager } from '../mol-plugin-state/manager/animation';
-import { isTimingMode } from '../mol-util/debug';
-import { printTimerResults } from '../mol-gl/webgl/timer';
+import type { PluginContext } from './context.ts';
+import { now } from '../mol-util/now.ts';
+import type { PluginAnimationManager } from '../mol-plugin-state/manager/animation.ts';
+import { isTimingMode } from '../mol-util/debug.ts';
+import { printTimerResults } from '../mol-gl/webgl/timer.ts';
 
 const MaxProperFrameDelta = 1000 / 30;
 
@@ -24,7 +24,7 @@ export class PluginAnimationLoop {
     private currentFrame: number | undefined = undefined;
     private _isAnimating = false;
 
-    get isAnimating() {
+    get isAnimating(): boolean {
         return this._isAnimating;
     }
 

@@ -4,18 +4,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ModelCrossLinkRestraint } from './format';
-import { Unit, StructureElement, Structure, Bond } from '../../../mol-model/structure';
-import { PairRestraints, PairRestraint } from '../pair-restraints';
-import { CustomStructureProperty } from '../../common/custom-structure-property';
-import { CustomProperty } from '../../common/custom-property';
-import { DataLocation } from '../../../mol-model/location';
-import { DataLoci } from '../../../mol-model/loci';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { CentroidHelper } from '../../../mol-math/geometry/centroid-helper';
-import { bondLabel } from '../../../mol-theme/label';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { CustomPropertyDescriptor } from '../../../mol-model/custom-property';
+import { ModelCrossLinkRestraint } from './format.ts';
+import { type Unit, type StructureElement, type Structure, Bond } from '../../../mol-model/structure.ts';
+import { PairRestraints, type PairRestraint } from '../pair-restraints.ts';
+import { CustomStructureProperty } from '../../common/custom-structure-property.ts';
+import type { CustomProperty } from '../../common/custom-property.ts';
+import { DataLocation } from '../../../mol-model/location.ts';
+import { DataLoci } from '../../../mol-model/loci.ts';
+import type { Sphere3D } from '../../../mol-math/geometry.ts';
+import { CentroidHelper } from '../../../mol-math/geometry/centroid-helper.ts';
+import { bondLabel } from '../../../mol-theme/label.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { CustomPropertyDescriptor } from '../../../mol-model/custom-property.ts';
 
 export type CrossLinkRestraintValue = PairRestraints<CrossLinkRestraint>
 
@@ -54,7 +54,7 @@ namespace CrossLinkRestraint {
     }
 
     const distVecA = Vec3(), distVecB = Vec3();
-    export function distance(pair: CrossLinkRestraint) {
+    export function distance(pair: CrossLinkRestraint): number {
         pair.unitA.conformation.position(pair.unitA.elements[pair.indexA], distVecA);
         pair.unitB.conformation.position(pair.unitB.elements[pair.indexB], distVecB);
         return Vec3.distance(distVecA, distVecB);
@@ -73,7 +73,7 @@ namespace CrossLinkRestraint {
         return !!x && x.kind === 'data-location' && x.tag === 'cross-link-restraints';
     }
 
-    export function areLocationsEqual(locA: Location, locB: Location) {
+    export function areLocationsEqual(locA: Location, locB: Location): boolean {
         return (
             locA.data.structure === locB.data.structure &&
             locA.data.crossLinkRestraints === locB.data.crossLinkRestraints &&
@@ -102,7 +102,7 @@ namespace CrossLinkRestraint {
         return !!x && x.kind === 'data-loci' && x.tag === 'interactions';
     }
 
-    export function getBoundingSphere(crossLinkRestraints: CrossLinkRestraintValue, elements: ReadonlyArray<Element>, boundingSphere: Sphere3D) {
+    export function getBoundingSphere(crossLinkRestraints: CrossLinkRestraintValue, elements: ReadonlyArray<Element>, boundingSphere: Sphere3D): Sphere3D {
         return CentroidHelper.fromPairProvider(elements.length, (i, pA, pB) => {
             const p = crossLinkRestraints.pairs[elements[i]];
             p.unitA.conformation.position(p.unitA.elements[p.indexA], pA);

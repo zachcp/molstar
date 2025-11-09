@@ -4,15 +4,15 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Mat4, Tensor } from '../../../../mol-math/linear-algebra';
-import { FormatPropertyProvider } from '../../../../mol-model-formats/structure/common/property';
-import { CustomPropertyDescriptor } from '../../../custom-property';
-import { CifExportContext } from '../../structure';
-import { Model } from '../model';
-import { Column, Table } from '../../../../mol-data/db';
-import { CifWriter } from '../../../../mol-io/writer/cif';
-import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif';
-import { toTable } from '../../../../mol-io/reader/cif/schema';
+import type { Mat4, Tensor } from '../../../../mol-math/linear-algebra.ts';
+import { FormatPropertyProvider } from '../../../../mol-model-formats/structure/common/property.ts';
+import { CustomPropertyDescriptor } from '../../../custom-property.ts';
+import type { CifExportContext } from '../../structure.ts';
+import type { Model } from '../model.ts';
+import { Column, Table } from '../../../../mol-data/db.ts';
+import { CifWriter } from '../../../../mol-io/writer/cif.ts';
+import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif.ts';
+import { toTable } from '../../../../mol-io/reader/cif/schema.ts';
 
 export namespace GlobalModelTransformInfo {
     const CategoryName = 'molstar_global_model_transform_info' as const;

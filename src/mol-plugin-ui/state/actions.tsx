@@ -4,18 +4,17 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { State } from '../../mol-state';
-import { PluginUIComponent } from '../base';
-import { Icon, CodeSvg } from '../controls/icons';
-import { ApplyActionControl } from './apply-action';
+import type { State } from '../../mol-state/index.ts';
+import { PluginUIComponent } from '../base.tsx';
+import { Icon, CodeSvg } from '../controls/icons.tsx';
+import { ApplyActionControl } from './apply-action.tsx';
 
 export class StateObjectActions extends PluginUIComponent<{ state: State, nodeRef: string, hideHeader?: boolean, initiallyCollapsed?: boolean, alwaysExpandFirst?: boolean }> {
     get current() {
         return this.props.state.behaviors.currentObject.value;
     }
 
-    componentDidMount() {
-        // TODO: handle tree change: some state actions might become invalid
+    override componentDidMount() {        // TODO: handle tree change: some state actions might become invalid
         // this.subscribe(this.props.state.events.changed, o => {
         //     this.setState(createStateObjectActionSelectState(this.props));
         // });
@@ -30,8 +29,7 @@ export class StateObjectActions extends PluginUIComponent<{ state: State, nodeRe
         this.subscribe(this.plugin.state.data.actions.events.removed, () => this.forceUpdate());
     }
 
-    render() {
-        const { state, nodeRef: ref } = this.props;
+    override render() {        const { state, nodeRef: ref } = this.props;
         const cell = state.cells.get(ref)!;
         const actions = state.actions.fromCell(cell, this.plugin);
         if (actions.length === 0) return null;

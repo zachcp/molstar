@@ -1,4 +1,4 @@
-import { findPredecessorIndex } from '../mol-data/int/impl/sorted-array';
+import { findPredecessorIndex } from '../mol-data/int/impl/sorted-array.ts';
 
 
 function createData(n: number) {

@@ -4,16 +4,16 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column, Table } from '../../mol-data/db';
-import { XyzFile } from '../../mol-io/reader/xyz/parser';
-import { Trajectory } from '../../mol-model/structure';
-import { MoleculeType } from '../../mol-model/structure/model/types';
-import { RuntimeContext, Task } from '../../mol-task';
-import { ModelFormat } from '../format';
-import { createModels } from './basic/parser';
-import { BasicSchema, createBasic } from './basic/schema';
-import { ComponentBuilder } from './common/component';
-import { EntityBuilder } from './common/entity';
+import { Column, Table } from '../../mol-data/db.ts';
+import type { XyzFile } from '../../mol-io/reader/xyz/parser.ts';
+import type { Trajectory } from '../../mol-model/structure.ts';
+import { MoleculeType } from '../../mol-model/structure/model/types.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
+import type { ModelFormat } from '../format.ts';
+import { createModels } from './basic/parser.ts';
+import { BasicSchema, createBasic } from './basic/schema.ts';
+import { ComponentBuilder } from './common/component.ts';
+import { EntityBuilder } from './common/entity.ts';
 
 function getModels(mol: XyzFile, ctx: RuntimeContext) {
     const { molecules } = mol;

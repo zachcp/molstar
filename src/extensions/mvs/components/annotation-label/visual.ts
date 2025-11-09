@@ -4,21 +4,21 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Text } from '../../../../mol-geo/geometry/text/text';
-import { TextBuilder } from '../../../../mol-geo/geometry/text/text-builder';
-import { Structure } from '../../../../mol-model/structure';
-import { ComplexTextVisual, ComplexVisual } from '../../../../mol-repr/structure/complex-visual';
-import * as Original from '../../../../mol-repr/structure/visual/label-text';
-import { ElementIterator, eachSerialElement, getSerialElementLoci } from '../../../../mol-repr/structure/visual/util/element';
-import { VisualUpdateState } from '../../../../mol-repr/util';
-import { VisualContext } from '../../../../mol-repr/visual';
-import { Theme } from '../../../../mol-theme/theme';
-import { ColorNames } from '../../../../mol-util/color/names';
-import { omitObjectKeys } from '../../../../mol-util/object';
-import { ParamDefinition as PD } from '../../../../mol-util/param-definition';
-import { textPropsForSelection } from '../../helpers/label-text';
-import { groupRows } from '../../helpers/selections';
-import { getMVSAnnotationForStructure } from '../annotation-prop';
+import type { Text } from '../../../../mol-geo/geometry/text/text.ts';
+import { TextBuilder } from '../../../../mol-geo/geometry/text/text-builder.ts';
+import type { Structure } from '../../../../mol-model/structure.ts';
+import { ComplexTextVisual, type ComplexVisual } from '../../../../mol-repr/structure/complex-visual.ts';
+import * as Original from '../../../../mol-repr/structure/visual/label-text.ts';
+import { ElementIterator, eachSerialElement, getSerialElementLoci } from '../../../../mol-repr/structure/visual/util/element.ts';
+import type { VisualUpdateState } from '../../../../mol-repr/util.ts';
+import type { VisualContext } from '../../../../mol-repr/visual.ts';
+import type { Theme } from '../../../../mol-theme/theme.ts';
+import { ColorNames } from '../../../../mol-util/color/names.ts';
+import { omitObjectKeys } from '../../../../mol-util/object.ts';
+import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
+import { textPropsForSelection } from '../../helpers/label-text.ts';
+import { groupRows } from '../../helpers/selections.ts';
+import { getMVSAnnotationForStructure } from '../annotation-prop.ts';
 
 
 /** Parameter definition for "label-text" visual in "MVS Annotation Label" representation */

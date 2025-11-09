@@ -5,18 +5,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ElementIndex, Model } from '../../mol-model/structure';
-import { StructureElement } from '../../mol-model/structure/structure';
-import { Location } from '../../mol-model/location';
-import { ThemeDataContext } from '../../mol-theme/theme';
-import { ColorTheme, LocationColor } from '../../mol-theme/color';
-import { Color } from '../../mol-util/color';
-import { Loci } from '../../mol-model/loci';
-import { OrderedSet } from '../../mol-data/int';
-import { CustomModelProperty } from './custom-model-property';
-import { CustomProperty } from './custom-property';
-import { LociLabelProvider } from '../../mol-plugin-state/manager/loci-label';
-import { CustomPropertyDescriptor } from '../../mol-model/custom-property';
+import type { ElementIndex, Model } from '../../mol-model/structure.ts';
+import { StructureElement } from '../../mol-model/structure/structure.ts';
+import type { Location } from '../../mol-model/location.ts';
+import type { ThemeDataContext } from '../../mol-theme/theme.ts';
+import type { ColorTheme, LocationColor } from '../../mol-theme/color.ts';
+import type { Color } from '../../mol-util/color/index.ts';
+import type { Loci } from '../../mol-model/loci.ts';
+import { OrderedSet } from '../../mol-data/int.ts';
+import { CustomModelProperty } from './custom-model-property.ts';
+import type { CustomProperty } from './custom-property.ts';
+import type { LociLabelProvider } from '../../mol-plugin-state/manager/loci-label.ts';
+import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
 
 export { CustomElementProperty };
 

@@ -4,28 +4,28 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color } from '../../mol-util/color';
-import { Location } from '../../mol-model/location';
-import type { ColorTheme, LocationColor } from '../color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../theme';
-import { type PluginContext } from '../../mol-plugin/context';
-import { isPositionLocation } from '../../mol-geo/util/location-iterator';
-import { ColorThemeCategory } from './categories';
-import { StateSelection } from '../../mol-state/state/selection';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { QueryContext, Structure, StructureElement, StructureSelection } from '../../mol-model/structure';
-import { ChainIdColorTheme, ChainIdColorThemeParams } from './chain-id';
-import { EntityIdColorTheme, EntityIdColorThemeParams } from './entity-id';
-import { EntitySourceColorTheme, EntitySourceColorThemeParams } from './entity-source';
-import { MoleculeTypeColorTheme, MoleculeTypeColorThemeParams } from './molecule-type';
-import { ModelIndexColorTheme, ModelIndexColorThemeParams } from './model-index';
-import { StructureIndexColorTheme, StructureIndexColorThemeParams } from './structure-index';
-import { assertUnreachable } from '../../mol-util/type-helpers';
-import { ScaleLegend, TableLegend } from '../../mol-util/legend';
-import { StructureLookup3DResultContext } from '../../mol-model/structure/structure/util/lookup3d';
-import { StructureSelectionQueries } from '../../mol-plugin-state/helpers/structure-selection-query';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
+import { Color } from '../../mol-util/color/index.ts';
+import type { Location } from '../../mol-model/location.ts';
+import type { ColorTheme, LocationColor } from '../color.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { ThemeDataContext } from '../theme.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import { isPositionLocation } from '../../mol-geo/util/location-iterator.ts';
+import { ColorThemeCategory } from './categories.ts';
+import { StateSelection } from '../../mol-state/state/selection.ts';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { QueryContext, type Structure, StructureElement, StructureSelection } from '../../mol-model/structure.ts';
+import { ChainIdColorTheme, ChainIdColorThemeParams } from './chain-id.ts';
+import { EntityIdColorTheme, EntityIdColorThemeParams } from './entity-id.ts';
+import { EntitySourceColorTheme, EntitySourceColorThemeParams } from './entity-source.ts';
+import { MoleculeTypeColorTheme, MoleculeTypeColorThemeParams } from './molecule-type.ts';
+import { ModelIndexColorTheme, ModelIndexColorThemeParams } from './model-index.ts';
+import { StructureIndexColorTheme, StructureIndexColorThemeParams } from './structure-index.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
+import type { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
+import { StructureLookup3DResultContext } from '../../mol-model/structure/structure/util/lookup3d.ts';
+import { StructureSelectionQueries } from '../../mol-plugin-state/helpers/structure-selection-query.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
 
 const Description = `Assigns a color based on structure property at a given vertex.`;
 

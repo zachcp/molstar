@@ -6,16 +6,16 @@
 
 
 import { createRoot } from 'react-dom/client';
-import { Viewer } from '../../apps/viewer/app';
-import { MAPairwiseScorePlot } from '../../extensions/model-archive/quality-assessment/pairwise/ui';
-import { QualityAssessment } from '../../extensions/model-archive/quality-assessment/prop';
-import { Model, ResidueIndex } from '../../mol-model/structure';
+import { Viewer } from '../../apps/viewer/app.ts';
+import { MAPairwiseScorePlot } from '../../extensions/model-archive/quality-assessment/pairwise/ui.tsx';
+import type { QualityAssessment } from '../../extensions/model-archive/quality-assessment/prop.ts';
+import type { Model, ResidueIndex } from '../../mol-model/structure.ts';
 import './index.html';
 import '../../mol-plugin-ui/skin/light.scss';
 
 export class AlphaFoldPAEExample {
-    viewer: Viewer;
-    plotContainerId: string;
+    viewer!: Viewer;
+    plotContainerId!: string;
 
 
     async init(options: { pluginContainerId: string, plotContainerId: string }) {

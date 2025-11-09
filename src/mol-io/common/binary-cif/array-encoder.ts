@@ -7,10 +7,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ChunkedArray } from '../../../mol-data/util';
-import { Encoding, EncodedData } from './encoding';
-import { classifyIntArray } from './classifier';
-import { TypedIntArray, TypedFloatArray } from '../../../mol-util/type-helpers';
+import { ChunkedArray } from '../../../mol-data/util.ts';
+import { Encoding, type EncodedData } from './encoding.ts';
+import { classifyIntArray } from './classifier.ts';
+import type { TypedIntArray, TypedFloatArray } from '../../../mol-util/type-helpers.ts';
 
 export interface ArrayEncoder {
     and(f: ArrayEncoding.Provider): ArrayEncoder,
@@ -55,7 +55,7 @@ export namespace ArrayEncoder {
         return new ArrayEncoderImpl([f]);
     }
 
-    export function fromEncoding(encoding: Encoding[]) {
+    export function fromEncoding(encoding: Encoding[]): ArrayEncoder {
         let e = by(getProvider(encoding[0]));
         for (let i = 1; i < encoding.length; i++) {
             if (encoding[i - 1].kind === 'IntegerPacking') break;

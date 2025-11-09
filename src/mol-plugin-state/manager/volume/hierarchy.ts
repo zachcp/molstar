@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { setSubtreeVisibility } from '../../../mol-plugin/behavior/static/state';
-import { PluginContext } from '../../../mol-plugin/context';
-import { PluginComponent } from '../../component';
-import { buildVolumeHierarchy, VolumeHierarchy, VolumeHierarchyRef, VolumeRef } from './hierarchy-state';
-import { createVolumeRepresentationParams } from '../../helpers/volume-representation-params';
-import { StateTransforms } from '../../transforms';
+import { setSubtreeVisibility } from '../../../mol-plugin/behavior/static/state.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import { PluginComponent } from '../../component.ts';
+import { buildVolumeHierarchy, VolumeHierarchy, type VolumeHierarchyRef, type VolumeRef } from './hierarchy-state.ts';
+import { createVolumeRepresentationParams } from '../../helpers/volume-representation-params.ts';
+import { StateTransforms } from '../../transforms.ts';
 
 export class VolumeHierarchyManager extends PluginComponent {
     private state = {
@@ -31,12 +31,12 @@ export class VolumeHierarchyManager extends PluginComponent {
         return this.plugin.state.data;
     }
 
-    get current() {
+    get current(): VolumeHierarchy {
         this.sync(false);
         return this.state.hierarchy;
     }
 
-    get selection() {
+    get selection(): VolumeRef | undefined {
         this.sync(false);
         return this.state.selection;
     }

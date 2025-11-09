@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Loci } from '../mol-model/loci';
-import { Structure, StructureElement } from '../mol-model/structure';
-import { Script } from '../mol-script/script';
+import { Loci } from '../mol-model/loci.ts';
+import { type Structure, StructureElement } from '../mol-model/structure.ts';
+import { Script } from '../mol-script/script.ts';
 
 export { Emissive };
 
@@ -23,7 +23,7 @@ namespace Emissive {
     export type Layer<T extends Loci = Loci> = { readonly loci: T, readonly value: number }
     export const Empty: Emissive = { kind: 'empty-loci', layers: [] };
 
-    export function areEqual(eA: Emissive, eB: Emissive) {
+    export function areEqual(eA: Emissive, eB: Emissive): boolean {
         if (eA.layers.length === 0 && eB.layers.length === 0) return true;
         if (eA.layers.length !== eB.layers.length) return false;
         for (let i = 0, il = eA.layers.length; i < il; ++i) {
@@ -33,7 +33,7 @@ namespace Emissive {
         return true;
     }
 
-    export function isEmpty(emissive: Emissive) {
+    export function isEmpty(emissive: Emissive): boolean {
         return emissive.layers.length === 0;
     }
 
@@ -125,7 +125,7 @@ namespace Emissive {
         return { kind: 'element-loci', layers };
     }
 
-    export function toBundle(emissive: Emissive<StructureElement.Loci>) {
+    export function toBundle(emissive: Emissive<StructureElement.Loci>): { kind: 'element-loci', layers: BundleLayer[] } {
         const layers: BundleLayer[] = [];
         for (let i = 0, il = emissive.layers.length; i < il; ++i) {
             const { loci, value } = emissive.layers[i];

@@ -5,19 +5,19 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import * as argparse from 'argparse';
-import * as util from 'util';
+import * as util from 'node:util';
 
-import { Volume } from '../../mol-model/volume';
-import { downloadCif } from './helpers';
-import { CIF } from '../../mol-io/reader/cif';
-import { Table } from '../../mol-data/db';
-import { StringBuilder } from '../../mol-util';
-import { Task } from '../../mol-task';
-import { createVolumeIsosurfaceMesh } from '../../mol-repr/volume/isosurface';
-import { Theme } from '../../mol-theme/theme';
-import { volumeFromDensityServerData, DscifFormat } from '../../mol-model-formats/volume/density-server';
+import { Volume } from '../../mol-model/volume.ts';
+import { downloadCif } from './helpers.ts';
+import { CIF } from '../../mol-io/reader/cif.ts';
+import { Table } from '../../mol-data/db.ts';
+import { StringBuilder } from '../../mol-util/index.ts';
+import { Task } from '../../mol-task/index.ts';
+import { createVolumeIsosurfaceMesh } from '../../mol-repr/volume/isosurface.ts';
+import { Theme } from '../../mol-theme/theme.ts';
+import { volumeFromDensityServerData, DscifFormat } from '../../mol-model-formats/volume/density-server.ts';
 
 require('util.promisify').shim();
 const writeFileAsync = util.promisify(fs.writeFile);

@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ValueCell } from '../../mol-util/value-cell';
-import { Vec2 } from '../../mol-math/linear-algebra';
-import { TextureImage, createTextureImage } from '../../mol-gl/renderable/util';
-import { Clipping } from '../../mol-theme/clipping';
+import { ValueCell } from '../../mol-util/value-cell.ts';
+import { Vec2 } from '../../mol-math/linear-algebra.ts';
+import { type TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
+import type { Clipping } from '../../mol-theme/clipping.ts';
 
 export type ClippingType = 'instance' | 'groupInstance';
 

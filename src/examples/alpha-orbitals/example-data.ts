@@ -1,5 +1,5 @@
-import { AlphaOrbital, Basis } from '../../extensions/alpha-orbitals/data-model';
-import { SphericalBasisOrder } from '../../extensions/alpha-orbitals/spherical-functions';
+import type { AlphaOrbital, Basis } from '../../extensions/alpha-orbitals/data-model.ts';
+import type { SphericalBasisOrder } from '../../extensions/alpha-orbitals/spherical-functions.ts';
 
 export const DemoMoleculeSDF = `60823
   -OEChem-10232017443D

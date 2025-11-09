@@ -5,47 +5,45 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
-import { Lines } from '../../../mol-geo/geometry/lines/lines';
-import { LinesBuilder } from '../../../mol-geo/geometry/lines/lines-builder';
-import { addFixedCountDashedCylinder, addSimpleCylinder, BasicCylinderProps } from '../../../mol-geo/geometry/mesh/builder/cylinder';
-import { addEllipsoid } from '../../../mol-geo/geometry/mesh/builder/ellipsoid';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { Text } from '../../../mol-geo/geometry/text/text';
-import { TextBuilder } from '../../../mol-geo/geometry/text/text-builder';
-import { Box, BoxCage } from '../../../mol-geo/primitive/box';
-import { Circle } from '../../../mol-geo/primitive/circle';
-import { Primitive } from '../../../mol-geo/primitive/primitive';
-import { StringLike } from '../../../mol-io/common/string-like';
-import { Box3D, Sphere3D } from '../../../mol-math/geometry';
-import { Mat4, Vec3 } from '../../../mol-math/linear-algebra';
-import { radToDeg } from '../../../mol-math/misc';
-import { Shape } from '../../../mol-model/shape';
-import { Structure, StructureElement, StructureSelection } from '../../../mol-model/structure';
-import { StructureQueryHelper } from '../../../mol-plugin-state/helpers/structure-query';
-import { PluginStateObject as SO } from '../../../mol-plugin-state/objects';
-import { PluginContext } from '../../../mol-plugin/context';
-import { ShapeRepresentation } from '../../../mol-repr/shape/representation';
-import { Expression } from '../../../mol-script/language/expression';
-import { StateObject, StateTransformer } from '../../../mol-state';
-import { Task } from '../../../mol-task';
-import { round } from '../../../mol-util';
-import { range } from '../../../mol-util/array';
-import { Asset } from '../../../mol-util/assets';
-import { Clip } from '../../../mol-util/clip';
-import { Color } from '../../../mol-util/color';
-import { MarkerActions } from '../../../mol-util/marker-action';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { capitalize } from '../../../mol-util/string';
-import { rowsToExpression, rowToExpression } from '../helpers/selections';
-import { collectMVSReferences, decodeColor, isDefined } from '../helpers/utils';
-import { addParamDefaults } from '../tree/generic/params-schema';
-import { treeValidationIssues } from '../tree/generic/tree-validation';
-import { MolstarNode, MolstarNodeParams, MolstarSubtree } from '../tree/molstar/molstar-tree';
-import { MVSNode, MVSTreeSchema } from '../tree/mvs/mvs-tree';
-import { isComponentExpression, isPrimitiveComponentExpressions, isVector3, PrimitivePositionT } from '../tree/mvs/param-types';
-import { MVSTransform } from './annotation-structure-component';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
+import { Lines } from '../../../mol-geo/geometry/lines/lines.ts';
+import { LinesBuilder } from '../../../mol-geo/geometry/lines/lines-builder.ts';
+import { addFixedCountDashedCylinder, addSimpleCylinder, type BasicCylinderProps } from '../../../mol-geo/geometry/mesh/builder/cylinder.ts';
+import { addEllipsoid } from '../../../mol-geo/geometry/mesh/builder/ellipsoid.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Text } from '../../../mol-geo/geometry/text/text.ts';
+import { TextBuilder } from '../../../mol-geo/geometry/text/text-builder.ts';
+import { Box, BoxCage } from '../../../mol-geo/primitive/box.ts';
+import { Circle } from '../../../mol-geo/primitive/circle.ts';
+import type { Primitive } from '../../../mol-geo/primitive/primitive.ts';
+import { StringLike } from '../../../mol-io/common/string-like.ts';
+import { Box3D, Sphere3D } from '../../../mol-math/geometry.ts';
+import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { radToDeg } from '../../../mol-math/misc.ts';
+import { Shape } from '../../../mol-model/shape.ts';
+import { type Structure, StructureElement, StructureSelection } from '../../../mol-model/structure.ts';
+import { StructureQueryHelper } from '../../../mol-plugin-state/helpers/structure-query.ts';
+import { PluginStateObject as SO } from '../../../mol-plugin-state/objects.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import { ShapeRepresentation } from '../../../mol-repr/shape/representation.ts';
+import type { Expression } from '../../../mol-script/language/expression.ts';
+import { StateObject, StateTransformer } from '../../../mol-state/index.ts';
+import { Task } from '../../../mol-task/index.ts';
+import { round } from '../../../mol-util/index.ts';
+import { range } from '../../../mol-util/array.ts';
+import { Asset } from '../../../mol-util/assets.ts';
+import { Color } from '../../../mol-util/color/index.ts';
+import { MarkerActions } from '../../../mol-util/marker-action.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { capitalize } from '../../../mol-util/string.ts';
+import { rowsToExpression, rowToExpression } from '../helpers/selections.ts';
+import { collectMVSReferences, decodeColor, isDefined } from '../helpers/utils.ts';
+import { addParamDefaults } from '../tree/generic/params-schema.ts';
+import type { MolstarNode, MolstarNodeParams, MolstarSubtree } from '../tree/molstar/molstar-tree.ts';
+import { type MVSNode, MVSTreeSchema } from '../tree/mvs/mvs-tree.ts';
+import { isComponentExpression, isPrimitiveComponentExpressions, isVector3, type PrimitivePositionT } from '../tree/mvs/param-types.ts';
+import { MVSTransform } from './annotation-structure-component.ts';
 
 
 type PrimitivesParams = MolstarNode<'primitives'>['params']
@@ -83,35 +81,15 @@ export const MVSDownloadPrimitiveData = MVSTransform({
             const url = Asset.getUrlAsset(plugin.managers.asset, params.uri);
             const asset = await plugin.managers.asset.resolve(url, 'string').runInContext(ctx);
             const node = JSON.parse(StringLike.toString(asset.data)) as MolstarSubtree<'primitives'>;
-            const validationIssues = treeValidationIssues(MVSTreeSchema, node, { anyRoot: true });
-            if (validationIssues) {
-                throw new Error(`Invalid primitive data from ${params.uri}:\n${validationIssues.join('\n')}`);
-            }
-            if (node.kind !== 'primitives') {
-                throw new Error(`Expected primitives node from ${params.uri}, got ${node.kind}`);
-            }
-            const nodeWithDefaults: MolstarSubtree<'primitives'> = {
-                ...node,
-                params: addParamDefaults(MVSTreeSchema.nodes.primitives.params, node.params || {}),
-                children: node.children?.map((child: any) => {
-                    if (child.kind === 'primitive') {
-                        return {
-                            ...child,
-                            params: addParamDefaults(MVSTreeSchema.nodes.primitive.params, child.params || {})
-                        };
-                    }
-                    return child;
-                })
-            };
             (cache as any).asset = asset;
             return new MVSPrimitivesData({
-                node: nodeWithDefaults,
+                node,
                 defaultStructure: SO.Molecule.Structure.is(a) ? a.data : undefined,
                 structureRefs: {},
-                primitives: getPrimitives(nodeWithDefaults),
-                options: { ...nodeWithDefaults.params },
+                primitives: getPrimitives(node),
+                options: { ...node.params },
                 positionCache: new Map(),
-                instances: getInstances(nodeWithDefaults.params),
+                instances: getInstances(node.params),
             }, { label: 'Primitive Data' });
         });
     },
@@ -163,8 +141,7 @@ export const MVSBuildPrimitiveShape = MVSTransform({
     from: MVSPrimitivesData,
     to: SO.Shape.Provider,
     params: {
-        kind: PD.Text<'mesh' | 'labels' | 'lines'>('mesh'),
-        clip: PD.Value<Clip.Props | undefined>(undefined, { isHidden: true })
+        kind: PD.Text<'mesh' | 'labels' | 'lines'>('mesh')
     }
 })({
     apply({ a, params, dependencies }) {
@@ -183,7 +160,7 @@ export const MVSBuildPrimitiveShape = MVSTransform({
                 label,
                 data: context,
                 params: {
-                    ...PD.withDefaults(Mesh.Params, { alpha: a.data.options?.opacity ?? 1, clip: params.clip, ...customMeshParams }),
+                    ...PD.withDefaults(Mesh.Params, { alpha: a.data.options?.opacity ?? 1, ...customMeshParams }),
                     ...snapshotKey,
                     ...markdownCommands,
                 },
@@ -207,7 +184,6 @@ export const MVSBuildPrimitiveShape = MVSTransform({
                         tetherLength: options?.label_tether_length ?? 1,
                         background: isDefined(bgColor),
                         backgroundColor: isDefined(bgColor) ? decodeColor(bgColor) : undefined,
-                        clip: params.clip,
                         ...customLabelParams,
                     }),
                     ...snapshotKey,
@@ -224,7 +200,7 @@ export const MVSBuildPrimitiveShape = MVSTransform({
                 label,
                 data: context,
                 params: {
-                    ...PD.withDefaults(Lines.Params, { alpha: a.data.options?.opacity ?? 1, clip: params.clip, ...customLineParams }),
+                    ...PD.withDefaults(Lines.Params, { alpha: a.data.options?.opacity ?? 1, ...customLineParams }),
                     ...snapshotKey,
                     ...markdownCommands,
                 },

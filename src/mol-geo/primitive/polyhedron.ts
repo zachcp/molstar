@@ -6,9 +6,9 @@
 
 // adapted from three.js, MIT License Copyright 2010-2018 three.js authors
 
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { computeIndexedVertexNormals, appplyRadius } from '../util';
-import { Primitive } from './primitive';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { computeIndexedVertexNormals, appplyRadius } from '../util.ts';
+import type { Primitive } from './primitive.ts';
 
 export const DefaultPolyhedronProps = {
     radius: 1,

@@ -5,11 +5,11 @@
  */
 
 // import { Column } from 'mol-data/db'
-import { Tokens, TokenBuilder, Tokenizer } from '../common/text/tokenizer';
-import * as Data from './data-model';
-import { Field } from './field';
-import { ReaderResult as Result } from '../result';
-import { Task, RuntimeContext, chunkedSubtask, } from '../../../mol-task';
+import { type Tokens, TokenBuilder, Tokenizer } from '../common/text/tokenizer.ts';
+import * as Data from './data-model.ts';
+import { Field } from './field.ts';
+import { ReaderResult as Result } from '../result.ts';
+import { Task, type RuntimeContext, chunkedSubtask, } from '../../../mol-task/index.ts';
 
 const enum CsvTokenType {
     Value = 0,

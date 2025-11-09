@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import * as Impl from './impl/interval';
+import * as Impl from './impl/interval.ts';
 
 namespace Interval {
     export const Empty: Interval = Impl.Empty as any;

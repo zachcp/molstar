@@ -4,23 +4,23 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { PluginBehavior } from '../../../mol-plugin/behavior/behavior';
-import { ValidationReport, ValidationReportProvider } from './prop';
-import { RandomCoilIndexColorThemeProvider } from './color/random-coil-index';
-import { GeometryQualityColorThemeProvider } from './color/geometry-quality';
-import { Loci } from '../../../mol-model/loci';
-import { OrderedSet } from '../../../mol-data/int';
-import { ClashesRepresentationProvider } from './representation';
-import { DensityFitColorThemeProvider } from './color/density-fit';
-import { cantorPairing } from '../../../mol-data/util';
-import { DefaultQueryRuntimeTable } from '../../../mol-script/runtime/query/compiler';
-import { StructureSelectionQuery, StructureSelectionCategory } from '../../../mol-plugin-state/helpers/structure-selection-query';
-import { MolScriptBuilder as MS } from '../../../mol-script/language/builder';
-import { Task } from '../../../mol-task';
-import { StructureRepresentationPresetProvider, PresetStructureRepresentations } from '../../../mol-plugin-state/builder/structure/representation-preset';
-import { StateObjectRef } from '../../../mol-state';
-import { Model } from '../../../mol-model/structure';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { PluginBehavior } from '../../../mol-plugin/behavior/behavior.ts';
+import { ValidationReport, ValidationReportProvider } from './prop.ts';
+import { RandomCoilIndexColorThemeProvider } from './color/random-coil-index.ts';
+import { GeometryQualityColorThemeProvider } from './color/geometry-quality.ts';
+import type { Loci } from '../../../mol-model/loci.ts';
+import { OrderedSet } from '../../../mol-data/int.ts';
+import { ClashesRepresentationProvider } from './representation.ts';
+import { DensityFitColorThemeProvider } from './color/density-fit.ts';
+import { cantorPairing } from '../../../mol-data/util.ts';
+import { DefaultQueryRuntimeTable } from '../../../mol-script/runtime/query/compiler.ts';
+import { StructureSelectionQuery, StructureSelectionCategory } from '../../../mol-plugin-state/helpers/structure-selection-query.ts';
+import { MolScriptBuilder as MS } from '../../../mol-script/language/builder.ts';
+import { Task } from '../../../mol-task/index.ts';
+import { StructureRepresentationPresetProvider, PresetStructureRepresentations } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
+import { StateObjectRef } from '../../../mol-state/index.ts';
+import { Model } from '../../../mol-model/structure.ts';
 
 export const RCSBValidationReport = PluginBehavior.create<{ autoAttach: boolean, showTooltip: boolean }>({
     name: 'rcsb-validation-report-prop',
@@ -303,7 +303,7 @@ export const ValidationReportGeometryQualityPreset = StructureRepresentationPres
         name: 'Validation Report (Geometry Quality)', group: 'Annotation',
         description: 'Color structure based on geometry quality; show geometry clashes. Data from wwPDB Validation Report, obtained via RCSB PDB.'
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return a.data.models.length === 1 && ValidationReport.isApplicable(a.data.models[0]);
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,
@@ -340,7 +340,7 @@ export const ValidationReportDensityFitPreset = StructureRepresentationPresetPro
         name: 'Validation Report (Density Fit)', group: 'Annotation',
         description: 'Color structure based on density fit. Data from wwPDB Validation Report, obtained via RCSB PDB.'
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return a.data.models.length === 1 && ValidationReport.isApplicable(a.data.models[0]) && Model.isFromXray(a.data.models[0]) && Model.probablyHasDensityMap(a.data.models[0]);
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,
@@ -364,7 +364,7 @@ export const ValidationReportRandomCoilIndexPreset = StructureRepresentationPres
         name: 'Validation Report (Random Coil Index)', group: 'Annotation',
         description: 'Color structure based on Random Coil Index. Data from wwPDB Validation Report, obtained via RCSB PDB.'
     },
-    isApplicable(a) {
+    isApplicable(a): boolean {
         return a.data.models.length === 1 && ValidationReport.isApplicable(a.data.models[0]) && Model.isFromNmr(a.data.models[0]);
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,

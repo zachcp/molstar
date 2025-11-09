@@ -5,7 +5,7 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 
 export const InteractionsSharedParams = {
     sizeFactor: PD.Numeric(0.3, { min: 0, max: 10, step: 0.01 }),

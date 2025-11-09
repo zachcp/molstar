@@ -6,24 +6,24 @@
 
 import { distinctUntilChanged, map } from 'rxjs';
 
-import { CIF } from '../../../mol-io/reader/cif';
-import { Box3D } from '../../../mol-math/geometry';
-import { PluginStateObject } from '../../../mol-plugin-state/objects';
-import { PluginBehavior } from '../../../mol-plugin/behavior';
-import { PluginCommand } from '../../../mol-plugin/command';
-import { PluginCommands } from '../../../mol-plugin/commands';
-import { PluginContext } from '../../../mol-plugin/context';
-import { UUID } from '../../../mol-util';
-import { Asset } from '../../../mol-util/assets';
-import { Color } from '../../../mol-util/color';
-import { ColorNames } from '../../../mol-util/color/names';
-import { Choice } from '../../../mol-util/param-choice';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
+import { CIF } from '../../../mol-io/reader/cif.ts';
+import { Box3D } from '../../../mol-math/geometry.ts';
+import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
+import { PluginBehavior } from '../../../mol-plugin/behavior.ts';
+import type { PluginCommand } from '../../../mol-plugin/command.ts';
+import { PluginCommands } from '../../../mol-plugin/commands.ts';
+import type { PluginContext } from '../../../mol-plugin/context.ts';
+import { UUID } from '../../../mol-util/index.ts';
+import { Asset } from '../../../mol-util/assets.ts';
+import type { Color } from '../../../mol-util/color/index.ts';
+import { ColorNames } from '../../../mol-util/color/names.ts';
+import { Choice } from '../../../mol-util/param-choice.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 
-import { MetadataWrapper } from '../../volumes-and-segmentations/volseg-api/utils';
+import { MetadataWrapper } from '../../volumes-and-segmentations/volseg-api/utils.ts';
 
-import { MeshlistData } from '../mesh-extension';
-import { MeshServerInfo } from './server-info';
+import { MeshlistData } from '../mesh-extension.ts';
+import type { MeshServerInfo } from './server-info.ts';
 
 
 const DEFAULT_SEGMENT_NAME = 'Untitled segment';

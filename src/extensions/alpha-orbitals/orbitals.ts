@@ -6,14 +6,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { sortArray } from '../../mol-data/util';
-import { canComputeGrid3dOnGPU } from '../../mol-gl/compute/grid3d';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Task } from '../../mol-task';
-import { isTimingMode } from '../../mol-util/debug';
-import { sphericalCollocation } from './collocation';
-import { AlphaOrbital, createGrid, CubeGrid, CubeGridComputationParams, initCubeGrid } from './data-model';
-import { gpuComputeAlphaOrbitalsGridValues } from './gpu/compute';
+import { sortArray } from '../../mol-data/util.ts';
+import { canComputeGrid3dOnGPU } from '../../mol-gl/compute/grid3d.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { Task } from '../../mol-task/index.ts';
+import { isTimingMode } from '../../mol-util/debug.ts';
+import { sphericalCollocation } from './collocation.ts';
+import { type AlphaOrbital, createGrid, type CubeGrid, type CubeGridComputationParams, initCubeGrid } from './data-model.ts';
+import { gpuComputeAlphaOrbitalsGridValues } from './gpu/compute.ts';
 
 export function createSphericalCollocationGrid(
     params: CubeGridComputationParams, orbital: AlphaOrbital, webgl?: WebGLContext

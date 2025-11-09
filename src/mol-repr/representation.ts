@@ -5,30 +5,30 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { WebGLContext } from '../mol-gl/webgl/context';
-import { ColorTheme } from '../mol-theme/color';
-import { SizeTheme } from '../mol-theme/size';
-import { ThemeRegistryContext, Theme } from '../mol-theme/theme';
+import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import type { WebGLContext } from '../mol-gl/webgl/context.ts';
+import type { ColorTheme } from '../mol-theme/color.ts';
+import type { SizeTheme } from '../mol-theme/size.ts';
+import { type ThemeRegistryContext, Theme } from '../mol-theme/theme.ts';
 import { Subject } from 'rxjs';
-import { GraphicsRenderObject } from '../mol-gl/render-object';
-import { Task } from '../mol-task';
-import { PickingId } from '../mol-geo/geometry/picking';
-import { MarkerAction, MarkerActions } from '../mol-util/marker-action';
-import { Loci as ModelLoci, EmptyLoci, isEmptyLoci } from '../mol-model/loci';
-import { Overpaint } from '../mol-theme/overpaint';
-import { Transparency } from '../mol-theme/transparency';
-import { Mat4 } from '../mol-math/linear-algebra';
-import { LocationCallback, getQualityProps } from './util';
-import { BaseGeometry } from '../mol-geo/geometry/base';
-import { Visual } from './visual';
-import { CustomProperty } from '../mol-model-props/common/custom-property';
-import { Clipping } from '../mol-theme/clipping';
-import { SetUtils } from '../mol-util/set';
-import { cantorPairing } from '../mol-data/util';
-import { Substance } from '../mol-theme/substance';
-import { Emissive } from '../mol-theme/emissive';
-import { Location } from '../mol-model/location';
+import type { GraphicsRenderObject } from '../mol-gl/render-object.ts';
+import { Task } from '../mol-task/index.ts';
+import type { PickingId } from '../mol-geo/geometry/picking.ts';
+import { type MarkerAction, MarkerActions } from '../mol-util/marker-action.ts';
+import { Loci as ModelLoci, EmptyLoci, isEmptyLoci } from '../mol-model/loci.ts';
+import { Overpaint } from '../mol-theme/overpaint.ts';
+import { Transparency } from '../mol-theme/transparency.ts';
+import { Mat4 } from '../mol-math/linear-algebra.ts';
+import { type LocationCallback, getQualityProps } from './util.ts';
+import { BaseGeometry } from '../mol-geo/geometry/base.ts';
+import { Visual } from './visual.ts';
+import type { CustomProperty } from '../mol-model-props/common/custom-property.ts';
+import { Clipping } from '../mol-theme/clipping.ts';
+import { SetUtils } from '../mol-util/set.ts';
+import { cantorPairing } from '../mol-data/util.ts';
+import { Substance } from '../mol-theme/substance.ts';
+import { Emissive } from '../mol-theme/emissive.ts';
+import type { Location } from '../mol-model/location.ts';
 
 export type RepresentationProps = { [k: string]: any }
 
@@ -93,7 +93,7 @@ export class RepresentationRegistry<D, S extends Representation.State> {
     private _map = new Map<string, RepresentationProvider<D, any, any>>();
     private _name = new Map<RepresentationProvider<D, any, any>, string>();
 
-    get default() { return this._list[0]; }
+    get default(): { name: string, provider: RepresentationProvider<D, any, any> } { return this._list[0]; }
     get types(): [string, string][] { return getTypes(this._list); }
 
     constructor() {};
@@ -128,7 +128,7 @@ export class RepresentationRegistry<D, S extends Representation.State> {
         return this._map.get(name) || EmptyRepresentationProvider;
     }
 
-    get list() {
+    get list(): { name: string, provider: RepresentationProvider<D, any, any> }[] {
         return this._list;
     }
 
@@ -140,7 +140,7 @@ export class RepresentationRegistry<D, S extends Representation.State> {
         return getTypes(this.getApplicableList(data));
     }
 
-    clear() {
+    clear(): void {
         this._list.length = 0;
         this._map.clear();
         this._name.clear();
@@ -174,11 +174,11 @@ namespace Representation {
     export interface Loci<T extends ModelLoci = ModelLoci> { loci: T, repr?: Representation.Any }
 
     export namespace Loci {
-        export function areEqual(a: Loci, b: Loci) {
+        export function areEqual(a: Loci, b: Loci): boolean {
             return a.repr === b.repr && ModelLoci.areEqual(a.loci, b.loci);
         }
 
-        export function isEmpty(a: Loci) {
+        export function isEmpty(a: Loci): boolean {
             return ModelLoci.isEmpty(a.loci);
         }
 
@@ -285,7 +285,7 @@ namespace Representation {
         private next = new Set<number>();
 
         private _version = -1;
-        get version() {
+        get version(): number {
             return this._version;
         }
 

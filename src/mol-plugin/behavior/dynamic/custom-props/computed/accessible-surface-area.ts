@@ -4,16 +4,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { PluginBehavior } from '../../../behavior';
-import { ParamDefinition as PD } from '../../../../../mol-util/param-definition';
-import { AccessibleSurfaceAreaProvider, AccessibleSurfaceAreaSymbols } from '../../../../../mol-model-props/computed/accessible-surface-area';
-import { Loci } from '../../../../../mol-model/loci';
-import { AccessibleSurfaceAreaColorThemeProvider } from '../../../../../mol-model-props/computed/themes/accessible-surface-area';
-import { OrderedSet } from '../../../../../mol-data/int';
-import { arraySum } from '../../../../../mol-util/array';
-import { DefaultQueryRuntimeTable } from '../../../../../mol-script/runtime/query/compiler';
-import { StructureSelectionQuery, StructureSelectionCategory } from '../../../../../mol-plugin-state/helpers/structure-selection-query';
-import { MolScriptBuilder as MS } from '../../../../../mol-script/language/builder';
+import { PluginBehavior } from '../../../behavior.ts';
+import { ParamDefinition as PD } from '../../../../../mol-util/param-definition.ts';
+import { AccessibleSurfaceAreaProvider, AccessibleSurfaceAreaSymbols } from '../../../../../mol-model-props/computed/accessible-surface-area.ts';
+import type { Loci } from '../../../../../mol-model/loci.ts';
+import { AccessibleSurfaceAreaColorThemeProvider } from '../../../../../mol-model-props/computed/themes/accessible-surface-area.ts';
+import { OrderedSet } from '../../../../../mol-data/int.ts';
+import { arraySum } from '../../../../../mol-util/array.ts';
+import { DefaultQueryRuntimeTable } from '../../../../../mol-script/runtime/query/compiler.ts';
+import { StructureSelectionQuery, StructureSelectionCategory } from '../../../../../mol-plugin-state/helpers/structure-selection-query.ts';
+import { MolScriptBuilder as MS } from '../../../../../mol-script/language/builder.ts';
 
 export const AccessibleSurfaceArea = PluginBehavior.create<{ autoAttach: boolean, showTooltip: boolean }>({
     name: 'computed-accessible-surface-area-prop',
@@ -29,8 +29,7 @@ export const AccessibleSurfaceArea = PluginBehavior.create<{ autoAttach: boolean
             }
         };
 
-        update(p: { autoAttach: boolean, showTooltip: boolean }) {
-            const updated = (
+        override update(p: { autoAttach: boolean, showTooltip: boolean }) {            const updated = (
                 this.params.autoAttach !== p.autoAttach ||
                 this.params.showTooltip !== p.showTooltip
             );

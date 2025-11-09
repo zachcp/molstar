@@ -5,23 +5,23 @@
  * @author Ludovic Autin <ludovic.autin@gmail.com>
  */
 
-import { SortedArray } from '../../../mol-data/int';
-import * as EasingFns from '../../../mol-math/easing';
-import { clamp, lerp } from '../../../mol-math/interpolate';
-import { EPSILON, Mat3, Mat4, Quat, Vec3 } from '../../../mol-math/linear-algebra';
-import { RuntimeContext } from '../../../mol-task';
-import { deepEqual } from '../../../mol-util';
-import { Color } from '../../../mol-util/color';
-import { decodeColor } from '../../../mol-util/color/utils';
-import { produce } from '../../../mol-util/produce';
-import { makeContinuousPaletteCheckpoints, MVSContinuousPaletteProps, MVSDiscretePaletteProps } from '../components/annotation-color-theme';
-import { palettePropsFromMVSPalette } from '../load-helpers';
-import { Snapshot } from '../mvs-data';
-import { MVSAnimationEasing, MVSAnimationNode, MVSAnimationSchema } from '../tree/animation/animation-tree';
-import { Tree } from '../tree/generic/tree-schema';
-import { addDefaults } from '../tree/generic/tree-utils';
-import { MVSTree } from '../tree/mvs/mvs-tree';
-import { ColorT } from '../tree/mvs/param-types';
+import { SortedArray } from '../../../mol-data/int.ts';
+import * as EasingFns from '../../../mol-math/easing.ts';
+import { clamp, lerp } from '../../../mol-math/interpolate.ts';
+import { EPSILON, Mat3, Mat4, Quat, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import type { RuntimeContext } from '../../../mol-task/index.ts';
+import { deepEqual } from '../../../mol-util/index.ts';
+import { Color } from '../../../mol-util/color/index.ts';
+import { decodeColor } from '../../../mol-util/color/utils.ts';
+import { produce } from '../../../mol-util/produce.ts';
+import { makeContinuousPaletteCheckpoints, type MVSContinuousPaletteProps, type MVSDiscretePaletteProps } from '../components/annotation-color-theme.ts';
+import { palettePropsFromMVSPalette } from '../load-helpers.ts';
+import type { Snapshot } from '../mvs-data.ts';
+import { type MVSAnimationEasing, type MVSAnimationNode, MVSAnimationSchema } from '../tree/animation/animation-tree.ts';
+import type { Tree } from '../tree/generic/tree-schema.ts';
+import { addDefaults } from '../tree/generic/tree-utils.ts';
+import type { MVSTree } from '../tree/mvs/mvs-tree.ts';
+import type { ColorT } from '../tree/mvs/param-types.ts';
 
 export async function generateStateTransition(ctx: RuntimeContext, snapshot: Snapshot, snapshotIndex: number, snapshotCount: number) {
     if (!snapshot.animation) return undefined;

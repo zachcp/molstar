@@ -5,18 +5,18 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { CoarseHierarchy, CoarseConformation, CoarseElementData, CoarseSphereConformation, CoarseGaussianConformation } from '../../../mol-model/structure/model/properties/coarse';
-import { Entities } from '../../../mol-model/structure/model/properties/common';
-import { Column } from '../../../mol-data/db';
-import { getCoarseKeys } from '../../../mol-model/structure/model/properties/utils/coarse-keys';
-import { UUID } from '../../../mol-util';
-import { Segmentation, Interval } from '../../../mol-data/int';
-import { Mat3, Tensor } from '../../../mol-math/linear-algebra';
-import { ElementIndex, ChainIndex } from '../../../mol-model/structure/model/indexing';
-import { getCoarseRanges } from '../../../mol-model/structure/model/properties/utils/coarse-ranges';
-import { IhmSphereObjSite, IhmGaussianObjSite, AtomSite, BasicSchema } from './schema';
-import { Model } from '../../../mol-model/structure';
-import { getCoarseIndex } from '../../../mol-model/structure/model/properties/utils/coarse-index';
+import { CoarseHierarchy, type CoarseConformation, type CoarseElementData, type CoarseSphereConformation, type CoarseGaussianConformation } from '../../../mol-model/structure/model/properties/coarse.ts';
+import type { Entities } from '../../../mol-model/structure/model/properties/common.ts';
+import type { Column } from '../../../mol-data/db.ts';
+import { getCoarseKeys } from '../../../mol-model/structure/model/properties/utils/coarse-keys.ts';
+import { UUID } from '../../../mol-util/index.ts';
+import { Segmentation, Interval } from '../../../mol-data/int.ts';
+import { Mat3, Tensor } from '../../../mol-math/linear-algebra.ts';
+import type { ElementIndex, ChainIndex } from '../../../mol-model/structure/model/indexing.ts';
+import { getCoarseRanges } from '../../../mol-model/structure/model/properties/utils/coarse-ranges.ts';
+import { type IhmSphereObjSite, type IhmGaussianObjSite, type AtomSite, BasicSchema } from './schema.ts';
+import type { Model } from '../../../mol-model/structure.ts';
+import { getCoarseIndex } from '../../../mol-model/structure/model/properties/utils/coarse-index.ts';
 
 export interface CoarseData {
     model_id: number,

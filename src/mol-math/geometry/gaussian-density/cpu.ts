@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Box3D, fillGridDim } from '../../geometry';
-import { Vec3, Mat4, Tensor } from '../../linear-algebra';
-import { RuntimeContext } from '../../../mol-task';
-import { PositionData } from '../common';
-import { OrderedSet } from '../../../mol-data/int';
-import { GaussianDensityProps, GaussianDensityData } from '../gaussian-density';
-import { fasterExp } from '../../approx';
+import { Box3D, fillGridDim } from '../../geometry.ts';
+import { Vec3, Mat4, Tensor } from '../../linear-algebra.ts';
+import type { RuntimeContext } from '../../../mol-task/index.ts';
+import type { PositionData } from '../common.ts';
+import { OrderedSet } from '../../../mol-data/int.ts';
+import type { GaussianDensityProps, GaussianDensityData } from '../gaussian-density.ts';
+import { fasterExp } from '../../approx.ts';
 
 export async function GaussianDensityCPU(ctx: RuntimeContext, position: PositionData, box: Box3D, radius: (index: number) => number, props: GaussianDensityProps): Promise<GaussianDensityData> {
     const { resolution, radiusOffset, smoothness } = props;

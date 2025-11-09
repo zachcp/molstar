@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { SortedArray } from '../../../../mol-data/int';
-import { ElementIndex, ResidueIndex, ChainIndex } from '../../model';
-import { Unit } from '../unit';
-import { Location } from './location';
-import { StructureProperties } from '../properties';
+import type { SortedArray } from '../../../../mol-data/int.ts';
+import type { ElementIndex, ResidueIndex, ChainIndex } from '../../model.ts';
+import { Unit } from '../unit.ts';
+import type { Location } from './location.ts';
+import { StructureProperties } from '../properties.ts';
 
 // TODO: when nominal types are available, make this indexed by UnitIndex
 export type Set = SortedArray<ElementIndex>

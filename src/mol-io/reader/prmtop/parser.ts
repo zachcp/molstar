@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Task, RuntimeContext } from '../../../mol-task';
-import { Tokenizer, TokenBuilder, Tokens } from '../common/text/tokenizer';
-import { ReaderResult as Result } from '../result';
-import { TokenColumnProvider as TokenColumn } from '../common/text/column/token';
-import { Column } from '../../../mol-data/db';
-import { Mutable } from '../../../mol-util/type-helpers';
-import { StringLike } from '../../common/string-like';
+import { Task, type RuntimeContext } from '../../../mol-task/index.ts';
+import { Tokenizer, TokenBuilder, type Tokens } from '../common/text/tokenizer.ts';
+import { ReaderResult as Result } from '../result.ts';
+import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.ts';
+import { Column } from '../../../mol-data/db.ts';
+import type { Mutable } from '../../../mol-util/type-helpers.ts';
+import type { StringLike } from '../../common/string-like.ts';
 
 
 // http://ambermd.org/prmtop.pdf

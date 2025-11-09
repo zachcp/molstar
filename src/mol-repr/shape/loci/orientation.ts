@@ -4,22 +4,22 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { RuntimeContext } from '../../../mol-task';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { ColorNames } from '../../../mol-util/color/names';
-import { ShapeRepresentation } from '../representation';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation';
-import { Shape } from '../../../mol-model/shape';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { structureElementLociLabelMany } from '../../../mol-theme/label';
-import { addAxes } from '../../../mol-geo/geometry/mesh/builder/axes';
-import { addOrientedBox } from '../../../mol-geo/geometry/mesh/builder/box';
-import { addEllipsoid } from '../../../mol-geo/geometry/mesh/builder/ellipsoid';
-import { Axes3D } from '../../../mol-math/geometry';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { MarkerActions } from '../../../mol-util/marker-action';
-import { StructureElement } from '../../../mol-model/structure';
+import type { RuntimeContext } from '../../../mol-task/index.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { ColorNames } from '../../../mol-util/color/names.ts';
+import { ShapeRepresentation } from '../representation.ts';
+import { Representation, type RepresentationParamsGetter, type RepresentationContext } from '../../representation.ts';
+import { Shape } from '../../../mol-model/shape.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { structureElementLociLabelMany } from '../../../mol-theme/label.ts';
+import { addAxes } from '../../../mol-geo/geometry/mesh/builder/axes.ts';
+import { addOrientedBox } from '../../../mol-geo/geometry/mesh/builder/box.ts';
+import { addEllipsoid } from '../../../mol-geo/geometry/mesh/builder/ellipsoid.ts';
+import { Axes3D } from '../../../mol-math/geometry.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { MarkerActions } from '../../../mol-util/marker-action.ts';
+import { StructureElement } from '../../../mol-model/structure.ts';
 
 export interface OrientationData {
     locis: StructureElement.Loci[]
@@ -81,7 +81,7 @@ function buildAxesMesh(data: OrientationData, props: OrientationProps, mesh?: Me
     return MeshBuilder.getMesh(state);
 }
 
-function getAxesShape(ctx: RuntimeContext, data: OrientationData, props: OrientationProps, shape?: Shape<Mesh>) {
+function getAxesShape(ctx: RuntimeContext, data: OrientationData, props: OrientationProps, shape?: Shape<Mesh>): Shape<Mesh> {
     const mesh = buildAxesMesh(data, props, shape && shape.geometry);
     const name = getAxesName(data.locis);
     return Shape.create(name, data, mesh, () => props.color, () => 1, () => name);
@@ -104,7 +104,7 @@ function buildBoxMesh(data: OrientationData, props: OrientationProps, mesh?: Mes
     return MeshBuilder.getMesh(state);
 }
 
-function getBoxShape(ctx: RuntimeContext, data: OrientationData, props: OrientationProps, shape?: Shape<Mesh>) {
+function getBoxShape(ctx: RuntimeContext, data: OrientationData, props: OrientationProps, shape?: Shape<Mesh>): Shape<Mesh> {
     const mesh = buildBoxMesh(data, props, shape && shape.geometry);
     const name = getBoxName(data.locis);
     return Shape.create(name, data, mesh, () => props.color, () => 1, () => name);

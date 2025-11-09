@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { NumberArray } from './type-helpers';
-import { ParamDefinition as PD } from './param-definition';
+import type { NumberArray } from './type-helpers.ts';
+import { ParamDefinition as PD } from './param-definition.ts';
 
 export interface Material {
     /** Normalized to [0, 1] range */
@@ -16,21 +16,21 @@ export interface Material {
     bumpiness: number
 }
 
-export function Material(values?: Partial<Material>) {
+export function Material(values?: Partial<Material>): Material {
     return { ...Material.Zero, ...values };
 }
 
 export namespace Material {
     export const Zero: Material = { metalness: 0, roughness: 0, bumpiness: 0 };
 
-    export function toArray<T extends NumberArray>(material: Material, array: T, offset: number) {
+    export function toArray<T extends NumberArray>(material: Material, array: T, offset: number): T {
         array[offset] = material.metalness * 255;
         array[offset + 1] = material.roughness * 255;
         array[offset + 2] = material.bumpiness * 255;
         return array;
     }
 
-    export function toString({ metalness, roughness, bumpiness }: Material) {
+    export function toString({ metalness, roughness, bumpiness }: Material): string {
         return `M ${metalness.toFixed(2)} | R ${roughness.toFixed(2)} | B ${bumpiness.toFixed(2)}`;
     }
 

@@ -5,8 +5,8 @@
  */
 
 import { BehaviorSubject } from 'rxjs';
-import { MVSData } from '../../extensions/mvs/mvs-data';
-import type { MVSStoriesViewerModel } from './elements/viewer';
+import type { MVSData } from '../../extensions/mvs/mvs-data.ts';
+import type { MVSStoriesViewerModel } from './elements/viewer.tsx';
 
 export type MVSStoriesCommand =
     | { kind: 'load-mvs', format?: 'mvsj' | 'mvsx', url?: string, data?: MVSData | string | Uint8Array<ArrayBuffer> }

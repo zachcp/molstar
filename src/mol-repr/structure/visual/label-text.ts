@@ -5,19 +5,19 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { VisualUpdateState } from '../../../mol-repr/util';
-import { VisualContext } from '../../../mol-repr/visual';
-import { Structure, StructureElement, StructureProperties } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Text } from '../../../mol-geo/geometry/text/text';
-import { TextBuilder } from '../../../mol-geo/geometry/text/text-builder';
-import { ComplexTextVisual, ComplexTextParams, ComplexVisual } from '../complex-visual';
-import { ElementIterator, getSerialElementLoci, eachSerialElement } from './util/element';
-import { ColorNames } from '../../../mol-util/color/names';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { BoundaryHelper } from '../../../mol-math/geometry/boundary-helper';
-import { makeElementIgnoreTest } from './util/element';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { VisualUpdateState } from '../../../mol-repr/util.ts';
+import type { VisualContext } from '../../../mol-repr/visual.ts';
+import { type Structure, StructureElement, StructureProperties } from '../../../mol-model/structure.ts';
+import type { Theme } from '../../../mol-theme/theme.ts';
+import type { Text } from '../../../mol-geo/geometry/text/text.ts';
+import { TextBuilder } from '../../../mol-geo/geometry/text/text-builder.ts';
+import { ComplexTextVisual, ComplexTextParams, type ComplexVisual } from '../complex-visual.ts';
+import { ElementIterator, getSerialElementLoci, eachSerialElement } from './util/element.ts';
+import { ColorNames } from '../../../mol-util/color/names.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { BoundaryHelper } from '../../../mol-math/geometry/boundary-helper.ts';
+import { makeElementIgnoreTest } from './util/element.ts';
 
 export const LabelTextParams = {
     ...ComplexTextParams,

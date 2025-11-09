@@ -4,27 +4,27 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Loci } from '../../../mol-model/loci';
-import { RuntimeContext } from '../../../mol-task';
-import { Lines } from '../../../mol-geo/geometry/lines/lines';
-import { Text } from '../../../mol-geo/geometry/text/text';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { ColorNames } from '../../../mol-util/color/names';
-import { ShapeRepresentation } from '../representation';
-import { Representation, RepresentationParamsGetter, RepresentationContext } from '../../representation';
-import { Shape } from '../../../mol-model/shape';
-import { LinesBuilder } from '../../../mol-geo/geometry/lines/lines-builder';
-import { TextBuilder } from '../../../mol-geo/geometry/text/text-builder';
-import { Vec3, Mat4 } from '../../../mol-math/linear-algebra';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { arcLength, halfPI, radToDeg } from '../../../mol-math/misc';
-import { Circle } from '../../../mol-geo/primitive/circle';
-import { transformPrimitive } from '../../../mol-geo/primitive/primitive';
-import { MarkerActions, MarkerAction } from '../../../mol-util/marker-action';
-import { dihedralLabel } from '../../../mol-theme/label';
-import { LociLabelTextParams } from './common';
-import { Sphere3D } from '../../../mol-math/geometry';
+import { Loci } from '../../../mol-model/loci.ts';
+import type { RuntimeContext } from '../../../mol-task/index.ts';
+import { Lines } from '../../../mol-geo/geometry/lines/lines.ts';
+import { Text } from '../../../mol-geo/geometry/text/text.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { ColorNames } from '../../../mol-util/color/names.ts';
+import { ShapeRepresentation } from '../representation.ts';
+import { Representation, type RepresentationParamsGetter, type RepresentationContext } from '../../representation.ts';
+import { Shape } from '../../../mol-model/shape.ts';
+import { LinesBuilder } from '../../../mol-geo/geometry/lines/lines-builder.ts';
+import { TextBuilder } from '../../../mol-geo/geometry/text/text-builder.ts';
+import { Vec3, Mat4 } from '../../../mol-math/linear-algebra.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { arcLength, halfPI, radToDeg } from '../../../mol-math/misc.ts';
+import { Circle } from '../../../mol-geo/primitive/circle.ts';
+import { transformPrimitive } from '../../../mol-geo/primitive/primitive.ts';
+import { MarkerActions, MarkerAction } from '../../../mol-util/marker-action.ts';
+import { dihedralLabel } from '../../../mol-theme/label.ts';
+import { LociLabelTextParams } from './common.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
 
 export interface DihedralData {
     quads: Loci.Bundle<4>[]
@@ -203,7 +203,7 @@ function buildVectorsLines(data: DihedralData, props: DihedralProps, lines?: Lin
     return builder.getLines();
 }
 
-function getVectorsShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>) {
+function getVectorsShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>): Shape<Lines> {
     const lines = buildVectorsLines(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -220,7 +220,7 @@ function buildConnectorLine(data: DihedralData, props: DihedralProps, lines?: Li
     return builder.getLines();
 }
 
-function getConnectorShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>) {
+function getConnectorShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>): Shape<Lines> {
     const lines = buildConnectorLine(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -238,7 +238,7 @@ function buildArmsLines(data: DihedralData, props: DihedralProps, lines?: Lines)
     return builder.getLines();
 }
 
-function getArmsShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>) {
+function getArmsShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>): Shape<Lines> {
     const lines = buildArmsLines(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -256,7 +256,7 @@ function buildExtendersLines(data: DihedralData, props: DihedralProps, lines?: L
     return builder.getLines();
 }
 
-function getExtendersShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>) {
+function getExtendersShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>): Shape<Lines> {
     const lines = buildExtendersLines(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -286,7 +286,7 @@ function buildArcLines(data: DihedralData, props: DihedralProps, lines?: Lines):
     return builder.getLines();
 }
 
-function getArcShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>) {
+function getArcShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>): Shape<Lines> {
     const lines = buildArcLines(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -306,7 +306,7 @@ function buildSectorMesh(data: DihedralData, props: DihedralProps, mesh?: Mesh):
     return MeshBuilder.getMesh(state);
 }
 
-function getSectorShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Mesh>) {
+function getSectorShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Mesh>): Shape<Mesh> {
     const mesh = buildSectorMesh(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     const getLabel = (groupId: number) => dihedralLabel(data.quads[groupId]);
@@ -334,7 +334,7 @@ function buildText(data: DihedralData, props: DihedralProps, text?: Text): Text 
     return builder.getText();
 }
 
-function getTextShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Text>) {
+function getTextShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Text>): Shape<Text> {
     const text = buildText(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     const getLabel = (groupId: number) => dihedralLabel(data.quads[groupId]);

@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure, Unit } from '../../../mol-model/structure';
-import { StructureElement } from '../../../mol-model/structure/structure';
-import { Elements } from '../../../mol-model/structure/model/properties/atomic/types';
-import { BondType } from '../../../mol-model/structure/model/types';
-import { SortedArray } from '../../../mol-data/int';
+import type { Structure, Unit } from '../../../mol-model/structure.ts';
+import type { StructureElement } from '../../../mol-model/structure/structure.ts';
+import type { Elements } from '../../../mol-model/structure/model/properties/atomic/types.ts';
+import { BondType } from '../../../mol-model/structure/model/types.ts';
+import { SortedArray } from '../../../mol-data/int.ts';
 
 export function typeSymbol(unit: Unit.Atomic, index: StructureElement.UnitIndex) {
     return unit.model.atomicHierarchy.atoms.type_symbol.value(unit.elements[index]);

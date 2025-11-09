@@ -5,10 +5,10 @@
  */
 
 import * as ReactDOM from 'react-dom';
-import { PluginUIContext } from '../../../mol-plugin-ui/context';
-import { PluginContextContainer } from '../../../mol-plugin-ui/plugin';
-import { TransformUpdaterControl } from '../../../mol-plugin-ui/state/update-transform';
-import { StateElements } from '../helpers';
+import type { PluginUIContext } from '../../../mol-plugin-ui/context.ts';
+import { PluginContextContainer } from '../../../mol-plugin-ui/plugin.tsx';
+import { TransformUpdaterControl } from '../../../mol-plugin-ui/state/update-transform.tsx';
+import { StateElements } from '../helpers.ts';
 
 export function volumeStreamingControls(plugin: PluginUIContext, parent: Element) {
     ReactDOM.render(<PluginContextContainer plugin={plugin}>

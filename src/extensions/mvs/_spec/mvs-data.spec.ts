@@ -4,7 +4,7 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import fs from 'fs';
+import fs from 'node:fs';
 import { MVSData } from '../mvs-data';
 
 

@@ -4,18 +4,18 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { addFixedCountDashedCylinder, addSimpleCylinder, BasicCylinderProps } from '../../mol-geo/geometry/mesh/builder/cylinder';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder';
-import { Sphere3D } from '../../mol-math/geometry';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { Shape } from '../../mol-model/shape';
-import { StructureElement } from '../../mol-model/structure';
-import { addLinkCylinderMesh, AddLinkOptions, AddLinkParams, DefaultLinkCylinderProps, LinkStyle } from '../../mol-repr/structure/visual/util/link';
-import { Color } from '../../mol-util/color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { stringToWords } from '../../mol-util/string';
-import { InteractionKinds, StructureInteractions } from './model';
+import { addFixedCountDashedCylinder, addSimpleCylinder, type BasicCylinderProps } from '../../mol-geo/geometry/mesh/builder/cylinder.ts';
+import type { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { Sphere3D } from '../../mol-math/geometry.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { Shape } from '../../mol-model/shape.ts';
+import { StructureElement } from '../../mol-model/structure.ts';
+import { addLinkCylinderMesh, type AddLinkOptions, type AddLinkParams, DefaultLinkCylinderProps, LinkStyle } from '../../mol-repr/structure/visual/util/link.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { stringToWords } from '../../mol-util/string.ts';
+import { InteractionKinds, type StructureInteractions } from './model.ts';
 
 function visualParams({ color, style = 'dashed', radius = 0.04 }: { color: Color, style?: 'dashed' | 'solid', radius?: number }) {
     return PD.Group({

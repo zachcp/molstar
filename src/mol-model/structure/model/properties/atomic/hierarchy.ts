@@ -5,12 +5,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column, Table } from '../../../../../mol-data/db';
-import { Segmentation } from '../../../../../mol-data/int';
-import { mmCIF_Schema as mmCIF } from '../../../../../mol-io/reader/cif/schema/mmcif';
-import { ElementSymbol, MoleculeType, PolymerType } from '../../types';
-import { ChainIndex, EntityIndex, ResidueIndex, ElementIndex } from '../../indexing';
-import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges';
+import { Column, type Table } from '../../../../../mol-data/db.ts';
+import type { Segmentation } from '../../../../../mol-data/int.ts';
+import { mmCIF_Schema as mmCIF } from '../../../../../mol-io/reader/cif/schema/mmcif.ts';
+import type { ElementSymbol, MoleculeType, PolymerType } from '../../types.ts';
+import type { ChainIndex, EntityIndex, ResidueIndex, ElementIndex } from '../../indexing.ts';
+import type { SortedRanges } from '../../../../../mol-data/int/sorted-ranges.ts';
 
 export const AtomsSchema = {
     /**
@@ -256,28 +256,28 @@ export interface AtomicHierarchy extends _Hierarchy {
 
 export namespace AtomicHierarchy {
     /** Start residue inclusive */
-    export function chainStartResidueIndex(segs: AtomicSegments, cI: ChainIndex) {
+    export function chainStartResidueIndex(segs: AtomicSegments, cI: ChainIndex): ResidueIndex {
         return segs.residueAtomSegments.index[segs.chainAtomSegments.offsets[cI]];
     }
 
     /** End residue exclusive */
-    export function chainEndResidueIndexExcl(segs: AtomicSegments, cI: ChainIndex) {
+    export function chainEndResidueIndexExcl(segs: AtomicSegments, cI: ChainIndex): ResidueIndex {
         return segs.residueAtomSegments.index[segs.chainAtomSegments.offsets[cI + 1] - 1] + 1 as ResidueIndex;
     }
 
-    export function chainResidueCount(segs: AtomicSegments, cI: ChainIndex) {
+    export function chainResidueCount(segs: AtomicSegments, cI: ChainIndex): number {
         return chainEndResidueIndexExcl(segs, cI) - chainStartResidueIndex(segs, cI);
     }
 
-    export function residueFirstAtomIndex(hierarchy: AtomicHierarchy, rI: ResidueIndex) {
+    export function residueFirstAtomIndex(hierarchy: AtomicHierarchy, rI: ResidueIndex): ElementIndex {
         return hierarchy.residueAtomSegments.offsets[rI];
     }
 
-    export function atomChainIndex(hierarchy: AtomicHierarchy, eI: ElementIndex) {
+    export function atomChainIndex(hierarchy: AtomicHierarchy, eI: ElementIndex): ChainIndex {
         return hierarchy.chainAtomSegments.index[eI];
     }
 
-    export function residueChainIndex(hierarchy: AtomicHierarchy, rI: ResidueIndex) {
+    export function residueChainIndex(hierarchy: AtomicHierarchy, rI: ResidueIndex): ChainIndex {
         return hierarchy.chainAtomSegments.index[hierarchy.residueAtomSegments.offsets[rI]];
     }
 }

@@ -4,9 +4,9 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { SortedArray } from '../../../mol-data/int';
-import { ElementIndex } from '../../../mol-model/structure';
-import { arrayExtend, range } from '../../../mol-util/array';
+import { SortedArray } from '../../../mol-data/int.ts';
+import type { ElementIndex } from '../../../mol-model/structure.ts';
+import { arrayExtend, range } from '../../../mol-util/array.ts';
 
 
 /** Represents a collection of disjoint elements ranges in a model (atoms, spheres, or gaussians).

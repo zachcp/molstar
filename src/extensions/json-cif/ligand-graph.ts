@@ -4,13 +4,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Table } from '../../mol-data/db';
-import { mmCIF_Schema } from '../../mol-io/reader/cif/schema/mmcif';
-import { Mat4, Vec3 } from '../../mol-math/linear-algebra';
-import { MolstarBondSiteTypeId, MolstarBondSiteValueOrder } from '../../mol-model/structure/export/categories/molstar_bond_site';
-import { UUID } from '../../mol-util';
-import { arrayMapAdd } from '../../mol-util/map';
-import { JSONCifDataBlock } from './model';
+import type { Table } from '../../mol-data/db.ts';
+import type { mmCIF_Schema } from '../../mol-io/reader/cif/schema/mmcif.ts';
+import { type Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
+import type { MolstarBondSiteTypeId, MolstarBondSiteValueOrder } from '../../mol-model/structure/export/categories/molstar_bond_site.ts';
+import { UUID } from '../../mol-util/index.ts';
+import { arrayMapAdd } from '../../mol-util/map.ts';
+import type { JSONCifDataBlock } from './model.ts';
 
 type Atom = Partial<Table.Row<mmCIF_Schema['atom_site']>>
 

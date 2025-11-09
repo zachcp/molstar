@@ -5,5 +5,5 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-export * from './volume/volume';
-export * from './volume/grid';
+export * from './volume/volume.ts';
+export * from './volume/grid.ts';

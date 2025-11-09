@@ -6,10 +6,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginUIComponent } from './base';
-import { PluginToastManager } from '../mol-plugin/util/toast';
-import { IconButton } from './controls/common';
-import { CancelSvg } from './controls/icons';
+import { PluginUIComponent } from './base.tsx';
+import type { PluginToastManager } from '../mol-plugin/util/toast.ts';
+import { IconButton } from './controls/common.tsx';
+import { CancelSvg } from './controls/icons.tsx';
 
 class ToastEntry extends PluginUIComponent<{ entry: PluginToastManager.Entry }> {
     private hide = () => {
@@ -17,8 +17,7 @@ class ToastEntry extends PluginUIComponent<{ entry: PluginToastManager.Entry }> 
         (entry.hide || function () { }).call(null);
     };
 
-    render() {
-        const entry = this.props.entry;
+    override render() {        const entry = this.props.entry;
         const message = typeof entry.message === 'string'
             ? <div dangerouslySetInnerHTML={{ __html: entry.message }} />
             // @ts-ignore // TODO: handle type better
@@ -40,12 +39,10 @@ class ToastEntry extends PluginUIComponent<{ entry: PluginToastManager.Entry }> 
 }
 
 export class Toasts extends PluginUIComponent {
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.toast.events.changed, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.plugin.managers.toast.events.changed, () => this.forceUpdate());
     }
 
-    render() {
-        const state = this.plugin.managers.toast.state;
+    override render() {        const state = this.plugin.managers.toast.state;
 
         if (!state.entries.count()) return null;
 

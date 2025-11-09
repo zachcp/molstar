@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PluginContext } from './context';
-import { UUID } from '../mol-util';
+import type { PluginContext } from './context.ts';
+import { UUID } from '../mol-util/index.ts';
 
 export { PluginCommand, PluginCommandManager };
 

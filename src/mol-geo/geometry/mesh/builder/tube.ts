@@ -6,9 +6,9 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { Vec3 } from '../../../../mol-math/linear-algebra';
-import { cantorPairing, ChunkedArray } from '../../../../mol-data/util';
-import { MeshBuilder } from '../mesh-builder';
+import { Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { cantorPairing, ChunkedArray } from '../../../../mol-data/util.ts';
+import type { MeshBuilder } from '../mesh-builder.ts';
 
 const normalVector = Vec3();
 const capNormalSmoothingVector = Vec3();

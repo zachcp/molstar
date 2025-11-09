@@ -5,27 +5,27 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { SymmetryOperator } from '../../mol-math/geometry';
-import { Mat4 } from '../../mol-math/linear-algebra';
-import { SIFTSMapping } from '../../mol-model-props/sequence/sifts-mapping';
-import { QueryContext, Structure, StructureElement, StructureProperties, StructureSelection } from '../../mol-model/structure';
-import { alignAndSuperpose, superpose } from '../../mol-model/structure/structure/util/superposition';
-import { alignAndSuperposeWithSIFTSMapping } from '../../mol-model/structure/structure/util/superposition-sifts-mapping';
-import { StructureSelectionQueries } from '../../mol-plugin-state/helpers/structure-selection-query';
-import { StructureSelectionHistoryEntry } from '../../mol-plugin-state/manager/structure/selection';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { StateTransforms } from '../../mol-plugin-state/transforms';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginConfig } from '../../mol-plugin/config';
-import { StateObjectCell, StateObjectRef } from '../../mol-state';
-import { elementLabel, structureElementStatsLabel } from '../../mol-theme/label';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { stripTags } from '../../mol-util/string';
-import { CollapsableControls, PurePluginUIComponent } from '../base';
-import { Button, IconButton, ToggleButton } from '../controls/common';
-import { ArrowDownwardSvg, ArrowUpwardSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, SuperposeAtomsSvg, SuperposeChainsSvg, SuperpositionSvg, TuneSvg } from '../controls/icons';
-import { ParameterControls } from '../controls/parameters';
-import { ToggleSelectionModeButton } from './selection';
+import type { SymmetryOperator } from '../../mol-math/geometry.ts';
+import { Mat4 } from '../../mol-math/linear-algebra.ts';
+import { SIFTSMapping } from '../../mol-model-props/sequence/sifts-mapping.ts';
+import { QueryContext, type Structure, StructureElement, StructureProperties, StructureSelection } from '../../mol-model/structure.ts';
+import { alignAndSuperpose, superpose } from '../../mol-model/structure/structure/util/superposition.ts';
+import { alignAndSuperposeWithSIFTSMapping } from '../../mol-model/structure/structure/util/superposition-sifts-mapping.ts';
+import { StructureSelectionQueries } from '../../mol-plugin-state/helpers/structure-selection-query.ts';
+import type { StructureSelectionHistoryEntry } from '../../mol-plugin-state/manager/structure/selection.ts';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import { type StateObjectCell, StateObjectRef } from '../../mol-state/index.ts';
+import { elementLabel, structureElementStatsLabel } from '../../mol-theme/label.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { stripTags } from '../../mol-util/string.ts';
+import { CollapsableControls, PurePluginUIComponent } from '../base.tsx';
+import { Button, IconButton, ToggleButton } from '../controls/common.tsx';
+import { ArrowDownwardSvg, ArrowUpwardSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, SuperposeAtomsSvg, SuperposeChainsSvg, SuperpositionSvg, TuneSvg } from '../controls/icons.tsx';
+import { ParameterControls } from '../controls/parameters.tsx';
+import { ToggleSelectionModeButton } from './selection.tsx';
 
 export class StructureSuperpositionControls extends CollapsableControls {
     defaultState() {
@@ -37,8 +37,7 @@ export class StructureSuperpositionControls extends CollapsableControls {
         };
     }
 
-    componentDidMount() {
-        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, sel => {
+    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, sel => {
             this.setState({ isHidden: sel.structures.length < 2 });
         });
     }
@@ -77,15 +76,13 @@ interface AtomsLociEntry extends LociEntry {
 };
 
 export class SuperpositionControls extends PurePluginUIComponent<{ }, SuperpositionControlsState> {
-    state: SuperpositionControlsState = {
-        isBusy: false,
+    override state: SuperpositionControlsState = {        isBusy: false,
         canUseDb: false,
         action: undefined,
         options: DefaultStructureSuperpositionOptions
     };
 
-    componentDidMount() {
-        this.subscribe(this.selection.events.changed, () => {
+    override componentDidMount() {        this.subscribe(this.selection.events.changed, () => {
             this.forceUpdate();
         });
 
@@ -257,9 +254,9 @@ export class SuperpositionControls extends PurePluginUIComponent<{ }, Superposit
             <Button noOverflow title='Click to focus. Hover to highlight.' onClick={() => this.focusLoci(e.loci)} style={{ width: 'auto', textAlign: 'left' }} onMouseEnter={() => this.highlight(e.loci)} onMouseLeave={() => this.plugin.managers.interactivity.lociHighlights.clearHighlights()}>
                 {idx}. <span dangerouslySetInnerHTML={{ __html: e.label }} />
             </Button>
-            {history.length > 1 && <IconButton svg={ArrowUpwardSvg} small={true} className='msp-form-control' onClick={() => this.moveHistory(e, 'up')} flex='20px' title={'Move up'} />}
-            {history.length > 1 && <IconButton svg={ArrowDownwardSvg} small={true} className='msp-form-control' onClick={() => this.moveHistory(e, 'down')} flex='20px' title={'Move down'} />}
-            <IconButton svg={DeleteOutlinedSvg} small={true} className='msp-form-control' onClick={() => this.plugin.managers.structure.selection.modifyHistory(e, 'remove')} flex title={'Remove'} />
+            {history.length > 1 && <IconButton svg={ArrowUpwardSvg} small className='msp-form-control' onClick={() => this.moveHistory(e, 'up')} flex='20px' title="Move up" />}
+            {history.length > 1 && <IconButton svg={ArrowDownwardSvg} small className='msp-form-control' onClick={() => this.moveHistory(e, 'down')} flex='20px' title="Move down" />}
+            <IconButton svg={DeleteOutlinedSvg} small className='msp-form-control' onClick={() => this.plugin.managers.structure.selection.modifyHistory(e, 'remove')} flex title="Remove" />
         </div>;
     }
 
@@ -373,8 +370,7 @@ export class SuperpositionControls extends PurePluginUIComponent<{ }, Superposit
         this.setState({ options: values });
     };
 
-    render() {
-        return <>
+    override render() {        return <>
             <div className='msp-flex-row'>
                 <ToggleButton icon={SuperposeChainsSvg} label='Chains' toggle={this.toggleByChains} isSelected={this.state.action === 'byChains'} disabled={this.state.isBusy} />
                 <ToggleButton icon={SuperposeAtomsSvg} label='Atoms' toggle={this.toggleByAtoms} isSelected={this.state.action === 'byAtoms'} disabled={this.state.isBusy} />

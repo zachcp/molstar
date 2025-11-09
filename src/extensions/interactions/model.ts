@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { InteractionType } from '../../mol-model-props/computed/interactions/common';
-import { StructureElement } from '../../mol-model/structure';
+import { InteractionType } from '../../mol-model-props/computed/interactions/common.ts';
+import type { StructureElement } from '../../mol-model/structure.ts';
 
 interface InteractionElementSchemaBase {
     aStructureRef?: string,

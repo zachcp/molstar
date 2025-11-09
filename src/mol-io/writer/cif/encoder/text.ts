@@ -6,11 +6,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column } from '../../../../mol-data/db';
-import { StringBuilder } from '../../../../mol-util/string-builder';
-import { Category, Field, Encoder } from '../encoder';
-import { Writer } from '../../writer';
-import { getFieldDigitCount, getIncludedFields, getCategoryInstanceData, CategoryInstanceData } from './util';
+import { Column } from '../../../../mol-data/db.ts';
+import { StringBuilder } from '../../../../mol-util/string-builder.ts';
+import { Category, Field, type Encoder } from '../encoder.ts';
+import type { Writer } from '../../writer.ts';
+import { getFieldDigitCount, getIncludedFields, getCategoryInstanceData, type CategoryInstanceData } from './util.ts';
 
 export class TextEncoder implements Encoder<string> {
     private builder = StringBuilder.create();

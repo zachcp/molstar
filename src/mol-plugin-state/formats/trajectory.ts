@@ -6,11 +6,11 @@
  * @author Ludovic Autin <ludovic.autin@gmail.com>
  */
 
-import { StateTransforms } from '../transforms';
-import { guessCifVariant, DataFormatProvider } from './provider';
-import { StateTransformer, StateObjectRef } from '../../mol-state';
-import { PluginStateObject } from '../objects';
-import { PluginContext } from '../../mol-plugin/context';
+import { StateTransforms } from '../transforms.ts';
+import { guessCifVariant, type DataFormatProvider } from './provider.ts';
+import type { StateTransformer, StateObjectRef } from '../../mol-state/index.ts';
+import type { PluginStateObject } from '../objects.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
 
 export interface TrajectoryFormatProvider<P extends { trajectoryTags?: string | string[] } = { trajectoryTags?: string | string[] }, R extends { trajectory: StateObjectRef<PluginStateObject.Molecule.Trajectory> } = { trajectory: StateObjectRef<PluginStateObject.Molecule.Trajectory> }>
     extends DataFormatProvider<P, R> {

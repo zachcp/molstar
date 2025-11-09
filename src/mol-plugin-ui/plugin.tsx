@@ -7,23 +7,23 @@
  * @author Ventura Rivera <venturaxrivera@gmail.com>
  */
 
-import { List } from 'immutable';
+import type { List } from 'immutable';
 import * as React from 'react';
-import { formatTime } from '../mol-util';
-import { LogEntry } from '../mol-util/log-entry';
-import { PluginReactContext, PluginUIComponent } from './base';
-import { AnimationViewportControls, DefaultStructureTools, LociLabels, StateSnapshotViewportControls, TrajectoryViewportControls, SelectionViewportControls, ViewportSnapshotDescription } from './controls';
-import { LeftPanelControls } from './left-panel';
-import { SequenceView } from './sequence';
-import { BackgroundTaskProgress, OverlayTaskProgress } from './task';
-import { Toasts } from './toast';
-import { Viewport, ViewportControls } from './viewport';
-import { PluginCommands } from '../mol-plugin/commands';
-import { PluginUIContext } from './context';
-import { OpenFiles } from '../mol-plugin-state/actions/file';
-import { Asset } from '../mol-util/assets';
+import { formatTime } from '../mol-util/index.ts';
+import type { LogEntry } from '../mol-util/log-entry.ts';
+import { PluginReactContext, PluginUIComponent } from './base.tsx';
+import { AnimationViewportControls, DefaultStructureTools, LociLabels, StateSnapshotViewportControls, TrajectoryViewportControls, SelectionViewportControls, ViewportSnapshotDescription } from './controls.tsx';
+import { LeftPanelControls } from './left-panel.tsx';
+import { SequenceView } from './sequence.tsx';
+import { BackgroundTaskProgress, OverlayTaskProgress } from './task.tsx';
+import { Toasts } from './toast.tsx';
+import { Viewport, ViewportControls } from './viewport.tsx';
+import { PluginCommands } from '../mol-plugin/commands.ts';
+import type { PluginUIContext } from './context.ts';
+import { OpenFiles } from '../mol-plugin-state/actions/file.ts';
+import { Asset } from '../mol-util/assets.ts';
 import { BehaviorSubject } from 'rxjs';
-import { useBehavior } from './hooks/use-behavior';
+import { useBehavior } from './hooks/use-behavior.ts';
 
 export function Plugin({ plugin }: { plugin: PluginUIContext }) {
     if (plugin.isInitialized) {
@@ -68,8 +68,7 @@ function PluginInitWrapper({ plugin }: { plugin: PluginUIContext }) {
 }
 
 export class PluginContextContainer extends React.Component<{ plugin: PluginUIContext, children?: any }> {
-    render() {
-        return <PluginReactContext.Provider value={this.props.plugin}>
+    override render() {        return <PluginReactContext.Provider value={this.props.plugin}>
             <div className='msp-plugin'>
                 {this.props.children}
             </div>
@@ -80,8 +79,7 @@ export class PluginContextContainer extends React.Component<{ plugin: PluginUICo
 type RegionKind = 'top' | 'left' | 'right' | 'bottom' | 'main'
 
 export class Layout extends PluginUIComponent {
-    componentDidMount() {
-        this.subscribe(this.plugin.layout.events.updated, () => this.forceUpdate());
+    override componentDidMount() {        this.subscribe(this.plugin.layout.events.updated, () => this.forceUpdate());
     }
 
     region(kind: RegionKind, Element?: React.ComponentClass | React.FC) {
@@ -191,8 +189,7 @@ export class Layout extends PluginUIComponent {
         }
     };
 
-    render() {
-        const layout = this.plugin.layout.state;
+    override render() {        const layout = this.plugin.layout.state;
         const controls = this.plugin.spec.components?.controls || {};
         const viewport = this.plugin.spec.components?.viewport?.view || DefaultViewport;
         const sequenceView = this.plugin.spec.components?.sequenceViewer?.view || SequenceView;
@@ -258,8 +255,7 @@ function DragOverlay({ plugin, showDragOverlay }: { plugin: PluginUIContext, sho
 }
 
 export class ControlsWrapper extends PluginUIComponent {
-    render() {
-        const StructureTools = this.plugin.spec.components?.structureTools || DefaultStructureTools;
+    override render() {        const StructureTools = this.plugin.spec.components?.structureTools || DefaultStructureTools;
         return <div className='msp-scrollable-container'>
             <StructureTools />
         </div>;
@@ -267,8 +263,7 @@ export class ControlsWrapper extends PluginUIComponent {
 }
 
 export class DefaultViewport extends PluginUIComponent {
-    render() {
-        const VPControls = this.plugin.spec.components?.viewport?.controls || ViewportControls;
+    override render() {        const VPControls = this.plugin.spec.components?.viewport?.controls || ViewportControls;
         const SVPControls = this.plugin.spec.components?.selectionTools?.controls || SelectionViewportControls;
         const SnapshotDescription = this.plugin.spec.components?.viewport?.snapshotDescription || ViewportSnapshotDescription;
 
@@ -294,23 +289,19 @@ export class DefaultViewport extends PluginUIComponent {
 export class Log extends PluginUIComponent<{}, { entries: List<LogEntry> }> {
     private wrapper = React.createRef<HTMLDivElement>();
 
-    componentDidMount() {
-        this.subscribe(this.plugin.events.log, () => this.setState({ entries: this.plugin.log.entries }));
+    override componentDidMount() {        this.subscribe(this.plugin.events.log, () => this.setState({ entries: this.plugin.log.entries }));
     }
 
-    componentDidUpdate() {
-        this.scrollToBottom();
+    override componentDidUpdate() {        this.scrollToBottom();
     }
 
-    state = { entries: this.plugin.log.entries };
-
+    override state = { entries: this.plugin.log.entries };
     private scrollToBottom() {
         const log = this.wrapper.current;
         if (log) log.scrollTop = log.scrollHeight - log.clientHeight - 1;
     }
 
-    render() {
-        // TODO: ability to show full log
+    override render() {        // TODO: ability to show full log
         // showing more entries dramatically slows animations.
         const maxEntries = 10;
         const xs = this.state.entries, l = xs.size;

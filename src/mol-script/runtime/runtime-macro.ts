@@ -4,7 +4,7 @@
 //  * @author David Sehnal <david.sehnal@gmail.com>
 //  */
 
-// import Expression from '../language/expression';
+// import Expression from '../language/expression.ts';
 
 // interface Macro {
 //     readonly argNames: ReadonlyArray<string>,

@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ModelSymmetry } from '../../mol-model-formats/structure/property/symmetry';
-import { Model, ResidueIndex } from '../../mol-model/structure';
-import { PluginContext } from '../../mol-plugin/context';
-import { StructureRepresentationRegistry } from '../../mol-repr/structure/registry';
-import { ColorTheme } from '../../mol-theme/color';
+import { ModelSymmetry } from '../../mol-model-formats/structure/property/symmetry.ts';
+import type { Model, ResidueIndex } from '../../mol-model/structure.ts';
+import type { PluginContext } from '../../mol-plugin/context.ts';
+import type { StructureRepresentationRegistry } from '../../mol-repr/structure/registry.ts';
+import type { ColorTheme } from '../../mol-theme/color.ts';
 
 export interface ModelInfo {
     hetResidues: { name: string, indices: ResidueIndex[] }[],

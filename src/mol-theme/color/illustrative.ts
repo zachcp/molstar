@@ -4,23 +4,23 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ElementSymbol } from '../../mol-model/structure/model/types';
-import { Color } from '../../mol-util/color';
-import { StructureElement, Unit, Bond } from '../../mol-model/structure';
-import { Location } from '../../mol-model/location';
-import type { ColorTheme } from '../color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../theme';
-import { ChainIdColorTheme, ChainIdColorThemeParams } from './chain-id';
-import { UniformColorTheme, UniformColorThemeParams } from './uniform';
-import { assertUnreachable } from '../../mol-util/type-helpers';
-import { EntityIdColorTheme, EntityIdColorThemeParams } from './entity-id';
-import { MoleculeTypeColorTheme, MoleculeTypeColorThemeParams } from './molecule-type';
-import { EntitySourceColorTheme, EntitySourceColorThemeParams } from './entity-source';
-import { ModelIndexColorTheme, ModelIndexColorThemeParams } from './model-index';
-import { StructureIndexColorTheme, StructureIndexColorThemeParams } from './structure-index';
-import { ColorThemeCategory } from './categories';
-import { TrajectoryIndexColorTheme, TrajectoryIndexColorThemeParams } from './trajectory-index';
+import type { ElementSymbol } from '../../mol-model/structure/model/types.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { StructureElement, Unit, Bond } from '../../mol-model/structure.ts';
+import type { Location } from '../../mol-model/location.ts';
+import type { ColorTheme } from '../color.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import type { ThemeDataContext } from '../theme.ts';
+import { ChainIdColorTheme, ChainIdColorThemeParams } from './chain-id.ts';
+import { UniformColorTheme, UniformColorThemeParams } from './uniform.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
+import { EntityIdColorTheme, EntityIdColorThemeParams } from './entity-id.ts';
+import { MoleculeTypeColorTheme, MoleculeTypeColorThemeParams } from './molecule-type.ts';
+import { EntitySourceColorTheme, EntitySourceColorThemeParams } from './entity-source.ts';
+import { ModelIndexColorTheme, ModelIndexColorThemeParams } from './model-index.ts';
+import { StructureIndexColorTheme, StructureIndexColorThemeParams } from './structure-index.ts';
+import { ColorThemeCategory } from './categories.ts';
+import { TrajectoryIndexColorTheme, TrajectoryIndexColorThemeParams } from './trajectory-index.ts';
 
 const DefaultIllustrativeColor = Color(0xEEEEEE);
 const Description = `Assigns an illustrative color that gives every chain a color based on the chosen style but with lighter carbons (inspired by David Goodsell's Molecule of the Month style).`;

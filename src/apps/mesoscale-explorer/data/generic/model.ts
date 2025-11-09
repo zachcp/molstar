@@ -4,21 +4,21 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mat4 } from '../../../../mol-math/linear-algebra/3d/mat4';
-import { ElementIndex, Model, Structure, Unit } from '../../../../mol-model/structure';
-import { PluginStateObject as SO, PluginStateTransform } from '../../../../mol-plugin-state/objects';
-import { Task } from '../../../../mol-task';
-import { StateObject, StateTransformer } from '../../../../mol-state';
-import { ParamDefinition as PD } from '../../../../mol-util/param-definition';
-import { SymmetryOperator } from '../../../../mol-math/geometry';
-import { mergeUnits, partitionUnits } from '../util';
-import { Assembly, Symmetry } from '../../../../mol-model/structure/model/properties/symmetry';
-import { ModelSymmetry } from '../../../../mol-model-formats/structure/property/symmetry';
-import { SortedArray } from '../../../../mol-data/int';
-import { GenericInstances, getTransforms } from './preset';
-import { Asset } from '../../../../mol-util/assets';
-import { PluginContext } from '../../../../mol-plugin/context';
-import { deepEqual } from '../../../../mol-util';
+import { Mat4 } from '../../../../mol-math/linear-algebra/3d/mat4.ts';
+import { type ElementIndex, type Model, Structure, Unit } from '../../../../mol-model/structure.ts';
+import { PluginStateObject as SO, PluginStateTransform } from '../../../../mol-plugin-state/objects.ts';
+import { Task } from '../../../../mol-task/index.ts';
+import { StateObject, StateTransformer } from '../../../../mol-state/index.ts';
+import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
+import { SymmetryOperator } from '../../../../mol-math/geometry.ts';
+import { mergeUnits, partitionUnits } from '../util.ts';
+import { type Assembly, Symmetry } from '../../../../mol-model/structure/model/properties/symmetry.ts';
+import { ModelSymmetry } from '../../../../mol-model-formats/structure/property/symmetry.ts';
+import { SortedArray } from '../../../../mol-data/int.ts';
+import { type GenericInstances, getTransforms } from './preset.ts';
+import type { Asset } from '../../../../mol-util/assets.ts';
+import type { PluginContext } from '../../../../mol-plugin/context.ts';
+import { deepEqual } from '../../../../mol-util/index.ts';
 
 function createModelChainMap(model: Model) {
     const builder = new Structure.StructureBuilder();

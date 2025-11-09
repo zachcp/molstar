@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color } from '../../mol-util/color';
+import { Color } from '../../mol-util/color/index.ts';
 import * as React from 'react';
-import { _Props, _State } from '../base';
-import { Legend as LegendData, ScaleLegend as ScaleLegendData, TableLegend as TableLegendData } from '../../mol-util/legend';
+import type { _Props, _State } from '../base.tsx';
+import type { Legend as LegendData, ScaleLegend as ScaleLegendData, TableLegend as TableLegendData } from '../../mol-util/legend.ts';
 
 export type LegendProps<L extends LegendData> = { legend: L }
 export type Legend = React.ComponentClass<LegendProps<any>>
@@ -24,8 +24,7 @@ export function legendFor(legend: LegendData): Legend | undefined {
 }
 
 export class ScaleLegend extends React.PureComponent<LegendProps<ScaleLegendData>> {
-    render() {
-        const { legend } = this.props;
+    override render() {        const { legend } = this.props;
         const colors = legend.colors.map(c => Array.isArray(c) ? `${Color.toStyle(c[0])} ${100 * c[1]}%` : Color.toStyle(c)).join(', ');
         return <div className='msp-scale-legend'>
             <div style={{ background: `linear-gradient(to right, ${colors})` }}>
@@ -37,8 +36,7 @@ export class ScaleLegend extends React.PureComponent<LegendProps<ScaleLegendData
 }
 
 export class TableLegend extends React.PureComponent<LegendProps<TableLegendData>> {
-    render() {
-        const { legend } = this.props;
+    override render() {        const { legend } = this.props;
         return <div className='msp-table-legend'>
             {legend.table.map((value, i) => {
                 const [name, color] = value;

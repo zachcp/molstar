@@ -6,8 +6,8 @@
  * @author Koya Sakuma <koya.sakuma.work@gmail.com>
  */
 
-import { Transpiler } from '../transpiler';
-import { KeywordDict, PropertyDict, OperatorList } from '../types';
+import type { Transpiler } from '../transpiler';
+import type { KeywordDict, PropertyDict, OperatorList } from '../types';
 
 export function testKeywords(keywords: KeywordDict, transpiler: Transpiler) {
     for (const name in keywords) {

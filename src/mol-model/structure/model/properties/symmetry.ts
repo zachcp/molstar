@@ -4,14 +4,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { SymmetryOperator } from '../../../../mol-math/geometry/symmetry-operator';
-import { arrayFind } from '../../../../mol-data/util';
-import { StructureQuery } from '../../query';
-import { Model } from '../../model';
-import { Spacegroup } from '../../../../mol-math/geometry';
-import { Vec3 } from '../../../../mol-math/linear-algebra';
-import { ModelSymmetry } from '../../../../mol-model-formats/structure/property/symmetry';
-import { radToDeg } from '../../../../mol-math/misc';
+import type { SymmetryOperator } from '../../../../mol-math/geometry/symmetry-operator.ts';
+import { arrayFind } from '../../../../mol-data/util.ts';
+import type { StructureQuery } from '../../query.ts';
+import type { Model } from '../../model.ts';
+import { Spacegroup } from '../../../../mol-math/geometry.ts';
+import type { Vec3 } from '../../../../mol-math/linear-algebra.ts';
+import { ModelSymmetry } from '../../../../mol-model-formats/structure/property/symmetry.ts';
+import { radToDeg } from '../../../../mol-math/misc.ts';
 
 /** Determine an atom set and a list of operators that should be applied to that set  */
 export interface OperatorGroup {
@@ -26,7 +26,7 @@ export class Assembly {
     readonly id: string;
     readonly details: string;
 
-    private _operators: OperatorGroups;
+    private _operators!: OperatorGroups;
     get operatorGroups(): OperatorGroups {
         if (this._operators) return this._operators;
         this._operators = this.operatorsProvider();
@@ -70,7 +70,7 @@ namespace Symmetry {
         return symmetry ? arrayFind(symmetry.assemblies, a => a.id.toLowerCase() === _id) : undefined;
     }
 
-    export function getUnitcellLabel(symmetry: Symmetry) {
+    export function getUnitcellLabel(symmetry: Symmetry): string {
         const { cell, name, num } = symmetry.spacegroup;
         const { size, anglesInRadians } = cell;
         const a = size[0].toFixed(2);

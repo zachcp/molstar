@@ -5,8 +5,8 @@
  */
 
 import * as React from 'react';
-import { Color } from '../../mol-util/color';
-import { Icon, ArrowRightSvg, ArrowDropDownSvg, RemoveSvg, AddSvg } from './icons';
+import { Color } from '../../mol-util/color/index.ts';
+import { Icon, ArrowRightSvg, ArrowDropDownSvg, RemoveSvg, AddSvg } from './icons.tsx';
 
 export type ColorAccent = 'cyan' | 'red' | 'gray' | 'green' | 'purple' | 'blue' | 'orange'
 
@@ -24,8 +24,7 @@ export class ControlGroup extends React.Component<{
     maxHeight?: string,
     children?: any
 }, { isExpanded: boolean }> {
-    state = { isExpanded: !!this.props.initialExpanded };
-
+    override state = { isExpanded: !!this.props.initialExpanded };
     headerClicked = () => {
         if (this.props.onHeaderClick) {
             this.props.onHeaderClick();
@@ -34,8 +33,7 @@ export class ControlGroup extends React.Component<{
         }
     };
 
-    render() {
-        let groupClassName = this.props.hideOffset ? 'msp-control-group-children' : 'msp-control-group-children msp-control-offset';
+    override render() {        let groupClassName = this.props.hideOffset ? 'msp-control-group-children' : 'msp-control-group-children msp-control-offset';
         if (this.props.childrenClassName) groupClassName += ' ' + this.props.childrenClassName;
 
         // TODO: customize header style (bg color, togle button etc)
@@ -85,8 +83,7 @@ export class TextInput<T = string> extends React.PureComponent<TextInputProps<T>
     private delayHandle: any = void 0;
     private pendingValue: T | undefined = void 0;
 
-    state = { originalValue: '', value: '' };
-
+    override state = { originalValue: '', value: '' };
     onBlur = () => {
         this.setState({ value: '' + this.state.originalValue });
         if (this.props.onBlur) this.props.onBlur();
@@ -169,8 +166,7 @@ export class TextInput<T = string> extends React.PureComponent<TextInputProps<T>
         return { originalValue: value, value };
     }
 
-    render() {
-        return <input type='text'
+    override render() {        return <input type='text'
             className={this.props.className}
             style={this.props.style}
             ref={this.input}
@@ -191,12 +187,10 @@ export class ExpandableControlRow extends React.Component<{
     pivot: JSX.Element,
     controls: JSX.Element
 }, { isExpanded: boolean }> {
-    state = { isExpanded: false };
-
+    override state = { isExpanded: false };
     toggleExpanded = () => this.setState({ isExpanded: !this.state.isExpanded });
 
-    render() {
-        const { label, pivot, controls } = this.props;
+    override render() {        const { label, pivot, controls } = this.props;
         // TODO: fix the inline CSS
         return <>
             <ControlRow label={<>
@@ -325,8 +319,7 @@ export class ToggleButton extends React.PureComponent<ToggleButtonProps> {
         this.props.toggle();
     };
 
-    render() {
-        const props = this.props;
+    override render() {        const props = this.props;
         const label = props.label;
         const className = props.isSelected ? `${props.className || ''} msp-control-current` : props.className;
         return <Button icon={this.props.icon} onClick={this.onClick} title={this.props.title} inline={this.props.inline}
@@ -337,12 +330,10 @@ export class ToggleButton extends React.PureComponent<ToggleButtonProps> {
 }
 
 export class ExpandGroup extends React.PureComponent<{ children?: any, header: string, headerStyle?: React.CSSProperties, initiallyExpanded?: boolean, accent?: boolean, noOffset?: boolean, marginTop?: 0 | string, headerLeftMargin?: string }, { isExpanded: boolean }> {
-    state = { isExpanded: !!this.props.initiallyExpanded };
-
+    override state = { isExpanded: !!this.props.initiallyExpanded };
     toggleExpanded = () => this.setState({ isExpanded: !this.state.isExpanded });
 
-    render() {
-        return <>
+    override render() {        return <>
             <div className='msp-control-group-header' style={{ marginTop: this.props.marginTop !== void 0 ? this.props.marginTop : '1px', marginLeft: this.props.headerLeftMargin }}>
                 <button className='msp-btn msp-form-control msp-btn-block' onClick={this.toggleExpanded} style={this.props.headerStyle}>
                     <Icon svg={this.state.isExpanded ? ArrowDropDownSvg : ArrowRightSvg} />

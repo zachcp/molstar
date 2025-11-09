@@ -4,17 +4,17 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { SortedArray } from '../../../mol-data/int';
-import { ElementIndex, Structure, StructureElement } from '../../../mol-model/structure';
-import { StaticStructureComponentTypes, createStructureComponent } from '../../../mol-plugin-state/helpers/structure-component';
-import { PluginStateObject } from '../../../mol-plugin-state/objects';
-import { MolScriptBuilder } from '../../../mol-script/language/builder';
-import { Expression } from '../../../mol-script/language/expression';
-import { mapArrayToObject, pickObjectKeys } from '../../../mol-util/object';
-import { Choice } from '../../../mol-util/param-choice';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { capitalize } from '../../../mol-util/string';
-import { MVSAnnotationStructureComponentParams, createMVSAnnotationStructureComponent } from './annotation-structure-component';
+import { SortedArray } from '../../../mol-data/int.ts';
+import { type ElementIndex, Structure, StructureElement } from '../../../mol-model/structure.ts';
+import { StaticStructureComponentTypes, createStructureComponent } from '../../../mol-plugin-state/helpers/structure-component.ts';
+import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
+import { MolScriptBuilder } from '../../../mol-script/language/builder.ts';
+import type { Expression } from '../../../mol-script/language/expression.ts';
+import { mapArrayToObject, pickObjectKeys } from '../../../mol-util/object.ts';
+import { Choice } from '../../../mol-util/param-choice.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { capitalize } from '../../../mol-util/string.ts';
+import { MVSAnnotationStructureComponentParams, createMVSAnnotationStructureComponent } from './annotation-structure-component.ts';
 
 
 /** Allowed values for a static selector */

@@ -9,11 +9,11 @@
  * - added `ungzip`
  */
 
-import { writeUint, writeUshort, sizeUTF8, writeUTF8, readUshort, readUint, readUTF8, toInt32 } from './bin';
-import { crc, adler } from './checksum';
-import { _inflate } from './inflate';
-import { _deflateRaw } from './deflate';
-import { RuntimeContext, Task } from '../../mol-task';
+import { writeUint, writeUshort, sizeUTF8, writeUTF8, readUshort, readUint, readUTF8, toInt32 } from './bin.ts';
+import { crc, adler } from './checksum.ts';
+import { _inflate } from './inflate.ts';
+import { _deflateRaw } from './deflate.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
 
 export function Unzip(buf: ArrayBuffer, onlyNames = false) {
     return Task.create('Unzip', ctx => unzip(ctx, buf, onlyNames));

@@ -6,9 +6,9 @@
 
 import { Box3D } from '../../../mol-math/geometry';
 import { Vec3 } from '../../../mol-math/linear-algebra';
-import { RuntimeContext } from '../../../mol-task';
+import { RuntimeContext } from '../../../mol-task/index.ts';
 import { sphericalCollocation } from '../collocation';
-import { Basis, CubeGridInfo } from '../data-model';
+import type { Basis, CubeGridInfo } from '../data-model';
 
 describe('alpha-orbitals-cubes', () => {
     it('water', async () => {

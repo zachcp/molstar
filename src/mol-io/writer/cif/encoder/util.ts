@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Iterator } from '../../../../mol-data';
-import { Field, Category } from '../encoder';
+import { Iterator } from '../../../../mol-data/index.ts';
+import type { Field, Category } from '../encoder.ts';
 
 export function getFieldDigitCount(field: Field) {
     if (field.defaultFormat && typeof field.defaultFormat.digitCount !== 'undefined') return Math.max(0, Math.min(field.defaultFormat.digitCount, 16));

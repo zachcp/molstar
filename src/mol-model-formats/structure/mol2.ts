@@ -4,24 +4,24 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Column, Table } from '../../mol-data/db';
-import { Model, Symmetry } from '../../mol-model/structure/model';
-import { BondType, getMoleculeType, MoleculeType } from '../../mol-model/structure/model/types';
-import { RuntimeContext, Task } from '../../mol-task';
-import { createModels } from './basic/parser';
-import { BasicSchema, createBasic } from './basic/schema';
-import { ComponentBuilder } from './common/component';
-import { EntityBuilder } from './common/entity';
-import { ModelFormat } from '../format';
-import { IndexPairBonds } from './property/bonds/index-pair';
-import { Mol2Crysin, Mol2File } from '../../mol-io/reader/mol2/schema';
-import { AtomPartialCharge } from './property/partial-charge';
-import { Trajectory, ArrayTrajectory } from '../../mol-model/structure';
-import { guessElementSymbolString } from './util';
-import { ModelSymmetry } from './property/symmetry';
-import { Spacegroup, SpacegroupCell } from '../../mol-math/geometry';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { getChainId } from './common/util';
+import { Column, Table } from '../../mol-data/db.ts';
+import type { Model, Symmetry } from '../../mol-model/structure/model.ts';
+import { BondType, getMoleculeType, MoleculeType } from '../../mol-model/structure/model/types.ts';
+import { type RuntimeContext, Task } from '../../mol-task/index.ts';
+import { createModels } from './basic/parser.ts';
+import { BasicSchema, createBasic } from './basic/schema.ts';
+import { ComponentBuilder } from './common/component.ts';
+import { EntityBuilder } from './common/entity.ts';
+import type { ModelFormat } from '../format.ts';
+import { IndexPairBonds } from './property/bonds/index-pair.ts';
+import type { Mol2Crysin, Mol2File } from '../../mol-io/reader/mol2/schema.ts';
+import { AtomPartialCharge } from './property/partial-charge.ts';
+import { type Trajectory, ArrayTrajectory } from '../../mol-model/structure.ts';
+import { guessElementSymbolString } from './util.ts';
+import { ModelSymmetry } from './property/symmetry.ts';
+import { Spacegroup, SpacegroupCell } from '../../mol-math/geometry.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { getChainId } from './common/util.ts';
 
 type Subst = { chain: string, subType: string }
 

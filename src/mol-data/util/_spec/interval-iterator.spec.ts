@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Interval, OrderedSet, SortedArray } from '../../int';
+import { Interval, type OrderedSet, SortedArray } from '../../int';
 import { IntervalIterator } from '../interval-iterator';
 
 describe('interval', () => {

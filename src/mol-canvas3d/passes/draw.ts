@@ -6,26 +6,26 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { RenderTarget } from '../../mol-gl/webgl/render-target';
-import { Renderer } from '../../mol-gl/renderer';
-import { Scene } from '../../mol-gl/scene';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { Camera, ICamera } from '../camera';
-import { ValueCell } from '../../mol-util';
-import { Vec2 } from '../../mol-math/linear-algebra';
-import { Helper } from '../helper/helper';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import type { RenderTarget } from '../../mol-gl/webgl/render-target.ts';
+import type { Renderer } from '../../mol-gl/renderer.ts';
+import type { Scene } from '../../mol-gl/scene.ts';
+import type { Texture } from '../../mol-gl/webgl/texture.ts';
+import type { Camera, ICamera } from '../camera.ts';
+import { ValueCell } from '../../mol-util/index.ts';
+import { Vec2 } from '../../mol-math/linear-algebra.ts';
+import type { Helper } from '../helper/helper.ts';
 
-import { StereoCamera } from '../camera/stereo';
-import { WboitPass } from './wboit';
-import { DpoitPass } from './dpoit';
-import { AntialiasingPass, PostprocessingPass, PostprocessingProps } from './postprocessing';
-import { MarkingPass, MarkingProps } from './marking';
-import { CopyRenderable, createCopyRenderable } from '../../mol-gl/compute/util';
-import { isDebugMode, isTimingMode } from '../../mol-util/debug';
-import { AssetManager } from '../../mol-util/assets';
-import { DofPass } from './dof';
-import { BloomPass } from './bloom';
+import { StereoCamera } from '../camera/stereo.ts';
+import { WboitPass } from './wboit.ts';
+import { DpoitPass } from './dpoit.ts';
+import { AntialiasingPass, PostprocessingPass, type PostprocessingProps } from './postprocessing.ts';
+import { MarkingPass, type MarkingProps } from './marking.ts';
+import { type CopyRenderable, createCopyRenderable } from '../../mol-gl/compute/util.ts';
+import { isDebugMode, isTimingMode } from '../../mol-util/debug.ts';
+import type { AssetManager } from '../../mol-util/assets.ts';
+import { DofPass } from './dof.ts';
+import { BloomPass } from './bloom.ts';
 
 type Props = {
     postprocessing: PostprocessingProps;
@@ -84,7 +84,7 @@ export class DrawPass {
         }
         this.depthTextureOpaque.detachFramebuffer(this.postprocessing.target.framebuffer, 'depth');
     }
-    get transparency() {
+    get transparency(): TransparencyMode {
         return this.transparencyMode;
     }
 
@@ -120,7 +120,7 @@ export class DrawPass {
         this.setTransparency(transparency);
     }
 
-    getByteCount() {
+    getByteCount(): number {
         return (
             this.drawTarget.getByteCount() +
             this.colorTarget.getByteCount() +

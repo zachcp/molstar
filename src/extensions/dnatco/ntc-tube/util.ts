@@ -5,12 +5,12 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
-import { NtCTubeTypes as NTT } from './types';
-import { NtCTubeProvider } from './property';
-import { DnatcoUtil } from '../util';
-import { Segmentation, SortedArray } from '../../../mol-data/int';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { ChainIndex, ElementIndex, ResidueIndex, Structure, StructureElement, Unit } from '../../../mol-model/structure';
+import type { NtCTubeTypes as NTT } from './types.ts';
+import { NtCTubeProvider } from './property.ts';
+import { DnatcoUtil } from '../util.ts';
+import { Segmentation, SortedArray } from '../../../mol-data/int.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { type ChainIndex, type ElementIndex, type ResidueIndex, type Structure, StructureElement, type Unit } from '../../../mol-model/structure.ts';
 
 function getAtomPosition(vec: Vec3, loc: StructureElement.Location, residue: DnatcoUtil.Residue, names: string[], altId: string, insCode: string) {
     const eI = DnatcoUtil.getAtomIndex(loc, residue, names, altId, insCode);
@@ -101,7 +101,7 @@ export class NtCTubeSegmentsIterator {
     /* First residue of the current step */
     private residueOne?: DnatcoUtil.Residue;
     /* Second residue of the current step */
-    private residueTwo: DnatcoUtil.Residue;
+    private residueTwo!: DnatcoUtil.Residue;
     /* First residue of the next step, may be undefined
      * if we are at the end of a chain.
      * Undefined value indicates that the iterator has reached the end.*/

@@ -4,13 +4,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Task } from '../mol-task';
-import { UUID } from '../mol-util';
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { StateObject, StateObjectCell } from './object';
-import { State } from './state';
-import { StateTransformer } from './transformer';
-import { StateTransform } from './transform';
+import type { Task } from '../mol-task/index.ts';
+import { UUID } from '../mol-util/index.ts';
+import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import type { StateObject, StateObjectCell } from './object.ts';
+import type { State } from './state.ts';
+import type { StateTransformer } from './transformer.ts';
+import type { StateTransform } from './transform.ts';
 
 export { StateAction };
 

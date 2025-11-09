@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { GridLookup3D } from '../../../../mol-math/geometry';
-import { SortedArray } from '../../../../mol-data/int';
-import { Unit } from '../../../../mol-model/structure/structure';
-import { ResidueIndex } from '../../../../mol-model/structure';
-import { getBoundary } from '../../../../mol-math/geometry/boundary';
+import { GridLookup3D } from '../../../../mol-math/geometry.ts';
+import { SortedArray } from '../../../../mol-data/int.ts';
+import type { Unit } from '../../../../mol-model/structure/structure.ts';
+import type { ResidueIndex } from '../../../../mol-model/structure.ts';
+import { getBoundary } from '../../../../mol-math/geometry/boundary.ts';
 
 export function calcUnitProteinTraceLookup3D(unit: Unit.Atomic, unitProteinResidues: SortedArray<ResidueIndex>): GridLookup3D {
     const { x, y, z } = unit.model.atomicConformation;

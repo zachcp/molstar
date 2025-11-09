@@ -5,8 +5,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { SortedArray as S } from '../sorted-array';
-import { Interval as I } from '../interval';
+import { SortedArray as S } from '../sorted-array.ts';
+import { Interval as I } from '../interval.ts';
 
 type OrderedSetImpl = I | S
 type Nums = ArrayLike<number>
@@ -24,8 +24,8 @@ export function ofSortedArray(xs: Nums): OrderedSetImpl {
     return xs as any;
 }
 
-export function size(set: OrderedSetImpl) { return I.is(set) ? I.size(set) : S.size(set); }
-export function has(set: OrderedSetImpl, x: number) { return I.is(set) ? I.has(set, x) : S.has(set, x); }
+export function size(set: OrderedSetImpl): number { return I.is(set) ? I.size(set) : S.size(set); }
+export function has(set: OrderedSetImpl, x: number): boolean { return I.is(set) ? I.has(set, x) : S.has(set, x); }
 /** Returns the index of `x` in `set` or -1 if not found. */
 export function indexOf(set: OrderedSetImpl, x: number) { return I.is(set) ? I.indexOf(set, x) : S.indexOf(set, x); }
 export function getAt(set: OrderedSetImpl, i: number) { return I.is(set) ? I.getAt(set, i) : set[i]; }
@@ -33,14 +33,14 @@ export function min(set: OrderedSetImpl) { return I.is(set) ? I.min(set) : S.min
 export function max(set: OrderedSetImpl) { return I.is(set) ? I.max(set) : S.max(set); }
 export function start(set: OrderedSetImpl) { return I.is(set) ? I.start(set) : S.start(set); }
 export function end(set: OrderedSetImpl) { return I.is(set) ? I.end(set) : S.end(set); }
-export function isEmpty(set: OrderedSetImpl) { return size(set) === 0; }
+export function isEmpty(set: OrderedSetImpl): boolean { return size(set) === 0; }
 
 export function hashCode(set: OrderedSetImpl) { return I.is(set) ? I.hashCode(set) : S.hashCode(set); }
 // TODO: possibly add more hash functions to allow for multilevel hashing.
 
-export function toString(set: OrderedSetImpl) { return I.is(set) ? I.toString(set) : S.toString(set); }
+export function toString(set: OrderedSetImpl): string { return I.is(set) ? I.toString(set) : S.toString(set); }
 
-export function areEqual(a: OrderedSetImpl, b: OrderedSetImpl) {
+export function areEqual(a: OrderedSetImpl, b: OrderedSetImpl): boolean {
     if (I.is(a)) {
         if (I.is(b)) return I.areEqual(a, b);
         return areEqualIS(a, b);

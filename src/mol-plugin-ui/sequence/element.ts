@@ -5,11 +5,11 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { Interval, OrderedSet } from '../../mol-data/int';
-import { Loci } from '../../mol-model/loci';
-import { Structure, StructureElement } from '../../mol-model/structure';
-import { ColorNames } from '../../mol-util/color/names';
-import { SequenceWrapper, StructureUnit } from './wrapper';
+import { Interval, OrderedSet } from '../../mol-data/int.ts';
+import type { Loci } from '../../mol-model/loci.ts';
+import { Structure, StructureElement } from '../../mol-model/structure.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { SequenceWrapper, type StructureUnit } from './wrapper.ts';
 
 export class ElementSequenceWrapper extends SequenceWrapper<StructureUnit> {
     private unitIndices: Map<number, Interval<StructureElement.UnitIndex>>;

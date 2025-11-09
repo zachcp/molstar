@@ -6,14 +6,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { CifWriter } from '../../../../mol-io/writer/cif';
-import * as Data from './data-model';
-import * as Coords from '../algebra/coordinate';
-import { VOLUME_SERVER_VERSION as VERSION } from '../version';
-import * as DataFormat from '../../common/data-format';
-import { Column } from '../../../../mol-data/db';
-import { ArrayEncoding, ArrayEncoder } from '../../../../mol-io/common/binary-cif';
-import { TypedArrayValueType, TypedArrayValueArray } from '../../../../mol-io/common/typed-array';
+import { CifWriter } from '../../../../mol-io/writer/cif.ts';
+import type * as Data from './data-model.ts';
+import type * as Coords from '../algebra/coordinate.ts';
+import { VOLUME_SERVER_VERSION as VERSION } from '../version.ts';
+import type * as DataFormat from '../../common/data-format.ts';
+import { Column } from '../../../../mol-data/db.ts';
+import { ArrayEncoding, type ArrayEncoder } from '../../../../mol-io/common/binary-cif.ts';
+import { TypedArrayValueType, type TypedArrayValueArray } from '../../../../mol-io/common/typed-array.ts';
 
 export function encode(query: Data.QueryContext, output: Data.QueryOutputStream) {
     const w = CifWriter.createEncoder({ binary: query.params.asBinary, encoderName: `VolumeServer ${VERSION}` });

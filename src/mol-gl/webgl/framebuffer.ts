@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { idFactory } from '../../mol-util/id-factory';
-import { GLRenderingContext, isWebGL2 } from './compat';
+import { idFactory } from '../../mol-util/id-factory.ts';
+import { type GLRenderingContext, isWebGL2 } from './compat.ts';
 
 const getNextFramebufferId = idFactory();
 

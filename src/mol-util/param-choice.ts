@@ -4,7 +4,7 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { ParamDefinition } from './param-definition';
+import { ParamDefinition } from './param-definition.ts';
 
 
 /**

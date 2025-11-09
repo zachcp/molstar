@@ -5,7 +5,7 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { DSSPContext, DSSPType } from './common';
+import { type DSSPContext, DSSPType } from './common.ts';
 
 /**
  * A minimal helix is defined by two consecutive n-turns.

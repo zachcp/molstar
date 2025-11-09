@@ -6,13 +6,13 @@
  * @author Kim Juho <juho_kim@outlook.com>
  */
 
-import { CifField } from '../../../mol-io/reader/cif';
-import { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif';
-import { TokenBuilder, Tokenizer } from '../../../mol-io/reader/common/text/tokenizer';
-import { guessElementSymbolTokens } from '../util';
-import { Column } from '../../../mol-data/db';
-import { areTokensEmpty } from '../../../mol-io/reader/common/text/column/token';
-import { StringLike } from '../../../mol-io/common/string-like';
+import { CifField } from '../../../mol-io/reader/cif.ts';
+import type { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
+import { TokenBuilder, Tokenizer } from '../../../mol-io/reader/common/text/tokenizer.ts';
+import { guessElementSymbolTokens } from '../util.ts';
+import { Column } from '../../../mol-data/db.ts';
+import { areTokensEmpty } from '../../../mol-io/reader/common/text/column/token.ts';
+import type { StringLike } from '../../../mol-io/common/string-like.ts';
 
 
 type AtomSiteTemplate = typeof getAtomSiteTemplate extends (...args: any) => infer T ? T : never
@@ -50,7 +50,7 @@ export class LabelAsymIdHelper {
     private currAsymId = '';
     private currLabelAsymId = '';
 
-    clear() {
+    clear(): void {
         this.asymIdCounts.clear();
         this.currModelNum = undefined;
     }

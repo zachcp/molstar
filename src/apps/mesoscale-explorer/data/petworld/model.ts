@@ -4,21 +4,21 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mat4 } from '../../../../mol-math/linear-algebra/3d/mat4';
-import { getMatrices, operatorGroupsProvider } from '../../../../mol-model-formats/structure/property/assembly';
-import { Structure, StructureElement, StructureProperties, Trajectory, Unit } from '../../../../mol-model/structure';
-import { Assembly } from '../../../../mol-model/structure/model/properties/symmetry';
-import { PluginStateObject as SO, PluginStateTransform } from '../../../../mol-plugin-state/objects';
-import { Task } from '../../../../mol-task';
-import { Table } from '../../../../mol-data/db';
-import { mmCIF_Schema } from '../../../../mol-io/reader/cif/schema/mmcif';
-import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif';
-import { arrayFind } from '../../../../mol-data/util';
-import { StateObject, StateTransformer } from '../../../../mol-state';
-import { CifField } from '../../../../mol-io/reader/cif';
-import { ParamDefinition as PD } from '../../../../mol-util/param-definition';
-import { mergeUnits } from '../util';
-import { deepEqual } from '../../../../mol-util';
+import type { Mat4 } from '../../../../mol-math/linear-algebra/3d/mat4.ts';
+import { getMatrices, operatorGroupsProvider } from '../../../../mol-model-formats/structure/property/assembly.ts';
+import { Structure, StructureElement, StructureProperties, type Trajectory, Unit } from '../../../../mol-model/structure.ts';
+import { Assembly } from '../../../../mol-model/structure/model/properties/symmetry.ts';
+import { PluginStateObject as SO, PluginStateTransform } from '../../../../mol-plugin-state/objects.ts';
+import { Task } from '../../../../mol-task/index.ts';
+import type { Table } from '../../../../mol-data/db.ts';
+import type { mmCIF_Schema } from '../../../../mol-io/reader/cif/schema/mmcif.ts';
+import { MmcifFormat } from '../../../../mol-model-formats/structure/mmcif.ts';
+import { arrayFind } from '../../../../mol-data/util.ts';
+import { StateObject, StateTransformer } from '../../../../mol-state/index.ts';
+import type { CifField } from '../../../../mol-io/reader/cif.ts';
+import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
+import { mergeUnits } from '../util.ts';
+import { deepEqual } from '../../../../mol-util/index.ts';
 
 export { StructureFromPetworld };
 type StructureFromPetworld = typeof StructureFromPetworld

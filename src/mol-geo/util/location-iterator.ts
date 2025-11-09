@@ -6,9 +6,9 @@
  * @author Cai Huiyu <szmun.caihy@gmail.com>
  */
 
-import { Iterator } from '../../mol-data';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { NullLocation, Location } from '../../mol-model/location';
+import type { Iterator } from '../../mol-data/index.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { NullLocation, type Location } from '../../mol-model/location.ts';
 
 export interface LocationValue {
     location: Location
@@ -61,7 +61,7 @@ export function LocationIterator(groupCount: number, instanceCount: number, stri
 
     return {
         get hasNext() { return hasNext; },
-        get isNextNewInstance() { return isNextNewInstance; },
+        get isNextNewInstance(): boolean { return isNextNewInstance; },
         groupCount,
         instanceCount,
         count: groupCount * instanceCount,
@@ -117,7 +117,7 @@ export function LocationIterator(groupCount: number, instanceCount: number, stri
 
 export const EmptyLocationIterator: LocationIterator = {
     get hasNext() { return false; },
-    get isNextNewInstance() { return false; },
+    get isNextNewInstance(): boolean { return false; },
     groupCount: 0,
     instanceCount: 0,
     count: 0,

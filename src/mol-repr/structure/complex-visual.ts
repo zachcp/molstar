@@ -5,43 +5,43 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Visual, VisualContext } from '../visual';
-import { Bond, Structure, StructureElement } from '../../mol-model/structure';
-import { Geometry, GeometryUtils } from '../../mol-geo/geometry/geometry';
-import { LocationIterator } from '../../mol-geo/util/location-iterator';
-import { Theme } from '../../mol-theme/theme';
-import { createIdentityTransform } from '../../mol-geo/geometry/transform-data';
-import { createRenderObject, GraphicsRenderObject, RenderObjectValues } from '../../mol-gl/render-object';
-import { PickingId } from '../../mol-geo/geometry/picking';
-import { Loci, isEveryLoci, EmptyLoci } from '../../mol-model/loci';
-import { Interval } from '../../mol-data/int';
-import { LocationCallback, VisualUpdateState } from '../util';
-import { ColorTheme } from '../../mol-theme/color';
-import { ValueCell, deepEqual } from '../../mol-util';
-import { createSizes, SizeData } from '../../mol-geo/geometry/size-data';
-import { createColors } from '../../mol-geo/geometry/color-data';
-import { MarkerAction } from '../../mol-util/marker-action';
-import { Mat4 } from '../../mol-math/linear-algebra';
-import { Overpaint } from '../../mol-theme/overpaint';
-import { Transparency } from '../../mol-theme/transparency';
-import { Mesh } from '../../mol-geo/geometry/mesh/mesh';
-import { Cylinders } from '../../mol-geo/geometry/cylinders/cylinders';
-import { Lines } from '../../mol-geo/geometry/lines/lines';
-import { Text } from '../../mol-geo/geometry/text/text';
-import { SizeTheme } from '../../mol-theme/size';
-import { DirectVolume } from '../../mol-geo/geometry/direct-volume/direct-volume';
-import { createMarkers } from '../../mol-geo/geometry/marker-data';
-import { StructureParams, StructureMeshParams, StructureTextParams, StructureDirectVolumeParams, StructureLinesParams, StructureCylindersParams, StructureTextureMeshParams, StructureSpheresParams, StructurePointsParams, StructureImageParams } from './params';
-import { Clipping } from '../../mol-theme/clipping';
-import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { isPromiseLike } from '../../mol-util/type-helpers';
-import { Substance } from '../../mol-theme/substance';
-import { Spheres } from '../../mol-geo/geometry/spheres/spheres';
-import { Emissive } from '../../mol-theme/emissive';
-import { Points } from '../../mol-geo/geometry/points/points';
-import { Image } from '../../mol-geo/geometry/image/image';
+import type { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Visual, type VisualContext } from '../visual.ts';
+import { Bond, Structure, StructureElement } from '../../mol-model/structure.ts';
+import { Geometry, type GeometryUtils } from '../../mol-geo/geometry/geometry.ts';
+import type { LocationIterator } from '../../mol-geo/util/location-iterator.ts';
+import { Theme } from '../../mol-theme/theme.ts';
+import { createIdentityTransform } from '../../mol-geo/geometry/transform-data.ts';
+import { createRenderObject, type GraphicsRenderObject, type RenderObjectValues } from '../../mol-gl/render-object.ts';
+import type { PickingId } from '../../mol-geo/geometry/picking.ts';
+import { type Loci, isEveryLoci, EmptyLoci } from '../../mol-model/loci.ts';
+import { Interval } from '../../mol-data/int.ts';
+import { type LocationCallback, VisualUpdateState } from '../util.ts';
+import { ColorTheme } from '../../mol-theme/color.ts';
+import { ValueCell, deepEqual } from '../../mol-util/index.ts';
+import { createSizes, type SizeData } from '../../mol-geo/geometry/size-data.ts';
+import { createColors } from '../../mol-geo/geometry/color-data.ts';
+import { MarkerAction } from '../../mol-util/marker-action.ts';
+import type { Mat4 } from '../../mol-math/linear-algebra.ts';
+import type { Overpaint } from '../../mol-theme/overpaint.ts';
+import type { Transparency } from '../../mol-theme/transparency.ts';
+import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
+import { Cylinders } from '../../mol-geo/geometry/cylinders/cylinders.ts';
+import { Lines } from '../../mol-geo/geometry/lines/lines.ts';
+import { Text } from '../../mol-geo/geometry/text/text.ts';
+import { SizeTheme } from '../../mol-theme/size.ts';
+import { DirectVolume } from '../../mol-geo/geometry/direct-volume/direct-volume.ts';
+import { createMarkers } from '../../mol-geo/geometry/marker-data.ts';
+import { StructureParams, StructureMeshParams, StructureTextParams, StructureDirectVolumeParams, StructureLinesParams, StructureCylindersParams, StructureTextureMeshParams, StructureSpheresParams, StructurePointsParams, StructureImageParams } from './params.ts';
+import type { Clipping } from '../../mol-theme/clipping.ts';
+import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh.ts';
+import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { isPromiseLike } from '../../mol-util/type-helpers.ts';
+import type { Substance } from '../../mol-theme/substance.ts';
+import { Spheres } from '../../mol-geo/geometry/spheres/spheres.ts';
+import type { Emissive } from '../../mol-theme/emissive.ts';
+import { Points } from '../../mol-geo/geometry/points/points.ts';
+import { Image } from '../../mol-geo/geometry/image/image.ts';
 
 export interface ComplexVisual<P extends StructureParams> extends Visual<Structure, P> { }
 
@@ -287,7 +287,7 @@ export function ComplexVisual<G extends Geometry, P extends StructureParams & Ge
                 cb(location, isSecondary);
             }
         },
-        mark(loci: Loci, action: MarkerAction) {
+        mark(loci: Loci, action: MarkerAction): boolean {
             return Visual.mark(renderObject, loci, action, lociApply, previousMark);
         },
         setVisibility(visible: boolean) {

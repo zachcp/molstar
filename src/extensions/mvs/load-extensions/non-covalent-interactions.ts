@@ -4,11 +4,11 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { StateTransforms } from '../../../mol-plugin-state/transforms';
-import { StructureSurroundings } from '../components/surroundings';
-import { MolstarLoadingExtension } from '../load';
-import { UpdateTarget } from '../load-generic';
-import { getCustomProps } from '../tree/generic/tree-schema';
+import { StateTransforms } from '../../../mol-plugin-state/transforms.ts';
+import { StructureSurroundings } from '../components/surroundings.ts';
+import type { MolstarLoadingExtension } from '../load.ts';
+import { UpdateTarget } from '../load-generic.ts';
+import { getCustomProps } from '../tree/generic/tree-schema.ts';
 
 
 const DefaultNonCovalentInteractionRadius = 5;

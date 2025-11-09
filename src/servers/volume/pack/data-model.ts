@@ -5,11 +5,11 @@
  *
  * @author David Sehnal <david.sehnal@gmail.com>
  */
-import * as Format from './format';
-import * as DataFormat from '../common/data-format';
-import { FileHandle } from '../../../mol-io/common/file-handle';
-import { SimpleBuffer } from '../../../mol-io/common/simple-buffer';
-import { TypedArrayValueArray, TypedArrayValueType } from '../../../mol-io/common/typed-array';
+import type * as Format from './format.ts';
+import type * as DataFormat from '../common/data-format.ts';
+import type { FileHandle } from '../../../mol-io/common/file-handle.ts';
+import type { SimpleBuffer } from '../../../mol-io/common/simple-buffer.ts';
+import type { TypedArrayValueArray, TypedArrayValueType } from '../../../mol-io/common/typed-array.ts';
 
 const FORMAT_VERSION = '1.0.0';
 

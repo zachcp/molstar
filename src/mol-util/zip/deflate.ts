@@ -7,10 +7,10 @@
  * MIT License, Copyright (c) 2018 Photopea
  */
 
-import { RuntimeContext } from '../../mol-task';
-import { assertUnreachable, NumberArray } from '../type-helpers';
-import { _hufTree } from './huffman';
-import { U, revCodes, makeCodes, checkCompressionStreamSupport } from './util';
+import type { RuntimeContext } from '../../mol-task/index.ts';
+import { assertUnreachable, type NumberArray } from '../type-helpers.ts';
+import { _hufTree } from './huffman.ts';
+import { U, revCodes, makeCodes, checkCompressionStreamSupport } from './util.ts';
 
 function DeflateContext(data: Uint8Array, out: Uint8Array, opos: number, lvl: number) {
     const { lits, strt, prev } = U;

@@ -4,24 +4,24 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { VisualContext } from '../../visual';
-import { Unit, Structure } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder';
-import { createCurveSegmentState, PolymerTraceIterator, interpolateCurveSegment, interpolateSizes, PolymerLocationIterator, getPolymerElementLoci, eachPolymerElement, StandardTension, StandardShift, NucleicShift, OverhangFactor } from './util/polymer';
-import { isNucleic } from '../../../mol-model/structure/model/types';
-import { addTube } from '../../../mol-geo/geometry/mesh/builder/tube';
-import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual';
-import { VisualUpdateState } from '../../util';
-import { addSheet } from '../../../mol-geo/geometry/mesh/builder/sheet';
-import { addRibbon } from '../../../mol-geo/geometry/mesh/builder/ribbon';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere';
-import { BaseGeometry } from '../../../mol-geo/geometry/base';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { StructureGroup } from './util/common';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { VisualContext } from '../../visual.ts';
+import type { Unit, Structure } from '../../../mol-model/structure.ts';
+import type { Theme } from '../../../mol-theme/theme.ts';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
+import { createCurveSegmentState, PolymerTraceIterator, interpolateCurveSegment, interpolateSizes, PolymerLocationIterator, getPolymerElementLoci, eachPolymerElement, StandardTension, StandardShift, NucleicShift, OverhangFactor } from './util/polymer.ts';
+import { isNucleic } from '../../../mol-model/structure/model/types.ts';
+import { addTube } from '../../../mol-geo/geometry/mesh/builder/tube.ts';
+import { UnitsMeshParams, type UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
+import type { VisualUpdateState } from '../../util.ts';
+import { addSheet } from '../../../mol-geo/geometry/mesh/builder/sheet.ts';
+import { addRibbon } from '../../../mol-geo/geometry/mesh/builder/ribbon.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere.ts';
+import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import type { StructureGroup } from './util/common.ts';
 
 export const PolymerTubeMeshParams = {
     sizeFactor: PD.Numeric(0.2, { min: 0, max: 10, step: 0.01 }),

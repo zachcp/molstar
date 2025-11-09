@@ -13,7 +13,7 @@ export interface PickingId {
 export namespace PickingId {
     export const Null = 16777214 as const; // Math.pow(2, 24) - 2
 
-    export function areSame(a: PickingId, b: PickingId) {
+    export function areSame(a: PickingId, b: PickingId): boolean {
         return a.objectId === b.objectId && a.instanceId === b.instanceId && a.groupId === b.groupId;
     }
 }

@@ -4,23 +4,23 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { VisualContext } from '../../visual';
-import { Structure, StructureElement, Unit } from '../../../mol-model/structure';
-import { Theme } from '../../../mol-theme/theme';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
-import { Vec3 } from '../../../mol-math/linear-algebra';
-import { createLinkCylinderMesh, LinkCylinderParams, LinkStyle } from './util/link';
-import { UnitsMeshParams } from '../units-visual';
-import { ComplexVisual, ComplexMeshVisual } from '../complex-visual';
-import { VisualUpdateState } from '../../util';
-import { LocationIterator } from '../../../mol-geo/util/location-iterator';
-import { OrderedSet, Interval } from '../../../mol-data/int';
-import { PickingId } from '../../../mol-geo/geometry/picking';
-import { EmptyLoci, Loci } from '../../../mol-model/loci';
-import { getElementIdx, MetalsSet } from '../../../mol-model/structure/structure/unit/bonds/common';
-import { getAltResidueLociFromId, getAltResidueLoci } from './util/common';
-import { Sphere3D } from '../../../mol-math/geometry';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import type { VisualContext } from '../../visual.ts';
+import { Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
+import type { Theme } from '../../../mol-theme/theme.ts';
+import type { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { createLinkCylinderMesh, LinkCylinderParams, LinkStyle } from './util/link.ts';
+import { UnitsMeshParams } from '../units-visual.ts';
+import { type ComplexVisual, ComplexMeshVisual } from '../complex-visual.ts';
+import type { VisualUpdateState } from '../../util.ts';
+import { LocationIterator } from '../../../mol-geo/util/location-iterator.ts';
+import { OrderedSet, Interval } from '../../../mol-data/int.ts';
+import { PickingId } from '../../../mol-geo/geometry/picking.ts';
+import { EmptyLoci, type Loci } from '../../../mol-model/loci.ts';
+import { getElementIdx, MetalsSet } from '../../../mol-model/structure/structure/unit/bonds/common.ts';
+import { getAltResidueLociFromId, getAltResidueLoci } from './util/common.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
 
 function createCarbohydrateTerminalLinkCylinderMesh(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<CarbohydrateTerminalLinkParams>, mesh?: Mesh) {
     const { terminalLinks, elements } = structure.carbohydrates;

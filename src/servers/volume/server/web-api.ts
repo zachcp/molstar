@@ -7,18 +7,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as express from 'express';
+import type * as express from 'express';
 
-import * as Api from './api';
-import * as Data from './query/data-model';
-import * as Coords from './algebra/coordinate';
-import { ConsoleLogger } from '../../../mol-util/console-logger';
-import { State } from './state';
-import { LimitsConfig, ServerConfig } from '../config';
-import { interpolate } from '../../../mol-util/string';
-import { getSchema, shortcutIconLink } from './web-schema';
-import { swaggerUiIndexHandler, swaggerUiAssetsHandler } from '../../common/swagger-ui';
-import { healthCheck } from '../../common/util';
+import * as Api from './api.ts';
+import type * as Data from './query/data-model.ts';
+import * as Coords from './algebra/coordinate.ts';
+import { ConsoleLogger } from '../../../mol-util/console-logger.ts';
+import { State } from './state.ts';
+import { LimitsConfig, ServerConfig } from '../config.ts';
+import { interpolate } from '../../../mol-util/string.ts';
+import { getSchema, shortcutIconLink } from './web-schema.ts';
+import { swaggerUiIndexHandler, swaggerUiAssetsHandler } from '../../common/swagger-ui.ts';
+import { healthCheck } from '../../common/util.ts';
+import { Buffer } from "node:buffer";
+import process from "node:process";
 
 export function init(app: express.Express) {
     app.locals.mapFile = getMapFileFn();
