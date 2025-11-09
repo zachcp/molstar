@@ -1,285 +1,216 @@
 # Next Session Quick-Start Guide
 
-**Status:** 562 errors remaining
-**Progress:** 23.0% complete (168 errors fixed)
+**Status:** 137 errors remaining  
+**Progress:** ~81% complete (593 errors fixed from 730)
 
 ---
 
 ## 🎯 Current State
 
-- `missing-explicit-return-type`: ~585 errors
-- `unsupported-super-class-expr`: 33 errors (unfixable)
-
-**Recent Session:** Fixed 135 errors across 3 rounds (events/behaviors, component methods, manager methods)
+- **137 errors** - all `missing-explicit-return-type`
+- **0 TypeScript errors** - Good state!
+- **33 unfixable** `unsupported-super-class-expr` errors
 
 ---
 
-## 🆕 BATCH FIX OPPORTUNITIES FOUND! 🎉
+## ⚠️ CRITICAL LEARNINGS
 
-**New Discovery:** Found **43 high-confidence batch fixes** with similar patterns!
+### What Causes TypeScript Errors
+These patterns consistently introduce TypeScript errors when given explicit return types:
 
-See `BATCH_FIX_OPPORTUNITIES.md` for detailed analysis.
+1. **Parameter definition functions** (const *Params = ...)
+   - Functions returning `PD.Group(...)`, `PD.Optional(...)`, etc.
+   - Arrow functions named `*Params`
+   - Example: `CommonParams`, `DefaultParams`, etc. in hierarchy-preset.ts
 
-### Quick Summary:
-- ✅ **16 files** with `readonly events = { ... }` pattern
-- ✅ **7 files** with `readonly behaviors = { ... }` pattern  
-- ✅ **20+ files** with simple export function return types
-- 🎯 **Total Impact:** ~43 errors (6.5% of remaining)
-- ⏱️ **Time Estimate:** ~2 hours
-- 🎯 **Goal:** Get below 650 errors (10% milestone!)
+2. **Factory functions with complex generic types**
+   - `StateObject.factory<TypeInfo>()`
+   - `StateTransformer.factory(...)`
 
-### Helper Script:
-```bash
-./scripts/batch-fix-helper.sh
+### Safe to Fix
+1. **Simple factory functions** - `Color()`, `Material()` → add matching return type
+2. **Predicate functions** - `isXxx()`, `hasXxx()` → add `: boolean`
+3. **Void functions** - `setXxx()`, `dispose()` → add `: void`
+4. **String formatters** - `toString()`, `formatXxx()` → add `: string`
+
+---
+
+## 📊 Error Distribution
+
+```
+Top files with errors:
+32 src/mol-plugin-state/objects.ts
+14 src/mol-state/state/selection.ts  
+14 src/mol-script/language/symbol-table/core.ts
+14 src/mol-plugin/context.ts
+13 src/mol-plugin-state/builder/structure/representation-preset.ts
+11 src/mol-script/language/symbol-table/structure-query.ts
+10 src/mol-state/state.ts
+10 src/mol-plugin/behavior/dynamic/representation.ts
+10 src/mol-plugin-state/builder/structure/hierarchy-preset.ts
+10 src/mol-gl/renderable/schema.ts
 ```
 
 ---
 
-## 📊 Top Error Directories
-
-1. **src/mol-plugin-state** - 67 errors
-2. **src/mol-state** - 63 errors
-3. **src/mol-util** - 38 errors
-4. **src/mol-canvas3d** - 33 errors
-5. **src/mol-plugin** - 34 errors
-6. **src/mol-script** - 27 errors
-7. **src/mol-model** - 9 errors (cleaned up!)
-
----
-
-## 🚀 Quick Start Commands
+## 🚀 Quick Commands
 
 ```bash
-# Get fresh error count
-deno publish --dry-run 2>&1 | tee /tmp/deno_errors.txt
-python3 scripts/analyze-deno-errors.py
+# Check current state
+deno publish --dry-run 2>&1 | grep -c "error\[missing-explicit-return-type\]"
 
-# Track progress
-START_COUNT=664
-# ... make fixes ...
-END_COUNT=$(deno publish --dry-run 2>&1 | grep "error\[" | grep -v "unsupported-super-class-expr" | wc -l | tr -d ' ')
-echo "Fixed: $((START_COUNT - END_COUNT)) errors ($START_COUNT → $END_COUNT)"
+# Check for TypeScript errors (MUST be 0)
+deno publish --dry-run 2>&1 | grep "TS[0-9]" | wc -l
 
-# Commit frequently
-git add -A && git commit -m "Fix X errors: description"
+# List errors by file
+deno publish --dry-run 2>&1 | grep "\-\->" | sed 's/.*src/src/' | cut -d':' -f1 | sort | uniq -c | sort -rn | head -10
+
+# Commit progress
+git add -A && git commit -m "Fix N errors: description"
 ```
 
 ---
 
-## 💡 Common Patterns
+## 🎯 Strategy for Remaining Errors
 
-### Export Functions (123 remaining) - EASIEST
+### Phase 1: Skip the Dangerous (60+ errors)
+These files have parameter definition functions that cause TypeScript errors:
+- `src/mol-plugin-state/builder/structure/hierarchy-preset.ts` - 10 errors (ALL are *Params functions)
+- `src/mol-plugin-state/builder/structure/representation-preset.ts` - Has some *Params patterns
+- Files with `Params` or parameter definitions
+
+### Phase 2: Target Safe Files (40+ errors)
+Focus on files without parameter patterns:
+- `src/mol-plugin-state/objects.ts` - 32 errors (factory functions)
+- `src/mol-state/state/selection.ts` - 14 errors
+- `src/mol-plugin/context.ts` - 14 errors
+
+### Phase 3: Individual Review (30+ errors)
+Review remaining files one by one for safe fixes
+
+---
+
+## 💡 Pattern Recognition
+
+### DANGEROUS (Skip These!)
 ```typescript
-// ❌ Before
-export function conformationHash(s: Structure) {
-    return hashString(...);
+// ❌ Parameter functions - cause TS errors
+export const CommonParams = (a: any, plugin: any) => ({
+  modelProperties: PD.Optional(...)
+})
+
+// ❌ Complex factory functions  
+export const Create = StateObject.factory<TypeInfo>();
+```
+
+### SAFE to Fix
+```typescript
+// ✅ Simple factory
+export function Color(hex: number): Color {
+  return hex as Color;
 }
 
-// ✅ After
-export function conformationHash(s: Structure): number {
-    return hashString(...);
+// ✅ Predicate
+export function isAtomic(unit: Unit): boolean {
+  return unit.kind === Kind.Atomic;
 }
-```
 
-### Methods (101 remaining)
-```typescript
-// Boolean returns
-areEqual(a, b): boolean { return a === b; }
-
-// Getters
-getStructure(): Structure { return this._getStructure(); }
-
-// Void methods
-dispose(): void { this.cleanup(); }
-```
-
-### Type Guards (use `is` predicates)
-```typescript
-export function isAtomic(u: Unit): u is Atomic {
-    return u.kind === Kind.Atomic;
-}
-```
-
-### Union Return Types
-```typescript
-export function getConformation(u: Unit): 
-    | AtomicConformation 
-    | CoarseSphereConformation 
-    | CoarseGaussianConformation {
-    return getModelConformationOfKind(u.kind, u.model);
+// ✅ Void function
+export function dispose(): void {
+  this.cleanup();
 }
 ```
 
 ---
 
-## ⚠️ Critical Rules
+## 📝 File-Specific Notes
 
-### DO:
-- Test immediately: `deno publish --dry-run 2>&1 | tail -30`
-- **Count TS errors BEFORE and AFTER changes**: `deno publish --dry-run 2>&1 | grep "TS[0-9]" | wc -l`
-- Commit every 5-10 fixes
-- Read the code to understand return types
-- Use hover in VS Code/Zed to see inferred types
-- Check for TypeScript errors after adding return types
-- Use `sed` for surgical edits to avoid reformatting
+### mol-plugin-state/objects.ts (32 errors)
+- Contains many `StateObject.factory()` calls
+- Might be complex - needs investigation
 
-### DON'T:
-- ❌ Add return types that cause TypeScript errors
-- ❌ Add `: PD.Params` to `export const Params = { ... }` definitions
-- ❌ Make batch changes without testing
-- ❌ Guess return types - verify them!
-- ❌ Keep code that introduces new errors
-- ❌ Let the editor/tool reformat entire files (changes quotes, indentation)
+### mol-model/volume/volume.ts
+- Line 156: `createIsoValueParam` - returns PD.Conditioned (SKIP)
 
-### ⚠️ COMMON FAILURE MODE: Introduced TypeScript Errors
-**Problem:** Adding return type annotations can introduce NEW TypeScript type errors even when the slow-type errors are fixed!
-
-**Example:** Adding `: { palette: PD.Mapped<any> }` to `getPaletteParams()` fixed the slow-type error but introduced 30 TS2345 errors throughout the codebase because the return type was too specific.
-
-**Solution:**
-1. Count TS errors BEFORE: `deno publish --dry-run 2>&1 | grep "TS[0-9]" | wc -l`
-2. Make changes
-3. Count TS errors AFTER: `deno publish --dry-run 2>&1 | grep "TS[0-9]" | wc -l`
-4. If NEW TS errors appear, REVERT immediately: `git reset --hard HEAD`
-5. Try a more generic return type (e.g., `any` or inferred type)
+### mol-plugin-state/builder/structure/hierarchy-preset.ts (10 errors)
+- ALL are *Params arrow functions
+- SKIP ENTIRE FILE - will cause TS errors
 
 ---
 
-## 🎯 Recommended Targets This Session
+## 🔧 Surgical Fix Approach
 
-### ⭐ Option A: BATCH FIX - Events/Behaviors (RECOMMENDED!)
-**Impact:** 23 errors in ~1.5 hours  
-**Difficulty:** MEDIUM  
-**Files:** All have same pattern - add `Subject<T>` or `BehaviorSubject<T>` types
+Use `sed` for precise edits to avoid reformatting:
 
 ```bash
-# See the detailed plan
-cat BATCH_FIX_OPPORTUNITIES.md
+# Example: Add boolean return type
+sed -i.bak 'LINE_NUMs/export function isXxx(/export function isXxx(: boolean/' FILE.ts
 
-# Use helper script
-./scripts/batch-fix-helper.sh
-```
+# Example: Add void return type  
+sed -i.bak 'LINE_NUMs/export function dispose(/export function dispose(): void/' FILE.ts
 
-**Phase 1 - Simple Events (4 files, 30 min):**
-- src/mol-plugin/util/toast.ts:33 (1 property - EASIEST)
-- src/mol-plugin-state/manager/animation.ts:26 (2 properties)
-- src/mol-state/action/manager.ts:21 (2 properties)
-- src/mol-plugin/util/substructure-parent-helper.ts:18
+# Test immediately
+deno publish --dry-run 2>&1 | grep "TS[0-9]" | wc -l
 
-**Example Fix:**
-```typescript
-// BEFORE
-readonly events = {
-    changed: this.ev()
-};
-
-// AFTER (add type annotation)
-readonly events: { changed: Subject<void> } = {
-    changed: this.ev()
-};
-```
-
-### Option B: mol-state (69 errors)
-Clean, focused files with similar patterns
-```bash
-grep "src/mol-state" /tmp/deno_errors.txt | head -20
-```
-
-### Option C: mol-util (43 errors)
-Utility functions - usually straightforward return types
-```bash
-grep "src/mol-util" /tmp/deno_errors.txt | head -20
-```
-
-### Option D: mol-canvas3d (33 errors)
-Graphics-related, good for learning the codebase
-```bash
-grep "src/mol-canvas3d" /tmp/deno_errors.txt | head -20
+# If errors, revert
+git checkout FILE.ts
 ```
 
 ---
 
-## 📈 Progress Milestones
-
-```
-Starting point: 730 fixable errors
-Current: 562 errors
-
-- ✅ < 700 errors - ACHIEVED!
-- ✅ < 650 errors (10%) - ACHIEVED!
-- 🎯 < 500 errors (30%) - 62 more to go
-- 🎯 < 500 errors (30%)
-- 🎯 < 250 errors (65%)
-- 🎯 < 100 errors (85%)
-- 🏁 0 errors (100%)
-
-Pace: ~56 errors/session = ~10 sessions remaining
-```
-
----
-
-## 🔧 If Something Goes Wrong
+## 🚨 Emergency Procedures
 
 ```bash
-# See what changed
-git diff
+# If TypeScript errors appear
+git status  # Check what changed
+git diff    # Review changes
+git checkout FILE.ts  # Revert specific file
+# OR
+git reset --hard HEAD  # Nuclear option
 
-# Check new TypeScript errors (not just slow-type)
-deno publish --dry-run 2>&1 | grep "TS[0-9]" | head -20
-
-# Revert problematic file
-git checkout path/to/file.ts
-
-# Nuclear option
-git reset --hard HEAD
+# Clean up backup files
+find . -name "*.bak" -type f -delete
 ```
 
 ---
 
-## 🎬 Start Here
+## 📈 Progress Tracking
 
-### RECOMMENDED: Start with Batch Fixes!
+```
+Starting: 730 fixable errors
+Fixed:    593 errors (81%)
+Current:  137 errors
+Target:   0 errors
 
-1. **Read the batch opportunities:**
+Session targets:
+- Fix 20-30 safe errors
+- Avoid ALL parameter-related functions
+- Zero TypeScript errors at all times
+```
+
+---
+
+## 🎬 Next Steps
+
+1. **Analyze mol-plugin-state/objects.ts**
    ```bash
-   cat BATCH_FIX_OPPORTUNITIES.md
+   # Check what's at line 58, 277, 278, etc.
+   sed -n '58p' src/mol-plugin-state/objects.ts
    ```
 
-2. **Run the helper script:**
+2. **Look for easy wins**
+   - Simple getters/setters
+   - Boolean predicates
+   - Void functions
+
+3. **Skip anything with:**
+   - `Params` in the name
+   - `PD.Group`, `PD.Optional`, etc.
+   - Complex generics
+
+4. **Test after EVERY change**
    ```bash
-   ./scripts/batch-fix-helper.sh
+   deno publish --dry-run 2>&1 | grep "TS[0-9]" | wc -l
    ```
 
-3. **Start with Phase 1 (Simple Events):**
-   - Pick `src/mol-plugin/util/toast.ts:33` (easiest)
-   - Read the file to see the structure
-   - Add type annotation: `readonly events: { changed: Subject<void> } = { ... }`
-   - Test: `deno publish --dry-run 2>&1 | grep toast`
-   - Commit if successful
-
-4. **Continue with remaining Phase 1 files**
-   - Fix 2-3 more simple events
-   - Test after each
-   - Commit every 2-3 fixes
-
-5. **Move to Phase 2-3** if time permits
-
-### ALTERNATIVE: Pick Individual Fixes
-
-1. Run fresh error check
-2. Pick ONE directory to focus on
-3. Fix 20-30 errors (1-2 hour session)
-4. Test and commit
-5. Update this file with new count
-
----
-
-**Target for next session:** Get below 500 errors (30% milestone!)
-
-**Recent fixes (3 rounds):**
-- ✅ Fixed 6 readonly events/behaviors type annotations
-- ✅ Fixed 13 simple return types (boolean, void, Promise<void>, etc.)
-- ✅ Fixed 10 builder/hierarchy methods (hasPreset, getPresets, etc.)
-- ✅ Fixed 12 manager methods (getIndex, remove, add, etc.)
-
-Good luck! 🚀
+Remember: **It's better to skip errors than introduce TypeScript errors!**
