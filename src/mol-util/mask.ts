@@ -103,7 +103,7 @@ namespace Mask {
     }
 
     export function always(size: number): Mask { return new AllMask(size); }
-    export const never = new EmptyMask();
+    export const never: Mask = new EmptyMask();
 
     export function ofSet(set: Set<number>): Mask {
         return new SetMask(set);
