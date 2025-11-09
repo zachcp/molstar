@@ -40,7 +40,7 @@ export interface StructureRepresentationPresetProvider<
 > extends PresetProvider<PluginStateObject.Molecule.Structure, P, S> {}
 export function StructureRepresentationPresetProvider<P, S extends _Result>(
   repr: StructureRepresentationPresetProvider<P, S>,
-): StructureRepresentationPresetProvider<P, S> {
+) {
   return repr;
 }
 export namespace StructureRepresentationPresetProvider {
