@@ -12,7 +12,7 @@ import { ModifiersKeys } from '../../../mol-util/input/input-observer.ts';
 const M = ModifiersKeys;
 const Key = Binding.TriggerKey;
 
-const DefaultSnapshotControlsBindings = {
+const DefaultSnapshotControlsBindings: Record<string, Binding> = {
     next: Binding([
         Key('ArrowRight', M.create({ control: true })),
         Key('GamepadY'),
@@ -28,7 +28,7 @@ const DefaultSnapshotControlsBindings = {
         Key('ArrowDown', M.create({ control: true })),
     ]),
 };
-const SnapshotControlsParams = {
+const SnapshotControlsParams: PD.Params = {
     bindings: PD.Value(DefaultSnapshotControlsBindings, { isHidden: true }),
 };
 type SnapshotControlsProps = PD.Values<typeof SnapshotControlsParams>
