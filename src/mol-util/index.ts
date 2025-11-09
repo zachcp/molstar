@@ -14,6 +14,7 @@ import type { Progress, Task } from "../mol-task/index.ts";
 export * from "./value-cell.ts";
 export * from "./color/index.ts";
 export * from "./assets.ts";
+export * from "./type-helpers.ts";
 export { BitFlags, Mask, StringBuilder, UUID };
 
 export const noop: () => void = function (): void {};

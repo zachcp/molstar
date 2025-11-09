@@ -14,6 +14,13 @@ export * from "./mol-state/index.ts";
 export * from "./mol-task/index.ts";
 export * from "./mol-util/index.ts";
 
+// IO modules
+export { StringLike } from "./mol-io/common/string-like.ts";
+
+// Model modules
+export { Volume } from "./mol-model/volume.ts";
+export type { SaccharideCompIdMapType } from "./mol-model/structure/structure/carbohydrates/constants.ts";
+
 // Plugin modules
 export * from "./mol-plugin/index.ts";
 export * from "./mol-plugin-ui/index.ts";
@@ -21,6 +28,20 @@ export * from "./mol-plugin-state/index.ts";
 
 // Canvas
 export * from "./mol-canvas3d/index.ts";
+
+// Debug utilities
+export {
+  consoleStats,
+  isDebugMode,
+  isProductionMode,
+  isTimingMode,
+  setDebugMode,
+  setProductionMode,
+  setTimingMode,
+} from "./mol-util/debug.ts";
+
+// Version
+export { PLUGIN_VERSION as version } from "./mol-plugin/version.ts";
 
 // Extensions - Type-clean viewer extensions (11/15)
 // See EXTENSION_TYPE_FIXES.md for details on fixes applied
