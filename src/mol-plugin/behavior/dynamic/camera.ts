@@ -20,13 +20,13 @@ const M = ModifiersKeys;
 const Trigger = Binding.Trigger;
 const Key: (code?: string | undefined, modifiers?: ModifiersKeys | undefined) => Binding.Trigger = Binding.TriggerKey;
 
-export const DefaultClickResetCameraOnEmpty = Binding([
+export const DefaultClickResetCameraOnEmpty: Binding = Binding([
     Trigger(B.Flag.Primary, M.create()),
     Trigger(B.Flag.Secondary, M.create()),
     Trigger(B.Flag.Primary, M.create({ control: true })),
     Trigger(B.Flag.Trigger),
 ], 'Reset camera focus', 'Click on nothing using ${triggers}');
-export const DefaultClickResetCameraOnEmptySelectMode = Binding([
+export const DefaultClickResetCameraOnEmptySelectMode: Binding = Binding([
     Trigger(B.Flag.Secondary, M.create()),
     Trigger(B.Flag.Primary, M.create({ control: true }))
 ], 'Reset camera focus (Selection Mode)', 'Click on nothing using ${triggers}');
@@ -51,7 +51,7 @@ export const DefaultFocusLociBindings: FocusLociBindings = {
     clickResetCameraOnEmpty: DefaultClickResetCameraOnEmpty,
     clickResetCameraOnEmptySelectMode: DefaultClickResetCameraOnEmptySelectMode,
 };
-const FocusLociParams = {
+const FocusLociParams: PD.Params = {
     minRadius: PD.Numeric(8, { min: 1, max: 50, step: 1 }),
     extraRadius: PD.Numeric(4, { min: 1, max: 50, step: 1 }, { description: 'Value added to the bounding-sphere radius of the Loci' }),
     durationMs: PD.Numeric(250, { min: 0, max: 1000, step: 1 }, { description: 'Camera transition duration' }),
@@ -162,14 +162,14 @@ export const CameraAxisHelper = PluginBehavior.create<{}>({
     display: { name: 'Camera Axis Helper' }
 });
 
-const DefaultCameraControlsBindings = {
+const DefaultCameraControlsBindings: Record<string, Binding> = {
     keySpinAnimation: Binding([Key('I')], 'Spin Animation', 'Press ${triggers}'),
     keyRockAnimation: Binding([Key('O')], 'Rock Animation', 'Press ${triggers}'),
     keyToggleFlyMode: Binding([Key('Space', M.create({ shift: true }))], 'Toggle Fly Mode', 'Press ${triggers}'),
     keyResetView: Binding([Key('T')], 'Reset View', 'Press ${triggers}'),
     keyGlobalIllumination: Binding([Key('G')], 'Global Illumination', 'Press ${triggers}'),
 };
-const CameraControlsParams = {
+const CameraControlsParams: PD.Params = {
     bindings: PD.Value(DefaultCameraControlsBindings, { isHidden: true }),
 };
 type CameraControlsProps = PD.Values<typeof CameraControlsParams>
