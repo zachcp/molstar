@@ -1,8 +1,9 @@
 {
   "name": "@zachcp/molstar",
-  "version": "5.3.12",
+  "version": "5.3.13",
   "exports": {
-    ".": "./src/mod.ts"
+    ".": "./src/mod.ts",
+    "./polyfill": "./src/mol-util/polyfill.ts"
   },
   "imports": {
     "argparse": "npm:argparse@^2.0.1",
