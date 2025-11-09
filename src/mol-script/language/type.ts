@@ -30,9 +30,9 @@ namespace Type {
     export const Any: Any = { kind: 'any' } as any;
     export const AnyValue: AnyValue = { kind: 'any-value' } as any;
 
-    export const Num = Value<number>('', 'Number');
-    export const Str = Value<string>('', 'String');
-    export const Bool = OneOf<boolean>('', 'Bool', Str as any, ['true', 'false']);
+    export const Num: Type.Value<number> = Value<number>('', 'Number');
+    export const Str: Type.Value<string> = Value<string>('', 'String');
+    export const Bool: Type.OneOf<boolean> = OneOf<boolean>('', 'Bool', Str as any, ['true', 'false']);
 
     export function oneOfValues({ values }: OneOf<any>): string[] { return Object.keys(values).sort(); }
 }
