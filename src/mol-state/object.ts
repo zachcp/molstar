@@ -134,7 +134,7 @@ namespace StateObjectCell {
       | StateTransform.Ref
       | StateObjectCell
       | StateObjectSelector,
-  ) {
+  ): StateObjectCell | undefined {
     const ref =
       typeof refOrCellOrSelector === "string"
         ? refOrCellOrSelector
@@ -156,7 +156,7 @@ export class StateObjectTracker<T extends StateObject> {
     this.query = StateSelection.compile(sel);
   }
 
-  update() {
+  update(): boolean {
     const cell = this.state.select(this.query)[0];
     const version = cell ? cell.transform.version : void 0;
     const changed = this.cell !== cell || this.version !== version;
@@ -214,7 +214,7 @@ export class StateObjectSelector<
   }
 
   /** Checks if the object exists. If not throw an error. */
-  checkValid() {
+  checkValid(): boolean {
     if (!this.state) {
       throw new Error("Unassigned State.");
     }
