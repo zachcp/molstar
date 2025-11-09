@@ -1,7 +1,7 @@
 # Next Session Quick-Start Guide
 
-**Status:** 585 errors remaining
-**Progress:** 19.9% complete (145 errors fixed)
+**Status:** 562 errors remaining
+**Progress:** 23.0% complete (168 errors fixed)
 
 ---
 
@@ -10,7 +10,7 @@
 - `missing-explicit-return-type`: ~585 errors
 - `unsupported-super-class-expr`: 33 errors (unfixable)
 
-**Recent Session:** Fixed 9 errors (6 events/behaviors + 3 return types)
+**Recent Session:** Fixed 135 errors across 3 rounds (events/behaviors, component methods, manager methods)
 
 ---
 
@@ -186,17 +186,17 @@ grep "src/mol-canvas3d" /tmp/deno_errors.txt | head -20
 
 ```
 Starting point: 730 fixable errors
-Current: 585 errors
+Current: 562 errors
 
 - ✅ < 700 errors - ACHIEVED!
 - ✅ < 650 errors (10%) - ACHIEVED!
-- 🎯 < 500 errors (30%) - 85 more to go
+- 🎯 < 500 errors (30%) - 62 more to go
 - 🎯 < 500 errors (30%)
 - 🎯 < 250 errors (65%)
 - 🎯 < 100 errors (85%)
 - 🏁 0 errors (100%)
 
-Pace: ~48 errors/session = ~12 sessions remaining
+Pace: ~56 errors/session = ~10 sessions remaining
 ```
 
 ---
@@ -259,8 +259,10 @@ git reset --hard HEAD
 
 **Target for next session:** Get below 500 errors (30% milestone!)
 
-**Recent fixes:**
+**Recent fixes (3 rounds):**
 - ✅ Fixed 6 readonly events/behaviors type annotations
-- ✅ Fixed 3 simple return types (boolean, void, Promise<void>)
+- ✅ Fixed 13 simple return types (boolean, void, Promise<void>, etc.)
+- ✅ Fixed 10 builder/hierarchy methods (hasPreset, getPresets, etc.)
+- ✅ Fixed 12 manager methods (getIndex, remove, add, etc.)
 
 Good luck! 🚀
