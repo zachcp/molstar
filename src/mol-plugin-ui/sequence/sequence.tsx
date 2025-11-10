@@ -8,7 +8,7 @@
 
 import * as React from 'react';
 import { type BehaviorSubject, Subject } from 'rxjs';
-import { throttleTime } from 'rxjs/operators';
+import { throttleTime } from 'rxjs';
 import { OrderedSet } from '../../mol-data/int.ts';
 import type { ColorTypeLocation } from '../../mol-geo/geometry/color-data.ts';
 import { EveryLoci } from '../../mol-model/loci.ts';

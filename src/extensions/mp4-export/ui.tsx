@@ -5,7 +5,7 @@
  */
 
 import { merge } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime } from 'rxjs';
 import { CollapsableControls, type CollapsableState } from '../../mol-plugin-ui/base.tsx';
 import { Button } from '../../mol-plugin-ui/controls/common.tsx';
 import { CameraOutlinedSvg, GetAppSvg, Icon, SubscriptionsOutlinedSvg } from '../../mol-plugin-ui/controls/icons.tsx';

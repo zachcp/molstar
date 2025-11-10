@@ -5,7 +5,7 @@
  */
 
 import type * as React from 'react';
-import { debounceTime, filter } from 'rxjs/operators';
+import { debounceTime, filter } from 'rxjs';
 import type { PluginStateObject } from '../../mol-plugin-state/objects.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import {

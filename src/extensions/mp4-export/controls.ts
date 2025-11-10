@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime } from 'rxjs';
 import type { PluginStateAnimation } from '../../mol-plugin-state/animation/model.ts';
 import { PluginComponent } from '../../mol-plugin-state/component.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
