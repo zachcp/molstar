@@ -35,7 +35,7 @@ export class ViewportControls extends PluginUIComponent<ViewportControlsProps, V
         isScreenshotExpanded: false,
     };
 
-    state: ViewportControlsState = {
+    override state: ViewportControlsState = {
         ...this.allCollapsedState,
         isCameraResetEnabled: true,
     };
@@ -60,7 +60,7 @@ export class ViewportControls extends PluginUIComponent<ViewportControlsProps, V
 
     toggleExpanded = () => {
         PluginCommands.Layout.Update(this.plugin, {
-            state: {
+            override state: {
                 isExpanded: !this.plugin.layout.state.isExpanded,
                 expandToFullscreen: false
             }
@@ -69,7 +69,7 @@ export class ViewportControls extends PluginUIComponent<ViewportControlsProps, V
 
     toggleFullscreen = () => {
         PluginCommands.Layout.Update(this.plugin, {
-            state: {
+            override state: {
                 expandToFullscreen: !this.plugin.layout.state.expandToFullscreen,
             }
         });
@@ -114,7 +114,7 @@ export class ViewportControls extends PluginUIComponent<ViewportControlsProps, V
         this.setState(old => ({ ...old, isCameraResetEnabled: enable }));
     };
 
-    componentDidMount() {
+    override componentDidMount() {
         this.subscribe(this.plugin.events.canvas3d.settingsUpdated, () => this.forceUpdate());
         this.subscribe(this.plugin.layout.events.updated, () => this.forceUpdate());
         if (this.plugin.canvas3d) {
@@ -131,7 +131,7 @@ export class ViewportControls extends PluginUIComponent<ViewportControlsProps, V
         return <IconButton svg={icon} toggleState={isOn} onClick={onClick} title={title} style={{ background: 'transparent' }} disabled={disabled} />;
     }
 
-    render() {
+    override render() {
         const showXr = this.plugin.config.get(PluginConfig.Viewport.ShowXR);
         const xrIsSupported = !!this.plugin.canvas3d?.xr.isSupported.value;
         const xrIsPresenting = !!this.plugin.canvas3d?.xr.isPresenting.value;

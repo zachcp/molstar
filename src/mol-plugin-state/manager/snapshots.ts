@@ -37,7 +37,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
     private entryMap = new Map<string, PluginStateSnapshotManager.Entry>();
     private defaultSnapshotId: UUID | undefined = undefined;
 
-    protected updateState(state: Partial<StateManagerState>) {
+    protected override updateState(state: Partial<StateManagerState>) {
         if ('current' in state && !('currentAnimationTimeMs' in state)) {
             return super.updateState({ ...state, currentAnimationTimeMs: 0 });
         } else {
@@ -438,7 +438,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
         }
     }
 
-    dispose() {
+    override dispose() {
         super.dispose();
         this.entryMap.clear();
     }
