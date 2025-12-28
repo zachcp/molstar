@@ -52,7 +52,7 @@ const DownloadModelRepresentationOptions = (plugin: PluginContext) => {
     }, { isExpanded: false });
 };
 
-export const PdbDownloadProvider = {
+const _PdbDownloadProvider = {
     'rcsb': PD.Group({
         encoding: PD.Select('bcif', PD.arrayToOptions(['cif', 'bcif'] as const)),
     }, { label: 'RCSB PDB', isFlat: true }),
@@ -67,11 +67,10 @@ export const PdbDownloadProvider = {
     }, { label: 'PDBe', isFlat: true }),
     'pdbj': PD.EmptyGroup({ label: 'PDBj' }),
 };
+export const PdbDownloadProvider: typeof _PdbDownloadProvider = _PdbDownloadProvider;
 export type PdbDownloadProvider = keyof typeof PdbDownloadProvider;
 
-export { DownloadStructure };
-type DownloadStructure = typeof DownloadStructure;
-const DownloadStructure = StateAction.build({
+const _DownloadStructure = StateAction.build({
     from: PluginStateObject.Root,
     display: {
         name: 'Download Structure',
@@ -285,6 +284,8 @@ const DownloadStructure = StateAction.build({
         }).runInContext(ctx);
     })
 );
+export const DownloadStructure: typeof _DownloadStructure = _DownloadStructure;
+export type DownloadStructure = typeof DownloadStructure;
 
 async function getDownloadParams(
     src: string,
@@ -356,7 +357,7 @@ async function getRcsbDownloadParams(src: ReturnType<DownloadStructure['createDe
         );
 }
 
-export const UpdateTrajectory = StateAction.build({
+const _UpdateTrajectory = StateAction.build({
     display: { name: 'Update Trajectory' },
     params: {
         action: PD.Select('advance', PD.arrayToOptions(['advance', 'reset'] as const)),
@@ -391,8 +392,9 @@ export const UpdateTrajectory = StateAction.build({
 
     return state.updateTree(update);
 });
+export const UpdateTrajectory: typeof _UpdateTrajectory = _UpdateTrajectory;
 
-export const EnableModelCustomProps = StateAction.build({
+const _EnableModelCustomProps = StateAction.build({
     display: { name: 'Custom Model Properties', description: 'Enable parameters for custom properties of the model.' },
     from: PluginStateObject.Molecule.Model,
     params(a, ctx: PluginContext) {
@@ -402,8 +404,9 @@ export const EnableModelCustomProps = StateAction.build({
         return t.transformer !== CustomModelProperties;
     },
 })(({ ref, params }, ctx: PluginContext) => ctx.builders.structure.insertModelProperties(ref, params));
+export const EnableModelCustomProps: typeof _EnableModelCustomProps = _EnableModelCustomProps;
 
-export const EnableStructureCustomProps = StateAction.build({
+const _EnableStructureCustomProps = StateAction.build({
     display: {
         name: 'Custom Structure Properties',
         description: 'Enable parameters for custom properties of the structure.',
@@ -416,8 +419,9 @@ export const EnableStructureCustomProps = StateAction.build({
         return t.transformer !== CustomStructureProperties;
     },
 })(({ ref, params }, ctx: PluginContext) => ctx.builders.structure.insertStructureProperties(ref, params));
+export const EnableStructureCustomProps: typeof _EnableStructureCustomProps = _EnableStructureCustomProps;
 
-export const AddTrajectory = StateAction.build({
+const _AddTrajectory = StateAction.build({
     display: { name: 'Add Trajectory', description: 'Add trajectory from existing model/topology and coordinates.' },
     from: PluginStateObject.Root,
     params(a, ctx: PluginContext) {
@@ -451,8 +455,9 @@ export const AddTrajectory = StateAction.build({
         }).runInContext(taskCtx);
     })
 );
+export const AddTrajectory: typeof _AddTrajectory = _AddTrajectory;
 
-export const LoadTrajectory = StateAction.build({
+const _LoadTrajectory = StateAction.build({
     display: {
         name: 'Load Trajectory',
         description: 'Load trajectory of model/topology and coordinates from URL or file.',
@@ -584,3 +589,4 @@ export const LoadTrajectory = StateAction.build({
         }).runInContext(taskCtx);
     })
 );
+export const LoadTrajectory: typeof _LoadTrajectory = _LoadTrajectory;

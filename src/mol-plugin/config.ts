@@ -15,10 +15,10 @@ import type { SaccharideCompIdMapType } from '../mol-model/structure/structure/c
 import type { BackgroundProps } from '../mol-canvas3d/passes/background.ts';
 
 export class PluginConfigItem<T = any> {
-    toString() {
+    toString(): string {
         return this.key;
     }
-    valueOf() {
+    valueOf(): string {
         return this.key;
     }
     constructor(public key: string, public defaultValue?: T) {}
@@ -28,7 +28,58 @@ function item<T>(key: string, defaultValue?: T): PluginConfigItem<T> {
     return new PluginConfigItem(key, defaultValue);
 }
 
-export const PluginConfig = {
+export const PluginConfig: {
+    item: typeof item;
+    General: {
+        IsBusyTimeoutMs: PluginConfigItem<number>;
+        DisableAntialiasing: PluginConfigItem<boolean>;
+        DisablePreserveDrawingBuffer: PluginConfigItem<boolean>;
+        PixelScale: PluginConfigItem<number>;
+        PickScale: PluginConfigItem<number>;
+        Transparency: PluginConfigItem<'blended' | 'wboit' | 'dpoit'>;
+        PreferWebGl1: PluginConfigItem<boolean>;
+        AllowMajorPerformanceCaveat: PluginConfigItem<boolean>;
+        PowerPreference: PluginConfigItem<WebGLContextAttributes['powerPreference']>;
+        ResolutionMode: PluginConfigItem<'auto' | 'scaled' | 'native'>;
+    };
+    State: {
+        DefaultServer: PluginConfigItem<string>;
+        CurrentServer: PluginConfigItem<string>;
+        HistoryCapacity: PluginConfigItem<number>;
+    };
+    VolumeStreaming: {
+        Enabled: PluginConfigItem<boolean>;
+        DefaultServer: PluginConfigItem<string>;
+        CanStream: PluginConfigItem<(s: Structure, plugin: PluginContext) => boolean>;
+        EmdbHeaderServer: PluginConfigItem<string>;
+    };
+    Viewport: {
+        ShowReset: PluginConfigItem<boolean>;
+        ShowExpand: PluginConfigItem<boolean>;
+        ShowToggleFullscreen: PluginConfigItem<boolean>;
+        ShowControls: PluginConfigItem<boolean>;
+        ShowSettings: PluginConfigItem<boolean>;
+        ShowSelectionMode: PluginConfigItem<boolean>;
+        ShowAnimation: PluginConfigItem<boolean>;
+        ShowTrajectoryControls: PluginConfigItem<boolean>;
+        ShowScreenshotControls: PluginConfigItem<boolean>;
+        ShowIllumination: PluginConfigItem<boolean>;
+        ShowXR: PluginConfigItem<'auto' | 'always' | 'never'>;
+    };
+    Download: {
+        DefaultPdbProvider: PluginConfigItem<PdbDownloadProvider>;
+        DefaultEmdbProvider: PluginConfigItem<EmdbDownloadProvider>;
+    };
+    Structure: {
+        SizeThresholds: PluginConfigItem<typeof Structure.DefaultSizeThresholds>;
+        DefaultRepresentationPreset: PluginConfigItem<string>;
+        DefaultRepresentationPresetParams: PluginConfigItem<StructureRepresentationPresetProvider.CommonParams>;
+        SaccharideCompIdMapType: PluginConfigItem<SaccharideCompIdMapType>;
+    };
+    Background: {
+        Styles: PluginConfigItem<[BackgroundProps, string][]>;
+    };
+} = {
     item,
     General: {
         IsBusyTimeoutMs: item('plugin-config.is-busy-timeout', 750),
@@ -97,16 +148,16 @@ export const PluginConfig = {
 export class PluginConfigManager {
     private _config: Map<PluginConfigItem<any>, unknown> = new Map<PluginConfigItem<any>, unknown>();
 
-    get<T>(key: PluginConfigItem<T>) {
+    get<T>(key: PluginConfigItem<T>): T | undefined {
         if (!this._config.has(key)) return key.defaultValue;
         return this._config.get(key) as T;
     }
 
-    set<T>(key: PluginConfigItem<T>, value: T) {
+    set<T>(key: PluginConfigItem<T>, value: T): void {
         this._config.set(key, value);
     }
 
-    delete<T>(key: PluginConfigItem<T>) {
+    delete<T>(key: PluginConfigItem<T>): void {
         this._config.delete(key);
     }
 

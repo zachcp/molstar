@@ -84,7 +84,7 @@ namespace PluginBehavior {
   }
 
   export type CreateCategory = typeof CreateCategory;
-  export const CreateCategory = PluginStateTransform.BuiltIn({
+  export const CreateCategory: StateTransformer<Root, Category, { label: string }> = PluginStateTransform.BuiltIn({
     name: "create-behavior-category",
     display: { name: "Behavior Category" },
     from: Root,
@@ -93,17 +93,17 @@ namespace PluginBehavior {
       label: ParamDefinition.Text("", { isHidden: true }),
     },
   })({
-    apply({ params }) {
+    apply({ params }): Category {
       return new Category({}, { label: params.label });
     },
   });
 
   const categoryMap = new Map<string, keyof typeof Categories>();
-  export function getCategoryId(t: StateTransformer) {
+  export function getCategoryId(t: StateTransformer): keyof typeof Categories {
     return categoryMap.get(t.id)!;
   }
 
-  export function create<P extends {}>(params: CreateParams<P>) {
+  export function create<P extends {}>(params: CreateParams<P>): StateTransformer<Category, Behavior, P> {
     const t = PluginStateTransform.CreateBuiltIn<Category, Behavior, P>({
       name: params.name,
       display: params.display,
@@ -137,7 +137,7 @@ namespace PluginBehavior {
   export function simpleCommandHandler<T>(
     cmd: PluginCommand<T>,
     action: (data: T, ctx: PluginContext) => void | Promise<void>,
-  ) {
+  ): Ctor<{}> {
     return class implements PluginBehavior<{}> {
       // TODO can't be private due to bug with generating declerations, see https://github.com/Microsoft/TypeScript/issues/17293
       /** private */ sub: PluginCommand.Subscription | undefined = void 0;
