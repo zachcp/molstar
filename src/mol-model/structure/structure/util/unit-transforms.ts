@@ -46,7 +46,7 @@ export class StructureUnitTransforms {
         this._isIdentity = true;
     }
 
-    get isIdentity() {
+    get isIdentity(): boolean {
         if (this._isIdentity === undefined) {
             this._isIdentity = true;
             for (let i = 0, il = this.size * 16; i < il; i += 16) {
@@ -66,7 +66,7 @@ export class StructureUnitTransforms {
         this._isIdentity = undefined;
     }
 
-    getTransform(out: Mat4, unit: Unit) {
+    getTransform(out: Mat4, unit: Unit): Mat4 {
         return Mat4.fromArray(out, this.unitTransforms, this.unitOffsetMap.get(unit.id));
     }
 

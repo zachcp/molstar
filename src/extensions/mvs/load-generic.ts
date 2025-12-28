@@ -114,7 +114,15 @@ export interface UpdateTarget {
     readonly transformer?: StateTransformer,
     readonly transformParams?: any,
 }
-export const UpdateTarget = {
+export const UpdateTarget: {
+    create(plugin: PluginContext, replaceExisting: boolean): UpdateTarget;
+    apply<A extends StateObject, B extends StateObject, P extends {}>(target: UpdateTarget, transformer: StateTransformer<A, B, P>, params?: Partial<P>, options?: Partial<StateTransform.Options>): UpdateTarget;
+    setMvsDependencies(target: UpdateTarget, refs: string[] | Set<string>): UpdateTarget;
+    dependsOn(target: UpdateTarget, mapping: Map<string, string>): UpdateTarget;
+    tag(target: UpdateTarget, tags: string[]): UpdateTarget;
+    deleteChildren(target: UpdateTarget): UpdateTarget;
+    commit(target: UpdateTarget): Promise<void>;
+} = {
     /** Create a new update, with `selector` pointing to the root. */
     create(plugin: PluginContext, replaceExisting: boolean): UpdateTarget {
         const update = plugin.build();

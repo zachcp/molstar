@@ -58,9 +58,9 @@ export namespace Tensor {
 
     export function Data1(values: ArrayLike<number>): Data { return values as Data; }
 
-    export function Vector(d: number, ctor?: ArrayCtor) { return Space([d], [0], ctor); }
-    export function ColumnMajorMatrix(rows: number, cols: number, ctor?: ArrayCtor) { return Space([rows, cols], [1, 0], ctor); }
-    export function RowMajorMatrix(rows: number, cols: number, ctor?: ArrayCtor) { return Space([rows, cols], [0, 1], ctor); }
+    export function Vector(d: number, ctor?: ArrayCtor): Space { return Space([d], [0], ctor); }
+    export function ColumnMajorMatrix(rows: number, cols: number, ctor?: ArrayCtor): Space { return Space([rows, cols], [1, 0], ctor); }
+    export function RowMajorMatrix(rows: number, cols: number, ctor?: ArrayCtor): Space { return Space([rows, cols], [0, 1], ctor); }
 
     export function toMat4(out: Mat4, space: Space, data: Tensor.Data): Mat4 {
         if (space.rank !== 2) throw new Error('Invalid tensor rank');

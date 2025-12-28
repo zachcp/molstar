@@ -62,7 +62,7 @@ export namespace Volume {
         export type Relative = Readonly<{ kind: 'relative', relativeValue: number }>
         export type Absolute = Readonly<{ kind: 'absolute', absoluteValue: number }>
 
-        export function areSame(a: IsoValue, b: IsoValue, stats: Grid['stats']) {
+        export function areSame(a: IsoValue, b: IsoValue, stats: Grid['stats']): boolean {
             return equalEps(toAbsolute(a, stats).absoluteValue, toAbsolute(b, stats).absoluteValue, stats.sigma / 100);
         }
 
@@ -85,7 +85,7 @@ export namespace Volume {
             return value.kind === 'relative' ? value : { kind: 'relative', relativeValue: IsoValue.calcRelative(stats, value.absoluteValue) };
         }
 
-        export function toString(value: IsoValue) {
+        export function toString(value: IsoValue): string {
             return value.kind === 'relative'
                 ? `${value.relativeValue.toFixed(2)} σ`
                 : `${value.absoluteValue.toPrecision(4)}`;
@@ -93,7 +93,7 @@ export namespace Volume {
     }
 
     // Converts iso value to relative if using downsample VolumeServer data
-    export function adjustedIsoValue(volume: Volume, value: number, kind: 'absolute' | 'relative') {
+    export function adjustedIsoValue(volume: Volume, value: number, kind: 'absolute' | 'relative'): IsoValue {
         if (kind === 'relative') return IsoValue.relative(value);
 
         const absolute = IsoValue.absolute(value);
@@ -159,11 +159,11 @@ export namespace Volume {
         _propertyData: Object.create(null),
     };
 
-    export function areEquivalent(volA: Volume, volB: Volume) {
+    export function areEquivalent(volA: Volume, volB: Volume): boolean {
         return Grid.areEquivalent(volA.grid, volB.grid) && areInstanceTransformsEqual(volA, volB);
     }
 
-    export function areInstanceTransformsEqual(volA: Volume, volB: Volume) {
+    export function areInstanceTransformsEqual(volA: Volume, volB: Volume): boolean {
         if (volA.instances.length !== volB.instances.length) return false;
         for (let i = 0, il = volA.instances.length; i < il; ++i) {
             if (!Mat4.areEqual(volA.instances[i].transform, volB.instances[i].transform, EPSILON)) return false;
@@ -171,11 +171,11 @@ export namespace Volume {
         return true;
     }
 
-    export function isEmpty(vol: Volume) {
+    export function isEmpty(vol: Volume): boolean {
         return Grid.isEmpty(vol.grid) || vol.instances.length === 0;
     }
 
-    export function isOrbitals(volume: Volume) {
+    export function isOrbitals(volume: Volume): boolean {
         if (!CubeFormat.is(volume.sourceData)) return false;
         return volume.sourceData.data.header.orbitals;
     }
@@ -183,10 +183,10 @@ export namespace Volume {
     export interface Loci { readonly kind: 'volume-loci', readonly volume: Volume, readonly instances: OrderedSet<InstanceIndex> }
     export function Loci(volume: Volume, instances: OrderedSet<InstanceIndex>): Loci { return { kind: 'volume-loci', volume, instances }; }
     export function isLoci(x: any): x is Loci { return !!x && x.kind === 'volume-loci'; }
-    export function areLociEqual(a: Loci, b: Loci) { return a.volume === b.volume && OrderedSet.areEqual(a.instances, b.instances); }
-    export function isLociEmpty(loci: Loci) { return isEmpty(loci.volume) || OrderedSet.isEmpty(loci.instances); }
+    export function areLociEqual(a: Loci, b: Loci): boolean { return a.volume === b.volume && OrderedSet.areEqual(a.instances, b.instances); }
+    export function isLociEmpty(loci: Loci): boolean { return isEmpty(loci.volume) || OrderedSet.isEmpty(loci.instances); }
 
-    export function getBoundingSphere(volume: Volume, boundingSphere?: Sphere3D) {
+    export function getBoundingSphere(volume: Volume, boundingSphere?: Sphere3D): Sphere3D {
         return Grid.getBoundingSphere(volume.grid, boundingSphere);
     }
 
@@ -194,11 +194,11 @@ export namespace Volume {
         export interface Loci { readonly kind: 'isosurface-loci', readonly volume: Volume, readonly isoValue: Volume.IsoValue, readonly instances: OrderedSet<InstanceIndex> }
         export function Loci(volume: Volume, isoValue: Volume.IsoValue, instances: OrderedSet<InstanceIndex>): Loci { return { kind: 'isosurface-loci', volume, isoValue, instances }; }
         export function isLoci(x: any): x is Loci { return !!x && x.kind === 'isosurface-loci'; }
-        export function areLociEqual(a: Loci, b: Loci) { return a.volume === b.volume && Volume.IsoValue.areSame(a.isoValue, b.isoValue, a.volume.grid.stats) && OrderedSet.areEqual(a.instances, b.instances); }
-        export function isLociEmpty(loci: Loci) { return isEmpty(loci.volume) || OrderedSet.isEmpty(loci.instances); }
+        export function areLociEqual(a: Loci, b: Loci): boolean { return a.volume === b.volume && Volume.IsoValue.areSame(a.isoValue, b.isoValue, a.volume.grid.stats) && OrderedSet.areEqual(a.instances, b.instances); }
+        export function isLociEmpty(loci: Loci): boolean { return isEmpty(loci.volume) || OrderedSet.isEmpty(loci.instances); }
 
-        const bbox = Box3D();
-        export function getBoundingSphere(volume: Volume, isoValue: Volume.IsoValue, boundingSphere?: Sphere3D) {
+        const bbox: Box3D = Box3D();
+        export function getBoundingSphere(volume: Volume, isoValue: Volume.IsoValue, boundingSphere?: Sphere3D): Sphere3D {
             const value = Volume.IsoValue.toAbsolute(isoValue, volume.grid.stats).absoluteValue;
             const neg = value < 0;
 
@@ -244,7 +244,7 @@ export namespace Volume {
         export function isLoci(x: any): x is Loci {
             return !!x && x.kind === 'cell-loci';
         }
-        export function areLociEqual(a: Loci, b: Loci) {
+        export function areLociEqual(a: Loci, b: Loci): boolean {
             if (a.volume !== b.volume || a.elements.length !== b.elements.length) return false;
 
             for (let i = 0, il = a.elements.length; i < il; ++i) {
@@ -256,13 +256,13 @@ export namespace Volume {
             }
             return true;
         }
-        export function isLociEmpty(loci: Loci) {
+        export function isLociEmpty(loci: Loci): boolean {
             for (const { indices, instances } of loci.elements) {
                 if (!OrderedSet.isEmpty(instances) || !OrderedSet.isEmpty(indices)) return false;
             }
             return true;
         }
-        export function getLociSize(loci: Loci) {
+        export function getLociSize(loci: Loci): number {
             let size = 0;
             for (const { indices, instances } of loci.elements) {
                 size += OrderedSet.size(indices) * OrderedSet.size(instances);
@@ -288,10 +288,10 @@ export namespace Volume {
             return !!x && x.kind === 'cell-location';
         }
 
-        const boundaryHelper = new BoundaryHelper('98');
-        const tmpBoundaryPos = Vec3();
-        const tmpBoundaryPos2 = Vec3();
-        export function getBoundingSphere(volume: Volume, elements: Loci['elements'], boundingSphere?: Sphere3D) {
+        const boundaryHelper: BoundaryHelper = new BoundaryHelper('98');
+        const tmpBoundaryPos: Vec3 = Vec3();
+        const tmpBoundaryPos2: Vec3 = Vec3();
+        export function getBoundingSphere(volume: Volume, elements: Loci['elements'], boundingSphere?: Sphere3D): Sphere3D {
             boundaryHelper.reset();
             const transform = Grid.getGridToCartesianTransform(volume.grid);
             const { getCoords } = volume.grid.cells.space;
@@ -342,7 +342,7 @@ export namespace Volume {
         export function isLoci(x: any): x is Loci {
             return !!x && x.kind === 'segment-loci';
         }
-        export function areLociEqual(a: Loci, b: Loci) {
+        export function areLociEqual(a: Loci, b: Loci): boolean {
             if (a.volume !== b.volume || a.elements.length !== b.elements.length) return false;
 
             for (let i = 0, il = a.elements.length; i < il; ++i) {
@@ -354,13 +354,13 @@ export namespace Volume {
             }
             return true;
         }
-        export function isLociEmpty(loci: Loci) {
+        export function isLociEmpty(loci: Loci): boolean {
             for (const { segments, instances } of loci.elements) {
                 if (!OrderedSet.isEmpty(instances) || !OrderedSet.isEmpty(segments)) return false;
             }
             return true;
         }
-        export function getLociSize(loci: Loci) {
+        export function getLociSize(loci: Loci): number {
             let size = 0;
             for (const { segments, instances } of loci.elements) {
                 size += OrderedSet.size(segments) * OrderedSet.size(instances);
@@ -368,10 +368,10 @@ export namespace Volume {
             return size;
         }
 
-        const bbox = Box3D();
-        const bbox2 = Box3D();
-        const bbox3 = Box3D();
-        export function getBoundingSphere(volume: Volume, elements: Loci['elements'], boundingSphere?: Sphere3D) {
+        const bbox: Box3D = Box3D();
+        const bbox2: Box3D = Box3D();
+        const bbox3: Box3D = Box3D();
+        export function getBoundingSphere(volume: Volume, elements: Loci['elements'], boundingSphere?: Sphere3D): Sphere3D {
             const segmentation = Volume.Segmentation.get(volume);
             if (segmentation) {
                 Box3D.setEmpty(bbox);
@@ -417,8 +417,11 @@ export namespace Volume {
     }
 
     export type PickingGranularity = 'volume' | 'object' | 'voxel';
-    export const PickingGranularity = {
-        set(volume: Volume, granularity: PickingGranularity) {
+    export const PickingGranularity: {
+        set(volume: Volume, granularity: PickingGranularity): void;
+        get(volume: Volume): PickingGranularity;
+    } = {
+        set(volume: Volume, granularity: PickingGranularity): void {
             volume._propertyData['__picking_granularity__'] = granularity;
         },
         get(volume: Volume): PickingGranularity {
@@ -432,8 +435,11 @@ export namespace Volume {
         bounds: { [k: Volume.SegmentIndex]: Box3D }
         labels: { [k: Volume.SegmentIndex]: string }
     };
-    export const Segmentation = {
-        set(volume: Volume, segmentation: Segmentation) {
+    export const Segmentation: {
+        set(volume: Volume, segmentation: Segmentation): void;
+        get(volume: Volume): Segmentation | undefined;
+    } = {
+        set(volume: Volume, segmentation: Segmentation): void {
             volume._propertyData['__segmentation__'] = segmentation;
         },
         get(volume: Volume): Segmentation | undefined {

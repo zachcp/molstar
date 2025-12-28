@@ -71,7 +71,7 @@ export namespace PDBeStructRefDomain {
     export async function attachFromCifOrApi(model: Model, params: {
         // optional JSON source
         PDBe_apiSourceJson?: (model: Model) => Promise<any>;
-    }) {
+    }): Promise<boolean> {
         if (model.customProperties.has(Descriptor)) return true;
 
         let table: Property['data'];

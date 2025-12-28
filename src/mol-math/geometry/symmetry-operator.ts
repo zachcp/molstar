@@ -110,7 +110,7 @@ namespace SymmetryOperator {
     }
 
     const _m = Mat4();
-    export function checkIfRotationAndTranslation(rot: Mat3, offset: Vec3) {
+    export function checkIfRotationAndTranslation(rot: Mat3, offset: Vec3): boolean {
         Mat4.setIdentity(_m);
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
@@ -121,7 +121,7 @@ namespace SymmetryOperator {
         return Mat4.isRotationAndTranslation(_m, RotationTranslationEpsilon);
     }
 
-    export function ofRotationAndOffset(name: string, rot: Mat3, offset: Vec3, ncsId?: number) {
+    export function ofRotationAndOffset(name: string, rot: Mat3, offset: Vec3, ncsId?: number): SymmetryOperator {
         const t = Mat4.identity();
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
@@ -175,7 +175,7 @@ namespace SymmetryOperator {
      * Apply the 1st and then 2nd operator. ( = second.matrix * first.matrix).
      * Keep `name`, `assembly`, `ncsId`, `hkl` and `spgrOpId` properties from second.
      */
-    export function compose(first: SymmetryOperator, second: SymmetryOperator) {
+    export function compose(first: SymmetryOperator, second: SymmetryOperator): SymmetryOperator {
         const matrix = Mat4.mul(Mat4(), second.matrix, first.matrix);
         return create(second.name, matrix, second);
     }

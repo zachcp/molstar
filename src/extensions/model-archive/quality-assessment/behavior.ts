@@ -23,15 +23,17 @@ import {
     PresetStructureRepresentations,
     StructureRepresentationPresetProvider,
 } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
-import { StateObjectRef } from '../../../mol-state/index.ts';
+import { StateObjectRef, StateTransformer } from '../../../mol-state/index.ts';
 import { MAPairwiseScorePlotPanel } from './pairwise/ui.tsx';
 import { PluginConfigItem } from '../../../mol-plugin/config.ts';
 
-export const MAQualityAssessmentConfig = {
+export const MAQualityAssessmentConfig: {
+    EnablePairwiseScorePlot: PluginConfigItem<boolean>;
+} = {
     EnablePairwiseScorePlot: new PluginConfigItem('ma-quality-assessment-prop.enable-pairwise-score-plot', true),
 };
 
-export const MAQualityAssessment = PluginBehavior.create<{ autoAttach: boolean; showTooltip: boolean }>({
+export const MAQualityAssessment: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, { autoAttach: boolean; showTooltip: boolean }> = PluginBehavior.create<{ autoAttach: boolean; showTooltip: boolean }>({
     name: 'ma-quality-assessment-prop',
     category: 'custom-props',
     display: {
@@ -215,7 +217,7 @@ const confidentPLDDT = StructureSelectionQuery(
 
 //
 
-export const QualityAssessmentPLDDTPreset = StructureRepresentationPresetProvider({
+export const QualityAssessmentPLDDTPreset: StructureRepresentationPresetProvider = StructureRepresentationPresetProvider({
     id: 'preset-structure-representation-ma-quality-assessment-plddt',
     display: {
         name: 'Quality Assessment (pLDDT)',
@@ -239,7 +241,7 @@ export const QualityAssessmentPLDDTPreset = StructureRepresentationPresetProvide
     },
 });
 
-export const QualityAssessmentQmeanPreset = StructureRepresentationPresetProvider({
+export const QualityAssessmentQmeanPreset: StructureRepresentationPresetProvider = StructureRepresentationPresetProvider({
     id: 'preset-structure-representation-ma-quality-assessment-qmean',
     display: {
         name: 'Quality Assessment (QMEAN)',

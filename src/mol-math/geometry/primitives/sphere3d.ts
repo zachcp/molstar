@@ -366,12 +366,12 @@ namespace Sphere3D {
   }
 
   /** Check if `a` and `b` are overlapping */
-  export function overlaps(a: Sphere3D, b: Sphere3D) {
+  export function overlaps(a: Sphere3D, b: Sphere3D): boolean {
     return Vec3.distance(a.center, b.center) <= a.radius + b.radius;
   }
 
   /** Get the signed distance of `a` and `b` */
-  export function distance(a: Sphere3D, b: Sphere3D) {
+  export function distance(a: Sphere3D, b: Sphere3D): number {
     return Vec3.distance(a.center, b.center) - a.radius + b.radius;
   }
 

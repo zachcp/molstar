@@ -24,7 +24,7 @@ export interface GlobalMetadata {
     /** Version of MolViewSpec used to write this file. */
     version: string,
 }
-export const GlobalMetadata = {
+export const GlobalMetadata: { create(metadata?: Pick<GlobalMetadata, 'title' | 'description' | 'description_format'>): GlobalMetadata } = {
     create(metadata?: Pick<GlobalMetadata, 'title' | 'description' | 'description_format'>): GlobalMetadata {
         return {
             ...metadata,
@@ -81,7 +81,17 @@ export interface MVSData_States {
 export type MVSData = MVSData_State | MVSData_States
 
 
-export const MVSData = {
+export const MVSData: {
+    SupportedVersion: number;
+    fromMVSJ(mvsjString: string): MVSData;
+    toMVSJ(mvsData: MVSData, space?: string | number): string;
+    isValid(mvsData: MVSData, options?: { noExtra?: boolean }): boolean;
+    validationIssues(mvsData: MVSData, options?: { noExtra?: boolean }): string[] | undefined;
+    toPrettyString(mvsData: MVSData): string;
+    createBuilder(): Root;
+    createMultistate(snapshots: Snapshot[], metadata?: Pick<GlobalMetadata, 'title' | 'description' | 'description_format'>): MVSData_States;
+    stateToStates(state: MVSData_State): MVSData_States;
+} = {
     /** Currently supported major version of MolViewSpec format (e.g. 1 for version '1.0.8') */
     SupportedVersion: 1,
 

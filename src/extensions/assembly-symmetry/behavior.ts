@@ -40,7 +40,7 @@ import {
 
 const Tag = AssemblySymmetryData.Tag;
 
-export const AssemblySymmetry = PluginBehavior.create<{ autoAttach: boolean }>({
+export const AssemblySymmetry: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, { autoAttach: boolean }> = PluginBehavior.create<{ autoAttach: boolean }>({
   name: "assembly-symmetry-prop",
   category: "custom-props",
   display: {
@@ -347,7 +347,11 @@ export function tryCreateAssemblySymmetry(
 
 //
 
-export const AssemblySymmetryConfig = {
+export const AssemblySymmetryConfig: {
+  DefaultServerType: PluginConfigItem<typeof AssemblySymmetryDataParams.serverType.defaultValue>;
+  DefaultServerUrl: PluginConfigItem<typeof AssemblySymmetryDataParams.serverUrl.defaultValue>;
+  ApplyColors: PluginConfigItem<boolean>;
+} = {
   DefaultServerType: new PluginConfigItem(
     "assembly-symmetry.server-type",
     AssemblySymmetryDataParams.serverType.defaultValue,

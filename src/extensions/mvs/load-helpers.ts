@@ -39,10 +39,10 @@ import { DefaultColor } from './tree/mvs/mvs-tree.ts';
 import { type CategoricalPalette, CategoricalPaletteDefaults, type ColorDictNameT, type ColorListNameT, type ContinuousPalette, ContinuousPaletteDefaults, type DiscretePalette, DiscretePaletteDefaults } from './tree/mvs/param-types.ts';
 
 
-export const AnnotationFromUriKinds = new Set(['color_from_uri', 'component_from_uri', 'label_from_uri', 'tooltip_from_uri'] satisfies MolstarKind[]);
+export const AnnotationFromUriKinds: Set<'color_from_uri' | 'component_from_uri' | 'label_from_uri' | 'tooltip_from_uri'> = new Set(['color_from_uri', 'component_from_uri', 'label_from_uri', 'tooltip_from_uri'] satisfies MolstarKind[]);
 export type AnnotationFromUriKind = ElementOfSet<typeof AnnotationFromUriKinds>
 
-export const AnnotationFromSourceKinds = new Set(['color_from_source', 'component_from_source', 'label_from_source', 'tooltip_from_source'] satisfies MolstarKind[]);
+export const AnnotationFromSourceKinds: Set<'color_from_source' | 'component_from_source' | 'label_from_source' | 'tooltip_from_source'> = new Set(['color_from_source', 'component_from_source', 'label_from_source', 'tooltip_from_source'] satisfies MolstarKind[]);
 export type AnnotationFromSourceKind = ElementOfSet<typeof AnnotationFromSourceKinds>
 
 /** Return a 4x4 matrix representing a rotation followed by a translation */

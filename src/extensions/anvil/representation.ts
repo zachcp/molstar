@@ -20,7 +20,7 @@ import {
 } from '../../mol-repr/structure/representation.ts';
 import type { MembraneOrientation } from './prop.ts';
 import type { ThemeRegistryContext } from '../../mol-theme/theme.ts';
-import { ShapeRepresentation } from '../../mol-repr/shape/representation.ts';
+import { ShapeRepresentation, type ShapeRepresentation as ShapeRepresentationType } from '../../mol-repr/shape/representation.ts';
 import { Shape } from '../../mol-model/shape.ts';
 import type { RuntimeContext } from '../../mol-task/index.ts';
 import { Lines } from '../../mol-geo/geometry/lines/lines.ts';
@@ -35,53 +35,60 @@ import { lociLabel } from '../../mol-theme/label.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import type { CustomProperty } from '../../mol-model-props/common/custom-property.ts';
 
-const SharedParams = {
+const _SharedParams = {
     color: PD.Color(ColorNames.lightgrey),
     radiusFactor: PD.Numeric(1.2, { min: 0.1, max: 3.0, step: 0.01 }, {
         description: 'Scale the radius of the membrane layer',
     }),
 };
+type SharedParams = typeof _SharedParams;
+const SharedParams: SharedParams = _SharedParams;
 
-const BilayerPlanesParams = {
+const _BilayerPlanesParams = {
     ...Mesh.Params,
     ...SharedParams,
     sectorOpacity: PD.Numeric(0.5, { min: 0, max: 1, step: 0.01 }),
 };
-export type BilayerPlanesParams = typeof BilayerPlanesParams;
+export type BilayerPlanesParams = typeof _BilayerPlanesParams;
+export const BilayerPlanesParams: BilayerPlanesParams = _BilayerPlanesParams;
 export type BilayerPlanesProps = PD.Values<BilayerPlanesParams>;
 
-const BilayerRimsParams = {
+const _BilayerRimsParams = {
     ...Lines.Params,
     ...SharedParams,
     lineSizeAttenuation: PD.Boolean(false),
     linesSize: PD.Numeric(0.5, { min: 0.01, max: 50, step: 0.01 }),
     dashedLines: PD.Boolean(false),
 };
-export type BilayerRimsParams = typeof BilayerRimsParams;
+export type BilayerRimsParams = typeof _BilayerRimsParams;
+export const BilayerRimsParams: BilayerRimsParams = _BilayerRimsParams;
 export type BilayerRimsProps = PD.Values<BilayerRimsParams>;
 
-const MembraneOrientationVisuals = {
+const _MembraneOrientationVisuals = {
     'bilayer-planes': (
         ctx: RepresentationContext,
         getParams: RepresentationParamsGetter<MembraneOrientation, BilayerPlanesParams>,
-    ) => ShapeRepresentation(getBilayerPlanes, Mesh.Utils, {
+    ): ShapeRepresentationType<Structure, Mesh, BilayerPlanesParams> => ShapeRepresentation(getBilayerPlanes, Mesh.Utils, {
         modifyState: (s) => ({ ...s, markerActions: MarkerActions.Highlighting }),
         modifyProps: (p) => ({ ...p, alpha: p.sectorOpacity, ignoreLight: true, doubleSided: false }),
     }),
     'bilayer-rims': (
         ctx: RepresentationContext,
         getParams: RepresentationParamsGetter<MembraneOrientation, BilayerRimsParams>,
-    ) => ShapeRepresentation(getBilayerRims, Lines.Utils, {
+    ): ShapeRepresentationType<Structure, Lines, BilayerRimsParams> => ShapeRepresentation(getBilayerRims, Lines.Utils, {
         modifyState: (s) => ({ ...s, markerActions: MarkerActions.Highlighting }),
     }),
 };
+type MembraneOrientationVisuals = typeof _MembraneOrientationVisuals;
+const MembraneOrientationVisuals: MembraneOrientationVisuals = _MembraneOrientationVisuals;
 
-export const MembraneOrientationParams = {
+const _MembraneOrientationParams = {
     ...BilayerPlanesParams,
     ...BilayerRimsParams,
     visuals: PD.MultiSelect(['bilayer-planes', 'bilayer-rims'], PD.objectToOptions(MembraneOrientationVisuals)),
 };
-export type MembraneOrientationParams = typeof MembraneOrientationParams;
+export type MembraneOrientationParams = typeof _MembraneOrientationParams;
+export const MembraneOrientationParams: MembraneOrientationParams = _MembraneOrientationParams;
 export type MembraneOrientationProps = PD.Values<MembraneOrientationParams>;
 
 export function getMembraneOrientationParams(ctx: ThemeRegistryContext, structure: Structure) {

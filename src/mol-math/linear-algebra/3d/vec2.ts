@@ -24,7 +24,7 @@ interface Vec2 extends Array<number> {
   length: 2;
 }
 
-function Vec2() {
+function Vec2(): Vec2 {
   return Vec2.zero();
 }
 
@@ -196,11 +196,11 @@ namespace Vec2 {
     return out;
   }
 
-  export function areEqual(a: Vec2, b: Vec2) {
+  export function areEqual(a: Vec2, b: Vec2): boolean {
     return a[0] === b[0] && a[1] === b[1];
   }
 
-  export function toString(a: Vec2, precision?: number) {
+  export function toString(a: Vec2, precision?: number): string {
     return `[${a[0].toPrecision(precision)} ${a[1].toPrecision(precision)}}]`;
   }
 }

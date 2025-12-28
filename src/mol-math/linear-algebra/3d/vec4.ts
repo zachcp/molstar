@@ -29,7 +29,7 @@ interface Vec4 extends Array<number> {
   length: 4;
 }
 
-function Vec4() {
+function Vec4(): Vec4 {
   return Vec4.zero();
 }
 

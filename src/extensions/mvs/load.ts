@@ -56,7 +56,7 @@ export interface MVSLoadOptions {
     doNotReportErrors?: boolean
 }
 
-export function loadMVS(plugin: PluginContext, data: MVSData, options: MVSLoadOptions = {}) {
+export function loadMVS(plugin: PluginContext, data: MVSData, options: MVSLoadOptions = {}): Promise<void> {
     const task = Task.create('Load MVS', ctx => _loadMVS(ctx, plugin, data, options));
     return plugin.runTask(task);
 }
@@ -213,7 +213,7 @@ export interface MolstarLoadingContext {
     },
     canvas?: MolstarNode<'canvas'>,
 }
-export const MolstarLoadingContext = {
+export const MolstarLoadingContext: { create(): MolstarLoadingContext } = {
     create(): MolstarLoadingContext {
         return {
             annotationMap: new Map(),
