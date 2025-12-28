@@ -1289,7 +1289,7 @@ namespace Mat4 {
     bottom: number,
     near: number,
     far: number,
-  ) {
+  ): Mat4 {
     const x = (2 * near) / (right - left);
     const y = (2 * near) / (top - bottom);
 
@@ -1328,7 +1328,7 @@ namespace Mat4 {
     bottom: number,
     near: number,
     far: number,
-  ) {
+  ): Mat4 {
     const w = 1.0 / (right - left);
     const h = 1.0 / (top - bottom);
     const p = 1.0 / (far - near);
@@ -1359,7 +1359,7 @@ namespace Mat4 {
   /**
    * Generates a look-at matrix with the given eye position, focal point, and up axis
    */
-  export function lookAt(out: Mat4, eye: Vec3, center: Vec3, up: Vec3) {
+  export function lookAt(out: Mat4, eye: Vec3, center: Vec3, up: Vec3): Mat4 {
     let x0, x1, x2, y0, y1, y2, z0, z1, z2, len;
     const eyex = eye[0];
     const eyey = eye[1];
@@ -1442,7 +1442,7 @@ namespace Mat4 {
   /**
    * Generates a matrix that makes something look at something else.
    */
-  export function targetTo(out: Mat4, eye: Vec3, target: Vec3, up: Vec3) {
+  export function targetTo(out: Mat4, eye: Vec3, target: Vec3, up: Vec3): Mat4 {
     const eyex = eye[0],
       eyey = eye[1],
       eyez = eye[2],
@@ -1496,7 +1496,7 @@ namespace Mat4 {
   /**
    * Perm is 0-indexed permutation
    */
-  export function fromPermutation(out: Mat4, perm: number[]) {
+  export function fromPermutation(out: Mat4, perm: number[]): Mat4 {
     setZero(out);
     for (let i = 0; i < 4; i++) {
       const p = perm[i];
@@ -1505,14 +1505,14 @@ namespace Mat4 {
     return out;
   }
 
-  export function getMaxScaleOnAxis(m: Mat4) {
+  export function getMaxScaleOnAxis(m: Mat4): number {
     const scaleXSq = m[0] * m[0] + m[1] * m[1] + m[2] * m[2];
     const scaleYSq = m[4] * m[4] + m[5] * m[5] + m[6] * m[6];
     const scaleZSq = m[8] * m[8] + m[9] * m[9] + m[10] * m[10];
     return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
   }
 
-  export function extractBasis(m: Mat4) {
+  export function extractBasis(m: Mat4): { x: Vec3; y: Vec3; z: Vec3 } {
     return {
       x: Vec3.create(m[0], m[1], m[2]),
       y: Vec3.create(m[4], m[5], m[6]),
