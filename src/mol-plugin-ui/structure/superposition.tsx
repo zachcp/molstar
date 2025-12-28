@@ -38,7 +38,7 @@ export class StructureSuperpositionControls extends CollapsableControls {
         };
     }
 
-    override componentDidMount() {
+    componentDidMount() {
         this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, sel => {
             this.setState({ isHidden: sel.structures.length < 2 });
         });
@@ -78,14 +78,14 @@ interface AtomsLociEntry extends LociEntry {
 };
 
 export class SuperpositionControls extends PurePluginUIComponent<{ }, SuperpositionControlsState> {
-    override state: SuperpositionControlsState = {
+    state: SuperpositionControlsState = {
         isBusy: false,
         canUseDb: false,
         action: undefined,
         options: DefaultStructureSuperpositionOptions
     };
 
-    override componentDidMount() {
+    componentDidMount() {
         this.subscribe(this.selection.events.changed, () => {
             this.forceUpdate();
         });
@@ -416,7 +416,7 @@ export class SuperpositionControls extends PurePluginUIComponent<{ }, Superposit
         this.setState({ options: values });
     };
 
-    override render() {
+    render() {
         return <>
             <div className='msp-flex-row'>
                 <ToggleButton icon={SuperposeChainsSvg} label='Chains' toggle={this.toggleByChains} isSelected={this.state.action === 'byChains'} disabled={this.state.isBusy} />
