@@ -12,11 +12,11 @@ export namespace Types {
     export type List<T = any> = ArrayLike<T>;
     export type Set<T = any> = { has(e: T): boolean };
 
-    export const AnyVar = Type.Variable('a', Type.Any);
-    export const AnyValueVar = Type.Variable('a', Type.Any);
-    export const ConstrainedVar = Type.Variable('a', Type.Any, true);
+    export const AnyVar: any = Type.Variable('a', Type.Any);
+    export const AnyValueVar: any = Type.Variable('a', Type.Any);
+    export const ConstrainedVar: any = Type.Variable('a', Type.Any, true);
 
-    export const Regex = Type.Value<RegExp>('Core', 'Regex');
+    export const Regex: any = Type.Value<RegExp>('Core', 'Regex');
 
     export const Set: <T extends Type>(t?: T) => Type.Container<Set<T['@type']>> = <T extends Type>(t?: T) =>
         Type.Container<Set<T['@type']>>('Core', 'Set', t || AnyValueVar);
@@ -60,7 +60,7 @@ export const TTargs = Arguments.Dictionary({
     1: Argument(Type.Num),
 });
 
-const type = {
+const type: any = {
     '@header': 'Types',
     bool: symbol(Arguments.Dictionary({ 0: Argument(Type.AnyValue) }), Type.Bool, 'Convert a value to boolean.'),
     num: symbol(Arguments.Dictionary({ 0: Argument(Type.AnyValue) }), Type.Num, 'Convert a value to number.'),
@@ -84,14 +84,14 @@ const type = {
     compositeKey: symbol(Arguments.List(Type.AnyValue), Type.AnyValue),
 };
 
-const logic = {
+const logic: any = {
     '@header': 'Logic',
     not: unaryOp(Type.Bool),
     and: binOp(Type.Bool),
     or: binOp(Type.Bool),
 };
 
-const ctrl = {
+const ctrl: any = {
     '@header': 'Control',
     eval: symbol(Arguments.Dictionary({ 0: Argument(Types.Fn(Types.AnyVar)) }), Types.AnyVar, 'Evaluate a function.'),
     fn: symbol(
@@ -116,7 +116,7 @@ const ctrl = {
     ),
 };
 
-const rel = {
+const rel: any = {
     '@header': 'Relational',
     eq: binRel(Type.Variable('a', Type.AnyValue, true), Type.Bool),
     neq: binRel(Type.Variable('a', Type.AnyValue, true), Type.Bool),
@@ -135,7 +135,7 @@ const rel = {
     ),
 };
 
-const math = {
+const math: any = {
     '@header': 'Math',
     add: binOp(Type.Num),
     sub: binOp(Type.Num),
@@ -174,19 +174,19 @@ const math = {
     atan2: binRel(Type.Num, Type.Num),
 };
 
-const str = {
+const str: any = {
     '@header': 'Strings',
     concat: binOp(Type.Str),
     match: symbol(Arguments.Dictionary({ 0: Argument(Types.Regex), 1: Argument(Type.Str) }), Type.Bool),
 };
 
-const list = {
+const list: any = {
     '@header': 'Lists',
     getAt: symbol(Arguments.Dictionary({ 0: Argument(Types.List()), 1: Argument(Type.Num) }), Types.AnyVar),
     equal: symbol(Arguments.Dictionary({ 0: Argument(Types.List()), 1: Argument(Types.List()) }), Type.Bool),
 };
 
-const set = {
+const set: any = {
     '@header': 'Sets',
     has: symbol(
         Arguments.Dictionary({ 0: Argument(Types.Set(Types.ConstrainedVar)), 1: Argument(Types.ConstrainedVar) }),
@@ -203,7 +203,7 @@ const set = {
     ),
 };
 
-const flags = {
+const flags: any = {
     '@header': 'Flags',
     hasAny: symbol(
         Arguments.Dictionary({

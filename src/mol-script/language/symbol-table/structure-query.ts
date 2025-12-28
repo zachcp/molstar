@@ -72,7 +72,7 @@ export namespace Types {
     );
 }
 
-const type = {
+const type: any = {
     '@header': 'Types',
     elementSymbol: symbol(
         Arguments.Dictionary({ 0: Argument(Type.Str) }),
@@ -135,7 +135,7 @@ const type = {
     ),
 };
 
-const slot = {
+const slot: any = {
     '@header': 'Iteration Slots',
     element: symbol(Arguments.None, Types.ElementReference, 'A reference to the current element.'),
     elementSetReduce: symbol(
@@ -145,7 +145,7 @@ const slot = {
     ),
 };
 
-const generator = {
+const generator: any = {
     '@header': 'Generators',
     all: symbol(Arguments.None, Types.ElementSelectionQuery, 'The entire structure.'),
 
@@ -213,7 +213,7 @@ const generator = {
     empty: symbol(Arguments.None, Types.ElementSelectionQuery, 'Nada.'),
 };
 
-const modifier = {
+const modifier: any = {
     '@header': 'Selection Modifications',
 
     queryEach: symbol(
@@ -343,7 +343,7 @@ const modifier = {
     ),
 };
 
-const filter = {
+const filter: any = {
     '@header': 'Selection Filters',
     pick: symbol(
         Arguments.Dictionary({
@@ -425,7 +425,7 @@ const filter = {
     ),
 };
 
-const combinator = {
+const combinator: any = {
     '@header': 'Selection Combinators',
     intersect: symbol(
         Arguments.List(Types.ElementSelectionQuery),
@@ -452,7 +452,7 @@ const combinator = {
     ),
 };
 
-const atomSet = {
+const atomSet: any = {
     '@header': 'Atom Sets',
 
     atomCount: symbol(Arguments.None, Type.Num),
@@ -488,7 +488,7 @@ const atomSet = {
     ),
 };
 
-const atomProperty = {
+const atomProperty: any = {
     '@header': 'Atom Properties',
 
     core: {
@@ -607,7 +607,7 @@ const atomProperty = {
     },
 };
 
-const bondProperty = {
+const bondProperty: any = {
     '@header': 'Bond Properties',
 
     flags: bondProp(Types.BondFlags),

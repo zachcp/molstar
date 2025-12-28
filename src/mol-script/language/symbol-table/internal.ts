@@ -9,7 +9,7 @@ import * as Struct from './structure-query.ts';
 import { Argument, Arguments } from '../symbol.ts';
 import { symbol } from '../helpers.ts';
 
-const generator = {
+const generator: any = {
     '@header': 'Generators',
 
     bundleElement: symbol(
