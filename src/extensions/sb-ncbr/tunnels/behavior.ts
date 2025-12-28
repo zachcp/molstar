@@ -36,7 +36,7 @@ export const SbNcbrTunnels = PluginBehavior.create<{ autoAttach: boolean }>({
             this.ctx.builders.structure.representation.unregisterPreset(TunnelsPreset);
         }
     },
-    params: () => ({
+    params: (): { autoAttach: PD.BooleanParam } => ({
         autoAttach: PD.Boolean(true),
     }),
 });

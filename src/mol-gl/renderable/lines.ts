@@ -26,7 +26,7 @@ import {
 import { ValueCell } from '../../mol-util/index.ts';
 import { LinesShaderCode } from '../shader-code.ts';
 
-export const LinesSchema = {
+const _LinesSchema = {
     ...BaseSchema,
     ...SizeSchema,
     aGroup: AttributeSpec('float32', 1, 0),
@@ -38,7 +38,8 @@ export const LinesSchema = {
     uDoubleSided: UniformSpec('b', 'material'),
     dFlipSided: DefineSpec('boolean'),
 };
-export type LinesSchema = typeof LinesSchema;
+export type LinesSchema = typeof _LinesSchema;
+export const LinesSchema: LinesSchema = _LinesSchema;
 export type LinesValues = Values<LinesSchema>;
 
 export function LinesRenderable(

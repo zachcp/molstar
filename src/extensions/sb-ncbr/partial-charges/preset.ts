@@ -16,7 +16,7 @@ export const SbNcbrPartialChargesPreset = StructureRepresentationPresetProvider(
     isApplicable(a): boolean {
         return !!a.data.models.some((m) => SbNcbrPartialChargesPropertyProvider.isApplicable(m));
     },
-    params: () => StructureRepresentationPresetProvider.CommonParams,
+    params: (): typeof StructureRepresentationPresetProvider.CommonParams => StructureRepresentationPresetProvider.CommonParams,
     async apply(ref, params, plugin) {
         const structureCell = StateObjectRef.resolveAndCheck(plugin.state.data, ref);
         const structure = structureCell?.obj?.data;

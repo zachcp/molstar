@@ -27,7 +27,7 @@ import {
 import { TextShaderCode } from '../shader-code.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 
-export const TextSchema = {
+const _TextSchema = {
     ...BaseSchema,
     ...SizeSchema,
     aGroup: AttributeSpec('float32', 1, 0),
@@ -48,7 +48,8 @@ export const TextSchema = {
     uBackgroundColor: UniformSpec('v3', 'material'),
     uBackgroundOpacity: UniformSpec('f', 'material'),
 };
-export type TextSchema = typeof TextSchema;
+export type TextSchema = typeof _TextSchema;
+export const TextSchema: TextSchema = _TextSchema;
 export type TextValues = Values<TextSchema>;
 
 export function TextRenderable(

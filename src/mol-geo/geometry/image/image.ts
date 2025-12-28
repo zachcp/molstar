@@ -120,7 +120,7 @@ namespace Image {
             trimScale: ValueCell.create(trim.scale),
             trimTransform: ValueCell.create(trim.transform),
             isoLevel: ValueCell.create(isoLevel),
-            get boundingSphere() {
+            get boundingSphere(): Sphere3D {
                 const newHash = hashCode(image);
                 if (newHash !== currentHash) {
                     const b = getBoundingSphere(image.cornerBuffer.ref.value);

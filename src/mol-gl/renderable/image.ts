@@ -11,7 +11,7 @@ import { AttributeSpec, Values, GlobalUniformSchema, InternalSchema, TextureSpec
 import { ImageShaderCode } from '../shader-code.ts';
 import { ValueCell } from '../../mol-util/value-cell.ts';
 
-export const ImageSchema = {
+const _ImageSchema = {
     ...BaseSchema,
 
     aGroup: AttributeSpec('float32', 1, 0),
@@ -35,7 +35,8 @@ export const ImageSchema = {
     /** Same as `InterpolationTypeNames` in '../../mol-geo/geometry/image/image' */
     dInterpolation: DefineSpec('string', ['nearest', 'catmulrom', 'mitchell', 'bspline']),
 };
-export type ImageSchema = typeof ImageSchema
+export type ImageSchema = typeof _ImageSchema;
+export const ImageSchema: ImageSchema = _ImageSchema;
 export type ImageValues = Values<ImageSchema>
 
 export function ImageRenderable(ctx: WebGLContext, id: number, values: ImageValues, state: RenderableState, materialId: number, transparency: Transparency, globals: GlobalDefines): Renderable<ImageValues> {

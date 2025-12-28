@@ -98,7 +98,7 @@ export namespace DirectVolume {
             cellDim: ValueCell.create(cellDim),
             unitToCartn: ValueCell.create(unitToCartn),
             cartnToUnit: ValueCell.create(Mat4.invert(Mat4(), unitToCartn)),
-            get boundingSphere() {
+            get boundingSphere(): Sphere3D {
                 const newHash = hashCode(directVolume);
                 if (newHash !== currentHash) {
                     const b = getBoundingSphere(directVolume.gridDimension.ref.value, directVolume.transform.ref.value);

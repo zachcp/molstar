@@ -76,7 +76,7 @@ type Levels = {
     bias: number[];
 };
 
-function getLevels(props: { radius: number; bias: number }[], scale: number, levels?: Levels): Levels {
+function getLevels(props: { radius: number; bias: number }[], scale: number, levels?: Levels): { count: number; radius: number[]; bias: number[] } {
     const count = props.length;
     const { radius, bias } = levels || {
         radius: (new Array(count * 3)).fill(0),
@@ -674,7 +674,7 @@ function getSsaoRenderable(
     transparentDepthTexture: Texture,
     transparentDepthHalfTexture: Texture,
     transparentDepthQuarterTexture: Texture,
-): SsaoRenderable {
+): ComputeRenderable<Values<typeof SsaoSchema>> {
     const values: Values<typeof SsaoSchema> = {
         ...QuadValues,
         tDepth: ValueCell.create(depthTexture),
@@ -740,7 +740,7 @@ function getSsaoBlurRenderable(
     ctx: WebGLContext,
     ssaoDepthTexture: Texture,
     direction: 'horizontal' | 'vertical',
-): SsaoBlurRenderable {
+): ComputeRenderable<Values<typeof SsaoBlurSchema>> {
     const values: Values<typeof SsaoBlurSchema> = {
         ...QuadValues,
         tSsaoDepth: ValueCell.create(ssaoDepthTexture),
@@ -767,7 +767,7 @@ function getSsaoBlurRenderable(
     return createComputeRenderable(renderItem, values);
 }
 
-function getBlurKernel(kernelSize: number): number[] {
+function getBlurKernel(kernelSize: number): Array<number> {
     const sigma = kernelSize / 3.0;
     const halfKernelSize = Math.floor((kernelSize + 1) / 2);
 
@@ -790,7 +790,7 @@ for (let i = 0; i < 256; i++) {
     RandomHemisphereVector.push(v);
 }
 
-function getSamples(nSamples: number): number[] {
+function getSamples(nSamples: number): Array<number> {
     const samples = [];
     for (let i = 0; i < nSamples; i++) {
         let scale = (i * i + 2.0 * i + 1) / (nSamples * nSamples);

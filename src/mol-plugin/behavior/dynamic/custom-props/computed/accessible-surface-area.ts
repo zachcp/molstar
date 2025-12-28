@@ -67,7 +67,7 @@ export const AccessibleSurfaceArea = PluginBehavior.create<{ autoAttach: boolean
             this.ctx.query.structure.registry.remove(isAccessible);
         }
     },
-    params: () => ({
+    params: (): { autoAttach: PD.BooleanParam; showTooltip: PD.BooleanParam } => ({
         autoAttach: PD.Boolean(false),
         showTooltip: PD.Boolean(true),
     }),

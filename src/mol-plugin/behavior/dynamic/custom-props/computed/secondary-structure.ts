@@ -33,7 +33,7 @@ export const SecondaryStructure = PluginBehavior.create<{ autoAttach: boolean }>
             this.ctx.customStructureProperties.unregister(this.provider.descriptor.name);
         }
     },
-    params: () => ({
+    params: (): { autoAttach: PD.BooleanParam } => ({
         autoAttach: PD.Boolean(false),
     }),
 });

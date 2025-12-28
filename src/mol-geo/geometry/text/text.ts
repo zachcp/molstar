@@ -88,7 +88,7 @@ export namespace Text {
         return create(ft, cb, mb, db, ib, gb, tb, 0, text);
     }
 
-    function hashCode(text: Text) {
+    function hashCode(text: Text): number {
         return hashFnv32a([
             text.charCount, text.fontTexture.ref.version,
             text.centerBuffer.ref.version, text.mappingBuffer.ref.version,
@@ -98,7 +98,6 @@ export namespace Text {
     }
 
     function fromData(fontTexture: TextureImage<Uint8Array>, centers: Float32Array, mappings: Float32Array, depths: Float32Array, indices: Uint32Array, groups: Float32Array, tcoords: Float32Array, charCount: number): Text {
-
         const boundingSphere = Sphere3D();
         let groupMapping: GroupMapping;
 
@@ -115,7 +114,7 @@ export namespace Text {
             indexBuffer: ValueCell.create(indices),
             groupBuffer: ValueCell.create(groups),
             tcoordBuffer: ValueCell.create(tcoords),
-            get boundingSphere() {
+            get boundingSphere(): Sphere3D {
                 const newHash = hashCode(text);
                 if (newHash !== currentHash) {
                     const b = calculateInvariantBoundingSphere(text.centerBuffer.ref.value, text.charCount * 4, 4);
@@ -124,7 +123,7 @@ export namespace Text {
                 }
                 return boundingSphere;
             },
-            get groupMapping() {
+            get groupMapping(): GroupMapping {
                 if (text.groupBuffer.ref.version !== currentGroup) {
                     groupMapping = createGroupMapping(text.groupBuffer.ref.value, text.charCount, 4);
                     currentGroup = text.groupBuffer.ref.version;
@@ -139,7 +138,7 @@ export namespace Text {
         return text;
     }
 
-    function update(fontTexture: TextureImage<Uint8Array>, centers: Float32Array, mappings: Float32Array, depths: Float32Array, indices: Uint32Array, groups: Float32Array, tcoords: Float32Array, charCount: number, text: Text) {
+    function update(fontTexture: TextureImage<Uint8Array>, centers: Float32Array, mappings: Float32Array, depths: Float32Array, indices: Uint32Array, groups: Float32Array, tcoords: Float32Array, charCount: number, text: Text): Text {
         text.charCount = charCount;
         ValueCell.update(text.fontTexture, fontTexture);
         ValueCell.update(text.centerBuffer, centers);
@@ -273,7 +272,7 @@ export namespace Text {
         return createValues(text, s.transform, s.locationIterator, s.theme, p);
     }
 
-    function updateValues(values: TextValues, props: PD.Values<Params>) {
+    function updateValues(values: TextValues, props: PD.Values<Params>): void {
         BaseGeometry.updateValues(values, props);
         ValueCell.updateIfChanged(values.uSizeFactor, props.sizeFactor);
 
@@ -292,7 +291,7 @@ export namespace Text {
         ValueCell.updateIfChanged(values.uBackgroundOpacity, props.backgroundOpacity);
     }
 
-    function updateBoundingSphere(values: TextValues, text: Text) {
+    function updateBoundingSphere(values: TextValues, text: Text): void {
         const scale = getMaxSize(values) * values.uSizeFactor.ref.value;
         const padding = getPadding(values.aMapping.ref.value, values.aDepth.ref.value, text.charCount, scale);
         const invariantBoundingSphere = Sphere3D.expand(Sphere3D(), text.boundingSphere, padding);
@@ -314,7 +313,7 @@ export namespace Text {
         return state;
     }
 
-    function updateRenderableState(state: RenderableState, props: PD.Values<Params>) {
+    function updateRenderableState(state: RenderableState, props: PD.Values<Params>): void {
         BaseGeometry.updateRenderableState(state, props);
         state.pickable = false;
         state.opaque = false;
@@ -322,7 +321,7 @@ export namespace Text {
     }
 }
 
-function getPadding(mappings: Float32Array, depths: Float32Array, charCount: number, scale: number) {
+function getPadding(mappings: Float32Array, depths: Float32Array, charCount: number, scale: number): number {
     let maxOffset = 0;
     let maxDepth = 0;
     for (let i = 0, il = charCount * 4; i < il; ++i) {

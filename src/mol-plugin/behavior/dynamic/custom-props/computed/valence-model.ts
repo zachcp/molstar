@@ -104,7 +104,7 @@ export const ValenceModel = PluginBehavior.create<{ autoAttach: boolean; showToo
             this.ctx.managers.lociLabels.removeProvider(this.labelProvider);
         }
     },
-    params: () => ({
+    params: (): { autoAttach: PD.BooleanParam; showTooltip: PD.BooleanParam } => ({
         autoAttach: PD.Boolean(false),
         showTooltip: PD.Boolean(true),
     }),

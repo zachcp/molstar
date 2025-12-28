@@ -133,7 +133,7 @@ export namespace Lines {
             groupBuffer: ValueCell.create(groups),
             startBuffer: ValueCell.create(starts),
             endBuffer: ValueCell.create(ends),
-            get boundingSphere() {
+            get boundingSphere(): Sphere3D {
                 const newHash = hashCode(lines);
                 if (newHash !== currentHash) {
                     const s = calculateInvariantBoundingSphere(lines.startBuffer.ref.value, lines.lineCount * 4, 4);
@@ -144,7 +144,7 @@ export namespace Lines {
                 }
                 return boundingSphere;
             },
-            get groupMapping() {
+            get groupMapping(): GroupMapping {
                 if (lines.groupBuffer.ref.version !== currentGroup) {
                     groupMapping = createGroupMapping(lines.groupBuffer.ref.value, lines.lineCount, 4);
                     currentGroup = lines.groupBuffer.ref.version;

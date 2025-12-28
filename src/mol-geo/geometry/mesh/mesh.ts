@@ -153,7 +153,7 @@ export namespace Mesh {
       normalBuffer: ValueCell.create(normals),
       groupBuffer: ValueCell.create(groups),
       varyingGroup: ValueCell.create(false),
-      get boundingSphere() {
+      get boundingSphere(): Sphere3D {
         const newHash = hashCode(mesh);
         if (newHash !== currentHash) {
           const b = calculateInvariantBoundingSphere(
@@ -166,7 +166,7 @@ export namespace Mesh {
         }
         return boundingSphere;
       },
-      get groupMapping() {
+      get groupMapping(): GroupMapping {
         if (mesh.groupBuffer.ref.version !== currentGroup) {
           groupMapping = createGroupMapping(
             mesh.groupBuffer.ref.value,

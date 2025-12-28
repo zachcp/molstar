@@ -27,7 +27,7 @@ import {
 import { DirectVolumeShaderCode } from '../shader-code.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 
-export const DirectVolumeSchema = {
+const _DirectVolumeSchema = {
     ...BaseSchema,
 
     aPosition: AttributeSpec('float32', 3, 0),
@@ -61,7 +61,8 @@ export const DirectVolumeSchema = {
 
     meta: ValueSpec('unknown'),
 };
-export type DirectVolumeSchema = typeof DirectVolumeSchema;
+export type DirectVolumeSchema = typeof _DirectVolumeSchema;
+export const DirectVolumeSchema: DirectVolumeSchema = _DirectVolumeSchema;
 export type DirectVolumeValues = Values<DirectVolumeSchema>;
 
 export function DirectVolumeRenderable(

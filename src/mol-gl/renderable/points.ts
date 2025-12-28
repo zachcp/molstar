@@ -24,7 +24,7 @@ import {
 import { PointsShaderCode } from '../shader-code.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 
-export const PointsSchema = {
+const _PointsSchema = {
     ...BaseSchema,
     ...SizeSchema,
     aGroup: AttributeSpec('float32', 1, 0),
@@ -32,7 +32,8 @@ export const PointsSchema = {
     dPointSizeAttenuation: DefineSpec('boolean'),
     dPointStyle: DefineSpec('string', ['square', 'circle', 'fuzzy']),
 };
-export type PointsSchema = typeof PointsSchema;
+export type PointsSchema = typeof _PointsSchema;
+export const PointsSchema: PointsSchema = _PointsSchema;
 export type PointsValues = Values<PointsSchema>;
 
 export function PointsRenderable(

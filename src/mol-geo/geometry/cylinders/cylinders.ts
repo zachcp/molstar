@@ -111,7 +111,7 @@ export namespace Cylinders {
             scaleBuffer: ValueCell.create(scales),
             capBuffer: ValueCell.create(caps),
             colorModeBuffer: ValueCell.create(colorModes),
-            get boundingSphere() {
+            get boundingSphere(): Sphere3D {
                 const newHash = hashCode(cylinders);
                 if (newHash !== currentHash) {
                     const s = calculateInvariantBoundingSphere(cylinders.startBuffer.ref.value, cylinders.cylinderCount * 6, 6);
@@ -122,7 +122,7 @@ export namespace Cylinders {
                 }
                 return boundingSphere;
             },
-            get groupMapping() {
+            get groupMapping(): GroupMapping {
                 if (cylinders.groupBuffer.ref.version !== currentGroup) {
                     groupMapping = createGroupMapping(cylinders.groupBuffer.ref.value, cylinders.cylinderCount, 6);
                     currentGroup = cylinders.groupBuffer.ref.version;

@@ -26,7 +26,7 @@ import {
 import { SpheresShaderCode } from '../shader-code.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 
-export const SpheresSchema = {
+const _SpheresSchema = {
     ...BaseSchema,
     ...SizeSchema,
 
@@ -52,7 +52,8 @@ export const SpheresSchema = {
     centerBuffer: ValueSpec('float32'),
     groupBuffer: ValueSpec('float32'),
 };
-export type SpheresSchema = typeof SpheresSchema;
+export type SpheresSchema = typeof _SpheresSchema;
+export const SpheresSchema: SpheresSchema = _SpheresSchema;
 export type SpheresValues = Values<SpheresSchema>;
 
 export function SpheresRenderable(

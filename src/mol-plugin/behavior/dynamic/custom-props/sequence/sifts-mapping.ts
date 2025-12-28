@@ -50,7 +50,7 @@ export const SIFTSMapping = PluginBehavior.create<{ autoAttach: boolean; showToo
             this.ctx.managers.lociLabels.removeProvider(this.labelProvider);
         }
     },
-    params: () => ({
+    params: (): { autoAttach: PD.BooleanParam; showTooltip: PD.BooleanParam } => ({
         autoAttach: PD.Boolean(true),
         showTooltip: PD.Boolean(true),
     }),

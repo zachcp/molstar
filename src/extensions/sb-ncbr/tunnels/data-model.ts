@@ -101,7 +101,13 @@ export interface Tunnel {
   };
 }
 
-export const TunnelShapeParams = {
+export const TunnelShapeParams: {
+  webgl: PD.Value<WebGLContext | null>;
+  colorTheme: PD.Color;
+  visual: PD.Mapped<PD.NamedParams<PD.Normalize<{ resolution: number }>, "mesh"> | PD.NamedParams<PD.Normalize<{ resolution: number }>, "spheres">>;
+  samplingRate: PD.Numeric;
+  showRadii: PD.BooleanParam;
+} = {
   webgl: PD.Value<WebGLContext | null>(null),
   colorTheme: PD.Color(Color(0xff0000)),
   visual: PD.MappedStatic("mesh", {

@@ -79,7 +79,7 @@ export namespace Points {
             pointCount,
             centerBuffer: ValueCell.create(centers),
             groupBuffer: ValueCell.create(groups),
-            get boundingSphere() {
+            get boundingSphere(): Sphere3D {
                 const newHash = hashCode(points);
                 if (newHash !== currentHash) {
                     const b = calculateInvariantBoundingSphere(points.centerBuffer.ref.value, points.pointCount, 1);
@@ -88,7 +88,7 @@ export namespace Points {
                 }
                 return boundingSphere;
             },
-            get groupMapping() {
+            get groupMapping(): GroupMapping {
                 if (points.groupBuffer.ref.version !== currentGroup) {
                     groupMapping = createGroupMapping(points.groupBuffer.ref.value, points.pointCount);
                     currentGroup = points.groupBuffer.ref.version;

@@ -311,7 +311,7 @@ async function removeAllStructConnInspections(plugin: PluginContext, structNode:
 }
 
 /** Hide all carbohydrate SNFG visuals */
-function hideSnfgNodes(plugin: PluginContext, structNode: StructNode) {
+function hideSnfgNodes(plugin: PluginContext, structNode: StructNode): void {
     const snfgNodes = plugin.state.data.selectQ((q) =>
         q.byRef(structNode.transform.ref).subtree().withTag('branched-snfg-3d')
     );
@@ -321,7 +321,7 @@ function hideSnfgNodes(plugin: PluginContext, structNode: StructNode) {
 }
 
 /** Make visible all carbohydrate SNFG visuals that have been hidden by `hideSnfgNodes` */
-function unhideSnfgNodes(plugin: PluginContext, structNode: StructNode) {
+function unhideSnfgNodes(plugin: PluginContext, structNode: StructNode): void {
     const snfgNodes = plugin.state.data.selectQ((q) =>
         q.byRef(structNode.transform.ref).subtree().withTag('branched-snfg-3d')
     );

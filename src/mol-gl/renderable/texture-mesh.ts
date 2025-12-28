@@ -11,7 +11,7 @@ import { GlobalUniformSchema, BaseSchema, DefineSpec, Values, InternalSchema, In
 import { MeshShaderCode } from '../shader-code.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 
-export const TextureMeshSchema = {
+const _TextureMeshSchema = {
     ...BaseSchema,
     uGeoTexDim: UniformSpec('v2', 'buffered'),
     tPosition: TextureSpec('texture', 'rgb', 'float', 'nearest'),
@@ -31,7 +31,8 @@ export const TextureMeshSchema = {
     uInteriorSubstance: UniformSpec('v4'),
     meta: ValueSpec('unknown')
 };
-export type TextureMeshSchema = typeof TextureMeshSchema
+export type TextureMeshSchema = typeof _TextureMeshSchema;
+export const TextureMeshSchema: TextureMeshSchema = _TextureMeshSchema;
 export type TextureMeshValues = Values<TextureMeshSchema>
 
 export function TextureMeshRenderable(ctx: WebGLContext, id: number, values: TextureMeshValues, state: RenderableState, materialId: number, transparency: Transparency, globals: GlobalDefines): Renderable<TextureMeshValues> {

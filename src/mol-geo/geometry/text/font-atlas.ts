@@ -12,7 +12,7 @@ import { RUNNING_IN_NODEJS } from '../../../mol-util/nodejs-shims.ts';
 
 const TextAtlasCache: { [k: string]: FontAtlas } = {};
 
-export function getFontAtlas(props: Partial<FontAtlasProps>) {
+export function getFontAtlas(props: Partial<FontAtlasProps>): FontAtlas {
     const hash = JSON.stringify(props);
     if (TextAtlasCache[hash] === undefined) {
         TextAtlasCache[hash] = new FontAtlas(props);
@@ -121,7 +121,7 @@ export class FontAtlas {
         this.placeholder = this.get(String.fromCharCode(0xFFFD));
     }
 
-    get(char: string) {
+    get(char: string): FontAtlasMap {
         if (this.mapped[char] === undefined) {
             this.draw(char);
 
@@ -158,7 +158,7 @@ export class FontAtlas {
         return this.mapped[char];
     }
 
-    draw(char: string) {
+    draw(char: string): void {
         const h = this.lineHeight;
         const ctx = this.scratchContext;
         const data = this.scratchData;
@@ -194,7 +194,7 @@ export class FontAtlas {
 /** Type of imported `canvas` module (not using `typeof import('canvas')` to avoid missing types) */
 type CanvasModule = any;
 let _canvas: CanvasModule | undefined;
-function getCanvasModule(): CanvasModule {
+function getCanvasModule(): CanvasModule | undefined {
     if (!_canvas) {
         throw new Error(
             "When running in Node.js and wanting to use Canvas API, call mol-util/data-source's setCanvasModule function first and pass imported `canvas` module to it.",
@@ -203,7 +203,7 @@ function getCanvasModule(): CanvasModule {
     return _canvas;
 }
 /** Set `canvas` module, before using Canvas API functionality in NodeJS. Usage: `setCanvasModule(require('canvas')); // some code `*/
-export function setCanvasModule(canvas: CanvasModule) {
+export function setCanvasModule(canvas: CanvasModule): void {
     _canvas = canvas;
 }
 /** Return a newly created canvas context (using a canvas HTML element in browser, canvas module in NodeJS) */

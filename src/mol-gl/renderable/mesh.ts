@@ -11,7 +11,7 @@ import { GlobalUniformSchema, BaseSchema, AttributeSpec, ElementsSpec, DefineSpe
 import { MeshShaderCode } from '../shader-code.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 
-export const MeshSchema = {
+const _MeshSchema = {
     ...BaseSchema,
     aGroup: AttributeSpec('float32', 1, 0),
     aPosition: AttributeSpec('float32', 3, 0),
@@ -31,7 +31,8 @@ export const MeshSchema = {
     uInteriorSubstance: UniformSpec('v4'),
     meta: ValueSpec('unknown')
 } as const;
-export type MeshSchema = typeof MeshSchema
+export type MeshSchema = typeof _MeshSchema;
+export const MeshSchema: MeshSchema = _MeshSchema;
 export type MeshValues = Values<MeshSchema>
 
 export function MeshRenderable(ctx: WebGLContext, id: number, values: MeshValues, state: RenderableState, materialId: number, transparency: Transparency, globals: GlobalDefines): Renderable<MeshValues> {

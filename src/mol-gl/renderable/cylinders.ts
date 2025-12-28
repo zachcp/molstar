@@ -27,7 +27,7 @@ import {
 import { CylindersShaderCode } from '../shader-code.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 
-export const CylindersSchema = {
+const _CylindersSchema = {
     ...BaseSchema,
     ...SizeSchema,
     aGroup: AttributeSpec('float32', 1, 0),
@@ -52,7 +52,8 @@ export const CylindersSchema = {
     uInteriorSubstance: UniformSpec('v4'),
     dDualColor: DefineSpec('boolean'),
 };
-export type CylindersSchema = typeof CylindersSchema;
+export type CylindersSchema = typeof _CylindersSchema;
+export const CylindersSchema: CylindersSchema = _CylindersSchema;
 export type CylindersValues = Values<CylindersSchema>;
 
 export function CylindersRenderable(

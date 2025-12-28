@@ -18,13 +18,13 @@ export const ZenodoImport = PluginBehavior.create<{}>({
             this.ctx.customImportControls.set('zenodo-import', ZenodoImportUI as any);
         }
 
-        override update() {
+        override update(): boolean {
             return false;
         }
 
-        unregister() {
+        unregister(): void {
             this.ctx.customImportControls.delete('zenodo-import');
         }
     },
-    params: () => ({}),
+    params: (): {} => ({}),
 });

@@ -117,7 +117,7 @@ export const Interactions = PluginBehavior.create<{ autoAttach: boolean; showToo
             this.ctx.representation.structure.registry.remove(InteractionsRepresentationProvider);
         }
     },
-    params: () => ({
+    params: (): { autoAttach: PD.BooleanParam; showTooltip: PD.BooleanParam } => ({
         autoAttach: PD.Boolean(false),
         showTooltip: PD.Boolean(true),
     }),

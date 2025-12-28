@@ -503,7 +503,7 @@ function getTraceRenderable(
     thicknessTexture: Texture,
     accumulateTexture: Texture,
     depthTexture: Texture,
-): TraceRenderable {
+): ComputeRenderable<Values<typeof TraceSchema>> {
     const values: Values<typeof TraceSchema> = {
         ...QuadValues,
         tColor: ValueCell.create(colorTexture),
@@ -568,7 +568,7 @@ const AccumulateSchema = {
 const AccumulateShaderCode = ShaderCode('accumulate', quad_vert, accumulate_frag);
 type AccumulateRenderable = ComputeRenderable<Values<typeof AccumulateSchema>>;
 
-function getAccumulateRenderable(ctx: WebGLContext, colorTexture: Texture): AccumulateRenderable {
+function getAccumulateRenderable(ctx: WebGLContext, colorTexture: Texture): ComputeRenderable<Values<typeof AccumulateSchema>> {
     const values: Values<typeof AccumulateSchema> = {
         ...QuadValues,
         tColor: ValueCell.create(colorTexture),

@@ -38,7 +38,7 @@ import { BloomPass } from './bloom.ts';
 
 let IlluminationWarningShown = false;
 
-function checkIlluminationSupport(webgl: WebGLContext) {
+function checkIlluminationSupport(webgl: WebGLContext): boolean {
     const { drawBuffers, textureFloat, colorBufferFloat, depthTexture } = webgl.extensions;
     if (!textureFloat || !colorBufferFloat || !depthTexture || !drawBuffers) {
         if (isDebugMode && !IlluminationWarningShown) {
@@ -761,7 +761,7 @@ function getComposeRenderable(
     ssaoDepthOpaqueTexture: Texture,
     ssaoDepthTransparentTexture: Texture,
     transparentOutline: boolean,
-): ComposeRenderable {
+): ComputeRenderable<Values<typeof ComposeSchema>> {
     const values: Values<typeof ComposeSchema> = {
         ...QuadValues,
         tColor: ValueCell.create(colorTexture),
@@ -812,7 +812,7 @@ const MultiSampleComposeSchema = {
 const MultiSampleComposeShaderCode = ShaderCode('compose', quad_vert, multiSample_compose_frag);
 type MultiSampleComposeRenderable = ComputeRenderable<Values<typeof MultiSampleComposeSchema>>;
 
-function getMultiSampleComposeRenderable(ctx: WebGLContext, colorTexture: Texture): MultiSampleComposeRenderable {
+function getMultiSampleComposeRenderable(ctx: WebGLContext, colorTexture: Texture): ComputeRenderable<Values<typeof MultiSampleComposeSchema>> {
     const values: Values<typeof MultiSampleComposeSchema> = {
         ...QuadValues,
         tColor: ValueCell.create(colorTexture),

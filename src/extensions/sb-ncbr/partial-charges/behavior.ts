@@ -31,7 +31,7 @@ export const SbNcbrPartialCharges = PluginBehavior.create<{ autoAttach: boolean;
             this.ctx.builders.structure.representation.unregisterPreset(SbNcbrPartialChargesPreset);
         }
     },
-    params: () => ({
+    params: (): { autoAttach: PD.BooleanParam; showToolTip: PD.BooleanParam } => ({
         autoAttach: PD.Boolean(true),
         showToolTip: PD.Boolean(true),
     }),
