@@ -579,8 +579,7 @@ const requestAnimationFrame =
 const cancelAnimationFrame =
   typeof window !== "undefined"
     ? window.cancelAnimationFrame
-    : (handle: number) =>
-        clearImmediate!(handle as unknown as NodeJS.Immediate);
+    : (handle: number) => clearImmediate!(handle);
 
 namespace Canvas3D {
   export interface HoverEvent {
@@ -783,7 +782,7 @@ namespace Canvas3D {
           await xrManager.request();
         } catch (e) {
           console.error(e);
-          xr.requestFailed.next(e);
+          xr.requestFailed.next(String(e));
         }
       },
       end: () => xrManager.end(),
@@ -1762,7 +1761,7 @@ namespace Canvas3D {
       },
       setAttribs: (attribs: PartialCanvas3DAttribs) => {
         if (attribs.trackball) controls.setAttribs(attribs.trackball);
-        if (attribs.xr) xrManager.setProps(attribs.xr);
+        if (attribs.xr) xrManager.setAttribs(attribs.xr);
       },
       getImagePass: (props: Partial<ImageProps> = {}) => {
         return new ImagePass(
@@ -1787,7 +1786,7 @@ namespace Canvas3D {
       get attribs() {
         return {
           trackball: controls.attribs,
-          xr: xrManager.props,
+          xr: xrManager.attribs,
         };
       },
       get input() {

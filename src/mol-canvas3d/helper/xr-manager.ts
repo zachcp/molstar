@@ -103,9 +103,14 @@ export class XRManager {
   private hit: Vec3 | undefined = undefined;
 
   readonly props: XRManagerProps;
+  readonly attribs: XRManagerAttribs;
 
   setProps(props: Partial<XRManagerProps>) {
     Object.assign(this.props, props);
+  }
+
+  setAttribs(attribs: Partial<XRManagerAttribs>) {
+    Object.assign(this.attribs, attribs);
   }
 
   private intersect(
@@ -374,6 +379,7 @@ export class XRManager {
     attribs: Partial<XRManagerAttribs> = {},
   ) {
     this.props = { ...PD.getDefaultValues(XRManagerParams), ...props };
+    this.attribs = { ...DefaultXRManagerAttribs, ...attribs };
 
     this.hoverSub = this.interactionHelper.events.hover.subscribe(
       ({ position }) => {
@@ -389,9 +395,9 @@ export class XRManager {
     this.checkSupported();
     navigator.xr?.addEventListener("devicechange", this.checkSupported);
 
-    const b = { ...DefaultXRManagerBindings, ...attribs.bindings };
-
     this.keyUpSub = input.keyUp.subscribe(({ code, modifiers, key }) => {
+      const b = this.attribs.bindings;
+
       if (Binding.matchKey(b.exit, code, modifiers, key)) {
         this.end();
       }
@@ -403,6 +409,7 @@ export class XRManager {
 
     this.gestureSub = input.gesture.subscribe(
       ({ scale, button, modifiers }) => {
+        const b = this.attribs.bindings;
         if (Binding.match(b.gestureScale, button, modifiers)) {
           this.setScaleFactor(scale);
         }
