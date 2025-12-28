@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { AssemblySymmetryConfig } from '../../extensions/assembly-symmetry.ts';
+import { AssemblySymmetryConfig } from '../../extensions/assembly-symmetry/index.ts';
 import { G3dProvider } from '../../extensions/g3d/format.ts';
 import { SaccharideCompIdMapType } from '../../mol-model/structure/structure/carbohydrates/constants.ts';
 import { DataFormatProvider } from '../../mol-plugin-state/formats/provider.ts';

@@ -5,7 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ValueCell } from '../../../mol-util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import { Vec3, Mat4, Mat3, Vec4 } from '../../../mol-math/linear-algebra.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { transformPositionArray, transformDirectionArray, computeIndexedVertexNormals, GroupMapping, createGroupMapping } from '../../util.ts';
@@ -19,7 +19,7 @@ import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { calculateInvariantBoundingSphere, calculateTransformBoundingSphere } from '../../../mol-gl/renderable/util.ts';
 import { Theme } from '../../../mol-theme/theme.ts';
 import { MeshValues } from '../../../mol-gl/renderable/mesh.ts';
-import { Color } from '../../../mol-util/color.ts';
+import { Color } from '../../../mol-util/color/index.ts';
 import { BaseGeometry } from '../base.ts';
 import { createEmptyOverpaint } from '../overpaint-data.ts';
 import { createEmptyTransparency } from '../transparency-data.ts';

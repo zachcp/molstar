@@ -13,7 +13,7 @@ import { Structure, Unit, StructureElement, Bond } from '../../mol-model/structu
 import { Subject } from 'rxjs';
 import { getNextMaterialId, GraphicsRenderObject } from '../../mol-gl/render-object.ts';
 import { Theme } from '../../mol-theme/theme.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { PickingId } from '../../mol-geo/geometry/picking.ts';
 import { Loci, EmptyLoci, isEmptyLoci, isEveryLoci, isDataLoci, EveryLoci } from '../../mol-model/loci.ts';
 import { MarkerAction, MarkerActions, applyMarkerAction } from '../../mol-util/marker-action.ts';

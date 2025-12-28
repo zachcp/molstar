@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color } from '../mol-util/color.ts';
+import { Color } from '../mol-util/color/index.ts';
 import { Location } from '../mol-model/location.ts';
 import { ColorType, ColorTypeDirect, ColorTypeGrid, ColorTypeLocation } from '../mol-geo/geometry/color-data.ts';
 import { CarbohydrateSymbolColorThemeProvider } from './color/carbohydrate-symbol.ts';
 import { UniformColorThemeProvider } from './color/uniform.ts';
-import { deepEqual } from '../mol-util.ts';
+import { deepEqual } from '../mol-util/index.ts';
 import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
 import { ThemeDataContext, ThemeRegistry, ThemeProvider } from './theme.ts';
 import { ChainIdColorThemeProvider } from './color/chain-id.ts';

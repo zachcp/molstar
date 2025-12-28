@@ -7,9 +7,9 @@
 
 import { QualityAssessmentPLDDTPreset, QualityAssessmentQmeanPreset } from '../../extensions/model-archive/quality-assessment/behavior.ts';
 import { QualityAssessment } from '../../extensions/model-archive/quality-assessment/prop.ts';
-import { SbNcbrPartialChargesPreset, SbNcbrPartialChargesPropertyProvider } from '../../extensions/sb-ncbr.ts';
+import { SbNcbrPartialChargesPreset, SbNcbrPartialChargesPropertyProvider } from '../../extensions/sb-ncbr/index.ts';
 import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from '../../mol-plugin-state/builder/structure/representation-preset.ts';
-import { StateObjectRef } from '../../mol-state.ts';
+import { StateObjectRef } from '../../mol-state/index.ts';
 
 export const ViewerAutoPreset = StructureRepresentationPresetProvider({
     id: 'preset-structure-representation-viewer-auto',

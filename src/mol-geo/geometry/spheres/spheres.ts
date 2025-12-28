@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ValueCell } from '../../../mol-util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import { GeometryUtils } from '../geometry.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { TransformData } from '../transform-data.ts';
@@ -16,7 +16,7 @@ import { createMarkers } from '../marker-data.ts';
 import { TextureImage, calculateInvariantBoundingSphere, calculateTransformBoundingSphere, createTextureImage } from '../../../mol-gl/renderable/util.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { createSizes, getMaxSize } from '../size-data.ts';
-import { Color } from '../../../mol-util/color.ts';
+import { Color } from '../../../mol-util/color/index.ts';
 import { BaseGeometry } from '../base.ts';
 import { createEmptyOverpaint } from '../overpaint-data.ts';
 import { createEmptyTransparency } from '../transparency-data.ts';

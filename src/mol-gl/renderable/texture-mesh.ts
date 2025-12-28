@@ -9,7 +9,7 @@ import { WebGLContext } from '../webgl/context.ts';
 import { createGraphicsRenderItem, Transparency } from '../webgl/render-item.ts';
 import { GlobalUniformSchema, BaseSchema, DefineSpec, Values, InternalSchema, InternalValues, UniformSpec, TextureSpec, GlobalTextureSchema, ValueSpec, GlobalDefineValues, GlobalDefines, GlobalDefineSchema } from './schema.ts';
 import { MeshShaderCode } from '../shader-code.ts';
-import { ValueCell } from '../../mol-util.ts';
+import { ValueCell } from '../../mol-util/index.ts';
 
 export const TextureMeshSchema = {
     ...BaseSchema,

@@ -5,7 +5,7 @@
  * @author Cai Huiyu <szmun.caihy@gmail.com>
  */
 
-import { ValueCell } from '../../../mol-util.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { LocationIterator, PositionLocation } from '../../util/location-iterator.ts';
@@ -14,7 +14,7 @@ import { createColors } from '../color-data.ts';
 import { createMarkers } from '../marker-data.ts';
 import { GeometryUtils } from '../geometry.ts';
 import { Theme } from '../../../mol-theme/theme.ts';
-import { Color } from '../../../mol-util/color.ts';
+import { Color } from '../../../mol-util/color/index.ts';
 import { BaseGeometry } from '../base.ts';
 import { createEmptyOverpaint } from '../overpaint-data.ts';
 import { createEmptyTransparency } from '../transparency-data.ts';

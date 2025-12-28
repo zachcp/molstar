@@ -7,7 +7,7 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { AssemblySymmetryConfig } from '../../extensions/assembly-symmetry.ts';
+import { AssemblySymmetryConfig } from '../../extensions/assembly-symmetry/index.ts';
 import { loadMVSData, loadMVSX } from '../../extensions/mvs/components/formats.ts';
 import { loadMVS, MolstarLoadingExtension } from '../../extensions/mvs/load.ts';
 import { MVSData } from '../../extensions/mvs/mvs-data.ts';
@@ -28,7 +28,7 @@ import { createVolumeRepresentationParams } from '../../mol-plugin-state/helpers
 import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
 import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
 import { TrajectoryFromModelAndCoordinates } from '../../mol-plugin-state/transforms/model.ts';
-import { createPluginUI } from '../../mol-plugin-ui.ts';
+import { createPluginUI } from '../../mol-plugin-ui/index.ts';
 import { PluginUIContext } from '../../mol-plugin-ui/context.ts';
 import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
 import { DefaultPluginUISpec, PluginUISpec } from '../../mol-plugin-ui/spec.ts';
@@ -39,10 +39,10 @@ import { PluginState } from '../../mol-plugin/state.ts';
 import { MolScriptBuilder } from '../../mol-script/language/builder.ts';
 import { Expression } from '../../mol-script/language/expression.ts';
 import { Script } from '../../mol-script/script.ts';
-import { StateObjectSelector } from '../../mol-state.ts';
-import { Task } from '../../mol-task.ts';
+import { StateObjectSelector } from '../../mol-state/index.ts';
+import { Task } from '../../mol-task/index.ts';
 import { Asset } from '../../mol-util/assets.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { ExtensionMap } from './extensions.ts';
 import { DefaultViewerOptions, ViewerOptions } from './options.ts';
 

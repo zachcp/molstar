@@ -4,19 +4,19 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PDBeStructureQualityReport } from '../../extensions/pdbe.ts';
+import { PDBeStructureQualityReport } from '../../extensions/pdbe/index.ts';
 import { EmptyLoci } from '../../mol-model/loci.ts';
 import { StructureSelection } from '../../mol-model/structure.ts';
 import { AnimateModelIndex } from '../../mol-plugin-state/animation/built-in/model-index.ts';
 import { BuiltInTrajectoryFormat } from '../../mol-plugin-state/formats/trajectory.ts';
-import { createPluginUI } from '../../mol-plugin-ui.ts';
+import { createPluginUI } from '../../mol-plugin-ui/index.ts';
 import { PluginUIContext } from '../../mol-plugin-ui/context.ts';
 import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
 import { DefaultPluginUISpec } from '../../mol-plugin-ui/spec.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { Script } from '../../mol-script/script.ts';
 import { Asset } from '../../mol-util/assets.ts';
-import { Color } from '../../mol-util/color.ts';
+import { Color } from '../../mol-util/color/index.ts';
 import { StripedResidues } from './coloring.ts';
 import { CustomToastMessage } from './controls.tsx';
 import { CustomColorThemeProvider } from './custom-theme.ts';

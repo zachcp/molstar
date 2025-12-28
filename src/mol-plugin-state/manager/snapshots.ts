@@ -6,7 +6,7 @@
  */
 
 import { List } from 'immutable';
-import { UUID } from '../../mol-util.ts';
+import { UUID } from '../../mol-util/index.ts';
 import { PluginState } from '../../mol-plugin/state.ts';
 import { StatefulPluginComponent } from '../component.ts';
 import { PluginContext } from '../../mol-plugin/context.ts';
@@ -17,7 +17,7 @@ import { readFromFile } from '../../mol-util/data-source.ts';
 import { objectForEach } from '../../mol-util/object.ts';
 import { PLUGIN_VERSION } from '../../mol-plugin/version.ts';
 import { canvasToBlob } from '../../mol-canvas3d/util.ts';
-import { Task } from '../../mol-task.ts';
+import { Task } from '../../mol-task/index.ts';
 import { StringLike } from '../../mol-io/common/string-like.ts';
 import { SingleTaskQueue } from '../../mol-util/single-task-queue.ts';
 

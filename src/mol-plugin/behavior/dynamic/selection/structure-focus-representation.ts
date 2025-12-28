@@ -13,7 +13,7 @@ import { PluginStateObject } from '../../../../mol-plugin-state/objects.ts';
 import { StateTransforms } from '../../../../mol-plugin-state/transforms.ts';
 import { PluginBehavior } from '../../../behavior.ts';
 import { MolScriptBuilder as MS } from '../../../../mol-script/language/builder.ts';
-import { StateObjectCell, StateSelection, StateTransform } from '../../../../mol-state.ts';
+import { StateObjectCell, StateSelection, StateTransform } from '../../../../mol-state/index.ts';
 import { SizeTheme } from '../../../../mol-theme/size.ts';
 import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
 import { PluginCommands } from '../../../commands.ts';

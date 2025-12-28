@@ -8,7 +8,7 @@ import { OrderedSet } from '../../mol-data/int.ts';
 import { Loci } from '../../mol-model/loci.ts';
 import { ShapeGroup } from '../../mol-model/shape.ts';
 import { PluginContext } from '../../mol-plugin/context.ts';
-import { StateObjectSelector, StateTree } from '../../mol-state.ts';
+import { StateObjectSelector, StateTree } from '../../mol-state/index.ts';
 import type { MVSPrimitiveShapeSourceData } from './components/primitives.ts';
 import type { Snapshot } from './mvs-data.ts';
 import type { MVSNode } from './tree/mvs/mvs-tree.ts';
