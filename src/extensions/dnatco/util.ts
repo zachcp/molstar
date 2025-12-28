@@ -8,7 +8,14 @@
 import type { DnatcoTypes } from './types.ts';
 import { OrderedSet, Segmentation } from '../../mol-data/int.ts';
 import { EmptyLoci } from '../../mol-model/loci.ts';
-import { type ElementIndex, type ResidueIndex, type Structure, StructureElement, StructureProperties, type Unit } from '../../mol-model/structure.ts';
+import {
+    type ElementIndex,
+    type ResidueIndex,
+    type Structure,
+    StructureElement,
+    StructureProperties,
+    type Unit,
+} from '../../mol-model/structure.ts';
 
 const EmptyStepIndices = new Array<number>();
 
@@ -19,15 +26,22 @@ export namespace DnatcoUtil {
         return r ? { index: r.index, start: r.start, end: r.end } : void 0;
     }
 
-    export function getAtomIndex(loc: StructureElement.Location, residue: Residue, names: string[], altId: string, insCode: string): ElementIndex {
+    export function getAtomIndex(
+        loc: StructureElement.Location,
+        residue: Residue,
+        names: string[],
+        altId: string,
+        insCode: string,
+    ): ElementIndex {
         for (let eI = residue.start; eI < residue.end; eI++) {
             loc.element = loc.unit.elements[eI];
             const elName = StructureProperties.atom.label_atom_id(loc);
             const elAltId = StructureProperties.atom.label_alt_id(loc);
             const elInsCode = StructureProperties.residue.pdbx_PDB_ins_code(loc);
 
-            if (names.includes(elName) && (elAltId === altId || elAltId.length === 0) && (elInsCode === insCode))
+            if (names.includes(elName) && (elAltId === altId || elAltId.length === 0) && (elInsCode === insCode)) {
                 return loc.element;
+            }
         }
 
         return -1 as ElementIndex;
@@ -48,7 +62,7 @@ export namespace DnatcoUtil {
         const indices = residues.get(seqId);
         if (!indices) return EmptyStepIndices;
 
-        return insCode !== '' ? indices.filter(idx => data.steps[idx].PDB_ins_code_1 === insCode) : indices;
+        return insCode !== '' ? indices.filter((idx) => data.steps[idx].PDB_ins_code_1 === insCode) : indices;
     }
 
     export function residueAltIds(structure: Structure, unit: Unit, residue: Residue) {
@@ -57,33 +71,52 @@ export namespace DnatcoUtil {
         for (let eI = residue.start; eI < residue.end; eI++) {
             loc.element = OrderedSet.getAt(unit.elements, eI);
             const altId = StructureProperties.atom.label_alt_id(loc);
-            if (altId !== '' && !altIds.includes(altId))
+            if (altId !== '' && !altIds.includes(altId)) {
                 altIds.push(altId);
+            }
         }
 
         return altIds;
     }
 
     const _loc = StructureElement.Location.create();
-    export function residueToLoci(asymId: string, seqId: number, altId: string | undefined, insCode: string, loci: StructureElement.Loci, source: 'label' | 'auth') {
+    export function residueToLoci(
+        asymId: string,
+        seqId: number,
+        altId: string | undefined,
+        insCode: string,
+        loci: StructureElement.Loci,
+        source: 'label' | 'auth',
+    ) {
         _loc.structure = loci.structure;
         for (const e of loci.elements) {
             _loc.unit = e.unit;
 
-            const getAsymId = source === 'label' ? StructureProperties.chain.label_asym_id : StructureProperties.chain.auth_asym_id;
-            const getSeqId = source === 'label' ? StructureProperties.residue.label_seq_id : StructureProperties.residue.auth_seq_id;
+            const getAsymId = source === 'label'
+                ? StructureProperties.chain.label_asym_id
+                : StructureProperties.chain.auth_asym_id;
+            const getSeqId = source === 'label'
+                ? StructureProperties.residue.label_seq_id
+                : StructureProperties.residue.auth_seq_id;
 
             // Walk the entire unit and look for the requested residue
-            const chainIt = Segmentation.transientSegments(e.unit.model.atomicHierarchy.chainAtomSegments, e.unit.elements);
-            const residueIt = Segmentation.transientSegments(e.unit.model.atomicHierarchy.residueAtomSegments, e.unit.elements);
+            const chainIt = Segmentation.transientSegments(
+                e.unit.model.atomicHierarchy.chainAtomSegments,
+                e.unit.elements,
+            );
+            const residueIt = Segmentation.transientSegments(
+                e.unit.model.atomicHierarchy.residueAtomSegments,
+                e.unit.elements,
+            );
 
             const elemIndex = (idx: number) => OrderedSet.getAt(e.unit.elements, idx);
             while (chainIt.hasNext) {
                 const chain = chainIt.move();
                 _loc.element = elemIndex(chain.start);
                 const _asymId = getAsymId(_loc);
-                if (_asymId !== asymId)
+                if (_asymId !== asymId) {
                     continue; // Wrong chain, skip it
+                }
 
                 residueIt.setSegment(chain);
                 while (residueIt.hasNext) {
@@ -93,19 +126,21 @@ export namespace DnatcoUtil {
                     const _seqId = getSeqId(_loc);
                     if (_seqId === seqId) {
                         const _insCode = StructureProperties.residue.pdbx_PDB_ins_code(_loc);
-                        if (_insCode !== insCode)
+                        if (_insCode !== insCode) {
                             continue;
+                        }
                         if (altId) {
                             const _altIds = residueAltIds(loci.structure, e.unit, residue);
-                            if (!_altIds.includes(altId))
+                            if (!_altIds.includes(altId)) {
                                 continue;
+                            }
                         }
 
                         const start = residue.start as StructureElement.UnitIndex;
                         const end = residue.end as StructureElement.UnitIndex;
                         return StructureElement.Loci(
                             loci.structure,
-                            [{ unit: e.unit, indices: OrderedSet.ofBounds(start, end) }]
+                            [{ unit: e.unit, indices: OrderedSet.ofBounds(start, end) }],
                         );
                     }
                 }

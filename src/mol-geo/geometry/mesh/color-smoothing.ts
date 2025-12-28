@@ -15,22 +15,37 @@ import { getVolumeTexture2dLayout } from '../../../mol-repr/volume/util.ts';
 import { ValueCell } from '../../../mol-util/index.ts';
 
 interface ColorSmoothingInput {
-    vertexCount: number
-    instanceCount: number
-    groupCount: number
-    transformBuffer: Float32Array
-    instanceBuffer: Float32Array
-    positionBuffer: Float32Array
-    groupBuffer: Float32Array
-    colorData: TextureImage<Uint8Array>
-    colorType: 'group' | 'groupInstance'
-    boundingSphere: Sphere3D
-    invariantBoundingSphere: Sphere3D
-    itemSize: 4 | 3 | 1
+    vertexCount: number;
+    instanceCount: number;
+    groupCount: number;
+    transformBuffer: Float32Array;
+    instanceBuffer: Float32Array;
+    positionBuffer: Float32Array;
+    groupBuffer: Float32Array;
+    colorData: TextureImage<Uint8Array>;
+    colorType: 'group' | 'groupInstance';
+    boundingSphere: Sphere3D;
+    invariantBoundingSphere: Sphere3D;
+    itemSize: 4 | 3 | 1;
 }
 
-export function calcMeshColorSmoothing(input: ColorSmoothingInput, resolution: number, stride: number, webgl?: WebGLContext, texture?: Texture) {
-    const { colorType, vertexCount, groupCount, positionBuffer, instanceBuffer, transformBuffer, groupBuffer, itemSize } = input;
+export function calcMeshColorSmoothing(
+    input: ColorSmoothingInput,
+    resolution: number,
+    stride: number,
+    webgl?: WebGLContext,
+    texture?: Texture,
+) {
+    const {
+        colorType,
+        vertexCount,
+        groupCount,
+        positionBuffer,
+        instanceBuffer,
+        transformBuffer,
+        groupBuffer,
+        itemSize,
+    } = input;
 
     const isInstanceType = colorType.endsWith('Instance');
     const box = Box3D.fromSphere3D(Box3D(), isInstanceType ? input.boundingSphere : input.invariantBoundingSphere);
@@ -133,21 +148,33 @@ export function calcMeshColorSmoothing(input: ColorSmoothingInput, resolution: n
 
     if (webgl) {
         if (!texture) {
-            const format = itemSize === 4 ? 'rgba' :
-                itemSize === 3 ? 'rgb' : 'alpha';
+            const format = itemSize === 4 ? 'rgba' : itemSize === 3 ? 'rgb' : 'alpha';
             texture = webgl.resources.texture('image-uint8', format, 'ubyte', 'linear');
         }
         texture.load(textureImage);
 
         return { kind: 'volume' as const, texture, gridTexDim, gridDim, gridTransform, type };
     } else {
-        const interpolated = getTrilinearlyInterpolated({ vertexCount, instanceCount, transformBuffer, positionBuffer, colorType: type, grid, gridDim, gridTexDim, gridTransform, vertexStride: 3, colorStride: itemSize, outputStride: itemSize });
+        const interpolated = getTrilinearlyInterpolated({
+            vertexCount,
+            instanceCount,
+            transformBuffer,
+            positionBuffer,
+            colorType: type,
+            grid,
+            gridDim,
+            gridTexDim,
+            gridTransform,
+            vertexStride: 3,
+            colorStride: itemSize,
+            outputStride: itemSize,
+        });
 
         return {
             kind: 'vertex' as const,
             texture: interpolated,
             texDim: Vec2.create(interpolated.width, interpolated.height),
-            type: isInstanceType ? 'vertexInstance' : 'vertex'
+            type: isInstanceType ? 'vertexInstance' : 'vertex',
         };
     }
 }
@@ -155,23 +182,33 @@ export function calcMeshColorSmoothing(input: ColorSmoothingInput, resolution: n
 //
 
 interface ColorInterpolationInput {
-    vertexCount: number
-    instanceCount: number
-    transformBuffer: Float32Array
-    positionBuffer: Float32Array
-    colorType: 'volumeInstance' | 'volume'
-    grid: Uint8Array // 2d layout
-    gridTexDim: Vec2
-    gridDim: Vec3
-    gridTransform: Vec4
-    vertexStride: 3 | 4
-    colorStride: 1 | 3 | 4
-    outputStride: 1 | 3 | 4
-    itemOffset?: 0 | 1 | 2 | 3
+    vertexCount: number;
+    instanceCount: number;
+    transformBuffer: Float32Array;
+    positionBuffer: Float32Array;
+    colorType: 'volumeInstance' | 'volume';
+    grid: Uint8Array; // 2d layout
+    gridTexDim: Vec2;
+    gridDim: Vec3;
+    gridTransform: Vec4;
+    vertexStride: 3 | 4;
+    colorStride: 1 | 3 | 4;
+    outputStride: 1 | 3 | 4;
+    itemOffset?: 0 | 1 | 2 | 3;
 }
 
 export function getTrilinearlyInterpolated(input: ColorInterpolationInput): TextureImage<Uint8Array> {
-    const { vertexCount, positionBuffer, transformBuffer, grid, gridDim, gridTexDim, gridTransform, vertexStride, colorStride } = input;
+    const {
+        vertexCount,
+        positionBuffer,
+        transformBuffer,
+        grid,
+        gridDim,
+        gridTexDim,
+        gridTransform,
+        vertexStride,
+        colorStride,
+    } = input;
 
     const itemOffset = input.itemOffset || 0;
     const outputStride = input.outputStride;
@@ -262,23 +299,35 @@ function isSupportedColorType(x: string): x is 'group' | 'groupInstance' {
     return x === 'group' || x === 'groupInstance';
 }
 
-export function applyMeshColorSmoothing(values: MeshValues, resolution: number, stride: number, webgl?: WebGLContext, colorTexture?: Texture) {
+export function applyMeshColorSmoothing(
+    values: MeshValues,
+    resolution: number,
+    stride: number,
+    webgl?: WebGLContext,
+    colorTexture?: Texture,
+) {
     if (!isSupportedColorType(values.dColorType.ref.value)) return;
 
-    const smoothingData = calcMeshColorSmoothing({
-        vertexCount: values.uVertexCount.ref.value,
-        instanceCount: values.uInstanceCount.ref.value,
-        groupCount: values.uGroupCount.ref.value,
-        transformBuffer: values.aTransform.ref.value,
-        instanceBuffer: values.aInstance.ref.value,
-        positionBuffer: values.aPosition.ref.value,
-        groupBuffer: values.aGroup.ref.value,
-        colorData: values.tColor.ref.value,
-        colorType: values.dColorType.ref.value,
-        boundingSphere: values.boundingSphere.ref.value,
-        invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
-        itemSize: 3
-    }, resolution, stride, webgl, colorTexture);
+    const smoothingData = calcMeshColorSmoothing(
+        {
+            vertexCount: values.uVertexCount.ref.value,
+            instanceCount: values.uInstanceCount.ref.value,
+            groupCount: values.uGroupCount.ref.value,
+            transformBuffer: values.aTransform.ref.value,
+            instanceBuffer: values.aInstance.ref.value,
+            positionBuffer: values.aPosition.ref.value,
+            groupBuffer: values.aGroup.ref.value,
+            colorData: values.tColor.ref.value,
+            colorType: values.dColorType.ref.value,
+            boundingSphere: values.boundingSphere.ref.value,
+            invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
+            itemSize: 3,
+        },
+        resolution,
+        stride,
+        webgl,
+        colorTexture,
+    );
 
     if (smoothingData.kind === 'volume') {
         ValueCell.updateIfChanged(values.dColorType, smoothingData.type);
@@ -297,23 +346,35 @@ function isSupportedOverpaintType(x: string): x is 'groupInstance' {
     return x === 'groupInstance';
 }
 
-export function applyMeshOverpaintSmoothing(values: MeshValues, resolution: number, stride: number, webgl?: WebGLContext, colorTexture?: Texture) {
+export function applyMeshOverpaintSmoothing(
+    values: MeshValues,
+    resolution: number,
+    stride: number,
+    webgl?: WebGLContext,
+    colorTexture?: Texture,
+) {
     if (!isSupportedOverpaintType(values.dOverpaintType.ref.value)) return;
 
-    const smoothingData = calcMeshColorSmoothing({
-        vertexCount: values.uVertexCount.ref.value,
-        instanceCount: values.uInstanceCount.ref.value,
-        groupCount: values.uGroupCount.ref.value,
-        transformBuffer: values.aTransform.ref.value,
-        instanceBuffer: values.aInstance.ref.value,
-        positionBuffer: values.aPosition.ref.value,
-        groupBuffer: values.aGroup.ref.value,
-        colorData: values.tOverpaint.ref.value,
-        colorType: values.dOverpaintType.ref.value,
-        boundingSphere: values.boundingSphere.ref.value,
-        invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
-        itemSize: 4
-    }, resolution, stride, webgl, colorTexture);
+    const smoothingData = calcMeshColorSmoothing(
+        {
+            vertexCount: values.uVertexCount.ref.value,
+            instanceCount: values.uInstanceCount.ref.value,
+            groupCount: values.uGroupCount.ref.value,
+            transformBuffer: values.aTransform.ref.value,
+            instanceBuffer: values.aInstance.ref.value,
+            positionBuffer: values.aPosition.ref.value,
+            groupBuffer: values.aGroup.ref.value,
+            colorData: values.tOverpaint.ref.value,
+            colorType: values.dOverpaintType.ref.value,
+            boundingSphere: values.boundingSphere.ref.value,
+            invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
+            itemSize: 4,
+        },
+        resolution,
+        stride,
+        webgl,
+        colorTexture,
+    );
     if (smoothingData.kind === 'volume') {
         ValueCell.updateIfChanged(values.dOverpaintType, smoothingData.type);
         ValueCell.update(values.tOverpaintGrid, smoothingData.texture);
@@ -331,23 +392,35 @@ function isSupportedTransparencyType(x: string): x is 'groupInstance' {
     return x === 'groupInstance';
 }
 
-export function applyMeshTransparencySmoothing(values: MeshValues, resolution: number, stride: number, webgl?: WebGLContext, colorTexture?: Texture) {
+export function applyMeshTransparencySmoothing(
+    values: MeshValues,
+    resolution: number,
+    stride: number,
+    webgl?: WebGLContext,
+    colorTexture?: Texture,
+) {
     if (!isSupportedTransparencyType(values.dTransparencyType.ref.value)) return;
 
-    const smoothingData = calcMeshColorSmoothing({
-        vertexCount: values.uVertexCount.ref.value,
-        instanceCount: values.uInstanceCount.ref.value,
-        groupCount: values.uGroupCount.ref.value,
-        transformBuffer: values.aTransform.ref.value,
-        instanceBuffer: values.aInstance.ref.value,
-        positionBuffer: values.aPosition.ref.value,
-        groupBuffer: values.aGroup.ref.value,
-        colorData: values.tTransparency.ref.value,
-        colorType: values.dTransparencyType.ref.value,
-        boundingSphere: values.boundingSphere.ref.value,
-        invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
-        itemSize: 1
-    }, resolution, stride, webgl, colorTexture);
+    const smoothingData = calcMeshColorSmoothing(
+        {
+            vertexCount: values.uVertexCount.ref.value,
+            instanceCount: values.uInstanceCount.ref.value,
+            groupCount: values.uGroupCount.ref.value,
+            transformBuffer: values.aTransform.ref.value,
+            instanceBuffer: values.aInstance.ref.value,
+            positionBuffer: values.aPosition.ref.value,
+            groupBuffer: values.aGroup.ref.value,
+            colorData: values.tTransparency.ref.value,
+            colorType: values.dTransparencyType.ref.value,
+            boundingSphere: values.boundingSphere.ref.value,
+            invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
+            itemSize: 1,
+        },
+        resolution,
+        stride,
+        webgl,
+        colorTexture,
+    );
     if (smoothingData.kind === 'volume') {
         ValueCell.updateIfChanged(values.dTransparencyType, smoothingData.type);
         ValueCell.update(values.tTransparencyGrid, smoothingData.texture);
@@ -365,23 +438,35 @@ function isSupportedEmissiveType(x: string): x is 'groupInstance' {
     return x === 'groupInstance';
 }
 
-export function applyMeshEmissiveSmoothing(values: MeshValues, resolution: number, stride: number, webgl?: WebGLContext, colorTexture?: Texture) {
+export function applyMeshEmissiveSmoothing(
+    values: MeshValues,
+    resolution: number,
+    stride: number,
+    webgl?: WebGLContext,
+    colorTexture?: Texture,
+) {
     if (!isSupportedEmissiveType(values.dEmissiveType.ref.value)) return;
 
-    const smoothingData = calcMeshColorSmoothing({
-        vertexCount: values.uVertexCount.ref.value,
-        instanceCount: values.uInstanceCount.ref.value,
-        groupCount: values.uGroupCount.ref.value,
-        transformBuffer: values.aTransform.ref.value,
-        instanceBuffer: values.aInstance.ref.value,
-        positionBuffer: values.aPosition.ref.value,
-        groupBuffer: values.aGroup.ref.value,
-        colorData: values.tEmissive.ref.value,
-        colorType: values.dEmissiveType.ref.value,
-        boundingSphere: values.boundingSphere.ref.value,
-        invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
-        itemSize: 1
-    }, resolution, stride, webgl, colorTexture);
+    const smoothingData = calcMeshColorSmoothing(
+        {
+            vertexCount: values.uVertexCount.ref.value,
+            instanceCount: values.uInstanceCount.ref.value,
+            groupCount: values.uGroupCount.ref.value,
+            transformBuffer: values.aTransform.ref.value,
+            instanceBuffer: values.aInstance.ref.value,
+            positionBuffer: values.aPosition.ref.value,
+            groupBuffer: values.aGroup.ref.value,
+            colorData: values.tEmissive.ref.value,
+            colorType: values.dEmissiveType.ref.value,
+            boundingSphere: values.boundingSphere.ref.value,
+            invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
+            itemSize: 1,
+        },
+        resolution,
+        stride,
+        webgl,
+        colorTexture,
+    );
     if (smoothingData.kind === 'volume') {
         ValueCell.updateIfChanged(values.dEmissiveType, smoothingData.type);
         ValueCell.update(values.tEmissiveGrid, smoothingData.texture);
@@ -399,23 +484,35 @@ function isSupportedSubstanceType(x: string): x is 'groupInstance' {
     return x === 'groupInstance';
 }
 
-export function applyMeshSubstanceSmoothing(values: MeshValues, resolution: number, stride: number, webgl?: WebGLContext, colorTexture?: Texture) {
+export function applyMeshSubstanceSmoothing(
+    values: MeshValues,
+    resolution: number,
+    stride: number,
+    webgl?: WebGLContext,
+    colorTexture?: Texture,
+) {
     if (!isSupportedSubstanceType(values.dSubstanceType.ref.value)) return;
 
-    const smoothingData = calcMeshColorSmoothing({
-        vertexCount: values.uVertexCount.ref.value,
-        instanceCount: values.uInstanceCount.ref.value,
-        groupCount: values.uGroupCount.ref.value,
-        transformBuffer: values.aTransform.ref.value,
-        instanceBuffer: values.aInstance.ref.value,
-        positionBuffer: values.aPosition.ref.value,
-        groupBuffer: values.aGroup.ref.value,
-        colorData: values.tSubstance.ref.value,
-        colorType: values.dSubstanceType.ref.value,
-        boundingSphere: values.boundingSphere.ref.value,
-        invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
-        itemSize: 4
-    }, resolution, stride, webgl, colorTexture);
+    const smoothingData = calcMeshColorSmoothing(
+        {
+            vertexCount: values.uVertexCount.ref.value,
+            instanceCount: values.uInstanceCount.ref.value,
+            groupCount: values.uGroupCount.ref.value,
+            transformBuffer: values.aTransform.ref.value,
+            instanceBuffer: values.aInstance.ref.value,
+            positionBuffer: values.aPosition.ref.value,
+            groupBuffer: values.aGroup.ref.value,
+            colorData: values.tSubstance.ref.value,
+            colorType: values.dSubstanceType.ref.value,
+            boundingSphere: values.boundingSphere.ref.value,
+            invariantBoundingSphere: values.invariantBoundingSphere.ref.value,
+            itemSize: 4,
+        },
+        resolution,
+        stride,
+        webgl,
+        colorTexture,
+    );
     if (smoothingData.kind === 'volume') {
         ValueCell.updateIfChanged(values.dSubstanceType, smoothingData.type);
         ValueCell.update(values.tSubstanceGrid, smoothingData.texture);

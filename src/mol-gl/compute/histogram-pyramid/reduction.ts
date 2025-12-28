@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { createComputeRenderable, type ComputeRenderable } from '../../renderable.ts';
+import { type ComputeRenderable, createComputeRenderable } from '../../renderable.ts';
 import type { WebGLContext } from '../../webgl/context.ts';
 import { createComputeRenderItem } from '../../webgl/render-item.ts';
-import { type Values, TextureSpec, UniformSpec } from '../../renderable/schema.ts';
+import { TextureSpec, UniformSpec, type Values } from '../../renderable/schema.ts';
 import type { Texture, TextureFilter, TextureFormat, TextureKind, TextureType } from '../../../mol-gl/webgl/texture.ts';
 import { ShaderCode } from '../../../mol-gl/shader-code.ts';
 import { ValueCell } from '../../../mol-util/index.ts';
@@ -29,11 +29,15 @@ const HistopyramidReductionSchema = {
     uTexSize: UniformSpec('f'),
     uFirst: UniformSpec('b'),
 };
-type HistopyramidReductionValues = Values<typeof HistopyramidReductionSchema>
+type HistopyramidReductionValues = Values<typeof HistopyramidReductionSchema>;
 
 const HistogramPyramidName = 'histogram-pyramid';
 
-function getHistopyramidReductionRenderable(ctx: WebGLContext, inputLevel: Texture, previousLevel: Texture): ComputeRenderable<HistopyramidReductionValues> {
+function getHistopyramidReductionRenderable(
+    ctx: WebGLContext,
+    inputLevel: Texture,
+    previousLevel: Texture,
+): ComputeRenderable<HistopyramidReductionValues> {
     if (ctx.namedComputeRenderables[HistogramPyramidName]) {
         const v = ctx.namedComputeRenderables[HistogramPyramidName].values as HistopyramidReductionValues;
 
@@ -42,7 +46,11 @@ function getHistopyramidReductionRenderable(ctx: WebGLContext, inputLevel: Textu
 
         ctx.namedComputeRenderables[HistogramPyramidName].update();
     } else {
-        ctx.namedComputeRenderables[HistogramPyramidName] = createHistopyramidReductionRenderable(ctx, inputLevel, previousLevel);
+        ctx.namedComputeRenderables[HistogramPyramidName] = createHistopyramidReductionRenderable(
+            ctx,
+            inputLevel,
+            previousLevel,
+        );
     }
     return ctx.namedComputeRenderables[HistogramPyramidName];
 }
@@ -64,7 +72,7 @@ function createHistopyramidReductionRenderable(ctx: WebGLContext, inputLevel: Te
     return createComputeRenderable(renderItem, values);
 }
 
-type TextureFramebuffer = { texture: Texture, framebuffer: Framebuffer }
+type TextureFramebuffer = { texture: Texture; framebuffer: Framebuffer };
 function getLevelTextureFramebuffer(ctx: WebGLContext, level: number) {
     const size = Math.pow(2, level);
     const name = `level${level}`;
@@ -99,7 +107,14 @@ function getFramebuffer(name: string, webgl: WebGLContext): Framebuffer {
     return webgl.namedFramebuffers[_name];
 }
 
-function getTexture(name: string, webgl: WebGLContext, kind: TextureKind, format: TextureFormat, type: TextureType, filter: TextureFilter): Texture {
+function getTexture(
+    name: string,
+    webgl: WebGLContext,
+    kind: TextureKind,
+    format: TextureFormat,
+    type: TextureType,
+    filter: TextureFilter,
+): Texture {
     const _name = `${HistogramPyramidName}-${name}`;
     if (!webgl.namedTextures[_name]) {
         webgl.namedTextures[_name] = webgl.resources.texture(kind, format, type, filter);
@@ -113,14 +128,19 @@ function tryGetFramebuffer(name: string, webgl: WebGLContext): Framebuffer | und
 }
 
 export interface HistogramPyramid {
-    pyramidTex: Texture
-    count: number
-    height: number
-    levels: number
-    scale: Vec2
+    pyramidTex: Texture;
+    count: number;
+    height: number;
+    levels: number;
+    scale: Vec2;
 }
 
-export function createHistogramPyramid(ctx: WebGLContext, inputTexture: Texture, scale: Vec2, gridTexDim: Vec3): HistogramPyramid {
+export function createHistogramPyramid(
+    ctx: WebGLContext,
+    inputTexture: Texture,
+    scale: Vec2,
+    gridTexDim: Vec3,
+): HistogramPyramid {
     if (isTimingMode) ctx.timer.mark('createHistogramPyramid');
     const { gl, state } = ctx;
     const w = inputTexture.getWidth();

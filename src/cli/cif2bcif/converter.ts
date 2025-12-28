@@ -5,19 +5,19 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { CIF, type CifCategory, getCifFieldType, type CifField, type CifFile } from '../../mol-io/reader/cif.ts';
+import { CIF, type CifCategory, type CifField, type CifFile, getCifFieldType } from '../../mol-io/reader/cif.ts';
 import { CifWriter, type EncodingStrategyHint } from '../../mol-io/writer/cif.ts';
 import * as util from 'node:util';
 import * as fs from 'node:fs';
 import * as zlib from 'node:zlib';
-import { Progress, Task, type RuntimeContext } from '../../mol-task/index.ts';
+import { Progress, type RuntimeContext, Task } from '../../mol-task/index.ts';
 import { classifyFloatArray, classifyIntArray } from '../../mol-io/common/binary-cif.ts';
 import type { BinaryEncodingProvider } from '../../mol-io/writer/cif/encoder/binary.ts';
 import { Category } from '../../mol-io/writer/cif/encoder.ts';
 import type { ReaderResult } from '../../mol-io/reader/result.ts';
 import { utf8ReadLong } from '../../mol-io/common/utf8.ts';
-import process from "node:process";
-import type { Buffer } from "node:buffer";
+import process from 'node:process';
+import type { Buffer } from 'node:buffer';
 
 function showProgress(p: Progress) {
     process.stdout.write(`\r${new Array(80).join(' ')}`);
@@ -52,7 +52,7 @@ async function getCIF(ctx: RuntimeContext, filename: string) {
 function getCategoryInstanceProvider(cat: CifCategory, fields: CifWriter.Field[]): CifWriter.Category {
     return {
         name: cat.name,
-        instance: () => CifWriter.categoryInstance(fields, { data: cat, rowCount: cat.rowCount })
+        instance: () => CifWriter.categoryInstance(fields, { data: cat, rowCount: cat.rowCount }),
     };
 }
 
@@ -62,7 +62,11 @@ function classify(name: string, field: CifField): CifWriter.Field {
         return { name, type: CifWriter.Field.Type.Str, value: field.str, valueKind: field.valueKind };
     } else if (type['@type'] === 'float') {
         const encoder = classifyFloatArray(field.toFloatArray({ array: Float64Array }));
-        return CifWriter.Field.float(name, field.float, { valueKind: field.valueKind, encoder, typedArray: Float64Array });
+        return CifWriter.Field.float(name, field.float, {
+            valueKind: field.valueKind,
+            encoder,
+            typedArray: Float64Array,
+        });
     } else {
         const encoder = classifyIntArray(field.toIntArray({ array: Int32Array }));
         return CifWriter.Field.int(name, field.int, { valueKind: field.valueKind, encoder, typedArray: Int32Array });
@@ -70,7 +74,7 @@ function classify(name: string, field: CifField): CifWriter.Field {
 }
 
 export function convert(path: string, asText = false, hints?: EncodingStrategyHint[], filter?: string) {
-    return Task.create<Uint8Array>('Convert CIF', async ctx => {
+    return Task.create<Uint8Array>('Convert CIF', async (ctx) => {
         const encodingProvider: BinaryEncodingProvider = hints
             ? CifWriter.createEncodingProviderFromJsonConfig(hints)
             : { get: (c, f) => void 0 };
@@ -80,7 +84,7 @@ export function convert(path: string, asText = false, hints?: EncodingStrategyHi
             binary: !asText,
             encoderName: 'mol*/ciftools cif2bcif',
             binaryAutoClassifyEncoding: true,
-            binaryEncodingPovider: encodingProvider
+            binaryEncodingPovider: encodingProvider,
         });
 
         if (filter) {

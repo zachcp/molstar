@@ -12,20 +12,20 @@ import { ExpandableControlRow, IconButton } from '../controls/common.tsx';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { ParameterControls, type ParamOnChange } from '../controls/parameters.tsx';
 import { Slider } from '../controls/slider.tsx';
-import { Volume, type Grid } from '../../mol-model/volume.ts';
+import { type Grid, Volume } from '../../mol-model/volume.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
 import { ColorNames } from '../../mol-util/color/names.ts';
 import { toPrecision } from '../../mol-util/number.ts';
-import { StateSelection, type StateObjectCell } from '../../mol-state/index.ts';
+import { type StateObjectCell, StateSelection } from '../../mol-state/index.ts';
 import { setSubtreeVisibility } from '../../mol-plugin/behavior/static/state.ts';
-import { VisibilityOutlinedSvg, VisibilityOffOutlinedSvg } from '../controls/icons.tsx';
+import { VisibilityOffOutlinedSvg, VisibilityOutlinedSvg } from '../controls/icons.tsx';
 
 const ChannelParams = {
     color: PD.Color(ColorNames.black, { description: 'Display color of the volume.' }),
     wireframe: PD.Boolean(false, { description: 'Control display of the volume as a wireframe.' }),
-    opacity: PD.Numeric(0.3, { min: 0, max: 1, step: 0.01 }, { description: 'Opacity of the volume.' })
+    opacity: PD.Numeric(0.3, { min: 0, max: 1, step: 0.01 }, { description: 'Opacity of the volume.' }),
 };
-type ChannelParams = PD.Values<typeof ChannelParams>
+type ChannelParams = PD.Values<typeof ChannelParams>;
 
 const Bounds = new Map<VolumeStreaming.ChannelType, [number, number]>([
     ['em', [-5, 5]],
@@ -35,24 +35,34 @@ const Bounds = new Map<VolumeStreaming.ChannelType, [number, number]>([
 ]);
 
 class Channel extends PluginUIComponent<{
-    label: string,
-    name: VolumeStreaming.ChannelType,
-    channels: { [k: string]: VolumeStreaming.ChannelParams },
-    isRelative: boolean,
-    params: StateTransformParameters.Props,
-    stats: Grid['stats'],
-    changeIso: (name: string, value: number, isRelative: boolean) => void,
-    changeParams: (name: string, param: string, value: any) => void,
-    bCell: StateObjectCell,
-    isDisabled?: boolean,
-    isUnbounded?: boolean
+    label: string;
+    name: VolumeStreaming.ChannelType;
+    channels: { [k: string]: VolumeStreaming.ChannelParams };
+    isRelative: boolean;
+    params: StateTransformParameters.Props;
+    stats: Grid['stats'];
+    changeIso: (name: string, value: number, isRelative: boolean) => void;
+    changeParams: (name: string, param: string, value: any) => void;
+    bCell: StateObjectCell;
+    isDisabled?: boolean;
+    isUnbounded?: boolean;
 }> {
-    private ref = StateSelection.findTagInSubtree(this.plugin.state.data.tree, this.props.bCell!.transform.ref, this.props.name);
+    private ref = StateSelection.findTagInSubtree(
+        this.plugin.state.data.tree,
+        this.props.bCell!.transform.ref,
+        this.props.name,
+    );
 
-    override componentDidUpdate() {        this.ref = StateSelection.findTagInSubtree(this.plugin.state.data.tree, this.props.bCell!.transform.ref, this.props.name);
+    override componentDidUpdate() {
+        this.ref = StateSelection.findTagInSubtree(
+            this.plugin.state.data.tree,
+            this.props.bCell!.transform.ref,
+            this.props.name,
+        );
     }
 
-    override componentDidMount() {        this.subscribe(this.plugin.state.data.events.cell.stateUpdated, e => {
+    override componentDidMount() {
+        this.subscribe(this.plugin.state.data.events.cell.stateUpdated, (e) => {
             if (this.ref === e.ref) this.forceUpdate();
         });
     }
@@ -71,12 +81,18 @@ class Channel extends PluginUIComponent<{
         setSubtreeVisibility(state, ref, !state.cells.get(ref)!.state.isHidden);
     };
 
-    override render() {        const props = this.props;
+    override render() {
+        const props = this.props;
         const { isRelative, stats } = props;
         const channel = props.channels[props.name]!;
 
         const { min, max, mean, sigma } = stats;
-        const value = Math.round(100 * (channel.isoValue.kind === 'relative' ? channel.isoValue.relativeValue : channel.isoValue.absoluteValue)) / 100;
+        const value = Math.round(
+            100 *
+                (channel.isoValue.kind === 'relative'
+                    ? channel.isoValue.relativeValue
+                    : channel.isoValue.absoluteValue),
+        ) / 100;
         let relMin = (min - mean) / sigma;
         let relMax = (max - mean) / sigma;
 
@@ -93,20 +109,45 @@ class Channel extends PluginUIComponent<{
 
         const vMin = mean + sigma * relMin, vMax = mean + sigma * relMax;
 
-        const step = toPrecision(isRelative ? Math.round(((vMax - vMin) / sigma)) / 100 : sigma / 100, 2);
+        const step = toPrecision(isRelative ? Math.round((vMax - vMin) / sigma) / 100 : sigma / 100, 2);
         const ctrlMin = isRelative ? relMin : vMin;
         const ctrlMax = isRelative ? relMax : vMax;
 
-        return <ExpandableControlRow
-            label={props.label + (props.isRelative ? ' \u03C3' : '')}
-            colorStripe={channel.color}
-            pivot={<div className='msp-volume-channel-inline-controls'>
-                <Slider value={value} min={ctrlMin} max={ctrlMax} step={step}
-                    onChange={v => props.changeIso(props.name, v, isRelative)} onChangeImmediate={v => props.changeIso(props.name, v, isRelative)} disabled={props.params.isDisabled} onEnter={props.params.events.onEnter} />
-                <IconButton svg={this.getVisible() ? VisibilityOutlinedSvg : VisibilityOffOutlinedSvg} onClick={this.toggleVisible} toggleState={false} disabled={props.params.isDisabled} />
-            </div>}
-            controls={<ParameterControls onChange={({ name, value }) => props.changeParams(props.name, name, value)} params={ChannelParams} values={channel} onEnter={props.params.events.onEnter} isDisabled={props.params.isDisabled} />}
-        />;
+        return (
+            <ExpandableControlRow
+                label={props.label + (props.isRelative ? ' \u03C3' : '')}
+                colorStripe={channel.color}
+                pivot={
+                    <div className='msp-volume-channel-inline-controls'>
+                        <Slider
+                            value={value}
+                            min={ctrlMin}
+                            max={ctrlMax}
+                            step={step}
+                            onChange={(v) => props.changeIso(props.name, v, isRelative)}
+                            onChangeImmediate={(v) => props.changeIso(props.name, v, isRelative)}
+                            disabled={props.params.isDisabled}
+                            onEnter={props.params.events.onEnter}
+                        />
+                        <IconButton
+                            svg={this.getVisible() ? VisibilityOutlinedSvg : VisibilityOffOutlinedSvg}
+                            onClick={this.toggleVisible}
+                            toggleState={false}
+                            disabled={props.params.isDisabled}
+                        />
+                    </div>
+                }
+                controls={
+                    <ParameterControls
+                        onChange={({ name, value }) => props.changeParams(props.name, name, value)}
+                        params={ChannelParams}
+                        values={channel}
+                        onEnter={props.params.events.onEnter}
+                        isDisabled={props.params.isDisabled}
+                    />
+                }
+            />
+        );
     }
 }
 
@@ -131,11 +172,11 @@ export class VolumeStreamingCustomControls extends PluginUIComponent<StateTransf
                         ...old.entry.params.channels,
                         [name]: {
                             ...(old.entry.params.channels as any)[name],
-                            isoValue: isRelative ? Volume.IsoValue.relative(value) : Volume.IsoValue.absolute(value)
-                        }
-                    }
-                }
-            }
+                            isoValue: isRelative ? Volume.IsoValue.relative(value) : Volume.IsoValue.absolute(value),
+                        },
+                    },
+                },
+            },
         });
     };
 
@@ -151,19 +192,20 @@ export class VolumeStreamingCustomControls extends PluginUIComponent<StateTransf
                         ...old.entry.params.channels,
                         [name]: {
                             ...(old.entry.params.channels as any)[name],
-                            [param]: value
-                        }
-                    }
-                }
-            }
+                            [param]: value,
+                        },
+                    },
+                },
+            },
         });
     };
 
     convert(channel: any, stats: Grid['stats'], isRelative: boolean) {
         return {
-            ...channel, isoValue: isRelative
+            ...channel,
+            isoValue: isRelative
                 ? Volume.IsoValue.toRelative(channel.isoValue, stats)
-                : Volume.IsoValue.toAbsolute(channel.isoValue, stats)
+                : Volume.IsoValue.toAbsolute(channel.isoValue, stats),
         };
     }
 
@@ -176,7 +218,7 @@ export class VolumeStreamingCustomControls extends PluginUIComponent<StateTransf
                 entry: {
                     name: value,
                     params: old.entry.params,
-                }
+                },
             });
         } else {
             const b = (this.props.b as VolumeStreaming).data;
@@ -217,23 +259,22 @@ export class VolumeStreamingCustomControls extends PluginUIComponent<StateTransf
                         ...old.entry.params,
                         view: {
                             name: value.name,
-                            params: viewParams
+                            params: viewParams,
                         },
                         detailLevel: value.params.detailLevel,
-                        channels: isEM
-                            ? { em: this.convert(oldChannels.em, sampling.valuesInfo[0], isRelative) }
-                            : {
-                                '2fo-fc': this.convert(oldChannels['2fo-fc'], sampling.valuesInfo[0], isRelative),
-                                'fo-fc(+ve)': this.convert(oldChannels['fo-fc(+ve)'], sampling.valuesInfo[1], isRelative),
-                                'fo-fc(-ve)': this.convert(oldChannels['fo-fc(-ve)'], sampling.valuesInfo[1], isRelative)
-                            }
-                    }
-                }
+                        channels: isEM ? { em: this.convert(oldChannels.em, sampling.valuesInfo[0], isRelative) } : {
+                            '2fo-fc': this.convert(oldChannels['2fo-fc'], sampling.valuesInfo[0], isRelative),
+                            'fo-fc(+ve)': this.convert(oldChannels['fo-fc(+ve)'], sampling.valuesInfo[1], isRelative),
+                            'fo-fc(-ve)': this.convert(oldChannels['fo-fc(-ve)'], sampling.valuesInfo[1], isRelative),
+                        },
+                    },
+                },
             });
         }
     };
 
-    override render() {        if (!this.props.b) return null;
+    override render() {
+        if (!this.props.b) return null;
         const b = (this.props.b as VolumeStreaming).data;
 
         const isEM = b.info.kind === 'em';
@@ -256,16 +297,27 @@ export class VolumeStreamingCustomControls extends PluginUIComponent<StateTransf
 
         const sampling = b.info.header.sampling[0];
 
-        const isRelative = ((params.entry.params.channels as any)[pivot].isoValue as Volume.IsoValue).kind === 'relative';
-        const isRelativeParam = PD.Boolean(isRelative, { description: 'Use normalized or absolute isocontour scale.', label: 'Normalized' });
+        const isRelative =
+            ((params.entry.params.channels as any)[pivot].isoValue as Volume.IsoValue).kind === 'relative';
+        const isRelativeParam = PD.Boolean(isRelative, {
+            description: 'Use normalized or absolute isocontour scale.',
+            label: 'Normalized',
+        });
 
         const isUnbounded = !!(params.entry.params.view.params as any).isUnbounded;
-        const isUnboundedParam = PD.Boolean(isUnbounded, { description: 'Show full/limited range of iso-values for more fine-grained control.', label: 'Unbounded' });
+        const isUnboundedParam = PD.Boolean(isUnbounded, {
+            description: 'Show full/limited range of iso-values for more fine-grained control.',
+            label: 'Unbounded',
+        });
 
         const isOff = params.entry.params.view.name === 'off';
         // TODO: factor common things out, cache
         const OptionsParams = {
-            entry: PD.Select(params.entry.name, b.data.entries.map(info => [info.dataId, info.dataId] as [string, string]), { isHidden: isOff, description: 'Which entry with volume data to display.' }),
+            entry: PD.Select(
+                params.entry.name,
+                b.data.entries.map((info) => [info.dataId, info.dataId] as [string, string]),
+                { isHidden: isOff, description: 'Which entry with volume data to display.' },
+            ),
             view: PD.MappedStatic(params.entry.params.view.name, {
                 'off': PD.Group({
                     isRelative: PD.Boolean(isRelative, { isHidden: true }),
@@ -279,13 +331,17 @@ export class VolumeStreamingCustomControls extends PluginUIComponent<StateTransf
                     isUnbounded: isUnboundedParam,
                 }, { description: 'Static box defined by cartesian coords.' }),
                 'selection-box': PD.Group({
-                    radius: PD.Numeric(5, { min: 0, max: 50, step: 0.5 }, { description: 'Radius in \u212B within which the volume is shown.' }),
+                    radius: PD.Numeric(5, { min: 0, max: 50, step: 0.5 }, {
+                        description: 'Radius in \u212B within which the volume is shown.',
+                    }),
                     detailLevel,
                     isRelative: isRelativeParam,
                     isUnbounded: isUnboundedParam,
                 }, { description: 'Box around focused element.' }),
                 'camera-target': PD.Group({
-                    radius: PD.Numeric(0.5, { min: 0, max: 1, step: 0.05 }, { description: 'Radius within which the volume is shown (relative to the field of view).' }),
+                    radius: PD.Numeric(0.5, { min: 0, max: 1, step: 0.05 }, {
+                        description: 'Radius within which the volume is shown (relative to the field of view).',
+                    }),
                     detailLevel: { ...detailLevel, isHidden: true },
                     dynamicDetailLevel: dynamicDetailLevel,
                     isRelative: isRelativeParam,
@@ -295,15 +351,21 @@ export class VolumeStreamingCustomControls extends PluginUIComponent<StateTransf
                     detailLevel,
                     isRelative: isRelativeParam,
                     isUnbounded: isUnboundedParam,
-                }, { description: 'Box around the structure\'s bounding box.' }),
+                }, { description: "Box around the structure's bounding box." }),
                 'auto': PD.Group({
-                    radius: PD.Numeric(5, { min: 0, max: 50, step: 0.5 }, { description: 'Radius in \u212B within which the volume is shown.' }),
+                    radius: PD.Numeric(5, { min: 0, max: 50, step: 0.5 }, {
+                        description: 'Radius in \u212B within which the volume is shown.',
+                    }),
                     detailLevel,
                     selectionDetailLevel: selectionDetailLevel,
                     isRelative: isRelativeParam,
                     isUnbounded: isUnboundedParam,
                 }, { description: 'Box around focused element.' }),
-            }, { options: VolumeStreaming.ViewTypeOptions, description: 'Controls what of the volume is displayed. "Off" hides the volume alltogether. "Bounded box" shows the volume inside the given box. "Around Focus" shows the volume around the element/atom last interacted with. "Around Camera" shows the volume around the point the camera is targeting. "Whole Structure" shows the volume for the whole structure.' })
+            }, {
+                options: VolumeStreaming.ViewTypeOptions,
+                description:
+                    'Controls what of the volume is displayed. "Off" hides the volume alltogether. "Bounded box" shows the volume inside the given box. "Around Focus" shows the volume around the element/atom last interacted with. "Around Camera" shows the volume around the point the camera is targeting. "Whole Structure" shows the volume for the whole structure.',
+            }),
         };
         const options = {
             entry: params.entry.name,
@@ -317,22 +379,90 @@ export class VolumeStreamingCustomControls extends PluginUIComponent<StateTransf
                     selectionDetailLevel: (params.entry.params.view.params as any).selectionDetailLevel,
                     dynamicDetailLevel: (params.entry.params.view.params as any).dynamicDetailLevel,
                     isRelative,
-                    isUnbounded
-                }
-            }
+                    isUnbounded,
+                },
+            },
         };
 
         if (isOff) {
-            return <ParameterControls onChange={this.changeOption} params={OptionsParams} values={options} onEnter={this.props.events.onEnter} isDisabled={this.props.isDisabled} />;
+            return (
+                <ParameterControls
+                    onChange={this.changeOption}
+                    params={OptionsParams}
+                    values={options}
+                    onEnter={this.props.events.onEnter}
+                    isDisabled={this.props.isDisabled}
+                />
+            );
         }
 
-        return <>
-            {!isEM && <Channel label='2Fo-Fc' name='2fo-fc' bCell={this.props.bCell!} channels={params.entry.params.channels} changeIso={this.changeIso} changeParams={this.changeParams} isRelative={isRelative} params={this.props} stats={sampling.valuesInfo[0]} isUnbounded={isUnbounded} />}
-            {!isEM && <Channel label='Fo-Fc(+ve)' name='fo-fc(+ve)' bCell={this.props.bCell!} channels={params.entry.params.channels} changeIso={this.changeIso} changeParams={this.changeParams} isRelative={isRelative} params={this.props} stats={sampling.valuesInfo[1]} isUnbounded={isUnbounded} />}
-            {!isEM && <Channel label='Fo-Fc(-ve)' name='fo-fc(-ve)' bCell={this.props.bCell!} channels={params.entry.params.channels} changeIso={this.changeIso} changeParams={this.changeParams} isRelative={isRelative} params={this.props} stats={sampling.valuesInfo[1]} isUnbounded={isUnbounded} />}
-            {isEM && <Channel label='EM' name='em' bCell={this.props.bCell!} channels={params.entry.params.channels} changeIso={this.changeIso} changeParams={this.changeParams} isRelative={isRelative} params={this.props} stats={sampling.valuesInfo[0]} isUnbounded={isUnbounded} />}
+        return (
+            <>
+                {!isEM && (
+                    <Channel
+                        label='2Fo-Fc'
+                        name='2fo-fc'
+                        bCell={this.props.bCell!}
+                        channels={params.entry.params.channels}
+                        changeIso={this.changeIso}
+                        changeParams={this.changeParams}
+                        isRelative={isRelative}
+                        params={this.props}
+                        stats={sampling.valuesInfo[0]}
+                        isUnbounded={isUnbounded}
+                    />
+                )}
+                {!isEM && (
+                    <Channel
+                        label='Fo-Fc(+ve)'
+                        name='fo-fc(+ve)'
+                        bCell={this.props.bCell!}
+                        channels={params.entry.params.channels}
+                        changeIso={this.changeIso}
+                        changeParams={this.changeParams}
+                        isRelative={isRelative}
+                        params={this.props}
+                        stats={sampling.valuesInfo[1]}
+                        isUnbounded={isUnbounded}
+                    />
+                )}
+                {!isEM && (
+                    <Channel
+                        label='Fo-Fc(-ve)'
+                        name='fo-fc(-ve)'
+                        bCell={this.props.bCell!}
+                        channels={params.entry.params.channels}
+                        changeIso={this.changeIso}
+                        changeParams={this.changeParams}
+                        isRelative={isRelative}
+                        params={this.props}
+                        stats={sampling.valuesInfo[1]}
+                        isUnbounded={isUnbounded}
+                    />
+                )}
+                {isEM && (
+                    <Channel
+                        label='EM'
+                        name='em'
+                        bCell={this.props.bCell!}
+                        channels={params.entry.params.channels}
+                        changeIso={this.changeIso}
+                        changeParams={this.changeParams}
+                        isRelative={isRelative}
+                        params={this.props}
+                        stats={sampling.valuesInfo[0]}
+                        isUnbounded={isUnbounded}
+                    />
+                )}
 
-            <ParameterControls onChange={this.changeOption} params={OptionsParams} values={options} onEnter={this.props.events.onEnter} isDisabled={this.props.isDisabled} />
-        </>;
+                <ParameterControls
+                    onChange={this.changeOption}
+                    params={OptionsParams}
+                    values={options}
+                    onEnter={this.props.events.onEnter}
+                    isDisabled={this.props.isDisabled}
+                />
+            </>
+        );
     }
 }

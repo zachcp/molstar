@@ -14,7 +14,11 @@ import { clamp } from '../../../mol-math/interpolate.ts';
 
 export { Lab };
 
-interface Lab extends Array<number> { [d: number]: number, '@type': 'lab', length: 3 }
+interface Lab extends Array<number> {
+    [d: number]: number;
+    '@type': 'lab';
+    length: 3;
+}
 
 /**
  * CIE LAB color
@@ -89,7 +93,7 @@ namespace Lab {
         return Color.fromRgb(
             Math.round(clamp(r, 0, 255)),
             Math.round(clamp(g, 0, 255)),
-            Math.round(clamp(b, 0, 255))
+            Math.round(clamp(b, 0, 255)),
         );
     }
 

@@ -1,6 +1,5 @@
 import { ChunkedBigString } from '../string-like';
-import { Buffer } from "node:buffer";
-
+import { Buffer } from 'node:buffer';
 
 const SAMPLE_ASCII = `Basketball is a team sport in which two teams, most commonly 
 of five players each, opposing one another on a rectangular court, compete with 
@@ -68,7 +67,6 @@ const SAMPLE_UNICODE_PA = `ਵਿਕੀਪੀਡੀਆ, ਇੱਕ ਆਜ਼ਾ�
 ਜ਼ਿਆਦਾ ਪੁਆਇੰਟਾਂ ਵਾਲੀ ਟੀਮ ਜਿੱਤ ਜਾਂਦੀ ਹੈ, ਪਰ ਜੇ ਨਿਯਮਿਤ ਖੇਡ ਸਕੋਰ ਦੇ ਬਰਾਬਰੀ 
 ਨਾਲ ਖਤਮ ਹੋ ਜਾਂਦੀ ਹੈ, ਤਾਂ ਵਾਧੂ ਸਮੇਂ ਦਾ ਖੇਡ (ਓਵਰਟਾਈਮ) ਲਾਜ਼ਮੀ ਹੁੰਦਾ ਹੈ।
 `;
-
 
 const TESTING_LOG_STRING_CHUNK_SIZE = 3; // chunk of size 8
 
@@ -227,7 +225,12 @@ describe('ChunkedBigString.substring', () => {
             .toEqual('Basketball');
         expect(bigString.substring(SAMPLE_ASCII.indexOf('mandated')))
             .toEqual('mandated.\n');
-        expect(bigString.substring(SAMPLE_ASCII.indexOf('opposing team'), SAMPLE_ASCII.indexOf('opposing team') + 'opposing team'.length))
+        expect(
+            bigString.substring(
+                SAMPLE_ASCII.indexOf('opposing team'),
+                SAMPLE_ASCII.indexOf('opposing team') + 'opposing team'.length,
+            ),
+        )
             .toEqual('opposing team');
     });
 
@@ -239,7 +242,12 @@ describe('ChunkedBigString.substring', () => {
             .toEqual('Zámecký');
         expect(bigString.substring(SAMPLE_UNICODE_CS.indexOf('2014')))
             .toEqual('2014.\n');
-        expect(bigString.substring(SAMPLE_UNICODE_CS.indexOf('Slavnostní otevření'), SAMPLE_UNICODE_CS.indexOf('Slavnostní otevření') + 'Slavnostní otevření'.length))
+        expect(
+            bigString.substring(
+                SAMPLE_UNICODE_CS.indexOf('Slavnostní otevření'),
+                SAMPLE_UNICODE_CS.indexOf('Slavnostní otevření') + 'Slavnostní otevření'.length,
+            ),
+        )
             .toEqual('Slavnostní otevření');
     });
 });

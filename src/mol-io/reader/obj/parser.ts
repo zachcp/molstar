@@ -5,7 +5,7 @@
  */
 
 import { ReaderResult as Result } from '../result.ts';
-import { Task, type RuntimeContext } from '../../../mol-task/index.ts';
+import { type RuntimeContext, Task } from '../../../mol-task/index.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 
 async function parseInternal(data: string, ctx: RuntimeContext): Promise<Result<Mesh>> {
@@ -16,7 +16,7 @@ async function parseInternal(data: string, ctx: RuntimeContext): Promise<Result<
 }
 
 export function parse(data: string) {
-    return Task.create<Result<Mesh>>('Parse OBJ', async ctx => {
+    return Task.create<Result<Mesh>>('Parse OBJ', async (ctx) => {
         return await parseInternal(data, ctx);
     });
 }

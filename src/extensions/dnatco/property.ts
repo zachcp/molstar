@@ -52,24 +52,34 @@ export namespace Dnatco {
             cartesian_rmsd_closest_NtC_representative: Column.Schema.float,
             closest_CANA: Column.Schema.str,
             closest_NtC: Column.Schema.str,
-            closest_step_golden: Column.Schema.str
-        }
+            closest_step_golden: Column.Schema.str,
+        },
     };
     export type Schema = typeof Schema;
 
     export function getStepsFromCif(
         model: Model,
         cifSteps: Table<typeof Dnatco.Schema.ndb_struct_ntc_step>,
-        stepsSummary: StepsSummaryTable
+        stepsSummary: StepsSummaryTable,
     ): DnatcoTypes.Steps {
         const steps = new Array<DnatcoTypes.Step>();
         const mapping = new Array<DnatcoTypes.MappedChains>();
 
         const {
-            id, PDB_model_number, name,
-            auth_asym_id_1, auth_seq_id_1, label_comp_id_1, label_alt_id_1, PDB_ins_code_1,
-            auth_asym_id_2, auth_seq_id_2, label_comp_id_2, label_alt_id_2, PDB_ins_code_2,
-            _rowCount
+            id,
+            PDB_model_number,
+            name,
+            auth_asym_id_1,
+            auth_seq_id_1,
+            label_comp_id_1,
+            label_alt_id_1,
+            PDB_ins_code_1,
+            auth_asym_id_2,
+            auth_seq_id_2,
+            label_comp_id_2,
+            label_alt_id_2,
+            PDB_ins_code_2,
+            _rowCount,
         } = cifSteps;
 
         if (_rowCount !== stepsSummary._rowCount) throw new Error('Inconsistent mmCIF data');
@@ -78,15 +88,16 @@ export namespace Dnatco {
             const {
                 NtC,
                 confal_score,
-                rmsd
+                rmsd,
             } = getSummaryData(id.value(i), i, stepsSummary);
             const modelNum = PDB_model_number.value(i);
             const chainId = auth_asym_id_1.value(i);
             const seqId = auth_seq_id_1.value(i);
             const modelIdx = modelNum - 1;
 
-            if (mapping.length <= modelIdx || !mapping[modelIdx])
+            if (mapping.length <= modelIdx || !mapping[modelIdx]) {
                 mapping[modelIdx] = new Map<string, DnatcoTypes.MappedResidues>();
+            }
 
             const step = {
                 PDB_model_number: modelNum,
@@ -121,7 +132,11 @@ export namespace Dnatco {
         return { steps, mapping };
     }
 
-    export async function fromCif(ctx: CustomProperty.Context, model: Model, props: DnatcoProps): Promise<CustomProperty.Data<DnatcoSteps>> {
+    export async function fromCif(
+        ctx: CustomProperty.Context,
+        model: Model,
+        props: DnatcoProps,
+    ): Promise<CustomProperty.Data<DnatcoSteps>> {
         const info = PropertyWrapper.createInfo();
         const data = getCifData(model);
         if (data === undefined) return { value: { info, data: undefined } };
@@ -135,13 +150,16 @@ export namespace Dnatco {
         if (!hasNdbStructNtcCategories(model)) return undefined;
         return {
             steps: toTable(Schema.ndb_struct_ntc_step, model.sourceData.data.frame.categories.ndb_struct_ntc_step),
-            stepsSummary: toTable(Schema.ndb_struct_ntc_step_summary, model.sourceData.data.frame.categories.ndb_struct_ntc_step_summary)
+            stepsSummary: toTable(
+                Schema.ndb_struct_ntc_step_summary,
+                model.sourceData.data.frame.categories.ndb_struct_ntc_step_summary,
+            ),
         };
     }
 
     function hasNdbStructNtcCategories(model: Model): boolean {
         if (!MmcifFormat.is(model.sourceData)) return false;
-        const names = (model.sourceData).data.frame.categoryNames;
+        const names = model.sourceData.data.frame.categoryNames;
         return names.includes('ndb_struct_ntc_step') && names.includes('ndb_struct_ntc_step_summary');
     }
 
@@ -162,11 +180,23 @@ function getSummaryData(id: number, i: number, stepsSummary: StepsSummaryTable) 
 
     // Assume that step_ids in ntc_step_summary are in the same order as steps in ntc_step
     for (let j = i; j < stepsSummary._rowCount; j++) {
-        if (id === step_id.value(j)) return { NtC: assigned_NtC.value(j), confal_score: confal_score.value(j), rmsd: cartesian_rmsd_closest_NtC_representative.value(j) };
+        if (id === step_id.value(j)) {
+            return {
+                NtC: assigned_NtC.value(j),
+                confal_score: confal_score.value(j),
+                rmsd: cartesian_rmsd_closest_NtC_representative.value(j),
+            };
+        }
     }
     // Safety net for cases where the previous assumption is not met
     for (let j = 0; j < i; j++) {
-        if (id === step_id.value(j)) return { NtC: assigned_NtC.value(j), confal_score: confal_score.value(j), rmsd: cartesian_rmsd_closest_NtC_representative.value(j) };
+        if (id === step_id.value(j)) {
+            return {
+                NtC: assigned_NtC.value(j),
+                confal_score: confal_score.value(j),
+                rmsd: cartesian_rmsd_closest_NtC_representative.value(j),
+            };
+        }
     }
     throw new Error('Inconsistent mmCIF data');
 }

@@ -5,12 +5,12 @@
  */
 
 import { Color } from '../../mol-util/color/index.ts';
-import { StructureElement, Bond, type Structure } from '../../mol-model/structure.ts';
+import { Bond, type Structure, StructureElement } from '../../mol-model/structure.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ColorTheme, LocationColor } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../theme.ts';
-import { getPaletteParams, getPalette } from '../../mol-util/color/palette.ts';
+import { getPalette, getPaletteParams } from '../../mol-util/color/palette.ts';
 import type { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
 import { integerDigitCount } from '../../mol-util/number.ts';
@@ -24,7 +24,7 @@ const Description = `Assigns a color based on the operator HKL value of a transf
 export const OperatorHklColorThemeParams = {
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
 };
-export type OperatorHklColorThemeParams = typeof OperatorHklColorThemeParams
+export type OperatorHklColorThemeParams = typeof OperatorHklColorThemeParams;
 export function getOperatorHklColorThemeParams(ctx: ThemeDataContext) {
     const params = PD.clone(OperatorHklColorThemeParams);
     if (ctx.structure) {
@@ -32,7 +32,7 @@ export function getOperatorHklColorThemeParams(ctx: ThemeDataContext) {
             params.palette.defaultValue.name = 'colors';
             params.palette.defaultValue.params = {
                 ...params.palette.defaultValue.params,
-                list: { kind: 'interpolate', colors: getColorListFromName(DefaultList).list }
+                list: { kind: 'interpolate', colors: getColorListFromName(DefaultList).list },
             };
         }
     }
@@ -42,7 +42,7 @@ export function getOperatorHklColorThemeParams(ctx: ThemeDataContext) {
 const hklOffset = 10000;
 
 function hklKey(hkl: Vec3) {
-    return hkl.map(v => `${v + hklOffset}`.padStart(5, '0')).join('');
+    return hkl.map((v) => `${v + hklOffset}`.padStart(5, '0')).join('');
 }
 
 function hklKeySplit(key: string) {
@@ -54,7 +54,7 @@ function hklKeySplit(key: string) {
 }
 
 function formatHkl(hkl: Vec3) {
-    return hkl.map(v => v + 5).join('');
+    return hkl.map((v) => v + 5).join('');
 }
 
 function getOperatorHklSerialMap(structure: Structure) {
@@ -65,13 +65,16 @@ function getOperatorHklSerialMap(structure: Structure) {
         set.add(k);
     }
     const arr = Array.from(set.values()).sort();
-    arr.forEach(k => map.set(k, map.size));
+    arr.forEach((k) => map.set(k, map.size));
     const min = hklKeySplit(arr[0]);
     const max = hklKeySplit(arr[arr.length - 1]);
     return { min, max, map };
 }
 
-export function OperatorHklColorTheme(ctx: ThemeDataContext, props: PD.Values<OperatorHklColorThemeParams>): ColorTheme<OperatorHklColorThemeParams> {
+export function OperatorHklColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<OperatorHklColorThemeParams>,
+): ColorTheme<OperatorHklColorThemeParams> {
     let color: LocationColor;
     let legend: ScaleLegend | TableLegend | undefined;
 
@@ -89,7 +92,7 @@ export function OperatorHklColorTheme(ctx: ThemeDataContext, props: PD.Values<Op
         const labelOptions = {
             minLabel: formatHkl(min),
             maxLabel: formatHkl(max),
-            valueLabel: (i: number) => labelTable[i]
+            valueLabel: (i: number) => labelTable[i],
         };
 
         const palette = getPalette(map.size, props, labelOptions);
@@ -116,7 +119,7 @@ export function OperatorHklColorTheme(ctx: ThemeDataContext, props: PD.Values<Op
         color,
         props,
         description: Description,
-        legend
+        legend,
     };
 }
 
@@ -127,5 +130,5 @@ export const OperatorHklColorThemeProvider: ColorTheme.Provider<OperatorHklColor
     factory: OperatorHklColorTheme,
     getParams: getOperatorHklColorThemeParams,
     defaultValues: PD.getDefaultValues(OperatorHklColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
 };

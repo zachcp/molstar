@@ -7,11 +7,11 @@
 
 import { QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
 import { type ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
-import { TextureSpec, UniformSpec, DefineSpec, type Values } from '../../mol-gl/renderable/schema.ts';
+import { DefineSpec, TextureSpec, UniformSpec, type Values } from '../../mol-gl/renderable/schema.ts';
 import { ShaderCode } from '../../mol-gl/shader-code.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
-import { type Texture, createNullTexture } from '../../mol-gl/webgl/texture.ts';
+import { createNullTexture, type Texture } from '../../mol-gl/webgl/texture.ts';
 import { Mat4, Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
@@ -27,13 +27,17 @@ import type { PostprocessingProps } from './postprocessing.ts';
 export const DofParams: PD.Params = {
     blurSize: PD.Numeric(9, { min: 1, max: 32, step: 1 }),
     blurSpread: PD.Numeric(1.0, { min: 0.0, max: 10.0, step: 0.1 }),
-    inFocus: PD.Numeric(0.0, { min: -5000.0, max: 5000.0, step: 1.0 }, { description: 'Distance from the scene center that will be in focus' }),
-    PPM: PD.Numeric(20.0, { min: 0.0, max: 5000.0, step: 0.1 }, { description: 'Size of the area that will be in focus' }),
+    inFocus: PD.Numeric(0.0, { min: -5000.0, max: 5000.0, step: 1.0 }, {
+        description: 'Distance from the scene center that will be in focus',
+    }),
+    PPM: PD.Numeric(20.0, { min: 0.0, max: 5000.0, step: 0.1 }, {
+        description: 'Size of the area that will be in focus',
+    }),
     center: PD.Select('camera-target', PD.arrayToOptions(['scene-center', 'camera-target'])),
     mode: PD.Select('plane', PD.arrayToOptions(['plane', 'sphere'])),
 };
 
-export type DofProps = PD.Values<typeof DofParams>
+export type DofProps = PD.Values<typeof DofParams>;
 
 export class DofPass {
     static isEnabled(props: PostprocessingProps): boolean {
@@ -76,11 +80,21 @@ export class DofPass {
 
         if (width !== w || height !== h) {
             this.target.setSize(width, height);
-            ValueCell.update(this.renderable.values.uTexSize, Vec2.set(this.renderable.values.uTexSize.ref.value, width, height));
+            ValueCell.update(
+                this.renderable.values.uTexSize,
+                Vec2.set(this.renderable.values.uTexSize.ref.value, width, height),
+            );
         }
     }
 
-    update(camera: ICamera, input: Texture, depthOpaque: Texture, depthTransparent: Texture, props: DofProps, sphere: Sphere3D) {
+    update(
+        camera: ICamera,
+        input: Texture,
+        depthOpaque: Texture,
+        depthTransparent: Texture,
+        props: DofProps,
+        sphere: Sphere3D,
+    ) {
         let needsUpdate = false;
         if (this.renderable.values.tColor.ref.value !== input) {
             ValueCell.update(this.renderable.values.tColor, input);
@@ -105,12 +119,7 @@ export class DofPass {
         ValueCell.update(this.renderable.values.uInvProjection, invProjection);
         ValueCell.update(this.renderable.values.uMode, props.mode === 'sphere' ? 1 : 0);
 
-        Vec4.set(this.renderable.values.uBounds.ref.value,
-            v.x / w,
-            v.y / h,
-            (v.x + v.width) / w,
-            (v.y + v.height) / h
-        );
+        Vec4.set(this.renderable.values.uBounds.ref.value, v.x / w, v.y / h, (v.x + v.width) / w, (v.y + v.height) / h);
         ValueCell.update(this.renderable.values.uBounds, this.renderable.values.uBounds.ref.value);
 
         ValueCell.updateIfChanged(this.renderable.values.uNear, camera.near);
@@ -123,7 +132,7 @@ export class DofPass {
             needsUpdate = true;
         }
 
-        const worldCenter = (props.center === 'scene-center' ? sphere.center : camera.state.target);
+        const worldCenter = props.center === 'scene-center' ? sphere.center : camera.state.target;
         const distance = Vec3.distance(camera.state.position, worldCenter);
         const inFocus = distance + props.inFocus;
         ValueCell.updateIfChanged(this.renderable.values.uInFocus, inFocus * camera.scale);
@@ -180,9 +189,14 @@ const DofSchema = {
 };
 
 const DofShaderCode = ShaderCode('dof', quad_vert, dof_frag);
-type DofRenderable = ComputeRenderable<Values<typeof DofSchema>>
+type DofRenderable = ComputeRenderable<Values<typeof DofSchema>>;
 
-function getDofRenderable(ctx: WebGLContext, colorTexture: Texture, depthTextureOpaque: Texture, depthTextureTransparent: Texture): DofRenderable {
+function getDofRenderable(
+    ctx: WebGLContext,
+    colorTexture: Texture,
+    depthTextureOpaque: Texture,
+    depthTextureTransparent: Texture,
+): DofRenderable {
     const width = colorTexture.getWidth();
     const height = colorTexture.getHeight();
 

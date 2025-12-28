@@ -6,24 +6,24 @@
 
 import { ValueCell } from '../../mol-util/value-cell.ts';
 import { Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
-import { type TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
+import { createTextureImage, type TextureImage } from '../../mol-gl/renderable/util.ts';
 import { createNullTexture, type Texture } from '../../mol-gl/webgl/texture.ts';
 
 export type TransparencyType = 'instance' | 'groupInstance' | 'volumeInstance';
 
 export type TransparencyData = {
-    tTransparency: ValueCell<TextureImage<Uint8Array>>
-    uTransparencyTexDim: ValueCell<Vec2>
-    dTransparency: ValueCell<boolean>,
-    transparencyAverage: ValueCell<number>,
-    transparencyMin: ValueCell<number>,
+    tTransparency: ValueCell<TextureImage<Uint8Array>>;
+    uTransparencyTexDim: ValueCell<Vec2>;
+    dTransparency: ValueCell<boolean>;
+    transparencyAverage: ValueCell<number>;
+    transparencyMin: ValueCell<number>;
 
-    tTransparencyGrid: ValueCell<Texture>,
-    uTransparencyGridDim: ValueCell<Vec3>,
-    uTransparencyGridTransform: ValueCell<Vec4>,
-    dTransparencyType: ValueCell<string>,
-    uTransparencyStrength: ValueCell<number>,
-}
+    tTransparencyGrid: ValueCell<Texture>;
+    uTransparencyGridDim: ValueCell<Vec3>;
+    uTransparencyGridTransform: ValueCell<Vec4>;
+    dTransparencyType: ValueCell<string>;
+    uTransparencyStrength: ValueCell<number>;
+};
 
 export function applyTransparencyValue(array: Uint8Array, start: number, end: number, value: number) {
     for (let i = start; i < end; ++i) {
@@ -55,13 +55,25 @@ export function clearTransparency(array: Uint8Array, start: number, end: number)
     array.fill(0, start, end);
 }
 
-export function createTransparency(count: number, type: TransparencyType, transparencyData?: TransparencyData): TransparencyData {
-    const transparency = createTextureImage(Math.max(1, count), 1, Uint8Array, transparencyData && transparencyData.tTransparency.ref.value.array);
+export function createTransparency(
+    count: number,
+    type: TransparencyType,
+    transparencyData?: TransparencyData,
+): TransparencyData {
+    const transparency = createTextureImage(
+        Math.max(1, count),
+        1,
+        Uint8Array,
+        transparencyData && transparencyData.tTransparency.ref.value.array,
+    );
     if (transparencyData) {
         ValueCell.update(transparencyData.tTransparency, transparency);
         ValueCell.update(transparencyData.uTransparencyTexDim, Vec2.create(transparency.width, transparency.height));
         ValueCell.updateIfChanged(transparencyData.dTransparency, count > 0);
-        ValueCell.updateIfChanged(transparencyData.transparencyAverage, getTransparencyAverage(transparency.array, count));
+        ValueCell.updateIfChanged(
+            transparencyData.transparencyAverage,
+            getTransparencyAverage(transparency.array, count),
+        );
         ValueCell.updateIfChanged(transparencyData.transparencyMin, getTransparencyMin(transparency.array, count));
         ValueCell.updateIfChanged(transparencyData.dTransparencyType, type);
         return transparencyData;

@@ -4,7 +4,7 @@
  */
 
 import { constants } from 'node:fs';
-import { Buffer } from "node:buffer";
+import { Buffer } from 'node:buffer';
 
 const alloc = Buffer.alloc;
 
@@ -120,33 +120,38 @@ export interface Headers {
     mtime?: Date;
     linkname?: string | null;
     type?:
-    | 'file'
-    | 'link'
-    | 'symlink'
-    | 'character-device'
-    | 'block-device'
-    | 'directory'
-    | 'fifo'
-    | 'contiguous-file'
-    | 'pax-header'
-    | 'pax-global-header'
-    | 'gnu-long-link-path'
-    | 'gnu-long-path'
-    | null;
+        | 'file'
+        | 'link'
+        | 'symlink'
+        | 'character-device'
+        | 'block-device'
+        | 'directory'
+        | 'fifo'
+        | 'contiguous-file'
+        | 'pax-header'
+        | 'pax-global-header'
+        | 'gnu-long-link-path'
+        | 'gnu-long-path'
+        | null;
     uname?: string;
     gname?: string;
     devmajor?: number;
     devminor?: number;
-    typeflag?: number
+    typeflag?: number;
 }
 
 function modeToType(mode: number) {
     switch (mode & constants.S_IFMT) {
-        case constants.S_IFBLK: return 'block-device';
-        case constants.S_IFCHR: return 'character-device';
-        case constants.S_IFDIR: return 'directory';
-        case constants.S_IFIFO: return 'fifo';
-        case constants.S_IFLNK: return 'symlink';
+        case constants.S_IFBLK:
+            return 'block-device';
+        case constants.S_IFCHR:
+            return 'character-device';
+        case constants.S_IFDIR:
+            return 'directory';
+        case constants.S_IFIFO:
+            return 'fifo';
+        case constants.S_IFLNK:
+            return 'symlink';
     }
 
     return 'file';

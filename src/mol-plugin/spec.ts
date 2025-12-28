@@ -9,7 +9,10 @@ import type { PartialCanvas3DProps } from '../mol-canvas3d/canvas3d.ts';
 import { AnimateAssemblyUnwind } from '../mol-plugin-state/animation/built-in/assembly-unwind.ts';
 import { AnimateCameraSpin } from '../mol-plugin-state/animation/built-in/camera-spin.ts';
 import { AnimateModelIndex } from '../mol-plugin-state/animation/built-in/model-index.ts';
-import { AnimateStateSnapshotTransition, AnimateStateSnapshots } from '../mol-plugin-state/animation/built-in/state-snapshots.ts';
+import {
+    AnimateStateSnapshots,
+    AnimateStateSnapshotTransition,
+} from '../mol-plugin-state/animation/built-in/state-snapshots.ts';
 import type { PluginStateAnimation } from '../mol-plugin-state/animation/model.ts';
 import type { DataFormatProvider } from '../mol-plugin-state/formats/provider.ts';
 import type { StateAction, StateTransformer } from '../mol-state/index.ts';
@@ -20,7 +23,11 @@ import type { PluginLayoutStateProps } from './layout.ts';
 import { StateActions } from '../mol-plugin-state/actions.ts';
 import { AssignColorVolume } from '../mol-plugin-state/actions/volume.ts';
 import { StateTransforms } from '../mol-plugin-state/transforms.ts';
-import { BoxifyVolumeStreaming, CreateVolumeStreamingBehavior, InitVolumeStreaming } from '../mol-plugin/behavior/dynamic/volume-streaming/transformers.ts';
+import {
+    BoxifyVolumeStreaming,
+    CreateVolumeStreamingBehavior,
+    InitVolumeStreaming,
+} from '../mol-plugin/behavior/dynamic/volume-streaming/transformers.ts';
 import { AnimateStateInterpolation } from '../mol-plugin-state/animation/built-in/state-interpolation.ts';
 import { AnimateStructureSpin } from '../mol-plugin-state/animation/built-in/spin-structure.ts';
 import { AnimateCameraRock } from '../mol-plugin-state/animation/built-in/camera-rock.ts';
@@ -28,35 +35,44 @@ import { AnimateCameraRock } from '../mol-plugin-state/animation/built-in/camera
 export { PluginSpec };
 
 interface PluginSpec {
-    actions?: PluginSpec.Action[],
-    behaviors: PluginSpec.Behavior[],
-    animations?: PluginStateAnimation[],
-    customFormats?: [string, DataFormatProvider][],
-    canvas3d?: PartialCanvas3DProps,
+    actions?: PluginSpec.Action[];
+    behaviors: PluginSpec.Behavior[];
+    animations?: PluginStateAnimation[];
+    customFormats?: [string, DataFormatProvider][];
+    canvas3d?: PartialCanvas3DProps;
     layout?: {
-        initial?: Partial<PluginLayoutStateProps>,
-    },
-    config?: [PluginConfigItem, unknown][]
+        initial?: Partial<PluginLayoutStateProps>;
+    };
+    config?: [PluginConfigItem, unknown][];
 }
 
 namespace PluginSpec {
     export interface Action {
-        action: StateAction | StateTransformer,
+        action: StateAction | StateTransformer;
         /* constructible react component with <action.customControl /> */
-        customControl?: any,
-        autoUpdate?: boolean
+        customControl?: any;
+        autoUpdate?: boolean;
     }
 
-    export function Action(action: StateAction | StateTransformer, params?: { customControl?: any /* constructible react component with <action.customControl /> */, autoUpdate?: boolean }): Action {
+    export function Action(
+        action: StateAction | StateTransformer,
+        params?: {
+            customControl?: any /* constructible react component with <action.customControl /> */;
+            autoUpdate?: boolean;
+        },
+    ): Action {
         return { action, customControl: params && params.customControl, autoUpdate: params && params.autoUpdate };
     }
 
     export interface Behavior {
-        transformer: StateTransformer,
-        defaultParams?: any
+        transformer: StateTransformer;
+        defaultParams?: any;
     }
 
-    export function Behavior<T extends StateTransformer>(transformer: T, defaultParams: Partial<StateTransformer.Params<T>> = {}): Behavior {
+    export function Behavior<T extends StateTransformer>(
+        transformer: T,
+        defaultParams: Partial<StateTransformer.Params<T>> = {},
+    ): Behavior {
         return { transformer, defaultParams };
     }
 }
@@ -143,6 +159,6 @@ export const DefaultPluginSpec = (): PluginSpec => ({
         AnimateStateSnapshotTransition,
         AnimateAssemblyUnwind,
         AnimateStructureSpin,
-        AnimateStateInterpolation
-    ]
+        AnimateStateInterpolation,
+    ],
 });

@@ -3,10 +3,11 @@
  *
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  * @author Lukáš Polák <admin@lukaspolak.cz>
+ * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
 import { Color, type ColorListEntry } from './color.ts';
-import { getColorListFromName, type ColorListName } from './lists.ts';
+import { type ColorListName, getColorListFromName } from './lists.ts';
 import { defaults } from '../../mol-util/index.ts';
 import type { NumberArray } from '../../mol-util/type-helpers.ts';
 import { ScaleLegend } from '../legend.ts';
@@ -15,15 +16,15 @@ import { clamp } from '../../mol-math/interpolate.ts';
 
 export interface ColorScale {
     /** Returns hex color for given value */
-    color: (value: number) => Color
+    color: (value: number) => Color;
     /** Copies color to rgb int8 array */
-    colorToArray: (value: number, array: NumberArray, offset: number) => void
+    colorToArray: (value: number, array: NumberArray, offset: number) => void;
     /** Copies normalized (0 to 1) hex color to rgb array */
-    normalizedColorToArray: (value: number, array: NumberArray, offset: number) => void
+    normalizedColorToArray: (value: number, array: NumberArray, offset: number) => void;
     /**  */
-    setDomain: (min: number, max: number) => void
+    setDomain: (min: number, max: number) => void;
     /** Legend */
-    readonly legend: ScaleLegend
+    readonly legend: ScaleLegend;
 }
 
 export const DefaultColorScaleProps = {
@@ -33,9 +34,9 @@ export const DefaultColorScaleProps = {
     minLabel: '' as string | undefined,
     maxLabel: '' as string | undefined,
 };
-export type ColorScaleProps = Partial<typeof DefaultColorScaleProps>
+export type ColorScaleProps = Partial<typeof DefaultColorScaleProps>;
 
-type ColorScaleType = 'continuous' | 'discrete'
+type ColorScaleType = 'continuous' | 'discrete';
 
 export namespace ColorScale {
     export function create(props: ColorScaleProps): ColorScale {
@@ -65,23 +66,31 @@ export namespace ColorScale {
 
         let color: (v: number) => Color;
 
-        const hasOffsets = colors.every(c => Array.isArray(c));
+        const hasOffsets = colors.every((c) => Array.isArray(c));
         if (hasOffsets) {
             const sorted = [...colors] as [Color, number][];
             sorted.sort((a, b) => a[1] - b[1]);
 
-            const src = sorted.map(c => c[0]);
-            const off = SortedArray.ofSortedArray(sorted.map(c => c[1]));
-            const max = src.length - 1;
+            const src = sorted.map((c) => c[0]);
+            const off = SortedArray.ofSortedArray(sorted.map((c) => c[1]));
+            const maxId = src.length - 1;
 
             switch (type) {
-                case 'continuous': color = (value: number) => valueToColorWithOffsets(value, src, off, min, max, diff); break;
-                case 'discrete': color = (value: number) => valueToDiscreteColorWithOffsets(value, src, off, min, max, diff); break;
+                case 'continuous':
+                    color = (value: number) => valueToColorWithOffsets(value, src, off, min, maxId, diff);
+                    break;
+                case 'discrete':
+                    color = (value: number) => valueToDiscreteColorWithOffsets(value, src, off, min, maxId, diff);
+                    break;
             }
         } else {
             switch (type) {
-                case 'continuous': color = (value: number) => valueToColor(value, colors, min, diff); break;
-                case 'discrete': color = (value: number) => valueToDiscreteColor(value, colors, min, max, diff); break;
+                case 'continuous':
+                    color = (value: number) => valueToColor(value, colors, min, diff);
+                    break;
+                case 'discrete':
+                    color = (value: number) => valueToDiscreteColor(value, colors, min, max, diff);
+                    break;
             }
         }
         return {
@@ -93,18 +102,27 @@ export namespace ColorScale {
                 Color.toArrayNormalized(color(value), array, offset);
             },
             setDomain,
-            get legend() { return ScaleLegend(minLabel, maxLabel, colors); }
+            get legend() {
+                return ScaleLegend(minLabel, maxLabel, colors);
+            },
         };
     }
 
-    function valueToColorWithOffsets(value: number, src: Color[], off: SortedArray<number>, min: number, max: number, diff: number) {
+    function valueToColorWithOffsets(
+        value: number,
+        src: Color[],
+        off: SortedArray<number>,
+        min: number,
+        maxId: number,
+        diff: number,
+    ) {
         const t = clamp((value - min) / diff, 0, 1);
         const i = SortedArray.findPredecessorIndex(off, t);
 
         if (i === 0) {
-            return src[min];
-        } else if (i > max) {
-            return src[max];
+            return src[0];
+        } else if (i > maxId) {
+            return src[maxId];
         }
 
         const o1 = off[i - 1], o2 = off[i];
@@ -121,7 +139,14 @@ export namespace ColorScale {
         return Color.interpolate(c1, c2, t - tf);
     }
 
-    function valueToDiscreteColorWithOffsets(value: number, src: Color[], off: SortedArray<number>, min: number, max: number, diff: number) {
+    function valueToDiscreteColorWithOffsets(
+        value: number,
+        src: Color[],
+        off: SortedArray<number>,
+        min: number,
+        maxId: number,
+        diff: number,
+    ) {
         if (src.length === 0) {
             return Color.fromRgb(0, 0, 0);
         }
@@ -130,9 +155,9 @@ export namespace ColorScale {
         const i = SortedArray.findPredecessorIndex(off, t);
 
         if (i === 0) {
-            return src[min] as Color;
-        } else if (i > max) {
-            return src[max] as Color;
+            return src[0] as Color;
+        } else if (i > maxId) {
+            return src[maxId] as Color;
         }
 
         return src[i] as Color;

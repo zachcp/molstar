@@ -92,16 +92,16 @@ const general = {
         // values outside of comparisons
         'foobar',
         'protein or foobar',
-    ]
+    ],
 };
 
 describe('jmol general', () => {
-    general.supported.forEach(str => {
+    general.supported.forEach((str) => {
         it(str, () => {
             transpiler(str);
         });
     });
-    general.unsupported.forEach(str => {
+    general.unsupported.forEach((str) => {
         it(str, () => {
             const transpileStr = () => transpiler(str);
             expect(transpileStr).toThrow();

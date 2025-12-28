@@ -17,7 +17,7 @@ export const StateTransforms = {
     Model,
     Volume,
     Representation,
-    Shape
+    Shape,
 };
 
-export type StateTransforms = typeof StateTransforms
+export type StateTransforms = typeof StateTransforms;

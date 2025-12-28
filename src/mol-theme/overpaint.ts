@@ -12,16 +12,16 @@ import { Script } from '../mol-script/script.ts';
 export { Overpaint };
 
 type Overpaint<T extends Loci = Loci> = {
-    readonly kind: T['kind']
-    readonly layers: ReadonlyArray<Overpaint.Layer<T>>
-}
+    readonly kind: T['kind'];
+    readonly layers: ReadonlyArray<Overpaint.Layer<T>>;
+};
 
 function Overpaint<T extends Loci>(kind: T['kind'], layers: ReadonlyArray<Overpaint.Layer<T>>): Overpaint<T> {
     return { kind, layers };
 }
 
 namespace Overpaint {
-    export type Layer<T extends Loci = Loci> = { readonly loci: T, readonly color: Color, readonly clear: boolean }
+    export type Layer<T extends Loci = Loci> = { readonly loci: T; readonly color: Color; readonly clear: boolean };
     export const Empty: Overpaint = { kind: 'empty-loci', layers: [] };
 
     export function areEqual(oA: Overpaint, oB: Overpaint): boolean {
@@ -106,7 +106,7 @@ namespace Overpaint {
         }
     }
 
-    export type ScriptLayer = { script: Script, color: Color, clear: boolean }
+    export type ScriptLayer = { script: Script; color: Color; clear: boolean };
     export function ofScript(scriptLayers: ScriptLayer[], structure: Structure): Overpaint {
         const layers: Overpaint.Layer[] = [];
         for (let i = 0, il = scriptLayers.length; i < il; ++i) {
@@ -119,7 +119,7 @@ namespace Overpaint {
         return { kind: 'element-loci', layers };
     }
 
-    export type BundleLayer = { bundle: StructureElement.Bundle, color: Color, clear: boolean }
+    export type BundleLayer = { bundle: StructureElement.Bundle; color: Color; clear: boolean };
     export function ofBundle(bundleLayers: BundleLayer[], structure: Structure): Overpaint {
         const layers: Overpaint.Layer[] = [];
         for (let i = 0, il = bundleLayers.length; i < il; ++i) {
@@ -130,7 +130,9 @@ namespace Overpaint {
         return { kind: 'element-loci', layers };
     }
 
-    export function toBundle(overpaint: Overpaint<StructureElement.Loci>): { kind: 'element-loci', layers: BundleLayer[] } {
+    export function toBundle(
+        overpaint: Overpaint<StructureElement.Loci>,
+    ): { kind: 'element-loci'; layers: BundleLayer[] } {
         const layers: BundleLayer[] = [];
         for (let i = 0, il = overpaint.layers.length; i < il; ++i) {
             const { loci, color, clear } = overpaint.layers[i];

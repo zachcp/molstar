@@ -11,14 +11,14 @@ export const ModelExport = PluginBehavior.create<{}>({
     name: 'extension-model-export',
     category: 'misc',
     display: {
-        name: 'Model Export'
+        name: 'Model Export',
     },
     ctor: class extends PluginBehavior.Handler<{}> {
         register(): void {
             this.ctx.customStructureControls.set('model-export', ModelExportUI as any);
         }
 
-        update() {
+        override update() {
             return false;
         }
 
@@ -26,5 +26,5 @@ export const ModelExport = PluginBehavior.create<{}>({
             this.ctx.customStructureControls.delete('model-export');
         }
     },
-    params: () => ({})
+    params: () => ({}),
 });

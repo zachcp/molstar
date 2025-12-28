@@ -15,11 +15,13 @@ export const SecondaryStructure = PluginBehavior.create<{ autoAttach: boolean }>
     ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean }> {
         private provider = SecondaryStructureProvider;
 
-        override update(p: { autoAttach: boolean, showTooltip: boolean }) {            const updated = (
-                this.params.autoAttach !== p.autoAttach
-            );
+        override update(p: { autoAttach: boolean; showTooltip: boolean }) {
+            const updated = this.params.autoAttach !== p.autoAttach;
             this.params.autoAttach = p.autoAttach;
-            this.ctx.customStructureProperties.setDefaultAutoAttach(this.provider.descriptor.name, this.params.autoAttach);
+            this.ctx.customStructureProperties.setDefaultAutoAttach(
+                this.provider.descriptor.name,
+                this.params.autoAttach,
+            );
             return updated;
         }
 
@@ -32,6 +34,6 @@ export const SecondaryStructure = PluginBehavior.create<{ autoAttach: boolean }>
         }
     },
     params: () => ({
-        autoAttach: PD.Boolean(false)
-    })
+        autoAttach: PD.Boolean(false),
+    }),
 });

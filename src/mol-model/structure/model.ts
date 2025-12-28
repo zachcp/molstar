@@ -11,4 +11,4 @@ import { StructureSequence } from './model/properties/sequence.ts';
 
 export * from './model/properties/custom/indexed.ts';
 export * from './model/indexing.ts';
-export { Model, Types, Symmetry, StructureSequence };
+export { Model, StructureSequence, Symmetry, Types };

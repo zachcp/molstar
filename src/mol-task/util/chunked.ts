@@ -7,10 +7,15 @@
 import { now } from '../../mol-util/now.ts';
 import type { RuntimeContext } from '../execution/runtime-context.ts';
 
-type UniformlyChunkedFn<S> = (chunkSize: number, state: S) => number
+type UniformlyChunkedFn<S> = (chunkSize: number, state: S) => number;
 
-async function chunkedSubtask<S>(ctx: RuntimeContext, initialChunk: number, state: S,
-    f: UniformlyChunkedFn<S>, update: (ctx: RuntimeContext, state: S, processed: number) => Promise<void> | void): Promise<S> {
+async function chunkedSubtask<S>(
+    ctx: RuntimeContext,
+    initialChunk: number,
+    state: S,
+    f: UniformlyChunkedFn<S>,
+    update: (ctx: RuntimeContext, state: S, processed: number) => Promise<void> | void,
+): Promise<S> {
     let chunkSize = Math.max(initialChunk, 0);
     let globalProcessed = 0, globalTime = 0;
 

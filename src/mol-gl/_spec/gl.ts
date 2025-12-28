@@ -17,7 +17,11 @@ export function getGLContext(width: number, height: number) {
     return createContext(gl);
 }
 
-export function tryGetGLContext(width: number, height: number, requiredExtensions?: { fragDepth?: boolean, textureFloat?: boolean }) {
+export function tryGetGLContext(
+    width: number,
+    height: number,
+    requiredExtensions?: { fragDepth?: boolean; textureFloat?: boolean },
+) {
     try {
         const ctx = getGLContext(width, height);
         if (requiredExtensions?.fragDepth && !ctx.extensions.fragDepth) return;

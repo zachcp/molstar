@@ -14,9 +14,9 @@ import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
 import { BoxCage } from '../../../mol-geo/primitive/box.ts';
 import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
-import { transformCage, cloneCage } from '../../../mol-geo/primitive/cage.ts';
+import { cloneCage, transformCage } from '../../../mol-geo/primitive/cage.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
-import { type RepresentationParamsGetter, Representation, type RepresentationContext } from '../../representation.ts';
+import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../../representation.ts';
 
 const translate05 = Mat4.fromTranslation(Mat4(), Vec3.create(0.5, 0.5, 0.5));
 const unitCage = transformCage(cloneCage(BoxCage()), translate05);
@@ -25,18 +25,18 @@ const tmpRef = Vec3();
 const tmpTranslate = Mat4();
 
 interface UnitcellData {
-    symmetry: Symmetry
-    ref: Vec3
+    symmetry: Symmetry;
+    ref: Vec3;
 }
 
 const CellRef = {
     origin: 'Origin',
-    model: 'Model'
+    model: 'Model',
 };
 
 const CellAttachment = {
     corner: 'Corner',
-    center: 'Center'
+    center: 'Center',
 };
 
 const CellParams = {
@@ -46,17 +46,18 @@ const CellParams = {
     ref: PD.Select('model', PD.objectToOptions(CellRef), { isEssential: true }),
     attachment: PD.Select('corner', PD.objectToOptions(CellAttachment), { isEssential: true }),
 };
-type CellParams = typeof CellParams
+type CellParams = typeof CellParams;
 
 const UnitcellVisuals = {
-    'mesh': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<UnitcellData, CellParams>) => ShapeRepresentation(getUnitcellShape, Mesh.Utils),
+    'mesh': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<UnitcellData, CellParams>) =>
+        ShapeRepresentation(getUnitcellShape, Mesh.Utils),
 };
 
 export const UnitcellParams = {
-    ...CellParams
+    ...CellParams,
 };
-export type UnitcellParams = typeof UnitcellParams
-export type UnitcellProps = PD.Values<UnitcellParams>
+export type UnitcellParams = typeof UnitcellParams;
+export type UnitcellProps = PD.Values<UnitcellParams>;
 
 function getUnitcellMesh(data: UnitcellData, props: UnitcellProps, mesh?: Mesh) {
     const state = MeshBuilder.createState(256, 128, mesh);
@@ -103,7 +104,16 @@ export function getUnitcellData(model: Model, symmetry: Symmetry, props: Unitcel
     return { symmetry, ref };
 }
 
-export type UnitcellRepresentation = Representation<UnitcellData, UnitcellParams>
-export function UnitcellRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<UnitcellData, UnitcellParams>): UnitcellRepresentation {
-    return Representation.createMulti('Unit Cell', ctx, getParams, Representation.StateBuilder, UnitcellVisuals as unknown as Representation.Def<UnitcellData, UnitcellParams>);
+export type UnitcellRepresentation = Representation<UnitcellData, UnitcellParams>;
+export function UnitcellRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<UnitcellData, UnitcellParams>,
+): UnitcellRepresentation {
+    return Representation.createMulti(
+        'Unit Cell',
+        ctx,
+        getParams,
+        Representation.StateBuilder,
+        UnitcellVisuals as unknown as Representation.Def<UnitcellData, UnitcellParams>,
+    );
 }

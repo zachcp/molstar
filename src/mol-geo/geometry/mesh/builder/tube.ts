@@ -39,7 +39,7 @@ const v3dot = Vec3.dot;
 const v3unitX = Vec3.unitX;
 const caAdd3 = ChunkedArray.add3;
 
-const CosSinCache = new Map<number, { cos: number[], sin: number[] }>();
+const CosSinCache = new Map<number, { cos: number[]; sin: number[] }>();
 function getCosSin(radialSegments: number, shift: boolean) {
     const offset = shift ? 1 : 0;
     const hash = cantorPairing(radialSegments, offset);
@@ -56,7 +56,20 @@ function getCosSin(radialSegments: number, shift: boolean) {
     return CosSinCache.get(hash)!;
 }
 
-export function addTube(state: MeshBuilder.State, controlPoints: ArrayLike<number>, normalVectors: ArrayLike<number>, binormalVectors: ArrayLike<number>, linearSegments: number, radialSegments: number, widthValues: ArrayLike<number>, heightValues: ArrayLike<number>, startCap: boolean, endCap: boolean, crossSection: 'elliptical' | 'rounded', roundCap = false) {
+export function addTube(
+    state: MeshBuilder.State,
+    controlPoints: ArrayLike<number>,
+    normalVectors: ArrayLike<number>,
+    binormalVectors: ArrayLike<number>,
+    linearSegments: number,
+    radialSegments: number,
+    widthValues: ArrayLike<number>,
+    heightValues: ArrayLike<number>,
+    startCap: boolean,
+    endCap: boolean,
+    crossSection: 'elliptical' | 'rounded',
+    roundCap = false,
+) {
     const { currentGroup, vertices, normals, indices, groups } = state;
 
     let vertexCount = vertices.elementCount;
@@ -82,9 +95,17 @@ export function addTube(state: MeshBuilder.State, controlPoints: ArrayLike<numbe
         if (roundCapFlag) {
             const sc = doubleRoundCap ? i <= halfLinearSegments! : startCap;
             if (doubleRoundCap) {
-                capSmoothingFactor = Math.max(Number.EPSILON, Math.sqrt(1 - Math.pow((sc ? halfLinearSegments! - i : i - halfLinearSegments!) / halfLinearSegments!, 2)));
+                capSmoothingFactor = Math.max(
+                    Number.EPSILON,
+                    Math.sqrt(
+                        1 - Math.pow((sc ? halfLinearSegments! - i : i - halfLinearSegments!) / halfLinearSegments!, 2),
+                    ),
+                );
             } else {
-                capSmoothingFactor = Math.max(Number.EPSILON, Math.sqrt(1 - Math.pow((sc ? linearSegments - i : i) / linearSegments, 2)));
+                capSmoothingFactor = Math.max(
+                    Number.EPSILON,
+                    Math.sqrt(1 - Math.pow((sc ? linearSegments - i : i) / linearSegments, 2)),
+                );
             }
             width *= capSmoothingFactor;
             height *= capSmoothingFactor;
@@ -98,7 +119,9 @@ export function addTube(state: MeshBuilder.State, controlPoints: ArrayLike<numbe
                 add3AndScale2(surfacePoint, u, v, controlPoint, width * cos[j], width * sin[j]);
                 const h = v3dot(v, v3unitX) < 0
                     ? (j < q1 || j >= q3) ? height - width : -height + width
-                    : (j >= q1 && j < q3) ? -height + width : height - width;
+                    : (j >= q1 && j < q3)
+                    ? -height + width
+                    : height - width;
                 v3scaleAndAdd(surfacePoint, surfacePoint, u, h);
                 if (j === q1 || j === q1 - 1) {
                     add2AndScale2(normalVector, u, v, 0, 1);
@@ -131,13 +154,13 @@ export function addTube(state: MeshBuilder.State, controlPoints: ArrayLike<numbe
                 indices,
                 vertexCount + i * radialSegments + (j + 1) % radialSegments, // a
                 vertexCount + (i + 1) * radialSegments + (j + 1) % radialSegments, // c
-                vertexCount + i * radialSegments + j // b
+                vertexCount + i * radialSegments + j, // b
             );
             caAdd3(
                 indices,
                 vertexCount + (i + 1) * radialSegments + (j + 1) % radialSegments, // c
                 vertexCount + (i + 1) * radialSegments + j, // d
-                vertexCount + i * radialSegments + j // b
+                vertexCount + i * radialSegments + j, // b
             );
         }
         for (let j = radialSegmentsHalf; j < radialSegments; ++j) {
@@ -145,7 +168,7 @@ export function addTube(state: MeshBuilder.State, controlPoints: ArrayLike<numbe
                 indices,
                 vertexCount + i * radialSegments + (j + 1) % radialSegments, // a
                 vertexCount + (i + 1) * radialSegments + j, // d
-                vertexCount + i * radialSegments + j // b
+                vertexCount + i * radialSegments + j, // b
             );
             caAdd3(
                 indices,
@@ -188,7 +211,7 @@ export function addTube(state: MeshBuilder.State, controlPoints: ArrayLike<numbe
                 indices,
                 vertexCount + (i + 1) % radialSegments,
                 vertexCount + i,
-                centerVertex
+                centerVertex,
             );
         }
     }
@@ -225,11 +248,12 @@ export function addTube(state: MeshBuilder.State, controlPoints: ArrayLike<numbe
                 indices,
                 vertexCount + i,
                 vertexCount + (i + 1) % radialSegments,
-                centerVertex
+                centerVertex,
             );
         }
     }
 
-    const addedVertexCount = (linearSegments + 1) * radialSegments + (startCap ? radialSegments + 1 : 0) + (endCap ? radialSegments + 1 : 0);
+    const addedVertexCount = (linearSegments + 1) * radialSegments + (startCap ? radialSegments + 1 : 0) +
+        (endCap ? radialSegments + 1 : 0);
     ChunkedArray.addRepeat(groups, addedVertexCount, currentGroup);
 }

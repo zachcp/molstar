@@ -19,7 +19,7 @@ export class PluginContainer {
         this.parent.parentElement?.removeChild(this.parent);
     }
 
-    constructor(public options?: { checkeredCanvasBackground?: boolean, canvas?: HTMLCanvasElement }) {
+    constructor(public options?: { checkeredCanvasBackground?: boolean; canvas?: HTMLCanvasElement }) {
         const parent = document.createElement('div');
         Object.assign(parent.style, {
             position: 'absolute',
@@ -38,9 +38,10 @@ export class PluginContainer {
             canvas = document.createElement('canvas');
             if (options?.checkeredCanvasBackground) {
                 Object.assign(canvas.style, {
-                    'background-image': 'linear-gradient(45deg, lightgrey 25%, transparent 25%, transparent 75%, lightgrey 75%, lightgrey), linear-gradient(45deg, lightgrey 25%, transparent 25%, transparent 75%, lightgrey 75%, lightgrey)',
+                    'background-image':
+                        'linear-gradient(45deg, lightgrey 25%, transparent 25%, transparent 75%, lightgrey 75%, lightgrey), linear-gradient(45deg, lightgrey 25%, transparent 25%, transparent 75%, lightgrey 75%, lightgrey)',
                     'background-size': '60px 60px',
-                    'background-position': '0 0, 30px 30px'
+                    'background-position': '0 0, 30px 30px',
                 });
             }
             parent.appendChild(canvas);

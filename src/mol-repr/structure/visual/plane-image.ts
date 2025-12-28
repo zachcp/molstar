@@ -33,27 +33,51 @@ const v3squaredDistance = Vec3.squaredDistance;
 export const PlaneImageParams = {
     ...ComplexImageParams,
     interpolation: PD.Select('nearest', PD.objectToOptions(InterpolationTypes)),
-    imageResolution: PD.Numeric(0.5, { min: 0.01, max: 20, step: 0.01 }, { description: 'Grid resolution/cell spacing.', ...BaseGeometry.CustomQualityParamInfo }),
-    mode: PD.Select('frame', PD.arrayToOptions(['frame', 'plane'] as const), { description: 'Frame: slice through the structure along arbitrary axes in any step size. Plane: an arbitrary plane defined by point and normal.' }),
-    offset: PD.Numeric(0, { min: -1, max: 1, step: 0.01 }, { isEssential: true, immediateUpdate: true, hideIf: p => p.mode !== 'frame', description: 'Relative offset from center.' }),
-    axis: PD.Select('c', PD.arrayToOptions(['a', 'b', 'c'] as const), { isEssential: true, hideIf: p => p.mode !== 'frame' }),
+    imageResolution: PD.Numeric(0.5, { min: 0.01, max: 20, step: 0.01 }, {
+        description: 'Grid resolution/cell spacing.',
+        ...BaseGeometry.CustomQualityParamInfo,
+    }),
+    mode: PD.Select('frame', PD.arrayToOptions(['frame', 'plane'] as const), {
+        description:
+            'Frame: slice through the structure along arbitrary axes in any step size. Plane: an arbitrary plane defined by point and normal.',
+    }),
+    offset: PD.Numeric(0, { min: -1, max: 1, step: 0.01 }, {
+        isEssential: true,
+        immediateUpdate: true,
+        hideIf: (p) => p.mode !== 'frame',
+        description: 'Relative offset from center.',
+    }),
+    axis: PD.Select('c', PD.arrayToOptions(['a', 'b', 'c'] as const), {
+        isEssential: true,
+        hideIf: (p) => p.mode !== 'frame',
+    }),
     rotation: PD.Group({
         axis: PD.Vec3(Vec3.create(1, 0, 0), {}, { description: 'Axis of rotation' }),
-        angle: PD.Numeric(0, { min: -180, max: 180, step: 1 }, { immediateUpdate: true, description: 'Axis rotation angle in Degrees' }),
-    }, { isExpanded: true, hideIf: p => p.mode !== 'frame' }),
+        angle: PD.Numeric(0, { min: -180, max: 180, step: 1 }, {
+            immediateUpdate: true,
+            description: 'Axis rotation angle in Degrees',
+        }),
+    }, { isExpanded: true, hideIf: (p) => p.mode !== 'frame' }),
     plane: PD.Group({
         point: PD.Vec3(Vec3.create(0, 0, 0), {}, { description: 'Plane point' }),
         normal: PD.Vec3(Vec3.create(1, 0, 0), {}, { description: 'Plane normal' }),
-    }, { isExpanded: true, hideIf: p => p.mode !== 'plane' }),
-    extent: PD.Select('frame', PD.arrayToOptions(['frame', 'sphere'] as const), { description: 'Extent of the plane, either box (frame) or sphere.' }),
-    margin: PD.Numeric(4, { min: 0, max: 50, step: 1 }, { immediateUpdate: true, description: 'Margin around the structure in Angstrom' }),
+    }, { isExpanded: true, hideIf: (p) => p.mode !== 'plane' }),
+    extent: PD.Select('frame', PD.arrayToOptions(['frame', 'sphere'] as const), {
+        description: 'Extent of the plane, either box (frame) or sphere.',
+    }),
+    margin: PD.Numeric(4, { min: 0, max: 50, step: 1 }, {
+        immediateUpdate: true,
+        description: 'Margin around the structure in Angstrom',
+    }),
     frame: PD.Select('principalAxes', PD.arrayToOptions(['principalAxes', 'boundingBox'] as const)),
     antialias: PD.Boolean(true, { description: 'Antialiasing of structure edges.' }),
     cutout: PD.Boolean(false, { description: 'Cutout the structure from the image.' }),
-    defaultColor: PD.Color(Color(0xCCCCCC), { description: 'Default color for parts of the image that are not covered by the color theme.' }),
+    defaultColor: PD.Color(Color(0xCCCCCC), {
+        description: 'Default color for parts of the image that are not covered by the color theme.',
+    }),
     includeParent: PD.Boolean(false, { description: 'Show parent structure (but within extent of this structure).' }),
 };
-export type PlaneImageParams = typeof PlaneImageParams
+export type PlaneImageParams = typeof PlaneImageParams;
 
 export function PlaneImageVisual(materialId: number): ComplexVisual<PlaneImageParams> {
     return ComplexImageVisual<PlaneImageParams>({
@@ -62,9 +86,14 @@ export function PlaneImageVisual(materialId: number): ComplexVisual<PlaneImagePa
         createLocationIterator: ElementIterator.fromStructure,
         getLoci: getSerialElementLoci,
         eachLocation: eachSerialElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<PlaneImageParams>, currentProps: PD.Values<PlaneImageParams>, newTheme: Theme, currentTheme: Theme) => {
-            state.createGeometry = (
-                newProps.imageResolution !== currentProps.imageResolution ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<PlaneImageParams>,
+            currentProps: PD.Values<PlaneImageParams>,
+            newTheme: Theme,
+            currentTheme: Theme,
+        ) => {
+            state.createGeometry = newProps.imageResolution !== currentProps.imageResolution ||
                 newProps.mode !== currentProps.mode ||
                 newProps.margin !== currentProps.margin ||
                 newProps.frame !== currentProps.frame ||
@@ -79,28 +108,27 @@ export function PlaneImageVisual(materialId: number): ComplexVisual<PlaneImagePa
                 newProps.cutout !== currentProps.cutout ||
                 newProps.defaultColor !== currentProps.defaultColor ||
                 !ColorTheme.areEqual(newTheme.color, currentTheme.color) ||
-                !SizeTheme.areEqual(newTheme.size, currentTheme.size)
-            );
-        }
+                !SizeTheme.areEqual(newTheme.size, currentTheme.size);
+        },
     }, materialId);
 }
 
 //
 
 export interface PlaneImageProps {
-    imageResolution: number,
-    mode: 'frame' | 'plane',
-    offset: number,
-    axis: 'a' | 'b' | 'c',
-    margin: number,
-    frame: 'principalAxes' | 'boundingBox',
-    extent: 'frame' | 'sphere',
-    rotation: { axis: Vec3, angle: number },
-    plane: { point: Vec3, normal: Vec3 },
-    antialias: boolean,
-    cutout: boolean,
-    defaultColor: Color,
-    includeParent: boolean,
+    imageResolution: number;
+    mode: 'frame' | 'plane';
+    offset: number;
+    axis: 'a' | 'b' | 'c';
+    margin: number;
+    frame: 'principalAxes' | 'boundingBox';
+    extent: 'frame' | 'sphere';
+    rotation: { axis: Vec3; angle: number };
+    plane: { point: Vec3; normal: Vec3 };
+    antialias: boolean;
+    cutout: boolean;
+    defaultColor: Color;
+    includeParent: boolean;
 }
 
 function getFrame(structure: Structure, props: PlaneImageProps) {
@@ -181,10 +209,11 @@ function getFrame(structure: Structure, props: PlaneImageProps) {
 
     const trimRotation = Quat.identity();
     if (frame === 'principalAxes') {
-        Quat.fromBasis(trimRotation,
+        Quat.fromBasis(
+            trimRotation,
             Vec3.normalize(Vec3(), dirA),
             Vec3.normalize(Vec3(), dirB),
-            Vec3.normalize(Vec3(), dirC)
+            Vec3.normalize(Vec3(), dirC),
         );
     }
 
@@ -213,13 +242,17 @@ function getFrame(structure: Structure, props: PlaneImageProps) {
     return { size, major, minor, normal, center, trim };
 }
 
-export function createPlaneImage(ctx: VisualContext, structure: Structure, theme: Theme, props: PlaneImageProps, image?: Image): Image {
+export function createPlaneImage(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: PlaneImageProps,
+    image?: Image,
+): Image {
     const { imageResolution, offset, antialias, cutout, defaultColor } = props;
     const scaleFactor = 1 / imageResolution;
 
-    const color = 'color' in theme.color && theme.color.color
-        ? theme.color.color
-        : () => Color(0xffffff);
+    const color = 'color' in theme.color && theme.color.color ? theme.color.color : () => Color(0xffffff);
 
     const { size, major, minor, normal, center, trim } = getFrame(structure, props);
 
@@ -376,7 +409,11 @@ export function createPlaneImage(ctx: VisualContext, structure: Structure, theme
                                         f = 1;
                                     }
                                 } else {
-                                    Color.toArray(Color.interpolate(Color.fromArray(imageArray, k4), col, f), imageArray, k4);
+                                    Color.toArray(
+                                        Color.interpolate(Color.fromArray(imageArray, k4), col, f),
+                                        imageArray,
+                                        k4,
+                                    );
                                 }
                             }
                         }
@@ -397,10 +434,18 @@ export function createPlaneImage(ctx: VisualContext, structure: Structure, theme
     const valueTexture = { width: 1, height: 1, array: new Float32Array(1), flipY: true };
 
     const corners = new Float32Array([
-        -0.5, 0.5, 0,
-        0.5, 0.5, 0,
-        -0.5, -0.5, 0,
-        0.5, -0.5, 0
+        -0.5,
+        0.5,
+        0,
+        0.5,
+        0.5,
+        0,
+        -0.5,
+        -0.5,
+        0,
+        0.5,
+        -0.5,
+        0,
     ]);
     transformPositionArray(m, corners, 0, 4);
 

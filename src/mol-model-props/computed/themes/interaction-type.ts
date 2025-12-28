@@ -65,13 +65,16 @@ function typeColor(type: InteractionType): Color {
     }
 }
 
-export const InteractionTypeColorThemeParams = { };
-export type InteractionTypeColorThemeParams = typeof InteractionTypeColorThemeParams
+export const InteractionTypeColorThemeParams = {};
+export type InteractionTypeColorThemeParams = typeof InteractionTypeColorThemeParams;
 export function getInteractionTypeColorThemeParams(ctx: ThemeDataContext) {
     return InteractionTypeColorThemeParams; // TODO return copy
 }
 
-export function InteractionTypeColorTheme(ctx: ThemeDataContext, props: PD.Values<InteractionTypeColorThemeParams>): ColorTheme<InteractionTypeColorThemeParams> {
+export function InteractionTypeColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<InteractionTypeColorThemeParams>,
+): ColorTheme<InteractionTypeColorThemeParams> {
     let color: LocationColor;
 
     const interactions = ctx.structure ? InteractionsProvider.get(ctx.structure) : undefined;
@@ -104,11 +107,14 @@ export function InteractionTypeColorTheme(ctx: ThemeDataContext, props: PD.Value
         props: props,
         contextHash,
         description: Description,
-        legend: TableLegend(InteractionTypeColorTable)
+        legend: TableLegend(InteractionTypeColorTable),
     };
 }
 
-export const InteractionTypeColorThemeProvider: ColorTheme.Provider<InteractionTypeColorThemeParams, 'interaction-type'> = {
+export const InteractionTypeColorThemeProvider: ColorTheme.Provider<
+    InteractionTypeColorThemeParams,
+    'interaction-type'
+> = {
     name: 'interaction-type',
     label: 'Interaction Type',
     category: ColorThemeCategory.Misc,
@@ -117,7 +123,8 @@ export const InteractionTypeColorThemeProvider: ColorTheme.Provider<InteractionT
     defaultValues: PD.getDefaultValues(InteractionTypeColorThemeParams),
     isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
     ensureCustomProperties: {
-        attach: (ctx: CustomProperty.Context, data: ThemeDataContext) => data.structure ? InteractionsProvider.attach(ctx, data.structure, void 0, true) : Promise.resolve(),
-        detach: (data) => data.structure && InteractionsProvider.ref(data.structure, false)
-    }
+        attach: (ctx: CustomProperty.Context, data: ThemeDataContext) =>
+            data.structure ? InteractionsProvider.attach(ctx, data.structure, void 0, true) : Promise.resolve(),
+        detach: (data) => data.structure && InteractionsProvider.ref(data.structure, false),
+    },
 };

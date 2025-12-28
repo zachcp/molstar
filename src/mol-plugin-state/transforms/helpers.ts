@@ -15,20 +15,26 @@ import type { PlaneData } from '../../mol-repr/shape/loci/plane.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 
-export function getDistanceDataFromStructureSelections(s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>): DistanceData {
+export function getDistanceDataFromStructureSelections(
+    s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>,
+): DistanceData {
     const lociA = s[0].loci;
     const lociB = s[1].loci;
     return { pairs: [{ loci: [lociA, lociB] as const }] };
 }
 
-export function getAngleDataFromStructureSelections(s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>): AngleData {
+export function getAngleDataFromStructureSelections(
+    s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>,
+): AngleData {
     const lociA = s[0].loci;
     const lociB = s[1].loci;
     const lociC = s[2].loci;
     return { triples: [{ loci: [lociA, lociB, lociC] as const }] };
 }
 
-export function getDihedralDataFromStructureSelections(s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>): DihedralData {
+export function getDihedralDataFromStructureSelections(
+    s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>,
+): DihedralData {
     const lociA = s[0].loci;
     const lociB = s[1].loci;
     const lociC = s[2].loci;
@@ -36,17 +42,23 @@ export function getDihedralDataFromStructureSelections(s: ReadonlyArray<PluginSt
     return { quads: [{ loci: [lociA, lociB, lociC, lociD] as const }] };
 }
 
-export function getLabelDataFromStructureSelections(s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>): LabelData {
+export function getLabelDataFromStructureSelections(
+    s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>,
+): LabelData {
     const loci = s[0].loci;
     return { infos: [{ loci }] };
 }
 
-export function getOrientationDataFromStructureSelections(s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>): OrientationData {
-    return { locis: s.map(v => v.loci) };
+export function getOrientationDataFromStructureSelections(
+    s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>,
+): OrientationData {
+    return { locis: s.map((v) => v.loci) };
 }
 
-export function getPlaneDataFromStructureSelections(s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>): PlaneData {
-    return { locis: s.map(v => v.loci) };
+export function getPlaneDataFromStructureSelections(
+    s: ReadonlyArray<PluginStateObject.Molecule.Structure.SelectionEntry>,
+): PlaneData {
+    return { locis: s.map((v) => v.loci) };
 }
 
 const GetTransformState = {
@@ -82,7 +94,10 @@ export function getTransformFromParams(src: TransformParam, centroid: Vec3) {
 
         Mat4.fromTranslation(GetTransformState.translationToCenter, GetTransformState.center);
         Mat4.fromRotation(GetTransformState.rotation, src.params.angle * Math.PI / 180, src.params.axis);
-        Mat4.fromTranslation(GetTransformState.translationFromCenter, Vec3.negate(GetTransformState.center, GetTransformState.center));
+        Mat4.fromTranslation(
+            GetTransformState.translationFromCenter,
+            Vec3.negate(GetTransformState.center, GetTransformState.center),
+        );
         const transform = Mat4.mul3(
             Mat4(),
             GetTransformState.translationToCenter,
@@ -103,7 +118,7 @@ export const TransformParam = PD.MappedStatic(
                 data: PD.Mat4(Mat4.identity()),
                 transpose: PD.Boolean(false),
             },
-            { isFlat: true }
+            { isFlat: true },
         ),
         components: PD.Group(
             {
@@ -112,13 +127,13 @@ export const TransformParam = PD.MappedStatic(
                 angle: PD.Numeric(0, { min: -360, max: 360, step: 1 }, { description: 'Angle in Degrees' }),
                 rotationCenter: PD.MappedStatic('point', {
                     point: PD.Group({ point: PD.Vec3(Vec3.create(0, 0, 0)) }, { isFlat: true }),
-                    centroid: PD.Group({})
+                    centroid: PD.Group({}),
                 }),
             },
-            { isFlat: true }
+            { isFlat: true },
         ),
     },
     { label: 'Kind' },
 );
 
-export type TransformParam = (typeof TransformParam)['defaultValue']
+export type TransformParam = (typeof TransformParam)['defaultValue'];

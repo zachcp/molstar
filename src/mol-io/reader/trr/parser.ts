@@ -10,11 +10,11 @@ import { Task } from '../../../mol-task/index.ts';
 import { ReaderResult as Result } from '../result.ts';
 
 export interface TrrFile {
-    frames: { count: number, x: Float32Array, y: Float32Array, z: Float32Array }[],
-    boxes: number[][],
-    times: number[],
-    timeOffset: number,
-    deltaTime: number
+    frames: { count: number; x: Float32Array; y: Float32Array; z: Float32Array }[];
+    boxes: number[][];
+    times: number[];
+    timeOffset: number;
+    deltaTime: number;
 }
 
 async function parseInternal(data: Uint8Array) {
@@ -27,7 +27,7 @@ async function parseInternal(data: Uint8Array) {
         boxes: [],
         times: [],
         timeOffset: 0,
-        deltaTime: 0
+        deltaTime: 0,
     };
     const coordinates = f.frames;
     const boxes = f.boxes;
@@ -109,10 +109,8 @@ async function parseInternal(data: Uint8Array) {
                 const tmp = new Uint32Array(data.buffer, offset, natoms3);
                 for (let i = 0; i < natoms3; ++i) {
                     const value = tmp[i];
-                    tmp[i] = (
-                        ((value & 0xFF) << 24) | ((value & 0xFF00) << 8) |
-                        ((value >> 8) & 0xFF00) | ((value >> 24) & 0xFF)
-                    );
+                    tmp[i] = ((value & 0xFF) << 24) | ((value & 0xFF00) << 8) |
+                        ((value >> 8) & 0xFF00) | ((value >> 24) & 0xFF);
                 }
                 const frameCoords = new Float32Array(data.buffer, offset, natoms3);
                 for (let i = 0; i < natoms; ++i) {
@@ -145,7 +143,7 @@ async function parseInternal(data: Uint8Array) {
 }
 
 export function parseTrr(data: Uint8Array) {
-    return Task.create<Result<TrrFile>>('Parse TRR', async ctx => {
+    return Task.create<Result<TrrFile>>('Parse TRR', async (ctx) => {
         try {
             ctx.update({ canAbort: true, message: 'Parsing trajectory...' });
             const file = await parseInternal(data);

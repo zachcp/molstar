@@ -5,9 +5,9 @@
  */
 
 import type { ElementIndex } from '../../indexing.ts';
-import type { CoarseElementData, CoarseElementReference, CoarseIndex, CoarseElementKey } from '../coarse.ts';
+import type { CoarseElementData, CoarseElementKey, CoarseElementReference, CoarseIndex } from '../coarse.ts';
 
-export function getCoarseIndex(data: { spheres: CoarseElementData, gaussians: CoarseElementData }): CoarseIndex {
+export function getCoarseIndex(data: { spheres: CoarseElementData; gaussians: CoarseElementData }): CoarseIndex {
     return new Index(data);
 }
 
@@ -75,13 +75,15 @@ class Index implements CoarseIndex {
         return false;
     }
 
-    constructor(private data: { spheres: CoarseElementData, gaussians: CoarseElementData }) {
+    constructor(private data: { spheres: CoarseElementData; gaussians: CoarseElementData }) {
     }
 }
 
 type CoarseElementMapping = { [entityId: string]: { [chainId: string]: { [seqId: number]: ElementIndex } } };
 
-function buildMapping({ count, entity_id, asym_id, seq_id_begin, seq_id_end }: CoarseElementData): CoarseElementMapping {
+function buildMapping(
+    { count, entity_id, asym_id, seq_id_begin, seq_id_end }: CoarseElementData,
+): CoarseElementMapping {
     const ret: CoarseElementMapping = {};
     for (let i = 0; i < count; i++) {
         const entityId = entity_id.value(i);

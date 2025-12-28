@@ -5,44 +5,44 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { CifWriter } from "../mol-io/writer/cif.ts";
-import type { CifExportContext } from "./structure/export/mmcif.ts";
-import type { QuerySymbolRuntime } from "../mol-script/runtime/query/compiler.ts";
-import { UUID } from "../mol-util/index.ts";
+import type { CifWriter } from '../mol-io/writer/cif.ts';
+import type { CifExportContext } from './structure/export/mmcif.ts';
+import type { QuerySymbolRuntime } from '../mol-script/runtime/query/compiler.ts';
+import { UUID } from '../mol-util/index.ts';
 
-export { CustomPropertyDescriptor, CustomProperties };
+export { CustomProperties, CustomPropertyDescriptor };
 
 interface CustomPropertyDescriptor<
-  ExportCtx = CifExportContext,
-  Symbols extends { [name: string]: QuerySymbolRuntime } = {},
+    ExportCtx = CifExportContext,
+    Symbols extends { [name: string]: QuerySymbolRuntime } = {},
 > {
-  readonly name: string;
+    readonly name: string;
 
-  cifExport?: {
-    // Prefix enforced during export.
-    prefix: string;
-    context?: (ctx: CifExportContext) => ExportCtx | undefined;
-    categories: CifWriter.Category<ExportCtx>[];
-  };
+    cifExport?: {
+        // Prefix enforced during export.
+        prefix: string;
+        context?: (ctx: CifExportContext) => ExportCtx | undefined;
+        categories: CifWriter.Category<ExportCtx>[];
+    };
 
-  // TODO: add aliases when lisp-like mol-script is done
-  symbols?: Symbols;
+    // TODO: add aliases when lisp-like mol-script is done
+    symbols?: Symbols;
 }
 
 function CustomPropertyDescriptor<
-  Ctx,
-  Desc extends CustomPropertyDescriptor<Ctx>,
+    Ctx,
+    Desc extends CustomPropertyDescriptor<Ctx>,
 >(desc: Desc): Desc {
-  return desc;
+    return desc;
 }
 
 namespace CustomPropertyDescriptor {
-  export function getUUID(prop: CustomPropertyDescriptor): UUID {
-    if (!(prop as any).__key) {
-      (prop as any).__key = UUID.create22();
+    export function getUUID(prop: CustomPropertyDescriptor): UUID {
+        if (!(prop as any).__key) {
+            (prop as any).__key = UUID.create22();
+        }
+        return (prop as any).__key;
     }
-    return (prop as any).__key;
-  }
 }
 
 /**
@@ -51,50 +51,50 @@ namespace CustomPropertyDescriptor {
 type Asset = { dispose: () => void };
 
 class CustomProperties {
-  private _list: CustomPropertyDescriptor[] = [];
-  private _set = new Set<CustomPropertyDescriptor>();
-  private _refs = new Map<CustomPropertyDescriptor, number>();
-  private _assets = new Map<CustomPropertyDescriptor, Asset[]>();
+    private _list: CustomPropertyDescriptor[] = [];
+    private _set = new Set<CustomPropertyDescriptor>();
+    private _refs = new Map<CustomPropertyDescriptor, number>();
+    private _assets = new Map<CustomPropertyDescriptor, Asset[]>();
 
-  get all(): ReadonlyArray<CustomPropertyDescriptor> {
-    return this._list;
-  }
-
-  add(desc: CustomPropertyDescriptor<any>) {
-    if (this._set.has(desc)) return;
-
-    this._list.push(desc);
-    this._set.add(desc);
-  }
-
-  reference(desc: CustomPropertyDescriptor<any>, add: boolean) {
-    let refs = this._refs.get(desc) || 0;
-    refs += add ? 1 : -1;
-    this._refs.set(desc, Math.max(refs, 0));
-  }
-
-  hasReference(desc: CustomPropertyDescriptor<any>): boolean {
-    return (this._refs.get(desc) || 0) > 0;
-  }
-
-  has(desc: CustomPropertyDescriptor<any>): boolean {
-    return this._set.has(desc);
-  }
-
-  /** Sets assets for a prop, disposes of existing assets for that prop */
-  assets(desc: CustomPropertyDescriptor<any>, assets?: Asset[]) {
-    const prevAssets = this._assets.get(desc);
-    if (prevAssets) {
-      for (const a of prevAssets) a.dispose();
+    get all(): ReadonlyArray<CustomPropertyDescriptor> {
+        return this._list;
     }
-    if (assets) this._assets.set(desc, assets);
-    else this._assets.delete(desc);
-  }
 
-  /** Disposes of all assets of all props */
-  dispose() {
-    this._assets.forEach((assets) => {
-      for (const a of assets) a.dispose();
-    });
-  }
+    add(desc: CustomPropertyDescriptor<any>) {
+        if (this._set.has(desc)) return;
+
+        this._list.push(desc);
+        this._set.add(desc);
+    }
+
+    reference(desc: CustomPropertyDescriptor<any>, add: boolean) {
+        let refs = this._refs.get(desc) || 0;
+        refs += add ? 1 : -1;
+        this._refs.set(desc, Math.max(refs, 0));
+    }
+
+    hasReference(desc: CustomPropertyDescriptor<any>): boolean {
+        return (this._refs.get(desc) || 0) > 0;
+    }
+
+    has(desc: CustomPropertyDescriptor<any>): boolean {
+        return this._set.has(desc);
+    }
+
+    /** Sets assets for a prop, disposes of existing assets for that prop */
+    assets(desc: CustomPropertyDescriptor<any>, assets?: Asset[]) {
+        const prevAssets = this._assets.get(desc);
+        if (prevAssets) {
+            for (const a of prevAssets) a.dispose();
+        }
+        if (assets) this._assets.set(desc, assets);
+        else this._assets.delete(desc);
+    }
+
+    /** Disposes of all assets of all props */
+    dispose() {
+        this._assets.forEach((assets) => {
+            for (const a of assets) a.dispose();
+        });
+    }
 }

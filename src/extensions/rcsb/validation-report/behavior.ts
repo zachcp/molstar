@@ -15,21 +15,27 @@ import { ClashesRepresentationProvider } from './representation.ts';
 import { DensityFitColorThemeProvider } from './color/density-fit.ts';
 import { cantorPairing } from '../../../mol-data/util.ts';
 import { DefaultQueryRuntimeTable } from '../../../mol-script/runtime/query/compiler.ts';
-import { StructureSelectionQuery, StructureSelectionCategory } from '../../../mol-plugin-state/helpers/structure-selection-query.ts';
+import {
+    StructureSelectionCategory,
+    StructureSelectionQuery,
+} from '../../../mol-plugin-state/helpers/structure-selection-query.ts';
 import { MolScriptBuilder as MS } from '../../../mol-script/language/builder.ts';
 import { Task } from '../../../mol-task/index.ts';
-import { StructureRepresentationPresetProvider, PresetStructureRepresentations } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
+import {
+    PresetStructureRepresentations,
+    StructureRepresentationPresetProvider,
+} from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
 import { StateObjectRef } from '../../../mol-state/index.ts';
 import { Model } from '../../../mol-model/structure.ts';
 
-export const RCSBValidationReport = PluginBehavior.create<{ autoAttach: boolean, showTooltip: boolean }>({
+export const RCSBValidationReport = PluginBehavior.create<{ autoAttach: boolean; showTooltip: boolean }>({
     name: 'rcsb-validation-report-prop',
     category: 'custom-props',
     display: {
         name: 'Validation Report',
-        description: 'Data from wwPDB Validation Report, obtained via RCSB PDB.'
+        description: 'Data from wwPDB Validation Report, obtained via RCSB PDB.',
     },
-    ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean, showTooltip: boolean }> {
+    ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean; showTooltip: boolean }> {
         private provider = ValidationReportProvider;
 
         private labelProvider = {
@@ -38,9 +44,9 @@ export const RCSBValidationReport = PluginBehavior.create<{ autoAttach: boolean,
                 return [
                     geometryQualityLabel(loci),
                     densityFitLabel(loci),
-                    randomCoilIndexLabel(loci)
-                ].filter(l => !!l).join('</br>');
-            }
+                    randomCoilIndexLabel(loci),
+                ].filter((l) => !!l).join('</br>');
+            },
         };
 
         register(): void {
@@ -62,11 +68,14 @@ export const RCSBValidationReport = PluginBehavior.create<{ autoAttach: boolean,
             this.ctx.builders.structure.representation.registerPreset(ValidationReportRandomCoilIndexPreset);
         }
 
-        update(p: { autoAttach: boolean, showTooltip: boolean }) {
+        override update(p: { autoAttach: boolean; showTooltip: boolean }) {
             const updated = this.params.autoAttach !== p.autoAttach;
             this.params.autoAttach = p.autoAttach;
             this.params.showTooltip = p.showTooltip;
-            this.ctx.customStructureProperties.setDefaultAutoAttach(this.provider.descriptor.name, this.params.autoAttach);
+            this.ctx.customStructureProperties.setDefaultAutoAttach(
+                this.provider.descriptor.name,
+                this.params.autoAttach,
+            );
             return updated;
         }
 
@@ -92,8 +101,8 @@ export const RCSBValidationReport = PluginBehavior.create<{ autoAttach: boolean,
     params: () => ({
         autoAttach: PD.Boolean(false),
         showTooltip: PD.Boolean(true),
-        baseUrl: PD.Text(ValidationReport.DefaultBaseUrl)
-    })
+        baseUrl: PD.Text(ValidationReport.DefaultBaseUrl),
+    }),
 });
 
 //
@@ -114,17 +123,17 @@ function geometryQualityLabel(loci: Loci): string | undefined {
             const issues = new Set<string>();
 
             const bonds = bondOutliers.index.get(eI);
-            if (bonds) bonds.forEach(b => issues.add(bondOutliers.data[b].tag));
+            if (bonds) bonds.forEach((b) => issues.add(bondOutliers.data[b].tag));
 
             const angles = angleOutliers.index.get(eI);
-            if (angles) angles.forEach(a => issues.add(angleOutliers.data[a].tag));
+            if (angles) angles.forEach((a) => issues.add(angleOutliers.data[a].tag));
 
             if (issues.size === 0) {
                 return `Geometry Quality <small>(1 Atom)</small>: no issues`;
             }
 
             const summary: string[] = [];
-            issues.forEach(name => summary.push(name));
+            issues.forEach((name) => summary.push(name));
             return `Geometry Quality <small>(1 Atom)</small>: ${summary.join(', ')}`;
         }
 
@@ -142,7 +151,7 @@ function geometryQualityLabel(loci: Loci): string | undefined {
             const residueIndex = unit.model.atomicHierarchy.residueAtomSegments.index;
             const { elements } = unit;
 
-            OrderedSet.forEach(indices, idx => {
+            OrderedSet.forEach(indices, (idx) => {
                 const eI = elements[idx];
 
                 const rI = residueIndex[eI];
@@ -150,7 +159,7 @@ function geometryQualityLabel(loci: Loci): string | undefined {
                 if (!seen.has(residueKey)) {
                     const issues = geometryIssues.get(rI);
                     if (issues) {
-                        issues.forEach(name => {
+                        issues.forEach((name) => {
                             const count = cummulativeIssues.get(name) || 0;
                             cummulativeIssues.set(name, count + 1);
                         });
@@ -195,7 +204,7 @@ function densityFitLabel(loci: Loci): string | undefined {
             const residueIndex = unit.model.atomicHierarchy.residueAtomSegments.index;
             const { elements } = unit;
 
-            OrderedSet.forEach(indices, idx => {
+            OrderedSet.forEach(indices, (idx) => {
                 const eI = elements[idx];
                 const rI = residueIndex[eI];
 
@@ -252,7 +261,7 @@ function randomCoilIndexLabel(loci: Loci): string | undefined {
             const residueIndex = unit.model.atomicHierarchy.residueAtomSegments.index;
             const { elements } = unit;
 
-            OrderedSet.forEach(indices, idx => {
+            OrderedSet.forEach(indices, (idx) => {
                 const eI = elements[idx];
                 const rI = residueIndex[eI];
 
@@ -278,30 +287,36 @@ function randomCoilIndexLabel(loci: Loci): string | undefined {
 
 //
 
-const hasClash = StructureSelectionQuery('Residues with Clashes', MS.struct.modifier.union([
-    MS.struct.modifier.wholeResidues([
-        MS.struct.modifier.union([
-            MS.struct.generator.atomGroups({
-                'chain-test': MS.core.rel.eq([MS.ammp('objectPrimitive'), 'atomistic']),
-                'atom-test': ValidationReport.symbols.hasClash.symbol(),
-            })
-        ])
-    ])
-]), {
-    description: 'Select residues with clashes in the wwPDB validation report.',
-    category: StructureSelectionCategory.Residue,
-    ensureCustomProperties: (ctx, structure) => {
-        return ValidationReportProvider.attach(ctx, structure.models[0]);
-    }
-});
+const hasClash = StructureSelectionQuery(
+    'Residues with Clashes',
+    MS.struct.modifier.union([
+        MS.struct.modifier.wholeResidues([
+            MS.struct.modifier.union([
+                MS.struct.generator.atomGroups({
+                    'chain-test': MS.core.rel.eq([MS.ammp('objectPrimitive'), 'atomistic']),
+                    'atom-test': ValidationReport.symbols.hasClash.symbol(),
+                }),
+            ]),
+        ]),
+    ]),
+    {
+        description: 'Select residues with clashes in the wwPDB validation report.',
+        category: StructureSelectionCategory.Residue,
+        ensureCustomProperties: (ctx, structure) => {
+            return ValidationReportProvider.attach(ctx, structure.models[0]);
+        },
+    },
+);
 
 //
 
 export const ValidationReportGeometryQualityPreset = StructureRepresentationPresetProvider({
     id: 'preset-structure-representation-rcsb-validation-report-geometry-uality',
     display: {
-        name: 'Validation Report (Geometry Quality)', group: 'Annotation',
-        description: 'Color structure based on geometry quality; show geometry clashes. Data from wwPDB Validation Report, obtained via RCSB PDB.'
+        name: 'Validation Report (Geometry Quality)',
+        group: 'Annotation',
+        description:
+            'Color structure based on geometry quality; show geometry clashes. Data from wwPDB Validation Report, obtained via RCSB PDB.',
     },
     isApplicable(a): boolean {
         return a.data.models.length === 1 && ValidationReport.isApplicable(a.data.models[0]);
@@ -312,36 +327,64 @@ export const ValidationReportGeometryQualityPreset = StructureRepresentationPres
         const structure = structureCell?.obj?.data;
         if (!structureCell || !structure) return {};
 
-        await plugin.runTask(Task.create('Validation Report', async runtime => {
-            await ValidationReportProvider.attach({ runtime, assetManager: plugin.managers.asset, errorContext: plugin.errorContext }, structure.models[0]);
+        await plugin.runTask(Task.create('Validation Report', async (runtime) => {
+            await ValidationReportProvider.attach({
+                runtime,
+                assetManager: plugin.managers.asset,
+                errorContext: plugin.errorContext,
+            }, structure.models[0]);
         }));
 
         const colorTheme = GeometryQualityColorThemeProvider.name as any;
-        const { components, representations } = await PresetStructureRepresentations.auto.apply(ref, { ...params, theme: { globalName: colorTheme, focus: { name: colorTheme } } }, plugin);
+        const { components, representations } = await PresetStructureRepresentations.auto.apply(ref, {
+            ...params,
+            theme: { globalName: colorTheme, focus: { name: colorTheme } },
+        }, plugin);
 
-        const clashes = await plugin.builders.structure.tryCreateComponentFromExpression(structureCell, hasClash.expression, 'clashes', { label: 'Clashes' });
+        const clashes = await plugin.builders.structure.tryCreateComponentFromExpression(
+            structureCell,
+            hasClash.expression,
+            'clashes',
+            { label: 'Clashes' },
+        );
 
-        const { update, builder, typeParams, color } = StructureRepresentationPresetProvider.reprBuilder(plugin, params);
+        const { update, builder, typeParams, color } = StructureRepresentationPresetProvider.reprBuilder(
+            plugin,
+            params,
+        );
         let clashesBallAndStick, clashesRepr;
         if (representations) {
-            clashesBallAndStick = builder.buildRepresentation(update, clashes, { type: 'ball-and-stick', typeParams, color: colorTheme }, { tag: 'clashes-ball-and-stick' });
-            clashesRepr = builder.buildRepresentation<any>(update, clashes, { type: ClashesRepresentationProvider.name, typeParams, color }, { tag: 'clashes-repr' });
+            clashesBallAndStick = builder.buildRepresentation(update, clashes, {
+                type: 'ball-and-stick',
+                typeParams,
+                color: colorTheme,
+            }, { tag: 'clashes-ball-and-stick' });
+            clashesRepr = builder.buildRepresentation<any>(update, clashes, {
+                type: ClashesRepresentationProvider.name,
+                typeParams,
+                color,
+            }, { tag: 'clashes-repr' });
         }
 
         await update.commit({ revertOnError: true });
 
-        return { components: { ...components, clashes }, representations: { ...representations, clashesBallAndStick, clashesRepr } };
-    }
+        return {
+            components: { ...components, clashes },
+            representations: { ...representations, clashesBallAndStick, clashesRepr },
+        };
+    },
 });
 
 export const ValidationReportDensityFitPreset = StructureRepresentationPresetProvider({
     id: 'preset-structure-representation-rcsb-validation-report-density-fit',
     display: {
-        name: 'Validation Report (Density Fit)', group: 'Annotation',
-        description: 'Color structure based on density fit. Data from wwPDB Validation Report, obtained via RCSB PDB.'
+        name: 'Validation Report (Density Fit)',
+        group: 'Annotation',
+        description: 'Color structure based on density fit. Data from wwPDB Validation Report, obtained via RCSB PDB.',
     },
     isApplicable(a): boolean {
-        return a.data.models.length === 1 && ValidationReport.isApplicable(a.data.models[0]) && Model.isFromXray(a.data.models[0]) && Model.probablyHasDensityMap(a.data.models[0]);
+        return a.data.models.length === 1 && ValidationReport.isApplicable(a.data.models[0]) &&
+            Model.isFromXray(a.data.models[0]) && Model.probablyHasDensityMap(a.data.models[0]);
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,
     async apply(ref, params, plugin) {
@@ -349,23 +392,33 @@ export const ValidationReportDensityFitPreset = StructureRepresentationPresetPro
         const structure = structureCell?.obj?.data;
         if (!structureCell || !structure) return {};
 
-        await plugin.runTask(Task.create('Validation Report', async runtime => {
-            await ValidationReportProvider.attach({ runtime, assetManager: plugin.managers.asset, errorContext: plugin.errorContext }, structure.models[0]);
+        await plugin.runTask(Task.create('Validation Report', async (runtime) => {
+            await ValidationReportProvider.attach({
+                runtime,
+                assetManager: plugin.managers.asset,
+                errorContext: plugin.errorContext,
+            }, structure.models[0]);
         }));
 
         const colorTheme = DensityFitColorThemeProvider.name as any;
-        return await PresetStructureRepresentations.auto.apply(ref, { ...params, theme: { globalName: colorTheme, focus: { name: colorTheme } } }, plugin);
-    }
+        return await PresetStructureRepresentations.auto.apply(ref, {
+            ...params,
+            theme: { globalName: colorTheme, focus: { name: colorTheme } },
+        }, plugin);
+    },
 });
 
 export const ValidationReportRandomCoilIndexPreset = StructureRepresentationPresetProvider({
     id: 'preset-structure-representation-rcsb-validation-report-random-coil-index',
     display: {
-        name: 'Validation Report (Random Coil Index)', group: 'Annotation',
-        description: 'Color structure based on Random Coil Index. Data from wwPDB Validation Report, obtained via RCSB PDB.'
+        name: 'Validation Report (Random Coil Index)',
+        group: 'Annotation',
+        description:
+            'Color structure based on Random Coil Index. Data from wwPDB Validation Report, obtained via RCSB PDB.',
     },
     isApplicable(a): boolean {
-        return a.data.models.length === 1 && ValidationReport.isApplicable(a.data.models[0]) && Model.isFromNmr(a.data.models[0]);
+        return a.data.models.length === 1 && ValidationReport.isApplicable(a.data.models[0]) &&
+            Model.isFromNmr(a.data.models[0]);
     },
     params: () => StructureRepresentationPresetProvider.CommonParams,
     async apply(ref, params, plugin) {
@@ -373,11 +426,18 @@ export const ValidationReportRandomCoilIndexPreset = StructureRepresentationPres
         const structure = structureCell?.obj?.data;
         if (!structureCell || !structure) return {};
 
-        await plugin.runTask(Task.create('Validation Report', async runtime => {
-            await ValidationReportProvider.attach({ runtime, assetManager: plugin.managers.asset, errorContext: plugin.errorContext }, structure.models[0]);
+        await plugin.runTask(Task.create('Validation Report', async (runtime) => {
+            await ValidationReportProvider.attach({
+                runtime,
+                assetManager: plugin.managers.asset,
+                errorContext: plugin.errorContext,
+            }, structure.models[0]);
         }));
 
         const colorTheme = RandomCoilIndexColorThemeProvider.name as any;
-        return await PresetStructureRepresentations.auto.apply(ref, { ...params, theme: { globalName: colorTheme, focus: { name: colorTheme } } }, plugin);
-    }
+        return await PresetStructureRepresentations.auto.apply(ref, {
+            ...params,
+            theme: { globalName: colorTheme, focus: { name: colorTheme } },
+        }, plugin);
+    },
 });

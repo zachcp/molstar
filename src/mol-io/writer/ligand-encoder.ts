@@ -6,18 +6,18 @@
 
 import { StringBuilder } from '../../mol-util/index.ts';
 import type { Writer } from './writer.ts';
-import type { Encoder, Category, Field } from './cif/encoder.ts';
+import type { Category, Encoder, Field } from './cif/encoder.ts';
 import type { ComponentAtom } from '../../mol-model-formats/structure/property/atoms/chem_comp.ts';
 import type { ComponentBond } from '../../mol-model-formats/structure/property/bonds/chem_comp.ts';
 import { getElementIdx, isHydrogen } from '../../mol-model/structure/structure/unit/bonds/common.ts';
 import type { ElementSymbol } from '../../mol-model/structure/model/types.ts';
 
 interface Atom {
-    Cartn_x: number,
-    Cartn_y: number,
-    Cartn_z: number,
-    type_symbol: ElementSymbol,
-    index: number
+    Cartn_x: number;
+    Cartn_y: number;
+    Cartn_z: number;
+    type_symbol: ElementSymbol;
+    index: number;
 }
 
 function Atom(partial: any): Atom {
@@ -45,7 +45,11 @@ export abstract class LigandEncoder implements Encoder<string> {
             throw new Error('The writer contents have already been encoded, no more writing.');
         }
 
-        if (this.metaInformation && (category.name === 'model_server_result' || category.name === 'model_server_params' || category.name === 'model_server_stats')) {
+        if (
+            this.metaInformation &&
+            (category.name === 'model_server_result' || category.name === 'model_server_params' ||
+                category.name === 'model_server_stats')
+        ) {
             this.writeFullCategory(this.meta, category, context);
             return;
         }
@@ -88,14 +92,24 @@ export abstract class LigandEncoder implements Encoder<string> {
         return StringBuilder.getString(this.builder);
     }
 
-    protected getAtoms<Ctx>(instance: Category.Instance<Ctx>, source: any, ccdAtoms: ComponentAtom.Entry['map']): Map<string, Atom> {
+    protected getAtoms<Ctx>(
+        instance: Category.Instance<Ctx>,
+        source: any,
+        ccdAtoms: ComponentAtom.Entry['map'],
+    ): Map<string, Atom> {
         const sortedFields = this.getSortedFields(instance, ['Cartn_x', 'Cartn_y', 'Cartn_z']);
         const label_atom_id = this.getField(instance, 'label_atom_id');
         const type_symbol = this.getField(instance, 'type_symbol');
         return this._getAtoms(source, sortedFields, label_atom_id, type_symbol, ccdAtoms);
     }
 
-    private _getAtoms(source: any, fields: Field<any, any>[], label_atom_id: Field<any, any>, type_symbol: Field<any, any>, ccdAtoms: ComponentAtom.Entry['map']): Map<string, Atom> {
+    private _getAtoms(
+        source: any,
+        fields: Field<any, any>[],
+        label_atom_id: Field<any, any>,
+        type_symbol: Field<any, any>,
+        ccdAtoms: ComponentAtom.Entry['map'],
+    ): Map<string, Atom> {
         const atoms = new Map<string, Atom>();
         let index = 0;
 
@@ -119,7 +133,7 @@ export abstract class LigandEncoder implements Encoder<string> {
                 const ts = type_symbol.value(key, data, index) as ElementSymbol;
                 if (this.skipHydrogen(ts)) continue;
 
-                const a: { [k: string]: (string | number) } = {};
+                const a: { [k: string]: string | number } = {};
 
                 for (let _f = 0, _fl = fields.length; _f < _fl; _f++) {
                     const f: Field<any, any> = fields[_f]!;
@@ -148,11 +162,11 @@ export abstract class LigandEncoder implements Encoder<string> {
     }
 
     private getSortedFields<Ctx>(instance: Category.Instance<Ctx>, names: string[]) {
-        return names.map(n => this.getField(instance, n));
+        return names.map((n) => this.getField(instance, n));
     }
 
     private getField<Ctx>(instance: Category.Instance<Ctx>, name: string) {
-        return instance.fields.find(f => f.name === name)!;
+        return instance.fields.find((f) => f.name === name)!;
     }
 
     protected getName<Ctx>(instance: Category.Instance<Ctx>, source: any): string {

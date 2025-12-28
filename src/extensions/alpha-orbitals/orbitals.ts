@@ -12,11 +12,19 @@ import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { Task } from '../../mol-task/index.ts';
 import { isTimingMode } from '../../mol-util/debug.ts';
 import { sphericalCollocation } from './collocation.ts';
-import { type AlphaOrbital, createGrid, type CubeGrid, type CubeGridComputationParams, initCubeGrid } from './data-model.ts';
+import {
+    type AlphaOrbital,
+    createGrid,
+    type CubeGrid,
+    type CubeGridComputationParams,
+    initCubeGrid,
+} from './data-model.ts';
 import { gpuComputeAlphaOrbitalsGridValues } from './gpu/compute.ts';
 
 export function createSphericalCollocationGrid(
-    params: CubeGridComputationParams, orbital: AlphaOrbital, webgl?: WebGLContext
+    params: CubeGridComputationParams,
+    orbital: AlphaOrbital,
+    webgl?: WebGLContext,
 ): Task<CubeGrid> {
     return Task.create('Spherical Collocation Grid', async (ctx) => {
         const cubeGrid = initCubeGrid(params);
@@ -33,7 +41,7 @@ export function createSphericalCollocationGrid(
         }
 
         const grid = createGrid(cubeGrid, matrix, [0, 1, 2]);
-        let isovalues: { negative?: number, positive?: number } | undefined;
+        let isovalues: { negative?: number; positive?: number } | undefined;
 
         if (!params.doNotComputeIsovalues) {
             isovalues = computeOrbitalIsocontourValues(matrix, 0.85);
@@ -97,7 +105,7 @@ export function computeOrbitalIsocontourValues(input: Float32Array, cumulativeTh
 
     sortArray(
         indices,
-        (indices, i, j) => weights[indices[j]] - weights[indices[i]]
+        (indices, i, j) => weights[indices[j]] - weights[indices[i]],
     );
 
     let cweight = 0,

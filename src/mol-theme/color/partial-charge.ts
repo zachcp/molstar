@@ -5,7 +5,7 @@
  */
 
 import { Color, ColorScale } from '../../mol-util/color/index.ts';
-import { StructureElement, type Unit, Bond, type ElementIndex } from '../../mol-model/structure.ts';
+import { Bond, type ElementIndex, StructureElement, type Unit } from '../../mol-model/structure.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ColorTheme } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
@@ -20,7 +20,7 @@ export const PartialChargeColorThemeParams = {
     domain: PD.Interval([-1, 1]),
     list: PD.ColorList('red-white-blue', { presetKind: 'scale' }),
 };
-export type PartialChargeColorThemeParams = typeof PartialChargeColorThemeParams
+export type PartialChargeColorThemeParams = typeof PartialChargeColorThemeParams;
 export function getPartialChargeColorThemeParams(ctx: ThemeDataContext) {
     return PartialChargeColorThemeParams; // TODO return copy
 }
@@ -29,7 +29,10 @@ function getPartialCharge(unit: Unit, element: ElementIndex) {
     return AtomPartialCharge.Provider.get(unit.model)?.data.value(element);
 }
 
-export function PartialChargeColorTheme(ctx: ThemeDataContext, props: PD.Values<PartialChargeColorThemeParams>): ColorTheme<PartialChargeColorThemeParams> {
+export function PartialChargeColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<PartialChargeColorThemeParams>,
+): ColorTheme<PartialChargeColorThemeParams> {
     const scale = ColorScale.create({
         domain: props.domain,
         listOrName: props.list.colors,
@@ -53,7 +56,7 @@ export function PartialChargeColorTheme(ctx: ThemeDataContext, props: PD.Values<
         color,
         props,
         description: Description,
-        legend: scale ? scale.legend : undefined
+        legend: scale ? scale.legend : undefined,
     };
 }
 
@@ -64,5 +67,6 @@ export const PartialChargeColorThemeProvider: ColorTheme.Provider<PartialChargeC
     factory: PartialChargeColorTheme,
     getParams: getPartialChargeColorThemeParams,
     defaultValues: PD.getDefaultValues(PartialChargeColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure && ctx.structure.models.some(m => AtomPartialCharge.Provider.get(m) !== undefined)
+    isApplicable: (ctx: ThemeDataContext) =>
+        !!ctx.structure && ctx.structure.models.some((m) => AtomPartialCharge.Provider.get(m) !== undefined),
 };

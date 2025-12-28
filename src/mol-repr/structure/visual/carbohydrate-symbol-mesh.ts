@@ -9,7 +9,13 @@ import { Box, PerforatedBox } from '../../../mol-geo/primitive/box.ts';
 import { OctagonalPyramid, PerforatedOctagonalPyramid } from '../../../mol-geo/primitive/pyramid.ts';
 import { Star } from '../../../mol-geo/primitive/star.ts';
 import { Octahedron, PerforatedOctahedron } from '../../../mol-geo/primitive/octahedron.ts';
-import { DiamondPrism, PentagonalPrism, ShiftedHexagonalPrism, HexagonalPrism, HeptagonalPrism } from '../../../mol-geo/primitive/prism.ts';
+import {
+    DiamondPrism,
+    HeptagonalPrism,
+    HexagonalPrism,
+    PentagonalPrism,
+    ShiftedHexagonalPrism,
+} from '../../../mol-geo/primitive/prism.ts';
 import { Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
 import type { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
@@ -21,7 +27,7 @@ import type { ComplexVisual } from '../representation.ts';
 import type { VisualUpdateState } from '../../util.ts';
 import { LocationIterator } from '../../../mol-geo/util/location-iterator.ts';
 import { PickingId } from '../../../mol-geo/geometry/picking.ts';
-import { OrderedSet, Interval } from '../../../mol-data/int.ts';
+import { Interval, OrderedSet } from '../../../mol-data/int.ts';
 import { EmptyLoci, type Loci } from '../../../mol-model/loci.ts';
 import type { VisualContext } from '../../../mol-repr/visual.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
@@ -47,7 +53,13 @@ const hexagonalPrism = HexagonalPrism();
 const shiftedHexagonalPrism = ShiftedHexagonalPrism();
 const heptagonalPrism = HeptagonalPrism();
 
-function createCarbohydrateSymbolMesh(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<CarbohydrateSymbolParams>, mesh?: Mesh) {
+function createCarbohydrateSymbolMesh(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<CarbohydrateSymbolParams>,
+    mesh?: Mesh,
+) {
     const builderState = MeshBuilder.createState(256, 128, mesh);
 
     const { detail, sizeFactor } = props;
@@ -166,7 +178,7 @@ export const CarbohydrateSymbolParams = {
     detail: PD.Numeric(0, { min: 0, max: 3, step: 1 }, BaseGeometry.CustomQualityParamInfo),
     sizeFactor: PD.Numeric(1.75, { min: 0, max: 10, step: 0.01 }),
 };
-export type CarbohydrateSymbolParams = typeof CarbohydrateSymbolParams
+export type CarbohydrateSymbolParams = typeof CarbohydrateSymbolParams;
 
 export function CarbohydrateSymbolVisual(materialId: number): ComplexVisual<CarbohydrateSymbolParams> {
     return ComplexMeshVisual<CarbohydrateSymbolParams>({
@@ -175,12 +187,14 @@ export function CarbohydrateSymbolVisual(materialId: number): ComplexVisual<Carb
         createLocationIterator: CarbohydrateElementIterator,
         getLoci: getCarbohydrateLoci,
         eachLocation: eachCarbohydrate,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<CarbohydrateSymbolParams>, currentProps: PD.Values<CarbohydrateSymbolParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
-                newProps.detail !== currentProps.detail
-            );
-        }
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<CarbohydrateSymbolParams>,
+            currentProps: PD.Values<CarbohydrateSymbolParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
+                newProps.detail !== currentProps.detail;
+        },
     }, materialId);
 }
 
@@ -229,7 +243,7 @@ function eachCarbohydrate(loci: Loci, structure: Structure, apply: (interval: In
         if (!Unit.isAtomic(unit)) continue;
 
         __elementIndicesSet.clear();
-        OrderedSet.forEach(indices, v => {
+        OrderedSet.forEach(indices, (v) => {
             const elementIndices = getElementIndices(unit, unit.elements[v]);
             for (let i = 0, il = elementIndices.length; i < il; ++i) {
                 if (!__elementIndicesSet.has(elementIndices[i])) {

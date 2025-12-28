@@ -15,7 +15,15 @@ import { Camera } from '../camera.ts';
 import { cameraUnproject } from '../camera/util.ts';
 import { Viewport } from '../camera/util.ts';
 import type { Helper } from './helper.ts';
-import { type AsyncPickData, PickBuffers, type PickData, PickPass, type PickOptions, checkAsyncPickingSupport, AsyncPickStatus } from '../passes/pick.ts';
+import {
+    type AsyncPickData,
+    AsyncPickStatus,
+    checkAsyncPickingSupport,
+    PickBuffers,
+    type PickData,
+    type PickOptions,
+    PickPass,
+} from '../passes/pick.ts';
 import { Sphere3D } from '../../mol-math/geometry/primitives/sphere3d.ts';
 
 export class RayHelper {
@@ -138,7 +146,7 @@ export class RayHelper {
                 } else if (status === AsyncPickStatus.Pending) {
                     return 'pending';
                 }
-            }
+            },
         };
     }
 
@@ -152,7 +160,13 @@ export class RayHelper {
         this.pickPass.dispose();
     }
 
-    constructor(private webgl: WebGLContext, private renderer: Renderer, private scene: Scene, private helper: Helper, options: PickOptions) {
+    constructor(
+        private webgl: WebGLContext,
+        private renderer: Renderer,
+        private scene: Scene,
+        private helper: Helper,
+        options: PickOptions,
+    ) {
         const size = options.pickPadding * 2 + 1;
 
         this.camera = new Camera();
@@ -164,7 +178,7 @@ export class RayHelper {
 
         if (!checkAsyncPickingSupport(webgl)) {
             this.asyncIdentify = (ray, cam) => ({
-                tryGet: () => this.identify(ray, cam)
+                tryGet: () => this.identify(ray, cam),
             });
         }
     }

@@ -7,7 +7,7 @@
 
 import { StateTree } from '../tree/immutable.ts';
 import type { TransientTree } from '../tree/transient.ts';
-import { type StateObject, StateObjectCell, StateObjectSelector, StateObjectRef } from '../object.ts';
+import { type StateObject, StateObjectCell, StateObjectRef, StateObjectSelector } from '../object.ts';
 import { StateTransform } from '../transform.ts';
 import type { StateTransformer } from '../transformer.ts';
 import type { State } from '../state.ts';
@@ -16,38 +16,44 @@ import { produce } from '../../mol-util/produce.ts';
 export { StateBuilder };
 
 interface StateBuilder {
-    readonly editInfo: StateBuilder.EditInfo,
-    getTree(): StateTree
+    readonly editInfo: StateBuilder.EditInfo;
+    getTree(): StateTree;
 }
 
 namespace StateBuilder {
     export interface EditInfo {
-        applied: boolean,
-        sourceTree: StateTree,
-        count: number,
-        lastUpdate?: StateTransform.Ref
+        applied: boolean;
+        sourceTree: StateTree;
+        count: number;
+        lastUpdate?: StateTransform.Ref;
     }
 
     interface BuildState {
-        state: State | undefined,
-        tree: TransientTree,
-        editInfo: EditInfo,
-        actions: Action[]
+        state: State | undefined;
+        tree: TransientTree;
+        editInfo: EditInfo;
+        actions: Action[];
     }
 
     type Action =
-        | { kind: 'add', transform: StateTransform }
-        | { kind: 'update', ref: string, params: any }
-        | { kind: 'delete', ref: string }
-        | { kind: 'insert', ref: string, transform: StateTransform }
+        | { kind: 'add'; transform: StateTransform }
+        | { kind: 'update'; ref: string; params: any }
+        | { kind: 'delete'; ref: string }
+        | { kind: 'insert'; ref: string; transform: StateTransform };
 
     function getAffectedRefs(state: BuildState): string[] {
         const refs = new Set<string>();
         for (const a of state.actions) {
             switch (a.kind) {
-                case 'add': refs.add(a.transform.ref); break;
-                case 'update': refs.add(a.ref); break;
-                case 'delete': refs.add(a.ref); break;
+                case 'add':
+                    refs.add(a.transform.ref);
+                    break;
+                case 'update':
+                    refs.add(a.ref);
+                    break;
+                case 'delete':
+                    refs.add(a.ref);
+                    break;
                 case 'insert': {
                     refs.add(a.ref);
                     refs.add(a.transform.ref);
@@ -75,9 +81,15 @@ namespace StateBuilder {
         const tree = state.state.tree.asTransient();
         for (const a of state.actions) {
             switch (a.kind) {
-                case 'add': tree.add(a.transform); break;
-                case 'update': tree.setParams(a.ref, a.params); break;
-                case 'delete': tree.remove(a.ref); break;
+                case 'add':
+                    tree.add(a.transform);
+                    break;
+                case 'update':
+                    tree.setParams(a.ref, a.params);
+                    break;
+                case 'delete':
+                    tree.remove(a.ref);
+                    break;
                 case 'insert': {
                     const children = tree.children.get(a.ref).toArray();
                     tree.add(a.transform);
@@ -101,29 +113,38 @@ namespace StateBuilder {
     }
 
     export function isTo(obj: any): obj is StateBuilder.To<any> {
-        return !!obj && typeof (obj as StateBuilder).getTree === 'function' && typeof (obj as StateBuilder.To<any>).ref === 'string';
+        return !!obj && typeof (obj as StateBuilder).getTree === 'function' &&
+            typeof (obj as StateBuilder.To<any>).ref === 'string';
     }
 
     // type ToFromCell<C extends StateObjectCell> = C extends StateObjectCell<infer A, StateTransform<infer T extends StateTransformer>> ? To<A, any>: never
 
     export class Root implements StateBuilder {
         private state: BuildState;
-        get editInfo(): StateBuilder.EditInfo { return this.state.editInfo; }
-        get currentTree(): TransientTree { return this.state.tree; }
+        get editInfo(): StateBuilder.EditInfo {
+            return this.state.editInfo;
+        }
+        get currentTree(): TransientTree {
+            return this.state.tree;
+        }
 
-        to<A extends StateObject, T extends StateTransformer>(ref: StateTransform.Ref): To<A, T>
-        to<A extends StateObject, T extends StateTransformer>(ref: StateObjectRef<A>): To<A, T>
-        to<C extends StateObjectCell>(cell: C): To<StateObjectCell.Obj<C>, StateObjectCell.Transformer<C>>
-        to<S extends StateObjectSelector>(selector: S): To<StateObjectSelector.Obj<S>, StateObjectSelector.Transformer<S>>
+        to<A extends StateObject, T extends StateTransformer>(ref: StateTransform.Ref): To<A, T>;
+        to<A extends StateObject, T extends StateTransformer>(ref: StateObjectRef<A>): To<A, T>;
+        to<C extends StateObjectCell>(cell: C): To<StateObjectCell.Obj<C>, StateObjectCell.Transformer<C>>;
+        to<S extends StateObjectSelector>(
+            selector: S,
+        ): To<StateObjectSelector.Obj<S>, StateObjectSelector.Transformer<S>>;
         to(refOrCellOrSelector: StateTransform.Ref | StateObjectCell | StateObjectSelector) {
             const ref = typeof refOrCellOrSelector === 'string'
                 ? refOrCellOrSelector
                 : StateObjectCell.is(refOrCellOrSelector)
-                    ? refOrCellOrSelector.transform.ref
-                    : refOrCellOrSelector.ref;
+                ? refOrCellOrSelector.transform.ref
+                : refOrCellOrSelector.ref;
             return new To<StateObject, StateTransformer>(this.state, ref, this);
         }
-        toRoot<A extends StateObject>() { return new To<A>(this.state, this.state.tree.root.ref, this); }
+        toRoot<A extends StateObject>() {
+            return new To<A>(this.state, this.state.tree.root.ref, this);
+        }
         delete(obj: StateObjectRef) {
             const ref = StateObjectRef.resolveRef(obj);
             if (!ref || !this.state.tree.transforms.has(ref)) return this;
@@ -132,19 +153,32 @@ namespace StateBuilder {
             this.state.actions.push({ kind: 'delete', ref });
             return this;
         }
-        getTree(options?: { useHashVersion?: boolean }): StateTree { return buildTree(this.state, options); }
+        getTree(options?: { useHashVersion?: boolean }): StateTree {
+            return buildTree(this.state, options);
+        }
 
         commit(options?: Partial<State.UpdateOptions>) {
             if (!this.state.state) throw new Error('Cannot commit template tree');
             return this.state.state.runTask(this.state.state.updateTree(this, options));
         }
 
-        constructor(tree: StateTree, state?: State) { this.state = { state, tree: tree.asTransient(), actions: [], editInfo: { applied: false, sourceTree: tree, count: 0, lastUpdate: void 0 } }; }
+        constructor(tree: StateTree, state?: State) {
+            this.state = {
+                state,
+                tree: tree.asTransient(),
+                actions: [],
+                editInfo: { applied: false, sourceTree: tree, count: 0, lastUpdate: void 0 },
+            };
+        }
     }
 
     export class To<A extends StateObject, T extends StateTransformer = StateTransformer> implements StateBuilder {
-        get editInfo(): StateBuilder.EditInfo { return this.state.editInfo; }
-        get selector(): StateObjectSelector<A, T> { return new StateObjectSelector<A, T>(this.ref, this.state.state); }
+        get editInfo(): StateBuilder.EditInfo {
+            return this.state.editInfo;
+        }
+        get selector(): StateObjectSelector<A, T> {
+            return new StateObjectSelector<A, T>(this.ref, this.state.state);
+        }
 
         readonly ref: StateTransform.Ref;
 
@@ -156,7 +190,11 @@ namespace StateBuilder {
          * Apply the transformed to the parent node
          * If no params are specified (params <- undefined), default params are lazily resolved.
          */
-        apply<T extends StateTransformer<A, any, any>>(tr: T, params?: Partial<StateTransformer.Params<T>>, options?: Partial<StateTransform.Options>): To<StateTransformer.To<T>, T> {
+        apply<T extends StateTransformer<A, any, any>>(
+            tr: T,
+            params?: Partial<StateTransformer.Params<T>>,
+            options?: Partial<StateTransform.Options>,
+        ): To<StateTransformer.To<T>, T> {
             if (tr.definition.isDecorator) {
                 return this.insert(tr, params, options);
             }
@@ -176,7 +214,12 @@ namespace StateBuilder {
          * If the ref is present, the transform is applied.
          * Otherwise a transform with the specifed ref is created.
          */
-        applyOrUpdate<T extends StateTransformer<A, any, any>>(ref: StateTransform.Ref, tr: T, params?: Partial<StateTransformer.Params<T>>, options?: Partial<StateTransform.Options>): To<StateTransformer.To<T>, T> {
+        applyOrUpdate<T extends StateTransformer<A, any, any>>(
+            ref: StateTransform.Ref,
+            tr: T,
+            params?: Partial<StateTransformer.Params<T>>,
+            options?: Partial<StateTransform.Options>,
+        ): To<StateTransformer.To<T>, T> {
             if (this.state.tree.transforms.has(ref)) {
                 const to = this.to<StateTransformer.To<T>, T>(ref);
                 if (params) to.update(params);
@@ -191,7 +234,12 @@ namespace StateBuilder {
          * If no params are specified (params <- undefined), default params are lazily resolved.
          * The transformer cannot be a decorator to be able to use this.
          */
-        applyOrUpdateTagged<T extends StateTransformer<A, any, any>>(tags: string | string[], tr: T, params?: Partial<StateTransformer.Params<T>>, options?: Partial<StateTransform.Options>): To<StateTransformer.To<T>, T> {
+        applyOrUpdateTagged<T extends StateTransformer<A, any, any>>(
+            tags: string | string[],
+            tr: T,
+            params?: Partial<StateTransformer.Params<T>>,
+            options?: Partial<StateTransform.Options>,
+        ): To<StateTransformer.To<T>, T> {
             if (tr.definition.isDecorator) {
                 throw new Error(`Can't use applyOrUpdateTagged on decorator transformers.`);
             }
@@ -210,7 +258,10 @@ namespace StateBuilder {
                 }
             }
 
-            const t = tr.apply(applyRoot, params, { ...options, tags: stringArrayUnion(tags, options && options.tags) });
+            const t = tr.apply(applyRoot, params, {
+                ...options,
+                tags: stringArrayUnion(tags, options && options.tags),
+            });
             this.state.tree.add(t);
             this.editInfo.count++;
             this.editInfo.lastUpdate = t.ref;
@@ -223,14 +274,22 @@ namespace StateBuilder {
         /**
          * A helper to greate a group-like state object and keep the current type.
          */
-        group<T extends StateTransformer<A, any, any>>(tr: T, params?: StateTransformer.Params<T>, options?: Partial<StateTransform.Options>): To<A, T> {
+        group<T extends StateTransformer<A, any, any>>(
+            tr: T,
+            params?: StateTransformer.Params<T>,
+            options?: Partial<StateTransform.Options>,
+        ): To<A, T> {
             return this.apply(tr, params, options);
         }
 
         /**
          * Inserts a new transform that does not change the object type and move the original children to it.
          */
-        insert<T extends StateTransformer<A, A, any>>(tr: T, params?: Partial<StateTransformer.Params<T>>, options?: Partial<StateTransform.Options>): To<StateTransformer.To<T>, T> {
+        insert<T extends StateTransformer<A, A, any>>(
+            tr: T,
+            params?: Partial<StateTransformer.Params<T>>,
+            options?: Partial<StateTransform.Options>,
+        ): To<StateTransformer.To<T>, T> {
             // cache the children
             const children = this.state.tree.children.get(this.ref).toArray();
 
@@ -259,9 +318,19 @@ namespace StateBuilder {
             }
         }
 
-        update<T extends StateTransformer<any, A, any>>(transformer: T, params: (old: StateTransformer.Params<T>) => Partial<StateTransformer.Params<T>> | void): Root
-        update(params: Partial<StateTransformer.Params<T>> | ((old: StateTransformer.Params<T>) => Partial<StateTransformer.Params<T>> | void)): Root
-        update<T extends StateTransformer<any, A, any>>(paramsOrTransformer: T | any, provider?: (old: StateTransformer.Params<T>) => StateTransformer.Params<T>) {
+        update<T extends StateTransformer<any, A, any>>(
+            transformer: T,
+            params: (old: StateTransformer.Params<T>) => Partial<StateTransformer.Params<T>> | void,
+        ): Root;
+        update(
+            params:
+                | Partial<StateTransformer.Params<T>>
+                | ((old: StateTransformer.Params<T>) => Partial<StateTransformer.Params<T>> | void),
+        ): Root;
+        update<T extends StateTransformer<any, A, any>>(
+            paramsOrTransformer: T | any,
+            provider?: (old: StateTransformer.Params<T>) => StateTransformer.Params<T>,
+        ) {
             let params: any;
             if (provider) {
                 const old = this.state.tree.transforms.get(this.ref)!;
@@ -286,7 +355,7 @@ namespace StateBuilder {
                 this.state.tree.assignState(this.ref, state);
                 this.editInfo.count++;
                 this.editInfo.lastUpdate = this.ref;
-                if (!this.state.actions.find(a => a.kind === 'update' && a.ref === this.ref)) {
+                if (!this.state.actions.find((a) => a.kind === 'update' && a.ref === this.ref)) {
                     this.state.actions.push({ kind: 'update', ref: this.ref, params: transform.params });
                 }
             }
@@ -309,14 +378,24 @@ namespace StateBuilder {
             }
         }
 
-        to<A extends StateObject, T extends StateTransformer>(ref: StateTransform.Ref): To<A, T>
-        to<C extends StateObjectCell>(cell: C): To<StateObjectCell.Obj<C>, StateObjectCell.Transformer<C>>
-        to<S extends StateObjectSelector>(selector: S): To<StateObjectSelector.Obj<S>, StateObjectSelector.Transformer<S>>
-        to(ref: StateTransform.Ref | StateObjectCell | StateObjectSelector) { return this.root.to(ref as any); }
-        toRoot<A extends StateObject>() { return this.root.toRoot<A>(); }
-        delete(ref: StateObjectRef) { return this.root.delete(ref); }
+        to<A extends StateObject, T extends StateTransformer>(ref: StateTransform.Ref): To<A, T>;
+        to<C extends StateObjectCell>(cell: C): To<StateObjectCell.Obj<C>, StateObjectCell.Transformer<C>>;
+        to<S extends StateObjectSelector>(
+            selector: S,
+        ): To<StateObjectSelector.Obj<S>, StateObjectSelector.Transformer<S>>;
+        to(ref: StateTransform.Ref | StateObjectCell | StateObjectSelector) {
+            return this.root.to(ref as any);
+        }
+        toRoot<A extends StateObject>() {
+            return this.root.toRoot<A>();
+        }
+        delete(ref: StateObjectRef) {
+            return this.root.delete(ref);
+        }
 
-        getTree(options?: { useHashVersion?: boolean }): StateTree { return buildTree(this.state, options); }
+        getTree(options?: { useHashVersion?: boolean }): StateTree {
+            return buildTree(this.state, options);
+        }
 
         /** Returns selector to this node. */
         commit(options?: Partial<State.UpdateOptions>): Promise<StateObjectSelector<A>> {

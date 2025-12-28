@@ -16,7 +16,7 @@ import type { Expression } from '../../language/expression.ts';
 import type { OperatorList } from '../types.ts';
 
 const propNames = Object.keys(properties).sort(h.strLenSortFn)
-    .filter(name => !properties[name].isUnsupported).join('|');
+    .filter((name) => !properties[name].isUnsupported).join('|');
 
 export const operators: OperatorList = [
     {
@@ -35,7 +35,7 @@ export const operators: OperatorList = [
         rule: h.prefixOp(/WITHIN\s+([-+]?[0-9]*\.?[0-9]+)\s+OF/i, 1).map((x: any) => parseFloat(x)),
         map: (radius: number, selection: Expression) => {
             return B.struct.modifier.includeSurroundings({ 0: selection, radius });
-        }
+        },
     },
     {
         '@desc': 'Exclusive within, equivalent to (within 3 of X) and not X',
@@ -46,9 +46,9 @@ export const operators: OperatorList = [
         map: (radius: number, target: Expression) => {
             return B.struct.modifier.exceptBy({
                 '0': B.struct.modifier.includeSurroundings({ 0: target, radius }),
-                by: target
+                by: target,
             });
-        }
+        },
     },
     {
         '@desc': 'Selects atoms which have the same keyword as the atoms in a given selection',
@@ -60,9 +60,9 @@ export const operators: OperatorList = [
             return B.struct.filter.withSameAtomProperties({
                 '0': B.struct.generator.all(),
                 source,
-                property
+                property,
             });
-        }
+        },
     },
     {
         '@desc': 'Selects atoms included in both s1 and s2.',
@@ -70,7 +70,7 @@ export const operators: OperatorList = [
         name: 'and',
         type: h.binaryLeft,
         rule: P.MonadicParser.alt(h.infixOp(/AND/i), P.MonadicParser.whitespace),
-        map: (op, selection, by) => B.struct.modifier.intersectBy({ 0: selection, by })
+        map: (op, selection, by) => B.struct.modifier.intersectBy({ 0: selection, by }),
     },
     {
         '@desc': 'Selects atoms included in either s1 or s2.',
@@ -78,6 +78,6 @@ export const operators: OperatorList = [
         name: 'or',
         type: h.binaryLeft,
         rule: h.infixOp(/OR/i),
-        map: (op, s1, s2) => B.struct.combinator.merge([s1, s2])
-    }
+        map: (op, s1, s2) => B.struct.combinator.merge([s1, s2]),
+    },
 ];

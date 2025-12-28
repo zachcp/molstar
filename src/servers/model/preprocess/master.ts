@@ -7,31 +7,33 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as argparse from 'argparse';
-import { runMaster, type PreprocessEntry } from './parallel.ts';
+import { type PreprocessEntry, runMaster } from './parallel.ts';
 import type { ModelPropertyProviderConfig } from '../property-provider.ts';
-import process from "node:process";
+import process from 'node:process';
 
 function description() {
     const exampleCfg = {
         numProcesses: 1,
         customProperties: {
             sources: [
-                'wwpdb'
+                'wwpdb',
             ],
             params: {
                 wwPDB: {
-                    chemCompBondTablePath: './build/data/ccb.bcif'
-                }
-            }
-        }
+                    chemCompBondTablePath: './build/data/ccb.bcif',
+                },
+            },
+        },
     };
 
-    return `Preprocess CIF files to include custom properties and convert them to BinaryCIF format.\n\nExample cfg.json: ${JSON.stringify(exampleCfg, null, 2)}`;
+    return `Preprocess CIF files to include custom properties and convert them to BinaryCIF format.\n\nExample cfg.json: ${
+        JSON.stringify(exampleCfg, null, 2)
+    }`;
 }
 
 const cmdParser = new argparse.ArgumentParser({
     add_help: true,
-    description: description()
+    description: description(),
 });
 cmdParser.add_argument('--input', '-i', { help: 'Input filename', required: false });
 cmdParser.add_argument('--outCIF', '-oc', { help: 'Output CIF filename', required: false });
@@ -45,32 +47,36 @@ cmdParser.add_argument('--folderNumProcesses', '-fp', { help: 'Convert folder nu
 
 interface CmdArgs {
     // bulk?: string,
-    help?: any,
-    cfg?: string,
-    input?: string,
-    outCIF?: string,
-    outBCIF?: string,
-    folderIn?: string,
-    folderOutCIF?: string,
-    folderOutBCIF?: string,
-    folderNumProcesses?: string
+    help?: any;
+    cfg?: string;
+    input?: string;
+    outCIF?: string;
+    outBCIF?: string;
+    folderIn?: string;
+    folderOutCIF?: string;
+    folderOutBCIF?: string;
+    folderNumProcesses?: string;
 }
 
-
 export interface PreprocessConfig {
-    numProcesses?: number,
-    customProperties?: ModelPropertyProviderConfig | string
+    numProcesses?: number;
+    customProperties?: ModelPropertyProviderConfig | string;
 }
 
 const cmdArgs = cmdParser.parse_args() as CmdArgs;
 
-if (Object.keys(cmdArgs).filter(k => (cmdArgs as any)[k] !== null).length === 0 || typeof cmdArgs.help !== 'undefined') {
+if (
+    Object.keys(cmdArgs).filter((k) => (cmdArgs as any)[k] !== null).length === 0 || typeof cmdArgs.help !== 'undefined'
+) {
     cmdParser.print_help();
     process.exit(0);
 }
 
 const entries: PreprocessEntry[] = [];
-let config: PreprocessConfig = { numProcesses: cmdArgs.folderIn ? +(cmdArgs.folderNumProcesses || 1) : 1, customProperties: void 0 };
+let config: PreprocessConfig = {
+    numProcesses: cmdArgs.folderIn ? +(cmdArgs.folderNumProcesses || 1) : 1,
+    customProperties: void 0,
+};
 
 if (cmdArgs.input) entries.push({ source: cmdArgs.input, cif: cmdArgs.outCIF, bcif: cmdArgs.outBCIF });
 // else if (cmdArgs.bulk) runBulk(cmdArgs.bulk);

@@ -167,7 +167,7 @@ function createData(elements: number, instances: number) {
     const start = Math.floor(instances / 2);
     data.fill(1, start, start + elements);
     return data;
-};
+}
 
 export function run(elements: number, instances: number) {
     const suite = new B.Suite();

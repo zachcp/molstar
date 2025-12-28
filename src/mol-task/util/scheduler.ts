@@ -10,26 +10,27 @@
  * MIT license.
  */
 
-import process from "node:process";
-import { setImmediate } from "node:timers";
-import { clearImmediate } from "node:timers";
+import process from 'node:process';
+import { setImmediate } from 'node:timers';
+import { clearImmediate } from 'node:timers';
 declare const WorkerGlobalScope: any;
 function createImmediateActions() {
     const thisGlobal: any = (function () {
         const _window = typeof window !== 'undefined' && window;
-        const _self = typeof self !== 'undefined' && typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope && self;
+        const _self = typeof self !== 'undefined' && typeof WorkerGlobalScope !== 'undefined' &&
+            self instanceof WorkerGlobalScope && self;
         const _global = typeof globalThis !== 'undefined' && globalThis;
         return _window || _global || _self;
     })();
 
     type Callback = (...args: any[]) => void;
-    type Task = { callback: Callback, args: any[] }
+    type Task = { callback: Callback; args: any[] };
 
-    const tasksByHandle: { [handle: number]: Task } = { };
+    const tasksByHandle: { [handle: number]: Task } = {};
     const doc = typeof document !== 'undefined' ? document : void 0;
 
     let nextHandle = 1; // Spec says greater than zero
-    let registerImmediate: ((handle: number) => void);
+    let registerImmediate: (handle: number) => void;
 
     function setImmediate(callback: Callback, ...args: any[]) {
         // Callback can either be a function or a string
@@ -77,7 +78,9 @@ function createImmediateActions() {
 
     function installNextTickImplementation() {
         registerImmediate = function (handle) {
-            process.nextTick(function () { runIfPresent(handle); });
+            process.nextTick(function () {
+                runIfPresent(handle);
+            });
         };
     }
 
@@ -101,9 +104,11 @@ function createImmediateActions() {
 
         const messagePrefix = 'setImmediate$' + Math.random() + '$';
         const onGlobalMessage = function (event: any) {
-            if (event.source === thisGlobal &&
+            if (
+                event.source === thisGlobal &&
                 typeof event.data === 'string' &&
-                event.data.indexOf(messagePrefix) === 0) {
+                event.data.indexOf(messagePrefix) === 0
+            ) {
                 runIfPresent(+event.data.slice(messagePrefix.length));
             }
         };
@@ -173,23 +178,24 @@ function createImmediateActions() {
 
     return {
         setImmediate,
-        clearImmediate
+        clearImmediate,
     };
 }
 
-const immediateActions = (function () {
+const immediateActions = function () {
     if (typeof setImmediate !== 'undefined') {
         if (typeof window !== 'undefined') {
             return {
-                setImmediate: (handler: any, ...args: any[]) => (window as any).setImmediate(handler, ...args as any) as number,
-                clearImmediate: (handle: any) => (window as any).clearImmediate(handle)
+                setImmediate: (handler: any, ...args: any[]) =>
+                    (window as any).setImmediate(handler, ...args as any) as number,
+                clearImmediate: (handle: any) => (window as any).clearImmediate(handle),
             };
         } else {
             return { setImmediate, clearImmediate };
         }
     }
     return createImmediateActions();
-}());
+}();
 
 function resolveImmediate(res: () => void) {
     immediateActions.setImmediate(res);
@@ -198,9 +204,13 @@ function resolveImmediate(res: () => void) {
 const Scheduler = {
     setImmediate: immediateActions.setImmediate,
     clearImmediate: immediateActions.clearImmediate,
-    immediatePromise() { return new Promise<void>(resolveImmediate); },
+    immediatePromise() {
+        return new Promise<void>(resolveImmediate);
+    },
 
-    delay<T>(timeout: number, value: T | undefined = void 0): Promise<T> { return new Promise(r => setTimeout(r, timeout, value)); }
+    delay<T>(timeout: number, value: T | undefined = void 0): Promise<T> {
+        return new Promise((r) => setTimeout(r, timeout, value));
+    },
 };
 
 export { Scheduler };

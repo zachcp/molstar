@@ -10,10 +10,14 @@ import { pointInPolygon } from '../polygon';
 describe('pointInPolygon', () => {
     it('basic', () => {
         const polygon = [
-            -1, -1,
-            1, -1,
-            1, 1,
-            -1, 1
+            -1,
+            -1,
+            1,
+            -1,
+            1,
+            1,
+            -1,
+            1,
         ];
         expect(pointInPolygon(Vec2.create(0, 0), polygon, 4)).toBe(true);
         expect(pointInPolygon(Vec2.create(2, 2), polygon, 4)).toBe(false);

@@ -8,7 +8,7 @@ import type { RuntimeContext } from '../../../mol-task/index.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { ColorNames } from '../../../mol-util/color/names.ts';
 import { ShapeRepresentation } from '../representation.ts';
-import { Representation, type RepresentationParamsGetter, type RepresentationContext } from '../../representation.ts';
+import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../../representation.ts';
 import { Shape } from '../../../mol-model/shape.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
@@ -20,7 +20,7 @@ import { StructureElement } from '../../../mol-model/structure.ts';
 import { Axes3D } from '../../../mol-math/geometry.ts';
 
 export interface PlaneData {
-    locis: StructureElement.Loci[]
+    locis: StructureElement.Loci[];
 }
 
 const _PlaneParams = {
@@ -28,18 +28,19 @@ const _PlaneParams = {
     color: PD.Color(ColorNames.orange),
     scaleFactor: PD.Numeric(1, { min: 0.1, max: 10, step: 0.1 }),
 };
-type _PlaneParams = typeof _PlaneParams
+type _PlaneParams = typeof _PlaneParams;
 
 const PlaneVisuals = {
-    'plane': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<PlaneData, _PlaneParams>) => ShapeRepresentation(getPlaneShape, Mesh.Utils),
+    'plane': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<PlaneData, _PlaneParams>) =>
+        ShapeRepresentation(getPlaneShape, Mesh.Utils),
 };
 
 export const PlaneParams = {
     ..._PlaneParams,
     visuals: PD.MultiSelect(['plane'], PD.objectToOptions(PlaneVisuals)),
 };
-export type PlaneParams = typeof PlaneParams
-export type PlaneProps = PD.Values<PlaneParams>
+export type PlaneParams = typeof PlaneParams;
+export type PlaneProps = PD.Values<PlaneParams>;
 
 //
 
@@ -76,9 +77,18 @@ function getPlaneShape(ctx: RuntimeContext, data: PlaneData, props: PlaneProps, 
 
 //
 
-export type PlaneRepresentation = Representation<PlaneData, PlaneParams>
-export function PlaneRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<PlaneData, PlaneParams>): PlaneRepresentation {
-    const repr = Representation.createMulti('Plane', ctx, getParams, Representation.StateBuilder, PlaneVisuals as unknown as Representation.Def<PlaneData, PlaneParams>);
+export type PlaneRepresentation = Representation<PlaneData, PlaneParams>;
+export function PlaneRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<PlaneData, PlaneParams>,
+): PlaneRepresentation {
+    const repr = Representation.createMulti(
+        'Plane',
+        ctx,
+        getParams,
+        Representation.StateBuilder,
+        PlaneVisuals as unknown as Representation.Def<PlaneData, PlaneParams>,
+    );
     repr.setState({ markerActions: MarkerActions.Highlighting });
     return repr;
 }

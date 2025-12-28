@@ -5,7 +5,7 @@
  */
 
 import { Sphere3D } from '../../mol-math/geometry.ts';
-import { Vec3, Mat4 } from '../../mol-math/linear-algebra.ts';
+import { Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { BoundaryHelper } from '../../mol-math/geometry/boundary-helper.ts';
 import type { TextureFilter } from '../webgl/texture.ts';
 import { arrayMinMax } from '../../mol-util/array.ts';
@@ -24,21 +24,26 @@ export function calculateTextureInfo(n: number, itemSize: number) {
 }
 
 export interface TextureImage<T extends Uint8Array | Float32Array | Int32Array> {
-    readonly array: T
-    readonly width: number
-    readonly height: number
-    readonly flipY?: boolean
-    readonly filter?: TextureFilter
+    readonly array: T;
+    readonly width: number;
+    readonly height: number;
+    readonly flipY?: boolean;
+    readonly filter?: TextureFilter;
 }
 
 export interface TextureVolume<T extends Uint8Array | Float32Array> {
-    readonly array: T
-    readonly width: number
-    readonly height: number
-    readonly depth: number
+    readonly array: T;
+    readonly width: number;
+    readonly height: number;
+    readonly depth: number;
 }
 
-export function createTextureImage<T extends Uint8Array | Float32Array>(n: number, itemSize: number, arrayCtor: new (length: number) => T, array?: T): TextureImage<T> {
+export function createTextureImage<T extends Uint8Array | Float32Array>(
+    n: number,
+    itemSize: number,
+    arrayCtor: new (length: number) => T,
+    array?: T,
+): TextureImage<T> {
     const { length, width, height } = calculateTextureInfo(n, itemSize);
     array = array && array.length >= length ? array : new arrayCtor(length);
     return { array, width, height };
@@ -52,7 +57,7 @@ const DefaultPrintImageOptions = {
     useCanvas: false,
     flipY: false,
 };
-export type PrintImageOptions = typeof DefaultPrintImageOptions
+export type PrintImageOptions = typeof DefaultPrintImageOptions;
 
 export function printTextureImage(textureImage: TextureImage<any>, options: Partial<PrintImageOptions> = {}) {
     const { array, width, height } = textureImage;
@@ -134,7 +139,7 @@ export function printImageData(imageData: ImageData, options: Partial<PrintImage
         if (!ctx) throw new Error('Could not create canvas 2d context');
         ctx.putImageData(imageData, 0, 0);
 
-        canvas.toBlob(imgBlob => {
+        canvas.toBlob((imgBlob) => {
             const objectURL = URL.createObjectURL(imgBlob!);
             const existingImg = document.getElementById(o.id) as HTMLImageElement;
             const img = existingImg || document.createElement('img');
@@ -164,7 +169,11 @@ function getHelper(count: number) {
     return count > 100_000 ? boundaryHelperCoarse : boundaryHelperFine;
 }
 
-export function calculateInvariantBoundingSphere(position: Float32Array, positionCount: number, stepFactor: number): Sphere3D {
+export function calculateInvariantBoundingSphere(
+    position: Float32Array,
+    positionCount: number,
+    stepFactor: number,
+): Sphere3D {
     const step = stepFactor * 3;
     const boundaryHelper = getHelper(positionCount);
 
@@ -194,7 +203,12 @@ export function calculateInvariantBoundingSphere(position: Float32Array, positio
 
 const _mat4 = Mat4();
 
-export function calculateTransformBoundingSphere(invariantBoundingSphere: Sphere3D, transform: Float32Array, transformCount: number, transformOffset: number): Sphere3D {
+export function calculateTransformBoundingSphere(
+    invariantBoundingSphere: Sphere3D,
+    transform: Float32Array,
+    transformCount: number,
+    transformOffset: number,
+): Sphere3D {
     if (transformCount === 1) {
         Mat4.fromArray(_mat4, transform, transformOffset);
         const s = Sphere3D.clone(invariantBoundingSphere);
@@ -236,7 +250,14 @@ export function calculateTransformBoundingSphere(invariantBoundingSphere: Sphere
     return boundaryHelper.getSphere();
 }
 
-export function calculateBoundingSphere(position: Float32Array, positionCount: number, transform: Float32Array, transformCount: number, padding = 0, stepFactor = 1): { boundingSphere: Sphere3D, invariantBoundingSphere: Sphere3D } {
+export function calculateBoundingSphere(
+    position: Float32Array,
+    positionCount: number,
+    transform: Float32Array,
+    transformCount: number,
+    padding = 0,
+    stepFactor = 1,
+): { boundingSphere: Sphere3D; invariantBoundingSphere: Sphere3D } {
     const invariantBoundingSphere = calculateInvariantBoundingSphere(position, positionCount, stepFactor);
     const boundingSphere = calculateTransformBoundingSphere(invariantBoundingSphere, transform, transformCount, 0);
     Sphere3D.expand(boundingSphere, boundingSphere, padding);

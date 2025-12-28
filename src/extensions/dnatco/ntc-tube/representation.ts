@@ -28,8 +28,17 @@ import { EmptyLoci, type Loci } from '../../../mol-model/loci.ts';
 import { Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
 import { structureUnion } from '../../../mol-model/structure/query/utils/structure-set.ts';
 import type { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
-import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../../../mol-repr/representation.ts';
-import { type StructureRepresentation, StructureRepresentationProvider, StructureRepresentationStateBuilder, UnitsRepresentation } from '../../../mol-repr/structure/representation.ts';
+import {
+    Representation,
+    type RepresentationContext,
+    type RepresentationParamsGetter,
+} from '../../../mol-repr/representation.ts';
+import {
+    type StructureRepresentation,
+    StructureRepresentationProvider,
+    StructureRepresentationStateBuilder,
+    UnitsRepresentation,
+} from '../../../mol-repr/structure/representation.ts';
 import { UnitsMeshParams, UnitsMeshVisual, type UnitsVisual } from '../../../mol-repr/structure/units-visual.ts';
 import { createCurveSegmentState, type CurveSegmentState } from '../../../mol-repr/structure/visual/util/polymer.ts';
 import { getStructureQuality, type VisualUpdateState } from '../../../mol-repr/util.ts';
@@ -95,7 +104,14 @@ const _binormalVec = Vec3();
 const _prevNormal = Vec3();
 const _nextNormal = Vec3();
 
-function interpolatePointsAndTangents(state: CurveSegmentState, p0: Vec3, p1: Vec3, p2: Vec3, p3: Vec3, tRange: number[]) {
+function interpolatePointsAndTangents(
+    state: CurveSegmentState,
+    p0: Vec3,
+    p1: Vec3,
+    p2: Vec3,
+    p3: Vec3,
+    tRange: number[],
+) {
     const { curvePoints, tangentVectors, linearSegments } = state;
     const tension = 0.5;
     const r = tRange[1] - tRange[0];
@@ -157,7 +173,16 @@ function interpolateNormals(state: CurveSegmentState, firstDirection: Vec3, last
     }
 }
 
-function interpolate(state: CurveSegmentState, p0: Vec3, p1: Vec3, p2: Vec3, p3: Vec3, firstDir: Vec3, lastDir: Vec3, tRange = [0, 1]) {
+function interpolate(
+    state: CurveSegmentState,
+    p0: Vec3,
+    p1: Vec3,
+    p2: Vec3,
+    p3: Vec3,
+    firstDir: Vec3,
+    lastDir: Vec3,
+    tRange = [0, 1],
+) {
     interpolatePointsAndTangents(state, p0, p1, p2, p3, tRange);
     interpolateNormals(state, firstDir, lastDir);
 }
@@ -176,34 +201,49 @@ function createNtCTubeSegmentsIterator(structureGroup: StructureGroup): Location
         const stepIdx = Math.floor(groupId / 4);
         const step = data.data.steps[stepIdx];
         const r = groupId % 4;
-        const kind =
-            r === 0 ? 'upper' :
-                r === 1 ? 'lower' :
-                    r === 2 ? 'residue-boundary' : 'segment-boundary';
+        const kind = r === 0 ? 'upper' : r === 1 ? 'lower' : r === 2 ? 'residue-boundary' : 'segment-boundary';
 
         return NTT.Location({ step, kind });
     };
     return LocationIterator(totalMeshGroupsCount(data.data.steps) + 1, instanceCount, 1, getLocation);
 }
 
-function segmentCount(structure: Structure, props: PD.Values<NtCTubeMeshParams>): { linear: number, radial: number } {
+function segmentCount(structure: Structure, props: PD.Values<NtCTubeMeshParams>): { linear: number; radial: number } {
     const quality = props.quality;
 
-    if (quality === 'custom')
+    if (quality === 'custom') {
         return { linear: props.linearSegments, radial: props.radialSegments };
-    else if (quality === 'auto') {
+    } else if (quality === 'auto') {
         const autoQuality = getStructureQuality(structure) as QualityOptions;
         return { linear: LinearSegmentCount[autoQuality], radial: RadialSegmentCount[autoQuality] };
-    } else
+    } else {
         return { linear: LinearSegmentCount[quality], radial: RadialSegmentCount[quality] };
+    }
 }
 
 function stepBoundingSphere(step: DnatcoTypes.Step, struLoci: StructureElement.Loci): Sphere3D | undefined {
-    const one = DnatcoUtil.residueToLoci(step.auth_asym_id_1, step.auth_seq_id_1, step.label_alt_id_1, step.PDB_ins_code_1, struLoci, 'auth');
-    const two = DnatcoUtil.residueToLoci(step.auth_asym_id_2, step.auth_seq_id_2, step.label_alt_id_2, step.PDB_ins_code_2, struLoci, 'auth');
+    const one = DnatcoUtil.residueToLoci(
+        step.auth_asym_id_1,
+        step.auth_seq_id_1,
+        step.label_alt_id_1,
+        step.PDB_ins_code_1,
+        struLoci,
+        'auth',
+    );
+    const two = DnatcoUtil.residueToLoci(
+        step.auth_asym_id_2,
+        step.auth_seq_id_2,
+        step.label_alt_id_2,
+        step.PDB_ins_code_2,
+        struLoci,
+        'auth',
+    );
 
     if (StructureElement.Loci.is(one) && StructureElement.Loci.is(two)) {
-        const union = structureUnion(struLoci.structure, [StructureElement.Loci.toStructure(one), StructureElement.Loci.toStructure(two)]);
+        const union = structureUnion(struLoci.structure, [
+            StructureElement.Loci.toStructure(one),
+            StructureElement.Loci.toStructure(two),
+        ]);
         return union.boundary.sphere;
     }
     return void 0;
@@ -214,7 +254,14 @@ function totalMeshGroupsCount(steps: DnatcoTypes.Step[]) {
     return steps.length * 4 - 1; // Subtract one because the last Segment Boundary marker is not drawn
 }
 
-function createNtCTubeMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PD.Values<NtCTubeMeshParams>, mesh?: Mesh) {
+function createNtCTubeMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<NtCTubeMeshParams>,
+    mesh?: Mesh,
+) {
     if (!Unit.isAtomic(unit)) return Mesh.createEmpty(mesh);
 
     const prop = NtCTubeProvider.get(structure.model).value;
@@ -225,7 +272,9 @@ function createNtCTubeMesh(ctx: VisualContext, unit: Unit, structure: Structure,
 
     const MarkerLinearSegmentCount = 2;
     const segCount = segmentCount(structure, props);
-    const vertexCount = Math.floor((segCount.linear * 4 * data.steps.length / structure.model.atomicHierarchy.chains._rowCount) * segCount.radial);
+    const vertexCount = Math.floor(
+        (segCount.linear * 4 * data.steps.length / structure.model.atomicHierarchy.chains._rowCount) * segCount.radial,
+    );
     const chunkSize = Math.floor(vertexCount / 3);
     const diameter = 1.0 * theme.size.props.value;
 
@@ -240,7 +289,13 @@ function createNtCTubeMesh(ctx: VisualContext, unit: Unit, structure: Structure,
     const [normals, binormals] = [binormalVectors, normalVectors]; // Needed so that the tube is not drawn from inside out
 
     const markerState = createCurveSegmentState(MarkerLinearSegmentCount);
-    const { curvePoints: mCurvePoints, normalVectors: mNormalVectors, binormalVectors: mBinormalVectors, widthValues: mWidthValues, heightValues: mHeightValues } = markerState;
+    const {
+        curvePoints: mCurvePoints,
+        normalVectors: mNormalVectors,
+        binormalVectors: mBinormalVectors,
+        widthValues: mWidthValues,
+        heightValues: mHeightValues,
+    } = markerState;
     for (let idx = 0; idx <= MarkerLinearSegmentCount; idx++) {
         mWidthValues[idx] = diameter;
         mHeightValues[idx] = diameter;
@@ -255,8 +310,9 @@ function createNtCTubeMesh(ctx: VisualContext, unit: Unit, structure: Structure,
     const it = new NtCTubeSegmentsIterator(structure, unit);
     while (it.hasNext) {
         const segment = it.move();
-        if (!segment)
+        if (!segment) {
             continue;
+        }
 
         const { p_1, p0, p1, p2, p3, p4, pP } = segment;
         const FirstBlockId = segment.stepIdx * 4;
@@ -277,7 +333,19 @@ function createNtCTubeMesh(ctx: VisualContext, unit: Unit, structure: Structure,
         // C5' -> O3' block
         interpolate(state, p0, p1, p2, p3, firstDir, lastDir);
         mb.currentGroup = FirstBlockId;
-        addTube(mb, curvePoints, normals, binormals, segCount.linear, segCount.radial, widthValues, heightValues, segment.firstInChain || segment.followsGap, false, 'rounded');
+        addTube(
+            mb,
+            curvePoints,
+            normals,
+            binormals,
+            segCount.linear,
+            segCount.radial,
+            widthValues,
+            heightValues,
+            segment.firstInChain || segment.followsGap,
+            false,
+            'rounded',
+        );
 
         // O3' -> C5' block
         v3copy(firstDir, lastDir);
@@ -287,33 +355,103 @@ function createNtCTubeMesh(ctx: VisualContext, unit: Unit, structure: Structure,
         // From O3' to the residue marker
         interpolate(state, p1, p2, p3, p4, firstDir, markerDir, [0, rmShift - residueMarkerWidth]);
         mb.currentGroup = SecondBlockId;
-        addTube(mb, curvePoints, normals, binormals, segCount.linear, segCount.radial, widthValues, heightValues, false, false, 'rounded');
+        addTube(
+            mb,
+            curvePoints,
+            normals,
+            binormals,
+            segCount.linear,
+            segCount.radial,
+            widthValues,
+            heightValues,
+            false,
+            false,
+            'rounded',
+        );
 
         // Residue marker
-        interpolate(markerState, p1, p2, p3, p4, markerDir, markerDir, [rmShift - residueMarkerWidth, rmShift + residueMarkerWidth]);
+        interpolate(markerState, p1, p2, p3, p4, markerDir, markerDir, [
+            rmShift - residueMarkerWidth,
+            rmShift + residueMarkerWidth,
+        ]);
         mb.currentGroup = ResidueMarkerId;
-        addTube(mb, mCurvePoints, mNormals, mBinormals, MarkerLinearSegmentCount, segCount.radial, mWidthValues, mHeightValues, false, false, 'rounded');
+        addTube(
+            mb,
+            mCurvePoints,
+            mNormals,
+            mBinormals,
+            MarkerLinearSegmentCount,
+            segCount.radial,
+            mWidthValues,
+            mHeightValues,
+            false,
+            false,
+            'rounded',
+        );
 
         if (segment.capEnd) {
             // From the residue marker to C5' of the end
             interpolate(state, p1, p2, p3, p4, markerDir, lastDir, [rmShift + residueMarkerWidth, 1]);
             mb.currentGroup = SecondBlockId;
-            addTube(mb, curvePoints, normals, binormals, segCount.linear, segCount.radial, widthValues, heightValues, false, true, 'rounded');
+            addTube(
+                mb,
+                curvePoints,
+                normals,
+                binormals,
+                segCount.linear,
+                segCount.radial,
+                widthValues,
+                heightValues,
+                false,
+                true,
+                'rounded',
+            );
         } else {
             // From the residue marker to C5' of the step boundary marker
-            interpolate(state, p1, p2, p3, p4, markerDir, lastDir, [rmShift + residueMarkerWidth, 1 - props.segmentBoundaryWidth]);
+            interpolate(state, p1, p2, p3, p4, markerDir, lastDir, [
+                rmShift + residueMarkerWidth,
+                1 - props.segmentBoundaryWidth,
+            ]);
             mb.currentGroup = SecondBlockId;
-            addTube(mb, curvePoints, normals, binormals, segCount.linear, segCount.radial, widthValues, heightValues, false, false, 'rounded');
+            addTube(
+                mb,
+                curvePoints,
+                normals,
+                binormals,
+                segCount.linear,
+                segCount.radial,
+                widthValues,
+                heightValues,
+                false,
+                false,
+                'rounded',
+            );
 
             // Step boundary marker
             interpolate(markerState, p1, p2, p3, p4, lastDir, lastDir, [1 - props.segmentBoundaryWidth, 1]);
             mb.currentGroup = SegmentBoundaryMarkerId;
-            addTube(mb, mCurvePoints, mNormals, mBinormals, MarkerLinearSegmentCount, segCount.radial, mWidthValues, mHeightValues, false, false, 'rounded');
+            addTube(
+                mb,
+                mCurvePoints,
+                mNormals,
+                mBinormals,
+                MarkerLinearSegmentCount,
+                segCount.radial,
+                mWidthValues,
+                mHeightValues,
+                false,
+                false,
+                'rounded',
+            );
         }
 
         if (segment.followsGap) {
             const cylinderProps: CylinderProps = {
-                radiusTop: diameter / 2, radiusBottom: diameter / 2, topCap: true, bottomCap: true, radialSegments: segCount.radial,
+                radiusTop: diameter / 2,
+                radiusBottom: diameter / 2,
+                topCap: true,
+                bottomCap: true,
+                radialSegments: segCount.radial,
             };
             mb.currentGroup = FirstBlockId;
             addFixedCountDashedCylinder(mb, p_1, p1, 1, 2 * segCount.linear, false, cylinderProps);
@@ -331,7 +469,7 @@ const _rmvCO = Vec3();
 const _rmvPO = Vec3();
 const _rmPos = Vec3();
 const _HalfPi = Math.PI / 2;
-function calcResidueMarkerShift(pO: Vec3, pC: Vec3, pP: Vec3): { rmShift: number, rmPos: Vec3 } {
+function calcResidueMarkerShift(pO: Vec3, pC: Vec3, pP: Vec3): { rmShift: number; rmPos: Vec3 } {
     v3sub(_rmvCO, pC, pO);
     v3sub(_rmvPO, pP, pO);
 
@@ -406,26 +544,30 @@ function NtCTubeVisual(materialId: number): UnitsVisual<NtCTubeMeshParams> {
         createLocationIterator: createNtCTubeSegmentsIterator,
         getLoci: getNtCTubeSegmentLoci,
         eachLocation: eachNtCTubeSegment,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<NtCTubeMeshParams>, currentProps: PD.Values<NtCTubeMeshParams>) => {
-            state.createGeometry = (
-                newProps.quality !== currentProps.quality ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<NtCTubeMeshParams>,
+            currentProps: PD.Values<NtCTubeMeshParams>,
+        ) => {
+            state.createGeometry = newProps.quality !== currentProps.quality ||
                 newProps.residueMarkerWidth !== currentProps.residueMarkerWidth ||
                 newProps.segmentBoundaryWidth !== currentProps.segmentBoundaryWidth ||
                 newProps.doubleSided !== currentProps.doubleSided ||
                 newProps.alpha !== currentProps.alpha ||
                 newProps.linearSegments !== currentProps.linearSegments ||
-                newProps.radialSegments !== currentProps.radialSegments
-            );
-        }
+                newProps.radialSegments !== currentProps.radialSegments;
+        },
     }, materialId);
-
 }
 const NtCTubeVisuals = {
-    'ntc-tube-symbol': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, NtCTubeMeshParams>) => UnitsRepresentation('NtC Tube Mesh', ctx, getParams, NtCTubeVisual),
+    'ntc-tube-symbol': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, NtCTubeMeshParams>,
+    ) => UnitsRepresentation('NtC Tube Mesh', ctx, getParams, NtCTubeVisual),
 };
 
 export const NtCTubeParams = {
-    ...NtCTubeMeshParams
+    ...NtCTubeMeshParams,
 };
 export type NtCTubeParams = typeof NtCTubeParams;
 export function getNtCTubeParams(ctx: ThemeRegistryContext, structure: Structure) {
@@ -433,8 +575,17 @@ export function getNtCTubeParams(ctx: ThemeRegistryContext, structure: Structure
 }
 
 export type NtCTubeRepresentation = StructureRepresentation<NtCTubeParams>;
-export function NtCTubeRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, NtCTubeParams>): NtCTubeRepresentation {
-    return Representation.createMulti('NtC Tube', ctx, getParams, StructureRepresentationStateBuilder, NtCTubeVisuals as unknown as Representation.Def<Structure, NtCTubeParams>);
+export function NtCTubeRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, NtCTubeParams>,
+): NtCTubeRepresentation {
+    return Representation.createMulti(
+        'NtC Tube',
+        ctx,
+        getParams,
+        StructureRepresentationStateBuilder,
+        NtCTubeVisuals as unknown as Representation.Def<Structure, NtCTubeParams>,
+    );
 }
 
 export const NtCTubeRepresentationProvider = StructureRepresentationProvider({
@@ -446,9 +597,10 @@ export const NtCTubeRepresentationProvider = StructureRepresentationProvider({
     defaultValues: PD.getDefaultValues(NtCTubeParams),
     defaultColorTheme: { name: 'ntc-tube' },
     defaultSizeTheme: { name: 'uniform', props: { value: 2.0 } },
-    isApplicable: (structure: Structure) => structure.models.every(m => Dnatco.isApplicable(m)),
+    isApplicable: (structure: Structure) => structure.models.every((m) => Dnatco.isApplicable(m)),
     ensureCustomProperties: {
-        attach: async (ctx: CustomProperty.Context, structure: Structure) => structure.models.forEach(m => NtCTubeProvider.attach(ctx, m, void 0, true)),
-        detach: (data) => data.models.forEach(m => NtCTubeProvider.ref(m, false)),
+        attach: async (ctx: CustomProperty.Context, structure: Structure) =>
+            structure.models.forEach((m) => NtCTubeProvider.attach(ctx, m, void 0, true)),
+        detach: (data) => data.models.forEach((m) => NtCTubeProvider.ref(m, false)),
     },
 });

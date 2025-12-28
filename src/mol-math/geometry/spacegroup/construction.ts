@@ -5,34 +5,45 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4 } from '../../linear-algebra.ts';
-import { SpacegroupName, TransformData, GroupData, getSpacegroupIndex, OperatorData, SpacegroupNumber } from './tables.ts';
+import { Mat4, Vec3 } from '../../linear-algebra.ts';
+import {
+    getSpacegroupIndex,
+    GroupData,
+    OperatorData,
+    SpacegroupName,
+    SpacegroupNumber,
+    TransformData,
+} from './tables.ts';
 import { SymmetryOperator } from '../../geometry/symmetry-operator.ts';
 
 interface SpacegroupCell {
     /** Index into spacegroup data table */
-    readonly index: number,
-    readonly size: Vec3,
-    readonly volume: number,
-    readonly anglesInRadians: Vec3,
+    readonly index: number;
+    readonly size: Vec3;
+    readonly volume: number;
+    readonly anglesInRadians: Vec3;
     /** Transfrom cartesian -> fractional coordinates within the cell */
-    readonly toFractional: Mat4,
+    readonly toFractional: Mat4;
     /** Transfrom fractional coordinates within the cell -> cartesian */
-    readonly fromFractional: Mat4
+    readonly fromFractional: Mat4;
 }
 
 interface Spacegroup {
     /** Hermann-Mauguin spacegroup name */
-    readonly name: string,
+    readonly name: string;
     /** Spacegroup number from International Tables for Crystallography */
-    readonly num: number,
-    readonly cell: SpacegroupCell,
-    readonly operators: ReadonlyArray<Mat4>
+    readonly num: number;
+    readonly cell: SpacegroupCell;
+    readonly operators: ReadonlyArray<Mat4>;
 }
 
 namespace SpacegroupCell {
     /** Create a 'P 1' with cellsize [1, 1, 1] */
-    export const Zero: SpacegroupCell = create('P 1', Vec3.create(1, 1, 1), Vec3.create(Math.PI / 2, Math.PI / 2, Math.PI / 2));
+    export const Zero: SpacegroupCell = create(
+        'P 1',
+        Vec3.create(1, 1, 1),
+        Vec3.create(Math.PI / 2, Math.PI / 2, Math.PI / 2),
+    );
 
     /** True if 'P 1' with cellsize [1, 1, 1] */
     export function isZero(cell?: SpacegroupCell): boolean {
@@ -41,7 +52,11 @@ namespace SpacegroupCell {
     }
 
     /** Returns Zero cell if the spacegroup does not exist */
-    export function create(nameOrNumber: number | string | SpacegroupName, size: Vec3, anglesInRadians: Vec3): SpacegroupCell {
+    export function create(
+        nameOrNumber: number | string | SpacegroupName,
+        size: Vec3,
+        anglesInRadians: Vec3,
+    ): SpacegroupCell {
         const index = getSpacegroupIndex(nameOrNumber);
         if (index < 0) {
             console.warn(`Unknown spacegroup '${nameOrNumber}', returning a 'P 1' with cellsize [1, 1, 1]`);
@@ -68,7 +83,7 @@ namespace SpacegroupCell {
             [x[0], y[0], z[0], 0],
             [0, y[1], z[1], 0],
             [0, 0, z[2], 0],
-            [0, 0, 0, 1.0]
+            [0, 0, 0, 1.0],
         ]);
         const toFractional = Mat4.invert(Mat4.zero(), fromFractional)!;
 
@@ -81,7 +96,7 @@ namespace Spacegroup {
     export const ZeroP1 = create(SpacegroupCell.Zero);
 
     export function create(cell: SpacegroupCell): Spacegroup {
-        const operators = GroupData[cell.index].map(i => getOperatorMatrix(OperatorData[i]));
+        const operators = GroupData[cell.index].map((i) => getOperatorMatrix(OperatorData[i]));
         const name = SpacegroupName[cell.index];
         const num = SpacegroupNumber[cell.index];
         return { name, num, cell, operators };
@@ -89,7 +104,14 @@ namespace Spacegroup {
 
     const _ijkVec = Vec3();
     const _tempMat = Mat4();
-    export function setOperatorMatrix(spacegroup: Spacegroup, index: number, i: number, j: number, k: number, target: Mat4): Mat4 {
+    export function setOperatorMatrix(
+        spacegroup: Spacegroup,
+        index: number,
+        i: number,
+        j: number,
+        k: number,
+        target: Mat4,
+    ): Mat4 {
         Vec3.set(_ijkVec, i, j, k);
 
         Mat4.fromTranslation(_tempMat, _ijkVec);
@@ -98,15 +120,24 @@ namespace Spacegroup {
             Mat4.mul(
                 target,
                 Mat4.mul(target, spacegroup.cell.fromFractional, _tempMat),
-                spacegroup.operators[index]
+                spacegroup.operators[index],
             ),
-            spacegroup.cell.toFractional
+            spacegroup.cell.toFractional,
         );
     }
 
-    export function getSymmetryOperator(spacegroup: Spacegroup, spgrOp: number, i: number, j: number, k: number): SymmetryOperator {
+    export function getSymmetryOperator(
+        spacegroup: Spacegroup,
+        spgrOp: number,
+        i: number,
+        j: number,
+        k: number,
+    ): SymmetryOperator {
         const operator = setOperatorMatrix(spacegroup, spgrOp, i, j, k, Mat4.zero());
-        return SymmetryOperator.create(SymmetryOperator.getSymmetryOperatorName(spgrOp, i, j, k), operator, { hkl: Vec3.create(i, j, k), spgrOp });
+        return SymmetryOperator.create(SymmetryOperator.getSymmetryOperatorName(spgrOp, i, j, k), operator, {
+            hkl: Vec3.create(i, j, k),
+            spgrOp,
+        });
     }
 
     const _translationRef = Vec3();
@@ -118,8 +149,14 @@ namespace Spacegroup {
      * Get Symmetry operator for transformation around the given
      * reference point `ref` in fractional coordinates
      */
-    export function getSymmetryOperatorRef(spacegroup: Spacegroup, spgrOp: number, i: number, j: number, k: number, ref: Vec3): SymmetryOperator {
-
+    export function getSymmetryOperatorRef(
+        spacegroup: Spacegroup,
+        spgrOp: number,
+        i: number,
+        j: number,
+        k: number,
+        ref: Vec3,
+    ): SymmetryOperator {
         const operator = Mat4.zero();
 
         Vec3.set(_ijkVec, i, j, k);
@@ -145,7 +182,10 @@ namespace Spacegroup {
         const _k = k - _translationRefOffset[2];
 
         // const operator = setOperatorMatrixRef(spacegroup, spgrOp, i, j, k, ref, Mat4.zero());
-        return SymmetryOperator.create(SymmetryOperator.getSymmetryOperatorName(spgrOp, _i, _j, _k), operator, { hkl: Vec3.create(_i, _j, _k), spgrOp });
+        return SymmetryOperator.create(SymmetryOperator.getSymmetryOperatorName(spgrOp, _i, _j, _k), operator, {
+            hkl: Vec3.create(_i, _j, _k),
+            spgrOp,
+        });
     }
 
     function getOperatorMatrix(ids: number[]) {
@@ -159,7 +199,7 @@ namespace Spacegroup {
         return [
             formatElement(getRotation(op[0], op[4], op[8]), getShift(op[12])),
             formatElement(getRotation(op[1], op[5], op[9]), getShift(op[13])),
-            formatElement(getRotation(op[2], op[6], op[10]), getShift(op[14]))
+            formatElement(getRotation(op[2], op[6], op[10]), getShift(op[14])),
         ].join(',');
     }
 
@@ -186,13 +226,20 @@ namespace Spacegroup {
 
     function getShift(s: number) {
         switch (s) {
-            case 1 / 2: return '1/2';
-            case 1 / 4: return '1/4';
-            case 3 / 4: return '3/4';
-            case 1 / 3: return '1/3';
-            case 2 / 3: return '2/3';
-            case 1 / 6: return '1/6';
-            case 5 / 6: return '5/6';
+            case 1 / 2:
+                return '1/2';
+            case 1 / 4:
+                return '1/4';
+            case 3 / 4:
+                return '3/4';
+            case 1 / 3:
+                return '1/3';
+            case 2 / 3:
+                return '2/3';
+            case 1 / 6:
+                return '1/6';
+            case 5 / 6:
+                return '5/6';
         }
         return '';
     }

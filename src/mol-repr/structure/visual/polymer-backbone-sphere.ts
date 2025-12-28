@@ -6,13 +6,19 @@
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import type { VisualContext } from '../../visual.ts';
-import { type Unit, type Structure, type ElementIndex, StructureElement } from '../../../mol-model/structure.ts';
+import { type ElementIndex, type Structure, StructureElement, type Unit } from '../../../mol-model/structure.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { eachPolymerElement, getPolymerElementLoci, PolymerLocationIterator } from './util/polymer.ts';
-import { UnitsMeshParams, type UnitsVisual, UnitsMeshVisual, UnitsSpheresVisual, UnitsSpheresParams } from '../units-visual.ts';
+import {
+    UnitsMeshParams,
+    UnitsMeshVisual,
+    UnitsSpheresParams,
+    UnitsSpheresVisual,
+    type UnitsVisual,
+} from '../units-visual.ts';
 import type { VisualUpdateState } from '../../util.ts';
 import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
@@ -31,20 +37,32 @@ export const PolymerBackboneSphereParams = {
     detail: PD.Numeric(0, { min: 0, max: 3, step: 1 }, BaseGeometry.CustomQualityParamInfo),
     tryUseImpostor: PD.Boolean(true),
 };
-export type PolymerBackboneSphereParams = typeof PolymerBackboneSphereParams
+export type PolymerBackboneSphereParams = typeof PolymerBackboneSphereParams;
 
-export function PolymerBackboneSphereVisual(materialId: number, structure: Structure, props: PD.Values<PolymerBackboneSphereParams>, webgl?: WebGLContext) {
+export function PolymerBackboneSphereVisual(
+    materialId: number,
+    structure: Structure,
+    props: PD.Values<PolymerBackboneSphereParams>,
+    webgl?: WebGLContext,
+) {
     return props.tryUseImpostor && checkSphereImpostorSupport(webgl)
         ? PolymerBackboneSphereImpostorVisual(materialId)
         : PolymerBackboneSphereMeshVisual(materialId);
 }
 
 interface PolymerBackboneSphereProps {
-    detail: number,
-    sizeFactor: number,
+    detail: number;
+    sizeFactor: number;
 }
 
-function createPolymerBackboneSphereImpostor(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PolymerBackboneSphereProps, spheres?: Spheres) {
+function createPolymerBackboneSphereImpostor(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PolymerBackboneSphereProps,
+    spheres?: Spheres,
+) {
     const polymerElementCount = unit.polymerElements.length;
     if (!polymerElementCount) return Spheres.createEmpty(spheres);
 
@@ -75,14 +93,29 @@ export function PolymerBackboneSphereImpostorVisual(materialId: number): UnitsVi
         createLocationIterator: (structureGroup: StructureGroup) => PolymerLocationIterator.fromGroup(structureGroup),
         getLoci: getPolymerElementLoci,
         eachLocation: eachPolymerElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<PolymerBackboneSphereParams>, currentProps: PD.Values<PolymerBackboneSphereParams>) => { },
-        mustRecreate: (structureGroup: StructureGroup, props: PD.Values<PolymerBackboneSphereParams>, webgl?: WebGLContext) => {
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<PolymerBackboneSphereParams>,
+            currentProps: PD.Values<PolymerBackboneSphereParams>,
+        ) => {},
+        mustRecreate: (
+            structureGroup: StructureGroup,
+            props: PD.Values<PolymerBackboneSphereParams>,
+            webgl?: WebGLContext,
+        ) => {
             return !props.tryUseImpostor || !webgl;
-        }
+        },
     }, materialId);
 }
 
-function createPolymerBackboneSphereMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PolymerBackboneSphereProps, mesh?: Mesh) {
+function createPolymerBackboneSphereMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PolymerBackboneSphereProps,
+    mesh?: Mesh,
+) {
     const polymerElementCount = unit.polymerElements.length;
     if (!polymerElementCount) return Mesh.createEmpty(mesh);
 
@@ -119,14 +152,20 @@ export function PolymerBackboneSphereMeshVisual(materialId: number): UnitsVisual
         createLocationIterator: (structureGroup: StructureGroup) => PolymerLocationIterator.fromGroup(structureGroup),
         getLoci: getPolymerElementLoci,
         eachLocation: eachPolymerElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<PolymerBackboneSphereParams>, currentProps: PD.Values<PolymerBackboneSphereParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
-                newProps.detail !== currentProps.detail
-            );
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<PolymerBackboneSphereParams>,
+            currentProps: PD.Values<PolymerBackboneSphereParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
+                newProps.detail !== currentProps.detail;
         },
-        mustRecreate: (structureGroup: StructureGroup, props: PD.Values<PolymerBackboneSphereParams>, webgl?: WebGLContext) => {
+        mustRecreate: (
+            structureGroup: StructureGroup,
+            props: PD.Values<PolymerBackboneSphereParams>,
+            webgl?: WebGLContext,
+        ) => {
             return props.tryUseImpostor && !!webgl;
-        }
+        },
     }, materialId);
 }

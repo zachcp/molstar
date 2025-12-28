@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { type Database, Column } from '../../../../mol-data/db.ts';
+import { Column, type Database } from '../../../../mol-data/db.ts';
 
-import Schema = Column.Schema
+import Schema = Column.Schema;
 
 const str = Schema.str;
 const int = Schema.int;
@@ -27,8 +27,8 @@ export const DensityServer_Header_Schema = {
         'query_type': Aliased<'box' | 'cell'>(str),
         'query_box_type': Aliased<'cartesian' | 'fractional'>(str),
         'query_box_a': Vector(3),
-        'query_box_b': Vector(3)
-    }
+        'query_box_b': Vector(3),
+    },
 };
 
 export const DensityServer_Data_Schema = {
@@ -54,11 +54,11 @@ export const DensityServer_Data_Schema = {
         'min_source': float,
         'min_sampled': float,
         'max_source': float,
-        'max_sampled': float
+        'max_sampled': float,
     },
     volume_data_3d: {
-        values: float
-    }
+        values: float,
+    },
 };
 
 export type DensityServer_Header_Schema = typeof DensityServer_Header_Schema;

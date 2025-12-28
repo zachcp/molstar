@@ -6,12 +6,11 @@
 
 import type { SymmetryOperator } from '../../../../mol-math/geometry.ts';
 import type { CifExportContext } from '../mmcif.ts';
-import { StructureElement, StructureProperties as P, type CifExportCategoryInfo } from '../../structure.ts';
+import { type CifExportCategoryInfo, StructureElement, StructureProperties as P } from '../../structure.ts';
 import { Unit } from '../../structure/unit.ts';
 import { Segmentation } from '../../../../mol-data/int.ts';
 import { CifWriter } from '../../../../mol-io/writer/cif.ts';
 import { Column } from '../../../../mol-data/db.ts';
-
 
 export function atom_site_operator_mapping(ctx: CifExportContext): CifExportCategoryInfo | undefined {
     const entries = getEntries(ctx);
@@ -38,13 +37,19 @@ export const AtomSiteOperatorMappingSchema = {
 
         // NCS
         ncs_id: Column.Schema.Int(),
-    }
+    },
 };
 
-const asmValueKind = (i: number, xs: Entry[]) => typeof xs[i].operator.assembly === 'undefined' ? Column.ValueKinds.NotPresent : Column.ValueKinds.Present;
-const symmetryValueKind = (i: number, xs: Entry[]) => xs[i].operator.spgrOp === -1 ? Column.ValueKinds.NotPresent : Column.ValueKinds.Present;
+const asmValueKind = (i: number, xs: Entry[]) =>
+    typeof xs[i].operator.assembly === 'undefined' ? Column.ValueKinds.NotPresent : Column.ValueKinds.Present;
+const symmetryValueKind = (i: number, xs: Entry[]) =>
+    xs[i].operator.spgrOp === -1 ? Column.ValueKinds.NotPresent : Column.ValueKinds.Present;
 
-const Fields = CifWriter.fields<number, Entry[], keyof (typeof AtomSiteOperatorMappingSchema)['molstar_atom_site_operator_mapping']>()
+const Fields = CifWriter.fields<
+    number,
+    Entry[],
+    keyof (typeof AtomSiteOperatorMappingSchema)['molstar_atom_site_operator_mapping']
+>()
     .str('label_asym_id', (i, xs) => xs[i].label_asym_id)
     .str('auth_asym_id', (i, xs) => xs[i].auth_asym_id)
     .str('operator_name', (i, xs) => xs[i].operator.name)
@@ -55,7 +60,11 @@ const Fields = CifWriter.fields<number, Entry[], keyof (typeof AtomSiteOperatorM
     .int('assembly_operator_id', (i, xs) => xs[i].operator.assembly?.operId || 0, { valueKind: asmValueKind })
     // symmetry
     .int('symmetry_operator_index', (i, xs) => xs[i].operator.spgrOp, { valueKind: symmetryValueKind })
-    .vec('symmetry_hkl', [(i, xs) => xs[i].operator.hkl[0], (i, xs) => xs[i].operator.hkl[1], (i, xs) => xs[i].operator.hkl[2]], { valueKind: symmetryValueKind })
+    .vec('symmetry_hkl', [
+        (i, xs) => xs[i].operator.hkl[0],
+        (i, xs) => xs[i].operator.hkl[1],
+        (i, xs) => xs[i].operator.hkl[2],
+    ], { valueKind: symmetryValueKind })
     // NCS
     .int('ncs_id', (i, xs) => xs[i].operator.ncsId, { valueKind: symmetryValueKind })
     .getFields();
@@ -64,13 +73,13 @@ const Category: CifWriter.Category<Entry[]> = {
     name: 'molstar_atom_site_operator_mapping',
     instance(entries: Entry[]) {
         return { fields: Fields, source: [{ data: entries, rowCount: entries.length }] };
-    }
+    },
 };
 
 interface Entry {
-    label_asym_id: string,
-    auth_asym_id: string,
-    operator: SymmetryOperator
+    label_asym_id: string;
+    auth_asym_id: string;
+    operator: SymmetryOperator;
 }
 
 function getEntries(ctx: CifExportContext) {

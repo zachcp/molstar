@@ -10,14 +10,14 @@ import { NetcdfReader } from '../../common/netcdf/reader.ts';
 import { ReaderResult as Result } from '../result.ts';
 
 export interface NctrajFile {
-    coordinates: number[][],
-    velocities?: number[][],
-    forces?: number[][],
-    cell_lengths?: number[][],
-    cell_angles?: number[][],
-    time?: number[],
-    timeOffset: number,
-    deltaTime: number
+    coordinates: number[][];
+    velocities?: number[][];
+    forces?: number[][];
+    cell_lengths?: number[][];
+    cell_angles?: number[][];
+    time?: number[];
+    timeOffset: number;
+    deltaTime: number;
 }
 
 async function parseInternal(data: Uint8Array) {
@@ -29,7 +29,7 @@ async function parseInternal(data: Uint8Array) {
         coordinates: [],
         time: [],
         timeOffset: 0,
-        deltaTime: 1
+        deltaTime: 1,
     };
 
     for (const c of nc.getDataVariable('coordinates')) f.coordinates.push(c);
@@ -77,7 +77,7 @@ async function parseInternal(data: Uint8Array) {
 }
 
 export function parseNctraj(data: Uint8Array) {
-    return Task.create<Result<NctrajFile>>('Parse NCTRAJ', async ctx => {
+    return Task.create<Result<NctrajFile>>('Parse NCTRAJ', async (ctx) => {
         try {
             ctx.update({ canAbort: true, message: 'Parsing trajectory...' });
             const file = await parseInternal(data);

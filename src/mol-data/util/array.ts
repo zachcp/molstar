@@ -5,57 +5,57 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import type { ArrayCtor } from "../../mol-util/type-helpers.ts";
+import type { ArrayCtor } from '../../mol-util/type-helpers.ts';
 
 export function arrayFind<T>(
-  array: ArrayLike<T>,
-  f: (v: T) => boolean,
+    array: ArrayLike<T>,
+    f: (v: T) => boolean,
 ): T | undefined {
-  for (let i = 0, _i = array.length; i < _i; i++) {
-    if (f(array[i])) return array[i];
-  }
-  return void 0;
+    for (let i = 0, _i = array.length; i < _i; i++) {
+        if (f(array[i])) return array[i];
+    }
+    return void 0;
 }
 
 export function iterableToArray<T>(it: IterableIterator<T>): T[] {
-  if (Array.from) return Array.from(it);
+    if (Array.from) return Array.from(it);
 
-  const ret = [];
-  while (true) {
-    const { done, value } = it.next();
-    if (done) break;
-    ret[ret.length] = value;
-  }
-  return ret;
+    const ret = [];
+    while (true) {
+        const { done, value } = it.next();
+        if (done) break;
+        ret[ret.length] = value;
+    }
+    return ret;
 }
 
 /** Fills the array so that array[0] = start and array[array.length - 1] = end */
 export function createRangeArray(
-  start: number,
-  end: number,
-  ctor?: ArrayCtor<number>,
+    start: number,
+    end: number,
+    ctor?: ArrayCtor<number>,
 ): ArrayLike<number> {
-  const len = end - start + 1;
-  const array = ctor ? new ctor(len) : new Int32Array(len);
-  for (let i = 0; i < len; i++) {
-    array[i] = i + start;
-  }
-  return array;
+    const len = end - start + 1;
+    const array = ctor ? new ctor(len) : new Int32Array(len);
+    for (let i = 0; i < len; i++) {
+        array[i] = i + start;
+    }
+    return array;
 }
 
 export function arrayPickIndices<T>(
-  array: ArrayLike<T>,
-  indices: ArrayLike<number>,
+    array: ArrayLike<T>,
+    indices: ArrayLike<number>,
 ): ArrayLike<T> {
-  const ret = new (arrayGetCtor(array))(indices.length);
-  for (let i = 0, _i = indices.length; i < _i; i++) {
-    ret[i] = array[indices[i]];
-  }
-  return ret;
+    const ret = new (arrayGetCtor(array))(indices.length);
+    for (let i = 0, _i = indices.length; i < _i; i++) {
+        ret[i] = array[indices[i]];
+    }
+    return ret;
 }
 
 export function arrayGetCtor<T>(data: ArrayLike<T>): ArrayCtor<T> {
-  const ret = (data as any).constructor;
-  if (!ret) throw new Error("data does not define a constructor and it should");
-  return ret;
+    const ret = (data as any).constructor;
+    if (!ret) throw new Error('data does not define a constructor and it should');
+    return ret;
 }

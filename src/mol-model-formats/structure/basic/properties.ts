@@ -8,9 +8,23 @@
 import { Table } from '../../../mol-data/db.ts';
 import type { Model } from '../../../mol-model/structure/model/model.ts';
 import type { AtomicHierarchy } from '../../../mol-model/structure/model/properties/atomic.ts';
-import type { ChemicalComponent, MissingResidue, StructAsym } from '../../../mol-model/structure/model/properties/common.ts';
-import { getDefaultChemicalComponent, getMoleculeType, MoleculeType } from '../../../mol-model/structure/model/types.ts';
-import { SaccharideCompIdMap, type SaccharideComponent, type SaccharideComponentMap, SaccharidesSnfgMap, UnknownSaccharideComponent } from '../../../mol-model/structure/structure/carbohydrates/constants.ts';
+import type {
+    ChemicalComponent,
+    MissingResidue,
+    StructAsym,
+} from '../../../mol-model/structure/model/properties/common.ts';
+import {
+    getDefaultChemicalComponent,
+    getMoleculeType,
+    MoleculeType,
+} from '../../../mol-model/structure/model/types.ts';
+import {
+    SaccharideCompIdMap,
+    type SaccharideComponent,
+    type SaccharideComponentMap,
+    SaccharidesSnfgMap,
+    UnknownSaccharideComponent,
+} from '../../../mol-model/structure/structure/carbohydrates/constants.ts';
 import { memoize1 } from '../../../mol-util/memoize.ts';
 import type { BasicData } from './schema.ts';
 
@@ -33,7 +47,7 @@ export function getMissingResidues(data: BasicData): Model['properties']['missin
         get: (model_num: number, asym_id: string, seq_id: number) => {
             return map.get(getKey(model_num, asym_id, seq_id));
         },
-        size: map.size
+        size: map.size,
     };
 }
 
@@ -47,7 +61,7 @@ export function getChemicalComponentMap(data: BasicData): Model['properties']['c
         }
     } else {
         const uniqueNames = getUniqueComponentNames(data);
-        uniqueNames.forEach(n => {
+        uniqueNames.forEach((n) => {
             map.set(n, getDefaultChemicalComponent(n));
         });
     }
@@ -63,7 +77,8 @@ export function getSaccharideComponentMap(data: BasicData): SaccharideComponentM
         // so we always need to check `chem_comp` for those
         const { comp_id, type, identifier } = data.pdbx_chem_comp_identifier;
         for (let i = 0, il = comp_id.rowCount; i < il; ++i) {
-            if (type.value(i) === 'SNFG CARBOHYDRATE SYMBOL' ||
+            if (
+                type.value(i) === 'SNFG CARBOHYDRATE SYMBOL' ||
                 type.value(i) === 'SNFG CARB SYMBOL' // legacy, to be removed from mmCIF dictionary
             ) {
                 const snfgName = identifier.value(i);
@@ -108,13 +123,12 @@ const getUniqueComponentNames = memoize1((data: BasicData) => {
     return uniqueNames;
 });
 
-
 export function getStructAsymMap(atomic: AtomicHierarchy, data?: BasicData): Model['properties']['structAsymMap'] {
     const map = new Map<string, StructAsym>();
 
     const { auth_asym_id, label_asym_id, label_entity_id } = atomic.chains;
 
-    for (let i = 0, _i = atomic.chains._rowCount; i < _i; i ++) {
+    for (let i = 0, _i = atomic.chains._rowCount; i < _i; i++) {
         const id = label_asym_id.value(i);
         map.set(id, { id, auth_id: auth_asym_id.value(i), entity_id: label_entity_id.value(i) });
     }
@@ -128,7 +142,7 @@ export function getStructAsymMap(atomic: AtomicHierarchy, data?: BasicData): Mod
                 map.set(_id, {
                     id: _id,
                     auth_id: '',
-                    entity_id: entity_id.value(i)
+                    entity_id: entity_id.value(i),
                 });
             }
         }

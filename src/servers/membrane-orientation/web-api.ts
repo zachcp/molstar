@@ -31,18 +31,21 @@ export function initWebApi(app: express.Express) {
         res.writeHead(200, {
             'Content-Type': 'application/json; charset=utf-8',
             'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'X-Requested-With'
+            'Access-Control-Allow-Headers': 'X-Requested-With',
         });
         res.end(JSON.stringify(getSchema()));
     });
 
     app.use(makePath(''), swaggerUiAssetsHandler());
-    app.get(makePath(''), swaggerUiIndexHandler({
-        openapiJsonUrl: makePath('openapi.json'),
-        apiPrefix: MembraneServerConfig.apiPrefix,
-        title: 'MembraneServer API',
-        shortcutIconLink
-    }));
+    app.get(
+        makePath(''),
+        swaggerUiIndexHandler({
+            openapiJsonUrl: makePath('openapi.json'),
+            apiPrefix: MembraneServerConfig.apiPrefix,
+            title: 'MembraneServer API',
+            shortcutIconLink,
+        }),
+    );
 }
 
 async function predictMembraneOrientation(req: express.Request, res: express.Response) {

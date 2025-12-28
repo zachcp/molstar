@@ -6,17 +6,25 @@
 
 import { Mat4, Tensor, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { SymmetryOperator } from '../../../mol-math/geometry/symmetry-operator.ts';
-import { Assembly, type OperatorGroup, type OperatorGroups } from '../../../mol-model/structure/model/properties/symmetry.ts';
+import {
+    Assembly,
+    type OperatorGroup,
+    type OperatorGroups,
+} from '../../../mol-model/structure/model/properties/symmetry.ts';
 import { Queries as Q } from '../../../mol-model/structure.ts';
 import { StructureProperties } from '../../../mol-model/structure.ts';
 import type { Table } from '../../../mol-data/db.ts';
 import type { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
 
-type StructAssembly = Table<mmCIF_Schema['pdbx_struct_assembly']>
-type StructAssemblyGen = Table<mmCIF_Schema['pdbx_struct_assembly_gen']>
-type StructOperList = Table<mmCIF_Schema['pdbx_struct_oper_list']>
+type StructAssembly = Table<mmCIF_Schema['pdbx_struct_assembly']>;
+type StructAssemblyGen = Table<mmCIF_Schema['pdbx_struct_assembly_gen']>;
+type StructOperList = Table<mmCIF_Schema['pdbx_struct_oper_list']>;
 
-export function createAssemblies(pdbx_struct_assembly: StructAssembly, pdbx_struct_assembly_gen: StructAssemblyGen, pdbx_struct_oper_list: StructOperList): ReadonlyArray<Assembly> {
+export function createAssemblies(
+    pdbx_struct_assembly: StructAssembly,
+    pdbx_struct_assembly_gen: StructAssemblyGen,
+    pdbx_struct_oper_list: StructOperList,
+): ReadonlyArray<Assembly> {
     if (!pdbx_struct_assembly._rowCount) return [];
 
     const matrices = getMatrices(pdbx_struct_oper_list);
@@ -27,10 +35,15 @@ export function createAssemblies(pdbx_struct_assembly: StructAssembly, pdbx_stru
     return assemblies;
 }
 
-type Matrices = Map<string, Mat4>
-type Generator = { assemblyId: string, expression: string, asymIds: string[] }
+type Matrices = Map<string, Mat4>;
+type Generator = { assemblyId: string; expression: string; asymIds: string[] };
 
-function createAssembly(pdbx_struct_assembly: StructAssembly, pdbx_struct_assembly_gen: StructAssemblyGen, index: number, matrices: Matrices): Assembly {
+function createAssembly(
+    pdbx_struct_assembly: StructAssembly,
+    pdbx_struct_assembly_gen: StructAssemblyGen,
+    index: number,
+    matrices: Matrices,
+): Assembly {
     const id = pdbx_struct_assembly.id.value(index);
     const details = pdbx_struct_assembly.details.value(index);
     const generators: Generator[] = [];
@@ -42,7 +55,7 @@ function createAssembly(pdbx_struct_assembly: StructAssembly, pdbx_struct_assemb
         generators[generators.length] = {
             assemblyId: id,
             expression: oper_expression.value(i),
-            asymIds: asym_id_list.value(i)
+            asymIds: asym_id_list.value(i),
         };
     }
 
@@ -61,9 +74,12 @@ export function operatorGroupsProvider(generators: Generator[], matrices: Matric
             const operators = getAssemblyOperators(matrices, operatorNames, operatorOffset, gen.assemblyId);
             const selector = Q.generators.atoms({
                 chainTest: Q.pred.and(
-                    Q.pred.eq(ctx => StructureProperties.unit.operator_name(ctx.element), SymmetryOperator.DefaultName),
-                    Q.pred.inSet(ctx => StructureProperties.chain.label_asym_id(ctx.element), gen.asymIds)
-                )
+                    Q.pred.eq(
+                        (ctx) => StructureProperties.unit.operator_name(ctx.element),
+                        SymmetryOperator.DefaultName,
+                    ),
+                    Q.pred.inSet((ctx) => StructureProperties.chain.label_asym_id(ctx.element), gen.asymIds),
+                ),
             });
             groups[groups.length] = { selector, operators, asymIds: gen.asymIds };
             operatorOffset += operators.length;
@@ -122,7 +138,10 @@ function getAssemblyOperators(matrices: Matrices, operatorNames: string[][], sta
         index++;
         const opName = `ASM_${index}`; // Kept mostly for compatibility reasons
         const canonicalOpName = SymmetryOperator.getAssemblyOperatorName(op);
-        operators[operators.length] = SymmetryOperator.create(opName, m, { instanceId: canonicalOpName, assembly: { id: assemblyId, operId: index, operList: op } });
+        operators[operators.length] = SymmetryOperator.create(opName, m, {
+            instanceId: canonicalOpName,
+            assembly: { id: assemblyId, operId: index, operList: op },
+        });
     }
 
     return operators;
@@ -137,9 +156,9 @@ function parseOperatorList(value: string): string[][] {
     let g: any;
     while (g = oeRegex.exec(value)) groups[groups.length] = g[1];
 
-    groups.forEach(g => {
+    groups.forEach((g) => {
         const group: string[] = [];
-        g.split(',').forEach(e => {
+        g.split(',').forEach((e) => {
             const dashIndex = e.indexOf('-');
             if (dashIndex > 0) {
                 const from = parseInt(e.substring(0, dashIndex)), to = parseInt(e.substr(dashIndex + 1));

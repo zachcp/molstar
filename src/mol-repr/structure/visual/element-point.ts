@@ -6,14 +6,21 @@
  */
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { UnitsPointsParams, type UnitsVisual, UnitsPointsVisual } from '../units-visual.ts';
+import { UnitsPointsParams, UnitsPointsVisual, type UnitsVisual } from '../units-visual.ts';
 import type { VisualContext } from '../../visual.ts';
-import type { Unit, Structure } from '../../../mol-model/structure.ts';
+import type { Structure, Unit } from '../../../mol-model/structure.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
 import { Points } from '../../../mol-geo/geometry/points/points.ts';
 import { PointsBuilder } from '../../../mol-geo/geometry/points/points-builder.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
-import { ElementIterator, getElementLoci, eachElement, makeElementIgnoreTest, getSerialElementLoci, eachSerialElement } from './util/element.ts';
+import {
+    eachElement,
+    eachSerialElement,
+    ElementIterator,
+    getElementLoci,
+    getSerialElementLoci,
+    makeElementIgnoreTest,
+} from './util/element.ts';
 import type { VisualUpdateState } from '../../util.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { ComplexPointsParams, ComplexPointsVisual, type ComplexVisual } from '../complex-visual.ts';
@@ -29,11 +36,18 @@ export const ElementPointParams = {
     traceOnly: PD.Boolean(false),
     stride: PD.Numeric(1, { min: 1, max: 100, step: 1 }),
 };
-export type ElementPointParams = typeof ElementPointParams
+export type ElementPointParams = typeof ElementPointParams;
 
 // TODO size
 
-export function createElementPoint(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PD.Values<ElementPointParams>, points: Points) {
+export function createElementPoint(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<ElementPointParams>,
+    points: Points,
+) {
     // TODO sizeFactor
 
     const { child } = structure;
@@ -94,20 +108,28 @@ export function ElementPointVisual(materialId: number): UnitsVisual<ElementPoint
         createLocationIterator: ElementIterator.fromGroup,
         getLoci: getElementLoci,
         eachLocation: eachElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<ElementPointParams>, currentProps: PD.Values<ElementPointParams>) => {
-            state.createGeometry = (
-                newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<ElementPointParams>,
+            currentProps: PD.Values<ElementPointParams>,
+        ) => {
+            state.createGeometry = newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
                 newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant ||
                 newProps.traceOnly !== currentProps.traceOnly ||
-                newProps.stride !== currentProps.stride
-            );
-        }
+                newProps.stride !== currentProps.stride;
+        },
     }, materialId);
 }
 
 //
 
-export function createStructureElementPoint(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<StructureElementPointParams>, points?: Points): Points {
+export function createStructureElementPoint(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<StructureElementPointParams>,
+    points?: Points,
+): Points {
     // TODO sizeFactor
 
     const { child } = structure;
@@ -177,7 +199,7 @@ export const StructureElementPointParams = {
     traceOnly: PD.Boolean(false),
     stride: PD.Numeric(1, { min: 1, max: 100, step: 1 }),
 };
-export type StructureElementPointParams = typeof StructureElementPointParams
+export type StructureElementPointParams = typeof StructureElementPointParams;
 
 export function StructureElementPointVisual(materialId: number): ComplexVisual<StructureElementPointParams> {
     return ComplexPointsVisual<StructureElementPointParams>({
@@ -186,13 +208,15 @@ export function StructureElementPointVisual(materialId: number): ComplexVisual<S
         createLocationIterator: ElementIterator.fromStructure,
         getLoci: getSerialElementLoci,
         eachLocation: eachSerialElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<StructureElementPointParams>, currentProps: PD.Values<StructureElementPointParams>) => {
-            state.createGeometry = (
-                newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<StructureElementPointParams>,
+            currentProps: PD.Values<StructureElementPointParams>,
+        ) => {
+            state.createGeometry = newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
                 newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant ||
                 newProps.traceOnly !== currentProps.traceOnly ||
-                newProps.stride !== currentProps.stride
-            );
-        }
+                newProps.stride !== currentProps.stride;
+        },
     }, materialId);
 }

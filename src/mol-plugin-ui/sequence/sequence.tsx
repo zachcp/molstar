@@ -8,7 +8,7 @@
 
 import * as React from 'react';
 import { type BehaviorSubject, Subject } from 'rxjs';
-import { throttleTime } from 'rxjs/operators';
+import { throttleTime } from 'rxjs';
 import { OrderedSet } from '../../mol-data/int.ts';
 import type { ColorTypeLocation } from '../../mol-geo/geometry/color-data.ts';
 import { EveryLoci } from '../../mol-model/loci.ts';
@@ -19,7 +19,13 @@ import { Representation } from '../../mol-repr/representation.ts';
 import { Task } from '../../mol-task/index.ts';
 import type { ColorTheme, LocationColor } from '../../mol-theme/color.ts';
 import { Color } from '../../mol-util/color/index.ts';
-import { ButtonsType, getButton, getButtons, getModifiers, type ModifiersKeys } from '../../mol-util/input/input-observer.ts';
+import {
+    ButtonsType,
+    getButton,
+    getButtons,
+    getModifiers,
+    type ModifiersKeys,
+} from '../../mol-util/input/input-observer.ts';
 import type { MarkerAction } from '../../mol-util/marker-action.ts';
 import { memoizeLatest } from '../../mol-util/memoize.ts';
 import { PluginUIComponent } from '../base.tsx';
@@ -27,12 +33,11 @@ import type { SequenceWrapper } from './wrapper.ts';
 import type { ThemeDataContext } from '../../mol-theme/theme.ts';
 import type { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
-
 type SequenceProps = {
-    sequenceWrapper: SequenceWrapper.Any,
-    sequenceNumberPeriod?: number,
-    hideSequenceNumbers?: boolean,
-}
+    sequenceWrapper: SequenceWrapper.Any;
+    sequenceNumberPeriod?: number;
+    hideSequenceNumbers?: boolean;
+};
 
 /** Note, if this is changed, the CSS for `msp-sequence-number` needs adjustment too */
 const MaxSequenceNumberSize = 5;
@@ -44,15 +49,17 @@ const DefaultMarkerColors = {
 };
 
 interface ColorThemeSpec<P extends PD.Params = any> {
-    provider: ColorTheme.Provider<P, string, ColorTypeLocation>,
-    getProps?: (ctx: ThemeDataContext) => PD.Values<P>,
+    provider: ColorTheme.Provider<P, string, ColorTypeLocation>;
+    getProps?: (ctx: ThemeDataContext) => PD.Values<P>;
 }
 
 // TODO: this is somewhat inefficient and should be done using a canvas.
 export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
     protected parentDiv = React.createRef<HTMLDivElement>();
     protected lastMouseOverSeqIdx = -1;
-    protected highlightQueue = new Subject<{ seqIdx: number, buttons: number, button: number, modifiers: ModifiersKeys }>();
+    protected highlightQueue = new Subject<
+        { seqIdx: number; buttons: number; button: number; modifiers: ModifiersKeys }
+    >();
     protected markerColors = { ...DefaultMarkerColors };
     /** @experimental */
     private customColorThemeWrapper: ColorThemeWrapper | undefined = undefined;
@@ -79,14 +86,18 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         return 1;
     }
 
-    override componentDidMount() {        this.plugin.managers.interactivity.lociHighlights.addProvider(this.lociHighlightProvider);
+    override componentDidMount() {
+        this.plugin.managers.interactivity.lociHighlights.addProvider(this.lociHighlightProvider);
         this.plugin.managers.interactivity.lociSelects.addProvider(this.lociSelectionProvider);
 
-        this.subscribe(this.highlightQueue.pipe(throttleTime(3 * 16.666, void 0, { leading: true, trailing: true })), (e) => {
-            const loci = this.getLoci(e.seqIdx < 0 ? void 0 : e.seqIdx);
-            this.hover(loci, e.buttons, e.button, e.modifiers);
-        });
-        this.subscribe(this.plugin.managers.structure.focus.behaviors.current, focus => {
+        this.subscribe(
+            this.highlightQueue.pipe(throttleTime(3 * 16.666, void 0, { leading: true, trailing: true })),
+            (e) => {
+                const loci = this.getLoci(e.seqIdx < 0 ? void 0 : e.seqIdx);
+                this.hover(loci, e.buttons, e.button, e.modifiers);
+            },
+        );
+        this.subscribe(this.plugin.managers.structure.focus.behaviors.current, (focus) => {
             this.updateFocus(focus?.loci);
             this.updateMarker();
         });
@@ -96,9 +107,10 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
             this.updateColors();
             this.updateMarker();
         });
-        const experimentalSequenceColorTheme: BehaviorSubject<ColorThemeSpec | undefined> | undefined = this.plugin.customUIState.experimentalSequenceColorTheme;
+        const experimentalSequenceColorTheme: BehaviorSubject<ColorThemeSpec | undefined> | undefined =
+            this.plugin.customUIState.experimentalSequenceColorTheme;
         if (experimentalSequenceColorTheme) {
-            this.subscribe(experimentalSequenceColorTheme, theme => {
+            this.subscribe(experimentalSequenceColorTheme, (theme) => {
                 if (!theme && !this.customColorThemeWrapper) return;
                 this.customColorThemeWrapper = ColorThemeWrapper(this.plugin, theme, () => this.forceUpdate());
                 this.forceUpdate();
@@ -123,7 +135,8 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         }
     }
 
-    override componentWillUnmount() {        super.componentWillUnmount();
+    override componentWillUnmount() {
+        super.componentWillUnmount();
 
         this.plugin.managers.interactivity.lociHighlights.removeProvider(this.lociHighlightProvider);
         this.plugin.managers.interactivity.lociSelects.removeProvider(this.lociSelectionProvider);
@@ -145,7 +158,12 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         return seqIdx;
     }
 
-    hover(loci: StructureElement.Loci | undefined, buttons: ButtonsType, button: ButtonsType.Flag, modifiers: ModifiersKeys) {
+    hover(
+        loci: StructureElement.Loci | undefined,
+        buttons: ButtonsType,
+        button: ButtonsType.Flag,
+        modifiers: ModifiersKeys,
+    ) {
         const ev = { current: Representation.Loci.Empty, buttons, button, modifiers };
         if (loci !== undefined && !StructureElement.Loci.isEmpty(loci)) {
             ev.current = { loci };
@@ -157,7 +175,7 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
 
                 const range = StructureElement.Loci(loci.structure, [{
                     unit: ref.unit,
-                    indices: OrderedSet.ofRange(min as StructureElement.UnitIndex, max as StructureElement.UnitIndex)
+                    indices: OrderedSet.ofRange(min as StructureElement.UnitIndex, max as StructureElement.UnitIndex),
                 }]);
                 ev.current = { loci: range };
             }
@@ -165,7 +183,12 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         this.plugin.behaviors.interaction.hover.next(ev);
     }
 
-    click(loci: StructureElement.Loci | undefined, buttons: ButtonsType, button: ButtonsType.Flag, modifiers: ModifiersKeys) {
+    click(
+        loci: StructureElement.Loci | undefined,
+        buttons: ButtonsType,
+        button: ButtonsType.Flag,
+        modifiers: ModifiersKeys,
+    ) {
         const ev = { current: Representation.Loci.Empty, buttons, button, modifiers };
         if (loci !== undefined && !StructureElement.Loci.isEmpty(loci)) {
             ev.current = { loci };
@@ -210,7 +233,7 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
 
                 range = StructureElement.Loci(loci.structure, [{
                     unit: ref.unit,
-                    indices: OrderedSet.ofRange(min as StructureElement.UnitIndex, max as StructureElement.UnitIndex)
+                    indices: OrderedSet.ofRange(min as StructureElement.UnitIndex, max as StructureElement.UnitIndex),
                 }]);
             }
 
@@ -243,7 +266,16 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
     }
 
     protected residue(seqIdx: number, label: string) {
-        return <span key={seqIdx} data-seqid={seqIdx} style={{ backgroundColor: this.getBackgroundColor(seqIdx) }} className={this.getResidueClass(seqIdx, label)}>{`\u200b${label}\u200b`}</span>;
+        return (
+            <span
+                key={seqIdx}
+                data-seqid={seqIdx}
+                style={{ backgroundColor: this.getBackgroundColor(seqIdx) }}
+                className={this.getResidueClass(seqIdx, label)}
+            >
+                {`\u200b${label}\u200b`}
+            </span>
+        );
     }
 
     protected getSequenceNumberClass(seqIdx: number, seqNum: string, label: string) {
@@ -280,7 +312,11 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
     }
     protected getSequenceNumberSpan(seqIdx: number, label: string) {
         const seqNum = this.getSequenceNumber(seqIdx);
-        return <span key={`marker-${seqIdx}`} className={this.getSequenceNumberClass(seqIdx, seqNum, label)}>{this.padSeqNum(seqNum)}</span>;
+        return (
+            <span key={`marker-${seqIdx}`} className={this.getSequenceNumberClass(seqIdx, seqNum, label)}>
+                {this.padSeqNum(seqNum)}
+            </span>
+        );
     }
 
     protected updateMarker() {
@@ -345,7 +381,8 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         this.highlightQueue.next({ seqIdx: -1, buttons, button, modifiers });
     };
 
-    override render() {        const sw = this.props.sequenceWrapper;
+    override render() {
+        const sw = this.props.sequenceWrapper;
         const elems: JSX.Element[] = [];
 
         if (this.customColorThemeWrapper) {
@@ -369,22 +406,23 @@ export class Sequence<P extends SequenceProps> extends PluginUIComponent<P> {
         // residue spans are updated as react won't update them
         this.updateMarker();
 
-        return <div
-            className='msp-sequence-wrapper'
-            onContextMenu={this.contextMenu}
-            onMouseDown={this.mouseDown}
-            onMouseUp={this.mouseUp}
-            onMouseMove={this.mouseMove}
-            onMouseLeave={this.mouseLeave}
-            ref={this.parentDiv}
-        >
-            {elems}
-        </div>;
+        return (
+            <div
+                className='msp-sequence-wrapper'
+                onContextMenu={this.contextMenu}
+                onMouseDown={this.mouseDown}
+                onMouseUp={this.mouseUp}
+                onMouseMove={this.mouseMove}
+                onMouseLeave={this.mouseLeave}
+                ref={this.parentDiv}
+            >
+                {elems}
+            </div>
+        );
     }
 }
 
-
-type ColorThemeWrapper = ReturnType<typeof ColorThemeWrapper>
+type ColorThemeWrapper = ReturnType<typeof ColorThemeWrapper>;
 
 function ColorThemeWrapper(plugin: PluginContext, theme: ColorThemeSpec | undefined, forceUpdate: () => void) {
     const tmpLocation = StructureElement.Location.create();
@@ -407,11 +445,17 @@ function ColorThemeWrapper(plugin: PluginContext, theme: ColorThemeSpec | undefi
         const props = theme.getProps?.({ structure }) ?? theme.provider.defaultValues;
         if (theme.provider.ensureCustomProperties) {
             // The following task runs asynchronously
-            plugin.runTask(Task.create('Attach custom properties for coloring theme', async runtime => {
+            plugin.runTask(Task.create('Attach custom properties for coloring theme', async (runtime) => {
                 try {
-                    await theme.provider.ensureCustomProperties?.attach({ assetManager: plugin.managers.asset, runtime }, { structure });
+                    await theme.provider.ensureCustomProperties?.attach({
+                        assetManager: plugin.managers.asset,
+                        runtime,
+                    }, { structure });
                 } catch (err) {
-                    console.warn(`Failed to attach custom properties needed for coloring theme ${theme.provider.name}:`, err);
+                    console.warn(
+                        `Failed to attach custom properties needed for coloring theme ${theme.provider.name}:`,
+                        err,
+                    );
                 } finally {
                     themeColor = theme.provider.factory({ structure }, props).color;
                     forceUpdate();

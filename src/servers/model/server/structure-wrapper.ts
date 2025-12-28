@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Structure, type Model } from '../../../mol-model/structure.ts';
+import { type Model, Structure } from '../../../mol-model/structure.ts';
 import { PerformanceMonitor } from '../../../mol-util/performance-monitor.ts';
 import { Cache } from './cache.ts';
-import { ModelServerConfig as Config, mapSourceAndIdToFilename, type ModelServerFetchFormats } from '../config.ts';
-import { CIF, type CifFrame, type CifBlock } from '../../../mol-io/reader/cif.ts';
+import { mapSourceAndIdToFilename, ModelServerConfig as Config, type ModelServerFetchFormats } from '../config.ts';
+import { CIF, type CifBlock, type CifFrame } from '../../../mol-io/reader/cif.ts';
 import * as util from 'node:util';
 import * as fs from 'node:fs';
 import * as zlib from 'node:zlib';
@@ -18,13 +18,13 @@ import type { ModelPropertiesProvider } from '../property-provider.ts';
 import { trajectoryFromMmCIF } from '../../../mol-model-formats/structure/mmcif.ts';
 import { fetchRetry } from '../utils/fetch-retry.ts';
 import { Task } from '../../../mol-task/index.ts';
-import type { Buffer } from "node:buffer";
+import type { Buffer } from 'node:buffer';
 
 require('util.promisify').shim();
 
 export enum StructureSourceType {
     File,
-    Cache
+    Cache,
 }
 
 export interface StructureInfo {
@@ -34,24 +34,28 @@ export interface StructureInfo {
     createModelTime: number;
     attachPropsTime: number;
 
-    sourceId: string,
-    entryId: string
+    sourceId: string;
+    entryId: string;
 }
 
 export interface StructureWrapper {
-    info: StructureInfo,
-    isBinary: boolean,
-    key: string,
-    approximateSize: number,
-    models: ArrayLike<Model>,
-    modelMap: Map<number, Model>,
-    structureModelMap: Map<number, Structure>,
-    propertyProvider: ModelPropertiesProvider | undefined,
-    cifFrame: CifFrame,
-    cache: object
+    info: StructureInfo;
+    isBinary: boolean;
+    key: string;
+    approximateSize: number;
+    models: ArrayLike<Model>;
+    modelMap: Map<number, Model>;
+    structureModelMap: Map<number, Structure>;
+    propertyProvider: ModelPropertiesProvider | undefined;
+    cifFrame: CifFrame;
+    cache: object;
 }
 
-export async function createStructureWrapperFromJobEntry(entry: JobEntry, propertyProvider: ModelPropertiesProvider | undefined, allowCache = true): Promise<StructureWrapper> {
+export async function createStructureWrapperFromJobEntry(
+    entry: JobEntry,
+    propertyProvider: ModelPropertiesProvider | undefined,
+    allowCache = true,
+): Promise<StructureWrapper> {
     if (allowCache && Config.cacheMaxSizeInBytes > 0) {
         const ret = StructureCache.get(entry.key);
         if (ret) return ret;
@@ -63,7 +67,7 @@ export async function createStructureWrapperFromJobEntry(entry: JobEntry, proper
     return ret;
 }
 
-export const StructureCache = new Cache<StructureWrapper>(s => s.key, s => s.approximateSize);
+export const StructureCache = new Cache<StructureWrapper>((s) => s.key, (s) => s.approximateSize);
 const perf = new PerformanceMonitor();
 
 const readFileAsync = util.promisify(fs.readFile);
@@ -93,7 +97,10 @@ async function parseCif(data: string | Uint8Array) {
     return parsed.result;
 }
 
-export async function readDataAndFrame(filename: string, key?: string): Promise<{ data: string | Uint8Array, frame: CifBlock, isBinary: boolean }> {
+export async function readDataAndFrame(
+    filename: string,
+    key?: string,
+): Promise<{ data: string | Uint8Array; frame: CifBlock; isBinary: boolean }> {
     perf.start('read');
     let data, isBinary;
     try {
@@ -113,13 +120,23 @@ export async function readDataAndFrame(filename: string, key?: string): Promise<
     return { data, frame, isBinary };
 }
 
-async function fetchDataAndFrame(jobId: string, uri: string, format: ModelServerFetchFormats, key?: string): Promise<{ data: string | Uint8Array, frame: CifBlock, isBinary: boolean }> {
+async function fetchDataAndFrame(
+    jobId: string,
+    uri: string,
+    format: ModelServerFetchFormats,
+    key?: string,
+): Promise<{ data: string | Uint8Array; frame: CifBlock; isBinary: boolean }> {
     perf.start('read');
     const isBinary = format.startsWith('bcif');
     let data;
     try {
         ConsoleLogger.logId(jobId, 'Fetch', `${uri}`);
-        const response = await fetchRetry(uri, 500, 3, () => ConsoleLogger.logId(jobId, 'Fetch', `Retrying to fetch '${uri}'`));
+        const response = await fetchRetry(
+            uri,
+            500,
+            3,
+            () => ConsoleLogger.logId(jobId, 'Fetch', `Retrying to fetch '${uri}'`),
+        );
 
         if (format.endsWith('.gz')) {
             const input = await unzipAsync(await response.arrayBuffer());
@@ -151,7 +168,9 @@ function readOrFetch(jobId: string, key: string, sourceId: string | '_local_', e
     if (!mapped) throw new Error(`Cound not map '${key}' for a resource.`);
 
     const uri = mapped[0].toLowerCase();
-    if (uri.startsWith('http://') || uri.startsWith('https://') || uri.startsWith('ftp://') || uri.startsWith('gs://')) {
+    if (
+        uri.startsWith('http://') || uri.startsWith('https://') || uri.startsWith('ftp://') || uri.startsWith('gs://')
+    ) {
         return fetchDataAndFrame(jobId, mapped[0], (mapped[1] || 'cif').toLowerCase() as any, key);
     }
 
@@ -159,7 +178,13 @@ function readOrFetch(jobId: string, key: string, sourceId: string | '_local_', e
     return readDataAndFrame(mapped[0], key);
 }
 
-export async function readStructureWrapper(key: string, sourceId: string | '_local_', entryId: string, jobId: string | undefined, propertyProvider: ModelPropertiesProvider | undefined) {
+export async function readStructureWrapper(
+    key: string,
+    sourceId: string | '_local_',
+    entryId: string,
+    jobId: string | undefined,
+    propertyProvider: ModelPropertiesProvider | undefined,
+) {
     const { data, frame, isBinary } = await readOrFetch(jobId || '', key, sourceId, entryId);
     perf.start('createModel');
     const trajectory = await trajectoryFromMmCIF(frame).run();
@@ -182,7 +207,7 @@ export async function readStructureWrapper(key: string, sourceId: string | '_loc
             createModelTime: perf.time('createModel'),
             attachPropsTime: 0, // perf.time('attachProps'),
             sourceId,
-            entryId
+            entryId,
         },
         isBinary,
         key,
@@ -192,7 +217,7 @@ export async function readStructureWrapper(key: string, sourceId: string | '_loc
         structureModelMap: new Map(),
         cifFrame: frame,
         propertyProvider,
-        cache: Object.create(null)
+        cache: Object.create(null),
     };
 
     return ret;
@@ -218,7 +243,7 @@ export async function resolveStructure(wrapper: StructureWrapper, modelNum?: num
 
 export async function resolveStructures(wrapper: StructureWrapper, modelNums?: number[]) {
     const ret: Structure[] = [];
-    for (const n of modelNums || (wrapper.models as Model[]).map(m => m.modelNum)) {
+    for (const n of modelNums || (wrapper.models as Model[]).map((m) => m.modelNum)) {
         const s = await resolveStructure(wrapper, n);
         if (s) ret.push(s);
     }

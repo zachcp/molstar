@@ -11,22 +11,22 @@ import { Text } from '../../../mol-geo/geometry/text/text.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { ColorNames } from '../../../mol-util/color/names.ts';
 import { ShapeRepresentation } from '../representation.ts';
-import { Representation, type RepresentationParamsGetter, type RepresentationContext } from '../../representation.ts';
+import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../../representation.ts';
 import { Shape } from '../../../mol-model/shape.ts';
 import { LinesBuilder } from '../../../mol-geo/geometry/lines/lines-builder.ts';
 import { TextBuilder } from '../../../mol-geo/geometry/text/text-builder.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
-import { MarkerActions, MarkerAction } from '../../../mol-util/marker-action.ts';
+import { MarkerAction, MarkerActions } from '../../../mol-util/marker-action.ts';
 import { distanceLabel } from '../../../mol-theme/label.ts';
 import { LociLabelTextParams } from './common.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 
 export interface DistanceData {
-    pairs: Loci.Bundle<2>[]
+    pairs: Loci.Bundle<2>[];
 }
 
 const SharedParams = {
-    unitLabel: PD.Text('\u212B', { isEssential: true })
+    unitLabel: PD.Text('\u212B', { isEssential: true }),
 };
 
 const LineParams = {
@@ -37,17 +37,23 @@ const LineParams = {
     linesSize: PD.Numeric(0.075, { min: 0.01, max: 5, step: 0.01 }),
     dashLength: PD.Numeric(0.2, { min: 0.01, max: 0.2, step: 0.01 }),
 };
-type LineParams = typeof LineParams
+type LineParams = typeof LineParams;
 
 const TextParams = {
     ...LociLabelTextParams,
     ...SharedParams,
 };
-type TextParams = typeof TextParams
+type TextParams = typeof TextParams;
 
 const DistanceVisuals = {
-    'lines': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DistanceData, LineParams>) => ShapeRepresentation(getLinesShape, Lines.Utils, { modifyState: s => ({ ...s, markerActions: MarkerActions.Highlighting }) }),
-    'text': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DistanceData, TextParams>) => ShapeRepresentation(getTextShape, Text.Utils, { modifyState: s => ({ ...s, markerActions: MarkerAction.None }) }),
+    'lines': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DistanceData, LineParams>) =>
+        ShapeRepresentation(getLinesShape, Lines.Utils, {
+            modifyState: (s) => ({ ...s, markerActions: MarkerActions.Highlighting }),
+        }),
+    'text': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DistanceData, TextParams>) =>
+        ShapeRepresentation(getTextShape, Text.Utils, {
+            modifyState: (s) => ({ ...s, markerActions: MarkerAction.None }),
+        }),
 };
 
 export const DistanceParams = {
@@ -55,8 +61,8 @@ export const DistanceParams = {
     ...TextParams,
     visuals: PD.MultiSelect(['lines', 'text'], PD.objectToOptions(DistanceVisuals)),
 };
-export type DistanceParams = typeof DistanceParams
-export type DistanceProps = PD.Values<DistanceParams>
+export type DistanceParams = typeof DistanceParams;
+export type DistanceProps = PD.Values<DistanceParams>;
 
 //
 
@@ -69,7 +75,7 @@ function getDistanceState() {
         distance: 0,
     };
 }
-type DistanceState = ReturnType<typeof getDistanceState>
+type DistanceState = ReturnType<typeof getDistanceState>;
 
 function setDistanceState(pair: Loci.Bundle<2>, state: DistanceState) {
     const { sphereA, sphereB, center } = state;
@@ -88,7 +94,9 @@ function setDistanceState(pair: Loci.Bundle<2>, state: DistanceState) {
 const tmpState = getDistanceState();
 
 function getDistanceName(data: DistanceData, unitLabel: string) {
-    return data.pairs.length === 1 ? `Distance ${distanceLabel(data.pairs[0], { unitLabel, measureOnly: true })}` : `${data.pairs.length} Distances`;
+    return data.pairs.length === 1
+        ? `Distance ${distanceLabel(data.pairs[0], { unitLabel, measureOnly: true })}`
+        : `${data.pairs.length} Distances`;
 }
 
 //
@@ -102,7 +110,12 @@ function buildLines(data: DistanceData, props: DistanceProps, lines?: Lines): Li
     return builder.getLines();
 }
 
-function getLinesShape(ctx: RuntimeContext, data: DistanceData, props: DistanceProps, shape?: Shape<Lines>): Shape<Lines> {
+function getLinesShape(
+    ctx: RuntimeContext,
+    data: DistanceData,
+    props: DistanceProps,
+    shape?: Shape<Lines>,
+): Shape<Lines> {
     const lines = buildLines(data, props, shape && shape.geometry);
     const name = getDistanceName(data, props.unitLabel);
     const getLabel = (groupId: number) => distanceLabel(data.pairs[groupId], props);
@@ -133,7 +146,16 @@ function getTextShape(ctx: RuntimeContext, data: DistanceData, props: DistancePr
 
 //
 
-export type DistanceRepresentation = Representation<DistanceData, DistanceParams>
-export function DistanceRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<DistanceData, DistanceParams>): DistanceRepresentation {
-    return Representation.createMulti('Distance', ctx, getParams, Representation.StateBuilder, DistanceVisuals as unknown as Representation.Def<DistanceData, DistanceParams>);
+export type DistanceRepresentation = Representation<DistanceData, DistanceParams>;
+export function DistanceRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<DistanceData, DistanceParams>,
+): DistanceRepresentation {
+    return Representation.createMulti(
+        'Distance',
+        ctx,
+        getParams,
+        Representation.StateBuilder,
+        DistanceVisuals as unknown as Representation.Def<DistanceData, DistanceParams>,
+    );
 }

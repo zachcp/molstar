@@ -5,7 +5,7 @@
  */
 
 import { Color, ColorScale } from '../../mol-util/color/index.ts';
-import { StructureElement, Unit, Bond, type ElementIndex } from '../../mol-model/structure.ts';
+import { Bond, type ElementIndex, StructureElement, Unit } from '../../mol-model/structure.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ColorTheme } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
@@ -20,7 +20,7 @@ export const FormalChargeColorThemeParams = {
     domain: PD.Interval([-3, 3]),
     list: PD.ColorList({ kind: 'set', colors: ColorLists['red-white-blue'].list }),
 };
-export type FormalChargeColorThemeParams = typeof FormalChargeColorThemeParams
+export type FormalChargeColorThemeParams = typeof FormalChargeColorThemeParams;
 export function getFormalChargeColorThemeParams(ctx: ThemeDataContext) {
     return FormalChargeColorThemeParams; // TODO return copy
 }
@@ -33,7 +33,10 @@ function getFormalCharge(unit: Unit, element: ElementIndex) {
     }
 }
 
-export function FormalChargeColorTheme(ctx: ThemeDataContext, props: PD.Values<FormalChargeColorThemeParams>): ColorTheme<FormalChargeColorThemeParams> {
+export function FormalChargeColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<FormalChargeColorThemeParams>,
+): ColorTheme<FormalChargeColorThemeParams> {
     const scale = ColorScale.create({
         domain: props.domain,
         listOrName: props.list.colors,
@@ -57,7 +60,7 @@ export function FormalChargeColorTheme(ctx: ThemeDataContext, props: PD.Values<F
         color,
         props,
         description: Description,
-        legend: scale ? scale.legend : undefined
+        legend: scale ? scale.legend : undefined,
     };
 }
 
@@ -68,5 +71,6 @@ export const FormalChargeColorThemeProvider: ColorTheme.Provider<FormalChargeCol
     factory: FormalChargeColorTheme,
     getParams: getFormalChargeColorThemeParams,
     defaultValues: PD.getDefaultValues(FormalChargeColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure && ctx.structure.models.some(m => m.atomicHierarchy.atoms.pdbx_formal_charge.isDefined)
+    isApplicable: (ctx: ThemeDataContext) =>
+        !!ctx.structure && ctx.structure.models.some((m) => m.atomicHierarchy.atoms.pdbx_formal_charge.isDefined),
 };

@@ -7,20 +7,20 @@
 import { PluginBehavior } from '../../../mol-plugin/behavior/behavior.ts';
 import { ChemicalComponentPreset, ChemicalCompontentTrajectoryHierarchyPreset } from './representation.ts';
 
-export const wwPDBChemicalComponentDictionary = PluginBehavior.create<{ }>({
+export const wwPDBChemicalComponentDictionary = PluginBehavior.create<{}>({
     name: 'wwpdb-chemical-component-dictionary',
     category: 'representation',
     display: {
         name: 'wwPDB Chemical Compontent Dictionary',
-        description: 'Custom representation for data loaded from the CCD.'
+        description: 'Custom representation for data loaded from the CCD.',
     },
-    ctor: class extends PluginBehavior.Handler<{ }> {
+    ctor: class extends PluginBehavior.Handler<{}> {
         register(): void {
             this.ctx.builders.structure.hierarchy.registerPreset(ChemicalCompontentTrajectoryHierarchyPreset);
             this.ctx.builders.structure.representation.registerPreset(ChemicalComponentPreset);
         }
 
-        update() {
+        override update() {
             return false;
         }
 
@@ -29,5 +29,5 @@ export const wwPDBChemicalComponentDictionary = PluginBehavior.create<{ }>({
             this.ctx.builders.structure.representation.unregisterPreset(ChemicalComponentPreset);
         }
     },
-    params: () => ({ })
+    params: () => ({}),
 });

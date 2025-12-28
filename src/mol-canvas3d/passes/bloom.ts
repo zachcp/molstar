@@ -6,13 +6,13 @@
  * Partially adapted from three.js, The MIT License, Copyright © 2010-2024 three.js authors
  */
 
-import { type CopyRenderable, QuadSchema, QuadValues, createCopyRenderable } from '../../mol-gl/compute/util.ts';
+import { type CopyRenderable, createCopyRenderable, QuadSchema, QuadValues } from '../../mol-gl/compute/util.ts';
 import { type ComputeRenderable, createComputeRenderable } from '../../mol-gl/renderable.ts';
-import { TextureSpec, UniformSpec, DefineSpec, type Values } from '../../mol-gl/renderable/schema.ts';
+import { DefineSpec, TextureSpec, UniformSpec, type Values } from '../../mol-gl/renderable/schema.ts';
 import { ShaderCode } from '../../mol-gl/shader-code.ts';
 import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
 import { createComputeRenderItem } from '../../mol-gl/webgl/render-item.ts';
-import { type Texture, createNullTexture } from '../../mol-gl/webgl/texture.ts';
+import { createNullTexture, type Texture } from '../../mol-gl/webgl/texture.ts';
 import { Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
 import { ValueCell } from '../../mol-util/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
@@ -31,10 +31,13 @@ const MipCount = 5;
 export const BloomParams: PD.Params = {
     strength: PD.Numeric(1, { min: 0, max: 3, step: 0.1 }),
     radius: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }),
-    threshold: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }, { description: 'Luminosity threshold', hideIf: p => p.mode === 'emissive' }),
+    threshold: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }, {
+        description: 'Luminosity threshold',
+        hideIf: (p) => p.mode === 'emissive',
+    }),
     mode: PD.Select('emissive', [['luminosity', 'Luminosity'], ['emissive', 'Emissive']] as const),
 };
-export type BloomProps = PD.Values<typeof BloomParams>
+export type BloomProps = PD.Values<typeof BloomParams>;
 
 export class BloomPass {
     static isEnabled(props: PostprocessingProps): boolean {
@@ -71,7 +74,16 @@ export class BloomPass {
         const nullTexture = createNullTexture();
         this.luminosityRenderable = getLuminosityRenderable(webgl, nullTexture, nullTexture, nullTexture);
         this.blurRenderable = getBlurRenderable(webgl, nullTexture);
-        this.compositeRenderable = getCompositeRenderable(webgl, width, height, this.verticalBlurTargets[0].texture, this.verticalBlurTargets[1].texture, this.verticalBlurTargets[2].texture, this.verticalBlurTargets[3].texture, this.verticalBlurTargets[4].texture);
+        this.compositeRenderable = getCompositeRenderable(
+            webgl,
+            width,
+            height,
+            this.verticalBlurTargets[0].texture,
+            this.verticalBlurTargets[1].texture,
+            this.verticalBlurTargets[2].texture,
+            this.verticalBlurTargets[3].texture,
+            this.verticalBlurTargets[4].texture,
+        );
         this.copyRenderable = createCopyRenderable(webgl, this.compositeTarget.texture);
     }
 
@@ -103,10 +115,19 @@ export class BloomPass {
                 blurHeight = Math.round(blurHeight / 2);
             }
 
-            ValueCell.update(this.luminosityRenderable.values.uTexSizeInv, Vec2.set(this.compositeRenderable.values.uTexSizeInv.ref.value, 1 / width, 1 / height));
-            ValueCell.update(this.compositeRenderable.values.uTexSizeInv, Vec2.set(this.compositeRenderable.values.uTexSizeInv.ref.value, 1 / width, 1 / height));
+            ValueCell.update(
+                this.luminosityRenderable.values.uTexSizeInv,
+                Vec2.set(this.compositeRenderable.values.uTexSizeInv.ref.value, 1 / width, 1 / height),
+            );
+            ValueCell.update(
+                this.compositeRenderable.values.uTexSizeInv,
+                Vec2.set(this.compositeRenderable.values.uTexSizeInv.ref.value, 1 / width, 1 / height),
+            );
 
-            ValueCell.update(this.copyRenderable.values.uTexSize, Vec2.set(this.copyRenderable.values.uTexSize.ref.value, width, height));
+            ValueCell.update(
+                this.copyRenderable.values.uTexSize,
+                Vec2.set(this.copyRenderable.values.uTexSize.ref.value, width, height),
+            );
         }
     }
 
@@ -187,10 +208,16 @@ export class BloomPass {
 
             ValueCell.update(this.blurRenderable.values.dKernelRadius, BlurKernelSizes[i]);
             ValueCell.update(this.blurRenderable.values.uGaussianCoefficients, getBlurCoefficients(BlurKernelSizes[i]));
-            ValueCell.update(this.blurRenderable.values.uTexSizeInv, Vec2.set(this.blurRenderable.values.uTexSizeInv.ref.value, 1 / blurWidth, 1 / blurHeight));
+            ValueCell.update(
+                this.blurRenderable.values.uTexSizeInv,
+                Vec2.set(this.blurRenderable.values.uTexSizeInv.ref.value, 1 / blurWidth, 1 / blurHeight),
+            );
 
             this.horizontalBlurTargets[i].bind();
-            ValueCell.update(this.blurRenderable.values.tInput, i === 0 ? this.luminosityTarget.texture : this.verticalBlurTargets[i - 1].texture);
+            ValueCell.update(
+                this.blurRenderable.values.tInput,
+                i === 0 ? this.luminosityTarget.texture : this.verticalBlurTargets[i - 1].texture,
+            );
             ValueCell.update(this.blurRenderable.values.uDirection, BlurDirectionX);
             this.blurRenderable.update();
             this.blurRenderable.render();
@@ -242,9 +269,14 @@ const LuminositySchema = {
     dMode: DefineSpec('string', ['luminosity', 'emissive']),
 };
 const LuminosityShaderCode = ShaderCode('Bloom Luminosity', quad_vert, luminosity_frag);
-type LuminosityRenderable = ComputeRenderable<Values<typeof LuminositySchema>>
+type LuminosityRenderable = ComputeRenderable<Values<typeof LuminositySchema>>;
 
-function getLuminosityRenderable(ctx: WebGLContext, colorTexture: Texture, emissiveTexture: Texture, depthTexture: Texture): LuminosityRenderable {
+function getLuminosityRenderable(
+    ctx: WebGLContext,
+    colorTexture: Texture,
+    emissiveTexture: Texture,
+    depthTexture: Texture,
+): LuminosityRenderable {
     const width = colorTexture.getWidth();
     const height = colorTexture.getHeight();
 
@@ -294,7 +326,7 @@ const BlurSchema = {
     dKernelRadius: DefineSpec('number'),
 };
 const BlurShaderCode = ShaderCode('Bloom Blur', quad_vert, blur_frag);
-type BlurRenderable = ComputeRenderable<Values<typeof BlurSchema>>
+type BlurRenderable = ComputeRenderable<Values<typeof BlurSchema>>;
 
 function getBlurRenderable(ctx: WebGLContext, inputTexture: Texture): BlurRenderable {
     const width = inputTexture.getWidth();
@@ -333,9 +365,18 @@ const CompositeSchema = {
     uBloomTints: UniformSpec('v3[]'),
 };
 const CompositeShaderCode = ShaderCode('Bloom Composite', quad_vert, composite_frag);
-type CompositeRenderable = ComputeRenderable<Values<typeof CompositeSchema>>
+type CompositeRenderable = ComputeRenderable<Values<typeof CompositeSchema>>;
 
-function getCompositeRenderable(ctx: WebGLContext, width: number, height: number, blurTexture1: Texture, blurTexture2: Texture, blurTexture3: Texture, blurTexture4: Texture, blurTexture5: Texture): CompositeRenderable {
+function getCompositeRenderable(
+    ctx: WebGLContext,
+    width: number,
+    height: number,
+    blurTexture1: Texture,
+    blurTexture2: Texture,
+    blurTexture3: Texture,
+    blurTexture4: Texture,
+    blurTexture5: Texture,
+): CompositeRenderable {
     const values: Values<typeof CompositeSchema> = {
         ...QuadValues,
         uTexSizeInv: ValueCell.create(Vec2.create(width, height)),

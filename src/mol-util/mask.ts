@@ -17,7 +17,7 @@ export function sortAsc<T extends ArrayLike<number>>(array: T): T {
 }
 
 interface Mask {
-    '@type': 'mask'
+    '@type': 'mask';
     size: number;
     has(i: number): boolean;
     /** in-order iteration of all "masked elements". */
@@ -28,23 +28,34 @@ namespace Mask {
     class EmptyMask implements Mask {
         '@type': 'mask';
         size = 0;
-        has(i: number): boolean { return false; }
-        forEach<Ctx>(f: (i: number, ctx?: Ctx) => void, ctx: Ctx): Ctx { return ctx; }
-        constructor() { }
+        has(i: number): boolean {
+            return false;
+        }
+        forEach<Ctx>(f: (i: number, ctx?: Ctx) => void, ctx: Ctx): Ctx {
+            return ctx;
+        }
+        constructor() {}
     }
 
     class SingletonMask implements Mask {
         '@type': 'mask';
         size = 1;
-        has(i: number) { return i === this.idx; }
-        forEach<Ctx>(f: (i: number, ctx?: Ctx) => void, ctx?: Ctx) { f(this.idx, ctx); return ctx; }
-        constructor(private idx: number) { }
+        has(i: number) {
+            return i === this.idx;
+        }
+        forEach<Ctx>(f: (i: number, ctx?: Ctx) => void, ctx?: Ctx) {
+            f(this.idx, ctx);
+            return ctx;
+        }
+        constructor(private idx: number) {}
     }
 
     class BitMask implements Mask {
         '@type': 'mask';
         private length: number;
-        has(i: number) { return i < this.length && !!this.mask[i] as any; }
+        has(i: number) {
+            return i < this.length && !!this.mask[i] as any;
+        }
 
         private _forEach<Ctx>(f: (i: number, ctx?: Ctx) => void, ctx: Ctx | undefined) {
             for (let i = 0; i < this.length; i++) {
@@ -55,12 +66,16 @@ namespace Mask {
             this._forEach(f, ctx);
             return ctx;
         }
-        constructor(private mask: boolean[], public size: number) { this.length = mask.length; }
+        constructor(private mask: boolean[], public size: number) {
+            this.length = mask.length;
+        }
     }
 
     class AllMask implements Mask {
         '@type': 'mask';
-        has(i: number) { return true; }
+        has(i: number) {
+            return true;
+        }
         private _forEach<Ctx>(f: (i: number, ctx?: Ctx) => void, ctx: Ctx | undefined) {
             for (let i = 0; i < this.size; i++) {
                 f(i, ctx);
@@ -70,14 +85,16 @@ namespace Mask {
             this._forEach(f, ctx);
             return ctx;
         }
-        constructor(public size: number) { }
+        constructor(public size: number) {}
     }
 
     class SetMask implements Mask {
         '@type': 'mask';
         private _flat: number[] | undefined = void 0;
         size: number;
-        has(i: number) { return this.set.has(i); }
+        has(i: number) {
+            return this.set.has(i);
+        }
 
         private _forEach<Ctx>(f: (i: number, ctx: Ctx) => void, ctx: Ctx) {
             for (const idx of this.flatten()) {
@@ -88,7 +105,7 @@ namespace Mask {
             if (this._flat) return this._flat;
             const indices = new Int32Array(this.size);
             let offset = 0;
-            this.set.forEach(i => indices[offset++] = i);
+            this.set.forEach((i) => indices[offset++] = i);
             sortAsc(indices);
             this._flat = indices as any as number[];
             return this._flat;
@@ -102,7 +119,9 @@ namespace Mask {
         }
     }
 
-    export function always(size: number): Mask { return new AllMask(size); }
+    export function always(size: number): Mask {
+        return new AllMask(size);
+    }
     export const never: Mask = new EmptyMask();
 
     export function ofSet(set: Set<number>): Mask {
@@ -152,7 +171,7 @@ namespace Mask {
     export function complement(mask: Mask, against: Mask): Mask {
         let count = 0;
         let max = 0;
-        against.forEach(i => {
+        against.forEach((i) => {
             if (!mask.has(i)) {
                 count++;
                 if (i > max) max = i;
@@ -162,7 +181,7 @@ namespace Mask {
         if (count / max < 1 / 12) {
             // set based
             const set = new Set<number>();
-            against.forEach(i => {
+            against.forEach((i) => {
                 if (!mask.has(i)) {
                     set.add(i);
                 }
@@ -171,7 +190,7 @@ namespace Mask {
         } else {
             // mask based
             const target = new Uint8Array(max + 1);
-            against.forEach(i => {
+            against.forEach((i) => {
                 if (!mask.has(i)) {
                     target[i] = 1;
                 }

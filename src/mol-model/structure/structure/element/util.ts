@@ -6,29 +6,37 @@
  */
 
 import type { SortedArray } from '../../../../mol-data/int.ts';
-import type { ElementIndex, ResidueIndex, ChainIndex } from '../../model.ts';
+import type { ChainIndex, ElementIndex, ResidueIndex } from '../../model.ts';
 import { Unit } from '../unit.ts';
 import type { Location } from './location.ts';
 import { StructureProperties } from '../properties.ts';
 
 // TODO: when nominal types are available, make this indexed by UnitIndex
-export type Set = SortedArray<ElementIndex>
+export type Set = SortedArray<ElementIndex>;
 
 /** Index into Unit.elements */
-export type UnitIndex = { readonly '@type': 'unit-element-index' } & number
+export type UnitIndex = { readonly '@type': 'unit-element-index' } & number;
 
-export interface Property<T> { (location: Location): T }
-export interface Predicate extends Property<boolean> { }
+export interface Property<T> {
+    (location: Location): T;
+}
+export interface Predicate extends Property<boolean> {}
 
-export function property<T>(p: Property<T>) { return p; }
+export function property<T>(p: Property<T>) {
+    return p;
+}
 
-function _wrongUnitKind(kind: string) { throw new Error(`Property only available for ${kind} models.`); }
+function _wrongUnitKind(kind: string) {
+    throw new Error(`Property only available for ${kind} models.`);
+}
 export function atomicProperty<T>(p: (location: Location<Unit.Atomic>) => T) {
-    return property(l => Unit.isAtomic(l.unit) ? p(l as Location<Unit.Atomic>) : _wrongUnitKind('atomic'));
+    return property((l) => Unit.isAtomic(l.unit) ? p(l as Location<Unit.Atomic>) : _wrongUnitKind('atomic'));
 }
 
 export function coarseProperty<T>(p: (location: Location<Unit.Spheres | Unit.Gaussians>) => T) {
-    return property(l => Unit.isCoarse(l.unit) ? p(l as Location<Unit.Spheres | Unit.Gaussians>) : _wrongUnitKind('coarse'));
+    return property((l) =>
+        Unit.isCoarse(l.unit) ? p(l as Location<Unit.Spheres | Unit.Gaussians>) : _wrongUnitKind('coarse')
+    );
 }
 
 export function residueIndex(e: Location) {

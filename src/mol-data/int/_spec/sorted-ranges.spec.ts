@@ -13,7 +13,12 @@ describe('rangesArray', () => {
         it(name, () => expect(a).toEqual(b));
     }
 
-    function testIterator(name: string, ranges: SortedRanges, set: OrderedSet, expectedValues: { index: number[], start: number[], end: number[]}) {
+    function testIterator(
+        name: string,
+        ranges: SortedRanges,
+        set: OrderedSet,
+        expectedValues: { index: number[]; start: number[]; end: number[] },
+    ) {
         it(`iterator, ${name}`, () => {
             const rangesIt = SortedRanges.transientSegments(ranges, set);
             const { index, start, end } = expectedValues;
@@ -39,34 +44,35 @@ describe('rangesArray', () => {
     test('min/max', [SortedRanges.min(a1234), SortedRanges.max(a1234)], [1, 4]);
     test('start/end', [SortedRanges.start(a1234), SortedRanges.end(a1234)], [1, 5]);
 
-    testIterator('two ranges',
-        SortedRanges.ofSortedRanges([1, 2, 3, 4]),
-        OrderedSet.ofBounds(1, 5),
-        { index: [0, 1], start: [0, 2], end: [2, 4] }
-    );
-    testIterator('first range',
-        SortedRanges.ofSortedRanges([1, 2, 3, 4]),
-        SortedArray.ofSortedArray([2]),
-        { index: [0], start: [0], end: [1] }
-    );
-    testIterator('second range',
-        SortedRanges.ofSortedRanges([1, 2, 3, 4]),
-        SortedArray.ofSortedArray([4]),
-        { index: [1], start: [0], end: [1] }
-    );
-    testIterator('set not in ranges',
-        SortedRanges.ofSortedRanges([1, 2, 3, 4]),
-        SortedArray.ofSortedArray([10]),
-        { index: [], start: [], end: [] }
-    );
-    testIterator('set in second range and beyond',
+    testIterator('two ranges', SortedRanges.ofSortedRanges([1, 2, 3, 4]), OrderedSet.ofBounds(1, 5), {
+        index: [0, 1],
+        start: [0, 2],
+        end: [2, 4],
+    });
+    testIterator('first range', SortedRanges.ofSortedRanges([1, 2, 3, 4]), SortedArray.ofSortedArray([2]), {
+        index: [0],
+        start: [0],
+        end: [1],
+    });
+    testIterator('second range', SortedRanges.ofSortedRanges([1, 2, 3, 4]), SortedArray.ofSortedArray([4]), {
+        index: [1],
+        start: [0],
+        end: [1],
+    });
+    testIterator('set not in ranges', SortedRanges.ofSortedRanges([1, 2, 3, 4]), SortedArray.ofSortedArray([10]), {
+        index: [],
+        start: [],
+        end: [],
+    });
+    testIterator(
+        'set in second range and beyond',
         SortedRanges.ofSortedRanges([1, 2, 3, 4]),
         SortedArray.ofSortedArray([3, 10]),
-        { index: [1], start: [0], end: [1] }
+        { index: [1], start: [0], end: [1] },
     );
-    testIterator('length 1 range',
-        SortedRanges.ofSortedRanges([1, 1, 3, 4]),
-        SortedArray.ofSortedArray([0, 1, 10]),
-        { index: [0], start: [1], end: [2] }
-    );
+    testIterator('length 1 range', SortedRanges.ofSortedRanges([1, 1, 3, 4]), SortedArray.ofSortedArray([0, 1, 10]), {
+        index: [0],
+        start: [1],
+        end: [2],
+    });
 });

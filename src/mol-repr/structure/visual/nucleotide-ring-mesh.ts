@@ -8,7 +8,7 @@ import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import type { NumberArray } from '../../../mol-util/type-helpers.ts';
 import type { VisualContext } from '../../visual.ts';
-import { Unit, type Structure } from '../../../mol-model/structure.ts';
+import { type Structure, Unit } from '../../../mol-model/structure.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
@@ -17,8 +17,18 @@ import type { CylinderProps } from '../../../mol-geo/primitive/cylinder.ts';
 import { isNucleic } from '../../../mol-model/structure/model/types.ts';
 import { addCylinder } from '../../../mol-geo/geometry/mesh/builder/cylinder.ts';
 import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere.ts';
-import { UnitsMeshParams, type UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
-import { NucleotideLocationIterator, getNucleotideElementLoci, eachNucleotideElement, getNucleotideBaseType, createNucleicIndices, setPurinIndices, setPyrimidineIndices, hasPyrimidineIndices, hasPurinIndices } from './util/nucleotide.ts';
+import { UnitsMeshParams, UnitsMeshVisual, type UnitsVisual } from '../units-visual.ts';
+import {
+    createNucleicIndices,
+    eachNucleotideElement,
+    getNucleotideBaseType,
+    getNucleotideElementLoci,
+    hasPurinIndices,
+    hasPyrimidineIndices,
+    NucleotideLocationIterator,
+    setPurinIndices,
+    setPyrimidineIndices,
+} from './util/nucleotide.ts';
 import type { VisualUpdateState } from '../../util.ts';
 import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
@@ -44,7 +54,7 @@ export const NucleotideRingMeshParams = {
     detail: PD.Numeric(0, { min: 0, max: 3, step: 1 }, BaseGeometry.CustomQualityParamInfo),
 };
 export const DefaultNucleotideRingMeshProps = PD.getDefaultValues(NucleotideRingMeshParams);
-export type NucleotideRingProps = typeof DefaultNucleotideRingMeshProps
+export type NucleotideRingProps = typeof DefaultNucleotideRingMeshProps;
 
 const positionsRing5_6 = new Float32Array(2 * 9 * 3);
 const stripIndicesRing5_6 = new Uint32Array([0, 1, 2, 3, 4, 5, 6, 7, 16, 17, 14, 15, 12, 13, 8, 9, 10, 11, 0, 1]);
@@ -65,7 +75,14 @@ function shiftPositions(out: NumberArray, dir: Vec3, ...positions: Vec3[]) {
     }
 }
 
-function createNucleotideRingMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: NucleotideRingProps, mesh?: Mesh) {
+function createNucleotideRingMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: NucleotideRingProps,
+    mesh?: Mesh,
+) {
     if (!Unit.isAtomic(unit)) return Mesh.createEmpty(mesh);
 
     const nucleotideElementCount = unit.nucleotideElements.length;
@@ -105,14 +122,22 @@ function createNucleotideRingMesh(ctx: VisualContext, unit: Unit, structure: Str
                     setPurinIndices(idx, unit, residueIndex);
 
                     if (idx.N9 !== -1 && idx.trace !== -1) {
-                        c.invariantPosition(idx.N9, pN9); c.invariantPosition(idx.trace, pTrace);
+                        c.invariantPosition(idx.N9, pN9);
+                        c.invariantPosition(idx.trace, pTrace);
                         builderState.currentGroup = i;
                         addCylinder(builderState, pN9, pTrace, 1, cylinderProps);
                         addSphere(builderState, pN9, radius, detail);
                     }
 
                     if (hasPurinIndices(idx)) {
-                        c.invariantPosition(idx.N1, pN1); c.invariantPosition(idx.C2, pC2); c.invariantPosition(idx.N3, pN3); c.invariantPosition(idx.C4, pC4); c.invariantPosition(idx.C5, pC5); c.invariantPosition(idx.C6, pC6); c.invariantPosition(idx.N7, pN7); c.invariantPosition(idx.C8, pC8);
+                        c.invariantPosition(idx.N1, pN1);
+                        c.invariantPosition(idx.C2, pC2);
+                        c.invariantPosition(idx.N3, pN3);
+                        c.invariantPosition(idx.C4, pC4);
+                        c.invariantPosition(idx.C5, pC5);
+                        c.invariantPosition(idx.C6, pC6);
+                        c.invariantPosition(idx.N7, pN7);
+                        c.invariantPosition(idx.C8, pC8);
 
                         Vec3.triangleNormal(normal, pN1, pC4, pC5);
                         Vec3.scale(normal, normal, thickness);
@@ -126,14 +151,19 @@ function createNucleotideRingMesh(ctx: VisualContext, unit: Unit, structure: Str
                     setPyrimidineIndices(idx, unit, residueIndex);
 
                     if (idx.N1 !== -1 && idx.trace !== -1) {
-                        c.invariantPosition(idx.N1, pN1); c.invariantPosition(idx.trace, pTrace);
+                        c.invariantPosition(idx.N1, pN1);
+                        c.invariantPosition(idx.trace, pTrace);
                         builderState.currentGroup = i;
                         addCylinder(builderState, pN1, pTrace, 1, cylinderProps);
                         addSphere(builderState, pN1, radius, detail);
                     }
 
                     if (hasPyrimidineIndices(idx)) {
-                        c.invariantPosition(idx.C2, pC2); c.invariantPosition(idx.N3, pN3); c.invariantPosition(idx.C4, pC4); c.invariantPosition(idx.C5, pC5); c.invariantPosition(idx.C6, pC6);
+                        c.invariantPosition(idx.C2, pC2);
+                        c.invariantPosition(idx.N3, pN3);
+                        c.invariantPosition(idx.C4, pC4);
+                        c.invariantPosition(idx.C5, pC5);
+                        c.invariantPosition(idx.C6, pC6);
 
                         Vec3.triangleNormal(normal, pN1, pC4, pC5);
                         Vec3.scale(normal, normal, thickness);
@@ -160,9 +190,9 @@ function createNucleotideRingMesh(ctx: VisualContext, unit: Unit, structure: Str
 
 export const NucleotideRingParams = {
     ...UnitsMeshParams,
-    ...NucleotideRingMeshParams
+    ...NucleotideRingMeshParams,
 };
-export type NucleotideRingParams = typeof NucleotideRingParams
+export type NucleotideRingParams = typeof NucleotideRingParams;
 
 export function NucleotideRingVisual(materialId: number): UnitsVisual<NucleotideRingParams> {
     return UnitsMeshVisual<NucleotideRingParams>({
@@ -171,12 +201,14 @@ export function NucleotideRingVisual(materialId: number): UnitsVisual<Nucleotide
         createLocationIterator: NucleotideLocationIterator.fromGroup,
         getLoci: getNucleotideElementLoci,
         eachLocation: eachNucleotideElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<NucleotideRingParams>, currentProps: PD.Values<NucleotideRingParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<NucleotideRingParams>,
+            currentProps: PD.Values<NucleotideRingParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.thicknessFactor !== currentProps.thicknessFactor ||
-                newProps.radialSegments !== currentProps.radialSegments
-            );
-        }
+                newProps.radialSegments !== currentProps.radialSegments;
+        },
     }, materialId);
 }

@@ -10,42 +10,41 @@
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { Tokenizer } from '../common/text/tokenizer.ts';
 import { Column } from '../../../mol-data/db.ts';
-import { Task, chunkedSubtask, type RuntimeContext } from '../../../mol-task/index.ts';
+import { chunkedSubtask, type RuntimeContext, Task } from '../../../mol-task/index.ts';
 import { ReaderResult as Result } from '../result.ts';
 import { parseFloat as fastParseFloat } from '../common/text/number-parser.ts';
 import type { StringLike } from '../../common/string-like.ts';
 
-
 // https://h5cube-spec.readthedocs.io/en/latest/cubeformat.html
 
 export interface CubeFile {
-    name: string,
-    header: CubeFile.Header,
-    atoms: CubeFile.Atoms,
-    values: Float64Array
+    name: string;
+    header: CubeFile.Header;
+    atoms: CubeFile.Atoms;
+    values: Float64Array;
 }
 
 export namespace CubeFile {
     export interface Header {
-        orbitals: boolean,
-        comment1: string,
-        comment2: string,
-        atomCount: number,
-        origin: Vec3,
-        dim: Vec3,
-        basisX: Vec3,
-        basisY: Vec3,
-        basisZ: Vec3,
-        dataSetIds: number[]
+        orbitals: boolean;
+        comment1: string;
+        comment2: string;
+        atomCount: number;
+        origin: Vec3;
+        dim: Vec3;
+        basisX: Vec3;
+        basisY: Vec3;
+        basisZ: Vec3;
+        dataSetIds: number[];
     }
 
     export interface Atoms {
-        count: number,
-        number: Column<number>,
-        nuclearCharge: Column<number>,
-        x: Column<number>,
-        y: Column<number>,
-        z: Column<number>
+        count: number;
+        number: Column<number>;
+        nuclearCharge: Column<number>;
+        x: Column<number>;
+        y: Column<number>;
+        z: Column<number>;
     }
 }
 
@@ -83,7 +82,18 @@ function readHeader(tokenizer: Tokenizer) {
         for (let i = 0, _i = +counts[0]; i < _i; i++) dataSetIds.push(+counts[i + 1]);
     }
 
-    const header: CubeFile.Header = { orbitals: rawAtomCount < 0, comment1, comment2, atomCount, origin, dim: Vec3.create(NVX, NVY, NVZ), basisX, basisY, basisZ, dataSetIds };
+    const header: CubeFile.Header = {
+        orbitals: rawAtomCount < 0,
+        comment1,
+        comment2,
+        atomCount,
+        origin,
+        dim: Vec3.create(NVX, NVY, NVZ),
+        basisX,
+        basisY,
+        basisZ,
+        dataSetIds,
+    };
     return { header, atoms };
 }
 
@@ -109,7 +119,7 @@ function readAtoms(tokenizer: Tokenizer, count: number, scaleFactor: number): Cu
         nuclearCharge: Column.ofArray({ array: value, schema: Column.Schema.float }),
         x: Column.ofArray({ array: x, schema: Column.Schema.float }),
         y: Column.ofArray({ array: y, schema: Column.Schema.float }),
-        z: Column.ofArray({ array: z, schema: Column.Schema.float })
+        z: Column.ofArray({ array: z, schema: Column.Schema.float }),
     };
 }
 
@@ -133,7 +143,7 @@ function readValues(ctx: RuntimeContext, tokenizer: Tokenizer, header: CubeFile.
 }
 
 export function parseCube(data: StringLike, name: string) {
-    return Task.create<Result<CubeFile>>('Parse Cube', async taskCtx => {
+    return Task.create<Result<CubeFile>>('Parse Cube', async (taskCtx) => {
         await taskCtx.update('Reading header...');
         const tokenizer = Tokenizer(data);
         const { header, atoms } = readHeader(tokenizer);

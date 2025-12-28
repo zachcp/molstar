@@ -14,14 +14,14 @@ import type { CoarseHierarchy } from './coarse.ts';
 import type { CoarseElements } from './coarse/hierarchy.ts';
 
 interface StructureSequence {
-    readonly sequences: ReadonlyArray<StructureSequence.Entity>,
-    readonly byEntityKey: { [key: number]: StructureSequence.Entity }
+    readonly sequences: ReadonlyArray<StructureSequence.Entity>;
+    readonly byEntityKey: { [key: number]: StructureSequence.Entity };
 }
 
 namespace StructureSequence {
     export interface Entity {
-        readonly entityId: string,
-        readonly sequence: Sequence
+        readonly entityId: string;
+        readonly sequence: Sequence;
     }
 
     const Empty: StructureSequence = { byEntityKey: {}, sequences: [] };
@@ -37,7 +37,11 @@ namespace StructureSequence {
         return { sequences, byEntityKey };
     }
 
-    export function fromHierarchy(entities: Entities, atomicHierarchy: AtomicHierarchy, coarseHierarchy: CoarseHierarchy): StructureSequence {
+    export function fromHierarchy(
+        entities: Entities,
+        atomicHierarchy: AtomicHierarchy,
+        coarseHierarchy: CoarseHierarchy,
+    ): StructureSequence {
         const atomic = fromAtomicHierarchy(entities, atomicHierarchy);
         const coarse = coarseHierarchy.isDefined ? fromCoarseHierarchy(entities, coarseHierarchy) : Empty;
         return merge(atomic, coarse);
@@ -49,7 +53,7 @@ namespace StructureSequence {
         const { chainAtomSegments, residueAtomSegments } = hierarchy;
         const { count, offsets } = chainAtomSegments;
 
-        const byEntityKey: StructureSequence['byEntityKey'] = { };
+        const byEntityKey: StructureSequence['byEntityKey'] = {};
         const sequences: StructureSequence.Entity[] = [];
 
         // check if chain segments are empty
@@ -64,7 +68,10 @@ namespace StructureSequence {
 
             const start = cI;
             cI++;
-            while (cI < _cI && entityKey === hierarchy.index.getEntityFromChain(cI) && entities.data.type.value(entityKey) !== 'polymer') {
+            while (
+                cI < _cI && entityKey === hierarchy.index.getEntityFromChain(cI) &&
+                entities.data.type.value(entityKey) !== 'polymer'
+            ) {
                 cI++;
             }
             cI--;
@@ -81,7 +88,7 @@ namespace StructureSequence {
 
             byEntityKey[entityKey] = {
                 entityId: entities.data.id.value(entityKey),
-                sequence: Sequence.ofResidueNames(compId, seqId)
+                sequence: Sequence.ofResidueNames(compId, seqId),
             };
 
             sequences.push(byEntityKey[entityKey]);
@@ -100,7 +107,7 @@ namespace StructureSequence {
         const { chainElementSegments, seq_id_begin, seq_id_end } = elements;
         const { count, offsets } = chainElementSegments;
 
-        const byEntityKey: StructureSequence['byEntityKey'] = { };
+        const byEntityKey: StructureSequence['byEntityKey'] = {};
         const sequences: StructureSequence.Entity[] = [];
 
         // check if chain segments are empty
@@ -127,7 +134,7 @@ namespace StructureSequence {
 
             byEntityKey[eK] = {
                 entityId: entities.data.id.value(eK),
-                sequence: Sequence.ofSequenceRanges(seqIdBegin, seqIdEnd)
+                sequence: Sequence.ofSequenceRanges(seqIdBegin, seqIdEnd),
             };
 
             sequences.push(byEntityKey[eK]);

@@ -1,9 +1,8 @@
-
 import * as React from 'react';
 
 import { Vec2 } from '../../../mol-math/linear-algebra.ts';
 
-export class PointComponent extends React.Component<any, {show: boolean}> {
+export class PointComponent extends React.Component<any, { show: boolean }> {
     constructor(props: any) {
         super(props);
         this.state = { show: false };
@@ -28,9 +27,10 @@ export class PointComponent extends React.Component<any, {show: boolean}> {
         this.props.delete(this.props.id);
     }
 
-    public override render() {        return ([
+    public override render() {
+        return [
             <circle
-                r="10"
+                r='10'
                 key={`${this.props.id}circle`}
                 id={`${this.props.id}`}
                 cx={this.props.x}
@@ -40,8 +40,8 @@ export class PointComponent extends React.Component<any, {show: boolean}> {
                 onMouseEnter={this.handleHover}
                 onMouseLeave={this.handleHoverOff}
                 onMouseDown={this.props.onmousedown}
-                fill="black"
-            />
-        ]);
+                fill='black'
+            />,
+        ];
     }
 }

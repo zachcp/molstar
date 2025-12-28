@@ -216,4 +216,3 @@ export const NtCColors = ColorMap({
     ZZS2_Upr: DefaultNtCClassColors.SYN,
     ZZS2_Lwr: DefaultNtCClassColors.Z,
 });
-

@@ -18,30 +18,30 @@ const v3fromArray = Vec3.fromArray;
 const b3add = Box3D.add;
 
 type TopGrid = {
-    readonly batchSize: number
-    readonly batchCount: number
-    readonly batchOffsets: Uint32Array
-    readonly batchSpheres: Float32Array
-    readonly batchCell: Uint32Array
-}
+    readonly batchSize: number;
+    readonly batchCount: number;
+    readonly batchOffsets: Uint32Array;
+    readonly batchSpheres: Float32Array;
+    readonly batchCell: Uint32Array;
+};
 
 type BottomGrid = {
-    readonly cellSize: number
-    readonly cellCount: number
-    readonly cellOffsets: Uint32Array
-    readonly cellSpheres: Float32Array
-    readonly cellTransform: Float32Array
-    readonly cellInstance: Float32Array
-}
+    readonly cellSize: number;
+    readonly cellCount: number;
+    readonly cellOffsets: Uint32Array;
+    readonly cellSpheres: Float32Array;
+    readonly cellTransform: Float32Array;
+    readonly cellInstance: Float32Array;
+};
 
-export type InstanceGrid = BottomGrid & TopGrid
+export type InstanceGrid = BottomGrid & TopGrid;
 
 export type InstanceData = {
-    instanceCount: number
-    instance: Float32Array
-    transform: Float32Array
-    invariantBoundingSphere: Sphere3D
-}
+    instanceCount: number;
+    instance: Float32Array;
+    transform: Float32Array;
+    invariantBoundingSphere: Sphere3D;
+};
 
 export function createEmptyInstanceGrid(): InstanceGrid {
     return {

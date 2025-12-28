@@ -11,7 +11,7 @@ import type { Unit } from '../unit.ts';
 import { Structure } from '../structure.ts';
 import { UniqueArray } from '../../../../mol-data/generic.ts';
 
-type UArray = UniqueArray<number, number>
+type UArray = UniqueArray<number, number>;
 
 export class StructureUniqueSubsetBuilder {
     private ids: number[] = [];
@@ -98,6 +98,5 @@ export class StructureUniqueSubsetBuilder {
     }
 
     constructor(private parent: Structure) {
-
     }
 }

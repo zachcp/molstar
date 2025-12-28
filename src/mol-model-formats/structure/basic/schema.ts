@@ -11,23 +11,23 @@ import { getNormalizedAtomSite } from './util.ts';
 
 // TODO split into conformation and hierarchy parts
 
-export type Entry = Table<mmCIF_Schema['entry']>
-export type Struct = Table<mmCIF_Schema['struct']>
-export type StructAsym = Table<mmCIF_Schema['struct_asym']>
-export type IhmModelList = Table<mmCIF_Schema['ihm_model_list']>
-export type IhmModelGroup = Table<mmCIF_Schema['ihm_model_group']>
-export type IhmModelGroupLink = Table<mmCIF_Schema['ihm_model_group_link']>
-export type Entity = Table<mmCIF_Schema['entity']>
-export type EntityPoly = Table<mmCIF_Schema['entity_poly']>
-export type EntityPolySeq = Table<mmCIF_Schema['entity_poly_seq']>
-export type EntityBranch = Table<mmCIF_Schema['pdbx_entity_branch']>
-export type ChemComp = Table<mmCIF_chemComp_schema>
-export type ChemCompIdentifier = Table<mmCIF_Schema['pdbx_chem_comp_identifier']>
-export type AtomSite = Table<mmCIF_Schema['atom_site']>
-export type IhmSphereObjSite = Table<mmCIF_Schema['ihm_sphere_obj_site']>
-export type IhmGaussianObjSite = Table<mmCIF_Schema['ihm_gaussian_obj_site']>
-export type UnobsOrZeroOccResidues = Table<mmCIF_Schema['pdbx_unobs_or_zero_occ_residues']>
-export type Molecule = Table<mmCIF_Schema['pdbx_molecule']>
+export type Entry = Table<mmCIF_Schema['entry']>;
+export type Struct = Table<mmCIF_Schema['struct']>;
+export type StructAsym = Table<mmCIF_Schema['struct_asym']>;
+export type IhmModelList = Table<mmCIF_Schema['ihm_model_list']>;
+export type IhmModelGroup = Table<mmCIF_Schema['ihm_model_group']>;
+export type IhmModelGroupLink = Table<mmCIF_Schema['ihm_model_group_link']>;
+export type Entity = Table<mmCIF_Schema['entity']>;
+export type EntityPoly = Table<mmCIF_Schema['entity_poly']>;
+export type EntityPolySeq = Table<mmCIF_Schema['entity_poly_seq']>;
+export type EntityBranch = Table<mmCIF_Schema['pdbx_entity_branch']>;
+export type ChemComp = Table<mmCIF_chemComp_schema>;
+export type ChemCompIdentifier = Table<mmCIF_Schema['pdbx_chem_comp_identifier']>;
+export type AtomSite = Table<mmCIF_Schema['atom_site']>;
+export type IhmSphereObjSite = Table<mmCIF_Schema['ihm_sphere_obj_site']>;
+export type IhmGaussianObjSite = Table<mmCIF_Schema['ihm_gaussian_obj_site']>;
+export type UnobsOrZeroOccResidues = Table<mmCIF_Schema['pdbx_unobs_or_zero_occ_residues']>;
+export type Molecule = Table<mmCIF_Schema['pdbx_molecule']>;
 
 export const BasicSchema = {
     entry: mmCIF_Schema.entry,
@@ -50,23 +50,23 @@ export const BasicSchema = {
 };
 
 export interface BasicData {
-    entry: Entry
-    struct: Struct
-    struct_asym: StructAsym
-    ihm_model_list: IhmModelList
-    ihm_model_group: IhmModelGroup
-    ihm_model_group_link: IhmModelGroupLink
-    entity: Entity
-    entity_poly: EntityPoly
-    entity_poly_seq: EntityPolySeq
-    pdbx_entity_branch: EntityBranch
-    chem_comp: ChemComp
-    pdbx_chem_comp_identifier: ChemCompIdentifier
-    atom_site: AtomSite
-    ihm_sphere_obj_site: IhmSphereObjSite
-    ihm_gaussian_obj_site: IhmGaussianObjSite
-    pdbx_unobs_or_zero_occ_residues: UnobsOrZeroOccResidues
-    pdbx_molecule: Molecule
+    entry: Entry;
+    struct: Struct;
+    struct_asym: StructAsym;
+    ihm_model_list: IhmModelList;
+    ihm_model_group: IhmModelGroup;
+    ihm_model_group_link: IhmModelGroupLink;
+    entity: Entity;
+    entity_poly: EntityPoly;
+    entity_poly_seq: EntityPolySeq;
+    pdbx_entity_branch: EntityBranch;
+    chem_comp: ChemComp;
+    pdbx_chem_comp_identifier: ChemCompIdentifier;
+    atom_site: AtomSite;
+    ihm_sphere_obj_site: IhmSphereObjSite;
+    ihm_gaussian_obj_site: IhmGaussianObjSite;
+    pdbx_unobs_or_zero_occ_residues: UnobsOrZeroOccResidues;
+    pdbx_molecule: Molecule;
 }
 
 export function createBasic(data: Partial<BasicData>, normalize = false): BasicData {

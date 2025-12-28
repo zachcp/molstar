@@ -5,7 +5,7 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { type DSSPContext, type Ladder, BridgeType, type Bridge } from './common.ts';
+import { type Bridge, BridgeType, type DSSPContext, type Ladder } from './common.ts';
 
 function shouldExtendLadder(ladder: Ladder, bridge: Bridge): boolean {
     // in order to extend ladders, same type must be present
@@ -33,8 +33,10 @@ function shouldExtendLadder(ladder: Ladder, bridge: Bridge): boolean {
  * all residues in bulge-linked ladders are marked E, including any extra residues.
  */
 function resemblesBulge(ladder1: Ladder, ladder2: Ladder) {
-    if (!(ladder1.type === ladder2.type && ladder2.firstStart - ladder1.firstEnd < 6 &&
-        ladder1.firstStart < ladder2.firstStart && ladder2.nextLadder === 0)) return false;
+    if (
+        !(ladder1.type === ladder2.type && ladder2.firstStart - ladder1.firstEnd < 6 &&
+            ladder1.firstStart < ladder2.firstStart && ladder2.nextLadder === 0)
+    ) return false;
 
     if (ladder1.type === BridgeType.PARALLEL) {
         return bulgeCriterion2(ladder1, ladder2);
@@ -82,7 +84,7 @@ export function assignLadders(ctx: DSSPContext) {
                 firstEnd: bridge.partner1,
                 secondStart: bridge.partner2,
                 secondEnd: bridge.partner2,
-                type: bridge.type
+                type: bridge.type,
             };
         }
     }

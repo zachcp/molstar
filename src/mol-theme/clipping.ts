@@ -5,26 +5,26 @@
  */
 
 import { Loci } from '../mol-model/loci.ts';
-import { StructureElement, type Structure } from '../mol-model/structure.ts';
+import { type Structure, StructureElement } from '../mol-model/structure.ts';
 import { Script } from '../mol-script/script.ts';
 import { BitFlags } from '../mol-util/bit-flags.ts';
 
 export { Clipping };
 
 type Clipping<T extends Loci = Loci> = {
-    readonly kind: T['kind']
-    readonly layers: ReadonlyArray<Clipping.Layer<T>>
-}
+    readonly kind: T['kind'];
+    readonly layers: ReadonlyArray<Clipping.Layer<T>>;
+};
 
 function Clipping<T extends Loci>(kind: T['kind'], layers: ReadonlyArray<Clipping.Layer<T>>): Clipping<T> {
     return { kind, layers };
 }
 
 namespace Clipping {
-    export type Layer<T extends Loci = Loci> = { readonly loci: T, readonly groups: Groups }
+    export type Layer<T extends Loci = Loci> = { readonly loci: T; readonly groups: Groups };
     export const Empty: Clipping = { kind: 'empty-loci', layers: [] };
 
-    export type Groups = BitFlags<Groups.Flag>
+    export type Groups = BitFlags<Groups.Flag>;
     export namespace Groups {
         export const is: (g: Groups, f: Flag) => boolean = BitFlags.has;
         export enum Flag {
@@ -49,7 +49,7 @@ namespace Clipping {
             'five': Flag.Five,
             'six': Flag.Six,
         };
-        export type Names = keyof typeof Names
+        export type Names = keyof typeof Names;
 
         export function isName(name: string): name is Names {
             return name in Names;
@@ -57,12 +57,18 @@ namespace Clipping {
 
         export function fromName(name: Names): Flag {
             switch (name) {
-                case 'one': return Flag.One;
-                case 'two': return Flag.Two;
-                case 'three': return Flag.Three;
-                case 'four': return Flag.Four;
-                case 'five': return Flag.Five;
-                case 'six': return Flag.Six;
+                case 'one':
+                    return Flag.One;
+                case 'two':
+                    return Flag.Two;
+                case 'three':
+                    return Flag.Three;
+                case 'four':
+                    return Flag.Four;
+                case 'five':
+                    return Flag.Five;
+                case 'six':
+                    return Flag.Six;
             }
         }
 
@@ -167,7 +173,7 @@ namespace Clipping {
         }
     }
 
-    export type ScriptLayer = { script: Script, groups: Groups }
+    export type ScriptLayer = { script: Script; groups: Groups };
     export function ofScript(scriptLayers: ScriptLayer[], structure: Structure): Clipping {
         const layers: Clipping.Layer[] = [];
         for (let i = 0, il = scriptLayers.length; i < il; ++i) {
@@ -180,7 +186,7 @@ namespace Clipping {
         return { kind: 'element-loci', layers };
     }
 
-    export type BundleLayer = { bundle: StructureElement.Bundle, groups: Groups }
+    export type BundleLayer = { bundle: StructureElement.Bundle; groups: Groups };
     export function ofBundle(bundleLayers: BundleLayer[], structure: Structure): Clipping {
         const layers: Clipping.Layer[] = [];
         for (let i = 0, il = bundleLayers.length; i < il; ++i) {
@@ -191,7 +197,9 @@ namespace Clipping {
         return { kind: 'element-loci', layers };
     }
 
-    export function toBundle(clipping: Clipping<StructureElement.Loci>): { kind: 'element-loci', layers: BundleLayer[] } {
+    export function toBundle(
+        clipping: Clipping<StructureElement.Loci>,
+    ): { kind: 'element-loci'; layers: BundleLayer[] } {
         const layers: BundleLayer[] = [];
         for (let i = 0, il = clipping.layers.length; i < il; ++i) {
             const { loci, groups } = clipping.layers[i];

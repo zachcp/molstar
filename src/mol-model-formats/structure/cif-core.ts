@@ -6,7 +6,7 @@
 
 import { Column, Table } from '../../mol-data/db.ts';
 import type { Model, Symmetry } from '../../mol-model/structure/model.ts';
-import { MoleculeType, BondType } from '../../mol-model/structure/model/types.ts';
+import { BondType, MoleculeType } from '../../mol-model/structure/model/types.ts';
 import { type RuntimeContext, Task } from '../../mol-task/index.ts';
 import { createModels } from './basic/parser.ts';
 import { BasicSchema, createBasic } from './basic/schema.ts';
@@ -14,7 +14,7 @@ import { ComponentBuilder } from './common/component.ts';
 import { EntityBuilder } from './common/entity.ts';
 import type { ModelFormat } from '../format.ts';
 import type { CifCore_Database } from '../../mol-io/reader/cif/schema/cif-core.ts';
-import { type CifFrame, CIF } from '../../mol-io/reader/cif.ts';
+import { CIF, type CifFrame } from '../../mol-io/reader/cif.ts';
 import { Spacegroup, SpacegroupCell } from '../../mol-math/geometry.ts';
 import { Vec3 } from '../../mol-math/linear-algebra.ts';
 import { ModelSymmetry } from './property/symmetry.ts';
@@ -35,20 +35,25 @@ function getSpacegroupNameOrNumber(space_group: CifCore_Database['space_group'])
 function getSymmetry(db: CifCore_Database): Symmetry {
     const { cell, space_group } = db;
     const nameOrNumber = getSpacegroupNameOrNumber(space_group);
-    const spaceCell = SpacegroupCell.create(nameOrNumber,
+    const spaceCell = SpacegroupCell.create(
+        nameOrNumber,
         Vec3.create(cell.length_a.value(0), cell.length_b.value(0), cell.length_c.value(0)),
-        Vec3.scale(Vec3(), Vec3.create(cell.angle_alpha.value(0), cell.angle_beta.value(0), cell.angle_gamma.value(0)), Math.PI / 180));
+        Vec3.scale(
+            Vec3(),
+            Vec3.create(cell.angle_alpha.value(0), cell.angle_beta.value(0), cell.angle_gamma.value(0)),
+            Math.PI / 180,
+        ),
+    );
 
     return {
         spacegroup: Spacegroup.create(spaceCell),
         assemblies: [],
         isNonStandardCrystalFrame: false,
-        ncsOperators: []
+        ncsOperators: [],
     };
 }
 
 async function getModels(db: CifCore_Database, format: CifCoreFormat, ctx: RuntimeContext) {
-
     const atomCount = db.atom_site._rowCount;
     const MOL = Column.ofConst('MOL', atomCount, Column.Schema.str);
     const A = Column.ofConst('A', atomCount, Column.Schema.str);
@@ -132,11 +137,9 @@ async function getModels(db: CifCore_Database, format: CifCoreFormat, ctx: Runti
         B_iso_or_equiv: db.atom_site.u_iso_or_equiv,
     }, atomCount);
 
-    const name = (
-        db.chemical.name_common.value(0) ||
+    const name = db.chemical.name_common.value(0) ||
         db.chemical.name_systematic.value(0) ||
-        db.chemical_formula.sum.value(0)
-    );
+        db.chemical_formula.sum.value(0);
 
     const entityBuilder = new EntityBuilder();
     entityBuilder.setNames([['MOL', name || 'Unknown Entity']]);
@@ -149,7 +152,7 @@ async function getModels(db: CifCore_Database, format: CifCoreFormat, ctx: Runti
     const basic = createBasic({
         entity: entityBuilder.getEntityTable(),
         chem_comp: componentBuilder.getChemCompTable(),
-        atom_site
+        atom_site,
     });
 
     const models = await createModels(basic, format, ctx);
@@ -214,13 +217,19 @@ async function getModels(db: CifCore_Database, format: CifCoreFormat, ctx: Runti
                 j += 1;
             }
 
-            IndexPairBonds.Provider.set(first, IndexPairBonds.fromData({ pairs: {
-                indexA: Column.ofIntArray(indexA),
-                indexB: Column.ofIntArray(indexB),
-                order: Column.ofIntArray(order),
-                distance: Column.ofFloatArray(dist),
-                flag: Column.ofIntArray(flag)
-            }, count: atomCount }));
+            IndexPairBonds.Provider.set(
+                first,
+                IndexPairBonds.fromData({
+                    pairs: {
+                        indexA: Column.ofIntArray(indexA),
+                        indexB: Column.ofIntArray(indexB),
+                        order: Column.ofIntArray(order),
+                        distance: Column.ofFloatArray(dist),
+                        flag: Column.ofIntArray(flag),
+                    },
+                    count: atomCount,
+                }),
+            );
         }
     }
 
@@ -240,16 +249,20 @@ function atomSiteAnisotropApplicableCifCore(model: Model) {
     if (!CifCoreFormat.is(model.sourceData)) return false;
     return model.sourceData.data.db.atom_site_aniso.u.isDefined;
 }
-AtomSiteAnisotrop.Provider.formatRegistry.add('cifCore', atomSiteAnisotropFromCifCore, atomSiteAnisotropApplicableCifCore);
+AtomSiteAnisotrop.Provider.formatRegistry.add(
+    'cifCore',
+    atomSiteAnisotropFromCifCore,
+    atomSiteAnisotropApplicableCifCore,
+);
 
 //
 
 export { CifCoreFormat };
 
-type CifCoreFormat = ModelFormat<CifCoreFormat.Data>
+type CifCoreFormat = ModelFormat<CifCoreFormat.Data>;
 
 namespace CifCoreFormat {
-    export type Data = { db: CifCore_Database, frame: CifFrame }
+    export type Data = { db: CifCore_Database; frame: CifFrame };
     export function is(x?: ModelFormat): x is CifCoreFormat {
         return x?.kind === 'cifCore';
     }
@@ -257,16 +270,14 @@ namespace CifCoreFormat {
     export function fromFrame(frame: CifFrame, db?: CifCore_Database): CifCoreFormat {
         if (!db) db = CIF.schema.cifCore(frame);
 
-        const name = (
-            db.database_code.depnum_ccdc_archive.value(0) ||
+        const name = db.database_code.depnum_ccdc_archive.value(0) ||
             db.database_code.depnum_ccdc_fiz.value(0) ||
             db.database_code.icsd.value(0) ||
             db.database_code.mdf.value(0) ||
             db.database_code.nbs.value(0) ||
             db.database_code.csd.value(0) ||
             db.database_code.cod.value(0) ||
-            db._name
-        );
+            db._name;
 
         return { kind: 'cifCore', name, data: { db, frame } };
     }
@@ -274,5 +285,5 @@ namespace CifCoreFormat {
 
 export function trajectoryFromCifCore(frame: CifFrame): Task<Trajectory> {
     const format = CifCoreFormat.fromFrame(frame);
-    return Task.create('Parse CIF Core', ctx => getModels(format.data.db, format, ctx));
+    return Task.create('Parse CIF Core', (ctx) => getModels(format.data.db, format, ctx));
 }

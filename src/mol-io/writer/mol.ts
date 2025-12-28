@@ -9,9 +9,9 @@ import type { Encoder } from './cif/encoder.ts';
 
 export namespace MolWriter {
     export interface EncoderParams {
-        encoderName?: string,
+        encoderName?: string;
         // whether to write hydrogen atoms
-        hydrogens?: boolean
+        hydrogens?: boolean;
     }
 
     export function createEncoder(params?: EncoderParams): Encoder {

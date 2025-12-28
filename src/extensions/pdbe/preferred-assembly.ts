@@ -13,7 +13,7 @@ import { MmcifFormat } from '../../mol-model-formats/structure/mmcif.ts';
 import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
 
 export namespace PDBePreferredAssembly {
-    export type Property = string
+    export type Property = string;
 
     export function getFirstFromModel(model: Model): Property {
         const symmetry = ModelSymmetry.Provider.get(model);
@@ -29,23 +29,27 @@ export namespace PDBePreferredAssembly {
 
     export const Schema = {
         pdbe_preferred_assembly: {
-            assembly_id: Column.Schema.str
-        }
+            assembly_id: Column.Schema.str,
+        },
     };
-    export type Schema = typeof Schema
+    export type Schema = typeof Schema;
 
     export const Descriptor = CustomPropertyDescriptor({
         name: 'pdbe_preferred_assembly',
         cifExport: {
             prefix: 'pdbe',
-            context(ctx): Property { return get(ctx.firstModel); },
+            context(ctx): Property {
+                return get(ctx.firstModel);
+            },
             categories: [{
                 name: 'pdbe_preferred_assembly',
                 instance(ctx: Property) {
-                    return CifWriter.Category.ofTable(Table.ofArrays(Schema.pdbe_preferred_assembly, { assembly_id: [ctx] }));
-                }
-            }]
-        }
+                    return CifWriter.Category.ofTable(
+                        Table.ofArrays(Schema.pdbe_preferred_assembly, { assembly_id: [ctx] }),
+                    );
+                },
+            }],
+        },
     });
 
     function fromCifData(model: Model): string | undefined {
@@ -57,7 +61,7 @@ export namespace PDBePreferredAssembly {
 
     export async function attachFromCifOrApi(model: Model, params: {
         // optional JSON source
-        PDBe_apiSourceJson?: (model: Model) => Promise<any>
+        PDBe_apiSourceJson?: (model: Model) => Promise<any>;
     }) {
         if (model.customProperties.has(Descriptor)) return true;
 

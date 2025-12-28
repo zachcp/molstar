@@ -5,12 +5,19 @@
  */
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { type UnitsVisual, UnitsLinesParams, UnitsLinesVisual } from '../units-visual.ts';
+import { UnitsLinesParams, UnitsLinesVisual, type UnitsVisual } from '../units-visual.ts';
 import type { VisualContext } from '../../visual.ts';
-import { Unit, type Structure, type StructureElement } from '../../../mol-model/structure.ts';
+import { type Structure, type StructureElement, Unit } from '../../../mol-model/structure.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
-import { ElementIterator, getElementLoci, eachElement, makeElementIgnoreTest, getSerialElementLoci, eachSerialElement } from './util/element.ts';
+import {
+    eachElement,
+    eachSerialElement,
+    ElementIterator,
+    getElementLoci,
+    getSerialElementLoci,
+    makeElementIgnoreTest,
+} from './util/element.ts';
 import type { VisualUpdateState } from '../../util.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { Lines } from '../../../mol-geo/geometry/lines/lines.ts';
@@ -35,9 +42,16 @@ export const ElementCrossParams = {
     crosses: PD.Select('lone', PD.arrayToOptions(['lone', 'all'] as const)),
     crossSize: PD.Numeric(0.35, { min: 0, max: 2, step: 0.01 }),
 };
-export type ElementCrossParams = typeof ElementCrossParams
+export type ElementCrossParams = typeof ElementCrossParams;
 
-export function createElementCross(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PD.Values<ElementCrossParams>, lines: Lines) {
+export function createElementCross(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<ElementCrossParams>,
+    lines: Lines,
+) {
     const { child } = structure;
     if (child && !child.unitMap.get(unit.id)) return Lines.createEmpty(lines);
 
@@ -60,7 +74,9 @@ export function createElementCross(ctx: VisualContext, unit: Unit, structure: St
 
     for (let i = 0 as StructureElement.UnitIndex; i < n; ++i) {
         if (ignore && ignore(elements[i])) continue;
-        if (lone && Unit.isAtomic(unit) && hasUnitVisibleBonds(unit, props) && bondCount(structure, unit, i) !== 0) continue;
+        if (lone && Unit.isAtomic(unit) && hasUnitVisibleBonds(unit, props) && bondCount(structure, unit, i) !== 0) {
+            continue;
+        }
 
         c.invariantPosition(elements[i], p);
         v3add(center, center, p);
@@ -101,21 +117,29 @@ export function ElementCrossVisual(materialId: number): UnitsVisual<ElementCross
         createLocationIterator: ElementIterator.fromGroup,
         getLoci: getElementLoci,
         eachLocation: eachElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<ElementCrossParams>, currentProps: PD.Values<ElementCrossParams>) => {
-            state.createGeometry = (
-                newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<ElementCrossParams>,
+            currentProps: PD.Values<ElementCrossParams>,
+        ) => {
+            state.createGeometry = newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
                 newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant ||
                 newProps.traceOnly !== currentProps.traceOnly ||
                 newProps.crosses !== currentProps.crosses ||
-                newProps.crossSize !== currentProps.crossSize
-            );
-        }
+                newProps.crossSize !== currentProps.crossSize;
+        },
     }, materialId);
 }
 
 //
 
-export function createStructureElementCross(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<StructureElementCrossParams>, lines?: Lines): Lines {
+export function createStructureElementCross(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<StructureElementCrossParams>,
+    lines?: Lines,
+): Lines {
     const { child } = structure;
 
     const { getSerialIndex } = structure.serialMapping;
@@ -143,7 +167,9 @@ export function createStructureElementCross(ctx: VisualContext, structure: Struc
 
         for (let i = 0 as StructureElement.UnitIndex; i < elementCount; i++) {
             if (ignore && ignore(elements[i])) continue;
-            if (lone && Unit.isAtomic(unit) && hasUnitVisibleBonds(unit, props) && bondCount(structure, unit, i) !== 0) continue;
+            if (
+                lone && Unit.isAtomic(unit) && hasUnitVisibleBonds(unit, props) && bondCount(structure, unit, i) !== 0
+            ) continue;
 
             c.position(elements[i], p);
             v3add(center, center, p);
@@ -188,7 +214,7 @@ export const StructureElementCrossParams = {
     crosses: PD.Select('lone', PD.arrayToOptions(['lone', 'all'] as const)),
     crossSize: PD.Numeric(0.35, { min: 0, max: 2, step: 0.01 }),
 };
-export type StructureElementCrossParams = typeof StructureElementCrossParams
+export type StructureElementCrossParams = typeof StructureElementCrossParams;
 
 export function StructureElementCrossVisual(materialId: number): ComplexVisual<StructureElementCrossParams> {
     return ComplexLinesVisual<StructureElementCrossParams>({
@@ -197,14 +223,16 @@ export function StructureElementCrossVisual(materialId: number): ComplexVisual<S
         createLocationIterator: ElementIterator.fromStructure,
         getLoci: getSerialElementLoci,
         eachLocation: eachSerialElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<StructureElementCrossParams>, currentProps: PD.Values<StructureElementCrossParams>) => {
-            state.createGeometry = (
-                newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<StructureElementCrossParams>,
+            currentProps: PD.Values<StructureElementCrossParams>,
+        ) => {
+            state.createGeometry = newProps.ignoreHydrogens !== currentProps.ignoreHydrogens ||
                 newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant ||
                 newProps.traceOnly !== currentProps.traceOnly ||
                 newProps.crosses !== currentProps.crosses ||
-                newProps.crossSize !== currentProps.crossSize
-            );
-        }
+                newProps.crossSize !== currentProps.crossSize;
+        },
     }, materialId);
 }

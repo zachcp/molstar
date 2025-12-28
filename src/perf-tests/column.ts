@@ -34,7 +34,9 @@ export namespace Column {
         return sum;
     }
 
-    function val(i: number) { return i * i + 1; }
+    function val(i: number) {
+        return i * i + 1;
+    }
 
     export function runMono() {
         const suite = new B.Suite();

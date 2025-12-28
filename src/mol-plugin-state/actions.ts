@@ -11,5 +11,5 @@ import * as DataFormat from './actions/file.ts';
 export const StateActions = {
     Structure,
     Volume,
-    DataFormat
+    DataFormat,
 };

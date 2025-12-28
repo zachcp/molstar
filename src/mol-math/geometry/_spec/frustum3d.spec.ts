@@ -46,10 +46,10 @@ describe('frustum3d', () => {
         Frustum3D.fromProjectionMatrix(f, m);
 
         const b0 = Box3D.create(v3(0, 0, 0), v3(1, 1, 1));
-        expect(Frustum3D.intersectsBox3D(f, b0)). toBe(false);
+        expect(Frustum3D.intersectsBox3D(f, b0)).toBe(false);
 
         const b1 = Box3D.create(v3(-1.1, -1.1, -1.1), v3(-0.1, -0.1, -0.1));
-        expect(Frustum3D.intersectsBox3D(f, b1)). toBe(true);
+        expect(Frustum3D.intersectsBox3D(f, b1)).toBe(true);
     });
 
     it('containsPoint', () => {

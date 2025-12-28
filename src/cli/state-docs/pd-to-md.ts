@@ -12,30 +12,53 @@ export function paramsToMd(params: PD.Params) {
 
 function paramInfo(param: PD.Any, offset: number): string {
     switch (param.type) {
-        case 'value': return 'Value';
-        case 'boolean': return 'true/false';
-        case 'number': return 'Numeric value';
-        case 'converted': return paramInfo(param.converted, offset);
-        case 'conditioned': return getParams(param.conditionParams, offset);
-        case 'multi-select': return `Array of ${oToS(param.options)}`;
-        case 'color': return 'Color as 0xrrggbb';
-        case 'color-list': return `A list of colors as 0xrrggbb`;
-        case 'vec3': return `3D vector [x, y, z]`;
-        case 'mat4': return `4x4 transformation matrix`;
-        case 'url': return `URL couple with unique identifier`;
-        case 'file': return `JavaScript File Handle`;
-        case 'file-list': return `JavaScript FileList Handle`;
-        case 'select': return `One of ${oToS(param.options)}`;
-        case 'value-ref': return `Reference to a runtime defined value.`;
-        case 'data-ref': return `Reference to a computed data value.`;
-        case 'text': return 'String';
-        case 'interval': return `Interval [min, max]`;
-        case 'group': return `Object with:\n${getParams(param.params, offset + 2)}`;
-        case 'mapped': return `Object { name: string, params: object } where name+params are:\n${getMapped(param, offset + 2)}`;
-        case 'line-graph': return `A list of 2d vectors [xi, yi][]`;
-        case 'object-list': return `Array of\n${paramInfo(PD.Group(param.element), offset + 2)}`;
+        case 'value':
+            return 'Value';
+        case 'boolean':
+            return 'true/false';
+        case 'number':
+            return 'Numeric value';
+        case 'converted':
+            return paramInfo(param.converted, offset);
+        case 'conditioned':
+            return getParams(param.conditionParams, offset);
+        case 'multi-select':
+            return `Array of ${oToS(param.options)}`;
+        case 'color':
+            return 'Color as 0xrrggbb';
+        case 'color-list':
+            return `A list of colors as 0xrrggbb`;
+        case 'vec3':
+            return `3D vector [x, y, z]`;
+        case 'mat4':
+            return `4x4 transformation matrix`;
+        case 'url':
+            return `URL couple with unique identifier`;
+        case 'file':
+            return `JavaScript File Handle`;
+        case 'file-list':
+            return `JavaScript FileList Handle`;
+        case 'select':
+            return `One of ${oToS(param.options)}`;
+        case 'value-ref':
+            return `Reference to a runtime defined value.`;
+        case 'data-ref':
+            return `Reference to a computed data value.`;
+        case 'text':
+            return 'String';
+        case 'interval':
+            return `Interval [min, max]`;
+        case 'group':
+            return `Object with:\n${getParams(param.params, offset + 2)}`;
+        case 'mapped':
+            return `Object { name: string, params: object } where name+params are:\n${getMapped(param, offset + 2)}`;
+        case 'line-graph':
+            return `A list of 2d vectors [xi, yi][]`;
+        case 'object-list':
+            return `Array of\n${paramInfo(PD.Group(param.element), offset + 2)}`;
         // TODO: support more languages
-        case 'script': return `An expression in the specified language { language: 'mol-script', expressiong: string }`;
+        case 'script':
+            return `An expression in the specified language { language: 'mol-script', expressiong: string }`;
         default:
             const _: never = param;
             console.warn(`${_} has no associated UI component`);
@@ -44,7 +67,7 @@ function paramInfo(param: PD.Any, offset: number): string {
 }
 
 function oToS(options: readonly PD.SelectOption<any>[]) {
-    return options.map(o => `'${o[0]}'`).join(', ');
+    return options.map((o) => `'${o[0]}'`).join(', ');
 }
 
 function offsetS(n: number) {

@@ -5,11 +5,14 @@
 import * as Coords from './coordinate.ts';
 import type { SpacegroupCell } from '../../../../mol-math/geometry.ts';
 
-export interface Box<C extends Coords.Coord<Coords.Space>> { a: C, b: C }
+export interface Box<C extends Coords.Coord<Coords.Space>> {
+    a: C;
+    b: C;
+}
 
-export interface Cartesian extends Box<Coords.Cartesian> { }
-export interface Fractional extends Box<Coords.Fractional> { }
-export interface Grid<K> extends Box<Coords.Grid<K>> { }
+export interface Cartesian extends Box<Coords.Cartesian> {}
+export interface Fractional extends Box<Coords.Fractional> {}
+export interface Grid<K> extends Box<Coords.Grid<K>> {}
 
 // CONVERSIONS
 
@@ -24,7 +27,7 @@ export function cartesianToFractional(box: Cartesian, spacegroup: SpacegroupCell
         [r[0], l[1], r[2]],
         [l[0], r[1], r[2]],
         [r[0], r[1], r[2]],
-    ].map(c => Coords.cartesianToFractional(Coords.cartesian(c[0], c[1], c[2]), spacegroup));
+    ].map((c) => Coords.cartesianToFractional(Coords.cartesian(c[0], c[1], c[2]), spacegroup));
     return bounding(corners);
 }
 
@@ -40,7 +43,7 @@ export function fractionalBoxReorderAxes(box: Fractional, axisOrder: number[]) {
     const { a, b } = box;
     return {
         a: Coords.withCoord(a, a[axisOrder[0]], a[axisOrder[1]], a[axisOrder[2]]),
-        b: Coords.withCoord(b, b[axisOrder[0]], b[axisOrder[1]], b[axisOrder[2]])
+        b: Coords.withCoord(b, b[axisOrder[0]], b[axisOrder[1]], b[axisOrder[2]]),
     };
 }
 
@@ -48,7 +51,7 @@ export function expandGridBox<K>(box: Grid<K>, by: number) {
     const { a, b } = box;
     return {
         a: Coords.withCoord(a, a[0] - by, a[1] - by, a[2] - by),
-        b: Coords.withCoord(b, b[0] + by, b[1] + by, b[2] + by)
+        b: Coords.withCoord(b, b[0] + by, b[1] + by, b[2] + by),
     };
 }
 
@@ -68,7 +71,7 @@ export function fractionalToDomain<K>(box: Fractional, kind: K, delta: Coords.Fr
         delta,
         origin: box.a,
         dimensions: ds,
-        sampleCount: Coords.sampleCounts(ds, delta)
+        sampleCount: Coords.sampleCounts(ds, delta),
     });
 }
 
@@ -104,7 +107,10 @@ export function areIntersecting<C extends Coords.Coord<S>, S extends Coords.Spac
     return true;
 }
 
-export function intersect<C extends Coords.Coord<S>, S extends Coords.Space>(box1: Box<C>, box2: Box<C>): Box<C> | undefined {
+export function intersect<C extends Coords.Coord<S>, S extends Coords.Space>(
+    box1: Box<C>,
+    box2: Box<C>,
+): Box<C> | undefined {
     const a = Coords.clone(box1.a);
     const b = Coords.clone(box1.a);
 

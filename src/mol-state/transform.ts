@@ -11,35 +11,35 @@ import { hashMurmur128o } from '../mol-data/util.ts';
 export { Transform as StateTransform };
 
 interface Transform<T extends StateTransformer = StateTransformer> {
-    readonly parent: Transform.Ref,
-    readonly transformer: T,
-    readonly state: Transform.State,
-    readonly tags?: string[],
-    readonly ref: Transform.Ref,
+    readonly parent: Transform.Ref;
+    readonly transformer: T;
+    readonly state: Transform.State;
+    readonly tags?: string[];
+    readonly ref: Transform.Ref;
     /**
      * Sibling-like dependency
      * Do NOT make a cell dependent on its ancestor.
      */
-    readonly dependsOn?: Transform.Ref[],
-    readonly params?: StateTransformer.Params<T>,
-    readonly version: string
+    readonly dependsOn?: Transform.Ref[];
+    readonly params?: StateTransformer.Params<T>;
+    readonly version: string;
 }
 
 namespace Transform {
-    export type Ref = string
-    export type Transformer<T extends Transform> = T extends Transform<infer S> ? S : never
+    export type Ref = string;
+    export type Transformer<T extends Transform> = T extends Transform<infer S> ? S : never;
 
     export const RootRef = '-=root=-' as Ref;
 
     export interface State {
         // is the cell shown in the UI
-        isGhost?: boolean,
+        isGhost?: boolean;
         // can the corresponding be deleted by the user.
-        isLocked?: boolean,
+        isLocked?: boolean;
         // is the representation associated with the cell hidden
-        isHidden?: boolean,
+        isHidden?: boolean;
         // is the tree node collapsed?
-        isCollapsed?: boolean
+        isCollapsed?: boolean;
     }
 
     export function isStateChange(a: State, b?: Partial<State>) {
@@ -93,13 +93,18 @@ namespace Transform {
     }
 
     export interface Options {
-        ref?: string,
-        tags?: string | string[],
-        state?: State,
-        dependsOn?: Ref[]
+        ref?: string;
+        tags?: string | string[];
+        state?: State;
+        dependsOn?: Ref[];
     }
 
-    export function create<T extends StateTransformer>(parent: Ref, transformer: T, params?: StateTransformer.Params<T>, options?: Options): Transform<T> {
+    export function create<T extends StateTransformer>(
+        parent: Ref,
+        transformer: T,
+        params?: StateTransformer.Params<T>,
+        options?: Options,
+    ): Transform<T> {
         const ref = options && options.ref ? options.ref : UUID.create22() as string as Ref;
         let tags: string[] | undefined = void 0;
         if (options && options.tags) {
@@ -110,12 +115,12 @@ namespace Transform {
         return {
             parent,
             transformer,
-            state: options?.state || { },
+            state: options?.state || {},
             tags,
             ref,
             dependsOn: options && options.dependsOn,
             params,
-            version: UUID.create22()
+            version: UUID.create22(),
         };
     }
 
@@ -186,18 +191,20 @@ namespace Transform {
     }
 
     export interface Serialized {
-        parent: string,
-        transformer: string,
-        params: any,
-        state?: State,
-        tags?: string[],
-        isDecorator?: boolean,
-        ref: string,
-        dependsOn?: string[]
-        version: string
+        parent: string;
+        transformer: string;
+        params: any;
+        state?: State;
+        tags?: string[];
+        isDecorator?: boolean;
+        ref: string;
+        dependsOn?: string[];
+        version: string;
     }
 
-    function _id(x: any) { return x; }
+    function _id(x: any) {
+        return x;
+    }
     export function toJSON(t: Transform): Serialized {
         const pToJson = t.transformer.definition.customSerialization
             ? t.transformer.definition.customSerialization.toJSON
@@ -206,7 +213,7 @@ namespace Transform {
         for (const k of Object.keys(t.state)) {
             const s = (t.state as any)[k];
             if (!s) continue;
-            if (!state) state = { };
+            if (!state) state = {};
             state[k] = true;
         }
         return {
@@ -217,7 +224,7 @@ namespace Transform {
             tags: t.tags,
             ref: t.ref,
             dependsOn: t.dependsOn,
-            version: t.version
+            version: t.version,
         };
     }
 
@@ -230,11 +237,11 @@ namespace Transform {
             parent: t.parent as Ref,
             transformer,
             params: t.params ? pFromJson(t.params) : void 0,
-            state: t.state || { },
+            state: t.state || {},
             tags: t.tags,
             ref: t.ref as Ref,
             dependsOn: t.dependsOn,
-            version: t.version
+            version: t.version,
         };
     }
 }

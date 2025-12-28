@@ -7,20 +7,23 @@
 
 import { Volume } from '../../mol-model/volume.ts';
 import { Task } from '../../mol-task/index.ts';
-import { SpacegroupCell, Box3D } from '../../mol-math/geometry.ts';
+import { Box3D, SpacegroupCell } from '../../mol-math/geometry.ts';
 import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra.ts';
 import type { ModelFormat } from '../format.ts';
 import { CustomProperties } from '../../mol-model/custom-property.ts';
 import type { Segmentation_Data_Database } from '../../mol-io/reader/cif/schema/segmentation.ts';
 import { objectForEach } from '../../mol-util/object.ts';
 
-export function volumeFromSegmentationData(source: Segmentation_Data_Database, params?: Partial<{ label: string, segmentLabels: { [id: number]: string }, ownerId: string }>): Task<Volume> {
-    return Task.create<Volume>('Create Segmentation Volume', async ctx => {
+export function volumeFromSegmentationData(
+    source: Segmentation_Data_Database,
+    params?: Partial<{ label: string; segmentLabels: { [id: number]: string }; ownerId: string }>,
+): Task<Volume> {
+    return Task.create<Volume>('Create Segmentation Volume', async (ctx) => {
         const { volume_data_3d_info: info, segmentation_data_3d: values } = source;
         const cell = SpacegroupCell.create(
             info.spacegroup_number.value(0) || 'P 1',
             Vec3.ofArray(info.spacegroup_cell_size.value(0)),
-            Vec3.scale(Vec3(), Vec3.ofArray(info.spacegroup_cell_angles.value(0)), Math.PI / 180)
+            Vec3.scale(Vec3(), Vec3.ofArray(info.spacegroup_cell_angles.value(0)), Math.PI / 180),
         );
 
         const axis_order_fast_to_slow = info.axis_order.value(0);
@@ -44,11 +47,14 @@ export function volumeFromSegmentationData(source: Segmentation_Data_Database, p
                 transform: {
                     kind: 'spacegroup',
                     cell,
-                    fractionalBox: Box3D.create(origin, Vec3.add(Vec3(), origin, dimensions))
+                    fractionalBox: Box3D.create(origin, Vec3.add(Vec3(), origin, dimensions)),
                 },
                 cells: t,
                 stats: {
-                    min: 0, max: 1, mean: 0, sigma: 1
+                    min: 0,
+                    max: 1,
+                    mean: 0,
+                    sigma: 1,
                 },
             },
             instances: [{ transform: Mat4.identity() }],
@@ -71,7 +77,7 @@ export function volumeFromSegmentationData(source: Segmentation_Data_Database, p
             sets.get(set)!.add(segment);
         }
         sets.forEach((segs, set) => {
-            segs.forEach(seg => {
+            segs.forEach((seg) => {
                 if (!segments.has(seg)) segments.set(seg, new Set());
                 segments.get(seg)!.add(set);
             });
@@ -110,7 +116,7 @@ export function volumeFromSegmentationData(source: Segmentation_Data_Database, p
         });
 
         objectForEach(setBounds, (b, s) => {
-            sets.get(parseInt(s))!.forEach(seg => {
+            sets.get(parseInt(s))!.forEach((seg) => {
                 const sb = bounds[seg];
                 if (b[0] < sb.min[0]) sb.min[0] = b[0];
                 if (b[1] < sb.min[1]) sb.min[1] = b[1];
@@ -131,7 +137,7 @@ export function volumeFromSegmentationData(source: Segmentation_Data_Database, p
 
 export { SegcifFormat };
 
-type SegcifFormat = ModelFormat<Segmentation_Data_Database>
+type SegcifFormat = ModelFormat<Segmentation_Data_Database>;
 
 namespace SegcifFormat {
     export function is(x?: ModelFormat): x is SegcifFormat {

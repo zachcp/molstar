@@ -7,13 +7,19 @@
 
 import { produce } from "../mol-util/produce.ts";
 import { List } from "immutable";
-import { merge, type Subscription } from "rxjs";
-import { debounceTime, filter, take, throttleTime } from "rxjs/operators";
+import {
+  debounceTime,
+  filter,
+  merge,
+  take,
+  throttleTime,
+  type Subscription,
+} from "rxjs";
 import {
   Canvas3D,
   Canvas3DContext,
-  DefaultCanvas3DParams,
   type Canvas3DProps,
+  DefaultCanvas3DParams,
   type PartialCanvas3DProps,
 } from "../mol-canvas3d/canvas3d.ts";
 import { resizeCanvas } from "../mol-canvas3d/util.ts";
@@ -44,7 +50,7 @@ import { type LeftPanelTabName, PluginLayout } from "./layout.ts";
 import { Representation } from "../mol-repr/representation.ts";
 import { StructureRepresentationRegistry } from "../mol-repr/structure/registry.ts";
 import { VolumeRepresentationRegistry } from "../mol-repr/volume/registry.ts";
-import { StateTransform, StateBuilder } from "../mol-state/index.ts";
+import { type StateBuilder, StateTransform } from "../mol-state/index.ts";
 import { type RuntimeContext, Scheduler, Task } from "../mol-task/index.ts";
 import { ColorTheme } from "../mol-theme/color.ts";
 import { SizeTheme } from "../mol-theme/size.ts";
@@ -372,8 +378,9 @@ export class PluginContext {
   ): boolean {
     try {
       this.layout.setRoot(container);
-      if (this.spec.layout && this.spec.layout.initial)
+      if (this.spec.layout && this.spec.layout.initial) {
         this.layout.setProps(this.spec.layout.initial);
+      }
 
       if (!canvas3dContext) {
         canvas3dContext = Canvas3DContext.fromCanvas(
@@ -585,8 +592,9 @@ export class PluginContext {
         this.state.data.behaviors.isUpdating,
         this.state.behaviors.behaviors.isUpdating,
       ).subscribe((u) => {
-        if (this.behaviors.state.isUpdating.value !== u)
+        if (this.behaviors.state.isUpdating.value !== u) {
           this.behaviors.state.isUpdating.next(u);
+        }
       }),
     );
 

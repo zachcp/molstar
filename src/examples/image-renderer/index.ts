@@ -17,23 +17,29 @@ import pngjs from 'pngjs';
 import jpegjs from 'jpeg-js';
 
 import { Download, ParseCif } from '../../mol-plugin-state/transforms/data.ts';
-import { ModelFromTrajectory, StructureComponent, StructureFromModel, TrajectoryFromMmCif } from '../../mol-plugin-state/transforms/model.ts';
+import {
+    ModelFromTrajectory,
+    StructureComponent,
+    StructureFromModel,
+    TrajectoryFromMmCif,
+} from '../../mol-plugin-state/transforms/model.ts';
 import { StructureRepresentation3D } from '../../mol-plugin-state/transforms/representation.ts';
 import { HeadlessPluginContext } from '../../mol-plugin/headless-plugin-context.ts';
 import { DefaultPluginSpec } from '../../mol-plugin/spec.ts';
 import { type ExternalModules, STYLIZED_POSTPROCESSING } from '../../mol-plugin/util/headless-screenshot.ts';
 import { setFSModule } from '../../mol-util/data-source.ts';
 
-
 setFSModule(fs);
 
 interface Args {
-    pdbId: string,
-    outDirectory: string
+    pdbId: string;
+    outDirectory: string;
 }
 
 function parseArguments(): Args {
-    const parser = new ArgumentParser({ description: 'Example command-line application generating images of PDB structures' });
+    const parser = new ArgumentParser({
+        description: 'Example command-line application generating images of PDB structures',
+    });
     parser.add_argument('pdbId', { help: 'PDB identifier' });
     parser.add_argument('outDirectory', { help: 'Directory for outputs' });
     const args = parser.parse_args();
@@ -81,7 +87,13 @@ async function main() {
     await plugin.saveImage(path.join(args.outDirectory, 'large.jpg'), { width: 1600, height: 1200 });
     await plugin.saveImage(path.join(args.outDirectory, 'stylized.png'), undefined, STYLIZED_POSTPROCESSING);
     await plugin.saveImage(path.join(args.outDirectory, 'stylized.jpg'), undefined, STYLIZED_POSTPROCESSING);
-    await plugin.saveImage(path.join(args.outDirectory, 'stylized-compressed-jpg.jpg'), undefined, STYLIZED_POSTPROCESSING, undefined, 10);
+    await plugin.saveImage(
+        path.join(args.outDirectory, 'stylized-compressed-jpg.jpg'),
+        undefined,
+        STYLIZED_POSTPROCESSING,
+        undefined,
+        10,
+    );
 
     // Export state loadable in Mol* Viewer
     await plugin.saveStateSnapshot(path.join(args.outDirectory, 'molstar-state.molj'));

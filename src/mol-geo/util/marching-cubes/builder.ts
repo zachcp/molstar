@@ -14,11 +14,11 @@ import { LinesBuilder } from '../../geometry/lines/lines-builder.ts';
 import type { Lines } from '../../geometry/lines/lines.ts';
 
 export interface MarchingCubesBuilder<T> {
-    addVertex(x: number, y: number, z: number): number
-    addNormal(x: number, y: number, z: number): void
-    addGroup(group: number): void
-    addTriangle(vertList: number[], a: number, b: number, c: number, edgeFilter: number): void
-    get(): T
+    addVertex(x: number, y: number, z: number): number;
+    addNormal(x: number, y: number, z: number): void;
+    addGroup(group: number): void;
+    addTriangle(vertList: number[], a: number, b: number, c: number, edgeFilter: number): void;
+    get(): T;
 }
 
 export function MarchingCubesMeshBuilder(vertexChunkSize: number, mesh?: Mesh): MarchingCubesBuilder<Mesh> {
@@ -58,7 +58,7 @@ export function MarchingCubesMeshBuilder(vertexChunkSize: number, mesh?: Mesh): 
             const ib = ChunkedArray.compact(indices, true) as Uint32Array;
             const gb = ChunkedArray.compact(groups, true) as Float32Array;
             return Mesh.create(vb, ib, nb, gb, vertexCount, triangleCount, mesh);
-        }
+        },
     };
 }
 
@@ -106,13 +106,17 @@ export function MarchingCubesLinesBuilder(vertexChunkSize: number, lines?: Lines
             for (let i = 0; i < linesCount; ++i) {
                 const la = ib[i * 2], lb = ib[i * 2 + 1];
                 builder.add(
-                    vb[la * 3], vb[la * 3 + 1], vb[la * 3 + 2],
-                    vb[lb * 3], vb[lb * 3 + 1], vb[lb * 3 + 2],
-                    gb[la]
+                    vb[la * 3],
+                    vb[la * 3 + 1],
+                    vb[la * 3 + 2],
+                    vb[lb * 3],
+                    vb[lb * 3 + 1],
+                    vb[lb * 3 + 2],
+                    gb[la],
                 );
             }
 
             return builder.getLines();
-        }
+        },
     };
 }

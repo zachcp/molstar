@@ -6,21 +6,21 @@
  */
 
 import { Interval, OrderedSet } from '../../mol-data/int.ts';
-import { type Loci, isEveryLoci } from '../../mol-model/loci.ts';
+import { isEveryLoci, type Loci } from '../../mol-model/loci.ts';
 import type { Structure, StructureElement, Unit } from '../../mol-model/structure.ts';
 import type { Color } from '../../mol-util/color/index.ts';
-import { type MarkerAction, applyMarkerAction } from '../../mol-util/marker-action.ts';
+import { applyMarkerAction, type MarkerAction } from '../../mol-util/marker-action.ts';
 
-export type StructureUnit = { structure: Structure, units: Unit[] }
+export type StructureUnit = { structure: Structure; units: Unit[] };
 
 export { SequenceWrapper };
 
 abstract class SequenceWrapper<D> {
-    abstract residueLabel(seqIdx: number): string
-    abstract residueColor(seqIdx: number): Color
-    abstract residueClass(seqIdx: number): string
+    abstract residueLabel(seqIdx: number): string;
+    abstract residueColor(seqIdx: number): Color;
+    abstract residueClass(seqIdx: number): string;
 
-    abstract getLoci(seqIdx: number): StructureElement.Loci
+    abstract getLoci(seqIdx: number): StructureElement.Loci;
 
     /** Return list of sequence viewer positions that correspond to `loci` */
     abstract getSeqIndices(loci: Loci): OrderedSet;
@@ -49,7 +49,7 @@ abstract class SequenceWrapper<D> {
             return true;
         } else {
             const seqIdxs = this.getSeqIndices(loci);
-            OrderedSet.forEach(seqIdxs, seqIdx => this.focusMarkerArray[seqIdx] = value);
+            OrderedSet.forEach(seqIdxs, (seqIdx) => this.focusMarkerArray[seqIdx] = value);
             return OrderedSet.size(seqIdxs) > 0;
         }
     }
@@ -79,5 +79,5 @@ abstract class SequenceWrapper<D> {
 }
 
 namespace SequenceWrapper {
-    export type Any = SequenceWrapper<any>
+    export type Any = SequenceWrapper<any>;
 }

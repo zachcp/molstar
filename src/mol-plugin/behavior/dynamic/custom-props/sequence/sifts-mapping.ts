@@ -12,27 +12,29 @@ import { StructureElement } from '../../../../../mol-model/structure.ts';
 import { ParamDefinition as PD } from '../../../../../mol-util/param-definition.ts';
 import { PluginBehavior } from '../../../behavior.ts';
 
-export const SIFTSMapping = PluginBehavior.create<{ autoAttach: boolean, showTooltip: boolean }>({
+export const SIFTSMapping = PluginBehavior.create<{ autoAttach: boolean; showTooltip: boolean }>({
     name: 'sifts-mapping-prop',
     category: 'custom-props',
     display: { name: 'SIFTS Mapping' },
-    ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean, showTooltip: boolean }> {
+    ctor: class extends PluginBehavior.Handler<{ autoAttach: boolean; showTooltip: boolean }> {
         private provider = BestDatabaseSequenceMappingProp.Provider;
 
         private labelProvider = {
             label: (loci: Loci): string | undefined => {
                 if (!this.params.showTooltip) return;
                 return bestDatabaseSequenceMappingLabel(loci);
-            }
+            },
         };
 
-        override update(p: { autoAttach: boolean, showTooltip: boolean }) {            const updated = (
-                this.params.autoAttach !== p.autoAttach ||
-                this.params.showTooltip !== p.showTooltip
-            );
+        override update(p: { autoAttach: boolean; showTooltip: boolean }) {
+            const updated = this.params.autoAttach !== p.autoAttach ||
+                this.params.showTooltip !== p.showTooltip;
             this.params.autoAttach = p.autoAttach;
             this.params.showTooltip = p.showTooltip;
-            this.ctx.customStructureProperties.setDefaultAutoAttach(this.provider.descriptor.name, this.params.autoAttach);
+            this.ctx.customStructureProperties.setDefaultAutoAttach(
+                this.provider.descriptor.name,
+                this.params.autoAttach,
+            );
             return updated;
         }
 
@@ -50,8 +52,8 @@ export const SIFTSMapping = PluginBehavior.create<{ autoAttach: boolean, showToo
     },
     params: () => ({
         autoAttach: PD.Boolean(true),
-        showTooltip: PD.Boolean(true)
-    })
+        showTooltip: PD.Boolean(true),
+    }),
 });
 
 //

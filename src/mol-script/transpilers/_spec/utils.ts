@@ -7,7 +7,7 @@
  */
 
 import type { Transpiler } from '../transpiler';
-import type { KeywordDict, PropertyDict, OperatorList } from '../types';
+import type { KeywordDict, OperatorList, PropertyDict } from '../types';
 
 export function testKeywords(keywords: KeywordDict, transpiler: Transpiler) {
     for (const name in keywords) {
@@ -28,7 +28,7 @@ export function testKeywords(keywords: KeywordDict, transpiler: Transpiler) {
 export function testProperties(properties: PropertyDict, transpiler: Transpiler) {
     for (const name in properties) {
         const p = properties[name];
-        p['@examples'].forEach(example => {
+        p['@examples'].forEach((example) => {
             it(name, () => {
                 if (!p.isUnsupported) {
                     transpiler(example);
@@ -48,8 +48,8 @@ export function testProperties(properties: PropertyDict, transpiler: Transpiler)
 }
 
 export function testOperators(operators: OperatorList, transpiler: Transpiler) {
-    operators.forEach(o => {
-        o['@examples'].forEach(example => {
+    operators.forEach((o) => {
+        o['@examples'].forEach((example) => {
             it(o.name, () => {
                 if (!o.isUnsupported) {
                     transpiler(example);

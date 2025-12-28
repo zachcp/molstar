@@ -26,24 +26,31 @@ export const VolumeValueColorThemeParams = {
             [ColorNames.red, 0.25],
             [ColorNames.white, 0.5],
             [ColorNames.blue, 0.75],
-            [ColorNames.white, 1]
-        ]
+            [ColorNames.white, 1],
+        ],
     }, { offsets: true, isEssential: true }),
     domain: PD.MappedStatic('auto', {
         custom: PD.Interval([-1, 1], { step: 0.001 }),
         auto: PD.Group({
-            symmetric: PD.Boolean(false, { description: 'If true the automatic range is determined as [-|max|, |max|].' })
-        })
+            symmetric: PD.Boolean(false, {
+                description: 'If true the automatic range is determined as [-|max|, |max|].',
+            }),
+        }),
     }),
-    isRelative: PD.Boolean(false, { description: 'If true the value is treated as relative to the volume mean and sigma.' }),
+    isRelative: PD.Boolean(false, {
+        description: 'If true the value is treated as relative to the volume mean and sigma.',
+    }),
     defaultColor: PD.Color(Color(0xcccccc)),
 };
-export type VolumeValueColorThemeParams = typeof VolumeValueColorThemeParams
+export type VolumeValueColorThemeParams = typeof VolumeValueColorThemeParams;
 export function getVolumeValueColorThemeParams(ctx: ThemeDataContext) {
     return VolumeValueColorThemeParams; // TODO return copy
 }
 
-export function VolumeValueColorTheme(ctx: ThemeDataContext, props: PD.Values<VolumeValueColorThemeParams>): ColorTheme<VolumeValueColorThemeParams, any> {
+export function VolumeValueColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<VolumeValueColorThemeParams>,
+): ColorTheme<VolumeValueColorThemeParams, any> {
     if (ctx.volume) {
         const { min, max, mean, sigma } = ctx.volume.grid.stats;
         const domain: [number, number] = props.domain.name === 'custom' ? props.domain.params : [min, max];
@@ -66,7 +73,7 @@ export function VolumeValueColorTheme(ctx: ThemeDataContext, props: PD.Values<Vo
 
             const normalizedDomain = [
                 normalize(domain[0], min, max),
-                normalize(domain[1], min, max)
+                normalize(domain[1], min, max),
             ] as [number, number];
 
             const palette = ColorTheme.Palette(colorList.colors, colorList.kind, normalizedDomain, defaultColor);

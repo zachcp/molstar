@@ -10,26 +10,30 @@ import { CifWriter } from '../../../mol-io/writer/cif.ts';
 import type { mmCIF_Schema } from '../../../mol-io/reader/cif/schema/mmcif.ts';
 import type { Structure } from '../structure.ts';
 import { _atom_site } from './categories/atom_site.ts';
-import CifCategory = CifWriter.Category
+import CifCategory = CifWriter.Category;
 import { _struct_conf, _struct_sheet_range } from './categories/secondary-structure.ts';
 import { _chem_comp, _chem_comp_bond, _pdbx_chem_comp_identifier, _pdbx_nonpoly_scheme } from './categories/misc.ts';
 import type { Model } from '../model.ts';
-import { getUniqueEntityIndicesFromStructures, copy_mmCif_category, copy_source_mmCifCategory } from './categories/utils.ts';
-import { _struct_asym, _entity_poly, _entity_poly_seq } from './categories/sequence.ts';
+import {
+    copy_mmCif_category,
+    copy_source_mmCifCategory,
+    getUniqueEntityIndicesFromStructures,
+} from './categories/utils.ts';
+import { _entity_poly, _entity_poly_seq, _struct_asym } from './categories/sequence.ts';
 import { CustomPropertyDescriptor } from '../../custom-property.ts';
 import { atom_site_operator_mapping } from './categories/atom_site_operator_mapping.ts';
 import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif.ts';
 import { molstar_bond_site } from './categories/molstar_bond_site.ts';
 
 export interface CifExportContext {
-    structures: Structure[],
-    firstModel: Model,
-    cache: any
+    structures: Structure[];
+    firstModel: Model;
+    cache: any;
 }
 
 export type CifExportCategoryInfo =
-    | [CifWriter.Category, any /** context */, CifWriter.Encoder.WriteCategoryOptions]
-    | [CifWriter.Category, any /** context */]
+    | [CifWriter.Category, any, /** context */ CifWriter.Encoder.WriteCategoryOptions]
+    | [CifWriter.Category, any /** context */];
 
 export namespace CifExportContext {
     export function create(structures: Structure | Structure[]): CifExportContext {
@@ -37,7 +41,7 @@ export namespace CifExportContext {
         return {
             structures: structureArray,
             firstModel: structureArray[0].model,
-            cache: Object.create(null)
+            cache: Object.create(null),
         };
     }
 }
@@ -47,15 +51,16 @@ const _entity: CifCategory<CifExportContext> = {
     instance({ structures }) {
         const indices = getUniqueEntityIndicesFromStructures(structures);
         return CifCategory.ofTable(structures[0].model.entities.data, indices);
-    }
+    },
 };
 
 function isWithoutSymmetry(structure: Structure) {
-    return structure.units.every(u => u.conformation.operator.isIdentity);
+    return structure.units.every((u) => u.conformation.operator.isIdentity);
 }
 
 function isWithoutOperator(structure: Structure) {
-    return isWithoutSymmetry(structure) && structure.units.every(u => !u.conformation.operator.assembly && !u.conformation.operator.suffix);
+    return isWithoutSymmetry(structure) &&
+        structure.units.every((u) => !u.conformation.operator.assembly && !u.conformation.operator.suffix);
 }
 
 const Categories = (options?: { keepAtomSiteId?: boolean }) => [
@@ -103,17 +108,27 @@ const Categories = (options?: { keepAtomSiteId?: boolean }) => [
 ];
 
 namespace _Filters {
-    export const AtomSitePositionsFieldNames = new Set<string>(<(keyof typeof mmCIF_Schema.atom_site)[]>['id', 'Cartn_x', 'Cartn_y', 'Cartn_z']);
+    export const AtomSitePositionsFieldNames = new Set<string>(
+        <(keyof typeof mmCIF_Schema.atom_site)[]> ['id', 'Cartn_x', 'Cartn_y', 'Cartn_z'],
+    );
 }
 
 export const mmCIF_Export_Filters = {
-    onlyPositions: <CifWriter.Category.Filter>{
-        includeCategory(name) { return name === 'atom_site'; },
-        includeField(cat, field) { return _Filters.AtomSitePositionsFieldNames.has(field); }
-    }
+    onlyPositions: <CifWriter.Category.Filter> {
+        includeCategory(name) {
+            return name === 'atom_site';
+        },
+        includeField(cat, field) {
+            return _Filters.AtomSitePositionsFieldNames.has(field);
+        },
+    },
 };
 
-function getCustomPropCategories(customProp: CustomPropertyDescriptor, ctx: CifExportContext, params?: encode_mmCIF_categories_Params): CifExportCategoryInfo[] {
+function getCustomPropCategories(
+    customProp: CustomPropertyDescriptor,
+    ctx: CifExportContext,
+    params?: encode_mmCIF_categories_Params,
+): CifExportCategoryInfo[] {
     if (!customProp.cifExport || customProp.cifExport.categories.length === 0) return [];
 
     const prefix = customProp.cifExport.prefix;
@@ -133,26 +148,28 @@ function getCustomPropCategories(customProp: CustomPropertyDescriptor, ctx: CifE
     for (const cat of cats) {
         if (params?.skipCategoryNames?.has(cat.name)) continue;
         if (params?.includedCategoryNames && !params.includedCategoryNames.has(cat.name)) continue;
-        if (cat.name.indexOf(prefix) !== 0) throw new Error(`Custom category '${cat.name}' name must start with prefix '${prefix}.'`);
+        if (cat.name.indexOf(prefix) !== 0) {
+            throw new Error(`Custom category '${cat.name}' name must start with prefix '${prefix}.'`);
+        }
         ret.push([cat, propCtx]);
     }
     return ret;
 }
 
 type encode_mmCIF_categories_Params = {
-    exportCtx?: CifExportContext,
-    encoder?: CifWriter.Encoder,
+    exportCtx?: CifExportContext;
+    encoder?: CifWriter.Encoder;
 
     /** Skip provided categories */
-    skipCategoryNames?: Set<string>,
+    skipCategoryNames?: Set<string>;
     /** If defined, include only specified categories */
-    includedCategoryNames?: Set<string>,
+    includedCategoryNames?: Set<string>;
     /** If true, copy all categories present in an input mmCIF file */
-    copyAllCategories?: boolean,
+    copyAllCategories?: boolean;
     /** If enabled, keep atom_site.id from the input data, otherwise use 1-based index of atom */
-    doNotReindexAtomSiteId?: boolean,
+    doNotReindexAtomSiteId?: boolean;
     /** List of custom properties to include */
-    customProperties?: CustomPropertyDescriptor[],
+    customProperties?: CustomPropertyDescriptor[];
 
     extensions?: {
         /**
@@ -160,15 +177,19 @@ type encode_mmCIF_categories_Params = {
          * Forces doNotReindexAtomSiteId to true.
          * Note: This is not a standard mmCIF category and is currently specific to Mol*.
          */
-        molstar_bond_site?: boolean,
-    }
-}
+        molstar_bond_site?: boolean;
+    };
+};
 
 /** Doesn't start a data block */
-export function encode_mmCIF_categories(encoder: CifWriter.Encoder, structures: Structure | Structure[], params?: encode_mmCIF_categories_Params) {
+export function encode_mmCIF_categories(
+    encoder: CifWriter.Encoder,
+    structures: Structure | Structure[],
+    params?: encode_mmCIF_categories_Params,
+) {
     const first = Array.isArray(structures) ? structures[0] : (structures as Structure);
     const models = first.models;
-    if (models.length !== 1) throw new Error('Can\'t export stucture composed from multiple models.');
+    if (models.length !== 1) throw new Error("Can't export stucture composed from multiple models.");
 
     const ctx: CifExportContext = params?.exportCtx || CifExportContext.create(structures);
 
@@ -179,10 +200,16 @@ export function encode_mmCIF_categories(encoder: CifWriter.Encoder, structures: 
     }
 }
 
-function encode_mmCIF_categories_default(encoder: CifWriter.Encoder, ctx: CifExportContext, params?: encode_mmCIF_categories_Params) {
-    for (const cat of Categories({
-        keepAtomSiteId: params?.extensions?.molstar_bond_site || params?.doNotReindexAtomSiteId
-    })) {
+function encode_mmCIF_categories_default(
+    encoder: CifWriter.Encoder,
+    ctx: CifExportContext,
+    params?: encode_mmCIF_categories_Params,
+) {
+    for (
+        const cat of Categories({
+            keepAtomSiteId: params?.extensions?.molstar_bond_site || params?.doNotReindexAtomSiteId,
+        })
+    ) {
         if (params?.skipCategoryNames && params?.skipCategoryNames.has(cat.name)) continue;
         if (params?.includedCategoryNames && !params.includedCategoryNames.has(cat.name)) continue;
         encoder.writeCategory(cat, ctx);
@@ -198,7 +225,7 @@ function encode_mmCIF_categories_default(encoder: CifWriter.Encoder, ctx: CifExp
         if (info) encoder.writeCategory(info[0], info[1], info[2]);
     }
 
-    const _params = params || { };
+    const _params = params || {};
     for (const customProp of ctx.firstModel.customProperties.all) {
         for (const [cat, propCtx] of getCustomPropCategories(customProp, ctx, _params)) {
             encoder.writeCategory(cat, propCtx);
@@ -223,19 +250,25 @@ function encode_mmCIF_categories_default(encoder: CifWriter.Encoder, ctx: CifExp
     }
 }
 
-function encode_mmCIF_categories_copyAll(encoder: CifWriter.Encoder, ctx: CifExportContext, params?: encode_mmCIF_categories_Params) {
+function encode_mmCIF_categories_copyAll(
+    encoder: CifWriter.Encoder,
+    ctx: CifExportContext,
+    params?: encode_mmCIF_categories_Params,
+) {
     const providedCategories = new Map<string, CifExportCategoryInfo>();
 
-    for (const cat of Categories({
-        keepAtomSiteId: params?.extensions?.molstar_bond_site || params?.doNotReindexAtomSiteId
-    })) {
+    for (
+        const cat of Categories({
+            keepAtomSiteId: params?.extensions?.molstar_bond_site || params?.doNotReindexAtomSiteId,
+        })
+    ) {
         providedCategories.set(cat.name, [cat, ctx]);
     }
 
     const mapping = atom_site_operator_mapping(ctx);
     if (mapping) providedCategories.set(mapping[0].name, mapping);
 
-    const _params = params || { };
+    const _params = params || {};
     for (const customProp of ctx.firstModel.customProperties.all) {
         for (const info of getCustomPropCategories(customProp, ctx, _params)) {
             providedCategories.set(info[0].name, info);
@@ -289,7 +322,12 @@ function encode_mmCIF_categories_copyAll(encoder: CifWriter.Encoder, ctx: CifExp
     }
 }
 
-function to_mmCIF(name: string, structures: Structure | Structure[], asBinary = false, params?: encode_mmCIF_categories_Params) {
+function to_mmCIF(
+    name: string,
+    structures: Structure | Structure[],
+    asBinary = false,
+    params?: encode_mmCIF_categories_Params,
+) {
     const enc = params?.encoder ?? CifWriter.createEncoder({ binary: asBinary });
     enc.startDataBlock(name);
     encode_mmCIF_categories(enc, structures, params);

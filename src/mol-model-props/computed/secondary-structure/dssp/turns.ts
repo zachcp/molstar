@@ -7,7 +7,6 @@
 
 import { type DSSPContext, DSSPType } from './common.ts';
 
-
 /**
  * The basic turn pattern is a single H bond of type (i, i + n).
  * We assign an n-turn at residue i if there is an H bond from CO(i) to NH(i + n),
@@ -18,11 +17,17 @@ import { type DSSPContext, DSSPType } from './common.ts';
 export function assignTurns(ctx: DSSPContext) {
     const { proteinInfo, hbonds, flags } = ctx;
 
-    const turnFlag = [DSSPType.Flag.T3S, DSSPType.Flag.T4S, DSSPType.Flag.T5S, DSSPType.Flag.T3, DSSPType.Flag.T4, DSSPType.Flag.T5];
+    const turnFlag = [
+        DSSPType.Flag.T3S,
+        DSSPType.Flag.T4S,
+        DSSPType.Flag.T5S,
+        DSSPType.Flag.T3,
+        DSSPType.Flag.T4,
+        DSSPType.Flag.T5,
+    ];
 
     for (let idx = 0; idx < 3; idx++) {
         for (let i = 0, il = proteinInfo.residueIndices.length - 1; i < il; ++i) {
-
             // check if hbond exists
             if (hbonds.getDirectedEdgeIndex(i, i + idx + 3) !== -1) {
                 flags[i] |= turnFlag[idx + 3] | turnFlag[idx];

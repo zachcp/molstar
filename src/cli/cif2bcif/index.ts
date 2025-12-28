@@ -11,7 +11,7 @@ import * as util from 'node:util';
 import * as fs from 'node:fs';
 import * as zlib from 'node:zlib';
 import { convert } from './converter.ts';
-import type { Buffer } from "node:buffer";
+import type { Buffer } from 'node:buffer';
 
 require('util.promisify').shim();
 
@@ -39,28 +39,28 @@ function run(args: Args) {
 
 const parser = new argparse.ArgumentParser({
     add_help: true,
-    description: 'Convert any BCIF file to a CIF file or vice versa'
+    description: 'Convert any BCIF file to a CIF file or vice versa',
 });
 parser.add_argument('src', {
-    help: 'Source file path'
+    help: 'Source file path',
 });
 parser.add_argument('out', {
-    help: 'Output file path'
+    help: 'Output file path',
 });
 parser.add_argument('-c', '--config', {
     help: 'Optional encoding strategy/precision config path',
-    required: false
+    required: false,
 });
 parser.add_argument('-f', '--filter', {
     help: 'Optional filter whitelist/blacklist path',
-    required: false
+    required: false,
 });
 
 interface Args {
-    src: string
-    out: string
-    config?: string
-    filter?: string
+    src: string;
+    out: string;
+    config?: string;
+    filter?: string;
 }
 const args: Args = parser.parse_args();
 

@@ -13,34 +13,34 @@ import { Vec3 } from '../linear-algebra/3d/vec3.ts';
 
 interface SymmetryOperator {
     /** Operator name, e.g. 1_555, ASM_1 */
-    readonly name: string,
+    readonly name: string;
     /** Canonical operator name, must follow symmetry instance naming rules (https://molstar.org/mol-view-spec-docs/selectors/#instance_id).
      * E.g. 1_555, ASM-X0-5 */
-    readonly instanceId: string,
+    readonly instanceId: string;
 
     readonly assembly?: {
         /** pointer to `pdbx_struct_assembly.id` or empty string */
-        readonly id: string,
+        readonly id: string;
         /** pointers to `pdbx_struct_oper_list.id` or empty list */
-        readonly operList: string[],
+        readonly operList: string[];
         /** (arbitrary) unique id of the operator to be used in suffix */
-        readonly operId: number
-    },
+        readonly operId: number;
+    };
 
     /** pointer to `struct_ncs_oper.id` or -1 */
-    readonly ncsId: number,
+    readonly ncsId: number;
 
-    readonly hkl: Vec3,
+    readonly hkl: Vec3;
     /** spacegroup symmetry operator index, -1 if not applicable */
-    readonly spgrOp: number,
+    readonly spgrOp: number;
     /** unique (external) key, -1 if not available */
-    readonly key: number,
+    readonly key: number;
 
-    readonly matrix: Mat4,
+    readonly matrix: Mat4;
     /** cache the inverse of the transform */
-    readonly inverse: Mat4,
+    readonly inverse: Mat4;
     /** optimize the identity case */
-    readonly isIdentity: boolean,
+    readonly isIdentity: boolean;
 
     /**
      * Suffix based on operator type.
@@ -48,7 +48,7 @@ interface SymmetryOperator {
      * - Crystal: -op_ijk
      * - ncs: _ncsId
      */
-    readonly suffix: string
+    readonly suffix: string;
 }
 
 namespace SymmetryOperator {
@@ -57,7 +57,14 @@ namespace SymmetryOperator {
 
     export const RotationTranslationEpsilon = 0.005;
 
-    export type CreateInfo = { assembly?: SymmetryOperator['assembly'], ncsId?: number, hkl?: Vec3, spgrOp?: number, key?: number, instanceId?: string }
+    export type CreateInfo = {
+        assembly?: SymmetryOperator['assembly'];
+        ncsId?: number;
+        hkl?: Vec3;
+        spgrOp?: number;
+        key?: number;
+        instanceId?: string;
+    };
     export function create(name: string, matrix: Mat4, info?: CreateInfo | SymmetryOperator): SymmetryOperator {
         let { assembly, ncsId, hkl, spgrOp, key } = info || {};
         const _hkl = hkl ? Vec3.clone(hkl) : Vec3();
@@ -67,11 +74,37 @@ namespace SymmetryOperator {
         const isIdentity = Mat4.isIdentity(matrix);
         const suffix = getSuffix(info, isIdentity);
         const instanceId = info?.instanceId ?? name;
-        if (isIdentity) return { name, instanceId, assembly, matrix, inverse: Mat4.identity(), isIdentity: true, hkl: _hkl, spgrOp, ncsId, suffix, key };
+        if (isIdentity) {
+            return {
+                name,
+                instanceId,
+                assembly,
+                matrix,
+                inverse: Mat4.identity(),
+                isIdentity: true,
+                hkl: _hkl,
+                spgrOp,
+                ncsId,
+                suffix,
+                key,
+            };
+        }
         if (!Mat4.isRotationAndTranslation(matrix, RotationTranslationEpsilon)) {
             console.warn(`Symmetry operator (${name}) should be a composition of rotation and translation.`);
         }
-        return { name, instanceId, assembly, matrix, inverse: Mat4.invert(Mat4(), matrix), isIdentity: false, hkl: _hkl, spgrOp, key, ncsId, suffix };
+        return {
+            name,
+            instanceId,
+            assembly,
+            matrix,
+            inverse: Mat4.invert(Mat4(), matrix),
+            isIdentity: false,
+            hkl: _hkl,
+            spgrOp,
+            key,
+            ncsId,
+            suffix,
+        };
     }
 
     function isSymmetryOperator(x: any): x is SymmetryOperator {
@@ -180,16 +213,18 @@ namespace SymmetryOperator {
         return create(second.name, matrix, second);
     }
 
-    export interface CoordinateMapper<T extends number> { (index: T, slot: Vec3): Vec3 }
+    export interface CoordinateMapper<T extends number> {
+        (index: T, slot: Vec3): Vec3;
+    }
     export interface ArrayMapping<T extends number> {
-        readonly coordinates: Coordinates,
-        readonly operator: SymmetryOperator,
-        invariantPosition(this: ArrayMapping<T>, i: T, s: Vec3): Vec3,
-        position(this: ArrayMapping<T>, i: T, s: Vec3): Vec3,
-        x(this: ArrayMapping<T>, index: T): number,
-        y(this: ArrayMapping<T>, index: T): number,
-        z(this: ArrayMapping<T>, index: T): number,
-        readonly r: (this: ArrayMapping<T>, index: T) => number
+        readonly coordinates: Coordinates;
+        readonly operator: SymmetryOperator;
+        invariantPosition(this: ArrayMapping<T>, i: T, s: Vec3): Vec3;
+        position(this: ArrayMapping<T>, i: T, s: Vec3): Vec3;
+        x(this: ArrayMapping<T>, index: T): number;
+        y(this: ArrayMapping<T>, index: T): number;
+        z(this: ArrayMapping<T>, index: T): number;
+        readonly r: (this: ArrayMapping<T>, index: T) => number;
     }
 
     class _ArrayMapping<T extends number> implements ArrayMapping<T> {
@@ -198,7 +233,11 @@ namespace SymmetryOperator {
         private readonly _z: ArrayLike<number>;
         private readonly _m: Mat4;
 
-        constructor(readonly operator: SymmetryOperator, readonly coordinates: Coordinates, readonly r: ((index: T) => number) = _zeroRadius) {
+        constructor(
+            readonly operator: SymmetryOperator,
+            readonly coordinates: Coordinates,
+            readonly r: (index: T) => number = _zeroRadius,
+        ) {
             this._x = coordinates.x;
             this._y = coordinates.y;
             this._z = coordinates.z;
@@ -251,7 +290,11 @@ namespace SymmetryOperator {
         private readonly _z: ArrayLike<number>;
         private readonly _m: Mat4;
 
-        constructor(readonly operator: SymmetryOperator, readonly coordinates: Coordinates, readonly r: ((index: T) => number) = _zeroRadius) {
+        constructor(
+            readonly operator: SymmetryOperator,
+            readonly coordinates: Coordinates,
+            readonly r: (index: T) => number = _zeroRadius,
+        ) {
             this._x = coordinates.x;
             this._y = coordinates.y;
             this._z = coordinates.z;
@@ -293,7 +336,11 @@ namespace SymmetryOperator {
         private readonly _y: ArrayLike<number>;
         private readonly _z: ArrayLike<number>;
 
-        constructor(readonly operator: SymmetryOperator, readonly coordinates: Coordinates, readonly r: ((index: T) => number) = _zeroRadius) {
+        constructor(
+            readonly operator: SymmetryOperator,
+            readonly coordinates: Coordinates,
+            readonly r: (index: T) => number = _zeroRadius,
+        ) {
             this._x = coordinates.x;
             this._y = coordinates.y;
             this._z = coordinates.z;
@@ -326,20 +373,30 @@ namespace SymmetryOperator {
         }
     }
 
-    export interface Coordinates { x: ArrayLike<number>, y: ArrayLike<number>, z: ArrayLike<number> }
+    export interface Coordinates {
+        x: ArrayLike<number>;
+        y: ArrayLike<number>;
+        z: ArrayLike<number>;
+    }
 
-    export function createMapping<T extends number>(operator: SymmetryOperator, coords: Coordinates, radius: ((index: T) => number) = _zeroRadius): ArrayMapping<T> {
+    export function createMapping<T extends number>(
+        operator: SymmetryOperator,
+        coords: Coordinates,
+        radius: (index: T) => number = _zeroRadius,
+    ): ArrayMapping<T> {
         return Mat4.isIdentity(operator.matrix)
             ? new _ArrayMappingIdentity(operator, coords, radius)
             : isW1(operator.matrix)
-                ? new _ArrayMappingW1(operator, coords, radius)
-                : new _ArrayMapping(operator, coords, radius);
+            ? new _ArrayMappingW1(operator, coords, radius)
+            : new _ArrayMapping(operator, coords, radius);
     }
 }
 
 export { SymmetryOperator };
 
-function _zeroRadius(_i: number) { return 0; }
+function _zeroRadius(_i: number) {
+    return 0;
+}
 
 function isW1(m: Mat4) {
     return m[3] === 0 && m[7] === 0 && m[11] === 0 && m[15] === 1;

@@ -29,7 +29,13 @@ function createModelChainMap(model: Model) {
 
     for (let i = 0; i < _rowCount; i++) {
         const elements = SortedArray.ofBounds(offsets[i] as ElementIndex, offsets[i + 1] as ElementIndex);
-        const unit = builder.addUnit(Unit.Kind.Atomic, model, SymmetryOperator.Default, elements, Unit.Trait.FastBoundary);
+        const unit = builder.addUnit(
+            Unit.Kind.Atomic,
+            model,
+            SymmetryOperator.Default,
+            elements,
+            Unit.Trait.FastBoundary,
+        );
         units.set(label_asym_id.value(i), unit);
     }
 
@@ -37,7 +43,9 @@ function createModelChainMap(model: Model) {
 }
 
 function buildAssembly(model: Model, assembly: Assembly) {
-    const coordinateSystem = SymmetryOperator.create(assembly.id, Mat4.identity(), { assembly: { id: assembly.id, operId: 0, operList: [] } });
+    const coordinateSystem = SymmetryOperator.create(assembly.id, Mat4.identity(), {
+        assembly: { id: assembly.id, operId: 0, operList: [] },
+    });
     const assembler = Structure.Builder({
         coordinateSystem,
         label: model.label,
@@ -62,7 +70,7 @@ function buildAssembly(model: Model, assembly: Assembly) {
 }
 
 export { MmcifAssembly };
-type MmcifAssembly = typeof MmcifAssembly
+type MmcifAssembly = typeof MmcifAssembly;
 const MmcifAssembly = PluginStateTransform.BuiltIn({
     name: 'mmcif-assembly',
     display: { name: 'Mmcif Assembly' },
@@ -70,13 +78,13 @@ const MmcifAssembly = PluginStateTransform.BuiltIn({
     to: PSO.Molecule.Structure,
     params: {
         id: PD.Text('', { label: 'Asm Id', description: 'Assembly Id (use empty for the 1st assembly)' }),
-    }
+    },
 })({
     canAutoUpdate({ newParams }) {
         return true;
     },
     apply({ a, params }, plugin: PluginContext) {
-        return Task.create('Build Structure', async ctx => {
+        return Task.create('Build Structure', async (ctx) => {
             const model = a.data;
 
             let id = params.id;
@@ -93,7 +101,9 @@ const MmcifAssembly = PluginStateTransform.BuiltIn({
             } else {
                 asm = Symmetry.findAssembly(model, id || '');
                 if (!asm) {
-                    plugin.log.warn(`Model '${model.entryId}' has no assembly called '${id}', returning model structure.`);
+                    plugin.log.warn(
+                        `Model '${model.entryId}' has no assembly called '${id}', returning model structure.`,
+                    );
                 }
             }
 
@@ -116,7 +126,7 @@ const MmcifAssembly = PluginStateTransform.BuiltIn({
     },
     dispose({ b }) {
         b?.data.customPropertyDescriptors.dispose();
-    }
+    },
 });
 
 type UnitsByEntity = Map<EntityIndex, Unit[]>;
@@ -154,7 +164,7 @@ function getUnitsByEntity(structure: Structure): UnitsByEntity {
 }
 
 export { MmcifStructure };
-type MmcifStructure = typeof MmcifStructure
+type MmcifStructure = typeof MmcifStructure;
 const MmcifStructure = PluginStateTransform.BuiltIn({
     name: 'mmcif-structure',
     display: { name: 'Mmcif Structure' },
@@ -164,13 +174,13 @@ const MmcifStructure = PluginStateTransform.BuiltIn({
         structureRef: PD.Text(''),
         entityId: PD.Text(''),
         cellSize: PD.Numeric(500, { min: 0, max: 10000, step: 100 }),
-    }
+    },
 })({
     canAutoUpdate({ newParams }) {
         return true;
     },
     apply({ a, params, dependencies }) {
-        return Task.create('Build Structure', async ctx => {
+        return Task.create('Build Structure', async (ctx) => {
             const parent = dependencies![params.structureRef].data as Structure;
             const { entities } = parent.model;
             const idx = entities.getEntityIndex(params.entityId);
@@ -180,7 +190,7 @@ const MmcifStructure = PluginStateTransform.BuiltIn({
             const unitCount = units.length;
 
             let structure: Structure;
-            if (unitCount > 1 && units.every(u => u.conformation.operator.isIdentity)) {
+            if (unitCount > 1 && units.every((u) => u.conformation.operator.isIdentity)) {
                 const mergedUnits = partitionUnits(units, params.cellSize);
                 structure = Structure.create(mergedUnits);
             } else {
@@ -188,7 +198,9 @@ const MmcifStructure = PluginStateTransform.BuiltIn({
             }
             // could also use _struct_ref.pdbx_db_accession to point to uniprot with _struct_ref.db_name == UNP
             const label = entities.data.pdbx_description.value(idx).join(', ') || 'model';
-            const description = `*Entity id* ${entities.data.id.value(idx)} *src_method* ${entities.data.src_method.value(idx)} *type* ${entities.data.type.value(idx)}`;
+            const description = `*Entity id* ${entities.data.id.value(idx)} *src_method* ${
+                entities.data.src_method.value(idx)
+            } *type* ${entities.data.type.value(idx)}`;
             return new PSO.Molecule.Structure(structure, { label, description: description });
         });
     },
@@ -199,5 +211,5 @@ const MmcifStructure = PluginStateTransform.BuiltIn({
     },
     dispose({ b }) {
         b?.data.customPropertyDescriptors.dispose();
-    }
+    },
 });

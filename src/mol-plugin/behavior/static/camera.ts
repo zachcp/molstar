@@ -18,7 +18,7 @@ export function registerDefault(ctx: PluginContext) {
 }
 
 export function Reset(ctx: PluginContext) {
-    PluginCommands.Camera.Reset.subscribe(ctx, options => {
+    PluginCommands.Camera.Reset.subscribe(ctx, (options) => {
         ctx.managers.camera.reset(options?.snapshot, options?.durationMs);
     });
 }
@@ -37,7 +37,7 @@ export function Focus(ctx: PluginContext) {
 }
 
 export function FocusObject(ctx: PluginContext) {
-    PluginCommands.Camera.FocusObject.subscribe(ctx, async options => {
+    PluginCommands.Camera.FocusObject.subscribe(ctx, async (options) => {
         ctx.managers.camera.focusObject(options);
     });
 }

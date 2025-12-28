@@ -11,12 +11,21 @@ import * as fs from 'node:fs';
 import fetch from 'node-fetch';
 import { CIF } from '../mol-io/reader/cif.ts';
 
-import { Structure, type Model, Queries as Q, StructureElement, StructureSelection, StructureSymmetry, StructureQuery, StructureProperties as SP } from '../mol-model/structure.ts';
+import {
+    type Model,
+    Queries as Q,
+    Structure,
+    StructureElement,
+    StructureProperties as SP,
+    StructureQuery,
+    StructureSelection,
+    StructureSymmetry,
+} from '../mol-model/structure.ts';
 // import { Segmentation, OrderedSet } from '../mol-data/int.ts'
 
 import { to_mmCIF } from '../mol-model/structure/export/mmcif.ts';
 import { Vec3 } from '../mol-math/linear-algebra.ts';
-import { trajectoryFromMmCIF, MmcifFormat } from '../mol-model-formats/structure/mmcif.ts';
+import { MmcifFormat, trajectoryFromMmCIF } from '../mol-model-formats/structure/mmcif.ts';
 // import { printUnits } from '../apps/structure-info/model.ts';
 // import { EquivalenceClasses } from '../mol-data/util.ts';
 
@@ -321,13 +330,16 @@ export namespace PropertyAccess {
 
         const auth_comp_id = SP.atom.auth_comp_id, op = SP.unit.operator_name;
         // const q1 = Q.generators.atoms({ residueTest: l => auth_comp_id(l) === 'REA' });
-        const q1 = Q.modifiers.includeSurroundings(Q.generators.atoms({
-            chainTest: l => op(l.element) === '1_555',
-            atomTest: l => auth_comp_id(l.element) === 'REA'
-        }), {
-            radius: 5,
-            wholeResidues: true
-        });
+        const q1 = Q.modifiers.includeSurroundings(
+            Q.generators.atoms({
+                chainTest: (l) => op(l.element) === '1_555',
+                atomTest: (l) => auth_comp_id(l.element) === 'REA',
+            }),
+            {
+                radius: 5,
+                wholeResidues: true,
+            },
+        );
         const surr = StructureSelection.unionStructure(StructureQuery.run(q1, a));
         console.timeEnd('symmetry');
 
@@ -401,7 +413,6 @@ export namespace PropertyAccess {
 
         // console.log(models[0].symmetry.assemblies);
 
-
         // const { structures, models } = await readCIF('e:/test/molstar/3j3q.bcif');
 
         // fs.writeFileSync('e:/test/molstar/3j3q.bcif', to_mmCIF('test', structures[0], true));
@@ -412,7 +423,7 @@ export namespace PropertyAccess {
         // return;
 
         console.log('bs', baseline(models.representative));
-        console.log('sp', sumProperty(structures[0], l => l.unit.model.atomicConformation.atomId.value(l.element)));
+        console.log('sp', sumProperty(structures[0], (l) => l.unit.model.atomicConformation.atomId.value(l.element)));
         // console.log(sumPropertySegmented(structures[0], l => l.unit.model.atomSiteConformation.atomId.value(l.element)));
 
         // console.log(sumPropertySegmentedMutable(structures[0], l => l.unit.model.conformation.atomId.value(l.element));
@@ -435,15 +446,18 @@ export namespace PropertyAccess {
         // const auth_asym_id = SP.chain.auth_asym_id;
         // const set =  new Set(['A', 'B', 'C', 'D']);
         // const q = Q.generators.atomGroups({ atomTest: l => auth_seq_id(l) < 3 });
-        const q = Q.generators.atoms({ atomTest: Q.pred.eq(l => SP.atom.auth_comp_id(l.element), 'ALA') });
+        const q = Q.generators.atoms({ atomTest: Q.pred.eq((l) => SP.atom.auth_comp_id(l.element), 'ALA') });
         const P = SP;
         // const q0 = Q.generators.atoms({ atomTest: l => auth_comp_id(l) === 'ALA' });
-        const q1 = (Q.generators.atoms({ atomTest: l => auth_comp_id(l.element) === 'ALA' }));
-        const q2 = (Q.generators.atoms({ atomTest: l => auth_comp_id(l.element) === 'ALA', groupBy: l => SP.residue.key(l.element) }));
-        const q3 = (Q.generators.atoms({
-            chainTest: Q.pred.inSet(l => P.chain.auth_asym_id(l.element), ['A', 'B', 'C', 'D']),
-            atomTest: Q.pred.eq(l => P.atom.auth_comp_id(l.element), 'ALA')
-        }));
+        const q1 = Q.generators.atoms({ atomTest: (l) => auth_comp_id(l.element) === 'ALA' });
+        const q2 = Q.generators.atoms({
+            atomTest: (l) => auth_comp_id(l.element) === 'ALA',
+            groupBy: (l) => SP.residue.key(l.element),
+        });
+        const q3 = Q.generators.atoms({
+            chainTest: Q.pred.inSet((l) => P.chain.auth_asym_id(l.element), ['A', 'B', 'C', 'D']),
+            atomTest: Q.pred.eq((l) => P.atom.auth_comp_id(l.element), 'ALA'),
+        });
         await query(q, structures[0]);
         // console.log(to_mmCIF('test', Selection.union(q0r)));
 
@@ -464,7 +478,7 @@ export namespace PropertyAccess {
         suite
             // .add('test q', () => q1(structures[0]))
             // .add('test q', () => q(structures[0]))
-            .add('test int', () => sumProperty(structures[0], l => col(l.element)))
+            .add('test int', () => sumProperty(structures[0], (l) => col(l.element)))
             .add('test q1', async () => query(q1, structures[0]))
             .add('test q3', async () => query(q3, structures[0]))
             // .add('sum residue', () => sumPropertyResidue(structures[0], l => l.unit.hierarchy.residues.auth_seq_id.value(l.unit.residueIndex[l.atom])))

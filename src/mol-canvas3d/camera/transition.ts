@@ -21,8 +21,12 @@ class CameraTransitionManager {
     private _target: Camera.Snapshot = Camera.createDefaultSnapshot();
     private _current = Camera.createDefaultSnapshot();
 
-    get source(): Readonly<Camera.Snapshot> { return this._source; }
-    get target(): Readonly<Camera.Snapshot> { return this._target; }
+    get source(): Readonly<Camera.Snapshot> {
+        return this._source;
+    }
+    get target(): Readonly<Camera.Snapshot> {
+        return this._target;
+    }
 
     apply(to: Partial<Camera.Snapshot>, durationMs: number = 0, transition?: CameraTransitionManager.TransitionFunc) {
         if (!this.inTransition || durationMs > 0) {
@@ -42,7 +46,10 @@ class CameraTransitionManager {
         if (this._target.radius < 0.01) this._target.radius = 0.01;
         if (this._target.radiusMax < 0.01) this._target.radiusMax = 0.01;
 
-        if (!this.inTransition && durationMs <= 0 || (typeof to.mode !== 'undefined' && to.mode !== this.camera.state.mode)) {
+        if (
+            !this.inTransition && durationMs <= 0 ||
+            (typeof to.mode !== 'undefined' && to.mode !== this.camera.state.mode)
+        ) {
             this.finish(this._target);
             return;
         }
@@ -80,12 +87,16 @@ class CameraTransitionManager {
     }
 
     constructor(private camera: Camera) {
-
     }
 }
 
 namespace CameraTransitionManager {
-    export type TransitionFunc = (out: Camera.Snapshot, t: number, source: Camera.Snapshot, target: Camera.Snapshot) => void
+    export type TransitionFunc = (
+        out: Camera.Snapshot,
+        t: number,
+        source: Camera.Snapshot,
+        target: Camera.Snapshot,
+    ) => void;
 
     const _rotUp = Quat.identity();
     const _rotDist = Quat.identity();
@@ -93,7 +104,12 @@ namespace CameraTransitionManager {
     const _sourcePosition = Vec3();
     const _targetPosition = Vec3();
 
-    export function defaultTransition(out: Camera.Snapshot, t: number, source: Camera.Snapshot, target: Camera.Snapshot): void {
+    export function defaultTransition(
+        out: Camera.Snapshot,
+        t: number,
+        source: Camera.Snapshot,
+        target: Camera.Snapshot,
+    ): void {
         Camera.copySnapshot(out, target);
 
         // Rotate up

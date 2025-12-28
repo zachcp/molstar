@@ -8,7 +8,10 @@ import type { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { StateObjectRef, StateTransform } from '../../../mol-state/index.ts';
 import { StateTransforms } from '../../../mol-plugin-state/transforms.ts';
-import { StructureRepresentationPresetProvider, presetStaticComponent } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
+import {
+    presetStaticComponent,
+    StructureRepresentationPresetProvider,
+} from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
 import type { Mat4 } from '../../../mol-math/linear-algebra.ts';
 import type { Structure } from '../../../mol-model/structure.ts';
@@ -20,19 +23,26 @@ import { capitalize } from '../../../mol-util/string.ts';
 
 const CCDParams = (a: PluginStateObject.Molecule.Trajectory | undefined, plugin: PluginContext) => ({
     representationPresetParams: PD.Optional(PD.Group(StructureRepresentationPresetProvider.CommonParams)),
-    showOriginalCoordinates: PD.Optional(PD.Boolean(true, { description: `Show original coordinates for 'model' and 'ideal' structure and do not align them.` })),
-    shownCoordinateType: PD.Select('ideal', PD.arrayToOptions(['ideal', 'model', 'both'] as const), { description: `What coordinate sets are visible.` }),
+    showOriginalCoordinates: PD.Optional(
+        PD.Boolean(true, {
+            description: `Show original coordinates for 'model' and 'ideal' structure and do not align them.`,
+        }),
+    ),
+    shownCoordinateType: PD.Select('ideal', PD.arrayToOptions(['ideal', 'model', 'both'] as const), {
+        description: `What coordinate sets are visible.`,
+    }),
     aromaticBonds: PD.Boolean(false, { description: 'Display aromatic bonds with dashes' }),
-    ...TrajectoryHierarchyPresetProvider.CommonParams(a, plugin)
+    ...TrajectoryHierarchyPresetProvider.CommonParams(a, plugin),
 });
 
 export const ChemicalCompontentTrajectoryHierarchyPreset = TrajectoryHierarchyPresetProvider({
     id: 'preset-trajectory-ccd',
     display: {
-        name: 'Chemical Component', group: 'Preset',
-        description: 'Shows molecules from the Chemical Component Dictionary.'
+        name: 'Chemical Component',
+        group: 'Preset',
+        description: 'Shows molecules from the Chemical Component Dictionary.',
     },
-    isApplicable: o => {
+    isApplicable: (o) => {
         return CCDFormat.is(o.data.representative.sourceData);
     },
     params: CCDParams,
@@ -43,10 +53,18 @@ export const ChemicalCompontentTrajectoryHierarchyPreset = TrajectoryHierarchyPr
         const builder = plugin.builders.structure;
 
         const idealModel = await builder.createModel(trajectory, { modelIndex: 0 });
-        const idealModelProperties = await builder.insertModelProperties(idealModel, params.modelProperties, { isCollapsed: true });
+        const idealModelProperties = await builder.insertModelProperties(idealModel, params.modelProperties, {
+            isCollapsed: true,
+        });
 
-        const idealStructure = await builder.createStructure(idealModelProperties || idealModel, { name: 'model', params: {} });
-        const idealStructureProperties = await builder.insertStructureProperties(idealStructure, params.structureProperties);
+        const idealStructure = await builder.createStructure(idealModelProperties || idealModel, {
+            name: 'model',
+            params: {},
+        });
+        const idealStructureProperties = await builder.insertStructureProperties(
+            idealStructure,
+            params.structureProperties,
+        );
 
         const representationPreset = params.representationPreset || ChemicalComponentPreset.id;
         const representationPresetParams = params.representationPresetParams || {};
@@ -55,16 +73,27 @@ export const ChemicalCompontentTrajectoryHierarchyPreset = TrajectoryHierarchyPr
         // degenerate case where either model or ideal coordinates are missing
         if (tr.frameCount !== 2) {
             const coordinateType = CCDFormat.CoordinateType.get(idealModel.obj!.data);
-            await builder.representation.applyPreset(idealStructureProperties, representationPreset, { ...representationPresetParams, coordinateType });
+            await builder.representation.applyPreset(idealStructureProperties, representationPreset, {
+                ...representationPresetParams,
+                coordinateType,
+            });
 
             return { models: [idealModel], structures: [idealStructure] };
         }
 
         const modelModel = await builder.createModel(trajectory, { modelIndex: 1 });
-        const modelModelProperties = await builder.insertModelProperties(modelModel, params.modelProperties, { isCollapsed: true });
+        const modelModelProperties = await builder.insertModelProperties(modelModel, params.modelProperties, {
+            isCollapsed: true,
+        });
 
-        const modelStructure = await builder.createStructure(modelModelProperties || modelModel, { name: 'model', params: {} });
-        const modelStructureProperties = await builder.insertStructureProperties(modelStructure, params.structureProperties);
+        const modelStructure = await builder.createStructure(modelModelProperties || modelModel, {
+            name: 'model',
+            params: {},
+        });
+        const modelStructureProperties = await builder.insertStructureProperties(
+            modelStructure,
+            params.structureProperties,
+        );
 
         // align ideal and model coordinates
         if (!params.showOriginalCoordinates) {
@@ -78,11 +107,21 @@ export const ChemicalCompontentTrajectoryHierarchyPreset = TrajectoryHierarchyPr
             }
         }
 
-        await builder.representation.applyPreset(idealStructureProperties, representationPreset, { ...representationPresetParams, aromaticBonds: params.aromaticBonds, coordinateType: 'ideal', isHidden: params.shownCoordinateType === 'model' });
-        await builder.representation.applyPreset(modelStructureProperties, representationPreset, { ...representationPresetParams, aromaticBonds: params.aromaticBonds, coordinateType: 'model', isHidden: params.shownCoordinateType === 'ideal' });
+        await builder.representation.applyPreset(idealStructureProperties, representationPreset, {
+            ...representationPresetParams,
+            aromaticBonds: params.aromaticBonds,
+            coordinateType: 'ideal',
+            isHidden: params.shownCoordinateType === 'model',
+        });
+        await builder.representation.applyPreset(modelStructureProperties, representationPreset, {
+            ...representationPresetParams,
+            aromaticBonds: params.aromaticBonds,
+            coordinateType: 'model',
+            isHidden: params.shownCoordinateType === 'ideal',
+        });
 
         return { models: [idealModel, modelModel], structures: [idealStructure, modelStructure] };
-    }
+    },
 });
 
 function getPositionTables(s1: Structure, s2: Structure) {
@@ -92,10 +131,10 @@ function getPositionTables(s1: Structure, s2: Structure) {
 
     const ret = [
         MinimizeRmsd.Positions.empty(intersecting.size),
-        MinimizeRmsd.Positions.empty(intersecting.size)
+        MinimizeRmsd.Positions.empty(intersecting.size),
     ];
     let o = 0;
-    intersecting.forEach(k => {
+    intersecting.forEach((k) => {
         ret[0].x[o] = s1.model.atomicConformation.x[m1.get(k)!];
         ret[0].y[o] = s1.model.atomicConformation.y[m1.get(k)!];
         ret[0].z[o] = s1.model.atomicConformation.z[m1.get(k)!];
@@ -120,17 +159,20 @@ function getAtomIdSerialMap(structure: Structure) {
 
 function transform(plugin: PluginContext, s: StateObjectRef<PluginStateObject.Molecule.Structure>, matrix: Mat4) {
     const b = plugin.state.data.build().to(s)
-        .insert(StateTransforms.Model.TransformStructureConformation, { transform: { name: 'matrix', params: { data: matrix, transpose: false } } });
+        .insert(StateTransforms.Model.TransformStructureConformation, {
+            transform: { name: 'matrix', params: { data: matrix, transpose: false } },
+        });
     return plugin.runTask(plugin.state.data.updateTree(b));
 }
 
 export const ChemicalComponentPreset = StructureRepresentationPresetProvider({
     id: 'preset-structure-representation-chemical-component',
     display: {
-        name: 'Chemical Component', group: 'Miscellaneous',
-        description: `Show 'Ideal' and 'Model' coordinates of chemical components.`
+        name: 'Chemical Component',
+        group: 'Miscellaneous',
+        description: `Show 'Ideal' and 'Model' coordinates of chemical components.`,
     },
-    isApplicable: o => {
+    isApplicable: (o) => {
         return CCDFormat.is(o.data.model.sourceData);
     },
     params: () => ({
@@ -145,14 +187,20 @@ export const ChemicalComponentPreset = StructureRepresentationPresetProvider({
 
         const { aromaticBonds, coordinateType, isHidden } = params;
         const components = {
-            [coordinateType]: await presetStaticComponent(plugin, structureCell, 'all', { label: capitalize(coordinateType), tags: [coordinateType] })
+            [coordinateType]: await presetStaticComponent(plugin, structureCell, 'all', {
+                label: capitalize(coordinateType),
+                tags: [coordinateType],
+            }),
         };
 
         const structure = structureCell.obj!.data;
         const { update, builder, typeParams } = StructureRepresentationPresetProvider.reprBuilder(plugin, params);
 
         const representations = {
-            [coordinateType]: builder.buildRepresentation(update, components[coordinateType], { type: 'ball-and-stick', typeParams: { ...typeParams, aromaticBonds } }, { initialState: { isHidden } }),
+            [coordinateType]: builder.buildRepresentation(update, components[coordinateType], {
+                type: 'ball-and-stick',
+                typeParams: { ...typeParams, aromaticBonds },
+            }, { initialState: { isHidden } }),
         };
         // sync UI state
         if (components[coordinateType]?.cell?.state && isHidden) {
@@ -160,8 +208,13 @@ export const ChemicalComponentPreset = StructureRepresentationPresetProvider({
         }
 
         await update.commit({ revertOnError: true });
-        await StructureRepresentationPresetProvider.updateFocusRepr(plugin, structure, params.theme?.focus?.name, params.theme?.focus?.params);
+        await StructureRepresentationPresetProvider.updateFocusRepr(
+            plugin,
+            structure,
+            params.theme?.focus?.name,
+            params.theme?.focus?.params,
+        );
 
         return { components, representations };
-    }
+    },
 });

@@ -6,7 +6,6 @@
  * @author Ventura Rivera <venturaxrivera@gmail.com>
  */
 
-
 import type { StateTransformParameters } from '../mol-plugin-ui/state/common.tsx';
 import { CreateVolumeStreamingBehavior } from '../mol-plugin/behavior/dynamic/volume-streaming/transformers.ts';
 import { DefaultPluginSpec, type PluginSpec } from '../mol-plugin/spec.ts';
@@ -16,55 +15,55 @@ import type { Loci } from '../mol-model/loci.ts';
 import type { SequenceViewMode } from './sequence.tsx';
 
 export interface PluginUISpec extends PluginSpec {
-    customParamEditors?: [StateAction | StateTransformer, StateTransformParameters.Class][],
+    customParamEditors?: [StateAction | StateTransformer, StateTransformParameters.Class][];
     components?: {
-        controls?: PluginUISpec.LayoutControls
-        remoteState?: 'none' | 'default',
-        structureTools?: React.ComponentClass | React.FC,
+        controls?: PluginUISpec.LayoutControls;
+        remoteState?: 'none' | 'default';
+        structureTools?: React.ComponentClass | React.FC;
         viewport?: {
-            view?: React.ComponentClass | React.FC,
-            controls?: React.ComponentClass | React.FC,
-            snapshotDescription?: React.ComponentClass | React.FC,
-        },
+            view?: React.ComponentClass | React.FC;
+            controls?: React.ComponentClass | React.FC;
+            snapshotDescription?: React.ComponentClass | React.FC;
+        };
         sequenceViewer?: {
-            view?: React.ComponentClass | React.FC
-            modeOptions?: SequenceViewMode[],
-            defaultMode?: SequenceViewMode,
-        }
-        hideTaskOverlay?: boolean,
-        disableDragOverlay?: boolean,
+            view?: React.ComponentClass | React.FC;
+            modeOptions?: SequenceViewMode[];
+            defaultMode?: SequenceViewMode;
+        };
+        hideTaskOverlay?: boolean;
+        disableDragOverlay?: boolean;
         selectionTools?: {
-            controls?: React.ComponentClass | React.FC,
-            granularityOptions?: Loci.Granularity[],
+            controls?: React.ComponentClass | React.FC;
+            granularityOptions?: Loci.Granularity[];
             hide?: {
-                granularity?: boolean,
-                union?: boolean,
-                subtract?: boolean,
-                intersect?: boolean,
-                set?: boolean,
-                theme?: boolean,
-                componentAdd?: boolean,
-                componentRemove?: boolean,
-                undo?: boolean,
-                help?: boolean,
-                cancel?: boolean,
-            },
-        },
-    },
+                granularity?: boolean;
+                union?: boolean;
+                subtract?: boolean;
+                intersect?: boolean;
+                set?: boolean;
+                theme?: boolean;
+                componentAdd?: boolean;
+                componentRemove?: boolean;
+                undo?: boolean;
+                help?: boolean;
+                cancel?: boolean;
+            };
+        };
+    };
 }
 
 export namespace PluginUISpec {
     export interface LayoutControls {
-        top?: React.ComponentClass | React.FC | 'none',
-        left?: React.ComponentClass | React.FC | 'none',
-        right?: React.ComponentClass | React.FC | 'none',
-        bottom?: React.ComponentClass | React.FC | 'none'
+        top?: React.ComponentClass | React.FC | 'none';
+        left?: React.ComponentClass | React.FC | 'none';
+        right?: React.ComponentClass | React.FC | 'none';
+        bottom?: React.ComponentClass | React.FC | 'none';
     }
 }
 
 export const DefaultPluginUISpec = (): PluginUISpec => ({
     ...DefaultPluginSpec(),
     customParamEditors: [
-        [CreateVolumeStreamingBehavior, VolumeStreamingCustomControls]
+        [CreateVolumeStreamingBehavior, VolumeStreamingCustomControls],
     ],
 });

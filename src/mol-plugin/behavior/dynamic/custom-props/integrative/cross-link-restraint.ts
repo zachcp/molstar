@@ -12,11 +12,11 @@ import { CrossLinkRestraintRepresentationProvider } from '../../../../../mol-mod
 import { CrossLinkColorThemeProvider } from '../../../../../mol-model-props/integrative/cross-link-restraint/color.ts';
 import type { CrossLinkRestraint as _CrossLinkRestraint } from '../../../../../mol-model-props/integrative/cross-link-restraint/property.ts';
 
-export const CrossLinkRestraint = PluginBehavior.create<{ }>({
+export const CrossLinkRestraint = PluginBehavior.create<{}>({
     name: 'integrative-cross-link-restraint',
     category: 'custom-props',
     display: { name: 'Cross Link Restraint' },
-    ctor: class extends PluginBehavior.Handler<{ }> {
+    ctor: class extends PluginBehavior.Handler<{}> {
         private provider = ModelCrossLinkRestraint.Provider;
 
         register(): void {
@@ -32,7 +32,7 @@ export const CrossLinkRestraint = PluginBehavior.create<{ }>({
             this.ctx.representation.structure.themes.colorThemeRegistry.remove(CrossLinkColorThemeProvider);
             this.ctx.representation.structure.registry.remove(CrossLinkRestraintRepresentationProvider);
         }
-    }
+    },
 });
 
 function crossLinkRestraintFromMmcif(model: Model) {

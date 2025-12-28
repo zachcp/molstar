@@ -15,21 +15,21 @@ import { resolveJob } from './query.ts';
 import { StructureCache } from './structure-wrapper.ts';
 
 export type Entry<Q extends QueryName = QueryName> = {
-    input: string,
-    query: Q,
-    modelNums?: number[],
-    copyAllCategories?: boolean,
+    input: string;
+    query: Q;
+    modelNums?: number[];
+    copyAllCategories?: boolean;
     // column major 4x4 transformation matrix, provided as array of 16 float values
-    transform?: number[],
-    params?: QueryParams<Q>,
-}
+    transform?: number[];
+    params?: QueryParams<Q>;
+};
 
 export type LocalInput = {
-    queries: Entry[],
-    output: string,
-    binary?: boolean,
-    asTarGz?: boolean,
-    gzipLevel?: number
+    queries: Entry[];
+    output: string;
+    binary?: boolean;
+    asTarGz?: boolean;
+    gzipLevel?: number;
 }[];
 
 export async function runLocal(input: LocalInput) {
@@ -41,22 +41,24 @@ export async function runLocal(input: LocalInput) {
     for (const job of input) {
         const binary = /\.bcif/.test(job.output);
         JobManager.add({
-            entries: job.queries.map(q => JobEntry({
-                entryId: q.input,
-                queryName: q.query,
-                queryParams: q.params || { },
-                modelNums: q.modelNums,
-                transform: q.transform as Mat4 ?? Mat4.identity(),
-                copyAllCategories: !!q.copyAllCategories
-            })),
+            entries: job.queries.map((q) =>
+                JobEntry({
+                    entryId: q.input,
+                    queryName: q.query,
+                    queryParams: q.params || {},
+                    modelNums: q.modelNums,
+                    transform: q.transform as Mat4 ?? Mat4.identity(),
+                    copyAllCategories: !!q.copyAllCategories,
+                })
+            ),
             writer: job.asTarGz
                 ? new TarballFileResultWriter(job.output, job.gzipLevel)
                 : new FileResultWriter(job.output),
             options: {
                 outputFilename: job.output,
                 binary,
-                tarball: job.asTarGz
-            }
+                tarball: job.asTarGz,
+            },
         });
     }
     JobManager.sort();
@@ -92,7 +94,10 @@ export async function runLocal(input: LocalInput) {
                 break;
             }
         }
-        ConsoleLogger.log('Progress', `[${++progress}/${input.length}] after ${PerformanceMonitor.format(now() - started)}.`);
+        ConsoleLogger.log(
+            'Progress',
+            `[${++progress}/${input.length}] after ${PerformanceMonitor.format(now() - started)}.`,
+        );
     }
 
     ConsoleLogger.log('Progress', `Done in ${PerformanceMonitor.format(now() - started)}.`);

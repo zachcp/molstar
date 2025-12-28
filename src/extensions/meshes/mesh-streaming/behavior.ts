@@ -25,7 +25,6 @@ import { MetadataWrapper } from '../../volumes-and-segmentations/volseg-api/util
 import { MeshlistData } from '../mesh-extension.ts';
 import type { MeshServerInfo } from './server-info.ts';
 
-
 const DEFAULT_SEGMENT_NAME = 'Untitled segment';
 const DEFAULT_SEGMENT_COLOR = ColorNames.lightgray;
 export const NO_SEGMENT = -1;
@@ -35,11 +34,10 @@ const DEFAULT_DETAIL = 7; // TODO decide a reasonable default
 /** Segments whose bounding box volume is above this value (relative to the overall bounding box) are considered as background segments */
 export const BACKGROUND_SEGMENT_VOLUME_THRESHOLD = 0.5;
 
-
-export class MeshStreaming extends PluginStateObject.CreateBehavior<MeshStreaming.Behavior>({ name: 'Mesh Streaming' }) { }
+export class MeshStreaming
+    extends PluginStateObject.CreateBehavior<MeshStreaming.Behavior>({ name: 'Mesh Streaming' }) {}
 
 export namespace MeshStreaming {
-
     export namespace Params {
         export const ViewTypeChoice = new Choice({ off: 'Off', select: 'Select', all: 'All' }, 'select'); // TODO add camera target?
         export type ViewType = Choice.Values<typeof ViewTypeChoice>;
@@ -49,26 +47,35 @@ export namespace MeshStreaming {
                 view: PD.MappedStatic('select', {
                     'off': PD.Group({}),
                     'select': PD.Group({
-                        baseDetail: PD.Numeric(DEFAULT_DETAIL, { min: 1, max: MAX_DETAIL, step: 1 }, { description: 'Detail level for the non-selected segments (lower number = better)' }),
-                        focusDetail: PD.Numeric(1, { min: 1, max: MAX_DETAIL, step: 1 }, { description: 'Detail level for the selected segment (lower number = better)' }),
+                        baseDetail: PD.Numeric(DEFAULT_DETAIL, { min: 1, max: MAX_DETAIL, step: 1 }, {
+                            description: 'Detail level for the non-selected segments (lower number = better)',
+                        }),
+                        focusDetail: PD.Numeric(1, { min: 1, max: MAX_DETAIL, step: 1 }, {
+                            description: 'Detail level for the selected segment (lower number = better)',
+                        }),
                         selectedSegment: PD.Numeric(NO_SEGMENT, {}, { isHidden: true }),
                     }, { isFlat: true }),
                     'all': PD.Group({
-                        detail: PD.Numeric(DEFAULT_DETAIL, { min: 1, max: MAX_DETAIL, step: 1 }, { description: 'Detail level for all segments (lower number = better)' })
+                        detail: PD.Numeric(DEFAULT_DETAIL, { min: 1, max: MAX_DETAIL, step: 1 }, {
+                            description: 'Detail level for all segments (lower number = better)',
+                        }),
                     }, { isFlat: true }),
-                }, { description: '"Off" hides all segments. \n"Select" shows all segments in lower detail, clicked segment in better detail. "All" shows all segment in the same level.' }),
+                }, {
+                    description:
+                        '"Off" hides all segments. \n"Select" shows all segments in lower detail, clicked segment in better detail. "All" shows all segment in the same level.',
+                }),
             };
         }
 
-        export type Definition = ReturnType<typeof create>
-        export type Values = PD.Values<Definition>
+        export type Definition = ReturnType<typeof create>;
+        export type Values = PD.Values<Definition>;
 
         export function copyValues(params: Values): Values {
             return {
                 view: {
                     name: params.view.name,
                     params: { ...params.view.params } as any,
-                }
+                },
             };
         }
         export function valuesEqual(p: Values, q: Values): boolean {
@@ -83,7 +90,8 @@ export namespace MeshStreaming {
                 case 'off':
                     return q.view.name === 'off';
                 case 'select':
-                    return q.view.name === 'select' && p.view.params.baseDetail === q.view.params.baseDetail && p.view.params.focusDetail === q.view.params.focusDetail;
+                    return q.view.name === 'select' && p.view.params.baseDetail === q.view.params.baseDetail &&
+                        p.view.params.focusDetail === q.view.params.focusDetail;
                 case 'all':
                     return q.view.name === 'all' && p.view.params.detail === q.view.params.detail;
                 default:
@@ -93,14 +101,14 @@ export namespace MeshStreaming {
     }
 
     export interface VisualInfo {
-        tag: string, // e.g. high-2, low-1 // ? remove if can be omitted
-        segmentId: number, // ? remove if unused
-        segmentName: string, // ? remove if unused
-        detailType: VisualInfo.DetailType, // ? remove if unused
-        detail: number, // ? remove if unused
-        color: Color, // move to MeshlistData?
-        visible: boolean,
-        data?: MeshlistData,
+        tag: string; // e.g. high-2, low-1 // ? remove if can be omitted
+        segmentId: number; // ? remove if unused
+        segmentName: string; // ? remove if unused
+        detailType: VisualInfo.DetailType; // ? remove if unused
+        detail: number; // ? remove if unused
+        color: Color; // move to MeshlistData?
+        visible: boolean;
+        data?: MeshlistData;
     }
     export namespace VisualInfo {
         export type DetailType = 'low' | 'high';
@@ -110,7 +118,6 @@ export namespace MeshStreaming {
         }
     }
 
-
     export class Behavior extends PluginBehavior.WithSubscribers<Params.Values> {
         private id: string;
         private ref: string = '';
@@ -119,9 +126,9 @@ export namespace MeshStreaming {
         public visuals?: { [tag: string]: VisualInfo };
         public backgroundSegments: { [segmentId: number]: boolean } = {};
         private focusObservable = this.plugin.behaviors.interaction.click.pipe( // QUESTION is this OK way to get focused segment?
-            map(evt => evt.current.loci),
-            map(loci => (loci.kind === 'group-loci') ? loci.shape.sourceData as MeshlistData : null),
-            map(data => (data?.ownerId === this.id) ? data : null), // do not process shapes created by others
+            map((evt) => evt.current.loci),
+            map((loci) => (loci.kind === 'group-loci') ? loci.shape.sourceData as MeshlistData : null),
+            map((data) => (data?.ownerId === this.id) ? data : null), // do not process shapes created by others
             distinctUntilChanged((old, current) => old?.segmentId === current?.segmentId),
         );
         private focusSubscription?: PluginCommand.Subscription = undefined;
@@ -154,7 +161,11 @@ export namespace MeshStreaming {
                 }
                 const state = this.plugin.state.data;
                 const update = state.build().to(this.ref).update(newParams);
-                PluginCommands.State.Update(this.plugin, { state, tree: update, options: { doNotUpdateCurrent: true } });
+                PluginCommands.State.Update(this.plugin, {
+                    state,
+                    tree: update,
+                    options: { doNotUpdateCurrent: true },
+                });
             }
         }
 
@@ -192,7 +203,9 @@ export namespace MeshStreaming {
                 this.backgroundSegmentsInitialized = true;
             }
             if (params.view.name === 'select' && !this.focusSubscription) {
-                this.focusSubscription = this.subscribeObservable(this.focusObservable, data => { this.selectSegment(data?.segmentId ?? NO_SEGMENT); });
+                this.focusSubscription = this.subscribeObservable(this.focusObservable, (data) => {
+                    this.selectSegment(data?.segmentId ?? NO_SEGMENT);
+                });
             } else if (params.view.name !== 'select' && this.focusSubscription) {
                 this.focusSubscription.unsubscribe();
                 this.focusSubscription = undefined;
@@ -290,7 +303,12 @@ export namespace MeshStreaming {
             if (parsed.isError) {
                 throw new Error(`Failed parsing CIF file from ${url}`);
             }
-            const meshlistData = await MeshlistData.fromCIF(parsed.result, visual.segmentId, visual.segmentName, visual.detail);
+            const meshlistData = await MeshlistData.fromCIF(
+                parsed.result,
+                visual.segmentId,
+                visual.segmentName,
+                visual.detail,
+            );
             meshlistData.ownerId = this.id;
             // const bbox = MeshlistData.bbox(meshlistData);
             // const bboxVolume = bbox ? MS.Box3D.volume(bbox) : 0.0;
@@ -317,7 +335,7 @@ export namespace MeshStreaming {
             for (const segid in bboxes) {
                 const bbox = bboxes[segid];
                 const bboxVolume = Box3D.volume(bbox);
-                isBgSegment[segid] = (bboxVolume > totalVolume * BACKGROUND_SEGMENT_VOLUME_THRESHOLD);
+                isBgSegment[segid] = bboxVolume > totalVolume * BACKGROUND_SEGMENT_VOLUME_THRESHOLD;
                 // console.log(`BBox ${segid}: ${Math.round(bboxVolume! / 1e6)} M, ${bboxVolume / totalVolume}`, bbox); // DEBUG
             }
             this.backgroundSegments = isBgSegment;
@@ -326,7 +344,5 @@ export namespace MeshStreaming {
         getDescription() {
             return Params.ViewTypeChoice.prettyName(this.params.view.name);
         }
-
     }
 }
-

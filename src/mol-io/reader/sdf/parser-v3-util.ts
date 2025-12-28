@@ -7,18 +7,18 @@
 
 import { Column } from '../../../mol-data/db.ts';
 import type { MolFile } from '../mol/parser.ts';
-import { Tokenizer, TokenBuilder, type Tokens } from '../common/text/tokenizer.ts';
+import { TokenBuilder, Tokenizer, type Tokens } from '../common/text/tokenizer.ts';
 import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.ts';
 
 export function isV3(
-    versionLine: string
+    versionLine: string,
 ): boolean {
     return versionLine.trim().endsWith('V3000');
 }
 
 export function handleCountsV3(
-    tokenizer: Tokenizer
-): { atomCount: number, bondCount: number } {
+    tokenizer: Tokenizer,
+): { atomCount: number; bondCount: number } {
     const atomCount = TokenBuilder.create(tokenizer.data, 1);
     const bondCount = TokenBuilder.create(tokenizer.data, 1);
 
@@ -33,13 +33,13 @@ export function handleCountsV3(
 
     return {
         atomCount: TokenColumn(atomCount)(Column.Schema.int).value(0),
-        bondCount: TokenColumn(bondCount)(Column.Schema.int).value(0)
+        bondCount: TokenColumn(bondCount)(Column.Schema.int).value(0),
     };
 }
 
 export function handleAtomsV3(
     tokenizer: Tokenizer,
-    atomCount: number
+    atomCount: number,
 ): MolFile['atoms'] {
     const x = TokenBuilder.create(tokenizer.data, atomCount * 2);
     const y = TokenBuilder.create(tokenizer.data, atomCount * 2);
@@ -70,13 +70,13 @@ export function handleAtomsV3(
         type_symbol: TokenColumn(type_symbol)(Column.Schema.str),
         /* No support for formal charge parsing in V3000 molfiles at the moment,
         so all charges default to 0.*/
-        formal_charge: Column.ofConst(0, atomCount, Column.Schema.int)
+        formal_charge: Column.ofConst(0, atomCount, Column.Schema.int),
     };
 }
 
 export function handleBondsV3(
     tokenizer: Tokenizer,
-    bondCount: number
+    bondCount: number,
 ): MolFile['bonds'] {
     const atomIdxA = TokenBuilder.create(tokenizer.data, bondCount * 2);
     const atomIdxB = TokenBuilder.create(tokenizer.data, bondCount * 2);

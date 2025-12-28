@@ -18,7 +18,7 @@ export function superpose(xs: StructureElement.Loci[]): MinimizeRmsd.Result[] {
     const n = getMinSize(xs);
     const input: MinimizeRmsd.Input = {
         a: getPositionTable(xs[0], n),
-        b: getPositionTable(xs[1], n)
+        b: getPositionTable(xs[1], n),
     };
 
     ret[0] = MinimizeRmsd.compute(input);
@@ -55,9 +55,9 @@ export function alignAndSuperpose(xs: StructureElement.Loci[]): AlignAndSuperpos
         ret.push({
             ...MinimizeRmsd.compute({
                 a: getPositionTable(lociA, n),
-                b: getPositionTable(lociB, n)
+                b: getPositionTable(lociB, n),
             }),
-            alignmentScore: score
+            alignmentScore: score,
         });
     }
 

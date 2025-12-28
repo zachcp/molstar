@@ -4,5 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-export * from './mvs-data.ts';
-export * from './load.ts';
+export * from "./mvs-data.ts";
+export * from "./load.ts";
+export * from "./behavior.ts";
+export * from "./components/formats.ts";

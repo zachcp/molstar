@@ -15,7 +15,7 @@ const c = {
     SHADER_SOURCE_LENGTH: 35720,
 
     MAX_TEXTURE_MAX_ANISOTROPY_EXT: 0x84FF,
-    MAX_TEXTURE_IMAGE_UNITS_NV: 0x8872
+    MAX_TEXTURE_IMAGE_UNITS_NV: 0x8872,
 } as const;
 
 const gl = {
@@ -316,11 +316,15 @@ const gl = {
     VERTEX_ATTRIB_ARRAY_TYPE: 34341,
     VERTEX_SHADER: 35633,
     VIEWPORT: 2978,
-    ZERO: 0
+    ZERO: 0,
 } as const;
-type gl = typeof gl
+type gl = typeof gl;
 
-export function createGl(width: number, height: number, contextAttributes: WebGLContextAttributes): WebGLRenderingContext {
+export function createGl(
+    width: number,
+    height: number,
+    contextAttributes: WebGLContextAttributes,
+): WebGLRenderingContext {
     const getNextId = idFactory();
     const items: { [k: number]: any } = {};
     const boundTextures: { [k: number]: any } = {};
@@ -334,7 +338,8 @@ export function createGl(width: number, height: number, contextAttributes: WebGL
     return {
         ...gl,
         canvas: {
-            width, height
+            width,
+            height,
         } as HTMLCanvasElement,
         getAttachedShaders: function (program: WebGLProgram) {
             return [] as WebGLShader[];
@@ -342,96 +347,159 @@ export function createGl(width: number, height: number, contextAttributes: WebGL
         getBufferParameter: function (target: number, pname: number) {
             return 0;
         },
-        getContextAttributes: function () { return contextAttributes; },
+        getContextAttributes: function () {
+            return contextAttributes;
+        },
         getFramebufferAttachmentParameter: function () {},
-        getProgramInfoLog: function () { return ''; },
-        getShaderInfoLog: function () { return ''; },
+        getProgramInfoLog: function () {
+            return '';
+        },
+        getShaderInfoLog: function () {
+            return '';
+        },
         getRenderbufferParameter: function () {},
         getShaderPrecisionFormat: function (shadertype: number, precisiontype: number) {
             return {
                 precision: 0,
                 rangeMax: 0,
-                rangeMin: 0
+                rangeMin: 0,
             };
         },
-        getShaderSource: function (shader: WebGLShader | null) { return ''; },
+        getShaderSource: function (shader: WebGLShader | null) {
+            return '';
+        },
         getTexParameter: function () {},
         getUniform: function () {},
         getVertexAttrib: function () {},
-        getVertexAttribOffset: function (index: number, pname: number) { return 0; },
+        getVertexAttribOffset: function (index: number, pname: number) {
+            return 0;
+        },
         hint: function (target: number, mode: number) {},
-        isBuffer: function (buffer: WebGLBuffer | null) { return true; },
-        isEnabled: function (cap: number) { return true; },
-        isFramebuffer: function (framebuffer: WebGLFramebuffer | null) { return true; },
-        isProgram: function (program: WebGLProgram | null) { return true; },
-        isRenderbuffer: function (renderbuffer: WebGLRenderbuffer | null) { return true; },
-        isShader: function (shader: WebGLShader | null) { return true; },
-        isTexture: function (texture: WebGLTexture | null) { return true; },
+        isBuffer: function (buffer: WebGLBuffer | null) {
+            return true;
+        },
+        isEnabled: function (cap: number) {
+            return true;
+        },
+        isFramebuffer: function (framebuffer: WebGLFramebuffer | null) {
+            return true;
+        },
+        isProgram: function (program: WebGLProgram | null) {
+            return true;
+        },
+        isRenderbuffer: function (renderbuffer: WebGLRenderbuffer | null) {
+            return true;
+        },
+        isShader: function (shader: WebGLShader | null) {
+            return true;
+        },
+        isTexture: function (texture: WebGLTexture | null) {
+            return true;
+        },
         getExtension: function (extensionName: string): any {
             switch (extensionName) {
-                case 'EXT_blend_minmax': return {
-                    MAX_EXT: 0,
-                    MIN_EXT: 0
-                } as unknown as EXT_blend_minmax;
-                case 'EXT_texture_filter_anisotropic': return {
-                    MAX_TEXTURE_MAX_ANISOTROPY_EXT: 0,
-                    TEXTURE_MAX_ANISOTROPY_EXT: 0
-                } as unknown as EXT_texture_filter_anisotropic;
-                case 'EXT_frag_depth': return {} as EXT_frag_depth;
-                case 'EXT_shader_texture_lod': return {} as unknown as EXT_shader_texture_lod;
-                case 'EXT_sRGB': return {
-                    FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING_EXT: 0,
-                    SRGB8_ALPHA8_EXT: 0,
-                    SRGB_ALPHA_EXT: 0,
-                    SRGB_EXT: 0
-                } as unknown as EXT_sRGB;
-                case 'OES_vertex_array_object': return {
-                    VERTEX_ARRAY_BINDING_OES: 0,
-                    bindVertexArrayOES: function (arrayObject: WebGLVertexArrayObjectOES) { },
-                    createVertexArrayOES: function (): WebGLVertexArrayObjectOES { return {}; },
-                    deleteVertexArrayOES: function (arrayObject: WebGLVertexArrayObjectOES) { },
-                    isVertexArrayOES: function (value: any) { return true; }
-                } as unknown as OES_vertex_array_object;
-                case 'WEBGL_color_buffer_float': return {
-                    FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE_EXT: 0,
-                    RGB32F_EXT: 0,
-                    RGBA32F_EXT: 0,
-                    UNSIGNED_NORMALIZED_EXT: 0
-                } as unknown as WEBGL_color_buffer_float;
-                case 'WEBGL_compressed_texture_astc': return null;
-                case 'WEBGL_compressed_texture_s3tc_srgb': return null;
-                case 'WEBGL_debug_shaders': return {
-                    getTranslatedShaderSource(shader: WebGLShader) { return ''; }
-                } as unknown as WEBGL_debug_shaders;
-                case 'WEBGL_draw_buffers': return null;
-                case 'WEBGL_lose_context': return {
-                    loseContext: function () { },
-                    restoreContext: function () { },
-                } as unknown as WEBGL_lose_context;
-                case 'WEBGL_depth_texture': return {
-                    UNSIGNED_INT_24_8_WEBGL: 0
-                } as unknown as WEBGL_depth_texture;
-                case 'WEBGL_debug_renderer_info': return {
-                    UNMASKED_RENDERER_WEBGL: 0,
-                    UNMASKED_VENDOR_WEBGL: 0
-                } as unknown as WEBGL_debug_renderer_info;
-                case 'WEBGL_compressed_texture_s3tc': return null;
-                case 'OES_texture_half_float_linear': return {} as unknown as OES_texture_half_float_linear;
-                case 'OES_texture_half_float': return {
-                    HALF_FLOAT_OES: 0
-                } as unknown as OES_texture_half_float;
-                case 'OES_texture_float_linear': return {} as unknown as OES_texture_float_linear;
-                case 'OES_texture_float': return {} as unknown as OES_texture_float;
-                case 'OES_standard_derivatives': return {
-                    FRAGMENT_SHADER_DERIVATIVE_HINT_OES: 0
-                } as unknown as OES_standard_derivatives;
-                case 'OES_element_index_uint': return {} as unknown as OES_element_index_uint;
-                case 'ANGLE_instanced_arrays': return {
-                    drawArraysInstancedANGLE: function (mode: number, first: number, count: number, primcount: number) {},
-                    drawElementsInstancedANGLE: function (mode: number, count: number, type: number, offset: number, primcount: number) {},
-                    vertexAttribDivisorANGLE: function (index: number, divisor: number) {},
-                    VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE: 0
-                } as unknown as ANGLE_instanced_arrays;
+                case 'EXT_blend_minmax':
+                    return {
+                        MAX_EXT: 0,
+                        MIN_EXT: 0,
+                    } as unknown as EXT_blend_minmax;
+                case 'EXT_texture_filter_anisotropic':
+                    return {
+                        MAX_TEXTURE_MAX_ANISOTROPY_EXT: 0,
+                        TEXTURE_MAX_ANISOTROPY_EXT: 0,
+                    } as unknown as EXT_texture_filter_anisotropic;
+                case 'EXT_frag_depth':
+                    return {} as EXT_frag_depth;
+                case 'EXT_shader_texture_lod':
+                    return {} as unknown as EXT_shader_texture_lod;
+                case 'EXT_sRGB':
+                    return {
+                        FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING_EXT: 0,
+                        SRGB8_ALPHA8_EXT: 0,
+                        SRGB_ALPHA_EXT: 0,
+                        SRGB_EXT: 0,
+                    } as unknown as EXT_sRGB;
+                case 'OES_vertex_array_object':
+                    return {
+                        VERTEX_ARRAY_BINDING_OES: 0,
+                        bindVertexArrayOES: function (arrayObject: WebGLVertexArrayObjectOES) {},
+                        createVertexArrayOES: function (): WebGLVertexArrayObjectOES {
+                            return {};
+                        },
+                        deleteVertexArrayOES: function (arrayObject: WebGLVertexArrayObjectOES) {},
+                        isVertexArrayOES: function (value: any) {
+                            return true;
+                        },
+                    } as unknown as OES_vertex_array_object;
+                case 'WEBGL_color_buffer_float':
+                    return {
+                        FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE_EXT: 0,
+                        RGB32F_EXT: 0,
+                        RGBA32F_EXT: 0,
+                        UNSIGNED_NORMALIZED_EXT: 0,
+                    } as unknown as WEBGL_color_buffer_float;
+                case 'WEBGL_compressed_texture_astc':
+                    return null;
+                case 'WEBGL_compressed_texture_s3tc_srgb':
+                    return null;
+                case 'WEBGL_debug_shaders':
+                    return {
+                        getTranslatedShaderSource(shader: WebGLShader) {
+                            return '';
+                        },
+                    } as unknown as WEBGL_debug_shaders;
+                case 'WEBGL_draw_buffers':
+                    return null;
+                case 'WEBGL_lose_context':
+                    return {
+                        loseContext: function () {},
+                        restoreContext: function () {},
+                    } as unknown as WEBGL_lose_context;
+                case 'WEBGL_depth_texture':
+                    return {
+                        UNSIGNED_INT_24_8_WEBGL: 0,
+                    } as unknown as WEBGL_depth_texture;
+                case 'WEBGL_debug_renderer_info':
+                    return {
+                        UNMASKED_RENDERER_WEBGL: 0,
+                        UNMASKED_VENDOR_WEBGL: 0,
+                    } as unknown as WEBGL_debug_renderer_info;
+                case 'WEBGL_compressed_texture_s3tc':
+                    return null;
+                case 'OES_texture_half_float_linear':
+                    return {} as unknown as OES_texture_half_float_linear;
+                case 'OES_texture_half_float':
+                    return {
+                        HALF_FLOAT_OES: 0,
+                    } as unknown as OES_texture_half_float;
+                case 'OES_texture_float_linear':
+                    return {} as unknown as OES_texture_float_linear;
+                case 'OES_texture_float':
+                    return {} as unknown as OES_texture_float;
+                case 'OES_standard_derivatives':
+                    return {
+                        FRAGMENT_SHADER_DERIVATIVE_HINT_OES: 0,
+                    } as unknown as OES_standard_derivatives;
+                case 'OES_element_index_uint':
+                    return {} as unknown as OES_element_index_uint;
+                case 'ANGLE_instanced_arrays':
+                    return {
+                        drawArraysInstancedANGLE: function (
+                            mode: number,
+                            first: number,
+                            count: number,
+                            primcount: number,
+                        ) {},
+                        drawElementsInstancedANGLE: function (
+                            mode: number,
+                            count: number,
+                            type: number,
+                            offset: number,
+                            primcount: number,
+                        ) {},
+                        vertexAttribDivisorANGLE: function (index: number, divisor: number) {},
+                        VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE: 0,
+                    } as unknown as ANGLE_instanced_arrays;
             }
             return null;
         },
@@ -442,13 +510,15 @@ export function createGl(width: number, height: number, contextAttributes: WebGL
             };
             return id;
         },
-        deleteBuffer: function () { },
-        bindBuffer: function () { },
-        bufferData: function () { },
+        deleteBuffer: function () {},
+        bindBuffer: function () {},
+        bufferData: function () {},
         getParameter: function (pname: number) {
             switch (pname) {
-                case c.MAX_TEXTURE_MAX_ANISOTROPY_EXT: return 16;
-                case c.MAX_TEXTURE_IMAGE_UNITS_NV: return 16;
+                case c.MAX_TEXTURE_MAX_ANISOTROPY_EXT:
+                    return 16;
+                case c.MAX_TEXTURE_IMAGE_UNITS_NV:
+                    return 16;
 
                 case gl.ELEMENT_ARRAY_BUFFER_BINDING:
                 case gl.ARRAY_BUFFER_BINDING:
@@ -582,12 +652,24 @@ export function createGl(width: number, height: number, contextAttributes: WebGL
         },
         getSupportedExtensions: function () {
             return [
-                'EXT_blend_minmax', 'EXT_texture_filter_anisotropic', 'EXT_frag_depth',
-                'EXT_shader_texture_lod', 'EXT_sRGB', 'OES_vertex_array_object',
-                'WEBGL_color_buffer_float', 'WEBGL_debug_shaders', 'WEBGL_lose_context',
-                'WEBGL_depth_texture', 'WEBGL_debug_renderer_info', 'OES_texture_half_float_linear',
-                'OES_texture_half_float', 'OES_texture_float_linear', 'OES_texture_float',
-                'OES_standard_derivatives', 'OES_element_index_uint', 'ANGLE_instanced_arrays'
+                'EXT_blend_minmax',
+                'EXT_texture_filter_anisotropic',
+                'EXT_frag_depth',
+                'EXT_shader_texture_lod',
+                'EXT_sRGB',
+                'OES_vertex_array_object',
+                'WEBGL_color_buffer_float',
+                'WEBGL_debug_shaders',
+                'WEBGL_lose_context',
+                'WEBGL_depth_texture',
+                'WEBGL_debug_renderer_info',
+                'OES_texture_half_float_linear',
+                'OES_texture_half_float',
+                'OES_texture_float_linear',
+                'OES_texture_float',
+                'OES_standard_derivatives',
+                'OES_element_index_uint',
+                'ANGLE_instanced_arrays',
             ];
         },
         createShader: function (type: number) {
@@ -600,13 +682,16 @@ export function createGl(width: number, height: number, contextAttributes: WebGL
         },
         getShaderParameter: function (shader: WebGLShader, pname: number) {
             switch (pname) {
-                case gl.SHADER_TYPE: return items[shader as number].type;
-                case gl.COMPILE_STATUS: return true;
-                default: throw new Error(`getShaderParameter ${pname}`);
+                case gl.SHADER_TYPE:
+                    return items[shader as number].type;
+                case gl.COMPILE_STATUS:
+                    return true;
+                default:
+                    throw new Error(`getShaderParameter ${pname}`);
             }
         },
-        shaderSource: function () { },
-        compileShader: function () { },
+        shaderSource: function () {},
+        compileShader: function () {},
         createProgram: function () {
             const id = getNextId();
             items[id] = {
@@ -618,22 +703,30 @@ export function createGl(width: number, height: number, contextAttributes: WebGL
         attachShader: function (program: WebGLProgram, shader: WebGLShader) {
             items[program as number].shaders.push(shader as number);
         },
-        bindAttribLocation: function () { },
-        linkProgram: function () { },
+        bindAttribLocation: function () {},
+        linkProgram: function () {},
         getProgramParameter: function (program: number, pname: number) {
             switch (pname) {
-                case gl.LINK_STATUS: return true;
-                case gl.ACTIVE_UNIFORMS: return 4;
-                case gl.ACTIVE_ATTRIBUTES: return 0;
-                case gl.ACTIVE_UNIFORMS: return 0;
-                case gl.DELETE_STATUS: return false;
-                case gl.VALIDATE_STATUS: return true;
-                case gl.ATTACHED_SHADERS: return 2;
-                default: throw new Error(`getProgramParameter ${pname}`);
+                case gl.LINK_STATUS:
+                    return true;
+                case gl.ACTIVE_UNIFORMS:
+                    return 4;
+                case gl.ACTIVE_ATTRIBUTES:
+                    return 0;
+                case gl.ACTIVE_UNIFORMS:
+                    return 0;
+                case gl.DELETE_STATUS:
+                    return false;
+                case gl.VALIDATE_STATUS:
+                    return true;
+                case gl.ATTACHED_SHADERS:
+                    return 2;
+                default:
+                    throw new Error(`getProgramParameter ${pname}`);
             }
         },
-        deleteShader: function () { },
-        deleteProgram: function () { },
+        deleteShader: function () {},
+        deleteProgram: function () {},
         viewport: function (x: number, y: number, width: number, height: number) {
             viewport.x = x;
             viewport.y = y;
@@ -646,13 +739,13 @@ export function createGl(width: number, height: number, contextAttributes: WebGL
             colorClearValue.b = blue;
             colorClearValue.a = alpha;
         },
-        clearDepth: function () { },
-        depthFunc: function () { },
-        enable: function () { },
-        disable: function () { },
-        frontFace: function () { },
-        cullFace: function () { },
-        activeTexture: function () { },
+        clearDepth: function () {},
+        depthFunc: function () {},
+        enable: function () {},
+        disable: function () {},
+        frontFace: function () {},
+        cullFace: function () {},
+        activeTexture: function () {},
         createTexture: function () {
             const id = getNextId();
             items[id] = {
@@ -660,17 +753,17 @@ export function createGl(width: number, height: number, contextAttributes: WebGL
             };
             return id;
         },
-        deleteTexture: function () { },
+        deleteTexture: function () {},
         bindTexture: function (target: number, texture: WebGLTexture | null) {
             boundTextures[target as number] = texture;
         },
-        texParameterf: function () { },
-        texParameteri: function () { },
-        pixelStorei: function () { },
-        texImage2D: function () { },
-        texSubImage2D: function () { },
-        compressedTexImage2D: function () { },
-        useProgram: function () { },
+        texParameterf: function () {},
+        texParameteri: function () {},
+        pixelStorei: function () {},
+        texImage2D: function () {},
+        texSubImage2D: function () {},
+        compressedTexImage2D: function () {},
+        useProgram: function () {},
         getUniformLocation: function () {
             return 0;
         },
@@ -685,42 +778,44 @@ export function createGl(width: number, height: number, contextAttributes: WebGL
             return {
                 size: 1,
                 type: gl.FLOAT,
-                name: `__activeAttrib${index}`
+                name: `__activeAttrib${index}`,
             };
         },
-        clear: function () { },
-        uniform1f: function () { },
-        uniform1fv: function () { },
-        uniform1i: function () { },
-        uniform1iv: function () { },
-        uniform2f: function () { },
-        uniform2fv: function () { },
-        uniform2i: function () { },
-        uniform2iv: function () { },
-        uniform3f: function () { },
-        uniform3fv: function () { },
-        uniform3i: function () { },
-        uniform3iv: function () { },
-        uniform4f: function () { },
-        uniform4fv: function () { },
-        uniform4i: function () { },
-        uniform4iv: function () { },
-        uniformMatrix2fv: function () { },
-        uniformMatrix3fv: function () { },
-        uniformMatrix4fv: function () { },
-        getAttribLocation: function () { return 1; },
-        vertexAttribPointer: function () { },
-        enableVertexAttribArray: function () { },
-        disableVertexAttribArray: function () { },
-        drawElements: function () { },
-        drawArrays: function () { },
-        depthMask: function () { },
+        clear: function () {},
+        uniform1f: function () {},
+        uniform1fv: function () {},
+        uniform1i: function () {},
+        uniform1iv: function () {},
+        uniform2f: function () {},
+        uniform2fv: function () {},
+        uniform2i: function () {},
+        uniform2iv: function () {},
+        uniform3f: function () {},
+        uniform3fv: function () {},
+        uniform3i: function () {},
+        uniform3iv: function () {},
+        uniform4f: function () {},
+        uniform4fv: function () {},
+        uniform4i: function () {},
+        uniform4iv: function () {},
+        uniformMatrix2fv: function () {},
+        uniformMatrix3fv: function () {},
+        uniformMatrix4fv: function () {},
+        getAttribLocation: function () {
+            return 1;
+        },
+        vertexAttribPointer: function () {},
+        enableVertexAttribArray: function () {},
+        disableVertexAttribArray: function () {},
+        drawElements: function () {},
+        drawArrays: function () {},
+        depthMask: function () {},
         depthRange: function (zNear: number, zFar: number) {
             depthRange.zNear = zNear;
             depthRange.zFar = zFar;
         },
-        bufferSubData: function () { },
-        blendFunc: function () { },
+        bufferSubData: function () {},
+        blendFunc: function () {},
         createFramebuffer: function () {
             const id = getNextId();
             items[id] = {
@@ -729,12 +824,12 @@ export function createGl(width: number, height: number, contextAttributes: WebGL
             };
             return id;
         },
-        bindFramebuffer: function () { },
-        framebufferTexture2D: function () { },
+        bindFramebuffer: function () {},
+        framebufferTexture2D: function () {},
         checkFramebufferStatus: function () {
             return gl.FRAMEBUFFER_COMPLETE;
         },
-        deleteFramebuffer: function () { },
+        deleteFramebuffer: function () {},
         createRenderbuffer: function () {
             const id = getNextId();
             items[id] = {
@@ -743,48 +838,52 @@ export function createGl(width: number, height: number, contextAttributes: WebGL
             };
             return id;
         },
-        bindRenderbuffer: function () { },
-        deleteRenderbuffer: function () { },
-        renderbufferStorage: function () { },
-        framebufferRenderbuffer: function () { },
-        scissor: function () { },
-        colorMask: function () { },
-        lineWidth: function () { },
-        vertexAttrib1f: function () { },
-        vertexAttrib1fv: function () { },
-        vertexAttrib2f: function () { },
-        vertexAttrib2fv: function () { },
-        vertexAttrib3f: function () { },
-        vertexAttrib3fv: function () { },
-        vertexAttrib4f: function () { },
-        vertexAttrib4fv: function () { },
-        validateProgram: function () { },
-        generateMipmap: function () { },
-        isContextLost: function () { return false; },
+        bindRenderbuffer: function () {},
+        deleteRenderbuffer: function () {},
+        renderbufferStorage: function () {},
+        framebufferRenderbuffer: function () {},
+        scissor: function () {},
+        colorMask: function () {},
+        lineWidth: function () {},
+        vertexAttrib1f: function () {},
+        vertexAttrib1fv: function () {},
+        vertexAttrib2f: function () {},
+        vertexAttrib2fv: function () {},
+        vertexAttrib3f: function () {},
+        vertexAttrib3fv: function () {},
+        vertexAttrib4f: function () {},
+        vertexAttrib4fv: function () {},
+        validateProgram: function () {},
+        generateMipmap: function () {},
+        isContextLost: function () {
+            return false;
+        },
         drawingBufferWidth: width,
         drawingBufferHeight: height,
         drawingBufferColorSpace: 'srgb',
-        blendColor: function () { },
-        blendEquation: function () { },
-        blendEquationSeparate: function () { },
-        blendFuncSeparate: function () { },
-        clearStencil: function () { },
-        compressedTexSubImage2D: function () { },
-        copyTexImage2D: function () { },
-        copyTexSubImage2D: function () { },
-        detachShader: function () { },
-        finish: function () { },
-        flush: function () { },
-        getError: function () { return 0; },
-        polygonOffset: function () { },
-        readPixels: function () { },
-        sampleCoverage: function () { },
-        stencilFunc: function () { },
-        stencilFuncSeparate: function () { },
-        stencilMask: function () { },
-        stencilMaskSeparate: function () { },
-        stencilOp: function () { },
-        stencilOpSeparate: function () { },
+        blendColor: function () {},
+        blendEquation: function () {},
+        blendEquationSeparate: function () {},
+        blendFuncSeparate: function () {},
+        clearStencil: function () {},
+        compressedTexSubImage2D: function () {},
+        copyTexImage2D: function () {},
+        copyTexSubImage2D: function () {},
+        detachShader: function () {},
+        finish: function () {},
+        flush: function () {},
+        getError: function () {
+            return 0;
+        },
+        polygonOffset: function () {},
+        readPixels: function () {},
+        sampleCoverage: function () {},
+        stencilFunc: function () {},
+        stencilFuncSeparate: function () {},
+        stencilMask: function () {},
+        stencilMaskSeparate: function () {},
+        stencilOp: function () {},
+        stencilOpSeparate: function () {},
         unpackColorSpace: 'srgb',
     };
 }

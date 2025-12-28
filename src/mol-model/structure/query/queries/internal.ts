@@ -12,7 +12,7 @@ import type { StructureQuery } from '../query.ts';
 import { StructureSelection } from '../selection.ts';
 import type { QueryContext } from '../context.ts';
 import { BondType } from '../../model/types.ts';
-import { type BundleElement, Bundle } from '../../structure/element/bundle.ts';
+import { Bundle, type BundleElement } from '../../structure/element/bundle.ts';
 import type { UnitIndex } from '../../structure/element/element.ts';
 
 export function defaultBondTest(ctx: QueryContext) {
@@ -80,7 +80,10 @@ export function atomicHet(): StructureQuery {
             l.element = elements[0];
             if (P.entity.type(l) === 'water') continue;
             if (P.entity.type(l) === 'polymer') {
-                const residuesIt = Segmentation.transientSegments(unit.model.atomicHierarchy.residueAtomSegments, elements);
+                const residuesIt = Segmentation.transientSegments(
+                    unit.model.atomicHierarchy.residueAtomSegments,
+                    elements,
+                );
                 let residueCount = 0;
                 while (residuesIt.hasNext) {
                     residueCount++;
@@ -113,7 +116,7 @@ export function bundleElementImpl(groupedUnits: number[][], ranges: number[], se
     return {
         groupedUnits: groupedUnits as any as SortedArray<number>[],
         ranges: ranges as any as SortedArray<UnitIndex>,
-        set: set as any as SortedArray<UnitIndex>
+        set: set as any as SortedArray<UnitIndex>,
     };
 }
 
@@ -121,7 +124,7 @@ export function bundleGenerator(elements: BundleElement[]): StructureQuery {
     return function query_bundleGenerator(ctx) {
         const bundle: Bundle = {
             hash: ctx.inputStructure.hashCode,
-            elements
+            elements,
         };
 
         return StructureSelection.Sequence(ctx.inputStructure, [Bundle.toStructure(bundle, ctx.inputStructure)]);

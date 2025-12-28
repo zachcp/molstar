@@ -10,13 +10,13 @@
 const COMPRESSED_EXT_LIST = ['gz', 'zip'];
 
 export interface FileNameInfo {
-    path: string
-    name: string
-    ext: string
-    base: string
-    dir: string
-    protocol: string
-    query: string
+    path: string;
+    name: string;
+    ext: string;
+    base: string;
+    dir: string;
+    protocol: string;
+    query: string;
 }
 
 export function getFileNameInfo(fileName: string): FileNameInfo {

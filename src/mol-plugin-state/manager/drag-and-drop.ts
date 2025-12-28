@@ -4,25 +4,24 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-
 import { OpenFiles } from '../actions/file.ts';
 import { Asset } from '../../mol-util/assets.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 
-export type PluginDragAndDropHandler = (files: File[], plugin: PluginContext) => Promise<boolean> | boolean
+export type PluginDragAndDropHandler = (files: File[], plugin: PluginContext) => Promise<boolean> | boolean;
 
 export class DragAndDropManager {
     private handlers: [name: string, handler: PluginDragAndDropHandler][] = [];
 
     addHandler(name: string, handler: PluginDragAndDropHandler) {
-        const index = this.handlers.findIndex(h => h[0] === name);
+        const index = this.handlers.findIndex((h) => h[0] === name);
         if (index < 0) this.handlers.push([name, handler]);
         else this.handlers[index][1] = handler;
     }
 
     removeHandler(name: string) {
-        const index = this.handlers.findIndex(h => h[0] === name);
+        const index = this.handlers.findIndex((h) => h[0] === name);
         if (index >= 0) this.handlers.splice(index, 1);
     }
 
@@ -45,7 +44,7 @@ export class DragAndDropManager {
 }
 
 function defaultDragAndDropHandler(plugin: PluginContext, files: File[]) {
-    const sessions = files.filter(f => {
+    const sessions = files.filter((f) => {
         const fn = f.name.toLowerCase();
         return fn.endsWith('.molx') || fn.endsWith('.molj');
     });
@@ -54,9 +53,9 @@ function defaultDragAndDropHandler(plugin: PluginContext, files: File[]) {
         PluginCommands.State.Snapshots.OpenFile(plugin, { file: sessions[0] });
     } else {
         plugin.runTask(plugin.state.data.applyAction(OpenFiles, {
-            files: files.map(f => Asset.File(f)),
+            files: files.map((f) => Asset.File(f)),
             format: { name: 'auto', params: {} },
-            visuals: true
+            visuals: true,
         }));
     }
 }

@@ -12,7 +12,10 @@ import { Mask } from "./mask.ts";
 import type { Progress, Task } from "../mol-task/index.ts";
 
 export * from "./value-cell.ts";
-export { BitFlags, StringBuilder, UUID, Mask };
+export * from "./color/index.ts";
+export * from "./assets.ts";
+export * from "./type-helpers.ts";
+export { BitFlags, Mask, StringBuilder, UUID };
 
 export const noop: () => void = function (): void {};
 
@@ -98,8 +101,9 @@ export function shallowEqualObjects(a: {}, b: {}): boolean {
   const keys: string[] = Object.keys(a);
   if (Object.keys(b).length !== keys.length) return false;
   for (const k of keys) {
-    if (!hasOwnProperty.call(a, k) || (a as any)[k] !== (b as any)[k])
+    if (!hasOwnProperty.call(a, k) || (a as any)[k] !== (b as any)[k]) {
       return false;
+    }
   }
   return true;
 }

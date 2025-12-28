@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra.ts';
+import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra.ts';
 import { MeshBuilder } from '../mesh-builder.ts';
 import { getSphere } from './sphere.ts';
 
@@ -18,6 +18,17 @@ function setEllipsoidMat(m: Mat4, center: Vec3, dirMajor: Vec3, dirMinor: Vec3, 
     return Mat4.scale(m, m, radiusScale);
 }
 
-export function addEllipsoid(state: MeshBuilder.State, center: Vec3, dirMajor: Vec3, dirMinor: Vec3, radiusScale: Vec3, detail: number) {
-    MeshBuilder.addPrimitive(state, setEllipsoidMat(tmpEllipsoidMat, center, dirMajor, dirMinor, radiusScale), getSphere(detail));
+export function addEllipsoid(
+    state: MeshBuilder.State,
+    center: Vec3,
+    dirMajor: Vec3,
+    dirMinor: Vec3,
+    radiusScale: Vec3,
+    detail: number,
+) {
+    MeshBuilder.addPrimitive(
+        state,
+        setEllipsoidMat(tmpEllipsoidMat, center, dirMajor, dirMinor, radiusScale),
+        getSphere(detail),
+    );
 }

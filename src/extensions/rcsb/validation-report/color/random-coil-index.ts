@@ -8,10 +8,10 @@ import type { ThemeDataContext } from '../../../../mol-theme/theme.ts';
 import type { ColorTheme, LocationColor } from '../../../../mol-theme/color.ts';
 import { ParamDefinition as PD } from '../../../../mol-util/param-definition.ts';
 import { Color, ColorScale } from '../../../../mol-util/color/index.ts';
-import { StructureElement, Model, type ElementIndex, Bond } from '../../../../mol-model/structure.ts';
+import { Bond, type ElementIndex, Model, StructureElement } from '../../../../mol-model/structure.ts';
 import type { Location } from '../../../../mol-model/location.ts';
 import type { CustomProperty } from '../../../../mol-model-props/common/custom-property.ts';
-import { ValidationReportProvider, ValidationReport } from '../prop.ts';
+import { ValidationReport, ValidationReportProvider } from '../prop.ts';
 import { ColorThemeCategory } from '../../../../mol-theme/color/categories.ts';
 
 const DefaultColor = Color(0xCCCCCC);
@@ -54,8 +54,9 @@ export function RandomCoilIndexColorTheme(ctx: ThemeDataContext, props: {}): Col
         color,
         props,
         contextHash,
-        description: 'Assigns residue colors according to the Random Coil Index value. Data from wwPDB Validation Report, obtained via RCSB PDB.',
-        legend: scale.legend
+        description:
+            'Assigns residue colors according to the Random Coil Index value. Data from wwPDB Validation Report, obtained via RCSB PDB.',
+        legend: scale.legend,
     };
 }
 
@@ -66,9 +67,14 @@ export const RandomCoilIndexColorThemeProvider: ColorTheme.Provider<{}, Validati
     factory: RandomCoilIndexColorTheme,
     getParams: () => ({}),
     defaultValues: PD.getDefaultValues({}),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure && ValidationReport.isApplicable(ctx.structure.models[0]) && Model.isFromNmr(ctx.structure.models[0]),
+    isApplicable: (ctx: ThemeDataContext) =>
+        !!ctx.structure && ValidationReport.isApplicable(ctx.structure.models[0]) &&
+        Model.isFromNmr(ctx.structure.models[0]),
     ensureCustomProperties: {
-        attach: (ctx: CustomProperty.Context, data: ThemeDataContext) => data.structure ? ValidationReportProvider.attach(ctx, data.structure.models[0], void 0, true) : Promise.resolve(),
-        detach: (data) => data.structure && ValidationReportProvider.ref(data.structure.models[0], false)
-    }
+        attach: (ctx: CustomProperty.Context, data: ThemeDataContext) =>
+            data.structure
+                ? ValidationReportProvider.attach(ctx, data.structure.models[0], void 0, true)
+                : Promise.resolve(),
+        detach: (data) => data.structure && ValidationReportProvider.ref(data.structure.models[0], false),
+    },
 };

@@ -21,34 +21,35 @@ import { CustomPropertyDescriptor } from '../../mol-model/custom-property.ts';
 export { CustomElementProperty };
 
 interface CustomElementProperty<T> {
-    propertyProvider: CustomModelProperty.Provider<{}, CustomElementProperty.Value<T>>
-    colorThemeProvider?: ColorTheme.Provider<{}>
-    labelProvider?: LociLabelProvider
+    propertyProvider: CustomModelProperty.Provider<{}, CustomElementProperty.Value<T>>;
+    colorThemeProvider?: ColorTheme.Provider<{}>;
+    labelProvider?: LociLabelProvider;
 }
 
 namespace CustomElementProperty {
-    export type Value<T> = Map<ElementIndex, T>
-    export type Data<T> = CustomProperty.Data<Value<T>>
+    export type Value<T> = Map<ElementIndex, T>;
+    export type Data<T> = CustomProperty.Data<Value<T>>;
 
     export interface Builder<T> {
-        label: string
-        name: string
-        getData(model: Model, ctx?: CustomProperty.Context): Data<T> | Promise<Data<T>>
+        label: string;
+        name: string;
+        getData(model: Model, ctx?: CustomProperty.Context): Data<T> | Promise<Data<T>>;
         coloring?: {
-            getColor: (p: T) => Color
-            defaultColor: Color
-        }
-        getLabel?: (p: T) => string | undefined
-        isApplicable?: (data: Model) => boolean,
-        type?: 'dynamic' | 'static',
+            getColor: (p: T) => Color;
+            defaultColor: Color;
+        };
+        getLabel?: (p: T) => string | undefined;
+        isApplicable?: (data: Model) => boolean;
+        type?: 'dynamic' | 'static';
     }
 
     export function create<T>(builder: Builder<T>): CustomElementProperty<T> {
         const modelProperty = createModelProperty(builder);
         return {
             propertyProvider: modelProperty,
-            colorThemeProvider: builder.coloring?.getColor && createColorThemeProvider(modelProperty, builder.coloring.getColor, builder.coloring.defaultColor),
-            labelProvider: builder.getLabel && createLabelProvider(modelProperty, builder.getLabel)
+            colorThemeProvider: builder.coloring?.getColor &&
+                createColorThemeProvider(modelProperty, builder.coloring.getColor, builder.coloring.defaultColor),
+            labelProvider: builder.getLabel && createLabelProvider(modelProperty, builder.getLabel),
         };
     }
 
@@ -64,12 +65,15 @@ namespace CustomElementProperty {
             isApplicable: (data: Model) => !builder.isApplicable || !!builder.isApplicable(data),
             obtain: async (ctx: CustomProperty.Context, data: Model) => {
                 return await builder.getData(data, ctx);
-            }
+            },
         });
     }
 
-    function createColorThemeProvider<T>(modelProperty: CustomModelProperty.Provider<{}, Value<T>>, getColor: (p: T) => Color, defaultColor: Color): ColorTheme.Provider<{}> {
-
+    function createColorThemeProvider<T>(
+        modelProperty: CustomModelProperty.Provider<{}, Value<T>>,
+        getColor: (p: T) => Color,
+        defaultColor: Color,
+    ): ColorTheme.Provider<{}> {
         function Coloring(ctx: ThemeDataContext, props: {}): ColorTheme<{}> {
             let color: LocationColor;
 
@@ -95,7 +99,7 @@ namespace CustomElementProperty {
                 color: color,
                 props: props,
                 contextHash,
-                description: `Assign element colors based on '${modelProperty.label}' data.`
+                description: `Assign element colors based on '${modelProperty.label}' data.`,
             };
         }
 
@@ -108,13 +112,21 @@ namespace CustomElementProperty {
             defaultValues: {},
             isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
             ensureCustomProperties: {
-                attach: (ctx: CustomProperty.Context, data: ThemeDataContext) => data.structure ? modelProperty.attach(ctx, data.structure.models[0], void 0, true) : Promise.resolve(),
-                detach: (data: ThemeDataContext) => data.structure && data.structure.models[0].customProperties.reference(modelProperty.descriptor, false)
-            }
+                attach: (ctx: CustomProperty.Context, data: ThemeDataContext) =>
+                    data.structure
+                        ? modelProperty.attach(ctx, data.structure.models[0], void 0, true)
+                        : Promise.resolve(),
+                detach: (data: ThemeDataContext) =>
+                    data.structure &&
+                    data.structure.models[0].customProperties.reference(modelProperty.descriptor, false),
+            },
         };
     }
 
-    function createLabelProvider<T>(modelProperty: CustomModelProperty.Provider<{}, Value<T>>, getLabel: (p: T) => string | undefined): LociLabelProvider {
+    function createLabelProvider<T>(
+        modelProperty: CustomModelProperty.Provider<{}, Value<T>>,
+        getLabel: (p: T) => string | undefined,
+    ): LociLabelProvider {
         return {
             label: (loci: Loci) => {
                 if (loci.kind === 'element-loci') {
@@ -127,7 +139,7 @@ namespace CustomElementProperty {
                     return getLabel(value);
                 }
                 return;
-            }
+            },
         };
     }
 }

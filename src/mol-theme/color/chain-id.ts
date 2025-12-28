@@ -4,14 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Unit, StructureProperties, StructureElement, Bond, type Structure, Model } from '../../mol-model/structure.ts';
+import { Bond, Model, type Structure, StructureElement, StructureProperties, Unit } from '../../mol-model/structure.ts';
 import { Color } from '../../mol-util/color/index.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ColorTheme, LocationColor } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import type { ThemeDataContext } from '../../mol-theme/theme.ts';
-import { getPaletteParams, getPalette } from '../../mol-util/color/palette.ts';
-import type { TableLegend, ScaleLegend } from '../../mol-util/legend.ts';
+import { getPalette, getPaletteParams } from '../../mol-util/color/palette.ts';
+import type { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
 import { ColorThemeCategory } from './categories.ts';
 
 const DefaultList = 'many-distinct';
@@ -22,10 +22,10 @@ export const ChainIdColorThemeParams = {
     asymId: PD.Select('auth', PD.arrayToOptions<AsymIdType>(['auth', 'label'])),
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
 };
-export type ChainIdColorThemeParams = typeof ChainIdColorThemeParams
+export type ChainIdColorThemeParams = typeof ChainIdColorThemeParams;
 export function getChainIdColorThemeParams(ctx: ThemeDataContext) {
     const params = PD.clone(ChainIdColorThemeParams);
-    if (ctx.structure?.models.some(m => m.coarseHierarchy.isDefined)) {
+    if (ctx.structure?.models.some((m) => m.coarseHierarchy.isDefined)) {
         params.asymId.defaultValue = 'label';
     }
     return params;
@@ -36,9 +36,7 @@ type AsymIdType = 'auth' | 'label';
 function getAsymId(unit: Unit, type: AsymIdType): StructureElement.Property<string> {
     switch (unit.kind) {
         case Unit.Kind.Atomic:
-            return type === 'auth'
-                ? StructureProperties.chain.auth_asym_id
-                : StructureProperties.chain.label_asym_id;
+            return type === 'auth' ? StructureProperties.chain.auth_asym_id : StructureProperties.chain.label_asym_id;
         case Unit.Kind.Spheres:
         case Unit.Kind.Gaussians:
             return StructureProperties.coarse.asym_id;
@@ -47,9 +45,7 @@ function getAsymId(unit: Unit, type: AsymIdType): StructureElement.Property<stri
 
 function getAsymIdKey(location: StructureElement.Location, type: AsymIdType) {
     const asymId = getAsymId(location.unit, type)(location);
-    return location.structure.root.models.length > 1
-        ? getKey(location.unit.model, asymId)
-        : asymId;
+    return location.structure.root.models.length > 1 ? getKey(location.unit.model, asymId) : asymId;
 }
 
 function getKey(model: Model, asymId: string) {
@@ -64,9 +60,7 @@ function getAsymIdSerialMap(structure: Structure, type: AsymIdType) {
         let count = 0;
         m.properties.structAsymMap.forEach(({ auth_id }, label_id) => {
             const asymId = type === 'auth' ? auth_id : label_id;
-            const k = structure.models.length > 1
-                ? getKey(m, asymId)
-                : asymId;
+            const k = structure.models.length > 1 ? getKey(m, asymId) : asymId;
             if (!map.has(k)) {
                 map.set(k, count + offset);
                 ++count;
@@ -76,7 +70,10 @@ function getAsymIdSerialMap(structure: Structure, type: AsymIdType) {
     return map;
 }
 
-export function ChainIdColorTheme(ctx: ThemeDataContext, props: PD.Values<ChainIdColorThemeParams>): ColorTheme<ChainIdColorThemeParams> {
+export function ChainIdColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<ChainIdColorThemeParams>,
+): ColorTheme<ChainIdColorThemeParams> {
     let color: LocationColor;
     let legend: ScaleLegend | TableLegend | undefined;
 
@@ -113,7 +110,7 @@ export function ChainIdColorTheme(ctx: ThemeDataContext, props: PD.Values<ChainI
         color,
         props,
         description: Description,
-        legend
+        legend,
     };
 }
 
@@ -124,5 +121,5 @@ export const ChainIdColorThemeProvider: ColorTheme.Provider<ChainIdColorThemePar
     factory: ChainIdColorTheme,
     getParams: getChainIdColorThemeParams,
     defaultValues: PD.getDefaultValues(ChainIdColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
 };

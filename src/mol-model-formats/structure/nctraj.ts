@@ -12,7 +12,7 @@ import { Vec3 } from '../../mol-math/linear-algebra.ts';
 import type { Mutable } from '../../mol-util/type-helpers.ts';
 
 export function coordinatesFromNctraj(file: NctrajFile): Task<Coordinates> {
-    return Task.create('Parse NCTRAJ', async ctx => {
+    return Task.create('Parse NCTRAJ', async (ctx) => {
         await ctx.update('Converting to coordinates');
 
         const deltaTime = Time(file.deltaTime, 'step');
@@ -32,9 +32,11 @@ export function coordinatesFromNctraj(file: NctrajFile): Task<Coordinates> {
             }
             const frame: Mutable<Frame> = {
                 elementCount,
-                x, y, z,
+                x,
+                y,
+                z,
                 xyzOrdering: { isIdentity: true },
-                time: Time(offsetTime.value + deltaTime.value * i, deltaTime.unit)
+                time: Time(offsetTime.value + deltaTime.value * i, deltaTime.unit),
             };
             // TODO: handle case where cell_lengths and cell_angles are set, i.e., angles not 90deg
             if (file.cell_lengths) {

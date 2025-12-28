@@ -7,7 +7,7 @@
 
 import { Column, Table } from '../../../mol-data/db.ts';
 import { type Entities, EntitySubtype } from '../../../mol-model/structure/model/properties/common.ts';
-import { getEntityType, getEntitySubtype } from '../../../mol-model/structure/model/types.ts';
+import { getEntitySubtype, getEntityType } from '../../../mol-model/structure/model/types.ts';
 import type { ElementIndex, EntityIndex, Model } from '../../../mol-model/structure/model.ts';
 import { type BasicData, BasicSchema, type Entity } from './schema.ts';
 import type { mmCIF_chemComp_schema } from '../../../mol-io/reader/cif/schema/mmcif-extras.ts';
@@ -127,11 +127,15 @@ export function getEntityData(data: BasicData): Entities {
     return {
         data: entityData,
         subtype: subtypeColumn,
-        getEntityIndex
+        getEntityIndex,
     };
 }
 
-export function getEntitiesWithPRD(data: BasicData, entities: Entities, structAsymMap: Model['properties']['structAsymMap']): Entities {
+export function getEntitiesWithPRD(
+    data: BasicData,
+    entities: Entities,
+    structAsymMap: Model['properties']['structAsymMap'],
+): Entities {
     if (!data.pdbx_molecule || !data.pdbx_molecule.prd_id.isDefined) {
         return entities;
     }
@@ -150,6 +154,6 @@ export function getEntitiesWithPRD(data: BasicData, entities: Entities, structAs
 
     return {
         ...entities,
-        prd_id: prdIdColumn
+        prd_id: prdIdColumn,
     };
 }

@@ -47,13 +47,18 @@ function calcHbondEnergy(oPos: Vec3, cPos: Vec3, nPos: Vec3, hPos: Vec3) {
     const e = e1 + e2;
 
     // cap lowest possible energy
-    if (e < hbondEnergyMinimal)
+    if (e < hbondEnergyMinimal) {
         return hbondEnergyMinimal;
+    }
 
     return e;
 }
 
-export function calcUnitBackboneHbonds(unit: Unit.Atomic, proteinInfo: ProteinInfo, lookup3d: GridLookup3D): DsspHbonds {
+export function calcUnitBackboneHbonds(
+    unit: Unit.Atomic,
+    proteinInfo: ProteinInfo,
+    lookup3d: GridLookup3D,
+): DsspHbonds {
     const { residueIndices, cIndices, hIndices, nIndices, oIndices } = proteinInfo;
 
     const { index } = unit.model.atomicHierarchy;

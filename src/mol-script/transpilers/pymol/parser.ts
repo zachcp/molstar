@@ -55,7 +55,7 @@ const lang = P.MonadicParser.createLanguage({
         return P.MonadicParser.alt(
             r.Parens,
             r.Operator,
-            r.Expression
+            r.Expression,
         ).wrap(P.MonadicParser.string('('), P.MonadicParser.string(')'));
     },
 
@@ -66,7 +66,7 @@ const lang = P.MonadicParser.createLanguage({
             r.NamedAtomProperties,
             r.Pepseq,
             r.Rep,
-            r.Object
+            r.Object,
         );
     },
 
@@ -78,26 +78,36 @@ const lang = P.MonadicParser.createLanguage({
                     orNull(propertiesDict.segi).skip(slash),
                     orNull(propertiesDict.chain).skip(slash),
                     orNull(propertiesDict.resi).skip(slash),
-                    orNull(propertiesDict.name)
-                ).map(x => { return { object: x[0], segi: x[1], chain: x[2], resi: x[3], name: x[4] }; }),
+                    orNull(propertiesDict.name),
+                ).map((x) => {
+                    return { object: x[0], segi: x[1], chain: x[2], resi: x[3], name: x[4] };
+                }),
                 P.MonadicParser.seq(
                     orNull(r.ObjectProperty).skip(slash),
                     orNull(propertiesDict.segi).skip(slash),
                     orNull(propertiesDict.chain).skip(slash),
-                    orNull(propertiesDict.resi)
-                ).map(x => { return { object: x[0], segi: x[1], chain: x[2], resi: x[3] }; }),
+                    orNull(propertiesDict.resi),
+                ).map((x) => {
+                    return { object: x[0], segi: x[1], chain: x[2], resi: x[3] };
+                }),
                 P.MonadicParser.seq(
                     orNull(r.ObjectProperty).skip(slash),
                     orNull(propertiesDict.segi).skip(slash),
-                    orNull(propertiesDict.chain)
-                ).map(x => { return { object: x[0], segi: x[1], chain: x[2] }; }),
+                    orNull(propertiesDict.chain),
+                ).map((x) => {
+                    return { object: x[0], segi: x[1], chain: x[2] };
+                }),
                 P.MonadicParser.seq(
                     orNull(r.ObjectProperty).skip(slash),
-                    orNull(propertiesDict.segi)
-                ).map(x => { return { object: x[0], segi: x[1] }; }),
+                    orNull(propertiesDict.segi),
+                ).map((x) => {
+                    return { object: x[0], segi: x[1] };
+                }),
                 P.MonadicParser.seq(
-                    orNull(r.ObjectProperty)
-                ).map(x => { return { object: x[0] }; }),
+                    orNull(r.ObjectProperty),
+                ).map((x) => {
+                    return { object: x[0] };
+                }),
             )),
             P.MonadicParser.alt(
                 P.MonadicParser.seq(
@@ -105,24 +115,32 @@ const lang = P.MonadicParser.createLanguage({
                     orNull(propertiesDict.segi).skip(slash),
                     orNull(propertiesDict.chain).skip(slash),
                     orNull(propertiesDict.resi).skip(slash),
-                    orNull(propertiesDict.name)
-                ).map(x => { return { object: x[0], segi: x[1], chain: x[2], resi: x[3], name: x[4] }; }),
+                    orNull(propertiesDict.name),
+                ).map((x) => {
+                    return { object: x[0], segi: x[1], chain: x[2], resi: x[3], name: x[4] };
+                }),
                 P.MonadicParser.seq(
                     orNull(propertiesDict.segi).skip(slash),
                     orNull(propertiesDict.chain).skip(slash),
                     orNull(propertiesDict.resi).skip(slash),
-                    orNull(propertiesDict.name)
-                ).map(x => { return { segi: x[0], chain: x[1], resi: x[2], name: x[3] }; }),
+                    orNull(propertiesDict.name),
+                ).map((x) => {
+                    return { segi: x[0], chain: x[1], resi: x[2], name: x[3] };
+                }),
                 P.MonadicParser.seq(
                     orNull(propertiesDict.chain).skip(slash),
                     orNull(propertiesDict.resi).skip(slash),
-                    orNull(propertiesDict.name)
-                ).map(x => { return { chain: x[0], resi: x[1], name: x[2] }; }),
+                    orNull(propertiesDict.name),
+                ).map((x) => {
+                    return { chain: x[0], resi: x[1], name: x[2] };
+                }),
                 P.MonadicParser.seq(
                     orNull(propertiesDict.resi).skip(slash),
-                    orNull(propertiesDict.name)
-                ).map(x => { return { resi: x[0], name: x[1] }; }),
-            )
+                    orNull(propertiesDict.name),
+                ).map((x) => {
+                    return { resi: x[0], name: x[1] };
+                }),
+            ),
         );
     },
 
@@ -139,7 +157,9 @@ const lang = P.MonadicParser.createLanguage({
     },
     Object: (r: any) => {
         return r.ObjectProperty.notFollowedBy(slash)
-            .map((x: any) => { throw new Error(`property 'object' not supported, value '${x}'`); });
+            .map((x: any) => {
+                throw new Error(`property 'object' not supported, value '${x}'`);
+            });
     },
 
     // Selects peptide sequence matching upper-case one-letter
@@ -153,7 +173,10 @@ const lang = P.MonadicParser.createLanguage({
     // Selects atoms which show representation rep.
     // REP rep
     Rep: () => {
-        return P.MonadicParser.regexp(/REP\s+(lines|spheres|mesh|ribbon|cartoon|sticks|dots|surface|labels|extent|nonbonded|nb_spheres|slice|extent|slice|dashes|angles|dihedrals|cgo|cell|callback|everything)/i, 1)
+        return P.MonadicParser.regexp(
+            /REP\s+(lines|spheres|mesh|ribbon|cartoon|sticks|dots|surface|labels|extent|nonbonded|nb_spheres|slice|extent|slice|dashes|angles|dihedrals|cgo|cell|callback|everything)/i,
+            1,
+        )
             .map(h.makeError(`operator 'rep' not supported`));
     },
 
@@ -165,9 +188,9 @@ const lang = P.MonadicParser.createLanguage({
         return P.MonadicParser.alt(
             r.Operator,
             r.Parens,
-            r.Expression
+            r.Expression,
         ).trim(P.MonadicParser.optWhitespace);
-    }
+    },
 });
 
-export const transpiler: Transpiler = str => lang.Query.tryParse(str);
+export const transpiler: Transpiler = (str) => lang.Query.tryParse(str);

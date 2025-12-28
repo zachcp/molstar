@@ -6,7 +6,14 @@
  */
 
 import { PluginStateObject as SO } from '../../objects.ts';
-import { StateObject, type StateTransform, type State, type StateObjectCell, type StateTree, type StateTransformer } from '../../../mol-state/index.ts';
+import {
+    type State,
+    StateObject,
+    type StateObjectCell,
+    type StateTransform,
+    type StateTransformer,
+    type StateTree,
+} from '../../../mol-state/index.ts';
 import { StateTransforms } from '../../transforms.ts';
 import { VolumeStreaming } from '../../../mol-plugin/behavior/dynamic/volume-streaming/behavior.ts';
 import type { CreateVolumeStreamingBehavior } from '../../../mol-plugin/behavior/dynamic/volume-streaming/transformers.ts';
@@ -19,10 +26,10 @@ export function buildStructureHierarchy(state: State, previous?: StructureHierar
 }
 
 export interface StructureHierarchy {
-    trajectories: TrajectoryRef[],
-    models: ModelRef[],
-    structures: StructureRef[],
-    refs: Map<StateTransform.Ref, StructureHierarchyRef>
+    trajectories: TrajectoryRef[];
+    models: ModelRef[];
+    structures: StructureRef[];
+    refs: Map<StateTransform.Ref, StructureHierarchyRef>;
     // TODO: might be needed in the future
     // decorators: Map<StateTransform.Ref, StateTransform>,
 }
@@ -31,20 +38,31 @@ export function StructureHierarchy(): StructureHierarchy {
     return { trajectories: [], models: [], structures: [], refs: new Map() };
 }
 
-interface RefBase<K extends string = string, O extends StateObject = StateObject, T extends StateTransformer = StateTransformer> {
-    kind: K,
-    cell: StateObjectCell<O, StateTransform<T>>,
-    version: StateTransform['version']
+interface RefBase<
+    K extends string = string,
+    O extends StateObject = StateObject,
+    T extends StateTransformer = StateTransformer,
+> {
+    kind: K;
+    cell: StateObjectCell<O, StateTransform<T>>;
+    version: StateTransform['version'];
 }
 
 export type StructureHierarchyRef =
     | TrajectoryRef
-    | ModelRef | ModelPropertiesRef | ModelUnitcellRef
-    | StructureRef | StructurePropertiesRef | StructureTransformRef | StructureVolumeStreamingRef | StructureComponentRef | StructureRepresentationRef
-    | GenericRepresentationRef
+    | ModelRef
+    | ModelPropertiesRef
+    | ModelUnitcellRef
+    | StructureRef
+    | StructurePropertiesRef
+    | StructureTransformRef
+    | StructureVolumeStreamingRef
+    | StructureComponentRef
+    | StructureRepresentationRef
+    | GenericRepresentationRef;
 
 export interface TrajectoryRef extends RefBase<'trajectory', SO.Molecule.Trajectory> {
-    models: ModelRef[]
+    models: ModelRef[];
 }
 
 function TrajectoryRef(cell: StateObjectCell<SO.Molecule.Trajectory>): TrajectoryRef {
@@ -52,27 +70,29 @@ function TrajectoryRef(cell: StateObjectCell<SO.Molecule.Trajectory>): Trajector
 }
 
 export interface ModelRef extends RefBase<'model', SO.Molecule.Model> {
-    trajectory?: TrajectoryRef,
-    properties?: ModelPropertiesRef,
-    structures: StructureRef[],
-    genericRepresentations?: GenericRepresentationRef[],
-    unitcell?: ModelUnitcellRef
+    trajectory?: TrajectoryRef;
+    properties?: ModelPropertiesRef;
+    structures: StructureRef[];
+    genericRepresentations?: GenericRepresentationRef[];
+    unitcell?: ModelUnitcellRef;
 }
 
 function ModelRef(cell: StateObjectCell<SO.Molecule.Model>, trajectory?: TrajectoryRef): ModelRef {
     return { kind: 'model', cell, version: cell.transform.version, trajectory, structures: [] };
 }
 
-export interface ModelPropertiesRef extends RefBase<'model-properties', SO.Molecule.Model, StateTransforms['Model']['CustomModelProperties']> {
-    model: ModelRef
+export interface ModelPropertiesRef
+    extends RefBase<'model-properties', SO.Molecule.Model, StateTransforms['Model']['CustomModelProperties']> {
+    model: ModelRef;
 }
 
 function ModelPropertiesRef(cell: StateObjectCell<SO.Molecule.Model>, model: ModelRef): ModelPropertiesRef {
     return { kind: 'model-properties', cell, version: cell.transform.version, model };
 }
 
-export interface ModelUnitcellRef extends RefBase<'model-unitcell', SO.Shape.Representation3D, StateTransforms['Representation']['ModelUnitcell3D']> {
-    model: ModelRef
+export interface ModelUnitcellRef
+    extends RefBase<'model-unitcell', SO.Shape.Representation3D, StateTransforms['Representation']['ModelUnitcell3D']> {
+    model: ModelRef;
 }
 
 function ModelUnitcellRef(cell: StateObjectCell<SO.Shape.Representation3D>, model: ModelRef): ModelUnitcellRef {
@@ -80,47 +100,65 @@ function ModelUnitcellRef(cell: StateObjectCell<SO.Shape.Representation3D>, mode
 }
 
 export interface StructureRef extends RefBase<'structure', SO.Molecule.Structure> {
-    model?: ModelRef,
-    properties?: StructurePropertiesRef,
-    transform?: StructureTransformRef,
-    components: StructureComponentRef[],
-    genericRepresentations?: GenericRepresentationRef[],
-    volumeStreaming?: StructureVolumeStreamingRef
+    model?: ModelRef;
+    properties?: StructurePropertiesRef;
+    transform?: StructureTransformRef;
+    components: StructureComponentRef[];
+    genericRepresentations?: GenericRepresentationRef[];
+    volumeStreaming?: StructureVolumeStreamingRef;
 }
 
 function StructureRef(cell: StateObjectCell<SO.Molecule.Structure>, model?: ModelRef): StructureRef {
     return { kind: 'structure', cell, version: cell.transform.version, model, components: [] };
 }
 
-export interface StructurePropertiesRef extends RefBase<'structure-properties', SO.Molecule.Structure, StateTransforms['Model']['CustomStructureProperties']> {
-    structure: StructureRef
+export interface StructurePropertiesRef
+    extends
+        RefBase<'structure-properties', SO.Molecule.Structure, StateTransforms['Model']['CustomStructureProperties']> {
+    structure: StructureRef;
 }
 
-function StructurePropertiesRef(cell: StateObjectCell<SO.Molecule.Structure>, structure: StructureRef): StructurePropertiesRef {
+function StructurePropertiesRef(
+    cell: StateObjectCell<SO.Molecule.Structure>,
+    structure: StructureRef,
+): StructurePropertiesRef {
     return { kind: 'structure-properties', cell, version: cell.transform.version, structure };
 }
 
-export interface StructureTransformRef extends RefBase<'structure-transform', SO.Molecule.Structure, StateTransforms['Model']['TransformStructureConformation']> {
-    structure: StructureRef
+export interface StructureTransformRef extends
+    RefBase<
+        'structure-transform',
+        SO.Molecule.Structure,
+        StateTransforms['Model']['TransformStructureConformation']
+    > {
+    structure: StructureRef;
 }
 
-function StructureTransformRef(cell: StateObjectCell<SO.Molecule.Structure>, structure: StructureRef): StructureTransformRef {
+function StructureTransformRef(
+    cell: StateObjectCell<SO.Molecule.Structure>,
+    structure: StructureRef,
+): StructureTransformRef {
     return { kind: 'structure-transform', cell, version: cell.transform.version, structure };
 }
 
-export interface StructureVolumeStreamingRef extends RefBase<'structure-volume-streaming', VolumeStreaming, CreateVolumeStreamingBehavior> {
-    structure: StructureRef
+export interface StructureVolumeStreamingRef
+    extends RefBase<'structure-volume-streaming', VolumeStreaming, CreateVolumeStreamingBehavior> {
+    structure: StructureRef;
 }
 
-function StructureVolumeStreamingRef(cell: StateObjectCell<VolumeStreaming>, structure: StructureRef): StructureVolumeStreamingRef {
+function StructureVolumeStreamingRef(
+    cell: StateObjectCell<VolumeStreaming>,
+    structure: StructureRef,
+): StructureVolumeStreamingRef {
     return { kind: 'structure-volume-streaming', cell, version: cell.transform.version, structure };
 }
 
-export interface StructureComponentRef extends RefBase<'structure-component', SO.Molecule.Structure, StateTransforms['Model']['StructureComponent']> {
-    structure: StructureRef,
-    key?: string,
-    representations: StructureRepresentationRef[],
-    genericRepresentations?: GenericRepresentationRef[]
+export interface StructureComponentRef
+    extends RefBase<'structure-component', SO.Molecule.Structure, StateTransforms['Model']['StructureComponent']> {
+    structure: StructureRef;
+    key?: string;
+    representations: StructureRepresentationRef[];
+    genericRepresentations?: GenericRepresentationRef[];
 }
 
 function componentKey(cell: StateObjectCell<SO.Molecule.Structure>) {
@@ -128,47 +166,74 @@ function componentKey(cell: StateObjectCell<SO.Molecule.Structure>) {
     return [...cell.transform.tags].sort().join();
 }
 
-function StructureComponentRef(cell: StateObjectCell<SO.Molecule.Structure>, structure: StructureRef): StructureComponentRef {
-    return { kind: 'structure-component', cell, version: cell.transform.version, structure, key: componentKey(cell), representations: [] };
+function StructureComponentRef(
+    cell: StateObjectCell<SO.Molecule.Structure>,
+    structure: StructureRef,
+): StructureComponentRef {
+    return {
+        kind: 'structure-component',
+        cell,
+        version: cell.transform.version,
+        structure,
+        key: componentKey(cell),
+        representations: [],
+    };
 }
 
-export interface StructureRepresentationRef extends RefBase<'structure-representation', SO.Molecule.Structure.Representation3D, StateTransforms['Representation']['StructureRepresentation3D']> {
-    component: StructureComponentRef
+export interface StructureRepresentationRef extends
+    RefBase<
+        'structure-representation',
+        SO.Molecule.Structure.Representation3D,
+        StateTransforms['Representation']['StructureRepresentation3D']
+    > {
+    component: StructureComponentRef;
 }
 
-function StructureRepresentationRef(cell: StateObjectCell<SO.Molecule.Structure.Representation3D>, component: StructureComponentRef): StructureRepresentationRef {
+function StructureRepresentationRef(
+    cell: StateObjectCell<SO.Molecule.Structure.Representation3D>,
+    component: StructureComponentRef,
+): StructureRepresentationRef {
     return { kind: 'structure-representation', cell, version: cell.transform.version, component };
 }
 
 export interface GenericRepresentationRef extends RefBase<'generic-representation', SO.Any> {
-    parent: StructureHierarchyRef
+    parent: StructureHierarchyRef;
 }
 
-function GenericRepresentationRef(cell: StateObjectCell<SO.Molecule.Structure.Representation3D>, parent: StructureHierarchyRef): GenericRepresentationRef {
+function GenericRepresentationRef(
+    cell: StateObjectCell<SO.Molecule.Structure.Representation3D>,
+    parent: StructureHierarchyRef,
+): GenericRepresentationRef {
     return { kind: 'generic-representation', cell, version: cell.transform.version, parent };
 }
 
 interface BuildState {
-    state: State,
-    oldHierarchy: StructureHierarchy,
+    state: State;
+    oldHierarchy: StructureHierarchy;
 
-    hierarchy: StructureHierarchy,
+    hierarchy: StructureHierarchy;
 
-    currentTrajectory?: TrajectoryRef,
-    currentModel?: ModelRef,
-    currentStructure?: StructureRef,
-    currentComponent?: StructureComponentRef,
-    parentComponents?: StructureComponentRef[],
+    currentTrajectory?: TrajectoryRef;
+    currentModel?: ModelRef;
+    currentStructure?: StructureRef;
+    currentComponent?: StructureComponentRef;
+    parentComponents?: StructureComponentRef[];
 
-    changed: boolean,
-    added: Set<StateTransform.Ref>
+    changed: boolean;
+    added: Set<StateTransform.Ref>;
 }
 
 function BuildState(state: State, oldHierarchy: StructureHierarchy): BuildState {
     return { state, oldHierarchy, hierarchy: StructureHierarchy(), changed: false, added: new Set() };
 }
 
-function createOrUpdateRefList<R extends StructureHierarchyRef, C extends any[]>(state: BuildState, cell: StateObjectCell, list: R[], ctor: (...args: C) => R, ...args: C) {
+function createOrUpdateRefList<R extends StructureHierarchyRef, C extends any[]>(
+    state: BuildState,
+    cell: StateObjectCell,
+    list: R[],
+    ctor: (...args: C) => R,
+    ...args: C
+) {
     const ref: R = ctor(...args);
     list.push(ref);
     state.hierarchy.refs.set(cell.transform.ref, ref);
@@ -182,7 +247,12 @@ function createOrUpdateRefList<R extends StructureHierarchyRef, C extends any[]>
     return ref;
 }
 
-function createOrUpdateRef<R extends StructureHierarchyRef, C extends any[]>(state: BuildState, cell: StateObjectCell, ctor: (...args: C) => R, ...args: C) {
+function createOrUpdateRef<R extends StructureHierarchyRef, C extends any[]>(
+    state: BuildState,
+    cell: StateObjectCell,
+    ctor: (...args: C) => R,
+    ...args: C
+) {
     const ref: R = ctor(...args);
     state.hierarchy.refs.set(cell.transform.ref, ref);
     const old = state.oldHierarchy.refs.get(cell.transform.ref);
@@ -195,9 +265,9 @@ function createOrUpdateRef<R extends StructureHierarchyRef, C extends any[]>(sta
     return ref;
 }
 
-type TestCell = (cell: StateObjectCell, state: BuildState) => boolean
-type ApplyRef = (state: BuildState, cell: StateObjectCell) => boolean | void
-type LeaveRef = (state: BuildState) => any
+type TestCell = (cell: StateObjectCell, state: BuildState) => boolean;
+type ApplyRef = (state: BuildState, cell: StateObjectCell) => boolean | void;
+type LeaveRef = (state: BuildState) => any;
 
 function isType(t: StateObject.Ctor): TestCell {
     return (cell) => t.is(cell.obj);
@@ -208,26 +278,33 @@ function isTypeRoot(t: StateObject.Ctor, target: (state: BuildState) => any): Te
 }
 
 function isTransformer(t: StateTransformer): TestCell {
-    return cell => cell.transform.transformer === t;
+    return (cell) => cell.transform.transformer === t;
 }
 
-function noop() { }
+function noop() {}
 
 const Mapping: [TestCell, ApplyRef, LeaveRef][] = [
     // Trajectory
     [isType(SO.Molecule.Trajectory), (state, cell) => {
         state.currentTrajectory = createOrUpdateRefList(state, cell, state.hierarchy.trajectories, TrajectoryRef, cell);
-    }, state => state.currentTrajectory = void 0],
+    }, (state) => state.currentTrajectory = void 0],
 
     // Model
-    [isTypeRoot(SO.Molecule.Model, s => s.currentModel), (state, cell) => {
+    [isTypeRoot(SO.Molecule.Model, (s) => s.currentModel), (state, cell) => {
         if (state.currentTrajectory) {
-            state.currentModel = createOrUpdateRefList(state, cell, state.currentTrajectory.models, ModelRef, cell, state.currentTrajectory);
+            state.currentModel = createOrUpdateRefList(
+                state,
+                cell,
+                state.currentTrajectory.models,
+                ModelRef,
+                cell,
+                state.currentTrajectory,
+            );
         } else {
             state.currentModel = createOrUpdateRef(state, cell, ModelRef, cell);
         }
         state.hierarchy.models.push(state.currentModel);
-    }, state => state.currentModel = void 0],
+    }, (state) => state.currentModel = void 0],
     [isTransformer(StateTransforms.Model.CustomModelProperties), (state, cell) => {
         if (!state.currentModel) return false;
         state.currentModel.properties = createOrUpdateRef(state, cell, ModelPropertiesRef, cell, state.currentModel);
@@ -238,27 +315,52 @@ const Mapping: [TestCell, ApplyRef, LeaveRef][] = [
     }, noop],
 
     // Structure
-    [isTypeRoot(SO.Molecule.Structure, s => s.currentStructure), (state, cell) => {
+    [isTypeRoot(SO.Molecule.Structure, (s) => s.currentStructure), (state, cell) => {
         if (state.currentModel) {
-            state.currentStructure = createOrUpdateRefList(state, cell, state.currentModel.structures, StructureRef, cell, state.currentModel);
+            state.currentStructure = createOrUpdateRefList(
+                state,
+                cell,
+                state.currentModel.structures,
+                StructureRef,
+                cell,
+                state.currentModel,
+            );
         } else {
             state.currentStructure = createOrUpdateRef(state, cell, StructureRef, cell);
         }
         state.hierarchy.structures.push(state.currentStructure);
-    }, state => state.currentStructure = void 0],
+    }, (state) => state.currentStructure = void 0],
     [isTransformer(StateTransforms.Model.CustomStructureProperties), (state, cell) => {
         if (!state.currentStructure) return false;
-        state.currentStructure.properties = createOrUpdateRef(state, cell, StructurePropertiesRef, cell, state.currentStructure);
+        state.currentStructure.properties = createOrUpdateRef(
+            state,
+            cell,
+            StructurePropertiesRef,
+            cell,
+            state.currentStructure,
+        );
     }, noop],
     [isTransformer(StateTransforms.Model.TransformStructureConformation), (state, cell) => {
         if (!state.currentStructure) return false;
-        state.currentStructure.transform = createOrUpdateRef(state, cell, StructureTransformRef, cell, state.currentStructure);
+        state.currentStructure.transform = createOrUpdateRef(
+            state,
+            cell,
+            StructureTransformRef,
+            cell,
+            state.currentStructure,
+        );
     }, noop],
 
     // Volume Streaming
     [isType(VolumeStreaming), (state, cell) => {
         if (!state.currentStructure) return false;
-        state.currentStructure.volumeStreaming = createOrUpdateRef(state, cell, StructureVolumeStreamingRef, cell, state.currentStructure);
+        state.currentStructure.volumeStreaming = createOrUpdateRef(
+            state,
+            cell,
+            StructureVolumeStreamingRef,
+            cell,
+            state.currentStructure,
+        );
         // Do not continue into VolumeStreaming subtree.
         return false;
     }, noop],
@@ -273,9 +375,16 @@ const Mapping: [TestCell, ApplyRef, LeaveRef][] = [
                 if (!state.parentComponents) state.parentComponents = [];
                 state.parentComponents.push(state.currentComponent);
             }
-            state.currentComponent = createOrUpdateRefList(state, cell, state.currentStructure.components, StructureComponentRef, cell, state.currentStructure);
+            state.currentComponent = createOrUpdateRefList(
+                state,
+                cell,
+                state.currentStructure.components,
+                StructureComponentRef,
+                cell,
+                state.currentStructure,
+            );
         }
-    }, state => {
+    }, (state) => {
         if (state.parentComponents && state.parentComponents.length > 0) {
             state.currentComponent = state.parentComponents.pop();
         } else state.currentComponent = void 0;
@@ -286,7 +395,14 @@ const Mapping: [TestCell, ApplyRef, LeaveRef][] = [
         return !cell.state.isGhost && !!state.currentComponent && SO.Molecule.Structure.Representation3D.is(cell.obj);
     }, (state, cell) => {
         if (state.currentComponent) {
-            createOrUpdateRefList(state, cell, state.currentComponent.representations, StructureRepresentationRef, cell, state.currentComponent);
+            createOrUpdateRefList(
+                state,
+                cell,
+                state.currentComponent.representations,
+                StructureRepresentationRef,
+                cell,
+                state.currentComponent,
+            );
         }
 
         // Nothing useful down the line
@@ -294,11 +410,18 @@ const Mapping: [TestCell, ApplyRef, LeaveRef][] = [
     }, noop],
 
     // Generic Representation
-    [cell => !cell.state.isGhost && SO.isRepresentation3D(cell.obj), (state, cell) => {
+    [(cell) => !cell.state.isGhost && SO.isRepresentation3D(cell.obj), (state, cell) => {
         const genericTarget = state.currentComponent || state.currentStructure || state.currentModel;
         if (genericTarget) {
             if (!genericTarget.genericRepresentations) genericTarget.genericRepresentations = [];
-            createOrUpdateRefList(state, cell, genericTarget.genericRepresentations, GenericRepresentationRef, cell, genericTarget);
+            createOrUpdateRefList(
+                state,
+                cell,
+                genericTarget.genericRepresentations,
+                GenericRepresentationRef,
+                cell,
+                genericTarget,
+            );
         }
     }, noop],
 ];
@@ -316,9 +439,11 @@ function isRemoved(this: BuildState, ref: StructureHierarchyRef) {
     this.changed = true;
 }
 
-type VisitorCtx = { tree: StateTree, state: BuildState };
+type VisitorCtx = { tree: StateTree; state: BuildState };
 
-function _preOrderFunc(this: VisitorCtx, c: StateTransform.Ref | undefined) { _doPreOrder(this, this.tree.transforms.get(c!)!); }
+function _preOrderFunc(this: VisitorCtx, c: StateTransform.Ref | undefined) {
+    _doPreOrder(this, this.tree.transforms.get(c!)!);
+}
 function _doPreOrder(ctx: VisitorCtx, root: StateTransform) {
     const { state } = ctx;
     const cell = state.state.cells.get(root.ref);

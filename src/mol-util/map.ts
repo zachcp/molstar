@@ -7,7 +7,7 @@
 
 export interface DefaultMap<K, V> extends Map<K, V> {
     /** Return the value for `key` when available or the default value otherwise. */
-    getDefault: (key: K) => V
+    getDefault: (key: K) => V;
 }
 
 /** A `Map` instance with a `getDefault` method added. */

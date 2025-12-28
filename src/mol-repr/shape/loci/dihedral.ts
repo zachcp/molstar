@@ -11,28 +11,28 @@ import { Text } from '../../../mol-geo/geometry/text/text.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { ColorNames } from '../../../mol-util/color/names.ts';
 import { ShapeRepresentation } from '../representation.ts';
-import { Representation, type RepresentationParamsGetter, type RepresentationContext } from '../../representation.ts';
+import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../../representation.ts';
 import { Shape } from '../../../mol-model/shape.ts';
 import { LinesBuilder } from '../../../mol-geo/geometry/lines/lines-builder.ts';
 import { TextBuilder } from '../../../mol-geo/geometry/text/text-builder.ts';
-import { Vec3, Mat4 } from '../../../mol-math/linear-algebra.ts';
+import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
 import { arcLength, halfPI, radToDeg } from '../../../mol-math/misc.ts';
 import { Circle } from '../../../mol-geo/primitive/circle.ts';
 import { transformPrimitive } from '../../../mol-geo/primitive/primitive.ts';
-import { MarkerActions, MarkerAction } from '../../../mol-util/marker-action.ts';
+import { MarkerAction, MarkerActions } from '../../../mol-util/marker-action.ts';
 import { dihedralLabel } from '../../../mol-theme/label.ts';
 import { LociLabelTextParams } from './common.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 
 export interface DihedralData {
-    quads: Loci.Bundle<4>[]
+    quads: Loci.Bundle<4>[];
 }
 
 const SharedParams = {
     color: PD.Color(ColorNames.lightgreen),
-    arcScale: PD.Numeric(0.7, { min: 0.01, max: 1, step: 0.01 })
+    arcScale: PD.Numeric(0.7, { min: 0.01, max: 1, step: 0.01 }),
 };
 
 const LinesParams = {
@@ -44,24 +44,24 @@ const LinesParams = {
 };
 
 const VectorsParams = {
-    ...LinesParams
+    ...LinesParams,
 };
-type VectorsParams = typeof VectorsParams
+type VectorsParams = typeof VectorsParams;
 
 const ExtendersParams = {
-    ...LinesParams
+    ...LinesParams,
 };
-type ExtendersParams = typeof ExtendersParams
+type ExtendersParams = typeof ExtendersParams;
 
 const ArmsParams = {
-    ...LinesParams
+    ...LinesParams,
 };
-type ArmsParams = typeof ArmsParams
+type ArmsParams = typeof ArmsParams;
 
 const ArcParams = {
-    ...LinesParams
+    ...LinesParams,
 };
-type ArcParams = typeof ArcParams
+type ArcParams = typeof ArcParams;
 
 const SectorParams = {
     ...Mesh.Params,
@@ -69,16 +69,28 @@ const SectorParams = {
     ignoreLight: PD.Boolean(true),
     sectorOpacity: PD.Numeric(0.75, { min: 0, max: 1, step: 0.01 }),
 };
-type SectorParams = typeof SectorParams
+type SectorParams = typeof SectorParams;
 
 const DihedralVisuals = {
-    'vectors': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DihedralData, VectorsParams>) => ShapeRepresentation(getVectorsShape, Lines.Utils, { modifyState: s => ({ ...s, pickable: false }) }),
-    'extenders': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DihedralData, ExtendersParams>) => ShapeRepresentation(getExtendersShape, Lines.Utils, { modifyState: s => ({ ...s, pickable: false }) }),
-    'connector': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DihedralData, ExtendersParams>) => ShapeRepresentation(getConnectorShape, Lines.Utils, { modifyState: s => ({ ...s, pickable: false }) }),
-    'arms': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DihedralData, ArmsParams>) => ShapeRepresentation(getArmsShape, Lines.Utils, { modifyState: s => ({ ...s, pickable: false }) }),
-    'arc': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DihedralData, ArcParams>) => ShapeRepresentation(getArcShape, Lines.Utils, { modifyState: s => ({ ...s, pickable: false }) }),
-    'sector': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DihedralData, SectorParams>) => ShapeRepresentation(getSectorShape, Mesh.Utils, { modifyProps: p => ({ ...p, alpha: p.sectorOpacity }), modifyState: s => ({ ...s, markerActions: MarkerActions.Highlighting }) }),
-    'text': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DihedralData, LociLabelTextParams>) => ShapeRepresentation(getTextShape, Text.Utils, { modifyState: s => ({ ...s, markerActions: MarkerAction.None }) }),
+    'vectors': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DihedralData, VectorsParams>) =>
+        ShapeRepresentation(getVectorsShape, Lines.Utils, { modifyState: (s) => ({ ...s, pickable: false }) }),
+    'extenders': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DihedralData, ExtendersParams>) =>
+        ShapeRepresentation(getExtendersShape, Lines.Utils, { modifyState: (s) => ({ ...s, pickable: false }) }),
+    'connector': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DihedralData, ExtendersParams>) =>
+        ShapeRepresentation(getConnectorShape, Lines.Utils, { modifyState: (s) => ({ ...s, pickable: false }) }),
+    'arms': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DihedralData, ArmsParams>) =>
+        ShapeRepresentation(getArmsShape, Lines.Utils, { modifyState: (s) => ({ ...s, pickable: false }) }),
+    'arc': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DihedralData, ArcParams>) =>
+        ShapeRepresentation(getArcShape, Lines.Utils, { modifyState: (s) => ({ ...s, pickable: false }) }),
+    'sector': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DihedralData, SectorParams>) =>
+        ShapeRepresentation(getSectorShape, Mesh.Utils, {
+            modifyProps: (p) => ({ ...p, alpha: p.sectorOpacity }),
+            modifyState: (s) => ({ ...s, markerActions: MarkerActions.Highlighting }),
+        }),
+    'text': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<DihedralData, LociLabelTextParams>) =>
+        ShapeRepresentation(getTextShape, Text.Utils, {
+            modifyState: (s) => ({ ...s, markerActions: MarkerAction.None }),
+        }),
 };
 
 export const DihedralParams = {
@@ -90,8 +102,8 @@ export const DihedralParams = {
     ...LociLabelTextParams,
     visuals: PD.MultiSelect(['extenders', 'arms', 'sector', 'text'], PD.objectToOptions(DihedralVisuals)),
 };
-export type DihedralParams = typeof DihedralParams
-export type DihedralProps = PD.Values<DihedralParams>
+export type DihedralParams = typeof DihedralParams;
+export type DihedralProps = PD.Values<DihedralParams>;
 
 //
 
@@ -119,7 +131,7 @@ function getDihedralState() {
         angle: 0,
     };
 }
-type DihedralState = ReturnType<typeof getDihedralState>
+type DihedralState = ReturnType<typeof getDihedralState>;
 
 const tmpVec = Vec3();
 const tmpMat = Mat4();
@@ -188,7 +200,9 @@ function getCircle(state: DihedralState, segmentLength?: number) {
 const tmpState = getDihedralState();
 
 function getDihedralName(data: DihedralData) {
-    return data.quads.length === 1 ? `Dihedral ${dihedralLabel(data.quads[0], { measureOnly: true })}` : `${data.quads.length} Dihedrals`;
+    return data.quads.length === 1
+        ? `Dihedral ${dihedralLabel(data.quads[0], { measureOnly: true })}`
+        : `${data.quads.length} Dihedrals`;
 }
 
 //
@@ -203,7 +217,12 @@ function buildVectorsLines(data: DihedralData, props: DihedralProps, lines?: Lin
     return builder.getLines();
 }
 
-function getVectorsShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>): Shape<Lines> {
+function getVectorsShape(
+    ctx: RuntimeContext,
+    data: DihedralData,
+    props: DihedralProps,
+    shape?: Shape<Lines>,
+): Shape<Lines> {
     const lines = buildVectorsLines(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -220,7 +239,12 @@ function buildConnectorLine(data: DihedralData, props: DihedralProps, lines?: Li
     return builder.getLines();
 }
 
-function getConnectorShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>): Shape<Lines> {
+function getConnectorShape(
+    ctx: RuntimeContext,
+    data: DihedralData,
+    props: DihedralProps,
+    shape?: Shape<Lines>,
+): Shape<Lines> {
     const lines = buildConnectorLine(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -238,7 +262,12 @@ function buildArmsLines(data: DihedralData, props: DihedralProps, lines?: Lines)
     return builder.getLines();
 }
 
-function getArmsShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>): Shape<Lines> {
+function getArmsShape(
+    ctx: RuntimeContext,
+    data: DihedralData,
+    props: DihedralProps,
+    shape?: Shape<Lines>,
+): Shape<Lines> {
     const lines = buildArmsLines(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -256,7 +285,12 @@ function buildExtendersLines(data: DihedralData, props: DihedralProps, lines?: L
     return builder.getLines();
 }
 
-function getExtendersShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>): Shape<Lines> {
+function getExtendersShape(
+    ctx: RuntimeContext,
+    data: DihedralData,
+    props: DihedralProps,
+    shape?: Shape<Lines>,
+): Shape<Lines> {
     const lines = buildExtendersLines(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -286,7 +320,12 @@ function buildArcLines(data: DihedralData, props: DihedralProps, lines?: Lines):
     return builder.getLines();
 }
 
-function getArcShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Lines>): Shape<Lines> {
+function getArcShape(
+    ctx: RuntimeContext,
+    data: DihedralData,
+    props: DihedralProps,
+    shape?: Shape<Lines>,
+): Shape<Lines> {
     const lines = buildArcLines(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     return Shape.create(name, data, lines, () => props.color, () => props.linesSize, () => '');
@@ -306,7 +345,12 @@ function buildSectorMesh(data: DihedralData, props: DihedralProps, mesh?: Mesh):
     return MeshBuilder.getMesh(state);
 }
 
-function getSectorShape(ctx: RuntimeContext, data: DihedralData, props: DihedralProps, shape?: Shape<Mesh>): Shape<Mesh> {
+function getSectorShape(
+    ctx: RuntimeContext,
+    data: DihedralData,
+    props: DihedralProps,
+    shape?: Shape<Mesh>,
+): Shape<Mesh> {
     const mesh = buildSectorMesh(data, props, shape && shape.geometry);
     const name = getDihedralName(data);
     const getLabel = (groupId: number) => dihedralLabel(data.quads[groupId]);
@@ -327,7 +371,13 @@ function buildText(data: DihedralData, props: DihedralProps, text?: Text): Text 
         let angle = radToDeg(tmpState.angle).toFixed(2);
         if (angle === '-0.00') angle = '0.00';
         const label = props.customText || `${angle}\u00B0`;
-        const radius = Math.max(2, tmpState.sphereA.radius, tmpState.sphereB.radius, tmpState.sphereC.radius, tmpState.sphereD.radius);
+        const radius = Math.max(
+            2,
+            tmpState.sphereA.radius,
+            tmpState.sphereB.radius,
+            tmpState.sphereC.radius,
+            tmpState.sphereD.radius,
+        );
         const scale = radius / 2;
         builder.add(label, tmpVec[0], tmpVec[1], tmpVec[2], 0.1, scale, i);
     }
@@ -343,7 +393,16 @@ function getTextShape(ctx: RuntimeContext, data: DihedralData, props: DihedralPr
 
 //
 
-export type DihedralRepresentation = Representation<DihedralData, DihedralParams>
-export function DihedralRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<DihedralData, DihedralParams>): DihedralRepresentation {
-    return Representation.createMulti('Dihedral', ctx, getParams, Representation.StateBuilder, DihedralVisuals as unknown as Representation.Def<DihedralData, DihedralParams>);
+export type DihedralRepresentation = Representation<DihedralData, DihedralParams>;
+export function DihedralRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<DihedralData, DihedralParams>,
+): DihedralRepresentation {
+    return Representation.createMulti(
+        'Dihedral',
+        ctx,
+        getParams,
+        Representation.StateBuilder,
+        DihedralVisuals as unknown as Representation.Def<DihedralData, DihedralParams>,
+    );
 }

@@ -23,16 +23,16 @@ const testBlock = Data.CifBlock(['test'], {
         int: intField,
         str: strField,
         strList: strListField,
-        intList: intListField
-    })
+        intList: intListField,
+    }),
 }, 'test');
 
 namespace TestSchema {
     export const test = {
         int: Column.Schema.int,
         str: Column.Schema.str,
-        strList: Column.Schema.List(',', x => x),
-        intList: Column.Schema.List(' ', x => parseInt(x, 10))
+        strList: Column.Schema.List(',', (x) => x),
+        intList: Column.Schema.List(' ', (x) => parseInt(x, 10)),
     };
     export const schema = { test };
 }

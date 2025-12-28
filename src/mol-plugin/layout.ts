@@ -1,8 +1,9 @@
 /**
- * Copyright (c) 2018-2021 mol* contributors, licensed under MIT, See LICENSE file for more info.
+ * Copyright (c) 2018-2025 mol* contributors, licensed under MIT, See LICENSE file for more info.
  *
  * @author David Sehnal <david.sehnal@gmail.com>
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
+ * @author Lukáš Polák <admin@lukaspolak.cz>
  */
 
 import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
@@ -19,7 +20,11 @@ const simpleRegionStateOptions = [
     ['full', 'Full'],
     ['hidden', 'Hidden'],
 ] as const;
-export type PluginLayoutControlsDisplay = 'outside' | 'portrait' | 'landscape' | 'reactive'
+export type PluginLayoutControlsDisplay =
+    | 'outside'
+    | 'portrait'
+    | 'landscape'
+    | 'reactive';
 export const PluginLayoutStateParams = {
     isExpanded: PD.Boolean(false),
     showControls: PD.Boolean(true),
@@ -29,45 +34,67 @@ export const PluginLayoutStateParams = {
         right: PD.Select('full', simpleRegionStateOptions),
         bottom: PD.Select('full', simpleRegionStateOptions),
     }),
-    controlsDisplay: PD.Value<PluginLayoutControlsDisplay>('outside', { isHidden: true })
+    controlsDisplay: PD.Value<PluginLayoutControlsDisplay>('outside', {
+        isHidden: true,
+    }),
+    expandToFullscreen: PD.Boolean(false),
 };
-export type PluginLayoutStateProps = PD.Values<typeof PluginLayoutStateParams>
+export type PluginLayoutStateProps = PD.Values<typeof PluginLayoutStateParams>;
 
-export type LeftPanelTabName = 'none' | 'root' | 'data' | 'states' | 'settings' | 'help'
+export type LeftPanelTabName =
+    | 'none'
+    | 'root'
+    | 'data'
+    | 'states'
+    | 'settings'
+    | 'help';
 
 interface RootState {
-    top: string | null,
-    bottom: string | null,
-    left: string | null,
-    right: string | null,
+    top: string | null;
+    bottom: string | null;
+    left: string | null;
+    right: string | null;
 
-    width: string | null,
-    height: string | null,
-    maxWidth: string | null,
-    maxHeight: string | null,
-    margin: string | null,
-    marginLeft: string | null,
-    marginRight: string | null,
-    marginTop: string | null,
-    marginBottom: string | null,
+    width: string | null;
+    height: string | null;
+    maxWidth: string | null;
+    maxHeight: string | null;
+    margin: string | null;
+    marginLeft: string | null;
+    marginRight: string | null;
+    marginTop: string | null;
+    marginBottom: string | null;
 
-    scrollTop: number,
-    scrollLeft: number,
-    position: string | null,
-    overflow: string | null,
-    viewports: HTMLElement[],
-    zIndex: string | null
+    scrollTop: number;
+    scrollLeft: number;
+    position: string | null;
+    overflow: string | null;
+    viewports: HTMLElement[];
+    zIndex: string | null;
 }
 
 export class PluginLayout extends StatefulPluginComponent<PluginLayoutStateProps> {
     readonly events = {
-        updated: this.ev()
+        updated: this.ev(),
     };
 
     private updateProps(state: Partial<PluginLayoutStateProps>) {
         const prevExpanded = !!this.state.isExpanded;
         this.updateState(state);
-        if (this.root && typeof state.isExpanded === 'boolean' && state.isExpanded !== prevExpanded) this.handleExpand();
+        if (
+            this.root &&
+            typeof state.isExpanded === 'boolean' &&
+            state.isExpanded !== prevExpanded
+        ) {
+            this.handleExpand();
+        }
+
+        if (this.state.expandToFullscreen) {
+            const body = document.getElementsByTagName('body')[0];
+            if (body) this.tryRequestFullscreen(body);
+        } else if (document.fullscreenElement) {
+            this.tryExitFullscreen();
+        }
 
         this.events.updated.next(void 0);
     }
@@ -86,9 +113,30 @@ export class PluginLayout extends StatefulPluginComponent<PluginLayoutStateProps
     }
 
     private getScrollElement() {
-        if ((document as any).scrollingElement) return (document as any).scrollingElement;
+        if ((document as any).scrollingElement) {
+            return (document as any).scrollingElement;
+        }
         if (document.documentElement) return document.documentElement;
         return document.body;
+    }
+
+    private async tryRequestFullscreen(body: HTMLElement) {
+        if (document.fullscreenElement) return;
+        try {
+            await body.requestFullscreen();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    private async tryExitFullscreen() {
+        if (!document.fullscreenElement) return;
+
+        try {
+            await document.exitFullscreen();
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     private handleExpand() {
@@ -105,7 +153,9 @@ export class PluginLayout extends StatefulPluginComponent<PluginLayoutStateProps
                 for (let i = 0; i < children.length; i++) {
                     if (children[i] === this.expandedViewport) {
                         hasExp = true;
-                    } else if (((children[i] as any).name || '').toLowerCase() === 'viewport') {
+                    } else if (
+                        ((children[i] as any).name || '').toLowerCase() === 'viewport'
+                    ) {
                         viewports.push(children[i] as any);
                     }
                 }
@@ -116,7 +166,6 @@ export class PluginLayout extends StatefulPluginComponent<PluginLayoutStateProps
 
                 if (!hasExp) head.appendChild(this.expandedViewport);
 
-
                 const s = body.style;
 
                 const doc = this.getScrollElement();
@@ -124,10 +173,25 @@ export class PluginLayout extends StatefulPluginComponent<PluginLayoutStateProps
                 const scrollTop = doc.scrollTop;
 
                 this.rootState = {
-                    top: s.top, bottom: s.bottom, right: s.right, left: s.left, scrollTop, scrollLeft, position: s.position, overflow: s.overflow, viewports, zIndex: this.root.style.zIndex,
-                    width: s.width, height: s.height,
-                    maxWidth: s.maxWidth, maxHeight: s.maxHeight,
-                    margin: s.margin, marginLeft: s.marginLeft, marginRight: s.marginRight, marginTop: s.marginTop, marginBottom: s.marginBottom
+                    top: s.top,
+                    bottom: s.bottom,
+                    right: s.right,
+                    left: s.left,
+                    scrollTop,
+                    scrollLeft,
+                    position: s.position,
+                    overflow: s.overflow,
+                    viewports,
+                    zIndex: this.root.style.zIndex,
+                    width: s.width,
+                    height: s.height,
+                    maxWidth: s.maxWidth,
+                    maxHeight: s.maxHeight,
+                    margin: s.margin,
+                    marginLeft: s.marginLeft,
+                    marginRight: s.marginRight,
+                    marginTop: s.marginTop,
+                    marginBottom: s.marginBottom,
                 };
 
                 s.overflow = 'hidden';
@@ -156,6 +220,10 @@ export class PluginLayout extends StatefulPluginComponent<PluginLayoutStateProps
                         head.removeChild(this.expandedViewport);
                         break;
                     }
+                }
+
+                if (this.state.expandToFullscreen && document.fullscreenElement) {
+                    document.exitFullscreen();
                 }
 
                 if (this.rootState) {
@@ -198,10 +266,38 @@ export class PluginLayout extends StatefulPluginComponent<PluginLayoutStateProps
         }
     }
 
-    constructor(private context: PluginContext) {
-        super({ ...PD.getDefaultValues(PluginLayoutStateParams), ...(context.spec.layout && context.spec.layout.initial) });
+    private fullscreenChangeHandler = () => {
+        // In case the user exits fullscreen mode by pressing ESC, treat it as an expand toggle
+        if (!document.fullscreenElement) {
+            this.updateProps({ expandToFullscreen: false });
+        }
+    };
 
-        PluginCommands.Layout.Update.subscribe(context, e => this.updateProps(e.state));
+    override dispose(): void {
+        super.dispose();
+        document.removeEventListener(
+            'fullscreenchange',
+            this.fullscreenChangeHandler,
+        );
+        document.removeEventListener(
+            'webkitfullscreenchange',
+            this.fullscreenChangeHandler,
+        );
+    }
+
+    constructor(private context: PluginContext) {
+        super({
+            ...PD.getDefaultValues(PluginLayoutStateParams),
+            ...(context.spec.layout && context.spec.layout.initial),
+        });
+
+        document.addEventListener('fullscreenchange', this.fullscreenChangeHandler);
+        document.addEventListener(
+            'webkitfullscreenchange',
+            this.fullscreenChangeHandler,
+        );
+
+        PluginCommands.Layout.Update.subscribe(context, (e) => this.updateProps(e.state));
 
         // TODO how best make sure it runs on node.js as well as in the browser?
         if (typeof document !== 'undefined') {

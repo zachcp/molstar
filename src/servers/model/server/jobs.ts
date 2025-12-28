@@ -5,63 +5,63 @@
  */
 
 import { UUID } from '../../../mol-util/index.ts';
-import { getQueryByName, type QueryDefinition, type QueryName, type QueryParams, type Encoding } from './api.ts';
+import { type Encoding, getQueryByName, type QueryDefinition, type QueryName, type QueryParams } from './api.ts';
 import { LinkedList } from '../../../mol-data/generic.ts';
 import type { ResultWriter } from '../utils/writer.ts';
 import type { Mat4 } from '../../../mol-math/linear-algebra.ts';
 
 export interface ResponseFormat {
-    tarball: boolean,
-    encoding: Encoding
+    tarball: boolean;
+    encoding: Encoding;
 }
 
 export interface Job {
-    id: UUID,
-    datetime_utc: string,
+    id: UUID;
+    datetime_utc: string;
 
-    entries: JobEntry[],
+    entries: JobEntry[];
 
-    responseFormat: ResponseFormat,
-    outputFilename?: string,
+    responseFormat: ResponseFormat;
+    outputFilename?: string;
 
-    writer: ResultWriter
+    writer: ResultWriter;
 }
 
 export interface JobDefinition {
-    entries: JobEntry[],
-    writer: ResultWriter,
-    options?: { outputFilename?: string, binary?: boolean, tarball?: boolean, encoding?: Encoding }
+    entries: JobEntry[];
+    writer: ResultWriter;
+    options?: { outputFilename?: string; binary?: boolean; tarball?: boolean; encoding?: Encoding };
 }
 
 export interface JobEntry {
-    job: Job,
-    sourceId: '_local_' | string,
-    entryId: string,
-    key: string,
+    job: Job;
+    sourceId: '_local_' | string;
+    entryId: string;
+    key: string;
 
-    queryDefinition: QueryDefinition,
-    normalizedParams: any,
-    modelNums?: number[],
-    copyAllCategories: boolean,
-    transform?: Mat4
+    queryDefinition: QueryDefinition;
+    normalizedParams: any;
+    modelNums?: number[];
+    copyAllCategories: boolean;
+    transform?: Mat4;
 }
 
 interface JobEntryDefinition<Name extends QueryName> {
-    sourceId?: string, // = '_local_',
-    entryId: string,
-    queryName: Name,
-    queryParams: QueryParams<Name>,
-    modelNums?: number[],
-    copyAllCategories: boolean,
-    transform?: Mat4
+    sourceId?: string; // = '_local_',
+    entryId: string;
+    queryName: Name;
+    queryParams: QueryParams<Name>;
+    modelNums?: number[];
+    copyAllCategories: boolean;
+    transform?: Mat4;
 }
 
 export interface ResultWriterParams {
-    encoding: Encoding,
-    download: boolean,
-    filename?: string,
-    entryId?: string,
-    queryName?: string
+    encoding: Encoding;
+    download: boolean;
+    filename?: string;
+    entryId?: string;
+    queryName?: string;
 }
 
 export function JobEntry<Name extends QueryName>(definition: JobEntryDefinition<Name>): JobEntry {
@@ -80,7 +80,7 @@ export function JobEntry<Name extends QueryName>(definition: JobEntryDefinition<
         normalizedParams,
         modelNums: definition.modelNums,
         copyAllCategories: !!definition.copyAllCategories,
-        transform: definition.transform
+        transform: definition.transform,
     };
 }
 
@@ -92,11 +92,15 @@ export function createJob(definition: JobDefinition): Job {
         writer: definition.writer,
         responseFormat: {
             tarball: !!definition?.options?.tarball,
-            encoding: definition?.options?.encoding ? definition.options.encoding : !!(definition.options && definition.options.binary) ? 'bcif' : 'cif'
+            encoding: definition?.options?.encoding
+                ? definition.options.encoding
+                : !!(definition.options && definition.options.binary)
+                ? 'bcif'
+                : 'cif',
         },
-        outputFilename: definition.options && definition.options.outputFilename
+        outputFilename: definition.options && definition.options.outputFilename,
     };
-    definition.entries.forEach(e => e.job = job);
+    definition.entries.forEach((e) => e.job = job);
     return job;
 }
 

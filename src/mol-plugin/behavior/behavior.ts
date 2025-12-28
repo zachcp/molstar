@@ -5,8 +5,8 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { PluginStateTransform, PluginStateObject } from '../../mol-plugin-state/objects.ts';
-import { StateTransformer, type StateTransform } from '../../mol-state/index.ts';
+import { PluginStateObject, PluginStateTransform } from '../../mol-plugin-state/objects.ts';
+import { type StateTransform, StateTransformer } from '../../mol-state/index.ts';
 import { Task } from '../../mol-task/index.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import type { PluginCommand } from '../command.ts';
@@ -17,43 +17,45 @@ import { shallowEqualObjects } from '../../mol-util/index.ts';
 export { PluginBehavior };
 
 interface PluginBehavior<P = unknown> {
-    register(ref: StateTransform.Ref): void,
-    unregister?(): void,
-    dispose?(): void,
+    register(ref: StateTransform.Ref): void;
+    unregister?(): void;
+    dispose?(): void;
 
     /** Update params in place. Optionally return a promise if it depends on an async action. */
-    update?(params: P): boolean | Promise<boolean>
+    update?(params: P): boolean | Promise<boolean>;
 }
 
 namespace PluginBehavior {
-    export class Root extends PluginStateObject.Create({ name: 'Root', typeClass: 'Root' }) { }
-    export class Category extends PluginStateObject.Create({ name: 'Category', typeClass: 'Object' }) { }
-    export class Behavior extends PluginStateObject.CreateBehavior<PluginBehavior>({ name: 'Behavior' }) { }
+    export class Root extends PluginStateObject.Create({ name: 'Root', typeClass: 'Root' }) {}
+    export class Category extends PluginStateObject.Create({ name: 'Category', typeClass: 'Object' }) {}
+    export class Behavior extends PluginStateObject.CreateBehavior<PluginBehavior>({ name: 'Behavior' }) {}
 
-    export interface Ctor<P = undefined> { new(ctx: PluginContext, params: P): PluginBehavior<P> }
+    export interface Ctor<P = undefined> {
+        new (ctx: PluginContext, params: P): PluginBehavior<P>;
+    }
 
     export const Categories = {
         'common': 'Common',
         'representation': 'Representation',
         'interaction': 'Interaction',
         'custom-props': 'Custom Properties',
-        'misc': 'Miscellaneous'
+        'misc': 'Miscellaneous',
     };
 
     export interface CreateParams<P extends {}> {
-        name: string,
-        category: keyof typeof Categories,
-        ctor: Ctor<P>,
-        canAutoUpdate?: StateTransformer.Definition<Root, Behavior, P>['canAutoUpdate'],
-        label?: (params: P) => { label: string, description?: string },
+        name: string;
+        category: keyof typeof Categories;
+        ctor: Ctor<P>;
+        canAutoUpdate?: StateTransformer.Definition<Root, Behavior, P>['canAutoUpdate'];
+        label?: (params: P) => { label: string; description?: string };
         display: {
-            name: string,
-            description?: string
-        },
-        params?(a: Root, globalCtx: PluginContext): { [K in keyof P]: ParamDefinition.Any }
+            name: string;
+            description?: string;
+        };
+        params?(a: Root, globalCtx: PluginContext): { [K in keyof P]: ParamDefinition.Any };
     }
 
-    export type CreateCategory = typeof CreateCategory
+    export type CreateCategory = typeof CreateCategory;
     export const CreateCategory = PluginStateTransform.BuiltIn({
         name: 'create-behavior-category',
         display: { name: 'Behavior Category' },
@@ -61,11 +63,11 @@ namespace PluginBehavior {
         to: Category,
         params: {
             label: ParamDefinition.Text('', { isHidden: true }),
-        }
+        },
     })({
         apply({ params }) {
             return new Category({}, { label: params.label });
-        }
+        },
     });
 
     const categoryMap = new Map<string, keyof typeof Categories>();
@@ -81,7 +83,9 @@ namespace PluginBehavior {
             to: [Behavior],
             params: params.params,
             apply({ params: p }, ctx: PluginContext) {
-                const label = params.label ? params.label(p) : { label: params.display.name, description: params.display.description };
+                const label = params.label
+                    ? params.label(p)
+                    : { label: params.display.name, description: params.display.description };
                 return new Behavior(new params.ctor(ctx, p), label);
             },
             update({ b, newParams }) {
@@ -91,25 +95,28 @@ namespace PluginBehavior {
                     return updated ? StateTransformer.UpdateResult.Updated : StateTransformer.UpdateResult.Unchanged;
                 });
             },
-            canAutoUpdate: params.canAutoUpdate
+            canAutoUpdate: params.canAutoUpdate,
         });
         categoryMap.set(t.id, params.category);
         return t;
     }
 
-    export function simpleCommandHandler<T>(cmd: PluginCommand<T>, action: (data: T, ctx: PluginContext) => void | Promise<void>) {
+    export function simpleCommandHandler<T>(
+        cmd: PluginCommand<T>,
+        action: (data: T, ctx: PluginContext) => void | Promise<void>,
+    ) {
         return class implements PluginBehavior<{}> {
             // TODO can't be private due to bug with generating declerations, see https://github.com/Microsoft/TypeScript/issues/17293
             /** private */ sub: PluginCommand.Subscription | undefined = void 0;
             register(): void {
-                this.sub = cmd.subscribe(this.ctx, data => action(data, this.ctx));
+                this.sub = cmd.subscribe(this.ctx, (data) => action(data, this.ctx));
             }
             dispose(): void {
                 if (this.sub) this.sub.unsubscribe();
                 this.sub = void 0;
             }
             // TODO can't be private due to bug with generating declerations, see https://github.com/Microsoft/TypeScript/issues/17293
-            constructor(/** private */ public ctx: PluginContext) { }
+            constructor(/** private */ public ctx: PluginContext) {}
         };
     }
 
@@ -138,7 +145,7 @@ namespace PluginBehavior {
         }
     }
 
-    export abstract class WithSubscribers<P = { }> implements PluginBehavior<P> {
+    export abstract class WithSubscribers<P = {}> implements PluginBehavior<P> {
         abstract register(ref: string): void;
 
         private subs: PluginCommand.Subscription[] = [];
@@ -155,7 +162,7 @@ namespace PluginBehavior {
                         this.subs.splice(idx, 1);
                         sub.unsubscribe();
                     }
-                }
+                },
             };
         }
         dispose(): void {

@@ -9,7 +9,6 @@ import { Mat3, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { PrincipalAxes } from '../../../mol-math/linear-algebra/matrix/principal-axes.ts';
 import { type Structure, StructureElement, StructureProperties } from '../../../mol-model/structure.ts';
 
-
 /** Minimum number of atoms necessary for running PCA.
  * If enough atoms cannot be selected, XYZ axes will be used instead of PCA axes. */
 const MIN_ATOMS_FOR_PCA = 3;
@@ -29,7 +28,6 @@ export const ROTATION_MATRICES = {
     rotZ180: Mat3.create(-1, 0, 0, 0, -1, 0, 0, 0, 1),
 };
 
-
 /** Return transformation which will align the PCA axes of an atomic structure
  * (or multiple structures) to the Cartesian axes x, y, z
  * (transformed = rotation * (coords - origin)).
@@ -38,7 +36,10 @@ export const ROTATION_MATRICES = {
  * If `referenceRotation` is provided, select the one nearest to `referenceRotation`.
  * Otherwise use arbitrary rules to ensure the orientation after transform does not depend on the original orientation.
  */
-export function structureLayingTransform(structures: Structure[], referenceRotation?: Mat3): { rotation: Mat3, origin: Vec3 } {
+export function structureLayingTransform(
+    structures: Structure[],
+    referenceRotation?: Mat3,
+): { rotation: Mat3; origin: Vec3 } {
     const coords = smartSelectCoords(structures, MIN_ATOMS_FOR_PCA);
     return layingTransform(coords, referenceRotation);
 }
@@ -53,7 +54,7 @@ export function structureLayingTransform(structures: Structure[], referenceRotat
  * If `referenceRotation` is provided, select the one nearest to `referenceRotation`.
  * Otherwise use arbitrary rules to ensure the orientation after transform does not depend on the original orientation.
  */
-export function layingTransform(coords: number[], referenceRotation?: Mat3): { rotation: Mat3, origin: Vec3 } {
+export function layingTransform(coords: number[], referenceRotation?: Mat3): { rotation: Mat3; origin: Vec3 } {
     if (coords.length === 0) {
         console.warn('Skipping PCA, no atoms');
         return { rotation: ROTATION_MATRICES.identity, origin: Vec3.zero() };
@@ -89,7 +90,10 @@ function smartSelectCoords(structures: Structure[], minAtoms: number): number[] 
  * If `onlyTrace`, include only trace atoms (CA, O3');
  * if `skipHydrogens`, skip all hydrogen atoms;
  * if `skipWater`, skip all water residues. */
-function selectCoords(structures: Structure[], options: { onlyTrace?: boolean, skipHydrogens?: boolean, skipWater?: boolean }): number[] {
+function selectCoords(
+    structures: Structure[],
+    options: { onlyTrace?: boolean; skipHydrogens?: boolean; skipWater?: boolean },
+): number[] {
     const { onlyTrace, skipHydrogens, skipWater } = options;
     const { x, y, z, type_symbol, label_comp_id } = StructureProperties.atom;
     const coords: number[] = [];
@@ -114,7 +118,14 @@ function minimalFlip(rotation: Mat3, referenceRotation: Mat3): Mat3 {
     let bestFlip = ROTATION_MATRICES.identity;
     let bestScore = 0; // there will always be at least one positive score
     const aux = Mat3();
-    for (const flip of [ROTATION_MATRICES.identity, ROTATION_MATRICES.rotX180, ROTATION_MATRICES.rotY180, ROTATION_MATRICES.rotZ180]) {
+    for (
+        const flip of [
+            ROTATION_MATRICES.identity,
+            ROTATION_MATRICES.rotX180,
+            ROTATION_MATRICES.rotY180,
+            ROTATION_MATRICES.rotZ180,
+        ]
+    ) {
         const score = Mat3.innerProduct(Mat3.mul(aux, flip, rotation), referenceRotation);
         if (score > bestScore) {
             bestFlip = flip;
@@ -134,9 +145,21 @@ function minimalFlip(rotation: Mat3, referenceRotation: Mat3): Mat3 {
  * Provided `origin` parameter MUST be the mean of the coordinates, otherwise it will not work!
  */
 function canonicalFlip(coords: number[], rotation: Mat3, origin: Vec3): Mat3 {
-    const pcaX = Vec3.create(Mat3.getValue(rotation, 0, 0), Mat3.getValue(rotation, 0, 1), Mat3.getValue(rotation, 0, 2));
-    const pcaY = Vec3.create(Mat3.getValue(rotation, 1, 0), Mat3.getValue(rotation, 1, 1), Mat3.getValue(rotation, 1, 2));
-    const pcaZ = Vec3.create(Mat3.getValue(rotation, 2, 0), Mat3.getValue(rotation, 2, 1), Mat3.getValue(rotation, 2, 2));
+    const pcaX = Vec3.create(
+        Mat3.getValue(rotation, 0, 0),
+        Mat3.getValue(rotation, 0, 1),
+        Mat3.getValue(rotation, 0, 2),
+    );
+    const pcaY = Vec3.create(
+        Mat3.getValue(rotation, 1, 0),
+        Mat3.getValue(rotation, 1, 1),
+        Mat3.getValue(rotation, 1, 2),
+    );
+    const pcaZ = Vec3.create(
+        Mat3.getValue(rotation, 2, 0),
+        Mat3.getValue(rotation, 2, 1),
+        Mat3.getValue(rotation, 2, 2),
+    );
     const n = Math.floor(coords.length / 3);
     const v = Vec3();
     let xCum = 0;

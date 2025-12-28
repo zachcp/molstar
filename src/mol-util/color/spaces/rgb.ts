@@ -8,7 +8,11 @@ import type { Color } from '../color.ts';
 
 export { Rgb };
 
-interface Rgb extends Array<number> { [d: number]: number, '@type': 'normalized-rgb', length: 3 }
+interface Rgb extends Array<number> {
+    [d: number]: number;
+    '@type': 'normalized-rgb';
+    length: 3;
+}
 
 function Rgb() {
     return Rgb.zero();

@@ -20,8 +20,8 @@ if (typeof window !== 'undefined') {
         const properties = 'memory'.split(',');
         const methods = (
             'assert,clear,count,debug,dir,dirxml,error,exception,group,' +
-        'groupCollapsed,groupEnd,info,log,markTimeline,profile,profiles,profileEnd,' +
-        'show,table,time,timeEnd,timeline,timelineEnd,timeStamp,trace,warn'
+            'groupCollapsed,groupEnd,info,log,markTimeline,profile,profiles,profileEnd,' +
+            'show,table,time,timeEnd,timeline,timelineEnd,timeStamp,trace,warn'
         ).split(',');
 
         while ((prop = properties.pop())) if (!(con as any)[prop]) (con as any)[prop] = empty;
@@ -32,7 +32,6 @@ if (typeof window !== 'undefined') {
 if (typeof globalThis.HTMLCanvasElement !== 'undefined' && !globalThis.HTMLCanvasElement.prototype.toBlob) {
     // http://code.google.com/p/chromium/issues/detail?id=67587#57
     Object.defineProperty(globalThis.HTMLCanvasElement.prototype, 'toBlob', {
-
         value: function (callback: any, type: any, quality: any) {
             const bin = globalThis.atob(this.toDataURL(type, quality).split(',')[1]);
             const len = bin.length;
@@ -42,12 +41,10 @@ if (typeof globalThis.HTMLCanvasElement !== 'undefined' && !globalThis.HTMLCanva
 
             let j = 0;
             for (let i = 0; i < len32; i++) {
-                a32[i] = (
-                    bin.charCodeAt(j++) |
+                a32[i] = bin.charCodeAt(j++) |
                     bin.charCodeAt(j++) << 8 |
                     bin.charCodeAt(j++) << 16 |
-                    bin.charCodeAt(j++) << 24
-                );
+                    bin.charCodeAt(j++) << 24;
             }
 
             let tailLength = len & 3;
@@ -57,8 +54,7 @@ if (typeof globalThis.HTMLCanvasElement !== 'undefined' && !globalThis.HTMLCanva
             }
 
             callback(new globalThis.Blob([a8], { 'type': type || 'image/png' }));
-        }
-
+        },
     });
 }
 
@@ -87,7 +83,8 @@ if (!Math.sign) {
 if (!Number.isInteger) {
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isInteger
     Number.isInteger = function isInteger(nVal) {
-        return typeof nVal === 'number' && isFinite(nVal) && nVal > -9007199254740992 && nVal < 9007199254740992 && Math.floor(nVal) === nVal;
+        return typeof nVal === 'number' && isFinite(nVal) && nVal > -9007199254740992 && nVal < 9007199254740992 &&
+            Math.floor(nVal) === nVal;
     };
 }
 
@@ -101,14 +98,13 @@ if (!Number.isNaN) {
 if (!Object.assign) {
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
     Object.defineProperty(Object, 'assign', {
-
         enumerable: false,
         configurable: true,
         writable: true,
 
-        value: function (target: any/* , firstSource */) {
+        value: function (target: any /* , firstSource */) {
             'use strict';
-            if (target === undefined || target === null) { throw new TypeError('Cannot convert first argument to object'); }
+            if (target === undefined || target === null) throw new TypeError('Cannot convert first argument to object');
 
             const to = Object(target);
 
@@ -117,14 +113,14 @@ if (!Object.assign) {
 
             for (let i = 1; i < arguments.length; i++) {
                 const nextSource = arguments[i];
-                if (nextSource === undefined || nextSource === null) { continue; }
+                if (nextSource === undefined || nextSource === null) continue;
 
                 const keysArray = Object.keys(Object(nextSource));
                 for (let nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
                     const nextKey = keysArray[nextIndex];
                     try {
                         const desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
-                        if (desc !== undefined && desc.enumerable) { to[nextKey] = nextSource[nextKey]; }
+                        if (desc !== undefined && desc.enumerable) to[nextKey] = nextSource[nextKey];
                     } catch (e) {
                         if (!hasPendingException) {
                             hasPendingException = true;
@@ -133,12 +129,11 @@ if (!Object.assign) {
                     }
                 }
 
-                if (hasPendingException) { throw pendingException; }
+                if (hasPendingException) throw pendingException;
             }
 
             return to;
-        }
-
+        },
     });
 }
 
@@ -147,8 +142,8 @@ if (!String.prototype.startsWith) {
 
     (function () {
         'use strict'; // needed to support `apply`/`call` with `undefined`/`null`
-        const defineProperty = (function () {
-        // IE 8 only supports `Object.defineProperty` on DOM elements
+        const defineProperty = function () {
+            // IE 8 only supports `Object.defineProperty` on DOM elements
             let result;
             try {
                 const object = {};
@@ -156,7 +151,7 @@ if (!String.prototype.startsWith) {
                 result = $defineProperty(object, object as any, object) && $defineProperty;
             } catch (error) {}
             return result;
-        }());
+        }();
         const toString = {}.toString;
         const startsWith = function (this: any, search: any) {
             if (this === null) {
@@ -192,18 +187,21 @@ if (!String.prototype.startsWith) {
             defineProperty(String.prototype, 'startsWith', {
                 'value': startsWith,
                 'configurable': true,
-                'writable': true
+                'writable': true,
             });
         } else {
             String.prototype.startsWith = startsWith;
         }
-    }());
+    })();
 }
 
 if (!String.prototype.endsWith) {
     String.prototype.endsWith = function (searchString, position) {
         const subjectString = this.toString();
-        if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
+        if (
+            typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position ||
+            position > subjectString.length
+        ) {
             position = subjectString.length;
         }
         position -= searchString.length;
@@ -216,7 +214,7 @@ if (!String.prototype.repeat) {
     String.prototype.repeat = function (count) {
         'use strict';
         if (this === null) {
-            throw new TypeError('can\'t convert ' + this + ' to object');
+            throw new TypeError("can't convert " + this + ' to object');
         }
         let str = '' + this;
         count = +count;
@@ -289,13 +287,14 @@ if (!Array.prototype.includes) {
             k = n;
         } else {
             k = len + n;
-            if (k < 0) { k = 0; }
+            if (k < 0) k = 0;
         }
         let currentElement;
         while (k < len) {
             currentElement = O[k];
-            if (searchElement === currentElement ||
-            (Number.isNaN(searchElement) && Number.isNaN(currentElement))
+            if (
+                searchElement === currentElement ||
+                (Number.isNaN(searchElement) && Number.isNaN(currentElement))
             ) {
                 return true;
             }
@@ -308,15 +307,15 @@ if (!Array.prototype.includes) {
 // Production steps of ECMA-262, Edition 6, 22.1.2.1
 // Reference: https://people.mozilla.org/~jorendorff/es6-draft.html#sec-array.from
 if (!Array.from) {
-    Array.from = (function () {
+    Array.from = function () {
         const toStr = Object.prototype.toString;
         const isCallable = function (fn: any) {
             return typeof fn === 'function' || toStr.call(fn) === '[object Function]';
         };
         const toInteger = function (value: any) {
             const number = Number(value);
-            if (isNaN(number)) { return 0; }
-            if (number === 0 || !isFinite(number)) { return number; }
+            if (isNaN(number)) return 0;
+            if (number === 0 || !isFinite(number)) return number;
             return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
         };
         const maxSafeInteger = Math.pow(2, 53) - 1;
@@ -326,8 +325,8 @@ if (!Array.from) {
         };
 
         // The length property of the from method is 1.
-        return function from(this: any, arrayLike: any/* , mapFn, thisArg */) {
-        // 1. Let C be the this value.
+        return function from(this: any, arrayLike: any /* , mapFn, thisArg */) {
+            // 1. Let C be the this value.
             const C = this;
 
             // 2. Let items be ToObject(arrayLike).
@@ -381,7 +380,7 @@ if (!Array.from) {
             // 20. Return A.
             return A;
         };
-    }());
+    }();
 }
 
 if (typeof window !== 'undefined') {
@@ -397,18 +396,14 @@ if (typeof window !== 'undefined') {
         const vendors = ['ms', 'moz', 'webkit', 'o'];
 
         for (let x = 0; x < vendors.length && !globalThis.requestAnimationFrame; ++x) {
-            globalThis.requestAnimationFrame = (
-                (window as any)[vendors[x] + 'RequestAnimationFrame']
-            );
+            globalThis.requestAnimationFrame = (window as any)[vendors[x] + 'RequestAnimationFrame'];
 
-            globalThis.cancelAnimationFrame = (
-                (window as any)[vendors[x] + 'CancelAnimationFrame'] ||
-                (window as any)[vendors[x] + 'CancelRequestAnimationFrame']
-            );
+            globalThis.cancelAnimationFrame = (window as any)[vendors[x] + 'CancelAnimationFrame'] ||
+                (window as any)[vendors[x] + 'CancelRequestAnimationFrame'];
         }
 
         if (!globalThis.requestAnimationFrame) {
-            globalThis.requestAnimationFrame = function (callback/* , element */) {
+            globalThis.requestAnimationFrame = function (callback /* , element */) {
                 const currTime = new Date().getTime();
                 const timeToCall = Math.max(0, 16 - (currTime - lastTime));
 
@@ -428,7 +423,7 @@ if (typeof window !== 'undefined') {
                 clearTimeout(id);
             };
         }
-    }());
+    })();
 }
 
 if (Function.prototype.name === undefined && Object.defineProperty !== undefined) {
@@ -438,7 +433,7 @@ if (Function.prototype.name === undefined && Object.defineProperty !== undefined
     Object.defineProperty(Function.prototype, 'name', {
         get: function () {
             return this.toString().match(/^\s*function\s*(\S*)\s*\(/)[1];
-        }
+        },
     });
 }
 
@@ -469,7 +464,7 @@ if (Object.defineProperty !== undefined) {
             enumerable: false,
             configurable: false,
             writable: false,
-            value: Math.pow(2, 53) - 1
+            value: Math.pow(2, 53) - 1,
         });
     }
     if (Number.MIN_SAFE_INTEGER === undefined) {
@@ -477,7 +472,7 @@ if (Object.defineProperty !== undefined) {
             enumerable: false,
             configurable: false,
             writable: false,
-            value: -(Math.pow(2, 53) - 1)
+            value: -(Math.pow(2, 53) - 1),
         });
     }
 }
@@ -487,8 +482,9 @@ if (!Object.entries) {
         const ownProps = Object.keys(obj);
         let i = ownProps.length;
         const resArray = new Array(i); // preallocate the Array
-        while (i--)
+        while (i--) {
             resArray[i] = [ownProps[i], obj[ownProps[i]]];
+        }
 
         return resArray;
     };
@@ -544,7 +540,7 @@ if (!Array.prototype.find) {
             return undefined;
         },
         configurable: true,
-        writable: true
+        writable: true,
     });
 }
 
@@ -552,7 +548,6 @@ if (!Array.prototype.find) {
 if (!Array.prototype.fill) {
     Object.defineProperty(Array.prototype, 'fill', {
         value: function (value: any) {
-
             // Steps 1-2.
             if (this == null) {
                 throw new TypeError('this is null or not defined');
@@ -568,19 +563,14 @@ if (!Array.prototype.fill) {
             const relativeStart = start >> 0;
 
             // Step 8.
-            let k = relativeStart < 0 ?
-                Math.max(len + relativeStart, 0) :
-                Math.min(relativeStart, len);
+            let k = relativeStart < 0 ? Math.max(len + relativeStart, 0) : Math.min(relativeStart, len);
 
             // Steps 9-10.
             const end = arguments[2];
-            const relativeEnd = end === undefined ?
-                len : end >> 0;
+            const relativeEnd = end === undefined ? len : end >> 0;
 
             // Step 11.
-            const finalValue = relativeEnd < 0 ?
-                Math.max(len + relativeEnd, 0) :
-                Math.min(relativeEnd, len);
+            const finalValue = relativeEnd < 0 ? Math.max(len + relativeEnd, 0) : Math.min(relativeEnd, len);
 
             // Step 12.
             while (k < finalValue) {
@@ -590,13 +580,13 @@ if (!Array.prototype.fill) {
 
             // Step 13.
             return O;
-        }
+        },
     });
 }
 
 if (!Array.prototype.copyWithin) {
     Object.defineProperty(Array.prototype, 'copyWithin', {
-        value: function (target: any, start: any/* , end*/) {
+        value: function (target: any, start: any /* , end*/) {
             // Steps 1-2.
             if (this == null) {
                 throw new TypeError('this is null or not defined');
@@ -610,24 +600,18 @@ if (!Array.prototype.copyWithin) {
             // Steps 6-8.
             const relativeTarget = target >> 0;
 
-            let to = relativeTarget < 0 ?
-                Math.max(len + relativeTarget, 0) :
-                Math.min(relativeTarget, len);
+            let to = relativeTarget < 0 ? Math.max(len + relativeTarget, 0) : Math.min(relativeTarget, len);
 
             // Steps 9-11.
             const relativeStart = start >> 0;
 
-            let from = relativeStart < 0 ?
-                Math.max(len + relativeStart, 0) :
-                Math.min(relativeStart, len);
+            let from = relativeStart < 0 ? Math.max(len + relativeStart, 0) : Math.min(relativeStart, len);
 
             // Steps 12-14.
             const end = arguments[2];
             const relativeEnd = end === undefined ? len : end >> 0;
 
-            const final = relativeEnd < 0 ?
-                Math.max(len + relativeEnd, 0) :
-                Math.min(relativeEnd, len);
+            const final = relativeEnd < 0 ? Math.max(len + relativeEnd, 0) : Math.min(relativeEnd, len);
 
             // Step 15.
             let count = Math.min(final - from, len - to);
@@ -658,7 +642,7 @@ if (!Array.prototype.copyWithin) {
             return O;
         },
         configurable: true,
-        writable: true
+        writable: true,
     });
 }
 

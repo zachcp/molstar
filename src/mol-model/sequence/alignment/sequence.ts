@@ -5,22 +5,22 @@
  */
 
 import { type StructureElement, Unit } from '../../structure/structure.ts';
-import { type AlignmentOptions, align } from './alignment.ts';
+import { align, type AlignmentOptions } from './alignment.ts';
 import { OrderedSet } from '../../../mol-data/int.ts';
 
 export { AlignSequences };
 
 namespace AlignSequences {
     export type Input = {
-        a: StructureElement.Loci.Element,
-        b: StructureElement.Loci.Element
-    }
+        a: StructureElement.Loci.Element;
+        b: StructureElement.Loci.Element;
+    };
     /** `a` and `b` contain matching pairs, i.e. `a.indices[0]` aligns with `b.indices[0]` */
     export type Result = {
-        a: StructureElement.Loci.Element,
-        b: StructureElement.Loci.Element,
-        score: number
-    }
+        a: StructureElement.Loci.Element;
+        b: StructureElement.Loci.Element;
+        score: number;
+    };
 
     export function createSeqIdIndicesMap(element: StructureElement.Loci.Element) {
         const seqIds = new Map<number, StructureElement.UnitIndex[]>();
@@ -89,7 +89,7 @@ namespace AlignSequences {
         return {
             a: { unit: input.a.unit, indices: outA },
             b: { unit: input.b.unit, indices: outB },
-            score
+            score,
         };
     }
 }

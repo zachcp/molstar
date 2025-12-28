@@ -4,7 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../../../mol-repr/representation.ts';
+import {
+    Representation,
+    type RepresentationContext,
+    type RepresentationParamsGetter,
+} from '../../../mol-repr/representation.ts';
 import type { ThemeRegistryContext } from '../../../mol-theme/theme.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
@@ -17,15 +21,29 @@ import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { Structure, StructureElement } from '../../../mol-model/structure.ts';
 import type { VisualContext } from '../../../mol-repr/visual.ts';
 import { createLinkCylinderMesh, LinkCylinderParams } from '../../../mol-repr/structure/visual/util/link.ts';
-import { ComplexMeshParams, type ComplexVisual, ComplexMeshVisual } from '../../../mol-repr/structure/complex-visual.ts';
+import {
+    ComplexMeshParams,
+    ComplexMeshVisual,
+    type ComplexVisual,
+} from '../../../mol-repr/structure/complex-visual.ts';
 import type { VisualUpdateState } from '../../../mol-repr/util.ts';
-import { ComplexRepresentation, type StructureRepresentation, StructureRepresentationStateBuilder, StructureRepresentationProvider } from '../../../mol-repr/structure/representation.ts';
+import {
+    ComplexRepresentation,
+    type StructureRepresentation,
+    StructureRepresentationProvider,
+    StructureRepresentationStateBuilder,
+} from '../../../mol-repr/structure/representation.ts';
 import type { CustomProperty } from '../../common/custom-property.ts';
-import { CrossLinkRestraintProvider, CrossLinkRestraint } from './property.ts';
+import { CrossLinkRestraint, CrossLinkRestraintProvider } from './property.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 
-function createCrossLinkRestraintCylinderMesh(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<CrossLinkRestraintCylinderParams>, mesh?: Mesh) {
-
+function createCrossLinkRestraintCylinderMesh(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<CrossLinkRestraintCylinderParams>,
+    mesh?: Mesh,
+) {
     const crossLinks = CrossLinkRestraintProvider.get(structure).value!;
     if (!crossLinks.count) return Mesh.createEmpty(mesh);
     const { sizeFactor } = props;
@@ -65,7 +83,7 @@ export const CrossLinkRestraintCylinderParams = {
     ...LinkCylinderParams,
     sizeFactor: PD.Numeric(0.5, { min: 0, max: 10, step: 0.1 }),
 };
-export type CrossLinkRestraintCylinderParams = typeof CrossLinkRestraintCylinderParams
+export type CrossLinkRestraintCylinderParams = typeof CrossLinkRestraintCylinderParams;
 
 export function CrossLinkRestraintVisual(materialId: number): ComplexVisual<CrossLinkRestraintCylinderParams> {
     return ComplexMeshVisual<CrossLinkRestraintCylinderParams>({
@@ -74,13 +92,15 @@ export function CrossLinkRestraintVisual(materialId: number): ComplexVisual<Cros
         createLocationIterator: createCrossLinkRestraintIterator,
         getLoci: getLinkLoci,
         eachLocation: eachCrossLink,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<CrossLinkRestraintCylinderParams>, currentProps: PD.Values<CrossLinkRestraintCylinderParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<CrossLinkRestraintCylinderParams>,
+            currentProps: PD.Values<CrossLinkRestraintCylinderParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.radialSegments !== currentProps.radialSegments ||
-                newProps.linkCap !== currentProps.linkCap
-            );
-        }
+                newProps.linkCap !== currentProps.linkCap;
+        },
     }, materialId);
 }
 
@@ -126,20 +146,32 @@ function eachCrossLink(loci: Loci, structure: Structure, apply: (interval: Inter
 //
 
 const CrossLinkRestraintVisuals = {
-    'cross-link-restraint': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, CrossLinkRestraintCylinderParams>) => ComplexRepresentation('Cross-link restraint', ctx, getParams, CrossLinkRestraintVisual),
+    'cross-link-restraint': (
+        ctx: RepresentationContext,
+        getParams: RepresentationParamsGetter<Structure, CrossLinkRestraintCylinderParams>,
+    ) => ComplexRepresentation('Cross-link restraint', ctx, getParams, CrossLinkRestraintVisual),
 };
 
 export const CrossLinkRestraintParams = {
     ...CrossLinkRestraintCylinderParams,
 };
-export type CrossLinkRestraintParams = typeof CrossLinkRestraintParams
+export type CrossLinkRestraintParams = typeof CrossLinkRestraintParams;
 export function getCrossLinkRestraintParams(ctx: ThemeRegistryContext, structure: Structure) {
     return PD.clone(CrossLinkRestraintParams);
 }
 
-export type CrossLinkRestraintRepresentation = StructureRepresentation<CrossLinkRestraintParams>
-export function CrossLinkRestraintRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, CrossLinkRestraintParams>): CrossLinkRestraintRepresentation {
-    return Representation.createMulti('CrossLinkRestraint', ctx, getParams, StructureRepresentationStateBuilder, CrossLinkRestraintVisuals as unknown as Representation.Def<Structure, CrossLinkRestraintParams>);
+export type CrossLinkRestraintRepresentation = StructureRepresentation<CrossLinkRestraintParams>;
+export function CrossLinkRestraintRepresentation(
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, CrossLinkRestraintParams>,
+): CrossLinkRestraintRepresentation {
+    return Representation.createMulti(
+        'CrossLinkRestraint',
+        ctx,
+        getParams,
+        StructureRepresentationStateBuilder,
+        CrossLinkRestraintVisuals as unknown as Representation.Def<Structure, CrossLinkRestraintParams>,
+    );
 }
 
 export const CrossLinkRestraintRepresentationProvider = StructureRepresentationProvider({
@@ -153,7 +185,8 @@ export const CrossLinkRestraintRepresentationProvider = StructureRepresentationP
     defaultSizeTheme: { name: 'uniform' },
     isApplicable: (structure: Structure) => CrossLinkRestraint.isApplicable(structure),
     ensureCustomProperties: {
-        attach: (ctx: CustomProperty.Context, structure: Structure) => CrossLinkRestraintProvider.attach(ctx, structure, void 0, true),
-        detach: (data) => CrossLinkRestraintProvider.ref(data, false)
-    }
+        attach: (ctx: CustomProperty.Context, structure: Structure) =>
+            CrossLinkRestraintProvider.attach(ctx, structure, void 0, true),
+        detach: (data) => CrossLinkRestraintProvider.ref(data, false),
+    },
 });

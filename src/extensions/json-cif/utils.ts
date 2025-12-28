@@ -23,12 +23,12 @@ export async function molfileToJSONCif(molfile: string) {
         includedCategoryNames: new Set(['atom_site']),
         extensions: {
             molstar_bond_site: true,
-        }
+        },
     });
 
     return {
         structure,
         molfile: parsed.result,
-        jsoncif: encoder.getFile()
+        jsoncif: encoder.getFile(),
     };
 }

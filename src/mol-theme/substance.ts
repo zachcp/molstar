@@ -13,16 +13,20 @@ import { shallowEqual } from '../mol-util/object.ts';
 export { Substance };
 
 type Substance<T extends Loci = Loci> = {
-    readonly kind: T['kind']
-    readonly layers: ReadonlyArray<Substance.Layer<T>>
-}
+    readonly kind: T['kind'];
+    readonly layers: ReadonlyArray<Substance.Layer<T>>;
+};
 
 function Substance<T extends Loci>(kind: T['kind'], layers: ReadonlyArray<Substance.Layer<T>>): Substance {
     return { kind, layers };
 }
 
 namespace Substance {
-    export type Layer<T extends Loci = Loci> = { readonly loci: T, readonly material: Material, readonly clear: boolean }
+    export type Layer<T extends Loci = Loci> = {
+        readonly loci: T;
+        readonly material: Material;
+        readonly clear: boolean;
+    };
     export const Empty: Substance = { kind: 'empty-loci', layers: [] };
 
     export function areEqual(sA: Substance, sB: Substance): boolean {
@@ -69,9 +73,7 @@ namespace Substance {
                 shadowed = StructureElement.Loci.union(loci, shadowed);
                 if (!StructureElement.Loci.isEmpty(loci)) {
                     if (clear) {
-                        clearLoci = clearLoci
-                            ? StructureElement.Loci.union(loci, clearLoci)
-                            : loci;
+                        clearLoci = clearLoci ? StructureElement.Loci.union(loci, clearLoci) : loci;
                     } else {
                         if (map.has(material)) {
                             loci = StructureElement.Loci.union(loci, map.get(material)!);
@@ -114,7 +116,7 @@ namespace Substance {
         }
     }
 
-    export type ScriptLayer = { script: Script, material: Material, clear: boolean }
+    export type ScriptLayer = { script: Script; material: Material; clear: boolean };
     export function ofScript(scriptLayers: ScriptLayer[], structure: Structure): Substance {
         const layers: Substance.Layer[] = [];
         for (let i = 0, il = scriptLayers.length; i < il; ++i) {
@@ -127,7 +129,7 @@ namespace Substance {
         return { kind: 'element-loci', layers };
     }
 
-    export type BundleLayer = { bundle: StructureElement.Bundle, material: Material, clear: boolean }
+    export type BundleLayer = { bundle: StructureElement.Bundle; material: Material; clear: boolean };
     export function ofBundle(bundleLayers: BundleLayer[], structure: Structure): Substance {
         const layers: Substance.Layer[] = [];
         for (let i = 0, il = bundleLayers.length; i < il; ++i) {

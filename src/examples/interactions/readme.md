@@ -10,7 +10,7 @@ An example showcasing features of the `interactions` extension, including:
 To run development build locally from the root `molstar` directory (after `npm install`):
 
 ```bash
-  npm run dev -- -e interactions
+npm run dev -- -e interactions
 ```
 
 and navigate to `build/examples/interactions` in the hosted server linked in the script output.

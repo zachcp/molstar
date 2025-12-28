@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Mat4 } from '../../../../mol-math/linear-algebra.ts';
+import { Mat4, Vec3 } from '../../../../mol-math/linear-algebra.ts';
 import { MeshBuilder } from '../mesh-builder.ts';
 import { Axes3D } from '../../../../mol-math/geometry.ts';
 import { createCage } from '../../../primitive/cage.ts';
@@ -15,7 +15,13 @@ const tmpMatrix = Mat4.identity();
 const tmpVertices = new Float32Array(6 * 3);
 const tmpEdges = new Uint8Array([0, 1, 2, 3, 4, 5]);
 
-export function addAxes(state: MeshBuilder.State, axes: Axes3D, radiusScale: number, detail: number, radialSegments: number) {
+export function addAxes(
+    state: MeshBuilder.State,
+    axes: Axes3D,
+    radiusScale: number,
+    detail: number,
+    radialSegments: number,
+) {
     const { origin, dirA, dirB, dirC } = axes;
 
     Vec3.add(tmpVec, origin, dirA);

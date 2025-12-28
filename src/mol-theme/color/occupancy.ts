@@ -5,7 +5,7 @@
  */
 
 import { Color, ColorScale } from '../../mol-util/color/index.ts';
-import { StructureElement, Unit, Bond, type ElementIndex } from '../../mol-model/structure.ts';
+import { Bond, type ElementIndex, StructureElement, Unit } from '../../mol-model/structure.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ColorTheme } from '../color.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
@@ -19,7 +19,7 @@ export const OccupancyColorThemeParams = {
     domain: PD.Interval([0, 1]),
     list: PD.ColorList('purples', { presetKind: 'scale' }),
 };
-export type OccupancyColorThemeParams = typeof OccupancyColorThemeParams
+export type OccupancyColorThemeParams = typeof OccupancyColorThemeParams;
 export function getOccupancyColorThemeParams(ctx: ThemeDataContext) {
     return OccupancyColorThemeParams; // TODO return copy
 }
@@ -32,7 +32,10 @@ export function getOccupancy(unit: Unit, element: ElementIndex): number {
     }
 }
 
-export function OccupancyColorTheme(ctx: ThemeDataContext, props: PD.Values<OccupancyColorThemeParams>): ColorTheme<OccupancyColorThemeParams> {
+export function OccupancyColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<OccupancyColorThemeParams>,
+): ColorTheme<OccupancyColorThemeParams> {
     const scale = ColorScale.create({
         reverse: false,
         domain: props.domain,
@@ -55,7 +58,7 @@ export function OccupancyColorTheme(ctx: ThemeDataContext, props: PD.Values<Occu
         color,
         props,
         description: Description,
-        legend: scale ? scale.legend : undefined
+        legend: scale ? scale.legend : undefined,
     };
 }
 
@@ -66,5 +69,6 @@ export const OccupancyColorThemeProvider: ColorTheme.Provider<OccupancyColorThem
     factory: OccupancyColorTheme,
     getParams: getOccupancyColorThemeParams,
     defaultValues: PD.getDefaultValues(OccupancyColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure && ctx.structure.models.some(m => m.atomicConformation.occupancy.isDefined)
+    isApplicable: (ctx: ThemeDataContext) =>
+        !!ctx.structure && ctx.structure.models.some((m) => m.atomicConformation.occupancy.isDefined),
 };

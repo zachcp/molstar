@@ -46,34 +46,35 @@ function addServerArgs(parser: argparse.ArgumentParser) {
     parser.add_argument('--apiPrefix', {
         default: DefaultMembraneServerConfig.apiPrefix,
         metavar: 'PREFIX',
-        help: `Specify the prefix of the API, i.e. <host>/<apiPrefix>/<API queries>`
+        help: `Specify the prefix of the API, i.e. <host>/<apiPrefix>/<API queries>`,
     });
     parser.add_argument('--defaultPort', {
         default: DefaultMembraneServerConfig.defaultPort,
         metavar: 'PORT',
         type: 'int',
-        help: `Specify the port the server is running on`
+        help: `Specify the port the server is running on`,
     });
     parser.add_argument('--shutdownTimeoutMinutes', {
         default: DefaultMembraneServerConfig.shutdownTimeoutMinutes,
         metavar: 'TIME',
         type: 'int',
-        help: `0 for off, server will shut down after this amount of minutes.`
+        help: `0 for off, server will shut down after this amount of minutes.`,
     });
     parser.add_argument('--shutdownTimeoutVarianceMinutes', {
         default: DefaultMembraneServerConfig.shutdownTimeoutVarianceMinutes,
         metavar: 'VARIANCE',
         type: 'int',
-        help: `modifies the shutdown timer by +/- timeoutVarianceMinutes (to avoid multiple instances shutting at the same time)`
+        help:
+            `modifies the shutdown timer by +/- timeoutVarianceMinutes (to avoid multiple instances shutting at the same time)`,
     });
     parser.add_argument('--bcifSource', {
         default: DefaultMembraneServerConfig.bcifSource,
         metavar: 'DEFAULT_SOURCE',
-        help: `Where 3D structure data is loaded from.`
+        help: `Where 3D structure data is loaded from.`,
     });
 }
 
-export type MembraneServerConfig = typeof DefaultMembraneServerConfig
+export type MembraneServerConfig = typeof DefaultMembraneServerConfig;
 export const MembraneServerConfig = { ...DefaultMembraneServerConfig };
 
 function setConfig(config: MembraneServerConfig) {
@@ -85,7 +86,7 @@ function setConfig(config: MembraneServerConfig) {
 function parseConfigArguments() {
     const parser = new argparse.ArgumentParser({
         add_help: true,
-        description: `Mol* MembraneServer ${VERSION}, (c) 2024, Mol* contributors`
+        description: `Mol* MembraneServer ${VERSION}, (c) 2024, Mol* contributors`,
     });
     addServerArgs(parser);
     return parser.parse_args() as MembraneServerConfig;

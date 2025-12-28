@@ -11,15 +11,22 @@ import { Sphere3D } from './sphere3d.ts';
 import { Vec3 } from '../../linear-algebra/3d/vec3.ts';
 import type { Mat4 } from '../../linear-algebra/3d/mat4.ts';
 
-interface Box3D { min: Vec3, max: Vec3 }
+interface Box3D {
+    min: Vec3;
+    max: Vec3;
+}
 
 function Box3D(): Box3D {
     return Box3D.zero();
 }
 
 namespace Box3D {
-    export function create(min: Vec3, max: Vec3): Box3D { return { min, max }; }
-    export function zero(): Box3D { return { min: Vec3(), max: Vec3() }; }
+    export function create(min: Vec3, max: Vec3): Box3D {
+        return { min, max };
+    }
+    export function zero(): Box3D {
+        return { min: Vec3(), max: Vec3() };
+    }
 
     export function copy(out: Box3D, a: Box3D): Box3D {
         Vec3.copy(out.min, a.min);
@@ -184,10 +191,12 @@ namespace Box3D {
         const c = s.center;
         const r = s.radius;
         return (
-            c[0] - r < box.min[0] || c[0] + r > box.max[0] ||
-            c[1] - r < box.min[1] || c[1] + r > box.max[1] ||
-            c[2] - r < box.min[2] || c[2] + r > box.max[2]
-        ) ? false : true;
+                c[0] - r < box.min[0] || c[0] + r > box.max[0] ||
+                c[1] - r < box.min[1] || c[1] + r > box.max[1] ||
+                c[2] - r < box.min[2] || c[2] + r > box.max[2]
+            )
+            ? false
+            : true;
     }
 
     export function center(out: Vec3, box: Box3D): Vec3 {

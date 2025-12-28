@@ -5,7 +5,7 @@
  */
 
 import type { Expression } from '../../mol-script/language/expression.ts';
-import { type QueryFn, Structure, StructureSelection as Sel, QueryContext } from '../../mol-model/structure.ts';
+import { QueryContext, type QueryFn, Structure, StructureSelection as Sel } from '../../mol-model/structure.ts';
 import { Script } from '../../mol-script/script.ts';
 import { compile } from '../../mol-script/runtime/query/compiler.ts';
 import type { PluginStateObject as SO } from '../objects.ts';
@@ -13,11 +13,11 @@ import type { PluginStateObject as SO } from '../objects.ts';
 export { StructureQueryHelper };
 namespace StructureQueryHelper {
     export interface CacheEntry {
-        script?: Script,
-        expression: Expression,
-        compiled: QueryFn<Sel>,
-        originalStructure: Structure,
-        currentStructure: Structure
+        script?: Script;
+        expression: Expression;
+        compiled: QueryFn<Sel>;
+        originalStructure: Structure;
+        currentStructure: Structure;
     }
 
     export function isUnchanged(entry: CacheEntry, query: Script | Expression, structure: Structure) {

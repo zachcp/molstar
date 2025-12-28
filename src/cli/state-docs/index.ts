@@ -6,7 +6,7 @@
  */
 
 import * as _ from '../../mol-plugin-state/transforms.ts';
-import { StateTransformer, type StateObject } from '../../mol-state/index.ts';
+import { type StateObject, StateTransformer } from '../../mol-state/index.ts';
 import { StringBuilder } from '../../mol-util/index.ts';
 import * as fs from 'node:fs';
 import { paramsToMd } from './pd-to-md.ts';
@@ -18,18 +18,23 @@ _.StateTransforms.Data.Download.id;
 
 // Empty plugin context
 const ctx = new PluginContext({
-    behaviors: []
+    behaviors: [],
 });
 
 const builder = StringBuilder.create();
 
 function typeToString(o: StateObject.Ctor[]) {
     if (o.length === 0) return '()';
-    return o.map(o => o.name).join(' | ');
+    return o.map((o) => o.name).join(' | ');
 }
 
 function writeTransformer(t: StateTransformer) {
-    StringBuilder.write(builder, `## <a name="${t.id.replace('.', '-')}"></a>${t.id} :: ${typeToString(t.definition.from)} -> ${typeToString(t.definition.to)}`);
+    StringBuilder.write(
+        builder,
+        `## <a name="${t.id.replace('.', '-')}"></a>${t.id} :: ${typeToString(t.definition.from)} -> ${
+            typeToString(t.definition.to)
+        }`,
+    );
     StringBuilder.newline(builder);
     if (t.definition.display.description) {
         StringBuilder.write(builder, `*${t.definition.display.description}*`);
@@ -45,7 +50,10 @@ function writeTransformer(t: StateTransformer) {
 
         StringBuilder.write(builder, `### Default Parameters`);
         StringBuilder.newline(builder);
-        StringBuilder.write(builder, `\`\`\`js\n${JSON.stringify(ParamDefinition.getDefaultValues(params), null, 2)}\n\`\`\``);
+        StringBuilder.write(
+            builder,
+            `\`\`\`js\n${JSON.stringify(ParamDefinition.getDefaultValues(params), null, 2)}\n\`\`\``,
+        );
         StringBuilder.newline(builder);
     }
     StringBuilder.write(builder, '----------------------------');
@@ -57,13 +65,13 @@ const transformers = StateTransformer.getAll();
 StringBuilder.write(builder, '# Mol* Plugin State Transformer Reference');
 StringBuilder.newline(builder);
 StringBuilder.newline(builder);
-transformers.forEach(t => {
+transformers.forEach((t) => {
     StringBuilder.write(builder, `* [${t.id}](#${t.id.replace('.', '-')})`);
     StringBuilder.newline(builder);
 });
 StringBuilder.newline(builder);
 StringBuilder.write(builder, '----------------------------');
 StringBuilder.newline(builder);
-transformers.forEach(t => writeTransformer(t));
+transformers.forEach((t) => writeTransformer(t));
 
 fs.writeFileSync(`docs/state/transforms.md`, StringBuilder.getString(builder));

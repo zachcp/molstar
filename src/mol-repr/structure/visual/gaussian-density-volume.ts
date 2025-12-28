@@ -8,16 +8,33 @@ import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import type { VisualContext } from '../../visual.ts';
 import type { Structure, Unit } from '../../../mol-model/structure.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
-import { type GaussianDensityProps, computeStructureGaussianDensityTexture, computeUnitGaussianDensityTexture, GaussianDensityParams } from './util/gaussian.ts';
+import {
+    computeStructureGaussianDensityTexture,
+    computeUnitGaussianDensityTexture,
+    GaussianDensityParams,
+    type GaussianDensityProps,
+} from './util/gaussian.ts';
 import { DirectVolume } from '../../../mol-geo/geometry/direct-volume/direct-volume.ts';
-import { ComplexDirectVolumeParams, type ComplexVisual, ComplexDirectVolumeVisual } from '../complex-visual.ts';
+import { ComplexDirectVolumeParams, ComplexDirectVolumeVisual, type ComplexVisual } from '../complex-visual.ts';
 import type { VisualUpdateState } from '../../util.ts';
 import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
-import { eachElement, eachSerialElement, ElementIterator, getElementLoci, getSerialElementLoci } from './util/element.ts';
+import {
+    eachElement,
+    eachSerialElement,
+    ElementIterator,
+    getElementLoci,
+    getSerialElementLoci,
+} from './util/element.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
-import { UnitsDirectVolumeParams, type UnitsVisual, UnitsDirectVolumeVisual } from '../units-visual.ts';
+import { UnitsDirectVolumeParams, UnitsDirectVolumeVisual, type UnitsVisual } from '../units-visual.ts';
 
-function createGaussianDensityVolume(ctx: VisualContext, structure: Structure, theme: Theme, props: GaussianDensityProps, directVolume?: DirectVolume): DirectVolume {
+function createGaussianDensityVolume(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: GaussianDensityProps,
+    directVolume?: DirectVolume,
+): DirectVolume {
     const { webgl } = ctx;
     if (!webgl) {
         // gpu gaussian density also needs blendMinMax but there is no fallback here so
@@ -31,13 +48,31 @@ function createGaussianDensityVolume(ctx: VisualContext, structure: Structure, t
 
     const create = (directVolume?: DirectVolume) => {
         const oldTexture = directVolume ? directVolume.gridTexture.ref.value : undefined;
-        const densityTextureData = computeStructureGaussianDensityTexture(structure, theme.size, props, webgl, oldTexture);
+        const densityTextureData = computeStructureGaussianDensityTexture(
+            structure,
+            theme.size,
+            props,
+            webgl,
+            oldTexture,
+        );
         const { transform, texture, bbox, gridDim } = densityTextureData;
 
         const unitToCartn = Mat4.mul(Mat4(), transform, Mat4.fromScaling(Mat4(), gridDim));
         const cellDim = Mat4.getScaling(Vec3(), transform);
 
-        const vol = DirectVolume.create(bbox, gridDim, transform, unitToCartn, cellDim, texture, stats, true, axisOrder, 'byte', directVolume);
+        const vol = DirectVolume.create(
+            bbox,
+            gridDim,
+            transform,
+            unitToCartn,
+            cellDim,
+            texture,
+            stats,
+            true,
+            axisOrder,
+            'byte',
+            directVolume,
+        );
 
         const sphere = Sphere3D.expand(Sphere3D(), structure.boundary.sphere, densityTextureData.maxRadius);
         vol.setBoundingSphere(sphere);
@@ -59,7 +94,7 @@ export const GaussianDensityVolumeParams = {
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     includeParent: PD.Boolean(false, { isHidden: true }),
 };
-export type GaussianDensityVolumeParams = typeof GaussianDensityVolumeParams
+export type GaussianDensityVolumeParams = typeof GaussianDensityVolumeParams;
 
 export function GaussianDensityVolumeVisual(materialId: number): ComplexVisual<GaussianDensityVolumeParams> {
     return ComplexDirectVolumeVisual<GaussianDensityVolumeParams>({
@@ -68,7 +103,11 @@ export function GaussianDensityVolumeVisual(materialId: number): ComplexVisual<G
         createLocationIterator: ElementIterator.fromStructure,
         getLoci: getSerialElementLoci,
         eachLocation: eachSerialElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<GaussianDensityVolumeParams>, currentProps: PD.Values<GaussianDensityVolumeParams>) => {
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<GaussianDensityVolumeParams>,
+            currentProps: PD.Values<GaussianDensityVolumeParams>,
+        ) => {
             if (newProps.resolution !== currentProps.resolution) state.createGeometry = true;
             if (newProps.radiusOffset !== currentProps.radiusOffset) state.createGeometry = true;
             if (newProps.smoothness !== currentProps.smoothness) state.createGeometry = true;
@@ -79,13 +118,20 @@ export function GaussianDensityVolumeVisual(materialId: number): ComplexVisual<G
         },
         dispose: (geometry: DirectVolume) => {
             geometry.gridTexture.ref.value.destroy();
-        }
+        },
     }, materialId);
 }
 
 //
 
-function createUnitsGaussianDensityVolume(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: GaussianDensityProps, directVolume?: DirectVolume): DirectVolume {
+function createUnitsGaussianDensityVolume(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: GaussianDensityProps,
+    directVolume?: DirectVolume,
+): DirectVolume {
     const { webgl } = ctx;
     if (!webgl) {
         // gpu gaussian density also needs blendMinMax but there is no fallback here so
@@ -99,12 +145,31 @@ function createUnitsGaussianDensityVolume(ctx: VisualContext, unit: Unit, struct
 
     const create = (directVolume?: DirectVolume) => {
         const oldTexture = directVolume ? directVolume.gridTexture.ref.value : undefined;
-        const densityTextureData = computeUnitGaussianDensityTexture(structure, unit, theme.size, props, webgl, oldTexture);
+        const densityTextureData = computeUnitGaussianDensityTexture(
+            structure,
+            unit,
+            theme.size,
+            props,
+            webgl,
+            oldTexture,
+        );
         const { transform, texture, bbox, gridDim } = densityTextureData;
 
         const unitToCartn = Mat4.mul(Mat4(), transform, Mat4.fromScaling(Mat4(), gridDim));
         const cellDim = Mat4.getScaling(Vec3(), transform);
-        const vol = DirectVolume.create(bbox, gridDim, transform, unitToCartn, cellDim, texture, stats, true, axisOrder, 'byte', directVolume);
+        const vol = DirectVolume.create(
+            bbox,
+            gridDim,
+            transform,
+            unitToCartn,
+            cellDim,
+            texture,
+            stats,
+            true,
+            axisOrder,
+            'byte',
+            directVolume,
+        );
 
         const sphere = Sphere3D.expand(Sphere3D(), unit.boundary.sphere, densityTextureData.maxRadius);
         vol.setBoundingSphere(sphere);
@@ -126,7 +191,7 @@ export const UnitsGaussianDensityVolumeParams = {
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     includeParent: PD.Boolean(false, { isHidden: true }),
 };
-export type UnitsGaussianDensityVolumeParams = typeof UnitsGaussianDensityVolumeParams
+export type UnitsGaussianDensityVolumeParams = typeof UnitsGaussianDensityVolumeParams;
 
 export function UnitsGaussianDensityVolumeVisual(materialId: number): UnitsVisual<UnitsGaussianDensityVolumeParams> {
     return UnitsDirectVolumeVisual<UnitsGaussianDensityVolumeParams>({
@@ -135,7 +200,11 @@ export function UnitsGaussianDensityVolumeVisual(materialId: number): UnitsVisua
         createLocationIterator: ElementIterator.fromGroup,
         getLoci: getElementLoci,
         eachLocation: eachElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<GaussianDensityVolumeParams>, currentProps: PD.Values<GaussianDensityVolumeParams>) => {
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<GaussianDensityVolumeParams>,
+            currentProps: PD.Values<GaussianDensityVolumeParams>,
+        ) => {
             if (newProps.resolution !== currentProps.resolution) state.createGeometry = true;
             if (newProps.radiusOffset !== currentProps.radiusOffset) state.createGeometry = true;
             if (newProps.smoothness !== currentProps.smoothness) state.createGeometry = true;
@@ -146,6 +215,6 @@ export function UnitsGaussianDensityVolumeVisual(materialId: number): UnitsVisua
         },
         dispose: (geometry: DirectVolume) => {
             geometry.gridTexture.ref.value.destroy();
-        }
+        },
     }, materialId);
 }

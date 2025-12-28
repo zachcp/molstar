@@ -9,20 +9,38 @@ import type * as React from 'react';
 import { getStructureThemeTypes } from '../../mol-plugin-state/helpers/structure-representation-params.ts';
 import { StructureComponentManager } from '../../mol-plugin-state/manager/structure/component.ts';
 import { StructureHierarchyManager } from '../../mol-plugin-state/manager/structure/hierarchy.ts';
-import type { StructureComponentRef, StructureRepresentationRef } from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
+import type {
+    StructureComponentRef,
+    StructureRepresentationRef,
+} from '../../mol-plugin-state/manager/structure/hierarchy-state.ts';
 import { PluginCommands } from '../../mol-plugin/commands.ts';
 import { State } from '../../mol-state/index.ts';
 import { ParamDefinition } from '../../mol-util/param-definition.ts';
 import { CollapsableControls, type CollapsableState, PurePluginUIComponent } from '../base.tsx';
 import { ActionMenu } from '../controls/action-menu.tsx';
-import { Button, ExpandGroup, IconButton, ToggleButton, ControlRow, TextInput } from '../controls/common.tsx';
-import { CubeOutlineSvg, IntersectSvg, SetSvg, SubtractSvg, UnionSvg, BookmarksOutlinedSvg, AddSvg, TuneSvg, RestoreSvg, VisibilityOffOutlinedSvg, VisibilityOutlinedSvg, DeleteOutlinedSvg, MoreHorizSvg, CheckSvg } from '../controls/icons.tsx';
+import { Button, ControlRow, ExpandGroup, IconButton, TextInput, ToggleButton } from '../controls/common.tsx';
+import {
+    AddSvg,
+    BookmarksOutlinedSvg,
+    CheckSvg,
+    CubeOutlineSvg,
+    DeleteOutlinedSvg,
+    IntersectSvg,
+    MoreHorizSvg,
+    RestoreSvg,
+    SetSvg,
+    SubtractSvg,
+    TuneSvg,
+    UnionSvg,
+    VisibilityOffOutlinedSvg,
+    VisibilityOutlinedSvg,
+} from '../controls/icons.tsx';
 import { ParameterControls } from '../controls/parameters.tsx';
 import { UpdateTransformControl } from '../state/update-transform.tsx';
 import { GenericEntryListControls } from './generic.tsx';
 
 interface StructureComponentControlState extends CollapsableState {
-    isDisabled: boolean
+    isDisabled: boolean;
 }
 
 export class StructureComponentControls extends CollapsableControls<{}, StructureComponentControlState> {
@@ -31,46 +49,49 @@ export class StructureComponentControls extends CollapsableControls<{}, Structur
             header: 'Components',
             isCollapsed: false,
             isDisabled: false,
-            brand: { accent: 'blue', svg: CubeOutlineSvg }
+            brand: { accent: 'blue', svg: CubeOutlineSvg },
         };
     }
 
-    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, c => this.setState({
-            description: StructureHierarchyManager.getSelectedStructuresDescription(this.plugin)
-        }));
+    override componentDidMount() {
+        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, (c) =>
+            this.setState({
+                description: StructureHierarchyManager.getSelectedStructuresDescription(this.plugin),
+            }));
     }
 
     renderControls() {
-        return <>
-            <ComponentEditorControls />
-            <ComponentListControls />
-            <GenericEntryListControls />
-        </>;
+        return (
+            <>
+                <ComponentEditorControls />
+                <ComponentListControls />
+                <GenericEntryListControls />
+            </>
+        );
     }
 }
 
 interface ComponentEditorControlsState {
-    action?: 'preset' | 'add' | 'options',
-    isEmpty: boolean,
-    isBusy: boolean,
-    canUndo: boolean
+    action?: 'preset' | 'add' | 'options';
+    isEmpty: boolean;
+    isBusy: boolean;
+    canUndo: boolean;
 }
 
 class ComponentEditorControls extends PurePluginUIComponent<{}, ComponentEditorControlsState> {
-    override state: ComponentEditorControlsState = {        isEmpty: true,
-        isBusy: false,
-        canUndo: false
-    };
+    override state: ComponentEditorControlsState = { isEmpty: true, isBusy: false, canUndo: false };
 
     get isDisabled() {
         return this.state.isBusy || this.state.isEmpty;
     }
 
-    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, c => this.setState({
-            action: this.state.action !== 'options' || c.structures.length === 0 ? void 0 : 'options',
-            isEmpty: c.structures.length === 0
-        }));
-        this.subscribe(this.plugin.behaviors.state.isBusy, v => {
+    override componentDidMount() {
+        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, (c) =>
+            this.setState({
+                action: this.state.action !== 'options' || c.structures.length === 0 ? void 0 : 'options',
+                isEmpty: c.structures.length === 0,
+            }));
+        this.subscribe(this.plugin.behaviors.state.isBusy, (v) => {
             this.setState({ isBusy: v, action: this.state.action !== 'options' ? void 0 : 'options' });
         });
         this.subscribe(this.plugin.state.data.events.historyUpdated, ({ state }) => {
@@ -94,10 +115,14 @@ class ComponentEditorControls extends PurePluginUIComponent<{}, ComponentEditorC
     get presetActions() {
         const pivot = this.plugin.managers.structure.component.pivotStructure;
         const providers = this.plugin.builders.structure.representation.getPresets(pivot?.cell.obj);
-        return ActionMenu.createItems(providers, { label: p => p.display.name, category: p => p.display.group, description: p => p.display.description });
+        return ActionMenu.createItems(providers, {
+            label: (p) => p.display.name,
+            category: (p) => p.display.group,
+            description: (p) => p.display.description,
+        });
     }
 
-    applyPreset: ActionMenu.OnSelect = item => {
+    applyPreset: ActionMenu.OnSelect = (item) => {
         this.hideAction();
 
         if (!item) return;
@@ -113,33 +138,71 @@ class ComponentEditorControls extends PurePluginUIComponent<{}, ComponentEditorC
         if (task) this.plugin.runTask(task);
     };
 
-    override render() {        const undoTitle = this.state.canUndo
+    override render() {
+        const undoTitle = this.state.canUndo
             ? `Undo ${this.plugin.state.data.latestUndoLabel}`
             : 'Some mistakes of the past can be undone.';
-        return <>
-            <div className='msp-flex-row'>
-                <ToggleButton icon={BookmarksOutlinedSvg} label='Preset' title='Apply a representation preset for the current structure(s).' toggle={this.togglePreset} isSelected={this.state.action === 'preset'} disabled={this.isDisabled} />
-                <ToggleButton icon={AddSvg} label='Add' title='Add a new representation component for a selection.' toggle={this.toggleAdd} isSelected={this.state.action === 'add'} disabled={this.isDisabled} />
-                <ToggleButton icon={TuneSvg} label='' title='Options that are applied to all applicable representations.' style={{ flex: '0 0 40px', padding: 0 }} toggle={this.toggleOptions} isSelected={this.state.action === 'options'} disabled={this.isDisabled} />
-                <IconButton svg={RestoreSvg} className='msp-flex-item' flex='40px' onClick={this.undo} disabled={!this.state.canUndo || this.isDisabled} title={undoTitle} />
-            </div>
-            {this.state.action === 'preset' && this.presetControls}
-            {this.state.action === 'add' && <div className='msp-control-offset'>
-                <AddComponentControls onApply={this.hideAction} />
-            </div>}
-            {this.state.action === 'options' && <div className='msp-control-offset'><ComponentOptionsControls isDisabled={this.isDisabled} /></div>}
-        </>;
+        return (
+            <>
+                <div className='msp-flex-row'>
+                    <ToggleButton
+                        icon={BookmarksOutlinedSvg}
+                        label='Preset'
+                        title='Apply a representation preset for the current structure(s).'
+                        toggle={this.togglePreset}
+                        isSelected={this.state.action === 'preset'}
+                        disabled={this.isDisabled}
+                    />
+                    <ToggleButton
+                        icon={AddSvg}
+                        label='Add'
+                        title='Add a new representation component for a selection.'
+                        toggle={this.toggleAdd}
+                        isSelected={this.state.action === 'add'}
+                        disabled={this.isDisabled}
+                    />
+                    <ToggleButton
+                        icon={TuneSvg}
+                        label=''
+                        title='Options that are applied to all applicable representations.'
+                        style={{ flex: '0 0 40px', padding: 0 }}
+                        toggle={this.toggleOptions}
+                        isSelected={this.state.action === 'options'}
+                        disabled={this.isDisabled}
+                    />
+                    <IconButton
+                        svg={RestoreSvg}
+                        className='msp-flex-item'
+                        flex='40px'
+                        onClick={this.undo}
+                        disabled={!this.state.canUndo || this.isDisabled}
+                        title={undoTitle}
+                    />
+                </div>
+                {this.state.action === 'preset' && this.presetControls}
+                {this.state.action === 'add' && (
+                    <div className='msp-control-offset'>
+                        <AddComponentControls onApply={this.hideAction} />
+                    </div>
+                )}
+                {this.state.action === 'options' && (
+                    <div className='msp-control-offset'>
+                        <ComponentOptionsControls isDisabled={this.isDisabled} />
+                    </div>
+                )}
+            </>
+        );
     }
 }
 
 interface AddComponentControlsState {
-    params: ParamDefinition.Params,
-    values: StructureComponentManager.AddParams
+    params: ParamDefinition.Params;
+    values: StructureComponentManager.AddParams;
 }
 
 interface AddComponentControlsProps {
-    forSelection?: boolean,
-    onApply: () => void
+    forSelection?: boolean;
+    onApply: () => void;
 }
 
 export class AddComponentControls extends PurePluginUIComponent<AddComponentControlsProps, AddComponentControlsState> {
@@ -165,49 +228,78 @@ export class AddComponentControls extends PurePluginUIComponent<AddComponentCont
 
     paramsChanged = (values: any) => this.setState({ values });
 
-    override render() {        return <>
-            <ParameterControls params={this.state.params} values={this.state.values} onChangeValues={this.paramsChanged} />
-            <Button icon={AddSvg} title='Use Selection and optional Representation to create a new Component.' className='msp-btn-commit msp-btn-commit-on' onClick={this.apply} style={{ marginTop: '1px' }}>
-                Create Component
-            </Button>
-        </>;
+    override render() {
+        return (
+            <>
+                <ParameterControls
+                    params={this.state.params}
+                    values={this.state.values}
+                    onChangeValues={this.paramsChanged}
+                />
+                <Button
+                    icon={AddSvg}
+                    title='Use Selection and optional Representation to create a new Component.'
+                    className='msp-btn-commit msp-btn-commit-on'
+                    onClick={this.apply}
+                    style={{ marginTop: '1px' }}
+                >
+                    Create Component
+                </Button>
+            </>
+        );
     }
 }
 
 class ComponentOptionsControls extends PurePluginUIComponent<{ isDisabled: boolean }> {
-    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.component.events.optionsUpdated, () => this.forceUpdate());
+    override componentDidMount() {
+        this.subscribe(this.plugin.managers.structure.component.events.optionsUpdated, () => this.forceUpdate());
     }
 
-    update = (options: StructureComponentManager.Options) => this.plugin.managers.structure.component.setOptions(options);
+    update = (options: StructureComponentManager.Options) =>
+        this.plugin.managers.structure.component.setOptions(options);
 
-    override render() {        return <ParameterControls params={StructureComponentManager.OptionsParams} values={this.plugin.managers.structure.component.state.options} onChangeValues={this.update} isDisabled={this.props.isDisabled} />;
+    override render() {
+        return (
+            <ParameterControls
+                params={StructureComponentManager.OptionsParams}
+                values={this.plugin.managers.structure.component.state.options}
+                onChangeValues={this.update}
+                isDisabled={this.props.isDisabled}
+            />
+        );
     }
 }
 
 class ComponentListControls extends PurePluginUIComponent {
-    override componentDidMount() {        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, () => {
+    override componentDidMount() {
+        this.subscribe(this.plugin.managers.structure.hierarchy.behaviors.selection, () => {
             this.forceUpdate();
         });
     }
 
-    override render() {        const componentGroups = this.plugin.managers.structure.hierarchy.currentComponentGroups;
+    override render() {
+        const componentGroups = this.plugin.managers.structure.hierarchy.currentComponentGroups;
         if (componentGroups.length === 0) return null;
 
-        return <div style={{ marginTop: '6px' }}>
-            {componentGroups.map(g => <StructureComponentGroup key={g[0].cell.transform.ref} group={g} />)}
-        </div>;
+        return (
+            <div style={{ marginTop: '6px' }}>
+                {componentGroups.map((g) => <StructureComponentGroup key={g[0].cell.transform.ref} group={g} />)}
+            </div>
+        );
     }
 }
 
-type StructureComponentEntryActions = 'action' | 'label'
+type StructureComponentEntryActions = 'action' | 'label';
 
-class StructureComponentGroup extends PurePluginUIComponent<{ group: StructureComponentRef[] }, { action?: StructureComponentEntryActions }> {
+class StructureComponentGroup
+    extends PurePluginUIComponent<{ group: StructureComponentRef[] }, { action?: StructureComponentEntryActions }> {
     override state = { action: void 0 as StructureComponentEntryActions | undefined };
     get pivot() {
         return this.props.group[0];
     }
 
-    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
+    override componentDidMount() {
+        this.subscribe(this.plugin.state.events.cell.stateUpdated, (e) => {
             if (State.ObjectEvent.isCell(e, this.pivot.cell)) this.forceUpdate();
         });
     }
@@ -224,8 +316,8 @@ class StructureComponentGroup extends PurePluginUIComponent<{ group: StructureCo
         const name = repr.cell.transform.params?.colorTheme.name;
         const themes = getStructureThemeTypes(this.plugin, this.pivot.cell.obj?.data);
         return ActionMenu.createItemsFromSelectOptions(themes, {
-            value: o => () => mng.updateRepresentationsTheme(this.props.group, { color: o[0] as any }),
-            selected: o => o[0] === name
+            value: (o) => () => mng.updateRepresentationsTheme(this.props.group, { color: o[0] as any }),
+            selected: (o) => o[0] === name,
         }) as ActionMenu.Item[];
     }
 
@@ -235,23 +327,29 @@ class StructureComponentGroup extends PurePluginUIComponent<{ group: StructureCo
             [
                 ActionMenu.Header('Add Representation'),
                 ...StructureComponentManager.getRepresentationTypes(this.plugin, this.props.group[0])
-                    .map(t => ActionMenu.Item(t[1], () => mng.addRepresentation(this.props.group, t[0])))
-            ]
+                    .map((t) => ActionMenu.Item(t[1], () => mng.addRepresentation(this.props.group, t[0]))),
+            ],
         ];
 
         if (this.pivot.representations.length > 0) {
             ret.push([
                 ActionMenu.Header('Set Coloring', { isIndependent: true }),
-                ...this.colorByActions
+                ...this.colorByActions,
             ]);
         }
 
         if (mng.canBeModified(this.props.group[0])) {
             ret.push([
                 ActionMenu.Header('Modify by Selection'),
-                ActionMenu.Item('Include', () => mng.modifyByCurrentSelection(this.props.group, 'union'), { icon: UnionSvg }),
-                ActionMenu.Item('Subtract', () => mng.modifyByCurrentSelection(this.props.group, 'subtract'), { icon: SubtractSvg }),
-                ActionMenu.Item('Intersect', () => mng.modifyByCurrentSelection(this.props.group, 'intersect'), { icon: IntersectSvg })
+                ActionMenu.Item('Include', () => mng.modifyByCurrentSelection(this.props.group, 'union'), {
+                    icon: UnionSvg,
+                }),
+                ActionMenu.Item('Subtract', () => mng.modifyByCurrentSelection(this.props.group, 'subtract'), {
+                    icon: SubtractSvg,
+                }),
+                ActionMenu.Item('Intersect', () => mng.modifyByCurrentSelection(this.props.group, 'intersect'), {
+                    icon: IntersectSvg,
+                }),
             ]);
         }
 
@@ -259,14 +357,14 @@ class StructureComponentGroup extends PurePluginUIComponent<{ group: StructureCo
 
         if (mng.canBeModified(this.props.group[0])) {
             ret.push(
-                ActionMenu.Item('Edit Label', this.toggleLabel)
+                ActionMenu.Item('Edit Label', this.toggleLabel),
             );
         }
 
         return ret;
     }
 
-    selectAction: ActionMenu.OnSelect = item => {
+    selectAction: ActionMenu.OnSelect = (item) => {
         if (!item) return;
         (item?.value as any)();
     };
@@ -279,7 +377,10 @@ class StructureComponentGroup extends PurePluginUIComponent<{ group: StructureCo
     highlight = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         if (!this.props.group[0].cell.parent) return;
-        PluginCommands.Interactivity.Object.Highlight(this.plugin, { state: this.props.group[0].cell.parent!, ref: this.props.group.map(c => c.cell.transform.ref) });
+        PluginCommands.Interactivity.Object.Highlight(this.plugin, {
+            state: this.props.group[0].cell.parent!,
+            ref: this.props.group.map((c) => c.cell.transform.ref),
+        });
     };
 
     clearHighlight = (e: React.MouseEvent<HTMLElement>) => {
@@ -300,7 +401,7 @@ class StructureComponentGroup extends PurePluginUIComponent<{ group: StructureCo
             this.plugin.managers.structure.hierarchy.toggleVisibility(this.props.group, 'show');
         }
 
-        this.plugin.managers.camera.focusSpheres(this.props.group, e => {
+        this.plugin.managers.camera.focusSpheres(this.props.group, (e) => {
             if (e.cell.state.isHidden) return;
             return e.cell.obj?.data.boundary.sphere;
         });
@@ -318,64 +419,178 @@ class StructureComponentGroup extends PurePluginUIComponent<{ group: StructureCo
         this.plugin.managers.structure.component.updateLabel(this.pivot, v);
     };
 
-    override render() {        const component = this.pivot;
+    override render() {
+        const component = this.pivot;
         const cell = component.cell;
         const label = cell.obj?.label;
         const reprLabel = this.reprLabel;
-        return <>
-            <div className='msp-flex-row'>
-                <Button noOverflow className='msp-control-button-label' title={`${label}. Click to focus.`} onClick={this.focus} onMouseEnter={this.highlight} onMouseLeave={this.clearHighlight} style={{ textAlign: 'left' }}>
-                    {label}
-                    <small className='msp-25-lower-contrast-text' style={{ float: 'right' }}>{reprLabel}</small>
-                </Button>
-                <IconButton svg={cell.state.isHidden ? VisibilityOffOutlinedSvg : VisibilityOutlinedSvg} toggleState={false} onClick={this.toggleVisible} title={`${cell.state.isHidden ? 'Show' : 'Hide'} component`} small className='msp-form-control' flex />
-                <IconButton svg={DeleteOutlinedSvg} toggleState={false} onClick={this.remove} title='Remove' small className='msp-form-control' flex />
-                <IconButton svg={MoreHorizSvg} onClick={this.toggleAction} title='Actions' toggleState={this.state.action === 'action'} className='msp-form-control' flex />
-            </div>
-            {this.state.action === 'label' && <div className='msp-control-offset' style={{ marginBottom: '6px' }}>
-                <ControlRow label='Label' control={<div style={{ display: 'flex', textAlignLast: 'center' }}>
-                    <TextInput onChange={this.updateLabel} value={label} style={{ flex: '1 1 auto', minWidth: 0 }} className='msp-form-control' blurOnEnter blurOnEscape />
-                    <IconButton svg={CheckSvg} onClick={this.toggleLabel}className='msp-form-control msp-control-button-label' flex />
-                </div>}/>
-            </div>}
-            {this.state.action === 'action' && <div className='msp-accent-offset'>
-                <div style={{ marginBottom: '6px' }}>
-                    <ActionMenu items={this.actions} onSelect={this.selectAction} noOffset />
+        return (
+            <>
+                <div className='msp-flex-row'>
+                    <Button
+                        noOverflow
+                        className='msp-control-button-label'
+                        title={`${label}. Click to focus.`}
+                        onClick={this.focus}
+                        onMouseEnter={this.highlight}
+                        onMouseLeave={this.clearHighlight}
+                        style={{ textAlign: 'left' }}
+                    >
+                        {label}
+                        <small className='msp-25-lower-contrast-text' style={{ float: 'right' }}>{reprLabel}</small>
+                    </Button>
+                    <IconButton
+                        svg={cell.state.isHidden ? VisibilityOffOutlinedSvg : VisibilityOutlinedSvg}
+                        toggleState={false}
+                        onClick={this.toggleVisible}
+                        title={`${cell.state.isHidden ? 'Show' : 'Hide'} component`}
+                        small
+                        className='msp-form-control'
+                        flex
+                    />
+                    <IconButton
+                        svg={DeleteOutlinedSvg}
+                        toggleState={false}
+                        onClick={this.remove}
+                        title='Remove'
+                        small
+                        className='msp-form-control'
+                        flex
+                    />
+                    <IconButton
+                        svg={MoreHorizSvg}
+                        onClick={this.toggleAction}
+                        title='Actions'
+                        toggleState={this.state.action === 'action'}
+                        className='msp-form-control'
+                        flex
+                    />
                 </div>
-                <div style={{ marginBottom: '6px' }}>
-                    {component.representations.map(r => <StructureRepresentationEntry group={this.props.group} key={r.cell.transform.ref} representation={r} />)}
-                </div>
-            </div>}
-        </>;
+                {this.state.action === 'label' && (
+                    <div className='msp-control-offset' style={{ marginBottom: '6px' }}>
+                        <ControlRow
+                            label='Label'
+                            control={
+                                <div style={{ display: 'flex', textAlignLast: 'center' }}>
+                                    <TextInput
+                                        onChange={this.updateLabel}
+                                        value={label}
+                                        style={{ flex: '1 1 auto', minWidth: 0 }}
+                                        className='msp-form-control'
+                                        blurOnEnter
+                                        blurOnEscape
+                                    />
+                                    <IconButton
+                                        svg={CheckSvg}
+                                        onClick={this.toggleLabel}
+                                        className='msp-form-control msp-control-button-label'
+                                        flex
+                                    />
+                                </div>
+                            }
+                        />
+                    </div>
+                )}
+                {this.state.action === 'action' && (
+                    <div className='msp-accent-offset'>
+                        <div style={{ marginBottom: '6px' }}>
+                            <ActionMenu items={this.actions} onSelect={this.selectAction} noOffset />
+                        </div>
+                        <div style={{ marginBottom: '6px' }}>
+                            {component.representations.map((r) => (
+                                <StructureRepresentationEntry
+                                    group={this.props.group}
+                                    key={r.cell.transform.ref}
+                                    representation={r}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </>
+        );
     }
 }
 
-class StructureRepresentationEntry extends PurePluginUIComponent<{ group: StructureComponentRef[], representation: StructureRepresentationRef }> {
-    remove = () => this.plugin.managers.structure.component.removeRepresentations(this.props.group, this.props.representation);
+class StructureRepresentationEntry
+    extends PurePluginUIComponent<{ group: StructureComponentRef[]; representation: StructureRepresentationRef }> {
+    remove = () =>
+        this.plugin.managers.structure.component.removeRepresentations(this.props.group, this.props.representation);
     toggleVisible = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         e.currentTarget.blur();
         this.plugin.managers.structure.component.toggleVisibility(this.props.group, this.props.representation);
     };
 
-    override componentDidMount() {        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
+    override componentDidMount() {
+        this.subscribe(this.plugin.state.events.cell.stateUpdated, (e) => {
             if (State.ObjectEvent.isCell(e, this.props.representation.cell)) this.forceUpdate();
         });
     }
 
-    update = (params: any) => this.plugin.managers.structure.component.updateRepresentations(this.props.group, this.props.representation, params);
+    update = (params: any) =>
+        this.plugin.managers.structure.component.updateRepresentations(
+            this.props.group,
+            this.props.representation,
+            params,
+        );
 
-    override render() {        const repr = this.props.representation.cell;
-        return <div className='msp-representation-entry'>
-            {repr.parent && <ExpandGroup header={`${repr.obj?.label || ''} Representation`} noOffset>
-                <UpdateTransformControl state={repr.parent} transform={repr.transform} customHeader='none' customUpdate={this.update} noMargin />
-            </ExpandGroup>}
-            <IconButton svg={DeleteOutlinedSvg} onClick={this.remove} title='Remove' small className='msp-default-bg' toggleState={false} style={{
-                position: 'absolute', top: 0, right: '32px', lineHeight: '24px', height: '24px', textAlign: 'right', width: '44px', paddingRight: '6px', background: 'none'
-            }} />
-            <IconButton svg={this.props.representation.cell.state.isHidden ? VisibilityOffOutlinedSvg : VisibilityOutlinedSvg} toggleState={false} onClick={this.toggleVisible} title='Toggle Visibility' small className='msp-default-bg' style={{
-                position: 'absolute', top: 0, right: 0, lineHeight: '24px', height: '24px', textAlign: 'right', width: '32px', paddingRight: '6px', background: 'none'
-            }} />
-        </div>;
+    override render() {
+        const repr = this.props.representation.cell;
+        return (
+            <div className='msp-representation-entry'>
+                {repr.parent && (
+                    <ExpandGroup header={`${repr.obj?.label || ''} Representation`} noOffset>
+                        <UpdateTransformControl
+                            state={repr.parent}
+                            transform={repr.transform}
+                            customHeader='none'
+                            customUpdate={this.update}
+                            noMargin
+                        />
+                    </ExpandGroup>
+                )}
+                <IconButton
+                    svg={DeleteOutlinedSvg}
+                    onClick={this.remove}
+                    title='Remove'
+                    small
+                    className='msp-default-bg'
+                    toggleState={false}
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: '32px',
+                        lineHeight: '24px',
+                        height: '24px',
+                        textAlign: 'right',
+                        width: '44px',
+                        paddingRight: '6px',
+                        background: 'none',
+                    }}
+                />
+                <IconButton
+                    svg={this.props.representation.cell.state.isHidden
+                        ? VisibilityOffOutlinedSvg
+                        : VisibilityOutlinedSvg}
+                    toggleState={false}
+                    onClick={this.toggleVisible}
+                    title='Toggle Visibility'
+                    small
+                    className='msp-default-bg'
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        lineHeight: '24px',
+                        height: '24px',
+                        textAlign: 'right',
+                        width: '32px',
+                        paddingRight: '6px',
+                        background: 'none',
+                    }}
+                />
+            </div>
+        );
     }
 }

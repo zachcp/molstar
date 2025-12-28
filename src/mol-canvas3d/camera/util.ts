@@ -9,11 +9,11 @@ import { type Mat4, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
 export { Viewport };
 
 type Viewport = {
-    x: number
-    y: number
-    width: number
-    height: number
-}
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+};
 
 function Viewport(): Viewport {
     return Viewport.zero();

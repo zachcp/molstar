@@ -6,14 +6,13 @@
  * @author Ludovic Autin <ludovic.autin@gmail.com>
  */
 
-import { Task, type RuntimeContext, chunkedSubtask } from '../../../../mol-task/index.ts';
-import { Tokenizer, TokenBuilder } from '../../common/text/tokenizer.ts';
+import { chunkedSubtask, type RuntimeContext, Task } from '../../../../mol-task/index.ts';
+import { TokenBuilder, Tokenizer } from '../../common/text/tokenizer.ts';
 import { ReaderResult as Result } from '../../result.ts';
 import { TokenColumnProvider as TokenColumn } from '../../common/text/column/token.ts';
 import { Column } from '../../../../mol-data/db.ts';
 import type { LammpsFrame, LammpsTrajectoryFile } from '../schema.ts';
 import type { StringLike } from '../../../common/string-like.ts';
-
 
 const { readLine, skipWhitespace, eatValue, eatLine, markStart } = Tokenizer;
 
@@ -23,7 +22,7 @@ function State(tokenizer: Tokenizer, runtimeCtx: RuntimeContext) {
         runtimeCtx,
     };
 }
-type State = ReturnType<typeof State>
+type State = ReturnType<typeof State>;
 
 async function handleAtoms(state: State, count: number, parts: string[]): Promise<LammpsFrame> {
     const { tokenizer } = state;
@@ -35,9 +34,9 @@ async function handleAtoms(state: State, count: number, parts: string[]): Promis
     // xsu,ysu,zsu = scaled unwrapped atom coordinates
     // ix,iy,iz = box image that the atom is in
     // how should we handle the different scenario ?
-    const xCol = parts.findIndex(p => p[0] === 'x');
-    const yCol = parts.findIndex(p => p[0] === 'y');
-    const zCol = parts.findIndex(p => p[0] === 'z');
+    const xCol = parts.findIndex((p) => p[0] === 'x');
+    const yCol = parts.findIndex((p) => p[0] === 'y');
+    const zCol = parts.findIndex((p) => p[0] === 'z');
     // retrieve the atom type colum for x only
     const atomMode = parts[xCol]; // x,xs,xu,xsu
     const atomId = TokenBuilder.create(tokenizer.data, count * 2);
@@ -54,7 +53,7 @@ async function handleAtoms(state: State, count: number, parts: string[]): Promis
 
     const { length } = tokenizer;
     let linesAlreadyRead = 0;
-    await chunkedSubtask(state.runtimeCtx, 100000, void 0, chunkSize => {
+    await chunkedSubtask(state.runtimeCtx, 100000, void 0, (chunkSize) => {
         const linesToRead = Math.min(count - linesAlreadyRead, chunkSize);
         for (let i = 0; i < linesToRead; ++i) {
             for (let j = 0; j < n; ++j) {
@@ -62,12 +61,24 @@ async function handleAtoms(state: State, count: number, parts: string[]): Promis
                 markStart(tokenizer);
                 eatValue(tokenizer);
                 switch (j) {
-                    case columnIndexMap['id']: TokenBuilder.addUnchecked(atomId, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                    case columnIndexMap['mol']: TokenBuilder.addUnchecked(moleculeType, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                    case columnIndexMap['type']: TokenBuilder.addUnchecked(atomType, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                    case xCol: TokenBuilder.addUnchecked(x, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                    case yCol: TokenBuilder.addUnchecked(y, tokenizer.tokenStart, tokenizer.tokenEnd); break;
-                    case zCol: TokenBuilder.addUnchecked(z, tokenizer.tokenStart, tokenizer.tokenEnd); break;
+                    case columnIndexMap['id']:
+                        TokenBuilder.addUnchecked(atomId, tokenizer.tokenStart, tokenizer.tokenEnd);
+                        break;
+                    case columnIndexMap['mol']:
+                        TokenBuilder.addUnchecked(moleculeType, tokenizer.tokenStart, tokenizer.tokenEnd);
+                        break;
+                    case columnIndexMap['type']:
+                        TokenBuilder.addUnchecked(atomType, tokenizer.tokenStart, tokenizer.tokenEnd);
+                        break;
+                    case xCol:
+                        TokenBuilder.addUnchecked(x, tokenizer.tokenStart, tokenizer.tokenEnd);
+                        break;
+                    case yCol:
+                        TokenBuilder.addUnchecked(y, tokenizer.tokenStart, tokenizer.tokenEnd);
+                        break;
+                    case zCol:
+                        TokenBuilder.addUnchecked(z, tokenizer.tokenStart, tokenizer.tokenEnd);
+                        break;
                 }
             }
             // ignore any extra columns
@@ -76,7 +87,7 @@ async function handleAtoms(state: State, count: number, parts: string[]): Promis
         }
         linesAlreadyRead += linesToRead;
         return linesToRead;
-    }, ctx => ctx.update({ message: 'Parsing...', current: tokenizer.position, max: length }));
+    }, (ctx) => ctx.update({ message: 'Parsing...', current: tokenizer.position, max: length }));
 
     return {
         count,
@@ -115,7 +126,7 @@ async function parseInternal(data: StringLike, ctx: RuntimeContext): Promise<Res
         times: [],
         bounds: [],
         timeOffset: 0.0,
-        deltaTime: 0.0
+        deltaTime: 0.0,
     };
     const frames = f.frames;
     let numAtoms = 0;
@@ -151,7 +162,8 @@ async function parseInternal(data: StringLike, ctx: RuntimeContext): Promise<Res
             f.bounds.push({
                 lower: [xlo, ylo, zlo],
                 length: [xhi - xlo, yhi - ylo, zhi - zlo],
-                periodicity: [px, py, pz] });
+                periodicity: [px, py, pz],
+            });
         }
     }
     if (f.times.length >= 1) {
@@ -164,7 +176,7 @@ async function parseInternal(data: StringLike, ctx: RuntimeContext): Promise<Res
 }
 
 export function parseLammpsTrajectory(data: StringLike) {
-    return Task.create<Result<LammpsTrajectoryFile>>('Parse Lammp Trajectory', async ctx => {
+    return Task.create<Result<LammpsTrajectoryFile>>('Parse Lammp Trajectory', async (ctx) => {
         return await parseInternal(data, ctx);
     });
 }

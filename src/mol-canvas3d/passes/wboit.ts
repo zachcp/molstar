@@ -28,9 +28,13 @@ const EvaluateWboitSchema = {
     uTexSize: UniformSpec('v2'),
 };
 const EvaluateWboitShaderCode = ShaderCode('evaluate-wboit', quad_vert, evaluateWboit_frag);
-type EvaluateWboitRenderable = ComputeRenderable<Values<typeof EvaluateWboitSchema>>
+type EvaluateWboitRenderable = ComputeRenderable<Values<typeof EvaluateWboitSchema>>;
 
-function getEvaluateWboitRenderable(ctx: WebGLContext, wboitATexture: Texture, wboitBTexture: Texture): EvaluateWboitRenderable {
+function getEvaluateWboitRenderable(
+    ctx: WebGLContext,
+    wboitATexture: Texture,
+    wboitBTexture: Texture,
+): EvaluateWboitRenderable {
     const values: Values<typeof EvaluateWboitSchema> = {
         ...QuadValues,
         tWboitA: ValueCell.create(wboitATexture),
@@ -96,7 +100,10 @@ export class WboitPass {
             this.textureA.define(width, height);
             this.textureB.define(width, height);
             this.depthRenderbuffer.setSize(width, height);
-            ValueCell.update(this.renderable.values.uTexSize, Vec2.set(this.renderable.values.uTexSize.ref.value, width, height));
+            ValueCell.update(
+                this.renderable.values.uTexSize,
+                Vec2.set(this.renderable.values.uTexSize.ref.value, width, height),
+            );
         }
     }
 

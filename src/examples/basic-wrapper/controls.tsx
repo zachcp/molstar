@@ -8,8 +8,10 @@ import { PluginUIComponent } from '../../mol-plugin-ui/base.tsx';
 
 export class CustomToastMessage extends PluginUIComponent {
     render() {
-        return <>
-            Custom <i>Toast</i> content. No timeout.
-        </>;
+        return (
+            <>
+                Custom <i>Toast</i> content. No timeout.
+            </>
+        );
     }
 }

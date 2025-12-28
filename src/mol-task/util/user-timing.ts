@@ -11,8 +11,12 @@ const hasPerformance = (typeof performance !== 'undefined') && !!performance.mar
 const timingEnabled = hasPerformance && isTimingMode;
 
 export namespace UserTiming {
-    function startMarkName(task: Task<any>) { return `startTask${task.id}`; }
-    function endMarkName(task: Task<any>) { return `endTask${task.id}`; }
+    function startMarkName(task: Task<any>) {
+        return `startTask${task.id}`;
+    }
+    function endMarkName(task: Task<any>) {
+        return `endTask${task.id}`;
+    }
     export function markStart(task: Task<any>) {
         if (timingEnabled) performance.mark(startMarkName(task));
     }

@@ -7,18 +7,18 @@
 import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
 import { GeometryExporterUI } from './ui.tsx';
 
-export const GeometryExport = PluginBehavior.create<{ }>({
+export const GeometryExport = PluginBehavior.create<{}>({
     name: 'extension-geo-export',
     category: 'misc',
     display: {
-        name: 'Geometry Export'
+        name: 'Geometry Export',
     },
-    ctor: class extends PluginBehavior.Handler<{ }> {
+    ctor: class extends PluginBehavior.Handler<{}> {
         register(): void {
             this.ctx.customStructureControls.set('geo-export', GeometryExporterUI as any);
         }
 
-        update() {
+        override update() {
             return false;
         }
 
@@ -26,5 +26,5 @@ export const GeometryExport = PluginBehavior.create<{ }>({
             this.ctx.customStructureControls.delete('geo-export');
         }
     },
-    params: () => ({ })
+    params: () => ({}),
 });

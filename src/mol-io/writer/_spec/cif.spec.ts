@@ -1,7 +1,7 @@
 import * as Data from '../../reader/cif/data-model';
 import { CifWriter } from '../cif';
 import { decodeMsgPack } from '../../common/msgpack/decode';
-import type { EncodedFile, EncodedCategory } from '../../common/binary-cif';
+import type { EncodedCategory, EncodedFile } from '../../common/binary-cif';
 import { Field } from '../../reader/cif/binary/field';
 import { TextEncoder } from '../cif/encoder/text';
 import * as C from '../cif/encoder';
@@ -10,9 +10,14 @@ import { parseCifText } from '../../reader/cif/text/parser';
 
 const cartn_x = Data.CifField.ofNumbers([1.001, 1.002, 1.003, 1.004, 1.005, 1.006, 1.007, 1.008, 1.009]);
 const cartn_y = Data.CifField.ofNumbers([-3.0, -2.666, -2.3333, -2.0, -1.666, -1.333, -1.0, -0.666, -0.333]);
-const cartn_z = Data.CifField.ofNumbers([1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => Math.sqrt(i)));
+const cartn_z = Data.CifField.ofNumbers([1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => Math.sqrt(i)));
 const label_seq_id = Data.CifField.ofNumbers([1, 2, 3, 6, 11, 23, 47, 106, 235]);
-const atom_site = Data.CifCategory.ofFields('atom_site', { 'Cartn_x': cartn_x, 'Cartn_y': cartn_y, 'Cartn_z': cartn_z, 'label_seq_id': label_seq_id });
+const atom_site = Data.CifCategory.ofFields('atom_site', {
+    'Cartn_x': cartn_x,
+    'Cartn_y': cartn_y,
+    'Cartn_z': cartn_z,
+    'label_seq_id': label_seq_id,
+});
 const field1 = Data.CifField.ofNumbers([1, 2, 3, 6, 11, 23, 47, 106, 235]);
 const field2 = Data.CifField.ofNumbers([-1, -2, -3, -6, -11, -23, -47, -106, -235]);
 const other_fields = Data.CifCategory.ofFields('other_fields', { 'field1': field1, 'field2': field2 });
@@ -25,20 +30,20 @@ const encoding_aware_encoder = CifWriter.createEncoder({
             'categoryName': 'atom_site',
             'columnName': 'Cartn_y',
             'encoding': 'rle',
-            'precision': 0
+            'precision': 0,
         },
         {
             'categoryName': 'atom_site',
             'columnName': 'Cartn_z',
             'encoding': 'delta',
-            'precision': 1
+            'precision': 1,
         },
         {
             'categoryName': 'atom_site',
             'columnName': 'label_seq_id',
-            'encoding': 'delta-rle'
-        }
-    ])
+            'encoding': 'delta-rle',
+        },
+    ]),
 });
 
 test('cif writer value escaping', async () => {
@@ -83,7 +88,7 @@ describe('encoding-config', () => {
     }
 
     function join(field: Data.CifField) {
-        return field.binaryEncoding!.map(e => e.kind).join();
+        return field.binaryEncoding!.map((e) => e.kind).join();
     }
 
     it('strategy', () => {
@@ -95,27 +100,31 @@ describe('encoding-config', () => {
 
     it('precision', () => {
         assert(decoded_cartn_x.toFloatArray(), cartn_x.toFloatArray());
-        assert(decoded_cartn_y.toFloatArray(), cartn_y.toFloatArray().map(d => Math.round(d)));
-        assert(decoded_cartn_z.toFloatArray(), cartn_z.toFloatArray().map(d => Math.round(d * 10) / 10));
+        assert(decoded_cartn_y.toFloatArray(), cartn_y.toFloatArray().map((d) => Math.round(d)));
+        assert(decoded_cartn_z.toFloatArray(), cartn_z.toFloatArray().map((d) => Math.round(d * 10) / 10));
         assert(decoded_label_seq_id.toIntArray(), label_seq_id.toIntArray());
     });
 });
 
 const filter_aware_encoder1 = CifWriter.createEncoder({
     binary: true,
-    binaryAutoClassifyEncoding: true
+    binaryAutoClassifyEncoding: true,
 });
-filter_aware_encoder1.setFilter(C.Category.filterOf('atom_site\n' +
-'\n' +
-'atom_site.Cartn_x\n' +
-'atom_site.Cartn_y\n'));
+filter_aware_encoder1.setFilter(C.Category.filterOf(
+    'atom_site\n' +
+        '\n' +
+        'atom_site.Cartn_x\n' +
+        'atom_site.Cartn_y\n',
+));
 
 const filter_aware_encoder2 = CifWriter.createEncoder({
-    binary: true
+    binary: true,
 });
-filter_aware_encoder2.setFilter(C.Category.filterOf('!atom_site\n' +
-'\n' +
-'!other_fields.field2\n'));
+filter_aware_encoder2.setFilter(C.Category.filterOf(
+    '!atom_site\n' +
+        '\n' +
+        '!other_fields.field2\n',
+));
 
 describe('filtering-config', () => {
     const decoded1 = process(filter_aware_encoder1);
@@ -165,18 +174,17 @@ function process(encoder: C.Encoder) {
     const encoded = encoder.getData() as Uint8Array;
 
     const unpacked = decodeMsgPack(encoded) as EncodedFile;
-    return Data.CifFile(unpacked.dataBlocks.map(block => {
+    return Data.CifFile(unpacked.dataBlocks.map((block) => {
         const cats = Object.create(null);
         for (const cat of block.categories) cats[cat.name.substring(1)] = Category(cat);
-        return Data.CifBlock(block.categories.map(c => c.name.substring(1)), cats, block.header);
+        return Data.CifBlock(block.categories.map((c) => c.name.substring(1)), cats, block.header);
     }));
 }
-
 
 function getCategoryInstanceProvider(cat: Data.CifCategory, fields: CifWriter.Field[]): CifWriter.Category {
     return {
         name: cat.name,
-        instance: () => CifWriter.categoryInstance(fields, { data: cat, rowCount: cat.rowCount })
+        instance: () => CifWriter.categoryInstance(fields, { data: cat, rowCount: cat.rowCount }),
     };
 }
 
@@ -198,13 +206,13 @@ function Category(data: EncodedCategory): Data.CifCategory {
     return {
         rowCount: data.rowCount,
         name: data.name.substring(1),
-        fieldNames: data.columns.map(c => c.name),
+        fieldNames: data.columns.map((c) => c.name),
         getField(name) {
             const col = map[name];
             if (!col) return void 0;
             if (!!cache[name]) return cache[name];
             cache[name] = Field(col);
             return cache[name];
-        }
+        },
     };
 }

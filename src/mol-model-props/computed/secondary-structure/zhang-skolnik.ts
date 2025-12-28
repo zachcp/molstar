@@ -20,7 +20,13 @@ const SheetDelta = 1.42;
 const posA = Vec3();
 const posB = Vec3();
 
-function zhangSkolnickAtomicSS(unit: Unit.Atomic, residueIndices: SortedArray<ResidueIndex>, i: number, distances: number[], delta: number) {
+function zhangSkolnickAtomicSS(
+    unit: Unit.Atomic,
+    residueIndices: SortedArray<ResidueIndex>,
+    i: number,
+    distances: number[],
+    delta: number,
+) {
     const c = unit.conformation;
     const { traceElementIndex } = unit.model.atomicHierarchy.derived.residue;
 

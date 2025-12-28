@@ -7,12 +7,15 @@
 import type { Table } from '../../mol-data/db.ts';
 import type { mmCIF_Schema } from '../../mol-io/reader/cif/schema/mmcif.ts';
 import { type Mat4, Vec3 } from '../../mol-math/linear-algebra.ts';
-import type { MolstarBondSiteTypeId, MolstarBondSiteValueOrder } from '../../mol-model/structure/export/categories/molstar_bond_site.ts';
+import type {
+    MolstarBondSiteTypeId,
+    MolstarBondSiteValueOrder,
+} from '../../mol-model/structure/export/categories/molstar_bond_site.ts';
 import { UUID } from '../../mol-util/index.ts';
 import { arrayMapAdd } from '../../mol-util/map.ts';
 import type { JSONCifDataBlock } from './model.ts';
 
-type Atom = Partial<Table.Row<mmCIF_Schema['atom_site']>>
+type Atom = Partial<Table.Row<mmCIF_Schema['atom_site']>>;
 
 export interface JSONCifLigandGraphBondProps {
     value_order: MolstarBondSiteValueOrder | undefined;
@@ -114,11 +117,15 @@ export class JSONCifLigandGraph {
         for (const b of bonds) {
             const bBonds = this.bondByKey.get(b.atom_2.key);
             if (!bBonds) continue;
-            this.bondByKey.set(b.atom_2.key, bBonds.filter(bb => bb.atom_2 !== atom));
+            this.bondByKey.set(b.atom_2.key, bBonds.filter((bb) => bb.atom_2 !== atom));
         }
     }
 
-    addOrUpdateBond(atom1: number | JSONCifLigandGraphAtom, atom2: number | JSONCifLigandGraphAtom, props: JSONCifLigandGraphBondProps) {
+    addOrUpdateBond(
+        atom1: number | JSONCifLigandGraphAtom,
+        atom2: number | JSONCifLigandGraphAtom,
+        props: JSONCifLigandGraphBondProps,
+    ) {
         const a1 = this.getAtom(atom1);
         const a2 = this.getAtom(atom2);
         if (!a1 || !a2) return;
@@ -135,11 +142,11 @@ export class JSONCifLigandGraph {
         if (!a1 || !a2) return;
         const a1Bonds = this.bondByKey.get(a1.key);
         if (a1Bonds) {
-            this.bondByKey.set(a1.key, a1Bonds.filter(b => b.atom_2 !== a2));
+            this.bondByKey.set(a1.key, a1Bonds.filter((b) => b.atom_2 !== a2));
         }
         const a2Bonds = this.bondByKey.get(a2.key);
         if (a2Bonds) {
-            this.bondByKey.set(a2.key, a2Bonds.filter(b => b.atom_2 !== a1));
+            this.bondByKey.set(a2.key, a2Bonds.filter((b) => b.atom_2 !== a1));
         }
     }
 
@@ -163,7 +170,12 @@ export class JSONCifLigandGraph {
         atomOrId: number | JSONCifLigandGraphAtom,
         how: 'dfs' | 'bfs',
         state: S,
-        visitAtom: (atom: JSONCifLigandGraphAtom, state: S, pred: JSONCifLigandGraphBond | undefined, graph: JSONCifLigandGraph) => void,
+        visitAtom: (
+            atom: JSONCifLigandGraphAtom,
+            state: S,
+            pred: JSONCifLigandGraphBond | undefined,
+            graph: JSONCifLigandGraph,
+        ) => void,
     ): S {
         const start = this.getAtom(atomOrId);
         if (!start) return state;
@@ -228,7 +240,7 @@ export class JSONCifLigandGraph {
                     ...this.data.categories['atom_site'],
                     rows: atoms,
                 },
-            }
+            },
         };
 
         const bonds: Record<string, any>[] = [];
@@ -255,7 +267,7 @@ export class JSONCifLigandGraph {
         if (block.categories.molstar_bond_site) {
             block.categories['molstar_bond_site'] = {
                 ...block.categories['molstar_bond_site'],
-                rows: bonds
+                rows: bonds,
             };
         }
 
@@ -300,7 +312,7 @@ export class JSONCifLigandGraph {
                 props: {
                     value_order: row.value_order,
                     type_id: row.type_id,
-                }
+                },
             });
         }
     }

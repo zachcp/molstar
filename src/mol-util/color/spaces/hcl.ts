@@ -13,7 +13,11 @@ import { Lab } from './lab.ts';
 
 export { Hcl };
 
-interface Hcl extends Array<number> { [d: number]: number, '@type': 'hcl', length: 3 }
+interface Hcl extends Array<number> {
+    [d: number]: number;
+    '@type': 'hcl';
+    length: 3;
+}
 
 /**
  * CIE HCL (Hue-Chroma-Luminance) color

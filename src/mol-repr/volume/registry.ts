@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { RepresentationRegistry, type Representation, type RepresentationProvider } from '../representation.ts';
+import { type Representation, type RepresentationProvider, RepresentationRegistry } from '../representation.ts';
 import type { Volume } from '../../mol-model/volume.ts';
 import { IsosurfaceRepresentationProvider } from './isosurface.ts';
 import { objectForEach } from '../../mol-util/object.ts';
@@ -17,7 +17,9 @@ export class VolumeRepresentationRegistry extends RepresentationRegistry<Volume,
     constructor() {
         super();
         objectForEach(VolumeRepresentationRegistry.BuiltIn, (p, k) => {
-            if (p.name !== k) throw new Error(`Fix BuiltInVolumeRepresentations to have matching names. ${p.name} ${k}`);
+            if (p.name !== k) {
+                throw new Error(`Fix BuiltInVolumeRepresentations to have matching names. ${p.name} ${k}`);
+            }
             this.add(p as any);
         });
     }
@@ -32,7 +34,7 @@ export namespace VolumeRepresentationRegistry {
         'slice': SliceRepresentationProvider,
     };
 
-    type _BuiltIn = typeof BuiltIn
-    export type BuiltIn = keyof _BuiltIn
-    export type BuiltInParams<T extends BuiltIn> = Partial<RepresentationProvider.ParamValues<_BuiltIn[T]>>
+    type _BuiltIn = typeof BuiltIn;
+    export type BuiltIn = keyof _BuiltIn;
+    export type BuiltInParams<T extends BuiltIn> = Partial<RepresentationProvider.ParamValues<_BuiltIn[T]>>;
 }

@@ -5,36 +5,50 @@
  */
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { UnitsMeshParams, type UnitsVisual, UnitsMeshVisual } from '../../../mol-repr/structure/units-visual.ts';
-import { ElementIterator, getElementLoci, eachElement, getSerialElementLoci, eachSerialElement, makeElementIgnoreTest } from '../../../mol-repr/structure/visual/util/element.ts';
+import { UnitsMeshParams, UnitsMeshVisual, type UnitsVisual } from '../../../mol-repr/structure/units-visual.ts';
+import {
+    eachElement,
+    eachSerialElement,
+    ElementIterator,
+    getElementLoci,
+    getSerialElementLoci,
+    makeElementIgnoreTest,
+} from '../../../mol-repr/structure/visual/util/element.ts';
 import type { VisualUpdateState } from '../../../mol-repr/util.ts';
 import type { VisualContext } from '../../../mol-repr/visual.ts';
-import { type Unit, type Structure, StructureElement } from '../../../mol-model/structure.ts';
+import { type Structure, StructureElement, type Unit } from '../../../mol-model/structure.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { sphereVertexCount } from '../../../mol-geo/primitive/sphere.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
-import { Vec3, Mat3, Tensor, EPSILON } from '../../../mol-math/linear-algebra.ts';
+import { EPSILON, Mat3, Tensor, Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { addEllipsoid } from '../../../mol-geo/geometry/mesh/builder/ellipsoid.ts';
 import { AtomSiteAnisotrop } from '../../../mol-model-formats/structure/property/anisotropic.ts';
 import { equalEps } from '../../../mol-math/linear-algebra/3d/common.ts';
 import { addSphere } from '../../../mol-geo/geometry/mesh/builder/sphere.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { BaseGeometry } from '../../../mol-geo/geometry/base.ts';
-import { ComplexMeshParams, type ComplexVisual, ComplexMeshVisual } from '../complex-visual.ts';
+import { ComplexMeshParams, ComplexMeshVisual, type ComplexVisual } from '../complex-visual.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3add = Vec3.add;
 
 export interface EllipsoidMeshProps {
-    detail: number,
-    sizeFactor: number,
-    ignoreHydrogens: boolean,
-    ignoreHydrogensVariant: 'all' | 'non-polar',
-    traceOnly: boolean,
+    detail: number;
+    sizeFactor: number;
+    ignoreHydrogens: boolean;
+    ignoreHydrogensVariant: 'all' | 'non-polar';
+    traceOnly: boolean;
 }
 
-export function createEllipsoidMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: EllipsoidMeshProps, mesh?: Mesh): Mesh {
+export function createEllipsoidMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: EllipsoidMeshProps,
+    mesh?: Mesh,
+): Mesh {
     const { child } = structure;
     const childUnit = child?.unitMap.get(unit.id);
     if (child && !childUnit) return Mesh.createEmpty(mesh);
@@ -121,7 +135,7 @@ export const EllipsoidMeshParams = {
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     traceOnly: PD.Boolean(false),
 };
-export type EllipsoidMeshParams = typeof EllipsoidMeshParams
+export type EllipsoidMeshParams = typeof EllipsoidMeshParams;
 
 export function EllipsoidMeshVisual(materialId: number): UnitsVisual<EllipsoidMeshParams> {
     return UnitsMeshVisual<EllipsoidMeshParams>({
@@ -130,19 +144,27 @@ export function EllipsoidMeshVisual(materialId: number): UnitsVisual<EllipsoidMe
         createLocationIterator: ElementIterator.fromGroup,
         getLoci: getElementLoci,
         eachLocation: eachElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<EllipsoidMeshParams>, currentProps: PD.Values<EllipsoidMeshParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<EllipsoidMeshParams>,
+            currentProps: PD.Values<EllipsoidMeshParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.detail !== currentProps.detail ||
-                newProps.ignoreHydrogens !== currentProps.ignoreHydrogens
-            );
-        }
+                newProps.ignoreHydrogens !== currentProps.ignoreHydrogens;
+        },
     }, materialId);
 }
 
 //
 
-export function createStructureEllipsoidMesh(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<StructureEllipsoidMeshParams>, mesh?: Mesh): Mesh {
+export function createStructureEllipsoidMesh(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<StructureEllipsoidMeshParams>,
+    mesh?: Mesh,
+): Mesh {
     const { child } = structure;
 
     const { detail, sizeFactor } = props;
@@ -256,7 +278,7 @@ export const StructureEllipsoidMeshParams = {
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     traceOnly: PD.Boolean(false),
 };
-export type StructureEllipsoidMeshParams = typeof StructureEllipsoidMeshParams
+export type StructureEllipsoidMeshParams = typeof StructureEllipsoidMeshParams;
 
 export function StructureEllipsoidMeshVisual(materialId: number): ComplexVisual<StructureEllipsoidMeshParams> {
     return ComplexMeshVisual<StructureEllipsoidMeshParams>({
@@ -265,12 +287,14 @@ export function StructureEllipsoidMeshVisual(materialId: number): ComplexVisual<
         createLocationIterator: ElementIterator.fromStructure,
         getLoci: getSerialElementLoci,
         eachLocation: eachSerialElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<StructureEllipsoidMeshParams>, currentProps: PD.Values<StructureEllipsoidMeshParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<StructureEllipsoidMeshParams>,
+            currentProps: PD.Values<StructureEllipsoidMeshParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.detail !== currentProps.detail ||
-                newProps.ignoreHydrogens !== currentProps.ignoreHydrogens
-            );
-        }
+                newProps.ignoreHydrogens !== currentProps.ignoreHydrogens;
+        },
     }, materialId);
 }

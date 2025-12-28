@@ -14,14 +14,13 @@ export const AnimateStateInterpolation = PluginStateAnimation.create({
     name: 'built-in.animate-state-interpolation',
     display: { name: 'Animate State (experimental)' },
     params: () => ({
-        transtionDurationInMs: PD.Numeric(2000, { min: 100, max: 30000, step: 10 })
+        transtionDurationInMs: PD.Numeric(2000, { min: 100, max: 30000, step: 10 }),
     }),
     canApply(plugin) {
         return { canApply: plugin.managers.snapshot.state.entries.size > 1 };
     },
-    initialState: () => ({ }),
+    initialState: () => ({}),
     async apply(animState, t, ctx) {
-
         const snapshots = ctx.plugin.managers.snapshot.state.entries;
         if (snapshots.size < 2) return { kind: 'finished' };
 
@@ -68,6 +67,6 @@ export const AnimateStateInterpolation = PluginStateAnimation.create({
 
         await PluginCommands.State.Update(ctx.plugin, { state, tree: update, options: { doNotLogTiming: true } });
 
-        return { kind: 'next', state: { } };
-    }
+        return { kind: 'next', state: {} };
+    },
 });

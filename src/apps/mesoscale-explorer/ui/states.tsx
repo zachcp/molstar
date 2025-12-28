@@ -8,10 +8,21 @@ import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif.ts';
 import { MmcifProvider } from '../../../mol-plugin-state/formats/trajectory.ts';
 import { PluginStateObject } from '../../../mol-plugin-state/objects.ts';
 import { Button, ExpandGroup, IconButton } from '../../../mol-plugin-ui/controls/common.tsx';
-import { GetAppSvg, HelpOutlineSvg, MagicWandSvg, TourSvg, Icon, OpenInBrowserSvg } from '../../../mol-plugin-ui/controls/icons.tsx';
+import {
+    GetAppSvg,
+    HelpOutlineSvg,
+    Icon,
+    MagicWandSvg,
+    OpenInBrowserSvg,
+    TourSvg,
+} from '../../../mol-plugin-ui/controls/icons.tsx';
 import { CollapsableControls, PluginUIComponent } from '../../../mol-plugin-ui/base.tsx';
 import { ApplyActionControl } from '../../../mol-plugin-ui/state/apply-action.tsx';
-import { LocalStateSnapshotList, LocalStateSnapshotParams, LocalStateSnapshots } from '../../../mol-plugin-ui/state/snapshots.tsx';
+import {
+    LocalStateSnapshotList,
+    LocalStateSnapshotParams,
+    LocalStateSnapshots,
+} from '../../../mol-plugin-ui/state/snapshots.tsx';
 import { PluginCommands } from '../../../mol-plugin/commands.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
 import { StateAction, StateObjectRef, StateTransform } from '../../../mol-state/index.ts';
@@ -24,7 +35,14 @@ import { createCellpackHierarchy } from '../data/cellpack/preset.ts';
 import { createGenericHierarchy } from '../data/generic/preset.ts';
 import { createMmcifHierarchy } from '../data/mmcif/preset.ts';
 import { createPetworldHierarchy } from '../data/petworld/preset.ts';
-import { getAllEntities, getEntityLabel, MesoscaleState, MesoscaleStateObject, setGraphicsCanvas3DProps, updateStyle } from '../data/state.ts';
+import {
+    getAllEntities,
+    getEntityLabel,
+    MesoscaleState,
+    MesoscaleStateObject,
+    setGraphicsCanvas3DProps,
+    updateStyle,
+} from '../data/state.ts';
 import { isTimingMode } from '../../../mol-util/debug.ts';
 import { now } from '../../../mol-util/now.ts';
 import { readFromFile } from '../../../mol-util/data-source.ts';
@@ -77,7 +95,7 @@ function adjustPluginProps(ctx: PluginContext) {
                             ],
                             nearThreshold: 10,
                             farThreshold: 1500,
-                        }
+                        },
                     },
                     radius: 5,
                     bias: 1,
@@ -86,7 +104,7 @@ function adjustPluginProps(ctx: PluginContext) {
                     resolutionScale: 1,
                     color: Color(0x000000),
                     transparentThreshold: 0.4,
-                }
+                },
             },
             shadow: {
                 name: 'on',
@@ -94,7 +112,7 @@ function adjustPluginProps(ctx: PluginContext) {
                     maxDistance: 80,
                     steps: 3,
                     tolerance: 1.0,
-                }
+                },
             },
             outline: {
                 name: 'on',
@@ -103,7 +121,7 @@ function adjustPluginProps(ctx: PluginContext) {
                     threshold: 0.15,
                     color: Color(0x000000),
                     includeTransparent: false,
-                }
+                },
             },
         },
         illumination: {
@@ -186,7 +204,7 @@ export async function loadUrl(ctx: PluginContext, url: string, type: 'molx' | 'm
         await PluginCommands.State.Snapshots.Clear(ctx);
         await PluginCommands.State.Snapshots.OpenUrl(ctx, { url, type });
 
-        const cell = ctx.state.data.selectQ(q => q.ofType(MesoscaleStateObject))[0];
+        const cell = ctx.state.data.selectQ((q) => q.ofType(MesoscaleStateObject))[0];
         if (!cell) throw new Error('Missing MesoscaleState');
 
         customState.stateRef = cell.transform.ref;
@@ -240,9 +258,12 @@ async function loadColors(ctx: PluginContext, file: File) {
         if (fullname in colorData) {
             const { x, y, z } = colorData[fullname];
             const color = Color.fromRgb(x, y, z);
-            update.to(entityCell).update(old => {
+            update.to(entityCell).update((old) => {
                 if (old.type) {
-                    old.colorTheme = { name: 'uniform', params: { value: color, lightness: old.colorTheme.params.lightness } };
+                    old.colorTheme = {
+                        name: 'uniform',
+                        params: { value: color, lightness: old.colorTheme.params.lightness },
+                    };
                     old.type.params.color = color;
                 } else if (old.coloring) {
                     old.coloring.params.color = color;
@@ -262,14 +283,16 @@ export const LoadDatabase = StateAction.build({
             entry: PD.Text(''),
         };
     },
-    from: PluginStateObject.Root
-})(({ params }, ctx: PluginContext) => Task.create('Loading from database...', async taskCtx => {
-    if (params.source === 'pdb') {
-        await loadPdb(ctx, params.entry);
-    } else if (params.source === 'pdbIhm') {
-        await loadPdbIhm(ctx, params.entry);
-    }
-}));
+    from: PluginStateObject.Root,
+})(({ params }, ctx: PluginContext) =>
+    Task.create('Loading from database...', async (taskCtx) => {
+        if (params.source === 'pdb') {
+            await loadPdb(ctx, params.entry);
+        } else if (params.source === 'pdbIhm') {
+            await loadPdbIhm(ctx, params.entry);
+        }
+    })
+);
 
 export const LoadExample = StateAction.build({
     display: { name: 'Load', description: 'Load an example' },
@@ -279,87 +302,116 @@ export const LoadExample = StateAction.build({
             entry: PD.Select(0, entries.map((s, i) => [i, s.label])),
         };
     },
-    from: PluginStateObject.Root
-})(({ params }, ctx: PluginContext) => Task.create('Loading example...', async taskCtx => {
-    const entries = (ctx.customState as MesoscaleExplorerState).examples || [];
-    await loadExampleEntry(ctx, entries[params.entry]);
-}));
+    from: PluginStateObject.Root,
+})(({ params }, ctx: PluginContext) =>
+    Task.create('Loading example...', async (taskCtx) => {
+        const entries = (ctx.customState as MesoscaleExplorerState).examples || [];
+        await loadExampleEntry(ctx, entries[params.entry]);
+    })
+);
 
 export const LoadModel = StateAction.build({
     display: { name: 'Load', description: 'Load a model' },
     params: {
-        files: PD.FileList({ accept: '.cif,.bcif,.cif.gz,.bcif.gz,.zip', multiple: true, description: 'mmCIF or Cellpack- or Petworld-style cif file.', label: 'File(s)' }),
+        files: PD.FileList({
+            accept: '.cif,.bcif,.cif.gz,.bcif.gz,.zip',
+            multiple: true,
+            description: 'mmCIF or Cellpack- or Petworld-style cif file.',
+            label: 'File(s)',
+        }),
     },
-    from: PluginStateObject.Root
-})(({ params }, ctx: PluginContext) => Task.create('Loading model...', async taskCtx => {
-    if (params.files === null || params.files.length === 0) {
-        ctx.log.error('No file(s) selected');
-        return;
-    }
-
-    await reset(ctx);
-
-    const firstFile = params.files[0];
-    const firstInfo = getFileNameInfo(firstFile.file!.name);
-
-    if (firstInfo.name.endsWith('zip')) {
-        try {
-            await createGenericHierarchy(ctx, firstFile);
-        } catch (e) {
-            console.error(e);
-            ctx.log.error(`Error opening file '${firstFile.name}'`);
+    from: PluginStateObject.Root,
+})(({ params }, ctx: PluginContext) =>
+    Task.create('Loading model...', async (taskCtx) => {
+        if (params.files === null || params.files.length === 0) {
+            ctx.log.error('No file(s) selected');
+            return;
         }
-    } else {
-        for (const file of params.files) {
-            try {
-                const info = getFileNameInfo(file.file!.name);
-                if (!['cif', 'bcif'].includes(info.ext)) continue;
 
-                const isBinary = ctx.dataFormats.binaryExtensions.has(info.ext);
-                const { data } = await ctx.builders.data.readFile({ file, isBinary });
-                await createHierarchy(ctx, data.ref);
+        await reset(ctx);
+
+        const firstFile = params.files[0];
+        const firstInfo = getFileNameInfo(firstFile.file!.name);
+
+        if (firstInfo.name.endsWith('zip')) {
+            try {
+                await createGenericHierarchy(ctx, firstFile);
             } catch (e) {
                 console.error(e);
-                ctx.log.error(`Error opening file '${file.name}'`);
+                ctx.log.error(`Error opening file '${firstFile.name}'`);
+            }
+        } else {
+            for (const file of params.files) {
+                try {
+                    const info = getFileNameInfo(file.file!.name);
+                    if (!['cif', 'bcif'].includes(info.ext)) continue;
+
+                    const isBinary = ctx.dataFormats.binaryExtensions.has(info.ext);
+                    const { data } = await ctx.builders.data.readFile({ file, isBinary });
+                    await createHierarchy(ctx, data.ref);
+                } catch (e) {
+                    console.error(e);
+                    ctx.log.error(`Error opening file '${file.name}'`);
+                }
             }
         }
-    }
-}));
-
+    })
+);
 
 export class DatabaseControls extends PluginUIComponent {
     componentDidMount() {
-
     }
 
     render() {
-        return <div id='database' style={{ margin: '5px' }}>
-            <ApplyActionControl state={this.plugin.state.data} action={LoadDatabase} nodeRef={this.plugin.state.data.tree.root.ref} applyLabel="Load" hideHeader />
-        </div>;
+        return (
+            <div id='database' style={{ margin: '5px' }}>
+                <ApplyActionControl
+                    state={this.plugin.state.data}
+                    action={LoadDatabase}
+                    nodeRef={this.plugin.state.data.tree.root.ref}
+                    applyLabel='Load'
+                    hideHeader
+                />
+            </div>
+        );
     }
 }
 
 export class LoaderControls extends PluginUIComponent {
     componentDidMount() {
-
     }
 
     render() {
-        return <div id='loader' style={{ margin: '5px' }}>
-            <ApplyActionControl state={this.plugin.state.data} action={LoadModel} nodeRef={this.plugin.state.data.tree.root.ref} applyLabel="Load" hideHeader />
-        </div>;
+        return (
+            <div id='loader' style={{ margin: '5px' }}>
+                <ApplyActionControl
+                    state={this.plugin.state.data}
+                    action={LoadModel}
+                    nodeRef={this.plugin.state.data.tree.root.ref}
+                    applyLabel='Load'
+                    hideHeader
+                />
+            </div>
+        );
     }
 }
 
 export class ExampleControls extends PluginUIComponent {
     componentDidMount() {
-
     }
 
     render() {
-        return <div id='example' style={{ margin: '5px' }}>
-            <ApplyActionControl state={this.plugin.state.data} action={LoadExample} nodeRef={this.plugin.state.data.tree.root.ref} applyLabel="Load" hideHeader />
-        </div>;
+        return (
+            <div id='example' style={{ margin: '5px' }}>
+                <ApplyActionControl
+                    state={this.plugin.state.data}
+                    action={LoadExample}
+                    nodeRef={this.plugin.state.data.tree.root.ref}
+                    applyLabel='Load'
+                    hideHeader
+                />
+            </div>
+        );
     }
 }
 
@@ -380,7 +432,7 @@ export function ColorLoaderControls({ plugin }: { plugin: PluginContext }) {
     return (
         <IconButton
             svg={OpenInBrowserSvg}
-            title="Load Colors"
+            title='Load Colors'
             onClick={triggerLoadColors}
             small
         />
@@ -396,7 +448,7 @@ export async function openState(ctx: PluginContext, file: File) {
     await PluginCommands.State.Snapshots.Clear(ctx);
     await PluginCommands.State.Snapshots.OpenFile(ctx, { file });
 
-    const cell = ctx.state.data.selectQ(q => q.ofType(MesoscaleStateObject))[0];
+    const cell = ctx.state.data.selectQ((q) => q.ofType(MesoscaleStateObject))[0];
     if (!cell) throw new Error('Missing MesoscaleState');
 
     customState.stateRef = cell.transform.ref;
@@ -418,51 +470,58 @@ export class SessionControls extends PluginUIComponent {
     };
 
     render() {
-        return <div id='session' style={{ margin: '5px' }}>
-            <div className='msp-flex-row'>
-                <Button icon={GetAppSvg} onClick={this.downloadToFileZip} title='Download the state.'>
-                    Download
-                </Button>
-                <div className='msp-btn msp-btn-block msp-btn-action msp-loader-msp-btn-file'>
-                    <Icon svg={OpenInBrowserSvg} inline /> Open <input onChange={this.open} type='file' multiple={false} accept='.molx,.molj' />
+        return (
+            <div id='session' style={{ margin: '5px' }}>
+                <div className='msp-flex-row'>
+                    <Button icon={GetAppSvg} onClick={this.downloadToFileZip} title='Download the state.'>
+                        Download
+                    </Button>
+                    <div className='msp-btn msp-btn-block msp-btn-action msp-loader-msp-btn-file'>
+                        <Icon svg={OpenInBrowserSvg} inline /> Open{' '}
+                        <input onChange={this.open} type='file' multiple={false} accept='.molx,.molj' />
+                    </div>
                 </div>
             </div>
-        </div>;
+        );
     }
 }
 
 export class SnapshotControls extends PluginUIComponent<{}> {
     render() {
-        return <div style={{ margin: '5px' }}>
-            <div id='snaplist' style={{ marginBottom: '10px' }}>
-                <LocalStateSnapshotList />
-            </div>
-            <div id='snap' style={{ marginBottom: '10px' }}>
-                <LocalStateSnapshots />
-            </div>
+        return (
+            <div style={{ margin: '5px' }}>
+                <div id='snaplist' style={{ marginBottom: '10px' }}>
+                    <LocalStateSnapshotList />
+                </div>
+                <div id='snap' style={{ marginBottom: '10px' }}>
+                    <LocalStateSnapshots />
+                </div>
 
-            <div id='snapoption' style={{ marginBottom: '10px' }}>
-                <ExpandGroup header='Snapshot Options' initiallyExpanded={false}>
-                    <LocalStateSnapshotParams />
-                </ExpandGroup>
+                <div id='snapoption' style={{ marginBottom: '10px' }}>
+                    <ExpandGroup header='Snapshot Options' initiallyExpanded={false}>
+                        <LocalStateSnapshotParams />
+                    </ExpandGroup>
+                </div>
             </div>
-        </div>;
+        );
     }
 }
 
-export class ExplorerInfo extends PluginUIComponent<{}, { isDisabled: boolean, showHelp: boolean }> {
+export class ExplorerInfo extends PluginUIComponent<{}, { isDisabled: boolean; showHelp: boolean }> {
     state = {
         isDisabled: false,
-        showHelp: false
+        showHelp: false,
     };
 
     componentDidMount() {
-        this.subscribe(this.plugin.state.data.behaviors.isUpdating, v => {
+        this.subscribe(this.plugin.state.data.behaviors.isUpdating, (v) => {
             this.setState({ isDisabled: v });
         });
 
-        this.subscribe(this.plugin.state.events.cell.stateUpdated, e => {
-            if (!this.state.isDisabled && MesoscaleState.has(this.plugin) && MesoscaleState.ref(this.plugin) === e.ref) {
+        this.subscribe(this.plugin.state.events.cell.stateUpdated, (e) => {
+            if (
+                !this.state.isDisabled && MesoscaleState.has(this.plugin) && MesoscaleState.ref(this.plugin) === e.ref
+            ) {
                 this.forceUpdate();
             }
         });
@@ -475,31 +534,221 @@ export class ExplorerInfo extends PluginUIComponent<{}, { isDisabled: boolean, s
 
         driver.setSteps([
             // Left panel
-            { element: '#explorerinfo', popover: { title: 'Explorer Header Info', description: 'This section displays the explorer header with version information, documentation access, and tour navigation. Use the right and left arrow keys to navigate the tour.', side: 'left', align: 'start' } },
-            { element: '#database', popover: { title: 'Import from PDB', description: 'Load structures directly from PDB and PDB-IHM databases.', side: 'bottom', align: 'start' } },
-            { element: '#loader', popover: { title: 'Import from File', description: 'Load local files (.molx, .molj, .zip, .cif, .bcif) using this option.', side: 'bottom', align: 'start' } },
-            { element: '#example', popover: { title: 'Example Models and Tours', description: 'Select from a range of example models and tours provided.', side: 'left', align: 'start' } },
-            { element: '#session', popover: { title: 'Session Management', description: 'Download the current session in .molx format.', side: 'top', align: 'start' } },
-            { element: '#snaplist', popover: { title: 'Snapshot List', description: 'View and manage the list of snapshots. You can reorder them and edit their titles, keys, and descriptions. Snapshot states cannot be edited.', side: 'right', align: 'start' } },
-            { element: '#snap', popover: { title: 'Add Snapshot', description: 'Save the current state (e.g., camera position, color, visibility, etc.) in a snapshot with an optional title, key, and description.', side: 'right', align: 'start' } },
-            { element: '#snapoption', popover: { title: 'Snapshot Options', description: 'These options are saved in the snapshot. Set them before adding a snapshot to see their effect during animation playback.', side: 'right', align: 'start' } },
-            { element: '#exportanimation', popover: { title: 'Export Animation', description: 'Create movies or scenes with rocking, rotating, or snapshots animations.', side: 'right', align: 'start' } },
-            { element: '#viewportsettings', popover: { title: 'Viewport Settings', description: 'Advanced settings for the renderer and trackball.', side: 'right', align: 'start' } },
+            {
+                element: '#explorerinfo',
+                popover: {
+                    title: 'Explorer Header Info',
+                    description:
+                        'This section displays the explorer header with version information, documentation access, and tour navigation. Use the right and left arrow keys to navigate the tour.',
+                    side: 'left',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#database',
+                popover: {
+                    title: 'Import from PDB',
+                    description: 'Load structures directly from PDB and PDB-IHM databases.',
+                    side: 'bottom',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#loader',
+                popover: {
+                    title: 'Import from File',
+                    description: 'Load local files (.molx, .molj, .zip, .cif, .bcif) using this option.',
+                    side: 'bottom',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#example',
+                popover: {
+                    title: 'Example Models and Tours',
+                    description: 'Select from a range of example models and tours provided.',
+                    side: 'left',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#session',
+                popover: {
+                    title: 'Session Management',
+                    description: 'Download the current session in .molx format.',
+                    side: 'top',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#snaplist',
+                popover: {
+                    title: 'Snapshot List',
+                    description:
+                        'View and manage the list of snapshots. You can reorder them and edit their titles, keys, and descriptions. Snapshot states cannot be edited.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#snap',
+                popover: {
+                    title: 'Add Snapshot',
+                    description:
+                        'Save the current state (e.g., camera position, color, visibility, etc.) in a snapshot with an optional title, key, and description.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#snapoption',
+                popover: {
+                    title: 'Snapshot Options',
+                    description:
+                        'These options are saved in the snapshot. Set them before adding a snapshot to see their effect during animation playback.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#exportanimation',
+                popover: {
+                    title: 'Export Animation',
+                    description: 'Create movies or scenes with rocking, rotating, or snapshots animations.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#viewportsettings',
+                popover: {
+                    title: 'Viewport Settings',
+                    description: 'Advanced settings for the renderer and trackball.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
             // Viewport
-            { element: '#snapinfo', popover: { title: 'Snapshot Description', description: 'Save the current state (e.g., camera position, color, visibility, etc.) in a snapshot with an optional title, key, and description.', side: 'right', align: 'start' } },
-            { element: '#snapinfoctrl', popover: { title: 'Snapshot Description Control', description: 'Control the visibility and text size of the snapshot description widget.', side: 'right', align: 'start' } },
+            {
+                element: '#snapinfo',
+                popover: {
+                    title: 'Snapshot Description',
+                    description:
+                        'Save the current state (e.g., camera position, color, visibility, etc.) in a snapshot with an optional title, key, and description.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#snapinfoctrl',
+                popover: {
+                    title: 'Snapshot Description Control',
+                    description: 'Control the visibility and text size of the snapshot description widget.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
             // Right panel
-            { element: '#modelinfo', popover: { title: 'Model Information', description: 'Summary information about the model, if available.', side: 'right', align: 'start' } },
-            { element: '#selestyle', popover: { title: 'Selection Style', description: 'Choose the rendering style for entity selection accessed via Shift/Ctrl mouse. Options include: Color & Outline, Color, Outline.', side: 'right', align: 'start' } },
-            { element: '#seleinfo', popover: { title: 'Selection List', description: 'View the current list of selected entities.', side: 'right', align: 'start' } },
-            { element: '#measurements', popover: { title: 'Measurements', description: 'Use this widget to create labels, measure distances, angles, dihedral orientations, and planes for the selected entities.', side: 'right', align: 'start' } },
-            { element: '#quickstyles', popover: { title: 'Quick Styles', description: 'Change between a selection of style presets.', side: 'right', align: 'start' } },
-            { element: '#graphicsquality', popover: { title: 'Graphics Quality', description: 'Adjust the overall graphics quality. Lower quality improves performance. Options are: Ultra, Quality (Default), Balanced, Performance, Custom. Custom settings use the Culling & LOD values set in the Tree.', side: 'right', align: 'start' } },
-            { element: '#searchtree', popover: { title: 'Search', description: 'Filter the entity tree based on your queries.', side: 'right', align: 'start' } },
-            { element: '#grouptree', popover: { title: 'Group By', description: 'Change the grouping of the hierarchy tree, e.g., group by instance or by compartment.', side: 'right', align: 'start' } },
-            { element: '#tree', popover: { title: 'Tree Hierarchy', description: 'View the hierarchical tree of entity types in the model.', side: 'right', align: 'start' } },
-            { element: '#focusinfo', popover: { title: 'Selection Description', description: 'Detailed information about the current selection, if present in the loaded file.', side: 'right', align: 'start' } },
-            { popover: { title: 'Happy Exploring!', description: 'That’s all! Go ahead and start exploring or creating mesoscale tours.' } }
+            {
+                element: '#modelinfo',
+                popover: {
+                    title: 'Model Information',
+                    description: 'Summary information about the model, if available.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#selestyle',
+                popover: {
+                    title: 'Selection Style',
+                    description:
+                        'Choose the rendering style for entity selection accessed via Shift/Ctrl mouse. Options include: Color & Outline, Color, Outline.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#seleinfo',
+                popover: {
+                    title: 'Selection List',
+                    description: 'View the current list of selected entities.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#measurements',
+                popover: {
+                    title: 'Measurements',
+                    description:
+                        'Use this widget to create labels, measure distances, angles, dihedral orientations, and planes for the selected entities.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#quickstyles',
+                popover: {
+                    title: 'Quick Styles',
+                    description: 'Change between a selection of style presets.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#graphicsquality',
+                popover: {
+                    title: 'Graphics Quality',
+                    description:
+                        'Adjust the overall graphics quality. Lower quality improves performance. Options are: Ultra, Quality (Default), Balanced, Performance, Custom. Custom settings use the Culling & LOD values set in the Tree.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#searchtree',
+                popover: {
+                    title: 'Search',
+                    description: 'Filter the entity tree based on your queries.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#grouptree',
+                popover: {
+                    title: 'Group By',
+                    description:
+                        'Change the grouping of the hierarchy tree, e.g., group by instance or by compartment.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#tree',
+                popover: {
+                    title: 'Tree Hierarchy',
+                    description: 'View the hierarchical tree of entity types in the model.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
+            {
+                element: '#focusinfo',
+                popover: {
+                    title: 'Selection Description',
+                    description: 'Detailed information about the current selection, if present in the loaded file.',
+                    side: 'right',
+                    align: 'start',
+                },
+            },
+            {
+                popover: {
+                    title: 'Happy Exploring!',
+                    description: 'That’s all! Go ahead and start exploring or creating mesoscale tours.',
+                },
+            },
         ]);
         driver.refresh();
     };
@@ -525,14 +774,37 @@ export class ExplorerInfo extends PluginUIComponent<{}, { isDisabled: boolean, s
         const driver = (this.plugin.customState as MesoscaleExplorerState).driver;
         if (!driver) return;
 
-        const help = <IconButton svg={HelpOutlineSvg} toggleState={false} small onClick={this.openHelp} title='Open the Documentation' />;
-        const tour = <IconButton svg={TourSvg} toggleState={false} small onClick={this.toggleHelp} title='Start the interactive tour' />;
-        return <>
-            <div id='explorerinfo' style={{ display: 'flex', alignItems: 'center', padding: '4px 0 4px 8px' }} className='msp-help-text'>
-                <h2 style={{ flexGrow: 1 }}>Mol* Mesoscale Explorer</h2>
-                {tour}{help}
-            </div>
-        </>;
+        const help = (
+            <IconButton
+                svg={HelpOutlineSvg}
+                toggleState={false}
+                small
+                onClick={this.openHelp}
+                title='Open the Documentation'
+            />
+        );
+        const tour = (
+            <IconButton
+                svg={TourSvg}
+                toggleState={false}
+                small
+                onClick={this.toggleHelp}
+                title='Start the interactive tour'
+            />
+        );
+        return (
+            <>
+                <div
+                    id='explorerinfo'
+                    style={{ display: 'flex', alignItems: 'center', padding: '4px 0 4px 8px' }}
+                    className='msp-help-text'
+                >
+                    <h2 style={{ flexGrow: 1 }}>Mol* Mesoscale Explorer</h2>
+                    {tour}
+                    {help}
+                </div>
+            </>
+        );
     }
 }
 
@@ -541,14 +813,16 @@ export class MesoQuickStylesControls extends CollapsableControls {
         return {
             isCollapsed: true,
             header: 'Quick Styles',
-            brand: { accent: 'gray' as const, svg: MagicWandSvg }
+            brand: { accent: 'gray' as const, svg: MagicWandSvg },
         };
     }
 
     renderControls() {
-        return <>
-            <MesoQuickStyles />
-        </>;
+        return (
+            <>
+                <MesoQuickStyles />
+            </>
+        );
     }
 }
 
@@ -568,7 +842,7 @@ export class MesoQuickStyles extends PluginUIComponent {
                         maxDistance: 80,
                         steps: 3,
                         tolerance: 1.0,
-                    }
+                    },
                 },
                 outline: {
                     name: 'on',
@@ -577,10 +851,10 @@ export class MesoQuickStyles extends PluginUIComponent {
                         threshold: 0.15,
                         color: Color(0x000000),
                         includeTransparent: false,
-                    }
+                    },
                 },
                 dof: { name: 'off', params: {} },
-            }
+            },
         });
         await updateStyle(this.plugin, {
             ignoreLight: true,
@@ -605,11 +879,11 @@ export class MesoQuickStyles extends PluginUIComponent {
                         maxDistance: 256,
                         steps: 64,
                         tolerance: 1.0,
-                    }
+                    },
                 },
                 outline: { name: 'off', params: {} },
                 dof: { name: 'off', params: {} },
-            }
+            },
         });
         await updateStyle(this.plugin, {
             ignoreLight: false,
@@ -634,7 +908,7 @@ export class MesoQuickStyles extends PluginUIComponent {
                         maxDistance: 256,
                         steps: 64,
                         tolerance: 1.0,
-                    }
+                    },
                 },
                 outline: { name: 'off', params: {} },
                 dof: {
@@ -646,9 +920,9 @@ export class MesoQuickStyles extends PluginUIComponent {
                         PPM: 200.0,
                         center: 'camera-target',
                         mode: 'sphere',
-                    }
-                }
-            }
+                    },
+                },
+            },
         });
         await updateStyle(this.plugin, {
             ignoreLight: false,
@@ -673,7 +947,7 @@ export class MesoQuickStyles extends PluginUIComponent {
                         maxDistance: 256,
                         steps: 64,
                         tolerance: 1.0,
-                    }
+                    },
                 },
                 outline: {
                     name: 'on',
@@ -682,10 +956,10 @@ export class MesoQuickStyles extends PluginUIComponent {
                         threshold: 0.15,
                         color: Color(0x000000),
                         includeTransparent: false,
-                    }
+                    },
                 },
                 dof: { name: 'off', params: {} },
-            }
+            },
         });
         await updateStyle(this.plugin, {
             ignoreLight: true,
@@ -707,7 +981,7 @@ export class MesoQuickStyles extends PluginUIComponent {
                 shadow: { name: 'off', params: {} },
                 outline: { name: 'off', params: {} },
                 dof: { name: 'off', params: {} },
-            }
+            },
         });
         await updateStyle(this.plugin, {
             ignoreLight: false,
@@ -732,7 +1006,7 @@ export class MesoQuickStyles extends PluginUIComponent {
                         maxDistance: 256,
                         steps: 64,
                         tolerance: 1.0,
-                    }
+                    },
                 },
                 outline: {
                     name: 'on',
@@ -741,10 +1015,10 @@ export class MesoQuickStyles extends PluginUIComponent {
                         threshold: 0.15,
                         color: Color(0x000000),
                         includeTransparent: false,
-                    }
+                    },
                 },
                 dof: { name: 'off', params: {} },
-            }
+            },
         });
         await updateStyle(this.plugin, {
             ignoreLight: false,
@@ -755,29 +1029,61 @@ export class MesoQuickStyles extends PluginUIComponent {
     }
 
     render() {
-        return <>
-            <div className='msp-flex-row'>
-                <Button noOverflow title='Applies default representation preset and sets outline and occlusion effects to default' onClick={() => this.default()} style={{ width: 'auto' }}>
-                    Default
-                </Button>
-                <Button noOverflow title='Applies celShading' onClick={() => this.celshading()} style={{ width: 'auto' }}>
-                    Cel-shaded
-                </Button>
-                <Button noOverflow title='Applies illustrative colors preset' onClick={() => this.illustrative()} style={{ width: 'auto' }}>
-                    Illustrative
-                </Button>
-            </div>
-            <div className='msp-flex-row'>
-                <Button noOverflow title='Apply shiny material to default' onClick={() => this.shiny()} style={{ width: 'auto' }}>
-                    Shiny
-                </Button>
-                <Button noOverflow title='Enable shiny material, outline, and illustrative colors' onClick={() => this.stylized()} style={{ width: 'auto' }}>
-                    Shiny-Illustrative
-                </Button>
-                <Button noOverflow title='Enable DOF and shiny material' onClick={() => this.shinyDof()} style={{ width: 'auto' }}>
-                    Shiny-DOF
-                </Button>
-            </div>
-        </>;
+        return (
+            <>
+                <div className='msp-flex-row'>
+                    <Button
+                        noOverflow
+                        title='Applies default representation preset and sets outline and occlusion effects to default'
+                        onClick={() => this.default()}
+                        style={{ width: 'auto' }}
+                    >
+                        Default
+                    </Button>
+                    <Button
+                        noOverflow
+                        title='Applies celShading'
+                        onClick={() => this.celshading()}
+                        style={{ width: 'auto' }}
+                    >
+                        Cel-shaded
+                    </Button>
+                    <Button
+                        noOverflow
+                        title='Applies illustrative colors preset'
+                        onClick={() => this.illustrative()}
+                        style={{ width: 'auto' }}
+                    >
+                        Illustrative
+                    </Button>
+                </div>
+                <div className='msp-flex-row'>
+                    <Button
+                        noOverflow
+                        title='Apply shiny material to default'
+                        onClick={() => this.shiny()}
+                        style={{ width: 'auto' }}
+                    >
+                        Shiny
+                    </Button>
+                    <Button
+                        noOverflow
+                        title='Enable shiny material, outline, and illustrative colors'
+                        onClick={() => this.stylized()}
+                        style={{ width: 'auto' }}
+                    >
+                        Shiny-Illustrative
+                    </Button>
+                    <Button
+                        noOverflow
+                        title='Enable DOF and shiny material'
+                        onClick={() => this.shinyDof()}
+                        style={{ width: 'auto' }}
+                    >
+                        Shiny-DOF
+                    </Button>
+                </div>
+            </>
+        );
     }
 }

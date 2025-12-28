@@ -17,29 +17,30 @@ import type { StateObjectSelector } from '../../mol-state/index.ts';
 import { Color } from '../../mol-util/color/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
-import { BOX, type VolsegEntryData, MAX_VOXELS } from './entry-root.ts';
+import { BOX, MAX_VOXELS, type VolsegEntryData } from './entry-root.ts';
 import { VolsegStateParams, VolumeTypeChoice } from './entry-state.ts';
 import * as ExternalAPIs from './external-api.ts';
 import { VolsegGlobalStateData } from './global-state.ts';
-
 
 const GROUP_TAG = 'volume-group';
 export const VOLUME_VISUAL_TAG = 'volume-visual';
 
 const DIRECT_VOLUME_RELATIVE_PEAK_HALFWIDTH = 0.5;
 
-
 export type VolumeVisualParams = ReturnType<typeof createVolumeRepresentationParams>;
 
-interface VolumeStats { min: number, max: number, mean: number, sigma: number };
-
+interface VolumeStats {
+    min: number;
+    max: number;
+    mean: number;
+    sigma: number;
+}
 
 export const SimpleVolumeParams = {
     volumeType: VolumeTypeChoice.PDSelect(),
-    opacity: PD.Numeric(0.2, { min: 0, max: 1, step: 0.05 }, { hideIf: p => p.volumeType === 'off' }),
+    opacity: PD.Numeric(0.2, { min: 0, max: 1, step: 0.05 }, { hideIf: (p) => p.volumeType === 'off' }),
 };
 export type SimpleVolumeParamValues = PD.Values<typeof SimpleVolumeParams>;
-
 
 export class VolsegVolumeData {
     private entryData: VolsegEntryData;
@@ -52,14 +53,23 @@ export class VolsegVolumeData {
     async loadVolume() {
         const hasVolumes = this.entryData.metadata.raw.grid.volumes.volume_downsamplings.length > 0;
         if (hasVolumes) {
-            const isoLevelPromise = ExternalAPIs.tryGetIsovalue(this.entryData.metadata.raw.grid.general.source_db_id ?? this.entryData.entryId);
+            const isoLevelPromise = ExternalAPIs.tryGetIsovalue(
+                this.entryData.metadata.raw.grid.general.source_db_id ?? this.entryData.entryId,
+            );
             let group = this.entryData.findNodesByTags(GROUP_TAG)[0]?.transform.ref;
             if (!group) {
-                const newGroupNode = await this.entryData.newUpdate().apply(CreateGroup, { label: 'Volume' }, { tags: [GROUP_TAG], state: { isCollapsed: true } }).commit();
+                const newGroupNode = await this.entryData.newUpdate().apply(CreateGroup, { label: 'Volume' }, {
+                    tags: [GROUP_TAG],
+                    state: { isCollapsed: true },
+                }).commit();
                 group = newGroupNode.ref;
             }
             const url = this.entryData.api.volumeUrl(this.entryData.source, this.entryData.entryId, BOX, MAX_VOXELS);
-            const data = await this.entryData.newUpdate().to(group).apply(Download, { url, isBinary: true, label: `Volume Data: ${url}` }).commit();
+            const data = await this.entryData.newUpdate().to(group).apply(Download, {
+                url,
+                isBinary: true,
+                label: `Volume Data: ${url}`,
+            }).commit();
             const parsed = await this.entryData.plugin.dataFormats.get('dscif')!.parse(this.entryData.plugin, data);
             const volumeNode: StateObjectSelector<PluginStateObject.Volume.Data> = parsed.volumes?.[0] ?? parsed.volume;
             const volumeData = volumeNode.cell!.obj!.data;
@@ -82,7 +92,10 @@ export class VolsegVolumeData {
 
             await this.entryData.newUpdate()
                 .to(volumeNode)
-                .apply(StateTransforms.Representation.VolumeRepresentation3D, visualParams, { tags: [VOLUME_VISUAL_TAG], state: { isHidden: volumeType === 'off' } })
+                .apply(StateTransforms.Representation.VolumeRepresentation3D, visualParams, {
+                    tags: [VOLUME_VISUAL_TAG],
+                    state: { isHidden: volumeType === 'off' },
+                })
                 .commit();
             return { isovalue: adjustedIsovalue };
         }
@@ -103,13 +116,17 @@ export class VolsegVolumeData {
                 type: {
                     name: type,
                     params: this.visualTypeParamCache[type] ?? oldParams.type.params,
-                }
+                },
             };
             const volumeStats = visual.obj?.data.sourceData.grid.stats;
             if (!volumeStats) throw new Error(`Cannot get volume stats from volume visual ${visual.transform.ref}`);
             this.changeIsovalueInVolumeVisualParams(newParams, undefined, volumeStats);
             const update = this.entryData.newUpdate().to(visual.transform.ref).update(newParams);
-            await PluginCommands.State.Update(this.entryData.plugin, { state: this.entryData.plugin.state.data, tree: update, options: { doNotUpdateCurrent: true } });
+            await PluginCommands.State.Update(this.entryData.plugin, {
+                state: this.entryData.plugin.state.data,
+                tree: update,
+                options: { doNotUpdateCurrent: true },
+            });
         }
     }
 
@@ -129,14 +146,18 @@ export class VolsegVolumeData {
                 type: {
                     name: volumeType,
                     params: this.visualTypeParamCache[volumeType] ?? oldVisualParams.type.params,
-                }
+                },
             };
             newVisualParams.type.params.alpha = opacity;
             const volumeStats = visual.obj?.data.sourceData.grid.stats;
             if (!volumeStats) throw new Error(`Cannot get volume stats from volume visual ${visual.transform.ref}`);
             this.changeIsovalueInVolumeVisualParams(newVisualParams, undefined, volumeStats);
             const update = this.entryData.newUpdate().to(visual.transform.ref).update(newVisualParams);
-            await PluginCommands.State.Update(this.entryData.plugin, { state: this.entryData.plugin.state.data, tree: update, options: { doNotUpdateCurrent: true } });
+            await PluginCommands.State.Update(this.entryData.plugin, {
+                state: this.entryData.plugin.state.data,
+                tree: update,
+                options: { doNotUpdateCurrent: true },
+            });
         }
     }
 
@@ -145,9 +166,16 @@ export class VolsegVolumeData {
         for (const visual of visuals) {
             const oldParams: VolumeVisualParams = visual.transform.params;
             if (oldParams.type.params.tryUseGpu === !tryUseGpu) {
-                const newParams = { ...oldParams, type: { ...oldParams.type, params: { ...oldParams.type.params, tryUseGpu: tryUseGpu } } };
+                const newParams = {
+                    ...oldParams,
+                    type: { ...oldParams.type, params: { ...oldParams.type.params, tryUseGpu: tryUseGpu } },
+                };
                 const update = this.entryData.newUpdate().to(visual.transform.ref).update(newParams);
-                await PluginCommands.State.Update(this.entryData.plugin, { state: this.entryData.plugin.state.data, tree: update, options: { doNotUpdateCurrent: true } });
+                await PluginCommands.State.Update(this.entryData.plugin, {
+                    state: this.entryData.plugin.state.data,
+                    tree: update,
+                    options: { doNotUpdateCurrent: true },
+                });
             }
         }
     }
@@ -163,13 +191,20 @@ export class VolsegVolumeData {
         if (type === 'off') type = 'isosurface';
         return createVolumeRepresentationParams(this.entryData.plugin, volume, {
             type: type,
-            typeParams: { alpha: 0.2, tryUseGpu: VolsegGlobalStateData.getGlobalState(this.entryData.plugin)?.tryUseGpu },
+            typeParams: {
+                alpha: 0.2,
+                tryUseGpu: VolsegGlobalStateData.getGlobalState(this.entryData.plugin)?.tryUseGpu,
+            },
             color: 'uniform',
             colorParams: { value: Color(0x121212) },
         });
     }
 
-    private changeIsovalueInVolumeVisualParams(params: VolumeVisualParams, isovalue: Volume.IsoValue | undefined, stats: VolumeStats) {
+    private changeIsovalueInVolumeVisualParams(
+        params: VolumeVisualParams,
+        isovalue: Volume.IsoValue | undefined,
+        stats: VolumeStats,
+    ) {
         isovalue ??= this.getIsovalueFromState();
         switch (params.type.name) {
             case 'isosurface':

@@ -3,13 +3,12 @@
 
 @mixin tasks {
     .msp-task-state {
-
         line-height: $row-height;
         //height: $row-height;
         //position: relative;
         //margin-top: 1px;
 
-        >span {
+        > span {
             @include non-selectable;
             //display: inline-block;
             //padding: 0 $control-spacing;
@@ -33,14 +32,14 @@
         .msp-task-state {
             $size: $row-height;
 
-            >div {
+            > div {
                 height: $size;
                 margin-top: 1px;
                 position: relative;
                 width: 100%;
                 background: $default-background;
 
-                >div {
+                > div {
                     height: $size;
                     line-height: $size;
                     display: inline-block;
@@ -51,7 +50,7 @@
                     position: absolute;
                 }
 
-                >button {
+                > button {
                     display: inline-block;
                     margin-top: -3px;
                     // font-size: 140%;
@@ -71,14 +70,14 @@
         .msp-task-state {
             $size: $row-height;
 
-            >div {
+            > div {
                 height: $size;
                 margin-top: 1px;
                 position: relative;
                 width: 100%;
                 background: $default-background;
 
-                >div {
+                > div {
                     height: $size;
                     line-height: $size;
                     display: inline-block;
@@ -89,7 +88,7 @@
                     position: absolute;
                 }
 
-                >button {
+                > button {
                     display: inline-block;
                     margin-top: -3px;
                     // font-size: 140%;

@@ -12,7 +12,7 @@ import { Task } from '../../../mol-task/index.ts';
 function getCategoryInstanceProvider(cat: CifCategory, fields: CifWriter.Field[]): CifWriter.Category {
     return {
         name: cat.name,
-        instance: () => CifWriter.categoryInstance(fields, { data: cat, rowCount: cat.rowCount })
+        instance: () => CifWriter.categoryInstance(fields, { data: cat, rowCount: cat.rowCount }),
     };
 }
 
@@ -28,7 +28,7 @@ function classify(name: string, field: CifField): CifWriter.Field {
 }
 
 export function classifyCif(frame: CifFrame) {
-    return Task.create('Classify CIF Data', async ctx => {
+    return Task.create('Classify CIF Data', async (ctx) => {
         let maxProgress = 0;
         for (const c of frame.categoryNames) maxProgress += frame.categories[c].fieldNames.length;
 

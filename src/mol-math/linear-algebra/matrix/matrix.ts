@@ -8,14 +8,18 @@ import type { NumberArray } from '../../../mol-util/type-helpers.ts';
 import type { Vec } from '../3d.ts';
 
 interface Matrix<N extends number = number, M extends number = number> {
-    data: NumberArray,
-    size: number,
-    cols: N,
-    rows: M
+    data: NumberArray;
+    size: number;
+    cols: N;
+    rows: M;
 }
 
 namespace Matrix {
-    export function create<N extends number, M extends number>(cols: N, rows: M, ctor: { new (size: number): NumberArray } = Float32Array): Matrix<N, M> {
+    export function create<N extends number, M extends number>(
+        cols: N,
+        rows: M,
+        ctor: { new (size: number): NumberArray } = Float32Array,
+    ): Matrix<N, M> {
         const size = cols * rows;
         return { data: new ctor(size), size, cols, rows };
     }
@@ -68,7 +72,11 @@ namespace Matrix {
     }
 
     /** out = matA * matB' */
-    export function multiplyABt<NA extends number, NB extends number, M extends number>(out: Matrix<M, M>, matA: Matrix<NA, M>, matB: Matrix<NB, M>): Matrix<M, M> {
+    export function multiplyABt<NA extends number, NB extends number, M extends number>(
+        out: Matrix<M, M>,
+        matA: Matrix<NA, M>,
+        matB: Matrix<NB, M>,
+    ): Matrix<M, M> {
         const ncols = matA.cols, nrows = matA.rows, mrows = matB.rows;
         const ad = matA.data, bd = matB.data, cd = out.data;
 

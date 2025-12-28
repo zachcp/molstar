@@ -7,8 +7,8 @@
 import type { Structure, Unit } from '../../../mol-model/structure.ts';
 import type { StructureElement } from '../../../mol-model/structure/structure.ts';
 import { Elements, isHalogen } from '../../../mol-model/structure/model/properties/atomic/types.ts';
-import { type ElementSymbol, BondType } from '../../../mol-model/structure/model/types.ts';
-import { eachBondedAtom, bondCount, typeSymbol, bondToElementCount } from './util.ts';
+import { BondType, type ElementSymbol } from '../../../mol-model/structure/model/types.ts';
+import { bondCount, bondToElementCount, eachBondedAtom, typeSymbol } from './util.ts';
 
 function isAromatic(unit: Unit.Atomic, index: StructureElement.UnitIndex) {
     // TODO also extend unit.rings with geometry/composition-based aromaticity detection and use it here in addition
@@ -43,7 +43,12 @@ export function isQuaternaryAmine(structure: Structure, unit: Unit.Atomic, index
 /**
  * Nitrogen in a tertiary amine
  */
-export function isTertiaryAmine(structure: Structure, unit: Unit.Atomic, index: StructureElement.UnitIndex, idealValence: number) {
+export function isTertiaryAmine(
+    structure: Structure,
+    unit: Unit.Atomic,
+    index: StructureElement.UnitIndex,
+    idealValence: number,
+) {
     return (
         typeSymbol(unit, index) === Elements.N &&
         bondCount(structure, unit, index) === 4 &&
@@ -56,7 +61,8 @@ export function isTertiaryAmine(structure: Structure, unit: Unit.Atomic, index: 
  */
 export function isImide(structure: Structure, unit: Unit.Atomic, index: StructureElement.UnitIndex) {
     let flag = false;
-    if (typeSymbol(unit, index) === Elements.N &&
+    if (
+        typeSymbol(unit, index) === Elements.N &&
         (bondCount(structure, unit, index) - bondToElementCount(structure, unit, index, Elements.H)) === 2
     ) {
         flag = bondToCarbonylCount(structure, unit, index) === 2;
@@ -69,7 +75,8 @@ export function isImide(structure: Structure, unit: Unit.Atomic, index: Structur
  */
 export function isAmide(structure: Structure, unit: Unit.Atomic, index: StructureElement.UnitIndex) {
     let flag = false;
-    if (typeSymbol(unit, index) === Elements.N &&
+    if (
+        typeSymbol(unit, index) === Elements.N &&
         (bondCount(structure, unit, index) - bondToElementCount(structure, unit, index, Elements.H)) === 2
     ) {
         flag = bondToCarbonylCount(structure, unit, index) === 1;
@@ -214,7 +221,9 @@ export function isAcetamidine(structure: Structure, unit: Unit.Atomic, index: St
 }
 
 const PolarElements = new Set<ElementSymbol>(['N', 'O', 'S', 'F', 'CL', 'BR', 'I'] as ElementSymbol[]);
-export function isPolar(element: ElementSymbol) { return PolarElements.has(element); }
+export function isPolar(element: ElementSymbol) {
+    return PolarElements.has(element);
+}
 
 export function hasPolarNeighbour(structure: Structure, unit: Unit.Atomic, index: StructureElement.UnitIndex) {
     let flag = false;

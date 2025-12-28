@@ -26,7 +26,7 @@
         circle {
             stroke: black;
             stroke-width: 10;
-            stroke-opacity: .3;
+            stroke-opacity: 0.3;
 
             &:hover {
                 fill: #ae5d04;
@@ -51,7 +51,7 @@
 
         .delete-button {
             rect {
-                fill: #ED4337;
+                fill: #ed4337;
                 stroke: black;
             }
 

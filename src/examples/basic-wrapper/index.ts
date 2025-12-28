@@ -24,7 +24,7 @@ import './index.html';
 import { buildStaticSuperposition, dynamicSuperpositionTest, StaticSuperpositionTestData } from './superposition.ts';
 import '../../mol-plugin-ui/skin/light.scss';
 
-type LoadParams = { url: string, format?: BuiltInTrajectoryFormat, isBinary?: boolean, assemblyId?: string }
+type LoadParams = { url: string; format?: BuiltInTrajectoryFormat; isBinary?: boolean; assemblyId?: string };
 
 class BasicWrapper {
     plugin!: PluginUIContext;
@@ -38,13 +38,13 @@ class BasicWrapper {
                 layout: {
                     initial: {
                         isExpanded: false,
-                        showControls: false
-                    }
+                        showControls: false,
+                    },
                 },
                 components: {
-                    remoteState: 'none'
-                }
-            }
+                    remoteState: 'none',
+                },
+            },
         });
 
         this.plugin.representation.structure.themes.colorThemeRegistry.add(StripedResidues.colorThemeProvider!);
@@ -53,7 +53,7 @@ class BasicWrapper {
         this.plugin.customModelProperties.register(StripedResidues.propertyProvider, true);
 
         this.plugin.managers.dragAndDrop.addHandler('custom-wrapper', (files) => {
-            if (files.some(f => f.name.toLowerCase().endsWith('.testext'))) {
+            if (files.some((f) => f.name.toLowerCase().endsWith('.testext'))) {
                 console.log('.testext File dropped');
                 return true;
             }
@@ -64,24 +64,32 @@ class BasicWrapper {
     async load({ url, format = 'mmcif', isBinary = false, assemblyId = '' }: LoadParams) {
         await this.plugin.clear();
 
-        const data = await this.plugin.builders.data.download({ url: Asset.Url(url), isBinary }, { state: { isGhost: true } });
+        const data = await this.plugin.builders.data.download({ url: Asset.Url(url), isBinary }, {
+            state: { isGhost: true },
+        });
         const trajectory = await this.plugin.builders.structure.parseTrajectory(data, format);
 
         await this.plugin.builders.structure.hierarchy.applyPreset(trajectory, 'default', {
-            structure: assemblyId ? {
-                name: 'assembly',
-                params: { id: assemblyId }
-            } : {
-                name: 'model',
-                params: {}
-            },
+            structure: assemblyId
+                ? {
+                    name: 'assembly',
+                    params: { id: assemblyId },
+                }
+                : {
+                    name: 'model',
+                    params: {},
+                },
             showUnitcell: false,
-            representationPreset: 'auto'
+            representationPreset: 'auto',
         });
     }
 
     setBackground(color: number) {
-        PluginCommands.Canvas3D.SetSettings(this.plugin, { settings: props => { props.renderer.backgroundColor = Color(color); } });
+        PluginCommands.Canvas3D.SetSettings(this.plugin, {
+            settings: (props) => {
+                props.renderer.backgroundColor = Color(color);
+            },
+        });
     }
 
     toggleSpin() {
@@ -94,9 +102,9 @@ class BasicWrapper {
                     ...trackball,
                     animate: trackball.animate.name === 'spin'
                         ? { name: 'off', params: {} }
-                        : { name: 'spin', params: { speed: 1 } }
-                }
-            }
+                        : { name: 'spin', params: { speed: 1 } },
+                },
+            },
         });
         if (this.plugin.canvas3d.props.trackball.animate.name !== 'spin') {
             PluginCommands.Camera.Reset(this.plugin, {});
@@ -110,36 +118,62 @@ class BasicWrapper {
     animate = {
         modelIndex: {
             targetFps: 8,
-            onceForward: () => { this.plugin.managers.animation.play(AnimateModelIndex, { duration: { name: 'computed', params: { targetFps: this.animateModelIndexTargetFps() } }, mode: { name: 'once', params: { direction: 'forward' } } }); },
-            onceBackward: () => { this.plugin.managers.animation.play(AnimateModelIndex, { duration: { name: 'computed', params: { targetFps: this.animateModelIndexTargetFps() } }, mode: { name: 'once', params: { direction: 'backward' } } }); },
-            palindrome: () => { this.plugin.managers.animation.play(AnimateModelIndex, { duration: { name: 'computed', params: { targetFps: this.animateModelIndexTargetFps() } }, mode: { name: 'palindrome', params: {} } }); },
-            loop: () => { this.plugin.managers.animation.play(AnimateModelIndex, { duration: { name: 'computed', params: { targetFps: this.animateModelIndexTargetFps() } }, mode: { name: 'loop', params: { direction: 'forward' } } }); },
-            stop: () => this.plugin.managers.animation.stop()
-        }
+            onceForward: () => {
+                this.plugin.managers.animation.play(AnimateModelIndex, {
+                    duration: { name: 'computed', params: { targetFps: this.animateModelIndexTargetFps() } },
+                    mode: { name: 'once', params: { direction: 'forward' } },
+                });
+            },
+            onceBackward: () => {
+                this.plugin.managers.animation.play(AnimateModelIndex, {
+                    duration: { name: 'computed', params: { targetFps: this.animateModelIndexTargetFps() } },
+                    mode: { name: 'once', params: { direction: 'backward' } },
+                });
+            },
+            palindrome: () => {
+                this.plugin.managers.animation.play(AnimateModelIndex, {
+                    duration: { name: 'computed', params: { targetFps: this.animateModelIndexTargetFps() } },
+                    mode: { name: 'palindrome', params: {} },
+                });
+            },
+            loop: () => {
+                this.plugin.managers.animation.play(AnimateModelIndex, {
+                    duration: { name: 'computed', params: { targetFps: this.animateModelIndexTargetFps() } },
+                    mode: { name: 'loop', params: { direction: 'forward' } },
+                });
+            },
+            stop: () => this.plugin.managers.animation.stop(),
+        },
     };
 
     coloring = {
         applyStripes: async () => {
             this.plugin.dataTransaction(async () => {
                 for (const s of this.plugin.managers.structure.hierarchy.current.structures) {
-                    await this.plugin.managers.structure.component.updateRepresentationsTheme(s.components, { color: StripedResidues.propertyProvider.descriptor.name as any });
+                    await this.plugin.managers.structure.component.updateRepresentationsTheme(s.components, {
+                        color: StripedResidues.propertyProvider.descriptor.name as any,
+                    });
                 }
             });
         },
         applyCustomTheme: async () => {
             this.plugin.dataTransaction(async () => {
                 for (const s of this.plugin.managers.structure.hierarchy.current.structures) {
-                    await this.plugin.managers.structure.component.updateRepresentationsTheme(s.components, { color: CustomColorThemeProvider.name as any });
+                    await this.plugin.managers.structure.component.updateRepresentationsTheme(s.components, {
+                        color: CustomColorThemeProvider.name as any,
+                    });
                 }
             });
         },
         applyDefault: async () => {
             this.plugin.dataTransaction(async () => {
                 for (const s of this.plugin.managers.structure.hierarchy.current.structures) {
-                    await this.plugin.managers.structure.component.updateRepresentationsTheme(s.components, { color: 'default' });
+                    await this.plugin.managers.structure.component.updateRepresentationsTheme(s.components, {
+                        color: 'default',
+                    });
                 }
             });
-        }
+        },
     };
 
     interactivity = {
@@ -148,16 +182,17 @@ class BasicWrapper {
             if (!data) return;
 
             const seq_id = 7;
-            const sel = Script.getStructureSelection(Q => Q.struct.generator.atomGroups({
-                'residue-test': Q.core.rel.eq([Q.struct.atomProperty.macromolecular.label_seq_id(), seq_id]),
-                'group-by': Q.struct.atomProperty.macromolecular.residueKey()
-            }), data);
+            const sel = Script.getStructureSelection((Q) =>
+                Q.struct.generator.atomGroups({
+                    'residue-test': Q.core.rel.eq([Q.struct.atomProperty.macromolecular.label_seq_id(), seq_id]),
+                    'group-by': Q.struct.atomProperty.macromolecular.residueKey(),
+                }), data);
             const loci = StructureSelection.toLociWithSourceUnits(sel);
             this.plugin.managers.interactivity.lociHighlights.highlightOnly({ loci });
         },
         clearHighlight: () => {
             this.plugin.managers.interactivity.lociHighlights.highlightOnly({ loci: EmptyLoci });
-        }
+        },
     };
 
     tests = {
@@ -170,25 +205,27 @@ class BasicWrapper {
             return dynamicSuperpositionTest(this.plugin, ['1tqn', '2hhb', '4hhb'], 'HEM');
         },
         toggleValidationTooltip: () => {
-            return this.plugin.state.updateBehavior(PDBeStructureQualityReport, params => { params.showTooltip = !params.showTooltip; });
+            return this.plugin.state.updateBehavior(PDBeStructureQualityReport, (params) => {
+                params.showTooltip = !params.showTooltip;
+            });
         },
         showToasts: () => {
             PluginCommands.Toast.Show(this.plugin, {
                 title: 'Toast 1',
                 message: 'This is an example text, timeout 3s',
                 key: 'toast-1',
-                timeoutMs: 3000
+                timeoutMs: 3000,
             });
             PluginCommands.Toast.Show(this.plugin, {
                 title: 'Toast 2',
                 message: CustomToastMessage,
-                key: 'toast-2'
+                key: 'toast-2',
             });
         },
         hideToasts: () => {
             PluginCommands.Toast.Hide(this.plugin, { key: 'toast-1' });
             PluginCommands.Toast.Hide(this.plugin, { key: 'toast-2' });
-        }
+        },
     };
 }
 

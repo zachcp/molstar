@@ -20,12 +20,15 @@ export const UniformColorThemeParams: PD.Params = {
     saturation: PD.Numeric(0, { min: -6, max: 6, step: 0.1 }),
     lightness: PD.Numeric(0, { min: -6, max: 6, step: 0.1 }),
 };
-export type UniformColorThemeParams = typeof UniformColorThemeParams
+export type UniformColorThemeParams = typeof UniformColorThemeParams;
 export function getUniformColorThemeParams(ctx: ThemeDataContext) {
     return UniformColorThemeParams; // TODO return copy
 }
 
-export function UniformColorTheme(ctx: ThemeDataContext, props: PD.Values<UniformColorThemeParams>): ColorTheme<UniformColorThemeParams> {
+export function UniformColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<UniformColorThemeParams>,
+): ColorTheme<UniformColorThemeParams> {
     let color = defaults(props.value, DefaultColor);
     color = Color.saturate(color, props.saturation);
     color = Color.lighten(color, props.lightness);
@@ -36,7 +39,7 @@ export function UniformColorTheme(ctx: ThemeDataContext, props: PD.Values<Unifor
         color: () => color,
         props: props,
         description: Description,
-        legend: TableLegend([['uniform', color]])
+        legend: TableLegend([['uniform', color]]),
     };
 }
 
@@ -47,5 +50,5 @@ export const UniformColorThemeProvider: ColorTheme.Provider<UniformColorThemePar
     factory: UniformColorTheme,
     getParams: getUniformColorThemeParams,
     defaultValues: PD.getDefaultValues(UniformColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => true
+    isApplicable: (ctx: ThemeDataContext) => true,
 };

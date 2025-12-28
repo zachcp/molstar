@@ -16,29 +16,29 @@ import type { ColorType } from '../mol-geo/geometry/color-data.ts';
 import type { Location } from '../mol-model/location.ts';
 
 export interface ThemeRegistryContext {
-    colorThemeRegistry: ColorTheme.Registry
-    sizeThemeRegistry: SizeTheme.Registry
+    colorThemeRegistry: ColorTheme.Registry;
+    sizeThemeRegistry: SizeTheme.Registry;
 }
 
 export interface ThemeDataContext {
-    [k: string]: any
-    structure?: Structure
-    volume?: Volume
-    shape?: Shape
+    [k: string]: any;
+    structure?: Structure;
+    volume?: Volume;
+    shape?: Shape;
     /** Hint to request support for specific kinds of locations */
-    locationKinds?: ReadonlyArray<Location['kind']>
+    locationKinds?: ReadonlyArray<Location['kind']>;
 }
 
 export { Theme };
 
 interface Theme {
-    color: ColorTheme<any, any>
-    size: SizeTheme<any>
+    color: ColorTheme<any, any>;
+    size: SizeTheme<any>;
     // label: LabelTheme // TODO
 }
 
 namespace Theme {
-    type Props = { [k: string]: any }
+    type Props = { [k: string]: any };
 
     export function create(ctx: ThemeRegistryContext, data: ThemeDataContext, props: Props, theme?: Theme) {
         theme = theme || createEmpty();
@@ -56,7 +56,12 @@ namespace Theme {
         return { color: ColorTheme.Empty, size: SizeTheme.Empty };
     }
 
-    export async function ensureDependencies(ctx: CustomProperty.Context, theme: ThemeRegistryContext, data: ThemeDataContext, props: Props): Promise<void> {
+    export async function ensureDependencies(
+        ctx: CustomProperty.Context,
+        theme: ThemeRegistryContext,
+        data: ThemeDataContext,
+        props: Props,
+    ): Promise<void> {
         await theme.colorThemeRegistry.get(props.colorTheme.name).ensureCustomProperties?.attach(ctx, data);
         await theme.sizeThemeRegistry.get(props.sizeTheme.name).ensureCustomProperties?.attach(ctx, data);
     }
@@ -69,32 +74,43 @@ namespace Theme {
 
 //
 
-export interface ThemeProvider<T extends ColorTheme<P, G> | SizeTheme<P>, P extends PD.Params, Id extends string = string, G extends ColorType = ColorType> {
-    readonly name: Id
-    readonly label: string
-    readonly category: string
-    readonly factory: (ctx: ThemeDataContext, props: PD.Values<P>) => T
-    readonly getParams: (ctx: ThemeDataContext) => P
-    readonly defaultValues: PD.Values<P>
-    readonly isApplicable: (ctx: ThemeDataContext) => boolean
+export interface ThemeProvider<
+    T extends ColorTheme<P, G> | SizeTheme<P>,
+    P extends PD.Params,
+    Id extends string = string,
+    G extends ColorType = ColorType,
+> {
+    readonly name: Id;
+    readonly label: string;
+    readonly category: string;
+    readonly factory: (ctx: ThemeDataContext, props: PD.Values<P>) => T;
+    readonly getParams: (ctx: ThemeDataContext) => P;
+    readonly defaultValues: PD.Values<P>;
+    readonly isApplicable: (ctx: ThemeDataContext) => boolean;
     readonly ensureCustomProperties?: {
-        attach: (ctx: CustomProperty.Context, data: ThemeDataContext) => Promise<void>,
-        detach: (data: ThemeDataContext) => void
-    }
+        attach: (ctx: CustomProperty.Context, data: ThemeDataContext) => Promise<void>;
+        detach: (data: ThemeDataContext) => void;
+    };
 }
 
-function getTypes(list: { name: string, provider: ThemeProvider<any, any> }[]): [string, string, string][] {
-    return list.map(e => [e.name, e.provider.label, e.provider.category] as [string, string, string]);
+function getTypes(list: { name: string; provider: ThemeProvider<any, any> }[]): [string, string, string][] {
+    return list.map((e) => [e.name, e.provider.label, e.provider.category] as [string, string, string]);
 }
 
 export class ThemeRegistry<T extends ColorTheme<any, any> | SizeTheme<any>> {
-    private _list: { name: string, provider: ThemeProvider<T, any> }[] = [];
+    private _list: { name: string; provider: ThemeProvider<T, any> }[] = [];
     private _map = new Map<string, ThemeProvider<T, any>>();
     private _name = new Map<ThemeProvider<T, any>, string>();
 
-    get default(): { name: string, provider: ThemeProvider<T, any> } { return this._list[0]; }
-    get list(): { name: string, provider: ThemeProvider<T, any> }[] { return this._list; }
-    get types(): [string, string, string][] { return getTypes(this._list); }
+    get default(): { name: string; provider: ThemeProvider<T, any> } {
+        return this._list[0];
+    }
+    get list(): { name: string; provider: ThemeProvider<T, any> }[] {
+        return this._list;
+    }
+    get types(): [string, string, string][] {
+        return getTypes(this._list);
+    }
 
     constructor(builtInThemes: { [k: string]: ThemeProvider<T, any> }, private emptyProvider: ThemeProvider<T, any>) {
         objectForEach(builtInThemes, (p, k) => {
@@ -125,7 +141,7 @@ export class ThemeRegistry<T extends ColorTheme<any, any> | SizeTheme<any>> {
     }
 
     remove(provider: ThemeProvider<T, any>): void {
-        this._list.splice(this._list.findIndex(e => e.name === provider.name), 1);
+        this._list.splice(this._list.findIndex((e) => e.name === provider.name), 1);
         const p = this._map.get(provider.name);
         if (p) {
             this._map.delete(provider.name);
@@ -146,14 +162,13 @@ export class ThemeRegistry<T extends ColorTheme<any, any> | SizeTheme<any>> {
         return this._name.get(provider)!;
     }
 
-
     create(name: string, ctx: ThemeDataContext, props = {}) {
         const provider = this.get(name);
         return provider.factory(ctx, { ...PD.getDefaultValues(provider.getParams(ctx)), ...props });
     }
 
     getApplicableList(ctx: ThemeDataContext) {
-        return this._list.filter(e => e.provider.isApplicable(ctx));
+        return this._list.filter((e) => e.provider.isApplicable(ctx));
     }
 
     getApplicableTypes(ctx: ThemeDataContext): [string, string, string][] {

@@ -5,7 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Unit, StructureElement, StructureProperties as Props, type Bond } from '../mol-model/structure.ts';
+import { type Bond, StructureElement, StructureProperties as Props, Unit } from '../mol-model/structure.ts';
 import { Loci } from '../mol-model/loci.ts';
 import { OrderedSet } from '../mol-data/int.ts';
 import { capitalize, stripTags } from '../mol-util/string.ts';
@@ -14,7 +14,7 @@ import { Vec3 } from '../mol-math/linear-algebra.ts';
 import { radToDeg } from '../mol-math/misc.ts';
 import { Volume } from '../mol-model/volume.ts';
 
-export type LabelGranularity = 'element' | 'conformation' | 'residue' | 'chain' | 'structure'
+export type LabelGranularity = 'element' | 'conformation' | 'residue' | 'chain' | 'structure';
 
 export const DefaultLabelOptions = {
     granularity: 'element' as LabelGranularity,
@@ -24,12 +24,12 @@ export const DefaultLabelOptions = {
     hidePrefix: false,
     htmlStyling: true,
 };
-export type LabelOptions = typeof DefaultLabelOptions
+export type LabelOptions = typeof DefaultLabelOptions;
 
 export function lociLabel(loci: Loci, options: Partial<LabelOptions> = {}): string {
     switch (loci.kind) {
         case 'structure-loci':
-            return loci.structure.models.map(m => m.entry).filter(l => !!l).join(', ');
+            return loci.structure.models.map((m) => m.entry).filter((l) => !!l).join(', ');
         case 'element-loci':
             return structureElementStatsLabel(StructureElement.Stats.ofLoci(loci), options);
         case 'bond-loci':
@@ -51,7 +51,7 @@ export function lociLabel(loci: Loci, options: Partial<LabelOptions> = {}): stri
         case 'isosurface-loci':
             return [
                 `${loci.volume.label || 'Volume'}`,
-                `Isosurface at ${Volume.IsoValue.toString(loci.isoValue)}`
+                `Isosurface at ${Volume.IsoValue.toString(loci.isoValue)}`,
             ].join(' | ');
         case 'cell-loci':
             const size = Volume.Cell.getLociSize(loci);
@@ -60,7 +60,7 @@ export function lociLabel(loci: Loci, options: Partial<LabelOptions> = {}): stri
             const relVal = Volume.IsoValue.toRelative(absVal, loci.volume.grid.stats);
             const label = [
                 `${loci.volume.label || 'Volume'}`,
-                `${size === 1 ? `Cell #${start}` : `${size} Cells`}`
+                `${size === 1 ? `Cell #${start}` : `${size} Cells`}`,
             ];
             if (size === 1) {
                 if (loci.volume.instances.length > 1) {
@@ -79,7 +79,7 @@ export function lociLabel(loci: Loci, options: Partial<LabelOptions> = {}): stri
             }
             return [
                 `${loci.volume.label || 'Volume'}`,
-                `${segmentCount === 1 ? `Segment ${firstSegment}` : `${segmentCount} Segments`}`
+                `${segmentCount === 1 ? `Segment ${firstSegment}` : `${segmentCount} Segments`}`,
             ].join(' | ');
     }
 }
@@ -88,8 +88,17 @@ function countLabel(count: number, label: string) {
     return count === 1 ? `1 ${label}` : `${count} ${label}s`;
 }
 
-function otherLabel(count: number, location: StructureElement.Location, granularity: LabelGranularity, hidePrefix: boolean, reverse: boolean, condensed: boolean) {
-    return `${elementLabel(location, { granularity, hidePrefix, reverse, condensed })} <small>[+ ${countLabel(count - 1, `other ${capitalize(granularity)}`)}]</small>`;
+function otherLabel(
+    count: number,
+    location: StructureElement.Location,
+    granularity: LabelGranularity,
+    hidePrefix: boolean,
+    reverse: boolean,
+    condensed: boolean,
+) {
+    return `${elementLabel(location, { granularity, hidePrefix, reverse, condensed })} <small>[+ ${
+        countLabel(count - 1, `other ${capitalize(granularity)}`)
+    }]</small>`;
 }
 
 /** Gets residue count of the model chain segments the unit is a subset of */
@@ -107,7 +116,10 @@ export function structureElementStatsLabel(stats: StructureElement.Stats, option
     return o.htmlStyling ? label : stripTags(label);
 }
 
-export function structureElementLociLabelMany(locis: StructureElement.Loci[], options: Partial<LabelOptions> = {}): string {
+export function structureElementLociLabelMany(
+    locis: StructureElement.Loci[],
+    options: Partial<LabelOptions> = {},
+): string {
     const stats = StructureElement.Stats.create();
     for (const l of locis) {
         StructureElement.Stats.add(stats, stats, StructureElement.Stats.ofLoci(l));
@@ -115,7 +127,13 @@ export function structureElementLociLabelMany(locis: StructureElement.Loci[], op
     return structureElementStatsLabel(stats, options);
 }
 
-function _structureElementStatsLabel(stats: StructureElement.Stats, countsOnly = false, hidePrefix = false, condensed = false, reverse = false): string {
+function _structureElementStatsLabel(
+    stats: StructureElement.Stats,
+    countsOnly = false,
+    hidePrefix = false,
+    condensed = false,
+    reverse = false,
+): string {
     const { structureCount, chainCount, residueCount, conformationCount, elementCount } = stats;
 
     if (!countsOnly && elementCount === 1 && residueCount === 0 && chainCount === 0) {
@@ -125,28 +143,67 @@ function _structureElementStatsLabel(stats: StructureElement.Stats, countsOnly =
     } else if (!countsOnly && elementCount === 0 && residueCount === 0 && chainCount === 1) {
         const { unit } = stats.firstChainLoc;
         const granularity = (Unit.isAtomic(unit) && getResidueCount(unit) === 1)
-            ? 'residue' : Unit.Traits.is(unit.traits, Unit.Trait.MultiChain)
-                ? 'residue' : 'chain';
+            ? 'residue'
+            : Unit.Traits.is(unit.traits, Unit.Trait.MultiChain)
+            ? 'residue'
+            : 'chain';
         return elementLabel(stats.firstChainLoc, { hidePrefix, condensed, granularity, reverse });
     } else if (!countsOnly) {
         const label: string[] = [];
         if (structureCount > 0) {
-            label.push(structureCount === 1 ? elementLabel(stats.firstStructureLoc, { hidePrefix, condensed, granularity: 'structure', reverse }) : otherLabel(structureCount, stats.firstStructureLoc, 'structure', hidePrefix, reverse, condensed));
+            label.push(
+                structureCount === 1
+                    ? elementLabel(stats.firstStructureLoc, {
+                        hidePrefix,
+                        condensed,
+                        granularity: 'structure',
+                        reverse,
+                    })
+                    : otherLabel(structureCount, stats.firstStructureLoc, 'structure', hidePrefix, reverse, condensed),
+            );
         }
         if (chainCount > 0) {
-            label.push(chainCount === 1 ? elementLabel(stats.firstChainLoc, { condensed, granularity: 'chain', hidePrefix, reverse }) : otherLabel(chainCount, stats.firstChainLoc, 'chain', hidePrefix, reverse, condensed));
+            label.push(
+                chainCount === 1
+                    ? elementLabel(stats.firstChainLoc, { condensed, granularity: 'chain', hidePrefix, reverse })
+                    : otherLabel(chainCount, stats.firstChainLoc, 'chain', hidePrefix, reverse, condensed),
+            );
             hidePrefix = true;
         }
         if (residueCount > 0) {
-            label.push(residueCount === 1 ? elementLabel(stats.firstResidueLoc, { condensed, granularity: 'residue', hidePrefix, reverse }) : otherLabel(residueCount, stats.firstResidueLoc, 'residue', hidePrefix, reverse, condensed));
+            label.push(
+                residueCount === 1
+                    ? elementLabel(stats.firstResidueLoc, { condensed, granularity: 'residue', hidePrefix, reverse })
+                    : otherLabel(residueCount, stats.firstResidueLoc, 'residue', hidePrefix, reverse, condensed),
+            );
             hidePrefix = true;
         }
         if (conformationCount > 0) {
-            label.push(conformationCount === 1 ? elementLabel(stats.firstConformationLoc, { condensed, granularity: 'conformation', hidePrefix, reverse }) : otherLabel(conformationCount, stats.firstConformationLoc, 'conformation', hidePrefix, reverse, condensed));
+            label.push(
+                conformationCount === 1
+                    ? elementLabel(stats.firstConformationLoc, {
+                        condensed,
+                        granularity: 'conformation',
+                        hidePrefix,
+                        reverse,
+                    })
+                    : otherLabel(
+                        conformationCount,
+                        stats.firstConformationLoc,
+                        'conformation',
+                        hidePrefix,
+                        reverse,
+                        condensed,
+                    ),
+            );
             hidePrefix = true;
         }
         if (elementCount > 0) {
-            label.push(elementCount === 1 ? elementLabel(stats.firstElementLoc, { condensed, granularity: 'element', hidePrefix, reverse }) : otherLabel(elementCount, stats.firstElementLoc, 'element', hidePrefix, reverse, condensed));
+            label.push(
+                elementCount === 1
+                    ? elementLabel(stats.firstElementLoc, { condensed, granularity: 'element', hidePrefix, reverse })
+                    : otherLabel(elementCount, stats.firstElementLoc, 'element', hidePrefix, reverse, condensed),
+            );
         }
         return label.join('<small> + </small>');
     } else {
@@ -161,10 +218,18 @@ function _structureElementStatsLabel(stats: StructureElement.Stats, countsOnly =
 }
 
 export function bondLabel(bond: Bond.Location, options: Partial<LabelOptions> = {}): string {
-    return bundleLabel({ loci: [
-        StructureElement.Loci(bond.aStructure, [{ unit: bond.aUnit, indices: OrderedSet.ofSingleton(bond.aIndex) }]),
-        StructureElement.Loci(bond.bStructure, [{ unit: bond.bUnit, indices: OrderedSet.ofSingleton(bond.bIndex) }])
-    ] }, options);
+    return bundleLabel({
+        loci: [
+            StructureElement.Loci(bond.aStructure, [{
+                unit: bond.aUnit,
+                indices: OrderedSet.ofSingleton(bond.aIndex),
+            }]),
+            StructureElement.Loci(bond.bStructure, [{
+                unit: bond.bUnit,
+                indices: OrderedSet.ofSingleton(bond.bIndex),
+            }]),
+        ],
+    }, options);
 }
 
 export function bundleLabel(bundle: Loci.Bundle<any>, options: Partial<LabelOptions> = {}): string {
@@ -185,18 +250,18 @@ export function _bundleLabel(bundle: Loci.Bundle<any>, options: LabelOptions) {
     }
 
     if (isSingleElements) {
-        const locations = (bundle.loci as StructureElement.Loci[]).map(l => {
+        const locations = (bundle.loci as StructureElement.Loci[]).map((l) => {
             const { unit, indices } = l.elements[0];
             return StructureElement.Location.create(l.structure, unit, unit.elements[OrderedSet.start(indices)]);
         });
-        const labels = locations.map(l => _elementLabel(l, granularity, hidePrefix, reverse || condensed));
+        const labels = locations.map((l) => _elementLabel(l, granularity, hidePrefix, reverse || condensed));
 
         if (condensed) {
-            return labels.map(l => l[0].replace(/\[.*\]/g, '').trim()).filter(l => !!l).join(' \u2014 ');
+            return labels.map((l) => l[0].replace(/\[.*\]/g, '').trim()).filter((l) => !!l).join(' \u2014 ');
         }
 
         let offset = 0;
-        for (let i = 0, il = Math.min(...labels.map(l => l.length)) - 1; i < il; ++i) {
+        for (let i = 0, il = Math.min(...labels.map((l) => l.length)) - 1; i < il; ++i) {
             let areIdentical = true;
             for (let j = 1, jl = labels.length; j < jl; ++j) {
                 if (labels[0][i] !== labels[j][i]) {
@@ -211,15 +276,15 @@ export function _bundleLabel(bundle: Loci.Bundle<any>, options: LabelOptions) {
         if (offset > 0) {
             const offsetLabels = [labels[0].join(' | ')];
             for (let j = 1, jl = labels.length; j < jl; ++j) {
-                offsetLabels.push(labels[j].slice(offset).filter(l => !!l).join(' | '));
+                offsetLabels.push(labels[j].slice(offset).filter((l) => !!l).join(' | '));
             }
             return offsetLabels.join(' \u2014 ');
         } else {
-            return labels.map(l => l.filter(l => !!l).join(' | ')).filter(l => !!l).join('</br>');
+            return labels.map((l) => l.filter((l) => !!l).join(' | ')).filter((l) => !!l).join('</br>');
         }
     } else {
-        const labels = bundle.loci.map(l => lociLabel(l, options));
-        return labels.filter(l => !!l).join(condensed ? ' \u2014 ' : '</br>');
+        const labels = bundle.loci.map((l) => lociLabel(l, options));
+        return labels.filter((l) => !!l).join(condensed ? ' \u2014 ' : '</br>');
     }
 }
 
@@ -227,11 +292,16 @@ export function elementLabel(location: StructureElement.Location, options: Parti
     const o = { ...DefaultLabelOptions, ...options };
     const _label = _elementLabel(location, o.granularity, o.hidePrefix, o.reverse || o.condensed);
     // TODO: condensed label for single atom structure returns empty label.. handle this case here?
-    const label = o.condensed ? _label[0]?.replace(/\[.*\]/g, '').trim() ?? '' : _label.filter(l => !!l).join(' | ');
+    const label = o.condensed ? _label[0]?.replace(/\[.*\]/g, '').trim() ?? '' : _label.filter((l) => !!l).join(' | ');
     return o.htmlStyling ? label : stripTags(label);
 }
 
-function _elementLabel(location: StructureElement.Location, granularity: LabelGranularity = 'element', hidePrefix = false, reverse = false): string[] {
+function _elementLabel(
+    location: StructureElement.Location,
+    granularity: LabelGranularity = 'element',
+    hidePrefix = false,
+    reverse = false,
+): string[] {
     const label: string[] = [];
     if (!hidePrefix) {
         let entry = location.unit.model.entry;
@@ -246,7 +316,9 @@ function _elementLabel(location: StructureElement.Location, granularity: LabelGr
     if (Unit.isAtomic(location.unit)) {
         label.push(..._atomicElementLabel(location as StructureElement.Location<Unit.Atomic>, granularity, reverse));
     } else if (Unit.isCoarse(location.unit)) {
-        label.push(..._coarseElementLabel(location as StructureElement.Location<Unit.Spheres | Unit.Gaussians>, granularity));
+        label.push(
+            ..._coarseElementLabel(location as StructureElement.Location<Unit.Spheres | Unit.Gaussians>, granularity),
+        );
     } else {
         label.push('Unknown');
     }
@@ -254,12 +326,17 @@ function _elementLabel(location: StructureElement.Location, granularity: LabelGr
     return reverse ? label.reverse() : label;
 }
 
-function _atomicElementLabel(location: StructureElement.Location<Unit.Atomic>, granularity: LabelGranularity, hideOccupancy = false): string[] {
+function _atomicElementLabel(
+    location: StructureElement.Location<Unit.Atomic>,
+    granularity: LabelGranularity,
+    hideOccupancy = false,
+): string[] {
     const rI = StructureElement.Location.residueIndex(location);
 
     const label_asym_id = Props.chain.label_asym_id(location);
     const auth_asym_id = Props.chain.auth_asym_id(location);
-    const has_label_seq_id = location.unit.model.atomicHierarchy.residues.label_seq_id.valueKind(rI) === Column.ValueKinds.Present;
+    const has_label_seq_id =
+        location.unit.model.atomicHierarchy.residues.label_seq_id.valueKind(rI) === Column.ValueKinds.Present;
     const label_seq_id = Props.residue.label_seq_id(location);
     const auth_seq_id = Props.residue.auth_seq_id(location);
     const ins_code = Props.residue.pdbx_PDB_ins_code(location);
@@ -270,8 +347,7 @@ function _atomicElementLabel(location: StructureElement.Location<Unit.Atomic>, g
     const sourceIndex = Props.atom.sourceIndex(location);
 
     const microHetCompIds = Props.residue.microheterogeneityCompIds(location);
-    const compId = granularity === 'residue' && microHetCompIds.length > 1 ?
-        `(${microHetCompIds.join('|')})` : comp_id;
+    const compId = granularity === 'residue' && microHetCompIds.length > 1 ? `(${microHetCompIds.join('|')})` : comp_id;
 
     const label: string[] = [];
 
@@ -287,7 +363,11 @@ function _atomicElementLabel(location: StructureElement.Location<Unit.Atomic>, g
             }
         case 'residue':
             const seq_id = label_seq_id === auth_seq_id || !has_label_seq_id ? auth_seq_id : label_seq_id;
-            label.push(`<b>${compId} ${seq_id}</b>${seq_id !== auth_seq_id ? ` <small>[auth</small> <b>${auth_seq_id}</b><small>]</small>` : ''}<b>${ins_code ? ins_code : ''}</b>`);
+            label.push(
+                `<b>${compId} ${seq_id}</b>${
+                    seq_id !== auth_seq_id ? ` <small>[auth</small> <b>${auth_seq_id}</b><small>]</small>` : ''
+                }<b>${ins_code ? ins_code : ''}</b>`,
+            );
         case 'chain':
             if (label_asym_id === auth_asym_id) {
                 label.push(`<b>${label_asym_id}</b>`);
@@ -307,7 +387,10 @@ function _atomicElementLabel(location: StructureElement.Location<Unit.Atomic>, g
     return label.reverse();
 }
 
-function _coarseElementLabel(location: StructureElement.Location<Unit.Spheres | Unit.Gaussians>, granularity: LabelGranularity): string[] {
+function _coarseElementLabel(
+    location: StructureElement.Location<Unit.Spheres | Unit.Gaussians>,
+    granularity: LabelGranularity,
+): string[] {
     const asym_id = Props.coarse.asym_id(location);
     const seq_id_begin = Props.coarse.seq_id_begin(location);
     const seq_id_end = Props.coarse.seq_id_end(location);
@@ -335,9 +418,12 @@ function _coarseElementLabel(location: StructureElement.Location<Unit.Spheres | 
 
 //
 
-export function distanceLabel(pair: Loci.Bundle<2>, options: Partial<LabelOptions & { measureOnly: boolean, unitLabel: string }> = {}) {
+export function distanceLabel(
+    pair: Loci.Bundle<2>,
+    options: Partial<LabelOptions & { measureOnly: boolean; unitLabel: string }> = {},
+) {
     const o = { ...DefaultLabelOptions, measureOnly: false, unitLabel: '\u212B', ...options };
-    const [cA, cB] = pair.loci.map(l => Loci.getCenter(l)!);
+    const [cA, cB] = pair.loci.map((l) => Loci.getCenter(l)!);
     const distance = `${Vec3.distance(cA, cB).toFixed(2)} ${o.unitLabel}`;
     if (o.measureOnly) return distance;
     const label = bundleLabel(pair, o);
@@ -346,7 +432,7 @@ export function distanceLabel(pair: Loci.Bundle<2>, options: Partial<LabelOption
 
 export function angleLabel(triple: Loci.Bundle<3>, options: Partial<LabelOptions & { measureOnly: boolean }> = {}) {
     const o = { ...DefaultLabelOptions, measureOnly: false, ...options };
-    const [cA, cB, cC] = triple.loci.map(l => Loci.getCenter(l)!);
+    const [cA, cB, cC] = triple.loci.map((l) => Loci.getCenter(l)!);
     const vAB = Vec3.sub(Vec3(), cA, cB);
     const vCB = Vec3.sub(Vec3(), cC, cB);
     const angle = `${radToDeg(Vec3.angle(vAB, vCB)).toFixed(2)}\u00B0`;
@@ -357,7 +443,7 @@ export function angleLabel(triple: Loci.Bundle<3>, options: Partial<LabelOptions
 
 export function dihedralLabel(quad: Loci.Bundle<4>, options: Partial<LabelOptions & { measureOnly: boolean }> = {}) {
     const o = { ...DefaultLabelOptions, measureOnly: false, ...options };
-    const [cA, cB, cC, cD] = quad.loci.map(l => Loci.getCenter(l)!);
+    const [cA, cB, cC, cD] = quad.loci.map((l) => Loci.getCenter(l)!);
     const dihedral = `${radToDeg(Vec3.dihedralAngle(cA, cB, cC, cD)).toFixed(2)}\u00B0`;
     if (o.measureOnly) return dihedral;
     const label = bundleLabel(quad, o);

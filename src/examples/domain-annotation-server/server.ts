@@ -7,14 +7,13 @@
 import express from 'express';
 import fetch from 'node-fetch';
 import { createMapping } from './mapping.ts';
-import process from "node:process";
+import process from 'node:process';
 
 async function getMappings(id: string) {
     const data = await fetch(`https://www.ebi.ac.uk/pdbe/api/mappings/${id}`);
     const json = await data.json();
     return createMapping(json);
-};
-
+}
 
 const PORT = process.env.port || 1338;
 
@@ -29,7 +28,7 @@ app.get(`${PREFIX}/:id`, async (req, res) => {
         res.writeHead(200, {
             'Content-Type': 'text/plain; charset=utf-8',
             'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'X-Requested-With'
+            'Access-Control-Allow-Headers': 'X-Requested-With',
         });
         res.end(mapping);
     } catch {

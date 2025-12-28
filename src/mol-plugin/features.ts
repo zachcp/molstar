@@ -21,7 +21,7 @@ export const PluginFeatureDetection = {
             'Version/15.2 Safari',
             'Version/15.3 Safari',
         ];
-        if (unpportedSafariVersions.some(v => navigator.userAgent.indexOf(v) > 0)) {
+        if (unpportedSafariVersions.some((v) => navigator.userAgent.indexOf(v) > 0)) {
             return true;
         }
 

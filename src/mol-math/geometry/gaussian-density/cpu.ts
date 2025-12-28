@@ -5,14 +5,20 @@
  */
 
 import { Box3D, fillGridDim } from '../../geometry.ts';
-import { Vec3, Mat4, Tensor } from '../../linear-algebra.ts';
+import { Mat4, Tensor, Vec3 } from '../../linear-algebra.ts';
 import type { RuntimeContext } from '../../../mol-task/index.ts';
 import type { PositionData } from '../common.ts';
 import { OrderedSet } from '../../../mol-data/int.ts';
-import type { GaussianDensityProps, GaussianDensityData } from '../gaussian-density.ts';
+import type { GaussianDensityData, GaussianDensityProps } from '../gaussian-density.ts';
 import { fasterExp } from '../../approx.ts';
 
-export async function GaussianDensityCPU(ctx: RuntimeContext, position: PositionData, box: Box3D, radius: (index: number) => number, props: GaussianDensityProps): Promise<GaussianDensityData> {
+export async function GaussianDensityCPU(
+    ctx: RuntimeContext,
+    position: PositionData,
+    box: Box3D,
+    radius: (index: number) => number,
+    props: GaussianDensityProps,
+): Promise<GaussianDensityData> {
     const { resolution, radiusOffset, smoothness } = props;
     const scaleFactor = 1 / resolution;
 
@@ -52,7 +58,7 @@ export async function GaussianDensityCPU(ctx: RuntimeContext, position: Position
     const densData = space.create();
 
     const alpha = smoothness;
-    const updateChunk = Math.ceil(100000 / ((Math.pow(Math.pow(maxRadius, 3), 3) * scaleFactor)));
+    const updateChunk = Math.ceil(100000 / (Math.pow(Math.pow(maxRadius, 3), 3) * scaleFactor));
 
     function accumulateRange(begI: number, endI: number) {
         for (let i = begI; i < endI; ++i) {

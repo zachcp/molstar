@@ -6,15 +6,20 @@
  */
 
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { type ComplexVisual, type StructureRepresentation, StructureRepresentationStateBuilder, type StructureRepresentationState } from './representation.ts';
+import {
+    type ComplexVisual,
+    type StructureRepresentation,
+    type StructureRepresentationState,
+    StructureRepresentationStateBuilder,
+} from './representation.ts';
 import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../representation.ts';
-import { Structure, StructureElement, Bond } from '../../mol-model/structure.ts';
+import { Bond, Structure, StructureElement } from '../../mol-model/structure.ts';
 import { Subject } from 'rxjs';
 import { getNextMaterialId, type GraphicsRenderObject } from '../../mol-gl/render-object.ts';
 import { Theme } from '../../mol-theme/theme.ts';
 import { Task } from '../../mol-task/index.ts';
 import type { PickingId } from '../../mol-geo/geometry/picking.ts';
-import { EmptyLoci, Loci, isEveryLoci, isDataLoci, EveryLoci } from '../../mol-model/loci.ts';
+import { EmptyLoci, EveryLoci, isDataLoci, isEveryLoci, Loci } from '../../mol-model/loci.ts';
 import { type MarkerAction, MarkerActions } from '../../mol-util/marker-action.ts';
 import { Overpaint } from '../../mol-theme/overpaint.ts';
 import type { StructureParams } from './params.ts';
@@ -25,7 +30,17 @@ import { Substance } from '../../mol-theme/substance.ts';
 import type { LocationCallback } from '../util.ts';
 import { Emissive } from '../../mol-theme/emissive.ts';
 
-export function ComplexRepresentation<P extends StructureParams>(label: string, ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, P>, visualCtor: (materialId: number, structure: Structure, props: PD.Values<P>, webgl?: WebGLContext) => ComplexVisual<P>): StructureRepresentation<P> {
+export function ComplexRepresentation<P extends StructureParams>(
+    label: string,
+    ctx: RepresentationContext,
+    getParams: RepresentationParamsGetter<Structure, P>,
+    visualCtor: (
+        materialId: number,
+        structure: Structure,
+        props: PD.Values<P>,
+        webgl?: WebGLContext,
+    ) => ComplexVisual<P>,
+): StructureRepresentation<P> {
     let version = 0;
     const { webgl } = ctx;
     const updated = new Subject<number>();
@@ -48,7 +63,7 @@ export function ComplexRepresentation<P extends StructureParams>(label: string, 
         }
         _props = Object.assign({}, _props, props);
 
-        return Task.create('Creating or updating ComplexRepresentation', async runtime => {
+        return Task.create('Creating or updating ComplexRepresentation', async (runtime) => {
             let newVisual = false;
             if (!visual) {
                 visual = visualCtor(materialId, _structure, _props, webgl);
@@ -93,7 +108,10 @@ export function ComplexRepresentation<P extends StructureParams>(label: string, 
             if (!Structure.areRootsEquivalent(loci.structure, _structure)) return false;
             // Remap `loci` from equivalent structure to the current `_structure`
             loci = Loci.remap(loci, _structure);
-            if (Structure.isLoci(loci) || (StructureElement.Loci.is(loci) && StructureElement.Loci.isWholeStructure(loci))) {
+            if (
+                Structure.isLoci(loci) ||
+                (StructureElement.Loci.is(loci) && StructureElement.Loci.isWholeStructure(loci))
+            ) {
                 // Change to `EveryLoci` to allow for downstream optimizations
                 loci = EveryLoci;
             }
@@ -161,11 +179,21 @@ export function ComplexRepresentation<P extends StructureParams>(label: string, 
         get groupCount() {
             return visual ? visual.groupCount : 0;
         },
-        get props() { return _props; },
-        get params() { return _params; },
-        get state() { return _state; },
-        get theme() { return _theme; },
-        get geometryVersion() { return geometryState.version; },
+        get props() {
+            return _props;
+        },
+        get params() {
+            return _params;
+        },
+        get state() {
+            return _state;
+        },
+        get theme() {
+            return _theme;
+        },
+        get geometryVersion() {
+            return geometryState.version;
+        },
         renderObjects,
         updated,
         createOrUpdate,
@@ -175,6 +203,6 @@ export function ComplexRepresentation<P extends StructureParams>(label: string, 
         getAllLoci,
         eachLocation,
         mark,
-        destroy
+        destroy,
     };
 }

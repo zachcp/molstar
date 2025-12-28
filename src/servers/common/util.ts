@@ -7,7 +7,7 @@
  */
 
 import type * as express from 'express';
-import { promises, constants } from 'node:fs';
+import { constants, promises } from 'node:fs';
 
 import { ConsoleLogger } from '../../mol-util/console-logger.ts';
 

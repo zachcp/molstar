@@ -34,11 +34,11 @@ export const PlyProvider = DataFormatProvider({
             .to(data.shape)
             .apply(StateTransforms.Representation.ShapeRepresentation3D);
         return repr.commit();
-    }
+    },
 });
 
 export const BuiltInShapeFormats = [
     ['ply', PlyProvider] as const,
 ] as const;
 
-export type BuildInShapeFormat = (typeof BuiltInShapeFormats)[number][0]
+export type BuildInShapeFormat = (typeof BuiltInShapeFormats)[number][0];

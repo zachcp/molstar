@@ -4,35 +4,44 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Table, Column } from '../../../mol-data/db.ts';
-import { WaterNames, PolymerNames } from '../../../mol-model/structure/model/types.ts';
+import { Column, Table } from '../../../mol-data/db.ts';
+import { PolymerNames, WaterNames } from '../../../mol-model/structure/model/types.ts';
 import { SetUtils } from '../../../mol-util/set.ts';
 import { BasicSchema } from '../basic/schema.ts';
 import type { mmCIF_chemComp_schema } from '../../../mol-io/reader/cif/schema/mmcif-extras.ts';
 import { SaccharideCompIdMap } from '../../../mol-model/structure/structure/carbohydrates/constants.ts';
 
-type Component = Table.Row<Pick<mmCIF_chemComp_schema, 'id' | 'name' | 'type'>>
+type Component = Table.Row<Pick<mmCIF_chemComp_schema, 'id' | 'name' | 'type'>>;
 
 const ProteinAtomIdsList = [
     new Set(['CA']),
     new Set(['C']),
-    new Set(['N'])
+    new Set(['N']),
 ];
 const RnaAtomIdsList = [
-    new Set(['P', 'O3\'', 'O3*']),
-    new Set(['C4\'', 'C4*']),
-    new Set(['O2\'', 'O2*', 'F2\'', 'F2*'])
+    new Set(['P', "O3'", 'O3*']),
+    new Set(["C4'", 'C4*']),
+    new Set(["O2'", 'O2*', "F2'", 'F2*']),
 ];
 const DnaAtomIdsList = [
-    new Set(['P', 'O3\'', 'O3*']),
-    new Set(['C3\'', 'C3*']),
-    new Set(['O2\'', 'O2*', 'F2\'', 'F2*'])
+    new Set(['P', "O3'", 'O3*']),
+    new Set(["C3'", 'C3*']),
+    new Set(["O2'", 'O2*', "F2'", 'F2*']),
 ];
 
 /** Used to reduce false positives for atom name-based type guessing */
 const NonPolymerNames = new Set([
-    'FMN', 'NCN', 'FNS', 'FMA', 'ATP', 'ADP', 'AMP', 'GTP', 'GDP', 'GMP', // Mononucleotides
-    'LIG'
+    'FMN',
+    'NCN',
+    'FNS',
+    'FMA',
+    'ATP',
+    'ADP',
+    'AMP',
+    'GTP',
+    'GDP',
+    'GMP', // Mononucleotides
+    'LIG',
 ]);
 
 const StandardComponents = (function () {
@@ -67,21 +76,21 @@ const StandardComponents = (function () {
         { id: 'PTR', name: 'O-PHOSPHOTYROSINE', type: 'l-peptide linking' },
         { id: 'PCA', name: 'PYROGLUTAMIC ACID', type: 'l-peptide linking' },
 
-        { id: 'A', name: 'ADENOSINE-5\'-MONOPHOSPHATE', type: 'rna linking' },
-        { id: 'C', name: 'CYTIDINE-5\'-MONOPHOSPHATE', type: 'rna linking' },
-        { id: 'T', name: 'THYMIDINE-5\'-MONOPHOSPHATE', type: 'rna linking' },
-        { id: 'G', name: 'GUANOSINE-5\'-MONOPHOSPHATE', type: 'rna linking' },
+        { id: 'A', name: "ADENOSINE-5'-MONOPHOSPHATE", type: 'rna linking' },
+        { id: 'C', name: "CYTIDINE-5'-MONOPHOSPHATE", type: 'rna linking' },
+        { id: 'T', name: "THYMIDINE-5'-MONOPHOSPHATE", type: 'rna linking' },
+        { id: 'G', name: "GUANOSINE-5'-MONOPHOSPHATE", type: 'rna linking' },
         { id: 'I', name: 'INOSINIC ACID', type: 'rna linking' },
-        { id: 'U', name: 'URIDINE-5\'-MONOPHOSPHATE', type: 'rna linking' },
+        { id: 'U', name: "URIDINE-5'-MONOPHOSPHATE", type: 'rna linking' },
 
-        { id: 'DA', name: '2\'-DEOXYADENOSINE-5\'-MONOPHOSPHATE', type: 'dna linking' },
-        { id: 'DC', name: '2\'-DEOXYCYTIDINE-5\'-MONOPHOSPHATE', type: 'dna linking' },
-        { id: 'DT', name: 'THYMIDINE-5\'-MONOPHOSPHATE', type: 'dna linking' },
-        { id: 'DG', name: '2\'-DEOXYGUANOSINE-5\'-MONOPHOSPHATE', type: 'dna linking' },
-        { id: 'DI', name: '2\'-DEOXYINOSINE-5\'-MONOPHOSPHATE', type: 'dna linking' },
-        { id: 'DU', name: '2\'-DEOXYURIDINE-5\'-MONOPHOSPHATE', type: 'dna linking' },
+        { id: 'DA', name: "2'-DEOXYADENOSINE-5'-MONOPHOSPHATE", type: 'dna linking' },
+        { id: 'DC', name: "2'-DEOXYCYTIDINE-5'-MONOPHOSPHATE", type: 'dna linking' },
+        { id: 'DT', name: "THYMIDINE-5'-MONOPHOSPHATE", type: 'dna linking' },
+        { id: 'DG', name: "2'-DEOXYGUANOSINE-5'-MONOPHOSPHATE", type: 'dna linking' },
+        { id: 'DI', name: "2'-DEOXYINOSINE-5'-MONOPHOSPHATE", type: 'dna linking' },
+        { id: 'DU', name: "2'-DEOXYURIDINE-5'-MONOPHOSPHATE", type: 'dna linking' },
     ];
-    components.forEach(c => map.set(c.id, c));
+    components.forEach((c) => map.set(c.id, c));
     return map;
 })();
 
@@ -95,7 +104,7 @@ const CharmmIonComponents = (function () {
         { id: 'CAL', name: 'CALCIUM ION', type: 'ion' },
         { id: 'POT', name: 'POTASSIUM ION', type: 'ion' },
     ];
-    components.forEach(c => map.set(c.id, c));
+    components.forEach((c) => map.set(c.id, c));
     return map;
 })();
 
@@ -149,8 +158,12 @@ export class ComponentBuilder {
         }
     }
 
-    has(compId: string) { return this.comps.has(compId); }
-    get(compId: string) { return this.comps.get(compId); }
+    has(compId: string) {
+        return this.comps.has(compId);
+    }
+    get(compId: string) {
+        return this.comps.get(compId);
+    }
 
     add(compId: string, index: number) {
         if (!this.has(compId)) {
@@ -185,10 +198,9 @@ export class ComponentBuilder {
     }
 
     setNames(names: [string, string][]) {
-        names.forEach(n => this.namesMap.set(n[0], n[1]));
+        names.forEach((n) => this.namesMap.set(n[0], n[1]));
     }
 
     constructor(private seqId: Column<number>, private atomId: Column<string>) {
-
     }
 }

@@ -7,18 +7,18 @@
 import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
 import { ZenodoImportUI } from './ui.tsx';
 
-export const ZenodoImport = PluginBehavior.create<{ }>({
+export const ZenodoImport = PluginBehavior.create<{}>({
     name: 'extension-zenodo-import',
     category: 'misc',
     display: {
-        name: 'Zenodo Export'
+        name: 'Zenodo Export',
     },
-    ctor: class extends PluginBehavior.Handler<{ }> {
+    ctor: class extends PluginBehavior.Handler<{}> {
         register(): void {
             this.ctx.customImportControls.set('zenodo-import', ZenodoImportUI as any);
         }
 
-        update() {
+        override update() {
             return false;
         }
 
@@ -26,5 +26,5 @@ export const ZenodoImport = PluginBehavior.create<{ }>({
             this.ctx.customImportControls.delete('zenodo-import');
         }
     },
-    params: () => ({ })
+    params: () => ({}),
 });

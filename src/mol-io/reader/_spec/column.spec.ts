@@ -14,12 +14,12 @@ const lines = [
     '1.00  a',
     '1.1    bcd   ',
     '',
-    ' 5'
+    ' 5',
 ];
 
 const linesData = lines.join('\n');
 
-const linesTokens = (function () {
+const linesTokens = function () {
     const tokens: number[] = [];
     let last = 0;
     for (const l of lines) {
@@ -28,7 +28,7 @@ const linesTokens = (function () {
     }
     if (tokens[tokens.length - 1] > linesData.length) tokens[tokens.length - 1] = linesData.length;
     return tokens;
-}());
+}();
 
 describe('fixed text column', () => {
     const col = FixedColumn({ data: linesData, indices: linesTokens, count: lines.length });

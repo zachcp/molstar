@@ -5,7 +5,7 @@
  */
 
 import { Color, ColorMap } from '../../mol-util/color/index.ts';
-import { StructureElement, type Unit, Bond, type ElementIndex } from '../../mol-model/structure.ts';
+import { Bond, type ElementIndex, StructureElement, type Unit } from '../../mol-model/structure.ts';
 import type { Location } from '../../mol-model/location.ts';
 import type { ColorTheme } from '../color.ts';
 import { MoleculeType } from '../../mol-model/structure/model/types.ts';
@@ -26,7 +26,7 @@ export const MoleculeTypeColors = ColorMap({
     PNA: 0x42A49A,
     saccharide: 0x7fc97f,
 });
-export type MoleculeTypeColors = typeof MoleculeTypeColors
+export type MoleculeTypeColors = typeof MoleculeTypeColors;
 
 const DefaultMoleculeTypeColor = Color(0xffff99);
 const Description = 'Assigns a color based on the molecule type of a residue.';
@@ -36,10 +36,10 @@ export const MoleculeTypeColorThemeParams = {
     lightness: PD.Numeric(0, { min: -6, max: 6, step: 0.1 }),
     colors: PD.MappedStatic('default', {
         'default': PD.EmptyGroup(),
-        'custom': PD.Group(getColorMapParams(MoleculeTypeColors))
-    })
+        'custom': PD.Group(getColorMapParams(MoleculeTypeColors)),
+    }),
 };
-export type MoleculeTypeColorThemeParams = typeof MoleculeTypeColorThemeParams
+export type MoleculeTypeColorThemeParams = typeof MoleculeTypeColorThemeParams;
 export function getMoleculeTypeColorThemeParams(ctx: ThemeDataContext) {
     return MoleculeTypeColorThemeParams; // TODO return copy
 }
@@ -47,19 +47,33 @@ export function getMoleculeTypeColorThemeParams(ctx: ThemeDataContext) {
 export function moleculeTypeColor(colorMap: MoleculeTypeColors, unit: Unit, element: ElementIndex): Color {
     const moleculeType = getElementMoleculeType(unit, element);
     switch (moleculeType) {
-        case MoleculeType.Water: return colorMap.water;
-        case MoleculeType.Ion: return colorMap.ion;
-        case MoleculeType.Protein: return colorMap.protein;
-        case MoleculeType.RNA: return colorMap.RNA;
-        case MoleculeType.DNA: return colorMap.DNA;
-        case MoleculeType.PNA: return colorMap.PNA;
-        case MoleculeType.Saccharide: return colorMap.saccharide;
+        case MoleculeType.Water:
+            return colorMap.water;
+        case MoleculeType.Ion:
+            return colorMap.ion;
+        case MoleculeType.Protein:
+            return colorMap.protein;
+        case MoleculeType.RNA:
+            return colorMap.RNA;
+        case MoleculeType.DNA:
+            return colorMap.DNA;
+        case MoleculeType.PNA:
+            return colorMap.PNA;
+        case MoleculeType.Saccharide:
+            return colorMap.saccharide;
     }
     return DefaultMoleculeTypeColor;
 }
 
-export function MoleculeTypeColorTheme(ctx: ThemeDataContext, props: PD.Values<MoleculeTypeColorThemeParams>): ColorTheme<MoleculeTypeColorThemeParams> {
-    const colorMap = getAdjustedColorMap(props.colors.name === 'default' ? MoleculeTypeColors : props.colors.params, props.saturation, props.lightness);
+export function MoleculeTypeColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<MoleculeTypeColorThemeParams>,
+): ColorTheme<MoleculeTypeColorThemeParams> {
+    const colorMap = getAdjustedColorMap(
+        props.colors.name === 'default' ? MoleculeTypeColors : props.colors.params,
+        props.saturation,
+        props.lightness,
+    );
 
     function color(location: Location): Color {
         if (StructureElement.Location.is(location)) {
@@ -76,9 +90,11 @@ export function MoleculeTypeColorTheme(ctx: ThemeDataContext, props: PD.Values<M
         color,
         props,
         description: Description,
-        legend: TableLegend(Object.keys(colorMap).map(name => {
-            return [name, (colorMap as any)[name] as Color] as [string, Color];
-        }).concat([['Other/unknown', DefaultMoleculeTypeColor]]))
+        legend: TableLegend(
+            Object.keys(colorMap).map((name) => {
+                return [name, (colorMap as any)[name] as Color] as [string, Color];
+            }).concat([['Other/unknown', DefaultMoleculeTypeColor]]),
+        ),
     };
 }
 
@@ -89,5 +105,5 @@ export const MoleculeTypeColorThemeProvider: ColorTheme.Provider<MoleculeTypeCol
     factory: MoleculeTypeColorTheme,
     getParams: getMoleculeTypeColorThemeParams,
     defaultValues: PD.getDefaultValues(MoleculeTypeColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure,
 };

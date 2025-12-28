@@ -3,7 +3,6 @@
 
 @mixin transformer {
     .msp-transformer {
-
         .msp-entity-badge {
             position: absolute;
             top: 0;
@@ -24,7 +23,6 @@
     }
 
     .msp-transformer-wrapper {
-
         .msp-entity-badge {
             left: 0;
             top: 0;
@@ -61,16 +59,19 @@
 
     .msp-transform-update-wrapper,
     .msp-transform-update-wrapper-collapsed {
-        >.msp-transform-header>button {
+        > .msp-transform-header > button {
             text-align: left;
             padding-left: $row-height;
             line-height: 24px;
-            background: color-lower-contrast($control-background, 4%); // $control-background; // color-lower-contrast($default-background, 4%);
+            background: color-lower-contrast(
+                $control-background,
+                4%
+            ); // $control-background; // color-lower-contrast($default-background, 4%);
             // font-weight: bold;
         }
     }
 
-    .msp-transform-wrapper>.msp-transform-header>button {
+    .msp-transform-wrapper > .msp-transform-header > button {
         text-align: left;
         background: $default-background; // color-lower-contrast($default-background, 4%);
         font-weight: bold;
@@ -88,18 +89,18 @@
         //     font-weight: bold;
         // }
 
-        >button>small {
+        > button > small {
             font-weight: normal;
             float: right;
         }
 
-        >button {
-            >span:first-child {
+        > button {
+            > span:first-child {
                 margin-right: 10px;
             }
         }
 
-        >button:hover {
+        > button:hover {
             color: color-lower-contrast($font-color, 15%);
         }
     }

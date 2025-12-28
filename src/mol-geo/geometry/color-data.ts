@@ -7,12 +7,12 @@
  */
 
 import { ValueCell } from '../../mol-util/index.ts';
-import { type TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
+import { createTextureImage, type TextureImage } from '../../mol-gl/renderable/util.ts';
 import { Color } from '../../mol-util/color/index.ts';
 import { Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
 import type { LocationIterator } from '../util/location-iterator.ts';
 import { NullLocation } from '../../mol-model/location.ts';
-import type { LocationColor, ColorTheme, ColorVolume } from '../../mol-theme/color.ts';
+import type { ColorTheme, ColorVolume, LocationColor } from '../../mol-theme/color.ts';
 import { createNullTexture, type Texture } from '../../mol-gl/webgl/texture.ts';
 
 export type ColorTypeLocation = 'uniform' | 'instance' | 'group' | 'groupInstance' | 'vertex' | 'vertexInstance';
@@ -21,26 +21,34 @@ export type ColorTypeDirect = 'direct';
 export type ColorType = ColorTypeLocation | ColorTypeGrid | ColorTypeDirect;
 
 export type ColorData = {
-    uColor: ValueCell<Vec3>,
-    tColor: ValueCell<TextureImage<Uint8Array>>,
-    tColorGrid: ValueCell<Texture>,
-    uPaletteDomain: ValueCell<Vec2>,
-    uPaletteDefault: ValueCell<Vec3>,
-    tPalette: ValueCell<TextureImage<Uint8Array>>,
-    uColorTexDim: ValueCell<Vec2>,
-    uColorGridDim: ValueCell<Vec3>,
-    uColorGridTransform: ValueCell<Vec4>,
-    dColorType: ValueCell<string>,
-    dUsePalette: ValueCell<boolean>,
-}
+    uColor: ValueCell<Vec3>;
+    tColor: ValueCell<TextureImage<Uint8Array>>;
+    tColorGrid: ValueCell<Texture>;
+    uPaletteDomain: ValueCell<Vec2>;
+    uPaletteDefault: ValueCell<Vec3>;
+    tPalette: ValueCell<TextureImage<Uint8Array>>;
+    uColorTexDim: ValueCell<Vec2>;
+    uColorGridDim: ValueCell<Vec3>;
+    uColorGridTransform: ValueCell<Vec4>;
+    dColorType: ValueCell<string>;
+    dUsePalette: ValueCell<boolean>;
+};
 
-export function createColors(locationIt: LocationIterator, positionIt: LocationIterator, colorTheme: ColorTheme<any, any>, colorData?: ColorData): ColorData {
+export function createColors(
+    locationIt: LocationIterator,
+    positionIt: LocationIterator,
+    colorTheme: ColorTheme<any, any>,
+    colorData?: ColorData,
+): ColorData {
     const data = _createColors(locationIt, positionIt, colorTheme, colorData);
     if (colorTheme.palette) {
         ValueCell.updateIfChanged(data.dUsePalette, true);
         const [min, max] = colorTheme.palette.domain || [0, 1];
         ValueCell.update(data.uPaletteDomain, Vec2.set(data.uPaletteDomain.ref.value, min, max));
-        ValueCell.update(data.uPaletteDefault, Color.toVec3Normalized(data.uPaletteDefault.ref.value, colorTheme.palette.defaultColor ?? Color(0xCCCCCC)));
+        ValueCell.update(
+            data.uPaletteDefault,
+            Color.toVec3Normalized(data.uPaletteDefault.ref.value, colorTheme.palette.defaultColor ?? Color(0xCCCCCC)),
+        );
         updatePaletteTexture(colorTheme.palette, data.tPalette);
     } else {
         ValueCell.updateIfChanged(data.dUsePalette, false);
@@ -48,20 +56,33 @@ export function createColors(locationIt: LocationIterator, positionIt: LocationI
     return data;
 }
 
-function _createColors(locationIt: LocationIterator, positionIt: LocationIterator, colorTheme: ColorTheme<any, any>, colorData?: ColorData): ColorData {
+function _createColors(
+    locationIt: LocationIterator,
+    positionIt: LocationIterator,
+    colorTheme: ColorTheme<any, any>,
+    colorData?: ColorData,
+): ColorData {
     switch (colorTheme.granularity) {
-        case 'uniform': return createUniformColor(locationIt, colorTheme.color, colorData);
+        case 'uniform':
+            return createUniformColor(locationIt, colorTheme.color, colorData);
         case 'instance':
             return locationIt.nonInstanceable
                 ? createGroupColor(locationIt, colorTheme.color, colorData)
                 : createInstanceColor(locationIt, colorTheme.color, colorData);
-        case 'group': return createGroupColor(locationIt, colorTheme.color, colorData);
-        case 'groupInstance': return createGroupInstanceColor(locationIt, colorTheme.color, colorData);
-        case 'vertex': return createVertexColor(positionIt, colorTheme.color, colorData);
-        case 'vertexInstance': return createVertexInstanceColor(positionIt, colorTheme.color, colorData);
-        case 'volume': return createGridColor(colorTheme.grid, 'volume', colorData);
-        case 'volumeInstance': return createGridColor(colorTheme.grid, 'volumeInstance', colorData);
-        case 'direct': return createDirectColor(colorData);
+        case 'group':
+            return createGroupColor(locationIt, colorTheme.color, colorData);
+        case 'groupInstance':
+            return createGroupInstanceColor(locationIt, colorTheme.color, colorData);
+        case 'vertex':
+            return createVertexColor(positionIt, colorTheme.color, colorData);
+        case 'vertexInstance':
+            return createVertexInstanceColor(positionIt, colorTheme.color, colorData);
+        case 'volume':
+            return createGridColor(colorTheme.grid, 'volume', colorData);
+        case 'volumeInstance':
+            return createGridColor(colorTheme.grid, 'volumeInstance', colorData);
+        case 'direct':
+            return createDirectColor(colorData);
     }
 }
 
@@ -127,7 +148,11 @@ function createUniformColor(locationIt: LocationIterator, color: LocationColor, 
 
 //
 
-export function createTextureColor(colors: TextureImage<Uint8Array>, type: ColorType, colorData?: ColorData): ColorData {
+export function createTextureColor(
+    colors: TextureImage<Uint8Array>,
+    type: ColorType,
+    colorData?: ColorData,
+): ColorData {
     if (colorData) {
         ValueCell.update(colorData.tColor, colors);
         ValueCell.update(colorData.uColorTexDim, Vec2.create(colors.width, colors.height));
@@ -153,7 +178,12 @@ export function createTextureColor(colors: TextureImage<Uint8Array>, type: Color
 /** Creates color texture with color for each instance */
 function createInstanceColor(locationIt: LocationIterator, color: LocationColor, colorData?: ColorData): ColorData {
     const { instanceCount } = locationIt;
-    const colors = createTextureImage(Math.max(1, instanceCount), 3, Uint8Array, colorData && colorData.tColor.ref.value.array);
+    const colors = createTextureImage(
+        Math.max(1, instanceCount),
+        3,
+        Uint8Array,
+        colorData && colorData.tColor.ref.value.array,
+    );
     locationIt.reset();
     while (locationIt.hasNext) {
         const { location, isSecondary, instanceIndex } = locationIt.move();
@@ -166,7 +196,12 @@ function createInstanceColor(locationIt: LocationIterator, color: LocationColor,
 /** Creates color texture with color for each group (i.e. shared across instances) */
 function createGroupColor(locationIt: LocationIterator, color: LocationColor, colorData?: ColorData): ColorData {
     const { groupCount, hasLocation2 } = locationIt;
-    const colors = createTextureImage(Math.max(1, groupCount * (hasLocation2 ? 2 : 1)), 3, Uint8Array, colorData && colorData.tColor.ref.value.array);
+    const colors = createTextureImage(
+        Math.max(1, groupCount * (hasLocation2 ? 2 : 1)),
+        3,
+        Uint8Array,
+        colorData && colorData.tColor.ref.value.array,
+    );
     locationIt.reset();
     const indexMultiplier = hasLocation2 ? 6 : 3;
     while (locationIt.hasNext && !locationIt.isNextNewInstance) {
@@ -178,7 +213,11 @@ function createGroupColor(locationIt: LocationIterator, color: LocationColor, co
 }
 
 /** Creates color texture with color for each group in each instance */
-function createGroupInstanceColor(locationIt: LocationIterator, color: LocationColor, colorData?: ColorData): ColorData {
+function createGroupInstanceColor(
+    locationIt: LocationIterator,
+    color: LocationColor,
+    colorData?: ColorData,
+): ColorData {
     const { groupCount, instanceCount, hasLocation2 } = locationIt;
     const count = instanceCount * groupCount * (hasLocation2 ? 2 : 1);
     const colors = createTextureImage(Math.max(1, count), 3, Uint8Array, colorData && colorData.tColor.ref.value.array);
@@ -195,7 +234,12 @@ function createGroupInstanceColor(locationIt: LocationIterator, color: LocationC
 /** Creates color texture with color for each vertex (i.e. shared across instances) */
 function createVertexColor(locationIt: LocationIterator, color: LocationColor, colorData?: ColorData): ColorData {
     const { groupCount, stride } = locationIt;
-    const colors = createTextureImage(Math.max(1, groupCount), 3, Uint8Array, colorData && colorData.tColor.ref.value.array);
+    const colors = createTextureImage(
+        Math.max(1, groupCount),
+        3,
+        Uint8Array,
+        colorData && colorData.tColor.ref.value.array,
+    );
     locationIt.reset();
     locationIt.voidInstances();
     while (locationIt.hasNext && !locationIt.isNextNewInstance) {
@@ -209,7 +253,11 @@ function createVertexColor(locationIt: LocationIterator, color: LocationColor, c
 }
 
 /** Creates color texture with color for each vertex in each instance */
-function createVertexInstanceColor(locationIt: LocationIterator, color: LocationColor, colorData?: ColorData): ColorData {
+function createVertexInstanceColor(
+    locationIt: LocationIterator,
+    color: LocationColor,
+    colorData?: ColorData,
+): ColorData {
     const { groupCount, instanceCount, stride } = locationIt;
     const count = instanceCount * groupCount;
     const colors = createTextureImage(Math.max(1, count), 3, Uint8Array, colorData && colorData.tColor.ref.value.array);

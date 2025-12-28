@@ -16,7 +16,7 @@ function shuffle<T>(data: T, len: number, clone: (s: T) => T, swap: Sort.Swapper
 }
 
 function shuffleArray(data: any[]) {
-    return shuffle(data, data.length, t => [...t]);
+    return shuffle(data, data.length, (t) => [...t]);
 }
 
 describe('qsort-array asc', () => {
@@ -70,7 +70,10 @@ describe('qsort-dual array', () => {
     const data = { xs: [0, 1, 2], ys: ['x', 'y', 'z'] };
 
     const cmp: Sort.Comparer<typeof data> = (data, i, j) => data.xs[i] - data.xs[j];
-    const swap: Sort.Swapper<typeof data> = (data, i, j) => { Sort.arraySwap(data.xs, i, j); Sort.arraySwap(data.ys, i, j); };
+    const swap: Sort.Swapper<typeof data> = (data, i, j) => {
+        Sort.arraySwap(data.xs, i, j);
+        Sort.arraySwap(data.ys, i, j);
+    };
     const clone = (d: typeof data) => ({ xs: [...d.xs], ys: [...d.ys] });
 
     function test(name: string, src: typeof data, randomize: boolean) {

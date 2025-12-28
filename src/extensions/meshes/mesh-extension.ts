@@ -6,7 +6,6 @@
 
 /** Defines new types of State tree transformers for dealing with mesh data. */
 
-
 import { BaseGeometry, type VisualQuality, VisualQualityOptions } from '../../mol-geo/geometry/base.ts';
 import { Mesh } from '../../mol-geo/geometry/mesh/mesh.ts';
 import type { CifFile } from '../../mol-io/reader/cif.ts';
@@ -25,25 +24,23 @@ import type { Color } from '../../mol-util/color/index.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import * as MeshUtils from './mesh-utils.ts';
 
-
 export const BACKGROUND_OPACITY = 0.2;
 export const FOREROUND_OPACITY = 1;
 
 export const VolsegTransform: StateTransformer.Builder.Root = StateTransformer.builderFactory('volseg');
-
 
 // // // // // // // // // // // // // // // // // // // // // // // //
 // Parsed data
 
 /** Data type for `MeshlistStateObject` - list of meshes */
 export interface MeshlistData {
-    segmentId: number,
-    segmentName: string,
-    detail: number,
-    meshIds: number[],
-    mesh: Mesh,
+    segmentId: number;
+    segmentName: string;
+    detail: number;
+    meshIds: number[];
+    mesh: Mesh;
     /** Reference to the object which created this meshlist (e.g. `MeshStreaming.Behavior`) */
-    ownerId?: string,
+    ownerId?: string;
 }
 
 export namespace MeshlistData {
@@ -55,8 +52,13 @@ export namespace MeshlistData {
             meshIds: [],
             mesh: Mesh.createEmpty(),
         };
-    };
-    export async function fromCIF(data: CifFile, segmentId: number, segmentName: string, detail: number): Promise<MeshlistData> {
+    }
+    export async function fromCIF(
+        data: CifFile,
+        segmentId: number,
+        segmentName: string,
+        detail: number,
+    ): Promise<MeshlistData> {
         const { mesh, meshIds } = await MeshUtils.meshFromCif(data);
         return {
             segmentId,
@@ -71,11 +73,13 @@ export namespace MeshlistData {
     }
     export function getShape(data: MeshlistData, color: Color): Shape<Mesh> {
         const mesh = data.mesh;
-        const meshShape: Shape<Mesh> = Shape.create(data.segmentName, data, mesh,
+        const meshShape: Shape<Mesh> = Shape.create(
+            data.segmentName,
+            data,
+            mesh,
             () => color,
-            () => 1,
-            // group => `${data.segmentName} | Segment ${data.segmentId} | Detail ${data.detail} | Mesh ${group}`,
-            group => data.segmentName,
+            () => 1, // group => `${data.segmentName} | Segment ${data.segmentId} | Detail ${data.detail} | Mesh ${group}`,
+            (group) => data.segmentName,
         );
         return meshShape;
     }
@@ -111,11 +115,11 @@ export namespace MeshlistData {
     }
 }
 
-
 // // // // // // // // // // // // // // // // // // // // // // // //
 // Raw Data -> Parsed data
 
-export class MeshlistStateObject extends PluginStateObject.Create<MeshlistData>({ name: 'Parsed Meshlist', typeClass: 'Object' }) { }
+export class MeshlistStateObject
+    extends PluginStateObject.Create<MeshlistData>({ name: 'Parsed Meshlist', typeClass: 'Object' }) {}
 
 export const ParseMeshlistTransformer = VolsegTransform({
     name: 'meshlist-from-string',
@@ -128,18 +132,25 @@ export const ParseMeshlistTransformer = VolsegTransform({
         detail: PD.Numeric(1, {}, { isHidden: true }),
         /** Reference to the object which manages this meshlist (e.g. `MeshStreaming.Behavior`) */
         ownerId: PD.Text('', { isHidden: true }),
-    }
+    },
 })({
     apply({ a, params }, globalCtx) { // `a` is the parent node, params are 2nd argument to To.apply(), `globalCtx` is the plugin
-        return Task.create('Create Parsed Meshlist', async ctx => {
-            const meshlistData = await MeshlistData.fromCIF(a.data, params.segmentId, params.segmentName, params.detail);
+        return Task.create('Create Parsed Meshlist', async (ctx) => {
+            const meshlistData = await MeshlistData.fromCIF(
+                a.data,
+                params.segmentId,
+                params.segmentName,
+                params.detail,
+            );
             meshlistData.ownerId = params.ownerId;
             const es = meshlistData.meshIds.length === 1 ? '' : 'es';
-            return new MeshlistStateObject(meshlistData, { label: params.label, description: `${meshlistData.segmentName} (${meshlistData.meshIds.length} mesh${es})` });
+            return new MeshlistStateObject(meshlistData, {
+                label: params.label,
+                description: `${meshlistData.segmentName} (${meshlistData.meshIds.length} mesh${es})`,
+            });
         });
-    }
+    },
 });
-
 
 // // // // // // // // // // // // // // // // // // // // // // // //
 // Parsed data -> Shape
@@ -161,12 +172,18 @@ namespace MeshShapeProvider {
 
 const meshShapeProviderParams: Mesh.Params = {
     ...Mesh.Params,
-    quality: PD.Select<VisualQuality>('custom', VisualQualityOptions, { isEssential: true, description: 'Visual/rendering quality of the representation.' }), // use 'custom' when wanting to apply doubleSided
+    quality: PD.Select<VisualQuality>('custom', VisualQualityOptions, {
+        isEssential: true,
+        description: 'Visual/rendering quality of the representation.',
+    }), // use 'custom' when wanting to apply doubleSided
     doubleSided: PD.Boolean(true, BaseGeometry.CustomQualityParamInfo),
     // set `flatShaded`: true to see the real mesh vertices and triangles
-    transparentBackfaces: PD.Select('on', PD.arrayToOptions(['off', 'on', 'opaque'] as const), BaseGeometry.ShadingCategory), // 'on' means: show backfaces with correct opacity, even when opacity < 1 (requires doubleSided) ¯\_(ツ)_/¯
+    transparentBackfaces: PD.Select(
+        'on',
+        PD.arrayToOptions(['off', 'on', 'opaque'] as const),
+        BaseGeometry.ShadingCategory,
+    ), // 'on' means: show backfaces with correct opacity, even when opacity < 1 (requires doubleSided) ¯\_(ツ)_/¯
 };
-
 
 export const MeshShapeTransformer = VolsegTransform({
     name: 'shape-from-meshlist',
@@ -179,30 +196,42 @@ export const MeshShapeTransformer = VolsegTransform({
 })({
     apply({ a, params }) {
         const shapeProvider = MeshShapeProvider.fromMeshlistData(a.data, params.color);
-        return new PluginStateObject.Shape.Provider(shapeProvider, { label: PluginStateObject.Shape.Provider.type.name, description: a.description });
-    }
+        return new PluginStateObject.Shape.Provider(shapeProvider, {
+            label: PluginStateObject.Shape.Provider.type.name,
+            description: a.description,
+        });
+    },
 });
-
 
 // // // // // // // // // // // // // // // // // // // // // // // //
 
-
 /** Download data and create state tree hierarchy down to visual representation. */
-export async function createMeshFromUrl(plugin: PluginContext, meshDataUrl: string, segmentId: number, detail: number,
-    collapseTree: boolean, color?: Color, parent?: StateObjectSelector | StateObjectRef, transparentIfBboxAbove?: number,
-    name?: string, ownerId?: string) {
-
+export async function createMeshFromUrl(
+    plugin: PluginContext,
+    meshDataUrl: string,
+    segmentId: number,
+    detail: number,
+    collapseTree: boolean,
+    color?: Color,
+    parent?: StateObjectSelector | StateObjectRef,
+    transparentIfBboxAbove?: number,
+    name?: string,
+    ownerId?: string,
+) {
     const update = parent ? plugin.build().to(parent) : plugin.build().toRoot();
-    const rawDataNodeRef = update.apply(Download,
-        { url: meshDataUrl, isBinary: true, label: `Downloaded Data ${segmentId}` },
-        { state: { isCollapsed: collapseTree } }
-    ).ref;
+    const rawDataNodeRef =
+        update.apply(Download, { url: meshDataUrl, isBinary: true, label: `Downloaded Data ${segmentId}` }, {
+            state: { isCollapsed: collapseTree },
+        }).ref;
     const parsedDataNode = await update.to(rawDataNodeRef)
         .apply(StateTransforms.Data.ParseCif)
-        .apply(ParseMeshlistTransformer,
-            { label: undefined, segmentId: segmentId, segmentName: name ?? `Segment ${segmentId}`, detail: detail, ownerId: ownerId },
-            {}
-        )
+        .apply(ParseMeshlistTransformer, {
+            label: undefined,
+            segmentId: segmentId,
+            segmentName: name ?? `Segment ${segmentId}`,
+            detail: detail,
+            ownerId: ownerId,
+        }, {})
         .commit();
 
     let transparent = false;
@@ -212,11 +241,10 @@ export async function createMeshFromUrl(plugin: PluginContext, meshDataUrl: stri
     }
 
     await plugin.build().to(parsedDataNode)
-        .apply(MeshShapeTransformer, { color: color },)
-        .apply(ShapeRepresentation3D,
-            { alpha: transparent ? BACKGROUND_OPACITY : FOREROUND_OPACITY },
-            { tags: ['mesh-segment-visual', `segment-${segmentId}`] }
-        )
+        .apply(MeshShapeTransformer, { color: color })
+        .apply(ShapeRepresentation3D, { alpha: transparent ? BACKGROUND_OPACITY : FOREROUND_OPACITY }, {
+            tags: ['mesh-segment-visual', `segment-${segmentId}`],
+        })
         .commit();
 
     return rawDataNodeRef;

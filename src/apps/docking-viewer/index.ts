@@ -58,9 +58,14 @@ class Viewer {
     constructor(public plugin: PluginUIContext) {
     }
 
-    static async create(elementOrId: string | HTMLElement, colors = [Color(0x992211), Color(0xDDDDDD)], showButtons = true) {
+    static async create(
+        elementOrId: string | HTMLElement,
+        colors = [Color(0x992211), Color(0xDDDDDD)],
+        showButtons = true,
+    ) {
         const o = {
-            ...DefaultViewerOptions, ...{
+            ...DefaultViewerOptions,
+            ...{
                 layoutIsExpanded: false,
                 layoutShowControls: false,
                 layoutShowRemoteState: false,
@@ -73,7 +78,7 @@ class Viewer {
                 viewportShowSettings: false,
                 viewportShowSelectionMode: false,
                 viewportShowAnimation: false,
-            }
+            },
         };
         const defaultSpec = DefaultPluginUISpec();
 
@@ -107,8 +112,8 @@ class Viewer {
                 },
                 remoteState: o.layoutShowRemoteState ? 'default' : 'none',
                 viewport: {
-                    view: ViewportComponent
-                }
+                    view: ViewportComponent,
+                },
             },
             config: [
                 [PluginConfig.Viewport.ShowExpand, o.viewportShowExpand],
@@ -121,21 +126,19 @@ class Viewer {
                 [PluginConfig.VolumeStreaming.DefaultServer, o.volumeStreamingServer],
                 [PluginConfig.Download.DefaultPdbProvider, o.pdbProvider],
                 [PluginConfig.Download.DefaultEmdbProvider, o.emdbProvider],
-                [ShowButtons, showButtons]
-            ]
+                [ShowButtons, showButtons],
+            ],
         };
 
-        const element = typeof elementOrId === 'string'
-            ? document.getElementById(elementOrId)
-            : elementOrId;
+        const element = typeof elementOrId === 'string' ? document.getElementById(elementOrId) : elementOrId;
         if (!element) throw new Error(`Could not get element with id '${elementOrId}'`);
         const plugin = await createPluginUI({ target: element, spec, render: renderReact18 });
 
         (plugin.customState as any) = {
             colorPalette: {
                 name: 'colors',
-                params: { list: { colors } }
-            }
+                params: { list: { colors } },
+            },
         };
 
         PluginCommands.Canvas3D.SetSettings(plugin, {
@@ -146,15 +149,17 @@ class Viewer {
                 },
                 camera: {
                     ...plugin.canvas3d!.props.camera,
-                    helper: { axes: { name: 'off', params: {} } }
-                }
-            }
+                    helper: { axes: { name: 'off', params: {} } },
+                },
+            },
         });
 
         return new Viewer(plugin);
     }
 
-    async loadStructuresFromUrlsAndMerge(sources: { url: string, format: BuiltInTrajectoryFormat, isBinary?: boolean }[]) {
+    async loadStructuresFromUrlsAndMerge(
+        sources: { url: string; format: BuiltInTrajectoryFormat; isBinary?: boolean }[],
+    ) {
         const structures: { ref: string }[] = [];
         for (const { url, format, isBinary } of sources) {
             const data = await this.plugin.builders.data.download({ url, isBinary });
@@ -170,32 +175,42 @@ class Viewer {
         // remove current structures from hierarchy as they will be merged
         // TODO only works with using loadStructuresFromUrlsAndMerge once
         //      need some more API metho to work with the hierarchy
-        this.plugin.managers.structure.hierarchy.updateCurrent(this.plugin.managers.structure.hierarchy.current.structures, 'remove');
+        this.plugin.managers.structure.hierarchy.updateCurrent(
+            this.plugin.managers.structure.hierarchy.current.structures,
+            'remove',
+        );
 
         const dependsOn = structures.map(({ ref }) => ref);
         const data = this.plugin.state.data.build().toRoot().apply(MergeStructures, { structures }, { dependsOn });
         const structure = await data.commit();
         const structureProperties = await this.plugin.builders.structure.insertStructureProperties(structure);
-        this.plugin.behaviors.canvas3d.initialized.subscribe(async v => {
-            await this.plugin.builders.structure.representation.applyPreset(structureProperties || structure, StructurePreset);
+        this.plugin.behaviors.canvas3d.initialized.subscribe(async (v) => {
+            await this.plugin.builders.structure.representation.applyPreset(
+                structureProperties || structure,
+                StructurePreset,
+            );
         });
     }
 }
 
-type MergeStructures = typeof MergeStructures
+type MergeStructures = typeof MergeStructures;
 const MergeStructures = PluginStateTransform.BuiltIn({
     name: 'merge-structures',
     display: { name: 'Merge Structures', description: 'Merge Structure' },
     from: PSO.Root,
     to: PSO.Molecule.Structure,
     params: {
-        structures: PD.ObjectList({
-            ref: PD.Text('')
-        }, ({ ref }) => ref, { isHidden: true })
-    }
+        structures: PD.ObjectList(
+            {
+                ref: PD.Text(''),
+            },
+            ({ ref }) => ref,
+            { isHidden: true },
+        ),
+    },
 })({
     apply({ params, dependencies }) {
-        return Task.create('Merge Structures', async ctx => {
+        return Task.create('Merge Structures', async (ctx) => {
             if (params.structures.length === 0) return StateObject.Null;
 
             const first = dependencies![params.structures[0].ref].data as Structure;
@@ -211,7 +226,7 @@ const MergeStructures = PluginStateTransform.BuiltIn({
             const structure = builder.getStructure();
             return new PSO.Molecule.Structure(structure, { label: 'Merged Structure' });
         });
-    }
+    },
 });
 
 (window as any).DockingViewer = Viewer;

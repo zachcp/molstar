@@ -14,24 +14,32 @@ import type { Renderbuffer } from './renderbuffer.ts';
 const getNextRenderTargetId = idFactory();
 
 export interface RenderTarget {
-    readonly id: number
-    readonly texture: Texture
-    readonly framebuffer: Framebuffer
-    readonly depthRenderbuffer: Renderbuffer | null
+    readonly id: number;
+    readonly texture: Texture;
+    readonly framebuffer: Framebuffer;
+    readonly depthRenderbuffer: Renderbuffer | null;
 
-    getByteCount: () => number
+    getByteCount: () => number;
 
-    getWidth: () => number
-    getHeight: () => number
+    getWidth: () => number;
+    getHeight: () => number;
     /** binds framebuffer */
-    bind: () => void
-    setSize: (width: number, height: number) => void
-    reset: () => void
-    destroy: () => void
+    bind: () => void;
+    setSize: (width: number, height: number) => void;
+    reset: () => void;
+    destroy: () => void;
 }
 
-export function createRenderTarget(gl: GLRenderingContext, resources: WebGLResources, _width: number, _height: number, depth = true, type: 'uint8' | 'float32' | 'fp16' = 'uint8', filter: TextureFilter = 'nearest', format: 'rgba' | 'alpha' = 'rgba'): RenderTarget {
-
+export function createRenderTarget(
+    gl: GLRenderingContext,
+    resources: WebGLResources,
+    _width: number,
+    _height: number,
+    depth = true,
+    type: 'uint8' | 'float32' | 'fp16' = 'uint8',
+    filter: TextureFilter = 'nearest',
+    format: 'rgba' | 'alpha' = 'rgba',
+): RenderTarget {
     if (format === 'alpha' && !isWebGL2(gl)) {
         throw new Error('cannot render to alpha format in webgl1');
     }
@@ -40,14 +48,14 @@ export function createRenderTarget(gl: GLRenderingContext, resources: WebGLResou
     const targetTexture = type === 'fp16'
         ? resources.texture('image-float16', format, 'fp16', filter)
         : type === 'float32'
-            ? resources.texture('image-float32', format, 'float', filter)
-            : resources.texture('image-uint8', format, 'ubyte', filter);
+        ? resources.texture('image-float32', format, 'float', filter)
+        : resources.texture('image-uint8', format, 'ubyte', filter);
     // make a depth renderbuffer of the same size as the targetTexture
     const depthRenderbuffer = !depth
         ? null
         : isWebGL2(gl)
-            ? resources.renderbuffer('depth32f', 'depth', _width, _height)
-            : resources.renderbuffer('depth16', 'depth', _width, _height);
+        ? resources.renderbuffer('depth32f', 'depth', _width, _height)
+        : resources.renderbuffer('depth16', 'depth', _width, _height);
 
     function init() {
         targetTexture.define(_width, _height);
@@ -90,6 +98,6 @@ export function createRenderTarget(gl: GLRenderingContext, resources: WebGLResou
             framebuffer.destroy();
             if (depthRenderbuffer) depthRenderbuffer.destroy();
             destroyed = true;
-        }
+        },
     };
 }

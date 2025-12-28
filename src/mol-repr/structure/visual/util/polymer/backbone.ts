@@ -9,11 +9,18 @@ import { type ElementIndex, type ResidueIndex, Unit } from '../../../../../mol-m
 import type { MoleculeType } from '../../../../../mol-model/structure/model/types.ts';
 import { getPolymerRanges } from '../polymer.ts';
 
-export type PolymerBackboneLinkCallback = (indexA: ElementIndex, indexB: ElementIndex, groupA: number, groupB: number, moleculeType: MoleculeType) => void
+export type PolymerBackboneLinkCallback = (
+    indexA: ElementIndex,
+    indexB: ElementIndex,
+    groupA: number,
+    groupB: number,
+    moleculeType: MoleculeType,
+) => void;
 
 export function eachPolymerBackboneLink(unit: Unit, callback: PolymerBackboneLinkCallback) {
     switch (unit.kind) {
-        case Unit.Kind.Atomic: return eachAtomicPolymerBackboneLink(unit, callback);
+        case Unit.Kind.Atomic:
+            return eachAtomicPolymerBackboneLink(unit, callback);
         case Unit.Kind.Spheres:
         case Unit.Kind.Gaussians:
             return eachCoarsePolymerBackboneLink(unit, callback);
@@ -40,8 +47,9 @@ function eachAtomicPolymerBackboneLink(unit: Unit.Atomic, callback: PolymerBackb
             if (isFirst) {
                 const index_1 = residueIt.move().index;
                 ++i;
-                if (!residueIt.hasNext)
+                if (!residueIt.hasNext) {
                     continue;
+                }
                 isFirst = false;
                 indexB = index_1;
             }
@@ -72,8 +80,9 @@ function eachCoarsePolymerBackboneLink(unit: Unit.Spheres | Unit.Gaussians, call
             if (isFirst) {
                 ++j;
                 ++i;
-                if (j > jl)
+                if (j > jl) {
                     continue;
+                }
                 isFirst = false;
             }
             callback(elements[j - 1], elements[j], i - 1, i, 0 /* Unknown */);
@@ -84,11 +93,12 @@ function eachCoarsePolymerBackboneLink(unit: Unit.Spheres | Unit.Gaussians, call
 
 //
 
-export type PolymerBackboneElementCallback = (index: ElementIndex, group: number) => void
+export type PolymerBackboneElementCallback = (index: ElementIndex, group: number) => void;
 
 export function eachPolymerBackboneElement(unit: Unit, callback: PolymerBackboneElementCallback) {
     switch (unit.kind) {
-        case Unit.Kind.Atomic: return eachAtomicPolymerBackboneElement(unit, callback);
+        case Unit.Kind.Atomic:
+            return eachAtomicPolymerBackboneElement(unit, callback);
         case Unit.Kind.Spheres:
         case Unit.Kind.Gaussians:
             return eachCoarsePolymerBackboneElement(unit, callback);
@@ -111,7 +121,10 @@ export function eachAtomicPolymerBackboneElement(unit: Unit.Atomic, callback: Po
     }
 }
 
-function eachCoarsePolymerBackboneElement(unit: Unit.Spheres | Unit.Gaussians, callback: PolymerBackboneElementCallback) {
+function eachCoarsePolymerBackboneElement(
+    unit: Unit.Spheres | Unit.Gaussians,
+    callback: PolymerBackboneElementCallback,
+) {
     const polymerIt = SortedRanges.transientSegments(getPolymerRanges(unit), unit.elements);
     const { elements } = unit;
 

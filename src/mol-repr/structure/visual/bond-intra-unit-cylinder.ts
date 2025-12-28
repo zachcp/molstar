@@ -9,16 +9,39 @@
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import type { VisualContext } from '../../visual.ts';
-import { Unit, type Structure, StructureElement, Bond } from '../../../mol-model/structure.ts';
+import { Bond, type Structure, StructureElement, Unit } from '../../../mol-model/structure.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { arrayEqual } from '../../../mol-util/index.ts';
-import { createLinkCylinderImpostors, createLinkCylinderMesh, EmptyLinkBuilderProps, type LinkBuilderProps, LinkStyle } from './util/link.ts';
-import { UnitsMeshParams, type UnitsVisual, UnitsMeshVisual, UnitsCylindersParams, UnitsCylindersVisual } from '../units-visual.ts';
+import {
+    createLinkCylinderImpostors,
+    createLinkCylinderMesh,
+    EmptyLinkBuilderProps,
+    type LinkBuilderProps,
+    LinkStyle,
+} from './util/link.ts';
+import {
+    UnitsCylindersParams,
+    UnitsCylindersVisual,
+    UnitsMeshParams,
+    UnitsMeshVisual,
+    type UnitsVisual,
+} from '../units-visual.ts';
 import type { VisualUpdateState } from '../../util.ts';
 import { BondType } from '../../../mol-model/structure/model/types.ts';
-import { BondCylinderParams, BondIterator, eachIntraBond, eachStructureGroupsBond, getIntraBondLoci, getStructureGroupsBondLoci, hasStructureVisibleBonds, hasUnitVisibleBonds, ignoreBondType, makeIntraBondIgnoreTest } from './util/bond.ts';
+import {
+    BondCylinderParams,
+    BondIterator,
+    eachIntraBond,
+    eachStructureGroupsBond,
+    getIntraBondLoci,
+    getStructureGroupsBondLoci,
+    hasStructureVisibleBonds,
+    hasUnitVisibleBonds,
+    ignoreBondType,
+    makeIntraBondIgnoreTest,
+} from './util/bond.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 import { IntAdjacencyGraph } from '../../../mol-math/graph.ts';
 import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
@@ -27,18 +50,37 @@ import { SortedArray } from '../../../mol-data/int.ts';
 import { arrayIntersectionSize } from '../../../mol-util/array.ts';
 import { checkCylinderImpostorSupport, type StructureGroup } from './util/common.ts';
 import { SizeTheme } from '../../../mol-theme/size.ts';
-import { ComplexCylindersParams, ComplexMeshParams, ComplexCylindersVisual, ComplexMeshVisual, type ComplexVisual } from '../complex-visual.ts';
+import {
+    ComplexCylindersParams,
+    ComplexCylindersVisual,
+    ComplexMeshParams,
+    ComplexMeshVisual,
+    type ComplexVisual,
+} from '../complex-visual.ts';
 import { EmptyLocationIterator } from '../../../mol-geo/util/location-iterator.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const isBondType = BondType.is;
 
-function getIntraUnitBondCylinderBuilderProps(unit: Unit.Atomic, structure: Structure, theme: Theme, props: PD.Values<IntraUnitBondCylinderParams>): LinkBuilderProps {
+function getIntraUnitBondCylinderBuilderProps(
+    unit: Unit.Atomic,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<IntraUnitBondCylinderParams>,
+): LinkBuilderProps {
     const elements = unit.elements;
     const bonds = unit.bonds;
     const { edgeCount, a, b, edgeProps, offset } = bonds;
     const { order: _order, flags: _flags } = edgeProps;
-    const { sizeFactor, sizeAspectRatio, adjustCylinderLength, aromaticBonds, includeTypes, excludeTypes, multipleBonds } = props;
+    const {
+        sizeFactor,
+        sizeAspectRatio,
+        adjustCylinderLength,
+        aromaticBonds,
+        includeTypes,
+        excludeTypes,
+        multipleBonds,
+    } = props;
 
     const mbOff = multipleBonds === 'off';
     const mbSymmetric = multipleBonds === 'symmetric';
@@ -142,9 +184,7 @@ function getIntraUnitBondCylinderBuilderProps(unit: Unit.Atomic, structure: Stru
                 // show metallic coordinations and hydrogen bonds with dashed cylinders
                 return LinkStyle.Dashed;
             } else if (o === 3) {
-                return mbOff ? LinkStyle.Solid :
-                    mbSymmetric ? LinkStyle.Triple :
-                        LinkStyle.OffsetTriple;
+                return mbOff ? LinkStyle.Solid : mbSymmetric ? LinkStyle.Triple : LinkStyle.OffsetTriple;
             } else if (aromaticBonds) {
                 const aI = a[edgeIndex], bI = b[edgeIndex];
                 const aR = elementAromaticRingIndices.get(aI);
@@ -160,19 +200,24 @@ function getIntraUnitBondCylinderBuilderProps(unit: Unit.Atomic, structure: Stru
                 }
             }
 
-            return (o !== 2 || mbOff) ? LinkStyle.Solid :
-                mbSymmetric ? LinkStyle.Double :
-                    LinkStyle.OffsetDouble;
+            return (o !== 2 || mbOff) ? LinkStyle.Solid : mbSymmetric ? LinkStyle.Double : LinkStyle.OffsetDouble;
         },
         radius: (edgeIndex: number) => {
             return radius(edgeIndex) * sizeAspectRatio;
         },
         ignore: makeIntraBondIgnoreTest(structure, unit, props),
-        stub
+        stub,
     };
 }
 
-function createIntraUnitBondCylinderImpostors(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PD.Values<IntraUnitBondCylinderParams>, cylinders?: Cylinders): Cylinders {
+function createIntraUnitBondCylinderImpostors(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<IntraUnitBondCylinderParams>,
+    cylinders?: Cylinders,
+): Cylinders {
     if (!Unit.isAtomic(unit)) return Cylinders.createEmpty(cylinders);
     if (!hasUnitVisibleBonds(unit, props)) return Cylinders.createEmpty(cylinders);
     if (!unit.bonds.edgeCount) return Cylinders.createEmpty(cylinders);
@@ -194,7 +239,14 @@ function createIntraUnitBondCylinderImpostors(ctx: VisualContext, unit: Unit, st
     return c;
 }
 
-function createIntraUnitBondCylinderMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PD.Values<IntraUnitBondCylinderParams>, mesh?: Mesh): Mesh {
+function createIntraUnitBondCylinderMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<IntraUnitBondCylinderParams>,
+    mesh?: Mesh,
+): Mesh {
     if (!Unit.isAtomic(unit)) return Mesh.createEmpty(mesh);
     if (!hasUnitVisibleBonds(unit, props)) return Mesh.createEmpty(mesh);
     if (!unit.bonds.edgeCount) return Mesh.createEmpty(mesh);
@@ -225,9 +277,14 @@ export const IntraUnitBondCylinderParams = {
     tryUseImpostor: PD.Boolean(true),
     includeParent: PD.Boolean(false),
 };
-export type IntraUnitBondCylinderParams = typeof IntraUnitBondCylinderParams
+export type IntraUnitBondCylinderParams = typeof IntraUnitBondCylinderParams;
 
-export function IntraUnitBondCylinderVisual(materialId: number, structure: Structure, props: PD.Values<IntraUnitBondCylinderParams>, webgl?: WebGLContext) {
+export function IntraUnitBondCylinderVisual(
+    materialId: number,
+    structure: Structure,
+    props: PD.Values<IntraUnitBondCylinderParams>,
+    webgl?: WebGLContext,
+) {
     return props.tryUseImpostor && checkCylinderImpostorSupport(webgl)
         ? IntraUnitBondCylinderImpostorVisual(materialId)
         : IntraUnitBondCylinderMeshVisual(materialId);
@@ -237,12 +294,20 @@ export function IntraUnitBondCylinderImpostorVisual(materialId: number): UnitsVi
     return UnitsCylindersVisual<IntraUnitBondCylinderParams>({
         defaultProps: PD.getDefaultValues(IntraUnitBondCylinderParams),
         createGeometry: createIntraUnitBondCylinderImpostors,
-        createLocationIterator: (structureGroup: StructureGroup, props) => BondIterator.fromGroup(structureGroup, { includeLocation2: props.colorMode === 'interpolate' }),
+        createLocationIterator: (structureGroup: StructureGroup, props) =>
+            BondIterator.fromGroup(structureGroup, { includeLocation2: props.colorMode === 'interpolate' }),
         getLoci: getIntraBondLoci,
         eachLocation: eachIntraBond,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<IntraUnitBondCylinderParams>, currentProps: PD.Values<IntraUnitBondCylinderParams>, newTheme: Theme, currentTheme: Theme, newStructureGroup: StructureGroup, currentStructureGroup: StructureGroup) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<IntraUnitBondCylinderParams>,
+            currentProps: PD.Values<IntraUnitBondCylinderParams>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructureGroup: StructureGroup,
+            currentStructureGroup: StructureGroup,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.sizeAspectRatio !== currentProps.sizeAspectRatio ||
                 newProps.linkScale !== currentProps.linkScale ||
                 newProps.linkSpacing !== currentProps.linkSpacing ||
@@ -261,8 +326,7 @@ export function IntraUnitBondCylinderImpostorVisual(materialId: number): UnitsVi
                 newProps.adjustCylinderLength !== currentProps.adjustCylinderLength ||
                 newProps.aromaticBonds !== currentProps.aromaticBonds ||
                 newProps.multipleBonds !== currentProps.multipleBonds ||
-                newProps.adjustCylinderLength && !SizeTheme.areEqual(newTheme.size, currentTheme.size)
-            );
+                newProps.adjustCylinderLength && !SizeTheme.areEqual(newTheme.size, currentTheme.size);
 
             if (newProps.colorMode !== currentProps.colorMode) {
                 state.createGeometry = true;
@@ -281,9 +345,13 @@ export function IntraUnitBondCylinderImpostorVisual(materialId: number): UnitsVi
                 }
             }
         },
-        mustRecreate: (structureGroup: StructureGroup, props: PD.Values<IntraUnitBondCylinderParams>, webgl?: WebGLContext) => {
+        mustRecreate: (
+            structureGroup: StructureGroup,
+            props: PD.Values<IntraUnitBondCylinderParams>,
+            webgl?: WebGLContext,
+        ) => {
             return !props.tryUseImpostor || !webgl;
-        }
+        },
     }, materialId);
 }
 
@@ -294,9 +362,16 @@ export function IntraUnitBondCylinderMeshVisual(materialId: number): UnitsVisual
         createLocationIterator: (structureGroup: StructureGroup) => BondIterator.fromGroup(structureGroup),
         getLoci: getIntraBondLoci,
         eachLocation: eachIntraBond,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<IntraUnitBondCylinderParams>, currentProps: PD.Values<IntraUnitBondCylinderParams>, newTheme: Theme, currentTheme: Theme, newStructureGroup: StructureGroup, currentStructureGroup: StructureGroup) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<IntraUnitBondCylinderParams>,
+            currentProps: PD.Values<IntraUnitBondCylinderParams>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructureGroup: StructureGroup,
+            currentStructureGroup: StructureGroup,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.sizeAspectRatio !== currentProps.sizeAspectRatio ||
                 newProps.radialSegments !== currentProps.radialSegments ||
                 newProps.linkScale !== currentProps.linkScale ||
@@ -315,8 +390,7 @@ export function IntraUnitBondCylinderMeshVisual(materialId: number): UnitsVisual
                 !arrayEqual(newProps.excludeTypes, currentProps.excludeTypes) ||
                 newProps.adjustCylinderLength !== currentProps.adjustCylinderLength ||
                 newProps.aromaticBonds !== currentProps.aromaticBonds ||
-                newProps.multipleBonds !== currentProps.multipleBonds
-            );
+                newProps.multipleBonds !== currentProps.multipleBonds;
 
             const newUnit = newStructureGroup.group.units[0];
             const currentUnit = currentStructureGroup.group.units[0];
@@ -329,16 +403,24 @@ export function IntraUnitBondCylinderMeshVisual(materialId: number): UnitsVisual
                 }
             }
         },
-        mustRecreate: (structureGroup: StructureGroup, props: PD.Values<IntraUnitBondCylinderParams>, webgl?: WebGLContext) => {
+        mustRecreate: (
+            structureGroup: StructureGroup,
+            props: PD.Values<IntraUnitBondCylinderParams>,
+            webgl?: WebGLContext,
+        ) => {
             return props.tryUseImpostor && !!webgl;
-        }
+        },
     }, materialId);
 }
 
 //
 
-function getStructureIntraUnitBondCylinderBuilderProps(structure: Structure, theme: Theme, props: PD.Values<StructureIntraUnitBondCylinderParams>): LinkBuilderProps {
-    const intraUnitProps: { group: Unit.SymmetryGroup, props: LinkBuilderProps}[] = [];
+function getStructureIntraUnitBondCylinderBuilderProps(
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<StructureIntraUnitBondCylinderParams>,
+): LinkBuilderProps {
+    const intraUnitProps: { group: Unit.SymmetryGroup; props: LinkBuilderProps }[] = [];
 
     const { bondCount, unitIndex, unitEdgeIndex, unitGroupIndex } = structure.intraUnitBondMapping;
     const { child } = structure;
@@ -388,11 +470,17 @@ function getStructureIntraUnitBondCylinderBuilderProps(structure: Structure, the
         stub: (edgeIndex: number) => {
             const { props } = intraUnitProps[unitIndex[edgeIndex]];
             return props.stub ? props.stub(unitEdgeIndex[edgeIndex]) : false;
-        }
+        },
     };
 }
 
-function createStructureIntraUnitBondCylinderImpostors(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<StructureIntraUnitBondCylinderParams>, cylinders?: Cylinders) {
+function createStructureIntraUnitBondCylinderImpostors(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<StructureIntraUnitBondCylinderParams>,
+    cylinders?: Cylinders,
+) {
     if (!hasStructureVisibleBonds(structure, props)) return Cylinders.createEmpty(cylinders);
     if (!structure.intraUnitBondMapping.bondCount) return Cylinders.createEmpty(cylinders);
 
@@ -410,7 +498,13 @@ function createStructureIntraUnitBondCylinderImpostors(ctx: VisualContext, struc
     return c;
 }
 
-function createStructureIntraUnitBondCylinderMesh(ctx: VisualContext, structure: Structure, theme: Theme, props: PD.Values<StructureIntraUnitBondCylinderParams>, mesh?: Mesh) {
+function createStructureIntraUnitBondCylinderMesh(
+    ctx: VisualContext,
+    structure: Structure,
+    theme: Theme,
+    props: PD.Values<StructureIntraUnitBondCylinderParams>,
+    mesh?: Mesh,
+) {
     if (!hasStructureVisibleBonds(structure, props)) return Mesh.createEmpty(mesh);
     if (!structure.intraUnitBondMapping.bondCount) return Mesh.createEmpty(mesh);
 
@@ -437,15 +531,22 @@ export const StructureIntraUnitBondCylinderParams = {
     tryUseImpostor: PD.Boolean(true),
     includeParent: PD.Boolean(false),
 };
-export type StructureIntraUnitBondCylinderParams = typeof StructureIntraUnitBondCylinderParams
+export type StructureIntraUnitBondCylinderParams = typeof StructureIntraUnitBondCylinderParams;
 
-export function StructureIntraUnitBondCylinderVisual(materialId: number, structure: Structure, props: PD.Values<StructureIntraUnitBondCylinderParams>, webgl?: WebGLContext) {
+export function StructureIntraUnitBondCylinderVisual(
+    materialId: number,
+    structure: Structure,
+    props: PD.Values<StructureIntraUnitBondCylinderParams>,
+    webgl?: WebGLContext,
+) {
     return props.tryUseImpostor && webgl && webgl.extensions.fragDepth
         ? StructureIntraUnitBondCylinderImpostorVisual(materialId)
         : StructureIntraUnitBondCylinderMeshVisual(materialId);
 }
 
-export function StructureIntraUnitBondCylinderImpostorVisual(materialId: number): ComplexVisual<StructureIntraUnitBondCylinderParams> {
+export function StructureIntraUnitBondCylinderImpostorVisual(
+    materialId: number,
+): ComplexVisual<StructureIntraUnitBondCylinderParams> {
     return ComplexCylindersVisual<StructureIntraUnitBondCylinderParams>({
         defaultProps: PD.getDefaultValues(StructureIntraUnitBondCylinderParams),
         createGeometry: createStructureIntraUnitBondCylinderImpostors,
@@ -456,9 +557,16 @@ export function StructureIntraUnitBondCylinderImpostorVisual(materialId: number)
         },
         getLoci: getStructureGroupsBondLoci,
         eachLocation: eachStructureGroupsBond,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<StructureIntraUnitBondCylinderParams>, currentProps: PD.Values<StructureIntraUnitBondCylinderParams>, newTheme: Theme, currentTheme: Theme, newStructure: Structure, currentStructure: Structure) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<StructureIntraUnitBondCylinderParams>,
+            currentProps: PD.Values<StructureIntraUnitBondCylinderParams>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructure: Structure,
+            currentStructure: Structure,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.sizeAspectRatio !== currentProps.sizeAspectRatio ||
                 newProps.linkScale !== currentProps.linkScale ||
                 newProps.linkSpacing !== currentProps.linkSpacing ||
@@ -475,8 +583,7 @@ export function StructureIntraUnitBondCylinderImpostorVisual(materialId: number)
                 !arrayEqual(newProps.includeTypes, currentProps.includeTypes) ||
                 !arrayEqual(newProps.excludeTypes, currentProps.excludeTypes) ||
                 newProps.adjustCylinderLength !== currentProps.adjustCylinderLength ||
-                newProps.multipleBonds !== currentProps.multipleBonds
-            );
+                newProps.multipleBonds !== currentProps.multipleBonds;
 
             if (newProps.colorMode !== currentProps.colorMode) {
                 state.createGeometry = true;
@@ -484,20 +591,29 @@ export function StructureIntraUnitBondCylinderImpostorVisual(materialId: number)
                 state.updateColor = true;
             }
 
-            if (hasStructureVisibleBonds(newStructure, newProps) && newStructure.interUnitBonds !== currentStructure.interUnitBonds) {
+            if (
+                hasStructureVisibleBonds(newStructure, newProps) &&
+                newStructure.interUnitBonds !== currentStructure.interUnitBonds
+            ) {
                 state.createGeometry = true;
                 state.updateTransform = true;
                 state.updateColor = true;
                 state.updateSize = true;
             }
         },
-        mustRecreate: (structure: Structure, props: PD.Values<StructureIntraUnitBondCylinderParams>, webgl?: WebGLContext) => {
+        mustRecreate: (
+            structure: Structure,
+            props: PD.Values<StructureIntraUnitBondCylinderParams>,
+            webgl?: WebGLContext,
+        ) => {
             return !props.tryUseImpostor || !webgl;
-        }
+        },
     }, materialId);
 }
 
-export function StructureIntraUnitBondCylinderMeshVisual(materialId: number): ComplexVisual<StructureIntraUnitBondCylinderParams> {
+export function StructureIntraUnitBondCylinderMeshVisual(
+    materialId: number,
+): ComplexVisual<StructureIntraUnitBondCylinderParams> {
     return ComplexMeshVisual<StructureIntraUnitBondCylinderParams>({
         defaultProps: PD.getDefaultValues(StructureIntraUnitBondCylinderParams),
         createGeometry: createStructureIntraUnitBondCylinderMesh,
@@ -508,9 +624,16 @@ export function StructureIntraUnitBondCylinderMeshVisual(materialId: number): Co
         },
         getLoci: getStructureGroupsBondLoci,
         eachLocation: eachStructureGroupsBond,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<StructureIntraUnitBondCylinderParams>, currentProps: PD.Values<StructureIntraUnitBondCylinderParams>, newTheme: Theme, currentTheme: Theme, newStructure: Structure, currentStructure: Structure) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<StructureIntraUnitBondCylinderParams>,
+            currentProps: PD.Values<StructureIntraUnitBondCylinderParams>,
+            newTheme: Theme,
+            currentTheme: Theme,
+            newStructure: Structure,
+            currentStructure: Structure,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.sizeAspectRatio !== currentProps.sizeAspectRatio ||
                 newProps.radialSegments !== currentProps.radialSegments ||
                 newProps.linkScale !== currentProps.linkScale ||
@@ -529,18 +652,24 @@ export function StructureIntraUnitBondCylinderMeshVisual(materialId: number): Co
                 !arrayEqual(newProps.excludeTypes, currentProps.excludeTypes) ||
                 newProps.adjustCylinderLength !== currentProps.adjustCylinderLength ||
                 newProps.multipleBonds !== currentProps.multipleBonds ||
-                newProps.adjustCylinderLength && !SizeTheme.areEqual(newTheme.size, currentTheme.size)
-            );
+                newProps.adjustCylinderLength && !SizeTheme.areEqual(newTheme.size, currentTheme.size);
 
-            if (hasStructureVisibleBonds(newStructure, newProps) && newStructure.interUnitBonds !== currentStructure.interUnitBonds) {
+            if (
+                hasStructureVisibleBonds(newStructure, newProps) &&
+                newStructure.interUnitBonds !== currentStructure.interUnitBonds
+            ) {
                 state.createGeometry = true;
                 state.updateTransform = true;
                 state.updateColor = true;
                 state.updateSize = true;
             }
         },
-        mustRecreate: (structure: Structure, props: PD.Values<StructureIntraUnitBondCylinderParams>, webgl?: WebGLContext) => {
+        mustRecreate: (
+            structure: Structure,
+            props: PD.Values<StructureIntraUnitBondCylinderParams>,
+            webgl?: WebGLContext,
+        ) => {
             return props.tryUseImpostor && !!webgl;
-        }
+        },
     }, materialId);
 }

@@ -13,19 +13,23 @@ import type { RuntimeContext } from '../../mol-task/index.ts';
 import type { Color } from '../../mol-util/color/index.ts';
 
 export interface Mp4EncoderParams<A extends PluginStateAnimation = PluginStateAnimation> {
-    pass: ImagePass,
-    customBackground?: Color,
-    animation: PluginStateAnimation.Instance<A>,
-    width: number,
-    height: number,
-    viewport: Viewport,
+    pass: ImagePass;
+    customBackground?: Color;
+    animation: PluginStateAnimation.Instance<A>;
+    width: number;
+    height: number;
+    viewport: Viewport;
     /** default is 30 */
-    fps?: number,
+    fps?: number;
     /** Number from 10 (best quality, slowest) to 51 (worst, fastest) */
-    quantizationParameter?: number
+    quantizationParameter?: number;
 }
 
-export async function encodeMp4Animation<A extends PluginStateAnimation>(plugin: PluginContext, ctx: RuntimeContext, params: Mp4EncoderParams<A>): Promise<Uint8Array<ArrayBuffer>> {
+export async function encodeMp4Animation<A extends PluginStateAnimation>(
+    plugin: PluginContext,
+    ctx: RuntimeContext,
+    params: Mp4EncoderParams<A>,
+): Promise<Uint8Array<ArrayBuffer>> {
     await ctx.update({ message: 'Initializing...', isIndeterminate: true });
 
     validateViewport(params);
@@ -61,7 +65,10 @@ export async function encodeMp4Animation<A extends PluginStateAnimation>(plugin:
         loop.resetTime(0);
 
         if (params.customBackground !== void 0) {
-            plugin.canvas3d?.setProps({ renderer: { backgroundColor: params.customBackground }, transparentBackground: false }, true);
+            plugin.canvas3d?.setProps({
+                renderer: { backgroundColor: params.customBackground },
+                transparentBackground: false,
+            }, true);
         }
 
         const fps = encoder.frameRate;
@@ -75,7 +82,12 @@ export async function encodeMp4Animation<A extends PluginStateAnimation>(plugin:
 
         stoppedAnimation = false;
         for (let i = 0; i <= N; i++) {
-            await loop.tick(i * dt, { isSynchronous: true, animation: { currentFrame: i, frameCount: N }, manualDraw: true, updateControls: true });
+            await loop.tick(i * dt, {
+                isSynchronous: true,
+                animation: { currentFrame: i, frameCount: N },
+                manualDraw: true,
+                updateControls: true,
+            });
             const image = await params.pass.getImageData(ctx, width, height, normalizedViewport);
             encoder.addFrameRgba(image.data);
 
@@ -92,7 +104,10 @@ export async function encodeMp4Animation<A extends PluginStateAnimation>(plugin:
     } finally {
         if (finalized) encoder.delete();
         if (params.customBackground !== void 0) {
-            plugin.canvas3d?.setProps({ renderer: { backgroundColor: canvasProps?.renderer!.backgroundColor }, transparentBackground: canvasProps?.transparentBackground });
+            plugin.canvas3d?.setProps({
+                renderer: { backgroundColor: canvasProps?.renderer!.backgroundColor },
+                transparentBackground: canvasProps?.transparentBackground,
+            });
         }
         if (!stoppedAnimation) await plugin.managers.animation.stop();
         if (wasAnimating) loop.start();
@@ -100,7 +115,10 @@ export async function encodeMp4Animation<A extends PluginStateAnimation>(plugin:
 }
 
 function validateViewport(params: Mp4EncoderParams) {
-    if (params.viewport.x + params.viewport.width > params.width || params.viewport.y + params.viewport.height > params.height) {
+    if (
+        params.viewport.x + params.viewport.width > params.width ||
+        params.viewport.y + params.viewport.height > params.height
+    ) {
         throw new Error('Viewport exceeds the canvas dimensions.');
     }
 }

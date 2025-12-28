@@ -6,14 +6,26 @@
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import type { VisualContext } from '../../visual.ts';
-import type { Unit, Structure } from '../../../mol-model/structure.ts';
+import type { Structure, Unit } from '../../../mol-model/structure.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
-import { createCurveSegmentState, PolymerTraceIterator, interpolateCurveSegment, interpolateSizes, PolymerLocationIterator, getPolymerElementLoci, eachPolymerElement, StandardTension, StandardShift, NucleicShift, OverhangFactor } from './util/polymer.ts';
+import {
+    createCurveSegmentState,
+    eachPolymerElement,
+    getPolymerElementLoci,
+    interpolateCurveSegment,
+    interpolateSizes,
+    NucleicShift,
+    OverhangFactor,
+    PolymerLocationIterator,
+    PolymerTraceIterator,
+    StandardShift,
+    StandardTension,
+} from './util/polymer.ts';
 import { isNucleic } from '../../../mol-model/structure/model/types.ts';
 import { addTube } from '../../../mol-geo/geometry/mesh/builder/tube.ts';
-import { UnitsMeshParams, type UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
+import { UnitsMeshParams, UnitsMeshVisual, type UnitsVisual } from '../units-visual.ts';
 import type { VisualUpdateState } from '../../util.ts';
 import { addSheet } from '../../../mol-geo/geometry/mesh/builder/sheet.ts';
 import { addRibbon } from '../../../mol-geo/geometry/mesh/builder/ribbon.ts';
@@ -30,17 +42,25 @@ export const PolymerTubeMeshParams = {
     radialSegments: PD.Numeric(16, { min: 2, max: 56, step: 2 }, BaseGeometry.CustomQualityParamInfo),
 };
 export const DefaultPolymerTubeMeshProps = PD.getDefaultValues(PolymerTubeMeshParams);
-export type PolymerTubeMeshProps = typeof DefaultPolymerTubeMeshProps
+export type PolymerTubeMeshProps = typeof DefaultPolymerTubeMeshProps;
 
 const tmpV1 = Vec3();
 
-function createPolymerTubeMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: PolymerTubeMeshProps, mesh?: Mesh) {
+function createPolymerTubeMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: PolymerTubeMeshProps,
+    mesh?: Mesh,
+) {
     const polymerElementCount = unit.polymerElements.length;
 
     if (!polymerElementCount) return Mesh.createEmpty(mesh);
     const { sizeFactor, detail, linearSegments, radialSegments } = props;
 
-    const vertexCount = linearSegments * radialSegments * polymerElementCount + (radialSegments + 1) * polymerElementCount * 2;
+    const vertexCount = linearSegments * radialSegments * polymerElementCount +
+        (radialSegments + 1) * polymerElementCount * 2;
     const builderState = MeshBuilder.createState(vertexCount, vertexCount / 10, mesh);
 
     const state = createCurveSegmentState(linearSegments);
@@ -90,11 +110,43 @@ function createPolymerTubeMesh(ctx: VisualContext, unit: Unit, structure: Struct
         if (v.initial === true && v.final === true) {
             addSphere(builderState, v.p2, s1 * 2, detail);
         } else if (radialSegments === 2) {
-            addRibbon(builderState, curvePoints, normalVectors, binormalVectors, segmentCount, widthValues, heightValues, 0);
+            addRibbon(
+                builderState,
+                curvePoints,
+                normalVectors,
+                binormalVectors,
+                segmentCount,
+                widthValues,
+                heightValues,
+                0,
+            );
         } else if (radialSegments === 4) {
-            addSheet(builderState, curvePoints, normalVectors, binormalVectors, segmentCount, widthValues, heightValues, 0, startCap, endCap);
+            addSheet(
+                builderState,
+                curvePoints,
+                normalVectors,
+                binormalVectors,
+                segmentCount,
+                widthValues,
+                heightValues,
+                0,
+                startCap,
+                endCap,
+            );
         } else {
-            addTube(builderState, curvePoints, normalVectors, binormalVectors, segmentCount, radialSegments, widthValues, heightValues, startCap, endCap, 'elliptical');
+            addTube(
+                builderState,
+                curvePoints,
+                normalVectors,
+                binormalVectors,
+                segmentCount,
+                radialSegments,
+                widthValues,
+                heightValues,
+                startCap,
+                endCap,
+                'elliptical',
+            );
         }
 
         ++i;
@@ -110,24 +162,27 @@ function createPolymerTubeMesh(ctx: VisualContext, unit: Unit, structure: Struct
 
 export const PolymerTubeParams = {
     ...UnitsMeshParams,
-    ...PolymerTubeMeshParams
+    ...PolymerTubeMeshParams,
 };
-export type PolymerTubeParams = typeof PolymerTubeParams
+export type PolymerTubeParams = typeof PolymerTubeParams;
 
 export function PolymerTubeVisual(materialId: number): UnitsVisual<PolymerTubeParams> {
     return UnitsMeshVisual<PolymerTubeParams>({
         defaultProps: PD.getDefaultValues(PolymerTubeParams),
         createGeometry: createPolymerTubeMesh,
-        createLocationIterator: (structureGroup: StructureGroup) => PolymerLocationIterator.fromGroup(structureGroup, { asSecondary: true }),
+        createLocationIterator: (structureGroup: StructureGroup) =>
+            PolymerLocationIterator.fromGroup(structureGroup, { asSecondary: true }),
         getLoci: getPolymerElementLoci,
         eachLocation: eachPolymerElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<PolymerTubeParams>, currentProps: PD.Values<PolymerTubeParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<PolymerTubeParams>,
+            currentProps: PD.Values<PolymerTubeParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
                 newProps.detail !== currentProps.detail ||
                 newProps.linearSegments !== currentProps.linearSegments ||
-                newProps.radialSegments !== currentProps.radialSegments
-            );
-        }
+                newProps.radialSegments !== currentProps.radialSegments;
+        },
     }, materialId);
 }

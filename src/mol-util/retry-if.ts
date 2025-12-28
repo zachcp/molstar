@@ -5,10 +5,10 @@
  */
 
 export async function retryIf<T>(promiseProvider: () => Promise<T>, params: {
-    retryThenIf?: (result: T) => boolean,
-    retryCatchIf?: (error: any) => boolean,
-    onRetry?: () => void,
-    retryCount: number
+    retryThenIf?: (result: T) => boolean;
+    retryCatchIf?: (error: any) => boolean;
+    onRetry?: () => void;
+    retryCount: number;
 }) {
     let count = 0;
     while (count <= params.retryCount) {

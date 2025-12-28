@@ -6,23 +6,23 @@
 
 import { ValueCell } from '../../mol-util/value-cell.ts';
 import { Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
-import { type TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
+import { createTextureImage, type TextureImage } from '../../mol-gl/renderable/util.ts';
 import { Color } from '../../mol-util/color/index.ts';
 import { createNullTexture, type Texture } from '../../mol-gl/webgl/texture.ts';
 
 export type OverpaintType = 'instance' | 'groupInstance' | 'volumeInstance';
 
 export type OverpaintData = {
-    tOverpaint: ValueCell<TextureImage<Uint8Array>>
-    uOverpaintTexDim: ValueCell<Vec2>
-    dOverpaint: ValueCell<boolean>,
+    tOverpaint: ValueCell<TextureImage<Uint8Array>>;
+    uOverpaintTexDim: ValueCell<Vec2>;
+    dOverpaint: ValueCell<boolean>;
 
-    tOverpaintGrid: ValueCell<Texture>,
-    uOverpaintGridDim: ValueCell<Vec3>,
-    uOverpaintGridTransform: ValueCell<Vec4>,
-    dOverpaintType: ValueCell<string>,
-    uOverpaintStrength: ValueCell<number>,
-}
+    tOverpaintGrid: ValueCell<Texture>;
+    uOverpaintGridDim: ValueCell<Vec3>;
+    uOverpaintGridTransform: ValueCell<Vec4>;
+    dOverpaintType: ValueCell<string>;
+    uOverpaintStrength: ValueCell<number>;
+};
 
 export function applyOverpaintColor(array: Uint8Array, start: number, end: number, color: Color) {
     for (let i = start; i < end; ++i) {
@@ -38,7 +38,12 @@ export function clearOverpaint(array: Uint8Array, start: number, end: number) {
 }
 
 export function createOverpaint(count: number, type: OverpaintType, overpaintData?: OverpaintData): OverpaintData {
-    const overpaint = createTextureImage(Math.max(1, count), 4, Uint8Array, overpaintData && overpaintData.tOverpaint.ref.value.array);
+    const overpaint = createTextureImage(
+        Math.max(1, count),
+        4,
+        Uint8Array,
+        overpaintData && overpaintData.tOverpaint.ref.value.array,
+    );
     if (overpaintData) {
         ValueCell.update(overpaintData.tOverpaint, overpaint);
         ValueCell.update(overpaintData.uOverpaintTexDim, Vec2.create(overpaint.width, overpaint.height));

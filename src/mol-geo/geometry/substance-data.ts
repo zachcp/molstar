@@ -6,23 +6,23 @@
 
 import { ValueCell } from '../../mol-util/value-cell.ts';
 import { Vec2, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
-import { type TextureImage, createTextureImage } from '../../mol-gl/renderable/util.ts';
+import { createTextureImage, type TextureImage } from '../../mol-gl/renderable/util.ts';
 import { createNullTexture, type Texture } from '../../mol-gl/webgl/texture.ts';
 import { Material } from '../../mol-util/material.ts';
 
 export type SubstanceType = 'instance' | 'groupInstance' | 'volumeInstance';
 
 export type SubstanceData = {
-    tSubstance: ValueCell<TextureImage<Uint8Array>>
-    uSubstanceTexDim: ValueCell<Vec2>
-    dSubstance: ValueCell<boolean>,
+    tSubstance: ValueCell<TextureImage<Uint8Array>>;
+    uSubstanceTexDim: ValueCell<Vec2>;
+    dSubstance: ValueCell<boolean>;
 
-    tSubstanceGrid: ValueCell<Texture>,
-    uSubstanceGridDim: ValueCell<Vec3>,
-    uSubstanceGridTransform: ValueCell<Vec4>,
-    dSubstanceType: ValueCell<string>,
-    uSubstanceStrength: ValueCell<number>,
-}
+    tSubstanceGrid: ValueCell<Texture>;
+    uSubstanceGridDim: ValueCell<Vec3>;
+    uSubstanceGridTransform: ValueCell<Vec4>;
+    dSubstanceType: ValueCell<string>;
+    uSubstanceStrength: ValueCell<number>;
+};
 
 export function applySubstanceMaterial(array: Uint8Array, start: number, end: number, material: Material) {
     for (let i = start; i < end; ++i) {
@@ -38,7 +38,12 @@ export function clearSubstance(array: Uint8Array, start: number, end: number) {
 }
 
 export function createSubstance(count: number, type: SubstanceType, substanceData?: SubstanceData): SubstanceData {
-    const substance = createTextureImage(Math.max(1, count), 4, Uint8Array, substanceData && substanceData.tSubstance.ref.value.array);
+    const substance = createTextureImage(
+        Math.max(1, count),
+        4,
+        Uint8Array,
+        substanceData && substanceData.tSubstance.ref.value.array,
+    );
     if (substanceData) {
         ValueCell.update(substanceData.tSubstance, substance);
         ValueCell.update(substanceData.uSubstanceTexDim, Vec2.create(substance.width, substance.height));

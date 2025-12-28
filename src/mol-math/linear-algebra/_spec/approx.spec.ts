@@ -4,7 +4,30 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { fasterPow2, fasterExp, fasterLog, fasterLog10, fasterSin, fasterCos, fastAtan, fastAtan2, fasterTan, fasterTanh, fasterCosh, fasterSinh, fastPow2, fastExp, fastLog, fastLog10, fastSinh, fastCosh, fastTanh, fastSin, fastCos, fastTan } from '../../approx';
+import {
+    fastAtan,
+    fastAtan2,
+    fastCos,
+    fastCosh,
+    fasterCos,
+    fasterCosh,
+    fasterExp,
+    fasterLog,
+    fasterLog10,
+    fasterPow2,
+    fasterSin,
+    fasterSinh,
+    fasterTan,
+    fasterTanh,
+    fastExp,
+    fastLog,
+    fastLog10,
+    fastPow2,
+    fastSin,
+    fastSinh,
+    fastTan,
+    fastTanh,
+} from '../../approx';
 
 describe('approx', () => {
     it('fastPow2', () => {

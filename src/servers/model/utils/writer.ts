@@ -10,18 +10,18 @@ import * as path from 'node:path';
 import { makeDir } from '../../../mol-util/make-dir.ts';
 import { encodeTarHeader, END_OF_TAR } from './tar.ts';
 import * as zlib from 'node:zlib';
-import { Buffer } from "node:buffer";
+import { Buffer } from 'node:buffer';
 
 export interface ResultWriter {
-    beginEntry(name: string, size: number): void,
-    endEntry(): void,
-    writeBinary(data: Uint8Array): boolean,
-    writeString(data: string): boolean,
-    end(): void
+    beginEntry(name: string, size: number): void;
+    endEntry(): void;
+    writeBinary(data: Uint8Array): boolean;
+    writeString(data: string): boolean;
+    end(): void;
 }
 
 export interface WebResutlWriter extends ResultWriter {
-    doError(code?: number, message?: string): void
+    doError(code?: number, message?: string): void;
 }
 
 export class SimpleResponseResultWriter implements WebResutlWriter {
@@ -53,7 +53,7 @@ export class SimpleResponseResultWriter implements WebResutlWriter {
             'Content-Type': this.isBinary ? 'application/octet-stream' : 'text/plain; charset=utf-8',
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Headers': 'X-Requested-With',
-            'Content-Disposition': `${this.isDownload ? 'attachment' : 'inline'}; filename="${this.fn}"`
+            'Content-Disposition': `${this.isDownload ? 'attachment' : 'inline'}; filename="${this.fn}"`,
         });
     }
 
@@ -73,8 +73,12 @@ export class SimpleResponseResultWriter implements WebResutlWriter {
         this.ended = true;
     }
 
-    constructor(private fn: string, private res: express.Response, private isBinary: boolean, private isDownload: boolean) {
-
+    constructor(
+        private fn: string,
+        private res: express.Response,
+        private isBinary: boolean,
+        private isDownload: boolean,
+    ) {
     }
 }
 
@@ -83,7 +87,6 @@ export class TarballResponseResultWriter implements WebResutlWriter {
     private headerWritten = false;
     private stream = zlib.createGzip({ level: 6, memLevel: 9, chunkSize: 16 * 16384 });
     private entrySize = 0;
-
 
     beginEntry(name: string, size: number) {
         this.writeHeader();
@@ -116,7 +119,7 @@ export class TarballResponseResultWriter implements WebResutlWriter {
             'Content-Type': 'application/tar+gzip',
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Headers': 'X-Requested-With',
-            'Content-Disposition': `inline; filename="${this.fn}"`
+            'Content-Disposition': `inline; filename="${this.fn}"`,
         });
     }
 
@@ -185,7 +188,6 @@ export class FileResultWriter implements ResultWriter {
     }
 
     constructor(private fn: string) {
-
     }
 }
 
@@ -236,6 +238,5 @@ export class TarballFileResultWriter implements ResultWriter {
     }
 
     constructor(private fn: string, private gzipLevel: number = 6) {
-
     }
 }

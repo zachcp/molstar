@@ -9,14 +9,26 @@ import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import type { NumberArray } from '../../../mol-util/type-helpers.ts';
 import type { VisualContext } from '../../visual.ts';
-import { Unit, type Structure } from '../../../mol-model/structure.ts';
+import { type Structure, Unit } from '../../../mol-model/structure.ts';
 import type { Theme } from '../../../mol-theme/theme.ts';
 import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
 import { MeshBuilder } from '../../../mol-geo/geometry/mesh/mesh-builder.ts';
 import { Segmentation } from '../../../mol-data/int.ts';
 import { isNucleic } from '../../../mol-model/structure/model/types.ts';
-import { UnitsMeshParams, type UnitsVisual, UnitsMeshVisual } from '../units-visual.ts';
-import { NucleotideLocationIterator, getNucleotideElementLoci, eachNucleotideElement, getNucleotideBaseType, createNucleicIndices, setSugarIndices, hasSugarIndices, setPurinIndices, hasPyrimidineIndices, setPyrimidineIndices, hasPurinIndices } from './util/nucleotide.ts';
+import { UnitsMeshParams, UnitsMeshVisual, type UnitsVisual } from '../units-visual.ts';
+import {
+    createNucleicIndices,
+    eachNucleotideElement,
+    getNucleotideBaseType,
+    getNucleotideElementLoci,
+    hasPurinIndices,
+    hasPyrimidineIndices,
+    hasSugarIndices,
+    NucleotideLocationIterator,
+    setPurinIndices,
+    setPyrimidineIndices,
+    setSugarIndices,
+} from './util/nucleotide.ts';
 import type { VisualUpdateState } from '../../util.ts';
 import { Sphere3D } from '../../../mol-math/geometry.ts';
 
@@ -47,7 +59,7 @@ export const NucleotideAtomicRingFillMeshParams = {
     thicknessFactor: PD.Numeric(1, { min: 0, max: 2, step: 0.01 }),
 };
 export const DefaultNucleotideAtomicRingFillMeshProps = PD.getDefaultValues(NucleotideAtomicRingFillMeshParams);
-export type NucleotideAtomicRingFillProps = typeof DefaultNucleotideAtomicRingFillMeshProps
+export type NucleotideAtomicRingFillProps = typeof DefaultNucleotideAtomicRingFillMeshProps;
 
 const positionsRing5_6 = new Float32Array(2 * 9 * 3);
 const stripIndicesRing5_6 = new Uint32Array([0, 1, 2, 3, 4, 5, 6, 7, 16, 17, 14, 15, 12, 13, 8, 9, 10, 11, 0, 1]);
@@ -73,7 +85,14 @@ function shiftPositions(out: NumberArray, dir: Vec3, ...positions: Vec3[]) {
     }
 }
 
-function createNucleotideAtomicRingFillMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: NucleotideAtomicRingFillProps, mesh?: Mesh) {
+function createNucleotideAtomicRingFillMesh(
+    ctx: VisualContext,
+    unit: Unit,
+    structure: Structure,
+    theme: Theme,
+    props: NucleotideAtomicRingFillProps,
+    mesh?: Mesh,
+) {
     if (!Unit.isAtomic(unit)) return Mesh.createEmpty(mesh);
 
     const nucleotideElementCount = unit.nucleotideElements.length;
@@ -107,11 +126,19 @@ function createNucleotideAtomicRingFillMesh(ctx: VisualContext, unit: Unit, stru
 
                 setSugarIndices(idx, unit, residueIndex);
                 if (hasSugarIndices(idx)) {
-                    c.invariantPosition(idx.C1_1, pC1_1); c.invariantPosition(idx.C2_1, pC2_1); c.invariantPosition(idx.C3_1, pC3_1); c.invariantPosition(idx.C4_1, pC4_1); c.invariantPosition(idx.O4_1, pO4_1);
+                    c.invariantPosition(idx.C1_1, pC1_1);
+                    c.invariantPosition(idx.C2_1, pC2_1);
+                    c.invariantPosition(idx.C3_1, pC3_1);
+                    c.invariantPosition(idx.C4_1, pC4_1);
+                    c.invariantPosition(idx.O4_1, pO4_1);
 
                     // sugar ring
                     Vec3.triangleNormal(normal, pC3_1, pC4_1, pC1_1);
-                    Vec3.scale(mid, Vec3.add(mid, pO4_1, Vec3.add(mid, pC4_1, Vec3.add(mid, pC3_1, Vec3.add(mid, pC1_1, pC2_1)))), 0.2 /* 1 / 5 */);
+                    Vec3.scale(
+                        mid,
+                        Vec3.add(mid, pO4_1, Vec3.add(mid, pC4_1, Vec3.add(mid, pC3_1, Vec3.add(mid, pC1_1, pC2_1)))),
+                        0.2, /* 1 / 5 */
+                    );
 
                     Vec3.scale(shift, normal, thickness);
                     shiftPositions(positionsRing5, shift, mid, pC3_1, pC4_1, pO4_1, pC1_1, pC2_1);
@@ -128,7 +155,14 @@ function createNucleotideAtomicRingFillMesh(ctx: VisualContext, unit: Unit, stru
                     setPurinIndices(idx, unit, residueIndex);
 
                     if (hasPurinIndices(idx)) {
-                        c.invariantPosition(idx.N1, pN1); c.invariantPosition(idx.C2, pC2); c.invariantPosition(idx.N3, pN3); c.invariantPosition(idx.C4, pC4); c.invariantPosition(idx.C5, pC5); c.invariantPosition(idx.C6, pC6); c.invariantPosition(idx.N7, pN7); c.invariantPosition(idx.C8, pC8), c.invariantPosition(idx.N9, pN9);
+                        c.invariantPosition(idx.N1, pN1);
+                        c.invariantPosition(idx.C2, pC2);
+                        c.invariantPosition(idx.N3, pN3);
+                        c.invariantPosition(idx.C4, pC4);
+                        c.invariantPosition(idx.C5, pC5);
+                        c.invariantPosition(idx.C6, pC6);
+                        c.invariantPosition(idx.N7, pN7);
+                        c.invariantPosition(idx.C8, pC8), c.invariantPosition(idx.N9, pN9);
 
                         // base ring
                         Vec3.triangleNormal(normal, pN1, pC4, pC5);
@@ -136,15 +170,30 @@ function createNucleotideAtomicRingFillMesh(ctx: VisualContext, unit: Unit, stru
                         shiftPositions(positionsRing5_6, shift, pN1, pC2, pN3, pC4, pC5, pC6, pN7, pC8, pN9);
 
                         MeshBuilder.addTriangleStrip(builderState, positionsRing5_6, stripIndicesRing5_6);
-                        MeshBuilder.addTriangleFanWithNormal(builderState, positionsRing5_6, fanIndicesTopRing5_6, normal);
+                        MeshBuilder.addTriangleFanWithNormal(
+                            builderState,
+                            positionsRing5_6,
+                            fanIndicesTopRing5_6,
+                            normal,
+                        );
                         Vec3.negate(normal, normal);
-                        MeshBuilder.addTriangleFanWithNormal(builderState, positionsRing5_6, fanIndicesBottomRing5_6, normal);
+                        MeshBuilder.addTriangleFanWithNormal(
+                            builderState,
+                            positionsRing5_6,
+                            fanIndicesBottomRing5_6,
+                            normal,
+                        );
                     }
                 } else if (isPyrimidine) {
                     setPyrimidineIndices(idx, unit, residueIndex);
 
                     if (hasPyrimidineIndices(idx)) {
-                        c.invariantPosition(idx.N1, pN1); c.invariantPosition(idx.C2, pC2); c.invariantPosition(idx.N3, pN3); c.invariantPosition(idx.C4, pC4); c.invariantPosition(idx.C5, pC5); c.invariantPosition(idx.C6, pC6);
+                        c.invariantPosition(idx.N1, pN1);
+                        c.invariantPosition(idx.C2, pC2);
+                        c.invariantPosition(idx.N3, pN3);
+                        c.invariantPosition(idx.C4, pC4);
+                        c.invariantPosition(idx.C5, pC5);
+                        c.invariantPosition(idx.C6, pC6);
 
                         // base ring
                         Vec3.triangleNormal(normal, pN1, pC4, pC5);
@@ -154,7 +203,12 @@ function createNucleotideAtomicRingFillMesh(ctx: VisualContext, unit: Unit, stru
                         MeshBuilder.addTriangleStrip(builderState, positionsRing6, stripIndicesRing6);
                         MeshBuilder.addTriangleFanWithNormal(builderState, positionsRing6, fanIndicesTopRing6, normal);
                         Vec3.negate(normal, normal);
-                        MeshBuilder.addTriangleFanWithNormal(builderState, positionsRing6, fanIndicesBottomRing6, normal);
+                        MeshBuilder.addTriangleFanWithNormal(
+                            builderState,
+                            positionsRing6,
+                            fanIndicesBottomRing6,
+                            normal,
+                        );
                     }
                 }
 
@@ -173,9 +227,9 @@ function createNucleotideAtomicRingFillMesh(ctx: VisualContext, unit: Unit, stru
 
 export const NucleotideAtomicRingFillParams = {
     ...UnitsMeshParams,
-    ...NucleotideAtomicRingFillMeshParams
+    ...NucleotideAtomicRingFillMeshParams,
 };
-export type NucleotideAtomicRingFillParams = typeof NucleotideAtomicRingFillParams
+export type NucleotideAtomicRingFillParams = typeof NucleotideAtomicRingFillParams;
 
 export function NucleotideAtomicRingFillVisual(materialId: number): UnitsVisual<NucleotideAtomicRingFillParams> {
     return UnitsMeshVisual<NucleotideAtomicRingFillParams>({
@@ -184,11 +238,13 @@ export function NucleotideAtomicRingFillVisual(materialId: number): UnitsVisual<
         createLocationIterator: NucleotideLocationIterator.fromGroup,
         getLoci: getNucleotideElementLoci,
         eachLocation: eachNucleotideElement,
-        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<NucleotideAtomicRingFillParams>, currentProps: PD.Values<NucleotideAtomicRingFillParams>) => {
-            state.createGeometry = (
-                newProps.sizeFactor !== currentProps.sizeFactor ||
-                newProps.thicknessFactor !== currentProps.thicknessFactor
-            );
-        }
+        setUpdateState: (
+            state: VisualUpdateState,
+            newProps: PD.Values<NucleotideAtomicRingFillParams>,
+            currentProps: PD.Values<NucleotideAtomicRingFillParams>,
+        ) => {
+            state.createGeometry = newProps.sizeFactor !== currentProps.sizeFactor ||
+                newProps.thicknessFactor !== currentProps.thicknessFactor;
+        },
     }, materialId);
 }
