@@ -30,23 +30,25 @@ import { Mat4 } from '../../mol-math/linear-algebra.ts';
 import { Interval } from '../../mol-data/int/interval.ts';
 import { OrderedSet } from '../../mol-data/int/ordered-set.ts';
 
-export const VolumeDotParams = {
+const _VolumeDotParams = {
     isoValue: Volume.IsoValueParam,
     perturbPositions: PD.Boolean(false)
 };
-export type VolumeDotParams = typeof VolumeDotParams
+export type VolumeDotParams = typeof _VolumeDotParams
+export const VolumeDotParams: VolumeDotParams = _VolumeDotParams;
 export type VolumeDotProps = PD.Values<VolumeDotParams>
 
 //
 
-export const VolumeSphereParams = {
+const _VolumeSphereParams = {
     ...Spheres.Params,
     ...Mesh.Params,
     ...VolumeDotParams,
     tryUseImpostor: PD.Boolean(true),
     detail: PD.Numeric(0, { min: 0, max: 3, step: 1 }, BaseGeometry.CustomQualityParamInfo),
 };
-export type VolumeSphereParams = typeof VolumeSphereParams
+export type VolumeSphereParams = typeof _VolumeSphereParams
+export const VolumeSphereParams: VolumeSphereParams = _VolumeSphereParams;
 export type VolumeSphereProps = PD.Values<VolumeSphereParams>
 
 export function VolumeSphereVisual(materialId: number, volume: Volume, key: number, props: PD.Values<VolumeSphereParams>, webgl?: WebGLContext) {
@@ -212,11 +214,12 @@ export function createVolumeSphereMesh(ctx: VisualContext, volume: Volume, key: 
 
 //
 
-export const VolumePointParams = {
+const _VolumePointParams = {
     ...Points.Params,
     ...VolumeDotParams,
 };
-export type VolumePointParams = typeof VolumePointParams
+export type VolumePointParams = typeof _VolumePointParams
+export const VolumePointParams: VolumePointParams = _VolumePointParams;
 export type VolumePointProps = PD.Values<VolumePointParams>
 
 export function VolumePointVisual(materialId: number): VolumeVisual<VolumePointParams> {
@@ -314,13 +317,14 @@ const DotVisuals = {
     'point': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, VolumePointParams>) => VolumeRepresentation('Dot point', ctx, getParams, VolumePointVisual, getLoci),
 };
 
-export const DotParams = {
+const _DotParams = {
     ...VolumeSphereParams,
     ...VolumePointParams,
     visuals: PD.MultiSelect(['sphere'], PD.objectToOptions(DotVisuals)),
     bumpFrequency: PD.Numeric(1, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
 };
-export type DotParams = typeof DotParams
+export type DotParams = typeof _DotParams
+export const DotParams: DotParams = _DotParams;
 export function getDotParams(ctx: ThemeRegistryContext, volume: Volume) {
     const p = PD.clone(DotParams);
     p.isoValue = Volume.createIsoValueParam(Volume.IsoValue.relative(2), volume.grid.stats);

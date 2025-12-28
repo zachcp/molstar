@@ -13,7 +13,7 @@ import { PluginStateObject as SO } from '../../../mol-plugin-state/objects.ts';
 import { lociLabel } from '../../../mol-theme/label.ts';
 import { PluginBehavior } from '../behavior.ts';
 import { StateTreeSpine } from '../../../mol-state/tree/spine.ts';
-import { StateSelection } from '../../../mol-state/index.ts';
+import { StateSelection, StateTransformer } from '../../../mol-state/index.ts';
 import { ButtonsType, ModifiersKeys } from '../../../mol-util/input/input-observer.ts';
 import { Binding } from '../../../mol-util/binding.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
@@ -30,7 +30,10 @@ const Trigger = Binding.Trigger;
 
 //
 
-const DefaultHighlightLociBindings = {
+const DefaultHighlightLociBindings: {
+    hoverHighlightOnly: Binding;
+    hoverHighlightOnlyExtend: Binding;
+} = {
     hoverHighlightOnly: Binding(
         [Trigger(B.Flag.None)],
         'Highlight',
@@ -42,7 +45,12 @@ const DefaultHighlightLociBindings = {
         'From selected to hovered element along polymer using ${triggers}',
     ),
 };
-const HighlightLociParams = {
+const HighlightLociParams: {
+    bindings: PD.Value<typeof DefaultHighlightLociBindings>;
+    ignore: PD.Value<Loci['kind'][]>;
+    preferAtoms: PD.BooleanParam;
+    mark: PD.BooleanParam;
+} = {
     bindings: PD.Value(DefaultHighlightLociBindings, { isHidden: true }),
     ignore: PD.Value<Loci['kind'][]>([], { isHidden: true }),
     preferAtoms: PD.Boolean(false, {
@@ -52,7 +60,7 @@ const HighlightLociParams = {
 };
 type HighlightLociProps = PD.Values<typeof HighlightLociParams>;
 
-export const HighlightLoci = PluginBehavior.create({
+export const HighlightLoci: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, HighlightLociProps> = PluginBehavior.create({
     name: 'representation-highlight-loci',
     category: 'interaction',
     ctor: class extends PluginBehavior.Handler<HighlightLociProps> {
@@ -139,7 +147,14 @@ export const HighlightLoci = PluginBehavior.create({
 
 //
 
-export const DefaultSelectLociBindings = {
+export const DefaultSelectLociBindings: {
+    clickSelect: Binding;
+    clickSelectOnly: Binding;
+    clickToggle: Binding;
+    clickToggleExtend: Binding;
+    clickDeselect: Binding;
+    clickDeselectAllOnEmpty: Binding;
+} = {
     clickSelect: Binding.Empty,
     clickSelectOnly: Binding.Empty,
     clickToggle: Binding(
@@ -159,7 +174,12 @@ export const DefaultSelectLociBindings = {
         'Click on nothing using ${triggers}',
     ),
 };
-const SelectLociParams = {
+const SelectLociParams: {
+    bindings: PD.Value<typeof DefaultSelectLociBindings>;
+    ignore: PD.Value<Loci['kind'][]>;
+    preferAtoms: PD.BooleanParam;
+    mark: PD.BooleanParam;
+} = {
     bindings: PD.Value(DefaultSelectLociBindings, { isHidden: true }),
     ignore: PD.Value<Loci['kind'][]>([], { isHidden: true }),
     preferAtoms: PD.Boolean(false, {
@@ -169,7 +189,7 @@ const SelectLociParams = {
 };
 type SelectLociProps = PD.Values<typeof SelectLociParams>;
 
-export const SelectLoci = PluginBehavior.create({
+export const SelectLoci: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, SelectLociProps> = PluginBehavior.create({
     name: 'representation-select-loci',
     category: 'interaction',
     ctor: class extends PluginBehavior.Handler<SelectLociProps> {
@@ -336,7 +356,7 @@ export const SelectLoci = PluginBehavior.create({
 
 //
 
-export const DefaultLociLabelProvider = PluginBehavior.create({
+export const DefaultLociLabelProvider: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, {}> = PluginBehavior.create({
     name: 'default-loci-label-provider',
     category: 'interaction',
     ctor: class implements PluginBehavior<undefined> {
@@ -379,7 +399,14 @@ export const DefaultLociLabelProvider = PluginBehavior.create({
 
 //
 
-export const DefaultFocusLociBindings = {
+export const DefaultFocusLociBindings: {
+    clickFocus: Binding;
+    clickFocusAdd: Binding;
+    clickFocusExtend: Binding;
+    clickFocusSelectMode: Binding;
+    clickFocusAddSelectMode: Binding;
+    clickFocusExtendSelectMode: Binding;
+} = {
     clickFocus: Binding(
         [Trigger(B.Flag.Primary, M.create()), Trigger(B.Flag.Trigger)],
         'Representation Focus',
@@ -420,12 +447,14 @@ export const DefaultFocusLociBindings = {
         'Click on element using ${triggers}',
     ),
 };
-const FocusLociParams = {
+const FocusLociParams: {
+    bindings: PD.Value<typeof DefaultFocusLociBindings>;
+} = {
     bindings: PD.Value(DefaultFocusLociBindings, { isHidden: true }),
 };
 type FocusLociProps = PD.Values<typeof FocusLociParams>;
 
-export const FocusLoci = PluginBehavior.create<FocusLociProps>({
+export const FocusLoci: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, FocusLociProps> = PluginBehavior.create<FocusLociProps>({
     name: 'representation-focus-loci',
     category: 'interaction',
     ctor: class extends PluginBehavior.Handler<FocusLociProps> {

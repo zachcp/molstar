@@ -30,19 +30,21 @@ import { ValueCell } from '../../mol-util/value-cell.ts';
 import { Interval } from '../../mol-data/int/interval.ts';
 import { OrderedSet } from '../../mol-data/int/ordered-set.ts';
 
-export const VolumeIsosurfaceParams = {
+const _VolumeIsosurfaceParams = {
     isoValue: Volume.IsoValueParam,
     wrap: PD.Select('auto', PD.arrayToOptions(['off', 'on', 'auto'] as const)),
 };
-export type VolumeIsosurfaceParams = typeof VolumeIsosurfaceParams
+export type VolumeIsosurfaceParams = typeof _VolumeIsosurfaceParams
+export const VolumeIsosurfaceParams: VolumeIsosurfaceParams = _VolumeIsosurfaceParams;
 export type VolumeIsosurfaceProps = PD.Values<VolumeIsosurfaceParams>
 
-export const VolumeIsosurfaceTextureParams = {
+const _VolumeIsosurfaceTextureParams = {
     ...VolumeIsosurfaceParams,
     tryUseGpu: PD.Boolean(true),
     gpuDataType: PD.Select('byte', PD.arrayToOptions(['byte', 'float', 'halfFloat'] as const), { hideIf: p => !p.tryUseGpu }),
 };
-export type VolumeIsosurfaceTextureParams = typeof VolumeIsosurfaceTextureParams
+export type VolumeIsosurfaceTextureParams = typeof _VolumeIsosurfaceTextureParams
+export const VolumeIsosurfaceTextureParams: VolumeIsosurfaceTextureParams = _VolumeIsosurfaceTextureParams;
 export type VolumeIsosurfaceTextureProps = PD.Values<VolumeIsosurfaceTextureParams>
 
 function gpuSupport(webgl: WebGLContext) {
@@ -134,14 +136,15 @@ export async function createVolumeIsosurfaceMesh(ctx: VisualContext, volume: Vol
     return surface;
 }
 
-export const IsosurfaceMeshParams = {
+const _IsosurfaceMeshParams = {
     ...Mesh.Params,
     ...TextureMesh.Params,
     ...VolumeIsosurfaceParams,
     ...VolumeIsosurfaceTextureParams,
     quality: { ...Mesh.Params.quality, isEssential: false },
 };
-export type IsosurfaceMeshParams = typeof IsosurfaceMeshParams
+export type IsosurfaceMeshParams = typeof _IsosurfaceMeshParams
+export const IsosurfaceMeshParams: IsosurfaceMeshParams = _IsosurfaceMeshParams;
 
 export function IsosurfaceMeshVisual(materialId: number): VolumeVisual<IsosurfaceMeshParams> {
     return VolumeVisual<Mesh, IsosurfaceMeshParams>({
@@ -310,13 +313,14 @@ export async function createVolumeIsosurfaceWireframe(ctx: VisualContext, volume
     return wireframe;
 }
 
-export const IsosurfaceWireframeParams = {
+const _IsosurfaceWireframeParams = {
     ...Lines.Params,
     ...VolumeIsosurfaceParams,
     quality: { ...Lines.Params.quality, isEssential: false },
     sizeFactor: PD.Numeric(3, { min: 0, max: 10, step: 0.1 }),
 };
-export type IsosurfaceWireframeParams = typeof IsosurfaceWireframeParams
+export type IsosurfaceWireframeParams = typeof _IsosurfaceWireframeParams
+export const IsosurfaceWireframeParams: IsosurfaceWireframeParams = _IsosurfaceWireframeParams;
 
 export function IsosurfaceWireframeVisual(materialId: number): VolumeVisual<IsosurfaceWireframeParams> {
     return VolumeVisual<Lines, IsosurfaceWireframeParams>({
@@ -342,13 +346,14 @@ const IsosurfaceVisuals = {
     'wireframe': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, IsosurfaceWireframeParams>) => VolumeRepresentation('Isosurface wireframe', ctx, getParams, IsosurfaceWireframeVisual, getLoci),
 };
 
-export const IsosurfaceParams = {
+const _IsosurfaceParams = {
     ...IsosurfaceMeshParams,
     ...IsosurfaceWireframeParams,
     visuals: PD.MultiSelect(['solid'], PD.objectToOptions(IsosurfaceVisuals)),
     bumpFrequency: PD.Numeric(1, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
 };
-export type IsosurfaceParams = typeof IsosurfaceParams
+export type IsosurfaceParams = typeof _IsosurfaceParams
+export const IsosurfaceParams: IsosurfaceParams = _IsosurfaceParams;
 export function getIsosurfaceParams(ctx: ThemeRegistryContext, volume: Volume) {
     const p = PD.clone(IsosurfaceParams);
     p.isoValue = Volume.createIsoValueParam(Volume.IsoValue.relative(2), volume.grid.stats);

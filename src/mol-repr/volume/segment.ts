@@ -29,7 +29,7 @@ import { SortedArray } from '../../mol-data/int/sorted-array.ts';
 import { Interval } from '../../mol-data/int/interval.ts';
 import { OrderedSet } from '../../mol-data/int/ordered-set.ts';
 
-export const VolumeSegmentParams = {
+const _VolumeSegmentParams = {
     segments: PD.Converted(
         (v: number[]) => v.map(x => `${x}`),
         (v: string[]) => v.map(x => parseInt(x)),
@@ -38,7 +38,8 @@ export const VolumeSegmentParams = {
         })
     )
 };
-export type VolumeSegmentParams = typeof VolumeSegmentParams
+export type VolumeSegmentParams = typeof _VolumeSegmentParams
+export const VolumeSegmentParams: VolumeSegmentParams = _VolumeSegmentParams;
 export type VolumeSegmentProps = PD.Values<VolumeSegmentParams>
 
 function gpuSupport(webgl: WebGLContext) {
@@ -179,14 +180,15 @@ export async function createVolumeSegmentMesh(ctx: VisualContext, volume: Volume
     return surface;
 }
 
-export const SegmentMeshParams = {
+const _SegmentMeshParams = {
     ...Mesh.Params,
     ...TextureMesh.Params,
     ...VolumeSegmentParams,
     quality: { ...Mesh.Params.quality, isEssential: false },
     tryUseGpu: PD.Boolean(true),
 };
-export type SegmentMeshParams = typeof SegmentMeshParams
+export type SegmentMeshParams = typeof _SegmentMeshParams
+export const SegmentMeshParams: SegmentMeshParams = _SegmentMeshParams;
 
 export function SegmentMeshVisual(materialId: number): VolumeVisual<SegmentMeshParams> {
     return VolumeVisual<Mesh, SegmentMeshParams>({
@@ -312,12 +314,13 @@ const SegmentVisuals = {
     'segment': (ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, SegmentMeshParams>) => VolumeRepresentation('Segment mesh', ctx, getParams, SegmentVisual, getLoci, getSegments),
 };
 
-export const SegmentParams = {
+const _SegmentParams = {
     ...SegmentMeshParams,
     visuals: PD.MultiSelect(['segment'], PD.objectToOptions(SegmentVisuals)),
     bumpFrequency: PD.Numeric(1, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
 };
-export type SegmentParams = typeof SegmentParams
+export type SegmentParams = typeof _SegmentParams
+export const SegmentParams: SegmentParams = _SegmentParams;
 export function getSegmentParams(ctx: ThemeRegistryContext, volume: Volume) {
     const p = PD.clone(SegmentParams);
 

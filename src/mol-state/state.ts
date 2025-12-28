@@ -55,16 +55,16 @@ class State {
         isUpdating: this.ev.behavior<boolean>(false),
     };
 
-    readonly actions = new StateActionManager();
+    readonly actions: StateActionManager = new StateActionManager();
 
     readonly runTask: <T>(task: Task<T>) => Promise<T>;
 
     get tree(): StateTree { return this._tree; }
-    get transforms() { return (this._tree as StateTree).transforms; }
-    get current() { return this.behaviors.currentObject.value.ref; }
-    get root() { return this.cells.get((this._tree as StateTree).root.ref)!; }
+    get transforms(): StateTree['transforms'] { return (this._tree as StateTree).transforms; }
+    get current(): StateTransform.Ref { return this.behaviors.currentObject.value.ref; }
+    get root(): StateObjectCell { return this.cells.get((this._tree as StateTree).root.ref)!; }
 
-    build() { return new StateBuilder.Root(this.tree, this); }
+    build(): StateBuilder.Root { return new StateBuilder.Root(this.tree, this); }
 
     readonly cells: State.Cells = new Map();
     private spine = new StateTreeSpine.Impl(this.cells);
@@ -109,17 +109,17 @@ class State {
         this.events.historyUpdated.next({ state: this });
     }
 
-    get latestUndoLabel() {
+    get latestUndoLabel(): string | undefined {
         return this.history.length > 0 ? this.history[0][1] : void 0;
     }
 
-    get canUndo() {
+    get canUndo(): boolean {
         return this.history.length > 0;
     }
 
     private undoingHistory = false;
 
-    undo() {
+    undo(): Task<void> {
         return Task.create('Undo', async ctx => {
             const e = this.history.shift();
             if (!e) return;
@@ -137,7 +137,7 @@ class State {
         return { tree: StateTree.toJSON(this._tree) };
     }
 
-    setSnapshot(snapshot: State.Snapshot) {
+    setSnapshot(snapshot: State.Snapshot): Task<void> {
         const tree = StateTree.fromJSON(snapshot.tree);
         return this.updateTree(tree);
     }
@@ -168,7 +168,7 @@ class State {
      * @example state.query(StateSelection.Generators.byRef('test').ancestorOfType(type))
      * @example state.query('test')
      */
-    select<C extends StateObjectCell>(selector: StateSelection.Selector<C>) {
+    select<C extends StateObjectCell>(selector: StateSelection.Selector<C>): C[] {
         return StateSelection.select(selector, this);
     }
 
@@ -176,7 +176,7 @@ class State {
      * Select Cells by building a query generated on the fly.
      * @example state.select(q => q.byRef('test').subtree())
      */
-    selectQ<C extends StateObjectCell>(selector: (q: typeof StateSelection.Generators) => StateSelection.Selector<C>) {
+    selectQ<C extends StateObjectCell>(selector: (q: typeof StateSelection.Generators) => StateSelection.Selector<C>): C[] {
         if (typeof selector === 'string') return StateSelection.select(selector, this);
         return StateSelection.select(selector(StateSelection.Generators), this);
     }
@@ -199,7 +199,7 @@ class State {
     private inTransactionError = false;
 
     /** Apply series of updates to the state. If any of them fail, revert to the original state. */
-    transaction(edits: (ctx: RuntimeContext) => Promise<void> | void, options?: { canUndo?: string | boolean, rethrowErrors?: boolean }) {
+    transaction(edits: (ctx: RuntimeContext) => Promise<void> | void, options?: { canUndo?: string | boolean, rethrowErrors?: boolean }): Task<void> {
         return Task.create('State Transaction', async ctx => {
             const isNested = this.inTransaction;
 
@@ -254,7 +254,7 @@ class State {
      * Determines whether the state is currently "inside" updateTree function.
      * This is different from "isUpdating" which wraps entire transactions.
      */
-    get inUpdate() { return this._inUpdate; }
+    get inUpdate(): boolean { return this._inUpdate; }
 
     /**
      * Queues up a reconciliation of the existing state tree.
@@ -411,7 +411,7 @@ namespace State {
         historyCapacity?: number
     }
 
-    export function create(rootObject: StateObject, params: Params) {
+    export function create(rootObject: StateObject, params: Params): State {
         return new State(rootObject, params);
     }
 
@@ -426,7 +426,7 @@ namespace State {
     }
 
     export namespace ObjectEvent {
-        export function isCell(e: ObjectEvent, cell?: StateObjectCell) {
+        export function isCell(e: ObjectEvent, cell?: StateObjectCell): boolean {
             return !!cell && e.ref === cell.transform.ref && e.state === cell.parent;
         }
     }

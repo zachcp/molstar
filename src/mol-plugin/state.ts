@@ -7,7 +7,9 @@
  */
 
 import { produce } from '../mol-util/produce.ts';
-import { merge } from 'rxjs';
+import { merge, type Observable, type BehaviorSubject } from 'rxjs';
+import type { StateObjectCell } from '../mol-state/object.ts';
+import type { StateObject } from '../mol-state/object.ts';
 import type { Camera } from '../mol-canvas3d/camera.ts';
 import { Canvas3DContext, Canvas3DParams, type Canvas3DProps } from '../mol-canvas3d/canvas3d.ts';
 import type { Vec3 } from '../mol-math/linear-algebra.ts';
@@ -39,7 +41,7 @@ class PluginState extends PluginComponent {
     readonly data!: State;
     readonly behaviors!: State;
 
-    readonly events = {
+    readonly events: PluginState.Events = {
         cell: {
             stateUpdated: merge(
                 this.data.events.cell.stateUpdated,
@@ -68,13 +70,13 @@ class PluginState extends PluginComponent {
                 this.behaviors.events.object.updated,
             ),
         },
-    } as const;
+    };
 
-    readonly snapshotParams = this.ev.behavior<PluginState.SnapshotParams>(
+    readonly snapshotParams: BehaviorSubject<PluginState.SnapshotParams> = this.ev.behavior<PluginState.SnapshotParams>(
         PluginState.DefaultSnapshotParams,
     );
 
-    setSnapshotParams = (params?: PluginState.SnapshotParams) => {
+    setSnapshotParams = (params?: PluginState.SnapshotParams): void => {
         this.snapshotParams.next({
             ...PluginState.DefaultSnapshotParams,
             ...params,
@@ -266,7 +268,7 @@ class PluginState extends PluginComponent {
         params: (
             old: StateTransformer.Params<T>,
         ) => void | StateTransformer.Params<T>,
-    ) {
+    ): Promise<void> {
         const tree: StateBuilder.Root = this.behaviors.build();
         if (!this.behaviors.tree.transforms.has(behavior.id)) {
             const defaultParams = behavior.createDefaultParams(
@@ -315,47 +317,72 @@ class PluginState extends PluginComponent {
     }
 }
 
+const _SnapshotParams = {
+    durationInMs: PD.Numeric(
+        1500,
+        { min: 100, max: 15000, step: 100 },
+        { label: 'Duration in ms' },
+    ),
+    data: PD.Boolean(true),
+    behavior: PD.Boolean(false),
+    structureSelection: PD.Boolean(false),
+    componentManager: PD.Boolean(true),
+    animation: PD.Boolean(true),
+    startAnimation: PD.Boolean(false),
+    canvas3d: PD.Boolean(true),
+    canvas3dContext: PD.Boolean(true),
+    interactivity: PD.Boolean(true),
+    camera: PD.Boolean(true),
+    cameraTransition: PD.MappedStatic(
+        'animate',
+        {
+            animate: PD.Group({
+                durationInMs: PD.Numeric(
+                    250,
+                    { min: 100, max: 5000, step: 500 },
+                    { label: 'Duration in ms' },
+                ),
+            }),
+            instant: PD.Group({}),
+        },
+        {
+            options: [
+                ['animate', 'Animate'],
+                ['instant', 'Instant'],
+            ],
+        },
+    ),
+    image: PD.Boolean(false),
+};
+type _SnapshotParams = typeof _SnapshotParams;
+const _DefaultSnapshotParams: PD.Values<_SnapshotParams> = PD.getDefaultValues(_SnapshotParams);
+
 namespace PluginState {
     export type CameraTransitionStyle = 'instant' | 'animate';
-    export const SnapshotParams = {
-        durationInMs: PD.Numeric(
-            1500,
-            { min: 100, max: 15000, step: 100 },
-            { label: 'Duration in ms' },
-        ),
-        data: PD.Boolean(true),
-        behavior: PD.Boolean(false),
-        structureSelection: PD.Boolean(false),
-        componentManager: PD.Boolean(true),
-        animation: PD.Boolean(true),
-        startAnimation: PD.Boolean(false),
-        canvas3d: PD.Boolean(true),
-        canvas3dContext: PD.Boolean(true),
-        interactivity: PD.Boolean(true),
-        camera: PD.Boolean(true),
-        cameraTransition: PD.MappedStatic(
-            'animate',
-            {
-                animate: PD.Group({
-                    durationInMs: PD.Numeric(
-                        250,
-                        { min: 100, max: 5000, step: 500 },
-                        { label: 'Duration in ms' },
-                    ),
-                }),
-                instant: PD.Group({}),
-            },
-            {
-                options: [
-                    ['animate', 'Animate'],
-                    ['instant', 'Instant'],
-                ],
-            },
-        ),
-        image: PD.Boolean(false),
-    };
+
+    export type ObjectEvent = { state: State; ref: StateTransform.Ref };
+    export type CellEvent = ObjectEvent & { cell: StateObjectCell };
+    export type CellRemovedEvent = ObjectEvent & { parent: StateTransform.Ref };
+    export type ObjCreatedEvent = ObjectEvent & { obj: StateObject };
+    export type ObjRemovedEvent = ObjectEvent & { obj?: StateObject };
+    export type ObjUpdatedEvent = ObjectEvent & { action: 'in-place' | 'recreate'; obj: StateObject; oldObj?: StateObject; oldData?: unknown };
+
+    export interface Events {
+        readonly cell: {
+            readonly stateUpdated: Observable<CellEvent>;
+            readonly created: Observable<CellEvent>;
+            readonly removed: Observable<CellRemovedEvent>;
+        };
+        readonly object: {
+            readonly created: Observable<ObjCreatedEvent>;
+            readonly removed: Observable<ObjRemovedEvent>;
+            readonly updated: Observable<ObjUpdatedEvent>;
+        };
+    }
+
+    export const SnapshotParams: _SnapshotParams = _SnapshotParams;
     export type SnapshotParams = Partial<PD.Values<typeof SnapshotParams>>;
-    export const DefaultSnapshotParams = PD.getDefaultValues(SnapshotParams);
+    export const DefaultSnapshotParams: PD.Values<_SnapshotParams> = _DefaultSnapshotParams;
 
     export interface Snapshot {
         id: UUID;
@@ -399,7 +426,7 @@ namespace PluginState {
         }[];
     }
 
-    export const getMinFrameDuration = memoizeLatest(
+    export const getMinFrameDuration: (snapshot: Snapshot | undefined) => number = memoizeLatest(
         (snapshot: Snapshot | undefined): number => {
             if (!snapshot) return 1000 / 60;
             const { transition } = snapshot;
@@ -416,7 +443,7 @@ namespace PluginState {
         },
     );
 
-    export const getStateTransitionDuration = memoizeLatest(
+    export const getStateTransitionDuration: (snapshot: Snapshot | undefined) => number | undefined = memoizeLatest(
         (snapshot: Snapshot | undefined): number | undefined => {
             if (!snapshot) return undefined;
             const { transition } = snapshot;
@@ -430,7 +457,7 @@ namespace PluginState {
         },
     );
 
-    export const getStateTransitionFrameTime = memoizeLatest(
+    export const getStateTransitionFrameTime: (snapshot: Snapshot | undefined, frameIndex: number | undefined) => number = memoizeLatest(
         (
             snapshot: Snapshot | undefined,
             frameIndex: number | undefined,

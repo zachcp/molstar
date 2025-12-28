@@ -105,11 +105,27 @@ export namespace StructureRepresentationPresetProvider {
         );
     }
 
+    export interface ReprBuilderResult {
+        update: StateBuilder.Root;
+        builder: PluginContext['builders']['structure']['representation'];
+        color: ColorTheme.BuiltIn | undefined;
+        symmetryColor: ColorTheme.BuiltIn | undefined;
+        symmetryColorParams: Record<string, unknown>;
+        globalColorParams: Record<string, unknown> | undefined;
+        typeParams: {
+            quality: VisualQuality;
+            ignoreHydrogens: boolean;
+            ignoreHydrogensVariant: 'all' | 'non-polar';
+            ignoreLight: boolean;
+        };
+        ballAndStickColor: ColorTheme.BuiltInParams<'element-symbol'>;
+    }
+
     export function reprBuilder(
         plugin: PluginContext,
         params: CommonParams,
         structure?: Structure,
-    ) {
+    ): ReprBuilderResult {
         const update: StateBuilder.Root = plugin.state.data.build();
         const builder = plugin.builders.structure.representation;
         const h: 'all' | 'hide-all' | 'only-polar' = plugin.managers.structure.component.state.options.hydrogens;
@@ -168,7 +184,7 @@ export namespace StructureRepresentationPresetProvider {
         structure: Structure,
         themeName: T | undefined,
         themeParams: ColorTheme.BuiltInParams<T> | undefined,
-    ) {
+    ): Promise<void> | void {
         if (!plugin.state.hasBehavior(StructureFocusRepresentation)) return;
 
         return plugin.state.updateBehavior(StructureFocusRepresentation, (p) => {

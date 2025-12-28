@@ -83,9 +83,9 @@ export type PluginInitializedState =
   | { kind: "error"; error: any };
 
 export class PluginContext {
-  runTask = <T>(task: Task<T>, params?: { useOverlay?: boolean }) =>
+  runTask = <T>(task: Task<T>, params?: { useOverlay?: boolean }): Promise<T> =>
     this.managers.task.run(task, params);
-  resolveTask = <T>(object: Task<T> | T | undefined) => {
+  resolveTask = <T>(object: Task<T> | T | undefined): Promise<T> | T | undefined => {
     if (!object) return void 0;
     if (Task.is(object)) return this.runTask(object);
     return object;
@@ -107,8 +107,8 @@ export class PluginContext {
   private ev = RxEventHelper.create();
 
   readonly config!: PluginConfigManager; // initialized via constructor parameter
-  readonly state = new PluginState(this);
-  readonly commands = new PluginCommandManager();
+  readonly state: PluginState = new PluginState(this);
+  readonly commands: PluginCommandManager = new PluginCommandManager();
 
   private canvas3dInit = this.ev.behavior<boolean>(false);
   readonly behaviors = {
@@ -162,22 +162,22 @@ export class PluginContext {
     },
   } as const;
 
-  readonly canvas3dInitialized = new Promise<void>((res, rej) => {
+  readonly canvas3dInitialized: Promise<void> = new Promise<void>((res, rej) => {
     this.initCanvas3dPromiseCallbacks = [res, rej];
   });
 
-  readonly initialized = new Promise<void>((res, rej) => {
+  readonly initialized: Promise<void> = new Promise<void>((res, rej) => {
     this.initializedPromiseCallbacks = [res, rej];
   });
 
-  get isInitialized() {
+  get isInitialized(): boolean {
     return this._isInitialized;
   }
 
   readonly canvas3dContext: Canvas3DContext | undefined;
   readonly canvas3d: Canvas3D | undefined;
-  readonly layout = new PluginLayout(this);
-  readonly animationLoop = new PluginAnimationLoop(this);
+  readonly layout: PluginLayout = new PluginLayout(this);
+  readonly animationLoop: PluginAnimationLoop = new PluginAnimationLoop(this);
 
   readonly representation = {
     structure: {
@@ -202,14 +202,14 @@ export class PluginContext {
     },
   } as const;
 
-  readonly dataFormats = new DataFormatRegistry();
+  readonly dataFormats: DataFormatRegistry = new DataFormatRegistry();
 
   readonly builders = {
     data: new DataBuilder(this),
     structure: void 0 as any as StructureBuilder,
   };
 
-  build() {
+  build(): ReturnType<PluginState['data']['build']> {
     return this.state.data.build();
   }
 
@@ -249,27 +249,27 @@ export class PluginContext {
     },
   } as const;
 
-  readonly customModelProperties = new CustomProperty.Registry<Model>();
-  readonly customStructureProperties = new CustomProperty.Registry<Structure>();
+  readonly customModelProperties: CustomProperty.Registry<Model> = new CustomProperty.Registry<Model>();
+  readonly customStructureProperties: CustomProperty.Registry<Structure> = new CustomProperty.Registry<Structure>();
 
-  readonly customStructureControls = new Map<
+  readonly customStructureControls: Map<
     string,
     {
       new (): any /* constructible react components with <action.customControl /> */;
     }
-  >();
-  readonly customImportControls = new Map<
+  > = new Map();
+  readonly customImportControls: Map<
     string,
     {
       new (): any /* constructible react components with <action.customControl /> */;
     }
-  >();
-  readonly genericRepresentationControls = new Map<
+  > = new Map();
+  readonly genericRepresentationControls: Map<
     string,
     (
       selection: StructureHierarchyManager["selection"],
     ) => [StructureHierarchyRef[], string]
-  >();
+  > = new Map();
 
   /**
    * A helper for collecting and notifying errors
@@ -278,7 +278,7 @@ export class PluginContext {
    * Individual extensions are responsible for using this
    * context and displaying the errors in appropriate ways.
    */
-  readonly errorContext = new ErrorContext();
+  readonly errorContext: ErrorContext = new ErrorContext();
 
   /**
    * Used to store application specific custom state which is then available
@@ -290,14 +290,14 @@ export class PluginContext {
     canvas: HTMLCanvasElement,
     container: HTMLDivElement,
     canvas3dContext?: Canvas3DContext,
-  ) {
+  ): Promise<boolean> {
     return this._initViewer(canvas, container, canvas3dContext);
   }
 
   async initContainerAsync(options?: {
     canvas3dContext?: Canvas3DContext;
     checkeredCanvasBackground?: boolean;
-  }) {
+  }): Promise<boolean> {
     return this._initContainer(options);
   }
 
@@ -307,7 +307,7 @@ export class PluginContext {
       canvas3dContext?: Canvas3DContext;
       checkeredCanvasBackground?: boolean;
     },
-  ) {
+  ): Promise<boolean> {
     return this._mount(target, initOptions);
   }
 
@@ -484,7 +484,7 @@ export class PluginContext {
     }
   }
 
-  handleResize = () => {
+  handleResize = (): void => {
     const canvas = this.canvas3dContext?.canvas;
     const container = this.layout.root;
     if (container && canvas) {
@@ -510,14 +510,14 @@ export class PluginContext {
   readonly fetch = ajaxGet;
 
   /** return true is animating or updating */
-  get isBusy() {
+  get isBusy(): boolean {
     return (
       this.behaviors.state.isAnimating.value ||
       this.behaviors.state.isUpdating.value
     );
   }
 
-  get selectionMode() {
+  get selectionMode(): boolean {
     return this.behaviors.interaction.selectionMode.value;
   }
 
@@ -528,11 +528,11 @@ export class PluginContext {
   dataTransaction(
     f: (ctx: RuntimeContext) => Promise<void> | void,
     options?: { canUndo?: string | boolean; rethrowErrors?: boolean },
-  ) {
+  ): Promise<void> {
     return this.runTask(this.state.data.transaction(f, options));
   }
 
-  clear(resetViewportSettings = false) {
+  clear(resetViewportSettings = false): Promise<void> {
     if (resetViewportSettings) this.canvas3d?.setProps(DefaultCanvas3DParams);
     return PluginCommands.State.RemoveObject(this, {
       state: this.state.data,

@@ -27,16 +27,11 @@ export function TrajectoryHierarchyPresetProvider<P, S>(
 ): TrajectoryHierarchyPresetProvider<P, S> {
     return preset;
 }
-export namespace TrajectoryHierarchyPresetProvider {
-    export type Params<P extends TrajectoryHierarchyPresetProvider> = P extends
-        TrajectoryHierarchyPresetProvider<infer T> ? T : never;
-    export type State<P extends TrajectoryHierarchyPresetProvider> = P extends
-        TrajectoryHierarchyPresetProvider<infer _, infer S> ? S : never;
-
-    export const CommonParams = (
-        a: PluginStateObject.Molecule.Trajectory | undefined,
-        plugin: PluginContext,
-    ) => ({
+function _commonParams(
+    a: PluginStateObject.Molecule.Trajectory | undefined,
+    plugin: PluginContext,
+) {
+    return {
         modelProperties: PD.Optional(
             PD.Group(
                 StateTransformer.getParamDefinition(
@@ -58,35 +53,56 @@ export namespace TrajectoryHierarchyPresetProvider {
         representationPreset: PD.Optional(
             PD.Text<keyof PresetStructureRepresentations>('auto' as const),
         ),
-    });
+    };
+}
+export type CommonParamsResult = ReturnType<typeof _commonParams>;
+
+export namespace TrajectoryHierarchyPresetProvider {
+    export type Params<P extends TrajectoryHierarchyPresetProvider> = P extends
+        TrajectoryHierarchyPresetProvider<infer T> ? T : never;
+    export type State<P extends TrajectoryHierarchyPresetProvider> = P extends
+        TrajectoryHierarchyPresetProvider<infer _, infer S> ? S : never;
+
+    export const CommonParams = (
+        a: PluginStateObject.Molecule.Trajectory | undefined,
+        plugin: PluginContext,
+    ): CommonParamsResult => _commonParams(a, plugin);
 }
 
 const CommonParams = TrajectoryHierarchyPresetProvider.CommonParams;
 
+function _defaultParams(
+    a: PluginStateObject.Molecule.Trajectory | undefined,
+    plugin: PluginContext,
+) {
+    return {
+        model: PD.Optional(
+            PD.Group(
+                StateTransformer.getParamDefinition(
+                    StateTransforms.Model.ModelFromTrajectory,
+                    a,
+                    plugin,
+                ),
+            ),
+        ),
+        showUnitcell: PD.Optional(PD.Boolean(false)),
+        structure: PD.Optional(
+            RootStructureDefinition.getParams(void 0, 'assembly').type,
+        ),
+        representationPresetParams: PD.Optional(
+            PD.Group(StructureRepresentationPresetProvider.CommonParams),
+        ),
+        ...CommonParams(a, plugin),
+    };
+}
+type DefaultParamsResult = ReturnType<typeof _defaultParams>;
+
 const DefaultParams = (
     a: PluginStateObject.Molecule.Trajectory | undefined,
     plugin: PluginContext,
-) => ({
-    model: PD.Optional(
-        PD.Group(
-            StateTransformer.getParamDefinition(
-                StateTransforms.Model.ModelFromTrajectory,
-                a,
-                plugin,
-            ),
-        ),
-    ),
-    showUnitcell: PD.Optional(PD.Boolean(false)),
-    structure: PD.Optional(
-        RootStructureDefinition.getParams(void 0, 'assembly').type,
-    ),
-    representationPresetParams: PD.Optional(
-        PD.Group(StructureRepresentationPresetProvider.CommonParams),
-    ),
-    ...CommonParams(a, plugin),
-});
+): DefaultParamsResult => _defaultParams(a, plugin);
 
-const defaultPreset = TrajectoryHierarchyPresetProvider({
+const defaultPreset: TrajectoryHierarchyPresetProvider<PD.ValuesFor<DefaultParamsResult>> = TrajectoryHierarchyPresetProvider({
     id: 'preset-trajectory-default',
     display: {
         name: 'Default (Assembly)',
@@ -140,18 +156,26 @@ const defaultPreset = TrajectoryHierarchyPresetProvider({
     },
 });
 
+function _allModelsParams(
+    a: PluginStateObject.Molecule.Trajectory | undefined,
+    plugin: PluginContext,
+) {
+    return {
+        useDefaultIfSingleModel: PD.Optional(PD.Boolean(false)),
+        representationPresetParams: PD.Optional(
+            PD.Group(StructureRepresentationPresetProvider.CommonParams),
+        ),
+        ...CommonParams(a, plugin),
+    };
+}
+type AllModelsParamsResult = ReturnType<typeof _allModelsParams>;
+
 const AllModelsParams = (
     a: PluginStateObject.Molecule.Trajectory | undefined,
     plugin: PluginContext,
-) => ({
-    useDefaultIfSingleModel: PD.Optional(PD.Boolean(false)),
-    representationPresetParams: PD.Optional(
-        PD.Group(StructureRepresentationPresetProvider.CommonParams),
-    ),
-    ...CommonParams(a, plugin),
-});
+): AllModelsParamsResult => _allModelsParams(a, plugin);
 
-const allModels = TrajectoryHierarchyPresetProvider({
+const allModels: TrajectoryHierarchyPresetProvider<PD.ValuesFor<AllModelsParamsResult>> = TrajectoryHierarchyPresetProvider({
     id: 'preset-trajectory-all-models',
     display: {
         name: 'All Models',
@@ -225,28 +249,43 @@ const allModels = TrajectoryHierarchyPresetProvider({
     },
 });
 
+function _crystalSymmetryParams(
+    a: PluginStateObject.Molecule.Trajectory | undefined,
+    plugin: PluginContext,
+) {
+    return {
+        model: PD.Optional(
+            PD.Group(
+                StateTransformer.getParamDefinition(
+                    StateTransforms.Model.ModelFromTrajectory,
+                    a,
+                    plugin,
+                ),
+            ),
+        ),
+        ...CommonParams(a, plugin),
+    };
+}
+type CrystalSymmetryParamsResult = ReturnType<typeof _crystalSymmetryParams>;
+
 const CrystalSymmetryParams = (
     a: PluginStateObject.Molecule.Trajectory | undefined,
     plugin: PluginContext,
-) => ({
-    model: PD.Optional(
-        PD.Group(
-            StateTransformer.getParamDefinition(
-                StateTransforms.Model.ModelFromTrajectory,
-                a,
-                plugin,
-            ),
-        ),
-    ),
-    ...CommonParams(a, plugin),
-});
+): CrystalSymmetryParamsResult => _crystalSymmetryParams(a, plugin);
 
 async function applyCrystalSymmetry(
     props: { ijkMin: Vec3; ijkMax: Vec3; theme?: string },
     trajectory: StateObjectRef<PluginStateObject.Molecule.Trajectory>,
-    params: PD.ValuesFor<ReturnType<typeof CrystalSymmetryParams>>,
+    params: PD.ValuesFor<CrystalSymmetryParamsResult>,
     plugin: PluginContext,
-) {
+): Promise<{
+    model: Awaited<ReturnType<StructureBuilder['createModel']>>;
+    modelProperties: Awaited<ReturnType<StructureBuilder['insertModelProperties']>>;
+    unitcell: Awaited<ReturnType<StructureBuilder['tryCreateUnitcell']>>;
+    structure: Awaited<ReturnType<StructureBuilder['createStructure']>>;
+    structureProperties: Awaited<ReturnType<StructureBuilder['insertStructureProperties']>>;
+    representation: Awaited<ReturnType<PluginContext['builders']['structure']['representation']['applyPreset']>>;
+}> {
     const builder = plugin.builders.structure;
 
     const model = await builder.createModel(trajectory, params.model);
@@ -286,7 +325,7 @@ async function applyCrystalSymmetry(
     };
 }
 
-const unitcell = TrajectoryHierarchyPresetProvider({
+const unitcell: TrajectoryHierarchyPresetProvider<PD.ValuesFor<CrystalSymmetryParamsResult>> = TrajectoryHierarchyPresetProvider({
     id: 'preset-trajectory-unitcell',
     display: {
         name: 'Unit Cell',
@@ -307,7 +346,7 @@ const unitcell = TrajectoryHierarchyPresetProvider({
     },
 });
 
-const supercell = TrajectoryHierarchyPresetProvider({
+const supercell: TrajectoryHierarchyPresetProvider<PD.ValuesFor<CrystalSymmetryParamsResult>> = TrajectoryHierarchyPresetProvider({
     id: 'preset-trajectory-supercell',
     display: {
         name: 'Super Cell',
@@ -332,23 +371,31 @@ const supercell = TrajectoryHierarchyPresetProvider({
     },
 });
 
+function _crystalContactsParams(
+    a: PluginStateObject.Molecule.Trajectory | undefined,
+    plugin: PluginContext,
+) {
+    return {
+        model: PD.Optional(
+            PD.Group(
+                StateTransformer.getParamDefinition(
+                    StateTransforms.Model.ModelFromTrajectory,
+                    a,
+                    plugin,
+                ),
+            ),
+        ),
+        ...CommonParams(a, plugin),
+    };
+}
+type CrystalContactsParamsResult = ReturnType<typeof _crystalContactsParams>;
+
 const CrystalContactsParams = (
     a: PluginStateObject.Molecule.Trajectory | undefined,
     plugin: PluginContext,
-) => ({
-    model: PD.Optional(
-        PD.Group(
-            StateTransformer.getParamDefinition(
-                StateTransforms.Model.ModelFromTrajectory,
-                a,
-                plugin,
-            ),
-        ),
-    ),
-    ...CommonParams(a, plugin),
-});
+): CrystalContactsParamsResult => _crystalContactsParams(a, plugin);
 
-const crystalContacts = TrajectoryHierarchyPresetProvider({
+const crystalContacts: TrajectoryHierarchyPresetProvider<PD.ValuesFor<CrystalContactsParamsResult>> = TrajectoryHierarchyPresetProvider({
     id: 'preset-trajectory-crystal-contacts',
     display: {
         name: 'Crystal Contacts',
