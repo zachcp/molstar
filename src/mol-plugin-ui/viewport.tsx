@@ -9,16 +9,16 @@
 
 import * as React from 'react';
 import { throttleTime } from 'rxjs';
-import { PluginCommands } from '../mol-plugin/commands';
-import { PluginConfig } from '../mol-plugin/config';
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { PluginUIComponent } from './base';
-import { Button, ControlGroup, IconButton } from './controls/common';
-import { AspectRatioSvg, AutorenewSvg, BuildOutlinedSvg, CameraOutlinedSvg, CloseSvg, FullscreenSvg, HeadsetVRSvg, LightModeSvg, TuneSvg } from './controls/icons';
-import { ToggleSelectionModeButton } from './structure/selection';
-import { ViewportCanvas } from './viewport/canvas';
-import { DownloadScreenshotControls } from './viewport/screenshot';
-import { SimpleSettingsControl } from './viewport/simple-settings';
+import { PluginCommands } from '../mol-plugin/commands.ts';
+import { PluginConfig } from '../mol-plugin/config.ts';
+import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import { PluginUIComponent } from './base.tsx';
+import { Button, ControlGroup, IconButton } from './controls/common.tsx';
+import { AspectRatioSvg, AutorenewSvg, BuildOutlinedSvg, CameraOutlinedSvg, CloseSvg, FullscreenSvg, HeadsetVRSvg, LightModeSvg, TuneSvg } from './controls/icons.tsx';
+import { ToggleSelectionModeButton } from './structure/selection.tsx';
+import { ViewportCanvas } from './viewport/canvas.tsx';
+import { DownloadScreenshotControls } from './viewport/screenshot.tsx';
+import { SimpleSettingsControl } from './viewport/simple-settings.tsx';
 
 interface ViewportControlsState {
     isSettingsExpanded: boolean,

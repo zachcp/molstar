@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mat4 } from '../mol-math/linear-algebra/3d/mat4';
-import { Vec3 } from '../mol-math/linear-algebra/3d/vec3';
+import { Mat4 } from '../mol-math/linear-algebra/3d/mat4.ts';
+import { Vec3 } from '../mol-math/linear-algebra/3d/vec3.ts';
 
 export interface Object3D {
     readonly view: Mat4

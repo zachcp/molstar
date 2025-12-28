@@ -5,23 +5,23 @@
  * @author Michael Krone <michael.krone@uni-tuebingen.de>
  */
 
-import { PositionData } from '../common';
-import { Box3D } from '../../geometry';
-import { GaussianDensityProps, GaussianDensityData, GaussianDensityTextureData } from '../gaussian-density';
-import { OrderedSet } from '../../../mol-data/int';
-import { Vec3, Tensor, Mat4, Vec2 } from '../../linear-algebra';
-import { ValueCell } from '../../../mol-util';
-import { createComputeRenderable, ComputeRenderable } from '../../../mol-gl/renderable';
-import { WebGLContext } from '../../../mol-gl/webgl/context';
-import { Texture, TextureFilter, TextureFormat, TextureKind, TextureType } from '../../../mol-gl/webgl/texture';
-import { unpackRGBToInt } from '../../../mol-util/number-packing';
-import { ShaderCode } from '../../../mol-gl/shader-code';
-import { createComputeRenderItem } from '../../../mol-gl/webgl/render-item';
-import { ValueSpec, AttributeSpec, UniformSpec, TextureSpec, DefineSpec, Values } from '../../../mol-gl/renderable/schema';
-import { gaussianDensity_vert } from '../../../mol-gl/shader/gaussian-density.vert';
-import { gaussianDensity_frag } from '../../../mol-gl/shader/gaussian-density.frag';
-import { Framebuffer } from '../../../mol-gl/webgl/framebuffer';
-import { isTimingMode } from '../../../mol-util/debug';
+import { PositionData } from '../common.ts';
+import { Box3D } from '../../geometry.ts';
+import { GaussianDensityProps, GaussianDensityData, GaussianDensityTextureData } from '../gaussian-density.ts';
+import { OrderedSet } from '../../../mol-data/int.ts';
+import { Vec3, Tensor, Mat4, Vec2 } from '../../linear-algebra.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
+import { createComputeRenderable, ComputeRenderable } from '../../../mol-gl/renderable.ts';
+import { WebGLContext } from '../../../mol-gl/webgl/context.ts';
+import { Texture, TextureFilter, TextureFormat, TextureKind, TextureType } from '../../../mol-gl/webgl/texture.ts';
+import { unpackRGBToInt } from '../../../mol-util/number-packing.ts';
+import { ShaderCode } from '../../../mol-gl/shader-code.ts';
+import { createComputeRenderItem } from '../../../mol-gl/webgl/render-item.ts';
+import { ValueSpec, AttributeSpec, UniformSpec, TextureSpec, DefineSpec, Values } from '../../../mol-gl/renderable/schema.ts';
+import { gaussianDensity_vert } from '../../../mol-gl/shader/gaussian-density.vert.ts';
+import { gaussianDensity_frag } from '../../../mol-gl/shader/gaussian-density.frag.ts';
+import { Framebuffer } from '../../../mol-gl/webgl/framebuffer.ts';
+import { isTimingMode } from '../../../mol-util/debug.ts';
 
 const GaussianDensitySchema = {
     drawCount: ValueSpec('number'),

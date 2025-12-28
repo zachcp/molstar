@@ -4,11 +4,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Iterator as _Iterator } from '../iterator';
-import { Interval } from './interval';
-import { OrderedSet } from './ordered-set';
-import { Segmentation } from './segmentation';
-import { SortedArray } from './sorted-array';
+import { Iterator as _Iterator } from '../iterator.ts';
+import { Interval } from './interval.ts';
+import { OrderedSet } from './ordered-set.ts';
+import { Segmentation } from './segmentation.ts';
+import { SortedArray } from './sorted-array.ts';
 
 /** Pairs of min and max indices of sorted, non-overlapping ranges */
 type SortedRanges<T extends number = number> = SortedArray<T>

@@ -4,30 +4,30 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { hashFnv32a } from '../../../mol-data/util';
-import { LocationIterator } from '../../util/location-iterator';
-import { RenderableState } from '../../../mol-gl/renderable';
-import { calculateTransformBoundingSphere, createTextureImage, TextureImage } from '../../../mol-gl/renderable/util';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { Vec2, Vec4, Vec3, Quat, Mat4 } from '../../../mol-math/linear-algebra';
-import { Theme } from '../../../mol-theme/theme';
-import { ValueCell } from '../../../mol-util';
-import { Color } from '../../../mol-util/color';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { BaseGeometry } from '../base';
-import { createColors } from '../color-data';
-import { GeometryUtils } from '../geometry';
-import { createMarkers } from '../marker-data';
-import { createEmptyOverpaint } from '../overpaint-data';
-import { TransformData } from '../transform-data';
-import { createEmptyTransparency } from '../transparency-data';
-import { ImageValues } from '../../../mol-gl/renderable/image';
-import { fillSerial } from '../../../mol-util/array';
-import { createEmptyClipping } from '../clipping-data';
-import { NullLocation } from '../../../mol-model/location';
-import { QuadPositions } from '../../../mol-gl/compute/util';
-import { createEmptySubstance } from '../substance-data';
-import { createEmptyEmissive } from '../emissive-data';
+import { hashFnv32a } from '../../../mol-data/util.ts';
+import { LocationIterator } from '../../util/location-iterator.ts';
+import { RenderableState } from '../../../mol-gl/renderable.ts';
+import { calculateTransformBoundingSphere, createTextureImage, TextureImage } from '../../../mol-gl/renderable/util.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { Vec2, Vec4, Vec3, Quat, Mat4 } from '../../../mol-math/linear-algebra.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { ValueCell } from '../../../mol-util/index.ts';
+import { Color } from '../../../mol-util/color/index.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { BaseGeometry } from '../base.ts';
+import { createColors } from '../color-data.ts';
+import { GeometryUtils } from '../geometry.ts';
+import { createMarkers } from '../marker-data.ts';
+import { createEmptyOverpaint } from '../overpaint-data.ts';
+import { TransformData } from '../transform-data.ts';
+import { createEmptyTransparency } from '../transparency-data.ts';
+import { ImageValues } from '../../../mol-gl/renderable/image.ts';
+import { fillSerial } from '../../../mol-util/array.ts';
+import { createEmptyClipping } from '../clipping-data.ts';
+import { NullLocation } from '../../../mol-model/location.ts';
+import { QuadPositions } from '../../../mol-gl/compute/util.ts';
+import { createEmptySubstance } from '../substance-data.ts';
+import { createEmptyEmissive } from '../emissive-data.ts';
 
 const QuadIndices = new Uint32Array([
     0, 1, 2,

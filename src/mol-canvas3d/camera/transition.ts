@@ -4,10 +4,10 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Camera } from '../camera';
-import { lerp } from '../../mol-math/interpolate';
-import { Quat } from '../../mol-math/linear-algebra/3d/quat';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
+import { Camera } from '../camera.ts';
+import { lerp } from '../../mol-math/interpolate.ts';
+import { Quat } from '../../mol-math/linear-algebra/3d/quat.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
 
 export { CameraTransitionManager };
 

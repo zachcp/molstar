@@ -5,10 +5,10 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { createRangeArray } from '../../util/array';
-import { hash3, hash4 } from '../../util/hash-functions';
-import { sortArray } from '../../util/sort';
-import { Interval } from '../interval';
+import { createRangeArray } from '../../util/array.ts';
+import { hash3, hash4 } from '../../util/hash-functions.ts';
+import { sortArray } from '../../util/sort.ts';
+import { Interval } from '../interval.ts';
 
 type Nums = ArrayLike<number>
 

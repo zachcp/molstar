@@ -4,21 +4,21 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { StructureProperties, StructureElement, Bond, Model } from '../../mol-model/structure';
-import { Color } from '../../mol-util/color';
-import { Location } from '../../mol-model/location';
-import type { ColorTheme, LocationColor } from '../color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../../mol-theme/theme';
-import { Column } from '../../mol-data/db/column';
-import { Table } from '../../mol-data/db/table';
-import { mmCIF_Schema } from '../../mol-io/reader/cif/schema/mmcif';
-import { getPaletteParams, getPalette } from '../../mol-util/color/palette';
-import { TableLegend, ScaleLegend } from '../../mol-util/legend';
-import { isInteger } from '../../mol-util/number';
-import { ColorLists, getColorListFromName } from '../../mol-util/color/lists';
-import { MmcifFormat } from '../../mol-model-formats/structure/mmcif';
-import { ColorThemeCategory } from './categories';
+import { StructureProperties, StructureElement, Bond, Model } from '../../mol-model/structure.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { Location } from '../../mol-model/location.ts';
+import type { ColorTheme, LocationColor } from '../color.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ThemeDataContext } from '../../mol-theme/theme.ts';
+import { Column } from '../../mol-data/db/column.ts';
+import { Table } from '../../mol-data/db/table.ts';
+import { mmCIF_Schema } from '../../mol-io/reader/cif/schema/mmcif.ts';
+import { getPaletteParams, getPalette } from '../../mol-util/color/palette.ts';
+import { TableLegend, ScaleLegend } from '../../mol-util/legend.ts';
+import { isInteger } from '../../mol-util/number.ts';
+import { ColorLists, getColorListFromName } from '../../mol-util/color/lists.ts';
+import { MmcifFormat } from '../../mol-model-formats/structure/mmcif.ts';
+import { ColorThemeCategory } from './categories.ts';
 
 const DefaultList = 'dark-2';
 const DefaultColor = Color(0xFAFAFA);

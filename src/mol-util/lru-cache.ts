@@ -6,7 +6,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { LinkedList } from '../mol-data/generic/linked-list';
+import { LinkedList } from '../mol-data/generic/linked-list.ts';
 
 export { LRUCache };
 

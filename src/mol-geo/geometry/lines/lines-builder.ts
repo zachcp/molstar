@@ -5,10 +5,10 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { ChunkedArray } from '../../../mol-data/util';
-import { Lines } from './lines';
-import { Mat4, Vec3 } from '../../../mol-math/linear-algebra';
-import { Cage } from '../../primitive/cage';
+import { ChunkedArray } from '../../../mol-data/util.ts';
+import { Lines } from './lines.ts';
+import { Mat4, Vec3 } from '../../../mol-math/linear-algebra.ts';
+import { Cage } from '../../primitive/cage.ts';
 
 export interface LinesBuilder {
     add(startX: number, startY: number, startZ: number, endX: number, endY: number, endZ: number, group: number): void

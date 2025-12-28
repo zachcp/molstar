@@ -8,13 +8,13 @@
  */
 
 import { Subject, Observable } from 'rxjs';
-import { Viewport } from '../../mol-canvas3d/camera/util';
-import { Ray3D } from '../../mol-math/geometry/primitives/ray3d';
-import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
-import { EPSILON } from '../../mol-math/linear-algebra/3d/common';
-import { BitFlags } from '../bit-flags';
-import { noop } from '../index';
+import { Viewport } from '../../mol-canvas3d/camera/util.ts';
+import { Ray3D } from '../../mol-math/geometry/primitives/ray3d.ts';
+import { Vec2 } from '../../mol-math/linear-algebra/3d/vec2.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
+import { EPSILON } from '../../mol-math/linear-algebra/3d/common.ts';
+import { BitFlags } from '../bit-flags.ts';
+import { noop } from '../index.ts';
 
 export function getButtons(event: MouseEvent | Touch) {
     if (typeof event === 'object') {

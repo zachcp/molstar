@@ -5,29 +5,29 @@
  * @author Cai Huiyu <szmun.caihy@gmail.com>
  */
 
-import { ValueCell } from '../../../mol-util';
-import { Sphere3D } from '../../../mol-math/geometry';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { LocationIterator, PositionLocation } from '../../util/location-iterator';
-import { TransformData } from '../transform-data';
-import { createColors } from '../color-data';
-import { createMarkers } from '../marker-data';
-import { GeometryUtils } from '../geometry';
-import { Theme } from '../../../mol-theme/theme';
-import { Color } from '../../../mol-util/color';
-import { BaseGeometry } from '../base';
-import { createEmptyOverpaint } from '../overpaint-data';
-import { createEmptyTransparency } from '../transparency-data';
-import { TextureMeshValues } from '../../../mol-gl/renderable/texture-mesh';
-import { calculateTransformBoundingSphere } from '../../../mol-gl/renderable/util';
-import { createNullTexture, Texture } from '../../../mol-gl/webgl/texture';
-import { Vec2, Vec3, Vec4 } from '../../../mol-math/linear-algebra';
-import { createEmptyClipping } from '../clipping-data';
-import { NullLocation } from '../../../mol-model/location';
-import { createEmptySubstance } from '../substance-data';
-import { RenderableState } from '../../../mol-gl/renderable';
-import { WebGLContext } from '../../../mol-gl/webgl/context';
-import { createEmptyEmissive } from '../emissive-data';
+import { ValueCell } from '../../../mol-util/index.ts';
+import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { LocationIterator, PositionLocation } from '../../util/location-iterator.ts';
+import { TransformData } from '../transform-data.ts';
+import { createColors } from '../color-data.ts';
+import { createMarkers } from '../marker-data.ts';
+import { GeometryUtils } from '../geometry.ts';
+import { Theme } from '../../../mol-theme/theme.ts';
+import { Color } from '../../../mol-util/color/index.ts';
+import { BaseGeometry } from '../base.ts';
+import { createEmptyOverpaint } from '../overpaint-data.ts';
+import { createEmptyTransparency } from '../transparency-data.ts';
+import { TextureMeshValues } from '../../../mol-gl/renderable/texture-mesh.ts';
+import { calculateTransformBoundingSphere } from '../../../mol-gl/renderable/util.ts';
+import { createNullTexture, Texture } from '../../../mol-gl/webgl/texture.ts';
+import { Vec2, Vec3, Vec4 } from '../../../mol-math/linear-algebra.ts';
+import { createEmptyClipping } from '../clipping-data.ts';
+import { NullLocation } from '../../../mol-model/location.ts';
+import { createEmptySubstance } from '../substance-data.ts';
+import { RenderableState } from '../../../mol-gl/renderable.ts';
+import { WebGLContext } from '../../../mol-gl/webgl/context.ts';
+import { createEmptyEmissive } from '../emissive-data.ts';
 
 export interface TextureMesh {
     readonly kind: 'texture-mesh',

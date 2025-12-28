@@ -5,11 +5,11 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { OrderedSet } from '../../mol-data/int/ordered-set';
-import { Mat4 } from '../linear-algebra/3d/mat4';
-import { Vec3 } from '../linear-algebra/3d/vec3';
-import { Tensor } from '../linear-algebra/tensor';
-import { Box3D } from './primitives/box3d';
+import { OrderedSet } from '../../mol-data/int/ordered-set.ts';
+import { Mat4 } from '../linear-algebra/3d/mat4.ts';
+import { Vec3 } from '../linear-algebra/3d/vec3.ts';
+import { Tensor } from '../linear-algebra/tensor.ts';
+import { Box3D } from './primitives/box3d.ts';
 
 export interface PositionData {
     x: ArrayLike<number>,

@@ -4,15 +4,15 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { transpileMolScript } from './script/mol-script/symbols';
-import { parseMolScript } from './language/parser';
-import { parse } from './transpile';
-import { Expression } from './language/expression';
-import { StructureElement, QueryContext, StructureSelection, Structure, QueryFn, QueryContextOptions } from '../mol-model/structure';
-import { compile } from './runtime/query/compiler';
-import { MolScriptBuilder } from './language/builder';
-import { assertUnreachable } from '../mol-util/type-helpers';
-import { Script } from './types';
+import { transpileMolScript } from './script/mol-script/symbols.ts';
+import { parseMolScript } from './language/parser.ts';
+import { parse } from './transpile.ts';
+import { Expression } from './language/expression.ts';
+import { StructureElement, QueryContext, StructureSelection, Structure, QueryFn, QueryContextOptions } from '../mol-model/structure.ts';
+import { compile } from './runtime/query/compiler.ts';
+import { MolScriptBuilder } from './language/builder.ts';
+import { assertUnreachable } from '../mol-util/type-helpers.ts';
+import { Script } from './types.ts';
 
 export { ScriptImpl as Script };
 

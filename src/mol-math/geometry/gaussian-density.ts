@@ -4,16 +4,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Box3D, DensityData } from '../geometry';
-import { PositionData } from './common';
-import { WebGLContext } from '../../mol-gl/webgl/context';
-import { Texture } from '../../mol-gl/webgl/texture';
-import { GaussianDensityTexture2d, GaussianDensityTexture3d } from './gaussian-density/gpu';
-import { Task } from '../../mol-task/task';
-import { GaussianDensityCPU } from './gaussian-density/cpu';
-import { Mat4 } from '../linear-algebra/3d/mat4';
-import { Vec3 } from '../linear-algebra/3d/vec3';
-import { Vec2 } from '../linear-algebra/3d/vec2';
+import { Box3D, DensityData } from '../geometry.ts';
+import { PositionData } from './common.ts';
+import { WebGLContext } from '../../mol-gl/webgl/context.ts';
+import { Texture } from '../../mol-gl/webgl/texture.ts';
+import { GaussianDensityTexture2d, GaussianDensityTexture3d } from './gaussian-density/gpu.ts';
+import { Task } from '../../mol-task/task.ts';
+import { GaussianDensityCPU } from './gaussian-density/cpu.ts';
+import { Mat4 } from '../linear-algebra/3d/mat4.ts';
+import { Vec3 } from '../linear-algebra/3d/vec3.ts';
+import { Vec2 } from '../linear-algebra/3d/vec2.ts';
 
 export const DefaultGaussianDensityProps = {
     resolution: 1,

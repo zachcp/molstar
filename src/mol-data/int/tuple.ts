@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { hash2 } from '../util/hash-functions';
+import { hash2 } from '../util/hash-functions.ts';
 
 /**
  * Represents a pair of two integers as a double,

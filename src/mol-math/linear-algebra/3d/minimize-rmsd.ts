@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Mat4 } from './mat4';
-import { Vec3 } from './vec3';
-import { EVD } from '../matrix/evd';
-import { Matrix } from '../matrix/matrix';
-import { Sphere3D } from '../../geometry/primitives/sphere3d';
-import { CentroidHelper } from '../../geometry/centroid-helper';
+import { Mat4 } from './mat4.ts';
+import { Vec3 } from './vec3.ts';
+import { EVD } from '../matrix/evd.ts';
+import { Matrix } from '../matrix/matrix.ts';
+import { Sphere3D } from '../../geometry/primitives/sphere3d.ts';
+import { CentroidHelper } from '../../geometry/centroid-helper.ts';
 
 export { MinimizeRmsd };
 namespace MinimizeRmsd {

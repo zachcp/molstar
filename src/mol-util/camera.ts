@@ -5,7 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Vec3 } from '../mol-math/linear-algebra/3d/vec3';
+import { Vec3 } from '../mol-math/linear-algebra/3d/vec3.ts';
 
 type CameraMode = 'perspective' | 'orthographic';
 

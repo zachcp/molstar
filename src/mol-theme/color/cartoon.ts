@@ -4,31 +4,31 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color } from '../../mol-util/color';
-import { Location } from '../../mol-model/location';
-import type { ColorTheme } from '../color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../theme';
-import { ChainIdColorTheme, ChainIdColorThemeParams } from './chain-id';
-import { UniformColorTheme, UniformColorThemeParams } from './uniform';
-import { assertUnreachable } from '../../mol-util/type-helpers';
-import { EntityIdColorTheme, EntityIdColorThemeParams } from './entity-id';
-import { MoleculeTypeColorTheme, MoleculeTypeColorThemeParams } from './molecule-type';
-import { EntitySourceColorTheme, EntitySourceColorThemeParams } from './entity-source';
-import { ModelIndexColorTheme, ModelIndexColorThemeParams } from './model-index';
-import { StructureIndexColorTheme, StructureIndexColorThemeParams } from './structure-index';
-import { ColorThemeCategory } from './categories';
-import { ResidueNameColorTheme, ResidueNameColorThemeParams } from './residue-name';
-import { ScaleLegend, TableLegend } from '../../mol-util/legend';
-import { SecondaryStructureColorTheme, SecondaryStructureColorThemeParams } from './secondary-structure';
-import { ElementSymbolColorTheme, ElementSymbolColorThemeParams } from './element-symbol';
-import { TrajectoryIndexColorTheme, TrajectoryIndexColorThemeParams } from './trajectory-index';
-import { hash2 } from '../../mol-data/util/hash-functions';
-import { HydrophobicityColorTheme, HydrophobicityColorThemeParams } from './hydrophobicity';
-import { UncertaintyColorTheme, UncertaintyColorThemeParams } from './uncertainty';
-import { OccupancyColorTheme, OccupancyColorThemeParams } from './occupancy';
-import { SequenceIdColorTheme, SequenceIdColorThemeParams } from './sequence-id';
-import { PartialChargeColorTheme, PartialChargeColorThemeParams } from './partial-charge';
+import { Color } from '../../mol-util/color/index.ts';
+import { Location } from '../../mol-model/location.ts';
+import type { ColorTheme } from '../color.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ThemeDataContext } from '../theme.ts';
+import { ChainIdColorTheme, ChainIdColorThemeParams } from './chain-id.ts';
+import { UniformColorTheme, UniformColorThemeParams } from './uniform.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
+import { EntityIdColorTheme, EntityIdColorThemeParams } from './entity-id.ts';
+import { MoleculeTypeColorTheme, MoleculeTypeColorThemeParams } from './molecule-type.ts';
+import { EntitySourceColorTheme, EntitySourceColorThemeParams } from './entity-source.ts';
+import { ModelIndexColorTheme, ModelIndexColorThemeParams } from './model-index.ts';
+import { StructureIndexColorTheme, StructureIndexColorThemeParams } from './structure-index.ts';
+import { ColorThemeCategory } from './categories.ts';
+import { ResidueNameColorTheme, ResidueNameColorThemeParams } from './residue-name.ts';
+import { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
+import { SecondaryStructureColorTheme, SecondaryStructureColorThemeParams } from './secondary-structure.ts';
+import { ElementSymbolColorTheme, ElementSymbolColorThemeParams } from './element-symbol.ts';
+import { TrajectoryIndexColorTheme, TrajectoryIndexColorThemeParams } from './trajectory-index.ts';
+import { hash2 } from '../../mol-data/util/hash-functions.ts';
+import { HydrophobicityColorTheme, HydrophobicityColorThemeParams } from './hydrophobicity.ts';
+import { UncertaintyColorTheme, UncertaintyColorThemeParams } from './uncertainty.ts';
+import { OccupancyColorTheme, OccupancyColorThemeParams } from './occupancy.ts';
+import { SequenceIdColorTheme, SequenceIdColorThemeParams } from './sequence-id.ts';
+import { PartialChargeColorTheme, PartialChargeColorThemeParams } from './partial-charge.ts';
 
 const Description = 'Uses separate themes for coloring mainchain and sidechain visuals.';
 

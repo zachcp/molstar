@@ -4,31 +4,31 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { Image } from '../../mol-geo/geometry/image/image';
-import { ThemeRegistryContext, Theme } from '../../mol-theme/theme';
-import { Grid, Volume } from '../../mol-model/volume';
-import { VolumeVisual, VolumeRepresentation, VolumeRepresentationProvider } from './representation';
-import { PositionLocation } from '../../mol-geo/util/location-iterator';
-import { VisualUpdateState } from '../util';
-import { RepresentationContext, RepresentationParamsGetter } from '../representation';
-import { VisualContext } from '../visual';
-import { PickingId } from '../../mol-geo/geometry/picking';
-import { EmptyLoci, Loci } from '../../mol-model/loci';
-import { transformPositionArray } from '../../mol-geo/util';
-import { Color } from '../../mol-util/color';
-import { ColorTheme } from '../../mol-theme/color';
-import { packIntToRGBArray } from '../../mol-util/number-packing';
-import { createVolumeCellLocationIterator, eachVolumeLoci } from './util';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
-import { Quat } from '../../mol-math/linear-algebra/3d/quat';
-import { degToRad } from '../../mol-math/misc';
-import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4';
-import { clamp, normalize } from '../../mol-math/interpolate';
-import { assertUnreachable } from '../../mol-util/type-helpers';
-import { OrderedSet } from '../../mol-data/int/ordered-set';
-import { SortedArray } from '../../mol-data/int/sorted-array';
-import { Interval } from '../../mol-data/int/interval';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { Image } from '../../mol-geo/geometry/image/image.ts';
+import { ThemeRegistryContext, Theme } from '../../mol-theme/theme.ts';
+import { Grid, Volume } from '../../mol-model/volume.ts';
+import { VolumeVisual, VolumeRepresentation, VolumeRepresentationProvider } from './representation.ts';
+import { PositionLocation } from '../../mol-geo/util/location-iterator.ts';
+import { VisualUpdateState } from '../util.ts';
+import { RepresentationContext, RepresentationParamsGetter } from '../representation.ts';
+import { VisualContext } from '../visual.ts';
+import { PickingId } from '../../mol-geo/geometry/picking.ts';
+import { EmptyLoci, Loci } from '../../mol-model/loci.ts';
+import { transformPositionArray } from '../../mol-geo/util.ts';
+import { Color } from '../../mol-util/color/index.ts';
+import { ColorTheme } from '../../mol-theme/color.ts';
+import { packIntToRGBArray } from '../../mol-util/number-packing.ts';
+import { createVolumeCellLocationIterator, eachVolumeLoci } from './util.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
+import { Quat } from '../../mol-math/linear-algebra/3d/quat.ts';
+import { degToRad } from '../../mol-math/misc.ts';
+import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4.ts';
+import { clamp, normalize } from '../../mol-math/interpolate.ts';
+import { assertUnreachable } from '../../mol-util/type-helpers.ts';
+import { OrderedSet } from '../../mol-data/int/ordered-set.ts';
+import { SortedArray } from '../../mol-data/int/sorted-array.ts';
+import { Interval } from '../../mol-data/int/interval.ts';
 
 export const SliceParams = {
     ...Image.Params,

@@ -5,16 +5,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Viewport, cameraProject, cameraUnproject } from './camera/util';
-import { CameraTransitionManager } from './camera/transition';
+import { Viewport, cameraProject, cameraUnproject } from './camera/util.ts';
+import { CameraTransitionManager } from './camera/transition.ts';
 import { BehaviorSubject } from 'rxjs';
-import { Scene } from '../mol-gl/scene';
-import { assertUnreachable } from '../mol-util/type-helpers';
-import { Ray3D } from '../mol-math/geometry/primitives/ray3d';
-import { Mat4 } from '../mol-math/linear-algebra/3d/mat4';
-import { Vec4 } from '../mol-math/linear-algebra/3d/vec4';
-import { Vec3 } from '../mol-math/linear-algebra/3d/vec3';
-import { EPSILON } from '../mol-math/linear-algebra/3d/common';
+import { Scene } from '../mol-gl/scene.ts';
+import { assertUnreachable } from '../mol-util/type-helpers.ts';
+import { Ray3D } from '../mol-math/geometry/primitives/ray3d.ts';
+import { Mat4 } from '../mol-math/linear-algebra/3d/mat4.ts';
+import { Vec4 } from '../mol-math/linear-algebra/3d/vec4.ts';
+import { Vec3 } from '../mol-math/linear-algebra/3d/vec3.ts';
+import { EPSILON } from '../mol-math/linear-algebra/3d/common.ts';
 
 export type { ICamera };
 

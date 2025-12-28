@@ -7,16 +7,16 @@
  * ported from NGL (https://github.com/arose/ngl), licensed under MIT
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { RuntimeContext } from '../../mol-task';
-import { OrderedSet } from '../../mol-data/int/ordered-set';
-import { fillGridDim, PositionData } from './common';
-import { Boundary } from './boundary';
-import { GridLookup3D } from './lookup3d/grid';
-import { Box3D } from './primitives/box3d';
-import { Vec3 } from '../linear-algebra/3d/vec3';
-import { Tensor } from '../linear-algebra/tensor';
-import { Mat4 } from '../linear-algebra/3d/mat4';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { RuntimeContext } from '../../mol-task/index.ts';
+import { OrderedSet } from '../../mol-data/int/ordered-set.ts';
+import { fillGridDim, PositionData } from './common.ts';
+import { Boundary } from './boundary.ts';
+import { GridLookup3D } from './lookup3d/grid.ts';
+import { Box3D } from './primitives/box3d.ts';
+import { Vec3 } from '../linear-algebra/3d/vec3.ts';
+import { Tensor } from '../linear-algebra/tensor.ts';
+import { Mat4 } from '../linear-algebra/3d/mat4.ts';
 
 function normalToLine(out: Vec3, p: Vec3) {
     out[0] = out[1] = out[2] = 1.0;

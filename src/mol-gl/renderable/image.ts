@@ -4,12 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Renderable, RenderableState, createRenderable } from '../renderable';
-import { WebGLContext } from '../webgl/context';
-import { createGraphicsRenderItem, Transparency } from '../webgl/render-item';
-import { AttributeSpec, Values, GlobalUniformSchema, InternalSchema, TextureSpec, ElementsSpec, DefineSpec, InternalValues, BaseSchema, UniformSpec, GlobalTextureSchema, GlobalDefineValues, GlobalDefines, GlobalDefineSchema } from './schema';
-import { ImageShaderCode } from '../shader-code';
-import { ValueCell } from '../../mol-util/value-cell';
+import { Renderable, RenderableState, createRenderable } from '../renderable.ts';
+import { WebGLContext } from '../webgl/context.ts';
+import { createGraphicsRenderItem, Transparency } from '../webgl/render-item.ts';
+import { AttributeSpec, Values, GlobalUniformSchema, InternalSchema, TextureSpec, ElementsSpec, DefineSpec, InternalValues, BaseSchema, UniformSpec, GlobalTextureSchema, GlobalDefineValues, GlobalDefines, GlobalDefineSchema } from './schema.ts';
+import { ImageShaderCode } from '../shader-code.ts';
+import { ValueCell } from '../../mol-util/value-cell.ts';
 
 export const ImageSchema = {
     ...BaseSchema,

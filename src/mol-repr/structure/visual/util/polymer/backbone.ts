@@ -3,11 +3,11 @@
  *
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
-import { Segmentation } from '../../../../../mol-data/int/segmentation';
-import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges';
-import { ElementIndex, ResidueIndex, Unit } from '../../../../../mol-model/structure';
-import { MoleculeType } from '../../../../../mol-model/structure/model/types';
-import { getPolymerRanges } from '../polymer';
+import { Segmentation } from '../../../../../mol-data/int/segmentation.ts';
+import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges.ts';
+import { ElementIndex, ResidueIndex, Unit } from '../../../../../mol-model/structure.ts';
+import { MoleculeType } from '../../../../../mol-model/structure/model/types.ts';
+import { getPolymerRanges } from '../polymer.ts';
 
 export type PolymerBackboneLinkCallback = (indexA: ElementIndex, indexB: ElementIndex, groupA: number, groupB: number, moleculeType: MoleculeType) => void
 

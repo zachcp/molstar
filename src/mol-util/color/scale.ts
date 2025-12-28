@@ -6,13 +6,13 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { Color, ColorListEntry } from './color';
-import { getColorListFromName, ColorListName } from './lists';
-import { defaults } from '../../mol-util';
-import { NumberArray } from '../../mol-util/type-helpers';
-import { ScaleLegend } from '../legend';
-import { SortedArray } from '../../mol-data/int/sorted-array';
-import { clamp } from '../../mol-math/interpolate';
+import { Color, ColorListEntry } from './color.ts';
+import { getColorListFromName, ColorListName } from './lists.ts';
+import { defaults } from '../../mol-util/index.ts';
+import { NumberArray } from '../../mol-util/type-helpers.ts';
+import { ScaleLegend } from '../legend.ts';
+import { SortedArray } from '../../mol-data/int/sorted-array.ts';
+import { clamp } from '../../mol-math/interpolate.ts';
 
 export interface ColorScale {
     /** Returns hex color for given value */

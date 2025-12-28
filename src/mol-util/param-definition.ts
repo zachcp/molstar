@@ -5,19 +5,19 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Color as ColorData } from './color';
-import { shallowEqualObjects } from './index';
-import { Vec2 as Vec2Data } from '../mol-math/linear-algebra/3d/vec2';
-import { Vec3 as Vec3Data } from '../mol-math/linear-algebra/3d/vec3';
-import { Mat4 as Mat4Data } from '../mol-math/linear-algebra/3d/mat4';
-import { deepClone } from './object';
-import { Script as ScriptData } from '../mol-script/types';
-import { Legend } from './legend';
-import { stringToWords } from './string';
-import { getColorListFromName, ColorListName } from './color/lists';
-import { Asset } from './assets';
-import { ColorListEntry } from './color/color';
-import { EPSILON } from '../mol-math/linear-algebra/3d/common';
+import { Color as ColorData } from './color/index.ts';
+import { shallowEqualObjects } from './index.ts';
+import { Vec2 as Vec2Data } from '../mol-math/linear-algebra/3d/vec2.ts';
+import { Vec3 as Vec3Data } from '../mol-math/linear-algebra/3d/vec3.ts';
+import { Mat4 as Mat4Data } from '../mol-math/linear-algebra/3d/mat4.ts';
+import { deepClone } from './object.ts';
+import { Script as ScriptData } from '../mol-script/types.ts';
+import { Legend } from './legend.ts';
+import { stringToWords } from './string.ts';
+import { getColorListFromName, ColorListName } from './color/lists.ts';
+import { Asset } from './assets.ts';
+import { ColorListEntry } from './color/color.ts';
+import { EPSILON } from '../mol-math/linear-algebra/3d/common.ts';
 
 export namespace ParamDefinition {
     export interface Info {

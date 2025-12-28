@@ -4,12 +4,12 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Canvas3DParams } from '../../../mol-canvas3d/canvas3d';
-import { PluginContext } from '../../../mol-plugin/context';
-import { PluginState } from '../../../mol-plugin/state';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition';
-import { PluginStateSnapshotManager } from '../../manager/snapshots';
-import { PluginStateAnimation } from '../model';
+import { Canvas3DParams } from '../../../mol-canvas3d/canvas3d.ts';
+import { PluginContext } from '../../../mol-plugin/context.ts';
+import { PluginState } from '../../../mol-plugin/state.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
+import { PluginStateSnapshotManager } from '../../manager/snapshots.ts';
+import { PluginStateAnimation } from '../model.ts';
 
 
 async function setPartialSnapshot(plugin: PluginContext, entry: Partial<PluginStateSnapshotManager.Entry['snapshot']>, first = false) {

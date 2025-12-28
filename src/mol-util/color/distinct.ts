@@ -8,13 +8,13 @@
  * which is heavily inspired by http://tools.medialab.sciences-po.fr/iwanthue/
  */
 
-import { Lab } from './spaces/lab';
-import { Hcl } from './spaces/hcl';
-import { deepClone } from '../object';
-import { deepEqual } from '../index';
-import { ParamDefinition as PD } from '../param-definition';
-import { ColorNames } from './names';
-import { Color } from './color';
+import { Lab } from './spaces/lab.ts';
+import { Hcl } from './spaces/hcl.ts';
+import { deepClone } from '../object.ts';
+import { deepEqual } from '../index.ts';
+import { ParamDefinition as PD } from '../param-definition.ts';
+import { ColorNames } from './names.ts';
+import { Color } from './color.ts';
 
 export const DistinctColorsParams = {
     hue: PD.Interval([1, 360], { min: 0, max: 360, step: 1 }),

@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { EPSILON } from '../mol-math/linear-algebra/3d/common';
-import { Mat4 } from '../mol-math/linear-algebra/3d/mat4';
-import { Quat } from '../mol-math/linear-algebra/3d/quat';
-import { Vec3 } from '../mol-math/linear-algebra/3d/vec3';
-import { degToRad } from '../mol-math/misc';
-import { ParamDefinition as PD } from './param-definition';
-import { stringToWords } from './string';
+import { EPSILON } from '../mol-math/linear-algebra/3d/common.ts';
+import { Mat4 } from '../mol-math/linear-algebra/3d/mat4.ts';
+import { Quat } from '../mol-math/linear-algebra/3d/quat.ts';
+import { Vec3 } from '../mol-math/linear-algebra/3d/vec3.ts';
+import { degToRad } from '../mol-math/misc.ts';
+import { ParamDefinition as PD } from './param-definition.ts';
+import { stringToWords } from './string.ts';
 
 export interface Clip {
     variant: Clip.Variant,

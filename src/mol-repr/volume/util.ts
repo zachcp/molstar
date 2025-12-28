@@ -4,20 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Grid, Volume } from '../../mol-model/volume';
-import { Loci } from '../../mol-model/loci';
-import { equalEps } from '../../mol-math/linear-algebra/3d/common';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
-import { packIntToRGBArray } from '../../mol-util/number-packing';
-import { SetUtils } from '../../mol-util/set';
-import { Box3D } from '../../mol-math/geometry';
-import { toHalfFloat } from '../../mol-util/number-conversion';
-import { clamp } from '../../mol-math/interpolate';
-import { LocationIterator } from '../../mol-geo/util/location-iterator';
-import { Tensor } from '../../mol-math/linear-algebra/tensor';
-import { Interval } from '../../mol-data/int/interval';
-import { SortedArray } from '../../mol-data/int/sorted-array';
-import { OrderedSet } from '../../mol-data/int/ordered-set';
+import { Grid, Volume } from '../../mol-model/volume.ts';
+import { Loci } from '../../mol-model/loci.ts';
+import { equalEps } from '../../mol-math/linear-algebra/3d/common.ts';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
+import { packIntToRGBArray } from '../../mol-util/number-packing.ts';
+import { SetUtils } from '../../mol-util/set.ts';
+import { Box3D } from '../../mol-math/geometry.ts';
+import { toHalfFloat } from '../../mol-util/number-conversion.ts';
+import { clamp } from '../../mol-math/interpolate.ts';
+import { LocationIterator } from '../../mol-geo/util/location-iterator.ts';
+import { Tensor } from '../../mol-math/linear-algebra/tensor.ts';
+import { Interval } from '../../mol-data/int/interval.ts';
+import { SortedArray } from '../../mol-data/int/sorted-array.ts';
+import { OrderedSet } from '../../mol-data/int/ordered-set.ts';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3set = Vec3.set;

@@ -5,10 +5,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as ColumnHelpers from './column-helpers';
-import { Tensor as Tensors } from '../../mol-math/linear-algebra/tensor';
-import type { Tokens } from '../../mol-io/reader/common/text/tokenizer';
-import { parseInt as fastParseInt, parseFloat as fastParseFloat } from '../../mol-io/reader/common/text/number-parser';
+import * as ColumnHelpers from './column-helpers.ts';
+import { Tensor as Tensors } from '../../mol-math/linear-algebra/tensor.ts';
+import type { Tokens } from '../../mol-io/reader/common/text/tokenizer.ts';
+import { parseInt as fastParseInt, parseFloat as fastParseFloat } from '../../mol-io/reader/common/text/number-parser.ts';
 
 interface Column<T> {
     readonly schema: Column.Schema,

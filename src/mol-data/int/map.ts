@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { iterableToArray } from '../util/array';
+import { iterableToArray } from '../util/array.ts';
 
 // TODO: rename to "linear map" and just do key value mapping from index?
 

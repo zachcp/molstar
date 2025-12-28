@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Interval } from '../../int/interval';
-import { OrderedSet } from '../../int/ordered-set';
-import { SortedArray } from '../../int/sorted-array';
-import { IntervalIterator } from '../interval-iterator';
+import { Interval } from '../../int/interval.ts';
+import { OrderedSet } from '../../int/ordered-set.ts';
+import { SortedArray } from '../../int/sorted-array.ts';
+import { IntervalIterator } from '../interval-iterator.ts';
 
 describe('interval', () => {
     function testIterator(name: string, interval: Interval, set: OrderedSet, expectedValues: { index: number[], start: number[], end: number[]}) {

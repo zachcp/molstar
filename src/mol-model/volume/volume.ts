@@ -5,18 +5,18 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Grid } from './grid';
-import { OrderedSet } from '../../mol-data/int';
-import { Box3D, Sphere3D } from '../../mol-math/geometry';
-import { Vec3, Mat4 } from '../../mol-math/linear-algebra';
-import { BoundaryHelper } from '../../mol-math/geometry/boundary-helper';
-import { CubeFormat } from '../../mol-model-formats/volume/cube';
-import { EPSILON, equalEps } from '../../mol-math/linear-algebra/3d/common';
-import { ModelFormat } from '../../mol-model-formats/format';
-import { CustomProperties } from '../custom-property';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { toPrecision } from '../../mol-util/number';
-import { DscifFormat } from '../../mol-model-formats/volume/density-server';
+import { Grid } from './grid.ts';
+import { OrderedSet } from '../../mol-data/int.ts';
+import { Box3D, Sphere3D } from '../../mol-math/geometry.ts';
+import { Vec3, Mat4 } from '../../mol-math/linear-algebra.ts';
+import { BoundaryHelper } from '../../mol-math/geometry/boundary-helper.ts';
+import { CubeFormat } from '../../mol-model-formats/volume/cube.ts';
+import { EPSILON, equalEps } from '../../mol-math/linear-algebra/3d/common.ts';
+import { ModelFormat } from '../../mol-model-formats/format.ts';
+import { CustomProperties } from '../custom-property.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { toPrecision } from '../../mol-util/number.ts';
+import { DscifFormat } from '../../mol-model-formats/volume/density-server.ts';
 
 export interface Volume {
     readonly label?: string

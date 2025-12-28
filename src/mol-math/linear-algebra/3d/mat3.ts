@@ -17,11 +17,11 @@
  * furnished to do so, subject to the following conditions:
  */
 
-import { NumberArray } from '../../../mol-util/type-helpers';
-import { EPSILON } from './common';
-import { Euler } from './euler';
-import { Mat4 } from './mat4';
-import { Vec3 } from './vec3';
+import { NumberArray } from '../../../mol-util/type-helpers.ts';
+import { EPSILON } from './common.ts';
+import { Euler } from './euler.ts';
+import { Mat4 } from './mat4.ts';
+import { Vec3 } from './vec3.ts';
 
 interface Mat3 extends Array<number> { [d: number]: number, '@type': 'mat3', length: 9 }
 interface ReadonlyMat3 extends Array<number> { readonly [d: number]: number, '@type': 'mat3', length: 9 }

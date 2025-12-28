@@ -5,14 +5,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Unit, StructureElement, StructureProperties as Props, Bond } from '../mol-model/structure';
-import { Loci } from '../mol-model/loci';
-import { OrderedSet } from '../mol-data/int/ordered-set';
-import { capitalize, stripTags } from '../mol-util/string';
-import { Column } from '../mol-data/db/column';
-import { Vec3 } from '../mol-math/linear-algebra';
-import { radToDeg } from '../mol-math/misc';
-import { Volume } from '../mol-model/volume';
+import { Unit, StructureElement, StructureProperties as Props, Bond } from '../mol-model/structure.ts';
+import { Loci } from '../mol-model/loci.ts';
+import { OrderedSet } from '../mol-data/int/ordered-set.ts';
+import { capitalize, stripTags } from '../mol-util/string.ts';
+import { Column } from '../mol-data/db/column.ts';
+import { Vec3 } from '../mol-math/linear-algebra.ts';
+import { radToDeg } from '../mol-math/misc.ts';
+import { Volume } from '../mol-model/volume.ts';
 
 export type LabelGranularity = 'element' | 'conformation' | 'residue' | 'chain' | 'structure'
 

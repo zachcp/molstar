@@ -4,36 +4,36 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { RuntimeContext } from '../mol-task';
-import { GraphicsRenderObject } from '../mol-gl/render-object';
-import { PickingId } from '../mol-geo/geometry/picking';
-import { Loci, isEmptyLoci, isEveryLoci, EveryLoci } from '../mol-model/loci';
-import { MarkerAction, applyMarkerAction, getMarkerInfo, setMarkerValue, getPartialMarkerAverage, MarkerActions, MarkerInfo } from '../mol-util/marker-action';
-import { ParamDefinition as PD } from '../mol-util/param-definition';
-import { WebGLContext } from '../mol-gl/webgl/context';
-import { Theme } from '../mol-theme/theme';
-import { Mat4 } from '../mol-math/linear-algebra';
-import { updateTransformData, fillIdentityTransform } from '../mol-geo/geometry/transform-data';
-import { calculateTransformBoundingSphere } from '../mol-gl/renderable/util';
-import { ValueCell } from '../mol-util';
-import { Overpaint } from '../mol-theme/overpaint';
-import { createOverpaint, clearOverpaint, applyOverpaintColor } from '../mol-geo/geometry/overpaint-data';
-import { Interval } from '../mol-data/int/interval';
-import { Transparency } from '../mol-theme/transparency';
-import { createTransparency, clearTransparency, applyTransparencyValue, getTransparencyAverage, getTransparencyMin } from '../mol-geo/geometry/transparency-data';
-import { Clipping } from '../mol-theme/clipping';
-import { createClipping, applyClippingGroups, clearClipping } from '../mol-geo/geometry/clipping-data';
-import { getMarkersAverage } from '../mol-geo/geometry/marker-data';
-import { Texture } from '../mol-gl/webgl/texture';
-import { Geometry } from '../mol-geo/geometry/geometry';
-import { getColorSmoothingProps, hasColorSmoothingProp } from '../mol-geo/geometry/base';
-import { applyMeshEmissiveSmoothing, applyMeshOverpaintSmoothing, applyMeshSubstanceSmoothing, applyMeshTransparencySmoothing } from '../mol-geo/geometry/mesh/color-smoothing';
-import { applyTextureMeshEmissiveSmoothing, applyTextureMeshOverpaintSmoothing, applyTextureMeshSubstanceSmoothing, applyTextureMeshTransparencySmoothing } from '../mol-geo/geometry/texture-mesh/color-smoothing';
-import { Substance } from '../mol-theme/substance';
-import { applySubstanceMaterial, clearSubstance, createSubstance } from '../mol-geo/geometry/substance-data';
-import { LocationCallback } from './util';
-import { Emissive } from '../mol-theme/emissive';
-import { applyEmissiveValue, clearEmissive, createEmissive, getEmissiveAverage } from '../mol-geo/geometry/emissive-data';
+import { RuntimeContext } from '../mol-task/index.ts';
+import { GraphicsRenderObject } from '../mol-gl/render-object.ts';
+import { PickingId } from '../mol-geo/geometry/picking.ts';
+import { Loci, isEmptyLoci, isEveryLoci, EveryLoci } from '../mol-model/loci.ts';
+import { MarkerAction, applyMarkerAction, getMarkerInfo, setMarkerValue, getPartialMarkerAverage, MarkerActions, MarkerInfo } from '../mol-util/marker-action.ts';
+import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
+import { WebGLContext } from '../mol-gl/webgl/context.ts';
+import { Theme } from '../mol-theme/theme.ts';
+import { Mat4 } from '../mol-math/linear-algebra.ts';
+import { updateTransformData, fillIdentityTransform } from '../mol-geo/geometry/transform-data.ts';
+import { calculateTransformBoundingSphere } from '../mol-gl/renderable/util.ts';
+import { ValueCell } from '../mol-util/index.ts';
+import { Overpaint } from '../mol-theme/overpaint.ts';
+import { createOverpaint, clearOverpaint, applyOverpaintColor } from '../mol-geo/geometry/overpaint-data.ts';
+import { Interval } from '../mol-data/int/interval.ts';
+import { Transparency } from '../mol-theme/transparency.ts';
+import { createTransparency, clearTransparency, applyTransparencyValue, getTransparencyAverage, getTransparencyMin } from '../mol-geo/geometry/transparency-data.ts';
+import { Clipping } from '../mol-theme/clipping.ts';
+import { createClipping, applyClippingGroups, clearClipping } from '../mol-geo/geometry/clipping-data.ts';
+import { getMarkersAverage } from '../mol-geo/geometry/marker-data.ts';
+import { Texture } from '../mol-gl/webgl/texture.ts';
+import { Geometry } from '../mol-geo/geometry/geometry.ts';
+import { getColorSmoothingProps, hasColorSmoothingProp } from '../mol-geo/geometry/base.ts';
+import { applyMeshEmissiveSmoothing, applyMeshOverpaintSmoothing, applyMeshSubstanceSmoothing, applyMeshTransparencySmoothing } from '../mol-geo/geometry/mesh/color-smoothing.ts';
+import { applyTextureMeshEmissiveSmoothing, applyTextureMeshOverpaintSmoothing, applyTextureMeshSubstanceSmoothing, applyTextureMeshTransparencySmoothing } from '../mol-geo/geometry/texture-mesh/color-smoothing.ts';
+import { Substance } from '../mol-theme/substance.ts';
+import { applySubstanceMaterial, clearSubstance, createSubstance } from '../mol-geo/geometry/substance-data.ts';
+import { LocationCallback } from './util.ts';
+import { Emissive } from '../mol-theme/emissive.ts';
+import { applyEmissiveValue, clearEmissive, createEmissive, getEmissiveAverage } from '../mol-geo/geometry/emissive-data.ts';
 
 export interface VisualContext {
     readonly runtime: RuntimeContext

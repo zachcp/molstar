@@ -4,9 +4,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column } from './column';
-import { sortArray } from '../util/sort';
-import { StringBuilder } from '../../mol-util/string-builder';
+import { Column } from './column.ts';
+import { sortArray } from '../util/sort.ts';
+import { StringBuilder } from '../../mol-util/string-builder.ts';
 
 /** A collection of columns */
 type Table<Schema extends Table.Schema = any> = {
