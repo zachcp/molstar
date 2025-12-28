@@ -42,40 +42,42 @@ namespace SortedRanges {
     }
     return size;
   }
-  export function count<T extends number = number>(ranges: SortedRanges<T>) {
+  export function count<T extends number = number>(
+    ranges: SortedRanges<T>,
+  ): number {
     return ranges.length / 2;
   }
 
   export function startAt<T extends number = number>(
     ranges: SortedRanges<T>,
     index: number,
-  ) {
+  ): T {
     return ranges[index * 2];
   }
   export function endAt<T extends number = number>(
     ranges: SortedRanges<T>,
     index: number,
-  ) {
+  ): number {
     return ranges[index * 2 + 1] + 1;
   }
 
   export function minAt<T extends number = number>(
     ranges: SortedRanges<T>,
     index: number,
-  ) {
+  ): T {
     return ranges[index * 2];
   }
   export function maxAt<T extends number = number>(
     ranges: SortedRanges<T>,
     index: number,
-  ) {
+  ): T {
     return ranges[index * 2 + 1];
   }
 
   export function areEqual<T extends number = number>(
     a: SortedRanges<T>,
     b: SortedRanges<T>,
-  ) {
+  ): boolean {
     if (a.length !== b.length) return false;
     for (let i = 0, il = a.length; i < il; ++i) {
       if (a[i] !== b[i]) return false;
@@ -100,7 +102,7 @@ namespace SortedRanges {
   export function has<T extends number = number>(
     ranges: SortedRanges<T>,
     set: OrderedSet<T>,
-  ) {
+  ): boolean {
     return firstIntersectionIndex(ranges, set) !== -1;
   }
 
@@ -109,7 +111,7 @@ namespace SortedRanges {
     ranges: SortedRanges<T>,
     set: OrderedSet<T>,
     from: number,
-  ) {
+  ): boolean {
     return firstIntersectionIndexFrom(ranges, set, from) !== -1;
   }
 
@@ -142,7 +144,7 @@ namespace SortedRanges {
   export function transientSegments<
     T extends number = number,
     I extends number = number,
-  >(ranges: SortedRanges<T>, set: OrderedSet<T>) {
+  >(ranges: SortedRanges<T>, set: OrderedSet<T>): Iterator<T, I> {
     return new Iterator<T, I>(ranges, set);
   }
 
@@ -171,7 +173,7 @@ namespace SortedRanges {
       );
     }
 
-    move() {
+    move(): Segmentation.Segment<I> {
       if (this.hasNext) {
         this.updateValue();
         this.curIndex = firstIntersectionIndexFrom(
