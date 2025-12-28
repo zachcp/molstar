@@ -9,7 +9,9 @@ import { PluginStateObject } from "../../../../mol-plugin-state/objects.ts";
 import type { Volume } from "../../../../mol-model/volume.ts";
 import type { Structure } from "../../../../mol-model/structure.ts";
 
-const VolumeServerInfoBase = PluginStateObject.Create<VolumeServerInfo.Data>({
+const VolumeServerInfoBase: ReturnType<
+  typeof PluginStateObject.Create<VolumeServerInfo.Data>
+> = PluginStateObject.Create<VolumeServerInfo.Data>({
   name: "Volume Streaming",
   typeClass: "Object",
 });

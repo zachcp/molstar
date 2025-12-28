@@ -112,12 +112,16 @@ export const TunnelShapeParams = {
   showRadii: PD.Boolean(false),
 };
 
-const TunnelStateObjectBase = PluginStateObject.Create<{ tunnel: Tunnel }>({
+const TunnelStateObjectBase: ReturnType<
+  typeof PluginStateObject.Create<{ tunnel: Tunnel }>
+> = PluginStateObject.Create<{ tunnel: Tunnel }>({
   name: "Tunnel Entry",
   typeClass: "Data",
 });
 export class TunnelStateObject extends TunnelStateObjectBase {}
-const TunnelsStateObjectBase = PluginStateObject.Create<{ tunnels: Tunnel[] }>({
+const TunnelsStateObjectBase: ReturnType<
+  typeof PluginStateObject.Create<{ tunnels: Tunnel[] }>
+> = PluginStateObject.Create<{ tunnels: Tunnel[] }>({
   name: "Tunnels",
   typeClass: "Data",
 });

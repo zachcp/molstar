@@ -39,10 +39,11 @@ import type { Camera } from "../../../../mol-canvas3d/camera.ts";
 import type { PluginCommand } from "../../../command.ts";
 import { SingleAsyncQueue } from "../../../../mol-util/single-async-queue.ts";
 
-const VolumeStreamingBase =
-  PluginStateObject.CreateBehavior<VolumeStreaming.Behavior>({
-    name: "Volume Streaming",
-  });
+const VolumeStreamingBase: ReturnType<
+  typeof PluginStateObject.CreateBehavior<VolumeStreaming.Behavior>
+> = PluginStateObject.CreateBehavior<VolumeStreaming.Behavior>({
+  name: "Volume Streaming",
+});
 export class VolumeStreaming extends VolumeStreamingBase {}
 
 export namespace VolumeStreaming {

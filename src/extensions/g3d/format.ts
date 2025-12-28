@@ -85,7 +85,13 @@ async function defaultStructure(
   await components.commit();
 }
 
-const G3dHeaderObjectBase = SO.Create<{
+const G3dHeaderObjectBase: ReturnType<
+  typeof SO.Create<{
+    header: G3dHeader;
+    urlOrData: Uint8Array | string;
+    cache: { [resolution: number]: Trajectory | undefined };
+  }>
+> = SO.Create<{
   header: G3dHeader;
   urlOrData: Uint8Array | string;
   cache: { [resolution: number]: Trajectory | undefined };

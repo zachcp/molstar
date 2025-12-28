@@ -32,17 +32,21 @@ interface PluginBehavior<P = unknown> {
 }
 
 namespace PluginBehavior {
-  const RootBase = PluginStateObject.Create({
-    name: "Root",
-    typeClass: "Root",
-  });
+  const RootBase: ReturnType<typeof PluginStateObject.Create> =
+    PluginStateObject.Create({
+      name: "Root",
+      typeClass: "Root",
+    });
   export class Root extends RootBase {}
-  const CategoryBase = PluginStateObject.Create({
-    name: "Category",
-    typeClass: "Object",
-  });
+  const CategoryBase: ReturnType<typeof PluginStateObject.Create> =
+    PluginStateObject.Create({
+      name: "Category",
+      typeClass: "Object",
+    });
   export class Category extends CategoryBase {}
-  const BehaviorBase = PluginStateObject.CreateBehavior<PluginBehavior>({
+  const BehaviorBase: ReturnType<
+    typeof PluginStateObject.CreateBehavior<PluginBehavior>
+  > = PluginStateObject.CreateBehavior<PluginBehavior>({
     name: "Behavior",
   });
   export class Behavior extends BehaviorBase {}

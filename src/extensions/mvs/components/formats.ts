@@ -21,7 +21,9 @@ import { MVSData } from "../mvs-data.ts";
 import { MVSTransform } from "./annotation-structure-component.ts";
 
 /** Plugin state object storing `MVSData` */
-const MvsBase = SO.Create<{ mvsData: MVSData; sourceUrl?: string }>({
+const MvsBase: ReturnType<
+  typeof SO.Create<{ mvsData: MVSData; sourceUrl?: string }>
+> = SO.Create<{ mvsData: MVSData; sourceUrl?: string }>({
   name: "MVS Data",
   typeClass: "Data",
 });

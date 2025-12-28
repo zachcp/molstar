@@ -91,21 +91,29 @@ export namespace PluginStateObject {
     return Create<T>({ ...type, typeClass: "Behavior" });
   }
 
-  const RootBase = Create({ name: "Root", typeClass: "Root" });
+  const RootBase: ReturnType<typeof Create> = Create({
+    name: "Root",
+    typeClass: "Root",
+  });
   export class Root extends RootBase {}
-  const GroupBase = Create({ name: "Group", typeClass: "Group" });
+  const GroupBase: ReturnType<typeof Create> = Create({
+    name: "Group",
+    typeClass: "Group",
+  });
   export class Group extends GroupBase {}
 
   export namespace Data {
-    const StringBase = Create<StringLike>({
-      name: "String Data",
-      typeClass: "Data",
-    });
+    const StringBase: ReturnType<typeof Create<StringLike>> =
+      Create<StringLike>({
+        name: "String Data",
+        typeClass: "Data",
+      });
     export class String extends StringBase {}
-    const BinaryBase = Create<Uint8Array<ArrayBuffer>>({
-      name: "Binary Data",
-      typeClass: "Data",
-    });
+    const BinaryBase: ReturnType<typeof Create<Uint8Array<ArrayBuffer>>> =
+      Create<Uint8Array<ArrayBuffer>>({
+        name: "Binary Data",
+        typeClass: "Data",
+      });
     export class Binary extends BinaryBase {}
 
     export type BlobEntry = { id: string } & (
@@ -113,7 +121,7 @@ export namespace PluginStateObject {
       | { kind: "binary"; data: Uint8Array<ArrayBuffer> }
     );
     export type BlobData = BlobEntry[];
-    const BlobBase = Create<BlobData>({
+    const BlobBase: ReturnType<typeof Create<BlobData>> = Create<BlobData>({
       name: "Data Blob",
       typeClass: "Data",
     });
@@ -121,52 +129,53 @@ export namespace PluginStateObject {
   }
 
   export namespace Format {
-    const JsonBase = Create<any>({
+    const JsonBase: ReturnType<typeof Create<any>> = Create<any>({
       name: "JSON Data",
       typeClass: "Data",
     });
     export class Json extends JsonBase {}
-    const CifBase = Create<CifFile>({
+    const CifBase: ReturnType<typeof Create<CifFile>> = Create<CifFile>({
       name: "CIF File",
       typeClass: "Data",
     });
     export class Cif extends CifBase {}
-    const CubeBase = Create<CubeFile>({
+    const CubeBase: ReturnType<typeof Create<CubeFile>> = Create<CubeFile>({
       name: "Cube File",
       typeClass: "Data",
     });
     export class Cube extends CubeBase {}
-    const PsfBase = Create<PsfFile>({
+    const PsfBase: ReturnType<typeof Create<PsfFile>> = Create<PsfFile>({
       name: "PSF File",
       typeClass: "Data",
     });
     export class Psf extends PsfBase {}
-    const PrmtopBase = Create<PrmtopFile>({
-      name: "PRMTOP File",
-      typeClass: "Data",
-    });
+    const PrmtopBase: ReturnType<typeof Create<PrmtopFile>> =
+      Create<PrmtopFile>({
+        name: "PRMTOP File",
+        typeClass: "Data",
+      });
     export class Prmtop extends PrmtopBase {}
-    const TopBase = Create<TopFile>({
+    const TopBase: ReturnType<typeof Create<TopFile>> = Create<TopFile>({
       name: "TOP File",
       typeClass: "Data",
     });
     export class Top extends TopBase {}
-    const PlyBase = Create<PlyFile>({
+    const PlyBase: ReturnType<typeof Create<PlyFile>> = Create<PlyFile>({
       name: "PLY File",
       typeClass: "Data",
     });
     export class Ply extends PlyBase {}
-    const Ccp4Base = Create<Ccp4File>({
+    const Ccp4Base: ReturnType<typeof Create<Ccp4File>> = Create<Ccp4File>({
       name: "CCP4/MRC/MAP File",
       typeClass: "Data",
     });
     export class Ccp4 extends Ccp4Base {}
-    const Dsn6Base = Create<Dsn6File>({
+    const Dsn6Base: ReturnType<typeof Create<Dsn6File>> = Create<Dsn6File>({
       name: "DSN6/BRIX File",
       typeClass: "Data",
     });
     export class Dsn6 extends Dsn6Base {}
-    const DxBase = Create<DxFile>({
+    const DxBase: ReturnType<typeof Create<DxFile>> = Create<DxFile>({
       name: "DX File",
       typeClass: "Data",
     });
@@ -188,7 +197,7 @@ export namespace PluginStateObject {
       | { kind: "custom"; data: unknown; tag: string }
     );
     export type BlobData = BlobEntry[];
-    const BlobBase = Create<BlobData>({
+    const BlobBase: ReturnType<typeof Create<BlobData>> = Create<BlobData>({
       name: "Format Blob",
       typeClass: "Data",
     });
@@ -196,37 +205,42 @@ export namespace PluginStateObject {
   }
 
   export namespace Molecule {
-    const CoordinatesBase = Create<_Coordinates>({
-      name: "Coordinates",
-      typeClass: "Object",
-    });
+    const CoordinatesBase: ReturnType<typeof Create<_Coordinates>> =
+      Create<_Coordinates>({
+        name: "Coordinates",
+        typeClass: "Object",
+      });
     export class Coordinates extends CoordinatesBase {}
-    const TopologyBase = Create<_Topology>({
-      name: "Topology",
-      typeClass: "Object",
-    });
+    const TopologyBase: ReturnType<typeof Create<_Topology>> =
+      Create<_Topology>({
+        name: "Topology",
+        typeClass: "Object",
+      });
     export class Topology extends TopologyBase {}
-    const ModelBase = Create<_Model>({
+    const ModelBase: ReturnType<typeof Create<_Model>> = Create<_Model>({
       name: "Model",
       typeClass: "Object",
     });
     export class Model extends ModelBase {}
-    const TrajectoryBase = Create<_Trajectory>({
-      name: "Trajectory",
-      typeClass: "Object",
-    });
+    const TrajectoryBase: ReturnType<typeof Create<_Trajectory>> =
+      Create<_Trajectory>({
+        name: "Trajectory",
+        typeClass: "Object",
+      });
     export class Trajectory extends TrajectoryBase {}
-    const StructureBase = Create<_Structure>({
-      name: "Structure",
-      typeClass: "Object",
-    });
+    const StructureBase: ReturnType<typeof Create<_Structure>> =
+      Create<_Structure>({
+        name: "Structure",
+        typeClass: "Object",
+      });
     export class Structure extends StructureBase {}
 
     export namespace Structure {
-      const Representation3DBase = CreateRepresentation3D<
-        StructureRepresentation<any>,
-        _Structure
-      >({ name: "Structure 3D" });
+      const Representation3DBase: ReturnType<
+        typeof CreateRepresentation3D<StructureRepresentation<any>, _Structure>
+      > = CreateRepresentation3D<StructureRepresentation<any>, _Structure>({
+        name: "Structure 3D",
+      });
       export class Representation3D extends Representation3DBase {}
 
       export interface Representation3DStateData {
@@ -236,7 +250,9 @@ export namespace PluginStateObject {
         state: Partial<StructureRepresentationState>;
         info?: unknown;
       }
-      const Representation3DStateBase = Create<Representation3DStateData>({
+      const Representation3DStateBase: ReturnType<
+        typeof Create<Representation3DStateData>
+      > = Create<Representation3DStateData>({
         name: "Structure 3D State",
         typeClass: "Object",
       });
@@ -248,7 +264,9 @@ export namespace PluginStateObject {
         groupId?: string;
         loci: StructureElement.Loci;
       }
-      const SelectionsBase = Create<ReadonlyArray<SelectionEntry>>({
+      const SelectionsBase: ReturnType<
+        typeof Create<ReadonlyArray<SelectionEntry>>
+      > = Create<ReadonlyArray<SelectionEntry>>({
         name: "Selections",
         typeClass: "Object",
       });
@@ -271,33 +289,37 @@ export namespace PluginStateObject {
       }[];
     }
 
-    const DataBase = Create<_Volume>({
+    const DataBase: ReturnType<typeof Create<_Volume>> = Create<_Volume>({
       name: "Volume",
       typeClass: "Object",
     });
     export class Data extends DataBase {}
-    const LazyBase = Create<LazyInfo>({
+    const LazyBase: ReturnType<typeof Create<LazyInfo>> = Create<LazyInfo>({
       name: "Lazy Volume",
       typeClass: "Object",
     });
     export class Lazy extends LazyBase {}
-    const Representation3DBase = CreateRepresentation3D<
-      VolumeRepresentation<any>,
-      _Volume
-    >({ name: "Volume 3D" });
+    const Representation3DBase: ReturnType<
+      typeof CreateRepresentation3D<VolumeRepresentation<any>, _Volume>
+    > = CreateRepresentation3D<VolumeRepresentation<any>, _Volume>({
+      name: "Volume 3D",
+    });
     export class Representation3D extends Representation3DBase {}
   }
 
   export namespace Shape {
-    const ProviderBase = Create<ShapeProvider<any, any, any>>({
+    const ProviderBase: ReturnType<
+      typeof Create<ShapeProvider<any, any, any>>
+    > = Create<ShapeProvider<any, any, any>>({
       name: "Shape Provider",
       typeClass: "Object",
     });
     export class Provider extends ProviderBase {}
-    const Representation3DBase = CreateRepresentation3D<
-      ShapeRepresentation<any, any, any>,
-      unknown
-    >({ name: "Shape 3D" });
+    const Representation3DBase: ReturnType<
+      typeof CreateRepresentation3D<ShapeRepresentation<any, any, any>, unknown>
+    > = CreateRepresentation3D<ShapeRepresentation<any, any, any>, unknown>({
+      name: "Shape 3D",
+    });
     export class Representation3D extends Representation3DBase {}
   }
 }
