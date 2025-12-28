@@ -230,7 +230,7 @@ function structConnExpression(conn: StructConnRecord, by: 'atoms' | 'residues') 
     const { core, struct } = MolScriptBuilder;
     const partnerExpressions = [];
     for (const partner of [conn.partner1, conn.partner2]) {
-        const propTests: Parameters<typeof struct.generator.atomGroups>[0] = {
+        const propTests: any = {
             'chain-test': core.rel.eq([struct.atomProperty.macromolecular.label_asym_id(), partner.asymId]),
             'group-by': struct.atomProperty.core.operatorName(),
         };
