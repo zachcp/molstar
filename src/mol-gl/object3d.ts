@@ -4,13 +4,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mat4, Vec3 } from '../mol-math/linear-algebra.ts';
+import { Mat4 } from '../mol-math/linear-algebra/3d/mat4';
+import { Vec3 } from '../mol-math/linear-algebra/3d/vec3';
 
 export interface Object3D {
-    readonly view: Mat4;
-    readonly position: Vec3;
-    readonly direction: Vec3;
-    readonly up: Vec3;
+    readonly view: Mat4
+    readonly position: Vec3
+    readonly direction: Vec3
+    readonly up: Vec3
 }
 
 export namespace Object3D {

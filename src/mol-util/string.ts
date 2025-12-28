@@ -5,9 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import type { StringLike } from '../mol-io/common/string-like.ts';
-
-const reLine = /^/gm;
+const reLine = /^/mg;
 export function indentString(str: string, count: number, indent: string) {
     return count === 0 ? str : str.replace(reLine, indent.repeat(count));
 }
@@ -52,16 +50,11 @@ export function kebabCaseToWords(str: string) {
     return capitalize(splitKebabCase(str));
 }
 
-export function stringToWords(str: string): string {
+export function stringToWords(str: string) {
     return capitalize(splitCamelCase(splitSnakeCase(splitKebabCase(str))));
 }
 
-export function substringStartsWith(
-    str: StringLike,
-    start: number,
-    end: number,
-    target: string,
-) {
+export function substringStartsWith(str: string, start: number, end: number, target: string) {
     const len = target.length;
     if (len > end - start) return false;
     for (let i = 0; i < len; i++) {
@@ -81,20 +74,20 @@ export function trimChar(str: string, char: string) {
     let end = str.length;
     while (start < end && str[start] === char) ++start;
     while (end > start && str[end - 1] === char) --end;
-    return start > 0 || end < str.length ? str.substring(start, end) : str;
+    return (start > 0 || end < str.length) ? str.substring(start, end) : str;
 }
 
 export function trimCharStart(str: string, char: string) {
     let start = 0;
     const end = str.length;
     while (start < end && str[start] === char) ++start;
-    return start > 0 ? str.substring(start, end) : str;
+    return (start > 0) ? str.substring(start, end) : str;
 }
 
 export function trimCharEnd(str: string, char: string) {
     let end = str.length;
     while (end > 0 && str[end - 1] === char) --end;
-    return end < str.length ? str.substring(0, end) : str;
+    return (end < str.length) ? str.substring(0, end) : str;
 }
 
 /** Simple function to strip tags from a string */

@@ -4,60 +4,48 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { hashFnv32a } from '../../../mol-data/util.ts';
-import { LocationIterator } from '../../../mol-geo/util/location-iterator.ts';
-import type { RenderableState } from '../../../mol-gl/renderable.ts';
-import {
-    calculateTransformBoundingSphere,
-    createTextureImage,
-    type TextureImage,
-} from '../../../mol-gl/renderable/util.ts';
-import { Sphere3D } from '../../../mol-math/geometry.ts';
-import { Mat4, Quat, Vec2, Vec3, Vec4 } from '../../../mol-math/linear-algebra.ts';
-import type { Theme } from '../../../mol-theme/theme.ts';
-import { ValueCell } from '../../../mol-util/index.ts';
-import type { Color } from '../../../mol-util/color/index.ts';
-import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { BaseGeometry } from '../base.ts';
-import { createColors } from '../color-data.ts';
-import type { GeometryUtils } from '../geometry.ts';
-import { createMarkers } from '../marker-data.ts';
-import { createEmptyOverpaint } from '../overpaint-data.ts';
-import type { TransformData } from '../transform-data.ts';
-import { createEmptyTransparency } from '../transparency-data.ts';
-import type { ImageValues } from '../../../mol-gl/renderable/image.ts';
-import { fillSerial } from '../../../mol-util/array.ts';
-import { createEmptyClipping } from '../clipping-data.ts';
-import { NullLocation } from '../../../mol-model/location.ts';
-import { QuadPositions } from '../../../mol-gl/compute/util.ts';
-import { createEmptySubstance } from '../substance-data.ts';
-import { createEmptyEmissive } from '../emissive-data.ts';
+import { hashFnv32a } from '../../../mol-data/util';
+import { LocationIterator } from '../../util/location-iterator';
+import { RenderableState } from '../../../mol-gl/renderable';
+import { calculateTransformBoundingSphere, createTextureImage, TextureImage } from '../../../mol-gl/renderable/util';
+import { Sphere3D } from '../../../mol-math/geometry';
+import { Vec2, Vec4, Vec3, Quat, Mat4 } from '../../../mol-math/linear-algebra';
+import { Theme } from '../../../mol-theme/theme';
+import { ValueCell } from '../../../mol-util';
+import { Color } from '../../../mol-util/color';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition';
+import { BaseGeometry } from '../base';
+import { createColors } from '../color-data';
+import { GeometryUtils } from '../geometry';
+import { createMarkers } from '../marker-data';
+import { createEmptyOverpaint } from '../overpaint-data';
+import { TransformData } from '../transform-data';
+import { createEmptyTransparency } from '../transparency-data';
+import { ImageValues } from '../../../mol-gl/renderable/image';
+import { fillSerial } from '../../../mol-util/array';
+import { createEmptyClipping } from '../clipping-data';
+import { NullLocation } from '../../../mol-model/location';
+import { QuadPositions } from '../../../mol-gl/compute/util';
+import { createEmptySubstance } from '../substance-data';
+import { createEmptyEmissive } from '../emissive-data';
 
 const QuadIndices = new Uint32Array([
-    0,
-    1,
-    2,
-    1,
-    3,
-    2,
+    0, 1, 2,
+    1, 3, 2
 ]);
 
 const QuadUvs = new Float32Array([
-    0,
-    1,
-    0,
-    0,
-    1,
-    1,
-    1,
-    0,
+    0, 1,
+    0, 0,
+    1, 1,
+    1, 0
 ]);
 
 export const InterpolationTypes = {
     'nearest': 'Nearest',
     'catmulrom': 'Catmulrom (Cubic)',
     'mitchell': 'Mitchell (Cubic)',
-    'bspline': 'B-Spline (Cubic)',
+    'bspline': 'B-Spline (Cubic)'
 };
 export type InterpolationTypes = keyof typeof InterpolationTypes;
 export const InterpolationTypeNames = Object.keys(InterpolationTypes) as InterpolationTypes[];
@@ -65,69 +53,54 @@ export const InterpolationTypeNames = Object.keys(InterpolationTypes) as Interpo
 export { Image };
 
 interface Image {
-    readonly kind: 'image';
+    readonly kind: 'image',
 
-    readonly imageTexture: ValueCell<TextureImage<Uint8Array>>;
-    readonly imageTextureDim: ValueCell<Vec2>;
-    readonly cornerBuffer: ValueCell<Float32Array>;
-    readonly groupTexture: ValueCell<TextureImage<Uint8Array>>;
-    readonly valueTexture: ValueCell<TextureImage<Float32Array>>;
+    readonly imageTexture: ValueCell<TextureImage<Uint8Array>>,
+    readonly imageTextureDim: ValueCell<Vec2>,
+    readonly cornerBuffer: ValueCell<Float32Array>,
+    readonly groupTexture: ValueCell<TextureImage<Uint8Array>>,
+    readonly valueTexture: ValueCell<TextureImage<Float32Array>>,
 
-    readonly trimType: ValueCell<number>;
-    readonly trimCenter: ValueCell<Vec3>;
-    readonly trimRotation: ValueCell<Quat>;
-    readonly trimScale: ValueCell<Vec3>;
-    readonly trimTransform: ValueCell<Mat4>;
+    readonly trimType: ValueCell<number>,
+    readonly trimCenter: ValueCell<Vec3>,
+    readonly trimRotation: ValueCell<Quat>,
+    readonly trimScale: ValueCell<Vec3>,
+    readonly trimTransform: ValueCell<Mat4>,
 
-    readonly isoLevel: ValueCell<number>;
+    readonly isoLevel: ValueCell<number>,
 
     /** Bounding sphere of the image */
-    readonly boundingSphere: Sphere3D;
+    readonly boundingSphere: Sphere3D
 
-    setBoundingSphere(boundingSphere: Sphere3D): void;
+    setBoundingSphere(boundingSphere: Sphere3D): void
 }
 
 namespace Image {
     export type Trim = {
-        type: 0 | 1 | 2 | 3 | 4 | 5;
-        center: Vec3;
-        rotation: Quat;
-        scale: Vec3;
-        transform: Mat4;
-    };
+        type: 0 | 1 | 2 | 3 | 4 | 5,
+        center: Vec3,
+        rotation: Quat,
+        scale: Vec3,
+        transform: Mat4,
+    }
 
     export function createEmptyTrim(): Trim {
         return { type: 0, center: Vec3(), rotation: Quat(), scale: Vec3(), transform: Mat4() };
     }
 
-    export function create(
-        imageTexture: TextureImage<Uint8Array>,
-        corners: Float32Array,
-        groupTexture: TextureImage<Uint8Array>,
-        valueTexture: TextureImage<Float32Array>,
-        trim: Trim,
-        isoLevel: number,
-        image?: Image,
-    ): Image {
-        return image
-            ? update(imageTexture, corners, groupTexture, valueTexture, trim, isoLevel, image)
-            : fromData(imageTexture, corners, groupTexture, valueTexture, trim, isoLevel);
+    export function create(imageTexture: TextureImage<Uint8Array>, corners: Float32Array, groupTexture: TextureImage<Uint8Array>, valueTexture: TextureImage<Float32Array>, trim: Trim, isoLevel: number, image?: Image): Image {
+        return image ?
+            update(imageTexture, corners, groupTexture, valueTexture, trim, isoLevel, image) :
+            fromData(imageTexture, corners, groupTexture, valueTexture, trim, isoLevel);
     }
 
     function hashCode(image: Image) {
         return hashFnv32a([
-            image.cornerBuffer.ref.version,
+            image.cornerBuffer.ref.version
         ]);
     }
 
-    function fromData(
-        imageTexture: TextureImage<Uint8Array>,
-        corners: Float32Array,
-        groupTexture: TextureImage<Uint8Array>,
-        valueTexture: TextureImage<Float32Array>,
-        trim: Trim,
-        isoLevel: number,
-    ): Image {
+    function fromData(imageTexture: TextureImage<Uint8Array>, corners: Float32Array, groupTexture: TextureImage<Uint8Array>, valueTexture: TextureImage<Float32Array>, trim: Trim, isoLevel: number): Image {
         const boundingSphere = Sphere3D();
         let currentHash = -1;
 
@@ -164,15 +137,7 @@ namespace Image {
         return image;
     }
 
-    function update(
-        imageTexture: TextureImage<Uint8Array>,
-        corners: Float32Array,
-        groupTexture: TextureImage<Uint8Array>,
-        valueTexture: TextureImage<Float32Array>,
-        trim: Trim,
-        isoLevel: number,
-        image: Image,
-    ): Image {
+    function update(imageTexture: TextureImage<Uint8Array>, corners: Float32Array, groupTexture: TextureImage<Uint8Array>, valueTexture: TextureImage<Float32Array>, trim: Trim, isoLevel: number, image: Image): Image {
         const width = imageTexture.width;
         const height = imageTexture.height;
 
@@ -205,7 +170,7 @@ namespace Image {
         ...BaseGeometry.Params,
         interpolation: PD.Select('bspline', PD.objectToOptions(InterpolationTypes)),
     };
-    export type Params = typeof Params;
+    export type Params = typeof Params
 
     export const Utils: GeometryUtils<Image, Params> = {
         Params,
@@ -216,20 +181,14 @@ namespace Image {
         updateBoundingSphere,
         createRenderableState,
         updateRenderableState,
-        createPositionIterator,
+        createPositionIterator
     };
 
     function createPositionIterator(_image: Image, _transform: TransformData): LocationIterator {
         return LocationIterator(1, 1, 1, () => NullLocation);
     }
 
-    function createValues(
-        image: Image,
-        transform: TransformData,
-        locationIt: LocationIterator,
-        theme: Theme,
-        props: PD.Values<Params>,
-    ): ImageValues {
+    function createValues(image: Image, transform: TransformData, locationIt: LocationIterator, theme: Theme, props: PD.Values<Params>): ImageValues {
         const { instanceCount, groupCount } = locationIt;
         const positionIt = createPositionIterator(image, transform);
 
@@ -243,20 +202,10 @@ namespace Image {
         const material = createEmptySubstance();
         const clipping = createEmptyClipping();
 
-        const counts = {
-            drawCount: QuadIndices.length,
-            vertexCount: QuadPositions.length / 3,
-            groupCount,
-            instanceCount,
-        };
+        const counts = { drawCount: QuadIndices.length, vertexCount: QuadPositions.length / 3, groupCount, instanceCount };
 
         const invariantBoundingSphere = Sphere3D.clone(image.boundingSphere);
-        const boundingSphere = calculateTransformBoundingSphere(
-            invariantBoundingSphere,
-            transform.aTransform.ref.value,
-            instanceCount,
-            0,
-        );
+        const boundingSphere = calculateTransformBoundingSphere(invariantBoundingSphere, transform.aTransform.ref.value, instanceCount, 0);
 
         return {
             dGeometryType: ValueCell.create('image'),
@@ -298,13 +247,7 @@ namespace Image {
         };
     }
 
-    function createValuesSimple(
-        image: Image,
-        props: Partial<PD.Values<Params>>,
-        colorValue: Color,
-        sizeValue: number,
-        transform?: TransformData,
-    ) {
+    function createValuesSimple(image: Image, props: Partial<PD.Values<Params>>, colorValue: Color, sizeValue: number, transform?: TransformData) {
         const s = BaseGeometry.createSimple(colorValue, sizeValue, transform);
         const p = { ...PD.getDefaultValues(Params), ...props };
         return createValues(image, s.transform, s.locationIterator, s.theme, p);
@@ -317,22 +260,14 @@ namespace Image {
 
     function updateBoundingSphere(values: ImageValues, image: Image) {
         const invariantBoundingSphere = Sphere3D.clone(image.boundingSphere);
-        const boundingSphere = calculateTransformBoundingSphere(
-            invariantBoundingSphere,
-            values.aTransform.ref.value,
-            values.instanceCount.ref.value,
-            0,
-        );
+        const boundingSphere = calculateTransformBoundingSphere(invariantBoundingSphere, values.aTransform.ref.value, values.instanceCount.ref.value, 0);
 
         if (!Sphere3D.equals(boundingSphere, values.boundingSphere.ref.value)) {
             ValueCell.update(values.boundingSphere, boundingSphere);
         }
         if (!Sphere3D.equals(invariantBoundingSphere, values.invariantBoundingSphere.ref.value)) {
             ValueCell.update(values.invariantBoundingSphere, invariantBoundingSphere);
-            ValueCell.update(
-                values.uInvariantBoundingSphere,
-                Vec4.fromSphere(values.uInvariantBoundingSphere.ref.value, invariantBoundingSphere),
-            );
+            ValueCell.update(values.uInvariantBoundingSphere, Vec4.fromSphere(values.uInvariantBoundingSphere.ref.value, invariantBoundingSphere));
         }
     }
 

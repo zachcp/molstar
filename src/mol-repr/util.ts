@@ -4,24 +4,25 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { defaults } from '../mol-util/index.ts';
-import { Structure } from '../mol-model/structure.ts';
-import type { VisualQuality } from '../mol-geo/geometry/base.ts';
-import { Box3D, SpacegroupCell } from '../mol-math/geometry.ts';
-import { ModelSymmetry } from '../mol-model-formats/structure/property/symmetry.ts';
-import { Volume } from '../mol-model/volume.ts';
-import type { Location } from '../mol-model/location.ts';
+import { defaults } from '../mol-util';
+import { Structure } from '../mol-model/structure';
+import { VisualQuality } from '../mol-geo/geometry/base';
+import { Box3D, SpacegroupCell } from '../mol-math/geometry';
+import { ModelSymmetry } from '../mol-model-formats/structure/property/symmetry';
+import { Volume } from '../mol-model/volume';
+import { Location } from '../mol-model/location';
+import { isStandaloneHmd } from '../mol-util/browser';
 
 export interface VisualUpdateState {
-    updateTransform: boolean;
-    updateMatrix: boolean;
-    updateColor: boolean;
-    updateSize: boolean;
-    createGeometry: boolean;
-    createNew: boolean;
+    updateTransform: boolean
+    updateMatrix: boolean
+    updateColor: boolean
+    updateSize: boolean
+    createGeometry: boolean
+    createNew: boolean
 
     /** holds contextual info, is not reset  */
-    info: { [k: string]: unknown };
+    info: { [k: string]: unknown }
 }
 export namespace VisualUpdateState {
     export function create(): VisualUpdateState {
@@ -33,7 +34,7 @@ export namespace VisualUpdateState {
             createGeometry: false,
             createNew: false,
 
-            info: {},
+            info: {}
         };
     }
     export function reset(state: VisualUpdateState) {
@@ -46,22 +47,22 @@ export namespace VisualUpdateState {
     }
 }
 
-export type LocationCallback = (loc: Location, isSecondary: boolean) => void;
+export type LocationCallback = (loc: Location, isSecondary: boolean) => void
 
 //
 
 export interface QualityProps {
-    quality: VisualQuality;
-    detail: number;
-    radialSegments: number;
-    linearSegments: number;
-    resolution: number;
-    imageResolution: number;
-    probePositions: number;
-    doubleSided: boolean;
-    xrayShaded: boolean | 'inverted';
-    alpha: number;
-    transparentBackfaces: 'off' | 'on' | 'opaque';
+    quality: VisualQuality
+    detail: number
+    radialSegments: number
+    linearSegments: number
+    resolution: number
+    imageResolution: number
+    probePositions: number
+    doubleSided: boolean
+    xrayShaded: boolean | 'inverted'
+    alpha: number
+    transparentBackfaces: 'off' | 'on' | 'opaque'
 }
 
 export const DefaultQualityThresholds = {
@@ -72,9 +73,31 @@ export const DefaultQualityThresholds = {
     highElementCount: 2_000,
     coarseGrainedFactor: 10,
 
-    elementCountFactor: 1,
+    elementCountFactor: 1
 };
-export type QualityThresholds = typeof DefaultQualityThresholds;
+export type QualityThresholds = typeof DefaultQualityThresholds
+
+enum QualityLevel {
+    Lowest,
+    Lower,
+    Low,
+    Medium,
+    High,
+    Higher,
+    Highest
+}
+
+function visualQualityToLevel(quality: Exclude<VisualQuality, 'auto' | 'custom'>): QualityLevel {
+    switch (quality) {
+        case 'lowest': return QualityLevel.Lowest;
+        case 'lower': return QualityLevel.Lower;
+        case 'low': return QualityLevel.Low;
+        case 'medium': return QualityLevel.Medium;
+        case 'high': return QualityLevel.High;
+        case 'higher': return QualityLevel.Higher;
+        case 'highest': return QualityLevel.Highest;
+    }
+}
 
 export function getStructureQuality(structure: Structure, tresholds: Partial<QualityThresholds> = {}): VisualQuality {
     const t = { ...DefaultQualityThresholds, ...tresholds };
@@ -132,73 +155,77 @@ export function getQualityProps(props: Partial<QualityProps>, data?: any) {
         }
     }
 
-    switch (quality) {
-        case 'highest':
-            detail = 3;
-            radialSegments = 36;
-            linearSegments = 18;
-            resolution = 0.1;
-            imageResolution = 0.01;
-            probePositions = 72;
-            doubleSided = true;
-            break;
-        case 'higher':
-            detail = 3;
-            radialSegments = 28;
-            linearSegments = 14;
-            resolution = 0.3;
-            imageResolution = 0.05;
-            probePositions = 48;
-            doubleSided = true;
-            break;
-        case 'high':
-            detail = 2;
-            radialSegments = 20;
-            linearSegments = 10;
-            resolution = 0.5;
-            imageResolution = 0.1;
-            probePositions = 36;
-            doubleSided = true;
-            break;
-        case 'medium':
-            detail = 1;
-            radialSegments = 12;
-            linearSegments = 8;
-            resolution = 0.8;
-            imageResolution = 0.2;
-            probePositions = 24;
-            doubleSided = true;
-            break;
-        case 'low':
-            detail = 0;
-            radialSegments = 8;
-            linearSegments = 3;
-            resolution = 1.3;
-            imageResolution = 0.4;
-            probePositions = 24;
-            doubleSided = false;
-            break;
-        case 'lower':
-            detail = 0;
-            radialSegments = 4;
-            linearSegments = 2;
-            resolution = 3;
-            imageResolution = 0.7;
-            probePositions = 12;
-            doubleSided = false;
-            break;
-        case 'lowest':
-            detail = 0;
-            radialSegments = 2;
-            linearSegments = 1;
-            resolution = 8;
-            imageResolution = 1;
-            probePositions = 12;
-            doubleSided = false;
-            break;
-        case 'custom':
-            // use defaults or given props as set above
-            break;
+    if (quality !== 'custom' && quality !== 'auto') {
+        let level = visualQualityToLevel(quality);
+        if (isStandaloneHmd()) {
+            level = Math.max(level - 1, QualityLevel.Lowest);
+        }
+
+        switch (level) {
+            case QualityLevel.Highest:
+                detail = 3;
+                radialSegments = 36;
+                linearSegments = 18;
+                resolution = 0.1;
+                imageResolution = 0.01;
+                probePositions = 72;
+                doubleSided = true;
+                break;
+            case QualityLevel.Higher:
+                detail = 3;
+                radialSegments = 28;
+                linearSegments = 14;
+                resolution = 0.3;
+                imageResolution = 0.05;
+                probePositions = 48;
+                doubleSided = true;
+                break;
+            case QualityLevel.High:
+                detail = 2;
+                radialSegments = 20;
+                linearSegments = 10;
+                resolution = 0.5;
+                imageResolution = 0.1;
+                probePositions = 36;
+                doubleSided = true;
+                break;
+            case QualityLevel.Medium:
+                detail = 1;
+                radialSegments = 12;
+                linearSegments = 8;
+                resolution = 0.8;
+                imageResolution = 0.2;
+                probePositions = 24;
+                doubleSided = true;
+                break;
+            case QualityLevel.Low:
+                detail = 0;
+                radialSegments = 8;
+                linearSegments = 3;
+                resolution = 1.3;
+                imageResolution = 0.4;
+                probePositions = 24;
+                doubleSided = false;
+                break;
+            case QualityLevel.Lower:
+                detail = 0;
+                radialSegments = 4;
+                linearSegments = 2;
+                resolution = 3;
+                imageResolution = 0.7;
+                probePositions = 12;
+                doubleSided = false;
+                break;
+            case QualityLevel.Lowest:
+                detail = 0;
+                radialSegments = 2;
+                linearSegments = 1;
+                resolution = 8;
+                imageResolution = 1;
+                probePositions = 12;
+                doubleSided = false;
+                break;
+        }
     }
 
     // max resolution based on volume (for 'auto' quality)
@@ -207,9 +234,7 @@ export function getQualityProps(props: Partial<QualityProps>, data?: any) {
         resolution = Math.min(resolution, 20);
     }
 
-    if (
-        props.transparentBackfaces === 'off' && ((props.alpha !== undefined && props.alpha < 1) || !!props.xrayShaded)
-    ) {
+    if (props.transparentBackfaces === 'off' && ((props.alpha !== undefined && props.alpha < 1) || !!props.xrayShaded)) {
         doubleSided = false;
     }
 
@@ -220,6 +245,6 @@ export function getQualityProps(props: Partial<QualityProps>, data?: any) {
         resolution,
         imageResolution,
         probePositions,
-        doubleSided,
+        doubleSided
     };
 }

@@ -5,14 +5,14 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { PositionData } from './common.ts';
-import { Vec3 } from '../linear-algebra.ts';
-import { OrderedSet } from '../../mol-data/int.ts';
-import { BoundaryHelper } from './boundary-helper.ts';
-import { Box3D } from '../geometry/primitives/box3d.ts';
-import { Sphere3D } from '../geometry/primitives/sphere3d.ts';
+import { PositionData } from './common';
+import { Vec3 } from '../linear-algebra';
+import { OrderedSet } from '../../mol-data/int/ordered-set';
+import { BoundaryHelper } from './boundary-helper';
+import { Box3D } from '../geometry/primitives/box3d';
+import { Sphere3D } from '../geometry/primitives/sphere3d';
 
-export type Boundary = { readonly box: Box3D; readonly sphere: Sphere3D };
+export type Boundary = { readonly box: Box3D, readonly sphere: Sphere3D }
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3set = Vec3.set;

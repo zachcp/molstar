@@ -4,16 +4,16 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column } from '../db.ts';
+import { Column } from '../db/column';
 
 export interface Grouping<V, K> {
-    map: Map<K, V[]>;
-    keys: ReadonlyArray<K>;
-    groups: ReadonlyArray<ReadonlyArray<V>>;
+    map: Map<K, V[]>,
+    keys: ReadonlyArray<K>,
+    groups: ReadonlyArray<ReadonlyArray<V>>
 }
 
 class GroupingImpl<K, V> {
-    readonly map: Map<K, V[]> = new Map<K, V[]>();
+    readonly map = new Map<K, V[]>();
     readonly keys: K[] = [];
     readonly groups: V[][] = [];
 
@@ -34,17 +34,14 @@ class GroupingImpl<K, V> {
         return { keys: this.keys, groups: this.groups, map: this.map };
     }
 
-    constructor(private getKey: (v: V) => K) {}
+    constructor(private getKey: (v: V) => K) { }
 }
 
-export function Grouper<V, K>(getKey: (x: V) => K): GroupingImpl<K, V> {
+export function Grouper<V, K>(getKey: (x: V) => K) {
     return new GroupingImpl<K, V>(getKey);
 }
 
-export function groupBy<V, K>(
-    values: ArrayLike<V> | Column<V>,
-    getKey: (x: V) => K,
-): Grouping<V, K> {
+export function groupBy<V, K>(values: ArrayLike<V> | Column<V>, getKey: (x: V) => K) {
     const gs = Grouper(getKey);
     if (Column.is(values)) {
         const v = values.value;

@@ -119,7 +119,7 @@ export function ExternalVolumeColorTheme(
             }
 
             const value = getTrilinearlyInterpolated(position);
-            if (isNaN(value)) return defaultColor;
+            if (Number.isNaN(value)) return defaultColor;
 
             if (usePalette) {
                 return (clamp((value - domain[0]) / (domain[1] - domain[0]), 0, 1) * ColorTheme.PaletteScale) as Color;

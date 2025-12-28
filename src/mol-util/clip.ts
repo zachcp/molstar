@@ -4,17 +4,21 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { EPSILON, Mat4, Quat, Vec3 } from '../mol-math/linear-algebra.ts';
-import { degToRad } from '../mol-math/misc.ts';
-import { ParamDefinition as PD } from './param-definition.ts';
-import { stringToWords } from './string.ts';
+import { EPSILON } from '../mol-math/linear-algebra/3d/common';
+import { Mat4 } from '../mol-math/linear-algebra/3d/mat4';
+import { Quat } from '../mol-math/linear-algebra/3d/quat';
+import { Vec3 } from '../mol-math/linear-algebra/3d/vec3';
+import { degToRad } from '../mol-math/misc';
+import { ParamDefinition as PD } from './param-definition';
+import { stringToWords } from './string';
 
 export interface Clip {
-    variant: Clip.Variant;
-    objects: Clip.Objects;
+    variant: Clip.Variant,
+    objects: Clip.Objects
 }
 
 export function Clip() {
+
 }
 
 export namespace Clip {
@@ -28,23 +32,23 @@ export namespace Clip {
         infiniteCone: 5,
     };
 
-    export type Variant = 'instance' | 'pixel';
+    export type Variant = 'instance' | 'pixel'
 
     export type Objects = {
-        count: number;
-        type: number[];
-        invert: boolean[];
-        position: number[];
-        rotation: number[];
-        scale: number[];
+        count: number
+        type: number[]
+        invert: boolean[]
+        position: number[]
+        rotation: number[]
+        scale: number[]
         /** Transform point by this before testing */
-        transform: number[];
-    };
+        transform: number[]
+    }
 
     export const Params = {
         variant: PD.Select('pixel', PD.arrayToOptions<Variant>(['instance', 'pixel'])),
         objects: PD.ObjectList({
-            type: PD.Select('plane', PD.objectToOptions(Type, (t) => stringToWords(t))),
+            type: PD.Select('plane', PD.objectToOptions(Type, t => stringToWords(t))),
             invert: PD.Boolean(false),
             position: PD.Vec3(Vec3()),
             rotation: PD.Group({
@@ -53,10 +57,10 @@ export namespace Clip {
             }, { isExpanded: true }),
             scale: PD.Vec3(Vec3.create(1, 1, 1)),
             transform: PD.Mat4(Mat4.identity()),
-        }, (o) => stringToWords(o.type)),
+        }, o => stringToWords(o.type))
     };
-    export type Params = typeof Params;
-    export type Props = PD.Values<Params>;
+    export type Params = typeof Params
+    export type Props = PD.Values<Params>
 
     function createClipObjects(count: number) {
         return {
@@ -91,11 +95,11 @@ export namespace Clip {
         }
         return {
             variant: props.variant,
-            objects: { count, type, invert, position, rotation, scale, transform },
+            objects: { count, type, invert, position, rotation, scale, transform }
         };
     }
 
-    export function areEqual(cA: Clip, cB: Clip): boolean {
+    export function areEqual(cA: Clip, cB: Clip) {
         if (cA.variant !== cB.variant) return false;
         if (cA.objects.count !== cB.objects.count) return false;
 

@@ -42,3 +42,11 @@ export function is_iOS(): boolean {
         !(window as any).MSStream && (isIOS || (isAppleDevice && isTouchScreen))
     );
 }
+
+export function isStandaloneHmd() {
+    if (typeof navigator === 'undefined') return false;
+    if (!('xr' in navigator)) return false;
+
+    const ua = navigator.userAgent || '';
+    return /OculusBrowser\//.test(ua) || /PicoBrowser\//.test(ua);
+}

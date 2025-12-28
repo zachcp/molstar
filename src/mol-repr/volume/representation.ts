@@ -4,55 +4,45 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { Visual, type VisualContext } from '../visual.ts';
-import { Grid, Volume } from '../../mol-model/volume.ts';
-import { Geometry, type GeometryUtils } from '../../mol-geo/geometry/geometry.ts';
-import type { LocationIterator } from '../../mol-geo/util/location-iterator.ts';
-import { Theme } from '../../mol-theme/theme.ts';
-import { createTransform, type TransformData } from '../../mol-geo/geometry/transform-data.ts';
-import { createRenderObject, getNextMaterialId, type GraphicsRenderObject } from '../../mol-gl/render-object.ts';
-import type { PickingId } from '../../mol-geo/geometry/picking.ts';
-import { EmptyLoci, isEmptyLoci, isEveryLoci, type Loci } from '../../mol-model/loci.ts';
-import { Interval, OrderedSet } from '../../mol-data/int.ts';
-import { getQualityProps, type LocationCallback, VisualUpdateState } from '../util.ts';
-import { ColorTheme } from '../../mol-theme/color.ts';
-import { ValueCell } from '../../mol-util/index.ts';
-import { createSizes } from '../../mol-geo/geometry/size-data.ts';
-import { createColors } from '../../mol-geo/geometry/color-data.ts';
-import type { MarkerAction } from '../../mol-util/marker-action.ts';
-import { EPSILON, Mat4 } from '../../mol-math/linear-algebra.ts';
-import type { Overpaint } from '../../mol-theme/overpaint.ts';
-import type { Transparency } from '../../mol-theme/transparency.ts';
-import {
-    Representation,
-    type RepresentationContext,
-    type RepresentationParamsGetter,
-    type RepresentationProvider,
-} from '../representation.ts';
-import { BaseGeometry } from '../../mol-geo/geometry/base.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { Visual, VisualContext } from '../visual';
+import { Grid, Volume } from '../../mol-model/volume';
+import { Geometry, GeometryUtils } from '../../mol-geo/geometry/geometry';
+import { LocationIterator } from '../../mol-geo/util/location-iterator';
+import { Theme } from '../../mol-theme/theme';
+import { createTransform, TransformData } from '../../mol-geo/geometry/transform-data';
+import { createRenderObject, getNextMaterialId, GraphicsRenderObject } from '../../mol-gl/render-object';
+import { PickingId } from '../../mol-geo/geometry/picking';
+import { Loci, isEveryLoci, EmptyLoci, isEmptyLoci } from '../../mol-model/loci';
+import { getQualityProps, LocationCallback, VisualUpdateState } from '../util';
+import { ColorTheme } from '../../mol-theme/color';
+import { ValueCell } from '../../mol-util';
+import { createSizes } from '../../mol-geo/geometry/size-data';
+import { createColors } from '../../mol-geo/geometry/color-data';
+import { MarkerAction } from '../../mol-util/marker-action';
+import { EPSILON, Mat4 } from '../../mol-math/linear-algebra';
+import { Overpaint } from '../../mol-theme/overpaint';
+import { Transparency } from '../../mol-theme/transparency';
+import { Representation, RepresentationProvider, RepresentationContext, RepresentationParamsGetter } from '../representation';
+import { BaseGeometry } from '../../mol-geo/geometry/base';
 import { Subject } from 'rxjs';
-import { type RuntimeContext, Task } from '../../mol-task/index.ts';
-import type { SizeValues } from '../../mol-gl/renderable/schema.ts';
-import type { Clipping } from '../../mol-theme/clipping.ts';
-import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
-import { isPromiseLike } from '../../mol-util/type-helpers.ts';
-import type { Substance } from '../../mol-theme/substance.ts';
-import { createMarkers } from '../../mol-geo/geometry/marker-data.ts';
-import type { Emissive } from '../../mol-theme/emissive.ts';
-import { SizeTheme } from '../../mol-theme/size.ts';
-import type { Sphere3D } from '../../mol-math/geometry/primitives/sphere3d.ts';
+import { RuntimeContext, Task } from '../../mol-task';
+import { SizeValues } from '../../mol-gl/renderable/schema';
+import { Clipping } from '../../mol-theme/clipping';
+import { WebGLContext } from '../../mol-gl/webgl/context';
+import { isPromiseLike } from '../../mol-util/type-helpers';
+import { Substance } from '../../mol-theme/substance';
+import { createMarkers } from '../../mol-geo/geometry/marker-data';
+import { Emissive } from '../../mol-theme/emissive';
+import { SizeTheme } from '../../mol-theme/size';
+import { Sphere3D } from '../../mol-math/geometry/primitives/sphere3d';
+import { Interval } from '../../mol-data/int/interval';
+import { OrderedSet } from '../../mol-data/int/ordered-set';
 
-export type VolumeKey = { volume: Volume; key: number };
-export interface VolumeVisual<P extends VolumeParams> extends Visual<VolumeKey, P> {}
+export type VolumeKey = { volume: Volume, key: number }
+export interface VolumeVisual<P extends VolumeParams> extends Visual<VolumeKey, P> { }
 
-function createVolumeInstancesTransform(
-    volume: Volume,
-    invariantBoundingSphere: Sphere3D,
-    cellSize: number,
-    batchSize: number,
-    transformData?: TransformData,
-) {
+function createVolumeInstancesTransform(volume: Volume, invariantBoundingSphere: Sphere3D, cellSize: number, batchSize: number, transformData?: TransformData) {
     const instanceCount = volume.instances.length;
     const transformArray = new Float32Array(instanceCount * 16);
     for (let i = 0; i < instanceCount; ++i) {
@@ -61,14 +51,7 @@ function createVolumeInstancesTransform(
     return createTransform(transformArray, instanceCount, invariantBoundingSphere, cellSize, batchSize, transformData);
 }
 
-function createVolumeRenderObject<G extends Geometry>(
-    volume: Volume,
-    geometry: G,
-    locationIt: LocationIterator,
-    theme: Theme,
-    props: PD.Values<Geometry.Params<G>>,
-    materialId: number,
-) {
+function createVolumeRenderObject<G extends Geometry>(volume: Volume, geometry: G, locationIt: LocationIterator, theme: Theme, props: PD.Values<Geometry.Params<G>>, materialId: number) {
     const { createValues, createRenderableState } = Geometry.getUtils(geometry);
     const transform = createVolumeInstancesTransform(volume, geometry.boundingSphere, props.cellSize, props.batchSize);
     const values = createValues(geometry, transform, locationIt, theme, props);
@@ -77,54 +60,22 @@ function createVolumeRenderObject<G extends Geometry>(
 }
 
 interface VolumeVisualBuilder<P extends VolumeParams, G extends Geometry> {
-    defaultProps: PD.Values<P>;
-    createGeometry(
-        ctx: VisualContext,
-        volume: Volume,
-        key: number,
-        theme: Theme,
-        props: PD.Values<P>,
-        geometry?: G,
-    ): Promise<G> | G;
-    createLocationIterator(volume: Volume, key: number): LocationIterator;
-    getLoci(pickingId: PickingId, volume: Volume, key: number, props: PD.Values<P>, id: number): Loci;
-    eachLocation(
-        loci: Loci,
-        volume: Volume,
-        key: number,
-        props: PD.Values<P>,
-        apply: (interval: Interval) => boolean,
-    ): boolean;
-    setUpdateState(
-        state: VisualUpdateState,
-        volume: Volume,
-        newProps: PD.Values<P>,
-        currentProps: PD.Values<P>,
-        newTheme: Theme,
-        currentTheme: Theme,
-    ): void;
-    mustRecreate?: (volumeKey: VolumeKey, props: PD.Values<P>) => boolean;
-    dispose?: (geometry: G) => void;
+    defaultProps: PD.Values<P>
+    createGeometry(ctx: VisualContext, volume: Volume, key: number, theme: Theme, props: PD.Values<P>, geometry?: G): Promise<G> | G
+    createLocationIterator(volume: Volume, key: number): LocationIterator
+    getLoci(pickingId: PickingId, volume: Volume, key: number, props: PD.Values<P>, id: number): Loci
+    eachLocation(loci: Loci, volume: Volume, key: number, props: PD.Values<P>, apply: (interval: Interval) => boolean): boolean
+    setUpdateState(state: VisualUpdateState, volume: Volume, newProps: PD.Values<P>, currentProps: PD.Values<P>, newTheme: Theme, currentTheme: Theme): void
+    mustRecreate?: (volumeKey: VolumeKey, props: PD.Values<P>) => boolean
+    dispose?: (geometry: G) => void
 }
 
 interface VolumeVisualGeometryBuilder<P extends VolumeParams, G extends Geometry> extends VolumeVisualBuilder<P, G> {
-    geometryUtils: GeometryUtils<G>;
+    geometryUtils: GeometryUtils<G>
 }
 
-export function VolumeVisual<G extends Geometry, P extends VolumeParams & Geometry.Params<G>>(
-    builder: VolumeVisualGeometryBuilder<P, G>,
-    materialId: number,
-): VolumeVisual<P> {
-    const {
-        defaultProps,
-        createGeometry,
-        createLocationIterator,
-        getLoci,
-        eachLocation,
-        setUpdateState,
-        mustRecreate,
-        dispose,
-    } = builder;
+export function VolumeVisual<G extends Geometry, P extends VolumeParams & Geometry.Params<G>>(builder: VolumeVisualGeometryBuilder<P, G>, materialId: number): VolumeVisual<P> {
+    const { defaultProps, createGeometry, createLocationIterator, getLoci, eachLocation, setUpdateState, mustRecreate, dispose } = builder;
     const { updateValues, updateBoundingSphere, updateRenderableState, createPositionIterator } = builder.geometryUtils;
     const updateState = VisualUpdateState.create();
 
@@ -159,10 +110,7 @@ export function VolumeVisual<G extends Geometry, P extends VolumeParams & Geomet
 
         if (!renderObject) {
             updateState.createNew = true;
-        } else if (
-            Grid.areEquivalent(newVolume.grid, currentVolume.grid) &&
-            !Volume.areInstanceTransformsEqual(newVolume, currentVolume)
-        ) {
+        } else if (Grid.areEquivalent(newVolume.grid, currentVolume.grid) && !Volume.areInstanceTransformsEqual(newVolume, currentVolume)) {
             updateState.updateTransform = true;
         } else if (!Volume.areEquivalent(newVolume, currentVolume) || newKey !== currentKey) {
             updateState.createNew = true;
@@ -183,10 +131,7 @@ export function VolumeVisual<G extends Geometry, P extends VolumeParams & Geomet
             updateState.updateSize = true;
         }
 
-        if (
-            newProps.instanceGranularity !== currentProps.instanceGranularity ||
-            newProps.cellSize !== currentProps.cellSize || newProps.batchSize !== currentProps.batchSize
-        ) {
+        if (newProps.instanceGranularity !== currentProps.instanceGranularity || newProps.cellSize !== currentProps.cellSize || newProps.batchSize !== currentProps.batchSize) {
             updateState.updateTransform = true;
         }
 
@@ -208,14 +153,7 @@ export function VolumeVisual<G extends Geometry, P extends VolumeParams & Geomet
         if (updateState.createNew) {
             locationIt = createLocationIterator(newVolume, newKey);
             if (newGeometry) {
-                renderObject = createVolumeRenderObject(
-                    newVolume,
-                    newGeometry,
-                    locationIt,
-                    newTheme,
-                    newProps,
-                    materialId,
-                );
+                renderObject = createVolumeRenderObject(newVolume, newGeometry, locationIt, newTheme, newProps, materialId);
                 positionIt = createPositionIterator(newGeometry, renderObject.values);
             } else {
                 throw new Error('expected geometry to be given');
@@ -242,13 +180,7 @@ export function VolumeVisual<G extends Geometry, P extends VolumeParams & Geomet
 
             if (updateState.updateMatrix) {
                 // console.log('update matrix');
-                createVolumeInstancesTransform(
-                    newVolume,
-                    geometry.boundingSphere,
-                    newProps.cellSize,
-                    newProps.batchSize,
-                    renderObject.values,
-                );
+                createVolumeInstancesTransform(newVolume, geometry.boundingSphere, newProps.cellSize, newProps.batchSize, renderObject.values);
             }
 
             if (updateState.createGeometry) {
@@ -299,7 +231,7 @@ export function VolumeVisual<G extends Geometry, P extends VolumeParams & Geomet
             if (Volume.Cell.isLociEmpty(loci)) return false;
             if (!Volume.areEquivalent(loci.volume, volume)) return false;
             for (const { instances } of loci.elements) {
-                OrderedSet.forEach(instances, (j) => {
+                OrderedSet.forEach(instances, j => {
                     if (apply(Interval.ofSingleton(j))) changed = true;
                 });
             }
@@ -308,7 +240,7 @@ export function VolumeVisual<G extends Geometry, P extends VolumeParams & Geomet
             if (!Volume.areEquivalent(loci.volume, volume)) return false;
             for (const { segments, instances } of loci.elements) {
                 if (OrderedSet.has(segments, key)) {
-                    OrderedSet.forEach(instances, (j) => {
+                    OrderedSet.forEach(instances, j => {
                         if (apply(Interval.ofSingleton(j))) changed = true;
                     });
                 }
@@ -352,21 +284,10 @@ export function VolumeVisual<G extends Geometry, P extends VolumeParams & Geomet
     }
 
     return {
-        get groupCount() {
-            return locationIt ? locationIt.count : 0;
-        },
-        get renderObject() {
-            return renderObject;
-        },
-        get geometryVersion() {
-            return geometryVersion;
-        },
-        async createOrUpdate(
-            ctx: VisualContext,
-            theme: Theme,
-            props: Partial<PD.Values<P>> = {},
-            volumeKey?: VolumeKey,
-        ) {
+        get groupCount() { return locationIt ? locationIt.count : 0; },
+        get renderObject() { return renderObject; },
+        get geometryVersion() { return geometryVersion; },
+        async createOrUpdate(ctx: VisualContext, theme: Theme, props: Partial<PD.Values<P>> = {}, volumeKey?: VolumeKey) {
             prepareUpdate(theme, props, volumeKey?.volume || currentVolume, volumeKey?.key || currentKey);
             if (updateState.createGeometry) {
                 const newGeometry = createGeometry(ctx, newVolume, newKey, newTheme, newProps, geometry);
@@ -376,9 +297,7 @@ export function VolumeVisual<G extends Geometry, P extends VolumeParams & Geomet
             }
         },
         getLoci(pickingId: PickingId) {
-            return renderObject
-                ? getLoci(pickingId, currentVolume, currentKey, currentProps, renderObject.id)
-                : EmptyLoci;
+            return renderObject ? getLoci(pickingId, currentVolume, currentKey, currentProps, renderObject.id) : EmptyLoci;
         },
         eachLocation(cb: LocationCallback) {
             locationIt.reset();
@@ -387,7 +306,7 @@ export function VolumeVisual<G extends Geometry, P extends VolumeParams & Geomet
                 cb(location, isSecondary);
             }
         },
-        mark(loci: Loci, action: MarkerAction): boolean {
+        mark(loci: Loci, action: MarkerAction) {
             return Visual.mark(renderObject, loci, action, lociApply);
         },
         setVisibility(visible: boolean) {
@@ -420,7 +339,7 @@ export function VolumeVisual<G extends Geometry, P extends VolumeParams & Geomet
         setClipping(clipping: Clipping) {
             return Visual.setClipping(renderObject, clipping, lociApply, true);
         },
-        setThemeStrength(strength: { overpaint: number; transparency: number; emissive: number; substance: number }) {
+        setThemeStrength(strength: { overpaint: number, transparency: number, emissive: number, substance: number }) {
             Visual.setThemeStrength(renderObject, strength);
         },
         destroy() {
@@ -430,45 +349,23 @@ export function VolumeVisual<G extends Geometry, P extends VolumeParams & Geomet
                 renderObject = undefined;
             }
         },
-        mustRecreate,
+        mustRecreate
     };
 }
 
-export interface VolumeRepresentation<P extends VolumeParams> extends Representation<Volume, P> {}
+export interface VolumeRepresentation<P extends VolumeParams> extends Representation<Volume, P> { }
 
-export type VolumeRepresentationProvider<P extends VolumeParams, Id extends string = string> = RepresentationProvider<
-    Volume,
-    P,
-    Representation.State,
-    Id
->;
-export function VolumeRepresentationProvider<P extends VolumeParams, Id extends string>(
-    p: VolumeRepresentationProvider<P, Id>,
-): VolumeRepresentationProvider<P, Id> {
-    return p;
-}
+export type VolumeRepresentationProvider<P extends VolumeParams, Id extends string = string> = RepresentationProvider<Volume, P, Representation.State, Id>
+export function VolumeRepresentationProvider<P extends VolumeParams, Id extends string>(p: VolumeRepresentationProvider<P, Id>): VolumeRepresentationProvider<P, Id> { return p; }
 
 //
 
 export const VolumeParams = {
     ...BaseGeometry.Params,
 };
-export type VolumeParams = typeof VolumeParams;
+export type VolumeParams = typeof VolumeParams
 
-export function VolumeRepresentation<P extends VolumeParams>(
-    label: string,
-    ctx: RepresentationContext,
-    getParams: RepresentationParamsGetter<Volume, P>,
-    visualCtor: (
-        materialId: number,
-        volume: Volume,
-        key: number,
-        props: PD.Values<P>,
-        webgl?: WebGLContext,
-    ) => VolumeVisual<P>,
-    getLoci: (volume: Volume, props: PD.Values<P>) => Loci,
-    getKeys: (props: PD.Values<P>) => ArrayLike<number> = () => [-1],
-): VolumeRepresentation<P> {
+export function VolumeRepresentation<P extends VolumeParams>(label: string, ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, P>, visualCtor: (materialId: number, volume: Volume, key: number, props: PD.Values<P>, webgl?: WebGLContext) => VolumeVisual<P>, getLoci: (volume: Volume, props: PD.Values<P>) => Loci, getKeys: (props: PD.Values<P>) => ArrayLike<number> = () => [-1]): VolumeRepresentation<P> {
     let version = 0;
     const { webgl } = ctx;
     const updated = new Subject<number>();
@@ -507,7 +404,7 @@ export function VolumeRepresentation<P extends VolumeParams>(
         Object.assign(_props, props, qualityProps);
         _keys = getKeys(_props);
 
-        return Task.create('Creating or updating VolumeRepresentation', async (runtime) => {
+        return Task.create('Creating or updating VolumeRepresentation', async runtime => {
             const toDelete = new Set(visuals.keys());
             for (let i = 0, il = _keys.length; i < il; ++i) {
                 const segment = _keys[i];
@@ -515,13 +412,13 @@ export function VolumeRepresentation<P extends VolumeParams>(
                 const promise = visual(runtime, segment);
                 if (promise) await promise;
             }
-            toDelete.forEach((segment) => {
+            toDelete.forEach(segment => {
                 visuals.get(segment)?.destroy();
                 visuals.delete(segment);
             });
             // update list of renderObjects
             renderObjects.length = 0;
-            visuals.forEach((visual) => {
+            visuals.forEach(visual => {
                 if (visual.renderObject) {
                     renderObjects.push(visual.renderObject);
                     geometryState.add(visual.renderObject.id, visual.geometryVersion);
@@ -535,7 +432,7 @@ export function VolumeRepresentation<P extends VolumeParams>(
 
     function mark(loci: Loci, action: MarkerAction) {
         let changed = false;
-        visuals.forEach((visual) => {
+        visuals.forEach(visual => {
             changed = visual.mark(loci, action) || changed;
         });
         return changed;
@@ -555,20 +452,7 @@ export function VolumeRepresentation<P extends VolumeParams>(
     }
 
     function setState(state: Partial<Representation.State>) {
-        const {
-            visible,
-            alphaFactor,
-            pickable,
-            overpaint,
-            transparency,
-            emissive,
-            substance,
-            clipping,
-            transform,
-            themeStrength,
-            syncManually,
-            markerActions,
-        } = state;
+        const { visible, alphaFactor, pickable, overpaint, transparency, emissive, substance, clipping, transform, themeStrength, syncManually, markerActions } = state;
         const newState: Partial<Representation.State> = {};
 
         if (visible !== undefined) newState.visible = visible;
@@ -586,7 +470,7 @@ export function VolumeRepresentation<P extends VolumeParams>(
         if (syncManually !== undefined) newState.syncManually = syncManually;
         if (markerActions !== undefined) newState.markerActions = markerActions;
 
-        visuals.forEach((visual) => setVisualState(visual, newState));
+        visuals.forEach(visual => setVisualState(visual, newState));
 
         Representation.updateState(_state, state);
     }
@@ -596,7 +480,7 @@ export function VolumeRepresentation<P extends VolumeParams>(
     }
 
     function destroy() {
-        visuals.forEach((visual) => visual.destroy());
+        visuals.forEach(visual => visual.destroy());
         visuals.clear();
     }
 
@@ -604,26 +488,16 @@ export function VolumeRepresentation<P extends VolumeParams>(
         label,
         get groupCount() {
             let groupCount = 0;
-            visuals.forEach((visual) => {
+            visuals.forEach(visual => {
                 if (visual.renderObject) groupCount += visual.groupCount;
             });
             return groupCount;
         },
-        get props() {
-            return _props;
-        },
-        get params() {
-            return _params;
-        },
-        get state() {
-            return _state;
-        },
-        get theme() {
-            return _theme;
-        },
-        get geometryVersion() {
-            return geometryState.version;
-        },
+        get props() { return _props; },
+        get params() { return _params; },
+        get state() { return _state; },
+        get theme() { return _theme; },
+        get geometryVersion() { return geometryState.version; },
         renderObjects,
         updated,
         createOrUpdate,
@@ -631,7 +505,7 @@ export function VolumeRepresentation<P extends VolumeParams>(
         setTheme,
         getLoci: (pickingId: PickingId): Loci => {
             let loci: Loci = EmptyLoci;
-            visuals.forEach((visual) => {
+            visuals.forEach(visual => {
                 const _loci = visual.getLoci(pickingId);
                 if (!isEmptyLoci(_loci)) loci = _loci;
             });
@@ -641,11 +515,11 @@ export function VolumeRepresentation<P extends VolumeParams>(
             return [getLoci(_volume, _props)];
         },
         eachLocation: (cb: LocationCallback) => {
-            visuals.forEach((visual) => {
+            visuals.forEach(visual => {
                 visual.eachLocation(cb);
             });
         },
         mark,
-        destroy,
+        destroy
     };
 }

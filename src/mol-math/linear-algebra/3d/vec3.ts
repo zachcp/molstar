@@ -17,27 +17,19 @@
  * furnished to do so, subject to the following conditions:
  */
 
-import { Mat4 } from './mat4.ts';
-import { clamp as _clamp, quadraticBezier as _quadraticBezier, spline as _spline } from '../../interpolate.ts';
-import type { NumberArray } from '../../../mol-util/type-helpers.ts';
-import type { Mat3 } from './mat3.ts';
-import type { Quat } from './quat.ts';
-import { EPSILON } from './common.ts';
+import { Mat4 } from './mat4';
+import { spline as _spline, quadraticBezier as _quadraticBezier, clamp as _clamp } from '../../interpolate';
+import { NumberArray } from '../../../mol-util/type-helpers';
+import { Mat3 } from './mat3';
+import { Quat } from './quat';
+import { EPSILON } from './common';
 
 const _isFinite = isFinite;
 
-export interface Vec3 extends Array<number> {
-    [d: number]: number;
-    '@type': 'vec3';
-    length: 3;
-}
-export interface ReadonlyVec3 extends Array<number> {
-    readonly [d: number]: number;
-    '@type': 'vec3';
-    length: 3;
-}
+export interface Vec3 extends Array<number> { [d: number]: number, '@type': 'vec3', length: 3 }
+export interface ReadonlyVec3 extends Array<number> { readonly [d: number]: number, '@type': 'vec3', length: 3 }
 
-export function Vec3(): Vec3 {
+export function Vec3() {
     return Vec3.zero();
 }
 
@@ -60,33 +52,37 @@ export namespace Vec3 {
         return _isFinite(a[0]) && _isFinite(a[1]) && _isFinite(a[2]);
     }
 
-    export function hasNaN(a: Vec3): boolean {
-        return isNaN(a[0]) || isNaN(a[1]) || isNaN(a[2]);
+    export function isInteger(a: Vec3): boolean {
+        return Number.isInteger(a[0]) && Number.isInteger(a[1]) && Number.isInteger(a[2]);
     }
 
-    export function setNaN(out: Vec3): Vec3 {
+    export function hasNaN(a: Vec3) {
+        return Number.isNaN(a[0]) || Number.isNaN(a[1]) || Number.isNaN(a[2]);
+    }
+
+    export function setNaN(out: Vec3) {
         out[0] = NaN;
         out[1] = NaN;
         out[2] = NaN;
         return out;
     }
 
-    export function fromObj(v: { x: number; y: number; z: number }): Vec3 {
+    export function fromObj(v: { x: number, y: number, z: number }): Vec3 {
         return create(v.x, v.y, v.z);
     }
 
-    export function toObj(v: Vec3): { x: number; y: number; z: number } {
+    export function toObj(v: Vec3) {
         return { x: v[0], y: v[1], z: v[2] };
     }
 
-    export function fromArray(v: Vec3, array: ArrayLike<number>, offset: number): Vec3 {
+    export function fromArray(v: Vec3, array: ArrayLike<number>, offset: number) {
         v[0] = array[offset + 0];
         v[1] = array[offset + 1];
         v[2] = array[offset + 2];
         return v;
     }
 
-    export function toArray<T extends NumberArray>(v: Vec3, out: T, offset: number): T {
+    export function toArray<T extends NumberArray>(v: Vec3, out: T, offset: number) {
         out[offset + 0] = v[0];
         out[offset + 1] = v[1];
         out[offset + 2] = v[2];
@@ -101,7 +97,7 @@ export namespace Vec3 {
         return out;
     }
 
-    export function ofArray(array: ArrayLike<number>): Vec3 {
+    export function ofArray(array: ArrayLike<number>) {
         const out = zero();
         out[0] = array[0];
         out[1] = array[1];
@@ -116,42 +112,42 @@ export namespace Vec3 {
         return out;
     }
 
-    export function copy(out: Vec3, a: Vec3): Vec3 {
+    export function copy(out: Vec3, a: Vec3) {
         out[0] = a[0];
         out[1] = a[1];
         out[2] = a[2];
         return out;
     }
 
-    export function add(out: Vec3, a: Vec3, b: Vec3): Vec3 {
+    export function add(out: Vec3, a: Vec3, b: Vec3) {
         out[0] = a[0] + b[0];
         out[1] = a[1] + b[1];
         out[2] = a[2] + b[2];
         return out;
     }
 
-    export function sub(out: Vec3, a: Vec3, b: Vec3): Vec3 {
+    export function sub(out: Vec3, a: Vec3, b: Vec3) {
         out[0] = a[0] - b[0];
         out[1] = a[1] - b[1];
         out[2] = a[2] - b[2];
         return out;
     }
 
-    export function mul(out: Vec3, a: Vec3, b: Vec3): Vec3 {
+    export function mul(out: Vec3, a: Vec3, b: Vec3) {
         out[0] = a[0] * b[0];
         out[1] = a[1] * b[1];
         out[2] = a[2] * b[2];
         return out;
     }
 
-    export function div(out: Vec3, a: Vec3, b: Vec3): Vec3 {
+    export function div(out: Vec3, a: Vec3, b: Vec3) {
         out[0] = a[0] / b[0];
         out[1] = a[1] / b[1];
         out[2] = a[2] / b[2];
         return out;
     }
 
-    export function scale(out: Vec3, a: Vec3, b: number): Vec3 {
+    export function scale(out: Vec3, a: Vec3, b: number) {
         out[0] = a[0] * b;
         out[1] = a[1] * b;
         out[2] = a[2] * b;
@@ -159,7 +155,7 @@ export namespace Vec3 {
     }
 
     /** Scales b, then adds a and b together */
-    export function scaleAndAdd(out: Vec3, a: Vec3, b: Vec3, scale: number): Vec3 {
+    export function scaleAndAdd(out: Vec3, a: Vec3, b: Vec3, scale: number) {
         out[0] = a[0] + (b[0] * scale);
         out[1] = a[1] + (b[1] * scale);
         out[2] = a[2] + (b[2] * scale);
@@ -167,21 +163,21 @@ export namespace Vec3 {
     }
 
     /** Scales b, then subtracts b from a */
-    export function scaleAndSub(out: Vec3, a: Vec3, b: Vec3, scale: number): Vec3 {
+    export function scaleAndSub(out: Vec3, a: Vec3, b: Vec3, scale: number) {
         out[0] = a[0] - (b[0] * scale);
         out[1] = a[1] - (b[1] * scale);
         out[2] = a[2] - (b[2] * scale);
         return out;
     }
 
-    export function addScalar(out: Vec3, a: Vec3, b: number): Vec3 {
+    export function addScalar(out: Vec3, a: Vec3, b: number) {
         out[0] = a[0] + b;
         out[1] = a[1] + b;
         out[2] = a[2] + b;
         return out;
     }
 
-    export function subScalar(out: Vec3, a: Vec3, b: number): Vec3 {
+    export function subScalar(out: Vec3, a: Vec3, b: number) {
         out[0] = a[0] - b;
         out[1] = a[1] - b;
         out[2] = a[2] - b;
@@ -191,7 +187,7 @@ export namespace Vec3 {
     /**
      * Math.round the components of a Vec3
      */
-    export function round(out: Vec3, a: Vec3): Vec3 {
+    export function round(out: Vec3, a: Vec3) {
         out[0] = Math.round(a[0]);
         out[1] = Math.round(a[1]);
         out[2] = Math.round(a[2]);
@@ -201,7 +197,7 @@ export namespace Vec3 {
     /**
      * Math.ceil the components of a Vec3
      */
-    export function ceil(out: Vec3, a: Vec3): Vec3 {
+    export function ceil(out: Vec3, a: Vec3) {
         out[0] = Math.ceil(a[0]);
         out[1] = Math.ceil(a[1]);
         out[2] = Math.ceil(a[2]);
@@ -211,7 +207,7 @@ export namespace Vec3 {
     /**
      * Math.floor the components of a Vec3
      */
-    export function floor(out: Vec3, a: Vec3): Vec3 {
+    export function floor(out: Vec3, a: Vec3) {
         out[0] = Math.floor(a[0]);
         out[1] = Math.floor(a[1]);
         out[2] = Math.floor(a[2]);
@@ -221,7 +217,7 @@ export namespace Vec3 {
     /**
      * Math.trunc the components of a Vec3
      */
-    export function trunc(out: Vec3, a: Vec3): Vec3 {
+    export function trunc(out: Vec3, a: Vec3) {
         out[0] = Math.trunc(a[0]);
         out[1] = Math.trunc(a[1]);
         out[2] = Math.trunc(a[2]);
@@ -231,7 +227,7 @@ export namespace Vec3 {
     /**
      * Math.abs the components of a Vec3
      */
-    export function abs(out: Vec3, a: Vec3): Vec3 {
+    export function abs(out: Vec3, a: Vec3) {
         out[0] = Math.abs(a[0]);
         out[1] = Math.abs(a[1]);
         out[2] = Math.abs(a[2]);
@@ -241,7 +237,7 @@ export namespace Vec3 {
     /**
      * Returns the minimum of two Vec3's
      */
-    export function min(out: Vec3, a: Vec3, b: Vec3): Vec3 {
+    export function min(out: Vec3, a: Vec3, b: Vec3) {
         out[0] = Math.min(a[0], b[0]);
         out[1] = Math.min(a[1], b[1]);
         out[2] = Math.min(a[2], b[2]);
@@ -251,7 +247,7 @@ export namespace Vec3 {
     /**
      * Returns the maximum of two Vec3's
      */
-    export function max(out: Vec3, a: Vec3, b: Vec3): Vec3 {
+    export function max(out: Vec3, a: Vec3, b: Vec3) {
         out[0] = Math.max(a[0], b[0]);
         out[1] = Math.max(a[1], b[1]);
         out[2] = Math.max(a[2], b[2]);
@@ -261,49 +257,49 @@ export namespace Vec3 {
     /**
      * Assumes min < max, componentwise
      */
-    export function clamp(out: Vec3, a: Vec3, min: Vec3, max: Vec3): Vec3 {
+    export function clamp(out: Vec3, a: Vec3, min: Vec3, max: Vec3) {
         out[0] = Math.max(min[0], Math.min(max[0], a[0]));
         out[1] = Math.max(min[1], Math.min(max[1], a[1]));
         out[2] = Math.max(min[2], Math.min(max[2], a[2]));
         return out;
     }
 
-    export function distance(a: Vec3, b: Vec3): number {
+    export function distance(a: Vec3, b: Vec3) {
         const x = b[0] - a[0],
             y = b[1] - a[1],
             z = b[2] - a[2];
         return Math.sqrt(x * x + y * y + z * z);
     }
 
-    export function squaredDistance(a: Vec3, b: Vec3): number {
+    export function squaredDistance(a: Vec3, b: Vec3) {
         const x = b[0] - a[0],
             y = b[1] - a[1],
             z = b[2] - a[2];
         return x * x + y * y + z * z;
     }
 
-    export function magnitude(a: Vec3): number {
+    export function magnitude(a: Vec3) {
         const x = a[0],
             y = a[1],
             z = a[2];
         return Math.sqrt(x * x + y * y + z * z);
     }
 
-    export function squaredMagnitude(a: Vec3): number {
+    export function squaredMagnitude(a: Vec3) {
         const x = a[0],
             y = a[1],
             z = a[2];
         return x * x + y * y + z * z;
     }
 
-    export function setMagnitude(out: Vec3, a: Vec3, l: number): Vec3 {
+    export function setMagnitude(out: Vec3, a: Vec3, l: number) {
         return scale(out, normalize(out, a), l);
     }
 
     /**
      * Negates the components of a vec3
      */
-    export function negate(out: Vec3, a: Vec3): Vec3 {
+    export function negate(out: Vec3, a: Vec3) {
         out[0] = -a[0];
         out[1] = -a[1];
         out[2] = -a[2];
@@ -313,14 +309,14 @@ export namespace Vec3 {
     /**
      * Returns the inverse of the components of a Vec3
      */
-    export function inverse(out: Vec3, a: Vec3): Vec3 {
+    export function inverse(out: Vec3, a: Vec3) {
         out[0] = 1.0 / a[0];
         out[1] = 1.0 / a[1];
         out[2] = 1.0 / a[2];
         return out;
     }
 
-    export function normalize(out: Vec3, a: Vec3): Vec3 {
+    export function normalize(out: Vec3, a: Vec3) {
         const x = a[0],
             y = a[1],
             z = a[2];
@@ -334,12 +330,13 @@ export namespace Vec3 {
         return out;
     }
 
-    export function dot(a: Vec3, b: Vec3): number {
+    export function dot(a: Vec3, b: Vec3) {
         return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
     }
 
-    export function cross(out: Vec3, a: Vec3, b: Vec3): Vec3 {
-        const ax = a[0], ay = a[1], az = a[2], bx = b[0], by = b[1], bz = b[2];
+    export function cross(out: Vec3, a: Vec3, b: Vec3) {
+        const ax = a[0], ay = a[1], az = a[2],
+            bx = b[0], by = b[1], bz = b[2];
 
         out[0] = ay * bz - az * by;
         out[1] = az * bx - ax * bz;
@@ -350,7 +347,7 @@ export namespace Vec3 {
     /**
      * Performs a linear interpolation between two Vec3's
      */
-    export function lerp(out: Vec3, a: Vec3, b: Vec3, t: number): Vec3 {
+    export function lerp(out: Vec3, a: Vec3, b: Vec3, t: number) {
         const ax = a[0],
             ay = a[1],
             az = a[2];
@@ -361,7 +358,7 @@ export namespace Vec3 {
     }
 
     const slerpRelVec = zero();
-    export function slerp(out: Vec3, a: Vec3, b: Vec3, t: number): Vec3 {
+    export function slerp(out: Vec3, a: Vec3, b: Vec3, t: number) {
         const d = _clamp(dot(a, b), -1, 1);
         const theta = Math.acos(d) * t;
         scaleAndAdd(slerpRelVec, b, a, -d);
@@ -372,7 +369,7 @@ export namespace Vec3 {
     /**
      * Performs a hermite interpolation with two control points
      */
-    export function hermite(out: Vec3, a: Vec3, b: Vec3, c: Vec3, d: Vec3, t: number): Vec3 {
+    export function hermite(out: Vec3, a: Vec3, b: Vec3, c: Vec3, d: Vec3, t: number) {
         const factorTimes2 = t * t;
         const factor1 = factorTimes2 * (2 * t - 3) + 1;
         const factor2 = factorTimes2 * (t - 2) + t;
@@ -389,7 +386,7 @@ export namespace Vec3 {
     /**
      * Performs a bezier interpolation with two control points
      */
-    export function bezier(out: Vec3, a: Vec3, b: Vec3, c: Vec3, d: Vec3, t: number): Vec3 {
+    export function bezier(out: Vec3, a: Vec3, b: Vec3, c: Vec3, d: Vec3, t: number) {
         const inverseFactor = 1 - t;
         const inverseFactorTimesTwo = inverseFactor * inverseFactor;
         const factorTimes2 = t * t;
@@ -405,7 +402,7 @@ export namespace Vec3 {
         return out;
     }
 
-    export function quadraticBezier(out: Vec3, a: Vec3, b: Vec3, c: Vec3, t: number): Vec3 {
+    export function quadraticBezier(out: Vec3, a: Vec3, b: Vec3, c: Vec3, t: number) {
         out[0] = _quadraticBezier(a[0], b[0], c[0], t);
         out[1] = _quadraticBezier(a[1], b[1], c[1], t);
         out[2] = _quadraticBezier(a[2], b[2], c[2], t);
@@ -416,7 +413,7 @@ export namespace Vec3 {
     /**
      * Performs a spline interpolation with two control points and a tension parameter
      */
-    export function spline(out: Vec3, a: Vec3, b: Vec3, c: Vec3, d: Vec3, t: number, tension: number): Vec3 {
+    export function spline(out: Vec3, a: Vec3, b: Vec3, c: Vec3, d: Vec3, t: number, tension: number) {
         out[0] = _spline(a[0], b[0], c[0], d[0], t, tension);
         out[1] = _spline(a[1], b[1], c[1], d[1], t, tension);
         out[2] = _spline(a[2], b[2], c[2], d[2], t, tension);
@@ -427,7 +424,7 @@ export namespace Vec3 {
     /**
      * Generates a random vector with the given scale
      */
-    export function random(out: Vec3, scale: number): Vec3 {
+    export function random(out: Vec3, scale: number) {
         const r = Math.random() * 2.0 * Math.PI;
         const z = (Math.random() * 2.0) - 1.0;
         const zScale = Math.sqrt(1.0 - z * z) * scale;
@@ -441,15 +438,16 @@ export namespace Vec3 {
     /**
      * Transforms the Vec3 with a Mat4. 4th vector component is implicitly '1'
      */
-    export function transformMat4(out: Vec3, a: Vec3, m: Mat4): Vec3 {
-        const x = a[0], y = a[1], z = a[2], w = 1 / ((m[3] * x + m[7] * y + m[11] * z + m[15]) || 1.0);
+    export function transformMat4(out: Vec3, a: Vec3, m: Mat4) {
+        const x = a[0], y = a[1], z = a[2],
+            w = 1 / ((m[3] * x + m[7] * y + m[11] * z + m[15]) || 1.0);
         out[0] = (m[0] * x + m[4] * y + m[8] * z + m[12]) * w;
         out[1] = (m[1] * x + m[5] * y + m[9] * z + m[13]) * w;
         out[2] = (m[2] * x + m[6] * y + m[10] * z + m[14]) * w;
         return out;
     }
 
-    export function transformDirection(out: Vec3, a: Vec3, m: Mat4): Vec3 {
+    export function transformDirection(out: Vec3, a: Vec3, m: Mat4) {
         const x = a[0], y = a[1], z = a[2];
         out[0] = m[0] * x + m[4] * y + m[8] * z;
         out[1] = m[1] * x + m[5] * y + m[9] * z;
@@ -460,17 +458,8 @@ export namespace Vec3 {
     /**
      * Like `transformMat4` but with offsets into arrays
      */
-    export function transformMat4Offset(
-        out: NumberArray,
-        a: NumberArray,
-        m: NumberArray,
-        outO: number,
-        aO: number,
-        oM: number,
-    ): NumberArray {
-        const x = a[0 + aO],
-            y = a[1 + aO],
-            z = a[2 + aO],
+    export function transformMat4Offset(out: NumberArray, a: NumberArray, m: NumberArray, outO: number, aO: number, oM: number) {
+        const x = a[0 + aO], y = a[1 + aO], z = a[2 + aO],
             w = 1 / ((m[3 + oM] * x + m[7 + oM] * y + m[11 + oM] * z + m[15 + oM]) || 1.0);
         out[0 + outO] = (m[0 + oM] * x + m[4 + oM] * y + m[8 + oM] * z + m[12 + oM]) * w;
         out[1 + outO] = (m[1 + oM] * x + m[5 + oM] * y + m[9 + oM] * z + m[13 + oM]) * w;
@@ -483,14 +472,7 @@ export namespace Vec3 {
      * This means the translation components of the matrix are ignored.
      * Assumes that m is already the transpose of the inverse matrix suitable for normal transformation.
      */
-    export function transformDirectionOffset(
-        out: NumberArray,
-        a: NumberArray,
-        m: NumberArray,
-        outO: number,
-        aO: number,
-        oM: number,
-    ): NumberArray {
+    export function transformDirectionOffset(out: NumberArray, a: NumberArray, m: NumberArray, outO: number, aO: number, oM: number) {
         const x = a[0 + aO], y = a[1 + aO], z = a[2 + aO];
         out[0 + outO] = m[0 + oM] * x + m[4 + oM] * y + m[8 + oM] * z;
         out[1 + outO] = m[1 + oM] * x + m[5 + oM] * y + m[9 + oM] * z;
@@ -508,7 +490,7 @@ export namespace Vec3 {
     /**
      * Transforms the Vec3 with a Mat3.
      */
-    export function transformMat3(out: Vec3, a: Vec3, m: Mat3): Vec3 {
+    export function transformMat3(out: Vec3, a: Vec3, m: Mat3) {
         const x = a[0], y = a[1], z = a[2];
         out[0] = x * m[0] + y * m[3] + z * m[6];
         out[1] = x * m[1] + y * m[4] + z * m[7];
@@ -517,7 +499,7 @@ export namespace Vec3 {
     }
 
     /** Transforms the Vec3 with a quat */
-    export function transformQuat(out: Vec3, a: Vec3, q: Quat): Vec3 {
+    export function transformQuat(out: Vec3, a: Vec3, q: Quat) {
         // benchmarks: http://jsperf.com/quaternion-transform-vec3-implementations
 
         const x = a[0], y = a[1], z = a[2];
@@ -537,7 +519,7 @@ export namespace Vec3 {
     }
 
     /** Computes the angle between 2 vectors, reports in radians. */
-    export function angle(a: Vec3, b: Vec3): number {
+    export function angle(a: Vec3, b: Vec3) {
         const denominator = Math.sqrt(squaredMagnitude(a) * squaredMagnitude(b));
         if (denominator === 0) return Math.PI / 2;
         const theta = dot(a, b) / denominator;
@@ -574,25 +556,24 @@ export namespace Vec3 {
      * @param radius [0, +Inf]
      */
     export function directionFromSpherical(out: Vec3, inclination: number, azimuth: number, radius: number): Vec3 {
-        return Vec3.set(
-            out,
+        return Vec3.set(out,
             radius * Math.cos(azimuth) * Math.sin(inclination),
             radius * Math.sin(azimuth) * Math.sin(inclination),
-            radius * Math.cos(inclination),
+            radius * Math.cos(inclination)
         );
     }
 
     /**
      * Returns whether or not the vectors have exactly the same elements in the same position (when compared with ===)
      */
-    export function exactEquals(a: Vec3, b: Vec3): boolean {
+    export function exactEquals(a: Vec3, b: Vec3) {
         return a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
     }
 
     /**
      * Returns whether or not the vectors have approximately the same elements in the same position.
      */
-    export function equals(a: Vec3, b: Vec3): boolean {
+    export function equals(a: Vec3, b: Vec3) {
         const a0 = a[0], a1 = a[1], a2 = a[2];
         const b0 = b[0], b1 = b[1], b2 = b[2];
         return (Math.abs(a0 - b0) <= EPSILON * Math.max(1.0, Math.abs(a0), Math.abs(b0)) &&
@@ -612,12 +593,12 @@ export namespace Vec3 {
         return Mat4.fromRotation(mat, by, axis);
     }
 
-    export function isZero(v: Vec3): boolean {
+    export function isZero(v: Vec3) {
         return v[0] === 0 && v[1] === 0 && v[2] === 0;
     }
 
     /** Project `point` onto `vector` starting from `origin` */
-    export function projectPointOnVector(out: Vec3, point: Vec3, vector: Vec3, origin: Vec3): Vec3 {
+    export function projectPointOnVector(out: Vec3, point: Vec3, vector: Vec3, origin: Vec3) {
         sub(out, point, origin);
         const scalar = dot(vector, out) / squaredMagnitude(vector);
         return add(out, scale(out, vector, scalar), origin);
@@ -625,33 +606,53 @@ export namespace Vec3 {
 
     const tmpProjectPlane = zero();
     /** Project `point` onto `plane` defined by `normal` starting from `origin` */
-    export function projectPointOnPlane(out: Vec3, point: Vec3, normal: Vec3, origin: Vec3): Vec3 {
+    export function projectPointOnPlane(out: Vec3, point: Vec3, normal: Vec3, origin: Vec3) {
         normalize(tmpProjectPlane, normal);
         sub(out, point, origin);
         return sub(out, point, scale(tmpProjectPlane, tmpProjectPlane, dot(out, tmpProjectPlane)));
     }
 
-    export function projectOnVector(out: Vec3, p: Vec3, vector: Vec3): Vec3 {
+    export function projectOnVector(out: Vec3, p: Vec3, vector: Vec3) {
         const scalar = dot(vector, p) / squaredMagnitude(vector);
         return scale(out, vector, scalar);
     }
 
     const tmpProject = zero();
-    export function projectOnPlane(out: Vec3, p: Vec3, normal: Vec3): Vec3 {
+    export function projectOnPlane(out: Vec3, p: Vec3, normal: Vec3) {
         projectOnVector(tmpProject, p, normal);
         return sub(out, p, tmpProject);
     }
 
     /** Get a vector that is similar to `b` but orthogonal to `a` */
     export function orthogonalize(out: Vec3, a: Vec3, b: Vec3): Vec3 {
-        return normalize(out, cross(out, cross(out, a, b), a));
+        // Regular case (`b` not parallel to `a`)
+        normalize(out, cross(out, cross(out, a, b), a));
+        if (!Vec3.isZero(out)) return out;
+
+        // `b` was parallel to `a`, try orthogonalize(a, X)
+        out[0] = 1; out[1] = 0; out[2] = 0;
+        normalize(out, cross(out, cross(out, a, out), a));
+        if (!Vec3.isZero(out)) return out;
+
+        // `X` was parallel to `a`, try orthogonalize(a, Y)
+        out[0] = 0; out[1] = 1; out[2] = 0;
+        normalize(out, cross(out, cross(out, a, out), a));
+        if (!Vec3.isZero(out)) return out;
+
+        // `a` was zero, return normalized `b`
+        normalize(out, b);
+        if (!Vec3.isZero(out)) return out;
+
+        // `b` was zero, return whatever
+        out[0] = 1; out[1] = 0; out[2] = 0;
+        return out;
     }
 
     /**
      * Get a vector like `a` that point into the same general direction as `b`,
      * i.e. where the dot product is > 0
      */
-    export function matchDirection(out: Vec3, a: Vec3, b: Vec3): Vec3 {
+    export function matchDirection(out: Vec3, a: Vec3, b: Vec3) {
         if (dot(a, b) > 0) copy(out, a);
         else negate(out, copy(out, a));
         return out;
@@ -660,7 +661,7 @@ export namespace Vec3 {
     /**
      * Get a normalized vector that is orthogonal to `dir`
      */
-    export function orthogonalDirection(out: Vec3, dir: Vec3): Vec3 {
+    export function orthogonalDirection(out: Vec3, dir: Vec3) {
         if (isZero(dir)) {
             return copy(out, Vec3.unitX);
         } else {
@@ -688,7 +689,7 @@ export namespace Vec3 {
     const triangleNormalTmpAB = zero();
     const triangleNormalTmpAC = zero();
     /** Calculate normal for the triangle defined by `a`, `b` and `c` */
-    export function triangleNormal(out: Vec3, a: Vec3, b: Vec3, c: Vec3): Vec3 {
+    export function triangleNormal(out: Vec3, a: Vec3, b: Vec3, c: Vec3) {
         sub(triangleNormalTmpAB, b, a);
         sub(triangleNormalTmpAC, c, a);
         return normalize(out, cross(out, triangleNormalTmpAB, triangleNormalTmpAC));
@@ -699,7 +700,7 @@ export namespace Vec3 {
         return Vec3.scaleAndAdd(out, a, Vec3.sub(centerTmpV, b, a), 0.5);
     }
 
-    export function toString(a: Vec3, precision?: number): string {
+    export function toString(a: Vec3, precision?: number) {
         return `[${a[0].toPrecision(precision)} ${a[1].toPrecision(precision)} ${a[2].toPrecision(precision)}]`;
     }
 

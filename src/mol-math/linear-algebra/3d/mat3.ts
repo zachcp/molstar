@@ -17,24 +17,16 @@
  * furnished to do so, subject to the following conditions:
  */
 
-import type { NumberArray } from '../../../mol-util/type-helpers.ts';
-import { EPSILON } from './common.ts';
-import type { Euler } from './euler.ts';
-import { Mat4 } from './mat4.ts';
-import { Vec3 } from './vec3.ts';
+import { NumberArray } from '../../../mol-util/type-helpers';
+import { EPSILON } from './common';
+import { Euler } from './euler';
+import { Mat4 } from './mat4';
+import { Vec3 } from './vec3';
 
-interface Mat3 extends Array<number> {
-    [d: number]: number;
-    '@type': 'mat3';
-    length: 9;
-}
-interface ReadonlyMat3 extends Array<number> {
-    readonly [d: number]: number;
-    '@type': 'mat3';
-    length: 9;
-}
+interface Mat3 extends Array<number> { [d: number]: number, '@type': 'mat3', length: 9 }
+interface ReadonlyMat3 extends Array<number> { readonly [d: number]: number, '@type': 'mat3', length: 9 }
 
-function Mat3(): Mat3 {
+function Mat3() {
     return Mat3.zero();
 }
 
@@ -73,11 +65,7 @@ namespace Mat3 {
         return mat;
     }
 
-    export function toArray<T extends NumberArray>(
-        a: Mat3,
-        out: T,
-        offset: number,
-    ): T {
+    export function toArray<T extends NumberArray>(a: Mat3, out: T, offset: number) {
         out[offset + 0] = a[0];
         out[offset + 1] = a[1];
         out[offset + 2] = a[2];
@@ -90,7 +78,7 @@ namespace Mat3 {
         return out;
     }
 
-    export function fromArray(a: Mat3, array: NumberArray, offset: number): Mat3 {
+    export function fromArray(a: Mat3, array: NumberArray, offset: number) {
         a[0] = array[offset + 0];
         a[1] = array[offset + 1];
         a[2] = array[offset + 2];
@@ -103,12 +91,7 @@ namespace Mat3 {
         return a;
     }
 
-    export function fromColumns(
-        out: Mat3,
-        left: Vec3,
-        middle: Vec3,
-        right: Vec3,
-    ): Mat3 {
+    export function fromColumns(out: Mat3, left: Vec3, middle: Vec3, right: Vec3) {
         out[0] = left[0];
         out[1] = left[1];
         out[2] = left[2];
@@ -124,7 +107,7 @@ namespace Mat3 {
     /**
      * Copies the upper-left 3x3 values into the given mat3.
      */
-    export function fromMat4(out: Mat3, a: Mat4): Mat3 {
+    export function fromMat4(out: Mat3, a: Mat4) {
         out[0] = a[0];
         out[1] = a[1];
         out[2] = a[2];
@@ -137,45 +120,18 @@ namespace Mat3 {
         return out;
     }
 
-    const _m4 = [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-    ] as unknown as Mat4;
-    export function fromEuler(out: Mat3, euler: Euler, order: Euler.Order): Mat3 {
+    const _m4 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] as unknown as Mat4;
+    export function fromEuler(out: Mat3, euler: Euler, order: Euler.Order) {
         Mat4.fromEuler(_m4, euler, order);
         return fromMat4(out, _m4);
     }
 
-    export function fromRotation(out: Mat3, rad: number, axis: Vec3): Mat3 {
+    export function fromRotation(out: Mat3, rad: number, axis: Vec3) {
         Mat4.fromRotation(_m4, rad, axis);
         return fromMat4(out, _m4);
     }
 
-    export function create(
-        a00: number,
-        a01: number,
-        a02: number,
-        a10: number,
-        a11: number,
-        a12: number,
-        a20: number,
-        a21: number,
-        a22: number,
-    ): Mat3 {
+    export function create(a00: number, a01: number, a02: number, a10: number, a11: number, a12: number, a20: number, a21: number, a22: number): Mat3 {
         const out = zero();
         out[0] = a00;
         out[1] = a01;
@@ -190,42 +146,41 @@ namespace Mat3 {
     }
 
     const _id = identity();
-    export function isIdentity(m: Mat3, eps?: number): boolean {
+    export function isIdentity(m: Mat3, eps?: number) {
         return areEqual(m, _id, typeof eps === 'undefined' ? EPSILON : eps);
     }
 
-    export function hasNaN(m: Mat3): boolean {
-        for (let i = 0; i < 9; i++) if (isNaN(m[i])) return true;
+    export function hasNaN(m: Mat3) {
+        for (let i = 0; i < 9; i++) if (Number.isNaN(m[i])) return true;
         return false;
     }
 
     /**
      * Creates a new Mat3 initialized with values from an existing matrix
      */
-    export function clone(a: Mat3): Mat3 {
+    export function clone(a: Mat3) {
         return copy(zero(), a);
     }
 
-    export function areEqual(a: Mat3, b: Mat3, eps: number): boolean {
+    export function areEqual(a: Mat3, b: Mat3, eps: number) {
         for (let i = 0; i < 9; i++) {
             if (Math.abs(a[i] - b[i]) > eps) return false;
         }
         return true;
     }
 
-    export function setValue(a: Mat3, i: number, j: number, value: number): Mat3 {
+    export function setValue(a: Mat3, i: number, j: number, value: number) {
         a[3 * j + i] = value;
-        return a;
     }
 
-    export function getValue(a: Mat3, i: number, j: number): number {
+    export function getValue(a: Mat3, i: number, j: number) {
         return a[3 * j + i];
     }
 
     /**
      * Copy the values from one Mat3 to another
      */
-    export function copy(out: Mat3, a: Mat3): Mat3 {
+    export function copy(out: Mat3, a: Mat3) {
         out[0] = a[0];
         out[1] = a[1];
         out[2] = a[2];
@@ -241,12 +196,10 @@ namespace Mat3 {
     /**
      * Transpose the values of a Mat3
      */
-    export function transpose(out: Mat3, a: Mat3): Mat3 {
+    export function transpose(out: Mat3, a: Mat3) {
         // If we are transposing ourselves we can skip a few steps but have to cache some values
         if (out === a) {
-            const a01 = a[1],
-                a02 = a[2],
-                a12 = a[5];
+            const a01 = a[1], a02 = a[2], a12 = a[5];
             out[1] = a[3];
             out[2] = a[6];
             out[3] = a01;
@@ -271,15 +224,9 @@ namespace Mat3 {
      * Inverts a Mat3
      */
     export function invert(out: Mat3, a: Mat3): Mat3 {
-        const a00 = a[0],
-            a01 = a[1],
-            a02 = a[2];
-        const a10 = a[3],
-            a11 = a[4],
-            a12 = a[5];
-        const a20 = a[6],
-            a21 = a[7],
-            a22 = a[8];
+        const a00 = a[0], a01 = a[1], a02 = a[2];
+        const a10 = a[3], a11 = a[4], a12 = a[5];
+        const a20 = a[6], a21 = a[7], a22 = a[8];
 
         const b01 = a22 * a11 - a12 * a21;
         const b11 = -a22 * a10 + a12 * a20;
@@ -306,7 +253,7 @@ namespace Mat3 {
         return out;
     }
 
-    export function symmtricFromUpper(out: Mat3, a: Mat3): Mat3 {
+    export function symmtricFromUpper(out: Mat3, a: Mat3) {
         if (out === a) {
             out[3] = a[1];
             out[6] = a[2];
@@ -325,7 +272,7 @@ namespace Mat3 {
         return out;
     }
 
-    export function symmtricFromLower(out: Mat3, a: Mat3): Mat3 {
+    export function symmtricFromLower(out: Mat3, a: Mat3) {
         if (out === a) {
             out[1] = a[3];
             out[2] = a[6];
@@ -344,16 +291,10 @@ namespace Mat3 {
         return out;
     }
 
-    export function determinant(a: Mat3): number {
-        const a00 = a[0],
-            a01 = a[1],
-            a02 = a[2];
-        const a10 = a[3],
-            a11 = a[4],
-            a12 = a[5];
-        const a20 = a[6],
-            a21 = a[7],
-            a22 = a[8];
+    export function determinant(a: Mat3) {
+        const a00 = a[0], a01 = a[1], a02 = a[2];
+        const a10 = a[3], a11 = a[4], a12 = a[5];
+        const a20 = a[6], a21 = a[7], a22 = a[8];
 
         const b01 = a22 * a11 - a12 * a21;
         const b11 = -a22 * a10 + a12 * a20;
@@ -363,11 +304,11 @@ namespace Mat3 {
         return a00 * b01 + a01 * b11 + a02 * b21;
     }
 
-    export function trace(a: Mat3): number {
+    export function trace(a: Mat3) {
         return a[0] + a[4] + a[8];
     }
 
-    export function sub(out: Mat3, a: Mat3, b: Mat3): Mat3 {
+    export function sub(out: Mat3, a: Mat3, b: Mat3) {
         out[0] = a[0] - b[0];
         out[1] = a[1] - b[1];
         out[2] = a[2] - b[2];
@@ -380,7 +321,7 @@ namespace Mat3 {
         return out;
     }
 
-    export function add(out: Mat3, a: Mat3, b: Mat3): Mat3 {
+    export function add(out: Mat3, a: Mat3, b: Mat3) {
         out[0] = a[0] + b[0];
         out[1] = a[1] + b[1];
         out[2] = a[2] + b[2];
@@ -393,26 +334,14 @@ namespace Mat3 {
         return out;
     }
 
-    export function mul(out: Mat3, a: Mat3, b: Mat3): Mat3 {
-        const a00 = a[0],
-            a01 = a[1],
-            a02 = a[2],
-            a10 = a[3],
-            a11 = a[4],
-            a12 = a[5],
-            a20 = a[6],
-            a21 = a[7],
-            a22 = a[8];
+    export function mul(out: Mat3, a: Mat3, b: Mat3) {
+        const a00 = a[0], a01 = a[1], a02 = a[2],
+            a10 = a[3], a11 = a[4], a12 = a[5],
+            a20 = a[6], a21 = a[7], a22 = a[8];
 
-        const b00 = b[0],
-            b01 = b[1],
-            b02 = b[2],
-            b10 = b[3],
-            b11 = b[4],
-            b12 = b[5],
-            b20 = b[6],
-            b21 = b[7],
-            b22 = b[8];
+        const b00 = b[0], b01 = b[1], b02 = b[2],
+            b10 = b[3], b11 = b[4], b12 = b[5],
+            b20 = b[6], b21 = b[7], b22 = b[8];
 
         out[0] = b00 * a00 + b01 * a10 + b02 * a20;
         out[1] = b00 * a01 + b01 * a11 + b02 * a21;
@@ -428,7 +357,7 @@ namespace Mat3 {
         return out;
     }
 
-    export function subScalar(out: Mat3, a: Mat3, s: number): Mat3 {
+    export function subScalar(out: Mat3, a: Mat3, s: number) {
         out[0] = a[0] - s;
         out[1] = a[1] - s;
         out[2] = a[2] - s;
@@ -441,7 +370,7 @@ namespace Mat3 {
         return out;
     }
 
-    export function addScalar(out: Mat3, a: Mat3, s: number): Mat3 {
+    export function addScalar(out: Mat3, a: Mat3, s: number) {
         out[0] = a[0] + s;
         out[1] = a[1] + s;
         out[2] = a[2] + s;
@@ -454,7 +383,7 @@ namespace Mat3 {
         return out;
     }
 
-    export function mulScalar(out: Mat3, a: Mat3, s: number): Mat3 {
+    export function mulScalar(out: Mat3, a: Mat3, s: number) {
         out[0] = a[0] * s;
         out[1] = a[1] * s;
         out[2] = a[2] * s;
@@ -474,7 +403,7 @@ namespace Mat3 {
      *
      * From https://en.wikipedia.org/wiki/Eigenvalue_algorithm#3.C3.973_matrices
      */
-    export function symmetricEigenvalues(out: Vec3, a: Mat3): Vec3 {
+    export function symmetricEigenvalues(out: Vec3, a: Mat3) {
         const p1 = a[1] * a[1] + a[2] * a[2] + a[5] * a[5];
         if (p1 === 0) {
             out[0] = a[0];
@@ -489,14 +418,15 @@ namespace Mat3 {
             const p = Math.sqrt(p2 / 6);
             mulScalar(tmpB, Identity, q);
             sub(tmpB, a, tmpB);
-            mulScalar(tmpB, tmpB, 1 / p);
+            mulScalar(tmpB, tmpB, (1 / p));
             const r = determinant(tmpB) / 2;
             // In exact arithmetic for a symmetric matrix  -1 <= r <= 1
             // but computation error can leave it slightly outside this range.
-            const phi = r <= -1 ? piThird : r >= 1 ? 0 : Math.acos(r) / 3;
+            const phi = r <= -1 ? piThird : r >= 1 ?
+                0 : Math.acos(r) / 3;
             // the eigenvalues satisfy eig3 <= eig2 <= eig1
             out[0] = q + 2 * p * Math.cos(phi);
-            out[2] = q + 2 * p * Math.cos(phi + 2 * piThird);
+            out[2] = q + 2 * p * Math.cos(phi + (2 * piThird));
             out[1] = 3 * q - out[0] - out[2]; // since trace(A) = eig1 + eig2 + eig3
         }
         return out;
@@ -511,7 +441,7 @@ namespace Mat3 {
     /**
      * Calculates the eigenvector for the given eigenvalue `e` of matrix `a`
      */
-    export function eigenvector(out: Vec3, a: Mat3, e: number): Vec3 {
+    export function eigenvector(out: Vec3, a: Mat3, e: number) {
         Vec3.set(tmpR0, a[0] - e, a[1], a[2]);
         Vec3.set(tmpR1, a[1], a[4] - e, a[5]);
         Vec3.set(tmpR2, a[2], a[5], a[8] - e);
@@ -541,7 +471,7 @@ namespace Mat3 {
     /**
      * Get matrix to transform directions, e.g. normals
      */
-    export function directionTransform(out: Mat3, t: Mat4): Mat3 {
+    export function directionTransform(out: Mat3, t: Mat4) {
         fromMat4(out, t);
         invert(out, out);
         transpose(out, out);
@@ -552,18 +482,10 @@ namespace Mat3 {
 
     /** Return the Frobenius inner product of two matrices (= dot product of the flattened matrices).
      * Can be used as a measure of similarity between two rotation matrices. */
-    export function innerProduct(a: Mat3, b: Mat3): number {
-        return (
-            a[0] * b[0] +
-            a[1] * b[1] +
-            a[2] * b[2] +
-            a[3] * b[3] +
-            a[4] * b[4] +
-            a[5] * b[5] +
-            a[6] * b[6] +
-            a[7] * b[7] +
-            a[8] * b[8]
-        );
+    export function innerProduct(a: Mat3, b: Mat3) {
+        return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+            + a[3] * b[3] + a[4] * b[4] + a[5] * b[5]
+            + a[6] * b[6] + a[7] * b[7] + a[8] * b[8];
     }
 
     /**

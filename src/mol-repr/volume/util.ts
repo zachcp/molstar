@@ -4,17 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Volume } from '../../mol-model/volume.ts';
-import type { Loci } from '../../mol-model/loci.ts';
-import { Interval, OrderedSet, type SortedArray } from '../../mol-data/int.ts';
-import { equalEps } from '../../mol-math/linear-algebra/3d/common.ts';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
-import { packIntToRGBArray } from '../../mol-util/number-packing.ts';
-import { SetUtils } from '../../mol-util/set.ts';
-import { Box3D } from '../../mol-math/geometry.ts';
-import { toHalfFloat } from '../../mol-util/number-conversion.ts';
-import { clamp } from '../../mol-math/interpolate.ts';
-import { LocationIterator } from '../../mol-geo/util/location-iterator.ts';
+import { Grid, Volume } from '../../mol-model/volume';
+import { Loci } from '../../mol-model/loci';
+import { equalEps } from '../../mol-math/linear-algebra/3d/common';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
+import { packIntToRGBArray } from '../../mol-util/number-packing';
+import { SetUtils } from '../../mol-util/set';
+import { Box3D } from '../../mol-math/geometry';
+import { toHalfFloat } from '../../mol-util/number-conversion';
+import { clamp } from '../../mol-math/interpolate';
+import { LocationIterator } from '../../mol-geo/util/location-iterator';
+import { Tensor } from '../../mol-math/linear-algebra/tensor';
+import { Interval } from '../../mol-data/int/interval';
+import { SortedArray } from '../../mol-data/int/sorted-array';
+import { OrderedSet } from '../../mol-data/int/ordered-set';
 
 // avoiding namespace lookup improved performance in Chrome (Aug 2020)
 const v3set = Vec3.set;
@@ -24,12 +27,7 @@ const v3addScalar = Vec3.addScalar;
 const v3scale = Vec3.scale;
 const v3toArray = Vec3.toArray;
 
-export function eachVolumeLoci(
-    loci: Loci,
-    volume: Volume,
-    props: { isoValue?: Volume.IsoValue; segments?: SortedArray } | undefined,
-    apply: (interval: Interval) => boolean,
-) {
+export function eachVolumeLoci(loci: Loci, volume: Volume, props: { isoValue?: Volume.IsoValue, segments?: SortedArray } | undefined, apply: (interval: Interval) => boolean) {
     let changed = false;
     const cellCount = volume.grid.cells.data.length;
 
@@ -65,7 +63,7 @@ export function eachVolumeLoci(
             const v = Volume.IsoValue.toAbsolute(loci.isoValue, stats).absoluteValue;
             for (let i = 0, il = data.length; i < il; ++i) {
                 if (equalEps(v, data[i], eps)) {
-                    OrderedSet.forEach(loci.instances, (j) => {
+                    OrderedSet.forEach(loci.instances, j => {
                         const offset = j * cellCount;
                         if (apply(Interval.ofSingleton(offset + i))) changed = true;
                     });
@@ -76,13 +74,13 @@ export function eachVolumeLoci(
         if (!Volume.areEquivalent(loci.volume, volume)) return false;
         for (const { indices, instances } of loci.elements) {
             if (Interval.is(indices)) {
-                OrderedSet.forEach(instances, (j) => {
+                OrderedSet.forEach(instances, j => {
                     const offset = j * cellCount;
                     if (apply(Interval.offset(indices, offset))) changed = true;
                 });
             } else {
-                OrderedSet.forEach(indices, (v) => {
-                    OrderedSet.forEach(instances, (j) => {
+                OrderedSet.forEach(indices, v => {
+                    OrderedSet.forEach(instances, j => {
                         const offset = j * cellCount;
                         if (apply(Interval.ofSingleton(offset + v))) changed = true;
                     });
@@ -94,7 +92,7 @@ export function eachVolumeLoci(
         if (props?.segments) {
             for (const { segments, instances } of loci.elements) {
                 if (OrderedSet.areIntersecting(segments, props.segments)) {
-                    OrderedSet.forEach(instances, (j) => {
+                    OrderedSet.forEach(instances, j => {
                         const offset = j * cellCount;
                         if (apply(Interval.ofBounds(offset, offset + cellCount))) changed = true;
                     });
@@ -158,21 +156,10 @@ export function getVolumeTexture2dLayout(dim: Vec3, padding = 0) {
     } else {
         width *= dim[2];
     }
-    return {
-        width,
-        height,
-        columns,
-        rows,
-        powerOfTwoSize: height < powerOfTwoSize ? powerOfTwoSize : powerOfTwoSize * 2,
-    };
+    return { width, height, columns, rows, powerOfTwoSize: height < powerOfTwoSize ? powerOfTwoSize : powerOfTwoSize * 2 };
 }
 
-export function createVolumeTexture2d(
-    volume: Volume,
-    variant: 'normals' | 'groups' | 'data',
-    padding = 0,
-    type: 'byte' | 'float' | 'halfFloat' = 'byte',
-) {
+export function createVolumeTexture2d(volume: Volume, variant: 'normals' | 'groups' | 'data', padding = 0, type: 'byte' | 'float' | 'halfFloat' = 'byte') {
     const { cells: { space, data }, stats: { max, min } } = volume.grid;
     const dim = space.dimensions as Vec3;
     const { dataOffset: o } = space;
@@ -182,8 +169,8 @@ export function createVolumeTexture2d(
     const array = type === 'byte'
         ? new Uint8Array(width * height * itemSize)
         : type === 'halfFloat'
-        ? new Uint16Array(width * height * itemSize)
-        : new Float32Array(width * height * itemSize);
+            ? new Uint16Array(width * height * itemSize)
+            : new Float32Array(width * height * itemSize);
     const textureImage = { array, width, height };
 
     const diff = max - min;
@@ -231,17 +218,15 @@ export function createVolumeTexture2d(
                             packIntToRGBArray(offset, array, index);
                         }
                     } else {
-                        v3set(
-                            n0,
+                        v3set(n0,
                             data[o(Math.max(0, x - 1), y, z)],
                             data[o(x, Math.max(0, y - 1), z)],
-                            data[o(x, y, Math.max(0, z - 1))],
+                            data[o(x, y, Math.max(0, z - 1))]
                         );
-                        v3set(
-                            n1,
+                        v3set(n1,
                             data[o(Math.min(xn1, x + 1), y, z)],
                             data[o(x, Math.min(yn1, y + 1), z)],
-                            data[o(x, y, Math.min(zn1, z + 1))],
+                            data[o(x, y, Math.min(zn1, z + 1))]
                         );
                         v3normalize(n0, v3sub(n0, n0, n1));
                         v3addScalar(n0, v3scale(n0, n0, 0.5), 0.5);
@@ -274,8 +259,8 @@ export function createVolumeTexture3d(volume: Volume, type: 'byte' | 'float' | '
     const array = type === 'byte'
         ? new Uint8Array(width * height * depth * 4)
         : type === 'halfFloat'
-        ? new Uint16Array(width * height * depth * 4)
-        : new Float32Array(width * height * depth * 4);
+            ? new Uint16Array(width * height * depth * 4)
+            : new Float32Array(width * height * depth * 4);
     const textureVolume = { array, width, height, depth };
     const diff = max - min;
 
@@ -292,17 +277,15 @@ export function createVolumeTexture3d(volume: Volume, type: 'byte' | 'float' | '
             for (let x = 0; x < width; ++x) {
                 const offset = o(x, y, z);
 
-                v3set(
-                    n0,
+                v3set(n0,
                     data[o(Math.max(0, x - 1), y, z)],
                     data[o(x, Math.max(0, y - 1), z)],
-                    data[o(x, y, Math.max(0, z - 1))],
+                    data[o(x, y, Math.max(0, z - 1))]
                 );
-                v3set(
-                    n1,
+                v3set(n1,
                     data[o(Math.min(width1, x + 1), y, z)],
                     data[o(x, Math.min(height1, y + 1), z)],
-                    data[o(x, y, Math.min(depth1, z + 1))],
+                    data[o(x, y, Math.min(depth1, z + 1))]
                 );
                 v3normalize(n0, v3sub(n0, n0, n1));
                 v3addScalar(n0, v3scale(n0, n0, 0.5), 0.5);
@@ -370,4 +353,49 @@ export function createSegmentTexture2d(volume: Volume, set: number[], bbox: Box3
     }
 
     return textureImage;
+}
+
+/**
+ * Create a new volume that is wrapped by one cell in all dimensions.
+ * Reuses the original volume grid data with new data accessors.
+ * Only intended for isosurface construction.
+ */
+export function createWrappedVolume(volume: Volume): Volume {
+    const { grid } = volume;
+    const { space } = grid.cells;
+    const { get, set, add, dataOffset } = space;
+    const [xn, yn, zn] = space.dimensions as Vec3;
+
+    const _dimensions = Vec3.create(xn + 1, yn + 1, zn + 1);
+
+    const _get = (data: Tensor.Data, x: number, y: number, z: number) => get(data, x % xn, y % yn, z % zn);
+    const _set = (data: Tensor.Data, x: number, y: number, z: number, d: number) => set(data, x % xn, y % yn, z % zn, d);
+    const _add = (data: Tensor.Data, x: number, y: number, z: number, d: number) => add(data, x % xn, y % yn, z % zn, d);
+    const _dataOffset = (x: number, y: number, z: number) => dataOffset(x % xn, y % yn, z % zn);
+
+    const _space: Tensor.Space = {
+        ...space,
+        dimensions: _dimensions,
+        get: _get,
+        set: _set,
+        add: _add,
+        dataOffset: _dataOffset,
+    };
+
+    const matrix = Grid.getGridToCartesianTransform(volume.grid);
+    const _transform: Grid.Transform = { kind: 'matrix', matrix };
+
+    const _grid: Grid = {
+        ...grid,
+        transform: _transform,
+        cells: {
+            ...grid.cells,
+            space: _space
+        }
+    };
+
+    return {
+        ...volume,
+        grid: _grid
+    };
 }

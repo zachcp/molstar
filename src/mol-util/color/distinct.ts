@@ -8,28 +8,26 @@
  * which is heavily inspired by http://tools.medialab.sciences-po.fr/iwanthue/
  */
 
-import { Lab } from './spaces/lab.ts';
-import { Hcl } from './spaces/hcl.ts';
-import { deepClone } from '../../mol-util/object.ts';
-import { deepEqual } from '../../mol-util/index.ts';
-import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { ColorNames } from './names.ts';
-import type { Color } from './color.ts';
+import { Lab } from './spaces/lab';
+import { Hcl } from './spaces/hcl';
+import { deepClone } from '../object';
+import { deepEqual } from '../index';
+import { ParamDefinition as PD } from '../param-definition';
+import { ColorNames } from './names';
+import { Color } from './color';
 
 export const DistinctColorsParams = {
     hue: PD.Interval([1, 360], { min: 0, max: 360, step: 1 }),
     chroma: PD.Interval([40, 70], { min: 0, max: 100, step: 1 }),
     luminance: PD.Interval([15, 85], { min: 0, max: 100, step: 1 }),
-    sort: PD.Select('contrast', PD.arrayToOptions(['none', 'contrast'] as const), {
-        description: 'no sorting leaves colors approximately ordered by hue',
-    }),
+    sort: PD.Select('contrast', PD.arrayToOptions(['none', 'contrast'] as const), { description: 'no sorting leaves colors approximately ordered by hue' }),
 
     clusteringStepCount: PD.Numeric(50, { min: 10, max: 200, step: 1 }, { isHidden: true }),
     minSampleCount: PD.Numeric(800, { min: 100, max: 5000, step: 100 }, { isHidden: true }),
     sampleCountFactor: PD.Numeric(5, { min: 1, max: 100, step: 1 }, { isHidden: true }),
 };
-export type DistinctColorsParams = typeof DistinctColorsParams;
-export type DistinctColorsProps = PD.Values<typeof DistinctColorsParams>;
+export type DistinctColorsParams = typeof DistinctColorsParams
+export type DistinctColorsProps = PD.Values<typeof DistinctColorsParams>
 
 const LabTolerance = 2;
 const tmpCheckColorHcl = [0, 0, 0] as unknown as Hcl;
@@ -176,5 +174,5 @@ export function distinctColors(count: number, props: Partial<DistinctColorsProps
     }
 
     const sorted = p.sort === 'contrast' ? sortByContrast(colors) : colors;
-    return sorted.map((c) => Lab.toColor(c));
+    return sorted.map(c => Lab.toColor(c));
 }

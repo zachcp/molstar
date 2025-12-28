@@ -4,21 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Box3D, fillGridDim } from '../../geometry.ts';
-import { Mat4, Tensor, Vec3 } from '../../linear-algebra.ts';
-import type { RuntimeContext } from '../../../mol-task/index.ts';
-import type { PositionData } from '../common.ts';
-import { OrderedSet } from '../../../mol-data/int.ts';
-import type { GaussianDensityData, GaussianDensityProps } from '../gaussian-density.ts';
-import { fasterExp } from '../../approx.ts';
+import { RuntimeContext } from '../../../mol-task';
+import { fillGridDim, PositionData } from '../common';
+import { OrderedSet } from '../../../mol-data/int/ordered-set';
+import { GaussianDensityProps, GaussianDensityData } from '../gaussian-density';
+import { fasterExp } from '../../approx';
+import { Box3D } from '../primitives/box3d';
+import { Vec3 } from '../../linear-algebra/3d/vec3';
+import { Tensor } from '../../linear-algebra/tensor';
+import { Mat4 } from '../../linear-algebra/3d/mat4';
 
-export async function GaussianDensityCPU(
-    ctx: RuntimeContext,
-    position: PositionData,
-    box: Box3D,
-    radius: (index: number) => number,
-    props: GaussianDensityProps,
-): Promise<GaussianDensityData> {
+export async function GaussianDensityCPU(ctx: RuntimeContext, position: PositionData, box: Box3D, radius: (index: number) => number, props: GaussianDensityProps): Promise<GaussianDensityData> {
     const { resolution, radiusOffset, smoothness } = props;
     const scaleFactor = 1 / resolution;
 
@@ -58,7 +54,7 @@ export async function GaussianDensityCPU(
     const densData = space.create();
 
     const alpha = smoothness;
-    const updateChunk = Math.ceil(100000 / (Math.pow(Math.pow(maxRadius, 3), 3) * scaleFactor));
+    const updateChunk = Math.ceil(100000 / ((Math.pow(Math.pow(maxRadius, 3), 3) * scaleFactor)));
 
     function accumulateRange(begI: number, endI: number) {
         for (let i = begI; i < endI; ++i) {

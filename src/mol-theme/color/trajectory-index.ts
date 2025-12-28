@@ -4,16 +4,16 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Color } from '../../mol-util/color/index.ts';
-import type { Location } from '../../mol-model/location.ts';
-import { Bond, Model, StructureElement } from '../../mol-model/structure.ts';
-import type { ColorTheme, LocationColor } from '../color.ts';
-import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import type { ThemeDataContext } from '../theme.ts';
-import { getPalette, getPaletteParams } from '../../mol-util/color/palette.ts';
-import type { ScaleLegend, TableLegend } from '../../mol-util/legend.ts';
-import { ColorThemeCategory } from './categories.ts';
-import { hashFnv32a } from '../../mol-data/util.ts';
+import { Color } from '../../mol-util/color';
+import { Location } from '../../mol-model/location';
+import { StructureElement, Bond, Model } from '../../mol-model/structure';
+import type { ColorTheme, LocationColor } from '../color';
+import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { ThemeDataContext } from '../theme';
+import { getPaletteParams, getPalette } from '../../mol-util/color/palette';
+import { TableLegend, ScaleLegend } from '../../mol-util/legend';
+import { ColorThemeCategory } from './categories';
+import { hashFnv32a } from '../../mol-data/util/hash-functions';
 
 const DefaultColor = Color(0xCCCCCC);
 const Description = 'Gives every model (frame) a unique color based on the index in its trajectory.';
@@ -21,15 +21,12 @@ const Description = 'Gives every model (frame) a unique color based on the index
 export const TrajectoryIndexColorThemeParams = {
     ...getPaletteParams({ type: 'colors', colorList: 'purples' }),
 };
-export type TrajectoryIndexColorThemeParams = typeof TrajectoryIndexColorThemeParams;
+export type TrajectoryIndexColorThemeParams = typeof TrajectoryIndexColorThemeParams
 export function getTrajectoryIndexColorThemeParams(ctx: ThemeDataContext) {
     return PD.clone(TrajectoryIndexColorThemeParams);
 }
 
-export function TrajectoryIndexColorTheme(
-    ctx: ThemeDataContext,
-    props: PD.Values<TrajectoryIndexColorThemeParams>,
-): ColorTheme<TrajectoryIndexColorThemeParams> {
+export function TrajectoryIndexColorTheme(ctx: ThemeDataContext, props: PD.Values<TrajectoryIndexColorThemeParams>): ColorTheme<TrajectoryIndexColorThemeParams> {
     let color: LocationColor;
     let legend: ScaleLegend | TableLegend | undefined;
     let contextHash = -1;
@@ -70,20 +67,16 @@ export function TrajectoryIndexColorTheme(
         props,
         contextHash,
         description: Description,
-        legend,
+        legend
     };
 }
 
-export const TrajectoryIndexColorThemeProvider: ColorTheme.Provider<
-    TrajectoryIndexColorThemeParams,
-    'trajectory-index'
-> = {
+export const TrajectoryIndexColorThemeProvider: ColorTheme.Provider<TrajectoryIndexColorThemeParams, 'trajectory-index'> = {
     name: 'trajectory-index',
     label: 'Trajectory Index',
     category: ColorThemeCategory.Chain,
     factory: TrajectoryIndexColorTheme,
     getParams: getTrajectoryIndexColorThemeParams,
     defaultValues: PD.getDefaultValues(TrajectoryIndexColorThemeParams),
-    isApplicable: (ctx: ThemeDataContext) =>
-        !!ctx.structure && ctx.structure.elementCount > 0 && Model.TrajectoryInfo.get(ctx.structure.models[0]).size > 1,
+    isApplicable: (ctx: ThemeDataContext) => !!ctx.structure && ctx.structure.elementCount > 0 && Model.TrajectoryInfo.get(ctx.structure.models[0]).size > 1
 };

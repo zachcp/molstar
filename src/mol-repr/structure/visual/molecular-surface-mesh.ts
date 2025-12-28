@@ -4,68 +4,56 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { UnitsMeshParams, UnitsMeshVisual, type UnitsVisual } from '../units-visual.ts';
-import { MolecularSurfaceCalculationParams } from '../../../mol-math/geometry/molecular-surface.ts';
-import type { VisualContext } from '../../visual.ts';
-import type { Structure, Unit } from '../../../mol-model/structure.ts';
-import type { Theme } from '../../../mol-theme/theme.ts';
-import { Mesh } from '../../../mol-geo/geometry/mesh/mesh.ts';
-import { computeStructureMolecularSurface, computeUnitMolecularSurface } from './util/molecular-surface.ts';
-import { computeMarchingCubesMesh } from '../../../mol-geo/util/marching-cubes/algorithm.ts';
-import {
-    eachElement,
-    eachSerialElement,
-    ElementIterator,
-    getElementLoci,
-    getSerialElementLoci,
-} from './util/element.ts';
-import type { VisualUpdateState } from '../../util.ts';
-import { CommonSurfaceParams } from './util/common.ts';
-import { Sphere3D } from '../../../mol-math/geometry.ts';
-import type { MeshValues } from '../../../mol-gl/renderable/mesh.ts';
-import type { Texture } from '../../../mol-gl/webgl/texture.ts';
-import type { WebGLContext } from '../../../mol-gl/webgl/context.ts';
-import { applyMeshColorSmoothing } from '../../../mol-geo/geometry/mesh/color-smoothing.ts';
-import { ColorSmoothingParams, getColorSmoothingProps } from '../../../mol-geo/geometry/base.ts';
-import { ValueCell } from '../../../mol-util/index.ts';
-import { ComplexMeshVisual, type ComplexVisual } from '../complex-visual.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition';
+import { UnitsMeshParams, UnitsVisual, UnitsMeshVisual } from '../units-visual';
+import { MolecularSurfaceCalculationParams } from '../../../mol-math/geometry/molecular-surface';
+import { VisualContext } from '../../visual';
+import { Unit, Structure } from '../../../mol-model/structure';
+import { Theme } from '../../../mol-theme/theme';
+import { Mesh } from '../../../mol-geo/geometry/mesh/mesh';
+import { computeStructureMolecularSurface, computeUnitMolecularSurface } from './util/molecular-surface';
+import { computeMarchingCubesMesh } from '../../../mol-geo/util/marching-cubes/algorithm';
+import { ElementIterator, getElementLoci, eachElement, getSerialElementLoci, eachSerialElement } from './util/element';
+import { VisualUpdateState } from '../../util';
+import { CommonSurfaceParams } from './util/common';
+import { Sphere3D } from '../../../mol-math/geometry';
+import { MeshValues } from '../../../mol-gl/renderable/mesh';
+import { Texture } from '../../../mol-gl/webgl/texture';
+import { WebGLContext } from '../../../mol-gl/webgl/context';
+import { applyMeshColorSmoothing } from '../../../mol-geo/geometry/mesh/color-smoothing';
+import { BaseGeometry, ColorSmoothingParams, getColorSmoothingProps } from '../../../mol-geo/geometry/base';
+import { ValueCell } from '../../../mol-util';
+import { ComplexMeshVisual, ComplexVisual } from '../complex-visual';
+
+const CommonMolecularSurfaceCalculationParams = {
+    ...MolecularSurfaceCalculationParams,
+    resolution: { ...MolecularSurfaceCalculationParams.resolution, ...BaseGeometry.CustomQualityParamInfo },
+    probePositions: { ...MolecularSurfaceCalculationParams.probePositions, ...BaseGeometry.CustomQualityParamInfo },
+};
 
 export const MolecularSurfaceMeshParams = {
     ...UnitsMeshParams,
-    ...MolecularSurfaceCalculationParams,
+    ...CommonMolecularSurfaceCalculationParams,
     ...CommonSurfaceParams,
     ...ColorSmoothingParams,
 };
-export type MolecularSurfaceMeshParams = typeof MolecularSurfaceMeshParams;
-export type MolecularSurfaceMeshProps = PD.Values<MolecularSurfaceMeshParams>;
+export type MolecularSurfaceMeshParams = typeof MolecularSurfaceMeshParams
+export type MolecularSurfaceMeshProps = PD.Values<MolecularSurfaceMeshParams>
 
 type MolecularSurfaceMeta = {
-    resolution?: number;
-    colorTexture?: Texture;
-};
+    resolution?: number
+    colorTexture?: Texture
+}
 
 //
 
-async function createMolecularSurfaceMesh(
-    ctx: VisualContext,
-    unit: Unit,
-    structure: Structure,
-    theme: Theme,
-    props: MolecularSurfaceMeshProps,
-    mesh?: Mesh,
-): Promise<Mesh> {
-    const { transform, field, idField, resolution, maxRadius } = await computeUnitMolecularSurface(
-        structure,
-        unit,
-        theme.size,
-        props,
-    ).runInContext(ctx.runtime);
+async function createMolecularSurfaceMesh(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: MolecularSurfaceMeshProps, mesh?: Mesh): Promise<Mesh> {
+    const { transform, field, idField, resolution, maxRadius } = await computeUnitMolecularSurface(structure, unit, theme.size, props).runInContext(ctx.runtime);
 
     const params = {
         isoLevel: props.probeRadius,
         scalarField: field,
-        idField,
+        idField
     };
     const surface = await computeMarchingCubesMesh(params, mesh).runAsChild(ctx.runtime);
 
@@ -96,11 +84,7 @@ export function MolecularSurfaceMeshVisual(materialId: number): UnitsVisual<Mole
         createLocationIterator: ElementIterator.fromGroup,
         getLoci: getElementLoci,
         eachLocation: eachElement,
-        setUpdateState: (
-            state: VisualUpdateState,
-            newProps: PD.Values<MolecularSurfaceMeshParams>,
-            currentProps: PD.Values<MolecularSurfaceMeshParams>,
-        ) => {
+        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<MolecularSurfaceMeshParams>, currentProps: PD.Values<MolecularSurfaceMeshParams>) => {
             if (newProps.resolution !== currentProps.resolution) state.createGeometry = true;
             if (newProps.probeRadius !== currentProps.probeRadius) state.createGeometry = true;
             if (newProps.probePositions !== currentProps.probePositions) state.createGeometry = true;
@@ -112,21 +96,11 @@ export function MolecularSurfaceMeshVisual(materialId: number): UnitsVisual<Mole
             if (newProps.smoothColors.name !== currentProps.smoothColors.name) {
                 state.updateColor = true;
             } else if (newProps.smoothColors.name === 'on' && currentProps.smoothColors.name === 'on') {
-                if (
-                    newProps.smoothColors.params.resolutionFactor !== currentProps.smoothColors.params.resolutionFactor
-                ) state.updateColor = true;
-                if (newProps.smoothColors.params.sampleStride !== currentProps.smoothColors.params.sampleStride) {
-                    state.updateColor = true;
-                }
+                if (newProps.smoothColors.params.resolutionFactor !== currentProps.smoothColors.params.resolutionFactor) state.updateColor = true;
+                if (newProps.smoothColors.params.sampleStride !== currentProps.smoothColors.params.sampleStride) state.updateColor = true;
             }
         },
-        processValues: (
-            values: MeshValues,
-            geometry: Mesh,
-            props: PD.Values<MolecularSurfaceMeshParams>,
-            theme: Theme,
-            webgl?: WebGLContext,
-        ) => {
+        processValues: (values: MeshValues, geometry: Mesh, props: PD.Values<MolecularSurfaceMeshParams>, theme: Theme, webgl?: WebGLContext) => {
             const { resolution, colorTexture } = geometry.meta as MolecularSurfaceMeta;
             const csp = getColorSmoothingProps(props.smoothColors, theme.color.preferSmoothing, resolution);
             if (csp) {
@@ -136,29 +110,19 @@ export function MolecularSurfaceMeshVisual(materialId: number): UnitsVisual<Mole
         },
         dispose: (geometry: Mesh) => {
             (geometry.meta as MolecularSurfaceMeta).colorTexture?.destroy();
-        },
+        }
     }, materialId);
 }
 
 //
 
-async function createStructureMolecularSurfaceMesh(
-    ctx: VisualContext,
-    structure: Structure,
-    theme: Theme,
-    props: MolecularSurfaceMeshProps,
-    mesh?: Mesh,
-): Promise<Mesh> {
-    const { transform, field, idField, resolution, maxRadius } = await computeStructureMolecularSurface(
-        structure,
-        theme.size,
-        props,
-    ).runInContext(ctx.runtime);
+async function createStructureMolecularSurfaceMesh(ctx: VisualContext, structure: Structure, theme: Theme, props: MolecularSurfaceMeshProps, mesh?: Mesh): Promise<Mesh> {
+    const { transform, field, idField, resolution, maxRadius } = await computeStructureMolecularSurface(structure, theme.size, props).runInContext(ctx.runtime);
 
     const params = {
         isoLevel: props.probeRadius,
         scalarField: field,
-        idField,
+        idField
     };
     const surface = await computeMarchingCubesMesh(params, mesh).runAsChild(ctx.runtime);
 
@@ -189,11 +153,7 @@ export function StructureMolecularSurfaceMeshVisual(materialId: number): Complex
         createLocationIterator: ElementIterator.fromStructure,
         getLoci: getSerialElementLoci,
         eachLocation: eachSerialElement,
-        setUpdateState: (
-            state: VisualUpdateState,
-            newProps: PD.Values<MolecularSurfaceMeshParams>,
-            currentProps: PD.Values<MolecularSurfaceMeshParams>,
-        ) => {
+        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<MolecularSurfaceMeshParams>, currentProps: PD.Values<MolecularSurfaceMeshParams>) => {
             if (newProps.resolution !== currentProps.resolution) state.createGeometry = true;
             if (newProps.probeRadius !== currentProps.probeRadius) state.createGeometry = true;
             if (newProps.probePositions !== currentProps.probePositions) state.createGeometry = true;
@@ -205,21 +165,11 @@ export function StructureMolecularSurfaceMeshVisual(materialId: number): Complex
             if (newProps.smoothColors.name !== currentProps.smoothColors.name) {
                 state.updateColor = true;
             } else if (newProps.smoothColors.name === 'on' && currentProps.smoothColors.name === 'on') {
-                if (
-                    newProps.smoothColors.params.resolutionFactor !== currentProps.smoothColors.params.resolutionFactor
-                ) state.updateColor = true;
-                if (newProps.smoothColors.params.sampleStride !== currentProps.smoothColors.params.sampleStride) {
-                    state.updateColor = true;
-                }
+                if (newProps.smoothColors.params.resolutionFactor !== currentProps.smoothColors.params.resolutionFactor) state.updateColor = true;
+                if (newProps.smoothColors.params.sampleStride !== currentProps.smoothColors.params.sampleStride) state.updateColor = true;
             }
         },
-        processValues: (
-            values: MeshValues,
-            geometry: Mesh,
-            props: PD.Values<MolecularSurfaceMeshParams>,
-            theme: Theme,
-            webgl?: WebGLContext,
-        ) => {
+        processValues: (values: MeshValues, geometry: Mesh, props: PD.Values<MolecularSurfaceMeshParams>, theme: Theme, webgl?: WebGLContext) => {
             const { resolution, colorTexture } = geometry.meta as MolecularSurfaceMeta;
             const csp = getColorSmoothingProps(props.smoothColors, theme.color.preferSmoothing, resolution);
             if (csp) {
@@ -229,6 +179,6 @@ export function StructureMolecularSurfaceMeshVisual(materialId: number): Complex
         },
         dispose: (geometry: Mesh) => {
             (geometry.meta as MolecularSurfaceMeta).colorTexture?.destroy();
-        },
+        }
     }, materialId);
 }

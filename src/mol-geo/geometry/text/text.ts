@@ -2,98 +2,79 @@
  * Copyright (c) 2019-2025 mol* contributors, licensed under MIT, See LICENSE file for more info.
  *
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
+ * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { ValueCell } from '../../../mol-util/index.ts';
-import type { GeometryUtils } from '../geometry.ts';
-import { LocationIterator, PositionLocation } from '../../../mol-geo/util/location-iterator.ts';
-import type { TransformData } from '../transform-data.ts';
-import type { Theme } from '../../../mol-theme/theme.ts';
-import { createColors } from '../color-data.ts';
-import { createSizes, getMaxSize } from '../size-data.ts';
-import { createMarkers } from '../marker-data.ts';
-import { ColorNames } from '../../../mol-util/color/names.ts';
-import { Sphere3D } from '../../../mol-math/geometry.ts';
-import {
-    calculateInvariantBoundingSphere,
-    calculateTransformBoundingSphere,
-    createTextureImage,
-    type TextureImage,
-} from '../../../mol-gl/renderable/util.ts';
-import type { TextValues } from '../../../mol-gl/renderable/text.ts';
-import { Color } from '../../../mol-util/color/index.ts';
-import { Vec3, Vec4 } from '../../../mol-math/linear-algebra.ts';
-import { FontAtlasParams } from './font-atlas.ts';
-import type { RenderableState } from '../../../mol-gl/renderable.ts';
-import { clamp } from '../../../mol-math/interpolate.ts';
-import type { createRenderObject as _createRenderObject } from '../../../mol-gl/render-object.ts';
-import { BaseGeometry } from '../base.ts';
-import { createEmptyOverpaint } from '../overpaint-data.ts';
-import { createEmptyTransparency } from '../transparency-data.ts';
-import { hashFnv32a } from '../../../mol-data/util.ts';
-import { createGroupMapping, type GroupMapping } from '../../util.ts';
-import { createEmptyClipping } from '../clipping-data.ts';
-import { createEmptySubstance } from '../substance-data.ts';
-import { createEmptyEmissive } from '../emissive-data.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition';
+import { ValueCell } from '../../../mol-util';
+import { GeometryUtils } from '../geometry';
+import { LocationIterator, PositionLocation } from '../../util/location-iterator';
+import { TransformData } from '../transform-data';
+import { Theme } from '../../../mol-theme/theme';
+import { createColors } from '../color-data';
+import { createSizes, getMaxSize } from '../size-data';
+import { createMarkers } from '../marker-data';
+import { ColorNames } from '../../../mol-util/color/names';
+import { Sphere3D } from '../../../mol-math/geometry';
+import { TextureImage, createTextureImage, calculateInvariantBoundingSphere, calculateTransformBoundingSphere } from '../../../mol-gl/renderable/util';
+import { TextValues } from '../../../mol-gl/renderable/text';
+import { Color } from '../../../mol-util/color';
+import { Vec3, Vec4 } from '../../../mol-math/linear-algebra';
+import { FontAtlasParams } from './font-atlas';
+import { RenderableState } from '../../../mol-gl/renderable';
+import { clamp } from '../../../mol-math/interpolate';
+import { createRenderObject as _createRenderObject } from '../../../mol-gl/render-object';
+import { BaseGeometry } from '../base';
+import { createEmptyOverpaint } from '../overpaint-data';
+import { createEmptyTransparency } from '../transparency-data';
+import { hashFnv32a } from '../../../mol-data/util';
+import { GroupMapping, createGroupMapping } from '../../util';
+import { createEmptyClipping } from '../clipping-data';
+import { createEmptySubstance } from '../substance-data';
+import { createEmptyEmissive } from '../emissive-data';
 
-type TextAttachment =
-    | 'bottom-left'
-    | 'bottom-center'
-    | 'bottom-right'
-    | 'middle-left'
-    | 'middle-center'
-    | 'middle-right'
-    | 'top-left'
-    | 'top-center'
-    | 'top-right';
+type TextAttachment = (
+    'bottom-left' | 'bottom-center' | 'bottom-right' |
+    'middle-left' | 'middle-center' | 'middle-right' |
+    'top-left' | 'top-center' | 'top-right'
+)
 
 /** Text */
 export interface Text {
-    readonly kind: 'text';
+    readonly kind: 'text',
 
     /** Number of characters in the text */
-    charCount: number;
+    charCount: number,
 
     /** Font Atlas */
-    readonly fontTexture: ValueCell<TextureImage<Uint8Array>>;
+    readonly fontTexture: ValueCell<TextureImage<Uint8Array>>,
 
     /** Center buffer as array of xyz values wrapped in a value cell */
-    readonly centerBuffer: ValueCell<Float32Array>;
+    readonly centerBuffer: ValueCell<Float32Array>,
     /** Mapping buffer as array of xy values wrapped in a value cell */
-    readonly mappingBuffer: ValueCell<Float32Array>;
+    readonly mappingBuffer: ValueCell<Float32Array>,
     /** Depth buffer as array of z values wrapped in a value cell */
-    readonly depthBuffer: ValueCell<Float32Array>;
+    readonly depthBuffer: ValueCell<Float32Array>,
     /** Index buffer as array of center index triplets wrapped in a value cell */
-    readonly indexBuffer: ValueCell<Uint32Array>;
+    readonly indexBuffer: ValueCell<Uint32Array>,
     /** Group buffer as array of group ids for each vertex wrapped in a value cell */
-    readonly groupBuffer: ValueCell<Float32Array>;
+    readonly groupBuffer: ValueCell<Float32Array>,
     /** Texture coordinates buffer as array of uv values wrapped in a value cell */
-    readonly tcoordBuffer: ValueCell<Float32Array>;
+    readonly tcoordBuffer: ValueCell<Float32Array>,
 
     /** Bounding sphere of the text */
-    readonly boundingSphere: Sphere3D;
+    readonly boundingSphere: Sphere3D
     /** Maps group ids to text indices */
-    readonly groupMapping: GroupMapping;
+    readonly groupMapping: GroupMapping
 
-    setBoundingSphere(boundingSphere: Sphere3D): void;
+    setBoundingSphere(boundingSphere: Sphere3D): void
 }
 
 export namespace Text {
-    export function create(
-        fontTexture: TextureImage<Uint8Array>,
-        centers: Float32Array,
-        mappings: Float32Array,
-        depths: Float32Array,
-        indices: Uint32Array,
-        groups: Float32Array,
-        tcoords: Float32Array,
-        charCount: number,
-        text?: Text,
-    ): Text {
-        return text
-            ? update(fontTexture, centers, mappings, depths, indices, groups, tcoords, charCount, text)
-            : fromData(fontTexture, centers, mappings, depths, indices, groups, tcoords, charCount);
+    export function create(fontTexture: TextureImage<Uint8Array>, centers: Float32Array, mappings: Float32Array, depths: Float32Array, indices: Uint32Array, groups: Float32Array, tcoords: Float32Array, charCount: number, text?: Text): Text {
+        return text ?
+            update(fontTexture, centers, mappings, depths, indices, groups, tcoords, charCount, text) :
+            fromData(fontTexture, centers, mappings, depths, indices, groups, tcoords, charCount);
     }
 
     export function createEmpty(text?: Text): Text {
@@ -109,27 +90,15 @@ export namespace Text {
 
     function hashCode(text: Text) {
         return hashFnv32a([
-            text.charCount,
-            text.fontTexture.ref.version,
-            text.centerBuffer.ref.version,
-            text.mappingBuffer.ref.version,
-            text.depthBuffer.ref.version,
-            text.indexBuffer.ref.version,
-            text.groupBuffer.ref.version,
-            text.tcoordBuffer.ref.version,
+            text.charCount, text.fontTexture.ref.version,
+            text.centerBuffer.ref.version, text.mappingBuffer.ref.version,
+            text.depthBuffer.ref.version, text.indexBuffer.ref.version,
+            text.groupBuffer.ref.version, text.tcoordBuffer.ref.version
         ]);
     }
 
-    function fromData(
-        fontTexture: TextureImage<Uint8Array>,
-        centers: Float32Array,
-        mappings: Float32Array,
-        depths: Float32Array,
-        indices: Uint32Array,
-        groups: Float32Array,
-        tcoords: Float32Array,
-        charCount: number,
-    ): Text {
+    function fromData(fontTexture: TextureImage<Uint8Array>, centers: Float32Array, mappings: Float32Array, depths: Float32Array, indices: Uint32Array, groups: Float32Array, tcoords: Float32Array, charCount: number): Text {
+
         const boundingSphere = Sphere3D();
         let groupMapping: GroupMapping;
 
@@ -165,22 +134,12 @@ export namespace Text {
             setBoundingSphere(sphere: Sphere3D) {
                 Sphere3D.copy(boundingSphere, sphere);
                 currentHash = hashCode(text);
-            },
+            }
         };
         return text;
     }
 
-    function update(
-        fontTexture: TextureImage<Uint8Array>,
-        centers: Float32Array,
-        mappings: Float32Array,
-        depths: Float32Array,
-        indices: Uint32Array,
-        groups: Float32Array,
-        tcoords: Float32Array,
-        charCount: number,
-        text: Text,
-    ) {
+    function update(fontTexture: TextureImage<Uint8Array>, centers: Float32Array, mappings: Float32Array, depths: Float32Array, indices: Uint32Array, groups: Float32Array, tcoords: Float32Array, charCount: number, text: Text) {
         text.charCount = charCount;
         ValueCell.update(text.fontTexture, fontTexture);
         ValueCell.update(text.centerBuffer, centers);
@@ -211,18 +170,12 @@ export namespace Text {
         tetherBaseWidth: PD.Numeric(0.3, { min: 0, max: 1, step: 0.01 }),
 
         attachment: PD.Select('middle-center', [
-            ['bottom-left', 'bottom-left'],
-            ['bottom-center', 'bottom-center'],
-            ['bottom-right', 'bottom-right'],
-            ['middle-left', 'middle-left'],
-            ['middle-center', 'middle-center'],
-            ['middle-right', 'middle-right'],
-            ['top-left', 'top-left'],
-            ['top-center', 'top-center'],
-            ['top-right', 'top-right'],
+            ['bottom-left', 'bottom-left'], ['bottom-center', 'bottom-center'], ['bottom-right', 'bottom-right'],
+            ['middle-left', 'middle-left'], ['middle-center', 'middle-center'], ['middle-right', 'middle-right'],
+            ['top-left', 'top-left'], ['top-center', 'top-center'], ['top-right', 'top-right'],
         ] as [TextAttachment, string][]),
     };
-    export type Params = typeof Params;
+    export type Params = typeof Params
 
     export const Utils: GeometryUtils<Text, Params> = {
         Params,
@@ -233,7 +186,7 @@ export namespace Text {
         updateBoundingSphere,
         createRenderableState,
         updateRenderableState,
-        createPositionIterator,
+        createPositionIterator
     };
 
     function createPositionIterator(text: Text, transform: TransformData): LocationIterator {
@@ -254,13 +207,7 @@ export namespace Text {
         return LocationIterator(groupCount, instanceCount, 4, getLocation);
     }
 
-    function createValues(
-        text: Text,
-        transform: TransformData,
-        locationIt: LocationIterator,
-        theme: Theme,
-        props: PD.Values<Params>,
-    ): TextValues {
+    function createValues(text: Text, transform: TransformData, locationIt: LocationIterator, theme: Theme, props: PD.Values<Params>): TextValues {
         const { instanceCount, groupCount } = locationIt;
         const positionIt = createPositionIterator(text, transform);
 
@@ -275,22 +222,12 @@ export namespace Text {
         const substance = createEmptySubstance();
         const clipping = createEmptyClipping();
 
-        const counts = {
-            drawCount: text.charCount * 2 * 3,
-            vertexCount: text.charCount * 4,
-            groupCount,
-            instanceCount,
-        };
+        const counts = { drawCount: text.charCount * 2 * 3, vertexCount: text.charCount * 4, groupCount, instanceCount };
 
         const scale = getMaxSize(size) * props.sizeFactor;
         const padding = getPadding(text.mappingBuffer.ref.value, text.depthBuffer.ref.value, text.charCount, scale);
         const invariantBoundingSphere = Sphere3D.expand(Sphere3D(), text.boundingSphere, padding);
-        const boundingSphere = calculateTransformBoundingSphere(
-            invariantBoundingSphere,
-            transform.aTransform.ref.value,
-            instanceCount,
-            0,
-        );
+        const boundingSphere = calculateTransformBoundingSphere(invariantBoundingSphere, transform.aTransform.ref.value, instanceCount, 0);
 
         return {
             dGeometryType: ValueCell.create('text'),
@@ -330,13 +267,7 @@ export namespace Text {
         };
     }
 
-    function createValuesSimple(
-        text: Text,
-        props: Partial<PD.Values<Params>>,
-        colorValue: Color,
-        sizeValue: number,
-        transform?: TransformData,
-    ) {
+    function createValuesSimple(text: Text, props: Partial<PD.Values<Params>>, colorValue: Color, sizeValue: number, transform?: TransformData) {
         const s = BaseGeometry.createSimple(colorValue, sizeValue, transform);
         const p = { ...PD.getDefaultValues(Params), ...props };
         return createValues(text, s.transform, s.locationIterator, s.theme, p);
@@ -365,22 +296,14 @@ export namespace Text {
         const scale = getMaxSize(values) * values.uSizeFactor.ref.value;
         const padding = getPadding(values.aMapping.ref.value, values.aDepth.ref.value, text.charCount, scale);
         const invariantBoundingSphere = Sphere3D.expand(Sphere3D(), text.boundingSphere, padding);
-        const boundingSphere = calculateTransformBoundingSphere(
-            invariantBoundingSphere,
-            values.aTransform.ref.value,
-            values.instanceCount.ref.value,
-            0,
-        );
+        const boundingSphere = calculateTransformBoundingSphere(invariantBoundingSphere, values.aTransform.ref.value, values.instanceCount.ref.value, 0);
 
         if (!Sphere3D.equals(boundingSphere, values.boundingSphere.ref.value)) {
             ValueCell.update(values.boundingSphere, boundingSphere);
         }
         if (!Sphere3D.equals(invariantBoundingSphere, values.invariantBoundingSphere.ref.value)) {
             ValueCell.update(values.invariantBoundingSphere, invariantBoundingSphere);
-            ValueCell.update(
-                values.uInvariantBoundingSphere,
-                Vec4.fromSphere(values.uInvariantBoundingSphere.ref.value, invariantBoundingSphere),
-            );
+            ValueCell.update(values.uInvariantBoundingSphere, Vec4.fromSphere(values.uInvariantBoundingSphere.ref.value, invariantBoundingSphere));
         }
         ValueCell.update(values.padding, padding);
     }
@@ -411,5 +334,5 @@ function getPadding(mappings: Float32Array, depths: Float32Array, charCount: num
         const d = Math.abs(depths[i]);
         if (d > maxDepth) maxDepth = d;
     }
-    return scale * Math.max(maxDepth, maxOffset);
+    return Math.max(maxDepth, scale * maxOffset);
 }

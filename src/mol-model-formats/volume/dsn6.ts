@@ -39,6 +39,7 @@ export function volumeFromDsn6(
         return {
             label: params?.label,
             entryId: params?.entryId,
+            periodicity: Vec3.isInteger(dimensions_frac) ? 'xyz' : 'none',
             grid: {
                 transform: {
                     kind: 'spacegroup',

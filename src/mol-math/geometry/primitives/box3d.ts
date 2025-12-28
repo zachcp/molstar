@@ -5,28 +5,21 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { PositionData } from '../common.ts';
-import { OrderedSet } from '../../../mol-data/int.ts';
-import { Sphere3D } from './sphere3d.ts';
-import { Vec3 } from '../../linear-algebra/3d/vec3.ts';
-import type { Mat4 } from '../../linear-algebra/3d/mat4.ts';
+import { PositionData } from '../common';
+import { OrderedSet } from '../../../mol-data/int/ordered-set';
+import { Sphere3D } from './sphere3d';
+import { Vec3 } from '../../linear-algebra/3d/vec3';
+import { Mat4 } from '../../linear-algebra/3d/mat4';
 
-interface Box3D {
-    min: Vec3;
-    max: Vec3;
-}
+interface Box3D { min: Vec3, max: Vec3 }
 
-function Box3D(): Box3D {
+function Box3D() {
     return Box3D.zero();
 }
 
 namespace Box3D {
-    export function create(min: Vec3, max: Vec3): Box3D {
-        return { min, max };
-    }
-    export function zero(): Box3D {
-        return { min: Vec3(), max: Vec3() };
-    }
+    export function create(min: Vec3, max: Vec3): Box3D { return { min, max }; }
+    export function zero(): Box3D { return { min: Vec3(), max: Vec3() }; }
 
     export function copy(out: Box3D, a: Box3D): Box3D {
         Vec3.copy(out.min, a.min);
@@ -85,7 +78,7 @@ namespace Box3D {
         return out;
     }
 
-    export function intersectsSphere3D(box: Box3D, sphere: Sphere3D): boolean {
+    export function intersectsSphere3D(box: Box3D, sphere: Sphere3D) {
         // Find the point on the AABB closest to the sphere center.
         Vec3.clamp(tmpV, sphere.center, box.min, box.max);
         // If that point is inside the sphere, the AABB and sphere intersect.
@@ -148,7 +141,7 @@ namespace Box3D {
         return out;
     }
 
-    export function scale(out: Box3D, box: Box3D, scale: number): Box3D {
+    export function scale(out: Box3D, box: Box3D, scale: number) {
         Vec3.scale(out.min, box.min, scale);
         Vec3.scale(out.max, box.max, scale);
         return out;
@@ -171,7 +164,7 @@ namespace Box3D {
         return out;
     }
 
-    export function containsVec3(box: Box3D, v: Vec3): boolean {
+    export function containsVec3(box: Box3D, v: Vec3) {
         return !(
             v[0] < box.min[0] || v[0] > box.max[0] ||
             v[1] < box.min[1] || v[1] > box.max[1] ||
@@ -179,7 +172,7 @@ namespace Box3D {
         );
     }
 
-    export function overlaps(a: Box3D, b: Box3D): boolean {
+    export function overlaps(a: Box3D, b: Box3D) {
         return !(
             a.max[0] < b.min[0] || a.min[0] > b.max[0] ||
             a.max[1] < b.min[1] || a.min[1] > b.max[1] ||
@@ -187,27 +180,25 @@ namespace Box3D {
         );
     }
 
-    export function containsSphere3D(box: Box3D, s: Sphere3D): boolean {
+    export function containsSphere3D(box: Box3D, s: Sphere3D) {
         const c = s.center;
         const r = s.radius;
         return (
-                c[0] - r < box.min[0] || c[0] + r > box.max[0] ||
-                c[1] - r < box.min[1] || c[1] + r > box.max[1] ||
-                c[2] - r < box.min[2] || c[2] + r > box.max[2]
-            )
-            ? false
-            : true;
+            c[0] - r < box.min[0] || c[0] + r > box.max[0] ||
+            c[1] - r < box.min[1] || c[1] + r > box.max[1] ||
+            c[2] - r < box.min[2] || c[2] + r > box.max[2]
+        ) ? false : true;
     }
 
     export function center(out: Vec3, box: Box3D): Vec3 {
         return Vec3.center(out, box.max, box.min);
     }
 
-    export function exactEquals(a: Box3D, b: Box3D): boolean {
+    export function exactEquals(a: Box3D, b: Box3D) {
         return Vec3.exactEquals(a.min, b.min) && Vec3.exactEquals(a.max, b.max);
     }
 
-    export function equals(a: Box3D, b: Box3D): boolean {
+    export function equals(a: Box3D, b: Box3D) {
         return Vec3.equals(a.min, b.min) && Vec3.equals(a.max, b.max);
     }
 }

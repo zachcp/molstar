@@ -1,102 +1,99 @@
 /**
- * Copyright (c) 2017-2024 mol* contributors, licensed under MIT, See LICENSE file for more info.
+ * Copyright (c) 2017-2025 mol* contributors, licensed under MIT, See LICENSE file for more info.
  *
  * @author David Sehnal <david.sehnal@gmail.com>
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
+ * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { UUID } from '../../../mol-util/uuid.ts';
-import type { StructureSequence } from './properties/sequence.ts';
-import type { AtomicConformation, AtomicHierarchy, AtomicRanges } from './properties/atomic.ts';
-import type { CoarseConformation, CoarseHierarchy } from './properties/coarse.ts';
-import type { ChemicalComponentMap, Entities, MissingResidues, StructAsymMap } from './properties/common.ts';
-import { CustomProperties } from '../../custom-property.ts';
-import type { SaccharideComponentMap } from '../structure/carbohydrates/constants.ts';
-import type { ModelFormat } from '../../../mol-model-formats/format.ts';
-import { calcModelCenter, getAsymIdCount } from './util.ts';
-import { Vec3 } from '../../../mol-math/linear-algebra.ts';
-import { Coordinates, type Frame } from '../coordinates.ts';
-import type { Topology } from '../topology.ts';
-import { Task } from '../../../mol-task/index.ts';
-import { IndexPairBonds } from '../../../mol-model-formats/structure/property/bonds/index-pair.ts';
-import { createModels } from '../../../mol-model-formats/structure/basic/parser.ts';
-import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif.ts';
-import type { ChainIndex, ElementIndex } from './indexing.ts';
-import type { SymmetryOperator } from '../../../mol-math/geometry.ts';
-import { ModelSymmetry } from '../../../mol-model-formats/structure/property/symmetry.ts';
-import { Column } from '../../../mol-data/db.ts';
-import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property.ts';
-import { ArrayTrajectory, type Trajectory } from '../trajectory.ts';
-import type { Unit } from '../structure.ts';
-import type { SortedArray } from '../../../mol-data/int/sorted-array.ts';
-import { PolymerType } from './types.ts';
-import { ModelSecondaryStructure } from '../../../mol-model-formats/structure/property/secondary-structure.ts';
+import { UUID } from '../../../mol-util/uuid';
+import { StructureSequence } from './properties/sequence';
+import { AtomicHierarchy, AtomicConformation, AtomicRanges, VdwRadius } from './properties/atomic';
+import { CoarseHierarchy, CoarseConformation } from './properties/coarse';
+import { Entities, ChemicalComponentMap, MissingResidues, StructAsymMap } from './properties/common';
+import { CustomProperties } from '../../custom-property';
+import { SaccharideComponentMap } from '../structure/carbohydrates/constants';
+import { ModelFormat } from '../../../mol-model-formats/format';
+import { calcModelCenter, getAsymIdCount } from './util';
+import { Vec3 } from '../../../mol-math/linear-algebra';
+import { Coordinates, Frame } from '../coordinates';
+import { Topology } from '../topology';
+import { Task } from '../../../mol-task';
+import { IndexPairBonds } from '../../../mol-model-formats/structure/property/bonds/index-pair';
+import { createModels } from '../../../mol-model-formats/structure/basic/parser';
+import { MmcifFormat } from '../../../mol-model-formats/structure/mmcif';
+import { ChainIndex, ElementIndex } from './indexing';
+import { SymmetryOperator } from '../../../mol-math/geometry';
+import { ModelSymmetry } from '../../../mol-model-formats/structure/property/symmetry';
+import { Column } from '../../../mol-data/db';
+import { CustomModelProperty } from '../../../mol-model-props/common/custom-model-property';
+import { Trajectory, ArrayTrajectory } from '../trajectory';
+import { Unit } from '../structure';
+import { SortedArray } from '../../../mol-data/int/sorted-array';
+import { PolymerType } from './types';
+import { ModelSecondaryStructure } from '../../../mol-model-formats/structure/property/secondary-structure';
 
 /**
  * Interface to the "source data" of the molecule.
  *
  * "Atoms" are integers in the range [0, atomCount).
  */
-export interface Model extends
-    Readonly<{
-        id: UUID;
-        entryId: string;
-        label: string;
+export interface Model extends Readonly<{
+    id: UUID,
+    entryId: string,
+    label: string,
 
-        /** the name of the entry/file/collection the model is part of */
-        entry: string;
+    /** the name of the entry/file/collection the model is part of */
+    entry: string,
 
-        /**
-         * corresponds to
-         * - for IHM: `ihm_model_list.model_id`
-         * - for standard mmCIF: `atom_site.pdbx_PDB_model_num`
-         * - for models from coordinates: frame index
-         */
-        modelNum: number;
+    /**
+     * corresponds to
+     * - for IHM: `ihm_model_list.model_id`
+     * - for standard mmCIF: `atom_site.pdbx_PDB_model_num`
+     * - for models from coordinates: frame index
+     */
+    modelNum: number,
 
-        sourceData: ModelFormat;
+    sourceData: ModelFormat,
 
-        parent: Model | undefined;
+    parent: Model | undefined,
 
-        entities: Entities;
-        sequence: StructureSequence;
+    entities: Entities,
+    sequence: StructureSequence,
 
-        atomicHierarchy: AtomicHierarchy;
-        atomicConformation: AtomicConformation;
-        atomicRanges: AtomicRanges;
-        atomicChainOperatorMappinng: Map<ChainIndex, SymmetryOperator>;
+    atomicHierarchy: AtomicHierarchy,
+    atomicConformation: AtomicConformation,
+    atomicRanges: AtomicRanges,
+    atomicChainOperatorMappinng: Map<ChainIndex, SymmetryOperator>,
 
-        properties: {
-            /** map that holds details about unobserved or zero occurrence residues */
-            readonly missingResidues: MissingResidues;
-            /** maps residue name to `ChemicalComponent` data */
-            readonly chemicalComponentMap: ChemicalComponentMap;
-            /** maps residue name to `SaccharideComponent` data */
-            readonly saccharideComponentMap: SaccharideComponentMap;
-            /** maps label_asym_id name to `StructAsym` data */
-            readonly structAsymMap: StructAsymMap;
-        };
+    properties: {
+        /** map that holds details about unobserved or zero occurrence residues */
+        readonly missingResidues: MissingResidues,
+        /** maps residue name to `ChemicalComponent` data */
+        readonly chemicalComponentMap: ChemicalComponentMap
+        /** maps residue name to `SaccharideComponent` data */
+        readonly saccharideComponentMap: SaccharideComponentMap
+        /** maps label_asym_id name to `StructAsym` data */
+        readonly structAsymMap: StructAsymMap
+    },
 
-        customProperties: CustomProperties;
+    customProperties: CustomProperties,
 
-        /**
-         * Not to be accessed directly, each custom property descriptor
-         * defines property accessors that use this field to store the data.
-         */
-        _staticPropertyData: { [name: string]: any };
-        _dynamicPropertyData: { [name: string]: any };
+    /**
+     * Not to be accessed directly, each custom property descriptor
+     * defines property accessors that use this field to store the data.
+     */
+    _staticPropertyData: { [name: string]: any },
+    _dynamicPropertyData: { [name: string]: any },
 
-        coarseHierarchy: CoarseHierarchy;
-        coarseConformation: CoarseConformation;
-    }> {}
-{
-}
+    coarseHierarchy: CoarseHierarchy,
+    coarseConformation: CoarseConformation
+}> {
+
+} { }
 
 export namespace Model {
-    function _trajectoryFromModelAndCoordinates(
-        model: Model,
-        coordinates: Coordinates,
-    ) {
+    function _trajectoryFromModelAndCoordinates(model: Model, coordinates: Coordinates) {
         const trajectory: Model[] = [];
         const { frames } = coordinates;
 
@@ -107,9 +104,7 @@ export namespace Model {
         for (let i = 0, il = frames.length; i < il; ++i) {
             const f = frames[i];
             if (f.elementCount !== elementCount) {
-                throw new Error(
-                    `Frame element count mismatch, got ${f.elementCount} but expected ${elementCount}.`,
-                );
+                throw new Error(`Frame element count mismatch, got ${f.elementCount} but expected ${elementCount}.`);
             }
 
             const m = {
@@ -121,14 +116,11 @@ export namespace Model {
                 // coarseConformation: coarse.conformation,
                 customProperties: new CustomProperties(),
                 _staticPropertyData: Object.create(null),
-                _dynamicPropertyData: Object.create(null),
+                _dynamicPropertyData: Object.create(null)
             };
 
             if (f.cell) {
-                const symmetry = ModelSymmetry.fromCell(
-                    f.cell.size,
-                    f.cell.anglesInRadians,
-                );
+                const symmetry = ModelSymmetry.fromCell(f.cell.size, f.cell.anglesInRadians);
                 ModelSymmetry.Provider.set(m, symmetry);
             }
 
@@ -152,36 +144,18 @@ export namespace Model {
         return srcIndexArray;
     }
 
-    export function trajectoryFromModelAndCoordinates(
-        model: Model,
-        coordinates: Coordinates,
-    ): Trajectory {
-        return new ArrayTrajectory(
-            _trajectoryFromModelAndCoordinates(model, coordinates).trajectory,
-        );
+    export function trajectoryFromModelAndCoordinates(model: Model, coordinates: Coordinates): Trajectory {
+        return new ArrayTrajectory(_trajectoryFromModelAndCoordinates(model, coordinates).trajectory);
     }
 
-    export function trajectoryFromTopologyAndCoordinates(
-        topology: Topology,
-        coordinates: Coordinates,
-    ): Task<Trajectory> {
-        return Task.create('Create Trajectory', async (ctx) => {
-            const models = await createModels(
-                topology.basic,
-                topology.sourceData,
-                ctx,
-            );
+    export function trajectoryFromTopologyAndCoordinates(topology: Topology, coordinates: Coordinates): Task<Trajectory> {
+        return Task.create('Create Trajectory', async ctx => {
+            const models = await createModels(topology.basic, topology.sourceData, ctx);
             if (models.frameCount === 0) throw new Error('found no model');
             const model = models.representative;
-            const { trajectory } = _trajectoryFromModelAndCoordinates(
-                model,
-                coordinates,
-            );
+            const { trajectory } = _trajectoryFromModelAndCoordinates(model, coordinates);
 
-            const bondData = {
-                pairs: topology.bonds,
-                count: model.atomicHierarchy.atoms._rowCount,
-            };
+            const bondData = { pairs: topology.bonds, count: model.atomicHierarchy.atoms._rowCount };
             const indexPairBonds = IndexPairBonds.fromData(bondData);
             const coarseGrained = isCoarseGrained(model);
 
@@ -195,32 +169,34 @@ export namespace Model {
         });
     }
 
-    export function getAtomicConformationFromFrame(
-        model: Model,
-        frame: Frame,
-    ): AtomicConformation {
-        return Coordinates.getAtomicConformation(
-            frame,
-            {
-                atomId: model.atomicConformation.atomId,
-                occupancy: model.atomicConformation.occupancy,
-                B_iso_or_equiv: model.atomicConformation.B_iso_or_equiv,
-            },
-            getSourceIndexArray(model),
-        );
+    export function getAtomicConformationFromFrame(model: Model, frame: Frame) {
+        return Coordinates.getAtomicConformation(frame, {
+            atomId: model.atomicConformation.atomId,
+            occupancy: model.atomicConformation.occupancy,
+            B_iso_or_equiv: model.atomicConformation.B_iso_or_equiv
+        }, getSourceIndexArray(model));
     }
 
     const CenterProp = '__Center__';
     export function getCenter(model: Model): Vec3 {
-        if (model._dynamicPropertyData[CenterProp]) {
-            return model._dynamicPropertyData[CenterProp];
-        }
-        const center = calcModelCenter(
-            model.atomicConformation,
-            model.coarseConformation,
-        );
+        if (model._dynamicPropertyData[CenterProp]) return model._dynamicPropertyData[CenterProp];
+        const center = calcModelCenter(model.atomicConformation, model.coarseConformation);
         model._dynamicPropertyData[CenterProp] = center;
         return center;
+    }
+
+    const AtomicRadiiProp = '__AtomicRadii__';
+    /** Get array of atomic radii for all atoms in the model (cached). */
+    export function getAtomicRadii(model: Model): Float32Array {
+        if (model._dynamicPropertyData[AtomicRadiiProp]) return model._dynamicPropertyData[AtomicRadiiProp];
+        const nAtoms = model.atomicHierarchy.atoms._rowCount;
+        const type_symbol = model.atomicHierarchy.atoms.type_symbol.value;
+        const radii = new Float32Array(nAtoms);
+        for (let i = 0; i < nAtoms; i++) {
+            radii[i] = VdwRadius(type_symbol(i));
+        }
+        model._dynamicPropertyData[AtomicRadiiProp] = radii;
+        return radii;
     }
 
     function invertIndex(xs: Column<number>) {
@@ -231,98 +207,67 @@ export namespace Model {
             if (x !== i) isIdentity = false;
             invertedIndex[x] = i;
         }
-        return {
-            isIdentity,
-            invertedIndex: invertedIndex as unknown as ArrayLike<ElementIndex>,
-        };
+        return { isIdentity, invertedIndex: invertedIndex as unknown as ArrayLike<ElementIndex> };
     }
 
     const InvertedAtomSrcIndexProp = '__InvertedAtomSrcIndex__';
-    export function getInvertedAtomSourceIndex(model: Model): {
-        isIdentity: boolean;
-        invertedIndex: ArrayLike<ElementIndex>;
-    } {
-        if (model._staticPropertyData[InvertedAtomSrcIndexProp]) {
-            return model._staticPropertyData[InvertedAtomSrcIndexProp];
-        }
+    export function getInvertedAtomSourceIndex(model: Model): { isIdentity: boolean, invertedIndex: ArrayLike<ElementIndex> } {
+        if (model._staticPropertyData[InvertedAtomSrcIndexProp]) return model._staticPropertyData[InvertedAtomSrcIndexProp];
         const index = invertIndex(model.atomicHierarchy.atomSourceIndex);
         model._staticPropertyData[InvertedAtomSrcIndexProp] = index;
         return index;
     }
 
     const TrajectoryInfoProp = '__TrajectoryInfo__';
-    export type TrajectoryInfo = {
-        readonly index: number;
-        readonly size: number;
-    };
+    export type TrajectoryInfo = { readonly index: number, readonly size: number }
     export const TrajectoryInfo = {
         get(model: Model): TrajectoryInfo {
-            return (
-                model._dynamicPropertyData[TrajectoryInfoProp] || { index: 0, size: 1 }
-            );
+            return model._dynamicPropertyData[TrajectoryInfoProp] || { index: 0, size: 1 };
         },
         set(model: Model, trajectoryInfo: TrajectoryInfo) {
-            return (model._dynamicPropertyData[TrajectoryInfoProp] = trajectoryInfo);
-        },
+            return model._dynamicPropertyData[TrajectoryInfoProp] = trajectoryInfo;
+        }
     };
 
     const AsymIdCountProp = '__AsymIdCount__';
-    export type AsymIdCount = { readonly auth: number; readonly label: number };
+    export type AsymIdCount = { readonly auth: number, readonly label: number }
     export const AsymIdCount = {
         get(model: Model): AsymIdCount {
-            if (model._dynamicPropertyData[AsymIdCountProp]) {
-                return model._dynamicPropertyData[AsymIdCountProp];
-            }
+            if (model._dynamicPropertyData[AsymIdCountProp]) return model._dynamicPropertyData[AsymIdCountProp];
             const asymIdCount = getAsymIdCount(model);
             model._dynamicPropertyData[AsymIdCountProp] = asymIdCount;
             return asymIdCount;
         },
     };
 
-    export type AsymIdOffset = { auth: number; label: number };
-    export const AsymIdOffset = CustomModelProperty.createSimple<AsymIdOffset>(
-        'asym_id_offset',
-        'static',
-    );
+    export type AsymIdOffset = { auth: number, label: number };
+    export const AsymIdOffset = CustomModelProperty.createSimple<AsymIdOffset>('asym_id_offset', 'static');
 
     export type Index = number;
-    export const Index = CustomModelProperty.createSimple<Index>(
-        'index',
-        'static',
-    );
+    export const Index = CustomModelProperty.createSimple<Index>('index', 'static');
 
     export type MaxIndex = number;
-    export const MaxIndex = CustomModelProperty.createSimple<MaxIndex>(
-        'max_index',
-        'static',
-    );
+    export const MaxIndex = CustomModelProperty.createSimple<MaxIndex>('max_index', 'static');
 
-    export function getRoot(model: Model): Model {
+    export function getRoot(model: Model) {
         return model.parent || model;
     }
 
-    export function areHierarchiesEqual(a: Model, b: Model): boolean {
-        return (
-            a.atomicHierarchy === b.atomicHierarchy &&
-            a.coarseHierarchy === b.coarseHierarchy
-        );
+    export function areHierarchiesEqual(a: Model, b: Model) {
+        return a.atomicHierarchy === b.atomicHierarchy && a.coarseHierarchy === b.coarseHierarchy;
     }
 
     const CoordinatesHistoryProp = '__CoordinatesHistory__';
     export type CoordinatesHistory = {
-        areEqual(
-            elements: SortedArray<ElementIndex>,
-            kind: Unit.Kind,
-            model: Model,
-        ): boolean;
-    };
+        areEqual(elements: SortedArray<ElementIndex>, kind: Unit.Kind, model: Model): boolean
+    }
     export const CoordinatesHistory = {
         get(model: Model): CoordinatesHistory | undefined {
             return model._staticPropertyData[CoordinatesHistoryProp];
         },
         set(model: Model, coordinatesHistory: CoordinatesHistory) {
-            return (model._staticPropertyData[CoordinatesHistoryProp] = coordinatesHistory);
-        },
+            return model._staticPropertyData[CoordinatesHistoryProp] = coordinatesHistory;
+        }
     };
 
     const CoarseGrainedProp = '__CoarseGrained__';
@@ -331,8 +276,8 @@ export namespace Model {
             return model._staticPropertyData[CoarseGrainedProp];
         },
         set(model: Model, coarseGrained: boolean) {
-            return (model._staticPropertyData[CoarseGrainedProp] = coarseGrained);
-        },
+            return model._staticPropertyData[CoarseGrainedProp] = coarseGrained;
+        }
     };
     /**
      * Mark as coarse grained if any of the following conditions are met:
@@ -354,8 +299,7 @@ export namespace Model {
             }
 
             // check for coarse grained atom names
-            let hasBB = false,
-                hasSC1 = false;
+            let hasBB = false, hasSC1 = false;
             const { label_atom_id, _rowCount: atomCount } = model.atomicHierarchy.atoms;
             for (let i = 0; i < atomCount; ++i) {
                 const atomName = label_atom_id.value(i);
@@ -397,9 +341,7 @@ export namespace Model {
         const { subtype } = model.entities;
         for (let i = 0, il = subtype.rowCount; i < il; ++i) {
             const s = subtype.value(i);
-            if (s.endsWith('ribonucleotide hybrid') || s.endsWith('ribonucleotide')) {
-                return true;
-            }
+            if (s.endsWith('ribonucleotide hybrid') || s.endsWith('ribonucleotide')) return true;
         }
         return false;
     }
@@ -426,7 +368,10 @@ export namespace Model {
     export function hasSecondaryStructure(model: Model): boolean {
         if (MmcifFormat.is(model.sourceData)) {
             const { db } = model.sourceData.data;
-            return db.struct_conf.id.isDefined || db.struct_sheet_range.id.isDefined;
+            return (
+                db.struct_conf.id.isDefined ||
+                db.struct_sheet_range.id.isDefined
+            );
         } else {
             return ModelSecondaryStructure.Provider.isApplicable(model);
         }
@@ -436,13 +381,10 @@ export namespace Model {
     const tmpLengths1 = Vec3.create(1, 1, 1);
     export function hasCrystalSymmetry(model: Model): boolean {
         const spacegroup = ModelSymmetry.Provider.get(model)?.spacegroup;
-        return (
-            !!spacegroup &&
-            !(
-                spacegroup.num === 1 &&
-                Vec3.equals(spacegroup.cell.anglesInRadians, tmpAngles90) &&
-                Vec3.equals(spacegroup.cell.size, tmpLengths1)
-            )
+        return !!spacegroup && !(
+            spacegroup.num === 1 &&
+            Vec3.equals(spacegroup.cell.anglesInRadians, tmpAngles90) &&
+            Vec3.equals(spacegroup.cell.size, tmpLengths1)
         );
     }
 
@@ -479,18 +421,8 @@ export namespace Model {
     export function isExperimental(model: Model): boolean {
         if (!MmcifFormat.is(model.sourceData)) return false;
         const { db } = model.sourceData.data;
-        for (
-            let i = 0;
-            i < db.struct.pdbx_structure_determination_methodology.rowCount;
-            i++
-        ) {
-            if (
-                db.struct.pdbx_structure_determination_methodology
-                    .value(i)
-                    .toLowerCase() === 'experimental'
-            ) {
-                return true;
-            }
+        for (let i = 0; i < db.struct.pdbx_structure_determination_methodology.rowCount; i++) {
+            if (db.struct.pdbx_structure_determination_methodology.value(i).toLowerCase() === 'experimental') return true;
         }
         return false;
     }
@@ -498,18 +430,8 @@ export namespace Model {
     export function isIntegrative(model: Model): boolean {
         if (!MmcifFormat.is(model.sourceData)) return false;
         const { db } = model.sourceData.data;
-        for (
-            let i = 0;
-            i < db.struct.pdbx_structure_determination_methodology.rowCount;
-            i++
-        ) {
-            if (
-                db.struct.pdbx_structure_determination_methodology
-                    .value(i)
-                    .toLowerCase() === 'integrative'
-            ) {
-                return true;
-            }
+        for (let i = 0; i < db.struct.pdbx_structure_determination_methodology.rowCount; i++) {
+            if (db.struct.pdbx_structure_determination_methodology.value(i).toLowerCase() === 'integrative') return true;
         }
         return false;
     }
@@ -517,18 +439,8 @@ export namespace Model {
     export function isComputational(model: Model): boolean {
         if (!MmcifFormat.is(model.sourceData)) return false;
         const { db } = model.sourceData.data;
-        for (
-            let i = 0;
-            i < db.struct.pdbx_structure_determination_methodology.rowCount;
-            i++
-        ) {
-            if (
-                db.struct.pdbx_structure_determination_methodology
-                    .value(i)
-                    .toLowerCase() === 'computational'
-            ) {
-                return true;
-            }
+        for (let i = 0; i < db.struct.pdbx_structure_determination_methodology.rowCount; i++) {
+            if (db.struct.pdbx_structure_determination_methodology.value(i).toLowerCase() === 'computational') return true;
         }
         return false;
     }
@@ -553,10 +465,7 @@ export namespace Model {
         const { db } = model.sourceData.data;
         const { db_name, content_type } = db.pdbx_database_related;
         for (let i = 0, il = db.pdbx_database_related._rowCount; i < il; ++i) {
-            if (
-                db_name.value(i).toUpperCase() === 'EMDB' &&
-                content_type.value(i) === 'associated EM volume'
-            ) {
+            if (db_name.value(i).toUpperCase() === 'EMDB' && content_type.value(i) === 'associated EM volume') {
                 return true;
             }
         }
@@ -572,16 +481,18 @@ export namespace Model {
         if (!MmcifFormat.is(model.sourceData)) return false;
         if (Model.isIntegrative(model)) return false;
         const { db } = model.sourceData.data;
-        return (
-            hasDensityMap(model) ||
+        return hasDensityMap(model) || (
             // check if from pdb archive but missing relevant meta data
-            (hasPdbId(model) &&
-                (!db.exptl.method.isDefined ||
-                    (isFromXray(model) &&
-                        (!db.pdbx_database_status.status_code_sf.isDefined ||
-                            db.pdbx_database_status.status_code_sf.valueKind(0) ===
-                                Column.ValueKinds.Unknown)) ||
-                    (isFromEm(model) && !db.pdbx_database_related.db_name.isDefined)))
+            hasPdbId(model) && (
+                !db.exptl.method.isDefined ||
+                (isFromXray(model) && (
+                    !db.pdbx_database_status.status_code_sf.isDefined ||
+                    db.pdbx_database_status.status_code_sf.valueKind(0) === Column.ValueKinds.Unknown
+                )) ||
+                (isFromEm(model) && (
+                    !db.pdbx_database_related.db_name.isDefined
+                ))
+            )
         );
     }
 }

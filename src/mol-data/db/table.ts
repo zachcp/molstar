@@ -4,42 +4,31 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Column } from './column.ts';
-import { sortArray } from '../util/sort.ts';
-import { StringBuilder } from '../../mol-util/index.ts';
+import { Column } from './column';
+import { sortArray } from '../util/sort';
+import { StringBuilder } from '../../mol-util/string-builder';
 
 /** A collection of columns */
 type Table<Schema extends Table.Schema = any> = {
-    readonly _rowCount: number;
-    readonly _columns: ReadonlyArray<string>;
-    readonly _schema: Schema;
-} & Table.Columns<Schema>;
+    readonly _rowCount: number,
+    readonly _columns: ReadonlyArray<string>,
+    readonly _schema: Schema
+} & Table.Columns<Schema>
 
 /** An immutable table */
 namespace Table {
-    export type Schema = { [field: string]: Column.Schema };
-    export type Columns<S extends Schema> = { [C in keyof S]: Column<S[C]['T']> };
-    export type Row<S extends Schema> = { [C in keyof S]: S[C]['T'] };
-    export type Arrays<S extends Schema> = {
-        [C in keyof S]: ArrayLike<S[C]['T']>;
-    };
-    export type PartialColumns<S extends Schema> = {
-        [C in keyof S]?: Column<S[C]['T']>;
-    };
-    export type PartialTable<S extends Table.Schema> = {
-        readonly _rowCount: number;
-        readonly _columns: ReadonlyArray<string>;
-    } & PartialColumns<S>;
+    export type Schema = { [field: string]: Column.Schema }
+    export type Columns<S extends Schema> = { [C in keyof S]: Column<S[C]['T']> }
+    export type Row<S extends Schema> = { [C in keyof S]: S[C]['T'] }
+    export type Arrays<S extends Schema> = { [C in keyof S]: ArrayLike<S[C]['T']> }
+    export type PartialColumns<S extends Schema> = { [C in keyof S]?: Column<S[C]['T']> }
+    export type PartialTable<S extends Table.Schema> = { readonly _rowCount: number, readonly _columns: ReadonlyArray<string> } & PartialColumns<S>
 
     export function is(t: any): t is Table<any> {
         return t && typeof t._rowCount === 'number' && !!t._columns && !!t._schema;
     }
 
-    export function pickColumns<S extends Schema>(
-        schema: S,
-        table: PartialTable<S>,
-        guard: Partial<Columns<S>> = {},
-    ): Table<S> {
+    export function pickColumns<S extends Schema>(schema: S, table: PartialTable<S>, guard: Partial<Columns<S>> = {}): Table<S> {
         const ret = Object.create(null);
         const keys = Object.keys(schema);
         ret._rowCount = table._rowCount;
@@ -53,19 +42,13 @@ namespace Table {
         return ret;
     }
 
-    export function ofColumns<S extends Schema, R extends Table<S> = Table<S>>(
-        schema: S,
-        columns: Columns<S>,
-    ): R {
+    export function ofColumns<S extends Schema, R extends Table<S> = Table<S>>(schema: S, columns: Columns<S>): R {
         const _columns = Object.keys(columns);
         const _rowCount = columns[_columns[0]].rowCount;
         return { _rowCount, _columns, _schema: schema, ...(columns as any) };
     }
 
-    export function ofPartialColumns<
-        S extends Schema,
-        R extends Table<S> = Table<S>,
-    >(schema: S, partialColumns: PartialColumns<S>, rowCount: number): R {
+    export function ofPartialColumns<S extends Schema, R extends Table<S> = Table<S>>(schema: S, partialColumns: PartialColumns<S>, rowCount: number): R {
         const ret = Object.create(null);
         const columns = Object.keys(schema);
         ret._rowCount = rowCount;
@@ -78,10 +61,7 @@ namespace Table {
         return ret;
     }
 
-    export function ofUndefinedColumns<
-        S extends Schema,
-        R extends Table<S> = Table<S>,
-    >(schema: S, rowCount: number): R {
+    export function ofUndefinedColumns<S extends Schema, R extends Table<S> = Table<S>>(schema: S, rowCount: number): R {
         const ret = Object.create(null);
         const columns = Object.keys(schema);
         ret._rowCount = rowCount;
@@ -93,10 +73,7 @@ namespace Table {
         return ret;
     }
 
-    export function ofRows<S extends Schema, R extends Table<S> = Table<S>>(
-        schema: S,
-        rows: ArrayLike<Partial<Row<S>>>,
-    ): R {
+    export function ofRows<S extends Schema, R extends Table<S> = Table<S>>(schema: S, rows: ArrayLike<Partial<Row<S>>>): R {
         const ret = Object.create(null);
         const rowCount = rows.length;
         const columns = Object.keys(schema);
@@ -107,18 +84,14 @@ namespace Table {
             (ret as any)[k] = Column.ofLambda({
                 rowCount,
                 schema: schema[k],
-                value: (r) => rows[r][k],
-                valueKind: (r) =>
-                    typeof rows[r][k] === 'undefined' ? Column.ValueKinds.NotPresent : Column.ValueKinds.Present,
+                value: r => rows[r][k],
+                valueKind: r => typeof rows[r][k] === 'undefined' ? Column.ValueKinds.NotPresent : Column.ValueKinds.Present
             });
         }
         return ret as R;
     }
 
-    export function ofArrays<S extends Schema, R extends Table<S> = Table<S>>(
-        schema: S,
-        arrays: Partial<Arrays<S>>,
-    ): R {
+    export function ofArrays<S extends Schema, R extends Table<S> = Table<S>>(schema: S, arrays: Partial<Arrays<S>>): R {
         const ret = Object.create(null);
         const columns = Object.keys(schema);
         ret._rowCount = 0;
@@ -126,10 +99,7 @@ namespace Table {
         ret._schema = schema;
         for (const k of columns) {
             if (typeof arrays[k] !== 'undefined') {
-                (ret as any)[k] = Column.ofArray({
-                    array: arrays[k]!,
-                    schema: schema[k],
-                });
+                (ret as any)[k] = Column.ofArray({ array: arrays[k]!, schema: schema[k] });
                 ret._rowCount = arrays[k]?.length;
             } else {
                 (ret as any)[k] = Column.Undefined(ret._rowCount, schema[k]);
@@ -138,11 +108,7 @@ namespace Table {
         return ret as R;
     }
 
-    export function view<S extends R, R extends Schema>(
-        table: Table<S>,
-        schema: R,
-        view: ArrayLike<number>,
-    ): Table<R> {
+    export function view<S extends R, R extends Schema>(table: Table<S>, schema: R, view: ArrayLike<number>) {
         const ret = Object.create(null);
         const columns = Object.keys(schema);
         ret._rowCount = view.length;
@@ -154,11 +120,7 @@ namespace Table {
         return ret as Table<R>;
     }
 
-    export function pick<S extends R, R extends Schema>(
-        table: Table<S>,
-        schema: R,
-        test: (i: number) => boolean,
-    ): Table<R> {
+    export function pick<S extends R, R extends Schema>(table: Table<S>, schema: R, test: (i: number) => boolean) {
         const _view: number[] = [];
         for (let i = 0, il = table._rowCount; i < il; ++i) {
             if (test(i)) _view.push(i);
@@ -166,12 +128,7 @@ namespace Table {
         return view(table, schema, _view);
     }
 
-    export function window<S extends R, R extends Schema>(
-        table: Table<S>,
-        schema: R,
-        start: number,
-        end: number,
-    ): Table<R> {
+    export function window<S extends R, R extends Schema>(table: Table<S>, schema: R, start: number, end: number) {
         if (start === 0 && end === table._rowCount) return table;
         const ret = Object.create(null);
         const columns = Object.keys(schema);
@@ -184,10 +141,7 @@ namespace Table {
         return ret as Table<R>;
     }
 
-    export function concat<S extends R, R extends Schema>(
-        tables: Table<S>[],
-        schema: R,
-    ): Table<R> {
+    export function concat<S extends R, R extends Schema>(tables: Table<S>[], schema: R) {
         const ret = Object.create(null);
         const columns = Object.keys(schema);
         ret._rowCount = 0;
@@ -213,22 +167,12 @@ namespace Table {
         return ret as Table<R>;
     }
 
-    export function columnToArray<S extends Schema>(
-        table: Table<S>,
-        name: keyof S,
-        array?: Column.ArrayCtor<any>,
-    ) {
-        (table as Columns<S>)[name] = Column.asArrayColumn(
-            (table as Columns<S>)[name],
-            array,
-        );
+    export function columnToArray<S extends Schema>(table: Table<S>, name: keyof S, array?: Column.ArrayCtor<any>) {
+        (table as Columns<S>)[name] = Column.asArrayColumn((table as Columns<S>)[name], array);
     }
 
     /** Sort and return a new table */
-    export function sort<T extends Table>(
-        table: T,
-        cmp: (i: number, j: number) => number,
-    ): T {
+    export function sort<T extends Table>(table: T, cmp: (i: number, j: number) => number) {
         const indices = new Int32Array(table._rowCount);
         for (let i = 0, _i = indices.length; i < _i; i++) indices[i] = i;
         sortArray(indices, (_, i, j) => cmp(i, j));
@@ -252,7 +196,7 @@ namespace Table {
         return ret;
     }
 
-    export function areEqual<T extends Table<any>>(a: T, b: T): boolean {
+    export function areEqual<T extends Table<any>>(a: T, b: T) {
         if (a._rowCount !== b._rowCount) return false;
         if (a._columns.length !== b._columns.length) return false;
         for (const c of a._columns) {
@@ -267,10 +211,7 @@ namespace Table {
     }
 
     /** Allocate a new object with the given row values. */
-    export function getRow<S extends Schema>(
-        table: Table<S>,
-        index: number,
-    ): Table.Row<S> {
+    export function getRow<S extends Schema>(table: Table<S>, index: number) {
         const row: Row<S> = Object.create(null);
         const { _columns: cols } = table;
         for (let i = 0; i < cols.length; i++) {
@@ -281,18 +222,13 @@ namespace Table {
     }
 
     /** Pick the first row for which `test` evaluates to true */
-    export function pickRow<S extends Schema>(
-        table: Table<S>,
-        test: (i: number) => boolean,
-    ): Table.Row<S> | undefined {
+    export function pickRow<S extends Schema>(table: Table<S>, test: (i: number) => boolean) {
         for (let i = 0, il = table._rowCount; i < il; ++i) {
             if (test(i)) return getRow(table, i);
         }
     }
 
-    export function getRows<S extends Schema>(
-        table: Table<S>,
-    ): ReadonlyArray<Table.Row<S>> {
+    export function getRows<S extends Schema>(table: Table<S>) {
         const ret: Row<S>[] = [];
         const { _rowCount: c } = table;
         for (let i = 0; i < c; i++) {
@@ -301,9 +237,7 @@ namespace Table {
         return ret;
     }
 
-    export function toArrays<S extends Schema>(
-        table: Table<S>,
-    ): { [k in keyof S]: ArrayLike<S[k]['T']> } {
+    export function toArrays<S extends Schema>(table: Table<S>) {
         const arrays: { [k: string]: ArrayLike<any> } = {};
         const { _columns } = table;
         for (let i = 0; i < _columns.length; i++) {
@@ -313,7 +247,7 @@ namespace Table {
         return arrays as { [k in keyof S]: ArrayLike<S[k]['T']> };
     }
 
-    export function formatToString<S extends Schema>(table: Table<S>): string {
+    export function formatToString<S extends Schema>(table: Table<S>) {
         const sb = StringBuilder.create();
 
         const { _columns: cols, _rowCount } = table;

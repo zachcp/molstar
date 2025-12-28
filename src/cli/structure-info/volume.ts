@@ -1,23 +1,24 @@
 #!/usr/bin/env node
 /**
- * Copyright (c) 2018 mol* contributors, licensed under MIT, See LICENSE file for more info.
+ * Copyright (c) 2018-2025 mol* contributors, licensed under MIT, See LICENSE file for more info.
  *
  * @author David Sehnal <david.sehnal@gmail.com>
+ * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as fs from 'node:fs';
+import * as fs from 'fs';
 import * as argparse from 'argparse';
-import * as util from 'node:util';
+import * as util from 'util';
 
-import { Volume } from '../../mol-model/volume.ts';
-import { downloadCif } from './helpers.ts';
-import { CIF } from '../../mol-io/reader/cif.ts';
-import { Table } from '../../mol-data/db.ts';
-import { StringBuilder } from '../../mol-util/index.ts';
-import { Task } from '../../mol-task/index.ts';
-import { createVolumeIsosurfaceMesh } from '../../mol-repr/volume/isosurface.ts';
-import { Theme } from '../../mol-theme/theme.ts';
-import { DscifFormat, volumeFromDensityServerData } from '../../mol-model-formats/volume/density-server.ts';
+import { Volume } from '../../mol-model/volume';
+import { downloadCif } from './helpers';
+import { CIF } from '../../mol-io/reader/cif';
+import { Table } from '../../mol-data/db';
+import { StringBuilder } from '../../mol-util';
+import { Task } from '../../mol-task';
+import { createVolumeIsosurfaceMesh } from '../../mol-repr/volume/isosurface';
+import { Theme } from '../../mol-theme/theme';
+import { volumeFromDensityServerData, DscifFormat } from '../../mol-model-formats/volume/density-server';
 
 require('util.promisify').shim();
 const writeFileAsync = util.promisify(fs.writeFile);
@@ -38,13 +39,7 @@ function print(volume: Volume) {
 }
 
 async function doMesh(volume: Volume, filename: string) {
-    const mesh = await Task.create(
-        '',
-        (runtime) =>
-            createVolumeIsosurfaceMesh({ runtime }, volume, -1, Theme.createEmpty(), {
-                isoValue: Volume.IsoValue.absolute(1.5),
-            }),
-    ).run();
+    const mesh = await Task.create('', runtime => createVolumeIsosurfaceMesh({ runtime }, volume, -1, Theme.createEmpty(), { isoValue: Volume.IsoValue.absolute(1.5), wrap: 'auto' })).run();
     console.log({ vc: mesh.vertexCount, tc: mesh.triangleCount });
 
     // Export the mesh in OBJ format.
@@ -82,18 +77,18 @@ async function run(url: string, meshFilename: string) {
 
 const parser = new argparse.ArgumentParser({
     add_help: true,
-    description: 'Info about VolumeData from mol-model module',
+    description: 'Info about VolumeData from mol-model module'
 });
 parser.add_argument('--emdb', '-e', {
     help: 'EMDB id, for example 8116',
 });
 parser.add_argument('--mesh', {
     help: 'Mesh filename',
-    required: true,
+    required: true
 });
 interface Args {
-    emdb?: string;
-    mesh: string;
+    emdb?: string,
+    mesh: string
 }
 const args: Args = parser.parse_args();
 

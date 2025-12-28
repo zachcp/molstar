@@ -4,9 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { clamp } from '../mol-math/interpolate.ts';
-import { Vec3, Vec4 } from '../mol-math/linear-algebra.ts';
-import type { NumberArray } from './type-helpers.ts';
+import { clamp } from '../mol-math/interpolate';
+import { Vec3 } from '../mol-math/linear-algebra/3d/vec3';
+import { Vec4 } from '../mol-math/linear-algebra/3d/vec4';
+import { NumberArray } from './type-helpers';
 
 /** encode positive integer as rgb byte triplet into array at offset */
 export function packIntToRGBArray(value: number, array: NumberArray, offset: number) {
@@ -30,7 +31,7 @@ const UnpackFactors = Vec4.create(
     UnpackDownscale / PackFactors[0],
     UnpackDownscale / PackFactors[1],
     UnpackDownscale / PackFactors[2],
-    UnpackDownscale / 1,
+    UnpackDownscale / 1
 );
 
 const tmpDepthRGBA = Vec4();

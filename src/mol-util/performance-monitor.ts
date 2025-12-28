@@ -5,7 +5,7 @@
  * Copyright (c) 2016 - now David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
  */
 
-import { now } from '../mol-util/now.ts';
+import { now } from './now';
 
 export class PerformanceMonitor {
     private starts = new Map<string, number>();
@@ -59,7 +59,7 @@ export class PerformanceMonitor {
 
     timeSum(...names: string[]) {
         let t = 0;
-        for (const m of names.map((n) => this.ends.get(n)! - this.starts.get(n)!)) t += m;
+        for (const m of names.map(n => this.ends.get(n)! - this.starts.get(n)!)) t += m;
         return t;
     }
 }

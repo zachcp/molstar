@@ -1,47 +1,39 @@
 /**
- * Copyright (c) 2018-2022 mol* contributors, licensed under MIT, See LICENSE file for more info.
+ * Copyright (c) 2018-2025 mol* contributors, licensed under MIT, See LICENSE file for more info.
  *
  * @author David Sehnal <david.sehnal@gmail.com>
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { OrderedSet } from '../../mol-data/int.ts';
-import { type Mat4, type Tensor, type Vec2, Vec3 } from '../linear-algebra.ts';
-import { Box3D } from './primitives/box3d.ts';
-import type { Texture } from '../../mol-gl/webgl/texture.ts';
+import { OrderedSet } from '../../mol-data/int/ordered-set';
+import { Mat4 } from '../linear-algebra/3d/mat4';
+import { Vec3 } from '../linear-algebra/3d/vec3';
+import { Tensor } from '../linear-algebra/tensor';
+import { Box3D } from './primitives/box3d';
 
 export interface PositionData {
-    x: ArrayLike<number>;
-    y: ArrayLike<number>;
-    z: ArrayLike<number>;
+    x: ArrayLike<number>,
+    y: ArrayLike<number>,
+    z: ArrayLike<number>,
     /** subset of indices into the x/y/z/radius arrays */
-    indices: OrderedSet;
+    indices: OrderedSet,
     /** optional element radius */
-    radius?: ArrayLike<number>;
+    radius?: ArrayLike<number>,
     /** optional element id */
-    id?: ArrayLike<number>;
+    id?: ArrayLike<number>,
 }
 
 export type DensityData = {
-    transform: Mat4;
-    field: Tensor;
-    idField: Tensor;
-    resolution: number;
-    maxRadius: number;
-};
-
-export type DensityTextureData = {
-    transform: Mat4;
-    texture: Texture;
-    bbox: Box3D;
-    gridDim: Vec3;
-    gridTexDim: Vec3;
-    gridTexScale: Vec2;
-};
+    transform: Mat4,
+    field: Tensor,
+    idField: Tensor,
+    resolution: number,
+    maxRadius: number,
+}
 
 export interface RegularGrid3d {
-    box: Box3D;
-    dimensions: Vec3;
+    box: Box3D,
+    dimensions: Vec3
 }
 
 export function getRegularGrid3dDelta({ box, dimensions }: RegularGrid3d) {

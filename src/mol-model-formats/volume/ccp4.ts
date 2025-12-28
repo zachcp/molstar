@@ -4,17 +4,17 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { Volume } from '../../mol-model/volume.ts';
-import { Task } from '../../mol-task/index.ts';
-import { Box3D, SpacegroupCell } from '../../mol-math/geometry.ts';
-import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra.ts';
-import type { Ccp4File, Ccp4Header } from '../../mol-io/reader/ccp4/schema.ts';
-import { degToRad } from '../../mol-math/misc.ts';
-import { getCcp4ValueType } from '../../mol-io/reader/ccp4/parser.ts';
-import { TypedArrayValueType } from '../../mol-io/common/typed-array.ts';
-import { arrayMax, arrayMean, arrayMin, arrayRms } from '../../mol-util/array.ts';
-import type { ModelFormat } from '../format.ts';
-import { CustomProperties } from '../../mol-model/custom-property.ts';
+import { Grid, Volume } from '../../mol-model/volume';
+import { Task } from '../../mol-task';
+import { SpacegroupCell, Box3D } from '../../mol-math/geometry';
+import { Mat4, Tensor, Vec3 } from '../../mol-math/linear-algebra';
+import { Ccp4File, Ccp4Header } from '../../mol-io/reader/ccp4/schema';
+import { degToRad } from '../../mol-math/misc';
+import { getCcp4ValueType } from '../../mol-io/reader/ccp4/parser';
+import { TypedArrayValueType } from '../../mol-io/common/typed-array';
+import { arrayMin, arrayRms, arrayMean, arrayMax } from '../../mol-util/array';
+import { ModelFormat } from '../format';
+import { CustomProperties } from '../../mol-model/custom-property';
 
 /** When available (e.g. in MRC files) use ORIGIN records instead of N[CRS]START */
 export function getCcp4Origin(header: Ccp4Header): Vec3 {
@@ -24,7 +24,7 @@ export function getCcp4Origin(header: Ccp4Header): Vec3 {
         return Vec3.create(
             header.originX / (header.xLength / header.NX),
             header.originY / (header.yLength / header.NY),
-            header.originZ / (header.zLength / header.NZ),
+            header.originZ / (header.zLength / header.NZ)
         );
     }
 }
@@ -32,23 +32,16 @@ export function getCcp4Origin(header: Ccp4Header): Vec3 {
 function getTypedArrayCtor(header: Ccp4Header) {
     const valueType = getCcp4ValueType(header);
     switch (valueType) {
-        case TypedArrayValueType.Float32:
-            return Float32Array;
-        case TypedArrayValueType.Int8:
-            return Int8Array;
-        case TypedArrayValueType.Int16:
-            return Int16Array;
-        case TypedArrayValueType.Uint16:
-            return Uint16Array;
+        case TypedArrayValueType.Float32: return Float32Array;
+        case TypedArrayValueType.Int8: return Int8Array;
+        case TypedArrayValueType.Int16: return Int16Array;
+        case TypedArrayValueType.Uint16: return Uint16Array;
     }
     throw Error(`${valueType} is not a supported value format.`);
 }
 
-export function volumeFromCcp4(
-    source: Ccp4File,
-    params?: { voxelSize?: Vec3; offset?: Vec3; label?: string; entryId?: string },
-): Task<Volume> {
-    return Task.create<Volume>('Create Volume', async (ctx) => {
+export function volumeFromCcp4(source: Ccp4File, params?: { voxelSize?: Vec3, offset?: Vec3, label?: string, entryId?: string }): Task<Volume> {
+    return Task.create<Volume>('Create Volume', async ctx => {
         const { header, values } = source;
         const size = Vec3.create(header.xLength, header.yLength, header.zLength);
         if (params && params.voxelSize) Vec3.mul(size, size, params.voxelSize);
@@ -78,23 +71,22 @@ export function volumeFromCcp4(
         // always calculate stats when all stats related values are zero
         const calcStats = header.AMIN === 0 && header.AMAX === 0 && header.AMEAN === 0 && header.ARMS === 0;
 
+        const volgrid: Grid = {
+            transform: { kind: 'spacegroup', cell, fractionalBox: Box3D.create(origin_frac, Vec3.add(Vec3(), origin_frac, dimensions_frac)) },
+            cells: data,
+            stats: {
+                min: (Number.isNaN(header.AMIN) || calcStats) ? arrayMin(values) : header.AMIN,
+                max: (Number.isNaN(header.AMAX) || calcStats) ? arrayMax(values) : header.AMAX,
+                mean: (Number.isNaN(header.AMEAN) || calcStats) ? arrayMean(values) : header.AMEAN,
+                sigma: (Number.isNaN(header.ARMS) || header.ARMS === 0) ? arrayRms(values) : header.ARMS
+            },
+        };
+
         return {
             label: params?.label,
             entryId: params?.entryId,
-            grid: {
-                transform: {
-                    kind: 'spacegroup',
-                    cell,
-                    fractionalBox: Box3D.create(origin_frac, Vec3.add(Vec3.zero(), origin_frac, dimensions_frac)),
-                },
-                cells: data,
-                stats: {
-                    min: (isNaN(header.AMIN) || calcStats) ? arrayMin(values) : header.AMIN,
-                    max: (isNaN(header.AMAX) || calcStats) ? arrayMax(values) : header.AMAX,
-                    mean: (isNaN(header.AMEAN) || calcStats) ? arrayMean(values) : header.AMEAN,
-                    sigma: (isNaN(header.ARMS) || header.ARMS === 0) ? arrayRms(values) : header.ARMS,
-                },
-            },
+            periodicity: Vec3.isInteger(dimensions_frac) ? 'xyz' : 'none',
+            grid: volgrid,
             instances: [{ transform: Mat4.identity() }],
             sourceData: Ccp4Format.create(source),
             customProperties: new CustomProperties(),
@@ -107,7 +99,7 @@ export function volumeFromCcp4(
 
 export { Ccp4Format };
 
-type Ccp4Format = ModelFormat<Ccp4File>;
+type Ccp4Format = ModelFormat<Ccp4File>
 
 namespace Ccp4Format {
     export function is(x?: ModelFormat): x is Ccp4Format {

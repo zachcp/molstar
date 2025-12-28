@@ -7,58 +7,39 @@
  */
 
 import * as React from 'react';
-import { Mat4, type Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
-import type { Volume } from '../../mol-model/volume.ts';
-import { Script } from '../../mol-script/script.ts';
-import { Asset } from '../../mol-util/assets.ts';
-import { Color } from '../../mol-util/color/index.ts';
-import type { ColorListEntry } from '../../mol-util/color/color.ts';
-import {
-    type ColorListName,
-    ColorListOptions,
-    ColorListOptionsScale,
-    ColorListOptionsSet,
-    getColorListFromName,
-} from '../../mol-util/color/lists.ts';
-import type { Legend as LegendData } from '../../mol-util/legend.ts';
-import { memoize1, memoizeLatest } from '../../mol-util/memoize.ts';
-import { getPrecision } from '../../mol-util/number.ts';
-import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import type { ParamMapping } from '../../mol-util/param-mapping.ts';
-import { camelCaseToWords } from '../../mol-util/string.ts';
-import { PluginReactContext, PluginUIComponent } from '../base.tsx';
-import type { PluginUIContext } from '../context.ts';
-import { ActionMenu } from './action-menu.tsx';
-import { ColorOptions, ColorValueOption, CombinedColorControl } from './color.tsx';
-import { Button, ControlGroup, ControlRow, ExpandGroup, IconButton, TextInput, ToggleButton } from './common.tsx';
-import {
-    ArrowDownwardSvg,
-    ArrowDropDownSvg,
-    ArrowRightSvg,
-    ArrowUpwardSvg,
-    BookmarksOutlinedSvg,
-    CheckSvg,
-    ClearSvg,
-    DeleteOutlinedSvg,
-    HelpOutlineSvg,
-    Icon,
-    MoreHorizSvg,
-    WarningSvg,
-} from './icons.tsx';
-import { legendFor } from './legend.tsx';
-import { LineGraphComponent } from './line-graph/line-graph-component.tsx';
-import { Slider, Slider2 } from './slider.tsx';
-import { getColorGradient, getColorGradientBanded } from '../../mol-util/color/utils.ts';
+import { Mat4, Vec2, Vec3 } from '../../mol-math/linear-algebra';
+import { Volume } from '../../mol-model/volume';
+import { Script } from '../../mol-script/script';
+import { Asset } from '../../mol-util/assets';
+import { Color } from '../../mol-util/color';
+import { ColorListEntry } from '../../mol-util/color/color';
+import { ColorListName, ColorListOptions, ColorListOptionsScale, ColorListOptionsSet, getColorListFromName } from '../../mol-util/color/lists';
+import { Legend as LegendData } from '../../mol-util/legend';
+import { memoize1, memoizeLatest } from '../../mol-util/memoize';
+import { getPrecision } from '../../mol-util/number';
+import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { ParamMapping } from '../../mol-util/param-mapping';
+import { camelCaseToWords } from '../../mol-util/string';
+import { PluginReactContext, PluginUIComponent } from '../base';
+import { PluginUIContext } from '../context';
+import { ActionMenu } from './action-menu';
+import { ColorOptions, ColorValueOption, CombinedColorControl } from './color';
+import { Button, ControlGroup, ControlRow, ExpandGroup, IconButton, TextInput, ToggleButton } from './common';
+import { ArrowDownwardSvg, ArrowDropDownSvg, ArrowRightSvg, ArrowUpwardSvg, BookmarksOutlinedSvg, CheckSvg, ClearSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, MoreHorizSvg, WarningSvg } from './icons';
+import { legendFor } from './legend';
+import { LineGraphComponent } from './line-graph/line-graph-component';
+import { Slider, Slider2 } from './slider';
+import { getColorGradient, getColorGradientBanded } from '../../mol-util/color/utils';
 
-export type ParameterControlsCategoryFilter = string | null | (string | null)[];
+export type ParameterControlsCategoryFilter = string | null | (string | null)[]
 
 export interface ParameterControlsProps<P extends PD.Params = PD.Params> {
-    params: P;
-    values: any;
-    onChange?: ParamsOnChange<PD.ValuesFor<P>>;
-    onChangeValues?: (values: PD.ValuesFor<P>, prev: PD.ValuesFor<P>) => void;
-    isDisabled?: boolean;
-    onEnter?: () => void;
+    params: P,
+    values: any,
+    onChange?: ParamsOnChange<PD.ValuesFor<P>>,
+    onChangeValues?: (values: PD.ValuesFor<P>, prev: PD.ValuesFor<P>) => void,
+    isDisabled?: boolean,
+    onEnter?: () => void
 }
 
 export class ParameterControls<P extends PD.Params> extends React.PureComponent<ParameterControlsProps<P>> {
@@ -82,17 +63,7 @@ export class ParameterControls<P extends PD.Params> extends React.PureComponent<
 
             if (!ctrls) ctrls = [];
             category = p.category;
-            ctrls.push(
-                <Control
-                    param={p}
-                    key={key}
-                    onChange={this.onChange}
-                    onEnter={this.props.onEnter}
-                    isDisabled={this.props.isDisabled}
-                    name={key}
-                    value={values[key]}
-                />,
-            );
+            ctrls.push(<Control param={p} key={key} onChange={this.onChange} onEnter={this.props.onEnter} isDisabled={this.props.isDisabled} name={key} value={values[key]} />);
         }
 
         if (!ctrls) return null;
@@ -116,21 +87,19 @@ export class ParameterControls<P extends PD.Params> extends React.PureComponent<
 
     paramGroups = memoizeLatest((params: PD.Params) => classifyParams(params));
 
-    override render() {
+    render() {
         const groups = this.paramGroups(this.props.params);
 
         const essentials = this.renderPart(groups.essentials);
         const advanced = this.renderPart(groups.advanced);
 
         if (essentials && advanced) {
-            return (
-                <>
-                    {essentials}
-                    <ExpandGroup header='Advanced Options'>
-                        {advanced}
-                    </ExpandGroup>
-                </>
-            );
+            return <>
+                {essentials}
+                <ExpandGroup header='Advanced Options'>
+                    {advanced}
+                </ExpandGroup>
+            </>;
         } else if (essentials) {
             return essentials;
         } else {
@@ -139,34 +108,28 @@ export class ParameterControls<P extends PD.Params> extends React.PureComponent<
     }
 }
 
-export class ParameterMappingControl<S, T>
-    extends PluginUIComponent<{ mapping: ParamMapping<S, T, PluginUIContext> }, { isDisabled: boolean }> {
-    override state = { isDisabled: false };
+export class ParameterMappingControl<S, T> extends PluginUIComponent<{ mapping: ParamMapping<S, T, PluginUIContext> }, { isDisabled: boolean }> {
+    state = {
+        isDisabled: false,
+    };
 
-    setSettings = (p: { param: PD.Base<any>; name: string; value: any }, old: any) => {
+    setSettings = (p: { param: PD.Base<any>, name: string, value: any }, old: any) => {
         const values = { ...old, [p.name]: p.value };
         const t = this.props.mapping.update(values, this.plugin);
         this.props.mapping.apply(t, this.plugin);
     };
 
-    override componentDidMount() {
-        this.subscribe(this.plugin.state.data.behaviors.isUpdating, (v) => {
+    componentDidMount() {
+        this.subscribe(this.plugin.state.data.behaviors.isUpdating, v => {
             this.setState({ isDisabled: v });
         });
     }
 
-    override render() {
+    render() {
         const t = this.props.mapping.getTarget(this.plugin);
         const values = this.props.mapping.getValues(t, this.plugin);
         const params = this.props.mapping.params(this.plugin) as any as PD.Params;
-        return (
-            <ParameterControls
-                params={params}
-                values={values}
-                onChange={this.setSettings}
-                isDisabled={this.state.isDisabled}
-            />
-        );
+        return <ParameterControls params={params} values={values} onChange={this.setSettings} isDisabled={this.state.isDisabled} />;
     }
 }
 
@@ -198,10 +161,7 @@ function classifyParams(params: PD.Params) {
 
     const keys = Object.keys(params);
 
-    const essentials: { params: ParamInfo[][]; map: Map<string, ParamInfo[]> | undefined } = {
-        params: [[]],
-        map: void 0,
-    };
+    const essentials: { params: ParamInfo[][], map: Map<string, ParamInfo[]> | undefined } = { params: [[]], map: void 0 };
     const advanced: typeof essentials = { params: [[]], map: void 0 };
 
     for (const k of keys) {
@@ -220,56 +180,31 @@ function classifyParams(params: PD.Params) {
 
 function controlFor(param: PD.Any): ParamControl | undefined {
     switch (param.type) {
-        case 'value':
-            return void 0;
-        case 'boolean':
-            return BoolControl;
-        case 'number':
-            return typeof param.min !== 'undefined' && typeof param.max !== 'undefined'
-                ? NumberRangeControl
-                : NumberInputControl;
-        case 'converted':
-            return ConvertedControl;
-        case 'conditioned':
-            return ConditionedControl;
-        case 'multi-select':
-            return MultiSelectControl;
-        case 'color':
-            return CombinedColorControl;
-        case 'color-list':
-            return param.offsets ? OffsetColorListControl : ColorListControl;
-        case 'vec3':
-            return Vec3Control;
-        case 'mat4':
-            return Mat4Control;
-        case 'url':
-            return UrlControl;
-        case 'file':
-            return FileControl;
-        case 'file-list':
-            return FileListControl;
-        case 'select':
-            return SelectControl;
-        case 'value-ref':
-            return ValueRefControl;
-        case 'data-ref':
-            return void 0;
-        case 'text':
-            return TextControl;
-        case 'interval':
-            return typeof param.min !== 'undefined' && typeof param.max !== 'undefined'
-                ? BoundedIntervalControl
-                : IntervalControl;
-        case 'group':
-            return GroupControl;
-        case 'mapped':
-            return MappedControl;
-        case 'line-graph':
-            return LineGraphControl;
-        case 'script':
-            return ScriptControl;
-        case 'object-list':
-            return ObjectListControl;
+        case 'value': return void 0;
+        case 'boolean': return BoolControl;
+        case 'number': return typeof param.min !== 'undefined' && typeof param.max !== 'undefined'
+            ? NumberRangeControl : NumberInputControl;
+        case 'converted': return ConvertedControl;
+        case 'conditioned': return ConditionedControl;
+        case 'multi-select': return MultiSelectControl;
+        case 'color': return CombinedColorControl;
+        case 'color-list': return param.offsets ? OffsetColorListControl : ColorListControl;
+        case 'vec3': return Vec3Control;
+        case 'mat4': return Mat4Control;
+        case 'url': return UrlControl;
+        case 'file': return FileControl;
+        case 'file-list': return FileListControl;
+        case 'select': return SelectControl;
+        case 'value-ref': return ValueRefControl;
+        case 'data-ref': return void 0;
+        case 'text': return TextControl;
+        case 'interval': return typeof param.min !== 'undefined' && typeof param.max !== 'undefined'
+            ? BoundedIntervalControl : IntervalControl;
+        case 'group': return GroupControl;
+        case 'mapped': return MappedControl;
+        case 'line-graph': return LineGraphControl;
+        case 'script': return ScriptControl;
+        case 'object-list': return ObjectListControl;
         default:
             const _: never = param;
             console.warn(`${_} has no associated UI component`);
@@ -277,53 +212,33 @@ function controlFor(param: PD.Any): ParamControl | undefined {
     }
 }
 
-export class ParamHelp<L extends LegendData> extends React.PureComponent<{ legend?: L; description?: string }> {
-    override render() {
+export class ParamHelp<L extends LegendData> extends React.PureComponent<{ legend?: L, description?: string }> {
+    render() {
         const { legend, description } = this.props;
         const Legend = legend && legendFor(legend);
 
-        return (
-            <div className='msp-help-text'>
-                <div>
-                    <div className='msp-help-description'>
-                        <Icon svg={HelpOutlineSvg} inline />
-                        {description}
-                    </div>
-                    {Legend && (
-                        <div className='msp-help-legend'>
-                            <Legend legend={legend} />
-                        </div>
-                    )}
-                </div>
+        return <div className='msp-help-text'>
+            <div>
+                <div className='msp-help-description'><Icon svg={HelpOutlineSvg} inline />{description}</div>
+                {Legend && <div className='msp-help-legend'><Legend legend={legend} /></div>}
             </div>
-        );
+        </div>;
     }
 }
 
-export type ParamsOnChange<P> = (
-    params: { param: PD.Base<any>; name: string; value: any },
-    values: Readonly<P>,
-) => void;
-export type ParamOnChange = (params: { param: PD.Base<any>; name: string; value: any }) => void;
+export type ParamsOnChange<P> = (params: { param: PD.Base<any>, name: string, value: any }, values: Readonly<P>) => void
+export type ParamOnChange = (params: { param: PD.Base<any>, name: string, value: any }) => void
 export interface ParamProps<P extends PD.Base<any> = PD.Base<any>> {
-    name: string;
-    value: P['defaultValue'];
-    param: P;
-    isDisabled?: boolean;
-    onChange: ParamOnChange;
-    onEnter?: () => void;
+    name: string,
+    value: P['defaultValue'],
+    param: P,
+    isDisabled?: boolean,
+    onChange: ParamOnChange,
+    onEnter?: () => void
 }
-export type ParamControl = React.ComponentClass<ParamProps<any>>;
+export type ParamControl = React.ComponentClass<ParamProps<any>>
 
-function renderSimple(
-    options: {
-        props: ParamProps<any>;
-        state: { showHelp: boolean };
-        control: JSX.Element;
-        addOn: JSX.Element | null;
-        toggleHelp: () => void;
-    },
-) {
+function renderSimple(options: { props: ParamProps<any>, state: { showHelp: boolean }, control: JSX.Element, addOn: JSX.Element | null, toggleHelp: () => void }) {
     const { props, state, control, toggleHelp, addOn } = options;
 
     const _className = [];
@@ -338,90 +253,71 @@ function renderSimple(
         : { description: props.param.description, legend: props.param.legend };
     const hasHelp = help.description || help.legend;
     const desc = label + (hasHelp ? '. Click for help.' : '');
-    return (
-        <>
-            <ControlRow
-                className={className}
-                title={desc}
-                label={
-                    <>
-                        {label}
-                        {hasHelp && <ToggleParamHelpButton show={state.showHelp} toggle={toggleHelp} title={desc} />}
-                    </>
-                }
-                control={control}
-            />
-            {hasHelp && state.showHelp && (
-                <div className='msp-control-offset'>
-                    <ParamHelp legend={help.legend} description={help.description} />
-                </div>
-            )}
-            {addOn}
-        </>
-    );
+    return <>
+        <ControlRow
+            className={className}
+            title={desc}
+            label={<>
+                {label}
+                {hasHelp && <ToggleParamHelpButton show={state.showHelp} toggle={toggleHelp} title={desc} />}
+            </>}
+            control={control}
+        />
+        {hasHelp && state.showHelp && <div className='msp-control-offset'>
+            <ParamHelp legend={help.legend} description={help.description} />
+        </div>}
+        {addOn}
+    </>;
 }
 
-export function ToggleParamHelpButton({ show, toggle, title }: { show: boolean; toggle: () => void; title?: string }) {
-    return (
-        <button
-            className='msp-help msp-btn-link msp-btn-icon msp-control-group-expander'
-            onClick={toggle}
-            title={title || `${show ? 'Hide' : 'Show'} help`}
-            style={{ background: 'transparent', textAlign: 'left', padding: '0' }}
-        >
-            <Icon svg={HelpOutlineSvg} />
-        </button>
-    );
+export function ToggleParamHelpButton({ show, toggle, title }: { show: boolean, toggle: () => void, title?: string }) {
+    return <button className='msp-help msp-btn-link msp-btn-icon msp-control-group-expander' onClick={toggle}
+        title={title || `${show ? 'Hide' : 'Show'} help`}
+        style={{ background: 'transparent', textAlign: 'left', padding: '0' }}>
+        <Icon svg={HelpOutlineSvg} />
+    </button>;
 }
 
 export abstract class SimpleParam<P extends PD.Any> extends React.PureComponent<ParamProps<P>, { showHelp: boolean }> {
-    override state = { showHelp: false };
+    state = { showHelp: false };
+
     protected update(value: P['defaultValue']) {
         this.props.onChange({ param: this.props.param, name: this.props.name, value });
     }
 
     abstract renderControl(): JSX.Element;
-    renderAddOn(): JSX.Element | null {
-        return null;
-    }
+    renderAddOn(): JSX.Element | null { return null; }
 
     toggleHelp = () => this.setState({ showHelp: !this.state.showHelp });
 
-    override render() {
+    render() {
         return renderSimple({
             props: this.props,
             state: this.state,
             control: this.renderControl(),
             toggleHelp: this.toggleHelp,
-            addOn: this.renderAddOn(),
+            addOn: this.renderAddOn()
         });
     }
 }
 
 export class BoolControl extends SimpleParam<PD.BooleanParam> {
-    onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        this.update(!this.props.value);
-        e.currentTarget.blur();
-    };
+    onClick = (e: React.MouseEvent<HTMLButtonElement>) => { this.update(!this.props.value); e.currentTarget.blur(); };
     renderControl() {
-        return (
-            <button onClick={this.onClick} disabled={this.props.isDisabled}>
-                <Icon svg={this.props.value ? CheckSvg : ClearSvg} />
-                {this.props.value ? 'On' : 'Off'}
-            </button>
-        );
+        return <button onClick={this.onClick} disabled={this.props.isDisabled}>
+            <Icon svg={this.props.value ? CheckSvg : ClearSvg} />
+            {this.props.value ? 'On' : 'Off'}
+        </button>;
     }
 }
 
-export class LineGraphControl extends React.PureComponent<
-    ParamProps<PD.LineGraph>,
-    { isExpanded: boolean; isOverPoint: boolean; message: string }
-> {
-    override state = {
+export class LineGraphControl extends React.PureComponent<ParamProps<PD.LineGraph>, { isExpanded: boolean, isOverPoint: boolean, message: string }> {
+    state = {
         isExpanded: false,
         isOverPoint: false,
         message: `${this.props.param.defaultValue.length} points`,
     };
+
 
     private pointToLabel(point?: Vec2) {
         if (!point) return '';
@@ -459,84 +355,51 @@ export class LineGraphControl extends React.PureComponent<
         e.currentTarget.blur();
     };
 
-    override render() {
+    render() {
         const label = this.props.param.label || camelCaseToWords(this.props.name);
-        return (
-            <>
-                <ControlRow
-                    label={label}
-                    control={
-                        <button onClick={this.toggleExpanded} disabled={this.props.isDisabled}>
-                            {`${this.state.message}`}
-                        </button>
-                    }
-                />
-                <div
-                    className='msp-control-offset'
-                    style={{ display: this.state.isExpanded ? 'block' : 'none', marginTop: 1 }}
-                >
-                    <LineGraphComponent
-                        data={this.props.value}
-                        volume={this.props.param.getVolume?.()}
-                        onChange={this.onChange}
-                        onHover={this.onHover}
-                        onDrag={this.onDrag}
-                    />
-                </div>
-            </>
-        );
+        return <>
+            <ControlRow label={label} control={<button onClick={this.toggleExpanded} disabled={this.props.isDisabled}>{`${this.state.message}`}</button>} />
+            <div className='msp-control-offset' style={{ display: this.state.isExpanded ? 'block' : 'none', marginTop: 1 }}>
+                <LineGraphComponent
+                    data={this.props.value}
+                    volume={this.props.param.getVolume?.()}
+                    onChange={this.onChange}
+                    onHover={this.onHover}
+                    onDrag={this.onDrag} />
+            </div>
+        </>;
     }
 }
 
 export class NumberInputControl extends React.PureComponent<ParamProps<PD.Numeric>> {
-    override state = { value: '0' };
+    state = { value: '0' };
+
     update = (value: number) => {
         const p = getPrecision(this.props.param.step || 0.01);
         value = parseFloat(value.toFixed(p));
         this.props.onChange({ param: this.props.param, name: this.props.name, value });
     };
 
-    override render() {
+    render() {
         const placeholder = this.props.param.label || camelCaseToWords(this.props.name);
         const label = this.props.param.label || camelCaseToWords(this.props.name);
         const p = getPrecision(this.props.param.step || 0.01);
-        return (
-            <ControlRow
-                title={this.props.param.description}
-                label={label}
-                control={
-                    <TextInput
-                        numeric
-                        value={parseFloat(this.props.value.toFixed(p))}
-                        onEnter={this.props.onEnter}
-                        placeholder={placeholder}
-                        isDisabled={this.props.isDisabled}
-                        onChange={this.update}
-                    />
-                }
-            />
-        );
+        return <ControlRow
+            title={this.props.param.description}
+            label={label}
+            control={<TextInput numeric
+                value={parseFloat(this.props.value.toFixed(p))} onEnter={this.props.onEnter} placeholder={placeholder}
+                isDisabled={this.props.isDisabled} onChange={this.update} />} />;
     }
 }
 
 export class NumberRangeControl extends SimpleParam<PD.Numeric> {
-    onChange = (v: number) => {
-        this.update(v);
-    };
+    onChange = (v: number) => { this.update(v); };
     renderControl() {
         const value = typeof this.props.value === 'undefined' ? this.props.param.defaultValue : this.props.value;
-        return (
-            <Slider
-                value={value}
-                min={this.props.param.min!}
-                max={this.props.param.max!}
-                step={this.props.param.step}
-                onChange={this.onChange}
-                onChangeImmediate={this.props.param.immediateUpdate ? this.onChange : void 0}
-                disabled={this.props.isDisabled}
-                onEnter={this.props.onEnter}
-            />
-        );
+        return <Slider value={value} min={this.props.param.min!} max={this.props.param.max!}
+            step={this.props.param.step} onChange={this.onChange} onChangeImmediate={this.props.param.immediateUpdate ? this.onChange : void 0}
+            disabled={this.props.isDisabled} onEnter={this.props.onEnter} />;
     }
 }
 
@@ -553,15 +416,20 @@ export class TextControl extends SimpleParam<PD.Text> {
     }
 }
 
-function TextCtrl(
-    { props, placeholder, update }: { props: ParamProps<PD.Text>; placeholder: string; update: (v: string) => any },
-) {
+function TextCtrl({ props, placeholder, update }: { props: ParamProps<PD.Text>, placeholder: string, update: (v: string) => any }) {
     const [value, setValue] = React.useState(props.value);
+    const [composition, setComposition] = React.useState(false);
     React.useEffect(() => setValue(props.value), [props.value]);
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        if (props.param.disableInteractiveUpdates) setValue(e.target.value);
+        if (composition || props.param.disableInteractiveUpdates) setValue(e.target.value);
         else update(e.target.value);
+    };
+    const onCompositionEnd = (e: React.CompositionEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setComposition(false);
+        const target = e.target as EventTarget & (HTMLInputElement | HTMLTextAreaElement);
+        if (props.param.disableInteractiveUpdates) setValue(target.value);
+        else update(target.value);
     };
     const onBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (props.param.disableInteractiveUpdates) update(e.target.value);
@@ -579,35 +447,23 @@ function TextCtrl(
     };
 
     if (props.param.multiline) {
-        return (
-            <div className='msp-control-text-area-wrapper'>
-                <textarea
-                    value={value ?? ''}
-                    placeholder={placeholder}
-                    disabled={props.isDisabled}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    onKeyDown={onKeyDown}
-                />
-            </div>
-        );
-    } else {
-        return (
-            <input
-                type='text'
-                value={value ?? ''}
-                placeholder={placeholder}
-                disabled={props.isDisabled}
-                onChange={onChange}
-                onBlur={onBlur}
-                onKeyDown={onKeyDown}
+        return <div className='msp-control-text-area-wrapper'>
+            <textarea
+                value={value ?? ''} placeholder={placeholder} disabled={props.isDisabled}
+            onChange={onChange} onBlur={onBlur} onKeyDown={onKeyDown}
+              onCompositionStart={() => setComposition(true)} onCompositionEnd={onCompositionEnd}
             />
-        );
+        </div>;
+    } else {
+        return <input type='text'
+            value={value ?? ''} placeholder={placeholder} disabled={props.isDisabled}
+          onChange={onChange} onBlur={onBlur} onKeyDown={onKeyDown}
+          onCompositionStart={() => setComposition(true)} onCompositionEnd={onCompositionEnd}
+        />;
     }
 }
 
-export class PureSelectControl
-    extends React.PureComponent<ParamProps<PD.Select<string | number>> & { title?: string }> {
+export class PureSelectControl extends React.PureComponent<ParamProps<PD.Select<string | number>> & { title?: string }> {
     protected update(value: string | number) {
         this.props.onChange({ param: this.props.param, name: this.props.name, value });
     }
@@ -620,30 +476,19 @@ export class PureSelectControl
         }
     };
 
-    override render() {
-        const isInvalid = this.props.value !== void 0 &&
-            !this.props.param.options.some((e) => e[0] === this.props.value);
-        return (
-            <select
-                className='msp-form-control'
-                title={this.props.title}
-                value={this.props.value !== void 0 ? this.props.value : this.props.param.defaultValue}
-                onChange={this.onChange}
-                disabled={this.props.isDisabled}
-            >
-                {isInvalid && (
-                    <option key={this.props.value} value={this.props.value}>{`[Invalid] ${this.props.value}`}</option>
-                )}
-                {this.props.param.options.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-            </select>
-        );
+    render() {
+        const isInvalid = this.props.value !== void 0 && !this.props.param.options.some(e => e[0] === this.props.value);
+        return <select className='msp-form-control' title={this.props.title} value={this.props.value !== void 0 ? this.props.value : this.props.param.defaultValue} onChange={this.onChange} disabled={this.props.isDisabled}>
+            {isInvalid && <option key={this.props.value} value={this.props.value}>{`[Invalid] ${this.props.value}`}</option>}
+            {this.props.param.options.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+        </select>;
     }
 }
 
-export class SelectControl
-    extends React.PureComponent<ParamProps<PD.Select<string | number>>, { showHelp: boolean; showOptions: boolean }> {
-    override state = { showHelp: false, showOptions: false };
-    onSelect: ActionMenu.OnSelect = (item) => {
+export class SelectControl extends React.PureComponent<ParamProps<PD.Select<string | number>>, { showHelp: boolean, showOptions: boolean }> {
+    state = { showHelp: false, showOptions: false };
+
+    onSelect: ActionMenu.OnSelect = item => {
         if (!item || item.value === this.props.value) {
             this.setState({ showOptions: false });
         } else {
@@ -657,7 +502,7 @@ export class SelectControl
 
     cycle = () => {
         const { options } = this.props.param;
-        const current = options.findIndex((o) => o[0] === this.props.value);
+        const current = options.findIndex(o => o[0] === this.props.value);
         const next = current === options.length - 1 ? 0 : current + 1;
         this.props.onChange({ param: this.props.param, name: this.props.name, value: options[next][0] });
     };
@@ -670,26 +515,18 @@ export class SelectControl
         const label = current
             ? current.label
             : typeof this.props.value === 'undefined'
-            ? `${ActionMenu.getFirstItem(items)?.label || ''} [Default]`
-            : `[Invalid] ${this.props.value}`;
+                ? `${ActionMenu.getFirstItem(items)?.label || ''} [Default]`
+                : `[Invalid] ${this.props.value}`;
 
         const toggle = this.props.param.cycle ? this.cycle : this.toggle;
         const textAlign = this.props.param.cycle ? 'center' : 'left';
         const icon = this.props.param.cycle
-            ? (this.props.value === 'on' ? CheckSvg : this.props.value === 'off' ? ClearSvg : void 0)
+            ? (this.props.value === 'on' ? CheckSvg
+                : this.props.value === 'off' ? ClearSvg : void 0)
             : void 0;
 
-        return (
-            <ToggleButton
-                disabled={this.props.isDisabled}
-                style={{ textAlign, overflow: 'hidden', textOverflow: 'ellipsis' }}
-                label={label}
-                title={label as string}
-                icon={icon}
-                toggle={toggle}
-                isSelected={this.state.showOptions}
-            />
-        );
+        return <ToggleButton disabled={this.props.isDisabled} style={{ textAlign, overflow: 'hidden', textOverflow: 'ellipsis' }}
+            label={label} title={label as string} icon={icon} toggle={toggle} isSelected={this.state.showOptions} />;
     }
 
     renderAddOn() {
@@ -703,21 +540,21 @@ export class SelectControl
 
     toggleHelp = () => this.setState({ showHelp: !this.state.showHelp });
 
-    override render() {
+    render() {
         return renderSimple({
             props: this.props,
             state: this.state,
             control: this.renderControl(),
             toggleHelp: this.toggleHelp,
-            addOn: this.renderAddOn(),
+            addOn: this.renderAddOn()
         });
     }
 }
 
-export class ValueRefControl
-    extends React.PureComponent<ParamProps<PD.ValueRef<any>>, { showHelp: boolean; showOptions: boolean }> {
-    override state = { showHelp: false, showOptions: false };
-    onSelect: ActionMenu.OnSelect = (item) => {
+export class ValueRefControl extends React.PureComponent<ParamProps<PD.ValueRef<any>>, { showHelp: boolean, showOptions: boolean }> {
+    state = { showHelp: false, showOptions: false };
+
+    onSelect: ActionMenu.OnSelect = item => {
         if (!item || item.value === this.props.value) {
             this.setState({ showOptions: false });
         } else {
@@ -736,18 +573,12 @@ export class ValueRefControl
     renderControl() {
         const items = this.items;
         const current = this.props.value.ref ? ActionMenu.findItem(items, this.props.value.ref) : void 0;
-        const label = current ? current.label : `[Ref] ${this.props.value.ref ?? ''}`;
+        const label = current
+            ? current.label
+            : `[Ref] ${this.props.value.ref ?? ''}`;
 
-        return (
-            <ToggleButton
-                disabled={this.props.isDisabled}
-                style={{ textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis' }}
-                label={label}
-                title={label as string}
-                toggle={this.toggle}
-                isSelected={this.state.showOptions}
-            />
-        );
+        return <ToggleButton disabled={this.props.isDisabled} style={{ textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis' }}
+            label={label} title={label as string} toggle={this.toggle} isSelected={this.state.showOptions} />;
     }
 
     renderAddOn() {
@@ -761,23 +592,24 @@ export class ValueRefControl
 
     toggleHelp = () => this.setState({ showHelp: !this.state.showHelp });
 
-    override render() {
+    render() {
         return renderSimple({
             props: this.props,
             state: this.state,
             control: this.renderControl(),
             toggleHelp: this.toggleHelp,
-            addOn: this.renderAddOn(),
+            addOn: this.renderAddOn()
         });
     }
 }
 ValueRefControl.contextType = PluginReactContext;
 
 export class IntervalControl extends React.PureComponent<ParamProps<PD.Interval>, { isExpanded: boolean }> {
-    override state = { isExpanded: false };
+    state = { isExpanded: false };
+
     components = {
         0: PD.Numeric(0, { step: this.props.param.step }, { label: 'Min' }),
-        1: PD.Numeric(0, { step: this.props.param.step }, { label: 'Max' }),
+        1: PD.Numeric(0, { step: this.props.param.step }, { label: 'Max' })
     };
 
     change(value: PD.MultiSelect<any>['defaultValue']) {
@@ -795,48 +627,25 @@ export class IntervalControl extends React.PureComponent<ParamProps<PD.Interval>
         e.currentTarget.blur();
     };
 
-    override render() {
+    render() {
         const v = this.props.value;
         const label = this.props.param.label || camelCaseToWords(this.props.name);
         const p = getPrecision(this.props.param.step || 0.01);
         const value = `[${v[0].toFixed(p)}, ${v[1].toFixed(p)}]`;
-        return (
-            <>
-                <ControlRow
-                    label={label}
-                    control={<button onClick={this.toggleExpanded} disabled={this.props.isDisabled}>{value}</button>}
-                />
-                {this.state.isExpanded && (
-                    <div className='msp-control-offset'>
-                        <ParameterControls
-                            params={this.components}
-                            values={v}
-                            onChange={this.componentChange}
-                            onEnter={this.props.onEnter}
-                        />
-                    </div>
-                )}
-            </>
-        );
+        return <>
+            <ControlRow label={label} control={<button onClick={this.toggleExpanded} disabled={this.props.isDisabled}>{value}</button>} />
+            {this.state.isExpanded && <div className='msp-control-offset'>
+                <ParameterControls params={this.components} values={v} onChange={this.componentChange} onEnter={this.props.onEnter} />
+            </div>}
+        </>;
     }
 }
 
 export class BoundedIntervalControl extends SimpleParam<PD.Interval> {
-    onChange = (v: [number, number]) => {
-        this.update(v);
-    };
+    onChange = (v: [number, number]) => { this.update(v); };
     renderControl() {
-        return (
-            <Slider2
-                value={this.props.value}
-                min={this.props.param.min!}
-                max={this.props.param.max!}
-                step={this.props.param.step}
-                onChange={this.onChange}
-                disabled={this.props.isDisabled}
-                onEnter={this.props.onEnter}
-            />
-        );
+        return <Slider2 value={this.props.value} min={this.props.param.min!} max={this.props.param.max!}
+            step={this.props.param.step} onChange={this.onChange} disabled={this.props.isDisabled} onEnter={this.props.onEnter} />;
     }
 }
 
@@ -852,20 +661,18 @@ export class ColorControl extends SimpleParam<PD.Color> {
             bottom: '0',
             height: '4px',
             right: '0',
-            left: '0',
+            left: '0'
         };
     }
 
     renderControl() {
-        return (
-            <div style={{ position: 'relative' }}>
-                <select value={this.props.value} onChange={this.onChange}>
-                    {ColorValueOption(this.props.value)}
-                    {ColorOptions()}
-                </select>
-                <div style={this.stripStyle()} />
-            </div>
-        );
+        return <div style={{ position: 'relative' }}>
+            <select value={this.props.value} onChange={this.onChange}>
+                {ColorValueOption(this.props.value)}
+                {ColorOptions()}
+            </select>
+            <div style={this.stripStyle()} />
+        </div>;
     }
 }
 
@@ -880,7 +687,7 @@ function colorStripStyle(list: PD.ColorList['defaultValue'], right = '0'): React
         bottom: '0',
         height: '4px',
         right,
-        left: '0',
+        left: '0'
     };
 }
 
@@ -889,33 +696,23 @@ function colorGradient(colors: ColorListEntry[], banded: boolean) {
 }
 
 function createColorListHelpers() {
+
     const addOn = (l: PD.SelectOption<ColorListName>) => {
         const preset = getColorListFromName(l[0]);
-        return (
-            <div
-                style={colorStripStyle({
-                    kind: preset.type !== 'qualitative' ? 'interpolate' : 'set',
-                    colors: preset.list,
-                })}
-            />
-        );
+        return <div style={colorStripStyle({ kind: preset.type !== 'qualitative' ? 'interpolate' : 'set', colors: preset.list })} />;
     };
 
     return {
         ColorPresets: {
-            all: ActionMenu.createItemsFromSelectOptions(ColorListOptions, { addOn, description: (o) => o[3] }),
-            scale: ActionMenu.createItemsFromSelectOptions(ColorListOptionsScale, { addOn, description: (o) => o[3] }),
-            set: ActionMenu.createItemsFromSelectOptions(ColorListOptionsSet, { addOn, description: (o) => o[3] }),
+            all: ActionMenu.createItemsFromSelectOptions(ColorListOptions, { addOn, description: o => o[3] }),
+            scale: ActionMenu.createItemsFromSelectOptions(ColorListOptionsScale, { addOn, description: o => o[3] }),
+            set: ActionMenu.createItemsFromSelectOptions(ColorListOptionsSet, { addOn, description: o => o[3] })
         },
-        ColorsParam: PD.ObjectList(
-            { color: PD.Color(0x0 as Color) },
-            ({ color }) => Color.toHexString(color).toUpperCase(),
-        ),
+        ColorsParam: PD.ObjectList({ color: PD.Color(0x0 as Color) }, ({ color }) => Color.toHexString(color).toUpperCase()),
         OffsetColorsParam: PD.ObjectList(
             { color: PD.Color(0x0 as Color), offset: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }) },
-            ({ color, offset }) => `${Color.toHexString(color).toUpperCase()} [${offset.toFixed(2)}]`,
-        ),
-        IsInterpolatedParam: PD.Boolean(false, { label: 'Interpolated' }),
+            ({ color, offset }) => `${Color.toHexString(color).toUpperCase()} [${offset.toFixed(2)}]`),
+        IsInterpolatedParam: PD.Boolean(false, { label: 'Interpolated' })
     };
 }
 
@@ -926,9 +723,9 @@ function ColorListHelpers() {
     return _colorListHelpers;
 }
 
-export class ColorListControl
-    extends React.PureComponent<ParamProps<PD.ColorList>, { showHelp: boolean; show?: 'edit' | 'presets' }> {
-    override state = { showHelp: false, show: void 0 as 'edit' | 'presets' | undefined };
+export class ColorListControl extends React.PureComponent<ParamProps<PD.ColorList>, { showHelp: boolean, show?: 'edit' | 'presets' }> {
+    state = { showHelp: false, show: void 0 as 'edit' | 'presets' | undefined };
+
     protected update(value: PD.ColorList['defaultValue']) {
         this.props.onChange({ param: this.props.param, name: this.props.name, value });
     }
@@ -939,24 +736,17 @@ export class ColorListControl
     renderControl() {
         const { value } = this.props;
         // TODO: fix the button right offset
-        return (
-            <>
-                <button onClick={this.toggleEdit} style={{ position: 'relative', paddingRight: '33px' }}>
-                    {value.colors.length === 1 ? '1 color' : `${value.colors.length} colors`}
-                    <div style={colorStripStyle(value, '33px')} />
-                </button>
-                <IconButton
-                    svg={BookmarksOutlinedSvg}
-                    onClick={this.togglePresets}
-                    toggleState={this.state.show === 'presets'}
-                    title='Color Presets'
-                    style={{ padding: 0, position: 'absolute', right: 0, top: 0, width: '32px' }}
-                />
-            </>
-        );
+        return <>
+            <button onClick={this.toggleEdit} style={{ position: 'relative', paddingRight: '33px' }}>
+                {value.colors.length === 1 ? '1 color' : `${value.colors.length} colors`}
+                <div style={colorStripStyle(value, '33px')} />
+            </button>
+            <IconButton svg={BookmarksOutlinedSvg} onClick={this.togglePresets} toggleState={this.state.show === 'presets'} title='Color Presets'
+                style={{ padding: 0, position: 'absolute', right: 0, top: 0, width: '32px' }} />
+        </>;
     }
 
-    selectPreset: ActionMenu.OnSelect = (item) => {
+    selectPreset: ActionMenu.OnSelect = item => {
         if (!item) return;
         this.setState({ show: void 0 });
 
@@ -967,7 +757,7 @@ export class ColorListControl
     colorsChanged: ParamOnChange = ({ value }) => {
         this.update({
             kind: this.props.value.kind,
-            colors: (value as (typeof _colorListHelpers)['ColorsParam']['defaultValue']).map((c) => c.color),
+            colors: (value as (typeof _colorListHelpers)['ColorsParam']['defaultValue']).map(c => c.color)
         });
     };
 
@@ -983,48 +773,32 @@ export class ColorListControl
         if (this.state.show === 'presets') return <ActionMenu items={preset} onSelect={this.selectPreset} />;
 
         // It might happen that the colors are either in the form of [Color, number] or just Color, show them as just Color
-        const values = this.props.value.colors.map((color) => ({
-            color: Array.isArray(color) ? color[0] : color,
+        const values = this.props.value.colors.map(color => ({
+            color: Array.isArray(color) ? color[0] : color
         }));
 
-        return (
-            <div className='msp-control-offset'>
-                <ObjectListControl
-                    name='colors'
-                    param={ColorsParam}
-                    value={values}
-                    onChange={this.colorsChanged}
-                    isDisabled={this.props.isDisabled}
-                    onEnter={this.props.onEnter}
-                />
-                <BoolControl
-                    name='isInterpolated'
-                    param={IsInterpolatedParam}
-                    value={this.props.value.kind === 'interpolate'}
-                    onChange={this.isInterpolatedChanged}
-                    isDisabled={this.props.isDisabled}
-                    onEnter={this.props.onEnter}
-                />
-            </div>
-        );
+        return <div className='msp-control-offset'>
+            <ObjectListControl name='colors' param={ColorsParam} value={values} onChange={this.colorsChanged} isDisabled={this.props.isDisabled} onEnter={this.props.onEnter} />
+            <BoolControl name='isInterpolated' param={IsInterpolatedParam} value={this.props.value.kind === 'interpolate'} onChange={this.isInterpolatedChanged} isDisabled={this.props.isDisabled} onEnter={this.props.onEnter} />
+        </div>;
     }
 
     toggleHelp = () => this.setState({ showHelp: !this.state.showHelp });
 
-    override render() {
+    render() {
         return renderSimple({
             props: this.props,
             state: this.state,
             control: this.renderControl(),
             toggleHelp: this.toggleHelp,
-            addOn: this.renderColors(),
+            addOn: this.renderColors()
         });
     }
 }
 
-export class OffsetColorListControl
-    extends React.PureComponent<ParamProps<PD.ColorList>, { showHelp: boolean; show?: 'edit' | 'presets' }> {
-    override state = { showHelp: false, show: void 0 as 'edit' | 'presets' | undefined };
+export class OffsetColorListControl extends React.PureComponent<ParamProps<PD.ColorList>, { showHelp: boolean, show?: 'edit' | 'presets' }> {
+    state = { showHelp: false, show: void 0 as 'edit' | 'presets' | undefined };
+
     protected update(value: PD.ColorList['defaultValue']) {
         this.props.onChange({ param: this.props.param, name: this.props.name, value });
     }
@@ -1035,24 +809,17 @@ export class OffsetColorListControl
     renderControl() {
         const { value } = this.props;
         // TODO: fix the button right offset
-        return (
-            <>
-                <button onClick={this.toggleEdit} style={{ position: 'relative', paddingRight: '33px' }}>
-                    {value.colors.length === 1 ? '1 color' : `${value.colors.length} colors`}
-                    <div style={colorStripStyle(value, '33px')} />
-                </button>
-                <IconButton
-                    svg={BookmarksOutlinedSvg}
-                    onClick={this.togglePresets}
-                    toggleState={this.state.show === 'presets'}
-                    title='Color Presets'
-                    style={{ padding: 0, position: 'absolute', right: 0, top: 0, width: '32px' }}
-                />
-            </>
-        );
+        return <>
+            <button onClick={this.toggleEdit} style={{ position: 'relative', paddingRight: '33px' }}>
+                {value.colors.length === 1 ? '1 color' : `${value.colors.length} colors`}
+                <div style={colorStripStyle(value, '33px')} />
+            </button>
+            <IconButton svg={BookmarksOutlinedSvg} onClick={this.togglePresets} toggleState={this.state.show === 'presets'} title='Color Presets'
+                style={{ padding: 0, position: 'absolute', right: 0, top: 0, width: '32px' }} />
+        </>;
     }
 
-    selectPreset: ActionMenu.OnSelect = (item) => {
+    selectPreset: ActionMenu.OnSelect = item => {
         if (!item) return;
         this.setState({ show: void 0 });
 
@@ -1061,9 +828,7 @@ export class OffsetColorListControl
     };
 
     colorsChanged: ParamOnChange = ({ value }) => {
-        const colors = (value as (typeof _colorListHelpers)['OffsetColorsParam']['defaultValue']).map((c) =>
-            [c.color, c.offset] as [Color, number]
-        );
+        const colors = (value as (typeof _colorListHelpers)['OffsetColorsParam']['defaultValue']).map(c => [c.color, c.offset] as [Color, number]);
         colors.sort((a, b) => a[1] - b[1]);
         this.update({ kind: this.props.value.kind, colors });
     };
@@ -1085,53 +850,32 @@ export class OffsetColorListControl
             return { color, offset: i / colors.length };
         });
         values.sort((a, b) => a.offset - b.offset);
-        return (
-            <div className='msp-control-offset'>
-                <ObjectListControl
-                    name='colors'
-                    param={OffsetColorsParam}
-                    value={values}
-                    onChange={this.colorsChanged}
-                    isDisabled={this.props.isDisabled}
-                    onEnter={this.props.onEnter}
-                />
-                <BoolControl
-                    name='isInterpolated'
-                    param={IsInterpolatedParam}
-                    value={this.props.value.kind === 'interpolate'}
-                    onChange={this.isInterpolatedChanged}
-                    isDisabled={this.props.isDisabled}
-                    onEnter={this.props.onEnter}
-                />
-            </div>
-        );
+        return <div className='msp-control-offset'>
+            <ObjectListControl name='colors' param={OffsetColorsParam} value={values} onChange={this.colorsChanged} isDisabled={this.props.isDisabled} onEnter={this.props.onEnter} />
+            <BoolControl name='isInterpolated' param={IsInterpolatedParam} value={this.props.value.kind === 'interpolate'} onChange={this.isInterpolatedChanged} isDisabled={this.props.isDisabled} onEnter={this.props.onEnter} />
+        </div>;
     }
 
     toggleHelp = () => this.setState({ showHelp: !this.state.showHelp });
 
-    override render() {
+    render() {
         return renderSimple({
             props: this.props,
             state: this.state,
             control: this.renderControl(),
             toggleHelp: this.toggleHelp,
-            addOn: this.renderColors(),
+            addOn: this.renderColors()
         });
     }
 }
 
 export class Vec3Control extends React.PureComponent<ParamProps<PD.Vec3>, { isExpanded: boolean }> {
-    override state = { isExpanded: false };
+    state = { isExpanded: false };
+
     components = {
-        0: PD.Numeric(0, { step: this.props.param.step }, {
-            label: (this.props.param.fieldLabels && this.props.param.fieldLabels.x) || 'X',
-        }),
-        1: PD.Numeric(0, { step: this.props.param.step }, {
-            label: (this.props.param.fieldLabels && this.props.param.fieldLabels.y) || 'Y',
-        }),
-        2: PD.Numeric(0, { step: this.props.param.step }, {
-            label: (this.props.param.fieldLabels && this.props.param.fieldLabels.z) || 'Z',
-        }),
+        0: PD.Numeric(0, { step: this.props.param.step }, { label: (this.props.param.fieldLabels && this.props.param.fieldLabels.x) || 'X' }),
+        1: PD.Numeric(0, { step: this.props.param.step }, { label: (this.props.param.fieldLabels && this.props.param.fieldLabels.y) || 'Y' }),
+        2: PD.Numeric(0, { step: this.props.param.step }, { label: (this.props.param.fieldLabels && this.props.param.fieldLabels.z) || 'Z' })
     };
 
     change(value: PD.MultiSelect<any>['defaultValue']) {
@@ -1149,42 +893,27 @@ export class Vec3Control extends React.PureComponent<ParamProps<PD.Vec3>, { isEx
         e.currentTarget.blur();
     };
 
-    override render() {
+    render() {
         const v = this.props.value;
         const label = this.props.param.label || camelCaseToWords(this.props.name);
         const p = getPrecision(this.props.param.step || 0.01);
         const value = `[${v[0].toFixed(p)}, ${v[1].toFixed(p)}, ${v[2].toFixed(p)}]`;
-        return (
-            <>
-                <ControlRow
-                    label={label}
-                    control={
-                        <button onClick={this.toggleExpanded} disabled={this.props.isDisabled}>
-                            <div title={value} className='msp-no-overflow' style={{ display: 'block' }}>{value}</div>
-                        </button>
-                    }
-                />
-                {this.state.isExpanded && (
-                    <div className='msp-control-offset'>
-                        <ParameterControls
-                            params={this.components}
-                            values={v}
-                            onChange={this.componentChange}
-                            onEnter={this.props.onEnter}
-                        />
-                    </div>
-                )}
-            </>
-        );
+        return <>
+            <ControlRow label={label} control={<button onClick={this.toggleExpanded} disabled={this.props.isDisabled}>
+                <div title={value} className='msp-no-overflow' style={{ display: 'block' }}>{value}</div>
+            </button>} />
+            {this.state.isExpanded && <div className='msp-control-offset'>
+                <ParameterControls params={this.components} values={v} onChange={this.componentChange} onEnter={this.props.onEnter} />
+            </div>}
+        </>;
     }
 }
 
 export class Mat4Control extends React.PureComponent<ParamProps<PD.Mat4>, { isExpanded: boolean }> {
-    override state = { isExpanded: false };
+    state = { isExpanded: false };
+
     components = {
-        json: PD.Text(JSON.stringify(Mat4()), {
-            description: 'JSON array with 4x4 matrix in a column major (j * 4 + i indexing) format',
-        }),
+        json: PD.Text(JSON.stringify(Mat4()), { description: 'JSON array with 4x4 matrix in a column major (j * 4 + i indexing) format' })
     };
 
     change(value: PD.MultiSelect<any>['defaultValue']) {
@@ -1221,52 +950,27 @@ export class Mat4Control extends React.PureComponent<ParamProps<PD.Mat4>, { isEx
         for (let i = 0; i < 4; i++) {
             const row: React.ReactNode[] = [];
             for (let j = 0; j < 4; j++) {
-                row.push(
-                    <TextInput
-                        key={j}
-                        numeric
-                        delayMs={50}
-                        value={Mat4.getValue(v, i, j)}
-                        onChange={this.changeValue(4 * j + i)}
-                        className='msp-form-control'
-                        blurOnEnter
-                        isDisabled={this.props.isDisabled}
-                    />,
-                );
+                row.push(<TextInput key={j} numeric delayMs={50} value={Mat4.getValue(v, i, j)} onChange={this.changeValue(4 * j + i)} className='msp-form-control' blurOnEnter={true} isDisabled={this.props.isDisabled} />);
             }
             rows.push(<div className='msp-flex-row' key={i}>{row}</div>);
         }
         return <div className='msp-parameter-matrix'>{rows}</div>;
     }
 
-    override render() {
+    render() {
         const v = {
-            json: JSON.stringify(this.props.value),
+            json: JSON.stringify(this.props.value)
         };
         const label = this.props.param.label || camelCaseToWords(this.props.name);
-        return (
-            <>
-                <ControlRow
-                    label={label}
-                    control={
-                        <button onClick={this.toggleExpanded} disabled={this.props.isDisabled}>
-                            <div className='msp-no-overflow' style={{ display: 'block' }}>4×4 Matrix</div>
-                        </button>
-                    }
-                />
-                {this.state.isExpanded && (
-                    <div className='msp-control-offset'>
-                        {this.grid}
-                        <ParameterControls
-                            params={this.components}
-                            values={v}
-                            onChange={this.componentChange}
-                            onEnter={this.props.onEnter}
-                        />
-                    </div>
-                )}
-            </>
-        );
+        return <>
+            <ControlRow label={label} control={<button onClick={this.toggleExpanded} disabled={this.props.isDisabled}>
+                <div className='msp-no-overflow' style={{ display: 'block' }}>{'4\u00D74 Matrix'}</div>
+            </button>} />
+            {this.state.isExpanded && <div className='msp-control-offset'>
+                {this.grid}
+                <ParameterControls params={this.components} values={v} onChange={this.componentChange} onEnter={this.props.onEnter} />
+            </div>}
+        </>;
     }
 }
 
@@ -1287,21 +991,19 @@ export class UrlControl extends SimpleParam<PD.UrlParam> {
 
     renderControl() {
         const placeholder = this.props.param.label || camelCaseToWords(this.props.name);
-        return (
-            <input
-                type='text'
-                value={Asset.getUrl(this.props.value || '')}
-                placeholder={placeholder}
-                onChange={this.onChange}
-                onKeyPress={this.props.onEnter ? this.onKeyPress : void 0}
-                disabled={this.props.isDisabled}
-            />
-        );
+        return <input type='text'
+            value={Asset.getUrl(this.props.value || '')}
+            placeholder={placeholder}
+            onChange={this.onChange}
+            onKeyPress={this.props.onEnter ? this.onKeyPress : void 0}
+            disabled={this.props.isDisabled}
+        />;
     }
 }
 
 export class FileControl extends React.PureComponent<ParamProps<PD.FileParam>> {
-    override state = { showHelp: false };
+    state = { showHelp: false };
+
     change(value: File) {
         this.props.onChange({ name: this.props.name, param: this.props.param, value: Asset.File(value) });
     }
@@ -1315,28 +1017,19 @@ export class FileControl extends React.PureComponent<ParamProps<PD.FileParam>> {
     renderControl() {
         const value = this.props.value;
 
-        return (
-            <div className='msp-btn msp-btn-block msp-btn-action msp-loader-msp-btn-file' style={{ marginTop: '1px' }}>
-                {value ? value.name : 'Select a file...'}{' '}
-                <input
-                    disabled={this.props.isDisabled}
-                    onChange={this.onChangeFile}
-                    type='file'
-                    multiple={false}
-                    accept={this.props.param.accept}
-                />
-            </div>
-        );
+        return <div className='msp-btn msp-btn-block msp-btn-action msp-loader-msp-btn-file' style={{ marginTop: '1px' }}>
+            {value ? value.name : 'Select a file...'} <input disabled={this.props.isDisabled} onChange={this.onChangeFile} type='file' multiple={false} accept={this.props.param.accept} />
+        </div>;
     }
 
-    override render() {
+    render() {
         if (this.props.param.label) {
             return renderSimple({
                 props: this.props,
                 state: this.state,
                 control: this.renderControl(),
                 toggleHelp: this.toggleHelp,
-                addOn: null,
+                addOn: null
             });
         } else {
             return this.renderControl();
@@ -1345,7 +1038,8 @@ export class FileControl extends React.PureComponent<ParamProps<PD.FileParam>> {
 }
 
 export class FileListControl extends React.PureComponent<ParamProps<PD.FileListParam>> {
-    override state = { showHelp: false };
+    state = { showHelp: false };
+
     change(value: FileList) {
         const files: Asset.File[] = [];
         if (value) {
@@ -1372,33 +1066,22 @@ export class FileListControl extends React.PureComponent<ParamProps<PD.FileListP
             }
         }
         const label = names.length === 0
-            ? 'Select files...'
-            : names.length === 1
-            ? names[0]
-            : `${names.length} files selected`;
+            ? 'Select files...' : names.length === 1
+                ? names[0] : `${names.length} files selected`;
 
-        return (
-            <div className='msp-btn msp-btn-block msp-btn-action msp-loader-msp-btn-file' style={{ marginTop: '1px' }}>
-                {label}{' '}
-                <input
-                    disabled={this.props.isDisabled}
-                    onChange={this.onChangeFileList}
-                    type='file'
-                    multiple
-                    accept={this.props.param.accept}
-                />
-            </div>
-        );
+        return <div className='msp-btn msp-btn-block msp-btn-action msp-loader-msp-btn-file' style={{ marginTop: '1px' }}>
+            {label} <input disabled={this.props.isDisabled} onChange={this.onChangeFileList} type='file' multiple={true} accept={this.props.param.accept} />
+        </div>;
     }
 
-    override render() {
+    render() {
         if (this.props.param.label) {
             return renderSimple({
                 props: this.props,
                 state: this.state,
                 control: this.renderControl(),
                 toggleHelp: this.toggleHelp,
-                addOn: null,
+                addOn: null
             });
         } else {
             return this.renderControl();
@@ -1407,7 +1090,8 @@ export class FileListControl extends React.PureComponent<ParamProps<PD.FileListP
 }
 
 export class MultiSelectControl extends React.PureComponent<ParamProps<PD.MultiSelect<any>>, { isExpanded: boolean }> {
-    override state = { isExpanded: false };
+    state = { isExpanded: false };
+
     change(value: PD.MultiSelect<any>['defaultValue']) {
         this.props.onChange({ name: this.props.name, param: this.props.param, value });
     }
@@ -1415,7 +1099,7 @@ export class MultiSelectControl extends React.PureComponent<ParamProps<PD.MultiS
     toggle(key: string) {
         return (e: React.MouseEvent<HTMLButtonElement>) => {
             if (this.props.value.indexOf(key) < 0) this.change(this.props.value.concat(key));
-            else this.change(this.props.value.filter((v) => v !== key));
+            else this.change(this.props.value.filter(v => v !== key));
             e.currentTarget.blur();
         };
     }
@@ -1425,56 +1109,34 @@ export class MultiSelectControl extends React.PureComponent<ParamProps<PD.MultiS
         e.currentTarget.blur();
     };
 
-    override render() {
+    render() {
         const current = this.props.value;
         const emptyLabel = this.props.param.emptyValue;
         const label = this.props.param.label || camelCaseToWords(this.props.name);
-        return (
-            <>
-                <ControlRow
-                    label={label}
-                    control={
-                        <button onClick={this.toggleExpanded} disabled={this.props.isDisabled}>
-                            {current.length === 0 && emptyLabel
-                                ? emptyLabel
-                                : `${current.length} of ${this.props.param.options.length}`}
-                        </button>
-                    }
-                />
-                {this.state.isExpanded && (
-                    <div className='msp-control-offset'>
-                        {this.props.param.options.map(([value, label]) => {
-                            const sel = current.indexOf(value) >= 0;
-                            return (
-                                <Button
-                                    key={value}
-                                    onClick={this.toggle(value)}
-                                    disabled={this.props.isDisabled}
-                                    style={{ marginTop: '1px' }}
-                                >
-                                    <span style={{ float: sel ? 'left' : 'right' }}>
-                                        {sel ? `✓ ${label}` : `${label} ✗`}
-                                    </span>
-                                </Button>
-                            );
-                        })}
-                    </div>
-                )}
-            </>
-        );
+        return <>
+            <ControlRow label={label} control={<button onClick={this.toggleExpanded} disabled={this.props.isDisabled}>
+                {current.length === 0 && emptyLabel ? emptyLabel : `${current.length} of ${this.props.param.options.length}`}
+            </button>} />
+            {this.state.isExpanded && <div className='msp-control-offset'>
+                {this.props.param.options.map(([value, label]) => {
+                    const sel = current.indexOf(value) >= 0;
+                    return <Button key={value} onClick={this.toggle(value)} disabled={this.props.isDisabled} style={{ marginTop: '1px' }}>
+                        <span style={{ float: sel ? 'left' : 'right' }}>{sel ? `✓ ${label}` : `${label} ✗`}</span>
+                    </Button>;
+                })}
+            </div>}
+        </>;
     }
 }
 
-export class GroupControl extends React.PureComponent<
-    ParamProps<PD.Group<any>> & { inMapped?: boolean },
-    { isExpanded: boolean; showPresets: boolean; showHelp: boolean }
-> {
-    override state = { isExpanded: !!this.props.param.isExpanded, showPresets: false, showHelp: false };
+export class GroupControl extends React.PureComponent<ParamProps<PD.Group<any>> & { inMapped?: boolean }, { isExpanded: boolean, showPresets: boolean, showHelp: boolean }> {
+    state = { isExpanded: !!this.props.param.isExpanded, showPresets: false, showHelp: false };
+
     change(value: any) {
         this.props.onChange({ name: this.props.name, param: this.props.param, value });
     }
 
-    onChangeParam: ParamOnChange = (e) => {
+    onChangeParam: ParamOnChange = e => {
         this.change({ ...this.props.value, [e.name]: e.value });
     };
 
@@ -1483,7 +1145,7 @@ export class GroupControl extends React.PureComponent<
 
     presetItems = memoizeLatest((param: PD.Group<any>) => ActionMenu.createItemsFromSelectOptions(param.presets ?? []));
 
-    onSelectPreset: ActionMenu.OnSelect = (item) => {
+    onSelectPreset: ActionMenu.OnSelect = item => {
         this.setState({ showPresets: false });
         this.change(item?.value);
     };
@@ -1492,39 +1154,31 @@ export class GroupControl extends React.PureComponent<
         if (!this.props.param.presets) return null;
 
         const label = this.props.param.label || camelCaseToWords(this.props.name);
-        return (
-            <div className='msp-control-group-wrapper'>
-                <div className='msp-control-group-header'>
-                    <button className='msp-btn msp-form-control msp-btn-block' onClick={this.toggleShowPresets}>
-                        <Icon svg={BookmarksOutlinedSvg} />
-                        {label} Presets
-                    </button>
-                </div>
-                {this.state.showPresets && (
-                    <ActionMenu items={this.presetItems(this.props.param)} onSelect={this.onSelectPreset} />
-                )}
+        return <div className='msp-control-group-wrapper'>
+            <div className='msp-control-group-header'>
+                <button className='msp-btn msp-form-control msp-btn-block' onClick={this.toggleShowPresets}>
+                    <Icon svg={BookmarksOutlinedSvg} />
+                    {label} Presets
+                </button>
             </div>
-        );
+            {this.state.showPresets && <ActionMenu items={this.presetItems(this.props.param)} onSelect={this.onSelectPreset} />}
+        </div>;
     }
 
     presets() {
         if (!this.props.param.presets) return null;
 
-        return (
-            <>
-                <div className='msp-control-group-presets-wrapper'>
-                    <div className='msp-control-group-header'>
-                        <button className='msp-btn msp-form-control msp-btn-block' onClick={this.toggleShowPresets}>
-                            <Icon svg={BookmarksOutlinedSvg} />
-                            Presets
-                        </button>
-                    </div>
+        return <>
+            <div className='msp-control-group-presets-wrapper'>
+                <div className='msp-control-group-header'>
+                    <button className='msp-btn msp-form-control msp-btn-block' onClick={this.toggleShowPresets}>
+                        <Icon svg={BookmarksOutlinedSvg} />
+                        Presets
+                    </button>
                 </div>
-                {this.state.showPresets && (
-                    <ActionMenu items={this.presetItems(this.props.param)} onSelect={this.onSelectPreset} />
-                )}
-            </>
-        );
+            </div>
+            {this.state.showPresets && <ActionMenu items={this.presetItems(this.props.param)} onSelect={this.onSelectPreset} />}
+        </>;
     }
 
     pivoted() {
@@ -1533,29 +1187,13 @@ export class GroupControl extends React.PureComponent<
         const pivot = params[key];
         const Control = controlFor(pivot)!;
 
-        const ctrl = (
-            <Control
-                name={key}
-                param={pivot}
-                value={this.props.value[key]}
-                onChange={this.onChangeParam}
-                onEnter={this.props.onEnter}
-                isDisabled={this.props.isDisabled}
-            />
-        );
+        const ctrl = <Control name={key} param={pivot} value={this.props.value[key]} onChange={this.onChangeParam} onEnter={this.props.onEnter} isDisabled={this.props.isDisabled} />;
 
         if (!this.state.isExpanded) {
-            return (
-                <div className='msp-mapped-parameter-group'>
-                    {ctrl}
-                    <IconButton
-                        svg={MoreHorizSvg}
-                        onClick={this.toggleExpanded}
-                        toggleState={this.state.isExpanded}
-                        title={`More Options`}
-                    />
-                </div>
-            );
+            return <div className='msp-mapped-parameter-group'>
+                {ctrl}
+                <IconButton svg={MoreHorizSvg} onClick={this.toggleExpanded} toggleState={this.state.isExpanded} title={`More Options`} />
+            </div>;
         }
 
         const filtered = Object.create(null);
@@ -1563,30 +1201,17 @@ export class GroupControl extends React.PureComponent<
             if (k !== key) filtered[k] = params[k];
         }
 
-        return (
-            <div className='msp-mapped-parameter-group'>
-                {ctrl}
-                <IconButton
-                    svg={MoreHorizSvg}
-                    onClick={this.toggleExpanded}
-                    toggleState={this.state.isExpanded}
-                    title={`More Options`}
-                />
-                <div className='msp-control-offset'>
-                    {this.pivotedPresets()}
-                    <ParameterControls
-                        params={filtered}
-                        onEnter={this.props.onEnter}
-                        values={this.props.value}
-                        onChange={this.onChangeParam}
-                        isDisabled={this.props.isDisabled}
-                    />
-                </div>
+        return <div className='msp-mapped-parameter-group'>
+            {ctrl}
+            <IconButton svg={MoreHorizSvg} onClick={this.toggleExpanded} toggleState={this.state.isExpanded} title={`More Options`} />
+            <div className='msp-control-offset'>
+                {this.pivotedPresets()}
+                <ParameterControls params={filtered} onEnter={this.props.onEnter} values={this.props.value} onChange={this.onChangeParam} isDisabled={this.props.isDisabled} />
             </div>
-        );
+        </div>;
     }
 
-    override render() {
+    render() {
         const params = this.props.param.params;
 
         // Do not show if there are no params.
@@ -1596,15 +1221,7 @@ export class GroupControl extends React.PureComponent<
 
         const label = this.props.param.label || camelCaseToWords(this.props.name);
 
-        const controls = (
-            <ParameterControls
-                params={params}
-                onChange={this.onChangeParam}
-                values={this.props.value}
-                onEnter={this.props.onEnter}
-                isDisabled={this.props.isDisabled}
-            />
-        );
+        const controls = <ParameterControls params={params} onChange={this.onChangeParam} values={this.props.value} onEnter={this.props.onEnter} isDisabled={this.props.isDisabled} />;
 
         if (this.props.inMapped) {
             return <div className='msp-control-offset'>{controls}</div>;
@@ -1614,27 +1231,24 @@ export class GroupControl extends React.PureComponent<
             return controls;
         }
 
-        return (
-            <div className='msp-control-group-wrapper' style={{ position: 'relative' }}>
-                <div className='msp-control-group-header'>
-                    <button className='msp-btn msp-form-control msp-btn-block' onClick={this.toggleExpanded}>
-                        <Icon svg={this.state.isExpanded ? ArrowDropDownSvg : ArrowRightSvg} />
-                        {label}
-                    </button>
-                </div>
-                {this.presets()}
-                {this.state.isExpanded && (
-                    <div className='msp-control-offset'>
-                        {controls}
-                    </div>
-                )}
+        return <div className='msp-control-group-wrapper' style={{ position: 'relative' }}>
+            <div className='msp-control-group-header'>
+                <button className='msp-btn msp-form-control msp-btn-block' onClick={this.toggleExpanded}>
+                    <Icon svg={this.state.isExpanded ? ArrowDropDownSvg : ArrowRightSvg} />
+                    {label}
+                </button>
             </div>
-        );
+            {this.presets()}
+            {this.state.isExpanded && <div className='msp-control-offset'>
+                {controls}
+            </div>}
+        </div>;
     }
 }
 
 export class MappedControl extends React.PureComponent<ParamProps<PD.Mapped<any>>, { isExpanded: boolean }> {
-    override state = { isExpanded: false };
+    state = { isExpanded: false };
+
     // TODO: this could lead to a rare bug where the component is reused with different mapped control.
     // I think there are currently no cases where this could happen in the UI, but still need to watch out..
     private valuesCache: { [name: string]: PD.Values<any> } = {};
@@ -1653,11 +1267,11 @@ export class MappedControl extends React.PureComponent<ParamProps<PD.Mapped<any>
         this.props.onChange({ name: this.props.name, param: this.props.param, value });
     }
 
-    onChangeName: ParamOnChange = (e) => {
+    onChangeName: ParamOnChange = e => {
         this.change({ name: e.value, params: this.getValues(e.value) });
     };
 
-    onChangeParam: ParamOnChange = (e) => {
+    onChangeParam: ParamOnChange = e => {
         this.setValues(this.props.value.name, e.value);
         this.change({ name: this.props.value.name, params: e.value });
     };
@@ -1671,7 +1285,7 @@ export class MappedControl extends React.PureComponent<ParamProps<PD.Mapped<any>
         return true;
     }
 
-    override render() {
+    render() {
         const value: PD.Mapped<any>['defaultValue'] = this.props.value || this.props.param.defaultValue;
 
         const param = this.props.param.map(value.name);
@@ -1682,20 +1296,13 @@ export class MappedControl extends React.PureComponent<ParamProps<PD.Mapped<any>
         const select = help
             ? {
                 ...this.props.param.select,
-                help: (name: any) => help({ name, params: this.getValues(name) }),
+                help: (name: any) => help({ name, params: this.getValues(name) })
             }
             : this.props.param.select;
 
-        const Select = (
-            <SelectControl
-                param={select}
-                isDisabled={this.props.isDisabled}
-                onChange={this.onChangeName}
-                onEnter={this.props.onEnter}
-                name={label}
-                value={value.name}
-            />
-        );
+        const Select = <SelectControl param={select}
+            isDisabled={this.props.isDisabled} onChange={this.onChangeName} onEnter={this.props.onEnter}
+            name={label} value={value.name} />;
 
         if (!Mapped) {
             return Select;
@@ -1703,59 +1310,28 @@ export class MappedControl extends React.PureComponent<ParamProps<PD.Mapped<any>
 
         if (param.type === 'group' && !param.isFlat) {
             if (!this.areParamsEmpty(param.params)) {
-                return (
-                    <div className='msp-mapped-parameter-group'>
-                        {Select}
-                        <IconButton
-                            svg={MoreHorizSvg}
-                            onClick={this.toggleExpanded}
-                            toggleState={this.state.isExpanded}
-                            title={`${label} Properties`}
-                        />
-                        {this.state.isExpanded && (
-                            <GroupControl
-                                inMapped
-                                param={param}
-                                value={value.params}
-                                name={value.name}
-                                onChange={this.onChangeParam}
-                                onEnter={this.props.onEnter}
-                                isDisabled={this.props.isDisabled}
-                            />
-                        )}
-                    </div>
-                );
+                return <div className='msp-mapped-parameter-group'>
+                    {Select}
+                    <IconButton svg={MoreHorizSvg} onClick={this.toggleExpanded} toggleState={this.state.isExpanded} title={`${label} Properties`} />
+                    {this.state.isExpanded && <GroupControl inMapped param={param} value={value.params} name={value.name} onChange={this.onChangeParam} onEnter={this.props.onEnter} isDisabled={this.props.isDisabled} />}
+                </div>;
             }
 
             return Select;
         }
 
-        return (
-            <>
-                {Select}
-                <Mapped
-                    param={param}
-                    value={value.params}
-                    name={value.name}
-                    onChange={this.onChangeParam}
-                    onEnter={this.props.onEnter}
-                    isDisabled={this.props.isDisabled}
-                />
-            </>
-        );
+        return <>
+            {Select}
+            <Mapped param={param} value={value.params} name={value.name} onChange={this.onChangeParam} onEnter={this.props.onEnter} isDisabled={this.props.isDisabled} />
+        </>;
     }
 }
 
-type ObjectListEditorProps = {
-    params: PD.Params;
-    value: object;
-    isUpdate?: boolean;
-    apply: (value: any) => void;
-    isDisabled?: boolean;
-};
+type ObjectListEditorProps = { params: PD.Params, value: object, isUpdate?: boolean, apply: (value: any) => void, isDisabled?: boolean }
 class ObjectListEditor extends React.PureComponent<ObjectListEditorProps, { current: object }> {
-    override state = { current: this.props.value };
-    onChangeParam: ParamOnChange = (e) => {
+    state = { current: this.props.value };
+
+    onChangeParam: ParamOnChange = e => {
         this.setState({ current: { ...this.state.current, [e.name]: e.value } });
     };
 
@@ -1763,43 +1339,26 @@ class ObjectListEditor extends React.PureComponent<ObjectListEditorProps, { curr
         this.props.apply(this.state.current);
     };
 
-    override componentDidUpdate(prevProps: ObjectListEditorProps) {
+    componentDidUpdate(prevProps: ObjectListEditorProps) {
         if (this.props.params !== prevProps.params || this.props.value !== prevProps.value) {
             this.setState({ current: this.props.value });
         }
     }
 
-    override render() {
-        return (
-            <>
-                <ParameterControls
-                    params={this.props.params}
-                    onChange={this.onChangeParam}
-                    values={this.state.current}
-                    onEnter={this.apply}
-                    isDisabled={this.props.isDisabled}
-                />
-                <button
-                    className={`msp-btn msp-btn-block msp-form-control msp-control-top-offset`}
-                    onClick={this.apply}
-                    disabled={this.props.isDisabled}
-                >
-                    {this.props.isUpdate ? 'Update' : 'Add'}
-                </button>
-            </>
-        );
+    render() {
+        return <>
+            <ParameterControls params={this.props.params} onChange={this.onChangeParam} values={this.state.current} onEnter={this.apply} isDisabled={this.props.isDisabled} />
+            <button className={`msp-btn msp-btn-block msp-form-control msp-control-top-offset`} onClick={this.apply} disabled={this.props.isDisabled}>
+                {this.props.isUpdate ? 'Update' : 'Add'}
+            </button>
+        </>;
     }
 }
 
-type ObjectListItemProps = {
-    param: PD.ObjectList;
-    value: object;
-    index: number;
-    actions: ObjectListControl['actions'];
-    isDisabled?: boolean;
-};
+type ObjectListItemProps = { param: PD.ObjectList, value: object, index: number, actions: ObjectListControl['actions'], isDisabled?: boolean }
 class ObjectListItem extends React.PureComponent<ObjectListItemProps, { isExpanded: boolean }> {
-    override state = { isExpanded: false };
+    state = { isExpanded: false };
+
     update = (v: object) => {
         // this.setState({ isExpanded: false }); // TODO auto update? mark changed state?
         this.props.actions.update(v, this.props.index);
@@ -1823,38 +1382,29 @@ class ObjectListItem extends React.PureComponent<ObjectListItemProps, { isExpand
         e.currentTarget.blur();
     };
 
-    override render() {
-        return (
-            <>
-                <div className='msp-param-object-list-item'>
-                    <button className='msp-btn msp-btn-block msp-form-control' onClick={this.toggleExpanded}>
-                        <span>{`${this.props.index + 1}: `}</span>
-                        {this.props.param.getLabel(this.props.value)}
-                    </button>
-                    <div>
-                        <IconButton svg={ArrowDownwardSvg} title='Move Up' onClick={this.moveUp} small />
-                        <IconButton svg={ArrowUpwardSvg} title='Move Down' onClick={this.moveDown} small />
-                        <IconButton svg={DeleteOutlinedSvg} title='Remove' onClick={this.remove} small />
-                    </div>
+    render() {
+        return <>
+            <div className='msp-param-object-list-item'>
+                <button className='msp-btn msp-btn-block msp-form-control' onClick={this.toggleExpanded}>
+                    <span>{`${this.props.index + 1}: `}</span>
+                    {this.props.param.getLabel(this.props.value)}
+                </button>
+                <div>
+                    <IconButton svg={ArrowDownwardSvg} title='Move Up' onClick={this.moveUp} small={true} />
+                    <IconButton svg={ArrowUpwardSvg} title='Move Down' onClick={this.moveDown} small={true} />
+                    <IconButton svg={DeleteOutlinedSvg} title='Remove' onClick={this.remove} small={true} />
                 </div>
-                {this.state.isExpanded && (
-                    <div className='msp-control-offset'>
-                        <ObjectListEditor
-                            params={this.props.param.element}
-                            apply={this.update}
-                            value={this.props.value}
-                            isUpdate
-                            isDisabled={this.props.isDisabled}
-                        />
-                    </div>
-                )}
-            </>
-        );
+            </div>
+            {this.state.isExpanded && <div className='msp-control-offset'>
+                <ObjectListEditor params={this.props.param.element} apply={this.update} value={this.props.value} isUpdate isDisabled={this.props.isDisabled} />
+            </div>}
+        </>;
     }
 }
 
 export class ObjectListControl extends React.PureComponent<ParamProps<PD.ObjectList>, { isExpanded: boolean }> {
-    override state = { isExpanded: false };
+    state = { isExpanded: false };
+
     change(value: any) {
         this.props.onChange({ name: this.props.name, param: this.props.param, value });
     }
@@ -1889,7 +1439,7 @@ export class ObjectListControl extends React.PureComponent<ParamProps<PD.ObjectL
                 if (i !== j) update.push(xs[j]);
             }
             this.change(update);
-        },
+        }
     };
 
     toggleExpanded = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -1897,40 +1447,19 @@ export class ObjectListControl extends React.PureComponent<ParamProps<PD.ObjectL
         e.currentTarget.blur();
     };
 
-    override render() {
+    render() {
         const v = this.props.value;
         const label = this.props.param.label || camelCaseToWords(this.props.name);
         const value = `${v.length} item${v.length !== 1 ? 's' : ''}`;
-        return (
-            <>
-                <ControlRow
-                    label={label}
-                    control={<button onClick={this.toggleExpanded} disabled={this.props.isDisabled}>{value}</button>}
-                />
-                {this.state.isExpanded && (
-                    <div className='msp-control-offset'>
-                        {this.props.value.map((v, i) => (
-                            <ObjectListItem
-                                key={i}
-                                param={this.props.param}
-                                value={v}
-                                index={i}
-                                actions={this.actions}
-                                isDisabled={this.props.isDisabled}
-                            />
-                        ))}
-                        <ControlGroup header='New Item'>
-                            <ObjectListEditor
-                                params={this.props.param.element}
-                                apply={this.add}
-                                value={this.props.param.ctor()}
-                                isDisabled={this.props.isDisabled}
-                            />
-                        </ControlGroup>
-                    </div>
-                )}
-            </>
-        );
+        return <>
+            <ControlRow label={label} control={<button onClick={this.toggleExpanded} disabled={this.props.isDisabled}>{value}</button>} />
+            {this.state.isExpanded && <div className='msp-control-offset'>
+                {this.props.value.map((v, i) => <ObjectListItem key={i} param={this.props.param} value={v} index={i} actions={this.actions} isDisabled={this.props.isDisabled} />)}
+                <ControlGroup header='New Item'>
+                    <ObjectListEditor params={this.props.param.element} apply={this.add} value={this.props.param.ctor()} isDisabled={this.props.isDisabled} />
+                </ControlGroup>
+            </div>}
+        </>;
     }
 }
 
@@ -1939,76 +1468,51 @@ export class ConditionedControl extends React.PureComponent<ParamProps<PD.Condit
         this.props.onChange({ name: this.props.name, param: this.props.param, value });
     }
 
-    onChangeCondition: ParamOnChange = (e) => {
+    onChangeCondition: ParamOnChange = e => {
         this.change(this.props.param.conditionedValue(this.props.value, e.value));
     };
 
-    onChangeParam: ParamOnChange = (e) => {
+    onChangeParam: ParamOnChange = e => {
         this.change(e.value);
     };
 
-    override render() {
+    render() {
         const value = this.props.value;
         const condition = this.props.param.conditionForValue(value) as string;
         const param = this.props.param.conditionParams[condition];
         const label = this.props.param.label || camelCaseToWords(this.props.name);
         const Conditioned = controlFor(param);
 
-        const select = (
-            <SelectControl
-                param={this.props.param.select}
-                isDisabled={this.props.isDisabled}
-                onChange={this.onChangeCondition}
-                onEnter={this.props.onEnter}
-                name={`${label} Kind`}
-                value={condition}
-            />
-        );
+        const select = <SelectControl param={this.props.param.select}
+            isDisabled={this.props.isDisabled} onChange={this.onChangeCondition} onEnter={this.props.onEnter}
+            name={`${label} Kind`} value={condition} />;
 
         if (!Conditioned) {
             return select;
         }
 
-        return (
-            <>
-                {select}
-                <Conditioned
-                    param={param}
-                    value={value}
-                    name={label}
-                    onChange={this.onChangeParam}
-                    onEnter={this.props.onEnter}
-                    isDisabled={this.props.isDisabled}
-                />
-            </>
-        );
+        return <>
+            {select}
+            <Conditioned param={param} value={value} name={label} onChange={this.onChangeParam} onEnter={this.props.onEnter} isDisabled={this.props.isDisabled} />
+        </>;
     }
 }
 
 export class ConvertedControl extends React.PureComponent<ParamProps<PD.Converted<any, any>>> {
-    onChange: ParamOnChange = (e) => {
+    onChange: ParamOnChange = e => {
         this.props.onChange({
             name: this.props.name,
             param: this.props.param,
-            value: this.props.param.toValue(e.value),
+            value: this.props.param.toValue(e.value)
         });
     };
 
-    override render() {
+    render() {
         const value = this.props.param.fromValue(this.props.value);
         const Converted = controlFor(this.props.param.converted);
 
         if (!Converted) return null;
-        return (
-            <Converted
-                param={this.props.param.converted}
-                value={value}
-                name={this.props.name}
-                onChange={this.onChange}
-                onEnter={this.props.onEnter}
-                isDisabled={this.props.isDisabled}
-            />
-        );
+        return <Converted param={this.props.param.converted} value={value} name={this.props.name} onChange={this.onChange} onEnter={this.props.onEnter} isDisabled={this.props.isDisabled} />;
     }
 }
 
@@ -2016,57 +1520,34 @@ export class ScriptControl extends React.PureComponent<ParamProps<PD.Script>> {
     onChange: ParamOnChange = ({ name, value }) => {
         const k = name as 'language' | 'expression';
         if (value !== this.props.value[k]) {
-            this.props.onChange({
-                param: this.props.param,
-                name: this.props.name,
-                value: { ...this.props.value, [k]: value },
-            });
+            this.props.onChange({ param: this.props.param, name: this.props.name, value: { ...this.props.value, [k]: value } });
         }
     };
 
-    override render() { // TODO: improve!
+    render() {
+        // TODO: improve!
+
         const selectParam: PD.Select<PD.Script['defaultValue']['language']> = {
             defaultValue: this.props.value.language,
             options: PD.objectToOptions(Script.Info),
             type: 'select',
         };
-        const select = (
-            <SelectControl
-                param={selectParam}
-                isDisabled={this.props.isDisabled}
-                onChange={this.onChange}
-                onEnter={this.props.onEnter}
-                name='language'
-                value={this.props.value.language}
-            />
-        );
+        const select = <SelectControl param={selectParam}
+            isDisabled={this.props.isDisabled} onChange={this.onChange} onEnter={this.props.onEnter}
+            name='language' value={this.props.value.language} />;
 
         const textParam: PD.Text = {
             defaultValue: this.props.value.language,
             type: 'text',
         };
-        const text = (
-            <TextControl
-                param={textParam}
-                isDisabled={this.props.isDisabled}
-                onChange={this.onChange}
-                name='expression'
-                value={this.props.value.expression}
-            />
-        );
+        const text = <TextControl param={textParam} isDisabled={this.props.isDisabled} onChange={this.onChange} name='expression' value={this.props.value.expression} />;
 
-        return (
-            <>
-                {select}
-                {this.props.value.language !== 'mol-script' && (
-                    <div className='msp-help-text' style={{ padding: '10px' }}>
-                        <Icon svg={WarningSvg} />{' '}
-                        Support for PyMOL, VMD, and Jmol selections is an experimental feature and may not always work
-                        as intended.
-                    </div>
-                )}
-                {text}
-            </>
-        );
+        return <>
+            {select}
+            {this.props.value.language !== 'mol-script' && <div className='msp-help-text' style={{ padding: '10px' }}>
+                <Icon svg={WarningSvg} /> Support for PyMOL, VMD, and Jmol selections is an experimental feature and may not always work as intended.
+            </div>}
+            {text}
+        </>;
     }
 }

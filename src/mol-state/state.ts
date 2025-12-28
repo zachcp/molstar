@@ -4,25 +4,25 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StateObject, StateObjectCell, StateObjectSelector } from './object.ts';
-import { StateTree } from './tree.ts';
-import { StateTransform } from './transform.ts';
-import { StateTransformer } from './transformer.ts';
-import { RuntimeContext, Task } from '../mol-task/index.ts';
-import { StateSelection } from './state/selection.ts';
-import { RxEventHelper } from '../mol-util/rx-event-helper.ts';
-import { StateBuilder } from './state/builder.ts';
-import { StateAction } from './action.ts';
-import { StateActionManager } from './action/manager.ts';
-import { TransientTree } from './tree/transient.ts';
-import { LogEntry } from '../mol-util/log-entry.ts';
-import { now, formatTimespan } from '../mol-util/now.ts';
-import { ParamDefinition } from '../mol-util/param-definition.ts';
-import { StateTreeSpine } from './tree/spine.ts';
-import { AsyncQueue } from '../mol-util/async-queue.ts';
-import { arraySetAdd, arraySetRemove } from '../mol-util/array.ts';
-import { UniqueArray } from '../mol-data/generic.ts';
-import { assignIfUndefined } from '../mol-util/object.ts';
+import { StateObject, StateObjectCell, StateObjectSelector } from './object';
+import { StateTree } from './tree';
+import { StateTransform } from './transform';
+import { StateTransformer } from './transformer';
+import { RuntimeContext, Task } from '../mol-task';
+import { StateSelection } from './state/selection';
+import { RxEventHelper } from '../mol-util/rx-event-helper';
+import { StateBuilder } from './state/builder';
+import { StateAction } from './action';
+import { StateActionManager } from './action/manager';
+import { TransientTree } from './tree/transient';
+import { LogEntry } from '../mol-util/log-entry';
+import { now, formatTimespan } from '../mol-util/now';
+import { ParamDefinition } from '../mol-util/param-definition';
+import { StateTreeSpine } from './tree/spine';
+import { AsyncQueue } from '../mol-util/async-queue';
+import { arraySetAdd, arraySetRemove } from '../mol-util/array';
+import { UniqueArray } from '../mol-data/generic/unique-array';
+import { assignIfUndefined } from '../mol-util/object';
 
 export { State };
 

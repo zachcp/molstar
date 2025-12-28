@@ -1,3 +1,4 @@
+
 /**
  * Copyright (c) 2019-23 mol* contributors, licensed under MIT, See LICENSE file for more info.
  *
@@ -5,19 +6,19 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { LinkedList } from '../mol-data/generic.ts';
+import { LinkedList } from '../mol-data/generic/linked-list';
 
 export { LRUCache };
 
 interface LRUCache<T> {
-    entries: LinkedList<LRUCache.Entry<T>>;
-    capacity: number;
+    entries: LinkedList<LRUCache.Entry<T>>,
+    capacity: number
 }
 
 namespace LRUCache {
     export interface Entry<T> {
-        key: string;
-        data: T;
+        key: string,
+        data: T
     }
 
     function entry<T>(key: string, data: T): Entry<T> {
@@ -27,7 +28,7 @@ namespace LRUCache {
     export function create<T>(capacity: number): LRUCache<T> {
         return {
             entries: LinkedList<Entry<T>>(),
-            capacity: Math.max(1, capacity),
+            capacity: Math.max(1, capacity)
         };
     }
 

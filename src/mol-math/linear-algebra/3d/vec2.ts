@@ -1,10 +1,10 @@
 /**
- * Copyright (c) 2018 mol* contributors, licensed under MIT, See LICENSE file for more info.
+ * Copyright (c) 2018-2025 mol* contributors, licensed under MIT, See LICENSE file for more info.
  *
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { NumberArray } from '../../../mol-util/type-helpers.ts';
+import { NumberArray } from '../../../mol-util/type-helpers';
 
 /*
  * This code has been modified from https://github.com/toji/gl-matrix/,
@@ -18,13 +18,9 @@ import type { NumberArray } from '../../../mol-util/type-helpers.ts';
  * furnished to do so, subject to the following conditions:
  */
 
-interface Vec2 extends Array<number> {
-    [d: number]: number;
-    '@type': 'vec2';
-    length: 2;
-}
+interface Vec2 extends Array<number> { [d: number]: number, '@type': 'vec2', length: 2 }
 
-function Vec2(): Vec2 {
+function Vec2() {
     return Vec2.zero();
 }
 
@@ -36,77 +32,81 @@ namespace Vec2 {
         return ret as any;
     }
 
-    export function clone(a: Vec2): Vec2 {
+    export function clone(a: Vec2) {
         const out = zero();
         out[0] = a[0];
         out[1] = a[1];
         return out;
     }
 
-    export function create(x: number, y: number): Vec2 {
+    export function fromObj(v: { x: number, y: number }): Vec2 {
+        return create(v.x, v.y);
+    }
+
+    export function toObj(v: Vec2) {
+        return { x: v[0], y: v[1] };
+    }
+
+    export function create(x: number, y: number) {
         const out = zero();
         out[0] = x;
         out[1] = y;
         return out;
     }
 
-    export function hasNaN(a: Vec2): boolean {
-        return isNaN(a[0]) || isNaN(a[1]);
+    export function hasNaN(a: Vec2) {
+        return Number.isNaN(a[0]) || Number.isNaN(a[1]);
     }
 
-    export function toArray<T extends NumberArray>(
-        a: Vec2,
-        out: T,
-        offset: number,
-    ): T {
+    export function toArray<T extends NumberArray>(a: Vec2, out: T, offset: number) {
         out[offset + 0] = a[0];
         out[offset + 1] = a[1];
         return out;
     }
 
-    export function fromArray(a: Vec2, array: NumberArray, offset: number): Vec2 {
+    export function fromArray(a: Vec2, array: NumberArray, offset: number) {
         a[0] = array[offset + 0];
         a[1] = array[offset + 1];
         return a;
     }
 
-    export function copy(out: Vec2, a: Vec2): Vec2 {
+    export function copy(out: Vec2, a: Vec2) {
         out[0] = a[0];
         out[1] = a[1];
         return out;
     }
 
-    export function set(out: Vec2, x: number, y: number): Vec2 {
+    export function set(out: Vec2, x: number, y: number) {
         out[0] = x;
         out[1] = y;
         return out;
     }
 
-    export function add(out: Vec2, a: Vec2, b: Vec2): Vec2 {
+    export function add(out: Vec2, a: Vec2, b: Vec2) {
         out[0] = a[0] + b[0];
         out[1] = a[1] + b[1];
         return out;
     }
 
-    export function sub(out: Vec2, a: Vec2, b: Vec2): Vec2 {
+    export function sub(out: Vec2, a: Vec2, b: Vec2) {
         out[0] = a[0] - b[0];
         out[1] = a[1] - b[1];
         return out;
     }
 
-    export function mul(out: Vec2, a: Vec2, b: Vec2): Vec2 {
+    export function mul(out: Vec2, a: Vec2, b: Vec2) {
         out[0] = a[0] * b[0];
         out[1] = a[1] * b[1];
         return out;
     }
 
-    export function div(out: Vec2, a: Vec2, b: Vec2): Vec2 {
+    export function div(out: Vec2, a: Vec2, b: Vec2) {
         out[0] = a[0] / b[0];
         out[1] = a[1] / b[1];
         return out;
     }
 
-    export function scale(out: Vec2, a: Vec2, b: number): Vec2 {
+    export function scale(out: Vec2, a: Vec2, b: number) {
         out[0] = a[0] * b;
         out[1] = a[1] * b;
         return out;
@@ -115,7 +115,7 @@ namespace Vec2 {
     /**
      * Math.round the components of a Vec2
      */
-    export function round(out: Vec2, a: Vec2): Vec2 {
+    export function round(out: Vec2, a: Vec2) {
         out[0] = Math.round(a[0]);
         out[1] = Math.round(a[1]);
         return out;
@@ -124,7 +124,7 @@ namespace Vec2 {
     /**
      * Math.ceil the components of a Vec2
      */
-    export function ceil(out: Vec2, a: Vec2): Vec2 {
+    export function ceil(out: Vec2, a: Vec2) {
         out[0] = Math.ceil(a[0]);
         out[1] = Math.ceil(a[1]);
         return out;
@@ -133,50 +133,50 @@ namespace Vec2 {
     /**
      * Math.floor the components of a Vec2
      */
-    export function floor(out: Vec2, a: Vec2): Vec2 {
+    export function floor(out: Vec2, a: Vec2) {
         out[0] = Math.floor(a[0]);
         out[1] = Math.floor(a[1]);
         return out;
     }
 
-    export function distance(a: Vec2, b: Vec2): number {
+    export function distance(a: Vec2, b: Vec2) {
         const x = b[0] - a[0],
             y = b[1] - a[1];
         return Math.sqrt(x * x + y * y);
     }
 
-    export function squaredDistance(a: Vec2, b: Vec2): number {
+    export function squaredDistance(a: Vec2, b: Vec2) {
         const x = b[0] - a[0],
             y = b[1] - a[1];
         return x * x + y * y;
     }
 
-    export function magnitude(a: Vec2): number {
+    export function magnitude(a: Vec2) {
         const x = a[0],
             y = a[1];
         return Math.sqrt(x * x + y * y);
     }
 
-    export function squaredMagnitude(a: Vec2): number {
+    export function squaredMagnitude(a: Vec2) {
         const x = a[0],
             y = a[1];
         return x * x + y * y;
     }
 
-    export function setMagnitude(out: Vec2, a: Vec2, l: number): Vec2 {
+    export function setMagnitude(out: Vec2, a: Vec2, l: number) {
         return scale(out, normalize(out, a), l);
     }
 
     /**
      * Returns the inverse of the components of a Vec2
      */
-    export function inverse(out: Vec2, a: Vec2): Vec2 {
+    export function inverse(out: Vec2, a: Vec2) {
         out[0] = 1.0 / a[0];
         out[1] = 1.0 / a[1];
         return out;
     }
 
-    export function normalize(out: Vec2, a: Vec2): Vec2 {
+    export function normalize(out: Vec2, a: Vec2) {
         const x = a[0],
             y = a[1];
         let len = x * x + y * y;
@@ -188,11 +188,11 @@ namespace Vec2 {
         return out;
     }
 
-    export function areEqual(a: Vec2, b: Vec2): boolean {
+    export function areEqual(a: Vec2, b: Vec2) {
         return a[0] === b[0] && a[1] === b[1];
     }
 
-    export function toString(a: Vec2, precision?: number): string {
+    export function toString(a: Vec2, precision?: number) {
         return `[${a[0].toPrecision(precision)} ${a[1].toPrecision(precision)}}]`;
     }
 }

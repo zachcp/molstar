@@ -4,18 +4,20 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { type Mat4, Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
+import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
+import { Vec4 } from '../../mol-math/linear-algebra/3d/vec4';
 
 export { Viewport };
 
 type Viewport = {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-};
+    x: number
+    y: number
+    width: number
+    height: number
+}
 
-function Viewport(): Viewport {
+function Viewport() {
     return Viewport.zero();
 }
 
@@ -48,7 +50,7 @@ namespace Viewport {
         return v4;
     }
 
-    export function equals(a: Viewport, b: Viewport): boolean {
+    export function equals(a: Viewport, b: Viewport) {
         return a.x === b.x && a.y === b.y && a.width === b.width && a.height === b.height;
     }
 }
@@ -58,7 +60,7 @@ namespace Viewport {
 const tmpVec4 = Vec4();
 
 /** Transform point into 2D window coordinates. */
-export function cameraProject(out: Vec4, point: Vec3, viewport: Viewport, projectionView: Mat4): Vec4 {
+export function cameraProject(out: Vec4, point: Vec3, viewport: Viewport, projectionView: Mat4) {
     const { x, y, width, height } = viewport;
 
     // clip space -> NDC -> window coordinates, implicit 1.0 for w component
@@ -88,7 +90,7 @@ export function cameraProject(out: Vec4, point: Vec3, viewport: Viewport, projec
  * The point must have `x` and `y` set to 2D window coordinates
  * and `z` between 0 (near) and 1 (far); the optional `w` is not used.
  */
-export function cameraUnproject(out: Vec3, point: Vec3 | Vec4, viewport: Viewport, inverseProjectionView: Mat4): Vec3 {
+export function cameraUnproject(out: Vec3, point: Vec3 | Vec4, viewport: Viewport, inverseProjectionView: Mat4) {
     const { x, y, width, height } = viewport;
 
     const px = point[0] - x;

@@ -5,27 +5,19 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import {
-    type ElementIndex,
-    type ResidueIndex,
-    type Structure,
-    StructureElement,
-    Unit,
-} from '../../../../../mol-model/structure.ts';
-import { Segmentation, type SortedArray } from '../../../../../mol-data/int.ts';
-import { MoleculeType, SecondaryStructureType } from '../../../../../mol-model/structure/model/types.ts';
-import type { Iterator } from '../../../../../mol-data/iterator.ts';
-import { Vec3 } from '../../../../../mol-math/linear-algebra.ts';
-import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges.ts';
-import type {
-    CoarseGaussianConformation,
-    CoarseSphereConformation,
-} from '../../../../../mol-model/structure/model/properties/coarse.ts';
-import { getPolymerRanges } from '../polymer.ts';
-import type { AtomicConformation } from '../../../../../mol-model/structure/model/properties/atomic.ts';
-import { SecondaryStructureProvider } from '../../../../../mol-model-props/computed/secondary-structure.ts';
-import { HelixOrientationProvider } from '../../../../../mol-model-props/computed/helix-orientation.ts';
-import type { SecondaryStructure } from '../../../../../mol-model/structure/model/properties/secondary-structure.ts';
+import { Unit, StructureElement, ElementIndex, ResidueIndex, Structure } from '../../../../../mol-model/structure';
+import { MoleculeType, SecondaryStructureType } from '../../../../../mol-model/structure/model/types';
+import { Iterator } from '../../../../../mol-data/iterator';
+import { Vec3 } from '../../../../../mol-math/linear-algebra';
+import { SortedRanges } from '../../../../../mol-data/int/sorted-ranges';
+import { CoarseSphereConformation, CoarseGaussianConformation } from '../../../../../mol-model/structure/model/properties/coarse';
+import { getPolymerRanges } from '../polymer';
+import { AtomicConformation } from '../../../../../mol-model/structure/model/properties/atomic';
+import { SecondaryStructureProvider } from '../../../../../mol-model-props/computed/secondary-structure';
+import { HelixOrientationProvider } from '../../../../../mol-model-props/computed/helix-orientation';
+import { SecondaryStructure } from '../../../../../mol-model/structure/model/properties/secondary-structure';
+import { Segmentation } from '../../../../../mol-data/int/segmentation';
+import { SortedArray } from '../../../../../mol-data/int/sorted-array';
 
 function isHelixSS(ss: SecondaryStructureType.Flag) {
     return SecondaryStructureType.is(ss, SecondaryStructureType.Flag.Helix);
@@ -38,22 +30,17 @@ function isSheetSS(ss: SecondaryStructureType.Flag) {
 //
 
 type PolymerTraceIteratorOptions = {
-    ignoreSecondaryStructure?: boolean;
-    useHelixOrientation?: boolean;
-};
+    ignoreSecondaryStructure?: boolean,
+    useHelixOrientation?: boolean
+}
 
 /**
  * Iterates over individual residues/coarse elements in polymers of a unit while
  * providing information about the neighbourhood in the underlying model for drawing splines
  */
-export function PolymerTraceIterator(
-    unit: Unit,
-    structure: Structure,
-    options: PolymerTraceIteratorOptions = {},
-): Iterator<PolymerTraceElement> {
+export function PolymerTraceIterator(unit: Unit, structure: Structure, options: PolymerTraceIteratorOptions = {}): Iterator<PolymerTraceElement> {
     switch (unit.kind) {
-        case Unit.Kind.Atomic:
-            return new AtomicPolymerTraceIterator(unit, structure, options);
+        case Unit.Kind.Atomic: return new AtomicPolymerTraceIterator(unit, structure, options);
         case Unit.Kind.Spheres:
         case Unit.Kind.Gaussians:
             return new CoarsePolymerTraceIterator(unit, structure);
@@ -61,27 +48,18 @@ export function PolymerTraceIterator(
 }
 
 interface PolymerTraceElement {
-    center: StructureElement.Location;
-    centerPrev: StructureElement.Location;
-    centerNext: StructureElement.Location;
-    first: boolean;
-    last: boolean;
-    initial: boolean;
-    final: boolean;
-    secStrucFirst: boolean;
-    secStrucLast: boolean;
-    secStrucType: SecondaryStructureType;
-    moleculeType: MoleculeType;
-    coarseBackboneFirst: boolean;
-    coarseBackboneLast: boolean;
+    center: StructureElement.Location
+    centerPrev: StructureElement.Location
+    centerNext: StructureElement.Location
+    first: boolean, last: boolean
+    initial: boolean, final: boolean
+    secStrucFirst: boolean, secStrucLast: boolean
+    secStrucType: SecondaryStructureType
+    moleculeType: MoleculeType
+    coarseBackboneFirst: boolean, coarseBackboneLast: boolean
 
-    p0: Vec3;
-    p1: Vec3;
-    p2: Vec3;
-    p3: Vec3;
-    p4: Vec3;
-    d12: Vec3;
-    d23: Vec3;
+    p0: Vec3, p1: Vec3, p2: Vec3, p3: Vec3, p4: Vec3
+    d12: Vec3, d23: Vec3
 }
 
 const SecStrucTypeNA = SecondaryStructureType.create(SecondaryStructureType.Flag.NA);
@@ -91,30 +69,18 @@ function createPolymerTraceElement(structure: Structure, unit: Unit): PolymerTra
         center: StructureElement.Location.create(structure, unit),
         centerPrev: StructureElement.Location.create(structure, unit),
         centerNext: StructureElement.Location.create(structure, unit),
-        first: false,
-        last: false,
-        initial: false,
-        final: false,
-        secStrucFirst: false,
-        secStrucLast: false,
+        first: false, last: false,
+        initial: false, final: false,
+        secStrucFirst: false, secStrucLast: false,
         secStrucType: SecStrucTypeNA,
         moleculeType: MoleculeType.Unknown,
-        coarseBackboneFirst: false,
-        coarseBackboneLast: false,
-        p0: Vec3(),
-        p1: Vec3(),
-        p2: Vec3(),
-        p3: Vec3(),
-        p4: Vec3(),
-        d12: Vec3(),
-        d23: Vec3(),
+        coarseBackboneFirst: false, coarseBackboneLast: false,
+        p0: Vec3(), p1: Vec3(), p2: Vec3(), p3: Vec3(), p4: Vec3(),
+        d12: Vec3(), d23: Vec3()
     };
 }
 
-const enum AtomicPolymerTraceIteratorState {
-    nextPolymer,
-    nextResidue,
-}
+const enum AtomicPolymerTraceIteratorState { nextPolymer, nextResidue }
 
 const tmpDir = Vec3();
 const tmpVecA = Vec3();
@@ -124,16 +90,16 @@ export class AtomicPolymerTraceIterator implements Iterator<PolymerTraceElement>
     private value: PolymerTraceElement;
     private polymerIt: SortedRanges.Iterator<ElementIndex, number>;
     private residueIt: Segmentation.SegmentIterator<ResidueIndex>;
-    private polymerSegment!: Segmentation.Segment<number>;
+    private polymerSegment: Segmentation.Segment<number>;
     private cyclicPolymerMap: Map<ResidueIndex, ResidueIndex>;
-    private residueSegmentMin!: ResidueIndex;
-    private residueSegmentMax!: ResidueIndex;
-    private prevSecStrucType!: SecondaryStructureType;
-    private currSecStrucType!: SecondaryStructureType;
-    private nextSecStrucType!: SecondaryStructureType;
-    private prevCoarseBackbone!: boolean;
-    private currCoarseBackbone!: boolean;
-    private nextCoarseBackbone!: boolean;
+    private residueSegmentMin: ResidueIndex;
+    private residueSegmentMax: ResidueIndex;
+    private prevSecStrucType: SecondaryStructureType;
+    private currSecStrucType: SecondaryStructureType;
+    private nextSecStrucType: SecondaryStructureType;
+    private prevCoarseBackbone: boolean;
+    private currCoarseBackbone: boolean;
+    private nextCoarseBackbone: boolean;
     private state: AtomicPolymerTraceIteratorState = AtomicPolymerTraceIteratorState.nextPolymer;
     private polymerRanges: SortedArray<ElementIndex>;
     private residueAtomSegments: Segmentation<ElementIndex, ResidueIndex>;
@@ -247,17 +213,12 @@ export class AtomicPolymerTraceIterator implements Iterator<PolymerTraceElement>
                 this.updateResidueSegmentRange(this.polymerSegment);
                 if (residueIt.hasNext) {
                     this.state = AtomicPolymerTraceIteratorState.nextResidue;
-                    const residueIndexBeg =
-                        this.residueAtomSegments.index[this.unit.elements[this.polymerSegment.start]];
+                    const residueIndexBeg = this.residueAtomSegments.index[this.unit.elements[this.polymerSegment.start]];
                     const residueIndexBegPrev = this.getResidueIndex(residueIndexBeg - 1);
-                    this.currSecStrucType = residueIndexBeg === residueIndexBegPrev
-                        ? SecStrucTypeNA
-                        : this.getSecStruc(residueIndexBegPrev);
+                    this.currSecStrucType = residueIndexBeg === residueIndexBegPrev ? SecStrucTypeNA : this.getSecStruc(residueIndexBegPrev);
                     this.nextSecStrucType = this.getSecStruc(residueIndexBeg);
-                    this.currCoarseBackbone = this.directionFromElementIndex[residueIndexBegPrev] === -1 ||
-                        this.directionToElementIndex[residueIndexBegPrev] === -1;
-                    this.nextCoarseBackbone = this.directionFromElementIndex[residueIndexBeg] === -1 ||
-                        this.directionToElementIndex[residueIndexBeg] === -1;
+                    this.currCoarseBackbone = this.directionFromElementIndex[residueIndexBegPrev] === -1 || this.directionToElementIndex[residueIndexBegPrev] === -1;
+                    this.nextCoarseBackbone = this.directionFromElementIndex[residueIndexBeg] === -1 || this.directionToElementIndex[residueIndexBeg] === -1;
                     break;
                 }
             }
@@ -274,14 +235,11 @@ export class AtomicPolymerTraceIterator implements Iterator<PolymerTraceElement>
 
             this.prevSecStrucType = this.getSecStruc(residueIndexPrev1);
             this.currSecStrucType = this.getSecStruc(residueIndex);
-            this.nextSecStrucType = residueIndex === residueIndexNext1
-                ? SecStrucTypeNA
-                : this.getSecStruc(residueIndexNext1);
+            this.nextSecStrucType = residueIndex === residueIndexNext1 ? SecStrucTypeNA : this.getSecStruc(residueIndexNext1);
 
             this.prevCoarseBackbone = this.currCoarseBackbone;
             this.currCoarseBackbone = this.nextCoarseBackbone;
-            this.nextCoarseBackbone = this.directionFromElementIndex[residueIndexNext1] === -1 ||
-                this.directionToElementIndex[residueIndexNext1] === -1;
+            this.nextCoarseBackbone = this.directionFromElementIndex[residueIndexNext1] === -1 || this.directionToElementIndex[residueIndexNext1] === -1;
 
             value.secStrucType = this.currSecStrucType;
             value.secStrucFirst = this.prevSecStrucType !== this.currSecStrucType;
@@ -450,9 +408,7 @@ export class AtomicPolymerTraceIterator implements Iterator<PolymerTraceElement>
         this.atomicConformation = unit.model.atomicConformation;
         this.residueAtomSegments = unit.model.atomicHierarchy.residueAtomSegments;
         this.polymerRanges = unit.model.atomicRanges.polymerRanges;
-        this.traceElementIndex = unit.model.atomicHierarchy.derived.residue.traceElementIndex as ArrayLike<
-            ElementIndex
-        >; // can assume it won't be -1 for polymer residues
+        this.traceElementIndex = unit.model.atomicHierarchy.derived.residue.traceElementIndex as ArrayLike<ElementIndex>; // can assume it won't be -1 for polymer residues
         this.directionFromElementIndex = unit.model.atomicHierarchy.derived.residue.directionFromElementIndex;
         this.directionToElementIndex = unit.model.atomicHierarchy.derived.residue.directionToElementIndex;
         this.moleculeType = unit.model.atomicHierarchy.derived.residue.moleculeType;
@@ -475,18 +431,15 @@ export class AtomicPolymerTraceIterator implements Iterator<PolymerTraceElement>
     }
 }
 
-const enum CoarsePolymerTraceIteratorState {
-    nextPolymer,
-    nextElement,
-}
+const enum CoarsePolymerTraceIteratorState { nextPolymer, nextElement }
 
 export class CoarsePolymerTraceIterator implements Iterator<PolymerTraceElement> {
     private value: PolymerTraceElement;
     private polymerIt: SortedRanges.Iterator<ElementIndex, ResidueIndex>;
-    private polymerSegment!: Segmentation.Segment<ResidueIndex>;
+    private polymerSegment: Segmentation.Segment<ResidueIndex>;
     private state: CoarsePolymerTraceIteratorState = CoarsePolymerTraceIteratorState.nextPolymer;
     private conformation: CoarseSphereConformation | CoarseGaussianConformation;
-    private elementIndex!: number;
+    private elementIndex: number;
     hasNext: boolean = false;
 
     private getElementIndex(elementIndex: number) {
@@ -567,12 +520,8 @@ export class CoarsePolymerTraceIterator implements Iterator<PolymerTraceElement>
         Vec3.set(this.value.d12, 1, 0, 0);
         Vec3.set(this.value.d23, 1, 0, 0);
         switch (unit.kind) {
-            case Unit.Kind.Spheres:
-                this.conformation = unit.model.coarseConformation.spheres;
-                break;
-            case Unit.Kind.Gaussians:
-                this.conformation = unit.model.coarseConformation.gaussians;
-                break;
+            case Unit.Kind.Spheres: this.conformation = unit.model.coarseConformation.spheres; break;
+            case Unit.Kind.Gaussians: this.conformation = unit.model.coarseConformation.gaussians; break;
         }
         this.hasNext = this.polymerIt.hasNext;
     }

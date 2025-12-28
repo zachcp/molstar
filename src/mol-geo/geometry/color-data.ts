@@ -143,7 +143,9 @@ export function createValueColor(value: Color, colorData?: ColorData): ColorData
 
 /** Creates color uniform */
 function createUniformColor(locationIt: LocationIterator, color: LocationColor, colorData?: ColorData): ColorData {
-    return createValueColor(color(NullLocation, false), colorData);
+    locationIt.reset();
+    const loc = locationIt.hasNext ? locationIt.move() : { location: NullLocation, isSecondary: false };
+    return createValueColor(color(loc.location, loc.isSecondary), colorData);
 }
 
 //

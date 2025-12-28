@@ -5,10 +5,10 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { GridLookup3D } from '../../geometry.ts';
-import { sortArray } from '../../../mol-data/util.ts';
-import { OrderedSet } from '../../../mol-data/int.ts';
-import { getBoundary } from '../boundary.ts';
+import { GridLookup3D } from '../../geometry';
+import { sortArray } from '../../../mol-data/util/sort';
+import { OrderedSet } from '../../../mol-data/int/ordered-set';
+import { getBoundary } from '../boundary';
 
 const xs = [0, 0, 1];
 const ys = [0, 1, 0];

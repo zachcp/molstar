@@ -6,26 +6,27 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { chunkedSubtask, type RuntimeContext } from '../../../../mol-task/index.ts';
-import type { StringLike } from '../../../common/string-like.ts';
+import { RuntimeContext } from '../../../../mol-task/execution/runtime-context';
+import { chunkedSubtask } from '../../../../mol-task/util/chunked';
+import { StringLike } from '../../../common/string-like';
 
 export { Tokenizer };
 
 interface Tokenizer {
-    data: StringLike;
+    data: StringLike,
 
-    position: number;
-    length: number;
+    position: number,
+    length: number,
 
-    lineNumber: number;
-    tokenStart: number;
-    tokenEnd: number;
+    lineNumber: number,
+    tokenStart: number,
+    tokenEnd: number
 }
 
 export interface Tokens {
-    data: StringLike;
-    count: number;
-    indices: ArrayLike<number>;
+    data: StringLike,
+    count: number,
+    indices: ArrayLike<number>
 }
 
 function Tokenizer(data: StringLike): Tokenizer {
@@ -35,7 +36,7 @@ function Tokenizer(data: StringLike): Tokenizer {
         length: data.length,
         lineNumber: 1,
         tokenStart: 0,
-        tokenEnd: 0,
+        tokenEnd: 0
     };
 }
 
@@ -134,12 +135,7 @@ namespace Tokenizer {
     }
 
     /** Advance the state by the given number of lines and return line starts/ends as tokens. */
-    export async function readLinesAsync(
-        state: Tokenizer,
-        count: number,
-        ctx: RuntimeContext,
-        initialLineCount = 100000,
-    ): Promise<Tokens> {
+    export async function readLinesAsync(state: Tokenizer, count: number, ctx: RuntimeContext, initialLineCount = 100000): Promise<Tokens> {
         const lineTokens = TokenBuilder.create(state.data, count * 2);
 
         let linesAlreadyRead = 0;
@@ -284,9 +280,9 @@ export function trimStr(data: StringLike, start: number, end: number) {
 
 export namespace TokenBuilder {
     interface Builder extends Tokens {
-        offset: number;
-        indices: Uint32Array;
-        indicesLenMinus2: number;
+        offset: number,
+        indices: Uint32Array,
+        indicesLenMinus2: number
     }
 
     function resize(builder: Builder) {
@@ -319,12 +315,12 @@ export namespace TokenBuilder {
 
     export function create(data: StringLike, size: number): Tokens {
         size = Math.max(10, size);
-        return <Builder> {
+        return <Builder>{
             data,
             indicesLenMinus2: (size - 2) | 0,
             count: 0,
             offset: 0,
-            indices: new Uint32Array(size),
+            indices: new Uint32Array(size)
         };
     }
 }

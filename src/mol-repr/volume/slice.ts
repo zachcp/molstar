@@ -4,29 +4,31 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { Image } from '../../mol-geo/geometry/image/image.ts';
-import type { Theme, ThemeRegistryContext } from '../../mol-theme/theme.ts';
-import { Grid, Volume } from '../../mol-model/volume.ts';
-import { VolumeRepresentation, VolumeRepresentationProvider, VolumeVisual } from './representation.ts';
-import { PositionLocation } from '../../mol-geo/util/location-iterator.ts';
-import type { VisualUpdateState } from '../util.ts';
-import type { RepresentationContext, RepresentationParamsGetter } from '../representation.ts';
-import type { VisualContext } from '../visual.ts';
-import { PickingId } from '../../mol-geo/geometry/picking.ts';
-import { EmptyLoci, type Loci } from '../../mol-model/loci.ts';
-import { Interval, OrderedSet, SortedArray } from '../../mol-data/int.ts';
-import { transformPositionArray } from '../../mol-geo/util.ts';
-import { Color } from '../../mol-util/color/index.ts';
-import { ColorTheme } from '../../mol-theme/color.ts';
-import { packIntToRGBArray } from '../../mol-util/number-packing.ts';
-import { createVolumeCellLocationIterator, eachVolumeLoci } from './util.ts';
-import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
-import { Quat } from '../../mol-math/linear-algebra/3d/quat.ts';
-import { degToRad } from '../../mol-math/misc.ts';
-import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4.ts';
-import { clamp, normalize } from '../../mol-math/interpolate.ts';
-import { assertUnreachable } from '../../mol-util/type-helpers.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { Image } from '../../mol-geo/geometry/image/image';
+import { ThemeRegistryContext, Theme } from '../../mol-theme/theme';
+import { Grid, Volume } from '../../mol-model/volume';
+import { VolumeVisual, VolumeRepresentation, VolumeRepresentationProvider } from './representation';
+import { PositionLocation } from '../../mol-geo/util/location-iterator';
+import { VisualUpdateState } from '../util';
+import { RepresentationContext, RepresentationParamsGetter } from '../representation';
+import { VisualContext } from '../visual';
+import { PickingId } from '../../mol-geo/geometry/picking';
+import { EmptyLoci, Loci } from '../../mol-model/loci';
+import { transformPositionArray } from '../../mol-geo/util';
+import { Color } from '../../mol-util/color';
+import { ColorTheme } from '../../mol-theme/color';
+import { packIntToRGBArray } from '../../mol-util/number-packing';
+import { createVolumeCellLocationIterator, eachVolumeLoci } from './util';
+import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3';
+import { Quat } from '../../mol-math/linear-algebra/3d/quat';
+import { degToRad } from '../../mol-math/misc';
+import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4';
+import { clamp, normalize } from '../../mol-math/interpolate';
+import { assertUnreachable } from '../../mol-util/type-helpers';
+import { OrderedSet } from '../../mol-data/int/ordered-set';
+import { SortedArray } from '../../mol-data/int/sorted-array';
+import { Interval } from '../../mol-data/int/interval';
 
 export const SliceParams = {
     ...Image.Params,
@@ -38,39 +40,24 @@ export const SliceParams = {
         relativeX: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }, { immediateUpdate: true }),
         relativeY: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }, { immediateUpdate: true }),
         relativeZ: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }, { immediateUpdate: true }),
-    }, { isEssential: true, hideIf: (p) => p.mode !== 'grid', description: 'Slice position in grid coordinates.' }),
+    }, { isEssential: true, hideIf: p => p.mode !== 'grid', description: 'Slice position in grid coordinates.' }),
     isoValue: Volume.IsoValueParam,
-    mode: PD.Select('grid', PD.arrayToOptions(['grid', 'frame', 'plane'] as const), {
-        description:
-            'Grid: slice through the volume along the grid axes in integer steps. Frame: slice through the volume along arbitrary axes in any step size. Plane: an arbitrary plane defined by point and normal.',
-    }),
-    offset: PD.Numeric(0, { min: -1, max: 1, step: 0.01 }, {
-        isEssential: true,
-        immediateUpdate: true,
-        hideIf: (p) => p.mode !== 'frame',
-        description: 'Relative offset from center.',
-    }),
-    axis: PD.Select('a', PD.arrayToOptions(['a', 'b', 'c'] as const), {
-        isEssential: true,
-        hideIf: (p) => p.mode !== 'frame',
-        description: 'Axis of the frame.',
-    }),
+    mode: PD.Select('grid', PD.arrayToOptions(['grid', 'frame', 'plane'] as const), { description: 'Grid: slice through the volume along the grid axes in integer steps. Frame: slice through the volume along arbitrary axes in any step size. Plane: an arbitrary plane defined by point and normal.' }),
+    offset: PD.Numeric(0, { min: -1, max: 1, step: 0.01 }, { isEssential: true, immediateUpdate: true, hideIf: p => p.mode !== 'frame', description: 'Relative offset from center.' }),
+    axis: PD.Select('a', PD.arrayToOptions(['a', 'b', 'c'] as const), { isEssential: true, hideIf: p => p.mode !== 'frame', description: 'Axis of the frame.' }),
     rotation: PD.Group({
         axis: PD.Vec3(Vec3.create(1, 0, 0), {}, { description: 'Axis of rotation' }),
-        angle: PD.Numeric(0, { min: -180, max: 180, step: 1 }, {
-            immediateUpdate: true,
-            description: 'Axis rotation angle in Degrees',
-        }),
-    }, { isExpanded: true, hideIf: (p) => p.mode !== 'frame' }),
+        angle: PD.Numeric(0, { min: -180, max: 180, step: 1 }, { immediateUpdate: true, description: 'Axis rotation angle in Degrees' }),
+    }, { isExpanded: true, hideIf: p => p.mode !== 'frame' }),
     plane: PD.Group({
         point: PD.Vec3(Vec3.create(0, 0, 0), {}, { description: 'Plane point' }),
         normal: PD.Vec3(Vec3.create(1, 0, 0), {}, { description: 'Plane normal' }),
-    }, { isExpanded: true, hideIf: (p) => p.mode !== 'plane' }),
+    }, { isExpanded: true, hideIf: p => p.mode !== 'plane' }),
 };
-export type SliceParams = typeof SliceParams;
-export type SliceProps = PD.Values<SliceParams>;
+export type SliceParams = typeof SliceParams
+export type SliceProps = PD.Values<SliceParams>
 
-export function getSliceParams(ctx: ThemeRegistryContext, volume: Volume): typeof SliceParams {
+export function getSliceParams(ctx: ThemeRegistryContext, volume: Volume) {
     const p = PD.clone(SliceParams);
     const dim = volume.grid.cells.space.dimensions;
     p.dimension = PD.MappedStatic('x', {
@@ -80,19 +67,12 @@ export function getSliceParams(ctx: ThemeRegistryContext, volume: Volume): typeo
         relativeX: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }, { immediateUpdate: true }),
         relativeY: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }, { immediateUpdate: true }),
         relativeZ: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }, { immediateUpdate: true }),
-    }, { isEssential: true, hideIf: (p) => p.mode !== 'grid' });
+    }, { isEssential: true, hideIf: p => p.mode !== 'grid' });
     p.isoValue = Volume.createIsoValueParam(Volume.IsoValue.absolute(volume.grid.stats.min), volume.grid.stats);
     return p;
 }
 
-export async function createImage(
-    ctx: VisualContext,
-    volume: Volume,
-    key: number,
-    theme: Theme,
-    props: SliceProps,
-    image?: Image,
-): Promise<Image> {
+export async function createImage(ctx: VisualContext, volume: Volume, key: number, theme: Theme, props: SliceProps, image?: Image): Promise<Image> {
     switch (props.mode) {
         case 'frame':
             return createFrameImage(ctx, volume, key, theme, props, image);
@@ -114,9 +94,9 @@ function getFrame(volume: Volume, props: SliceProps) {
     const cartnToGrid = Mat4.invert(Mat4(), gridToCartn);
     const [nx, ny, nz] = volume.grid.cells.space.dimensions;
 
-    const a = nx - 1;
-    const b = ny - 1;
-    const c = nz - 1;
+    const a = nx;
+    const b = ny;
+    const c = nz;
 
     const dirA = Vec3.create(a, 0, 0);
     const dirB = Vec3.create(0, b, 0);
@@ -187,26 +167,21 @@ function getFrame(volume: Volume, props: SliceProps) {
 }
 
 type SamplingInfo = {
-    m: Mat4;
-    width: number;
-    height: number;
+    m: Mat4
+    width: number
+    height: number
 };
 
-function getSampledImage(
-    volume: Volume,
-    theme: Theme,
-    info: SamplingInfo,
-    isoValue: Volume.IsoValue,
-    trim: Image.Trim,
-    image?: Image,
-): Image {
+function getSampledImage(volume: Volume, theme: Theme, info: SamplingInfo, isoValue: Volume.IsoValue, trim: Image.Trim, image?: Image): Image {
     const { m, width, height } = info;
 
     const { cells: { space }, stats } = volume.grid;
     const { min, max } = stats;
 
     const isUniform = theme.color.granularity === 'uniform';
-    const color = 'color' in theme.color && theme.color.color ? theme.color.color : () => Color(0xffffff);
+    const color = 'color' in theme.color && theme.color.color
+        ? theme.color.color
+        : () => Color(0xffffff);
 
     const v = Vec3();
 
@@ -263,18 +238,10 @@ function getSampledImage(
     const valueTexture = { width, height, array: valueArray, flipY: true };
 
     const corners = new Float32Array([
-        -0.5,
-        0.5,
-        0,
-        0.5,
-        0.5,
-        0,
-        -0.5,
-        -0.5,
-        0,
-        0.5,
-        -0.5,
-        0,
+        -0.5, 0.5, 0,
+        0.5, 0.5, 0,
+        -0.5, -0.5, 0,
+        0.5, -0.5, 0
     ]);
     transformPositionArray(m, corners, 0, 4);
 
@@ -285,14 +252,7 @@ function getSampledImage(
     return im;
 }
 
-async function createFrameImage(
-    ctx: VisualContext,
-    volume: Volume,
-    key: number,
-    theme: Theme,
-    props: SliceProps,
-    image?: Image,
-): Promise<Image> {
+async function createFrameImage(ctx: VisualContext, volume: Volume, key: number, theme: Theme, props: SliceProps, image?: Image): Promise<Image> {
     const { offset, isoValue } = props;
 
     const { size, major, minor, normal, center, trim, resolution } = getFrame(volume, props);
@@ -320,14 +280,7 @@ async function createFrameImage(
     return getSampledImage(volume, theme, info, isoValue, trim, image);
 }
 
-async function createPlaneImage(
-    ctx: VisualContext,
-    volume: Volume,
-    key: number,
-    theme: Theme,
-    props: SliceProps,
-    image?: Image,
-): Promise<Image> {
+async function createPlaneImage(ctx: VisualContext, volume: Volume, key: number, theme: Theme, props: SliceProps, image?: Image): Promise<Image> {
     const { plane: { point, normal }, isoValue } = props;
 
     const m = Mat4.fromPlane(Mat4(), normal, point);
@@ -336,9 +289,9 @@ async function createPlaneImage(
     const cartnToGrid = Mat4.invert(Mat4(), gridToCartn);
     const [mx, my, mz] = volume.grid.cells.space.dimensions;
 
-    const a = mx - 1;
-    const b = my - 1;
-    const c = mz - 1;
+    const a = mx;
+    const b = my;
+    const c = mz;
 
     const resolution = Math.max(a, b, c) / Math.max(mx, my, mz);
     const scaleFactor = 1 / resolution;
@@ -365,42 +318,28 @@ async function createPlaneImage(
     return getSampledImage(volume, theme, info, isoValue, trim, image);
 }
 
-async function createGridImage(
-    ctx: VisualContext,
-    volume: Volume,
-    key: number,
-    theme: Theme,
-    props: SliceProps,
-    image?: Image,
-): Promise<Image> {
+async function createGridImage(ctx: VisualContext, volume: Volume, key: number, theme: Theme, props: SliceProps, image?: Image): Promise<Image> {
     const { dimension: { name: dim }, isoValue } = props;
 
     const { cells: { space, data }, stats } = volume.grid;
     const { min, max } = stats;
 
     const isUniform = theme.color.granularity === 'uniform';
-    const color = 'color' in theme.color && theme.color.color ? theme.color.color : () => Color(0xffffff);
+    const color = 'color' in theme.color && theme.color.color
+        ? theme.color.color
+        : () => Color(0xffffff);
 
     const {
-        width,
-        height,
-        x,
-        y,
-        z,
-        x0,
-        y0,
-        z0,
-        nx,
-        ny,
-        nz,
+        width, height,
+        x, y, z,
+        x0, y0, z0,
+        nx, ny, nz
     } = getSliceInfo(volume.grid, props);
 
     const corners = new Float32Array(
-        dim === 'x' || dim === 'relativeX'
-            ? [x, 0, 0, x, y, 0, x, 0, z, x, y, z]
-            : dim === 'y' || dim === 'relativeY'
-            ? [0, y, 0, x, y, 0, 0, y, z, x, y, z]
-            : [0, 0, z, 0, y, z, x, 0, z, x, y, z],
+        dim === 'x' || dim === 'relativeX' ? [x, 0, 0, x, y, 0, x, 0, z, x, y, z] :
+            dim === 'y' || dim === 'relativeY' ? [0, y, 0, x, y, 0, 0, y, z, x, y, z] :
+                [0, 0, z, 0, y, z, x, 0, z, x, y, z]
     );
 
     const imageArray = new Uint8Array(width * height * 4);
@@ -462,48 +401,41 @@ function getSliceInfo(grid: Grid, props: SliceProps) {
     let [nx, ny, nz] = space.dimensions;
 
     if (dim === 'x') {
-        x = index, y = ny - 1, z = nz - 1;
+        x = index, y = ny, z = nz;
         width = nz, height = ny;
         x0 = x, nx = x0 + 1;
     } else if (dim === 'y') {
-        x = nx - 1, y = index, z = nz - 1;
+        x = nx, y = index, z = nz;
         width = nz, height = nx;
         y0 = y, ny = y0 + 1;
     } else if (dim === 'z') {
-        x = nx - 1, y = ny - 1, z = index;
+        x = nx, y = ny, z = index;
         width = nx, height = ny;
         z0 = z, nz = z0 + 1;
     } else if (dim === 'relativeX') {
         x = getRelativeIndex(nx, index);
-        y = ny - 1;
-        z = nz - 1;
+        y = ny;
+        z = nz;
         width = nz, height = ny;
         x0 = x, nx = x0 + 1;
     } else if (dim === 'relativeY') {
-        x = nx - 1;
+        x = nx;
         y = getRelativeIndex(ny, index);
-        z = nz - 1;
+        z = nz;
         width = nz, height = nx;
         y0 = y, ny = y0 + 1;
-    } /* if (dim === 'relativeZ') */ else {
-        x = nx - 1;
-        y = ny - 1;
+    } else /* if (dim === 'relativeZ') */ {
+        x = nx;
+        y = ny;
         z = getRelativeIndex(nz, index);
         width = nx, height = ny;
         z0 = z, nz = z0 + 1;
     }
     return {
-        width,
-        height,
-        x,
-        y,
-        z,
-        x0,
-        y0,
-        z0,
-        nx,
-        ny,
-        nz,
+        width, height,
+        x, y, z,
+        x0, y0, z0,
+        nx, ny, nz
     };
 }
 
@@ -565,8 +497,7 @@ function getSliceLoci(pickingId: PickingId, volume: Volume, key: number, props: 
         const instances = OrderedSet.ofSingleton(instanceId as Volume.InstanceIndex);
         if (granularity === 'volume') {
             return Volume.Loci(volume, instances);
-        }
-        if (granularity === 'object' || groupId === PickingId.Null) {
+        } if (granularity === 'object' || groupId === PickingId.Null) {
             return getObjectLoci(volume, instances, props);
         } else {
             const indices = Interval.ofSingleton(groupId as Volume.CellIndex);
@@ -589,15 +520,9 @@ export function SliceVisual(materialId: number): VolumeVisual<SliceParams> {
         createLocationIterator: createVolumeCellLocationIterator,
         getLoci: getSliceLoci,
         eachLocation: eachSlice,
-        setUpdateState: (
-            state: VisualUpdateState,
-            volume: Volume,
-            newProps: SliceProps,
-            currentProps: SliceProps,
-            newTheme: Theme,
-            currentTheme: Theme,
-        ) => {
-            state.createGeometry = newProps.dimension.name !== currentProps.dimension.name ||
+        setUpdateState: (state: VisualUpdateState, volume: Volume, newProps: SliceProps, currentProps: SliceProps, newTheme: Theme, currentTheme: Theme) => {
+            state.createGeometry = (
+                newProps.dimension.name !== currentProps.dimension.name ||
                 newProps.dimension.params !== currentProps.dimension.params ||
                 newProps.mode !== currentProps.mode ||
                 !Vec3.equals(newProps.rotation.axis, currentProps.rotation.axis) ||
@@ -607,17 +532,15 @@ export function SliceVisual(materialId: number): VolumeVisual<SliceParams> {
                 !Vec3.equals(newProps.plane.point, currentProps.plane.point) ||
                 !Vec3.equals(newProps.plane.normal, currentProps.plane.normal) ||
                 !Volume.IsoValue.areSame(newProps.isoValue, currentProps.isoValue, volume.grid.stats) ||
-                !ColorTheme.areEqual(newTheme.color, currentTheme.color);
+                !ColorTheme.areEqual(newTheme.color, currentTheme.color)
+            );
         },
 
-        geometryUtils: Image.Utils,
+        geometryUtils: Image.Utils
     }, materialId);
 }
 
-export function SliceRepresentation(
-    ctx: RepresentationContext,
-    getParams: RepresentationParamsGetter<Volume, SliceParams>,
-): VolumeRepresentation<SliceParams> {
+export function SliceRepresentation(ctx: RepresentationContext, getParams: RepresentationParamsGetter<Volume, SliceParams>): VolumeRepresentation<SliceParams> {
     return VolumeRepresentation('Slice', ctx, getParams, SliceVisual, getLoci);
 }
 
@@ -630,5 +553,5 @@ export const SliceRepresentationProvider = VolumeRepresentationProvider({
     defaultValues: PD.getDefaultValues(SliceParams),
     defaultColorTheme: { name: 'uniform' },
     defaultSizeTheme: { name: 'uniform' },
-    isApplicable: (volume: Volume) => !Volume.isEmpty(volume) && !Volume.Segmentation.get(volume),
+    isApplicable: (volume: Volume) => !Volume.isEmpty(volume) && !Volume.Segmentation.get(volume)
 });

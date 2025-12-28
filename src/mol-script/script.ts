@@ -4,47 +4,38 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { transpileMolScript } from './script/mol-script/symbols.ts';
-import { parseMolScript } from './language/parser.ts';
-import { parse } from './transpile.ts';
-import type { Expression } from './language/expression.ts';
-import {
-    QueryContext,
-    type QueryContextOptions,
-    type QueryFn,
-    type Structure,
-    type StructureElement,
-    StructureSelection,
-} from '../mol-model/structure.ts';
-import { compile } from './runtime/query/compiler.ts';
-import { MolScriptBuilder } from './language/builder.ts';
-import { assertUnreachable } from '../mol-util/type-helpers.ts';
+import { transpileMolScript } from './script/mol-script/symbols';
+import { parseMolScript } from './language/parser';
+import { parse } from './transpile';
+import { Expression } from './language/expression';
+import { StructureElement, QueryContext, StructureSelection, Structure, QueryFn, QueryContextOptions } from '../mol-model/structure';
+import { compile } from './runtime/query/compiler';
+import { MolScriptBuilder } from './language/builder';
+import { assertUnreachable } from '../mol-util/type-helpers';
+import { Script } from './types';
 
-export { Script };
+export { ScriptImpl as Script };
 
-interface Script {
-    expression: string;
-    language: Script.Language;
-}
+type ScriptImpl = Script
 
-function Script(expression: string, language: Script.Language): Script {
+function ScriptImpl(expression: string, language: Script['language']): Script {
     return { expression, language };
 }
 
-namespace Script {
-    export const Info = {
+namespace ScriptImpl {
+    export const Info: { [k in Script['language']]: string } = {
         'mol-script': 'Mol-Script',
         'pymol': 'PyMOL',
         'vmd': 'VMD',
         'jmol': 'Jmol',
     };
-    export type Language = keyof typeof Info;
+    export type Language = Script['language'];
 
     export function is(x: any): x is Script {
         return !!x && typeof (x as Script).expression === 'string' && !!(x as Script).language;
     }
 
-    export function areEqual(a: Script, b: Script): boolean {
+    export function areEqual(a: Script, b: Script) {
         return a.language === b.language && a.expression === b.expression;
     }
 
@@ -74,11 +65,7 @@ namespace Script {
         return StructureSelection.toLociWithSourceUnits(result);
     }
 
-    export function getStructureSelection(
-        expr: Expression | ((builder: typeof MolScriptBuilder) => Expression),
-        structure: Structure,
-        options?: QueryContextOptions,
-    ) {
+    export function getStructureSelection(expr: Expression | ((builder: typeof MolScriptBuilder) => Expression), structure: Structure, options?: QueryContextOptions) {
         const e = typeof expr === 'function' ? expr(MolScriptBuilder) : expr;
         const query = compile<StructureSelection>(e);
         return query(new QueryContext(structure, options));

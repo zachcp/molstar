@@ -1,4 +1,3 @@
-import { Mat3 } from './3d/mat3.ts';
 /**
  * Copyright (c) 2017-2020 mol* contributors, licensed under MIT, See LICENSE file for more info.
  *
@@ -6,94 +5,62 @@ import { Mat3 } from './3d/mat3.ts';
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mat4 } from './3d/mat4.ts';
-import type { Vec3 } from './3d/vec3.ts';
-import type { Vec4 } from './3d/vec4.ts';
+import { Mat4 } from './3d/mat4';
+import { Vec3 } from './3d/vec3';
+import { Vec4 } from './3d/vec4';
+import { Mat3 } from './3d/mat3';
 
-export interface Tensor {
-    data: Tensor.Data;
-    space: Tensor.Space;
-}
+export interface Tensor { data: Tensor.Data, space: Tensor.Space }
 
 export namespace Tensor {
-    export type ArrayCtor = { new (size: number): ArrayLike<number> };
+    export type ArrayCtor = { new (size: number): ArrayLike<number> }
 
-    export interface Data extends Array<number> {
-        '@type': 'tensor';
-    }
+    export interface Data extends Array<number> { '@type': 'tensor' }
 
     export interface Space {
-        readonly rank: number;
-        readonly dimensions: ReadonlyArray<number>;
-        readonly axisOrderSlowToFast: ReadonlyArray<number>;
-        create(array?: ArrayCtor): Tensor.Data;
-        get(data: Tensor.Data, ...coords: number[]): number;
-        set(data: Tensor.Data, ...coordsAndValue: number[]): number;
-        add(data: Tensor.Data, ...coordsAndValue: number[]): number;
-        dataOffset(...coords: number[]): number;
-        getCoords(dataOffset: number, coords: { [i: number]: number }): number[];
+        readonly rank: number,
+        readonly dimensions: ReadonlyArray<number>,
+        readonly axisOrderSlowToFast: ReadonlyArray<number>,
+        create(array?: ArrayCtor): Tensor.Data,
+        get(data: Tensor.Data, ...coords: number[]): number
+        set(data: Tensor.Data, ...coordsAndValue: number[]): number
+        add(data: Tensor.Data, ...coordsAndValue: number[]): number
+        dataOffset(...coords: number[]): number,
+        getCoords(dataOffset: number, coords: { [i: number]: number }): number[]
     }
 
     interface Layout {
-        dimensions: number[];
-        axisOrderSlowToFast: number[];
-        axisOrderFastToSlow: number[];
-        accessDimensions: number[];
+        dimensions: number[],
+        axisOrderSlowToFast: number[],
+        axisOrderFastToSlow: number[],
+        accessDimensions: number[],
         // if not specified, use Float64Array
-        defaultCtor: ArrayCtor;
+        defaultCtor: ArrayCtor
     }
 
     function Layout(dimensions: number[], axisOrderSlowToFast: number[], ctor?: ArrayCtor): Layout {
         // need to reverse the axis order for better access.
         const axisOrderFastToSlow: number[] = [];
-        for (let i = 0; i < axisOrderSlowToFast.length; i++) {
-            axisOrderFastToSlow[i] = axisOrderSlowToFast[axisOrderSlowToFast.length - i - 1];
-        }
+        for (let i = 0; i < axisOrderSlowToFast.length; i++) axisOrderFastToSlow[i] = axisOrderSlowToFast[axisOrderSlowToFast.length - i - 1];
 
         const accessDimensions = [1];
         for (let i = 1; i < dimensions.length; i++) accessDimensions[i] = dimensions[axisOrderFastToSlow[i - 1]];
-        return {
-            dimensions,
-            axisOrderFastToSlow,
-            axisOrderSlowToFast,
-            accessDimensions,
-            defaultCtor: ctor || Float64Array,
-        };
+        return { dimensions, axisOrderFastToSlow, axisOrderSlowToFast, accessDimensions, defaultCtor: ctor || Float64Array };
     }
 
-    export function create(space: Space, data: Data): Tensor {
-        return { space, data };
-    }
+    export function create(space: Space, data: Data): Tensor { return { space, data }; }
 
     export function Space(dimensions: number[], axisOrderSlowToFast: number[], ctor?: ArrayCtor): Space {
         const layout = Layout(dimensions, axisOrderSlowToFast, ctor);
         const { get, set, add, dataOffset, getCoords } = accessors(layout);
-        return {
-            rank: dimensions.length,
-            dimensions,
-            axisOrderSlowToFast,
-            create: creator(layout),
-            get,
-            set,
-            add,
-            dataOffset,
-            getCoords,
-        };
+        return { rank: dimensions.length, dimensions, axisOrderSlowToFast, create: creator(layout), get, set, add, dataOffset, getCoords };
     }
 
-    export function Data1(values: ArrayLike<number>): Data {
-        return values as Data;
-    }
+    export function Data1(values: ArrayLike<number>): Data { return values as Data; }
 
-    export function Vector(d: number, ctor?: ArrayCtor): Space {
-        return Space([d], [0], ctor);
-    }
-    export function ColumnMajorMatrix(rows: number, cols: number, ctor?: ArrayCtor): Space {
-        return Space([rows, cols], [1, 0], ctor);
-    }
-    export function RowMajorMatrix(rows: number, cols: number, ctor?: ArrayCtor): Space {
-        return Space([rows, cols], [0, 1], ctor);
-    }
+    export function Vector(d: number, ctor?: ArrayCtor) { return Space([d], [0], ctor); }
+    export function ColumnMajorMatrix(rows: number, cols: number, ctor?: ArrayCtor) { return Space([rows, cols], [1, 0], ctor); }
+    export function RowMajorMatrix(rows: number, cols: number, ctor?: ArrayCtor) { return Space([rows, cols], [0, 1], ctor); }
 
     export function toMat4(out: Mat4, space: Space, data: Tensor.Data): Mat4 {
         if (space.rank !== 2) throw new Error('Invalid tensor rank');
@@ -127,35 +94,26 @@ export namespace Tensor {
         return out;
     }
 
-    export function areEqualExact(a: Tensor.Data, b: Tensor.Data): boolean {
+    export function areEqualExact(a: Tensor.Data, b: Tensor.Data) {
         const len = a.length;
         if (len !== b.length) return false;
         for (let i = 0; i < len; i++) if (a[i] !== b[i]) return false;
         return true;
     }
 
-    function accessors(
-        layout: Layout,
-    ): {
-        get: Space['get'];
-        set: Space['set'];
-        add: Space['add'];
-        dataOffset: Space['dataOffset'];
-        getCoords: Space['getCoords'];
-    } {
+    function accessors(layout: Layout): { get: Space['get'], set: Space['set'], add: Space['add'], dataOffset: Space['dataOffset'], getCoords: Space['getCoords'] } {
         const { dimensions, axisOrderFastToSlow: ao } = layout;
         switch (dimensions.length) {
-            case 1:
-                return {
-                    get: (t, d) => t[d],
-                    set: (t, d, x) => t[d] = x,
-                    add: (t, d, x) => t[d] += x,
-                    dataOffset: (d) => d,
-                    getCoords: (o, c) => {
-                        c[0] = o;
-                        return c as number[];
-                    },
-                };
+            case 1: return {
+                get: (t, d) => t[d],
+                set: (t, d, x) => t[d] = x,
+                add: (t, d, x) => t[d] += x,
+                dataOffset: (d) => d,
+                getCoords: (o, c) => {
+                    c[0] = o;
+                    return c as number[];
+                }
+            };
             case 2: {
                 // column major
                 if (ao[0] === 0 && ao[1] === 1) {
@@ -169,7 +127,7 @@ export namespace Tensor {
                             c[0] = o % rows;
                             c[1] = Math.floor(o / rows);
                             return c as number[];
-                        },
+                        }
                     };
                 }
                 if (ao[0] === 1 && ao[1] === 0) {
@@ -183,7 +141,7 @@ export namespace Tensor {
                             c[0] = Math.floor(o / cols);
                             c[1] = o % cols;
                             return c as number[];
-                        },
+                        }
                     };
                 }
                 throw new Error('bad axis order');
@@ -202,7 +160,7 @@ export namespace Tensor {
                             c[1] = p % v;
                             c[2] = Math.floor(p / v);
                             return c as number[];
-                        },
+                        }
                     };
                 }
                 if (ao[0] === 0 && ao[1] === 2 && ao[2] === 1) { // 021 ikj
@@ -218,7 +176,7 @@ export namespace Tensor {
                             c[1] = Math.floor(p / v);
                             c[2] = p % v;
                             return c as number[];
-                        },
+                        }
                     };
                 }
                 if (ao[0] === 1 && ao[1] === 0 && ao[2] === 2) { // 102 jik
@@ -234,7 +192,7 @@ export namespace Tensor {
                             c[1] = o % u;
                             c[2] = Math.floor(p / v);
                             return c as number[];
-                        },
+                        }
                     };
                 }
                 if (ao[0] === 1 && ao[1] === 2 && ao[2] === 0) { // 120 jki
@@ -250,7 +208,7 @@ export namespace Tensor {
                             c[1] = o % u;
                             c[2] = p % v;
                             return c as number[];
-                        },
+                        }
                     };
                 }
                 if (ao[0] === 2 && ao[1] === 0 && ao[2] === 1) { // 201 kij
@@ -266,7 +224,7 @@ export namespace Tensor {
                             c[1] = Math.floor(p / v);
                             c[2] = o % u;
                             return c as number[];
-                        },
+                        }
                     };
                 }
                 if (ao[0] === 2 && ao[1] === 1 && ao[2] === 0) { // 210 kji
@@ -282,19 +240,18 @@ export namespace Tensor {
                             c[1] = p % v;
                             c[2] = o % u;
                             return c as number[];
-                        },
+                        }
                     };
                 }
                 throw new Error('bad axis order');
             }
-            default:
-                return {
-                    get: (t, ...c) => t[dataOffset(layout, c)],
-                    set: (t, ...c) => t[dataOffset(layout, c)] = c[c.length - 1],
-                    add: (t, ...c) => t[dataOffset(layout, c)] += c[c.length - 1],
-                    dataOffset: (...c) => dataOffset(layout, c),
-                    getCoords: (o, c) => getCoords(layout, o, c as number[]),
-                };
+            default: return {
+                get: (t, ...c) => t[dataOffset(layout, c)],
+                set: (t, ...c) => t[dataOffset(layout, c)] = c[c.length - 1],
+                add: (t, ...c) => t[dataOffset(layout, c)] += c[c.length - 1],
+                dataOffset: (...c) => dataOffset(layout, c),
+                getCoords: (o, c) => getCoords(layout, o, c as number[]),
+            };
         }
     }
 
@@ -302,7 +259,7 @@ export namespace Tensor {
         const { dimensions: ds } = layout;
         let size = 1;
         for (let i = 0, _i = ds.length; i < _i; i++) size *= ds[i];
-        return (ctor) => new (ctor || layout.defaultCtor)(size) as Tensor.Data;
+        return ctor => new (ctor || layout.defaultCtor)(size) as Tensor.Data;
     }
 
     function dataOffset(layout: Layout, coord: number[]) {
@@ -331,7 +288,7 @@ export namespace Tensor {
     }
 
     // Convers "slow to fast" axis order to "fast to slow" and vice versa.
-    export function invertAxisOrder(v: number[]): number[] {
+    export function invertAxisOrder(v: number[]) {
         const ret: number[] = [];
         for (let i = 0; i < v.length; i++) {
             ret[i] = v[v.length - i - 1];
@@ -345,13 +302,13 @@ export namespace Tensor {
         return ret;
     }
 
-    export function convertToCanonicalAxisIndicesFastToSlow(order: number[]): (xs: number[]) => number[] {
+    export function convertToCanonicalAxisIndicesFastToSlow(order: number[]) {
         const indices = new Int32Array(order.length) as any as number[];
         for (let i = 0; i < order.length; i++) indices[order[i]] = i;
         return (xs: number[]) => reorder(xs, indices);
     }
 
-    export function convertToCanonicalAxisIndicesSlowToFast(order: number[]): (xs: number[]) => number[] {
+    export function convertToCanonicalAxisIndicesSlowToFast(order: number[]) {
         const indices = new Int32Array(order.length) as any as number[];
         for (let i = 0; i < order.length; i++) indices[order[order.length - i - 1]] = i;
         return (xs: number[]) => reorder(xs, indices);

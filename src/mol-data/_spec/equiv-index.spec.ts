@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { EquivalenceClasses } from '../util.ts';
+import { EquivalenceClasses } from '../util/equivalence-classes';
 
 describe('equiv-classes', () => {
     it('integer mod classes', () => {
-        const cls = EquivalenceClasses<number, number>((x) => x % 2, (a, b) => (a - b) % 2 === 0);
+        const cls = EquivalenceClasses<number, number>(x => x % 2, (a, b) => (a - b) % 2 === 0);
         for (let i = 0; i < 6; i++) cls.add(i, i);
 
         expect(cls.groups.length).toBe(2);

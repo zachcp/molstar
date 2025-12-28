@@ -885,5 +885,6 @@ export function createGl(
         stencilOp: function () {},
         stencilOpSeparate: function () {},
         unpackColorSpace: 'srgb',
+        makeXRCompatible: async function () { },
     };
 }

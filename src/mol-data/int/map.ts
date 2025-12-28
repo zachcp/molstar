@@ -4,17 +4,17 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { iterableToArray } from '../util.ts';
+import { iterableToArray } from '../util/array';
 
 // TODO: rename to "linear map" and just do key value mapping from index?
 
 /** Immutable by convention IntMap */
 interface IntMap<T> {
-    has(key: number): boolean;
-    keys(): IterableIterator<number>;
-    values(): IterableIterator<T>;
-    get(key: number): T;
-    readonly size: number;
+    has(key: number): boolean,
+    keys(): IterableIterator<number>,
+    values(): IterableIterator<T>,
+    get(key: number): T,
+    readonly size: number
 }
 
 namespace IntMap {
@@ -47,7 +47,7 @@ namespace IntMap {
         return ret;
     }
 
-    export function addFrom<T>(map: Mutable<T>, src: IntMap<T>): Mutable<T> {
+    export function addFrom<T>(map: Mutable<T>, src: IntMap<T>) {
         const it = src.keys();
         while (true) {
             const { done, value } = it.next();
