@@ -41,7 +41,7 @@ namespace Asset {
         dispose: () => void
     }
 
-    export function Wrapper<T extends DataType = DataType>(data: DataResponse<T>, asset: Asset, manager: AssetManager) {
+    export function Wrapper<T extends DataType = DataType>(data: DataResponse<T>, asset: Asset, manager: AssetManager): Wrapper<T> {
         return {
             data,
             dispose: () => {
@@ -50,13 +50,13 @@ namespace Asset {
         };
     }
 
-    export function getUrl(url: string | Url) {
+    export function getUrl(url: string | Url): string {
         return typeof url === 'string' ? url : url.url;
     }
 
-    export function getUrlAsset(manager: AssetManager, url: string | Url, body?: string) {
+    export function getUrlAsset(manager: AssetManager, url: string | Url, body?: string): Url {
         if (typeof url === 'string') {
-            const asset = manager.tryFindUrl(url, body);
+            const asset: Url | undefined = manager.tryFindUrl(url, body);
             return asset || Url(url, { body });
         }
         return url;
@@ -69,7 +69,7 @@ class AssetManager {
 
     private _assets = new Map<string, { asset: Asset, file: File, refCount: number, isStatic?: boolean, tag?: string }>();
 
-    get assets() {
+    get assets(): { asset: Asset, file: File, refCount: number, isStatic?: boolean, tag?: string }[] {
         return iterableToArray(this._assets.values());
     }
 
@@ -92,19 +92,19 @@ class AssetManager {
         }
     }
 
-    set(asset: Asset, file: File, options?: { isStatic?: boolean, tag?: string }) {
+    set(asset: Asset, file: File, options?: { isStatic?: boolean, tag?: string }): void {
         this._assets.set(asset.id, { asset, file, refCount: 0, tag: options?.tag, isStatic: options?.isStatic });
     }
 
-    get(asset: Asset) {
+    get(asset: Asset): { asset: Asset, file: File, refCount: number, isStatic?: boolean, tag?: string } | undefined {
         return this._assets.get(asset.id);
     }
 
-    delete(asset: Asset) {
+    delete(asset: Asset): boolean {
         return this._assets.delete(asset.id);
     }
 
-    has(asset: Asset) {
+    has(asset: Asset): boolean {
         return this._assets.has(asset.id);
     }
 
@@ -144,14 +144,14 @@ class AssetManager {
         }
     }
 
-    release(asset: Asset) {
+    release(asset: Asset): void {
         const entry = this._assets.get(asset.id);
         if (!entry) return;
         entry.refCount--;
         if (entry.refCount <= 0 && !entry.isStatic) this._assets.delete(asset.id);
     }
 
-    clearTag(tag: string) {
+    clearTag(tag: string): void {
         const keys = Array.from(this._assets.keys());
         for (const key of keys) {
             const entry = this._assets.get(key);
@@ -161,11 +161,11 @@ class AssetManager {
         }
     }
 
-    clear() {
+    clear(): void {
         this._assets.clear();
     }
 
-    dispose() {
+    dispose(): void {
         this.clear();
     }
 }

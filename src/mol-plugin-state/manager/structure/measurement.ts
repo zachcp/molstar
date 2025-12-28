@@ -12,6 +12,7 @@ import {
     type StateBuilder,
     type StateObject,
     type StateObjectCell,
+    type StateObjectSelector,
     StateSelection,
     StateTransform,
     type StateTransformer,
@@ -74,7 +75,7 @@ type StructureMeasurementManagerAddOptions = {
     labelParams?: Partial<PD.Values<LociLabelTextParams>>;
 };
 
-function serializeLoci(loci: StructureElement.Loci) {
+function serializeLoci(loci: StructureElement.Loci): { bundle: StructureElement.Bundle } {
     return { bundle: StructureElement.Bundle.fromLoci(loci) };
 }
 
@@ -87,7 +88,7 @@ class StructureMeasurementManager extends StatefulPluginComponent<StructureMeasu
         this.behaviors.state.next(this.state);
     }
 
-    private getGroup() {
+    private getGroup(): StateBuilder.To<PluginStateObject.Group, any> {
         const state = this.plugin.state.data;
         const groupRef: string | undefined = StateSelection.findTagInSubtree(
             state.tree,
@@ -96,7 +97,7 @@ class StructureMeasurementManager extends StatefulPluginComponent<StructureMeasu
         );
         const builder: StateBuilder.Root = this.plugin.state.data.build();
 
-        if (groupRef) return builder.to(groupRef);
+        if (groupRef) return builder.to(groupRef) as StateBuilder.To<PluginStateObject.Group, any>;
         return builder
             .toRoot()
             .group(
@@ -151,7 +152,7 @@ class StructureMeasurementManager extends StatefulPluginComponent<StructureMeasu
                 >
             >;
         },
-    ) {
+    ): Promise<{ selection: StateObjectSelector; representation: StateObjectSelector } | undefined> {
         const cellA:
             | StateObjectCell<
                 PluginStateObject.Molecule.Structure,
@@ -241,7 +242,7 @@ class StructureMeasurementManager extends StatefulPluginComponent<StructureMeasu
                 >
             >;
         },
-    ) {
+    ): Promise<{ selection: StateObjectSelector; representation: StateObjectSelector } | undefined> {
         const cellA = this.plugin.helpers.substructureParent.get(a.structure);
         const cellB = this.plugin.helpers.substructureParent.get(b.structure);
         const cellC = this.plugin.helpers.substructureParent.get(c.structure);
@@ -302,7 +303,7 @@ class StructureMeasurementManager extends StatefulPluginComponent<StructureMeasu
                 >
             >;
         },
-    ) {
+    ): Promise<{ selection: StateObjectSelector; representation: StateObjectSelector } | undefined> {
         const cellA = this.plugin.helpers.substructureParent.get(a.structure);
         const cellB = this.plugin.helpers.substructureParent.get(b.structure);
         const cellC = this.plugin.helpers.substructureParent.get(c.structure);
@@ -368,7 +369,7 @@ class StructureMeasurementManager extends StatefulPluginComponent<StructureMeasu
                     >
                 >;
             },
-    ) {
+    ): Promise<{ selection: StateObjectSelector; representation: StateObjectSelector } | undefined> {
         const cellA:
             | StateObjectCell<
                 PluginStateObject.Molecule.Structure,
@@ -419,7 +420,7 @@ class StructureMeasurementManager extends StatefulPluginComponent<StructureMeasu
         };
     }
 
-    async addOrientation(locis: StructureElement.Loci[]) {
+    async addOrientation(locis: StructureElement.Loci[]): Promise<{ selection: StateObjectSelector; representation: StateObjectSelector } | undefined> {
         const selections: {
             key: string;
             ref: string;
@@ -480,7 +481,7 @@ class StructureMeasurementManager extends StatefulPluginComponent<StructureMeasu
         };
     }
 
-    async addPlane(locis: StructureElement.Loci[]) {
+    async addPlane(locis: StructureElement.Loci[]): Promise<{ selection: StateObjectSelector; representation: StateObjectSelector } | undefined> {
         const selections: {
             key: string;
             ref: string;
@@ -541,7 +542,7 @@ class StructureMeasurementManager extends StatefulPluginComponent<StructureMeasu
         };
     }
 
-    async addOrderLabels(locis: StructureElement.Loci[]) {
+    async addOrderLabels(locis: StructureElement.Loci[]): Promise<{ representation: StateObjectSelector }> {
         const update = this.getGroup();
 
         const current: StateSelection.CellSeq<

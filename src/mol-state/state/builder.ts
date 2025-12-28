@@ -142,10 +142,10 @@ namespace StateBuilder {
                 : refOrCellOrSelector.ref;
             return new To<StateObject, StateTransformer>(this.state, ref, this);
         }
-        toRoot<A extends StateObject>() {
+        toRoot<A extends StateObject>(): To<A> {
             return new To<A>(this.state, this.state.tree.root.ref, this);
         }
-        delete(obj: StateObjectRef) {
+        delete(obj: StateObjectRef): this {
             const ref = StateObjectRef.resolveRef(obj);
             if (!ref || !this.state.tree.transforms.has(ref)) return this;
             this.editInfo.count++;
@@ -157,7 +157,7 @@ namespace StateBuilder {
             return buildTree(this.state, options);
         }
 
-        commit(options?: Partial<State.UpdateOptions>) {
+        commit(options?: Partial<State.UpdateOptions>): Promise<void> {
             if (!this.state.state) throw new Error('Cannot commit template tree');
             return this.state.state.runTask(this.state.state.updateTree(this, options));
         }
@@ -362,7 +362,7 @@ namespace StateBuilder {
         }
 
         /** Add tags to the current node */
-        tag(tags: string | string[]) {
+        tag(tags: string | string[]): this {
             const transform = this.state.tree.transforms.get(this.ref)!;
             this.updateTagged(transform.params, stringArrayUnion(transform.tags, tags));
             return this;
@@ -386,10 +386,10 @@ namespace StateBuilder {
         to(ref: StateTransform.Ref | StateObjectCell | StateObjectSelector) {
             return this.root.to(ref as any);
         }
-        toRoot<A extends StateObject>() {
+        toRoot<A extends StateObject>(): To<A> {
             return this.root.toRoot<A>();
         }
-        delete(ref: StateObjectRef) {
+        delete(ref: StateObjectRef): Root {
             return this.root.delete(ref);
         }
 

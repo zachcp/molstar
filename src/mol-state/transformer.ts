@@ -226,12 +226,12 @@ namespace Transformer {
         return t;
     }
 
-    export function factory(namespace: string) {
+    export function factory(namespace: string): <A extends StateObject, B extends StateObject, P extends {} = {}>(definition: Definition<A, B, P>) => Transformer<A, B, P> {
         return <A extends StateObject, B extends StateObject, P extends {} = {}>(definition: Definition<A, B, P>) =>
             create(namespace, definition);
     }
 
-    export function builderFactory(namespace: string) {
+    export function builderFactory(namespace: string): Builder.Root {
         return Builder.build(namespace);
     }
 
@@ -256,8 +256,8 @@ namespace Transformer {
             (def: DefinitionBase<A, B, P>): Transformer<A, B, P>;
         }
 
-        function root(namespace: string, info: Type<any, any, any>): Define<any, any, any> {
-            return (def) =>
+        function root(namespace: string, info: Type<any, any, any>): Define<StateObject, StateObject, {}> {
+            return (def: DefinitionBase<StateObject, StateObject, {}>) =>
                 create(namespace, {
                     name: info.name,
                     from: info.from instanceof Array ? info.from : [info.from],
@@ -278,7 +278,7 @@ namespace Transformer {
         }
 
         export function build(namespace: string): Root {
-            return (info: any) => root(namespace, info);
+            return ((info: any): Define<any, any, any> => root(namespace, info)) as Root;
         }
     }
 

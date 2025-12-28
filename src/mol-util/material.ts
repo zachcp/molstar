@@ -16,21 +16,21 @@ export interface Material {
     bumpiness: number
 }
 
-export function Material(values?: Partial<Material>) {
+export function Material(values?: Partial<Material>): Material {
     return { ...Material.Zero, ...values };
 }
 
 export namespace Material {
     export const Zero: Material = { metalness: 0, roughness: 0, bumpiness: 0 };
 
-    export function toArray<T extends NumberArray>(material: Material, array: T, offset: number) {
+    export function toArray<T extends NumberArray>(material: Material, array: T, offset: number): T {
         array[offset] = material.metalness * 255;
         array[offset + 1] = material.roughness * 255;
         array[offset + 2] = material.bumpiness * 255;
         return array;
     }
 
-    export function toArrayNormalized<T extends NumberArray>(material: Material, array: T, offset: number) {
+    export function toArrayNormalized<T extends NumberArray>(material: Material, array: T, offset: number): T {
         array[offset] = material.metalness;
         array[offset + 1] = material.roughness;
         array[offset + 2] = material.bumpiness;
@@ -41,11 +41,11 @@ export namespace Material {
         return a.metalness === b.metalness && a.roughness === b.roughness && a.bumpiness === b.bumpiness;
     }
 
-    export function toString({ metalness, roughness, bumpiness }: Material) {
+    export function toString({ metalness, roughness, bumpiness }: Material): string {
         return `M ${metalness.toFixed(2)} | R ${roughness.toFixed(2)} | B ${bumpiness.toFixed(2)}`;
     }
 
-    export function getParam(info?: { isExpanded?: boolean, isFlat?: boolean }) {
+    export function getParam(info?: { isExpanded?: boolean, isFlat?: boolean }): PD.Group<PD.Normalize<Material>> {
         return PD.Group({
             metalness: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }),
             roughness: PD.Numeric(1, { min: 0, max: 1, step: 0.01 }),

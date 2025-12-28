@@ -13,6 +13,7 @@ import {
 import { MembraneOrientation, MembraneOrientationProvider } from "./prop.ts";
 import {
   StateObjectRef,
+  type StateObjectSelector,
   type StateTransform,
   StateTransformer,
 } from "../../mol-state/index.ts";
@@ -157,7 +158,7 @@ const MembraneOrientation3D = PluginStateTransform.BuiltIn({
   },
   from: PluginStateObject.Molecule.Structure,
   to: PluginStateObject.Shape.Representation3D,
-  params: (a) => {
+  params: (a): typeof MembraneOrientationParams => {
     return {
       ...MembraneOrientationParams,
     };
@@ -224,8 +225,8 @@ export const MembraneOrientationPreset = StructureRepresentationPresetProvider({
   isApplicable(a): boolean {
     return MembraneOrientationProvider.isApplicable(a.data);
   },
-  params: () => StructureRepresentationPresetProvider.CommonParams,
-  async apply(ref, params, plugin) {
+  params: (): typeof StructureRepresentationPresetProvider.CommonParams => StructureRepresentationPresetProvider.CommonParams,
+  async apply(ref, params, plugin): Promise<StructureRepresentationPresetProvider.Result> {
     const structureCell = StateObjectRef.resolveAndCheck(
       plugin.state.data,
       ref,
@@ -274,7 +275,7 @@ export function tryCreateMembraneOrientation(
   structure: StateObjectRef<PluginStateObject.Molecule.Structure>,
   params?: StateTransformer.Params<MembraneOrientation3D>,
   initialState?: Partial<StateTransform.State>,
-) {
+): Promise<StateObjectSelector<PluginStateObject.Shape.Representation3D>> {
   const state = plugin.state.data;
   const membraneOrientation = state
     .build()

@@ -50,21 +50,21 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
         opened: this.ev(),
     };
 
-    get current() {
+    get current(): PluginStateSnapshotManager.Entry | undefined {
         const id = this.state.current;
         return this.state.entries.find(e => e.snapshot.id === id);
     }
 
-    getIndex(e: PluginStateSnapshotManager.Entry) {
+    getIndex(e: PluginStateSnapshotManager.Entry): number {
         return this.state.entries.indexOf(e);
     }
 
-    getEntry(id: string | undefined) {
+    getEntry(id: string | undefined): PluginStateSnapshotManager.Entry | undefined {
         if (!id) return;
         return this.entryMap.get(id);
     }
 
-    remove(id: string) {
+    remove(id: string): void {
         const e = this.entryMap.get(id);
         if (!e) return;
 
@@ -77,13 +77,13 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
         this.events.changed.next(void 0);
     }
 
-    add(e: PluginStateSnapshotManager.Entry) {
+    add(e: PluginStateSnapshotManager.Entry): void {
         this.entryMap.set(e.snapshot.id, e);
         this.updateState({ current: e.snapshot.id, entries: this.state.entries.push(e) });
         this.events.changed.next(void 0);
     }
 
-    replace(id: string, snapshot: PluginState.Snapshot, params?: PluginStateSnapshotManager.EntryParams) {
+    replace(id: string, snapshot: PluginState.Snapshot, params?: PluginStateSnapshotManager.EntryParams): void {
         const old = this.getEntry(id);
         if (!old) return;
 
@@ -104,7 +104,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
         this.events.changed.next(void 0);
     }
 
-    move(id: string, dir: -1 | 1) {
+    move(id: string, dir: -1 | 1): void {
         const len = this.state.entries.size;
         if (len < 2) return;
 
@@ -123,7 +123,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
         this.events.changed.next(void 0);
     }
 
-    update(e: PluginStateSnapshotManager.Entry, options: { key?: string, name?: string, description?: string, descriptionFormat?: PluginStateSnapshotManager.DescriptionFormat }) {
+    update(e: PluginStateSnapshotManager.Entry, options: { key?: string, name?: string, description?: string, descriptionFormat?: PluginStateSnapshotManager.DescriptionFormat }): void {
         const idx = this.getIndex(e);
         if (idx < 0) return;
         const entries = this.state.entries.set(idx, {
@@ -138,7 +138,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
         this.events.changed.next(void 0);
     }
 
-    clear() {
+    clear(): void {
         if (this.state.entries.size === 0) return;
 
         this.entryMap.forEach(e => {
@@ -149,7 +149,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
         this.events.changed.next(void 0);
     }
 
-    applyKey(key: string) {
+    applyKey(key: string): void {
         const e = this.state.entries.find(e => e.key === key);
         if (!e) return;
 
@@ -158,7 +158,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
         this.plugin.state.setSnapshot(e.snapshot);
     }
 
-    setCurrent(id: string) {
+    setCurrent(id: string): PluginState.Snapshot | undefined {
         const e = this.getEntry(id);
         if (e) {
             this.updateState({ current: id as UUID });
@@ -168,7 +168,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
     }
 
     private animationFrameQueue = new SingleTaskQueue();
-    setSnapshotAnimationFrame(currentAnimationTimeMs: number, load = false) {
+    setSnapshotAnimationFrame(currentAnimationTimeMs: number, load = false): number | undefined {
         const entry = this.getEntry(this.state.current);
         if (!entry) return;
 
@@ -187,7 +187,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
         return frameIndex;
     }
 
-    getNextId(id: string | undefined, dir: -1 | 1) {
+    getNextId(id: string | undefined, dir: -1 | 1): string | undefined {
         const len = this.state.entries.size;
         if (!id) {
             if (len === 0) return void 0;
@@ -206,7 +206,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
         return this.state.entries.get(idx)!.snapshot.id;
     }
 
-    applyNext(dir: -1 | 1) {
+    applyNext(dir: -1 | 1): Promise<void> | undefined {
         const next = this.getNextId(this.state.current, dir);
         if (next) {
             const snapshot = this.setCurrent(next);
@@ -289,7 +289,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
         };
     }
 
-    async serialize(options?: { type: 'json' | 'molj' | 'zip' | 'molx', params?: PluginState.SnapshotParams }) {
+    async serialize(options?: { type: 'json' | 'molj' | 'zip' | 'molx', params?: PluginState.SnapshotParams }): Promise<Blob> {
         const json = JSON.stringify(await this.getStateSnapshot({ params: options?.params }), null, 2);
 
         if (!options?.type || options.type === 'json' || options.type === 'molj') {
@@ -322,7 +322,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
         }
     }
 
-    async open(file: File) {
+    async open(file: File): Promise<void> {
         try {
             const fn = file.name.toLowerCase();
             if (fn.endsWith('json') || fn.endsWith('molj')) {

@@ -141,7 +141,7 @@ export const G3DHeaderFromUrl = PluginStateTransform.BuiltIn({
   },
 });
 
-export type G3DTrajectory = typeof G3DHeaderFromUrl;
+export type G3DTrajectory = typeof G3DTrajectory;
 export const G3DTrajectory = PluginStateTransform.BuiltIn({
   name: "g3d-trajecotry",
   display: { name: "G3D Trajectory", description: "Create G3D Trajectory" },
@@ -212,31 +212,31 @@ export const LoadG3D = StateAction.build({
   }),
 );
 
-export const G3DFormat = PluginBehavior.create<{
+type G3DFormatParams = {
   autoAttach: boolean;
   showTooltip: boolean;
-}>({
+};
+class G3DFormatHandler extends PluginBehavior.Handler<G3DFormatParams> {
+  register(): void {
+    this.ctx.state.data.actions.add(LoadG3D);
+    objectForEach(G3dSymbols, (s) => DefaultQueryRuntimeTable.addSymbol(s));
+    this.ctx.managers.lociLabels.addProvider(G3dLabelProvider);
+  }
+  unregister(): void {
+    this.ctx.state.data.actions.remove(LoadG3D);
+    objectForEach(G3dSymbols, (s) =>
+      DefaultQueryRuntimeTable.removeSymbol(s),
+    );
+    this.ctx.managers.lociLabels.removeProvider(G3dLabelProvider);
+  }
+}
+const G3DFormat_config = {
   name: "g3d",
-  category: "misc",
+  category: "misc" as const,
   display: {
     name: "G3D",
     description: "G3D Format Support",
   },
-  ctor: class extends PluginBehavior.Handler<{
-    autoAttach: boolean;
-    showTooltip: boolean;
-  }> {
-    register() {
-      this.ctx.state.data.actions.add(LoadG3D);
-      objectForEach(G3dSymbols, (s) => DefaultQueryRuntimeTable.addSymbol(s));
-      this.ctx.managers.lociLabels.addProvider(G3dLabelProvider);
-    }
-    unregister() {
-      this.ctx.state.data.actions.remove(LoadG3D);
-      objectForEach(G3dSymbols, (s) =>
-        DefaultQueryRuntimeTable.removeSymbol(s),
-      );
-      this.ctx.managers.lociLabels.removeProvider(G3dLabelProvider);
-    }
-  },
-});
+  ctor: G3DFormatHandler,
+};
+export const G3DFormat: ReturnType<typeof PluginBehavior.create<G3DFormatParams>> = PluginBehavior.create<G3DFormatParams>(G3DFormat_config);

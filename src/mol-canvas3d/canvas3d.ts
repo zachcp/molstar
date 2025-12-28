@@ -94,9 +94,13 @@ import { produce } from "../mol-util/produce.ts";
 import { ShaderManager } from "./helper/shader-manager.ts";
 import { toFixed } from "../mol-util/number.ts";
 
-export const CameraFogParams = {
-  intensity: PD.Numeric(15, { min: 1, max: 100, step: 1 }),
-};
+function _createCameraFogParams(): { intensity: PD.Numeric } {
+  return {
+    intensity: PD.Numeric(15, { min: 1, max: 100, step: 1 }),
+  };
+}
+export const CameraFogParams: { intensity: PD.Numeric } = _createCameraFogParams();
+
 export const Canvas3DParams = {
   camera: PD.Group(
     {
@@ -205,7 +209,7 @@ export const Canvas3DParams = {
   pointer: PD.Group(PointerHelperParams),
   xr: PD.Group(XRManagerParams, { label: "XR" }),
 };
-export const DefaultCanvas3DParams = PD.getDefaultValues(Canvas3DParams);
+export const DefaultCanvas3DParams: PD.Values<typeof Canvas3DParams> = PD.getDefaultValues(Canvas3DParams);
 export type Canvas3DProps = PD.Values<typeof Canvas3DParams>;
 export type PartialCanvas3DProps = {
   [K in keyof Canvas3DProps]?: Canvas3DProps[K] extends {
@@ -279,7 +283,7 @@ namespace Canvas3DContext {
       ["dpoit", "Depth Peeling"],
     ] as const),
   };
-  export const DefaultProps = PD.getDefaultValues(Params);
+  export const DefaultProps: PD.Values<typeof Params> = PD.getDefaultValues(Params);
   export type Props = PD.Values<typeof Params>;
 
   export function fromCanvas(
