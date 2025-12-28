@@ -4,8 +4,8 @@
  * @author Diego del Alamo <diego.delalamo@gmail.com>
  */
 
-import { TMAlign } from '../3d/tm-align.ts';
-import { Vec3 } from '../3d/vec3.ts';
+import { TMAlign } from '../3d/tm-align';
+import { Vec3 } from '../3d/vec3';
 
 // Reference data from US-align for 6F34 vs 3TT3 chain A
 const REFERENCE_6F34_3TT3 = {

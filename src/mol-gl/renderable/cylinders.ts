@@ -48,6 +48,8 @@ export const CylindersSchema = {
     dSolidInterior: DefineSpec('boolean'),
     uBumpFrequency: UniformSpec('f', 'material'),
     uBumpAmplitude: UniformSpec('f', 'material'),
+    uInteriorColor: UniformSpec('v4'),
+    uInteriorSubstance: UniformSpec('v4'),
     dDualColor: DefineSpec('boolean'),
 };
 export type CylindersSchema = typeof CylindersSchema;

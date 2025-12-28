@@ -5,40 +5,40 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { Viewport } from '../mol-canvas3d/camera/util.ts';
-import type { ICamera } from '../mol-canvas3d/camera.ts';
-import type { Scene } from './scene.ts';
-import type { WebGLContext } from './webgl/context.ts';
-import { Mat4, Vec2, Vec3, Vec4 } from '../mol-math/linear-algebra.ts';
-import type { GraphicsRenderable } from './renderable.ts';
-import { Color } from '../mol-util/color/index.ts';
-import { deepEqual, ValueCell } from '../mol-util/index.ts';
-import type { GlobalUniformValues } from './renderable/schema.ts';
-import type { GraphicsRenderVariant } from './webgl/render-item.ts';
-import { ParamDefinition as PD } from '../mol-util/param-definition.ts';
-import { degToRad } from '../mol-math/misc.ts';
-import type { Texture, Textures } from './webgl/texture.ts';
-import { arrayMapUpsert } from '../mol-util/array.ts';
-import { clamp } from '../mol-math/interpolate.ts';
-import { isTimingMode } from '../mol-util/debug.ts';
-import { Frustum3D } from '../mol-math/geometry/primitives/frustum3d.ts';
-import { Plane3D } from '../mol-math/geometry/primitives/plane3d.ts';
-import { Sphere3D } from '../mol-math/geometry.ts';
+import { Viewport } from '../mol-canvas3d/camera/util';
+import { ICamera } from '../mol-canvas3d/camera';
+import { Scene } from './scene';
+import { WebGLContext } from './webgl/context';
+import { Mat4, Vec3, Vec4, Vec2 } from '../mol-math/linear-algebra';
+import { GraphicsRenderable } from './renderable';
+import { Color } from '../mol-util/color';
+import { ValueCell, deepEqual } from '../mol-util';
+import { GlobalUniformValues } from './renderable/schema';
+import { GraphicsRenderVariant } from './webgl/render-item';
+import { ParamDefinition as PD } from '../mol-util/param-definition';
+import { degToRad } from '../mol-math/misc';
+import { Texture, Textures } from './webgl/texture';
+import { arrayMapUpsert } from '../mol-util/array';
+import { clamp } from '../mol-math/interpolate';
+import { isTimingMode } from '../mol-util/debug';
+import { Frustum3D } from '../mol-math/geometry/primitives/frustum3d';
+import { Plane3D } from '../mol-math/geometry/primitives/plane3d';
+import { Sphere3D } from '../mol-math/geometry';
 
 export interface RendererStats {
-    programCount: number;
-    shaderCount: number;
+    programCount: number
+    shaderCount: number
 
-    attributeCount: number;
-    elementsCount: number;
-    framebufferCount: number;
-    renderbufferCount: number;
-    textureCount: number;
-    vertexArrayCount: number;
+    attributeCount: number
+    elementsCount: number
+    framebufferCount: number
+    renderbufferCount: number
+    textureCount: number
+    vertexArrayCount: number
 
-    drawCount: number;
-    instanceCount: number;
-    instancedDrawCount: number;
+    drawCount: number
+    instanceCount: number
+    instancedDrawCount: number
 }
 
 export enum PickType {
@@ -55,56 +55,45 @@ export enum MarkingType {
 }
 
 interface Renderer {
-    readonly stats: RendererStats;
-    readonly props: Readonly<RendererProps>;
-    readonly light: Readonly<Light>;
-    readonly ambientColor: Vec3;
+    readonly stats: RendererStats
+    readonly props: Readonly<RendererProps>
+    readonly light: Readonly<Light>
+    readonly ambientColor: Vec3
 
-    clear: (toBackgroundColor: boolean, ignoreTransparentBackground?: boolean, forceToTransparency?: boolean) => void;
-    clearDepth: (packed?: boolean) => void;
-    update: (camera: ICamera, scene: Scene) => void;
+    clear: (toBackgroundColor: boolean, ignoreTransparentBackground?: boolean, forceToTransparency?: boolean) => void
+    clearDepth: (packed?: boolean) => void
+    update: (camera: ICamera, scene: Scene) => void
 
-    renderPick: (group: Scene.Group, camera: ICamera, variant: 'pick' | 'depth', pickType: PickType) => void;
-    renderDepth: (group: Scene.Group, camera: ICamera) => void;
-    renderDepthOpaque: (group: Scene.Group, camera: ICamera) => void;
-    renderDepthOpaqueBack: (group: Scene.Group, camera: ICamera) => void;
-    renderDepthTransparent: (group: Scene.Group, camera: ICamera, depthTexture: Texture) => void;
-    renderMarkingDepth: (group: Scene.Group, camera: ICamera) => void;
-    renderMarkingMask: (group: Scene.Group, camera: ICamera, depthTexture: Texture | null) => void;
-    renderEmissive: (group: Scene.Group, camera: ICamera) => void;
-    renderTracing: (group: Scene.Group, camera: ICamera) => void;
-    renderBlended: (group: Scene, camera: ICamera) => void;
-    renderOpaque: (group: Scene.Group, camera: ICamera) => void;
-    renderBlendedTransparent: (group: Scene.Group, camera: ICamera) => void;
-    renderVolume: (group: Scene.Group, camera: ICamera, depthTexture: Texture) => void;
-    renderWboitTransparent: (group: Scene.Group, camera: ICamera, depthTexture: Texture) => void;
-    renderDpoitTransparent: (
-        group: Scene.Group,
-        camera: ICamera,
-        depthTexture: Texture,
-        dpoitTextures: { depth: Texture; frontColor: Texture; backColor: Texture },
-    ) => void;
+    renderPick: (group: Scene.Group, camera: ICamera, variant: 'pick' | 'depth', pickType: PickType) => void
+    renderDepth: (group: Scene.Group, camera: ICamera) => void
+    renderDepthOpaque: (group: Scene.Group, camera: ICamera) => void
+    renderDepthOpaqueBack: (group: Scene.Group, camera: ICamera) => void
+    renderDepthTransparent: (group: Scene.Group, camera: ICamera, depthTexture: Texture) => void
+    renderMarkingDepth: (group: Scene.Group, camera: ICamera) => void
+    renderMarkingMask: (group: Scene.Group, camera: ICamera, depthTexture: Texture | null) => void
+    renderEmissive: (group: Scene.Group, camera: ICamera) => void
+    renderTracing: (group: Scene.Group, camera: ICamera) => void
+    renderBlended: (group: Scene, camera: ICamera) => void
+    renderOpaque: (group: Scene.Group, camera: ICamera) => void
+    renderBlendedTransparent: (group: Scene.Group, camera: ICamera) => void
+    renderVolume: (group: Scene.Group, camera: ICamera, depthTexture: Texture) => void
+    renderWboitTransparent: (group: Scene.Group, camera: ICamera, depthTexture: Texture) => void
+    renderDpoitTransparent: (group: Scene.Group, camera: ICamera, depthTexture: Texture, dpoitTextures: { depth: Texture, frontColor: Texture, backColor: Texture }) => void
 
-    setProps: (props: Partial<RendererProps>) => void;
-    setViewport: (x: number, y: number, width: number, height: number) => void;
-    setTransparentBackground: (value: boolean) => void;
-    setDrawingBufferSize: (width: number, height: number) => void;
-    setPixelRatio: (value: number) => void;
-    setOcclusionTest: (f: ((s: Sphere3D) => boolean) | null) => void;
+    setProps: (props: Partial<RendererProps>) => void
+    setViewport: (x: number, y: number, width: number, height: number) => void
+    setTransparentBackground: (value: boolean) => void
+    setDrawingBufferSize: (width: number, height: number) => void
+    setPixelRatio: (value: number) => void
+    setOcclusionTest: (f: ((s: Sphere3D) => boolean) | null) => void
 
-    dispose: () => void;
+    dispose: () => void
 }
 
 export const RendererParams = {
     backgroundColor: PD.Color(Color(0x000000), { description: 'Background color of the 3D canvas' }),
 
-    pickingAlphaThreshold: PD.Numeric(0.5, { min: 0.0, max: 1.0, step: 0.01 }, {
-        description: 'The minimum opacity value needed for an object to be pickable.',
-    }),
-
-    interiorDarkening: PD.Numeric(0.5, { min: 0.0, max: 1.0, step: 0.01 }),
-    interiorColorFlag: PD.Boolean(true, { label: 'Use Interior Color' }),
-    interiorColor: PD.Color(Color.fromNormalizedRgb(0.3, 0.3, 0.3)),
+    pickingAlphaThreshold: PD.Numeric(0.5, { min: 0.0, max: 1.0, step: 0.01 }, { description: 'The minimum opacity value needed for an object to be pickable.' }),
 
     colorMarker: PD.Boolean(true, { description: 'Enable color marker' }),
     highlightColor: PD.Color(Color.fromNormalizedRgb(1.0, 0.4, 0.6)),
@@ -119,33 +108,27 @@ export const RendererParams = {
     celSteps: PD.Numeric(5, { min: 2, max: 16, step: 1 }),
     exposure: PD.Numeric(1, { min: 0.0, max: 3.0, step: 0.01 }),
 
-    light: PD.ObjectList(
-        {
-            inclination: PD.Numeric(150, { min: 0, max: 180, step: 1 }),
-            azimuth: PD.Numeric(320, { min: 0, max: 360, step: 1 }),
-            color: PD.Color(Color.fromNormalizedRgb(1.0, 1.0, 1.0)),
-            intensity: PD.Numeric(0.6, { min: 0.0, max: 5.0, step: 0.01 }),
-        },
-        (o) => Color.toHexString(o.color),
-        {
-            defaultValue: [{
-                inclination: 150,
-                azimuth: 320,
-                color: Color.fromNormalizedRgb(1.0, 1.0, 1.0),
-                intensity: 0.6,
-            }],
-        },
-    ),
+    light: PD.ObjectList({
+        inclination: PD.Numeric(150, { min: 0, max: 180, step: 1 }),
+        azimuth: PD.Numeric(320, { min: 0, max: 360, step: 1 }),
+        color: PD.Color(Color.fromNormalizedRgb(1.0, 1.0, 1.0)),
+        intensity: PD.Numeric(0.6, { min: 0.0, max: 5.0, step: 0.01 }),
+    }, o => Color.toHexString(o.color), { defaultValue: [{
+        inclination: 150,
+        azimuth: 320,
+        color: Color.fromNormalizedRgb(1.0, 1.0, 1.0),
+        intensity: 0.6
+    }] }),
     ambientColor: PD.Color(Color.fromNormalizedRgb(1.0, 1.0, 1.0)),
     ambientIntensity: PD.Numeric(0.4, { min: 0.0, max: 2.0, step: 0.01 }),
 };
-export type RendererProps = PD.Values<typeof RendererParams>;
+export type RendererProps = PD.Values<typeof RendererParams>
 
 export type Light = {
-    count: number;
-    direction: number[];
-    color: number[];
-};
+    count: number
+    direction: number[]
+    color: number[]
+}
 
 const tmpDir = Vec3();
 const tmpColor = Vec3();
@@ -204,7 +187,7 @@ namespace Renderer {
         emptyDepthTexture.define(1, 1);
         emptyDepthTexture.load({ array: new Uint8Array([255, 255, 255, 255]), width: 1, height: 1 });
         const sharedTexturesList: Textures = [
-            ['tDepth', emptyDepthTexture],
+            ['tDepth', emptyDepthTexture]
         ];
 
         const model = Mat4();
@@ -281,10 +264,6 @@ namespace Renderer {
             uAmbientColor: ValueCell.create(ambientColor),
 
             uPickingAlphaThreshold: ValueCell.create(p.pickingAlphaThreshold),
-
-            uInteriorDarkening: ValueCell.create(p.interiorDarkening),
-            uInteriorColorFlag: ValueCell.create(p.interiorColorFlag),
-            uInteriorColor: ValueCell.create(Color.toVec3Normalized(Vec3(), p.interiorColor)),
 
             uHighlightColor: ValueCell.create(Color.toVec3Normalized(Vec3(), p.highlightColor)),
             uSelectColor: ValueCell.create(Color.toVec3Normalized(Vec3(), p.selectColor)),
@@ -421,12 +400,7 @@ namespace Renderer {
             ValueCell.update(globalUniforms.uInvProjection, Mat4.invert(invProjection, camera.projection));
 
             ValueCell.updateIfChanged(globalUniforms.uIsOrtho, camera.state.mode === 'orthographic' ? 1 : 0);
-            ValueCell.update(
-                globalUniforms.uViewOffset,
-                camera.viewOffset.enabled
-                    ? Vec2.set(viewOffset, camera.viewOffset.offsetX * 16, camera.viewOffset.offsetY * 16)
-                    : Vec2.set(viewOffset, 0, 0),
-            );
+            ValueCell.update(globalUniforms.uViewOffset, camera.viewOffset.enabled ? Vec2.set(viewOffset, camera.viewOffset.offsetX * 16, camera.viewOffset.offsetY * 16) : Vec2.set(viewOffset, 0, 0));
             ValueCell.updateIfChanged(globalUniforms.uModelScale, camera.scale);
 
             ValueCell.update(globalUniforms.uCameraPosition, Mat4.getTranslation(cameraPosition, invView));
@@ -445,10 +419,7 @@ namespace Renderer {
 
             Plane3D.copy(cameraPlane, frustum[Frustum3D.PlaneIndex.Near]);
             cameraPlane.constant -= Plane3D.distanceToPoint(cameraPlane, cameraPosition);
-            ValueCell.update(
-                globalUniforms.uCameraPlane,
-                Plane3D.toArray(cameraPlane, globalUniforms.uCameraPlane.ref.value, 0),
-            );
+            ValueCell.update(globalUniforms.uCameraPlane, Plane3D.toArray(cameraPlane, globalUniforms.uCameraPlane.ref.value, 0));
 
             ValueCell.updateIfChanged(globalUniforms.uMarkerAverage, scene.markerAverage);
 
@@ -466,13 +437,7 @@ namespace Renderer {
             ValueCell.update(globalUniforms.uIsAsymmetricProjection, camera.isAsymmetricProjection);
         };
 
-        const updateInternal = (
-            group: Scene.Group,
-            camera: ICamera,
-            depthTexture: Texture | null,
-            renderMask: Mask,
-            markingDepthTest: boolean,
-        ) => {
+        const updateInternal = (group: Scene.Group, camera: ICamera, depthTexture: Texture | null, renderMask: Mask, markingDepthTest: boolean) => {
             arrayMapUpsert(sharedTexturesList, 'tDepth', depthTexture || emptyDepthTexture);
 
             modelScale = camera.scale;
@@ -480,14 +445,8 @@ namespace Renderer {
             ValueCell.update(globalUniforms.uModel, Mat4.scaleUniformly(model, group.view, modelScale));
             ValueCell.update(globalUniforms.uModelView, Mat4.mul(modelView, camera.view, model));
             ValueCell.update(globalUniforms.uInvModelView, Mat4.invert(invModelView, modelView));
-            ValueCell.update(
-                globalUniforms.uModelViewProjection,
-                Mat4.mul(modelViewProjection, modelView, camera.projection),
-            );
-            ValueCell.update(
-                globalUniforms.uInvModelViewProjection,
-                Mat4.invert(invModelViewProjection, modelViewProjection),
-            );
+            ValueCell.update(globalUniforms.uModelViewProjection, Mat4.mul(modelViewProjection, modelView, camera.projection));
+            ValueCell.update(globalUniforms.uInvModelViewProjection, Mat4.invert(invModelViewProjection, modelViewProjection));
 
             ValueCell.updateIfChanged(globalUniforms.uRenderMask, renderMask);
             ValueCell.updateIfChanged(globalUniforms.uMarkingDepthTest, markingDepthTest);
@@ -517,30 +476,29 @@ namespace Renderer {
         const checkOpaque = function (r: GraphicsRenderable) {
             // uAlpha is updated in `r.render` so we need to recompute it here
             const alpha = clamp(r.values.alpha.ref.value * r.state.alphaFactor, 0, 1);
-            const xrayShaded = r.values.dXrayShaded?.ref.value === 'on' ||
-                r.values.dXrayShaded?.ref.value === 'inverted';
+            const xrayShaded = r.values.dXrayShaded?.ref.value === 'on' || r.values.dXrayShaded?.ref.value === 'inverted';
             return (
                 (alpha === 1 &&
                     r.values.transparencyAverage.ref.value !== 1 &&
                     r.values.dGeometryType.ref.value !== 'directVolume' &&
                     r.values.dPointStyle?.ref.value !== 'fuzzy' &&
-                    !xrayShaded) || r.values.dTransparentBackfaces?.ref.value === 'opaque'
+                    !xrayShaded
+                ) || r.values.dTransparentBackfaces?.ref.value === 'opaque'
             );
         };
 
         const checkTransparent = function (r: GraphicsRenderable) {
             // uAlpha is updated in `r.render` so we need to recompute it here
             const alpha = clamp(r.values.alpha.ref.value * r.state.alphaFactor, 0, 1);
-            const xrayShaded = r.values.dXrayShaded?.ref.value === 'on' ||
-                r.values.dXrayShaded?.ref.value === 'inverted';
+            const xrayShaded = r.values.dXrayShaded?.ref.value === 'on' || r.values.dXrayShaded?.ref.value === 'inverted';
             return (
                 alpha !== 0 && (alpha < 1 ||
-                    r.values.transparencyAverage.ref.value > 0 ||
-                    r.values.dGeometryType.ref.value === 'directVolume' ||
-                    r.values.dPointStyle?.ref.value === 'fuzzy' ||
-                    r.values.dGeometryType.ref.value === 'text' ||
-                    r.values.dGeometryType.ref.value === 'image' ||
-                    xrayShaded)
+                r.values.transparencyAverage.ref.value > 0 ||
+                r.values.dGeometryType.ref.value === 'directVolume' ||
+                r.values.dPointStyle?.ref.value === 'fuzzy' ||
+                r.values.dGeometryType.ref.value === 'text' ||
+                r.values.dGeometryType.ref.value === 'image' ||
+                xrayShaded)
             );
         };
 
@@ -647,10 +605,7 @@ namespace Renderer {
                 const r = renderables[i];
 
                 const alpha = clamp(r.values.alpha.ref.value * r.state.alphaFactor, 0, 1);
-                if (
-                    alpha !== 0 && r.values.transparencyAverage.ref.value !== 1 &&
-                    r.values.markerAverage.ref.value !== 1
-                ) {
+                if (alpha !== 0 && r.values.transparencyAverage.ref.value !== 1 && r.values.markerAverage.ref.value !== 1) {
                     renderObject(renderables[i], 'marking', Flag.None);
                 }
             }
@@ -805,12 +760,7 @@ namespace Renderer {
             if (isTimingMode) ctx.timer.markEnd('Renderer.renderWboitTransparent');
         };
 
-        const renderDpoitTransparent = (
-            group: Scene.Group,
-            camera: ICamera,
-            depthTexture: Texture,
-            dpoitTextures: { depth: Texture; frontColor: Texture; backColor: Texture },
-        ) => {
+        const renderDpoitTransparent = (group: Scene.Group, camera: ICamera, depthTexture: Texture, dpoitTextures: { depth: Texture, frontColor: Texture, backColor: Texture }) => {
             if (isTimingMode) ctx.timer.mark('Renderer.renderDpoitTransparent');
 
             state.enable(gl.BLEND);
@@ -833,11 +783,7 @@ namespace Renderer {
         };
 
         return {
-            clear: (
-                toBackgroundColor: boolean,
-                ignoreTransparentBackground?: boolean,
-                forceToTransparency?: boolean,
-            ) => {
+            clear: (toBackgroundColor: boolean, ignoreTransparentBackground?: boolean, forceToTransparency?: boolean) => {
                 state.enable(gl.SCISSOR_TEST);
                 state.enable(gl.DEPTH_TEST);
                 state.colorMask(true, true, true, true);
@@ -890,27 +836,9 @@ namespace Renderer {
                     ValueCell.update(globalUniforms.uFogColor, Vec3.copy(globalUniforms.uFogColor.ref.value, bgColor));
                 }
 
-                if (
-                    props.pickingAlphaThreshold !== undefined && props.pickingAlphaThreshold !== p.pickingAlphaThreshold
-                ) {
+                if (props.pickingAlphaThreshold !== undefined && props.pickingAlphaThreshold !== p.pickingAlphaThreshold) {
                     p.pickingAlphaThreshold = props.pickingAlphaThreshold;
                     ValueCell.update(globalUniforms.uPickingAlphaThreshold, p.pickingAlphaThreshold);
-                }
-
-                if (props.interiorDarkening !== undefined && props.interiorDarkening !== p.interiorDarkening) {
-                    p.interiorDarkening = props.interiorDarkening;
-                    ValueCell.update(globalUniforms.uInteriorDarkening, p.interiorDarkening);
-                }
-                if (props.interiorColorFlag !== undefined && props.interiorColorFlag !== p.interiorColorFlag) {
-                    p.interiorColorFlag = props.interiorColorFlag;
-                    ValueCell.update(globalUniforms.uInteriorColorFlag, p.interiorColorFlag);
-                }
-                if (props.interiorColor !== undefined && props.interiorColor !== p.interiorColor) {
-                    p.interiorColor = props.interiorColor;
-                    ValueCell.update(
-                        globalUniforms.uInteriorColor,
-                        Color.toVec3Normalized(globalUniforms.uInteriorColor.ref.value, p.interiorColor),
-                    );
                 }
 
                 if (props.colorMarker !== undefined && props.colorMarker !== p.colorMarker) {
@@ -918,24 +846,15 @@ namespace Renderer {
                 }
                 if (props.highlightColor !== undefined && props.highlightColor !== p.highlightColor) {
                     p.highlightColor = props.highlightColor;
-                    ValueCell.update(
-                        globalUniforms.uHighlightColor,
-                        Color.toVec3Normalized(globalUniforms.uHighlightColor.ref.value, p.highlightColor),
-                    );
+                    ValueCell.update(globalUniforms.uHighlightColor, Color.toVec3Normalized(globalUniforms.uHighlightColor.ref.value, p.highlightColor));
                 }
                 if (props.selectColor !== undefined && props.selectColor !== p.selectColor) {
                     p.selectColor = props.selectColor;
-                    ValueCell.update(
-                        globalUniforms.uSelectColor,
-                        Color.toVec3Normalized(globalUniforms.uSelectColor.ref.value, p.selectColor),
-                    );
+                    ValueCell.update(globalUniforms.uSelectColor, Color.toVec3Normalized(globalUniforms.uSelectColor.ref.value, p.selectColor));
                 }
                 if (props.dimColor !== undefined && props.dimColor !== p.dimColor) {
                     p.dimColor = props.dimColor;
-                    ValueCell.update(
-                        globalUniforms.uDimColor,
-                        Color.toVec3Normalized(globalUniforms.uDimColor.ref.value, p.dimColor),
-                    );
+                    ValueCell.update(globalUniforms.uDimColor, Color.toVec3Normalized(globalUniforms.uDimColor.ref.value, p.dimColor));
                 }
                 if (props.highlightStrength !== undefined && props.highlightStrength !== p.highlightStrength) {
                     p.highlightStrength = props.highlightStrength;
@@ -977,20 +896,12 @@ namespace Renderer {
                 }
                 if (props.ambientColor !== undefined && props.ambientColor !== p.ambientColor) {
                     p.ambientColor = props.ambientColor;
-                    Vec3.scale(
-                        ambientColor,
-                        Color.toArrayNormalized(p.ambientColor, ambientColor, 0),
-                        p.ambientIntensity,
-                    );
+                    Vec3.scale(ambientColor, Color.toArrayNormalized(p.ambientColor, ambientColor, 0), p.ambientIntensity);
                     ValueCell.update(globalUniforms.uAmbientColor, ambientColor);
                 }
                 if (props.ambientIntensity !== undefined && props.ambientIntensity !== p.ambientIntensity) {
                     p.ambientIntensity = props.ambientIntensity;
-                    Vec3.scale(
-                        ambientColor,
-                        Color.toArrayNormalized(p.ambientColor, ambientColor, 0),
-                        p.ambientIntensity,
-                    );
+                    Vec3.scale(ambientColor, Color.toArrayNormalized(p.ambientColor, ambientColor, 0), p.ambientIntensity);
                     ValueCell.update(globalUniforms.uAmbientColor, ambientColor);
                 }
             },
@@ -999,10 +910,7 @@ namespace Renderer {
                 state.scissor(x, y, width, height);
                 if (x !== viewport.x || y !== viewport.y || width !== viewport.width || height !== viewport.height) {
                     Viewport.set(viewport, x, y, width, height);
-                    ValueCell.update(
-                        globalUniforms.uViewport,
-                        Vec4.set(globalUniforms.uViewport.ref.value, x, y, width, height),
-                    );
+                    ValueCell.update(globalUniforms.uViewport, Vec4.set(globalUniforms.uViewport.ref.value, x, y, width, height));
                 }
             },
             setTransparentBackground: (value: boolean) => {
@@ -1046,7 +954,7 @@ namespace Renderer {
             },
             dispose: () => {
                 // TODO
-            },
+            }
         };
     }
 }

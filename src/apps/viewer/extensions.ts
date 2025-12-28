@@ -6,27 +6,27 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { ANVILMembraneOrientation } from '../../extensions/anvil/behavior.ts';
-import { AssemblySymmetry } from '../../extensions/assembly-symmetry/index.ts';
-import { Backgrounds } from '../../extensions/backgrounds/index.ts';
-import { DnatcoNtCs } from '../../extensions/dnatco/index.ts';
-import { G3DFormat } from '../../extensions/g3d/format.ts';
-import { GeometryExport } from '../../extensions/geo-export/index.ts';
-import { MAQualityAssessment, MAQualityAssessmentConfig } from '../../extensions/model-archive/quality-assessment/behavior.ts';
-import { ModelExport } from '../../extensions/model-export/index.ts';
-import { Mp4Export } from '../../extensions/mp4-export/index.ts';
-import { loadMVS } from '../../extensions/mvs/index.ts';
-import { MolViewSpec } from '../../extensions/mvs/behavior.ts';
-import { loadMVSData } from '../../extensions/mvs/components/formats.ts';
-import { PDBeStructureQualityReport } from '../../extensions/pdbe/index.ts';
-import { RCSBValidationReport } from '../../extensions/rcsb/index.ts';
-import { SbNcbrPartialCharges, SbNcbrTunnels } from '../../extensions/sb-ncbr/index.ts';
-import { wwPDBChemicalComponentDictionary } from '../../extensions/wwpdb/ccd/behavior.ts';
-import { wwPDBStructConnExtensionFunctions } from '../../extensions/wwpdb/struct-conn/index.ts';
-import { ZenodoImport } from '../../extensions/zenodo/index.ts';
-import { PluginSpec } from '../../mol-plugin/spec.ts';
-import { MVSData } from '../../extensions/mvs/mvs-data.ts';
-import * as MVSUtil from '../../extensions/mvs/util.ts';
+import { ANVILMembraneOrientation } from '../../extensions/anvil/behavior';
+import { AssemblySymmetry } from '../../extensions/assembly-symmetry';
+import { Backgrounds } from '../../extensions/backgrounds';
+import { DnatcoNtCs } from '../../extensions/dnatco';
+import { G3DFormat } from '../../extensions/g3d/format';
+import { GeometryExport } from '../../extensions/geo-export';
+import { MAQualityAssessment, MAQualityAssessmentConfig } from '../../extensions/model-archive/quality-assessment/behavior';
+import { ModelExport } from '../../extensions/model-export';
+import { Mp4Export } from '../../extensions/mp4-export';
+import { loadMVS } from '../../extensions/mvs';
+import { MolViewSpec } from '../../extensions/mvs/behavior';
+import { loadMVSData } from '../../extensions/mvs/components/formats';
+import { PDBeStructureQualityReport } from '../../extensions/pdbe';
+import { RCSBValidationReport } from '../../extensions/rcsb';
+import { SbNcbrPartialCharges, SbNcbrTunnels } from '../../extensions/sb-ncbr';
+import { wwPDBChemicalComponentDictionary } from '../../extensions/wwpdb/ccd/behavior';
+import { wwPDBStructConnExtensionFunctions } from '../../extensions/wwpdb/struct-conn';
+import { ZenodoImport } from '../../extensions/zenodo';
+import { PluginSpec } from '../../mol-plugin/spec';
+import { MVSData } from '../../extensions/mvs/mvs-data';
+import * as MVSUtil from '../../extensions/mvs/util';
 
 export const ExtensionMap = {
     // Mol* built-in extensions

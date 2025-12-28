@@ -7,29 +7,29 @@
  */
 
 import * as React from 'react';
-import { Mat4, Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
-import { Volume } from '../../mol-model/volume.ts';
-import { Script } from '../../mol-script/script.ts';
-import { Asset } from '../../mol-util/assets.ts';
-import { Color } from '../../mol-util/color/index.ts';
-import { ColorListEntry } from '../../mol-util/color/color.ts';
-import { ColorListName, ColorListOptions, ColorListOptionsScale, ColorListOptionsSet, getColorListFromName } from '../../mol-util/color/lists.ts';
-import { Legend as LegendData } from '../../mol-util/legend.ts';
-import { memoize1, memoizeLatest } from '../../mol-util/memoize.ts';
-import { getPrecision } from '../../mol-util/number.ts';
-import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import { ParamMapping } from '../../mol-util/param-mapping.ts';
-import { camelCaseToWords } from '../../mol-util/string.ts';
-import { PluginReactContext, PluginUIComponent } from '../base.tsx';
-import { PluginUIContext } from '../context.ts';
-import { ActionMenu } from './action-menu.tsx';
-import { ColorOptions, ColorValueOption, CombinedColorControl } from './color.tsx';
-import { Button, ControlGroup, ControlRow, ExpandGroup, IconButton, TextInput, ToggleButton } from './common.tsx';
-import { ArrowDownwardSvg, ArrowDropDownSvg, ArrowRightSvg, ArrowUpwardSvg, BookmarksOutlinedSvg, CheckSvg, ClearSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, MoreHorizSvg, WarningSvg } from './icons.tsx';
-import { legendFor } from './legend.tsx';
-import { LineGraphComponent } from './line-graph/line-graph-component.tsx';
-import { Slider, Slider2 } from './slider.tsx';
-import { getColorGradient, getColorGradientBanded } from '../../mol-util/color/utils.ts';
+import { Mat4, Vec2, Vec3 } from '../../mol-math/linear-algebra';
+import { Volume } from '../../mol-model/volume';
+import { Script } from '../../mol-script/script';
+import { Asset } from '../../mol-util/assets';
+import { Color } from '../../mol-util/color';
+import { ColorListEntry } from '../../mol-util/color/color';
+import { ColorListName, ColorListOptions, ColorListOptionsScale, ColorListOptionsSet, getColorListFromName } from '../../mol-util/color/lists';
+import { Legend as LegendData } from '../../mol-util/legend';
+import { memoize1, memoizeLatest } from '../../mol-util/memoize';
+import { getPrecision } from '../../mol-util/number';
+import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { ParamMapping } from '../../mol-util/param-mapping';
+import { camelCaseToWords } from '../../mol-util/string';
+import { PluginReactContext, PluginUIComponent } from '../base';
+import { PluginUIContext } from '../context';
+import { ActionMenu } from './action-menu';
+import { ColorOptions, ColorValueOption, CombinedColorControl } from './color';
+import { Button, ControlGroup, ControlRow, ExpandGroup, IconButton, TextInput, ToggleButton } from './common';
+import { ArrowDownwardSvg, ArrowDropDownSvg, ArrowRightSvg, ArrowUpwardSvg, BookmarksOutlinedSvg, CheckSvg, ClearSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, TuneSvg, WarningSvg } from './icons';
+import { legendFor } from './legend';
+import { LineGraphComponent } from './line-graph/line-graph-component';
+import { Slider, Slider2 } from './slider';
+import { getColorGradient, getColorGradientBanded } from '../../mol-util/color/utils';
 
 export type ParameterControlsCategoryFilter = string | null | (string | null)[]
 
@@ -526,7 +526,7 @@ export class SelectControl extends React.PureComponent<ParamProps<PD.Select<stri
             : void 0;
 
         return <ToggleButton disabled={this.props.isDisabled} style={{ textAlign, overflow: 'hidden', textOverflow: 'ellipsis' }}
-            label={label} title={label as string} icon={icon} toggle={toggle} isSelected={this.state.showOptions} />;
+            label={label} title={label as string} icon={icon} toggle={toggle} isSelected={this.state.showOptions} className='msp-select-toggle' />;
     }
 
     renderAddOn() {
@@ -1192,7 +1192,7 @@ export class GroupControl extends React.PureComponent<ParamProps<PD.Group<any>> 
         if (!this.state.isExpanded) {
             return <div className='msp-mapped-parameter-group'>
                 {ctrl}
-                <IconButton svg={MoreHorizSvg} onClick={this.toggleExpanded} toggleState={this.state.isExpanded} title={`More Options`} />
+                <IconButton svg={TuneSvg} onClick={this.toggleExpanded} toggleState={this.state.isExpanded} title={`More Options`} style={{ opacity: 0.7 }} />
             </div>;
         }
 
@@ -1203,7 +1203,7 @@ export class GroupControl extends React.PureComponent<ParamProps<PD.Group<any>> 
 
         return <div className='msp-mapped-parameter-group'>
             {ctrl}
-            <IconButton svg={MoreHorizSvg} onClick={this.toggleExpanded} toggleState={this.state.isExpanded} title={`More Options`} />
+            <IconButton svg={TuneSvg} onClick={this.toggleExpanded} toggleState={this.state.isExpanded} title={`More Options`} />
             <div className='msp-control-offset'>
                 {this.pivotedPresets()}
                 <ParameterControls params={filtered} onEnter={this.props.onEnter} values={this.props.value} onChange={this.onChangeParam} isDisabled={this.props.isDisabled} />
@@ -1312,7 +1312,7 @@ export class MappedControl extends React.PureComponent<ParamProps<PD.Mapped<any>
             if (!this.areParamsEmpty(param.params)) {
                 return <div className='msp-mapped-parameter-group'>
                     {Select}
-                    <IconButton svg={MoreHorizSvg} onClick={this.toggleExpanded} toggleState={this.state.isExpanded} title={`${label} Properties`} />
+                    <IconButton svg={TuneSvg} onClick={this.toggleExpanded} toggleState={this.state.isExpanded} title={`${label} Properties`} style={{ opacity: this.state.isExpanded ? undefined : 0.7 }} />
                     {this.state.isExpanded && <GroupControl inMapped param={param} value={value.params} name={value.name} onChange={this.onChangeParam} onEnter={this.props.onEnter} isDisabled={this.props.isDisabled} />}
                 </div>;
             }

@@ -4,19 +4,16 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { shallowMergeArray } from '../mol-util/object.ts';
-import { RxEventHelper } from '../mol-util/rx-event-helper.ts';
-import type { Observable, Subscription } from 'rxjs';
-import { arraySetRemove } from '../mol-util/array.ts';
+import { shallowMergeArray } from '../mol-util/object';
+import { RxEventHelper } from '../mol-util/rx-event-helper';
+import { Subscription, Observable } from 'rxjs';
+import { arraySetRemove } from '../mol-util/array';
 
 export class PluginComponent {
     private _ev: RxEventHelper | undefined;
     private subs: Subscription[] | undefined = void 0;
 
-    protected subscribe<T>(
-        obs: Observable<T> | undefined,
-        action: (v: T) => void,
-    ): { unsubscribe: () => void } {
+    subscribe<T>(obs: Observable<T> | undefined, action: (v: T) => void) {
         if (!obs) return { unsubscribe: () => {} };
         if (typeof this.subs === 'undefined') this.subs = [];
 
@@ -29,11 +26,11 @@ export class PluginComponent {
                     sub.unsubscribe();
                     sub = void 0;
                 }
-            },
+            }
         };
     }
 
-    protected get ev(): RxEventHelper {
+    protected get ev() {
         return this._ev || (this._ev = RxEventHelper.create());
     }
 
@@ -59,7 +56,7 @@ export class StatefulPluginComponent<State extends {}> extends PluginComponent {
         return false;
     }
 
-    get state(): State {
+    get state() {
         return this._state;
     }
 

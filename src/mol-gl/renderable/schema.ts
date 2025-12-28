@@ -208,10 +208,6 @@ export const GlobalUniformSchema = {
 
     uPickingAlphaThreshold: UniformSpec('f'),
 
-    uInteriorDarkening: UniformSpec('f'),
-    uInteriorColorFlag: UniformSpec('b'),
-    uInteriorColor: UniformSpec('v3'),
-
     uHighlightColor: UniformSpec('v3'),
     uSelectColor: UniformSpec('v3'),
     uDimColor: UniformSpec('v3'),

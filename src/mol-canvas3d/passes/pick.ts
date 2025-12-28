@@ -401,7 +401,7 @@ export class PickBuffers {
 
         this.fenceTimestamp = now();
         this.fenceSync = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
-        // gl.flush();
+        gl.flush();
 
         this.ready = false;
         if (isTimingMode) this.webgl.timer.markEnd('PickBuffers.asyncRead');

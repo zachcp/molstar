@@ -4,27 +4,12 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { createRenderable, type Renderable, type RenderableState } from '../renderable.ts';
-import type { WebGLContext } from '../webgl/context.ts';
-import { createGraphicsRenderItem, type Transparency } from '../webgl/render-item.ts';
-import {
-    AttributeSpec,
-    BaseSchema,
-    DefineSpec,
-    ElementsSpec,
-    type GlobalDefines,
-    GlobalDefineSchema,
-    type GlobalDefineValues,
-    GlobalTextureSchema,
-    GlobalUniformSchema,
-    InternalSchema,
-    type InternalValues,
-    UniformSpec,
-    type Values,
-    ValueSpec,
-} from './schema.ts';
-import { MeshShaderCode } from '../shader-code.ts';
-import { ValueCell } from '../../mol-util/index.ts';
+import { Renderable, RenderableState, createRenderable } from '../renderable';
+import { WebGLContext } from '../webgl/context';
+import { createGraphicsRenderItem, Transparency } from '../webgl/render-item';
+import { GlobalUniformSchema, BaseSchema, AttributeSpec, ElementsSpec, DefineSpec, Values, InternalSchema, InternalValues, GlobalTextureSchema, ValueSpec, UniformSpec, GlobalDefineSchema, GlobalDefineValues, GlobalDefines } from './schema';
+import { MeshShaderCode } from '../shader-code';
+import { ValueCell } from '../../mol-util';
 
 export const MeshSchema = {
     ...BaseSchema,
@@ -42,27 +27,15 @@ export const MeshSchema = {
     dTransparentBackfaces: DefineSpec('string', ['off', 'on', 'opaque']),
     uBumpFrequency: UniformSpec('f', 'material'),
     uBumpAmplitude: UniformSpec('f', 'material'),
-    meta: ValueSpec('unknown'),
+    uInteriorColor: UniformSpec('v4'),
+    uInteriorSubstance: UniformSpec('v4'),
+    meta: ValueSpec('unknown')
 } as const;
-export type MeshSchema = typeof MeshSchema;
-export type MeshValues = Values<MeshSchema>;
+export type MeshSchema = typeof MeshSchema
+export type MeshValues = Values<MeshSchema>
 
-export function MeshRenderable(
-    ctx: WebGLContext,
-    id: number,
-    values: MeshValues,
-    state: RenderableState,
-    materialId: number,
-    transparency: Transparency,
-    globals: GlobalDefines,
-): Renderable<MeshValues> {
-    const schema = {
-        ...GlobalUniformSchema,
-        ...GlobalTextureSchema,
-        ...GlobalDefineSchema,
-        ...InternalSchema,
-        ...MeshSchema,
-    };
+export function MeshRenderable(ctx: WebGLContext, id: number, values: MeshValues, state: RenderableState, materialId: number, transparency: Transparency, globals: GlobalDefines): Renderable<MeshValues> {
+    const schema = { ...GlobalUniformSchema, ...GlobalTextureSchema, ...GlobalDefineSchema, ...InternalSchema, ...MeshSchema };
     const renderValues: MeshValues & InternalValues & GlobalDefineValues = {
         ...values,
         uObjectId: ValueCell.create(id),
@@ -70,15 +43,7 @@ export function MeshRenderable(
         dColorMarker: ValueCell.create(globals.dColorMarker),
     };
     const shaderCode = MeshShaderCode;
-    const renderItem = createGraphicsRenderItem(
-        ctx,
-        'triangles',
-        shaderCode,
-        schema,
-        renderValues,
-        materialId,
-        transparency,
-    );
+    const renderItem = createGraphicsRenderItem(ctx, 'triangles', shaderCode, schema, renderValues, materialId, transparency);
 
     return createRenderable(renderItem, renderValues, state);
 }

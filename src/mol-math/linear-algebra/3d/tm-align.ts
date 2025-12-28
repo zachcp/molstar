@@ -10,9 +10,9 @@
  * "TM-align: a protein structure alignment algorithm based on the TM-score"
  */
 
-import { Mat4 } from './mat4.ts';
-import { Vec3 } from './vec3.ts';
-import { MinimizeRmsd } from './minimize-rmsd.ts';
+import { Mat4 } from './mat4';
+import { Vec3 } from './vec3';
+import { MinimizeRmsd } from './minimize-rmsd';
 
 export { TMAlign };
 

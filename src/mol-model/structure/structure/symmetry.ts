@@ -142,6 +142,7 @@ namespace StructureSymmetry {
             for (let j = 0, _j = au.length; j < _j; j++) {
                 if (au[j].conformation !== bu[j].conformation) return false;
             }
+            if (!SortedArray.areEqual(a[i].elements, b[i].elements)) return false;
         }
         return true;
     }

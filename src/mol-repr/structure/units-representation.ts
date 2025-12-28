@@ -1,46 +1,43 @@
 /**
- * Copyright (c) 2018-2024 mol* contributors, licensed under MIT, See LICENSE file for more info.
+ * Copyright (c) 2018-2025 mol* contributors, licensed under MIT, See LICENSE file for more info.
  *
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
-import {
-    type StructureRepresentation,
-    type StructureRepresentationState,
-    StructureRepresentationStateBuilder,
-} from './representation.ts';
-import type { Visual } from '../visual.ts';
-import { Representation, type RepresentationContext, type RepresentationParamsGetter } from '../representation.ts';
-import { Bond, Structure, StructureElement, type Unit } from '../../mol-model/structure.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { StructureRepresentation, StructureRepresentationStateBuilder, StructureRepresentationState } from './representation';
+import { Visual } from '../visual';
+import { Representation, RepresentationContext, RepresentationParamsGetter } from '../representation';
+import { Structure, Unit, StructureElement, Bond } from '../../mol-model/structure';
 import { Subject } from 'rxjs';
-import { getNextMaterialId, type GraphicsRenderObject } from '../../mol-gl/render-object.ts';
-import { Theme } from '../../mol-theme/theme.ts';
-import { Task } from '../../mol-task/index.ts';
-import type { PickingId } from '../../mol-geo/geometry/picking.ts';
-import { EmptyLoci, EveryLoci, isDataLoci, isEmptyLoci, isEveryLoci, Loci } from '../../mol-model/loci.ts';
-import { applyMarkerAction, MarkerAction, MarkerActions } from '../../mol-util/marker-action.ts';
-import { Overpaint } from '../../mol-theme/overpaint.ts';
-import { Transparency } from '../../mol-theme/transparency.ts';
-import { EPSILON, Mat4 } from '../../mol-math/linear-algebra.ts';
-import { Interval } from '../../mol-data/int.ts';
-import type { StructureParams } from './params.ts';
-import { Clipping } from '../../mol-theme/clipping.ts';
-import type { WebGLContext } from '../../mol-gl/webgl/context.ts';
-import type { StructureGroup } from './visual/util/common.ts';
-import { Substance } from '../../mol-theme/substance.ts';
-import type { LocationCallback } from '../util.ts';
-import { Emissive } from '../../mol-theme/emissive.ts';
+import { getNextMaterialId, GraphicsRenderObject } from '../../mol-gl/render-object';
+import { Theme } from '../../mol-theme/theme';
+import { Task } from '../../mol-task';
+import { PickingId } from '../../mol-geo/geometry/picking';
+import { Loci, EmptyLoci, isEmptyLoci, isEveryLoci, isDataLoci, EveryLoci } from '../../mol-model/loci';
+import { MarkerAction, MarkerActions, applyMarkerAction } from '../../mol-util/marker-action';
+import { Overpaint } from '../../mol-theme/overpaint';
+import { Transparency } from '../../mol-theme/transparency';
+import { Mat4, EPSILON } from '../../mol-math/linear-algebra';
+import { Interval } from '../../mol-data/int';
+import { StructureParams } from './params';
+import { Clipping } from '../../mol-theme/clipping';
+import { WebGLContext } from '../../mol-gl/webgl/context';
+import { StructureGroup } from './visual/util/common';
+import { Substance } from '../../mol-theme/substance';
+import { LocationCallback } from '../util';
+import { Emissive } from '../../mol-theme/emissive';
+import { HashMap } from '../../mol-util/map';
 
-export interface UnitsVisual<P extends StructureParams> extends Visual<StructureGroup, P> {}
+function createVisualsMap<P extends StructureParams>() {
+    return new HashMap<Unit.SymmetryGroup, { group: Unit.SymmetryGroup, visual: UnitsVisual<P> }>(group => group.hashCode, Unit.SymmetryGroup.areInvariantElementsEqual);
+}
 
-export function UnitsRepresentation<P extends StructureParams>(
-    label: string,
-    ctx: RepresentationContext,
-    getParams: RepresentationParamsGetter<Structure, P>,
-    visualCtor: (materialId: number, structure: Structure, props: PD.Values<P>, webgl?: WebGLContext) => UnitsVisual<P>,
-): StructureRepresentation<P> {
+
+export interface UnitsVisual<P extends StructureParams> extends Visual<StructureGroup, P> { }
+
+export function UnitsRepresentation<P extends StructureParams>(label: string, ctx: RepresentationContext, getParams: RepresentationParamsGetter<Structure, P>, visualCtor: (materialId: number, structure: Structure, props: PD.Values<P>, webgl?: WebGLContext) => UnitsVisual<P>): StructureRepresentation<P> {
     let version = 0;
     const { webgl } = ctx;
     const updated = new Subject<number>();
@@ -48,7 +45,7 @@ export function UnitsRepresentation<P extends StructureParams>(
     const renderObjects: GraphicsRenderObject[] = [];
     const geometryState = new Representation.GeometryState();
     const _state = StructureRepresentationStateBuilder.create();
-    let visuals = new Map<number, { group: Unit.SymmetryGroup; visual: UnitsVisual<P> }>();
+    let visuals = createVisualsMap<P>();
 
     let _structure: Structure;
     let _groups: ReadonlyArray<Unit.SymmetryGroup>;
@@ -63,7 +60,7 @@ export function UnitsRepresentation<P extends StructureParams>(
         }
         _props = Object.assign({}, _props, props);
 
-        return Task.create('Creating or updating UnitsRepresentation', async (runtime) => {
+        return Task.create('Creating or updating UnitsRepresentation', async runtime => {
             if (!_structure && !structure) {
                 throw new Error('missing structure');
             } else if (structure && !_structure) {
@@ -76,29 +73,20 @@ export function UnitsRepresentation<P extends StructureParams>(
                     const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, { group, structure });
                     if (promise) await promise;
                     setVisualState(visual, group, _state); // current state for new visual
-                    visuals.set(group.hashCode, { visual, group });
-                    if (runtime.shouldUpdate) {
-                        await runtime.update({
-                            message: 'Creating or updating UnitsVisual',
-                            current: i,
-                            max: _groups.length,
-                        });
-                    }
+                    visuals.set(group, { visual, group });
+                    if (runtime.shouldUpdate) await runtime.update({ message: 'Creating or updating UnitsVisual', current: i, max: _groups.length });
                 }
-            } else if (
-                structure &&
-                (!Structure.areUnitIdsAndIndicesEqual(structure, _structure) || structure.child !== _structure.child)
-            ) {
+            } else if (structure && (!Structure.areUnitIdsAndIndicesEqual(structure, _structure) || structure.child !== _structure.child)) {
                 // console.log(label, 'structures not equivalent');
                 // Tries to re-use existing visuals for the groups of the new structure.
                 // Creates additional visuals if needed, destroys left-over visuals.
                 _groups = structure.unitSymmetryGroups;
                 // const newGroups: Unit.SymmetryGroup[] = []
                 const oldVisuals = visuals;
-                visuals = new Map();
+                visuals = createVisualsMap<P>();
                 for (let i = 0; i < _groups.length; i++) {
                     const group = _groups[i];
-                    const visualGroup = oldVisuals.get(group.hashCode);
+                    const visualGroup = oldVisuals.get(group);
                     if (visualGroup) {
                         // console.log(label, 'found visualGroup to reuse');
                         // console.log('old', visualGroup.group)
@@ -107,21 +95,15 @@ export function UnitsRepresentation<P extends StructureParams>(
                         if (visual.mustRecreate?.({ group, structure }, _props, webgl)) {
                             visual.destroy();
                             visual = visualCtor(materialId, structure, _props, webgl);
-                            const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, {
-                                group,
-                                structure,
-                            });
+                            const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, { group, structure });
                             if (promise) await promise;
                             setVisualState(visual, group, _state); // current state for new visual
                         } else {
-                            const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, {
-                                group,
-                                structure,
-                            });
+                            const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, { group, structure });
                             if (promise) await promise;
                         }
-                        visuals.set(group.hashCode, { visual, group });
-                        oldVisuals.delete(group.hashCode);
+                        visuals.set(group, { visual, group });
+                        oldVisuals.delete(group);
 
                         // Remove highlight
                         // TODO: remove selection too??
@@ -136,23 +118,15 @@ export function UnitsRepresentation<P extends StructureParams>(
                         const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, { group, structure });
                         if (promise) await promise;
                         setVisualState(visual, group, _state); // current state for new visual
-                        visuals.set(group.hashCode, { visual, group });
+                        visuals.set(group, { visual, group });
                     }
-                    if (runtime.shouldUpdate) {
-                        await runtime.update({
-                            message: 'Creating or updating UnitsVisual',
-                            current: i,
-                            max: _groups.length,
-                        });
-                    }
+                    if (runtime.shouldUpdate) await runtime.update({ message: 'Creating or updating UnitsVisual', current: i, max: _groups.length });
                 }
                 oldVisuals.forEach(({ visual }) => {
                     // console.log(label, 'removed unused visual');
                     visual.destroy();
                 });
-            } else if (
-                structure && structure !== _structure && Structure.areUnitIdsAndIndicesEqual(structure, _structure)
-            ) {
+            } else if (structure && structure !== _structure && Structure.areUnitIdsAndIndicesEqual(structure, _structure)) {
                 // console.log(label, 'structures equivalent but not identical');
                 // Expects that for structures with the same hashCode,
                 // the unitSymmetryGroups are the same as well.
@@ -162,62 +136,45 @@ export function UnitsRepresentation<P extends StructureParams>(
                 // console.log('old', _structure.unitSymmetryGroups)
                 for (let i = 0; i < _groups.length; i++) {
                     const group = _groups[i];
-                    const visualGroup = visuals.get(group.hashCode);
+                    const visualGroup = visuals.get(group);
                     if (visualGroup) {
                         let { visual } = visualGroup;
                         if (visual.mustRecreate?.({ group, structure }, _props, ctx.webgl)) {
                             visual.destroy();
                             visual = visualCtor(materialId, structure, _props, ctx.webgl);
                             visualGroup.visual = visual;
-                            const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, {
-                                group,
-                                structure,
-                            });
+                            const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, { group, structure });
                             if (promise) await promise;
                             setVisualState(visual, group, _state); // current state for new visual
                         } else {
-                            const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, {
-                                group,
-                                structure,
-                            });
+                            const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, { group, structure });
                             if (promise) await promise;
                         }
                         visualGroup.group = group;
                     } else {
                         throw new Error(`expected to find visual for hashCode ${group.hashCode}`);
                     }
-                    if (runtime.shouldUpdate) {
-                        await runtime.update({
-                            message: 'Creating or updating UnitsVisual',
-                            current: i,
-                            max: _groups.length,
-                        });
-                    }
+                    if (runtime.shouldUpdate) await runtime.update({ message: 'Creating or updating UnitsVisual', current: i, max: _groups.length });
                 }
             } else {
                 // console.log(label, 'no new structure');
                 // No new structure given, just update all visuals with new props.
-                const visualsList: { group: Unit.SymmetryGroup; visual: UnitsVisual<P> }[] = []; // TODO avoid allocation
-                visuals.forEach((vg) => visualsList.push(vg));
+                const visualsList: { group: Unit.SymmetryGroup, visual: UnitsVisual<P> }[] = []; // TODO avoid allocation
+                visuals.forEach(vg => visualsList.push(vg));
                 for (let i = 0, il = visualsList.length; i < il; ++i) {
                     let { visual, group } = visualsList[i];
                     if (visual.mustRecreate?.({ group, structure: _structure }, _props, ctx.webgl)) {
                         visual.destroy();
                         visual = visualCtor(materialId, _structure, _props, webgl);
                         visualsList[i].visual = visual;
-                        const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, {
-                            group,
-                            structure: _structure,
-                        });
+                        const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props, { group, structure: _structure });
                         if (promise) await promise;
                         setVisualState(visual, group, _state); // current state for new visual
                     } else {
                         const promise = visual.createOrUpdate({ webgl, runtime }, _theme, _props);
                         if (promise) await promise;
                     }
-                    if (runtime.shouldUpdate) {
-                        await runtime.update({ message: 'Creating or updating UnitsVisual', current: i, max: il });
-                    }
+                    if (runtime.shouldUpdate) await runtime.update({ message: 'Creating or updating UnitsVisual', current: i, max: il });
                 }
             }
             // update list of renderObjects
@@ -262,10 +219,7 @@ export function UnitsRepresentation<P extends StructureParams>(
             if (!Structure.areRootsEquivalent(loci.structure, _structure)) return false;
             // Remap `loci` from equivalent structure to the current `_structure`
             loci = Loci.remap(loci, _structure);
-            if (
-                Structure.isLoci(loci) ||
-                (StructureElement.Loci.is(loci) && StructureElement.Loci.isWholeStructure(loci))
-            ) {
+            if (Structure.isLoci(loci) || (StructureElement.Loci.is(loci) && StructureElement.Loci.isWholeStructure(loci))) {
                 // Change to `EveryLoci` to allow for downstream optimizations
                 loci = EveryLoci;
             }
@@ -281,24 +235,8 @@ export function UnitsRepresentation<P extends StructureParams>(
         return changed;
     }
 
-    function setVisualState(
-        visual: UnitsVisual<P>,
-        group: Unit.SymmetryGroup,
-        state: Partial<StructureRepresentationState>,
-    ) {
-        const {
-            visible,
-            alphaFactor,
-            pickable,
-            overpaint,
-            transparency,
-            emissive,
-            substance,
-            clipping,
-            themeStrength,
-            transform,
-            unitTransforms,
-        } = state;
+    function setVisualState(visual: UnitsVisual<P>, group: Unit.SymmetryGroup, state: Partial<StructureRepresentationState>) {
+        const { visible, alphaFactor, pickable, overpaint, transparency, emissive, substance, clipping, themeStrength, transform, unitTransforms } = state;
 
         if (visible !== undefined) visual.setVisibility(visible);
         if (alphaFactor !== undefined) visual.setAlphaFactor(alphaFactor);
@@ -325,21 +263,7 @@ export function UnitsRepresentation<P extends StructureParams>(
     }
 
     function setState(state: Partial<StructureRepresentationState>) {
-        const {
-            visible,
-            alphaFactor,
-            pickable,
-            overpaint,
-            transparency,
-            emissive,
-            substance,
-            clipping,
-            themeStrength,
-            transform,
-            unitTransforms,
-            syncManually,
-            markerActions,
-        } = state;
+        const { visible, alphaFactor, pickable, overpaint, transparency, emissive, substance, clipping, themeStrength, transform, unitTransforms, syncManually, markerActions } = state;
         const newState: Partial<StructureRepresentationState> = {};
 
         if (visible !== undefined) newState.visible = visible;
@@ -394,21 +318,11 @@ export function UnitsRepresentation<P extends StructureParams>(
             });
             return groupCount;
         },
-        get geometryVersion() {
-            return geometryState.version;
-        },
-        get props() {
-            return _props;
-        },
-        get params() {
-            return _params;
-        },
-        get state() {
-            return _state;
-        },
-        get theme() {
-            return _theme;
-        },
+        get geometryVersion() { return geometryState.version; },
+        get props() { return _props; },
+        get params() { return _params; },
+        get state() { return _state; },
+        get theme() { return _theme; },
         renderObjects,
         updated,
         createOrUpdate,
@@ -418,6 +332,6 @@ export function UnitsRepresentation<P extends StructureParams>(
         getAllLoci,
         eachLocation,
         mark,
-        destroy,
+        destroy
     };
 }

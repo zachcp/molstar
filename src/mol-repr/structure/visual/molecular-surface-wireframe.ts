@@ -1,51 +1,38 @@
 /**
- * Copyright (c) 2019-2022 mol* contributors, licensed under MIT, See LICENSE file for more info.
+ * Copyright (c) 2019-2025 mol* contributors, licensed under MIT, See LICENSE file for more info.
  *
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
-import { UnitsLinesParams, UnitsLinesVisual, type UnitsVisual } from '../units-visual.ts';
-import { MolecularSurfaceCalculationParams } from '../../../mol-math/geometry/molecular-surface.ts';
-import type { VisualContext } from '../../visual.ts';
-import type { Structure, Unit } from '../../../mol-model/structure.ts';
-import type { Theme } from '../../../mol-theme/theme.ts';
-import { Lines } from '../../../mol-geo/geometry/lines/lines.ts';
-import { computeUnitMolecularSurface, type MolecularSurfaceProps } from './util/molecular-surface.ts';
-import { computeMarchingCubesLines } from '../../../mol-geo/util/marching-cubes/algorithm.ts';
-import { eachElement, ElementIterator, getElementLoci } from './util/element.ts';
-import type { VisualUpdateState } from '../../util.ts';
-import { CommonSurfaceParams } from './util/common.ts';
-import { Sphere3D } from '../../../mol-math/geometry.ts';
+import { ParamDefinition as PD } from '../../../mol-util/param-definition';
+import { UnitsVisual, UnitsLinesVisual, UnitsLinesParams } from '../units-visual';
+import { VisualContext } from '../../visual';
+import { Unit, Structure } from '../../../mol-model/structure';
+import { Theme } from '../../../mol-theme/theme';
+import { Lines } from '../../../mol-geo/geometry/lines/lines';
+import { CommonMolecularSurfaceCalculationParams, computeUnitMolecularSurface, MolecularSurfaceProps } from './util/molecular-surface';
+import { computeMarchingCubesLines } from '../../../mol-geo/util/marching-cubes/algorithm';
+import { ElementIterator, getElementLoci, eachElement } from './util/element';
+import { VisualUpdateState } from '../../util';
+import { CommonSurfaceParams } from './util/common';
+import { Sphere3D } from '../../../mol-math/geometry';
 
 export const MolecularSurfaceWireframeParams = {
     ...UnitsLinesParams,
-    ...MolecularSurfaceCalculationParams,
+    ...CommonMolecularSurfaceCalculationParams,
     ...CommonSurfaceParams,
     sizeFactor: PD.Numeric(1.5, { min: 0, max: 10, step: 0.1 }),
 };
-export type MolecularSurfaceWireframeParams = typeof MolecularSurfaceWireframeParams;
+export type MolecularSurfaceWireframeParams = typeof MolecularSurfaceWireframeParams
 
 //
 
-async function createMolecularSurfaceWireframe(
-    ctx: VisualContext,
-    unit: Unit,
-    structure: Structure,
-    theme: Theme,
-    props: MolecularSurfaceProps,
-    lines?: Lines,
-): Promise<Lines> {
-    const { transform, field, idField, maxRadius } = await computeUnitMolecularSurface(
-        structure,
-        unit,
-        theme.size,
-        props,
-    ).runInContext(ctx.runtime);
+async function createMolecularSurfaceWireframe(ctx: VisualContext, unit: Unit, structure: Structure, theme: Theme, props: MolecularSurfaceProps, lines?: Lines): Promise<Lines> {
+    const { transform, field, idField, maxRadius } = await computeUnitMolecularSurface(structure, unit, theme.size, props).runInContext(ctx.runtime);
     const params = {
         isoLevel: props.probeRadius,
         scalarField: field,
-        idField,
+        idField
     };
     const wireframe = await computeMarchingCubesLines(params, lines).runAsChild(ctx.runtime);
 
@@ -64,17 +51,13 @@ export function MolecularSurfaceWireframeVisual(materialId: number): UnitsVisual
         createLocationIterator: ElementIterator.fromGroup,
         getLoci: getElementLoci,
         eachLocation: eachElement,
-        setUpdateState: (
-            state: VisualUpdateState,
-            newProps: PD.Values<MolecularSurfaceWireframeParams>,
-            currentProps: PD.Values<MolecularSurfaceWireframeParams>,
-        ) => {
+        setUpdateState: (state: VisualUpdateState, newProps: PD.Values<MolecularSurfaceWireframeParams>, currentProps: PD.Values<MolecularSurfaceWireframeParams>) => {
             if (newProps.resolution !== currentProps.resolution) state.createGeometry = true;
             if (newProps.probeRadius !== currentProps.probeRadius) state.createGeometry = true;
             if (newProps.probePositions !== currentProps.probePositions) state.createGeometry = true;
             if (newProps.ignoreHydrogens !== currentProps.ignoreHydrogens) state.createGeometry = true;
             if (newProps.ignoreHydrogensVariant !== currentProps.ignoreHydrogensVariant) state.createGeometry = true;
             if (newProps.includeParent !== currentProps.includeParent) state.createGeometry = true;
-        },
+        }
     }, materialId);
 }
