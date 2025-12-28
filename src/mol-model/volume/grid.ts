@@ -32,7 +32,7 @@ namespace Grid {
     export type Transform = { kind: 'spacegroup', cell: SpacegroupCell, fractionalBox: Box3D } | { kind: 'matrix', matrix: Mat4 }
 
     const _scale = Mat4(), _translate = Mat4();
-    export function getGridToCartesianTransform(grid: Grid) {
+    export function getGridToCartesianTransform(grid: Grid): Mat4 {
         if (grid.transform.kind === 'matrix') {
             return Mat4.copy(Mat4(), grid.transform.matrix);
         }
@@ -47,15 +47,15 @@ namespace Grid {
         return Mat4.identity();
     }
 
-    export function areEquivalent(gridA: Grid, gridB: Grid) {
+    export function areEquivalent(gridA: Grid, gridB: Grid): boolean {
         return gridA === gridB;
     }
 
-    export function isEmpty(grid: Grid) {
+    export function isEmpty(grid: Grid): boolean {
         return grid.cells.data.length === 0;
     }
 
-    export function getBoundingSphere(grid: Grid, boundingSphere?: Sphere3D) {
+    export function getBoundingSphere(grid: Grid, boundingSphere?: Sphere3D): Sphere3D {
         if (!boundingSphere) boundingSphere = Sphere3D();
 
         const dimensions = grid.cells.space.dimensions as Vec3;
@@ -67,7 +67,7 @@ namespace Grid {
      * Compute histogram with given bin count.
      * Cached on the Grid object.
      */
-    export function getHistogram(grid: Grid, binCount: number) {
+    export function getHistogram(grid: Grid, binCount: number): Histogram {
         let histograms = (grid as any)._historams as { [binCount: number]: Histogram };
         if (!histograms) {
             histograms = (grid as any)._historams = { };
@@ -78,7 +78,7 @@ namespace Grid {
         return histograms[binCount];
     }
 
-    export function makeGetTrilinearlyInterpolated(grid: Grid, transform: 'none' | 'relative') {
+    export function makeGetTrilinearlyInterpolated(grid: Grid, transform: 'none' | 'relative'): (position: Vec3) => number {
         const cartnToGrid = Grid.getGridToCartesianTransform(grid);
         Mat4.invert(cartnToGrid, cartnToGrid);
         const gridCoords = Vec3();

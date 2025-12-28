@@ -94,7 +94,7 @@ export namespace Tensor {
         return out;
     }
 
-    export function areEqualExact(a: Tensor.Data, b: Tensor.Data) {
+    export function areEqualExact(a: Tensor.Data, b: Tensor.Data): boolean {
         const len = a.length;
         if (len !== b.length) return false;
         for (let i = 0; i < len; i++) if (a[i] !== b[i]) return false;
@@ -262,7 +262,7 @@ export namespace Tensor {
         return ctor => new (ctor || layout.defaultCtor)(size) as Tensor.Data;
     }
 
-    function dataOffset(layout: Layout, coord: number[]) {
+    function dataOffset(layout: Layout, coord: number[]): number {
         const { accessDimensions: acc, axisOrderFastToSlow: ao } = layout;
         const d = acc.length - 1;
         let o = acc[d] * coord[ao[d]];
@@ -272,7 +272,7 @@ export namespace Tensor {
         return o;
     }
 
-    function getCoords(layout: Layout, o: number, coords: number[]) {
+    function getCoords(layout: Layout, o: number, coords: number[]): number[] {
         const { dimensions: dim, axisOrderFastToSlow: ao } = layout;
         const d = dim.length;
 
@@ -288,7 +288,7 @@ export namespace Tensor {
     }
 
     // Convers "slow to fast" axis order to "fast to slow" and vice versa.
-    export function invertAxisOrder(v: number[]) {
+    export function invertAxisOrder(v: number[]): number[] {
         const ret: number[] = [];
         for (let i = 0; i < v.length; i++) {
             ret[i] = v[v.length - i - 1];
@@ -296,19 +296,19 @@ export namespace Tensor {
         return ret;
     }
 
-    function reorder(xs: number[], indices: number[]) {
+    function reorder(xs: number[], indices: number[]): number[] {
         const ret: number[] = [];
         for (let i = 0; i < xs.length; i++) ret[i] = xs[indices[i]];
         return ret;
     }
 
-    export function convertToCanonicalAxisIndicesFastToSlow(order: number[]) {
+    export function convertToCanonicalAxisIndicesFastToSlow(order: number[]): (xs: number[]) => number[] {
         const indices = new Int32Array(order.length) as any as number[];
         for (let i = 0; i < order.length; i++) indices[order[i]] = i;
         return (xs: number[]) => reorder(xs, indices);
     }
 
-    export function convertToCanonicalAxisIndicesSlowToFast(order: number[]) {
+    export function convertToCanonicalAxisIndicesSlowToFast(order: number[]): (xs: number[]) => number[] {
         const indices = new Int32Array(order.length) as any as number[];
         for (let i = 0; i < order.length; i++) indices[order[order.length - i - 1]] = i;
         return (xs: number[]) => reorder(xs, indices);

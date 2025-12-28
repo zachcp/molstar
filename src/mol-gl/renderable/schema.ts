@@ -164,7 +164,7 @@ export type RenderableValues = { readonly [k: string]: ValueCell<any> };
 
 //
 
-export const GlobalUniformSchema = {
+const _GlobalUniformSchema = {
     uDrawId: UniformSpec('i'),
 
     uModel: UniformSpec('m4'),
@@ -226,10 +226,11 @@ export const GlobalUniformSchema = {
     uMarkingType: UniformSpec('i'),
     uPickType: UniformSpec('i'),
 } as const;
-export type GlobalUniformSchema = typeof GlobalUniformSchema;
+export type GlobalUniformSchema = typeof _GlobalUniformSchema;
+export const GlobalUniformSchema: GlobalUniformSchema = _GlobalUniformSchema;
 export type GlobalUniformValues = Values<GlobalUniformSchema>;
 
-export const GlobalTextureSchema = {
+const _GlobalTextureSchema = {
     tDepth: TextureSpec('texture', 'depth', 'ushort', 'nearest'),
 
     // dpoit
@@ -237,24 +238,27 @@ export const GlobalTextureSchema = {
     tDpoitFrontColor: TextureSpec('texture', 'rgba', 'float', 'nearest'),
     tDpoitBackColor: TextureSpec('texture', 'rgba', 'float', 'nearest'),
 } as const;
-export type GlobalTextureSchema = typeof GlobalTextureSchema;
+export type GlobalTextureSchema = typeof _GlobalTextureSchema;
+export const GlobalTextureSchema: GlobalTextureSchema = _GlobalTextureSchema;
 export type GlobalTextureValues = Values<GlobalTextureSchema>;
 
-export const GlobalDefineSchema = {
+const _GlobalDefineSchema = {
     dLightCount: DefineSpec('number'),
     dColorMarker: DefineSpec('boolean'),
 } as const;
-export type GlobalDefineSchema = typeof GlobalDefineSchema;
+export type GlobalDefineSchema = typeof _GlobalDefineSchema;
+export const GlobalDefineSchema: GlobalDefineSchema = _GlobalDefineSchema;
 export type GlobalDefineValues = Values<GlobalDefineSchema>;
 export type GlobalDefines = UnboxedValues<GlobalDefineSchema>;
 
-export const InternalSchema = {
+const _InternalSchema = {
     uObjectId: UniformSpec('i'),
 } as const;
-export type InternalSchema = typeof InternalSchema;
+export type InternalSchema = typeof _InternalSchema;
+export const InternalSchema: InternalSchema = _InternalSchema;
 export type InternalValues = Values<InternalSchema>;
 
-export const ColorSchema = {
+const _ColorSchema = {
     // aColor: AttributeSpec('float32', 3, 0), // TODO
     uColor: UniformSpec('v3', 'material'),
     uColorTexDim: UniformSpec('v2'),
@@ -279,10 +283,11 @@ export const ColorSchema = {
     ]),
     dUsePalette: DefineSpec('boolean'),
 } as const;
-export type ColorSchema = typeof ColorSchema;
+export type ColorSchema = typeof _ColorSchema;
+export const ColorSchema: ColorSchema = _ColorSchema;
 export type ColorValues = Values<ColorSchema>;
 
-export const SizeSchema = {
+const _SizeSchema = {
     // aSize: AttributeSpec('float32', 1, 0), // TODO
     uSize: UniformSpec('f', 'material'),
     uSizeTexDim: UniformSpec('v2'),
@@ -290,10 +295,11 @@ export const SizeSchema = {
     dSizeType: DefineSpec('string', ['uniform', 'attribute', 'instance', 'group', 'groupInstance']),
     uSizeFactor: UniformSpec('f', 'material'),
 } as const;
-export type SizeSchema = typeof SizeSchema;
+export type SizeSchema = typeof _SizeSchema;
+export const SizeSchema: SizeSchema = _SizeSchema;
 export type SizeValues = Values<SizeSchema>;
 
-export const MarkerSchema = {
+const _MarkerSchema = {
     uMarker: UniformSpec('f'),
     uMarkerTexDim: UniformSpec('v2'),
     tMarker: TextureSpec('image-uint8', 'alpha', 'ubyte', 'nearest'),
@@ -301,10 +307,11 @@ export const MarkerSchema = {
     markerStatus: ValueSpec('number'),
     dMarkerType: DefineSpec('string', ['instance', 'groupInstance']),
 } as const;
-export type MarkerSchema = typeof MarkerSchema;
+export type MarkerSchema = typeof _MarkerSchema;
+export const MarkerSchema: MarkerSchema = _MarkerSchema;
 export type MarkerValues = Values<MarkerSchema>;
 
-export const OverpaintSchema = {
+const _OverpaintSchema = {
     uOverpaintTexDim: UniformSpec('v2'),
     tOverpaint: TextureSpec('image-uint8', 'rgba', 'ubyte', 'nearest'),
     dOverpaint: DefineSpec('boolean'),
@@ -315,10 +322,11 @@ export const OverpaintSchema = {
     dOverpaintType: DefineSpec('string', ['instance', 'groupInstance', 'volumeInstance']),
     uOverpaintStrength: UniformSpec('f', 'material'),
 } as const;
-export type OverpaintSchema = typeof OverpaintSchema;
+export type OverpaintSchema = typeof _OverpaintSchema;
+export const OverpaintSchema: OverpaintSchema = _OverpaintSchema;
 export type OverpaintValues = Values<OverpaintSchema>;
 
-export const TransparencySchema = {
+const _TransparencySchema = {
     uTransparencyTexDim: UniformSpec('v2'),
     tTransparency: TextureSpec('image-uint8', 'alpha', 'ubyte', 'nearest'),
     dTransparency: DefineSpec('boolean'),
@@ -331,10 +339,11 @@ export const TransparencySchema = {
     dTransparencyType: DefineSpec('string', ['instance', 'groupInstance', 'volumeInstance']),
     uTransparencyStrength: UniformSpec('f', 'material'),
 } as const;
-export type TransparencySchema = typeof TransparencySchema;
+export type TransparencySchema = typeof _TransparencySchema;
+export const TransparencySchema: TransparencySchema = _TransparencySchema;
 export type TransparencyValues = Values<TransparencySchema>;
 
-export const EmissiveSchema = {
+const _EmissiveSchema = {
     uEmissiveTexDim: UniformSpec('v2'),
     tEmissive: TextureSpec('image-uint8', 'alpha', 'ubyte', 'nearest'),
     dEmissive: DefineSpec('boolean'),
@@ -346,10 +355,11 @@ export const EmissiveSchema = {
     dEmissiveType: DefineSpec('string', ['instance', 'groupInstance', 'volumeInstance']),
     uEmissiveStrength: UniformSpec('f', 'material'),
 } as const;
-export type EmissiveSchema = typeof EmissiveSchema;
+export type EmissiveSchema = typeof _EmissiveSchema;
+export const EmissiveSchema: EmissiveSchema = _EmissiveSchema;
 export type EmissiveValues = Values<EmissiveSchema>;
 
-export const SubstanceSchema = {
+const _SubstanceSchema = {
     uSubstanceTexDim: UniformSpec('v2'),
     tSubstance: TextureSpec('image-uint8', 'rgba', 'ubyte', 'nearest'),
     dSubstance: DefineSpec('boolean'),
@@ -360,19 +370,21 @@ export const SubstanceSchema = {
     dSubstanceType: DefineSpec('string', ['instance', 'groupInstance', 'volumeInstance']),
     uSubstanceStrength: UniformSpec('f', 'material'),
 } as const;
-export type SubstanceSchema = typeof SubstanceSchema;
+export type SubstanceSchema = typeof _SubstanceSchema;
+export const SubstanceSchema: SubstanceSchema = _SubstanceSchema;
 export type SubstanceValues = Values<SubstanceSchema>;
 
-export const ClippingSchema = {
+const _ClippingSchema = {
     uClippingTexDim: UniformSpec('v2'),
     tClipping: TextureSpec('image-uint8', 'alpha', 'ubyte', 'nearest'),
     dClipping: DefineSpec('boolean'),
     dClippingType: DefineSpec('string', ['instance', 'groupInstance']),
 } as const;
-export type ClippingSchema = typeof ClippingSchema;
+export type ClippingSchema = typeof _ClippingSchema;
+export const ClippingSchema: ClippingSchema = _ClippingSchema;
 export type ClippingValues = Values<ClippingSchema>;
 
-export const BaseSchema = {
+const _BaseSchema = {
     dGeometryType: DefineSpec('string', [
         'cylinders',
         'directVolume',
@@ -451,5 +463,6 @@ export const BaseSchema = {
 
     instanceGrid: ValueSpec('instanceGrid'),
 } as const;
-export type BaseSchema = typeof BaseSchema;
+export type BaseSchema = typeof _BaseSchema;
+export const BaseSchema: BaseSchema = _BaseSchema;
 export type BaseValues = Values<BaseSchema>;

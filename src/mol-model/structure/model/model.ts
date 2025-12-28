@@ -12,6 +12,7 @@ import { AtomicHierarchy, AtomicConformation, AtomicRanges, VdwRadius } from './
 import { CoarseHierarchy, CoarseConformation } from './properties/coarse.ts';
 import { Entities, ChemicalComponentMap, MissingResidues, StructAsymMap } from './properties/common.ts';
 import { CustomProperties } from '../../custom-property.ts';
+import { CustomProperty } from '../../../mol-model-props/common/custom-property.ts';
 import { SaccharideComponentMap } from '../structure/carbohydrates/constants.ts';
 import { ModelFormat } from '../../../mol-model-formats/format.ts';
 import { calcModelCenter, getAsymIdCount } from './util.ts';
@@ -169,7 +170,7 @@ export namespace Model {
         });
     }
 
-    export function getAtomicConformationFromFrame(model: Model, frame: Frame) {
+    export function getAtomicConformationFromFrame(model: Model, frame: Frame): AtomicConformation {
         return Coordinates.getAtomicConformation(frame, {
             atomId: model.atomicConformation.atomId,
             occupancy: model.atomicConformation.occupancy,
@@ -220,18 +221,23 @@ export namespace Model {
 
     const TrajectoryInfoProp = '__TrajectoryInfo__';
     export type TrajectoryInfo = { readonly index: number, readonly size: number }
-    export const TrajectoryInfo = {
+    export const TrajectoryInfo: {
+        get(model: Model): TrajectoryInfo;
+        set(model: Model, trajectoryInfo: TrajectoryInfo): TrajectoryInfo;
+    } = {
         get(model: Model): TrajectoryInfo {
             return model._dynamicPropertyData[TrajectoryInfoProp] || { index: 0, size: 1 };
         },
-        set(model: Model, trajectoryInfo: TrajectoryInfo) {
+        set(model: Model, trajectoryInfo: TrajectoryInfo): TrajectoryInfo {
             return model._dynamicPropertyData[TrajectoryInfoProp] = trajectoryInfo;
         }
     };
 
     const AsymIdCountProp = '__AsymIdCount__';
     export type AsymIdCount = { readonly auth: number, readonly label: number }
-    export const AsymIdCount = {
+    export const AsymIdCount: {
+        get(model: Model): AsymIdCount;
+    } = {
         get(model: Model): AsymIdCount {
             if (model._dynamicPropertyData[AsymIdCountProp]) return model._dynamicPropertyData[AsymIdCountProp];
             const asymIdCount = getAsymIdCount(model);
@@ -241,19 +247,19 @@ export namespace Model {
     };
 
     export type AsymIdOffset = { auth: number, label: number };
-    export const AsymIdOffset = CustomModelProperty.createSimple<AsymIdOffset>('asym_id_offset', 'static');
+    export const AsymIdOffset: CustomProperty.Provider<Model, any, any> = CustomModelProperty.createSimple<AsymIdOffset>('asym_id_offset', 'static');
 
     export type Index = number;
-    export const Index = CustomModelProperty.createSimple<Index>('index', 'static');
+    export const Index: CustomProperty.Provider<Model, any, any> = CustomModelProperty.createSimple<Index>('index', 'static');
 
     export type MaxIndex = number;
-    export const MaxIndex = CustomModelProperty.createSimple<MaxIndex>('max_index', 'static');
+    export const MaxIndex: CustomProperty.Provider<Model, any, any> = CustomModelProperty.createSimple<MaxIndex>('max_index', 'static');
 
-    export function getRoot(model: Model) {
+    export function getRoot(model: Model): Model {
         return model.parent || model;
     }
 
-    export function areHierarchiesEqual(a: Model, b: Model) {
+    export function areHierarchiesEqual(a: Model, b: Model): boolean {
         return a.atomicHierarchy === b.atomicHierarchy && a.coarseHierarchy === b.coarseHierarchy;
     }
 
@@ -261,21 +267,27 @@ export namespace Model {
     export type CoordinatesHistory = {
         areEqual(elements: SortedArray<ElementIndex>, kind: Unit.Kind, model: Model): boolean
     }
-    export const CoordinatesHistory = {
+    export const CoordinatesHistory: {
+        get(model: Model): CoordinatesHistory | undefined;
+        set(model: Model, coordinatesHistory: CoordinatesHistory): CoordinatesHistory;
+    } = {
         get(model: Model): CoordinatesHistory | undefined {
             return model._staticPropertyData[CoordinatesHistoryProp];
         },
-        set(model: Model, coordinatesHistory: CoordinatesHistory) {
+        set(model: Model, coordinatesHistory: CoordinatesHistory): CoordinatesHistory {
             return model._staticPropertyData[CoordinatesHistoryProp] = coordinatesHistory;
         }
     };
 
     const CoarseGrainedProp = '__CoarseGrained__';
-    export const CoarseGrained = {
+    export const CoarseGrained: {
+        get(model: Model): boolean | undefined;
+        set(model: Model, coarseGrained: boolean): boolean;
+    } = {
         get(model: Model): boolean | undefined {
             return model._staticPropertyData[CoarseGrainedProp];
         },
-        set(model: Model, coarseGrained: boolean) {
+        set(model: Model, coarseGrained: boolean): boolean {
             return model._staticPropertyData[CoarseGrainedProp] = coarseGrained;
         }
     };
