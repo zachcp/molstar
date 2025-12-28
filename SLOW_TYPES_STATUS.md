@@ -1,102 +1,187 @@
-# JSR Slow-Types Elimination Progress
+# Slow Types Fix Progress for JSR Publishing
 
-## Current Status (as of latest commit)
+## Current Status (2025-12-28)
 
-**Total slow-types remaining: 1,103**
-- 609 missing-explicit-return-type errors
-- 494 missing-explicit-type errors
+**Branch**: `2025-jsr`  
+**Total Slow Types Remaining**: 839 errors  
+**deno task publish**: ✅ Type checking passes, ⚠️ 839 slow-type warnings
 
 ## Completed Work
 
-### 1. Superclass Expression Fixes (38 errors eliminated)
-✅ Fixed all `unsupported-super-class-expr` errors by extracting complex superclass expressions into const variables.
+### ✅ Phase 1: Math Utilities (166 functions fixed)
+- **vec3.ts**: 32 functions - explicit return types added
+- **mat4.ts**: 34 functions - explicit return types added
+- **quat.ts**: 28 functions - explicit return types added
+- **mat3.ts**: 24 functions - explicit return types added
+- **vec4.ts**: 25 functions - explicit return types added
+- **vec2.ts**: 23 functions - explicit return types added
 
-**Files fixed:**
-- `src/mol-plugin-state/objects.ts` (33 fixes)
-- `src/mol-plugin/behavior/behavior.ts` (3 fixes)
-- `src/mol-plugin/behavior/dynamic/volume-streaming/*.ts` (2 fixes)
-- `src/extensions/sb-ncbr/tunnels/data-model.ts` (2 fixes)
-- `src/extensions/mvs/components/formats.ts` (1 fix)
-- `src/extensions/g3d/format.ts` (1 fix)
+### ✅ Phase 2: TypeScript Override Modifiers (53 fixes)
+- **parameters.tsx**: 46 methods fixed
+- **superposition.tsx**: 4 methods fixed
+- **viewport.tsx**: 3 methods fixed
 
-### 2. Explicit Type Annotations (38 type annotations added)
-✅ Added explicit `ReturnType<typeof ...>` annotations to all superclass base constants.
-
-**Pattern applied:**
-```typescript
-// Before:
-const FooBase = Create<Data>({ name: 'Foo', typeClass: 'Data' });
-
-// After:
-const FooBase: ReturnType<typeof Create<Data>> = Create<Data>({ name: 'Foo', typeClass: 'Data' });
-```
+All methods in React components that override base class methods now have the `override` keyword.
 
 ## Remaining Work
 
-### Missing Explicit Return Types (609 errors)
+### Slow-Type Error Categories
 
-**Common patterns identified:**
-1. **Getter methods** - Need return type annotations:
-   ```typescript
-   // Fix: get foo() { return this.bar; }
-   // To:  get foo(): TypeOfBar { return this.bar; }
+Based on the output from `deno task publish 2>&1`, the 839 remaining errors fall into these categories:
+
+1. **Missing explicit return types on functions** (~600-700 errors)
+   - Most common issue
+   - Pattern: `export function functionName(...) {` needs `: ReturnType`
+   - Async functions need `: Promise<ReturnType>`
+
+2. **Missing explicit types on exported variables** (~100-150 errors)
+   - Pattern: `export const varName = ...` needs `: Type`
+
+3. **Missing explicit types on class properties** (~50-100 errors)
+   - Pattern: class properties need explicit type annotations
+
+## Key Files with High Error Counts
+
+Based on the error output, focus on these high-impact areas:
+
+### Data Structures (`mol-data/`)
+- `src/mol-data/int/sorted-ranges.ts` - ~20+ functions
+- `src/mol-data/int/tuple.ts` - ~10+ functions
+- `src/mol-data/util/grouping.ts` - ~5+ functions
+
+### Geometry Primitives (`mol-math/geometry/primitives/`)
+- `src/mol-math/geometry/primitives/box3d.ts` - ~15+ functions
+- `src/mol-math/geometry/primitives/sphere3d.ts` - ~20+ functions
+
+### Geometry (`mol-geo/`)
+- `src/mol-geo/geometry/mesh/mesh.ts` - ~10+ functions
+- `src/mol-geo/geometry/texture-mesh/texture-mesh.ts` - ~5+ functions
+- `src/mol-geo/geometry/interior.ts` - ~2+ functions
+
+### Extensions
+- `src/extensions/mvs/` - ~20+ functions across multiple files
+- `src/extensions/model-archive/` - ~5+ functions
+- `src/extensions/pdbe/` - ~5+ functions
+- `src/extensions/anvil/behavior.ts` - ~2+ functions
+
+## Common Patterns to Fix
+
+### Pattern 1: Simple Return Type
+```typescript
+// BEFORE
+export function count(ranges: SortedRanges) {
+    return ranges.length;
+}
+
+// AFTER
+export function count(ranges: SortedRanges): number {
+    return ranges.length;
+}
+```
+
+### Pattern 2: Generic Return Type
+```typescript
+// BEFORE
+export function create<T>(value: T) {
+    return { value };
+}
+
+// AFTER  
+export function create<T>(value: T): { value: T } {
+    return { value };
+}
+```
+
+### Pattern 3: Async Function
+```typescript
+// BEFORE
+export async function loadData(url: string) {
+    const response = await fetch(url);
+    return response.json();
+}
+
+// AFTER
+export async function loadData(url: string): Promise<any> {
+    const response = await fetch(url);
+    return response.json();
+}
+```
+
+### Pattern 4: Void Return
+```typescript
+// BEFORE
+export function attachFromCifOrApi(model: Model) {
+    model.someProperty = someValue;
+}
+
+// AFTER
+export async function attachFromCifOrApi(model: Model): Promise<void> {
+    model.someProperty = someValue;
+}
+```
+
+### Pattern 5: Constructor/Factory Functions
+```typescript
+// BEFORE
+function Box3D() {
+    return { min: [0,0,0], max: [0,0,0] };
+}
+
+// AFTER
+function Box3D(): Box3D {
+    return { min: [0,0,0], max: [0,0,0] };
+}
+```
+
+## Automation Strategy
+
+To fix the remaining 839 errors efficiently:
+
+1. **Extract all errors to file**:
+   ```bash
+   cd /Users/zcpowers/Documents/Projects/molstar
+   deno task publish 2>&1 > /tmp/slow_types_full.txt
    ```
 
-2. **Factory functions** - Need return type annotations:
-   ```typescript
-   // Fix: export function createFoo(x: X) { return new Foo(x); }
-   // To:  export function createFoo(x: X): Foo { return new Foo(x); }
-   ```
+2. **Parse errors by file and line number**
 
-3. **Async functions** - Need Promise return types:
-   ```typescript
-   // Fix: export async function loadData() { ... }
-   // To:  export async function loadData(): Promise<void> { ... }
-   ```
+3. **Use automated script to add return types** where TypeScript can infer them:
+   - Read each function
+   - Use TypeScript compiler API to infer return type
+   - Add explicit annotation
 
-4. **Methods in classes** - Need return type annotations:
-   ```typescript
-   // Fix: update() { this.state.update(); }
-   // To:  update(): void { this.state.update(); }
-   ```
+4. **Manual review** for complex cases
 
-**Files with highest error counts:**
-- `src/mol-canvas3d/camera.ts` - Multiple getter/method errors
-- `src/mol-data/db/column.ts` - Factory function errors
-- `src/mol-data/db/table.ts` - Utility function errors
-- Various extension files
+## Testing Commands
 
-### Missing Explicit Types (494 errors)
+```bash
+# Check slow types count
+deno task publish 2>&1 | tail -20
 
-Need to analyze these separately - typically variable/property declarations missing type annotations.
+# Publish with slow types (current workaround)
+deno publish --dry-run --allow-slow-types --no-check
 
-## Strategy for Completion
+# Full check
+deno task check
+```
 
-### Approach 1: Manual Batching (Recommended for Quality)
-1. Fix one file at a time, starting with files with most errors
-2. Test after each file to ensure no regressions
-3. Commit in batches of 10-20 fixes
+## Git Status
 
-**Estimated effort:** 18-28 hours (609 + 494 fixes, ~1-2 min per fix)
+Last commit: `740082a6e` - "fix: add override modifiers to React component methods (53 fixes)"
 
-### Approach 2: Automated Script
-Create Python script to parse error output and generate patches:
-- Extract file paths, line numbers, function names
-- Infer return types from function bodies
-- Generate edit commands
+All changes have been pushed to remote `2025-jsr` branch.
 
-**Risk:** May introduce incorrect types requiring manual review
+## Next Steps for New Session
 
-## Next Steps
+1. Start with high-impact files (data structures and geometry primitives)
+2. Use batch fixes for similar patterns
+3. Commit in logical groups (e.g., "fix: add return types to mol-data/int/*.ts")
+4. Re-run `deno task publish` frequently to track progress
+5. Target milestone: Get under 500 errors, then 200, then 0
 
-1. Generate detailed breakdown of remaining 494 `missing-explicit-type` errors
-2. Choose batching strategy (manual vs. automated)
-3. Begin systematic fixes file-by-file
-4. Target: Achieve clean `deno publish` with zero slow-types
+## Notes
 
-## Success Criteria
-
-✅ `deno publish --dry-run` passes without `--allow-slow-types` flag  
-✅ `deno publish --dry-run` passes without `--no-check` flag  
-✅ Zero slow-type errors reported  
-✅ All TypeScript compilation succeeds
+- The TypeScript compiler already knows the return types (code compiles)
+- This is purely about making types explicit for JSR/Deno's static analysis
+- Most fixes are mechanical - add `: Type` annotations
+- Focus on public API functions first (exported functions)
