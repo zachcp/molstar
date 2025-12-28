@@ -24,7 +24,7 @@ namespace StateSelection {
     export function select<C extends StateObjectCell>(
         s: Selector<C>,
         state: State,
-    ) {
+    ): CellSeq<C> {
         return compile(s)(state);
     }
 
@@ -146,7 +146,7 @@ namespace StateSelection {
 
         export function byRef<T extends StateObject.Ctor>(
             ...refs: StateTransform.Ref[]
-        ) {
+        ): Builder<StateObjectCell<StateObject.From<T>>> {
             return build(() => (state: State) => {
                 const ret: StateObjectCell<StateObject.From<T>>[] = [];
                 for (const ref of refs) {
@@ -158,14 +158,14 @@ namespace StateSelection {
             });
         }
 
-        export function byValue<T extends StateObjectCell>(...objects: T[]) {
+        export function byValue<T extends StateObjectCell>(...objects: T[]): Builder<T> {
             return build(() => (state: State) => objects);
         }
 
         export function rootsOfType<T extends StateObject.Ctor>(
             type: T,
             root: StateTransform.Ref = StateTransform.RootRef,
-        ) {
+        ): Builder<StateObjectCell<StateObject.From<T>>> {
             return build(() => (state) => {
                 const ctx = {
                     roots: [] as StateObjectCell<StateObject.From<T>>[],
@@ -185,7 +185,7 @@ namespace StateSelection {
         export function ofType<T extends StateObject.Ctor>(
             type: T,
             root: StateTransform.Ref = StateTransform.RootRef,
-        ) {
+        ): Builder<StateObjectCell<StateObject.From<T>>> {
             return build(() => (state) => {
                 const ctx = {
                     ret: [] as StateObjectCell<StateObject.From<T>>[],
@@ -205,7 +205,7 @@ namespace StateSelection {
         export function ofTransformer<
             T extends StateTransformer<any, A, any>,
             A extends StateObject,
-        >(t: T, root: StateTransform.Ref = StateTransform.RootRef) {
+        >(t: T, root: StateTransform.Ref = StateTransform.RootRef): Builder<StateObjectCell<A, StateTransform<T>>> {
             return build(() => (state) => {
                 const ctx = {
                     ret: [] as StateObjectCell<A, StateTransform<T>>[],
@@ -225,7 +225,7 @@ namespace StateSelection {
         export function ofTransformerWithError<
             T extends StateTransformer<any, A, any>,
             A extends StateObject,
-        >(t: T, root: StateTransform.Ref = StateTransform.RootRef) {
+        >(t: T, root: StateTransform.Ref = StateTransform.RootRef): Builder<StateObjectCell<A, StateTransform<T>>> {
             return build(() => (state) => {
                 const ctx = {
                     ret: [] as StateObjectCell<A, StateTransform<T>>[],
@@ -300,11 +300,22 @@ namespace StateSelection {
         }
     }
 
+    type AnyCell = StateObjectCell<
+        StateObject<any, StateObject.Type<any>>,
+        StateTransform<
+            StateTransformer<
+                StateObject<any, StateObject.Type<any>>,
+                StateObject<any, StateObject.Type<any>>,
+                any
+            >
+        >
+    >;
+
     registerModifier('flatMap', flatMap);
     export function flatMap(
         b: Selector,
         f: (obj: StateObjectCell, state: State) => CellSeq,
-    ) {
+    ): Builder<AnyCell> {
         const q: Query<
             StateObjectCell<
                 StateObject<any, StateObject.Type<any>>,
@@ -332,7 +343,7 @@ namespace StateSelection {
     export function mapObject(
         b: Selector,
         f: (n: StateObjectCell, state: State) => StateObjectCell | undefined,
-    ) {
+    ): Builder<AnyCell> {
         const q: Query<
             StateObjectCell<
                 StateObject<any, StateObject.Type<any>>,
@@ -367,7 +378,7 @@ namespace StateSelection {
     }
 
     registerModifier('unique', unique);
-    export function unique(b: Selector) {
+    export function unique(b: Selector): Builder<AnyCell> {
         const q: Query<
             StateObjectCell<
                 StateObject<any, StateObject.Type<any>>,
@@ -395,7 +406,7 @@ namespace StateSelection {
     }
 
     registerModifier('first', first);
-    export function first(b: Selector) {
+    export function first(b: Selector): Builder<AnyCell> {
         const q: Query<
             StateObjectCell<
                 StateObject<any, StateObject.Type<any>>,
@@ -603,7 +614,7 @@ namespace StateSelection {
     export function ancestorWithTransformer(
         b: Selector,
         transfomers: StateTransformer[],
-    ) {
+    ): Builder<AnyCell> {
         return unique(
             mapObject(b, (n, s) =>
                 findAncestorWithTransformer(
@@ -724,7 +735,7 @@ namespace StateSelection {
         cells: State.Cells,
         root: StateTransform.Ref,
         test: (c: StateObjectCell) => boolean | void | undefined,
-    ) {
+    ): StateObjectCell<StateObject.From<T>> | undefined {
         return _findAncestor<T>(tree, cells, root, test, true);
     }
 
@@ -734,7 +745,7 @@ namespace StateSelection {
         cells: State.Cells,
         root: StateTransform.Ref,
         test: (c: StateObjectCell) => boolean | void | undefined,
-    ) {
+    ): StateObjectCell<StateObject.From<T>> | undefined {
         return _findAncestor<T>(tree, cells, root, test, false);
     }
 

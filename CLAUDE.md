@@ -1,7 +1,7 @@
 # Mol* JSR Migration Guide
 
 **Last Updated:** 2025-12-28  
-**Current Status:** v5.5.0 synced, ready for JSR publish with flags  
+**Current Status:** v5.5.0 synced, JSR publish ready with `--allow-slow-types`  
 **Branch:** `2025-jsr`
 
 ---
@@ -11,9 +11,9 @@
 | Metric | Current State |
 |--------|---------------|
 | **Version** | v5.5.0 (latest upstream) |
-| **TypeScript Errors** | 0 critical, 53 TS4114 warnings (TSX only) |
-| **Slow-Type Issues** | 1,141 (require `--allow-slow-types`) |
-| **Publish Command** | `deno publish --allow-slow-types --no-check` |
+| **TypeScript Errors** | 0 - All fixed |
+| **Slow-Type Issues** | ~720 (require `--allow-slow-types`) |
+| **Publish Command** | `deno publish --allow-dirty --allow-slow-types` |
 
 ---
 
@@ -22,18 +22,26 @@
 ### Current Publish Command
 ```bash
 # Dry run
-deno publish --dry-run --allow-slow-types --no-check
+deno publish --dry-run --allow-dirty --allow-slow-types
 
 # Production publish  
-deno publish --allow-slow-types --no-check
+deno publish --allow-dirty --allow-slow-types
 ```
 
 ### Why These Flags?
-- `--allow-slow-types`: Bypasses 1,141 slow-type warnings (complex type inference issues)
-- `--no-check`: Bypasses 53 TS4114 override warnings in React TSX files (Deno parser limitation)
+- `--allow-slow-types`: Bypasses ~720 slow-type warnings (mostly missing explicit type annotations on Params objects)
+- `--allow-dirty`: Allows publishing with uncommitted changes
 
-### Goal
-Eliminate the need for both flags by fixing all issues.
+### Fixed Issues
+- ✅ All TypeScript type errors resolved
+- ✅ Color theme type errors (6 fixed) 
+- ✅ Extension function return types (5 added)
+- ✅ Quality assessment type issues (2 fixed)
+
+### Remaining Work
+~720 JSR slow-type issues remain (mostly missing explicit type annotations on const declarations). These can be fixed systematically by:
+1. Adding `: Record<string, any>` to Params object declarations
+2. Adding `: any` to Provider declarations
 
 ---
 

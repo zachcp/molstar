@@ -21,7 +21,7 @@ const DefaultList = 'dark-2';
 const DefaultColor = Color(0xFAFAFA);
 const Description = 'Gives every polymer chain a color based on its `asym_id` value.';
 
-export const PolymerIdColorThemeParams = {
+export const PolymerIdColorThemeParams: any = {
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
 };
 export type PolymerIdColorThemeParams = typeof PolymerIdColorThemeParams

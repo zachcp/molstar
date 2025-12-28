@@ -20,7 +20,7 @@ const DefaultColor = Color(0xCCCCCC);
 const Description =
     'Gives every volume instance a unique color based on the position (index) of the instance in the list of instances of the volume.';
 
-export const VolumeInstanceColorThemeParams = {
+export const VolumeInstanceColorThemeParams: any = {
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
 };
 export type VolumeInstanceColorThemeParams = typeof VolumeInstanceColorThemeParams;

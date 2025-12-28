@@ -20,7 +20,7 @@ const DefaultColor = Color(0xCCCCCC);
 const Description =
     'Gives every chain instance (single chain or collection of single elements) a unique color based on the position (index) of the chain in the list of chains in the structure.';
 
-export const UnitIndexColorThemeParams = {
+export const UnitIndexColorThemeParams: any = {
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
 };
 export type UnitIndexColorThemeParams = typeof UnitIndexColorThemeParams;

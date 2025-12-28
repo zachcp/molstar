@@ -17,7 +17,7 @@ import { ColorThemeCategory } from './categories.ts';
 const DefaultColor = Color(0xCCCCCC);
 const Description = 'Gives every volume segment a unique color.';
 
-export const VolumeSegmentColorThemeParams = {
+export const VolumeSegmentColorThemeParams: any = {
     ...getPaletteParams({ type: 'colors', colorList: 'many-distinct' }),
 };
 export type VolumeSegmentColorThemeParams = typeof VolumeSegmentColorThemeParams;

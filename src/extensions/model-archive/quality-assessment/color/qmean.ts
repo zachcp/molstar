@@ -45,7 +45,7 @@ export function QmeanScoreColorTheme(
             const { unit, element } = location;
             if (!Unit.isAtomic(unit)) return DefaultColor;
             const qualityAssessment = QualityAssessmentProvider.get(unit.model).value;
-            const metric = qualityAssessment?.localMap.get(props.metricId!)?.values ?? qualityAssessment?.qmean;
+            const metric = qualityAssessment?.localMap.get(props.metricId as any)?.values ?? qualityAssessment?.qmean;
             const score = metric?.get(unit.model.atomicHierarchy.residueAtomSegments.index[element]) ?? -1;
             if (score < 0) {
                 return DefaultColor;

@@ -66,7 +66,7 @@ namespace Unit {
         readonly transformHash: number
     }
 
-    function getUnitIndexMap(units: Unit[]) {
+    function getUnitIndexMap(units: Unit[]): IntMap<number> {
         const unitIndexMap = IntMap.Mutable<number>();
         for (let i = 0, _i = units.length; i < _i; i++) {
             unitIndexMap.set(units[i].id, i);
@@ -74,7 +74,7 @@ namespace Unit {
         return unitIndexMap;
     }
 
-    function getTransformHash(units: Unit[]) {
+    function getTransformHash(units: Unit[]): number {
         const ids: number[] = [];
         for (let i = 0, _i = units.length; i < _i; i++) {
             ids.push(units[i].id);
@@ -82,7 +82,7 @@ namespace Unit {
         return hashFnv32a(ids);
     }
 
-    export function SymmetryGroup(units: Unit[]) {
+    export function SymmetryGroup(units: Unit[]): SymmetryGroup {
         const props: {
             unitIndexMap?: IntMap<number>
         } = {};
@@ -90,7 +90,7 @@ namespace Unit {
         return {
             elements: units[0].elements,
             units,
-            get unitIndexMap() {
+            get unitIndexMap(): IntMap<number> {
                 if (props.unitIndexMap) return props.unitIndexMap;
                 props.unitIndexMap = getUnitIndexMap(units);
                 return props.unitIndexMap;
@@ -101,7 +101,7 @@ namespace Unit {
     }
 
     export namespace SymmetryGroup {
-        export function areInvariantElementsEqual(a: SymmetryGroup, b: SymmetryGroup) {
+        export function areInvariantElementsEqual(a: SymmetryGroup, b: SymmetryGroup): boolean {
             if (a.hashCode !== b.hashCode) return false;
             return SortedArray.areEqual(a.elements, b.elements);
         }
@@ -118,11 +118,11 @@ namespace Unit {
         }
     }
 
-    export function conformationId(unit: Unit) {
+    export function conformationId(unit: Unit): string {
         return Unit.isAtomic(unit) ? unit.model.atomicConformation.id : unit.model.coarseConformation.id;
     }
 
-    export function hashUnit(u: Unit) {
+    export function hashUnit(u: Unit): number {
         return hash2(u.invariantId, SortedArray.hashCode(u.elements));
     }
 
@@ -184,17 +184,17 @@ namespace Unit {
         return {};
     }
 
-    function getAtomicRadiusFunc(model: Model) {
+    function getAtomicRadiusFunc(model: Model): (i: ElementIndex) => number {
         const type_symbol = model.atomicHierarchy.atoms.type_symbol.value;
         return (i: ElementIndex) => VdwRadius(type_symbol(i));
     }
 
-    function getSphereRadiusFunc(model: Model) {
+    function getSphereRadiusFunc(model: Model): (i: ElementIndex) => number {
         const r = model.coarseConformation.spheres.radius;
         return (i: ElementIndex) => r[i];
     }
 
-    function getGaussianRadiusFunc(_model: Model) {
+    function getGaussianRadiusFunc(_model: Model): (i: ElementIndex) => number {
         // TODO: compute radius for gaussians
         return (i: ElementIndex) => 0;
     }
@@ -229,7 +229,7 @@ namespace Unit {
         readonly props: AtomicProperties;
 
         private _transientCache: Map<any, any> | undefined = undefined;
-        get transientCache() {
+        get transientCache(): Map<any, any> {
             if (this._transientCache === void 0) this._transientCache = new Map<any, any>();
             return this._transientCache;
         }
@@ -247,12 +247,12 @@ namespace Unit {
             return unit;
         }
 
-        applyOperator(id: number, operator: SymmetryOperator, dontCompose = false): Unit {
+        applyOperator(id: number, operator: SymmetryOperator, dontCompose: boolean = false): Unit {
             const op = dontCompose ? operator : SymmetryOperator.compose(this.conformation.operator, operator);
             return new Atomic(id, this.invariantId, this.chainGroupId, this.traits, this.model, this.elements, SymmetryOperator.createMapping(op, this.model.atomicConformation, this.conformation.r), this.props);
         }
 
-        remapModel(model: Model, dynamicBonds: boolean, props?: AtomicProperties) {
+        remapModel(model: Model, dynamicBonds: boolean, props?: AtomicProperties): Atomic {
             if (!props) {
                 props = {
                     ...this.props,
@@ -282,7 +282,7 @@ namespace Unit {
             return new Atomic(this.id, this.invariantId, this.chainGroupId, this.traits, model, this.elements, conformation, props);
         }
 
-        get boundary() {
+        get boundary(): Boundary {
             if (this.props.boundary) return this.props.boundary;
             const { x, y, z } = this.model.atomicConformation;
             const radius = Model.getAtomicRadii(this.model);
@@ -292,20 +292,20 @@ namespace Unit {
             return this.props.boundary;
         }
 
-        get lookup3d() {
+        get lookup3d(): Lookup3D<StructureElement.UnitIndex> {
             if (this.props.lookup3d) return this.props.lookup3d;
             const { x, y, z } = this.model.atomicConformation;
             this.props.lookup3d = GridLookup3D({ x, y, z, indices: this.elements }, this.boundary);
             return this.props.lookup3d;
         }
 
-        get principalAxes() {
+        get principalAxes(): PrincipalAxes {
             if (this.props.principalAxes) return this.props.principalAxes;
             this.props.principalAxes = getPrincipalAxes(this);
             return this.props.principalAxes;
         }
 
-        get bonds() {
+        get bonds(): IntraUnitBonds {
             if (this.props.bonds) return this.props.bonds;
 
             const cache = ElementSetIntraBondCache.get(this.model);
@@ -320,37 +320,37 @@ namespace Unit {
             return this.props.bonds;
         }
 
-        get rings() {
+        get rings(): UnitRings {
             if (this.props.rings) return this.props.rings;
             this.props.rings = UnitRings.create(this);
             return this.props.rings;
         }
 
-        get resonance() {
+        get resonance(): UnitResonance {
             if (this.props.resonance) return this.props.resonance;
             this.props.resonance = getResonance(this);
             return this.props.resonance;
         }
 
-        get polymerElements() {
+        get polymerElements(): SortedArray<ElementIndex> {
             if (this.props.polymerElements) return this.props.polymerElements;
             this.props.polymerElements = getAtomicPolymerElements(this);
             return this.props.polymerElements;
         }
 
-        get gapElements() {
+        get gapElements(): SortedArray<ElementIndex> {
             if (this.props.gapElements) return this.props.gapElements;
             this.props.gapElements = getAtomicGapElements(this);
             return this.props.gapElements;
         }
 
-        get nucleotideElements() {
+        get nucleotideElements(): SortedArray<ElementIndex> {
             if (this.props.nucleotideElements) return this.props.nucleotideElements;
             this.props.nucleotideElements = getNucleotideElements(this);
             return this.props.nucleotideElements;
         }
 
-        get proteinElements() {
+        get proteinElements(): SortedArray<ElementIndex> {
             if (this.props.proteinElements) return this.props.proteinElements;
             this.props.proteinElements = getProteinElements(this);
             return this.props.proteinElements;
@@ -370,7 +370,7 @@ namespace Unit {
             return this.props.residueCount!;
         }
 
-        getResidueIndex(elementIndex: StructureElement.UnitIndex) {
+        getResidueIndex(elementIndex: StructureElement.UnitIndex): ResidueIndex {
             return this.residueIndex[this.elements[elementIndex]];
         }
 
@@ -399,7 +399,7 @@ namespace Unit {
     }
 
     function AtomicProperties(): AtomicProperties {
-        return BaseProperties();
+        return BaseProperties() as AtomicProperties;
     }
 
     class Coarse<K extends Kind.Gaussians | Kind.Spheres, C extends CoarseSphereConformation | CoarseGaussianConformation> implements Base {
@@ -420,7 +420,7 @@ namespace Unit {
         readonly props: CoarseProperties;
 
         private _transientCache: Map<any, any> | undefined = undefined;
-        get transientCache() {
+        get transientCache(): Map<any, any> {
             if (this._transientCache === void 0) this._transientCache = new Map<any, any>();
             return this._transientCache;
         }
@@ -438,7 +438,7 @@ namespace Unit {
             return unit;
         }
 
-        applyOperator(id: number, operator: SymmetryOperator, dontCompose = false): Unit {
+        applyOperator(id: number, operator: SymmetryOperator, dontCompose: boolean = false): Unit {
             const op = dontCompose ? operator : SymmetryOperator.compose(this.conformation.operator, operator);
             return createCoarse(id, this.invariantId, this.chainGroupId, this.traits, this.model, this.kind, this.elements, SymmetryOperator.createMapping(op, this.getCoarseConformation(), this.conformation.r), this.props);
         }
@@ -462,7 +462,7 @@ namespace Unit {
             return new Coarse(this.id, this.invariantId, this.chainGroupId, this.traits, model, this.kind, this.elements, conformation, props) as Unit.Spheres | Unit.Gaussians; // TODO get rid of casting
         }
 
-        get boundary() {
+        get boundary(): Boundary {
             if (this.props.boundary) return this.props.boundary;
             const { x, y, z } = this.getCoarseConformation();
             const radius = this.getCoarseRadii();
@@ -472,7 +472,7 @@ namespace Unit {
             return this.props.boundary;
         }
 
-        get lookup3d() {
+        get lookup3d(): Lookup3D<StructureElement.UnitIndex> {
             if (this.props.lookup3d) return this.props.lookup3d;
             // TODO: support sphere radius?
             const { x, y, z } = this.getCoarseConformation();
@@ -480,29 +480,29 @@ namespace Unit {
             return this.props.lookup3d;
         }
 
-        get principalAxes() {
+        get principalAxes(): PrincipalAxes {
             if (this.props.principalAxes) return this.props.principalAxes;
             this.props.principalAxes = getPrincipalAxes(this as Unit.Spheres | Unit.Gaussians); // TODO get rid of casting
             return this.props.principalAxes;
         }
 
-        get polymerElements() {
+        get polymerElements(): SortedArray<ElementIndex> {
             if (this.props.polymerElements) return this.props.polymerElements;
             this.props.polymerElements = getCoarsePolymerElements(this as Unit.Spheres | Unit.Gaussians); // TODO get rid of casting
             return this.props.polymerElements;
         }
 
-        get gapElements() {
+        get gapElements(): SortedArray<ElementIndex> {
             if (this.props.gapElements) return this.props.gapElements;
             this.props.gapElements = getCoarseGapElements(this as Unit.Spheres | Unit.Gaussians); // TODO get rid of casting
             return this.props.gapElements;
         }
 
-        private getCoarseConformation() {
+        private getCoarseConformation(): CoarseSphereConformation | CoarseGaussianConformation {
             return getCoarseConformation(this.kind, this.model);
         }
 
-        private getCoarseRadii() {
+        private getCoarseRadii(): ArrayLike<number> | undefined {
             return getCoarseRadii(this.kind, this.model);
         }
 
@@ -522,18 +522,18 @@ namespace Unit {
         }
     }
 
-    function getCoarseConformation(kind: Kind, model: Model) {
+    function getCoarseConformation(kind: Kind, model: Model): CoarseSphereConformation | CoarseGaussianConformation {
         return kind === Kind.Spheres ? model.coarseConformation.spheres : model.coarseConformation.gaussians;
     }
 
-    function getCoarseRadii(kind: Kind, model: Model) {
+    function getCoarseRadii(kind: Kind, model: Model): ArrayLike<number> | undefined {
         return kind === Kind.Spheres ? model.coarseConformation.spheres.radius : undefined; // Zero radius for gaussians
     }
 
     interface CoarseProperties extends BaseProperties { }
 
     function CoarseProperties(): CoarseProperties {
-        return BaseProperties();
+        return BaseProperties() as CoarseProperties;
     }
 
     export class Spheres extends Coarse<Kind.Spheres, CoarseSphereConformation> { }
@@ -543,21 +543,21 @@ namespace Unit {
         return new Coarse(id, invariantId, chainGroupId, traits, model, kind, elements, conformation, props) as any; // lets call this an ugly temporary hack
     }
 
-    export function areSameChainOperatorGroup(a: Unit, b: Unit) {
+    export function areSameChainOperatorGroup(a: Unit, b: Unit): boolean {
         return a.chainGroupId === b.chainGroupId && a.conformation.operator.name === b.conformation.operator.name;
     }
 
-    export function areOperatorsEqual(a: Unit, b: Unit) {
+    export function areOperatorsEqual(a: Unit, b: Unit): boolean {
         return Mat4.areEqual(a.conformation.operator.matrix, b.conformation.operator.matrix, 1e-6);
     }
 
-    export function areConformationsEqual(a: Unit, b: Unit) {
+    export function areConformationsEqual(a: Unit, b: Unit): boolean {
         if (a === b) return true;
         if (!SortedArray.areEqual(a.elements, b.elements)) return false;
         return isSameConformation(a, b.model);
     }
 
-    function tryRemapBonds(a: Atomic, old: IntraUnitBonds | undefined, model: Model, dynamicBonds: boolean) {
+    function tryRemapBonds(a: Atomic, old: IntraUnitBonds | undefined, model: Model, dynamicBonds: boolean): IntraUnitBonds | undefined {
         // TODO: should include additional checks?
 
         if (!old) return void 0;
@@ -577,7 +577,7 @@ namespace Unit {
         return isSameConformation(a, model) ? old : void 0;
     }
 
-    export function isSameConformation(u: Unit, model: Model) {
+    export function isSameConformation(u: Unit, model: Model): boolean {
         const coordsHistory = Model.CoordinatesHistory.get(Model.getRoot(model));
         if (coordsHistory) return coordsHistory.areEqual(u.elements, u.kind, model);
 
@@ -593,23 +593,27 @@ namespace Unit {
         return true;
     }
 
-    export function getModelConformationOfKind(kind: Unit.Kind, model: Model) {
+    type ModelConformation = Model['atomicConformation'] | CoarseSphereConformation | CoarseGaussianConformation;
+
+    export function getModelConformationOfKind(kind: Unit.Kind, model: Model): ModelConformation {
         return kind === Kind.Atomic ? model.atomicConformation :
             kind === Kind.Spheres ? model.coarseConformation.spheres :
                 model.coarseConformation.gaussians;
     }
 
-    export function getConformation(u: Unit) {
+    export function getConformation(u: Unit): ModelConformation {
         return getModelConformationOfKind(u.kind, u.model);
     }
 
-    export function getModelHierarchyOfKind(kind: Unit.Kind, model: Model) {
+    type ModelHierarchy = Model['atomicHierarchy'] | Model['coarseHierarchy']['spheres'] | Model['coarseHierarchy']['gaussians'];
+
+    export function getModelHierarchyOfKind(kind: Unit.Kind, model: Model): ModelHierarchy {
         return kind === Kind.Atomic ? model.atomicHierarchy :
             kind === Kind.Spheres ? model.coarseHierarchy.spheres :
                 model.coarseHierarchy.gaussians;
     }
 
-    export function getHierarchy(u: Unit) {
+    export function getHierarchy(u: Unit): ModelHierarchy {
         return getModelHierarchyOfKind(u.kind, u.model);
     }
 }

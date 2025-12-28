@@ -16,7 +16,7 @@ import { ColorThemeCategory } from './categories.ts';
 const Description =
     'Assigns a color to every amino acid according to the "Experimentally determined hydrophobicity scale for proteins at membrane interfaces" by Wimely and White (doi:10.1038/nsb1096-842).';
 
-export const HydrophobicityColorThemeParams = {
+export const HydrophobicityColorThemeParams: any = {
     list: PD.ColorList('red-yellow-green', { presetKind: 'scale' }),
     scale: PD.Select(
         'DGwif',
@@ -28,7 +28,8 @@ export function getHydrophobicityColorThemeParams(ctx: ThemeDataContext) {
     return HydrophobicityColorThemeParams; // TODO return copy
 }
 
-const scaleIndexMap = { 'DGwif': 0, 'DGwoct': 1, 'Oct-IF': 2 };
+const scaleIndexMap = { 'DGwif': 0, 'DGwoct': 1, 'Oct-IF': 2 } as const;
+type ScaleIndexMapKey = keyof typeof scaleIndexMap;
 
 export function hydrophobicity(compId: string, scaleIndex: number): number {
     const c = (ResidueHydrophobicity as { [k: string]: number[] })[compId];
@@ -53,7 +54,7 @@ export function HydrophobicityColorTheme(
     ctx: ThemeDataContext,
     props: PD.Values<HydrophobicityColorThemeParams>,
 ): ColorTheme<HydrophobicityColorThemeParams> {
-    const scaleIndex = scaleIndexMap[props.scale];
+    const scaleIndex = scaleIndexMap[props.scale as ScaleIndexMapKey];
 
     // get domain
     let min = Infinity;

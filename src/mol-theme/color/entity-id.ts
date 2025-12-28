@@ -18,10 +18,10 @@ import type { ModelFormat } from '../../mol-model-formats/format.ts';
 
 const DefaultList = 'many-distinct';
 const DefaultColor = Color(0xFAFAFA);
-const DefaultWaterColor = Color(0xFF0D0D);
+const DefaultWaterColor: any = Color(0xFF0D0D);
 const Description = 'Gives every chain a color based on its `label_entity_id` value.';
 
-export const EntityIdColorThemeParams = {
+export const EntityIdColorThemeParams: any = {
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
     overrideWater: PD.Boolean(false, { description: 'Override the color for water molecules.' }),
     waterColor: PD.Color(DefaultWaterColor, {

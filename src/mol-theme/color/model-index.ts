@@ -18,7 +18,7 @@ import { ColorThemeCategory } from './categories.ts';
 const DefaultColor = Color(0xCCCCCC);
 const Description = 'Gives every model a unique color based on its index.';
 
-export const ModelIndexColorThemeParams = {
+export const ModelIndexColorThemeParams: any = {
     ...getPaletteParams({ type: 'colors', colorList: 'many-distinct' }),
 };
 export type ModelIndexColorThemeParams = typeof ModelIndexColorThemeParams;

@@ -18,7 +18,7 @@ import { hashFnv32a } from '../../mol-data/util/hash-functions.ts';
 const DefaultColor = Color(0xCCCCCC);
 const Description = 'Gives every model (frame) a unique color based on the index in its trajectory.';
 
-export const TrajectoryIndexColorThemeParams = {
+export const TrajectoryIndexColorThemeParams: any = {
     ...getPaletteParams({ type: 'colors', colorList: 'purples' }),
 };
 export type TrajectoryIndexColorThemeParams = typeof TrajectoryIndexColorThemeParams

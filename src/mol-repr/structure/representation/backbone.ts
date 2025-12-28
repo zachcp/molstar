@@ -62,7 +62,7 @@ const BackboneVisuals = {
         ),
 };
 
-export const BackboneParams = {
+export const BackboneParams: Record<string, any> = {
     ...PolymerBackboneSphereParams,
     ...PolymerBackboneCylinderParams,
     ...PolymerGapParams,
@@ -119,7 +119,7 @@ export function BackboneRepresentation(
     );
 }
 
-export const BackboneRepresentationProvider = StructureRepresentationProvider({
+export const BackboneRepresentationProvider: any = StructureRepresentationProvider({
     name: 'backbone',
     label: 'Backbone',
     description: 'Displays polymer backbone with cylinders and spheres.',

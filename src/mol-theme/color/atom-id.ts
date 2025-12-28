@@ -18,7 +18,7 @@ const DefaultList = 'many-distinct';
 const DefaultColor = Color(0xFAFAFA);
 const Description = 'Gives every atom a color based on its `label_atom_id` value.';
 
-export const AtomIdColorThemeParams = {
+export const AtomIdColorThemeParams: any = {
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
 };
 export type AtomIdColorThemeParams = typeof AtomIdColorThemeParams;

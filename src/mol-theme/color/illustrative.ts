@@ -26,7 +26,7 @@ const DefaultIllustrativeColor = Color(0xEEEEEE);
 const Description =
     `Assigns an illustrative color that gives every chain a color based on the chosen style but with lighter carbons (inspired by David Goodsell's Molecule of the Month style).`;
 
-export const IllustrativeColorThemeParams = {
+export const IllustrativeColorThemeParams: any = {
     style: PD.MappedStatic('entity-id', {
         uniform: PD.Group(UniformColorThemeParams),
         'chain-id': PD.Group(ChainIdColorThemeParams),
@@ -66,7 +66,7 @@ function getStyleTheme(ctx: ThemeDataContext, props: IllustrativeColorThemeProps
         case 'trajectory-index':
             return TrajectoryIndexColorTheme(ctx, props.params);
         default:
-            assertUnreachable(props);
+            throw new Error(`Unknown style theme: ${(props as any).name}`);
     }
 }
 

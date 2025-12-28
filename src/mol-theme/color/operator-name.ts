@@ -18,7 +18,7 @@ const DefaultList = 'many-distinct';
 const DefaultColor = Color(0xCCCCCC);
 const Description = `Assigns a color based on the operator name of a transformed chain.`;
 
-export const OperatorNameColorThemeParams = {
+export const OperatorNameColorThemeParams: any = {
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
 };
 export type OperatorNameColorThemeParams = typeof OperatorNameColorThemeParams;

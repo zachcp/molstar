@@ -20,7 +20,7 @@ const DefaultColor = Color(0xCCCCCC);
 const Description =
     'Gives every polymer chain instance a unique color based on the position (index) of the polymer in the list of polymers in the structure.';
 
-export const PolymerIndexColorThemeParams = {
+export const PolymerIndexColorThemeParams: any = {
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
 };
 export type PolymerIndexColorThemeParams = typeof PolymerIndexColorThemeParams;

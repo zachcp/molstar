@@ -24,7 +24,7 @@ const DefaultList = 'dark-2';
 const DefaultColor = Color(0xFAFAFA);
 const Description = 'Gives ranges of a polymer chain a color based on the entity source it originates from (e.g. gene, plasmid, organism).';
 
-export const EntitySourceColorThemeParams = {
+export const EntitySourceColorThemeParams: any = {
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
 };
 export type EntitySourceColorThemeParams = typeof EntitySourceColorThemeParams

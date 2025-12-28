@@ -21,7 +21,7 @@ import { hash2 } from '../../mol-data/util/hash-functions.ts';
 import { ColorThemeCategory } from './categories.ts';
 
 // from Jmol http://jmol.sourceforge.net/jscolors/ (shapely)
-export const SecondaryStructureColors = ColorMap({
+export const SecondaryStructureColors: any = ColorMap({
     'alphaHelix': 0xFF0080,
     'threeTenHelix': 0xA00080,
     'piHelix': 0x600080,
@@ -41,7 +41,7 @@ export type SecondaryStructureColors = typeof SecondaryStructureColors
 const DefaultSecondaryStructureColor = Color(0x808080);
 const Description = 'Assigns a color based on the type of secondary structure and basic molecule type.';
 
-export const SecondaryStructureColorThemeParams = {
+export const SecondaryStructureColorThemeParams: any = {
     saturation: PD.Numeric(-1, { min: -6, max: 6, step: 0.1 }),
     lightness: PD.Numeric(0, { min: -6, max: 6, step: 0.1 }),
     colors: PD.MappedStatic('default', {

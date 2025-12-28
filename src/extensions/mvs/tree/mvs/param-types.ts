@@ -91,7 +91,27 @@ export type ComponentSelectorT = 'all' | 'polymer' | 'protein' | 'nucleic' | 'br
 export const ComponentSelectorT = literal<ComponentSelectorT>('all', 'polymer', 'protein', 'nucleic', 'branched', 'ligand', 'ion', 'water', 'coarse');
 
 /** `selector` parameter values for `component` node in MVS tree */
-const _ComponentExpressionT = partial({
+const _ComponentExpressionT: iots.Type<{
+    label_entity_id?: string;
+    label_asym_id?: string;
+    auth_asym_id?: string;
+    label_seq_id?: number;
+    auth_seq_id?: number;
+    pdbx_PDB_ins_code?: string;
+    beg_label_seq_id?: number;
+    end_label_seq_id?: number;
+    beg_auth_seq_id?: number;
+    end_auth_seq_id?: number;
+    label_comp_id?: string;
+    auth_comp_id?: string;
+    residue_index?: number;
+    label_atom_id?: string;
+    auth_atom_id?: string;
+    type_symbol?: string;
+    atom_id?: number;
+    atom_index?: number;
+    instance_id?: string;
+}> = partial({
     label_entity_id: str,
     label_asym_id: str,
     auth_asym_id: str,
@@ -133,13 +153,17 @@ export type Vector3 = [number, number, number];
 export const Vector3: iots.Type<Vector3> = tuple([float, float, float]);
 
 /** Parameter values for matrix params, e.g. `rotation` */
-export const Matrix = list(float); // TODO impl custom types Matrix3x3 and Matrix4x4
+export const Matrix: iots.Type<number[]> = list(float); // TODO impl custom types Matrix3x3 and Matrix4x4
 
 export type LabelAttachments = 'bottom-left' | 'bottom-center' | 'bottom-right' | 'middle-left' | 'middle-center' | 'middle-right' | 'top-left' | 'top-center' | 'top-right';
 export const LabelAttachments = literal<LabelAttachments>('bottom-left', 'bottom-center', 'bottom-right', 'middle-left', 'middle-center', 'middle-right', 'top-left', 'top-center', 'top-right');
 
 /** Primitives-related types */
-const _PrimitiveComponentExpressionT = partial({
+const _PrimitiveComponentExpressionT: iots.Type<{
+    structure_ref?: string;
+    expression_schema?: SchemaT;
+    expressions?: ComponentExpressionT[];
+}> = partial({
     structure_ref: str,
     expression_schema: SchemaT,
     expressions: list(ComponentExpressionT),
@@ -148,12 +172,12 @@ const _PrimitiveComponentExpressionT = partial({
 export interface PrimitiveComponentExpressionT extends ValueFor<typeof _PrimitiveComponentExpressionT> { }
 export const PrimitiveComponentExpressionT: iots.Type<PrimitiveComponentExpressionT> = _PrimitiveComponentExpressionT;
 
-export const PrimitivePositionT = union(Vector3, ComponentExpressionT, PrimitiveComponentExpressionT);
-export type PrimitivePositionT = ValueFor<typeof PrimitivePositionT>
+export type PrimitivePositionT = Vector3 | ComponentExpressionT | PrimitiveComponentExpressionT;
+export const PrimitivePositionT: iots.Type<PrimitivePositionT> = union(Vector3, ComponentExpressionT, PrimitiveComponentExpressionT);
 
-export const FloatList = list(float);
-export const IntList = list(int);
-export const StrList = list(str);
+export const FloatList: iots.Type<number[]> = list(float);
+export const IntList: iots.Type<number[]> = list(int);
+export const StrList: iots.Type<string[]> = list(str);
 
 
 /** Hexadecimal color string, e.g. '#FF1100' (the type matches more than just valid HexColor strings) */
@@ -165,7 +189,7 @@ export const HexColorT = new iots.Type<HexColorT>(
     value => value
 );
 /** Regular expression matching a hexadecimal color string, e.g. '#FF1100' or '#f10' */
-const hexColorRegex = /^#([0-9A-F]{3}){1,2}$/i;
+const hexColorRegex: RegExp = /^#([0-9A-F]{3}){1,2}$/i;
 /** Decide if a string is a valid hexadecimal color string (6-digit or 3-digit, e.g. '#FF1100' or '#f10') */
 function isHexColorT(str: any): str is HexColorT {
     return typeof str === 'string' && hexColorRegex.test(str);
@@ -263,7 +287,15 @@ export type ColorDictNameT = 'ElementSymbol' | 'ResidueName' | 'ResiduePropertie
 export const ColorDictNameT = literal<ColorDictNameT>('ElementSymbol', 'ResidueName', 'ResidueProperties', 'SecondaryStructure');
 
 
-const _CategoricalPalette = object(
+const _CategoricalPalette: iots.Type<{
+    kind: 'categorical';
+    colors?: ColorListNameT | ColorDictNameT | ColorT[] | Record<string, ColorT>;
+    repeat_color_list?: boolean;
+    sort?: 'none' | 'lexical' | 'numeric';
+    sort_direction?: 'ascending' | 'descending';
+    case_insensitive?: boolean;
+    missing_color?: ColorT | null;
+}> = object(
     {
         kind: literal('categorical'),
     },
@@ -301,7 +333,13 @@ export const CategoricalPaletteDefaults: Required<CategoricalPalette> = {
 };
 
 
-const _DiscretePalette = object(
+const _DiscretePalette: iots.Type<{
+    kind: 'discrete';
+    colors?: ColorListNameT | ColorT[] | [ColorT, number][] | [ColorT | null, number | null, number | null][];
+    reverse?: boolean;
+    mode?: 'normalized' | 'absolute';
+    value_domain?: [number | null, number | null];
+}> = object(
     {
         kind: literal('discrete'),
     },
@@ -339,7 +377,15 @@ export const DiscretePaletteDefaults: Required<DiscretePalette> = {
 };
 
 
-const _ContinuousPalette = object(
+const _ContinuousPalette: iots.Type<{
+    kind: 'continuous';
+    colors?: ColorListNameT | ColorT[] | [ColorT, number][];
+    reverse?: boolean;
+    mode?: 'normalized' | 'absolute';
+    value_domain?: [number | null, number | null];
+    underflow_color?: 'auto' | ColorT | null;
+    overflow_color?: 'auto' | ColorT | null;
+}> = object(
     {
         kind: literal('continuous'),
     },
@@ -381,4 +427,5 @@ export const ContinuousPaletteDefaults: Required<ContinuousPalette> = {
 // TODO consider spreading the palette param directly into color_from_uri/color_from_source params (though this will be tricky)
 // TODO consider implementing some kind of recursion for object-typed params to achieve smart error messages and default value handling
 
-export const Palette = union(CategoricalPalette, DiscretePalette, ContinuousPalette);
+export type Palette = CategoricalPalette | DiscretePalette | ContinuousPalette;
+export const Palette: iots.Type<Palette> = union(CategoricalPalette, DiscretePalette, ContinuousPalette);

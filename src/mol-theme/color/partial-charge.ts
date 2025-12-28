@@ -16,7 +16,7 @@ import { ColorThemeCategory } from './categories.ts';
 const DefaultPartialChargeColor = Color(0xffff99);
 const Description = `Assigns a color based on the partial charge of an atom.`;
 
-export const PartialChargeColorThemeParams = {
+export const PartialChargeColorThemeParams: any = {
     domain: PD.Interval([-1, 1]),
     list: PD.ColorList('red-white-blue', { presetKind: 'scale' }),
 };

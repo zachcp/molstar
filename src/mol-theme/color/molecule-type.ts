@@ -17,7 +17,7 @@ import { getAdjustedColorMap } from '../../mol-util/color/color.ts';
 import { getColorMapParams } from '../../mol-util/color/params.ts';
 import { ColorThemeCategory } from './categories.ts';
 
-export const MoleculeTypeColors = ColorMap({
+export const MoleculeTypeColors: any = ColorMap({
     water: 0x386cb0,
     ion: 0xf0027f,
     protein: 0xbeaed4,
@@ -31,7 +31,7 @@ export type MoleculeTypeColors = typeof MoleculeTypeColors;
 const DefaultMoleculeTypeColor = Color(0xffff99);
 const Description = 'Assigns a color based on the molecule type of a residue.';
 
-export const MoleculeTypeColorThemeParams = {
+export const MoleculeTypeColorThemeParams: any = {
     saturation: PD.Numeric(0, { min: -6, max: 6, step: 0.1 }),
     lightness: PD.Numeric(0, { min: -6, max: 6, step: 0.1 }),
     colors: PD.MappedStatic('default', {

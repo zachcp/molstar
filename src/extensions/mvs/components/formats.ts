@@ -190,7 +190,7 @@ export async function loadMVSData(
   data: MVSData | StringLike | Uint8Array<ArrayBuffer>,
   format: "mvsj" | "mvsx",
   options?: MVSLoadOptions,
-) {
+): Promise<void> {
   if (typeof data === "string" && data.startsWith("base64")) {
     data = Uint8Array.from(atob(data.substring(7)), (c) => c.charCodeAt(0)); // Decode base64 string to Uint8Array
   }
@@ -235,8 +235,6 @@ export async function loadMVSData(
   } else {
     throw new Error(`Unknown MolViewSpec format: ${format}`);
   }
-
-  return data;
 }
 
 function clearMVSXFileAssets(plugin: PluginContext) {

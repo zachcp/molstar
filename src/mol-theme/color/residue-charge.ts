@@ -17,7 +17,7 @@ import { getColorMapParams } from '../../mol-util/color/params.ts';
 import { ColorThemeCategory } from './categories.ts';
 
 // Colors for charged residues (by-name)
-export const ChargedResidueColors = ColorMap({
+export const ChargedResidueColors: any = ColorMap({
     // standard amino acids (charged)
     'ARG': 0x0000FF,
     'ASP': 0xFF0000,
@@ -93,7 +93,7 @@ export type ChargedResidueColors = typeof ChargedResidueColors
 const DefaultResidueChargeColor = Color(0xFF00FF);
 const Description = 'Assigns a color to every residue based on its charge state.';
 
-export const ResidueChargeColorThemeParams = {
+export const ResidueChargeColorThemeParams: any = {
     method: PD.MappedStatic('by-name', {
         'by-name': PD.Group({
             saturation: PD.Numeric(0, { min: -6, max: 6, step: 0.1 }),

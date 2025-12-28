@@ -50,7 +50,7 @@ export function PLDDTConfidenceColorTheme(
             if (!Unit.isAtomic(unit)) return DefaultColor;
 
             const qualityAssessment = QualityAssessmentProvider.get(unit.model).value;
-            const metric = qualityAssessment?.localMap.get(props.metricId!)?.values ?? qualityAssessment?.pLDDT;
+            const metric = qualityAssessment?.localMap.get(props.metricId as any)?.values ?? qualityAssessment?.pLDDT;
             let score = metric?.get(unit.model.atomicHierarchy.residueAtomSegments.index[element]);
             if (typeof score !== 'number') {
                 score = unit.model.atomicConformation.B_iso_or_equiv.value(element);

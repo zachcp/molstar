@@ -20,7 +20,7 @@ import { ColorThemeCategory } from './categories.ts';
 
 const Description = `Assigns a color based on volume value at a given vertex.`;
 
-export const ExternalVolumeColorThemeParams = {
+export const ExternalVolumeColorThemeParams: any = {
     volume: PD.ValueRef<Volume>(
         (ctx: PluginContext) => {
             const volumes = ctx.state.data.selectQ((q) => q.root.subtree().filter((c) => Volume.is(c.obj?.data)));
@@ -130,7 +130,7 @@ export function ExternalVolumeColorTheme(
 
         palette = usePalette
             ? {
-                colors: coloring.list.colors.map((e) => Array.isArray(e) ? e[0] : e),
+                colors: coloring.list.colors.map((e: any) => Array.isArray(e) ? e[0] : e),
                 filter: (coloring.list.kind === 'set' ? 'nearest' : 'linear') as 'nearest' | 'linear',
             }
             : undefined;

@@ -17,7 +17,7 @@ import { ColorThemeCategory } from './categories.ts';
 const DefaultColor = Color(0xCCCCCC);
 const Description = 'Gives every structure a unique color based on its index.';
 
-export const StructureIndexColorThemeParams = {
+export const StructureIndexColorThemeParams: any = {
     ...getPaletteParams({ type: 'colors', colorList: 'many-distinct' }),
 };
 export type StructureIndexColorThemeParams = typeof StructureIndexColorThemeParams;

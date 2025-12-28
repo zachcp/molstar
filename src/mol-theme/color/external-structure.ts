@@ -29,7 +29,7 @@ import { Vec3 } from '../../mol-math/linear-algebra/3d/vec3.ts';
 
 const Description = `Assigns a color based on structure property at a given vertex.`;
 
-export const ExternalStructureColorThemeParams = {
+export const ExternalStructureColorThemeParams: any = {
     structure: PD.ValueRef<Structure>(
         (ctx: PluginContext) => {
             const structures = ctx.state.data.select(
@@ -80,7 +80,7 @@ function getStyleTheme(ctx: ThemeDataContext, props: ExternalStructureColorTheme
         case 'structure-index':
             return StructureIndexColorTheme(ctx, props.params);
         default:
-            assertUnreachable(props);
+            throw new Error(`Unknown style theme: ${(props as any).name}`);
     }
 }
 

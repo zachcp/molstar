@@ -86,7 +86,7 @@ namespace QualityAssessment {
         }
     }
 
-    export function getLocalOptions(model: Model | undefined, kind: 'pLDDT' | 'qmean') {
+    export function getLocalOptions(model: Model | undefined, kind: 'pLDDT' | 'qmean'): ReturnType<typeof ParamDefinition.Select> {
         if (!model) return ParamDefinition.Select(undefined, [], { label: 'Metric', isHidden: true });
         const local = QualityAssessmentProvider.get(model).value?.local;
         if (!local) return ParamDefinition.Select(undefined, [], { label: 'Metric', isHidden: true });
@@ -208,7 +208,7 @@ namespace QualityAssessment {
         ma_qa_metric_local_pairwise: mmCIF_Schema.ma_qa_metric_local_pairwise,
     };
 
-    export function findModelArchiveCIFPAEMetrics(frame: CifFrame) {
+    export function findModelArchiveCIFPAEMetrics(frame: CifFrame): { id: number; name: string }[] {
         const { ma_qa_metric, ma_qa_metric_local_pairwise } = toDatabase(PairwiseSchema, frame);
         const result: { id: number; name: string }[] = [];
         if (ma_qa_metric_local_pairwise._rowCount === 0) return result;

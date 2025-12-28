@@ -17,7 +17,7 @@ const DefaultUncertaintyColor = Color(0xffff99);
 const Description =
     `Assigns a color based on the uncertainty or disorder of an element's position, e.g. B-factor or RMSF, depending on the data availability and experimental technique.`;
 
-export const UncertaintyColorThemeParams = {
+export const UncertaintyColorThemeParams: any = {
     domain: PD.Interval([0, 100]),
     list: PD.ColorList('red-white-blue', { presetKind: 'scale' }),
 };

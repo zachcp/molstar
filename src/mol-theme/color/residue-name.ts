@@ -16,7 +16,7 @@ import { getColorMapParams } from '../../mol-util/color/params.ts';
 import { ColorThemeCategory } from './categories.ts';
 
 // protein colors from Jmol http://jmol.sourceforge.net/jscolors/
-export const ResidueNameColors = ColorMap({
+export const ResidueNameColors: any = ColorMap({
     // standard amino acids
     'ALA': 0x8CFF8C,
     'ARG': 0x00007C,
@@ -66,7 +66,7 @@ export type ResidueNameColors = typeof ResidueNameColors;
 const DefaultResidueNameColor = Color(0xFF00FF);
 const Description = 'Assigns a color to every residue according to its name.';
 
-export const ResidueNameColorThemeParams = {
+export const ResidueNameColorThemeParams: any = {
     saturation: PD.Numeric(0, { min: -6, max: 6, step: 0.1 }),
     lightness: PD.Numeric(1, { min: -6, max: 6, step: 0.1 }),
     colors: PD.MappedStatic('default', {

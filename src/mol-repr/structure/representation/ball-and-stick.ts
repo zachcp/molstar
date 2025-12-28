@@ -87,7 +87,7 @@ const BallAndStickVisuals = {
         ),
 };
 
-export const BallAndStickParams = {
+export const BallAndStickParams: Record<string, any> = {
     ...ElementSphereParams,
     traceOnly: PD.Boolean(false, { isHidden: true }), // not useful here
     ...IntraUnitBondCylinderParams,
@@ -148,7 +148,7 @@ export function BallAndStickRepresentation(
     );
 }
 
-export const BallAndStickRepresentationProvider = StructureRepresentationProvider({
+export const BallAndStickRepresentationProvider: any = StructureRepresentationProvider({
     name: 'ball-and-stick',
     label: 'Ball & Stick',
     description: 'Displays atoms as spheres and bonds as cylinders.',

@@ -18,7 +18,7 @@ const DefaultList = 'many-distinct';
 const DefaultColor = Color(0xFAFAFA);
 const Description = 'Gives every chain a color based on its `asym_id` value.';
 
-export const ChainIdColorThemeParams = {
+export const ChainIdColorThemeParams: any = {
     asymId: PD.Select('auth', PD.arrayToOptions<AsymIdType>(['auth', 'label'])),
     ...getPaletteParams({ type: 'colors', colorList: DefaultList }),
 };

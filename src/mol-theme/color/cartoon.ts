@@ -32,7 +32,7 @@ import { PartialChargeColorTheme, PartialChargeColorThemeParams } from './partia
 
 const Description = 'Uses separate themes for coloring mainchain and sidechain visuals.';
 
-export const CartoonColorThemeParams = {
+export const CartoonColorThemeParams: any = {
     mainchain: PD.MappedStatic('molecule-type', {
         'uniform': PD.Group(UniformColorThemeParams),
         'chain-id': PD.Group(ChainIdColorThemeParams),
@@ -74,7 +74,7 @@ function getMainchainTheme(ctx: ThemeDataContext, props: CartoonColorThemeProps[
         case 'structure-index': return StructureIndexColorTheme(ctx, props.params);
         case 'secondary-structure': return SecondaryStructureColorTheme(ctx, props.params);
         case 'trajectory-index': return TrajectoryIndexColorTheme(ctx, props.params);
-        default: assertUnreachable(props);
+        default: throw new Error(`Unknown mainchain theme: ${(props as any).name}`);
     }
 }
 
@@ -88,7 +88,7 @@ function getSidechainTheme(ctx: ThemeDataContext, props: CartoonColorThemeProps[
         case 'occupancy': return OccupancyColorTheme(ctx, props.params);
         case 'sequence-id': return SequenceIdColorTheme(ctx, props.params);
         case 'partial-charge': return PartialChargeColorTheme(ctx, props.params);
-        default: assertUnreachable(props);
+        default: throw new Error(`Unknown sidechain theme: ${(props as any).name}`);
     }
 }
 

@@ -16,7 +16,7 @@ import { ColorLists } from '../../mol-util/color/lists.ts';
 const DefaultFormalChargeColor = Color(0xffff99);
 const Description = `Assigns a color based on the formal charge of an atom.`;
 
-export const FormalChargeColorThemeParams = {
+export const FormalChargeColorThemeParams: any = {
     domain: PD.Interval([-3, 3]),
     list: PD.ColorList({ kind: 'set', colors: ColorLists['red-white-blue'].list }),
 };

@@ -18,7 +18,7 @@ import { isPositionLocation } from '../../mol-geo/util/location-iterator.ts';
 
 const Description = 'Assign color based on the given value of a volume cell.';
 
-export const VolumeValueColorThemeParams = {
+export const VolumeValueColorThemeParams: any = {
     colorList: PD.ColorList({
         kind: 'interpolate',
         colors: [

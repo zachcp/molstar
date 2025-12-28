@@ -28,7 +28,7 @@ import { UniformColorTheme, UniformColorThemeParams } from './uniform.ts';
 import { TrajectoryIndexColorTheme, TrajectoryIndexColorThemeParams } from './trajectory-index.ts';
 
 // from Jmol http://jmol.sourceforge.net/jscolors/ (or 0xFFFFFF)
-export const ElementSymbolColors = ColorMap({
+export const ElementSymbolColors: any = ColorMap({
     'H': 0xFFFFFF,
     'D': 0xFFFFC0,
     'T': 0xFFFFA0,
@@ -154,7 +154,7 @@ export type ElementSymbolColors = typeof ElementSymbolColors;
 const DefaultElementSymbolColor = Color(0xFFFFFF);
 const Description = 'Assigns a color to every atom according to its chemical element.';
 
-export const ElementSymbolColorThemeParams = {
+export const ElementSymbolColorThemeParams: any = {
     carbonColor: PD.MappedStatic('chain-id', {
         'chain-id': PD.Group(ChainIdColorThemeParams),
         'unit-index': PD.Group(UnitIndexColorThemeParams, { label: 'Chain Instance' }),
@@ -209,7 +209,7 @@ function getCarbonTheme(ctx: ThemeDataContext, props: ElementSymbolColorThemePro
         case 'element-symbol':
             return undefined;
         default:
-            assertUnreachable(props);
+            throw new Error(`Unknown carbon theme: ${(props as any).name}`);
     }
 }
 

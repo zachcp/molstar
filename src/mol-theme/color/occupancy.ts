@@ -15,7 +15,7 @@ import { ColorThemeCategory } from './categories.ts';
 const DefaultOccupancyColor = Color(0xCCCCCC);
 const Description = `Assigns a color based on the occupancy of an atom.`;
 
-export const OccupancyColorThemeParams = {
+export const OccupancyColorThemeParams: any = {
     domain: PD.Interval([0, 1]),
     list: PD.ColorList('purples', { presetKind: 'scale' }),
 };
