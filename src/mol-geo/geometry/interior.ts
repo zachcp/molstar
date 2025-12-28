@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec4 } from '../../mol-math/linear-algebra/3d/vec4';
-import { Color } from '../../mol-util/color/color';
-import { Material } from '../../mol-util/material';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
+import { Vec4 } from '../../mol-math/linear-algebra/3d/vec4.ts';
+import { Color } from '../../mol-util/color/color.ts';
+import { Material } from '../../mol-util/material.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
 export function getInteriorParam() {
     return PD.Group({

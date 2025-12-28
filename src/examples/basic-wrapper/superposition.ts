@@ -4,19 +4,19 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Mat4 } from '../../mol-math/linear-algebra';
-import { QueryContext, StructureSelection, StructureElement } from '../../mol-model/structure';
-import { superpose, alignAndSuperpose } from '../../mol-model/structure/structure/util/superposition';
-import { tmAlign } from '../../mol-model/structure/structure/util/tm-align';
-import { PluginStateObject as PSO } from '../../mol-plugin-state/objects';
-import { PluginContext } from '../../mol-plugin/context';
-import { MolScriptBuilder as MS } from '../../mol-script/language/builder';
-import { Expression } from '../../mol-script/language/expression';
-import { compile } from '../../mol-script/runtime/query/compiler';
-import { StateObjectRef } from '../../mol-state';
-import { BuiltInTrajectoryFormat } from '../../mol-plugin-state/formats/trajectory';
-import { StateTransforms } from '../../mol-plugin-state/transforms';
-import { Asset } from '../../mol-util/assets';
+import { Mat4 } from '../../mol-math/linear-algebra.ts';
+import { QueryContext, StructureSelection, StructureElement } from '../../mol-model/structure.ts';
+import { superpose, alignAndSuperpose } from '../../mol-model/structure/structure/util/superposition.ts';
+import { tmAlign } from '../../mol-model/structure/structure/util/tm-align.ts';
+import { PluginStateObject as PSO } from '../../mol-plugin-state/objects.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { MolScriptBuilder as MS } from '../../mol-script/language/builder.ts';
+import { Expression } from '../../mol-script/language/expression.ts';
+import { compile } from '../../mol-script/runtime/query/compiler.ts';
+import { StateObjectRef } from '../../mol-state.ts';
+import { BuiltInTrajectoryFormat } from '../../mol-plugin-state/formats/trajectory.ts';
+import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
+import { Asset } from '../../mol-util/assets.ts';
 
 export type SuperpositionTestInput = {
     pdbId: string,

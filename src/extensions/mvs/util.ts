@@ -4,14 +4,14 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { OrderedSet } from '../../mol-data/int';
-import { Loci } from '../../mol-model/loci';
-import { ShapeGroup } from '../../mol-model/shape';
-import { PluginContext } from '../../mol-plugin/context';
-import { StateObjectSelector, StateTree } from '../../mol-state';
-import type { MVSPrimitiveShapeSourceData } from './components/primitives';
-import type { Snapshot } from './mvs-data';
-import type { MVSNode } from './tree/mvs/mvs-tree';
+import { OrderedSet } from '../../mol-data/int.ts';
+import { Loci } from '../../mol-model/loci.ts';
+import { ShapeGroup } from '../../mol-model/shape.ts';
+import { PluginContext } from '../../mol-plugin/context.ts';
+import { StateObjectSelector, StateTree } from '../../mol-state.ts';
+import type { MVSPrimitiveShapeSourceData } from './components/primitives.ts';
+import type { Snapshot } from './mvs-data.ts';
+import type { MVSNode } from './tree/mvs/mvs-tree.ts';
 
 
 /**

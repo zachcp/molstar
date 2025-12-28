@@ -6,10 +6,10 @@
  * Structure-level TM-align wrapper
  */
 
-import { Mat4 } from '../../../../mol-math/linear-algebra/3d/mat4';
-import { TMAlign } from '../../../../mol-math/linear-algebra/3d/tm-align';
-import { StructureElement } from '../element';
-import { getPositionTable } from './superposition';
+import { Mat4 } from '../../../../mol-math/linear-algebra/3d/mat4.ts';
+import { TMAlign } from '../../../../mol-math/linear-algebra/3d/tm-align.ts';
+import { StructureElement } from '../element.ts';
+import { getPositionTable } from './superposition.ts';
 
 export { tmAlign, tmAlignMultiple };
 

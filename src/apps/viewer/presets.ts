@@ -5,11 +5,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { QualityAssessmentPLDDTPreset, QualityAssessmentQmeanPreset } from '../../extensions/model-archive/quality-assessment/behavior';
-import { QualityAssessment } from '../../extensions/model-archive/quality-assessment/prop';
-import { SbNcbrPartialChargesPreset, SbNcbrPartialChargesPropertyProvider } from '../../extensions/sb-ncbr';
-import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from '../../mol-plugin-state/builder/structure/representation-preset';
-import { StateObjectRef } from '../../mol-state';
+import { QualityAssessmentPLDDTPreset, QualityAssessmentQmeanPreset } from '../../extensions/model-archive/quality-assessment/behavior.ts';
+import { QualityAssessment } from '../../extensions/model-archive/quality-assessment/prop.ts';
+import { SbNcbrPartialChargesPreset, SbNcbrPartialChargesPropertyProvider } from '../../extensions/sb-ncbr.ts';
+import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from '../../mol-plugin-state/builder/structure/representation-preset.ts';
+import { StateObjectRef } from '../../mol-state.ts';
 
 export const ViewerAutoPreset = StructureRepresentationPresetProvider({
     id: 'preset-structure-representation-viewer-auto',

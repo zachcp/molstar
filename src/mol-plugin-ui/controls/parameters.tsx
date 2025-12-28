@@ -7,29 +7,29 @@
  */
 
 import * as React from 'react';
-import { Mat4, Vec2, Vec3 } from '../../mol-math/linear-algebra';
-import { Volume } from '../../mol-model/volume';
-import { Script } from '../../mol-script/script';
-import { Asset } from '../../mol-util/assets';
-import { Color } from '../../mol-util/color';
-import { ColorListEntry } from '../../mol-util/color/color';
-import { ColorListName, ColorListOptions, ColorListOptionsScale, ColorListOptionsSet, getColorListFromName } from '../../mol-util/color/lists';
-import { Legend as LegendData } from '../../mol-util/legend';
-import { memoize1, memoizeLatest } from '../../mol-util/memoize';
-import { getPrecision } from '../../mol-util/number';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ParamMapping } from '../../mol-util/param-mapping';
-import { camelCaseToWords } from '../../mol-util/string';
-import { PluginReactContext, PluginUIComponent } from '../base';
-import { PluginUIContext } from '../context';
-import { ActionMenu } from './action-menu';
-import { ColorOptions, ColorValueOption, CombinedColorControl } from './color';
-import { Button, ControlGroup, ControlRow, ExpandGroup, IconButton, TextInput, ToggleButton } from './common';
-import { ArrowDownwardSvg, ArrowDropDownSvg, ArrowRightSvg, ArrowUpwardSvg, BookmarksOutlinedSvg, CheckSvg, ClearSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, TuneSvg, WarningSvg } from './icons';
-import { legendFor } from './legend';
-import { LineGraphComponent } from './line-graph/line-graph-component';
-import { Slider, Slider2 } from './slider';
-import { getColorGradient, getColorGradientBanded } from '../../mol-util/color/utils';
+import { Mat4, Vec2, Vec3 } from '../../mol-math/linear-algebra.ts';
+import { Volume } from '../../mol-model/volume.ts';
+import { Script } from '../../mol-script/script.ts';
+import { Asset } from '../../mol-util/assets.ts';
+import { Color } from '../../mol-util/color.ts';
+import { ColorListEntry } from '../../mol-util/color/color.ts';
+import { ColorListName, ColorListOptions, ColorListOptionsScale, ColorListOptionsSet, getColorListFromName } from '../../mol-util/color/lists.ts';
+import { Legend as LegendData } from '../../mol-util/legend.ts';
+import { memoize1, memoizeLatest } from '../../mol-util/memoize.ts';
+import { getPrecision } from '../../mol-util/number.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ParamMapping } from '../../mol-util/param-mapping.ts';
+import { camelCaseToWords } from '../../mol-util/string.ts';
+import { PluginReactContext, PluginUIComponent } from '../base.ts';
+import { PluginUIContext } from '../context.ts';
+import { ActionMenu } from './action-menu.ts';
+import { ColorOptions, ColorValueOption, CombinedColorControl } from './color.ts';
+import { Button, ControlGroup, ControlRow, ExpandGroup, IconButton, TextInput, ToggleButton } from './common.ts';
+import { ArrowDownwardSvg, ArrowDropDownSvg, ArrowRightSvg, ArrowUpwardSvg, BookmarksOutlinedSvg, CheckSvg, ClearSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, TuneSvg, WarningSvg } from './icons.ts';
+import { legendFor } from './legend.ts';
+import { LineGraphComponent } from './line-graph/line-graph-component.ts';
+import { Slider, Slider2 } from './slider.ts';
+import { getColorGradient, getColorGradientBanded } from '../../mol-util/color/utils.ts';
 
 export type ParameterControlsCategoryFilter = string | null | (string | null)[]
 

@@ -5,16 +5,16 @@
  * @author Lukáš Polák <admin@lukaspolak.cz>
  */
 
-import { Color, ColorMap } from '../../mol-util/color';
-import { StructureElement, Unit, Bond, ElementIndex } from '../../mol-model/structure';
-import { Location } from '../../mol-model/location';
-import type { ColorTheme } from '../color';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { ThemeDataContext } from '../theme';
-import { TableLegend } from '../../mol-util/legend';
-import { getAdjustedColorMap } from '../../mol-util/color/color';
-import { getColorMapParams } from '../../mol-util/color/params';
-import { ColorThemeCategory } from './categories';
+import { Color, ColorMap } from '../../mol-util/color.ts';
+import { StructureElement, Unit, Bond, ElementIndex } from '../../mol-model/structure.ts';
+import { Location } from '../../mol-model/location.ts';
+import type { ColorTheme } from '../color.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { ThemeDataContext } from '../theme.ts';
+import { TableLegend } from '../../mol-util/legend.ts';
+import { getAdjustedColorMap } from '../../mol-util/color/color.ts';
+import { getColorMapParams } from '../../mol-util/color/params.ts';
+import { ColorThemeCategory } from './categories.ts';
 
 // Colors for charged residues (by-name)
 export const ChargedResidueColors = ColorMap({

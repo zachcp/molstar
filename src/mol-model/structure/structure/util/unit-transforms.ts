@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Structure, Unit } from '../../../../mol-model/structure';
-import { Mat4 } from '../../../../mol-math/linear-algebra';
-import { IntMap } from '../../../../mol-data/int';
-import { fillIdentityTransform } from '../../../../mol-geo/geometry/transform-data';
+import { Structure, Unit } from '../../../../mol-model/structure.ts';
+import { Mat4 } from '../../../../mol-math/linear-algebra.ts';
+import { IntMap } from '../../../../mol-data/int.ts';
+import { fillIdentityTransform } from '../../../../mol-geo/geometry/transform-data.ts';
 
 const tmpMat = Mat4();
 

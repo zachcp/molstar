@@ -5,28 +5,28 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { SymmetryOperator } from '../../mol-math/geometry';
-import { Mat4 } from '../../mol-math/linear-algebra';
-import { SIFTSMapping } from '../../mol-model-props/sequence/sifts-mapping';
-import { QueryContext, Structure, StructureElement, StructureProperties, StructureSelection } from '../../mol-model/structure';
-import { alignAndSuperpose, superpose } from '../../mol-model/structure/structure/util/superposition';
-import { alignAndSuperposeWithSIFTSMapping } from '../../mol-model/structure/structure/util/superposition-sifts-mapping';
-import { tmAlign } from '../../mol-model/structure/structure/util/tm-align';
-import { StructureSelectionQueries } from '../../mol-plugin-state/helpers/structure-selection-query';
-import { StructureSelectionHistoryEntry } from '../../mol-plugin-state/manager/structure/selection';
-import { PluginStateObject } from '../../mol-plugin-state/objects';
-import { StateTransforms } from '../../mol-plugin-state/transforms';
-import { PluginCommands } from '../../mol-plugin/commands';
-import { PluginConfig } from '../../mol-plugin/config';
-import { StateObjectCell, StateObjectRef } from '../../mol-state';
-import { elementLabel, structureElementStatsLabel } from '../../mol-theme/label';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { stripTags } from '../../mol-util/string';
-import { CollapsableControls, PurePluginUIComponent } from '../base';
-import { Button, IconButton, ToggleButton } from '../controls/common';
-import { ArrowDownwardSvg, ArrowUpwardSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, SuperposeAtomsSvg, SuperposeChainsSvg, SuperpositionSvg, TuneSvg } from '../controls/icons';
-import { ParameterControls } from '../controls/parameters';
-import { ToggleSelectionModeButton } from './selection';
+import { SymmetryOperator } from '../../mol-math/geometry.ts';
+import { Mat4 } from '../../mol-math/linear-algebra.ts';
+import { SIFTSMapping } from '../../mol-model-props/sequence/sifts-mapping.ts';
+import { QueryContext, Structure, StructureElement, StructureProperties, StructureSelection } from '../../mol-model/structure.ts';
+import { alignAndSuperpose, superpose } from '../../mol-model/structure/structure/util/superposition.ts';
+import { alignAndSuperposeWithSIFTSMapping } from '../../mol-model/structure/structure/util/superposition-sifts-mapping.ts';
+import { tmAlign } from '../../mol-model/structure/structure/util/tm-align.ts';
+import { StructureSelectionQueries } from '../../mol-plugin-state/helpers/structure-selection-query.ts';
+import { StructureSelectionHistoryEntry } from '../../mol-plugin-state/manager/structure/selection.ts';
+import { PluginStateObject } from '../../mol-plugin-state/objects.ts';
+import { StateTransforms } from '../../mol-plugin-state/transforms.ts';
+import { PluginCommands } from '../../mol-plugin/commands.ts';
+import { PluginConfig } from '../../mol-plugin/config.ts';
+import { StateObjectCell, StateObjectRef } from '../../mol-state.ts';
+import { elementLabel, structureElementStatsLabel } from '../../mol-theme/label.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { stripTags } from '../../mol-util/string.ts';
+import { CollapsableControls, PurePluginUIComponent } from '../base.ts';
+import { Button, IconButton, ToggleButton } from '../controls/common.ts';
+import { ArrowDownwardSvg, ArrowUpwardSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, SuperposeAtomsSvg, SuperposeChainsSvg, SuperpositionSvg, TuneSvg } from '../controls/icons.ts';
+import { ParameterControls } from '../controls/parameters.ts';
+import { ToggleSelectionModeButton } from './selection.ts';
 
 export class StructureSuperpositionControls extends CollapsableControls {
     defaultState() {

@@ -5,15 +5,15 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { AssemblySymmetryConfig } from '../../extensions/assembly-symmetry';
-import { G3dProvider } from '../../extensions/g3d/format';
-import { SaccharideCompIdMapType } from '../../mol-model/structure/structure/carbohydrates/constants';
-import { DataFormatProvider } from '../../mol-plugin-state/formats/provider';
-import { PluginConfig, PluginConfigItem } from '../../mol-plugin/config';
-import { PluginLayoutControlsDisplay } from '../../mol-plugin/layout';
+import { AssemblySymmetryConfig } from '../../extensions/assembly-symmetry.ts';
+import { G3dProvider } from '../../extensions/g3d/format.ts';
+import { SaccharideCompIdMapType } from '../../mol-model/structure/structure/carbohydrates/constants.ts';
+import { DataFormatProvider } from '../../mol-plugin-state/formats/provider.ts';
+import { PluginConfig, PluginConfigItem } from '../../mol-plugin/config.ts';
+import { PluginLayoutControlsDisplay } from '../../mol-plugin/layout.ts';
 import '../../mol-util/polyfill';
-import { ObjectKeys } from '../../mol-util/type-helpers';
-import { ExtensionMap } from './extensions';
+import { ObjectKeys } from '../../mol-util/type-helpers.ts';
+import { ExtensionMap } from './extensions.ts';
 
 const CustomFormats: [string, DataFormatProvider][] = [
     ['g3d', G3dProvider] as const
