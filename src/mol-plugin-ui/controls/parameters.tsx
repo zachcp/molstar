@@ -20,15 +20,15 @@ import { getPrecision } from '../../mol-util/number.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { ParamMapping } from '../../mol-util/param-mapping.ts';
 import { camelCaseToWords } from '../../mol-util/string.ts';
-import { PluginReactContext, PluginUIComponent } from '../base.ts';
+import { PluginReactContext, PluginUIComponent } from '../base.tsx';
 import { PluginUIContext } from '../context.ts';
-import { ActionMenu } from './action-menu.ts';
-import { ColorOptions, ColorValueOption, CombinedColorControl } from './color.ts';
-import { Button, ControlGroup, ControlRow, ExpandGroup, IconButton, TextInput, ToggleButton } from './common.ts';
-import { ArrowDownwardSvg, ArrowDropDownSvg, ArrowRightSvg, ArrowUpwardSvg, BookmarksOutlinedSvg, CheckSvg, ClearSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, TuneSvg, WarningSvg } from './icons.ts';
-import { legendFor } from './legend.ts';
-import { LineGraphComponent } from './line-graph/line-graph-component.ts';
-import { Slider, Slider2 } from './slider.ts';
+import { ActionMenu } from './action-menu.tsx';
+import { ColorOptions, ColorValueOption, CombinedColorControl } from './color.tsx';
+import { Button, ControlGroup, ControlRow, ExpandGroup, IconButton, TextInput, ToggleButton } from './common.tsx';
+import { ArrowDownwardSvg, ArrowDropDownSvg, ArrowRightSvg, ArrowUpwardSvg, BookmarksOutlinedSvg, CheckSvg, ClearSvg, DeleteOutlinedSvg, HelpOutlineSvg, Icon, TuneSvg, WarningSvg } from './icons.tsx';
+import { legendFor } from './legend.tsx';
+import { LineGraphComponent } from './line-graph/line-graph-component.tsx';
+import { Slider, Slider2 } from './slider.tsx';
 import { getColorGradient, getColorGradientBanded } from '../../mol-util/color/utils.ts';
 
 export type ParameterControlsCategoryFilter = string | null | (string | null)[]
