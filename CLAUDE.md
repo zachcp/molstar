@@ -12,7 +12,7 @@
 |--------|---------------|
 | **Version** | v5.5.0 (latest upstream) |
 | **TypeScript Errors** | 0 - All fixed |
-| **Slow-Type Issues** | ~720 (require `--allow-slow-types`) |
+| **Slow-Type Issues** | ~586 (require `--allow-slow-types`) |
 | **Publish Command** | `deno publish --allow-dirty --allow-slow-types` |
 
 ---
@@ -29,7 +29,7 @@ deno publish --allow-dirty --allow-slow-types
 ```
 
 ### Why These Flags?
-- `--allow-slow-types`: Bypasses ~720 slow-type warnings (mostly missing explicit type annotations on Params objects)
+- `--allow-slow-types`: Bypasses ~586 slow-type warnings (mostly missing explicit type annotations on Params objects)
 - `--allow-dirty`: Allows publishing with uncommitted changes
 
 ### Fixed Issues
@@ -39,9 +39,23 @@ deno publish --allow-dirty --allow-slow-types
 - ✅ Quality assessment type issues (2 fixed)
 
 ### Remaining Work
-~720 JSR slow-type issues remain (mostly missing explicit type annotations on const declarations). These can be fixed systematically by:
-1. Adding `: Record<string, any>` to Params object declarations
-2. Adding `: any` to Provider declarations
+~586 JSR slow-type issues remain (mostly missing explicit type annotations on const declarations). 
+
+### Safe Fix Patterns
+1. **Simple return types**: `: boolean`, `: string`, `: number`, `: void`, `: Promise<void>`
+2. **typeof pattern** for complex objects:
+   ```typescript
+   const _Params = {...} as const;
+   export type Params = typeof _Params;
+   export const Params: Params = _Params;
+   ```
+3. **Arrow function return types**: `params: (): { foo: PD.Type } => ({...})`
+
+### Patterns to AVOID (break type inference)
+1. `Record<string, Field>` on schema objects - breaks downstream `typeof` inference
+2. `PD.Base<T>` when actual type is `PD.Conditioned/Converted`
+3. Schema files where other types use `typeof SchemaName`
+4. Files with `StateAction.build(...)` chains - require `--allow-slow-types`
 
 ---
 
