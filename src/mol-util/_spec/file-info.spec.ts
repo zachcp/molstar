@@ -4,7 +4,7 @@
  * @author Russell Parker <russell@benchling.com>
  */
 
-import { getFileNameInfo } from '../file-info';
+import { getFileNameInfo } from '../file-info.ts';
 
 describe('getFileNameInfo', () => {
     it('handles empty string', () => {

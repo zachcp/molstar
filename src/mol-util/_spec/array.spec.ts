@@ -4,7 +4,7 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { filterInPlace, range } from '../array';
+import { filterInPlace, range } from '../array.ts';
 
 describe('filterInPlace', () => {
     it('filterInPlace works', async () => {

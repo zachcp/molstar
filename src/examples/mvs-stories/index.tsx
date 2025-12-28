@@ -6,7 +6,7 @@
 
 import { download } from '../../mol-util/download.ts';
 import { BehaviorSubject } from 'rxjs';
-import { Stories } from './stories.ts';
+import { Stories } from './stories/index.ts';
 import { useBehavior } from '../../mol-plugin-ui/hooks/use-behavior.ts';
 import { createRoot } from 'react-dom/client';
 import { getMVSStoriesContext } from '../../apps/mvs-stories/context.ts';

@@ -5,9 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import type { NumberArray } from '../../../mol-util/type-helpers';
-import { Vec3 } from '../3d/vec3';
-import { PrincipalAxes } from '../matrix/principal-axes';
+import type { NumberArray } from '../../../mol-util/type-helpers.ts';
+import { Vec3 } from '../3d/vec3.ts';
+import { PrincipalAxes } from '../matrix/principal-axes.ts';
 
 describe('PrincipalAxes', () => {
     it('same-cartesian-plane', () => {

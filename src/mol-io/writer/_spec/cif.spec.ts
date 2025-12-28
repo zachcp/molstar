@@ -1,12 +1,12 @@
-import * as Data from '../../reader/cif/data-model';
-import { CifWriter } from '../cif';
-import { decodeMsgPack } from '../../common/msgpack/decode';
-import type { EncodedCategory, EncodedFile } from '../../common/binary-cif';
-import { Field } from '../../reader/cif/binary/field';
-import { TextEncoder } from '../cif/encoder/text';
-import * as C from '../cif/encoder';
-import { Column, Database, Table } from '../../../mol-data/db';
-import { parseCifText } from '../../reader/cif/text/parser';
+import * as Data from '../../reader/cif/data-model.ts';
+import { CifWriter } from '../cif.ts';
+import { decodeMsgPack } from '../../common/msgpack/decode.ts';
+import type { EncodedCategory, EncodedFile } from '../../common/binary-cif.ts';
+import { Field } from '../../reader/cif/binary/field.ts';
+import { TextEncoder } from '../cif/encoder/text.ts';
+import * as C from '../cif/encoder.ts';
+import { Column, Database, Table } from '../../../mol-data/db.ts';
+import { parseCifText } from '../../reader/cif/text/parser.ts';
 
 const cartn_x = Data.CifField.ofNumbers([1.001, 1.002, 1.003, 1.004, 1.005, 1.006, 1.007, 1.008, 1.009]);
 const cartn_y = Data.CifField.ofNumbers([-3.0, -2.666, -2.3333, -2.0, -1.666, -1.333, -1.0, -0.666, -0.333]);

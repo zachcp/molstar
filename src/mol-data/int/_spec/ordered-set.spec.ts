@@ -5,9 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { OrderedSet } from '../ordered-set';
-import { Interval } from '../interval';
-import { SortedArray } from '../sorted-array';
+import { OrderedSet } from '../ordered-set.ts';
+import { Interval } from '../interval.ts';
+import { SortedArray } from '../sorted-array.ts';
 
 describe('ordered set', () => {
     function ordSetToArray(set: OrderedSet) {

@@ -4,8 +4,8 @@
  * Adapted from MolQL project
  */
 
-import type { Transpiler } from '../transpiler';
-import { _transpiler as transpilers } from '../all';
+import type { Transpiler } from '../transpiler.ts';
+import { _transpiler as transpilers } from '../all.ts';
 
 function testTranspilerExamples(name: string, transpiler: Transpiler) {
     describe(`${name} examples`, () => {

@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mp4Export } from '../../extensions/mp4-export.ts';
+import { Mp4Export } from '../../extensions/mp4-export/index.ts';
 import type { DataFormatProvider } from '../../mol-plugin-state/formats/provider.ts';
 import { createPluginUI } from '../../mol-plugin-ui/index.ts';
 import { renderReact18 } from '../../mol-plugin-ui/react18.ts';
@@ -16,7 +16,7 @@ import { PluginSpec } from '../../mol-plugin/spec.ts';
 import '../../mol-util/polyfill';
 import { ObjectKeys } from '../../mol-util/type-helpers.ts';
 import type { SaccharideCompIdMapType } from '../../mol-model/structure/structure/carbohydrates/constants.ts';
-import { Backgrounds } from '../../extensions/backgrounds.ts';
+import { Backgrounds } from '../../extensions/backgrounds/index.ts';
 import { LeftPanel, RightPanel } from './ui/panels.tsx';
 import { Color } from '../../mol-util/color/index.ts';
 import { SpacefillRepresentationProvider } from '../../mol-repr/structure/representation/spacefill.ts';

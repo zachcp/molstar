@@ -5,9 +5,9 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { FixedColumnProvider as FixedColumn } from '../common/text/column/fixed';
-import { TokenColumnProvider as TokenColumn } from '../common/text/column/token';
-import { Column, ColumnHelpers } from '../../../mol-data/db';
+import { FixedColumnProvider as FixedColumn } from '../common/text/column/fixed.ts';
+import { TokenColumnProvider as TokenColumn } from '../common/text/column/token.ts';
+import { Column, ColumnHelpers } from '../../../mol-data/db.ts';
 
 const lines = [
     '1.123 abc',

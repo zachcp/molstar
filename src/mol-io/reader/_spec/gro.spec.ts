@@ -5,7 +5,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { parseGRO } from '../gro/parser';
+import { parseGRO } from '../gro/parser.ts';
 
 const groString = `MD of 2 waters, t= 4.2
     6

@@ -1,8 +1,8 @@
-// import { resolveJob } from './server/query';
+// import { resolveJob } from './server/query.ts';
 // import * as fs from 'node:fs'
 // import * as path from 'node:path'
-// import { StructureCache } from './server/structure-wrapper';
-// import { createJob } from './server/jobs';
+// import { StructureCache } from './server/structure-wrapper.ts';
+// import { createJob } from './server/jobs.ts';
 
 // function wrapFile(fn: string) {
 //     const w = {

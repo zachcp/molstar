@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { LinkedList } from '../linked-list';
+import { LinkedList } from '../linked-list.ts';
 
 describe('linked list', () => {
     function toArray<T>(list: LinkedList<T>) {

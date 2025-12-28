@@ -4,7 +4,7 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { ElementRanges } from '../element-ranges';
+import { ElementRanges } from '../element-ranges.ts';
 
 
 describe('union', () => {

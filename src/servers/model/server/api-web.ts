@@ -14,7 +14,7 @@ import { JobEntry, JobManager, type ResultWriterParams } from './jobs.ts';
 import type { UUID } from '../../../mol-util/index.ts';
 import { normalizeRestCommonParams, normalizeRestQueryParams, type QueryDefinition, QueryList } from './api.ts';
 import { getApiSchema, shortcutIconLink } from './api-schema.ts';
-import { swaggerUiAssetsHandler, swaggerUiIndexHandler } from '../../common/swagger-ui.ts';
+import { swaggerUiAssetsHandler, swaggerUiIndexHandler } from '../../common/swagger-ui/index.ts';
 import { getMultiQuerySpecFilename, type MultipleQuerySpec } from './api-web-multiple.ts';
 import { SimpleResponseResultWriter, TarballResponseResultWriter, type WebResutlWriter } from '../utils/writer.ts';
 import { splitCamelCase } from '../../../mol-util/string.ts';

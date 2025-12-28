@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Spacegroup, SpacegroupCell } from '../spacegroup/construction';
-import { Vec3 } from '../../linear-algebra';
+import { Spacegroup, SpacegroupCell } from '../spacegroup/construction.ts';
+import { Vec3 } from '../../linear-algebra.ts';
 
 function getSpacegroup(name: string) {
     const size = Vec3.create(1, 1, 1);

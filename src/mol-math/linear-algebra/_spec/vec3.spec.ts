@@ -4,7 +4,7 @@
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  */
 
-import { Vec3 } from '../3d/vec3';
+import { Vec3 } from '../3d/vec3.ts';
 
 describe('vec3', () => {
     const vec1 = Vec3.create(1, 2, 3);

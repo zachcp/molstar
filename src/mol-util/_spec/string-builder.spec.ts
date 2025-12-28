@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { StringBuilder as SB } from '../string-builder';
+import { StringBuilder as SB } from '../string-builder.ts';
 
 describe('string-builder', () => {
     function check(name: string, bb: (sb: SB) => void, expected: string) {

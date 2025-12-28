@@ -17,7 +17,7 @@ import { State } from './state.ts';
 import { LimitsConfig, ServerConfig } from '../config.ts';
 import { interpolate } from '../../../mol-util/string.ts';
 import { getSchema, shortcutIconLink } from './web-schema.ts';
-import { swaggerUiAssetsHandler, swaggerUiIndexHandler } from '../../common/swagger-ui.ts';
+import { swaggerUiAssetsHandler, swaggerUiIndexHandler } from '../../common/swagger-ui/index.ts';
 import { healthCheck } from '../../common/util.ts';
 import { Buffer } from 'node:buffer';
 import process from 'node:process';

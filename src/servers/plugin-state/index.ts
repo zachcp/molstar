@@ -9,7 +9,7 @@ import compression from 'compression';
 import cors from 'cors';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { swaggerUiAssetsHandler, swaggerUiIndexHandler } from '../common/swagger-ui.ts';
+import { swaggerUiAssetsHandler, swaggerUiIndexHandler } from '../common/swagger-ui/index.ts';
 import { makeDir } from '../../mol-util/make-dir.ts';
 import { getConfig } from './config.ts';
 import { UUID } from '../../mol-util/index.ts';

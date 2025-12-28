@@ -9,7 +9,7 @@ import {
     NumberTypes,
     parseFloat as fastParseFloat,
     parseInt as fastParseInt,
-} from '../../../mol-io/reader/common/text/number-parser';
+} from '../../../mol-io/reader/common/text/number-parser.ts';
 
 describe('common', () => {
     it('number-parser fastParseFloat', () => {

@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { createContext } from '../webgl/context';
+import { createContext } from '../webgl/context.ts';
 
 export function getGLContext(width: number, height: number) {
     const gl = require('gl')(width, height, {

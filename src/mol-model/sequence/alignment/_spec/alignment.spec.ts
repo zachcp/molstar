@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { align } from '../alignment';
+import { align } from '../alignment.ts';
 
 describe('Alignment', () => {
     it('basic', () => {

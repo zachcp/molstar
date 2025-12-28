@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { parsePsf } from '../psf/parser';
+import { parsePsf } from '../psf/parser.ts';
 
 const psfString = `PSF CMAP CHEQ
 

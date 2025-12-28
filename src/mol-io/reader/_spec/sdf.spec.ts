@@ -6,7 +6,7 @@
  * @author Panagiotis Tourlas <panagiot_tourlov@hotmail.com>
  */
 
-import { parseSdf } from '../sdf/parser';
+import { parseSdf } from '../sdf/parser.ts';
 
 const SdfString = `
   Mrv1718007121815122D

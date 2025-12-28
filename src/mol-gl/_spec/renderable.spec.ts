@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { calculateBoundingSphere } from '../renderable/util';
+import { calculateBoundingSphere } from '../renderable/util.ts';
 
 describe('renderable', () => {
     it('calculateBoundingSphere', () => {

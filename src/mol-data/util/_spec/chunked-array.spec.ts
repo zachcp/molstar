@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { ChunkedArray } from '../chunked-array';
+import { ChunkedArray } from '../chunked-array.ts';
 
 describe('Chunked Array', () => {
     it('creation', () => {

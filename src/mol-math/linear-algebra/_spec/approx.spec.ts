@@ -27,7 +27,7 @@ import {
     fastSinh,
     fastTan,
     fastTanh,
-} from '../../approx';
+} from '../../approx.ts';
 
 describe('approx', () => {
     it('fastPow2', () => {

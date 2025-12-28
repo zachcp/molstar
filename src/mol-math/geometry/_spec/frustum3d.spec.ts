@@ -4,10 +4,10 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mat4, Vec3 } from '../../linear-algebra';
-import { Box3D } from '../primitives/box3d';
-import { Frustum3D } from '../primitives/frustum3d';
-import { Sphere3D } from '../primitives/sphere3d';
+import { Mat4, Vec3 } from '../../linear-algebra.ts';
+import { Box3D } from '../primitives/box3d.ts';
+import { Frustum3D } from '../primitives/frustum3d.ts';
+import { Sphere3D } from '../primitives/sphere3d.ts';
 
 const v3 = Vec3.create;
 const s3 = Sphere3D.create;

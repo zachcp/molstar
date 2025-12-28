@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { createReferenceCache } from '../reference-cache';
+import { createReferenceCache } from '../reference-cache.ts';
 
 describe('reference-cache', () => {
     it('basic', () => {

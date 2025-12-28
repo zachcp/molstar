@@ -4,11 +4,11 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Box3D } from '../../../mol-math/geometry';
-import { Vec3 } from '../../../mol-math/linear-algebra';
+import { Box3D } from '../../../mol-math/geometry.ts';
+import { Vec3 } from '../../../mol-math/linear-algebra.ts';
 import { RuntimeContext } from '../../../mol-task/index.ts';
-import { sphericalCollocation } from '../collocation';
-import type { Basis, CubeGridInfo } from '../data-model';
+import { sphericalCollocation } from '../collocation.ts';
+import type { Basis, CubeGridInfo } from '../data-model.ts';
 
 describe('alpha-orbitals-cubes', () => {
     it('water', async () => {

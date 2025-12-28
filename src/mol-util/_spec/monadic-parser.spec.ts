@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { MonadicParser as P } from '../monadic-parser';
+import { MonadicParser as P } from '../monadic-parser.ts';
 
 describe('parser', () => {
     it('string', () => {

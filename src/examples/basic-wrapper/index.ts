@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { PDBeStructureQualityReport } from '../../extensions/pdbe.ts';
+import { PDBeStructureQualityReport } from '../../extensions/pdbe/index.ts';
 import { EmptyLoci } from '../../mol-model/loci.ts';
 import { StructureSelection } from '../../mol-model/structure.ts';
 import { AnimateModelIndex } from '../../mol-plugin-state/animation/built-in/model-index.ts';

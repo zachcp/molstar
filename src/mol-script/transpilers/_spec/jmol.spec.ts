@@ -7,11 +7,11 @@
  * Adapted from MolQL project
  */
 
-import * as u from './utils';
-import { transpiler } from '../jmol/parser';
-import { keywords } from '../jmol/keywords';
-import { properties } from '../jmol/properties';
-import { operators } from '../jmol/operators';
+import * as u from './utils.ts';
+import { transpiler } from '../jmol/parser.ts';
+import { keywords } from '../jmol/keywords.ts';
+import { properties } from '../jmol/properties.ts';
+import { operators } from '../jmol/operators.ts';
 
 const general = {
     supported: [

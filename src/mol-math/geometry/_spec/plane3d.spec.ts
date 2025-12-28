@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3 } from '../../linear-algebra';
-import { Plane3D } from '../primitives/plane3d';
+import { Vec3 } from '../../linear-algebra.ts';
+import { Plane3D } from '../primitives/plane3d.ts';
 
 describe('plane3d', () => {
     it('fromNormalAndCoplanarPoint', () => {

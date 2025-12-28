@@ -4,7 +4,7 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { FibonacciHeap } from '../fibonacci-heap';
+import { FibonacciHeap } from '../fibonacci-heap.ts';
 
 describe('fibonacci-heap', () => {
     it('basic', () => {

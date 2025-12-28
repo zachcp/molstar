@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { createRenderObject } from '../render-object';
-import { Scene } from '../scene';
-import { getGLContext, tryGetGLContext } from './gl';
-import { setDebugMode } from '../../mol-util/debug';
-import { ColorNames } from '../../mol-util/color/names';
-import { ParamDefinition as PD } from '../../mol-util/param-definition';
-import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh';
+import { createRenderObject } from '../render-object.ts';
+import { Scene } from '../scene.ts';
+import { getGLContext, tryGetGLContext } from './gl.ts';
+import { setDebugMode } from '../../mol-util/debug.ts';
+import { ColorNames } from '../../mol-util/color/names.ts';
+import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
+import { TextureMesh } from '../../mol-geo/geometry/texture-mesh/texture-mesh.ts';
 
 export function createTextureMesh() {
     const textureMesh = TextureMesh.createEmpty();

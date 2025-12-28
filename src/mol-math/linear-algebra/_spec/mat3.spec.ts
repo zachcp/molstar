@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Mat3 } from '../3d/mat3';
-import { Vec3 } from '../3d/vec3';
+import { Mat3 } from '../3d/mat3.ts';
+import { Vec3 } from '../3d/vec3.ts';
 
 describe('Mat3', () => {
     it('symmetricEigenvalues', () => {

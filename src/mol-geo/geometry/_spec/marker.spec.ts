@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { getMarkersAverage } from '../marker-data';
+import { getMarkersAverage } from '../marker-data.ts';
 
 describe('marker-data', () => {
     it('getMarkersAverage', () => {

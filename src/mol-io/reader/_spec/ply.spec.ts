@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { parsePly } from '../ply/parser';
-import type { PlyList, PlyTable } from '../ply/schema';
+import { parsePly } from '../ply/parser.ts';
+import type { PlyList, PlyTable } from '../ply/schema.ts';
 
 const plyString = `ply
 format ascii 1.0

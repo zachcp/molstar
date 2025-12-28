@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { deflate, inflate, unzip, zip } from '../zip/zip';
-import { SyncRuntimeContext } from '../../mol-task/execution/synchronous';
+import { deflate, inflate, unzip, zip } from '../zip/zip.ts';
+import { SyncRuntimeContext } from '../../mol-task/execution/synchronous.ts';
 
 describe('zip', () => {
     it('roundtrip deflate/inflate', async () => {

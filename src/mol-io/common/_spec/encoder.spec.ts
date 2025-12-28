@@ -1,5 +1,5 @@
-import { ArrayEncoding } from '../binary-cif/array-encoder';
-import { decode } from '../binary-cif/decoder';
+import { ArrayEncoding } from '../binary-cif/array-encoder.ts';
+import { decode } from '../binary-cif/decoder.ts';
 
 const E = ArrayEncoding;
 

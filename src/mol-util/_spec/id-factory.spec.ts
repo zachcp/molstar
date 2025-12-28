@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { idFactory } from '../id-factory';
+import { idFactory } from '../id-factory.ts';
 
 describe('id-factory', () => {
     it('basic', () => {

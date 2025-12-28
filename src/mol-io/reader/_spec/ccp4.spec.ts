@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as CCP4 from '../ccp4/parser';
+import * as CCP4 from '../ccp4/parser.ts';
 
 function createCcp4Data() {
     const data = new Uint8Array(4 * 256 + 6);

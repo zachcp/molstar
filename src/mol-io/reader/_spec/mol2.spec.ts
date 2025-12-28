@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { parseMol2 } from '../mol2/parser';
+import { parseMol2 } from '../mol2/parser.ts';
 
 const Mol2String = `@<TRIPOS>MOLECULE
 5816

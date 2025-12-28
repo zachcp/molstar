@@ -4,7 +4,7 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { IntAdjacencyGraph } from '../int-adjacency-graph';
+import { IntAdjacencyGraph } from '../int-adjacency-graph.ts';
 
 describe('IntGraph', () => {
     const vc = 3;

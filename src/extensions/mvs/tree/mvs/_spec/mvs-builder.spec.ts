@@ -5,8 +5,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { MVSData } from '../../../mvs-data';
-import { builderDemo, createMVSBuilder } from '../mvs-builder';
+import { MVSData } from '../../../mvs-data.ts';
+import { builderDemo, createMVSBuilder } from '../mvs-builder.ts';
 
 
 describe('mvs-builder', () => {

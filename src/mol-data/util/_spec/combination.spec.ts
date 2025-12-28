@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { combinations } from '../combination';
+import { combinations } from '../combination.ts';
 
 describe('Combination', () => {
     it('test123-2', () => {

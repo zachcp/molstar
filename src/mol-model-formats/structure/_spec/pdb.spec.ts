@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { TokenBuilder } from '../../../mol-io/reader/common/text/tokenizer';
-import { guessElementSymbolTokens } from '../util';
+import { TokenBuilder } from '../../../mol-io/reader/common/text/tokenizer.ts';
+import { guessElementSymbolTokens } from '../util.ts';
 
 const records = [
     ['ATOM     19 HD23 LEU A   1     151.940 143.340 155.670  0.00  0.00', 'H'],

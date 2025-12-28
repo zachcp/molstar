@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { parseCsv } from '../csv/parser';
+import { parseCsv } from '../csv/parser.ts';
 
 const csvStringBasic = `StrCol,IntCol,FloatCol
 # comment

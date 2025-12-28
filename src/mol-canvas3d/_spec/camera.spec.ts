@@ -4,9 +4,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec3, Vec4 } from '../../mol-math/linear-algebra';
-import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4';
-import { cameraProject, cameraUnproject, Viewport } from '../camera/util';
+import { Vec3, Vec4 } from '../../mol-math/linear-algebra.ts';
+import { Mat4 } from '../../mol-math/linear-algebra/3d/mat4.ts';
+import { cameraProject, cameraUnproject, Viewport } from '../camera/util.ts';
 
 describe('camera', () => {
     it('project/unproject', () => {

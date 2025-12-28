@@ -4,13 +4,13 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { molfileToJSONCif } from '../utils';
-import type { CifFile } from '../../../mol-io/reader/cif';
-import { trajectoryFromMmCIF } from '../../../mol-model-formats/structure/mmcif';
+import { molfileToJSONCif } from '../utils.ts';
+import type { CifFile } from '../../../mol-io/reader/cif.ts';
+import { trajectoryFromMmCIF } from '../../../mol-model-formats/structure/mmcif.ts';
 import { Task } from '../../../mol-task/index.ts';
-import { JSONCifLigandGraph } from '../ligand-graph';
-import { parseJSONCif } from '../parser';
-import type { JSONCifDataBlock } from '../model';
+import { JSONCifLigandGraph } from '../ligand-graph.ts';
+import { parseJSONCif } from '../parser.ts';
+import type { JSONCifDataBlock } from '../model.ts';
 
 describe('json-cif', () => {
     it('roundtrips', async () => {

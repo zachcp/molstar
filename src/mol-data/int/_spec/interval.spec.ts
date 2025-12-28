@@ -5,7 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Interval } from '../interval';
+import { Interval } from '../interval.ts';
 
 describe('interval', () => {
     function testI(name: string, a: Interval, b: Interval) {

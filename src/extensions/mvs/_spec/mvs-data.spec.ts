@@ -5,7 +5,7 @@
  */
 
 import fs from 'fs';
-import { MVSData } from '../mvs-data';
+import { MVSData } from '../mvs-data.ts';
 
 
 describe('MVSData', () => {

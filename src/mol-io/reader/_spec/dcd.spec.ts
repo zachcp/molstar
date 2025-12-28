@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { parseDcd } from '../dcd/parser';
+import { parseDcd } from '../dcd/parser.ts';
 
 function createDcdData() {
     const data = new Uint8Array(4 * 128);

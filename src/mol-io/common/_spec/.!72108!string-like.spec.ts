@@ -1,4 +1,4 @@
-import type { ChunkedBigString } from '../string-like';
+import type { ChunkedBigString } from '../string-like.ts';
 import type { Buffer } from 'node:buffer';
 
 const SAMPLE_ASCII = `Basketball is a team sport in which two teams, most commonly 

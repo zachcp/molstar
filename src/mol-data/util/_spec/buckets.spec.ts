@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { createRangeArray } from '../array';
-import { makeBuckets } from '../buckets';
+import { createRangeArray } from '../array.ts';
+import { makeBuckets } from '../buckets.ts';
 
 describe('buckets', () => {
     function reorder(order: ArrayLike<number>, data: any[]): any[] {

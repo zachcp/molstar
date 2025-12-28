@@ -4,13 +4,13 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { createGl } from './gl.shim';
-import { Camera } from '../../mol-canvas3d/camera';
-import { Vec3 } from '../../mol-math/linear-algebra';
-import { Renderer } from '../renderer';
-import { createContext } from '../webgl/context';
-import { Scene } from '../scene';
-import { createPoints } from './points.spec';
+import { createGl } from './gl.shim.ts';
+import { Camera } from '../../mol-canvas3d/camera.ts';
+import { Vec3 } from '../../mol-math/linear-algebra.ts';
+import { Renderer } from '../renderer.ts';
+import { createContext } from '../webgl/context.ts';
+import { Scene } from '../scene.ts';
+import { createPoints } from './points.spec.ts';
 
 export function createRenderer(gl: WebGLRenderingContext) {
     const ctx = createContext(gl);

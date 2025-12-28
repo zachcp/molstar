@@ -34,7 +34,7 @@ import { onelinerJsonString } from '../../mol-util/json.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 
 // MolViewSpec must be imported after HeadlessPluginContext
-import { Mp4Export } from '../../extensions/mp4-export.ts';
+import { Mp4Export } from '../../extensions/mp4-export/index.ts';
 import { MolViewSpec } from '../../extensions/mvs/behavior.ts';
 import { loadMVSX } from '../../extensions/mvs/components/formats.ts';
 import { loadMVS } from '../../extensions/mvs/load.ts';

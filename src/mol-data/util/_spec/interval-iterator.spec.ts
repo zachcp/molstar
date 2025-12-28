@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Interval, type OrderedSet, SortedArray } from '../../int';
-import { IntervalIterator } from '../interval-iterator';
+import { Interval, type OrderedSet, SortedArray } from '../../int.ts';
+import { IntervalIterator } from '../interval-iterator.ts';
 
 describe('interval', () => {
     function testIterator(

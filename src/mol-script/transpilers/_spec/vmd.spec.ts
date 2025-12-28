@@ -6,11 +6,11 @@
  * @author Koya Sakuma <koya.sakuma.work@gmail.com>
  */
 
-import * as u from './utils';
-import { transpiler } from '../vmd/parser';
-import { keywords } from '../vmd/keywords';
-import { properties } from '../vmd/properties';
-import { operators } from '../vmd/operators';
+import * as u from './utils.ts';
+import { transpiler } from '../vmd/parser.ts';
+import { keywords } from '../vmd/keywords.ts';
+import { properties } from '../vmd/properties.ts';
+import { operators } from '../vmd/operators.ts';
 
 const general = {
     supported: [

@@ -4,7 +4,7 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { RequiredField, fieldValidationIssues, float, int, literal, nullable, str, union } from '../field-schema';
+import { RequiredField, fieldValidationIssues, float, int, literal, nullable, str, union } from '../field-schema.ts';
 
 
 describe('fieldValidationIssues', () => {

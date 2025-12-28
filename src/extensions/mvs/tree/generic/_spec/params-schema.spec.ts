@@ -4,8 +4,8 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { OptionalField, RequiredField, bool, float, int, str } from '../field-schema';
-import { SimpleParamsSchema, UnionParamsSchema, paramsValidationIssues } from '../params-schema';
+import { OptionalField, RequiredField, bool, float, int, str } from '../field-schema.ts';
+import { SimpleParamsSchema, UnionParamsSchema, paramsValidationIssues } from '../params-schema.ts';
 
 
 const simpleSchema = SimpleParamsSchema({

@@ -4,8 +4,8 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { Vec2 } from '../../linear-algebra';
-import { pointInPolygon } from '../polygon';
+import { Vec2 } from '../../linear-algebra.ts';
+import { pointInPolygon } from '../polygon.ts';
 
 describe('pointInPolygon', () => {
     it('basic', () => {

@@ -5,9 +5,9 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import * as ColumnHelpers from '../column-helpers';
-import { Column } from '../column';
-import { Table } from '../table';
+import * as ColumnHelpers from '../column-helpers.ts';
+import { Column } from '../column.ts';
+import { Table } from '../table.ts';
 
 describe('column', () => {
     const cc = Column.ofConst(10, 2, Column.Schema.int);

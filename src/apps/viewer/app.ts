@@ -8,10 +8,10 @@
  */
 
 import { ANVILMembraneOrientation } from '../../extensions/anvil/behavior.ts';
-import { Backgrounds } from '../../extensions/backgrounds.ts';
-import { DnatcoNtCs } from '../../extensions/dnatco.ts';
+import { Backgrounds } from '../../extensions/backgrounds/index.ts';
+import { DnatcoNtCs } from '../../extensions/dnatco/index.ts';
 import { G3DFormat, G3dProvider } from '../../extensions/g3d/format.ts';
-import { GeometryExport } from '../../extensions/geo-export.ts';
+import { GeometryExport } from '../../extensions/geo-export/index.ts';
 import {
     MAQualityAssessment,
     MAQualityAssessmentConfig,
@@ -19,24 +19,24 @@ import {
     QualityAssessmentQmeanPreset,
 } from '../../extensions/model-archive/quality-assessment/behavior.ts';
 import { QualityAssessment } from '../../extensions/model-archive/quality-assessment/prop.ts';
-import { ModelExport } from '../../extensions/model-export.ts';
-import { Mp4Export } from '../../extensions/mp4-export.ts';
+import { ModelExport } from '../../extensions/model-export/index.ts';
+import { Mp4Export } from '../../extensions/mp4-export/index.ts';
 import { MolViewSpec } from '../../extensions/mvs/behavior.ts';
 import { loadMVSData, loadMVSX } from '../../extensions/mvs/components/formats.ts';
 import { loadMVS, type MolstarLoadingExtension } from '../../extensions/mvs/load.ts';
 import { MVSData } from '../../extensions/mvs/mvs-data.ts';
-import { PDBeStructureQualityReport } from '../../extensions/pdbe.ts';
-import { RCSBValidationReport } from '../../extensions/rcsb.ts';
-import { AssemblySymmetry, AssemblySymmetryConfig } from '../../extensions/assembly-symmetry.ts';
+import { PDBeStructureQualityReport } from '../../extensions/pdbe/index.ts';
+import { RCSBValidationReport } from '../../extensions/rcsb/index.ts';
+import { AssemblySymmetry, AssemblySymmetryConfig } from '../../extensions/assembly-symmetry/index.ts';
 import {
     SbNcbrPartialCharges,
     SbNcbrPartialChargesPreset,
     SbNcbrPartialChargesPropertyProvider,
     SbNcbrTunnels,
-} from '../../extensions/sb-ncbr.ts';
+} from '../../extensions/sb-ncbr/index.ts';
 import { wwPDBChemicalComponentDictionary } from '../../extensions/wwpdb/ccd/behavior.ts';
-import { wwPDBStructConnExtensionFunctions } from '../../extensions/wwpdb/struct-conn.ts';
-import { ZenodoImport } from '../../extensions/zenodo.ts';
+import { wwPDBStructConnExtensionFunctions } from '../../extensions/wwpdb/struct-conn/index.ts';
+import { ZenodoImport } from '../../extensions/zenodo/index.ts';
 import type { SaccharideCompIdMapType } from '../../mol-model/structure/structure/carbohydrates/constants.ts';
 import { Volume } from '../../mol-model/volume.ts';
 import { DownloadStructure, PdbDownloadProvider } from '../../mol-plugin-state/actions/structure.ts';

@@ -4,8 +4,8 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { Tensor as T } from '../tensor';
-import { Mat4 } from '../3d/mat4';
+import { Tensor as T } from '../tensor.ts';
+import { Mat4 } from '../3d/mat4.ts';
 
 describe('tensor', () => {
     it('vector', () => {

@@ -4,7 +4,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
-import { CIF } from '../../../mol-io/reader/cif';
+import { CIF } from '../../../mol-io/reader/cif.ts';
 
 const cifCoreString = `data_n1379
 _audit_block_doi                 10.5517/ccy42jn

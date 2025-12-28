@@ -4,7 +4,7 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { canonicalJsonString } from '../json';
+import { canonicalJsonString } from '../json.ts';
 
 describe('object utils', () => {
     it('canonicalJsonString', async () => {

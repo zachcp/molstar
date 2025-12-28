@@ -4,9 +4,9 @@
  * @author Gianluca Tomasello <giagitom@gmail.com>
  */
 
-import { Vec3 } from '../../linear-algebra';
-import { Box3D } from '../primitives/box3d';
-import { Ray3D } from '../primitives/ray3d';
+import { Vec3 } from '../../linear-algebra.ts';
+import { Box3D } from '../primitives/box3d.ts';
+import { Ray3D } from '../primitives/ray3d.ts';
 
 describe('ray3d', () => {
     it('intersectBox3D', () => {

@@ -6,11 +6,11 @@
  * @author Koya Sakuma <koya.sakuma.work@gmail.com>
  */
 
-import * as u from './utils';
-import { transpiler } from '../pymol/parser';
-import { keywords } from '../pymol/keywords';
-import { properties } from '../pymol/properties';
-import { operators } from '../pymol/operators';
+import * as u from './utils.ts';
+import { transpiler } from '../pymol/parser.ts';
+import { keywords } from '../pymol/keywords.ts';
+import { properties } from '../pymol/properties.ts';
+import { operators } from '../pymol/operators.ts';
 
 const general = {
     supported: [

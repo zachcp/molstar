@@ -6,7 +6,7 @@
 
 import type express from 'express';
 import { MembraneServerConfig } from './config.ts';
-import { swaggerUiAssetsHandler, swaggerUiIndexHandler } from '../common/swagger-ui.ts';
+import { swaggerUiAssetsHandler, swaggerUiIndexHandler } from '../common/swagger-ui/index.ts';
 import { getSchema, shortcutIconLink } from './web-schema.ts';
 import { MembraneOrientationProvider } from '../../extensions/anvil/prop.ts';
 import { SyncRuntimeContext } from '../../mol-task/execution/synchronous.ts';
