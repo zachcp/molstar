@@ -56,6 +56,63 @@ deno publish --allow-dirty --allow-slow-types
 2. `PD.Base<T>` when actual type is `PD.Conditioned/Converted`
 3. Schema files where other types use `typeof SchemaName`
 4. Files with `StateAction.build(...)` chains - require `--allow-slow-types`
+5. MVS tree files (`mvs-tree-*.ts`, `animation-tree.ts`) - complex schema inference
+
+### Fixing Slow-Types Workflow
+
+**Step 1: Get current errors and identify files**
+```bash
+# Save full output
+deno task publish 2>&1 > /tmp/slow-types-full.txt
+
+# Count errors
+grep -c "error\[missing-explicit" /tmp/slow-types-full.txt
+
+# List files by error count
+grep "molstar/src" /tmp/slow-types-full.txt | sed 's/.*molstar\//src\//' | \
+  cut -d':' -f1 | sort | uniq -c | sort -rn | head -30
+```
+
+**Step 2: Get exact lines for a specific file**
+```bash
+grep "path/to/file.ts" /tmp/slow-types-full.txt
+```
+
+**Step 3: Fix with targeted subagent prompts**
+
+Use this template for subagent tasks:
+```
+Fix JSR slow-type errors in /path/to/file.ts
+
+Lines to fix: 42, 65, 88, 112
+
+These are likely:
+- Line 42: readonly property needs type annotation
+- Line 65: function needs return type (e.g., `: boolean`)
+- Line 88: const declaration needs typeof pattern
+- Line 112: async function needs `: Promise<void>`
+
+Verify with `deno check --all src/mod.ts` - must have 0 errors.
+```
+
+**Step 4: Verify and commit**
+```bash
+# Check for TypeScript errors (must be 0)
+deno check --all src/mod.ts 2>&1 | grep -c "TS[0-9]"
+
+# Check slow-type count
+deno task publish 2>&1 | grep -c "error\[missing-explicit"
+
+# Commit
+git add -A && git commit -m "fix: slow-type fixes (X -> Y)"
+```
+
+### Files That Cannot Be Fixed (require --allow-slow-types)
+- `src/extensions/mvs/tree/mvs/*.ts` - MVS schema definitions
+- `src/extensions/mvs/tree/animation/*.ts` - Animation schema
+- `src/mol-plugin-state/actions/structure.ts` - StateAction.build chains
+- `src/mol-gl/renderable/schema.ts` - Complex spec helper functions
+- Any file with `PluginStateTransform.BuiltIn({...})({...})` patterns
 
 ---
 
