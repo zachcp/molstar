@@ -7,11 +7,11 @@
 
 import { is_iOS } from '../mol-util/browser.ts';
 
-export const PluginFeatureDetection = {
+const _PluginFeatureDetection = {
     get defaultTransparency(): 'blended' | 'wboit' | 'dpoit' {
         return is_iOS() ? 'blended' : 'wboit';
     },
-    get preferWebGl1() {
+    get preferWebGl1(): boolean {
         if (typeof navigator === 'undefined' || typeof window === 'undefined') return false;
 
         // WebGL2 isn't working in MacOS 12.0.1 Safari 15.1, 15.2. It is working in Safari 15.4 tech preview, so disabling all versions before that.
@@ -28,3 +28,5 @@ export const PluginFeatureDetection = {
         return is_iOS();
     },
 } as const;
+export type PluginFeatureDetection = typeof _PluginFeatureDetection;
+export const PluginFeatureDetection: PluginFeatureDetection = _PluginFeatureDetection;

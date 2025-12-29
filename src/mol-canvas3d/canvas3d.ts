@@ -209,8 +209,10 @@ const _Canvas3DParams = {
   pointer: PD.Group(PointerHelperParams),
   xr: PD.Group(XRManagerParams, { label: "XR" }),
 };
-export type Canvas3DParams = typeof _Canvas3DParams;
-export const Canvas3DParams: Canvas3DParams = _Canvas3DParams;
+type _Canvas3DParamsType = typeof _Canvas3DParams;
+const __Canvas3DParams: _Canvas3DParamsType = _Canvas3DParams;
+export type Canvas3DParams = _Canvas3DParamsType;
+export const Canvas3DParams: Canvas3DParams = __Canvas3DParams;
 export const DefaultCanvas3DParams: PD.Values<Canvas3DParams> = PD.getDefaultValues(Canvas3DParams);
 export type Canvas3DProps = PD.Values<Canvas3DParams>;
 export type PartialCanvas3DProps = {
@@ -222,11 +224,13 @@ export type PartialCanvas3DProps = {
     : Partial<Canvas3DProps[K]>;
 };
 
-export const DefaultCanvas3DAttribs = {
+const _DefaultCanvas3DAttribs = {
   trackball: DefaultTrackballControlsAttribs,
   xr: DefaultXRManagerAttribs,
-};
-export type Canvas3DAttribs = typeof DefaultCanvas3DAttribs;
+} as const;
+export type DefaultCanvas3DAttribs = typeof _DefaultCanvas3DAttribs;
+export const DefaultCanvas3DAttribs: DefaultCanvas3DAttribs = _DefaultCanvas3DAttribs;
+export type Canvas3DAttribs = typeof _DefaultCanvas3DAttribs;
 export type PartialCanvas3DAttribs = {
   [K in keyof Canvas3DAttribs]?: Canvas3DAttribs[K] extends {
     name: string;
@@ -272,7 +276,7 @@ namespace Canvas3DContext {
   };
   export type Attribs = typeof DefaultAttribs;
 
-  export const Params = {
+  const _Params = {
     resolutionMode: PD.Select(
       "auto",
       PD.arrayToOptions(["auto", "scaled", "native"] as const),
@@ -284,8 +288,12 @@ namespace Canvas3DContext {
       ["wboit", "Weighted, Blended"],
       ["dpoit", "Depth Peeling"],
     ] as const),
-  };
-  export const DefaultProps: PD.Values<typeof Params> = PD.getDefaultValues(Params);
+  } as const;
+  type _ParamsType = typeof _Params;
+  const __Params: _ParamsType = _Params;
+  export type Params = _ParamsType;
+  export const Params: Params = __Params;
+  export const DefaultProps: PD.Values<Params> = PD.getDefaultValues(Params);
   export type Props = PD.Values<typeof Params>;
 
   export function fromCanvas(

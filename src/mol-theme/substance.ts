@@ -140,7 +140,7 @@ namespace Substance {
         return { kind: 'element-loci', layers };
     }
 
-    export function toBundle(overpaint: Substance<StructureElement.Loci>) {
+    export function toBundle(overpaint: Substance<StructureElement.Loci>): { kind: 'element-loci'; layers: BundleLayer[] } {
         const layers: BundleLayer[] = [];
         for (let i = 0, il = overpaint.layers.length; i < il; ++i) {
             const { loci, material, clear } = overpaint.layers[i];

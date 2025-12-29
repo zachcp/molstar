@@ -32,7 +32,7 @@ export class QueryContext implements QueryContextView {
     currentStructure: Structure = void 0 as any;
 
     /** Current bond between atoms */
-    readonly atomicBond = new QueryContextBondInfo<Unit.Atomic>();
+    readonly atomicBond: QueryContextBondInfo<Unit.Atomic> = new QueryContextBondInfo<Unit.Atomic>();
 
     /** Supply this from the outside. Used by the internal.generator.current symbol */
     currentSelection: StructureSelection | undefined = void 0;

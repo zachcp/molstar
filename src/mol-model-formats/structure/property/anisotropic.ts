@@ -51,7 +51,7 @@ namespace AtomSiteAnisotrop {
         },
     };
 
-    export const Provider = FormatPropertyProvider.create<AtomSiteAnisotrop>(Descriptor);
+    export const Provider: FormatPropertyProvider<AtomSiteAnisotrop> = FormatPropertyProvider.create<AtomSiteAnisotrop>(Descriptor);
 
     export function getElementToAnsiotrop(
         atomId: Column<number>,

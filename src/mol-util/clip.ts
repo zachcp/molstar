@@ -45,7 +45,7 @@ export namespace Clip {
         transform: number[]
     }
 
-    export const Params = {
+    const _Params = {
         variant: PD.Select('pixel', PD.arrayToOptions<Variant>(['instance', 'pixel'])),
         objects: PD.ObjectList({
             type: PD.Select('plane', PD.objectToOptions(Type, t => stringToWords(t))),
@@ -59,7 +59,8 @@ export namespace Clip {
             transform: PD.Mat4(Mat4.identity()),
         }, o => stringToWords(o.type))
     } as const;
-    export type Params = typeof Params
+    export type Params = typeof _Params;
+    export const Params: Params = _Params;
     export type Props = PD.Values<Params>
 
     function createClipObjects(count: number) {

@@ -40,7 +40,7 @@ const _PluginLayoutStateParams = {
     expandToFullscreen: PD.Boolean(false),
 } as const;
 export type PluginLayoutStateParams = typeof _PluginLayoutStateParams;
-export const PluginLayoutStateParams: PluginLayoutStateParams = _PluginLayoutStateParams;
+export const PluginLayoutStateParams: typeof _PluginLayoutStateParams = _PluginLayoutStateParams;
 export type PluginLayoutStateProps = PD.Values<typeof PluginLayoutStateParams>;
 
 export type LeftPanelTabName =

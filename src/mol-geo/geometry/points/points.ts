@@ -126,13 +126,15 @@ export namespace Points {
     export type StyleTypes = keyof typeof StyleTypes;
     export const StyleTypeNames = Object.keys(StyleTypes) as StyleTypes[];
 
-    export const Params = {
+    const _Params = {
         ...BaseGeometry.Params,
         sizeFactor: PD.Numeric(3, { min: 0, max: 10, step: 0.1 }),
         pointSizeAttenuation: PD.Boolean(false),
         pointStyle: PD.Select('square', PD.objectToOptions(StyleTypes)),
     } as const;
-    export type Params = typeof Params;
+    type _Params = typeof _Params;
+    export type Params = _Params;
+    export const Params: Params = _Params;
 
     export const Utils: GeometryUtils<Points, Params> = {
         Params,

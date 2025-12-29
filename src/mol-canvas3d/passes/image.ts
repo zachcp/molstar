@@ -40,8 +40,10 @@ const _ImageParams = {
   cameraHelper: PD.Group(CameraHelperParams),
   renderer: PD.Group(RendererParams),
 } as const;
-export type ImageParams = typeof _ImageParams;
-export const ImageParams: ImageParams = _ImageParams;
+type _ImageParamsType = typeof _ImageParams;
+const __ImageParams: _ImageParamsType = _ImageParams;
+export type ImageParams = _ImageParamsType;
+export const ImageParams: ImageParams = __ImageParams;
 export type ImageProps = PD.Values<typeof ImageParams>;
 
 export class ImagePass {

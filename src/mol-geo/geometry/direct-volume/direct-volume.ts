@@ -155,7 +155,7 @@ export namespace DirectVolume {
         return create(bbox, gridDimension, transform, unitToCartn, cellDim, texture, stats, packedGroup, axisOrder, dataType, directVolume);
     }
 
-    export const Params = {
+    const _Params = {
         ...BaseGeometry.Params,
         ignoreLight: PD.Boolean(false, BaseGeometry.ShadingCategory),
         celShaded: PD.Boolean(false, BaseGeometry.ShadingCategory),
@@ -167,7 +167,9 @@ export namespace DirectVolume {
         stepsPerCell: PD.Numeric(3, { min: 1, max: 10, step: 1 }),
         jumpLength: PD.Numeric(0, { min: 0, max: 20, step: 0.1 }),
     } as const;
-    export type Params = typeof Params
+    type _Params = typeof _Params;
+    export type Params = _Params;
+    export const Params: Params = _Params;
 
     export const Utils: GeometryUtils<DirectVolume, Params> = {
         Params,

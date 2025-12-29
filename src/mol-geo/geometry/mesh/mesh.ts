@@ -851,7 +851,7 @@ export namespace Mesh {
 
   //
 
-  export const Params = {
+  const _Params = {
     ...BaseGeometry.Params,
     doubleSided: PD.Boolean(false, BaseGeometry.CustomQualityParamInfo),
     flipSided: PD.Boolean(false, BaseGeometry.ShadingCategory),
@@ -884,7 +884,9 @@ export namespace Mesh {
     ),
     interior: getInteriorParam(),
   } as const;
-  export type Params = typeof Params;
+  type _Params = typeof _Params;
+  export type Params = _Params;
+  export const Params: Params = _Params;
 
   export const Utils: GeometryUtils<Mesh, Params> = {
     Params,

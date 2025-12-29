@@ -380,7 +380,7 @@ namespace PluginState {
         };
     }
 
-    export const SnapshotParams: _SnapshotParams = _SnapshotParams;
+    export const SnapshotParams: typeof _SnapshotParams = _SnapshotParams;
     export type SnapshotParams = Partial<PD.Values<typeof SnapshotParams>>;
     export const DefaultSnapshotParams: PD.Values<_SnapshotParams> = _DefaultSnapshotParams;
 

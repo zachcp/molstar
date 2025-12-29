@@ -47,7 +47,7 @@ namespace SizeTheme {
     };
 
     export type Registry = ThemeRegistry<SizeTheme<any>>;
-    export function createRegistry() {
+    export function createRegistry(): Registry {
         return new ThemeRegistry(BuiltIn as { [k: string]: Provider<any> }, EmptyProvider);
     }
 

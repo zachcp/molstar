@@ -12,7 +12,7 @@ import type { ElementSymbol, MoleculeType, PolymerType } from '../../types.ts';
 import type { ChainIndex, ElementIndex, EntityIndex, ResidueIndex } from '../../indexing.ts';
 import type { SortedRanges } from '../../../../../mol-data/int/sorted-ranges.ts';
 
-export const AtomsSchema = {
+const _AtomsSchema = {
     /**
      * The chemical element of this atom site.
      * For mmCIF files, this points to atom_type.symbol in the ATOM_TYPE category.
@@ -50,9 +50,10 @@ export const AtomsSchema = {
      */
     pdbx_formal_charge: mmCIF.atom_site.pdbx_formal_charge,
     // id, occupancy and B_iso_or_equiv are part of conformation
-};
+} as const;
 
-export type AtomsSchema = typeof AtomsSchema;
+export type AtomsSchema = typeof _AtomsSchema;
+export const AtomsSchema: AtomsSchema = _AtomsSchema;
 export type Atoms = Table<AtomsSchema>;
 
 export const ResiduesSchema = {

@@ -51,7 +51,8 @@ const _ColorSmoothingParams = {
         off: PD.Group({}),
     }),
 } as const;
-export type ColorSmoothingParams = typeof _ColorSmoothingParams;
+type _ColorSmoothingParams = typeof _ColorSmoothingParams;
+export type ColorSmoothingParams = _ColorSmoothingParams;
 export const ColorSmoothingParams: ColorSmoothingParams = _ColorSmoothingParams;
 
 export function hasColorSmoothingProp(props: PD.Values<any>): props is PD.Values<ColorSmoothingParams> {
@@ -126,7 +127,8 @@ export namespace BaseGeometry {
             description: 'Instance grid batch size.',
         }),
     } as const;
-    export type Params = typeof _Params;
+    type _Params = typeof _Params;
+    export type Params = _Params;
     export const Params: Params = _Params;
 
     export type Counts = { drawCount: number; vertexCount: number; groupCount: number; instanceCount: number };

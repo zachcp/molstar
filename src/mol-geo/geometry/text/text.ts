@@ -150,7 +150,7 @@ export namespace Text {
         return text;
     }
 
-    export const Params = {
+    const _Params = {
         ...BaseGeometry.Params,
         ...FontAtlasParams,
         sizeFactor: PD.Numeric(1, { min: 0, max: 10, step: 0.1 }),
@@ -174,7 +174,9 @@ export namespace Text {
             ['top-left', 'top-left'], ['top-center', 'top-center'], ['top-right', 'top-right'],
         ] as [TextAttachment, string][]),
     } as const;
-    export type Params = typeof Params
+    type _Params = typeof _Params;
+    export type Params = _Params;
+    export const Params: Params = _Params;
 
     export const Utils: GeometryUtils<Text, Params> = {
         Params,

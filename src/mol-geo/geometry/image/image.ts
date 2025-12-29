@@ -166,11 +166,13 @@ namespace Image {
         return create(imageTexture, corners, groupTexture, valueTexture, trim, -1, image);
     }
 
-    export const Params = {
+    const _Params = {
         ...BaseGeometry.Params,
         interpolation: PD.Select('bspline', PD.objectToOptions(InterpolationTypes)),
     } as const;
-    export type Params = typeof Params
+    type _Params = typeof _Params;
+    export type Params = _Params;
+    export const Params: Params = _Params;
 
     export const Utils: GeometryUtils<Image, Params> = {
         Params,

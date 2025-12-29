@@ -67,8 +67,10 @@ const _SsaoParams = {
     color: PD.Color(Color(0x000000)),
     transparentThreshold: PD.Numeric(0.4, { min: 0, max: 1, step: 0.05 }),
 } as const;
-export type SsaoParams = typeof _SsaoParams;
-export const SsaoParams: SsaoParams = _SsaoParams;
+type _SsaoParamsType = typeof _SsaoParams;
+const __SsaoParams: _SsaoParamsType = _SsaoParams;
+export type SsaoParams = _SsaoParamsType;
+export const SsaoParams: SsaoParams = __SsaoParams;
 
 export type SsaoProps = PD.Values<typeof SsaoParams>;
 

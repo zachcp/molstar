@@ -266,7 +266,7 @@ function getProvidersParams(defaultOn: string[] = []): {
     });
     return params;
 }
-export const ContactProviderParams = getProvidersParams([
+export const ContactProviderParams: ReturnType<typeof getProvidersParams> = getProvidersParams([
     // 'ionic',
     'cation-pi',
     'pi-stacking',
@@ -277,11 +277,12 @@ export const ContactProviderParams = getProvidersParams([
     // 'weak-hydrogen-bonds',
 ]);
 
-export const InteractionsParams = {
+const _InteractionsParams = {
     providers: PD.Group(ContactProviderParams, { isFlat: true }),
     contacts: PD.Group(ContactsParams, { label: 'Advanced Options' }),
-};
-export type InteractionsParams = typeof InteractionsParams;
+} as const;
+export type InteractionsParams = typeof _InteractionsParams;
+export const InteractionsParams: InteractionsParams = _InteractionsParams;
 export type InteractionsProps = PD.Values<InteractionsParams>;
 
 export interface ComputeInterctionsOptions {

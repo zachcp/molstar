@@ -282,7 +282,7 @@ namespace Loci {
         },
     };
     export type Granularity = keyof typeof Granularity;
-    export const GranularityOptions = ParamDefinition.objectToOptions(Granularity, (k) => {
+    export const GranularityOptions: [Granularity, string][] | [Granularity, string, string][] = ParamDefinition.objectToOptions(Granularity, (k) => {
         switch (k) {
             case 'element':
                 return 'Atom/Coarse Element';

@@ -47,12 +47,14 @@ function getAngleTables(probePositions: number): AnglesTables {
 
 //
 
-export const MolecularSurfaceCalculationParams = {
+const _MolecularSurfaceCalculationParams = {
     probeRadius: PD.Numeric(1.4, { min: 0, max: 10, step: 0.1 }, { description: 'Radius of the probe tracing the molecular surface.' }),
     resolution: PD.Numeric(0.5, { min: 0.01, max: 20, step: 0.01 }, { description: 'Grid resolution/cell spacing.' }),
     probePositions: PD.Numeric(36, { min: 12, max: 90, step: 1 }, { description: 'Number of positions tested for probe target intersection.' }),
 } as const;
-export const DefaultMolecularSurfaceCalculationProps = PD.getDefaultValues(MolecularSurfaceCalculationParams);
+export type MolecularSurfaceCalculationParams = typeof _MolecularSurfaceCalculationParams;
+export const MolecularSurfaceCalculationParams: MolecularSurfaceCalculationParams = _MolecularSurfaceCalculationParams;
+export const DefaultMolecularSurfaceCalculationProps: PD.Values<MolecularSurfaceCalculationParams> = PD.getDefaultValues(MolecularSurfaceCalculationParams);
 export type MolecularSurfaceCalculationProps = typeof DefaultMolecularSurfaceCalculationProps
 
 

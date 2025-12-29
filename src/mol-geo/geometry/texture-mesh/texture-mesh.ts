@@ -60,7 +60,7 @@ export namespace TextureMesh {
         private index = 0;
         private textures: ({ vertex: Texture, group: Texture, normal: Texture } | undefined)[] = [];
 
-        get() {
+        get(): { vertex: Texture, group: Texture, normal: Texture } | undefined {
             return this.textures[this.index];
         }
 
@@ -118,7 +118,7 @@ export namespace TextureMesh {
         return create(0, 0, vt, gt, nt, bs, textureMesh);
     }
 
-    export const Params = {
+    const _Params = {
         ...BaseGeometry.Params,
         doubleSided: PD.Boolean(false, BaseGeometry.CustomQualityParamInfo),
         flipSided: PD.Boolean(false, BaseGeometry.ShadingCategory),
@@ -131,7 +131,9 @@ export namespace TextureMesh {
         bumpAmplitude: PD.Numeric(1, { min: 0, max: 5, step: 0.1 }, BaseGeometry.ShadingCategory),
         interior: getInteriorParam(),
     } as const;
-    export type Params = typeof Params
+    type _Params = typeof _Params;
+    export type Params = _Params;
+    export const Params: Params = _Params;
 
     export const Utils: GeometryUtils<TextureMesh, Params> = {
         Params,

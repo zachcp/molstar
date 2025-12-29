@@ -89,8 +89,10 @@ const _IlluminationParams = {
     }),
     ...TracingParams,
 } as const;
-export type IlluminationParams = typeof _IlluminationParams;
-export const IlluminationParams: IlluminationParams = _IlluminationParams;
+type _IlluminationParamsType = typeof _IlluminationParams;
+const __IlluminationParams: _IlluminationParamsType = _IlluminationParams;
+export type IlluminationParams = _IlluminationParamsType;
+export const IlluminationParams: IlluminationParams = __IlluminationParams;
 export type IlluminationProps = PD.Values<typeof IlluminationParams>;
 
 export class IlluminationPass {

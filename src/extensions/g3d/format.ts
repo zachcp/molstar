@@ -230,17 +230,18 @@ class G3DFormatHandler extends PluginBehavior.Handler<G3DFormatParams> {
     this.ctx.managers.lociLabels.removeProvider(G3dLabelProvider);
   }
 }
-const G3DFormat_config = {
+const _G3DFormat = PluginBehavior.create<G3DFormatParams>({
   name: "g3d",
-  category: "misc" as const,
+  category: "misc",
   display: {
     name: "G3D",
     description: "G3D Format Support",
   },
   ctor: G3DFormatHandler,
-  params: (): { autoAttach: typeof ParamDefinition.Boolean.prototype; showTooltip: typeof ParamDefinition.Boolean.prototype } => ({
+  params: () => ({
     autoAttach: ParamDefinition.Boolean(false),
     showTooltip: ParamDefinition.Boolean(true),
   }),
-};
-export const G3DFormat: ReturnType<typeof PluginBehavior.create<G3DFormatParams>> = PluginBehavior.create<G3DFormatParams>(G3DFormat_config);
+});
+export type G3DFormat = typeof _G3DFormat;
+export const G3DFormat: G3DFormat = _G3DFormat;

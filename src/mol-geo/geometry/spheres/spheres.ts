@@ -243,7 +243,7 @@ export namespace Spheres {
         return lodLevels.map(l => getAdjustedStride(l, sizeFactor)).reverse();
     }
 
-    export const Params = {
+    const _Params = {
         ...BaseGeometry.Params,
         sizeFactor: PD.Numeric(1, { min: 0, max: 10, step: 0.1 }),
         doubleSided: PD.Boolean(false, BaseGeometry.CustomQualityParamInfo),
@@ -269,7 +269,9 @@ export namespace Spheres {
             defaultValue: [] as LodLevels
         })
     } as const;
-    export type Params = typeof Params
+    type _Params = typeof _Params;
+    export type Params = _Params;
+    export const Params: Params = _Params;
 
     export const Utils: GeometryUtils<Spheres, Params> = {
         Params,

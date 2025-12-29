@@ -672,7 +672,7 @@ function getAtomicResidueCount(structure: Structure): number {
 }
 
 namespace Structure {
-    export const Empty = create([]);
+    export const Empty: Structure = create([]);
 
     export interface Props {
         parent?: Structure;
@@ -1526,13 +1526,13 @@ namespace Structure {
     //
 
     export type Index = number;
-    export const Index = CustomStructureProperty.createSimple<Index>(
+    export const Index: ReturnType<typeof CustomStructureProperty.createSimple<Index>> = CustomStructureProperty.createSimple<Index>(
         'index',
         'root',
     );
 
     export type MaxIndex = number;
-    export const MaxIndex = CustomStructureProperty.createSimple<MaxIndex>(
+    export const MaxIndex: ReturnType<typeof CustomStructureProperty.createSimple<MaxIndex>> = CustomStructureProperty.createSimple<MaxIndex>(
         'max_index',
         'root',
     );

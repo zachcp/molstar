@@ -67,8 +67,10 @@ const _TracingParams = {
     shadowSoftness: PD.Numeric(0.1, { min: 0.01, max: 1.0, step: 0.01 }),
     shadowThickness: PD.Numeric(0.5, { min: 0.1, max: 32, step: 0.1 }),
 } as const;
-export type TracingParams = typeof _TracingParams;
-export const TracingParams: TracingParams = _TracingParams;
+type _TracingParamsType = typeof _TracingParams;
+const __TracingParams: _TracingParamsType = _TracingParams;
+export type TracingParams = _TracingParamsType;
+export const TracingParams: TracingParams = __TracingParams;
 export type TracingProps = PD.Values<typeof TracingParams>;
 
 export class TracingPass {

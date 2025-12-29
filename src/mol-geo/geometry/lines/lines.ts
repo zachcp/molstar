@@ -190,12 +190,14 @@ export namespace Lines {
 
     //
 
-    export const Params = {
+    const _Params = {
         ...BaseGeometry.Params,
         sizeFactor: PD.Numeric(2, { min: 0, max: 10, step: 0.1 }),
         lineSizeAttenuation: PD.Boolean(false),
     } as const;
-    export type Params = typeof Params;
+    type _Params = typeof _Params;
+    export type Params = _Params;
+    export const Params: Params = _Params;
 
     export const Utils: GeometryUtils<Lines, Params> = {
         Params,

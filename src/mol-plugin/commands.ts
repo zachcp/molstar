@@ -17,7 +17,7 @@ import type { PluginToast } from './util/toast.ts';
 import type { Vec3 } from '../mol-math/linear-algebra.ts';
 import type { PluginStateSnapshotManager } from '../mol-plugin-state/manager/snapshots.ts';
 
-export const PluginCommands = {
+const _PluginCommands = {
     State: {
         SetCurrentObject: PluginCommand<{ state: State; ref: StateTransform.Ref }>(),
         ApplyAction: PluginCommand<{ state: State; action: StateAction.Instance; ref?: StateTransform.Ref }>(),
@@ -96,3 +96,5 @@ export const PluginCommands = {
         ResetSettings: PluginCommand<{}>(),
     },
 } as const;
+export type PluginCommands = typeof _PluginCommands;
+export const PluginCommands: PluginCommands = _PluginCommands;
