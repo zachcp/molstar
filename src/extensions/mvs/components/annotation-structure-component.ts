@@ -34,7 +34,7 @@ export type MVSAnnotationStructureComponentProps = PD.ValuesFor<typeof MVSAnnota
 
 
 /** Transformer builder for MVS extension */
-export const MVSTransform = StateTransformer.builderFactory('mvs');
+export const MVSTransform: StateTransformer.Builder.Root = StateTransformer.builderFactory('mvs');
 
 /** Transformer for creating a structure component based on custom model property "Annotations" */
 export type MVSAnnotationStructureComponent = typeof MVSAnnotationStructureComponent

@@ -27,7 +27,7 @@ interface StateObject<
 }
 
 namespace StateObject {
-    export function factory<T extends Type>() {
+    export function factory<T extends Type>(): <D = {}>(type: T) => ReturnType<typeof create<D, T>> {
         return <D = {}>(type: T) => create<D, T>(type);
     }
 
@@ -42,7 +42,18 @@ namespace StateObject {
     };
     export type From<C extends Ctor> = C extends Ctor<infer T> ? T : never;
 
-    export function create<Data, T extends Type>(type: T) {
+    export function create<Data, T extends Type>(type: T): {
+        new (data: Data, props?: { label: string; description?: string }): {
+            id: import('../mol-util/index.ts').UUID;
+            type: T;
+            data: Data;
+            label: string;
+            description?: string;
+            tags?: string[];
+        };
+        type: T;
+        is(obj?: StateObject): obj is StateObject<Data, T>;
+    } {
         return class O implements StateObject<Data, T> {
             static type = type;
             static is(obj?: StateObject): obj is StateObject<Data, T> {

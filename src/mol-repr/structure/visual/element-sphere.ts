@@ -45,7 +45,7 @@ export const CommonElementSphereParams = {
     traceOnly: PD.Boolean(false),
     tryUseImpostor: PD.Boolean(true),
     stride: PD.Numeric(1, { min: 1, max: 100, step: 1 }),
-};
+} as const;
 
 //
 

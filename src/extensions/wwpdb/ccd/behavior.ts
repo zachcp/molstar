@@ -6,8 +6,9 @@
 
 import { PluginBehavior } from '../../../mol-plugin/behavior/behavior.ts';
 import { ChemicalComponentPreset, ChemicalCompontentTrajectoryHierarchyPreset } from './representation.ts';
+import type { StateTransformer } from '../../../mol-state/index.ts';
 
-export const wwPDBChemicalComponentDictionary = PluginBehavior.create<{}>({
+export const wwPDBChemicalComponentDictionary: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, {}> = PluginBehavior.create<{}>({
     name: 'wwpdb-chemical-component-dictionary',
     category: 'representation',
     display: {

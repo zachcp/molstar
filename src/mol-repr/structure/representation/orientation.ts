@@ -51,7 +51,7 @@ export const OrientationParams = {
         { min: 0, max: 10, step: 0.1 },
         BaseGeometry.ShadingCategory,
     ),
-};
+} as const;
 export type OrientationParams = typeof OrientationParams;
 export function getOrientationParams(
     ctx: ThemeRegistryContext,

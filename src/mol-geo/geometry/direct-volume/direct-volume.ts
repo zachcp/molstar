@@ -166,7 +166,7 @@ export namespace DirectVolume {
         ], { isEssential: true }),
         stepsPerCell: PD.Numeric(3, { min: 1, max: 10, step: 1 }),
         jumpLength: PD.Numeric(0, { min: 0, max: 20, step: 0.1 }),
-    };
+    } as const;
     export type Params = typeof Params
 
     export const Utils: GeometryUtils<DirectVolume, Params> = {

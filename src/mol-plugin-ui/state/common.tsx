@@ -12,7 +12,7 @@ import type {
     StateTransform,
     StateTransformer,
 } from '../../mol-state/index.ts';
-import type * as React from 'react';
+import * as React from 'react';
 import { PurePluginUIComponent } from '../base.tsx';
 import { ParameterControls, type ParamOnChange } from '../controls/parameters.tsx';
 import type { PluginContext } from '../../mol-plugin/context.ts';
@@ -24,12 +24,12 @@ import { Button, ExpandGroup, IconButton, ToggleButton } from '../controls/commo
 export { StateTransformParameters, TransformControlBase };
 
 class StateTransformParameters extends PurePluginUIComponent<StateTransformParameters.Props> {
-    validate(params: any) {
+    validate(params: any): undefined {
         // TODO
         return void 0;
     }
 
-    areInitial(params: any) {
+    areInitial(params: any): boolean {
         return PD.areEqual(
             this.props.info.params,
             params,
@@ -46,7 +46,7 @@ class StateTransformParameters extends PurePluginUIComponent<StateTransformParam
         );
     };
 
-    override render() {
+    override render(): React.JSX.Element {
         return (
             <ParameterControls
                 params={this.props.info.params}

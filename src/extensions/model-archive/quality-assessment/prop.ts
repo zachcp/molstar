@@ -303,7 +303,7 @@ namespace QualityAssessment {
         return metric;
     }
 
-    export const symbols = {
+    export const symbols: { pLDDT: QuerySymbolRuntime; qmean: QuerySymbolRuntime } = {
         pLDDT: QuerySymbolRuntime.Dynamic(CustomPropSymbol('ma', 'quality-assessment.pLDDT', Type.Num), (ctx) => {
             const { unit, element } = ctx.element;
             if (!Unit.isAtomic(unit)) return -1;

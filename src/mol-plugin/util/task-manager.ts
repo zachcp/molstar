@@ -20,7 +20,7 @@ class TaskManager {
     private options = new Map<number, { useOverlay: boolean }>();
     private currentContext: { ctx: RuntimeContext; refCount: number }[] = [];
 
-    readonly events = {
+    readonly events: { progress: import('rxjs').Subject<TaskManager.ProgressEvent>; finished: import('rxjs').Subject<{ id: number }> } = {
         progress: this.ev<TaskManager.ProgressEvent>(),
         finished: this.ev<{ id: number }>(),
     };
@@ -104,7 +104,7 @@ namespace TaskManager {
     function delay(time: number): Promise<void> {
         return new Promise((res) => setTimeout(res, time));
     }
-    export function testTask(N: number) {
+    export function testTask(N: number): Task<void> {
         return Task.create('Test', async (ctx) => {
             let i = 0;
             while (i < N) {

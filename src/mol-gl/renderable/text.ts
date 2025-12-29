@@ -47,7 +47,7 @@ const _TextSchema = {
     uOffsetZ: UniformSpec('f', 'material'),
     uBackgroundColor: UniformSpec('v3', 'material'),
     uBackgroundOpacity: UniformSpec('f', 'material'),
-};
+} as const;
 export type TextSchema = typeof _TextSchema;
 export const TextSchema: TextSchema = _TextSchema;
 export type TextValues = Values<TextSchema>;

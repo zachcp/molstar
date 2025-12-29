@@ -17,6 +17,7 @@ import {
   type StateObject,
   type StateObjectCell,
   StateTree,
+  type StateTransformer,
 } from "../../mol-state/index.ts";
 import { Task } from "../../mol-task/index.ts";
 import type { ColorTheme } from "../../mol-theme/color.ts";
@@ -58,7 +59,7 @@ interface Registrables {
 }
 
 /** Registers everything needed for loading MolViewSpec files */
-export const MolViewSpec = PluginBehavior.create<{ autoAttach: boolean }>({
+export const MolViewSpec: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, { autoAttach: boolean }> = PluginBehavior.create<{ autoAttach: boolean }>({
   name: "molviewspec",
   category: "misc",
   display: {

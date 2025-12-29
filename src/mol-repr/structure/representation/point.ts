@@ -56,7 +56,7 @@ export const PointParams = {
         BaseGeometry.ShadingCategory,
     ),
     visuals: PD.MultiSelect(['element-point'], PD.objectToOptions(PointVisuals)),
-};
+} as const;
 export type PointParams = typeof PointParams;
 export function getPointParams(
     ctx: ThemeRegistryContext,

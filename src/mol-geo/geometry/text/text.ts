@@ -173,7 +173,7 @@ export namespace Text {
             ['middle-left', 'middle-left'], ['middle-center', 'middle-center'], ['middle-right', 'middle-right'],
             ['top-left', 'top-left'], ['top-center', 'top-center'], ['top-right', 'top-right'],
         ] as [TextAttachment, string][]),
-    };
+    } as const;
     export type Params = typeof Params
 
     export const Utils: GeometryUtils<Text, Params> = {

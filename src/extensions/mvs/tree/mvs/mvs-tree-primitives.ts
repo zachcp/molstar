@@ -5,12 +5,12 @@
  * @author Adam Midlik <midlik@gmail.com>
  */
 
-import { bool, dict, float, int, nullable, OptionalField, RequiredField, str, union } from '../generic/field-schema.ts';
+import { bool, dict, float, int, nullable, OptionalField, RequiredField, str, union, type Field } from '../generic/field-schema.ts';
 import { SimpleParamsSchema, UnionParamsSchema } from '../generic/params-schema.ts';
 import { ColorT, FloatList, IntList, PrimitivePositionT, Vector3 } from './param-types.ts';
 
 
-const _TubeBase = {
+const _TubeBase: Record<string, Field> = {
     /** Start point of the tube. */
     start: RequiredField(PrimitivePositionT, 'Start point of the tube.'),
     /** End point of the tube. */
@@ -23,7 +23,7 @@ const _TubeBase = {
     color: OptionalField(nullable(ColorT), null, 'Color of the tube. If not specified, uses the parent primitives group `color`.'),
 };
 
-const MeshParams = {
+const MeshParams: Record<string, Field> = {
     /** 3*n_vertices length array of floats with vertex position (x1, y1, z1, ...). */
     vertices: RequiredField(FloatList, '3*n_vertices length array of floats with vertex position (x1, y1, z1, ...).'),
     /** 3*n_triangles length array of indices into vertices that form triangles (t1_1, t1_2, t1_3, ...). */
@@ -48,7 +48,7 @@ const MeshParams = {
     wireframe_color: OptionalField(nullable(ColorT), null, 'Wireframe color. If not specified, uses `group_colors`.'),
 };
 
-const LinesParams = {
+const LinesParams: Record<string, Field> = {
     /** 3*n_vertices length array of floats with vertex position (x1, y1, z1, ...). */
     vertices: RequiredField(FloatList, '3*n_vertices length array of floats with vertex position (x1, y1, z1, ...).'),
     /** 2*n_lines length array of indices into vertices that form lines (l1_1, l1_2, ...). */
@@ -69,13 +69,13 @@ const LinesParams = {
     width: OptionalField(float, 1, 'Line width (in screen-space units). Can be overwritten by `group_widths`.'),
 };
 
-const TubeParams = {
+const TubeParams: Record<string, Field> = {
     ..._TubeBase,
     /** Tooltip to show when hovering over the tube. If not specified, uses the parent primitives group `tooltip`. */
     tooltip: OptionalField(nullable(str), null, 'Tooltip to show when hovering over the tube. If not specified, uses the parent primitives group `tooltip`.'),
 };
 
-const ArrowParams = {
+const ArrowParams: Record<string, Field> = {
     /** Start point of the tube. */
     start: RequiredField(PrimitivePositionT, 'Start point of the arrow.'),
     /** End point of the tube. */
@@ -108,7 +108,7 @@ const ArrowParams = {
     tooltip: OptionalField(nullable(str), null, 'Tooltip to show when hovering over the arrow. If not specified, uses the parent primitives group `tooltip`.'),
 };
 
-const DistanceMeasurementParams = {
+const DistanceMeasurementParams: Record<string, Field> = {
     ..._TubeBase,
     /** Template used to construct the label. Use {{distance}} as placeholder for the distance. */
     label_template: OptionalField(str, '{{distance}}', 'Template used to construct the label. Use {{distance}} as placeholder for the distance.'),
@@ -122,7 +122,7 @@ const DistanceMeasurementParams = {
     label_color: OptionalField(nullable(ColorT), null, 'Color of the label. If not specified, uses the parent primitives group `label_color`.'),
 };
 
-const AngleMeasurementParams = {
+const AngleMeasurementParams: Record<string, Field> = {
     /** Point A. */
     a: RequiredField(PrimitivePositionT, 'Point A.'),
     /** Point B. */
@@ -155,7 +155,7 @@ const AngleMeasurementParams = {
     section_radius_scale: OptionalField(float, 0.33, 'Factor to scale the radius of the angle section. Ignored if section_radius is set.'),
 };
 
-const PrimitiveLabelParams = {
+const PrimitiveLabelParams: Record<string, Field> = {
     /** Position of this label. */
     position: RequiredField(PrimitivePositionT, 'Position of this label.'),
     /** The label. */
@@ -168,7 +168,7 @@ const PrimitiveLabelParams = {
     label_offset: OptionalField(float, 0, 'Camera-facing offset to prevent overlap with geometry.'),
 };
 
-const EllipseParams = {
+const EllipseParams: Record<string, Field> = {
     /** Color of the primitive. If not specified, uses the parent primitives group `color`. */
     color: OptionalField(nullable(ColorT), null, 'Color of the ellipse. If not specified, uses the parent primitives group `color`.'),
     /** If true, ignores radius_minor/magnitude of the minor axis */
@@ -195,7 +195,7 @@ const EllipseParams = {
     tooltip: OptionalField(nullable(str), null, 'Tooltip to show when hovering over the tube. If not specified, uses the parent primitives group `tooltip`.'),
 };
 
-const EllipsoidParams = {
+const EllipsoidParams: Record<string, Field> = {
     /** Color of the primitive. If not specified, uses the parent primitives group `color`. */
     color: OptionalField(nullable(ColorT), null, 'Color of the ellipsoid. If not specified, uses the parent primitives group `color`.'),
     /** Ellipsoid center. */
@@ -216,7 +216,7 @@ const EllipsoidParams = {
     tooltip: OptionalField(nullable(str), null, 'Tooltip to show when hovering over the tube. If not specified, uses the parent primitives group `tooltip`.'),
 };
 
-const BoxParams = {
+const BoxParams: Record<string, Field> = {
     /** The center of the box. */
     center: RequiredField(PrimitivePositionT, 'The center of the box.'),
     /** The width, the height, and the depth of the box. Added to the bounding box determined by the center. */

@@ -16,7 +16,7 @@ export type EntitySubtype =
     | 'ion'
     | 'lipid'
     | 'peptide-like';
-export const EntitySubtype = Column.Schema.Aliased<EntitySubtype>(Column.Schema.Str());
+export const EntitySubtype: Column.Schema.Aliased<EntitySubtype> = Column.Schema.Aliased<EntitySubtype>(Column.Schema.Str());
 
 export interface Entities {
     data: mmCIF_Database['entity'];

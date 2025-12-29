@@ -11,8 +11,9 @@ import type { Loci } from '../../../mol-model/loci.ts';
 import { StructureElement } from '../../../mol-model/structure.ts';
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { PluginBehavior } from '../../../mol-plugin/behavior/behavior.ts';
+import type { StateTransformer } from '../../../mol-state/index.ts';
 
-export const PDBeStructureQualityReport = PluginBehavior.create<{ autoAttach: boolean; showTooltip: boolean }>({
+export const PDBeStructureQualityReport: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, { autoAttach: boolean; showTooltip: boolean }> = PluginBehavior.create<{ autoAttach: boolean; showTooltip: boolean }>({
     name: 'pdbe-structure-quality-report-prop',
     category: 'custom-props',
     display: {

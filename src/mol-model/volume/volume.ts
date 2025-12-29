@@ -110,7 +110,9 @@ export namespace Volume {
     }
 
     const defaultStats: Grid['stats'] = { min: -1, max: 1, mean: 0, sigma: 0.1 };
-    export function createIsoValueParam(defaultValue: Volume.IsoValue, stats?: Grid['stats']) {
+    type IsoValueConditioned = PD.Conditioned<Volume.IsoValue, PD.Converted<Volume.IsoValue, number>>;
+
+    export function createIsoValueParam(defaultValue: Volume.IsoValue, stats?: Grid['stats']): IsoValueConditioned {
         const sts = stats || defaultStats;
         const { min, max, mean, sigma } = sts;
 
@@ -144,10 +146,10 @@ export namespace Volume {
             (v: Volume.IsoValue) => v.kind === 'absolute' ? 'absolute' : 'relative',
             (v: Volume.IsoValue, c: 'absolute' | 'relative') => c === 'absolute' ? Volume.IsoValue.toAbsolute(v, sts) : Volume.IsoValue.toRelative(v, sts),
             { isEssential: true }
-        );
+        ) as unknown as IsoValueConditioned;
     }
 
-    export const IsoValueParam = createIsoValueParam(Volume.IsoValue.relative(2));
+    export const IsoValueParam: ReturnType<typeof createIsoValueParam> = createIsoValueParam(Volume.IsoValue.relative(2));
     export type IsoValueParam = typeof IsoValueParam
 
     export const One: Volume = {

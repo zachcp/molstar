@@ -429,9 +429,10 @@ export function alphaForNode(node: MolstarSubtree<'representation' | 'volume_rep
 }
 
 function getCommonClipParams(node: MolstarNode<'clip'>): Pick<Clip.Props['objects'][number], 'invert' | 'transform'> {
+    const params = node.params as any; // Base params are shared across all clip type variants
     return {
-        invert: !!node.params.invert,
-        transform: node.params.check_transform ? Mat4.fromArray(Mat4(), node.params.check_transform, 0) : Mat4.identity(),
+        invert: !!params.invert,
+        transform: params.check_transform ? Mat4.fromArray(Mat4(), params.check_transform, 0) : Mat4.identity(),
     };
 }
 
@@ -483,7 +484,8 @@ export function clippingForNode(node: MolstarSubtree<'representation' | 'volume_
     const children = getChildren(node).filter(c => c.kind === 'clip');
     if (!children.length) return;
 
-    const variant = children[0].params.variant === 'object' ? 'instance' : 'pixel';
+    const clipParams = children[0].params as any; // Base params are shared across all clip type variants
+    const variant = clipParams.variant === 'object' ? 'instance' : 'pixel';
     const objects: Clip.Props['objects'] = children.map(getClipObject).filter(o => !!o);
 
     return { variant, objects } satisfies Clip.Props;

@@ -68,7 +68,7 @@ export const NucleotideAtomicElementParams = {
     sizeFactor: PD.Numeric(0.3, { min: 0, max: 10, step: 0.01 }),
     detail: PD.Numeric(0, { min: 0, max: 3, step: 1 }, BaseGeometry.CustomQualityParamInfo),
     tryUseImpostor: PD.Boolean(true),
-};
+} as const;
 export type NucleotideAtomicElementParams = typeof NucleotideAtomicElementParams;
 interface NucleotideAtomicElementImpostorProps {
     sizeFactor: number;

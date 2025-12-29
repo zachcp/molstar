@@ -6,6 +6,7 @@
  */
 
 import { List } from 'immutable';
+import type { Subject } from 'rxjs';
 import { UUID } from '../../mol-util/index.ts';
 import { PluginState } from '../../mol-plugin/state.ts';
 import { StatefulPluginComponent } from '../component.ts';
@@ -37,7 +38,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
     private entryMap = new Map<string, PluginStateSnapshotManager.Entry>();
     private defaultSnapshotId: UUID | undefined = undefined;
 
-    protected override updateState(state: Partial<StateManagerState>) {
+    protected override updateState(state: Partial<StateManagerState>): boolean {
         if ('current' in state && !('currentAnimationTimeMs' in state)) {
             return super.updateState({ ...state, currentAnimationTimeMs: 0 });
         } else {
@@ -45,7 +46,7 @@ class PluginStateSnapshotManager extends StatefulPluginComponent<StateManagerSta
         }
     }
 
-    readonly events = {
+    readonly events: { changed: Subject<undefined>; opened: Subject<undefined> } = {
         changed: this.ev(),
         opened: this.ev(),
     };

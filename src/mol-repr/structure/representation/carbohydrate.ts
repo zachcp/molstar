@@ -80,7 +80,7 @@ export const CarbohydrateParams = {
         { min: 0, max: 1, step: 0.01 },
         BaseGeometry.ShadingCategory,
     ),
-};
+} as const;
 export type CarbohydrateParams = typeof CarbohydrateParams;
 export function getCarbohydrateParams(
     ctx: ThemeRegistryContext,

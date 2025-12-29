@@ -93,7 +93,7 @@ namespace Task {
         });
     }
 
-    export function resolveInContext<T>(object: Task<T> | T, ctx?: RuntimeContext) {
+    export function resolveInContext<T>(object: Task<T> | T, ctx?: RuntimeContext): Promise<T> | T {
         if (is(object)) return ctx ? object.runInContext(ctx) : object.run();
         return object;
     }

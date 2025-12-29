@@ -166,7 +166,7 @@ namespace ColorTheme {
         props: {}
     };
 
-    export function areEqual(themeA: ColorTheme<any, any>, themeB: ColorTheme<any, any>) {
+    export function areEqual(themeA: ColorTheme<any, any>, themeB: ColorTheme<any, any>): boolean {
         return themeA.contextHash === themeB.contextHash && themeA.factory === themeB.factory && deepEqual(themeA.props, themeB.props);
     }
 
@@ -174,7 +174,7 @@ namespace ColorTheme {
     export const EmptyProvider: Provider<{}> = { name: '', label: '', category: '', factory: EmptyFactory, getParams: () => ({}), defaultValues: {}, isApplicable: () => true };
 
     export type Registry = ThemeRegistry<ColorTheme<any, any>>
-    export function createRegistry() {
+    export function createRegistry(): Registry {
         return new ThemeRegistry(BuiltIn as { [k: string]: Provider<any, any, any> }, EmptyProvider);
     }
 

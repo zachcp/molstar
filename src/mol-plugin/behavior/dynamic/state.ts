@@ -6,6 +6,7 @@
 
 import { ParamDefinition as PD } from '../../../mol-util/param-definition.ts';
 import { PluginBehavior } from '../behavior.ts';
+import type { StateTransformer } from '../../../mol-state/transformer.ts';
 import { Binding } from '../../../mol-util/binding.ts';
 import { ModifiersKeys } from '../../../mol-util/input/input-observer.ts';
 
@@ -33,7 +34,7 @@ const SnapshotControlsParams: PD.Params = {
 };
 type SnapshotControlsProps = PD.Values<typeof SnapshotControlsParams>;
 
-export const SnapshotControls = PluginBehavior.create<SnapshotControlsProps>({
+export const SnapshotControls: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, SnapshotControlsProps> = PluginBehavior.create<SnapshotControlsProps>({
     name: 'snapshot-controls',
     category: 'interaction',
     ctor: class extends PluginBehavior.Handler<SnapshotControlsProps> {

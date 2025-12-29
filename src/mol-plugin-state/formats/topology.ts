@@ -10,8 +10,7 @@ import { DataFormatProvider } from './provider.ts';
 
 export const TopologyFormatCategory = 'Topology';
 
-export { PsfProvider };
-const PsfProvider = DataFormatProvider({
+const _PsfProvider = DataFormatProvider({
     label: 'PSF',
     description: 'PSF',
     category: TopologyFormatCategory,
@@ -27,10 +26,10 @@ const PsfProvider = DataFormatProvider({
         return { format: format.selector, topology: topology.selector };
     },
 });
-type PsfProvider = typeof PsfProvider;
+export type PsfProvider = typeof _PsfProvider;
+export const PsfProvider: PsfProvider = _PsfProvider;
 
-export { PrmtopProvider };
-const PrmtopProvider = DataFormatProvider({
+const _PrmtopProvider = DataFormatProvider({
     label: 'PRMTOP',
     description: 'PRMTOP',
     category: TopologyFormatCategory,
@@ -46,10 +45,10 @@ const PrmtopProvider = DataFormatProvider({
         return { format: format.selector, topology: topology.selector };
     },
 });
-type PrmtopProvider = typeof PrmtopProvider;
+export type PrmtopProvider = typeof _PrmtopProvider;
+export const PrmtopProvider: PrmtopProvider = _PrmtopProvider;
 
-export { TopProvider };
-const TopProvider = DataFormatProvider({
+const _TopProvider = DataFormatProvider({
     label: 'TOP',
     description: 'TOP',
     category: TopologyFormatCategory,
@@ -65,7 +64,8 @@ const TopProvider = DataFormatProvider({
         return { format: format.selector, topology: topology.selector };
     },
 });
-type TopProvider = typeof TopProvider;
+export type TopProvider = typeof _TopProvider;
+export const TopProvider: TopProvider = _TopProvider;
 
 export type TopologyProvider = PsfProvider;
 

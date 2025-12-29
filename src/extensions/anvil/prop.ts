@@ -42,7 +42,7 @@ namespace MembraneOrientation {
     }
 
     const pos = Vec3();
-    export const symbols = {
+    export const symbols: { isTransmembrane: QuerySymbolRuntime } = {
         isTransmembrane: QuerySymbolRuntime.Dynamic(
             CustomPropSymbol('computed', 'membrane-orientation.is-transmembrane', Type.Bool),
             (ctx) => {

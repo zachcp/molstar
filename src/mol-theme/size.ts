@@ -57,7 +57,7 @@ namespace SizeTheme {
         'uncertainty': UncertaintySizeThemeProvider,
         'uniform': UniformSizeThemeProvider,
         'volume-value': VolumeValueSizeThemeProvider,
-    };
+    } as const;
     type _BuiltIn = typeof BuiltIn;
     export type BuiltIn = keyof _BuiltIn;
     export type ParamValues<C extends SizeTheme.Provider<any>> = C extends SizeTheme.Provider<infer P> ? PD.Values<P>

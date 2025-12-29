@@ -5,6 +5,7 @@
  * @author Alexander Rose <alexander.rose@weirdbyte.de>
  */
 
+import type { BehaviorSubject } from 'rxjs';
 import type { Structure } from '../../../mol-model/structure.ts';
 import { setSubtreeVisibility } from '../../../mol-plugin/behavior/static/state.ts';
 import { PluginCommands } from '../../../mol-plugin/commands.ts';
@@ -37,7 +38,14 @@ export class StructureHierarchyManager extends PluginComponent {
         },
     };
 
-    readonly behaviors = {
+    readonly behaviors: {
+        readonly selection: BehaviorSubject<{
+            hierarchy: StructureHierarchy,
+            trajectories: ReadonlyArray<TrajectoryRef>,
+            models: ReadonlyArray<ModelRef>,
+            structures: ReadonlyArray<StructureRef>,
+        }>;
+    } = {
         selection: this.ev.behavior({
             hierarchy: this.current,
             trajectories: this.selection.trajectories,
@@ -230,7 +238,7 @@ export class StructureHierarchyManager extends PluginComponent {
         });
     }
 
-    remove(refs: (StructureHierarchyRef | string)[], canUndo?: boolean) {
+    remove(refs: (StructureHierarchyRef | string)[], canUndo?: boolean): Promise<void> | undefined {
         if (refs.length === 0) return;
         const deletes = this.plugin.state.data.build();
         for (const r of refs) {
@@ -349,7 +357,7 @@ export namespace StructureHierarchyManager {
         return groups;
     }
 
-    export function getSelectedStructuresDescription(plugin: PluginContext) {
+    export function getSelectedStructuresDescription(plugin: PluginContext): string {
         const { structures } = plugin.managers.structure.hierarchy.selection;
         if (structures.length === 0) return '';
 

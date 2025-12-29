@@ -5,6 +5,7 @@
  * @author Jiří Černý <jiri.cerny@ibt.cas.cz>
  */
 
+import type { StateTransformer } from '../../mol-state/index.ts';
 import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { ConfalPyramidsPreset } from './confal-pyramids/behavior.ts';
@@ -16,7 +17,7 @@ import { NtCTubeColorThemeProvider } from './ntc-tube/color.ts';
 import { NtCTubeProvider } from './ntc-tube/property.ts';
 import { NtCTubeRepresentationProvider } from './ntc-tube/representation.ts';
 
-export const DnatcoNtCs = PluginBehavior.create<{ autoAttach: boolean; showToolTip: boolean }>({
+export const DnatcoNtCs: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, { autoAttach: boolean; showToolTip: boolean }> = PluginBehavior.create<{ autoAttach: boolean; showToolTip: boolean }>({
     name: 'dnatco-ntcs',
     category: 'custom-props',
     display: {

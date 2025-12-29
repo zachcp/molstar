@@ -37,7 +37,7 @@ const _LinesSchema = {
     dLineSizeAttenuation: DefineSpec('boolean'),
     uDoubleSided: UniformSpec('b', 'material'),
     dFlipSided: DefineSpec('boolean'),
-};
+} as const;
 export type LinesSchema = typeof _LinesSchema;
 export const LinesSchema: LinesSchema = _LinesSchema;
 export type LinesValues = Values<LinesSchema>;

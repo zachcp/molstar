@@ -41,7 +41,7 @@ export const ElementCrossParams = {
     traceOnly: PD.Boolean(false),
     crosses: PD.Select('lone', PD.arrayToOptions(['lone', 'all'] as const)),
     crossSize: PD.Numeric(0.35, { min: 0, max: 2, step: 0.01 }),
-};
+} as const;
 export type ElementCrossParams = typeof ElementCrossParams;
 
 export function createElementCross(
@@ -213,7 +213,7 @@ export const StructureElementCrossParams = {
     traceOnly: PD.Boolean(false),
     crosses: PD.Select('lone', PD.arrayToOptions(['lone', 'all'] as const)),
     crossSize: PD.Numeric(0.35, { min: 0, max: 2, step: 0.01 }),
-};
+} as const;
 export type StructureElementCrossParams = typeof StructureElementCrossParams;
 
 export function StructureElementCrossVisual(materialId: number): ComplexVisual<StructureElementCrossParams> {

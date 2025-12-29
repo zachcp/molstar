@@ -326,7 +326,7 @@ const _DotParams = {
 export type DotParams = typeof _DotParams
 export const DotParams: DotParams = _DotParams;
 export function getDotParams(ctx: ThemeRegistryContext, volume: Volume) {
-    const p = PD.clone(DotParams);
+    const p = PD.clone(DotParams) as { -readonly [K in keyof DotParams]: DotParams[K] };
     p.isoValue = Volume.createIsoValueParam(Volume.IsoValue.relative(2), volume.grid.stats);
     return p;
 }

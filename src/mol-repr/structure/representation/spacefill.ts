@@ -61,7 +61,7 @@ export const SpacefillParams = {
         ['element-sphere'],
         PD.objectToOptions(SpacefillVisuals),
     ),
-};
+} as const;
 export type SpacefillParams = typeof SpacefillParams;
 
 let CoarseGrainedSpacefillParams: SpacefillParams;

@@ -31,7 +31,7 @@ const _PointsSchema = {
     aPosition: AttributeSpec('float32', 3, 0),
     dPointSizeAttenuation: DefineSpec('boolean'),
     dPointStyle: DefineSpec('string', ['square', 'circle', 'fuzzy']),
-};
+} as const;
 export type PointsSchema = typeof _PointsSchema;
 export const PointsSchema: PointsSchema = _PointsSchema;
 export type PointsValues = Values<PointsSchema>;

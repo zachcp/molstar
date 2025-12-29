@@ -883,7 +883,7 @@ export namespace Mesh {
       BaseGeometry.ShadingCategory,
     ),
     interior: getInteriorParam(),
-  };
+  } as const;
   export type Params = typeof Params;
 
   export const Utils: GeometryUtils<Mesh, Params> = {

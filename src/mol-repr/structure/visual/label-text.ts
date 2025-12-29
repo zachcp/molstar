@@ -34,7 +34,7 @@ export const LabelTextParams = {
     chainScale: PD.Numeric(10, { min: 0, max: 20, step: 0.1 }),
     residueScale: PD.Numeric(1, { min: 0, max: 20, step: 0.1 }),
     elementScale: PD.Numeric(0.5, { min: 0, max: 20, step: 0.1 }),
-};
+} as const;
 export type LabelTextParams = typeof LabelTextParams;
 export type LabelTextProps = PD.Values<LabelTextParams>;
 export type LabelLevels = LabelTextProps['level'];

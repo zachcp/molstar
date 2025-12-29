@@ -177,7 +177,7 @@ export namespace Cylinders {
         bumpAmplitude: PD.Numeric(1, { min: 0, max: 5, step: 0.1 }, BaseGeometry.ShadingCategory),
         interior: getInteriorParam(),
         colorMode: PD.Select('default', PD.arrayToOptions(['default', 'interpolate'] as const), BaseGeometry.ShadingCategory)
-    };
+    } as const;
     export type Params = typeof Params
 
     export const Utils: GeometryUtils<Cylinders, Params> = {

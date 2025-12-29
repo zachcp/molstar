@@ -50,7 +50,7 @@ export function kebabCaseToWords(str: string) {
     return capitalize(splitKebabCase(str));
 }
 
-export function stringToWords(str: string) {
+export function stringToWords(str: string): string {
     return capitalize(splitCamelCase(splitSnakeCase(splitKebabCase(str))));
 }
 

@@ -268,7 +268,7 @@ export namespace Spheres {
             ...BaseGeometry.CullingLodCategory,
             defaultValue: [] as LodLevels
         })
-    };
+    } as const;
     export type Params = typeof Params
 
     export const Utils: GeometryUtils<Spheres, Params> = {

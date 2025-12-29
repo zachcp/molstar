@@ -21,7 +21,7 @@ import type { Ray3D } from '../../mol-math/geometry/primitives/ray3d.ts';
 import { Viewport } from '../camera/util.ts';
 import { Shape } from '../../mol-model/shape/shape.ts';
 
-export const PointerHelperParams = {
+const _PointerHelperParams = {
     ...Mesh.Params,
     enabled: PD.Select('off', PD.arrayToOptions(['on', 'off']), {
         isEssential: true,
@@ -30,7 +30,8 @@ export const PointerHelperParams = {
     color: PD.Color(ColorNames.grey, { isEssential: true }),
     hitColor: PD.Color(ColorNames.pink, { isEssential: true }),
 };
-export type PointerHelperParams = typeof PointerHelperParams;
+export type PointerHelperParams = typeof _PointerHelperParams;
+export const PointerHelperParams: PointerHelperParams = _PointerHelperParams;
 export type PointerHelperProps = PD.Values<PointerHelperParams>;
 
 export class PointerHelper {

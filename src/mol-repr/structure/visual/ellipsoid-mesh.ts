@@ -134,7 +134,7 @@ export const EllipsoidMeshParams = {
     ignoreHydrogens: PD.Boolean(false),
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     traceOnly: PD.Boolean(false),
-};
+} as const;
 export type EllipsoidMeshParams = typeof EllipsoidMeshParams;
 
 export function EllipsoidMeshVisual(materialId: number): UnitsVisual<EllipsoidMeshParams> {
@@ -277,7 +277,7 @@ export const StructureEllipsoidMeshParams = {
     ignoreHydrogens: PD.Boolean(false),
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     traceOnly: PD.Boolean(false),
-};
+} as const;
 export type StructureEllipsoidMeshParams = typeof StructureEllipsoidMeshParams;
 
 export function StructureEllipsoidMeshVisual(materialId: number): ComplexVisual<StructureEllipsoidMeshParams> {

@@ -46,7 +46,10 @@ export type StructureMeasurementCell = StateObjectCell<
     >
 >;
 
-export const StructureMeasurementParams = {
+export const StructureMeasurementParams: {
+    distanceUnitLabel: PD.Text;
+    textColor: typeof MeasurementRepresentationCommonTextParams.textColor;
+} = {
     distanceUnitLabel: PD.Text('\u212B', { isEssential: true }),
     textColor: MeasurementRepresentationCommonTextParams.textColor,
 };
@@ -80,7 +83,7 @@ function serializeLoci(loci: StructureElement.Loci): { bundle: StructureElement.
 }
 
 class StructureMeasurementManager extends StatefulPluginComponent<StructureMeasurementManagerState> {
-    readonly behaviors = {
+    readonly behaviors: { state: import('rxjs').BehaviorSubject<StructureMeasurementManagerState> } = {
         state: this.ev.behavior(this.state),
     };
 

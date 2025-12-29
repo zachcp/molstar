@@ -5,9 +5,10 @@
  */
 
 import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
+import { StateTransformer } from '../../mol-state/transformer.ts';
 import { GeometryExporterUI } from './ui.tsx';
 
-export const GeometryExport = PluginBehavior.create<{}>({
+export const GeometryExport: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, {}> = PluginBehavior.create<{}>({
     name: 'extension-geo-export',
     category: 'misc',
     display: {

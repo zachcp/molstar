@@ -322,7 +322,7 @@ const _SegmentParams = {
 export type SegmentParams = typeof _SegmentParams
 export const SegmentParams: SegmentParams = _SegmentParams;
 export function getSegmentParams(ctx: ThemeRegistryContext, volume: Volume) {
-    const p = PD.clone(SegmentParams);
+    const p = PD.clone(SegmentParams) as { -readonly [K in keyof SegmentParams]: SegmentParams[K] };
 
     const segmentation = Volume.Segmentation.get(volume);
     if (segmentation) {

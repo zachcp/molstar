@@ -234,7 +234,7 @@ export const CommonSurfaceParams = {
         description:
             'Include elements of the parent structure in surface calculation to get a surface patch of the current structure.',
     }),
-};
+} as const;
 export const DefaultCommonSurfaceProps = PD.getDefaultValues(CommonSurfaceParams);
 export type CommonSurfaceProps = typeof DefaultCommonSurfaceProps;
 

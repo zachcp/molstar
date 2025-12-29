@@ -19,7 +19,7 @@ export type ParseFormatT =
     | 'psf' | 'prmtop' | 'top'
     // volumes
     | 'map' | 'dx' | 'dxbin'
-export const ParseFormatT = literal<ParseFormatT>(
+export const ParseFormatT: iots.Type<ParseFormatT> = literal<ParseFormatT>(
     // trajectory
     'mmcif',
     'bcif', // +volumes
@@ -56,7 +56,7 @@ export type MolstarParseFormatT =
     | 'psf' | 'prmtop' | 'top'
     // volumes
     | 'map' | 'dx' | 'dxbin'
-export const MolstarParseFormatT = literal<MolstarParseFormatT>(
+export const MolstarParseFormatT: iots.Type<MolstarParseFormatT> = literal<MolstarParseFormatT>(
     // trajectory
     'cif', // +volumes
     'pdb',
@@ -84,11 +84,11 @@ export const MolstarParseFormatT = literal<MolstarParseFormatT>(
 
 /** `kind` parameter values for `structure` node in MVS tree */
 export type StructureTypeT = 'model' | 'assembly' | 'symmetry' | 'symmetry_mates';
-export const StructureTypeT = literal<StructureTypeT>('model', 'assembly', 'symmetry', 'symmetry_mates');
+export const StructureTypeT: iots.Type<StructureTypeT> = literal<StructureTypeT>('model', 'assembly', 'symmetry', 'symmetry_mates');
 
 /** `selector` parameter values for `component` node in MVS tree */
 export type ComponentSelectorT = 'all' | 'polymer' | 'protein' | 'nucleic' | 'branched' | 'ligand' | 'ion' | 'water' | 'coarse';
-export const ComponentSelectorT = literal<ComponentSelectorT>('all', 'polymer', 'protein', 'nucleic', 'branched', 'ligand', 'ion', 'water', 'coarse');
+export const ComponentSelectorT: iots.Type<ComponentSelectorT> = literal<ComponentSelectorT>('all', 'polymer', 'protein', 'nucleic', 'branched', 'ligand', 'ion', 'water', 'coarse');
 
 /** `selector` parameter values for `component` node in MVS tree */
 const _ComponentExpressionT: iots.Type<{
@@ -142,11 +142,11 @@ export const ComponentExpressionT: iots.Type<ComponentExpressionT> = _ComponentE
 
 /** `schema` parameter values for `*_from_uri` and `*_from_source` nodes in MVS tree */
 export type SchemaT = 'whole_structure' | 'entity' | 'chain' | 'auth_chain' | 'residue' | 'auth_residue' | 'residue_range' | 'auth_residue_range' | 'atom' | 'auth_atom' | 'all_atomic';
-export const SchemaT = literal<SchemaT>('whole_structure', 'entity', 'chain', 'auth_chain', 'residue', 'auth_residue', 'residue_range', 'auth_residue_range', 'atom', 'auth_atom', 'all_atomic');
+export const SchemaT: iots.Type<SchemaT> = literal<SchemaT>('whole_structure', 'entity', 'chain', 'auth_chain', 'residue', 'auth_residue', 'residue_range', 'auth_residue_range', 'atom', 'auth_atom', 'all_atomic');
 
 /** `format` parameter values for `*_from_uri` nodes in MVS tree */
 export type SchemaFormatT = 'cif' | 'bcif' | 'json';
-export const SchemaFormatT = literal<SchemaFormatT>('cif', 'bcif', 'json');
+export const SchemaFormatT: iots.Type<SchemaFormatT> = literal<SchemaFormatT>('cif', 'bcif', 'json');
 
 /** Parameter values for vector params, e.g. `position` */
 export type Vector3 = [number, number, number];
@@ -156,7 +156,7 @@ export const Vector3: iots.Type<Vector3> = tuple([float, float, float]);
 export const Matrix: iots.Type<number[]> = list(float); // TODO impl custom types Matrix3x3 and Matrix4x4
 
 export type LabelAttachments = 'bottom-left' | 'bottom-center' | 'bottom-right' | 'middle-left' | 'middle-center' | 'middle-right' | 'top-left' | 'top-center' | 'top-right';
-export const LabelAttachments = literal<LabelAttachments>('bottom-left', 'bottom-center', 'bottom-right', 'middle-left', 'middle-center', 'middle-right', 'top-left', 'top-center', 'top-right');
+export const LabelAttachments: iots.Type<LabelAttachments> = literal<LabelAttachments>('bottom-left', 'bottom-center', 'bottom-right', 'middle-left', 'middle-center', 'middle-right', 'top-left', 'top-center', 'top-right');
 
 /** Primitives-related types */
 const _PrimitiveComponentExpressionT: iots.Type<{
@@ -182,7 +182,7 @@ export const StrList: iots.Type<string[]> = list(str);
 
 /** Hexadecimal color string, e.g. '#FF1100' (the type matches more than just valid HexColor strings) */
 export type HexColorT = `#${string}`;
-export const HexColorT = new iots.Type<HexColorT>(
+export const HexColorT: iots.Type<HexColorT> = new iots.Type<HexColorT>(
     'HexColor',
     ((value: any) => typeof value === 'string') as any,
     (value, ctx) => isHexColorT(value) ? { _tag: 'Right', right: value } : { _tag: 'Left', left: [{ value: value, context: ctx, message: `"${value}" is not a valid hex color string` }] },
@@ -196,7 +196,7 @@ function isHexColorT(str: any): str is HexColorT {
 }
 
 /** Named color string (e.g. 'red') for `color` parameter values for `color` node in MVS tree */
-export const ColorNameT = new iots.Type<ColorNameT>(
+export const ColorNameT: iots.Type<ColorNameT> = new iots.Type<ColorNameT>(
     'ColorName',
     ((value: any) => typeof value === 'string') as any,
     (value, ctx) => isColorNameT(value) ? { _tag: 'Right', right: value } : { _tag: 'Left', left: [{ value: value, context: ctx, message: `"${value}" is not a valid color name` }] },
@@ -264,7 +264,7 @@ export type ColorListNameT =
     | 'Set1' | 'Set2' | 'Set3' | 'Pastel1' | 'Pastel2' | 'Dark2' | 'Paired' | 'Accent'
     // Additional lists, not standard for visualization in general, but commonly used for structures
     | 'Chainbow'
-export const ColorListNameT = literal<ColorListNameT>(
+export const ColorListNameT: iots.Type<ColorListNameT> = literal<ColorListNameT>(
     // Color lists from https://observablehq.com/@d3/color-schemes (definitions: https://colorbrewer2.org/export/colorbrewer.js)
     // Sequential single-hue
     'Reds', 'Oranges', 'Greens', 'Blues', 'Purples', 'Greys',
@@ -284,7 +284,7 @@ export const ColorListNameT = literal<ColorListNameT>(
 );
 
 export type ColorDictNameT = 'ElementSymbol' | 'ResidueName' | 'ResidueProperties' | 'SecondaryStructure';
-export const ColorDictNameT = literal<ColorDictNameT>('ElementSymbol', 'ResidueName', 'ResidueProperties', 'SecondaryStructure');
+export const ColorDictNameT: iots.Type<ColorDictNameT> = literal<ColorDictNameT>('ElementSymbol', 'ResidueName', 'ResidueProperties', 'SecondaryStructure');
 
 
 const _CategoricalPalette: iots.Type<{

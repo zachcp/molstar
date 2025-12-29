@@ -4,49 +4,49 @@
  * @author David Sehnal <david.sehnal@gmail.com>
  */
 
-import { bool, float, int, literal, nullable, OptionalField, RequiredField } from '../generic/field-schema.ts';
+import { bool, float, int, literal, nullable, OptionalField, RequiredField, type Field } from '../generic/field-schema.ts';
 import { SimpleParamsSchema, UnionParamsSchema } from '../generic/params-schema.ts';
 import { Matrix, Vector3 } from './param-types.ts';
 
-const Cartoon = {
+const Cartoon: Record<string, Field> = {
     /** Scales the corresponding visuals */
     size_factor: OptionalField(float, 1, 'Scales the corresponding visuals.'),
     /** Simplify corkscrew helices to tubes. */
     tubular_helices: OptionalField(bool, false, 'Simplify corkscrew helices to tubes.'),
 };
 
-const Backbone = {
+const Backbone: Record<string, Field> = {
     /** Scales the corresponding visuals */
     size_factor: OptionalField(float, 1, 'Scales the corresponding visuals.'),
 };
 
-const BallAndStick = {
-    /** Scales the corresponding visuals */
-    size_factor: OptionalField(float, 1, 'Scales the corresponding visuals.'),
-    /** Controls whether hydrogen atoms are drawn. */
-    ignore_hydrogens: OptionalField(bool, false, 'Controls whether hydrogen atoms are drawn.'),
-};
-
-const Line = {
+const BallAndStick: Record<string, Field> = {
     /** Scales the corresponding visuals */
     size_factor: OptionalField(float, 1, 'Scales the corresponding visuals.'),
     /** Controls whether hydrogen atoms are drawn. */
     ignore_hydrogens: OptionalField(bool, false, 'Controls whether hydrogen atoms are drawn.'),
 };
 
-const Spacefill = {
+const Line: Record<string, Field> = {
     /** Scales the corresponding visuals */
     size_factor: OptionalField(float, 1, 'Scales the corresponding visuals.'),
     /** Controls whether hydrogen atoms are drawn. */
     ignore_hydrogens: OptionalField(bool, false, 'Controls whether hydrogen atoms are drawn.'),
 };
 
-const Carbohydrate = {
+const Spacefill: Record<string, Field> = {
+    /** Scales the corresponding visuals */
+    size_factor: OptionalField(float, 1, 'Scales the corresponding visuals.'),
+    /** Controls whether hydrogen atoms are drawn. */
+    ignore_hydrogens: OptionalField(bool, false, 'Controls whether hydrogen atoms are drawn.'),
+};
+
+const Carbohydrate: Record<string, Field> = {
     /** Scales the corresponding visuals */
     size_factor: OptionalField(float, 1, 'Scales the corresponding visuals.'),
 };
 
-const Surface = {
+const Surface: Record<string, Field> = {
     /** Type of surface representation. (Default is 'molecular') */
     surface_type: OptionalField(literal('molecular', 'gaussian'), 'molecular', `Type of surface representation. (Default is 'molecular')`),
     /** Scales the corresponding visuals */
@@ -69,7 +69,7 @@ export const MVSRepresentationParams = UnionParamsSchema(
     },
 );
 
-const VolumeIsoSurface = {
+const VolumeIsoSurface: Record<string, Field> = {
     /** Relative isovalue. */
     relative_isovalue: OptionalField(nullable(float), null, 'Relative isovalue.'),
     /** Absolute isovalue. Overrides `relative_isovalue`. */
@@ -80,7 +80,7 @@ const VolumeIsoSurface = {
     show_faces: OptionalField(bool, true, 'Show mesh faces. Defaults to true.'),
 };
 
-const VolumeGridSlice = {
+const VolumeGridSlice: Record<string, Field> = {
     /** Dimension of the grid slice, i.e. 'x', 'y', or 'z'. */
     dimension: RequiredField(literal('x', 'y', 'z'), 'Dimension of the grid slice, i.e. \'x\', \'y\', or \'z\'.'),
     /** Index of the grid slice in the specified dimension. 0-based index, i.e. 0 is the first slice. */
@@ -102,7 +102,7 @@ export const MVSVolumeRepresentationParams = UnionParamsSchema(
     },
 );
 
-const ClipParamsBase = {
+const ClipParamsBase: Record<string, Field> = {
     /** Transformation matrix to applied to each point before clipping. For example, can be used to clip volumes in the grid/fractional space. Default is null. */
     check_transform: OptionalField(nullable(Matrix), null, 'Transformation matrix to applied to each point before clipping. For example, can be used to clip volumes in the grid/fractional space. Default is null.'),
     /** Inverts the clipping region. Default is false. */

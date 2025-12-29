@@ -95,4 +95,4 @@ export const PluginCommands = {
         >(),
         ResetSettings: PluginCommand<{}>(),
     },
-};
+} as const;

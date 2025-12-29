@@ -41,7 +41,7 @@ export const VisualQualityOptions: [
 
 //
 
-export const ColorSmoothingParams = {
+const _ColorSmoothingParams = {
     smoothColors: PD.MappedStatic('auto', {
         auto: PD.Group({}),
         on: PD.Group({
@@ -50,8 +50,9 @@ export const ColorSmoothingParams = {
         }),
         off: PD.Group({}),
     }),
-};
-export type ColorSmoothingParams = typeof ColorSmoothingParams;
+} as const;
+export type ColorSmoothingParams = typeof _ColorSmoothingParams;
+export const ColorSmoothingParams: ColorSmoothingParams = _ColorSmoothingParams;
 
 export function hasColorSmoothingProp(props: PD.Values<any>): props is PD.Values<ColorSmoothingParams> {
     return !!props.smoothColors;
@@ -91,7 +92,7 @@ export namespace BaseGeometry {
         hideIf: (params: PD.Values<Params>) => typeof params.quality !== 'undefined' && params.quality !== 'custom',
     };
 
-    export const Params = {
+    const _Params = {
         alpha: PD.Numeric(1, { min: 0, max: 1, step: 0.01 }, {
             label: 'Opacity',
             isEssential: true,
@@ -124,8 +125,9 @@ export namespace BaseGeometry {
             ...CullingLodCategory,
             description: 'Instance grid batch size.',
         }),
-    };
-    export type Params = typeof Params;
+    } as const;
+    export type Params = typeof _Params;
+    export const Params: Params = _Params;
 
     export type Counts = { drawCount: number; vertexCount: number; groupCount: number; instanceCount: number };
 

@@ -20,14 +20,14 @@ import { Volume } from './volume/volume.ts';
 import { Interval } from '../mol-data/int.ts';
 
 /** A Loci that includes every loci */
-export const EveryLoci = { kind: 'every-loci' as 'every-loci' };
+export const EveryLoci = { kind: 'every-loci' as const };
 export type EveryLoci = typeof EveryLoci;
 export function isEveryLoci(x?: Loci): x is EveryLoci {
     return !!x && x.kind === 'every-loci';
 }
 
 /** A Loci that is empty */
-export const EmptyLoci = { kind: 'empty-loci' as 'empty-loci' };
+export const EmptyLoci = { kind: 'empty-loci' as const };
 export type EmptyLoci = typeof EmptyLoci;
 export function isEmptyLoci(x?: Loci): x is EmptyLoci {
     return !!x && x.kind === 'empty-loci';

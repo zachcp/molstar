@@ -66,7 +66,7 @@ export const CarbohydrateLinkParams = {
     ...UnitsMeshParams,
     ...LinkCylinderParams,
     linkSizeFactor: PD.Numeric(0.3, { min: 0, max: 3, step: 0.01 }),
-};
+} as const;
 export type CarbohydrateLinkParams = typeof CarbohydrateLinkParams;
 
 export function CarbohydrateLinkVisual(materialId: number): ComplexVisual<CarbohydrateLinkParams> {

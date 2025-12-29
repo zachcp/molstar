@@ -13,7 +13,7 @@ export class PluginComponent {
     private _ev: RxEventHelper | undefined;
     private subs: Subscription[] | undefined = void 0;
 
-    subscribe<T>(obs: Observable<T> | undefined, action: (v: T) => void) {
+    subscribe<T>(obs: Observable<T> | undefined, action: (v: T) => void): { unsubscribe: () => void } {
         if (!obs) return { unsubscribe: () => {} };
         if (typeof this.subs === 'undefined') this.subs = [];
 
@@ -30,7 +30,7 @@ export class PluginComponent {
         };
     }
 
-    protected get ev() {
+    protected get ev(): RxEventHelper {
         return this._ev || (this._ev = RxEventHelper.create());
     }
 
@@ -56,7 +56,7 @@ export class StatefulPluginComponent<State extends {}> extends PluginComponent {
         return false;
     }
 
-    get state() {
+    get state(): State {
         return this._state;
     }
 

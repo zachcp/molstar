@@ -35,7 +35,7 @@ export const ElementPointParams = {
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     traceOnly: PD.Boolean(false),
     stride: PD.Numeric(1, { min: 1, max: 100, step: 1 }),
-};
+} as const;
 export type ElementPointParams = typeof ElementPointParams;
 
 // TODO size
@@ -198,7 +198,7 @@ export const StructureElementPointParams = {
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     traceOnly: PD.Boolean(false),
     stride: PD.Numeric(1, { min: 1, max: 100, step: 1 }),
-};
+} as const;
 export type StructureElementPointParams = typeof StructureElementPointParams;
 
 export function StructureElementPointVisual(materialId: number): ComplexVisual<StructureElementPointParams> {

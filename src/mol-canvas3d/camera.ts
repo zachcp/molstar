@@ -54,7 +54,7 @@ export class Camera implements ICamera {
 
   readonly viewport: Viewport;
   readonly state: Readonly<Camera.Snapshot> = Camera.createDefaultSnapshot();
-  readonly viewOffset = Camera.ViewOffset();
+  readonly viewOffset: Camera.ViewOffset = Camera.ViewOffset();
 
   readonly disabled = false as const;
 
@@ -71,7 +71,7 @@ export class Camera implements ICamera {
   readonly transition: CameraTransitionManager = new CameraTransitionManager(
     this,
   );
-  readonly stateChanged = new BehaviorSubject<Partial<Camera.Snapshot>>(
+  readonly stateChanged: BehaviorSubject<Partial<Camera.Snapshot>> = new BehaviorSubject<Partial<Camera.Snapshot>>(
     this.state,
   );
 
@@ -320,7 +320,7 @@ export class Camera implements ICamera {
 
   constructor(
     state?: Partial<Camera.Snapshot>,
-    viewport = Viewport.create(0, 0, 128, 128),
+    viewport: Viewport = Viewport.create(0, 0, 128, 128),
   ) {
     this.viewport = viewport;
     Camera.copySnapshot(this.state, state);

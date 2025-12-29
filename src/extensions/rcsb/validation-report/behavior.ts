@@ -25,10 +25,10 @@ import {
     PresetStructureRepresentations,
     StructureRepresentationPresetProvider,
 } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
-import { StateObjectRef } from '../../../mol-state/index.ts';
+import { StateObjectRef, type StateTransformer } from '../../../mol-state/index.ts';
 import { Model } from '../../../mol-model/structure.ts';
 
-export const RCSBValidationReport = PluginBehavior.create<{ autoAttach: boolean; showTooltip: boolean }>({
+export const RCSBValidationReport: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, { autoAttach: boolean; showTooltip: boolean }> = PluginBehavior.create<{ autoAttach: boolean; showTooltip: boolean }>({
     name: 'rcsb-validation-report-prop',
     category: 'custom-props',
     display: {

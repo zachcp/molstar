@@ -6,7 +6,7 @@ import { StateObjectRef } from '../../../mol-state/index.ts';
 import { SbNcbrPartialChargesPropertyProvider } from './property.ts';
 import { SbNcbrPartialChargesColorThemeProvider } from './color.ts';
 
-export const SbNcbrPartialChargesPreset = StructureRepresentationPresetProvider({
+export const SbNcbrPartialChargesPreset: StructureRepresentationPresetProvider = StructureRepresentationPresetProvider({
     id: 'sb-ncbr-partial-charges-preset',
     display: {
         name: 'SB NCBR Partial Charges',

@@ -135,7 +135,7 @@ export const LineParams = {
         { min: 0, max: 1, step: 0.01 },
         BaseGeometry.ShadingCategory,
     ),
-};
+} as const;
 export type LineParams = typeof LineParams;
 export function getLineParams(
     ctx: ThemeRegistryContext,

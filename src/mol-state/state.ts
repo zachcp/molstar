@@ -23,6 +23,7 @@ import { AsyncQueue } from '../mol-util/async-queue.ts';
 import { arraySetAdd, arraySetRemove } from '../mol-util/array.ts';
 import { UniqueArray } from '../mol-data/generic/unique-array.ts';
 import { assignIfUndefined } from '../mol-util/object.ts';
+import type { Subject, BehaviorSubject } from 'rxjs';
 
 export { State };
 
@@ -34,7 +35,21 @@ class State {
     private ev = RxEventHelper.create();
 
     readonly globalContext: unknown = void 0;
-    readonly events = {
+    readonly events: {
+        cell: {
+            stateUpdated: Subject<State.ObjectEvent & { cell: StateObjectCell }>;
+            created: Subject<State.ObjectEvent & { cell: StateObjectCell }>;
+            removed: Subject<State.ObjectEvent & { parent: StateTransform.Ref }>;
+        };
+        object: {
+            updated: Subject<State.ObjectEvent & { action: 'in-place' | 'recreate', obj: StateObject, oldObj?: StateObject, oldData?: any }>;
+            created: Subject<State.ObjectEvent & { obj: StateObject }>;
+            removed: Subject<State.ObjectEvent & { obj?: StateObject }>;
+        };
+        log: Subject<LogEntry>;
+        changed: Subject<{ state: State, inTransaction: boolean }>;
+        historyUpdated: Subject<{ state: State }>;
+    } = {
         cell: {
             stateUpdated: this.ev<State.ObjectEvent & { cell: StateObjectCell }>(),
             created: this.ev<State.ObjectEvent & { cell: StateObjectCell }>(),
@@ -50,7 +65,10 @@ class State {
         historyUpdated: this.ev<{ state: State }>()
     };
 
-    readonly behaviors = {
+    readonly behaviors: {
+        currentObject: BehaviorSubject<State.ObjectEvent>;
+        isUpdating: BehaviorSubject<boolean>;
+    } = {
         currentObject: this.ev.behavior<State.ObjectEvent>({ state: this, ref: StateTransform.RootRef }),
         isUpdating: this.ev.behavior<boolean>(false),
     };
@@ -79,7 +97,7 @@ class State {
         this.refResolvers = this.refResolvers.filter(r => r[0] !== name);
     }
 
-    tryGetCellData = <T extends StateObject>(ref: StateTransform.Ref) => {
+    tryGetCellData = <T extends StateObject>(ref: StateTransform.Ref): T extends StateObject<infer D> ? D : never => {
         let ret = this.cells.get(ref)?.obj?.data;
         if (ret === undefined) {
             for (const [, resolver] of this.refResolvers) {

@@ -27,4 +27,4 @@ export const PluginFeatureDetection = {
 
         return is_iOS();
     },
-};
+} as const;

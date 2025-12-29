@@ -28,7 +28,7 @@ import { Color } from '../../mol-util/color/index.ts';
 import { isTimingMode } from '../../mol-util/debug.ts';
 import type { PostprocessingProps } from './postprocessing.ts';
 
-export const SsaoParams = {
+const _SsaoParams = {
     samples: PD.Numeric(32, { min: 1, max: 256, step: 1 }),
     multiScale: PD.MappedStatic('off', {
         on: PD.Group({
@@ -66,7 +66,9 @@ export const SsaoParams = {
     }),
     color: PD.Color(Color(0x000000)),
     transparentThreshold: PD.Numeric(0.4, { min: 0, max: 1, step: 0.05 }),
-};
+} as const;
+export type SsaoParams = typeof _SsaoParams;
+export const SsaoParams: SsaoParams = _SsaoParams;
 
 export type SsaoProps = PD.Values<typeof SsaoParams>;
 

@@ -191,7 +191,12 @@ function createImmediateActions() {
   };
 }
 
-const immediateActions = (function () {
+type ImmediateActions = {
+  setImmediate: (handler: (...args: any[]) => void, ...args: any[]) => number;
+  clearImmediate: (handle: number) => void;
+};
+
+const immediateActions: ImmediateActions = (function () {
   if (typeof setImmediate !== "undefined") {
     if (typeof window !== "undefined") {
       return {
@@ -200,7 +205,7 @@ const immediateActions = (function () {
         clearImmediate: (handle: any) => (window as any).clearImmediate(handle),
       };
     } else {
-      return { setImmediate, clearImmediate };
+      return { setImmediate, clearImmediate } as ImmediateActions;
     }
   }
   return createImmediateActions();
@@ -210,7 +215,14 @@ function resolveImmediate(res: () => void) {
   immediateActions.setImmediate(res);
 }
 
-const Scheduler = {
+type SchedulerType = {
+  setImmediate: (handler: (...args: any[]) => void, ...args: any[]) => number;
+  clearImmediate: (handle: number) => void;
+  immediatePromise: () => Promise<void>;
+  delay: <T>(timeout: number, value?: T | undefined) => Promise<T>;
+};
+
+const Scheduler: SchedulerType = {
   setImmediate: immediateActions.setImmediate,
   clearImmediate: immediateActions.clearImmediate,
   immediatePromise() {

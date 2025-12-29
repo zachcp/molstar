@@ -48,7 +48,7 @@ const BoxShape3D = PluginStateTransform.BuiltIn({
     },
 });
 
-export function getBoxMesh(box: Box3D, radius: number, oldMesh?: Mesh) {
+export function getBoxMesh(box: Box3D, radius: number, oldMesh?: Mesh): Mesh {
     const diag = Vec3.sub(Vec3(), box.max, box.min);
     const translateUnit = Mat4.fromTranslation(Mat4(), Vec3.create(0.5, 0.5, 0.5));
     const scale = Mat4.fromScaling(Mat4(), diag);

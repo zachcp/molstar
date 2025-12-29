@@ -152,7 +152,7 @@ const _DirectVolumeParams = {
     ...DirectVolume.Params,
     quality: { ...DirectVolume.Params.quality, isEssential: false },
     dataType: PD.Select('byte', PD.arrayToOptions(['byte', 'float', 'halfFloat'] as const)),
-};
+} as const;
 export type DirectVolumeParams = typeof _DirectVolumeParams
 export const DirectVolumeParams: DirectVolumeParams = _DirectVolumeParams;
 export function getDirectVolumeParams(ctx: ThemeRegistryContext, volume: Volume): DirectVolumeParams {

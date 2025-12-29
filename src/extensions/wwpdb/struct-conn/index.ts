@@ -56,7 +56,11 @@ const RESIDUES_VISUAL_PARAMS: VisualParams = {
 } as const;
 
 /** All public functions provided by the StructConn extension  */
-export const wwPDBStructConnExtensionFunctions = {
+export const wwPDBStructConnExtensionFunctions: {
+    getStructConns(plugin: PluginContext, entry: string | undefined): { [id: string]: StructConnRecord };
+    inspectStructConn(plugin: PluginContext, entry: string | undefined, structConnId: string, keepExisting?: boolean): Promise<number>;
+    clearStructConnInspections(plugin: PluginContext, entry: string | undefined): Promise<void>;
+} = {
     /** Return an object with all struct_conn records for a loaded structure.
      * Applies to the first structure belonging to `entry` (e.g. '1tqn'),
      * or to the first loaded structure overall if `entry` is `undefined`.

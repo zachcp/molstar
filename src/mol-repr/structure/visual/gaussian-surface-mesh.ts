@@ -37,7 +37,7 @@ const SharedParams = {
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     tryUseGpu: PD.Boolean(true),
     includeParent: PD.Boolean(false, { isHidden: true }),
-};
+} as const;
 type SharedParams = typeof SharedParams
 
 export const GaussianSurfaceMeshParams = {

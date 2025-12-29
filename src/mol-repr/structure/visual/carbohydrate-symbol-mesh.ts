@@ -177,7 +177,7 @@ export const CarbohydrateSymbolParams = {
     ...ComplexMeshParams,
     detail: PD.Numeric(0, { min: 0, max: 3, step: 1 }, BaseGeometry.CustomQualityParamInfo),
     sizeFactor: PD.Numeric(1.75, { min: 0, max: 10, step: 0.01 }),
-};
+} as const;
 export type CarbohydrateSymbolParams = typeof CarbohydrateSymbolParams;
 
 export function CarbohydrateSymbolVisual(materialId: number): ComplexVisual<CarbohydrateSymbolParams> {

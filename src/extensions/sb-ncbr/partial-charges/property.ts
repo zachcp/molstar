@@ -19,7 +19,9 @@ export interface SBNcbrPartialChargeData {
     params: PartialChargesPropertyParams;
 }
 
-const PartialChargesPropertyParams = {
+const PartialChargesPropertyParams: {
+    typeId: PD.Select<number>;
+} = {
     typeId: PD.Select<number>(0, [[0, '0']]),
 };
 type PartialChargesPropertyParams = typeof PartialChargesPropertyParams;

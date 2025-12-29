@@ -73,7 +73,10 @@ export interface StringLikeInterface {
     toString(): string;
 }
 
-export const StringLike = {
+export const StringLike: {
+    is(obj: unknown): obj is StringLike;
+    toString(str: StringLike): string;
+} = {
     /** Return true if `obj` is instance of `StringLike` */
     is(obj: unknown): obj is StringLike {
         return typeof (obj as StringLike).charCodeAt === 'function'; // a bit hacky

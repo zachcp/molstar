@@ -60,7 +60,7 @@ const _DirectVolumeSchema = {
     dXrayShaded: DefineSpec('string', ['off', 'on', 'inverted']),
 
     meta: ValueSpec('unknown'),
-};
+} as const;
 export type DirectVolumeSchema = typeof _DirectVolumeSchema;
 export const DirectVolumeSchema: DirectVolumeSchema = _DirectVolumeSchema;
 export type DirectVolumeValues = Values<DirectVolumeSchema>;

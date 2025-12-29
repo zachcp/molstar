@@ -53,7 +53,7 @@ export const PolymerTraceMeshParams = {
     detail: PD.Numeric(0, { min: 0, max: 3, step: 1 }, BaseGeometry.CustomQualityParamInfo),
     linearSegments: PD.Numeric(8, { min: 1, max: 48, step: 1 }, BaseGeometry.CustomQualityParamInfo),
     radialSegments: PD.Numeric(16, { min: 2, max: 56, step: 2 }, BaseGeometry.CustomQualityParamInfo),
-};
+} as const;
 export const DefaultPolymerTraceMeshProps = PD.getDefaultValues(PolymerTraceMeshParams);
 export type PolymerTraceMeshProps = typeof DefaultPolymerTraceMeshProps;
 

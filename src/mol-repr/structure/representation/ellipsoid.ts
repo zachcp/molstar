@@ -115,7 +115,7 @@ export const EllipsoidParams = {
         { min: 0, max: 10, step: 0.1 },
         BaseGeometry.ShadingCategory,
     ),
-};
+} as const;
 export type EllipsoidParams = typeof EllipsoidParams;
 export function getEllipsoidParams(
     ctx: ThemeRegistryContext,

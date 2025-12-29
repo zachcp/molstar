@@ -5,9 +5,10 @@
  */
 
 import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
+import { StateTransformer } from '../../mol-state/transformer.ts';
 import { ZenodoImportUI } from './ui.tsx';
 
-export const ZenodoImport = PluginBehavior.create<{}>({
+export const ZenodoImport: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, {}> = PluginBehavior.create<{}>({
     name: 'extension-zenodo-import',
     category: 'misc',
     display: {

@@ -11,8 +11,9 @@ import { MmcifFormat } from '../../../../../mol-model-formats/structure/mmcif.ts
 import { CrossLinkRestraintRepresentationProvider } from '../../../../../mol-model-props/integrative/cross-link-restraint/representation.ts';
 import { CrossLinkColorThemeProvider } from '../../../../../mol-model-props/integrative/cross-link-restraint/color.ts';
 import type { CrossLinkRestraint as _CrossLinkRestraint } from '../../../../../mol-model-props/integrative/cross-link-restraint/property.ts';
+import type { StateTransformer } from '../../../../../mol-state/transformer.ts';
 
-export const CrossLinkRestraint = PluginBehavior.create<{}>({
+export const CrossLinkRestraint: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, {}> = PluginBehavior.create<{}>({
     name: 'integrative-cross-link-restraint',
     category: 'custom-props',
     display: { name: 'Cross Link Restraint' },

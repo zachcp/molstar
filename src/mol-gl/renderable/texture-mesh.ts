@@ -30,7 +30,7 @@ const _TextureMeshSchema = {
     uInteriorColor: UniformSpec('v4'),
     uInteriorSubstance: UniformSpec('v4'),
     meta: ValueSpec('unknown')
-};
+} as const;
 export type TextureMeshSchema = typeof _TextureMeshSchema;
 export const TextureMeshSchema: TextureMeshSchema = _TextureMeshSchema;
 export type TextureMeshValues = Values<TextureMeshSchema>

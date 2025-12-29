@@ -32,7 +32,7 @@ const M = ModifiersKeys;
 const Trigger = Binding.Trigger;
 const Key = Binding.TriggerKey;
 
-export const DefaultTrackballBindings = {
+const _DefaultTrackballBindings = {
     dragRotate: Binding(
         [
             Trigger(B.Flag.Primary, M.create()),
@@ -91,9 +91,11 @@ export const DefaultTrackballBindings = {
 
     boostMove: Binding([Key('ShiftLeft')], 'Boost move', 'Press ${triggers}'),
     enablePointerLock: Binding([Key('Space', M.create({ control: true }))], 'Enable pointer lock', 'Press ${triggers}'),
-};
+} as const;
+export type DefaultTrackballBindings = typeof _DefaultTrackballBindings;
+export const DefaultTrackballBindings: DefaultTrackballBindings = _DefaultTrackballBindings;
 
-export const TrackballControlsParams = {
+const _TrackballControlsParams = {
     rotateSpeed: PD.Numeric(5.0, { min: 1, max: 10, step: 1 }),
     zoomSpeed: PD.Numeric(7.0, { min: 1, max: 15, step: 1 }),
     panSpeed: PD.Numeric(1.0, { min: 0.1, max: 5, step: 0.1 }),
@@ -137,7 +139,9 @@ export const TrackballControlsParams = {
         }),
     }, { isHidden: true }),
 };
-export type TrackballControlsProps = PD.Values<typeof TrackballControlsParams>;
+export type TrackballControlsParams = typeof _TrackballControlsParams;
+export const TrackballControlsParams: TrackballControlsParams = _TrackballControlsParams;
+export type TrackballControlsProps = PD.Values<TrackballControlsParams>;
 
 export const DefaultTrackballControlsAttribs = {
     bindings: DefaultTrackballBindings,

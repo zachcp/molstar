@@ -29,7 +29,7 @@ import { isDebugMode, isTimingMode } from "../../mol-util/debug.ts";
 import { printTimerResults } from "../../mol-gl/webgl/timer.ts";
 import { ShaderManager } from "../helper/shader-manager.ts";
 
-export const ImageParams = {
+const _ImageParams = {
   transparentBackground: PD.Boolean(false),
   dpoitIterations: PD.Numeric(2, { min: 1, max: 10, step: 1 }),
   multiSample: PD.Group(MultiSampleParams),
@@ -39,7 +39,9 @@ export const ImageParams = {
 
   cameraHelper: PD.Group(CameraHelperParams),
   renderer: PD.Group(RendererParams),
-};
+} as const;
+export type ImageParams = typeof _ImageParams;
+export const ImageParams: ImageParams = _ImageParams;
 export type ImageProps = PD.Values<typeof ImageParams>;
 
 export class ImagePass {

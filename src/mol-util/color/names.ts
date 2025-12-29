@@ -6,8 +6,7 @@
 
 import { type Color, ColorMap } from './color.ts';
 
-/** X11 color names http://www.w3.org/TR/css3-color/#svg-color */
-export const ColorNames = ColorMap({
+const _ColorNamesData = {
     aliceblue: 0xf0f8ff,
     antiquewhite: 0xfaebd7,
     aqua: 0x00ffff,
@@ -163,7 +162,10 @@ export const ColorNames = ColorMap({
     whitesmoke: 0xf5f5f5,
     yellow: 0xffff00,
     yellowgreen: 0x9acd32,
-});
+} as const;
+
+/** X11 color names http://www.w3.org/TR/css3-color/#svg-color */
+export const ColorNames: ColorMap<typeof _ColorNamesData> = ColorMap(_ColorNamesData);
 export type ColorNames = typeof ColorNames;
 export type ColorName = keyof ColorNames;
 export const ColorNamesValueMap = (function () {

@@ -163,7 +163,7 @@ export const CartoonParams = {
         PD.arrayToOptions(['default', 'interpolate'] as const),
         { ...BaseGeometry.ShadingCategory, isHidden: true },
     ),
-};
+} as const;
 
 export type CartoonParams = typeof CartoonParams;
 export function getCartoonParams(

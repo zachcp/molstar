@@ -276,7 +276,7 @@ export const IntraUnitBondCylinderParams = {
     sizeAspectRatio: PD.Numeric(2 / 3, { min: 0, max: 3, step: 0.01 }),
     tryUseImpostor: PD.Boolean(true),
     includeParent: PD.Boolean(false),
-};
+} as const;
 export type IntraUnitBondCylinderParams = typeof IntraUnitBondCylinderParams;
 
 export function IntraUnitBondCylinderVisual(
@@ -530,7 +530,7 @@ export const StructureIntraUnitBondCylinderParams = {
     sizeAspectRatio: PD.Numeric(2 / 3, { min: 0, max: 3, step: 0.01 }),
     tryUseImpostor: PD.Boolean(true),
     includeParent: PD.Boolean(false),
-};
+} as const;
 export type StructureIntraUnitBondCylinderParams = typeof StructureIntraUnitBondCylinderParams;
 
 export function StructureIntraUnitBondCylinderVisual(

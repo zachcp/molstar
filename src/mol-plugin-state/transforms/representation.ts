@@ -1151,7 +1151,7 @@ export namespace VolumeRepresentation3DHelpers {
         });
     }
 
-    export function getDescription(props: any) {
+    export function getDescription(props: any): string | undefined {
         if (props.isoValue) {
             return Volume.IsoValue.toString(props.isoValue);
         } else if (props.renderMode?.params?.isoValue) {

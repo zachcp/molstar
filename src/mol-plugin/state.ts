@@ -353,7 +353,7 @@ const _SnapshotParams = {
         },
     ),
     image: PD.Boolean(false),
-};
+} as const;
 type _SnapshotParams = typeof _SnapshotParams;
 const _DefaultSnapshotParams: PD.Values<_SnapshotParams> = PD.getDefaultValues(_SnapshotParams);
 

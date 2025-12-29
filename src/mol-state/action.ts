@@ -74,7 +74,7 @@ namespace StateAction {
         return action;
     }
 
-    export function fromTransformer<T extends StateTransformer>(transformer: T) {
+    export function fromTransformer<T extends StateTransformer>(transformer: T): StateAction<StateTransformer.From<T>, void, StateTransformer.Params<T>> {
         const def = transformer.definition;
         return create<StateTransformer.From<T>, void, StateTransformer.Params<T>>({
             from: def.from,

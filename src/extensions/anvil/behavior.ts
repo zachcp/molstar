@@ -41,11 +41,9 @@ import type { GenericRepresentationRef } from "../../mol-plugin-state/manager/st
 
 const Tag = MembraneOrientation.Tag;
 
-const _ANVILMembraneOrientation = PluginBehavior.create<{
-  autoAttach: boolean;
-}>({
+const _ANVILMembraneOrientation_config = {
   name: "anvil-membrane-orientation-prop",
-  category: "custom-props",
+  category: "custom-props" as const,
   display: {
     name: "Membrane Orientation",
     description: "Data calculated with ANVIL algorithm.",
@@ -85,7 +83,7 @@ const _ANVILMembraneOrientation = PluginBehavior.create<{
       );
     }
 
-    override update(p: { autoAttach: boolean }) {
+    override update(p: { autoAttach: boolean }): boolean {
       const updated = this.params.autoAttach !== p.autoAttach;
       this.params.autoAttach = p.autoAttach;
       this.ctx.customStructureProperties.setDefaultAutoAttach(
@@ -95,7 +93,7 @@ const _ANVILMembraneOrientation = PluginBehavior.create<{
       return updated;
     }
 
-    unregister() {
+    unregister(): void {
       DefaultQueryRuntimeTable.removeCustomProp(this.provider.descriptor);
 
       this.ctx.customStructureProperties.unregister(
@@ -113,10 +111,11 @@ const _ANVILMembraneOrientation = PluginBehavior.create<{
       );
     }
   },
-  params: () => ({
+  params: (): { autoAttach: typeof PD.Boolean.prototype } => ({
     autoAttach: PD.Boolean(false),
   }),
-});
+};
+const _ANVILMembraneOrientation = PluginBehavior.create<{ autoAttach: boolean }>(_ANVILMembraneOrientation_config);
 type ANVILMembraneOrientation = typeof _ANVILMembraneOrientation;
 export const ANVILMembraneOrientation: ANVILMembraneOrientation = _ANVILMembraneOrientation;
 

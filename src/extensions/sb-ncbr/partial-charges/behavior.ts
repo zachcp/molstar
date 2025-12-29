@@ -5,8 +5,9 @@ import { SbNcbrPartialChargesColorThemeProvider } from './color.ts';
 import { SbNcbrPartialChargesPropertyProvider } from './property.ts';
 import { SbNcbrPartialChargesLociLabelProvider } from './labels.ts';
 import { SbNcbrPartialChargesPreset } from './preset.ts';
+import type { StateTransformer } from '../../../mol-state/index.ts';
 
-export const SbNcbrPartialCharges = PluginBehavior.create<{ autoAttach: boolean; showToolTip: boolean }>({
+export const SbNcbrPartialCharges: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, { autoAttach: boolean; showToolTip: boolean }> = PluginBehavior.create<{ autoAttach: boolean; showToolTip: boolean }>({
     name: 'sb-ncbr-partial-charges',
     category: 'misc',
     display: {

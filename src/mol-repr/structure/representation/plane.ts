@@ -31,7 +31,7 @@ const PlaneVisuals = {
 export const PlaneParams = {
     ...PlaneImageParams,
     visuals: PD.MultiSelect(['plane-image'], PD.objectToOptions(PlaneVisuals)),
-};
+} as const;
 export type PlaneParams = typeof PlaneParams;
 export function getPlaneParams(
     ctx: ThemeRegistryContext,

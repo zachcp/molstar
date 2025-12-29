@@ -234,7 +234,7 @@ const ContactProviders = {
     'weak-hydrogen-bonds': WeakHydrogenBondsProvider,
     hydrophobic: HydrophobicProvider,
     'metal-coordination': MetalCoordinationProvider,
-};
+} as const;
 type ContactProviders = typeof ContactProviders;
 
 function getProvidersParams(defaultOn: string[] = []): {

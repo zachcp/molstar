@@ -1449,7 +1449,7 @@ namespace Structure {
         highSymmetryUnitCount: 10,
         /** Fiber-like structure are consider small when below this */
         fiberResidueCount: 15,
-    };
+    } as const;
     export type SizeThresholds = typeof DefaultSizeThresholds;
 
     function getPolymerSymmetryGroups(structure: Structure) {

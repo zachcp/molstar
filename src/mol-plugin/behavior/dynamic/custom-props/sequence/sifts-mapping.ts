@@ -11,8 +11,10 @@ import type { Loci } from '../../../../../mol-model/loci.ts';
 import { StructureElement } from '../../../../../mol-model/structure.ts';
 import { ParamDefinition as PD } from '../../../../../mol-util/param-definition.ts';
 import { PluginBehavior } from '../../../behavior.ts';
+import type { StateTransformer } from '../../../../../mol-state/transformer.ts';
 
-export const SIFTSMapping = PluginBehavior.create<{ autoAttach: boolean; showTooltip: boolean }>({
+type _SIFTSMappingParams = { autoAttach: boolean; showTooltip: boolean };
+export const SIFTSMapping: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, _SIFTSMappingParams> = PluginBehavior.create<_SIFTSMappingParams>({
     name: 'sifts-mapping-prop',
     category: 'custom-props',
     display: { name: 'SIFTS Mapping' },

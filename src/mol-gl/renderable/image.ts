@@ -34,7 +34,7 @@ const _ImageSchema = {
 
     /** Same as `InterpolationTypeNames` in '../../mol-geo/geometry/image/image' */
     dInterpolation: DefineSpec('string', ['nearest', 'catmulrom', 'mitchell', 'bspline']),
-};
+} as const;
 export type ImageSchema = typeof _ImageSchema;
 export const ImageSchema: ImageSchema = _ImageSchema;
 export type ImageValues = Values<ImageSchema>

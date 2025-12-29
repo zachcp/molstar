@@ -81,7 +81,7 @@ export const GaussianSurfaceParams = {
         { min: 0, max: 1, step: 0.01 },
         BaseGeometry.ShadingCategory,
     ),
-};
+} as const;
 export type GaussianSurfaceParams = typeof GaussianSurfaceParams;
 export function getGaussianSurfaceParams(
     ctx: ThemeRegistryContext,

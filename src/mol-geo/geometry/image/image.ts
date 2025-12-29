@@ -169,7 +169,7 @@ namespace Image {
     export const Params = {
         ...BaseGeometry.Params,
         interpolation: PD.Select('bspline', PD.objectToOptions(InterpolationTypes)),
-    };
+    } as const;
     export type Params = typeof Params
 
     export const Utils: GeometryUtils<Image, Params> = {

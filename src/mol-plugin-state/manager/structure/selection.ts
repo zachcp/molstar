@@ -381,7 +381,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
         return selections;
     }
 
-    getLoci(structure: Structure) {
+    getLoci(structure: Structure): StructureElement.Loci | typeof EmptyLoci {
         const entry: SelectionEntry | undefined = this.getEntry(structure);
         if (!entry) return EmptyLoci;
         return entry.selection;
@@ -426,7 +426,7 @@ export class StructureSelectionManager extends StatefulPluginComponent<Structure
         return count;
     }
 
-    getBoundary() {
+    getBoundary(): { box: { min: Vec3; max: Vec3 }; sphere: import('../../../mol-math/geometry/primitives/sphere3d.ts').Sphere3D } {
         const min = Vec3.create(
             Number.MAX_VALUE,
             Number.MAX_VALUE,

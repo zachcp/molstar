@@ -78,7 +78,7 @@ export namespace RepresentationProvider {
         r: R,
         ctx: ThemeRegistryContext,
         data: D,
-    ) {
+    ): PD.Values<ReturnType<R['getParams']>> {
         return PD.getDefaultValues(r.getParams(ctx, data));
     }
 }
@@ -151,11 +151,11 @@ export class RepresentationRegistry<D, S extends Representation.State> {
         return this._list;
     }
 
-    getApplicableList(data: D) {
+    getApplicableList(data: D): { name: string; provider: RepresentationProvider<D, any, any> }[] {
         return this._list.filter((e) => e.provider.isApplicable(data));
     }
 
-    getApplicableTypes(data: D) {
+    getApplicableTypes(data: D): [string, string][] {
         return getTypes(this.getApplicableList(data));
     }
 

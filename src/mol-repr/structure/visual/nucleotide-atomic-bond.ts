@@ -70,7 +70,7 @@ export const NucleotideAtomicBondParams = {
     sizeFactor: PD.Numeric(0.3, { min: 0, max: 10, step: 0.01 }),
     radialSegments: PD.Numeric(16, { min: 2, max: 56, step: 2 }, BaseGeometry.CustomQualityParamInfo),
     tryUseImpostor: PD.Boolean(true),
-};
+} as const;
 export type NucleotideAtomicBondParams = typeof NucleotideAtomicBondParams;
 interface NucleotideAtomicBondImpostorProps {
     sizeFactor: number;

@@ -17,6 +17,7 @@ const Transform: StateTransformer.Builder.Root = StateTransformer.builderFactory
 type TunnelsFromRawDataTransformer = StateTransformer<PluginStateObject.Root, TunnelsStateObject, { data: Tunnel[] }>;
 type SelectTunnelTransformer = StateTransformer<TunnelsStateObject, TunnelStateObject, { index: number }>;
 type TunnelFromRawDataTransformer = StateTransformer<PluginStateObject.Root, TunnelStateObject, { data: Tunnel }>;
+type TunnelShapeProviderTransformer = StateTransformer<TunnelStateObject, PluginStateObject.Shape.Provider, PD.Values<typeof TunnelShapeParams>>;
 
 export const TunnelsFromRawData: TunnelsFromRawDataTransformer = Transform({
     name: 'sb-ncbr-tunnels-from-data',
@@ -62,7 +63,7 @@ export const TunnelFromRawData: TunnelFromRawDataTransformer = Transform({
     },
 });
 
-const _TunnelShapeProvider = Transform({
+const _TunnelShapeProvider: TunnelShapeProviderTransformer = Transform({
     name: 'sb-ncbr-tunnel-shape-provider',
     display: { name: 'Tunnel' },
     from: TunnelStateObject,

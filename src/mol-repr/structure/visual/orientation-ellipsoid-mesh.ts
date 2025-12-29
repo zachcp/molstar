@@ -28,7 +28,7 @@ export const OrientationEllipsoidMeshParams = {
     ...UnitsMeshParams,
     sizeFactor: PD.Numeric(1, { min: 0, max: 2, step: 0.1 }),
     detail: PD.Numeric(0, { min: 0, max: 3, step: 1 }, BaseGeometry.CustomQualityParamInfo),
-};
+} as const;
 export type OrientationEllipsoidMeshParams = typeof OrientationEllipsoidMeshParams;
 
 export function OrientationEllipsoidMeshVisual(materialId: number): UnitsVisual<OrientationEllipsoidMeshParams> {

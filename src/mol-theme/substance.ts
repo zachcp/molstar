@@ -27,7 +27,7 @@ namespace Substance {
         readonly material: Material;
         readonly clear: boolean;
     };
-    export const Empty: Substance = { kind: 'empty-loci', layers: [] };
+    export const Empty: Substance = { kind: 'empty-loci', layers: [] } as const;
 
     export function areEqual(sA: Substance, sB: Substance): boolean {
         if (sA.layers.length === 0 && sB.layers.length === 0) return true;

@@ -214,7 +214,10 @@ export function getSymmetrySelectParam(structure?: Structure) {
 
 //
 
-export const AssemblySymmetryDataParams = {
+export const AssemblySymmetryDataParams: {
+    serverType: PD.Select<'rcsb' | 'pdbe'>;
+    serverUrl: PD.Text;
+} = {
     serverType: PD.Select('rcsb', [['rcsb', 'RCSB'], ['pdbe', 'PDBe']] as const),
     serverUrl: PD.Text(AssemblySymmetryData.DefaultServerUrl, {
         description: 'GraphQL endpoint URL (if server type is RCSB) or PDBe API endpoint URL (if server type is PDBe)',

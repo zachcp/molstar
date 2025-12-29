@@ -30,7 +30,7 @@ const DefaultInteractivityFocusOptions = {
     minRadius: 6,
     extraRadius: 6,
     durationMs: 250,
-};
+} as const;
 
 export type InteractivityFocusLociOptions = typeof DefaultInteractivityFocusOptions;
 

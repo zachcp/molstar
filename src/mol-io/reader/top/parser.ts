@@ -14,7 +14,16 @@ import type { StringLike } from '../../common/string-like.ts';
 
 // https://manual.gromacs.org/2021-current/reference-manual/file-formats.html#top
 
-const AtomsSchema = {
+const AtomsSchema: {
+    nr: Column.Schema.Int,
+    type: Column.Schema.Str,
+    resnr: Column.Schema.Int,
+    residu: Column.Schema.Str,
+    atom: Column.Schema.Str,
+    cgnr: Column.Schema.Int,
+    charge: Column.Schema.Float,
+    mass: Column.Schema.Float,
+} = {
     nr: Column.Schema.Int(),
     type: Column.Schema.Str(),
     resnr: Column.Schema.Int(),
@@ -25,12 +34,18 @@ const AtomsSchema = {
     mass: Column.Schema.Float(),
 };
 
-const BondsSchema = {
+const BondsSchema: {
+    ai: Column.Schema.Int,
+    aj: Column.Schema.Int,
+} = {
     ai: Column.Schema.Int(),
     aj: Column.Schema.Int(),
 };
 
-const MoleculesSchema = {
+const MoleculesSchema: {
+    compound: Column.Schema.Str,
+    molCount: Column.Schema.Int,
+} = {
     compound: Column.Schema.Str(),
     molCount: Column.Schema.Int(),
 };

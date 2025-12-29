@@ -25,7 +25,7 @@ export type PluginLayoutControlsDisplay =
     | 'portrait'
     | 'landscape'
     | 'reactive';
-export const PluginLayoutStateParams = {
+const _PluginLayoutStateParams = {
     isExpanded: PD.Boolean(false),
     showControls: PD.Boolean(true),
     regionState: PD.Group({
@@ -38,7 +38,9 @@ export const PluginLayoutStateParams = {
         isHidden: true,
     }),
     expandToFullscreen: PD.Boolean(false),
-};
+} as const;
+export type PluginLayoutStateParams = typeof _PluginLayoutStateParams;
+export const PluginLayoutStateParams: PluginLayoutStateParams = _PluginLayoutStateParams;
 export type PluginLayoutStateProps = PD.Values<typeof PluginLayoutStateParams>;
 
 export type LeftPanelTabName =
@@ -74,7 +76,7 @@ interface RootState {
 }
 
 export class PluginLayout extends StatefulPluginComponent<PluginLayoutStateProps> {
-    readonly events = {
+    readonly events: { updated: import('rxjs').Subject<undefined> } = {
         updated: this.ev(),
     };
 

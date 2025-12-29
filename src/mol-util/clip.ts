@@ -58,7 +58,7 @@ export namespace Clip {
             scale: PD.Vec3(Vec3.create(1, 1, 1)),
             transform: PD.Mat4(Mat4.identity()),
         }, o => stringToWords(o.type))
-    };
+    } as const;
     export type Params = typeof Params
     export type Props = PD.Values<Params>
 

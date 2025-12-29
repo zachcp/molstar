@@ -14,8 +14,10 @@ import { type Structure, StructureElement } from '../../../../../mol-model/struc
 import { OrderedSet } from '../../../../../mol-data/int.ts';
 import { geometryLabel } from '../../../../../mol-model-props/computed/chemistry/geometry.ts';
 import { arraySetAdd } from '../../../../../mol-util/array.ts';
+import type { StateTransformer } from '../../../../../mol-state/transformer.ts';
 
-export const ValenceModel = PluginBehavior.create<{ autoAttach: boolean; showTooltip: boolean }>({
+type _ValenceModelParams = { autoAttach: boolean; showTooltip: boolean };
+export const ValenceModel: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, _ValenceModelParams> = PluginBehavior.create<_ValenceModelParams>({
     name: 'computed-valence-model-prop',
     category: 'custom-props',
     display: { name: 'Valence Model' },

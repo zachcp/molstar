@@ -476,7 +476,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
 }
 
 namespace StructureComponentManager {
-    export const OptionsParams = {
+    const _OptionsParams = {
         hydrogens: PD.Select(
             'all',
             [['all', 'Show All'], ['hide-all', 'Hide All'], ['only-polar', 'Only Polar']] as const,
@@ -489,9 +489,11 @@ namespace StructureComponentManager {
         interactions: PD.Group(InteractionsProvider.defaultParams, { label: 'Non-covalent Interactions' }),
         interior: getInteriorParam(),
     };
+    export type OptionsParams = typeof _OptionsParams;
+    export const OptionsParams: OptionsParams = _OptionsParams;
     export type Options = PD.Values<typeof OptionsParams>
 
-    export function getAddParams(plugin: PluginContext, params?: { pivot?: StructureRef, allowNone: boolean, hideSelection?: boolean, checkExisting?: boolean }) {
+    function _getAddParams(plugin: PluginContext, params?: { pivot?: StructureRef, allowNone: boolean, hideSelection?: boolean, checkExisting?: boolean }) {
         const { options } = plugin.query.structure.registry;
         params = {
             pivot: plugin.managers.structure.component.pivotStructure,
@@ -509,9 +511,11 @@ namespace StructureComponentManager {
             })
         };
     }
+    export type GetAddParamsResult = ReturnType<typeof _getAddParams>;
+    export const getAddParams: typeof _getAddParams = _getAddParams;
     export type AddParams = { selection: StructureSelectionQuery, options: { checkExisting: boolean, label: string }, representation: string }
 
-    export function getThemeParams(plugin: PluginContext, pivot: StructureRef | StructureComponentRef | undefined) {
+    function _getThemeParams(plugin: PluginContext, pivot: StructureRef | StructureComponentRef | undefined) {
         const { options } = plugin.query.structure.registry;
         return {
             selection: PD.Select(options[1][0], options, { isHidden: false }),
@@ -537,6 +541,8 @@ namespace StructureComponentManager {
             representations: PD.MultiSelect([], getRepresentationTypes(plugin, pivot), { emptyValue: 'All' })
         };
     }
+    export type GetThemeParamsResult = ReturnType<typeof _getThemeParams>;
+    export const getThemeParams: typeof _getThemeParams = _getThemeParams;
     export type ThemeParams = PD.Values<ReturnType<typeof getThemeParams>>
 
     export function getRepresentationTypes(plugin: PluginContext, pivot: StructureRef | StructureComponentRef | undefined): [string, string][] {

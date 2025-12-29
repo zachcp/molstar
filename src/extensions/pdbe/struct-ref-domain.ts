@@ -41,7 +41,7 @@ export namespace PDBeStructRefDomain {
     };
     export type Schema = typeof Schema;
 
-    export const Descriptor = CustomPropertyDescriptor({
+    export const Descriptor: CustomPropertyDescriptor<Property> = CustomPropertyDescriptor({
         name: 'pdbe_struct_ref_domain',
         cifExport: {
             prefix: 'pdbe',

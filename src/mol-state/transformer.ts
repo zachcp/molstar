@@ -177,7 +177,7 @@ namespace Transformer {
         }
     }
 
-    export function getAll() {
+    export function getAll(): Transformer[] {
         return Array.from(registry.values());
     }
 
@@ -196,7 +196,7 @@ namespace Transformer {
     export function create<A extends StateObject, B extends StateObject, P extends {} = {}>(
         namespace: string,
         definition: Definition<A, B, P>,
-    ) {
+    ): Transformer<A, B, P> {
         const { name } = definition;
         const id = `${namespace}.${name}` as Id;
 

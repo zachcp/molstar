@@ -50,7 +50,7 @@ export const NucleotideBlockMeshParams = {
     sizeFactor: PD.Numeric(0.2, { min: 0, max: 10, step: 0.01 }),
     thicknessFactor: PD.Numeric(1, { min: 0, max: 2, step: 0.01 }),
     radialSegments: PD.Numeric(16, { min: 2, max: 56, step: 2 }, BaseGeometry.CustomQualityParamInfo),
-};
+} as const;
 export const DefaultNucleotideBlockMeshProps = PD.getDefaultValues(NucleotideBlockMeshParams);
 export type NucleotideBlockMeshProps = typeof DefaultNucleotideBlockMeshProps;
 

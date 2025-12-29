@@ -31,7 +31,7 @@ const LabelVisuals = {
 export const LabelParams = {
     ...LabelTextParams,
     visuals: PD.MultiSelect(['label-text'], PD.objectToOptions(LabelVisuals)),
-};
+} as const;
 export type LabelParams = typeof LabelParams;
 export function getLabelParams(
     ctx: ThemeRegistryContext,

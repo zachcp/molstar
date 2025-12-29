@@ -89,7 +89,7 @@ export const MolecularSurfaceParams = {
         { min: 0, max: 1, step: 0.01 },
         BaseGeometry.ShadingCategory,
     ),
-};
+} as const;
 export type MolecularSurfaceParams = typeof MolecularSurfaceParams;
 export function getMolecularSurfaceParams(
     ctx: ThemeRegistryContext,

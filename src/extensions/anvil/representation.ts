@@ -40,7 +40,7 @@ const _SharedParams = {
     radiusFactor: PD.Numeric(1.2, { min: 0.1, max: 3.0, step: 0.01 }, {
         description: 'Scale the radius of the membrane layer',
     }),
-};
+} as const;
 type SharedParams = typeof _SharedParams;
 const SharedParams: SharedParams = _SharedParams;
 
@@ -48,7 +48,7 @@ const _BilayerPlanesParams = {
     ...Mesh.Params,
     ...SharedParams,
     sectorOpacity: PD.Numeric(0.5, { min: 0, max: 1, step: 0.01 }),
-};
+} as const;
 export type BilayerPlanesParams = typeof _BilayerPlanesParams;
 export const BilayerPlanesParams: BilayerPlanesParams = _BilayerPlanesParams;
 export type BilayerPlanesProps = PD.Values<BilayerPlanesParams>;
@@ -59,7 +59,7 @@ const _BilayerRimsParams = {
     lineSizeAttenuation: PD.Boolean(false),
     linesSize: PD.Numeric(0.5, { min: 0.01, max: 50, step: 0.01 }),
     dashedLines: PD.Boolean(false),
-};
+} as const;
 export type BilayerRimsParams = typeof _BilayerRimsParams;
 export const BilayerRimsParams: BilayerRimsParams = _BilayerRimsParams;
 export type BilayerRimsProps = PD.Values<BilayerRimsParams>;
@@ -86,7 +86,7 @@ const _MembraneOrientationParams = {
     ...BilayerPlanesParams,
     ...BilayerRimsParams,
     visuals: PD.MultiSelect(['bilayer-planes', 'bilayer-rims'], PD.objectToOptions(MembraneOrientationVisuals)),
-};
+} as const;
 export type MembraneOrientationParams = typeof _MembraneOrientationParams;
 export const MembraneOrientationParams: MembraneOrientationParams = _MembraneOrientationParams;
 export type MembraneOrientationProps = PD.Values<MembraneOrientationParams>;

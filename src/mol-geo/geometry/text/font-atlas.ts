@@ -25,7 +25,14 @@ export type FontStyle = 'normal' | 'italic' | 'oblique';
 export type FontVariant = 'normal' | 'small-caps';
 export type FontWeight = 'normal' | 'bold';
 
-export const FontAtlasParams = {
+export type FontAtlasParams = {
+    fontFamily: PD.Select<FontFamily>;
+    fontQuality: PD.Select<number>;
+    fontStyle: PD.Select<FontStyle>;
+    fontVariant: PD.Select<FontVariant>;
+    fontWeight: PD.Select<FontWeight>;
+};
+export const FontAtlasParams: FontAtlasParams = {
     fontFamily: PD.Select(
         'sans-serif',
         [['sans-serif', 'Sans Serif'], ['monospace', 'Monospace'], ['serif', 'Serif'], ['cursive', 'Cursive']] as [
@@ -41,7 +48,6 @@ export const FontAtlasParams = {
     fontVariant: PD.Select('normal', [['normal', 'Normal'], ['small-caps', 'Small Caps']] as [FontVariant, string][]),
     fontWeight: PD.Select('normal', [['normal', 'Normal'], ['bold', 'Bold']] as [FontWeight, string][]),
 };
-export type FontAtlasParams = typeof FontAtlasParams;
 export type FontAtlasProps = PD.Values<FontAtlasParams>;
 
 export type FontAtlasMap = {

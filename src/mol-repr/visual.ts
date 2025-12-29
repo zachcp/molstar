@@ -85,7 +85,7 @@ namespace Visual {
 
     export type PreviousMark = { loci: Loci, action: MarkerAction, status: MarkerInfo['status'] }
 
-    export function mark(renderObject: GraphicsRenderObject | undefined, loci: Loci, action: MarkerAction, lociApply: LociApply, previous?: PreviousMark) {
+    export function mark(renderObject: GraphicsRenderObject | undefined, loci: Loci, action: MarkerAction, lociApply: LociApply, previous?: PreviousMark): boolean {
         if (!renderObject || isEmptyLoci(loci)) return false;
 
         const { tMarker, uMarker, markerAverage, markerStatus, uGroupCount, instanceCount, instanceGranularity: instanceGranularity } = renderObject.values;

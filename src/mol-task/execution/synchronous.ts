@@ -12,4 +12,4 @@ export class SynchronousRuntimeContext implements RuntimeContext {
     update(progress: string | Partial<RuntimeContext.ProgressUpdate>, dontNotify?: boolean): Promise<void> | void {}
 }
 
-export const SyncRuntimeContext = new SynchronousRuntimeContext();
+export const SyncRuntimeContext: SynchronousRuntimeContext = new SynchronousRuntimeContext();

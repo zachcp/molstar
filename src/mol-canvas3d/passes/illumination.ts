@@ -73,7 +73,7 @@ type RenderContext = {
     helper: Helper;
 };
 
-export const IlluminationParams = {
+const _IlluminationParams = {
     enabled: PD.Boolean(false),
     maxIterations: PD.Numeric(5, { min: 0, max: 16, step: 1 }, {
         description: 'Maximum number of tracing iterations. Final iteration count is 2^x.',
@@ -88,7 +88,9 @@ export const IlluminationParams = {
             'Ignore outline in illumination pass where it is generally not needed for visual clarity. Useful when illumination is often toggled on/off.',
     }),
     ...TracingParams,
-};
+} as const;
+export type IlluminationParams = typeof _IlluminationParams;
+export const IlluminationParams: IlluminationParams = _IlluminationParams;
 export type IlluminationProps = PD.Values<typeof IlluminationParams>;
 
 export class IlluminationPass {

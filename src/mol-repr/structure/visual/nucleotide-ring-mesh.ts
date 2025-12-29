@@ -52,7 +52,7 @@ export const NucleotideRingMeshParams = {
     thicknessFactor: PD.Numeric(1, { min: 0, max: 2, step: 0.01 }),
     radialSegments: PD.Numeric(16, { min: 2, max: 56, step: 2 }, BaseGeometry.CustomQualityParamInfo),
     detail: PD.Numeric(0, { min: 0, max: 3, step: 1 }, BaseGeometry.CustomQualityParamInfo),
-};
+} as const;
 export const DefaultNucleotideRingMeshProps = PD.getDefaultValues(NucleotideRingMeshParams);
 export type NucleotideRingProps = typeof DefaultNucleotideRingMeshProps;
 

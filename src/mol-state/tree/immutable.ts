@@ -152,13 +152,13 @@ namespace StateTree {
         return ctx.state;
     }
 
-    function _subtree(n: StateTransform, _: any, subtree: StateTransform[]) {
+    function _subtree(n: StateTransform, _: any, subtree: StateTransform[]): void {
         subtree.push(n);
     }
     /**
      * Get all nodes in a subtree, leafs come first.
      */
-    export function subtreePostOrder(tree: StateTree, root: StateTransform) {
+    export function subtreePostOrder(tree: StateTree, root: StateTransform): StateTransform[] {
         return doPostOrder<StateTransform[]>(tree, root, [], _subtree);
     }
 

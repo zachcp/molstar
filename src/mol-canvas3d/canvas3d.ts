@@ -101,7 +101,7 @@ function _createCameraFogParams(): { intensity: PD.Numeric } {
 }
 export const CameraFogParams: { intensity: PD.Numeric } = _createCameraFogParams();
 
-export const Canvas3DParams = {
+const _Canvas3DParams = {
   camera: PD.Group(
     {
       mode: PD.Select(
@@ -209,8 +209,10 @@ export const Canvas3DParams = {
   pointer: PD.Group(PointerHelperParams),
   xr: PD.Group(XRManagerParams, { label: "XR" }),
 };
-export const DefaultCanvas3DParams: PD.Values<typeof Canvas3DParams> = PD.getDefaultValues(Canvas3DParams);
-export type Canvas3DProps = PD.Values<typeof Canvas3DParams>;
+export type Canvas3DParams = typeof _Canvas3DParams;
+export const Canvas3DParams: Canvas3DParams = _Canvas3DParams;
+export const DefaultCanvas3DParams: PD.Values<Canvas3DParams> = PD.getDefaultValues(Canvas3DParams);
+export type Canvas3DProps = PD.Values<Canvas3DParams>;
 export type PartialCanvas3DProps = {
   [K in keyof Canvas3DProps]?: Canvas3DProps[K] extends {
     name: string;

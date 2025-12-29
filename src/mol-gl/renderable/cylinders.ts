@@ -51,7 +51,7 @@ const _CylindersSchema = {
     uInteriorColor: UniformSpec('v4'),
     uInteriorSubstance: UniformSpec('v4'),
     dDualColor: DefineSpec('boolean'),
-};
+} as const;
 export type CylindersSchema = typeof _CylindersSchema;
 export const CylindersSchema: CylindersSchema = _CylindersSchema;
 export type CylindersValues = Values<CylindersSchema>;

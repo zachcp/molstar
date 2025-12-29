@@ -7,7 +7,7 @@
 
 import { produce } from "../mol-util/produce.ts";
 import { List } from "immutable";
-import { merge, Subscription } from "rxjs";
+import { BehaviorSubject, merge, Observable, Subject, Subscription } from "rxjs";
 import { debounceTime, filter, take, throttleTime } from "rxjs/operators";
 import {
   Canvas3D,
@@ -111,7 +111,7 @@ export class PluginContext {
   readonly commands: PluginCommandManager = new PluginCommandManager();
 
   private canvas3dInit = this.ev.behavior<boolean>(false);
-  readonly behaviors = {
+  readonly behaviors: PluginContext.Behaviors = {
     state: {
       isAnimating: this.ev.behavior<boolean>(false),
       isUpdating: this.ev.behavior<boolean>(false),
@@ -179,7 +179,7 @@ export class PluginContext {
   readonly layout: PluginLayout = new PluginLayout(this);
   readonly animationLoop: PluginAnimationLoop = new PluginAnimationLoop(this);
 
-  readonly representation = {
+  readonly representation: PluginContext.Representation = {
     structure: {
       registry: new StructureRepresentationRegistry(),
       themes: {
@@ -196,7 +196,7 @@ export class PluginContext {
     },
   } as const;
 
-  readonly query = {
+  readonly query: PluginContext.Query = {
     structure: {
       registry: new StructureSelectionQueryRegistry(),
     },
@@ -204,7 +204,7 @@ export class PluginContext {
 
   readonly dataFormats: DataFormatRegistry = new DataFormatRegistry();
 
-  readonly builders = {
+  readonly builders: PluginContext.Builders = {
     data: new DataBuilder(this),
     structure: void 0 as any as StructureBuilder,
   };
@@ -213,12 +213,12 @@ export class PluginContext {
     return this.state.data.build();
   }
 
-  readonly helpers = {
+  readonly helpers: PluginContext.Helpers = {
     substructureParent: new SubstructureParentHelper(this),
     viewportScreenshot: void 0 as ViewportScreenshotHelper | undefined,
   } as const;
 
-  readonly managers = {
+  readonly managers: PluginContext.Managers = {
     structure: {
       hierarchy: new StructureHierarchyManager(this),
       component: new StructureComponentManager(this),
@@ -241,7 +241,7 @@ export class PluginContext {
     dragAndDrop: new DragAndDropManager(this),
   } as const;
 
-  readonly events = {
+  readonly events: PluginContext.Events = {
     log: this.ev<LogEntry>(),
     task: this.managers.task.events,
     canvas3d: {
@@ -494,7 +494,7 @@ export class PluginContext {
     }
   };
 
-  readonly log = {
+  readonly log: PluginContext.Log = {
     entries: List<LogEntry>(),
     entry: (e: LogEntry) => this.events.log.next(e),
     error: (msg: string) => this.events.log.next(LogEntry.error(msg)),
@@ -755,5 +755,99 @@ export class PluginContext {
       this.config.get(PluginConfig.Structure.SaccharideCompIdMapType) ??
         "default",
     );
+  }
+}
+
+export namespace PluginContext {
+  export interface Behaviors {
+    readonly state: {
+      readonly isAnimating: BehaviorSubject<boolean>;
+      readonly isUpdating: BehaviorSubject<boolean>;
+      readonly isBusy: BehaviorSubject<boolean>;
+    };
+    readonly interaction: {
+      readonly hover: BehaviorSubject<InteractivityManager.HoverEvent>;
+      readonly click: BehaviorSubject<InteractivityManager.ClickEvent>;
+      readonly drag: BehaviorSubject<InteractivityManager.DragEvent>;
+      readonly key: BehaviorSubject<KeyInput>;
+      readonly keyReleased: BehaviorSubject<KeyInput>;
+      readonly selectionMode: BehaviorSubject<boolean>;
+    };
+    readonly labels: {
+      readonly highlight: BehaviorSubject<{ labels: ReadonlyArray<LociLabel> }>;
+    };
+    readonly layout: {
+      readonly leftPanelTabName: BehaviorSubject<LeftPanelTabName>;
+    };
+    readonly canvas3d: {
+      readonly initialized: Observable<boolean>;
+    };
+  }
+
+  export interface Representation {
+    readonly structure: {
+      readonly registry: StructureRepresentationRegistry;
+      readonly themes: ThemeRegistryContext;
+    };
+    readonly volume: {
+      readonly registry: VolumeRepresentationRegistry;
+      readonly themes: ThemeRegistryContext;
+    };
+  }
+
+  export interface Query {
+    readonly structure: {
+      readonly registry: StructureSelectionQueryRegistry;
+    };
+  }
+
+  export interface Builders {
+    data: DataBuilder;
+    structure: StructureBuilder;
+  }
+
+  export interface Helpers {
+    readonly substructureParent: SubstructureParentHelper;
+    readonly viewportScreenshot: ViewportScreenshotHelper | undefined;
+  }
+
+  export interface Managers {
+    readonly structure: {
+      readonly hierarchy: StructureHierarchyManager;
+      readonly component: StructureComponentManager;
+      readonly measurement: StructureMeasurementManager;
+      readonly selection: StructureSelectionManager;
+      readonly focus: StructureFocusManager;
+    };
+    readonly volume: {
+      readonly hierarchy: VolumeHierarchyManager;
+    };
+    readonly interactivity: InteractivityManager;
+    readonly camera: CameraManager;
+    readonly animation: PluginAnimationManager;
+    readonly snapshot: PluginStateSnapshotManager;
+    readonly lociLabels: LociLabelManager;
+    readonly toast: PluginToastManager;
+    readonly asset: AssetManager;
+    readonly task: TaskManager;
+    readonly markdownExtensions: MarkdownExtensionManager;
+    readonly dragAndDrop: DragAndDropManager;
+  }
+
+  export interface Events {
+    readonly log: Subject<LogEntry>;
+    readonly task: TaskManager['events'];
+    readonly canvas3d: {
+      readonly settingsUpdated: Subject<void>;
+    };
+  }
+
+  export interface Log {
+    entries: List<LogEntry>;
+    entry: (e: LogEntry) => void;
+    error: (msg: string) => void;
+    message: (msg: string) => void;
+    info: (msg: string) => void;
+    warn: (msg: string) => void;
   }
 }

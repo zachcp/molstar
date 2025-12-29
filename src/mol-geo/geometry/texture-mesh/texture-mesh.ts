@@ -130,7 +130,7 @@ export namespace TextureMesh {
         bumpFrequency: PD.Numeric(0, { min: 0, max: 10, step: 0.1 }, BaseGeometry.ShadingCategory),
         bumpAmplitude: PD.Numeric(1, { min: 0, max: 5, step: 0.1 }, BaseGeometry.ShadingCategory),
         interior: getInteriorParam(),
-    };
+    } as const;
     export type Params = typeof Params
 
     export const Utils: GeometryUtils<TextureMesh, Params> = {
@@ -143,7 +143,7 @@ export namespace TextureMesh {
         createRenderableState,
         updateRenderableState,
         createPositionIterator,
-    };
+    } as const;
 
     const TextureMeshName = 'texture-mesh';
 

@@ -5,9 +5,10 @@
  */
 
 import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
+import { StateTransformer } from '../../mol-state/transformer.ts';
 import { Mp4EncoderUI } from './ui.tsx';
 
-export const Mp4Export = PluginBehavior.create<{}>({
+export const Mp4Export: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, {}> = PluginBehavior.create<{}>({
     name: 'extension-mp4-export',
     category: 'misc',
     display: {

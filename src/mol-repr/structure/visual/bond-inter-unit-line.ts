@@ -139,7 +139,7 @@ export const InterUnitBondLineParams = {
     ...ComplexLinesParams,
     ...BondLineParams,
     includeParent: PD.Boolean(false),
-};
+} as const;
 export type InterUnitBondLineParams = typeof InterUnitBondLineParams;
 
 export function InterUnitBondLineVisual(materialId: number): ComplexVisual<InterUnitBondLineParams> {

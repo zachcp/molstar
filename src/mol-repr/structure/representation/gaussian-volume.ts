@@ -62,7 +62,7 @@ export const GaussianVolumeParams = {
         ['gaussian-volume'],
         PD.objectToOptions(GaussianVolumeVisuals),
     ),
-};
+} as const;
 export type GaussianVolumeParams = typeof GaussianVolumeParams;
 export function getGaussianVolumeParams(
     ctx: ThemeRegistryContext,

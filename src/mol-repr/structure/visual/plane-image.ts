@@ -76,7 +76,7 @@ export const PlaneImageParams = {
         description: 'Default color for parts of the image that are not covered by the color theme.',
     }),
     includeParent: PD.Boolean(false, { description: 'Show parent structure (but within extent of this structure).' }),
-};
+} as const;
 export type PlaneImageParams = typeof PlaneImageParams;
 
 export function PlaneImageVisual(materialId: number): ComplexVisual<PlaneImageParams> {

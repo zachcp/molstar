@@ -22,7 +22,7 @@ export const MolecularSurfaceWireframeParams = {
     ...CommonMolecularSurfaceCalculationParams,
     ...CommonSurfaceParams,
     sizeFactor: PD.Numeric(1.5, { min: 0, max: 10, step: 0.1 }),
-};
+} as const;
 export type MolecularSurfaceWireframeParams = typeof MolecularSurfaceWireframeParams
 
 //

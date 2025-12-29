@@ -41,7 +41,7 @@ export class QueryRuntimeTable {
         }
     }
 
-    getRuntime(id: string) {
+    getRuntime(id: string): QuerySymbolRuntime | undefined {
         return this.map.get(id);
     }
 }

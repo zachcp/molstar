@@ -43,7 +43,7 @@ export const LinkCylinderParams = {
         PD.arrayToOptions(['default', 'interpolate'] as const),
         BaseGeometry.ShadingCategory,
     ),
-};
+} as const;
 export const DefaultLinkCylinderProps = PD.getDefaultValues(LinkCylinderParams);
 export type LinkCylinderProps = typeof DefaultLinkCylinderProps;
 
@@ -52,7 +52,7 @@ export const LinkLineParams = {
     linkSpacing: PD.Numeric(0.1, { min: 0, max: 2, step: 0.01 }),
     aromaticDashCount: PD.Numeric(2, { min: 1, max: 6, step: 1 }),
     dashCount: PD.Numeric(4, { min: 0, max: 10, step: 1 }),
-};
+} as const;
 export const DefaultLinkLineProps = PD.getDefaultValues(LinkLineParams);
 export type LinkLineProps = typeof DefaultLinkLineProps;
 

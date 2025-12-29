@@ -51,7 +51,7 @@ const _SpheresSchema = {
     lodLevels: ValueSpec('unknown'),
     centerBuffer: ValueSpec('float32'),
     groupBuffer: ValueSpec('float32'),
-};
+} as const;
 export type SpheresSchema = typeof _SpheresSchema;
 export const SpheresSchema: SpheresSchema = _SpheresSchema;
 export type SpheresValues = Values<SpheresSchema>;

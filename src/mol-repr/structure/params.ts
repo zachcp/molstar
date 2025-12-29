@@ -17,17 +17,20 @@ import { Image } from '../../mol-geo/geometry/image/image.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { type UnitKind, UnitKindOptions } from './visual/util/common.ts';
 
-export function getUnitKindsParam(defaultValue: UnitKind[]) {
+export function getUnitKindsParam(defaultValue: UnitKind[]): PD.MultiSelect<UnitKind> {
     return PD.MultiSelect<UnitKind>(defaultValue, UnitKindOptions, {
         description: 'For which kinds of units/chains to show the representation visuals.',
     });
 }
 
-export const StructureParams = {
+export type StructureParams = {
+    unitKinds: PD.MultiSelect<UnitKind>;
+    includeParent: PD.BooleanParam;
+};
+export const StructureParams: StructureParams = {
     unitKinds: getUnitKindsParam(['atomic', 'spheres']),
     includeParent: PD.Boolean(false, { isHidden: true }),
 };
-export type StructureParams = typeof StructureParams;
 
 export const StructureMeshParams = { ...Mesh.Params };
 export type StructureMeshParams = typeof StructureMeshParams;

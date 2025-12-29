@@ -57,7 +57,7 @@ const shift = Vec3();
 export const NucleotideAtomicRingFillMeshParams = {
     sizeFactor: PD.Numeric(0.2, { min: 0, max: 10, step: 0.01 }),
     thicknessFactor: PD.Numeric(1, { min: 0, max: 2, step: 0.01 }),
-};
+} as const;
 export const DefaultNucleotideAtomicRingFillMeshProps = PD.getDefaultValues(NucleotideAtomicRingFillMeshParams);
 export type NucleotideAtomicRingFillProps = typeof DefaultNucleotideAtomicRingFillMeshProps;
 

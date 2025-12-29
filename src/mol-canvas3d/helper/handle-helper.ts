@@ -25,7 +25,7 @@ import { type MarkerAction, MarkerActions } from '../../mol-util/marker-action.t
 import { Visual } from '../../mol-repr/visual.ts';
 import { Interval } from '../../mol-data/int.ts';
 
-const HandleParams = {
+const _HandleParams = {
     ...Mesh.Params,
     alpha: { ...Mesh.Params.alpha, defaultValue: 1 },
     ignoreLight: { ...Mesh.Params.ignoreLight, defaultValue: true },
@@ -33,17 +33,19 @@ const HandleParams = {
     colorY: PD.Color(ColorNames.green, { isEssential: true }),
     colorZ: PD.Color(ColorNames.blue, { isEssential: true }),
     scale: PD.Numeric(0.33, { min: 0.1, max: 2, step: 0.1 }, { isEssential: true }),
-};
-type HandleParams = typeof HandleParams;
+} as const;
+type HandleParams = typeof _HandleParams;
+const HandleParams: HandleParams = _HandleParams;
 type HandleProps = PD.Values<HandleParams>;
 
-export const HandleHelperParams = {
+const _HandleHelperParams = {
     handle: PD.MappedStatic('off', {
         on: PD.Group(HandleParams),
         off: PD.Group({}),
     }, { cycle: true, description: 'Show handle tool' }),
-};
-export type HandleHelperParams = typeof HandleHelperParams;
+} as const;
+export type HandleHelperParams = typeof _HandleHelperParams;
+export const HandleHelperParams: HandleHelperParams = _HandleHelperParams;
 export type HandleHelperProps = PD.Values<HandleHelperParams>;
 
 export class HandleHelper {

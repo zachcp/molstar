@@ -34,7 +34,7 @@ export namespace PDBePreferredAssembly {
     };
     export type Schema = typeof Schema;
 
-    export const Descriptor = CustomPropertyDescriptor({
+    export const Descriptor: CustomPropertyDescriptor<Property> = CustomPropertyDescriptor({
         name: 'pdbe_preferred_assembly',
         cifExport: {
             prefix: 'pdbe',

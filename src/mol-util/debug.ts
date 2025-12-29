@@ -10,7 +10,7 @@
  */
 
 import process from 'node:process';
-let isProductionMode = function () {
+let isProductionMode: boolean = function () {
     try {
         return process.env.NODE_ENV === 'production';
     } catch {
@@ -22,7 +22,7 @@ let isProductionMode = function () {
  * set to true to enable more comprehensive checks and assertions,
  * mostly used in `mol-gl` and in valence-model calculation
  */
-let isDebugMode = function getIsDebug() {
+let isDebugMode: boolean = function getIsDebug() {
     try {
         const val = process.env.DEBUG;
         return val === '*' || val === 'molstar';

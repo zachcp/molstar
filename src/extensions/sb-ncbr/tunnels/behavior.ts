@@ -13,14 +13,14 @@ import {
 } from '../../../mol-plugin-state/builder/structure/representation-preset.ts';
 import { Model, type Structure } from '../../../mol-model/structure.ts';
 import type { PluginContext } from '../../../mol-plugin/context.ts';
-import { StateObjectRef } from '../../../mol-state/index.ts';
+import { StateObjectRef, type StateTransformer } from '../../../mol-state/index.ts';
 import { getTunnelsConfig, TunnelsDataParams } from './props.ts';
 import { StateTransforms } from '../../../mol-plugin-state/transforms.ts';
 import type { ChannelsDBdata, Tunnel, TunnelDB } from './data-model.ts';
 import { TunnelFromRawData, TunnelShapeProvider } from './representation.ts';
 import { ColorGenerator } from '../../meshes/mesh-utils.ts';
 
-export const SbNcbrTunnels = PluginBehavior.create<{ autoAttach: boolean }>({
+export const SbNcbrTunnels: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, { autoAttach: boolean }> = PluginBehavior.create<{ autoAttach: boolean }>({
     name: 'sb-ncbr-tunnels',
     category: 'misc',
     display: {

@@ -40,7 +40,7 @@ const _SliceParams = {
         relativeX: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }, { immediateUpdate: true }),
         relativeY: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }, { immediateUpdate: true }),
         relativeZ: PD.Numeric(0, { min: 0, max: 1, step: 0.01 }, { immediateUpdate: true }),
-    }, { isEssential: true, hideIf: p => p.mode !== 'grid', description: 'Slice position in grid coordinates.' }),
+    } as const, { isEssential: true, hideIf: p => p.mode !== 'grid', description: 'Slice position in grid coordinates.' }),
     isoValue: Volume.IsoValueParam,
     mode: PD.Select('grid', PD.arrayToOptions(['grid', 'frame', 'plane'] as const), { description: 'Grid: slice through the volume along the grid axes in integer steps. Frame: slice through the volume along arbitrary axes in any step size. Plane: an arbitrary plane defined by point and normal.' }),
     offset: PD.Numeric(0, { min: -1, max: 1, step: 0.01 }, { isEssential: true, immediateUpdate: true, hideIf: p => p.mode !== 'frame', description: 'Relative offset from center.' }),

@@ -93,7 +93,7 @@ export const GaussianDensityVolumeParams = {
     ignoreHydrogens: PD.Boolean(false),
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     includeParent: PD.Boolean(false, { isHidden: true }),
-};
+} as const;
 export type GaussianDensityVolumeParams = typeof GaussianDensityVolumeParams;
 
 export function GaussianDensityVolumeVisual(materialId: number): ComplexVisual<GaussianDensityVolumeParams> {
@@ -190,7 +190,7 @@ export const UnitsGaussianDensityVolumeParams = {
     ignoreHydrogens: PD.Boolean(false),
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     includeParent: PD.Boolean(false, { isHidden: true }),
-};
+} as const;
 export type UnitsGaussianDensityVolumeParams = typeof UnitsGaussianDensityVolumeParams;
 
 export function UnitsGaussianDensityVolumeVisual(materialId: number): UnitsVisual<UnitsGaussianDensityVolumeParams> {

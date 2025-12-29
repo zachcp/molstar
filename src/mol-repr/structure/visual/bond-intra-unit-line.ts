@@ -171,7 +171,7 @@ export const IntraUnitBondLineParams = {
     ...UnitsLinesParams,
     ...BondLineParams,
     includeParent: PD.Boolean(false),
-};
+} as const;
 export type IntraUnitBondLineParams = typeof IntraUnitBondLineParams;
 
 export function IntraUnitBondLineVisual(materialId: number): UnitsVisual<IntraUnitBondLineParams> {
@@ -304,7 +304,7 @@ export const StructureIntraUnitBondLineParams = {
     ...ComplexLinesParams,
     ...BondLineParams,
     includeParent: PD.Boolean(false),
-};
+} as const;
 export type StructureIntraUnitBondLineParams = typeof StructureIntraUnitBondLineParams;
 
 export function StructureIntraUnitBondLineVisual(materialId: number): ComplexVisual<StructureIntraUnitBondLineParams> {

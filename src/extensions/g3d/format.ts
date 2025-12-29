@@ -238,5 +238,9 @@ const G3DFormat_config = {
     description: "G3D Format Support",
   },
   ctor: G3DFormatHandler,
+  params: (): { autoAttach: typeof ParamDefinition.Boolean.prototype; showTooltip: typeof ParamDefinition.Boolean.prototype } => ({
+    autoAttach: ParamDefinition.Boolean(false),
+    showTooltip: ParamDefinition.Boolean(true),
+  }),
 };
 export const G3DFormat: ReturnType<typeof PluginBehavior.create<G3DFormatParams>> = PluginBehavior.create<G3DFormatParams>(G3DFormat_config);

@@ -39,7 +39,7 @@ type RenderContext = {
     helper: Helper;
 };
 
-export const TracingParams = {
+const _TracingParams = {
     rendersPerFrame: PD.Interval([1, 16], { min: 1, max: 64, step: 1 }, {
         description:
             'Number of rays per pixel each frame. May be adjusted to reach targetFps but will stay within given interval.',
@@ -66,7 +66,9 @@ export const TracingParams = {
     shadowEnable: PD.Boolean(false),
     shadowSoftness: PD.Numeric(0.1, { min: 0.01, max: 1.0, step: 0.01 }),
     shadowThickness: PD.Numeric(0.5, { min: 0.1, max: 32, step: 0.1 }),
-};
+} as const;
+export type TracingParams = typeof _TracingParams;
+export const TracingParams: TracingParams = _TracingParams;
 export type TracingProps = PD.Values<typeof TracingParams>;
 
 export class TracingPass {

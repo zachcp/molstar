@@ -26,7 +26,15 @@ import { FeatureGroup, FeatureType, InteractionType } from './common.ts';
 import type { ContactProvider } from './contacts.ts';
 import { MoleculeType, ProteinBackboneAtoms } from '../../../mol-model/structure/model/types.ts';
 
-const GeometryParams = {
+const GeometryParams: {
+    distanceMax: PD.Numeric;
+    backbone: PD.BooleanParam;
+    accAngleDevMax: PD.Numeric;
+    ignoreHydrogens: PD.BooleanParam;
+    donAngleDevMax: PD.Numeric;
+    accOutOfPlaneAngleMax: PD.Numeric;
+    donOutOfPlaneAngleMax: PD.Numeric;
+} = {
     distanceMax: PD.Numeric(3.5, { min: 1, max: 5, step: 0.1 }),
     backbone: PD.Boolean(true, { description: 'Include backbone-to-backbone hydrogen bonds' }),
     accAngleDevMax: PD.Numeric(45, { min: 0, max: 180, step: 1 }, {
@@ -42,7 +50,10 @@ const GeometryParams = {
 type GeometryParams = typeof GeometryParams;
 type GeometryProps = PD.Values<GeometryParams>;
 
-const HydrogenBondsParams = {
+const HydrogenBondsParams: GeometryParams & {
+    water: PD.BooleanParam;
+    sulfurDistanceMax: PD.Numeric;
+} = {
     ...GeometryParams,
     water: PD.Boolean(false, { description: 'Include water-to-water hydrogen bonds' }),
     sulfurDistanceMax: PD.Numeric(4.1, { min: 1, max: 5, step: 0.1 }),

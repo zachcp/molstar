@@ -20,8 +20,10 @@ import {
     StructureSelectionQuery,
 } from '../../../../../mol-plugin-state/helpers/structure-selection-query.ts';
 import { MolScriptBuilder as MS } from '../../../../../mol-script/language/builder.ts';
+import type { StateTransformer } from '../../../../../mol-state/transformer.ts';
 
-export const AccessibleSurfaceArea = PluginBehavior.create<{ autoAttach: boolean; showTooltip: boolean }>({
+type _AccessibleSurfaceAreaParams = { autoAttach: boolean; showTooltip: boolean };
+export const AccessibleSurfaceArea: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, _AccessibleSurfaceAreaParams> = PluginBehavior.create<_AccessibleSurfaceAreaParams>({
     name: 'computed-accessible-surface-area-prop',
     category: 'custom-props',
     display: { name: 'Accessible Surface Area' },

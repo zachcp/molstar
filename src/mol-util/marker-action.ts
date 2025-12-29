@@ -37,7 +37,7 @@ export namespace MarkerActions {
         MarkerAction.Clear
     ) as MarkerActions;
 
-    export function isReverse(a: MarkerAction, b: MarkerAction) {
+    export function isReverse(a: MarkerAction, b: MarkerAction): boolean {
         return (
             (a === MarkerAction.Highlight && b === MarkerAction.RemoveHighlight) ||
             (a === MarkerAction.RemoveHighlight && b === MarkerAction.Highlight) ||

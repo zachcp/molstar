@@ -61,7 +61,7 @@ const FocusLociParams: PD.Params = {
 };
 type FocusLociProps = PD.Values<typeof FocusLociParams>
 
-export const FocusLoci = PluginBehavior.create<FocusLociProps>({
+export const FocusLoci: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, FocusLociProps> = PluginBehavior.create<FocusLociProps>({
     name: 'camera-focus-loci',
     category: 'interaction',
     ctor: class extends PluginBehavior.Handler<FocusLociProps> {
@@ -100,7 +100,7 @@ export const FocusLoci = PluginBehavior.create<FocusLociProps>({
     display: { name: 'Camera Focus Loci on Canvas' }
 });
 
-export const CameraAxisHelper = PluginBehavior.create<{}>({
+export const CameraAxisHelper: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, {}> = PluginBehavior.create<{}>({
     name: 'camera-axis-helper',
     category: 'interaction',
     ctor: class extends PluginBehavior.Handler<{}> {
@@ -182,7 +182,7 @@ const CameraControlsParams: PD.Params = {
 };
 type CameraControlsProps = PD.Values<typeof CameraControlsParams>
 
-export const CameraControls = PluginBehavior.create<CameraControlsProps>({
+export const CameraControls: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, CameraControlsProps> = PluginBehavior.create<CameraControlsProps>({
     name: 'camera-controls',
     category: 'interaction',
     ctor: class extends PluginBehavior.Handler<CameraControlsProps> {

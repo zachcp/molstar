@@ -17,8 +17,10 @@ import type { Loci } from '../../../../../mol-model/loci.ts';
 import { arraySetAdd } from '../../../../../mol-util/array.ts';
 import { InteractionTypeColorThemeProvider } from '../../../../../mol-model-props/computed/themes/interaction-type.ts';
 import { InteractionsRepresentationProvider } from '../../../../../mol-model-props/computed/representations/interactions.ts';
+import type { StateTransformer } from '../../../../../mol-state/transformer.ts';
 
-export const Interactions = PluginBehavior.create<{ autoAttach: boolean; showTooltip: boolean }>({
+type _InteractionsParams = { autoAttach: boolean; showTooltip: boolean };
+export const Interactions: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, _InteractionsParams> = PluginBehavior.create<_InteractionsParams>({
     name: 'computed-interactions-prop',
     category: 'custom-props',
     display: { name: 'Interactions' },

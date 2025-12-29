@@ -142,7 +142,7 @@ class TransientTree implements StateTree {
         this.transforms.set(ref, StateTransform.withParent(old, newParent));
     }
 
-    add(transform: StateTransform) {
+    add(transform: StateTransform): this {
         const ref = transform.ref;
 
         if (this.transforms.has(transform.ref)) {

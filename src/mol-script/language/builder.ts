@@ -57,7 +57,7 @@ export namespace MolScriptBuilder {
   }
 
   /** atom macromolecular property */
-  export function ammp(p: keyof typeof _ammp) {
+  export function ammp(p: keyof typeof _ammp): Expression {
     return (_ammp[p] as MSymbol<any>)();
   }
 
@@ -71,7 +71,7 @@ export namespace MolScriptBuilder {
     return _aps([atp(p)]);
   }
   /** atom macromolecular property set */
-  export function ammpSet(p: keyof typeof _ammp) {
+  export function ammpSet(p: keyof typeof _ammp): Expression {
     return _aps([ammp(p)]);
   }
 }

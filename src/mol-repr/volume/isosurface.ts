@@ -355,7 +355,7 @@ const _IsosurfaceParams = {
 export type IsosurfaceParams = typeof _IsosurfaceParams
 export const IsosurfaceParams: IsosurfaceParams = _IsosurfaceParams;
 export function getIsosurfaceParams(ctx: ThemeRegistryContext, volume: Volume) {
-    const p = PD.clone(IsosurfaceParams);
+    const p = PD.clone(IsosurfaceParams) as { -readonly [K in keyof IsosurfaceParams]: IsosurfaceParams[K] };
     p.isoValue = Volume.createIsoValueParam(Volume.IsoValue.relative(2), volume.grid.stats);
     return p;
 }

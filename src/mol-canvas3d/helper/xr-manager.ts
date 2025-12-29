@@ -54,17 +54,19 @@ type InputInfo = {
   targetRayPose: XRPose;
 };
 
-export const DefaultXRManagerBindings = {
+const _DefaultXRManagerBindings = {
   exit: Binding([Key("GamepadB")]),
   togglePassthrough: Binding([Key("GamepadA")]),
   gestureScale: Binding([Trigger(B.Flag.Trigger)]),
-};
+} as const;
+export type DefaultXRManagerBindings = typeof _DefaultXRManagerBindings;
+export const DefaultXRManagerBindings: DefaultXRManagerBindings = _DefaultXRManagerBindings;
 export const DefaultXRManagerAttribs = {
   bindings: DefaultXRManagerBindings,
 };
 export type XRManagerAttribs = typeof DefaultXRManagerAttribs;
 
-export const XRManagerParams = {
+const _XRManagerParams = {
   minTargetDistance: PD.Numeric(0.4, { min: 0.001, max: 1, step: 0.001 }),
   disablePostprocessing: PD.Boolean(true),
   resolutionScale: PD.Numeric(1, { min: 0.1, max: 2, step: 0.1 }),
@@ -76,8 +78,9 @@ export const XRManagerParams = {
         "The radius of the scene bounding sphere in meters, used to set the initial camera scale.",
     },
   ),
-};
-export type XRManagerParams = typeof XRManagerParams;
+} as const;
+export type XRManagerParams = typeof _XRManagerParams;
+export const XRManagerParams: XRManagerParams = _XRManagerParams;
 export type XRManagerProps = PD.Values<XRManagerParams>;
 
 export class XRManager {

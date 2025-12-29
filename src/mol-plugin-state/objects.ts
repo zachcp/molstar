@@ -55,7 +55,7 @@ export namespace PluginStateObject {
     typeClass: TypeClass;
   }
 
-  export const Create = StateObject.factory<TypeInfo>();
+  export const Create: <D = {}>(type: TypeInfo) => ReturnType<typeof StateObject.create<D, TypeInfo>> = StateObject.factory<TypeInfo>();
 
   export function isRepresentation3D(
     o?: Any,
@@ -325,6 +325,6 @@ export namespace PluginStateObject {
 }
 
 export namespace PluginStateTransform {
-  export const CreateBuiltIn = StateTransformer.factory("ms-plugin");
-  export const BuiltIn = StateTransformer.builderFactory("ms-plugin");
+  export const CreateBuiltIn: <A extends StateObject, B extends StateObject, P extends {} = {}>(definition: StateTransformer.Definition<A, B, P>) => StateTransformer<A, B, P> = StateTransformer.factory("ms-plugin");
+  export const BuiltIn: StateTransformer.Builder.Root = StateTransformer.builderFactory("ms-plugin");
 }

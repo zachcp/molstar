@@ -9,7 +9,14 @@ import { Color } from "../../mol-util/color/color.ts";
 import { Material } from "../../mol-util/material.ts";
 import { ParamDefinition as PD } from "../../mol-util/param-definition.ts";
 
-export function getInteriorParam() {
+interface InteriorParams {
+  color: Color,
+  colorStrength: number,
+  substance: Material,
+  substanceStrength: number,
+}
+
+export function getInteriorParam(): PD.Group<PD.Normalize<InteriorParams>> {
   return PD.Group({
     color: PD.Color(Color.fromRgb(76, 76, 76)),
     colorStrength: PD.Numeric(1, { min: 0, max: 1, step: 0.01 }),

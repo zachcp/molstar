@@ -35,7 +35,7 @@ namespace ScriptImpl {
         return !!x && typeof (x as Script).expression === 'string' && !!(x as Script).language;
     }
 
-    export function areEqual(a: Script, b: Script) {
+    export function areEqual(a: Script, b: Script): boolean {
         return a.language === b.language && a.expression === b.expression;
     }
 
@@ -65,7 +65,7 @@ namespace ScriptImpl {
         return StructureSelection.toLociWithSourceUnits(result);
     }
 
-    export function getStructureSelection(expr: Expression | ((builder: typeof MolScriptBuilder) => Expression), structure: Structure, options?: QueryContextOptions) {
+    export function getStructureSelection(expr: Expression | ((builder: typeof MolScriptBuilder) => Expression), structure: Structure, options?: QueryContextOptions): StructureSelection {
         const e = typeof expr === 'function' ? expr(MolScriptBuilder) : expr;
         const query = compile<StructureSelection>(e);
         return query(new QueryContext(structure, options));

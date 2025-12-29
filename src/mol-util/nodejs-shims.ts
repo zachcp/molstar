@@ -14,7 +14,7 @@ export const RUNNING_IN_NODEJS = typeof process !== 'undefined' && process.versi
     process.versions.node != null;
 
 /** Like `File` but works also in Node.js */
-export const File_ = getFile();
+export const File_: typeof File = getFile();
 
 function getFile(): typeof File {
     if (typeof File === 'undefined' || RUNNING_IN_NODEJS) {

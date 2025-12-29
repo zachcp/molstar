@@ -1,6 +1,6 @@
 # Mol* JSR Migration Guide
 
-**Last Updated:** 2025-12-28  
+**Last Updated:** 2025-12-29  
 **Current Status:** v5.5.0 synced, JSR publish ready with `--allow-slow-types`  
 **Branch:** `2025-jsr`
 
@@ -12,7 +12,7 @@
 |--------|---------------|
 | **Version** | v5.5.0 (latest upstream) |
 | **TypeScript Errors** | 0 - All fixed |
-| **Slow-Type Issues** | ~398 (require `--allow-slow-types`) |
+| **Slow-Type Issues** | ~249 (require `--allow-slow-types`) |
 | **Publish Command** | `deno publish --allow-dirty --allow-slow-types` |
 
 ---
@@ -29,7 +29,7 @@ deno publish --allow-dirty --allow-slow-types
 ```
 
 ### Why These Flags?
-- `--allow-slow-types`: Bypasses ~398 slow-type warnings (mostly missing explicit type annotations on Params objects)
+- `--allow-slow-types`: Bypasses ~249 slow-type warnings (complex patterns that can't be easily typed)
 - `--allow-dirty`: Allows publishing with uncommitted changes
 
 ### Fixed Issues
@@ -37,9 +37,16 @@ deno publish --allow-dirty --allow-slow-types
 - ✅ Color theme type errors (6 fixed) 
 - ✅ Extension function return types (5 added)
 - ✅ Quality assessment type issues (2 fixed)
+- ✅ Circular type reference in volume-streaming behavior.ts fixed
+- ✅ 100+ `as const` additions to Params objects
+- ✅ Explicit return types added to many functions
 
 ### Remaining Work
-~398 JSR slow-type issues remain (mostly missing explicit type annotations on const declarations). 
+~249 JSR slow-type issues remain. Most are complex patterns that cannot be easily fixed:
+- MVS tree schema files (mvs-tree.ts, animation-tree.ts, mvs-builder.ts)
+- StateAction.build() chains (actions/structure.ts, actions/volume.ts)
+- PluginStateTransform.BuiltIn() patterns (representation-preset.ts, hierarchy-preset.ts)
+- mol-gl/renderable/schema.ts helper functions 
 
 ### Safe Fix Patterns
 1. **Simple return types**: `: boolean`, `: string`, `: number`, `: void`, `: Promise<void>`

@@ -69,7 +69,7 @@ export interface MSymbol<A extends Arguments = Arguments, T extends Type = Type>
     id: string;
 }
 
-export function MSymbol<A extends Arguments, T extends Type>(name: string, args: A, type: T, description?: string) {
+export function MSymbol<A extends Arguments, T extends Type>(name: string, args: A, type: T, description?: string): MSymbol<A, T> {
     const symbol: MSymbol<A, T> = function (args: ExpressionArguments<A['@type']>) {
         return Expression.Apply(Expression.Symbol(symbol.id), args as any);
     } as any;

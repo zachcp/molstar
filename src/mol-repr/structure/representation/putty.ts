@@ -58,7 +58,7 @@ export const PuttyParams = {
         { min: 0, max: 1, step: 0.01 },
         BaseGeometry.ShadingCategory,
     ),
-};
+} as const;
 export type PuttyParams = typeof PuttyParams;
 export function getPuttyParams(
     ctx: ThemeRegistryContext,

@@ -5,9 +5,10 @@
  */
 
 import { PluginBehavior } from '../../mol-plugin/behavior/behavior.ts';
+import { StateTransformer } from '../../mol-state/transformer.ts';
 import { ModelExportUI } from './ui.tsx';
 
-export const ModelExport = PluginBehavior.create<{}>({
+export const ModelExport: StateTransformer<PluginBehavior.Category, PluginBehavior.Behavior, {}> = PluginBehavior.create<{}>({
     name: 'extension-model-export',
     category: 'misc',
     display: {

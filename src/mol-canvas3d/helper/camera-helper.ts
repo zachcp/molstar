@@ -30,7 +30,7 @@ import type { Viewport } from '../camera/util.ts';
 
 // TODO add scale line/grid
 
-const AxesParams = {
+const _AxesParams = {
     alpha: PD.Numeric(0.51, { min: 0, max: 1, step: 0.01 }, { isEssential: true, label: 'Opacity' }),
     colorX: PD.Color(ColorNames.red, { isEssential: true }),
     colorY: PD.Color(ColorNames.green, { isEssential: true }),
@@ -57,17 +57,19 @@ const AxesParams = {
     labelColorZ: PD.Color(ColorNames.grey),
     labelOpacity: PD.Numeric(1, { min: 0, max: 1, step: 0.01 }),
     labelScale: PD.Numeric(0.25, { min: 0.1, max: 1.0, step: 0.01 }),
-};
-type AxesParams = typeof AxesParams;
+} as const;
+type AxesParams = typeof _AxesParams;
+const AxesParams: AxesParams = _AxesParams;
 type AxesProps = PD.Values<AxesParams>;
 
-export const CameraHelperParams = {
+const _CameraHelperParams = {
     axes: PD.MappedStatic('on', {
         on: PD.Group(AxesParams),
         off: PD.Group({}),
     }, { cycle: true, description: 'Show camera orientation axes' }),
-};
-export type CameraHelperParams = typeof CameraHelperParams;
+} as const;
+export type CameraHelperParams = typeof _CameraHelperParams;
+export const CameraHelperParams: CameraHelperParams = _CameraHelperParams;
 export type CameraHelperProps = PD.Values<CameraHelperParams>;
 
 export class CameraHelper {

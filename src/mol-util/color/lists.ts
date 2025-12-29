@@ -1283,7 +1283,7 @@ export const ColorLists = {
             0xb3b3b3,
         ],
     ),
-};
+} as const;
 
 export type ColorListName = keyof typeof ColorLists;
 export const ColorListNames = Object.keys(ColorLists) as ColorListName[];

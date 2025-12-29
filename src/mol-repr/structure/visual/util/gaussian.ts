@@ -36,7 +36,7 @@ export const GaussianDensityParams = {
         description: 'Smoothness of the gausian surface, lower is smoother.',
     }),
     ...CommonSurfaceParams,
-};
+} as const;
 export const DefaultGaussianDensityProps = PD.getDefaultValues(GaussianDensityParams);
 export type GaussianDensityProps = typeof DefaultGaussianDensityProps;
 

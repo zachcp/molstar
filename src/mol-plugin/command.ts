@@ -63,7 +63,7 @@ class PluginCommandManager {
     }
 
     /** Resolves after all actions have completed */
-    dispatch<T>(cmd: PluginCommand<T>, params: T) {
+    dispatch<T>(cmd: PluginCommand<T>, params: T): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (this.disposing) {
                 reject('disposed');

@@ -55,7 +55,7 @@ export const GaussianWireframeParams = {
     ignoreHydrogens: PD.Boolean(false),
     ignoreHydrogensVariant: PD.Select('all', PD.arrayToOptions(['all', 'non-polar'] as const)),
     includeParent: PD.Boolean(false, { isHidden: true }),
-};
+} as const;
 export type GaussianWireframeParams = typeof GaussianWireframeParams;
 
 export function GaussianWireframeVisual(materialId: number): UnitsVisual<GaussianWireframeParams> {

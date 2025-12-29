@@ -19,7 +19,7 @@ export async function createPluginUI(options: {
   render: (component: any, container: Element) => any;
   spec?: PluginUISpec;
   onBeforeUIRender?: (ctx: PluginUIContext) => Promise<void> | void;
-}) {
+}): Promise<PluginUIContext> {
   const { spec, target, onBeforeUIRender, render } = options;
   const ctx = new PluginUIContext(spec || DefaultPluginUISpec());
   await ctx.init();
