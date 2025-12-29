@@ -209,10 +209,8 @@ const _Canvas3DParams = {
   pointer: PD.Group(PointerHelperParams),
   xr: PD.Group(XRManagerParams, { label: "XR" }),
 };
-type _Canvas3DParamsType = typeof _Canvas3DParams;
-const __Canvas3DParams: _Canvas3DParamsType = _Canvas3DParams;
-export type Canvas3DParams = _Canvas3DParamsType;
-export const Canvas3DParams: Canvas3DParams = __Canvas3DParams;
+export type Canvas3DParams = typeof _Canvas3DParams;
+export const Canvas3DParams: Canvas3DParams = _Canvas3DParams;
 export const DefaultCanvas3DParams: PD.Values<Canvas3DParams> = PD.getDefaultValues(Canvas3DParams);
 export type Canvas3DProps = PD.Values<Canvas3DParams>;
 export type PartialCanvas3DProps = {
@@ -289,10 +287,8 @@ namespace Canvas3DContext {
       ["dpoit", "Depth Peeling"],
     ] as const),
   } as const;
-  type _ParamsType = typeof _Params;
-  const __Params: _ParamsType = _Params;
-  export type Params = _ParamsType;
-  export const Params: Params = __Params;
+  export type Params = typeof _Params;
+  export const Params: Params = _Params;
   export const DefaultProps: PD.Values<Params> = PD.getDefaultValues(Params);
   export type Props = PD.Values<typeof Params>;
 

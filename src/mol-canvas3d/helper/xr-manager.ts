@@ -59,18 +59,14 @@ const _DefaultXRManagerBindings = {
   togglePassthrough: Binding([Key("GamepadA")]),
   gestureScale: Binding([Trigger(B.Flag.Trigger)]),
 } as const;
-type _DefaultXRManagerBindingsType = typeof _DefaultXRManagerBindings;
-const __DefaultXRManagerBindings: _DefaultXRManagerBindingsType = _DefaultXRManagerBindings;
-export type DefaultXRManagerBindings = _DefaultXRManagerBindingsType;
-export const DefaultXRManagerBindings: DefaultXRManagerBindings = __DefaultXRManagerBindings;
+export type DefaultXRManagerBindings = typeof _DefaultXRManagerBindings;
+export const DefaultXRManagerBindings: DefaultXRManagerBindings = _DefaultXRManagerBindings;
 const _DefaultXRManagerAttribs = {
   bindings: DefaultXRManagerBindings,
 } as const;
-type _DefaultXRManagerAttribsType = typeof _DefaultXRManagerAttribs;
-const __DefaultXRManagerAttribs: _DefaultXRManagerAttribsType = _DefaultXRManagerAttribs;
-export type DefaultXRManagerAttribs = _DefaultXRManagerAttribsType;
-export const DefaultXRManagerAttribs: DefaultXRManagerAttribs = __DefaultXRManagerAttribs;
-export type XRManagerAttribs = _DefaultXRManagerAttribsType;
+export type DefaultXRManagerAttribs = typeof _DefaultXRManagerAttribs;
+export const DefaultXRManagerAttribs: DefaultXRManagerAttribs = _DefaultXRManagerAttribs;
+export type XRManagerAttribs = typeof _DefaultXRManagerAttribs;
 
 const _XRManagerParams = {
   minTargetDistance: PD.Numeric(0.4, { min: 0.001, max: 1, step: 0.001 }),
@@ -85,10 +81,8 @@ const _XRManagerParams = {
     },
   ),
 } as const;
-type _XRManagerParamsType = typeof _XRManagerParams;
-const __XRManagerParams: _XRManagerParamsType = _XRManagerParams;
-export type XRManagerParams = _XRManagerParamsType;
-export const XRManagerParams: XRManagerParams = __XRManagerParams;
+export type XRManagerParams = typeof _XRManagerParams;
+export const XRManagerParams: XRManagerParams = _XRManagerParams;
 export type XRManagerProps = PD.Values<XRManagerParams>;
 
 export class XRManager {

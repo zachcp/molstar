@@ -30,10 +30,8 @@ const _PointerHelperParams = {
     color: PD.Color(ColorNames.grey, { isEssential: true }),
     hitColor: PD.Color(ColorNames.pink, { isEssential: true }),
 };
-type _PointerHelperParamsType = typeof _PointerHelperParams;
-const __PointerHelperParams: _PointerHelperParamsType = _PointerHelperParams;
-export type PointerHelperParams = _PointerHelperParamsType;
-export const PointerHelperParams: PointerHelperParams = __PointerHelperParams;
+export type PointerHelperParams = typeof _PointerHelperParams;
+export const PointerHelperParams: PointerHelperParams = _PointerHelperParams;
 export type PointerHelperProps = PD.Values<PointerHelperParams>;
 
 export class PointerHelper {

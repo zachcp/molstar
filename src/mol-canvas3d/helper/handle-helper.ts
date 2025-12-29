@@ -34,10 +34,8 @@ const _HandleParams = {
     colorZ: PD.Color(ColorNames.blue, { isEssential: true }),
     scale: PD.Numeric(0.33, { min: 0.1, max: 2, step: 0.1 }, { isEssential: true }),
 } as const;
-type _HandleParamsType = typeof _HandleParams;
-const __HandleParams: _HandleParamsType = _HandleParams;
-type HandleParams = _HandleParamsType;
-const HandleParams: HandleParams = __HandleParams;
+type HandleParams = typeof _HandleParams;
+const HandleParams: HandleParams = _HandleParams;
 type HandleProps = PD.Values<HandleParams>;
 
 const _HandleHelperParams = {
@@ -46,10 +44,8 @@ const _HandleHelperParams = {
         off: PD.Group({}),
     }, { cycle: true, description: 'Show handle tool' }),
 } as const;
-type _HandleHelperParamsType = typeof _HandleHelperParams;
-const __HandleHelperParams: _HandleHelperParamsType = _HandleHelperParams;
-export type HandleHelperParams = _HandleHelperParamsType;
-export const HandleHelperParams: HandleHelperParams = __HandleHelperParams;
+export type HandleHelperParams = typeof _HandleHelperParams;
+export const HandleHelperParams: HandleHelperParams = _HandleHelperParams;
 export type HandleHelperProps = PD.Values<HandleHelperParams>;
 
 export class HandleHelper {

@@ -92,10 +92,8 @@ const _DefaultTrackballBindings = {
     boostMove: Binding([Key('ShiftLeft')], 'Boost move', 'Press ${triggers}'),
     enablePointerLock: Binding([Key('Space', M.create({ control: true }))], 'Enable pointer lock', 'Press ${triggers}'),
 } as const;
-type _DefaultTrackballBindingsType = typeof _DefaultTrackballBindings;
-const __DefaultTrackballBindings: _DefaultTrackballBindingsType = _DefaultTrackballBindings;
-export type DefaultTrackballBindings = _DefaultTrackballBindingsType;
-export const DefaultTrackballBindings: DefaultTrackballBindings = __DefaultTrackballBindings;
+export type DefaultTrackballBindings = typeof _DefaultTrackballBindings;
+export const DefaultTrackballBindings: DefaultTrackballBindings = _DefaultTrackballBindings;
 
 const _TrackballControlsParams = {
     rotateSpeed: PD.Numeric(5.0, { min: 1, max: 10, step: 1 }),
@@ -141,20 +139,16 @@ const _TrackballControlsParams = {
         }),
     }, { isHidden: true }),
 };
-type _TrackballControlsParamsType = typeof _TrackballControlsParams;
-const __TrackballControlsParams: _TrackballControlsParamsType = _TrackballControlsParams;
-export type TrackballControlsParams = _TrackballControlsParamsType;
-export const TrackballControlsParams: TrackballControlsParams = __TrackballControlsParams;
+export type TrackballControlsParams = typeof _TrackballControlsParams;
+export const TrackballControlsParams: TrackballControlsParams = _TrackballControlsParams;
 export type TrackballControlsProps = PD.Values<TrackballControlsParams>;
 
 const _DefaultTrackballControlsAttribs = {
     bindings: DefaultTrackballBindings,
 } as const;
-type _DefaultTrackballControlsAttribsType = typeof _DefaultTrackballControlsAttribs;
-const __DefaultTrackballControlsAttribs: _DefaultTrackballControlsAttribsType = _DefaultTrackballControlsAttribs;
-export type DefaultTrackballControlsAttribs = _DefaultTrackballControlsAttribsType;
-export const DefaultTrackballControlsAttribs: DefaultTrackballControlsAttribs = __DefaultTrackballControlsAttribs;
-export type TrackballControlsAttribs = _DefaultTrackballControlsAttribsType;
+export type DefaultTrackballControlsAttribs = typeof _DefaultTrackballControlsAttribs;
+export const DefaultTrackballControlsAttribs: DefaultTrackballControlsAttribs = _DefaultTrackballControlsAttribs;
+export type TrackballControlsAttribs = typeof _DefaultTrackballControlsAttribs;
 
 export { TrackballControls };
 interface TrackballControls {

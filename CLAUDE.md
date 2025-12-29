@@ -12,7 +12,7 @@
 |--------|---------------|
 | **Version** | v5.5.0 (latest upstream) |
 | **TypeScript Errors** | 0 - All fixed |
-| **Slow-Type Issues** | ~249 (require `--allow-slow-types`) |
+| **Slow-Type Issues** | ~240 (require `--allow-slow-types`) |
 | **Publish Command** | `deno publish --allow-dirty --allow-slow-types` |
 
 ---
@@ -29,7 +29,7 @@ deno publish --allow-dirty --allow-slow-types
 ```
 
 ### Why These Flags?
-- `--allow-slow-types`: Bypasses ~249 slow-type warnings (complex patterns that can't be easily typed)
+- `--allow-slow-types`: Bypasses ~240 slow-type warnings (complex patterns that can't be easily typed)
 - `--allow-dirty`: Allows publishing with uncommitted changes
 
 ### Fixed Issues
@@ -42,11 +42,17 @@ deno publish --allow-dirty --allow-slow-types
 - ✅ Explicit return types added to many functions
 
 ### Remaining Work
-~249 JSR slow-type issues remain. Most are complex patterns that cannot be easily fixed:
-- MVS tree schema files (mvs-tree.ts, animation-tree.ts, mvs-builder.ts)
-- StateAction.build() chains (actions/structure.ts, actions/volume.ts)
-- PluginStateTransform.BuiltIn() patterns (representation-preset.ts, hierarchy-preset.ts)
-- mol-gl/renderable/schema.ts helper functions 
+~240 JSR slow-type issues remain. These are complex patterns that cannot be easily fixed:
+
+| Area | Count | Pattern |
+|------|-------|---------|
+| mol-repr/ | ~94 | RepresentationProvider function returns |
+| mol-plugin-state/builder,actions | ~27 | StateAction.build(), PluginStateTransform.BuiltIn() |
+| extensions/mvs/ | ~31 | Tree schema definitions |
+| mol-gl/renderable/ | ~19 | Schema helper functions |
+| mol-canvas3d/ | ~15 | PD.* param spreads |
+| mol-geo/ | ~11 | BaseGeometry.Params spreads |
+| Other | ~43 | Various complex patterns | 
 
 ### Safe Fix Patterns
 1. **Simple return types**: `: boolean`, `: string`, `: number`, `: void`, `: Promise<void>`

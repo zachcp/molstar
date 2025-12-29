@@ -58,10 +58,8 @@ const _AxesParams = {
     labelOpacity: PD.Numeric(1, { min: 0, max: 1, step: 0.01 }),
     labelScale: PD.Numeric(0.25, { min: 0.1, max: 1.0, step: 0.01 }),
 } as const;
-type _AxesParamsType = typeof _AxesParams;
-const __AxesParams: _AxesParamsType = _AxesParams;
-type AxesParams = _AxesParamsType;
-const AxesParams: AxesParams = __AxesParams;
+type AxesParams = typeof _AxesParams;
+const AxesParams: AxesParams = _AxesParams;
 type AxesProps = PD.Values<AxesParams>;
 
 const _CameraHelperParams = {
@@ -70,10 +68,8 @@ const _CameraHelperParams = {
         off: PD.Group({}),
     }, { cycle: true, description: 'Show camera orientation axes' }),
 } as const;
-type _CameraHelperParamsType = typeof _CameraHelperParams;
-const __CameraHelperParams: _CameraHelperParamsType = _CameraHelperParams;
-export type CameraHelperParams = _CameraHelperParamsType;
-export const CameraHelperParams: CameraHelperParams = __CameraHelperParams;
+export type CameraHelperParams = typeof _CameraHelperParams;
+export const CameraHelperParams: CameraHelperParams = _CameraHelperParams;
 export type CameraHelperProps = PD.Values<CameraHelperParams>;
 
 export class CameraHelper {
