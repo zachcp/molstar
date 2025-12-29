@@ -12,7 +12,7 @@
 |--------|---------------|
 | **Version** | v5.5.0 (latest upstream) |
 | **TypeScript Errors** | 0 - All fixed |
-| **Slow-Type Issues** | ~586 (require `--allow-slow-types`) |
+| **Slow-Type Issues** | ~398 (require `--allow-slow-types`) |
 | **Publish Command** | `deno publish --allow-dirty --allow-slow-types` |
 
 ---
@@ -29,7 +29,7 @@ deno publish --allow-dirty --allow-slow-types
 ```
 
 ### Why These Flags?
-- `--allow-slow-types`: Bypasses ~586 slow-type warnings (mostly missing explicit type annotations on Params objects)
+- `--allow-slow-types`: Bypasses ~398 slow-type warnings (mostly missing explicit type annotations on Params objects)
 - `--allow-dirty`: Allows publishing with uncommitted changes
 
 ### Fixed Issues
@@ -39,7 +39,7 @@ deno publish --allow-dirty --allow-slow-types
 - ✅ Quality assessment type issues (2 fixed)
 
 ### Remaining Work
-~586 JSR slow-type issues remain (mostly missing explicit type annotations on const declarations). 
+~398 JSR slow-type issues remain (mostly missing explicit type annotations on const declarations). 
 
 ### Safe Fix Patterns
 1. **Simple return types**: `: boolean`, `: string`, `: number`, `: void`, `: Promise<void>`
