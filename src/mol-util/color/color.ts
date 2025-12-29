@@ -13,7 +13,7 @@ import { Hsl } from './spaces/hsl.ts';
 /** RGB color triplet expressed as a single number */
 export type Color = { readonly '@type': 'color' } & number
 
-export function Color(hex: number) { return hex as Color; }
+export function Color(hex: number): Color { return hex as Color; }
 
 export namespace Color {
     export function toStyle(hexColor: Color): string {
@@ -221,10 +221,10 @@ export function ColorList(label: string, type: ColorList['type'], description: s
 }
 
 export type ColorTable<T extends { [k: string]: number[] }> = { [k in keyof T]: Color[] }
-export function ColorTable<T extends { [k: string]: number[] }>(o: T) { return o as unknown as ColorTable<T>; }
+export function ColorTable<T extends { [k: string]: number[] }>(o: T): ColorTable<T> { return o as unknown as ColorTable<T>; }
 
 export type ColorMap<T extends { [k: string]: number }> = { [k in keyof T]: Color }
-export function ColorMap<T extends { [k: string]: number }>(o: T) { return o as unknown as ColorMap<T>; }
+export function ColorMap<T extends { [k: string]: number }>(o: T): ColorMap<T> { return o as unknown as ColorMap<T>; }
 export function getAdjustedColorMap<T extends { [k: string]: number }>(map: ColorMap<T>, saturation: number, lightness: number) {
     const adjustedMap: { [k: string]: Color } = {};
     for (const e in map) {

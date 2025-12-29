@@ -42,7 +42,7 @@ namespace Transform {
         isCollapsed?: boolean
     }
 
-    export function isStateChange(a: State, b?: Partial<State>) {
+    export function isStateChange(a: State, b?: Partial<State>): boolean {
         if (!b) return false;
         if (typeof b.isCollapsed !== 'undefined' && a.isCollapsed !== b.isCollapsed) return true;
         if (typeof b.isHidden !== 'undefined' && a.isHidden !== b.isHidden) return true;
@@ -156,12 +156,12 @@ namespace Transform {
         return create(RootRef, StateTransformer.ROOT, {}, { ref: RootRef, state });
     }
 
-    export function hasTag(t: Transform, tag: string) {
+    export function hasTag(t: Transform, tag: string): boolean {
         if (!t.tags) return false;
         return t.tags.indexOf(tag) >= 0;
     }
 
-    export function hasTags(t: Transform, tags: string | string[]) {
+    export function hasTags(t: Transform, tags: string | string[]): boolean {
         if (!t.tags) return typeof tags !== 'string' && tags.length === 0;
         if (typeof tags === 'string') return hasTag(t, tags);
         for (const tag of tags) {

@@ -258,7 +258,7 @@ export namespace ParamDefinition {
         if (info?.pivot) ret.pivot = info.pivot as any;
         return ret;
     }
-    export function EmptyGroup(info?: Info) {
+    export function EmptyGroup(info?: Info): Group<Normalize<{}>> {
         return Group({}, info);
     }
 
@@ -314,14 +314,14 @@ export namespace ParamDefinition {
         // a provider because the list changes over time
         getOptions: (ctx: any) => Select<string>['options'],
     }
-    export function ValueRef<T>(getOptions: ValueRef['getOptions'], resolveRef: ValueRef<T>['resolveRef'], info?: Info & { defaultRef?: string }) {
+    export function ValueRef<T>(getOptions: ValueRef['getOptions'], resolveRef: ValueRef<T>['resolveRef'], info?: Info & { defaultRef?: string }): ValueRef<T> {
         return setInfo<ValueRef<T>>({ type: 'value-ref', defaultValue: { ref: info?.defaultRef ?? '', getValue: unsetGetValue as any }, getOptions, resolveRef }, info);
     }
 
     export interface DataRef<T = any> extends Base<{ ref: string, getValue: () => T }> {
         type: 'data-ref'
     }
-    export function DataRef<T>(info?: Info & { defaultRef?: string }) {
+    export function DataRef<T>(info?: Info & { defaultRef?: string }): DataRef<T> {
         return setInfo<DataRef<T>>({ type: 'data-ref', defaultValue: { ref: info?.defaultRef ?? '', getValue: unsetGetValue as any } }, info);
     }
 
@@ -376,7 +376,7 @@ export namespace ParamDefinition {
         return 0 as any;
     }
 
-    export function getDefaultValues<T extends Params>(params: T) {
+    export function getDefaultValues<T extends Params>(params: T): Values<T> {
         const d: { [k: string]: any } = {};
         for (const k of Object.keys(params)) {
             if (params[k].isOptional) continue;

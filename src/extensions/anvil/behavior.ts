@@ -34,13 +34,14 @@ import { DefaultQueryRuntimeTable } from "../../mol-script/runtime/query/compile
 import {
   StructureSelectionCategory,
   StructureSelectionQuery,
+  type StructureSelectionQuery as StructureSelectionQueryType,
 } from "../../mol-plugin-state/helpers/structure-selection-query.ts";
 import { MolScriptBuilder as MS } from "../../mol-script/language/builder.ts";
 import type { GenericRepresentationRef } from "../../mol-plugin-state/manager/structure/hierarchy-state.ts";
 
 const Tag = MembraneOrientation.Tag;
 
-export const ANVILMembraneOrientation = PluginBehavior.create<{
+const _ANVILMembraneOrientation = PluginBehavior.create<{
   autoAttach: boolean;
 }>({
   name: "anvil-membrane-orientation-prop",
@@ -116,10 +117,12 @@ export const ANVILMembraneOrientation = PluginBehavior.create<{
     autoAttach: PD.Boolean(false),
   }),
 });
+type ANVILMembraneOrientation = typeof _ANVILMembraneOrientation;
+export const ANVILMembraneOrientation: ANVILMembraneOrientation = _ANVILMembraneOrientation;
 
 //
 
-export const isTransmembrane = StructureSelectionQuery(
+export const isTransmembrane: StructureSelectionQueryType = StructureSelectionQuery(
   "Residues Embedded in Membrane",
   MS.struct.modifier.union([
     MS.struct.modifier.wholeResidues([
@@ -146,10 +149,7 @@ export const isTransmembrane = StructureSelectionQuery(
 
 //
 
-export { MembraneOrientation3D };
-
-type MembraneOrientation3D = typeof MembraneOrientation3D;
-const MembraneOrientation3D = PluginStateTransform.BuiltIn({
+const _MembraneOrientation3D = PluginStateTransform.BuiltIn({
   name: "membrane-orientation-3d",
   display: {
     name: "Membrane Orientation",
@@ -214,7 +214,11 @@ const MembraneOrientation3D = PluginStateTransform.BuiltIn({
   },
 });
 
-export const MembraneOrientationPreset = StructureRepresentationPresetProvider({
+type MembraneOrientation3D = typeof _MembraneOrientation3D;
+const MembraneOrientation3D: MembraneOrientation3D = _MembraneOrientation3D;
+export { MembraneOrientation3D };
+
+const _MembraneOrientationPreset = StructureRepresentationPresetProvider({
   id: "preset-membrane-orientation",
   display: {
     name: "Membrane Orientation",
@@ -269,6 +273,8 @@ export const MembraneOrientationPreset = StructureRepresentationPresetProvider({
     };
   },
 });
+type MembraneOrientationPreset = typeof _MembraneOrientationPreset;
+export const MembraneOrientationPreset: MembraneOrientationPreset = _MembraneOrientationPreset;
 
 export function tryCreateMembraneOrientation(
   plugin: PluginContext,

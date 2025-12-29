@@ -40,7 +40,7 @@ interface Theme {
 namespace Theme {
     type Props = { [k: string]: any };
 
-    export function create(ctx: ThemeRegistryContext, data: ThemeDataContext, props: Props, theme?: Theme) {
+    export function create(ctx: ThemeRegistryContext, data: ThemeDataContext, props: Props, theme?: Theme): Theme {
         theme = theme || createEmpty();
 
         const colorProps = props.colorTheme as PD.NamedParams;
@@ -162,12 +162,12 @@ export class ThemeRegistry<T extends ColorTheme<any, any> | SizeTheme<any>> {
         return this._name.get(provider)!;
     }
 
-    create(name: string, ctx: ThemeDataContext, props = {}) {
+    create(name: string, ctx: ThemeDataContext, props = {}): T {
         const provider = this.get(name);
         return provider.factory(ctx, { ...PD.getDefaultValues(provider.getParams(ctx)), ...props });
     }
 
-    getApplicableList(ctx: ThemeDataContext) {
+    getApplicableList(ctx: ThemeDataContext): { name: string; provider: ThemeProvider<T, any> }[] {
         return this._list.filter((e) => e.provider.isApplicable(ctx));
     }
 

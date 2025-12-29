@@ -81,15 +81,15 @@ export type ModifiersKeys = {
 export namespace ModifiersKeys {
     export const None: Readonly<ModifiersKeys> = create();
 
-    export function areEqual(a: ModifiersKeys, b: ModifiersKeys) {
+    export function areEqual(a: ModifiersKeys, b: ModifiersKeys): boolean {
         return a.shift === b.shift && a.alt === b.alt && a.control === b.control && a.meta === b.meta;
     }
 
-    export function areNone(a: ModifiersKeys) {
+    export function areNone(a: ModifiersKeys): boolean {
         return areEqual(a, None);
     }
 
-    export function size(a?: ModifiersKeys) {
+    export function size(a?: ModifiersKeys): number {
         if (!a) return 0;
         let ret = 0;
         if (!!a.shift) ret++;

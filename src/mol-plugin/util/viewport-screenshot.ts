@@ -22,6 +22,7 @@ import { download } from '../../mol-util/download.ts';
 import { ParamDefinition as PD } from '../../mol-util/param-definition.ts';
 import { SetUtils } from '../../mol-util/set.ts';
 import type { PluginContext } from '../context.ts';
+import { type BehaviorSubject, type Subject } from 'rxjs';
 
 export namespace ViewportScreenshotHelper {
     export type ResolutionSettings = PD.Values<
@@ -119,7 +120,11 @@ export class ViewportScreenshotHelper extends PluginComponent {
         return (this._params = this.createParams());
     }
 
-    readonly behaviors = {
+    readonly behaviors: {
+        values: BehaviorSubject<ViewportScreenshotHelperParams>;
+        cropParams: BehaviorSubject<{ auto: boolean; relativePadding: number }>;
+        relativeCrop: BehaviorSubject<Viewport>;
+    } = {
         values: this.ev.behavior<ViewportScreenshotHelperParams>({
             transparent: this.params.transparent.defaultValue,
             format: { name: 'png', params: {} },
@@ -139,7 +144,9 @@ export class ViewportScreenshotHelper extends PluginComponent {
         }),
     };
 
-    readonly events = {
+    readonly events: {
+        previewed: Subject<any>;
+    } = {
         previewed: this.ev<any>(),
     };
 
@@ -426,7 +433,7 @@ export class ViewportScreenshotHelper extends PluginComponent {
         return { canvas, width: w, height: h };
     }
 
-    getSizeAndViewport() {
+    getSizeAndViewport(): { width: number; height: number; viewport: Viewport } {
         const { width, height } = this.getSize();
         const crop: Viewport = this.relativeCrop;
         const viewport: Viewport = {
@@ -510,7 +517,7 @@ export class ViewportScreenshotHelper extends PluginComponent {
         }
     }
 
-    getImageDataUri() {
+    getImageDataUri(): Promise<string> {
         return this.plugin.runTask(
             Task.create('Generate Image', async (ctx) => {
                 await this.draw(ctx);
