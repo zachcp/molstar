@@ -148,13 +148,14 @@ export function eachDirectVolume(loci: Loci, volume: Volume, key: number, props:
 
 //
 
-export const DirectVolumeParams = {
+const _DirectVolumeParams = {
     ...DirectVolume.Params,
     quality: { ...DirectVolume.Params.quality, isEssential: false },
     dataType: PD.Select('byte', PD.arrayToOptions(['byte', 'float', 'halfFloat'] as const)),
 };
-export type DirectVolumeParams = typeof DirectVolumeParams
-export function getDirectVolumeParams(ctx: ThemeRegistryContext, volume: Volume) {
+export type DirectVolumeParams = typeof _DirectVolumeParams
+export const DirectVolumeParams: DirectVolumeParams = _DirectVolumeParams;
+export function getDirectVolumeParams(ctx: ThemeRegistryContext, volume: Volume): DirectVolumeParams {
     const params = PD.clone(DirectVolumeParams);
     params.controlPoints.getVolume = () => volume;
     return params;
@@ -182,7 +183,7 @@ export function DirectVolumeRepresentation(ctx: RepresentationContext, getParams
     return VolumeRepresentation('Direct Volume', ctx, getParams, DirectVolumeVisual, getLoci);
 }
 
-export const DirectVolumeRepresentationProvider = VolumeRepresentationProvider({
+export const DirectVolumeRepresentationProvider: VolumeRepresentationProvider<DirectVolumeParams> = VolumeRepresentationProvider({
     name: 'direct-volume',
     label: 'Direct Volume',
     description: 'Direct rendering of volumetric data.',

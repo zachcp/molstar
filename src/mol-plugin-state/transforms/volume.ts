@@ -121,7 +121,7 @@ const VolumeFromCube: StateTransformer<SO.Format.Cube, SO.Volume.Data> = PluginS
 });
 
 type VolumeFromDx = typeof VolumeFromDx;
-const VolumeFromDx = PluginStateTransform.BuiltIn({
+const VolumeFromDx: StateTransformer<SO.Format.Dx, SO.Volume.Data> = PluginStateTransform.BuiltIn({
     name: 'volume-from-dx',
     display: { name: 'Parse DX', description: 'Create volume from DX data.' },
     from: SO.Format.Dx,
@@ -284,7 +284,7 @@ const AssignColorVolume: StateTransformer<SO.Volume.Data, SO.Volume.Data> = Plug
 });
 
 export type VolumeTransform = typeof VolumeTransform;
-export const VolumeTransform = PluginStateTransform.BuiltIn({
+export const VolumeTransform: StateTransformer<SO.Volume.Data, SO.Volume.Data> = PluginStateTransform.BuiltIn({
     name: 'volume-transform',
     display: { name: 'Transform Volume' },
     isDecorator: true,
@@ -321,7 +321,7 @@ export const VolumeTransform = PluginStateTransform.BuiltIn({
 });
 
 export type VolumeInstances = typeof VolumeInstances;
-export const VolumeInstances = PluginStateTransform.BuiltIn({
+export const VolumeInstances: StateTransformer<SO.Volume.Data, SO.Volume.Data> = PluginStateTransform.BuiltIn({
     name: 'volume-instances',
     display: { name: 'Volume Instances' },
     isDecorator: true,

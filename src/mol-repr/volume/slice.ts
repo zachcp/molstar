@@ -30,7 +30,7 @@ import { OrderedSet } from '../../mol-data/int/ordered-set.ts';
 import { SortedArray } from '../../mol-data/int/sorted-array.ts';
 import { Interval } from '../../mol-data/int/interval.ts';
 
-export const SliceParams = {
+const _SliceParams = {
     ...Image.Params,
     quality: { ...Image.Params.quality, isEssential: false },
     dimension: PD.MappedStatic('x', {
@@ -54,10 +54,11 @@ export const SliceParams = {
         normal: PD.Vec3(Vec3.create(1, 0, 0), {}, { description: 'Plane normal' }),
     }, { isExpanded: true, hideIf: p => p.mode !== 'plane' }),
 };
-export type SliceParams = typeof SliceParams
+export type SliceParams = typeof _SliceParams
+export const SliceParams: SliceParams = _SliceParams;
 export type SliceProps = PD.Values<SliceParams>
 
-export function getSliceParams(ctx: ThemeRegistryContext, volume: Volume) {
+export function getSliceParams(ctx: ThemeRegistryContext, volume: Volume): SliceParams {
     const p = PD.clone(SliceParams);
     const dim = volume.grid.cells.space.dimensions;
     p.dimension = PD.MappedStatic('x', {
@@ -544,7 +545,7 @@ export function SliceRepresentation(ctx: RepresentationContext, getParams: Repre
     return VolumeRepresentation('Slice', ctx, getParams, SliceVisual, getLoci);
 }
 
-export const SliceRepresentationProvider = VolumeRepresentationProvider({
+export const SliceRepresentationProvider: VolumeRepresentationProvider<SliceParams> = VolumeRepresentationProvider({
     name: 'slice',
     label: 'Slice',
     description: 'Slice of volume rendered as image with interpolation.',

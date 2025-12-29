@@ -479,7 +479,7 @@ const ParseDx: StateTransformer<SO.Data.String | SO.Data.Binary, SO.Format.Dx> =
 });
 
 type ImportString = typeof ImportString;
-const ImportString = PluginStateTransform.BuiltIn({
+const ImportString: StateTransformer<SO.Root, SO.Data.String> = PluginStateTransform.BuiltIn({
     name: 'import-string',
     display: { name: 'Import String', description: 'Import given data as a string' },
     from: SO.Root,
@@ -504,7 +504,7 @@ const ImportString = PluginStateTransform.BuiltIn({
 });
 
 type ImportJson = typeof ImportJson;
-const ImportJson = PluginStateTransform.BuiltIn({
+const ImportJson: StateTransformer<SO.Root, SO.Format.Json> = PluginStateTransform.BuiltIn({
     name: 'import-json',
     display: { name: 'Import JSON', description: 'Import given data as a JSON' },
     from: SO.Root,
@@ -544,7 +544,7 @@ const ParseJson: StateTransformer<SO.Data.String, SO.Format.Json> = PluginStateT
 });
 
 type LazyVolume = typeof LazyVolume;
-const LazyVolume = PluginStateTransform.BuiltIn({
+const LazyVolume: StateTransformer<SO.Root, SO.Volume.Lazy> = PluginStateTransform.BuiltIn({
     name: 'lazy-volume',
     display: { name: 'Lazy Volume', description: 'A placeholder for lazy loaded volume representation' },
     from: SO.Root,

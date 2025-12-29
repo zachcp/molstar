@@ -14,6 +14,7 @@ import type { Canvas3D } from '../mol-canvas3d/canvas3d.ts';
 import type { ImagePass } from '../mol-canvas3d/passes/image.ts';
 import type { PostprocessingProps } from '../mol-canvas3d/passes/postprocessing.ts';
 import { AnimateStateSnapshots } from '../mol-plugin-state/animation/built-in/state-snapshots.ts';
+import type { PluginStateSnapshotManager } from '../mol-plugin-state/manager/snapshots.ts';
 import { type RuntimeContext, Task } from '../mol-task/index.ts';
 import { PluginContext } from './context.ts';
 import type { PluginSpec } from './spec.ts';
@@ -52,7 +53,7 @@ export class HeadlessPluginContext extends PluginContext {
         props?: Partial<PostprocessingProps>,
         format?: 'png' | 'jpeg',
         jpegQuality = 90,
-    ) {
+    ): Promise<void> {
         const task = Task.create('Render Screenshot', async (ctx) => {
             this.canvas3d!.commit(true);
             return await this.renderer.saveImage(
@@ -105,7 +106,7 @@ export class HeadlessPluginContext extends PluginContext {
     }
 
     /** Get the current plugin state */
-    async getStateSnapshot() {
+    async getStateSnapshot(): Promise<PluginStateSnapshotManager.StateSnapshot> {
         this.canvas3d!.commit(true);
         return await this.managers.snapshot.getStateSnapshot({ params: {} });
     }
@@ -125,7 +126,7 @@ export class HeadlessPluginContext extends PluginContext {
         size?: { width: number; height: number };
         fps?: number;
         postprocessing?: Partial<PostprocessingProps>;
-    }) {
+    }): Promise<Uint8Array<ArrayBuffer>> {
         if (!this.state.hasBehavior(Mp4Export)) {
             throw new Error(
                 'PluginContext must have Mp4Export extension registered in order to save animation.',
