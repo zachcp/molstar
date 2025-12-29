@@ -52,7 +52,41 @@ deno publish --allow-dirty --allow-slow-types
 | mol-gl/renderable/ | ~19 | Schema helper functions |
 | mol-canvas3d/ | ~15 | PD.* param spreads |
 | mol-geo/ | ~11 | BaseGeometry.Params spreads |
-| Other | ~43 | Various complex patterns | 
+| Other | ~43 | Various complex patterns |
+
+### Why These Can't Be Fixed
+
+JSR requires **explicit type annotations** on all public API symbols. The remaining issues share a common pattern: **builder/factory functions that return complex inferred types**.
+
+**Example - RepresentationProvider pattern:**
+```typescript
+// This is how mol-repr works:
+export const CartoonRepresentationProvider = StructureRepresentationProvider({
+  name: 'cartoon',
+  factory: CartoonVisualFactory,
+  params: CartoonParams,
+  // ... more config
+});
+
+// JSR wants this, but the return type is ~50 lines of nested generics:
+export const CartoonRepresentationProvider: StructureRepresentationProvider<
+  StructureRepresentation<StructureParams & CartoonParams>,
+  StructureRepresentationState,
+  // ... many more type parameters
+> = StructureRepresentationProvider({...});
+```
+
+**Why we can't just add types:**
+1. **Type complexity**: Return types are deeply nested generics (PD.Group, PD.Mapped, etc.)
+2. **Type inference chains**: Adding explicit types breaks downstream `typeof` usage
+3. **Spread patterns**: `{ ...BaseParams, ...SpecificParams }` creates union types that can't be explicitly written
+4. **Builder chains**: `StateAction.build({...}).apply({...})` creates intermediate types
+
+**Options for zero slow-types:**
+1. **Pre-build .d.ts files** - Generate declarations with tsc, publish those
+2. **Multi-package split** - Separate clean core from complex extensions
+3. **Major refactor** - Rewrite builder patterns (high risk, 100+ files)
+4. **Accept --allow-slow-types** - Pragmatic choice, types still work for users 
 
 ### Safe Fix Patterns
 1. **Simple return types**: `: boolean`, `: string`, `: number`, `: void`, `: Promise<void>`
