@@ -7,7 +7,7 @@
  */
 
 import { StateTransforms } from '../transforms.ts';
-import { DataFormatProvider, guessCifVariant } from './provider.ts';
+import { DataFormatProvider, type DataFormatProvider as DataFormatProviderType, guessCifVariant } from './provider.ts';
 import type { PluginContext } from '../../mol-plugin/context.ts';
 import type { StateObjectSelector } from '../../mol-state/index.ts';
 import type { PluginStateObject } from '../objects.ts';
@@ -50,7 +50,7 @@ function tryGetRecomendedIsoValue(volume: Volume) {
 async function defaultVisuals(
     plugin: PluginContext,
     data: { volume: StateObjectSelector<PluginStateObject.Volume.Data> },
-) {
+): Promise<StateObjectSelector<PluginStateObject.Volume.Representation3D>[]> {
     const typeParams: { isoValue?: Volume.IsoValue } = {};
     const isoValue = data.volume.data && tryGetRecomendedIsoValue(data.volume.data);
     if (isoValue) typeParams.isoValue = isoValue;
@@ -65,7 +65,7 @@ async function defaultVisuals(
     return [await visual.commit()];
 }
 
-export const Ccp4Provider = DataFormatProvider({
+export const Ccp4Provider: DataFormatProviderType<Params, { format: StateObjectSelector<PluginStateObject.Format.Ccp4>, volume: StateObjectSelector<PluginStateObject.Volume.Data> }, StateObjectSelector<PluginStateObject.Volume.Representation3D>[]> = DataFormatProvider({
     label: 'CCP4/MRC/MAP',
     description: 'CCP4/MRC/MAP',
     category: VolumeFormatCategory,
@@ -85,7 +85,7 @@ export const Ccp4Provider = DataFormatProvider({
     visuals: defaultVisuals,
 });
 
-export const Dsn6Provider = DataFormatProvider({
+export const Dsn6Provider: DataFormatProviderType<Params, { format: StateObjectSelector<PluginStateObject.Format.Dsn6>, volume: StateObjectSelector<PluginStateObject.Volume.Data> }, StateObjectSelector<PluginStateObject.Volume.Representation3D>[]> = DataFormatProvider({
     label: 'DSN6/BRIX',
     description: 'DSN6/BRIX',
     category: VolumeFormatCategory,
@@ -105,7 +105,7 @@ export const Dsn6Provider = DataFormatProvider({
     visuals: defaultVisuals,
 });
 
-export const DxProvider = DataFormatProvider({
+export const DxProvider: DataFormatProviderType<Params, { volume: StateObjectSelector<PluginStateObject.Volume.Data> }, StateObjectSelector<PluginStateObject.Volume.Representation3D>[]> = DataFormatProvider({
     label: 'DX',
     description: 'DX',
     category: VolumeFormatCategory,
@@ -126,7 +126,7 @@ export const DxProvider = DataFormatProvider({
     visuals: defaultVisuals,
 });
 
-export const CubeProvider = DataFormatProvider({
+export const CubeProvider: DataFormatProviderType<Params, { format: StateObjectSelector<PluginStateObject.Format.Cube>, volume: StateObjectSelector<PluginStateObject.Volume.Data>, structure: StateObjectSelector<PluginStateObject.Molecule.Structure> }, StateObjectSelector[]> = DataFormatProvider({
     label: 'Cube',
     description: 'Cube',
     category: VolumeFormatCategory,
@@ -205,7 +205,7 @@ export const CubeProvider = DataFormatProvider({
 
 type DsCifParams = { entryId?: string | string[] };
 
-export const DscifProvider = DataFormatProvider({
+export const DscifProvider: DataFormatProviderType<DsCifParams, { volumes: StateObjectSelector<PluginStateObject.Volume.Data>[] }, StateObjectSelector<PluginStateObject.Volume.Representation3D>[]> = DataFormatProvider({
     label: 'DensityServer CIF',
     description: 'DensityServer CIF',
     category: VolumeFormatCategory,
@@ -293,7 +293,7 @@ export const DscifProvider = DataFormatProvider({
     },
 });
 
-export const SegcifProvider = DataFormatProvider({
+export const SegcifProvider: DataFormatProviderType<undefined, { volumes: StateObjectSelector<PluginStateObject.Volume.Data>[] }, StateObjectSelector<PluginStateObject.Volume.Representation3D>[]> = DataFormatProvider({
     label: 'Segmentation CIF',
     description: 'Segmentation CIF',
     category: VolumeFormatCategory,

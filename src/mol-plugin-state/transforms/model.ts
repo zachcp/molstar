@@ -246,7 +246,7 @@ const TopologyFromTop: StateTransformer<SO.Format.Top, SO.Molecule.Topology> = P
 });
 type TopologyFromTop = typeof TopologyFromTop;
 
-export async function getTrajectory(ctx: RuntimeContext, obj: StateObject, coordinates: Coordinates) {
+export async function getTrajectory(ctx: RuntimeContext, obj: StateObject, coordinates: Coordinates): Promise<Trajectory> {
     if (obj.type === SO.Molecule.Topology.type) {
         const topology = obj.data as Topology;
         return await Model.trajectoryFromTopologyAndCoordinates(topology, coordinates).runInContext(ctx);
@@ -285,7 +285,7 @@ const TrajectoryFromModelAndCoordinates: StateTransformer<SO.Root, SO.Molecule.T
     });
 type TrajectoryFromModelAndCoordinates = typeof TrajectoryFromModelAndCoordinates;
 
-const TrajectoryFromBlob = PluginStateTransform.BuiltIn({
+const TrajectoryFromBlob: StateTransformer<SO.Format.Blob, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-blob',
     display: { name: 'Parse Blob', description: 'Parse format blob into a single trajectory.' },
     from: SO.Format.Blob,
@@ -592,7 +592,7 @@ const TrajectoryFromMOL2: StateTransformer<SO.Data.String, SO.Molecule.Trajector
     },
 });
 
-const TrajectoryFromCube = PluginStateTransform.BuiltIn({
+const TrajectoryFromCube: StateTransformer<SO.Format.Cube, SO.Molecule.Trajectory> = PluginStateTransform.BuiltIn({
     name: 'trajectory-from-cube',
     display: { name: 'Parse Cube', description: 'Parse Cube file to create a trajectory.' },
     from: SO.Format.Cube,
@@ -696,7 +696,7 @@ const ModelFromTrajectory: StateTransformer<SO.Molecule.Trajectory, SO.Molecule.
 });
 type ModelFromTrajectory = typeof ModelFromTrajectory;
 
-const StructureFromTrajectory = PluginStateTransform.BuiltIn({
+const StructureFromTrajectory: StateTransformer<SO.Molecule.Trajectory, SO.Molecule.Structure> = PluginStateTransform.BuiltIn({
     name: 'structure-from-trajectory',
     display: { name: 'Structure from Trajectory', description: 'Create a molecular structure from a trajectory.' },
     from: SO.Molecule.Trajectory,

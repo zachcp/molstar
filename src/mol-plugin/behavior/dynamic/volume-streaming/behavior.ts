@@ -380,7 +380,7 @@ export namespace VolumeStreaming {
 
     channels: Channels = {};
 
-    public get info() {
+    public get info(): VolumeServerInfo.EntryData {
       return this.infoMap.get(this.params.entry.name)!;
     }
 
@@ -700,7 +700,7 @@ export namespace VolumeStreaming {
       return detail;
     }
 
-    async update(params: Params) {
+    async update(params: Params): Promise<boolean> {
       const switchedToSelection =
         params.entry.params.view.name === "selection-box" &&
         this.params &&
@@ -836,7 +836,7 @@ export namespace VolumeStreaming {
       };
     }
 
-    getDescription() {
+    getDescription(): string {
       if (this.params.entry.params.view.name === "selection-box") {
         return "Selection";
       }

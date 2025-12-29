@@ -10,6 +10,9 @@ import { PluginComponent } from '../../component.ts';
 import { buildVolumeHierarchy, VolumeHierarchy, type VolumeHierarchyRef, type VolumeRef } from './hierarchy-state.ts';
 import { createVolumeRepresentationParams } from '../../helpers/volume-representation-params.ts';
 import { StateTransforms } from '../../transforms.ts';
+import type { BehaviorSubject } from 'rxjs';
+import type { StateObjectSelector } from '../../../mol-state/object.ts';
+import type { PluginStateObject } from '../../objects.ts';
 
 export class VolumeHierarchyManager extends PluginComponent {
     private state = {
@@ -20,7 +23,9 @@ export class VolumeHierarchyManager extends PluginComponent {
         selection: void 0 as VolumeRef | undefined,
     };
 
-    readonly behaviors = {
+    readonly behaviors: {
+        selection: BehaviorSubject<{ hierarchy: VolumeHierarchy; volume: VolumeRef | undefined }>;
+    } = {
         selection: this.ev.behavior({
             hierarchy: this.current,
             volume: this.selection,
@@ -88,7 +93,7 @@ export class VolumeHierarchyManager extends PluginComponent {
     }
 
     // TODO: have common util
-    remove(refs: (VolumeHierarchyRef | string)[], canUndo?: boolean) {
+    remove(refs: (VolumeHierarchyRef | string)[], canUndo?: boolean): Promise<void> | undefined {
         if (refs.length === 0) return;
         const deletes = this.plugin.state.data.build();
         for (const r of refs) deletes.delete(typeof r === 'string' ? r : r.cell.transform.ref);
@@ -105,7 +110,7 @@ export class VolumeHierarchyManager extends PluginComponent {
         }
     }
 
-    addRepresentation(ref: VolumeRef, type: string) {
+    addRepresentation(ref: VolumeRef, type: string): Promise<StateObjectSelector<PluginStateObject.Volume.Representation3D>> {
         const update = this.dataState.build()
             .to(ref.cell)
             .apply(
@@ -133,7 +138,7 @@ export class VolumeHierarchyManager extends PluginComponent {
 }
 
 export namespace VolumeHierarchyManager {
-    export function getRepresentationTypes(plugin: PluginContext, pivot: VolumeRef | undefined) {
+    export function getRepresentationTypes(plugin: PluginContext, pivot: VolumeRef | undefined): [string, string][] {
         return pivot?.cell.obj?.data
             ? plugin.representation.volume.registry.getApplicableTypes(pivot.cell.obj?.data!)
             : plugin.representation.volume.registry.types;

@@ -235,7 +235,7 @@ export const BuiltInMarkdownExtension: MarkdownExtension[] = [
 ];
 
 export class MarkdownExtensionManager {
-    state = {
+    state: { audioPlayer: BehaviorSubject<HTMLAudioElement | null> } = {
         audioPlayer: new BehaviorSubject<HTMLAudioElement | null>(null),
     };
 
@@ -406,8 +406,13 @@ export class MarkdownExtensionManager {
         return this.state.audioPlayer.value;
     }
 
-    audio = {
-        play: async (src: string, options?: { toggle?: boolean }) => {
+    audio: {
+        play: (src: string, options?: { toggle?: boolean }) => Promise<void>;
+        pause: () => void;
+        stop: () => void;
+        dispose: () => void;
+    } = {
+        play: async (src: string, options?: { toggle?: boolean }): Promise<void> => {
             try {
                 const audio = this.resolveAudioPlayer();
 
@@ -441,15 +446,15 @@ export class MarkdownExtensionManager {
                 console.error('Failed to play audio', e);
             }
         },
-        pause: () => {
+        pause: (): void => {
             this.audioPlayer?.pause();
         },
-        stop: () => {
+        stop: (): void => {
             if (!this.audioPlayer) return;
             this.audioPlayer.pause();
             this.audioPlayer.currentTime = 0;
         },
-        dispose: () => {
+        dispose: (): void => {
             if (this.audioPlayer) {
                 this.audioPlayer.pause();
                 this.audioPlayer.currentTime = 0;

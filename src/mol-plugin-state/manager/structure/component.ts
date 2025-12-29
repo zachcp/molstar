@@ -36,6 +36,7 @@ import { Material } from '../../../mol-util/material.ts';
 import { Clip } from '../../../mol-util/clip.ts';
 import { setStructureEmissive } from '../../helpers/structure-emissive.ts';
 import { areInteriorPropsEquals, getInteriorParam } from '../../../mol-geo/geometry/interior.ts';
+import { Subject } from 'rxjs';
 
 export { StructureComponentManager };
 
@@ -44,11 +45,11 @@ interface StructureComponentManagerState {
 }
 
 class StructureComponentManager extends StatefulPluginComponent<StructureComponentManagerState> {
-    readonly events = {
+    readonly events: { optionsUpdated: Subject<undefined> } = {
         optionsUpdated: this.ev<undefined>()
     };
 
-    get currentStructures() {
+    get currentStructures(): readonly StructureRef[] {
         return this.plugin.managers.structure.hierarchy.selection.structures;
     }
 
@@ -62,7 +63,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         this.events.optionsUpdated.next(void 0);
     }
 
-    async setOptions(options: StructureComponentManager.Options) {
+    async setOptions(options: StructureComponentManager.Options): Promise<void> {
         const interactionChanged = options.interactions !== this.state.options.interactions;
         this.updateState({ options });
         this.events.optionsUpdated.next(void 0);
@@ -186,11 +187,11 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         if (changed) return update.commit();
     }
 
-    clear(structures: ReadonlyArray<StructureRef>) {
+    clear(structures: ReadonlyArray<StructureRef>): Promise<void> {
         return this.clearComponents(structures);
     }
 
-    selectThis(components: ReadonlyArray<StructureComponentRef>) {
+    selectThis(components: ReadonlyArray<StructureComponentRef>): void {
         const mng = this.plugin.managers.structure.selection;
         mng.clear();
         for (const c of components) {
@@ -199,11 +200,11 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         }
     }
 
-    canBeModified(ref: StructureHierarchyRef) {
+    canBeModified(ref: StructureHierarchyRef): boolean {
         return this.plugin.builders.structure.isComponentTransform(ref.cell);
     }
 
-    modifyByCurrentSelection(components: ReadonlyArray<StructureComponentRef>, action: StructureComponentManager.ModifyAction) {
+    modifyByCurrentSelection(components: ReadonlyArray<StructureComponentRef>, action: StructureComponentManager.ModifyAction): Promise<void> {
         return this.plugin.runTask(Task.create('Modify Component', async taskCtx => {
             const b = this.dataState.build();
             for (const c of components) {
@@ -217,7 +218,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         }));
     }
 
-    toggleVisibility(components: ReadonlyArray<StructureComponentRef>, reprPivot?: StructureRepresentationRef) {
+    toggleVisibility(components: ReadonlyArray<StructureComponentRef>, reprPivot?: StructureRepresentationRef): void {
         if (components.length === 0) return;
 
         if (!reprPivot) {
@@ -238,7 +239,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         }
     }
 
-    removeRepresentations(components: ReadonlyArray<StructureComponentRef>, pivot?: StructureRepresentationRef) {
+    removeRepresentations(components: ReadonlyArray<StructureComponentRef>, pivot?: StructureRepresentationRef): Promise<void> | void {
         if (components.length === 0) return;
 
         const toRemove: StructureHierarchyRef[] = [];
@@ -260,7 +261,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         return this.plugin.managers.structure.hierarchy.remove(toRemove, true);
     }
 
-    updateRepresentations(components: ReadonlyArray<StructureComponentRef>, pivot: StructureRepresentationRef, params: StateTransformer.Params<StructureRepresentation3D>) {
+    updateRepresentations(components: ReadonlyArray<StructureComponentRef>, pivot: StructureRepresentationRef, params: StateTransformer.Params<StructureRepresentation3D>): Promise<void> {
         if (components.length === 0) return Promise.resolve();
 
         const index = components[0].representations.indexOf(pivot);
@@ -321,7 +322,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         return update.commit({ canUndo: 'Update Theme' });
     }
 
-    addRepresentation(components: ReadonlyArray<StructureComponentRef>, type: string) {
+    addRepresentation(components: ReadonlyArray<StructureComponentRef>, type: string): Promise<void> | undefined {
         if (components.length === 0) return;
 
         const { hydrogens, visualQuality: quality, ignoreLight, materialStyle: material, clipObjects: clip, interior } = this.state.options;
@@ -357,7 +358,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         }));
     }
 
-    async add(params: StructureComponentManager.AddParams, structures?: ReadonlyArray<StructureRef>) {
+    async add(params: StructureComponentManager.AddParams, structures?: ReadonlyArray<StructureRef>): Promise<void> {
         return this.plugin.dataTransaction(async () => {
             const xs = structures || this.currentStructures;
             if (xs.length === 0) return;
@@ -390,7 +391,7 @@ class StructureComponentManager extends StatefulPluginComponent<StructureCompone
         }, { canUndo: 'Add Selection' });
     }
 
-    async applyTheme(params: StructureComponentManager.ThemeParams, structures?: ReadonlyArray<StructureRef>) {
+    async applyTheme(params: StructureComponentManager.ThemeParams, structures?: ReadonlyArray<StructureRef>): Promise<void> {
         return this.plugin.dataTransaction(async ctx => {
             const xs = structures || this.currentStructures;
             if (xs.length === 0) return;
@@ -538,7 +539,7 @@ namespace StructureComponentManager {
     }
     export type ThemeParams = PD.Values<ReturnType<typeof getThemeParams>>
 
-    export function getRepresentationTypes(plugin: PluginContext, pivot: StructureRef | StructureComponentRef | undefined) {
+    export function getRepresentationTypes(plugin: PluginContext, pivot: StructureRef | StructureComponentRef | undefined): [string, string][] {
         return pivot?.cell.obj?.data
             ? plugin.representation.structure.registry.getApplicableTypes(pivot.cell.obj?.data!)
             : plugin.representation.structure.registry.types;
