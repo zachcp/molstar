@@ -5,8 +5,8 @@
  * @author Zach Charlop-Powers <zach.charlop.powers@gmail.com>
  */
 
-import { Color, ColorListEntry } from "./color";
-import { ColorNames } from "./names";
+import { Color, ColorListEntry } from './color';
+import { ColorNames } from './names';
 
 const hexColorRegex = /^#([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$/i;
 const rgbColorRegex =
@@ -57,7 +57,7 @@ export function getColorGradientBanded(colors: ColorListEntry[]) {
     const off = [...colors] as [Color, number][];
     // 0 colors present
     if (!off[0]) {
-      return "linear-gradient(to right, #000 0%, #000 100%)";
+      return 'linear-gradient(to right, #000 0%, #000 100%)';
     }
     off.sort((a, b) => a[1] - b[1]);
     styles.push(`${Color.toStyle(off[0][0])} ${(100 * off[0][1]).toFixed(2)}%`);
@@ -84,12 +84,12 @@ export function getColorGradientBanded(colors: ColorListEntry[]) {
     styles.push(`${colorEntryToStyle(colors[n - 1])} ${100 * ((n - 1) / n)}%`);
   }
 
-  return `linear-gradient(to right, ${styles.join(", ")})`;
+  return `linear-gradient(to right, ${styles.join(', ')})`;
 }
 
 export function getColorGradient(colors: ColorListEntry[]) {
   if (colors.length === 0)
-    return "linear-gradient(to right, #000 0%, #000 100%)";
+    return 'linear-gradient(to right, #000 0%, #000 100%)';
 
   const hasOffsets = colors.every((c) => Array.isArray(c));
   let styles;
@@ -102,7 +102,7 @@ export function getColorGradient(colors: ColorListEntry[]) {
     styles = colors.map((c) => colorEntryToStyle(c));
   }
 
-  return `linear-gradient(to right, ${styles.join(", ")})`;
+  return `linear-gradient(to right, ${styles.join(', ')})`;
 }
 
 function colorEntryToStyle(e: ColorListEntry, includeOffset = false) {
@@ -119,15 +119,15 @@ export function parseColorList(
   separator: RegExp = /,/,
 ): ColorListEntry[] {
   const ret: ColorListEntry[] = [];
-  const trimmed = input.replace(/\s+/g, "");
+  const trimmed = input.replace(/\s+/g, '');
   let tokenStart = 0;
   let bracketLevel = 0;
   for (let i = 0, il = trimmed.length; i < il; ++i) {
     const c = trimmed[i];
-    if (c === "(") {
+    if (c === '(') {
       bracketLevel++;
       continue;
-    } else if (c === ")") {
+    } else if (c === ')') {
       if (bracketLevel > 0) {
         bracketLevel--;
       }
