@@ -87,8 +87,8 @@ export type StructureTypeT = 'model' | 'assembly' | 'symmetry' | 'symmetry_mates
 export const StructureTypeT = literal<StructureTypeT>('model', 'assembly', 'symmetry', 'symmetry_mates');
 
 /** `selector` parameter values for `component` node in MVS tree */
-export type ComponentSelectorT = 'all' | 'polymer' | 'protein' | 'nucleic' | 'branched' | 'ligand' | 'ion' | 'water' | 'coarse';
-export const ComponentSelectorT = literal<ComponentSelectorT>('all', 'polymer', 'protein', 'nucleic', 'branched', 'ligand', 'ion', 'water', 'coarse');
+export type ComponentSelectorT = 'all' | 'polymer' | 'protein' | 'nucleic' | 'branched' | 'ligand' | 'ion' | 'lipid' | 'water' | 'coarse';
+export const ComponentSelectorT = literal<ComponentSelectorT>('all', 'polymer', 'protein', 'nucleic', 'branched', 'ligand', 'ion', 'lipid', 'water', 'coarse');
 
 /** `selector` parameter values for `component` node in MVS tree */
 const _ComponentExpressionT = partial({
